@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Calendar;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
