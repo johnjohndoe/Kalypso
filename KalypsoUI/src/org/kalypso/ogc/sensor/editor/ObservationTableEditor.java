@@ -18,33 +18,9 @@ import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.ogc.sensor.template.ITemplateListener;
 import org.kalypso.ogc.sensor.template.TableViewTemplate;
-import org.kalypso.util.status.MaskedNumber;
 
 /**
  * The Observation TableEditor.
- * <p>
- * <b>Hinweise zu den internen Verbrauch von BitMask für den Tagging von Werte
- * (Themengegliedert) </b>:
- * 
- * <pre>
- * Gültigkeit
- * 0x01 - Für Berechnung ok
- * 0x02 - Für Berechnung eventuell nicht geeignet
- * 0x04 - Für Berechnung nicht geeignet
- * 
- * Benutzer Eingabe
- * 0x08 - benötigt
- * 0x0F - optional
- * 0x10 - gesperrt
- * 
- * Typ
- * 0x12 - gemessene
- * 0x14 - vorhergesagte
- * 
- * Änderungen vom Benutzer
- * 0x18 - vom Benutzer nicht geändert
- * 0x1F - vom Benutzer geändert
- * </pre>
  * 
  * @author schlienger
  */
@@ -58,20 +34,23 @@ public class ObservationTableEditor extends AbstractEditorPart implements
   /**
    * @see org.kalypso.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
 
-    JTable table = new JTable( m_model );
+    final JTable table = new JTable( m_model );
     table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
-    table.setDefaultRenderer( MaskedNumber.class, new MaskedNumberTableCellRenderer() );
+    table.setDefaultRenderer( Number.class, new MaskedNumberTableCellRenderer() );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
-    Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
+    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 
     vFrame.setVisible( true );
     table.setVisible( true );
-    vFrame.add( new JScrollPane( table ) );
+    
+    final JScrollPane pane = new JScrollPane( table );
+    //pane.setBorder( BorderFactory.createEmptyBorder() );
+    vFrame.add( pane );
   }
 
   /**

@@ -4,6 +4,7 @@ import java.awt.Frame;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -45,9 +46,9 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
-    JTable table = new JTable( m_model );
+    final JTable table = new JTable( m_model );
     table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
     table.setDefaultRenderer( MaskedNumber.class, new MaskedNumberTableCellRenderer() );
     
@@ -55,11 +56,14 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     m_model.setRules( new Rules() );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
-    Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
+    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 
     vFrame.setVisible( true );
     table.setVisible( true );
-    vFrame.add( new JScrollPane( table ) );
+    
+    final JScrollPane pane = new JScrollPane( table );
+    pane.setBorder( BorderFactory.createEmptyBorder() );
+    vFrame.add( pane );
 
     getSite().getPage().addPartListener( this );
   }
