@@ -36,6 +36,7 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.impl.AbstractCalcJob;
@@ -531,9 +532,7 @@ public class SpreeCalcJob extends AbstractCalcJob
         final Object value = feature.getProperty( column );
         double dblVal = Double.NaN;
         if( value instanceof Number )
-        {
           dblVal = ( (Number)value ).doubleValue();
-        }
         else
           dblVal = Double.NaN;
 
@@ -544,13 +543,9 @@ public class SpreeCalcJob extends AbstractCalcJob
       }
     }
 
-    final DefaultAxis dateAxis = new DefaultAxis( "Datum", "datum", "", Date.class, 0, true );
-    final IAxis valueAxis = new DefaultAxis( "Wert", "wert", "", Double.class, 1, false );
-    final IAxis[] achsen = new IAxis[]
-    {
-        dateAxis,
-        valueAxis };
-
+    final DefaultAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, 0, true );
+    // TODO: statt wert, die Einheit nehmen!
+    
     final Date[] dateArray = (Date[])dates.toArray( new Date[dates.size()] );
 
     // create ZML for each timeserie
@@ -594,6 +589,15 @@ public class SpreeCalcJob extends AbstractCalcJob
 
       if( tuples.size() > 0 )
       {
+        final String valueType = TSMap.getTypeForName( column );
+
+        final IAxis valueAxis = new DefaultAxis( "Wert", valueType, "", Double.class, 1, false );
+        final IAxis[] achsen = new IAxis[]
+        {
+            dateAxis,
+            valueAxis 
+        };
+        
         final Object[][] tupleArray = (Object[][])tuples.toArray( new Object[tuples.size()][] );
         final SimpleTuppleModel model = new SimpleTuppleModel( achsen, tupleArray );
 

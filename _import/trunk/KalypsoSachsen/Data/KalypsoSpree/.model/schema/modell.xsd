@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.spree.modell" version="0.1" 
-	xmlns:spree="org.kalypso.spree.modell" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+<schema targetNamespace="org.kalypso.spree.modell" version="0.1" xmlns:spree="org.kalypso.spree.modell" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlinks.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
@@ -51,13 +50,11 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-    
-    <complexType name="EmptyFeatureBaseType">
+	<complexType name="EmptyFeatureBaseType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureType"/>
 		</complexContent>
 	</complexType>
-    
 	<element name="Einzugsgebiet" type="spree:_EinzugsgebietType"/>
 	<complexType name="_EinzugsgebietType">
 		<complexContent>
@@ -78,8 +75,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-    
-    
 	<complexType name="FlusslaufModellCollectionAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">

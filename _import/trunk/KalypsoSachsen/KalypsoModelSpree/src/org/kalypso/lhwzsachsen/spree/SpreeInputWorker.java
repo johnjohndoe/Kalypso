@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import org.deegree.model.feature.Feature;
@@ -34,11 +32,10 @@ import org.kalypso.ogc.gml.GMLHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.wq.WQObservationFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
@@ -125,7 +122,7 @@ public class SpreeInputWorker
 
       
       logwriter.println( "Erzeuge Zeitreihen-Datei: " + tsFilename );
-      final Map valuesMap = createTsData( tmpdir, inputMap );
+      final TSMap valuesMap = createTsData( tmpdir, inputMap );
       createTimeseriesFile( tsFilename, valuesMap, logwriter );
 
       return nativedir;
@@ -137,7 +134,7 @@ public class SpreeInputWorker
     }
   }
 
-  public static void createTimeseriesFile( final String tsFilename, final Map valuesMap, final PrintWriter logwriter ) throws CalcJobServiceException
+  public static void createTimeseriesFile( final String tsFilename, final TSMap valuesMap, final PrintWriter logwriter ) throws CalcJobServiceException
   {
     final List ftpList = new LinkedList();
 
@@ -166,7 +163,9 @@ public class SpreeInputWorker
     final DateFormat specialDateFormat = new SimpleDateFormat( "yMM.dd" );
     final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
     final Calendar calendar = Calendar.getInstance();
-    final Date[] dateArray = (Date[])valuesMap.get( "DATE" );
+    
+    
+    final Date[] dateArray = valuesMap.getDates();
 
     final Collection shapeFeatures = new ArrayList( dateArray.length );
 
@@ -189,7 +188,7 @@ public class SpreeInputWorker
       for( int j = 0; j < SpreeCalcJob.TS_DESCRIPTOR.length; j++ )
       {
         final String id = SpreeCalcJob.TS_DESCRIPTOR[j].id;
-        final Map datesToValuesMap = (Map)valuesMap.get( id );
+        final Map datesToValuesMap = valuesMap.getTimeserie( id );
 
         if( datesToValuesMap == null )
           continue;
@@ -233,13 +232,11 @@ public class SpreeInputWorker
     }
   }
 
-  public static Map createTsData( final File inputdir, final Map inputMap ) throws IOException
+  /** Liest die Zeitreihen und erzeugt daraus eine Tabelle (Map) */
+  public static TSMap createTsData( final File inputdir, final Map inputMap ) throws IOException
   {
-    final Map map = new HashMap();
-
-    // sortiert die Daten nach der Zeit
-    final Set dateSet = new TreeSet();
-
+    final TSMap tsmap = new TSMap();
+    
     // alle Zeitreihen lesen
     for( int i = 0; i < SpreeCalcJob.TS_DESCRIPTOR.length; i++ )
     {
@@ -260,28 +257,19 @@ public class SpreeInputWorker
       try
       {
         final IObservation obs = ZmlFactory.parseXML( obsFile.toURL(), "" );
-
-        final IAxis[] axisList = obs.getAxisList();
-
-        final IAxis dateAxis = ObservationUtilities.findAxisByClass( axisList, Date.class )[0];
-        final IAxis valueAxis = ObservationUtilities.findAxisByClass( axisList, Double.class )[0];
-
-        final Map dateToValueMap = new HashMap();
-
-        final ITuppleModel model = obs.getValues( null );
-
-        for( int j = 0; j < model.getCount(); j++ )
+        
+        tsmap.addObservation( obs, tsDesc.id );
+        
+        if( tsDesc.id.startsWith( "W_" ) )
         {
-          final Date date = (Date)model.getElement( j, dateAxis );
-          final Number val = (Number)model.getElement( j, valueAxis );
-          final Double value = val == null ? null : new Double( val.doubleValue() );
-
-          dateSet.add( date );
-
-          dateToValueMap.put( date, value );
+          // neuen Namen generieren
+          final String qName = "Q_" + tsDesc.id.substring( 2 );
+          
+          final WQObservationFilter filter = new WQObservationFilter();
+          filter.initFilter( TimeserieConstants.TYPE_WATERLEVEL, obs );
+          
+          tsmap.addObservation( filter, qName );
         }
-
-        map.put( tsDesc.id, dateToValueMap );
       }
       catch( final NoSuchElementException nse )
       {
@@ -298,9 +286,7 @@ public class SpreeInputWorker
       }
     }
 
-    map.put( "DATE", dateSet.toArray( new Date[dateSet.size()] ) );
-
-    return map;
+    return tsmap;
   }
 
   public static void findAndWriteLayer( final GMLWorkspace workspace, final String layerName,

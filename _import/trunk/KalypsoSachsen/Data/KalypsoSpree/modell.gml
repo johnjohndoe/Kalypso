@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Andersen (no) -->
 <SpreeModell
-   xmlns="http://www.tuhh.de/kalypsoSpree" 
-   xmlns:na="http://www.tuhh.de/kalypsoSpree"
+   xmlns="org.kalypso.spree.modell" 
    xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tuhh.de/kalypsoSpree .modellTyp/modellSchema/modell.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="org.kalypso.spree.modell ./.model/schema/modell.xsd">
 	<EZCollectionAssociation>
 		<EZCollection>
 			<EZMember>
@@ -20,13 +19,13 @@
 					<BodenfeuchteMax>70.0</BodenfeuchteMax>
 					<Ausdehnung/>
 					<Niederschlag_eingabeEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/PG_SCHIRG.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/PG_SCHIRG.zml"/>
 					</Niederschlag_eingabeEingang>
 					<Niederschlag_eingabe>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/PG_SCHIRG.zml"/>
 					</Niederschlag_eingabe>
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_SCHIRG.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/W_SCHIRG.zml"/>
 					</Wasserstand_gemessenEingang>
 					<Wasserstand_gemessen>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_SCHIRG.zml"/>
@@ -50,13 +49,13 @@
 					<Ausdehnung/>
 					
 					<Niederschlag_eingabeEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/PG_BAUTZWB.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/PG_BAUTZWB.zml"/>
 					</Niederschlag_eingabeEingang>
 					<Niederschlag_eingabe>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/PG_BAUTZWB.zml"/>
 					</Niederschlag_eingabe>
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_BAUTZWB.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/W_BAUTZWB.zml"/>
 					</Wasserstand_gemessenEingang>
 					<Wasserstand_gemessen>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_BAUTZWB.zml"/>
@@ -81,13 +80,13 @@
 					<Ausdehnung/>
 					
 					<Niederschlag_eingabeEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/PG_GROEDI.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/PG_GROEDI.zml"/>
 					</Niederschlag_eingabeEingang>
 					<Niederschlag_eingabe>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/PG_GROEDI.zml"/>
 					</Niederschlag_eingabe>
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_GROEDI.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/W_GROEDI.zml"/>
 					</Wasserstand_gemessenEingang>
 					<Wasserstand_gemessen>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_GROEDI.zml"/>
@@ -111,13 +110,13 @@
 					<Ausdehnung/>
 
 					<Niederschlag_eingabeEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/PG_JAENKD.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/PG_JAENKD.zml"/>
 					</Niederschlag_eingabeEingang>
 					<Niederschlag_eingabe>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/PG_JAENKD.zml"/>
 					</Niederschlag_eingabe>
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_JAENKD.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/W_JAENKD.zml"/>
 					</Wasserstand_gemessenEingang>
 					<Wasserstand_gemessen>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_JAENKD.zml"/>
@@ -141,13 +140,13 @@
 					<Ausdehnung/>
 					
 					<Niederschlag_eingabeEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/PG_SAERI.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/PG_SAERI.zml"/>
 					</Niederschlag_eingabeEingang>
 					<Niederschlag_eingabe>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/PG_SAERI.zml"/>
 					</Niederschlag_eingabe>
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_SAERI.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/W_SAERI.zml"/>
 					</Wasserstand_gemessenEingang>
 					<Wasserstand_gemessen>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_SAERI.zml"/>
@@ -176,7 +175,7 @@
 					<KorrekturEmpfehlungLaufzeit>0.0</KorrekturEmpfehlungLaufzeit>
 
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_LIESKE.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/W_LIESKE.zml"/>
 					</Wasserstand_gemessenEingang>
 					<Wasserstand_gemessen>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_LIESKE.zml"/>
@@ -201,7 +200,7 @@
 					<KorrekturEmpfehlungLaufzeit>-1.0</KorrekturEmpfehlungLaufzeit>
 
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_BOXBRG.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/W_BOXBRG.zml"/>
 					</Wasserstand_gemessenEingang>
 					<Wasserstand_gemessen>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_BOXBRG.zml"/>
@@ -225,7 +224,7 @@
 					<KorrekturEmpfehlungLaufzeit>0.0</KorrekturEmpfehlungLaufzeit>
 
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_SPREY.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/W_SPREY.zml"/>
 					</Wasserstand_gemessenEingang>
 					<Wasserstand_gemessen>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_SPREY.zml"/>
@@ -249,7 +248,7 @@
 					<KorrekturEmpfehlungLaufzeit>0.0</KorrekturEmpfehlungLaufzeit>
 
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_SPWITZ.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/W_SPWITZ.zml"/>
 					</Wasserstand_gemessenEingang>
 					<Wasserstand_gemessen>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_SPWITZ.zml"/>
@@ -269,7 +268,7 @@
 					<KorrekturEmpfehlungLaufzeit>0.0</KorrekturEmpfehlungLaufzeit>
 
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_SPREMB.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/W_SPREMB.zml"/>
 					</Wasserstand_gemessenEingang>
 					<Wasserstand_gemessen>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_SPREMB.zml"/>
@@ -295,7 +294,7 @@
 						</gml:Point>
 					</Ort>
 					<Abgabe_eingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/QV_TSQUITZ.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/QV_TSQUITZ.zml"/>
 					</Abgabe_eingang>
 					<Abgabe>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/QV_TSQUITZ.zml"/>
@@ -315,7 +314,7 @@
 						</gml:Point>
 					</Ort>
 					<Abgabe_eingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/QV_TSBAUTZ.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/QV_TSBAUTZ.zml"/>
 					</Abgabe_eingang>
 					<Abgabe>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/QV_TSBAUTZ.zml"/>
@@ -334,7 +333,7 @@
 					<Name>Überleitung Restlochkette</Name>
 					<Ort/>
 					<Abgabe_eingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/QV_RLKETTE.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/QV_RLKETTE.zml"/>
 					</Abgabe_eingang>
 					<Abgabe>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/QV_RLKETTE.zml"/>
@@ -346,7 +345,7 @@
 					<Name>Zuleiter Restloch Lohsa II</Name>
 					<Ort/>
 					<Abgabe_eingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/QV_LOHSA.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/QV_LOHSA.zml"/>
 					</Abgabe_eingang>
 					<Abgabe>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/QV_LOHSA.zml"/>
@@ -358,7 +357,7 @@
 					<Name>Zuleiter Restloch Bärwalde</Name>
 					<Ort/>
 					<Abgabe_eingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/QV_BWALDE.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/QV_BWALDE.zml"/>
 					</Abgabe_eingang>
 					<Abgabe>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/QV_BWALDE.zml"/>
@@ -370,7 +369,7 @@
 					<Name>Abzweig Kleine Spree</Name>
 					<Ort/>
 					<Abgabe_eingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/QV_SPWIESE.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/QV_SPWIESE.zml"/>
 					</Abgabe_eingang>
 					<Abgabe>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/QV_SPWIESE.zml"/>
@@ -390,7 +389,7 @@
 						</gml:Point>
 					</Ort>
 					<Zugabe_eingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/QP_BURGNEU.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/Spree/2004/QP_BURGNEU.zml"/>
 					</Zugabe_eingang>
 					<Zugabe>
 						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/QP_BURGNEU.zml"/>

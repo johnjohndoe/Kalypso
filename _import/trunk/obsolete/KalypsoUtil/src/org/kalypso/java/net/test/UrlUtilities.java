@@ -1,4 +1,4 @@
-package org.kalypso.java.net;
+package org.kalypso.java.net.test;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -16,7 +16,7 @@ public class UrlUtilities
   }
 
   /**
-   * Resolves a (potential) relative URL to a base URL.
+   * <p>Resolves a (potential) relative URL to a base URL.</p>
    * 
    * @param baseURL
    *          URL, to which the relative url will be resolved

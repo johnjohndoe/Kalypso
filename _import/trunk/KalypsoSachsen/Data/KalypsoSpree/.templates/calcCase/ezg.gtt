@@ -1,9 +1,3 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gistableview xmlns="gistableview.template.kalypso.org">
-	<layer linktype="gml" id="1" ns1:actuate="onRequest" ns1:href="PATH=calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=.model/schema/modell.xsd#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-		<column name="Name" width="100" editable="false"/>
-		<column name="BodenfeuchteMin" width="100" editable="false"/>
-		<column name="Bodenfeuchte" width="100" editable="true"/>
-		<column name="BodenfeuchteMax" width="100" editable="false"/>
-	</layer>
-</gistableview>
+<gistableview xmlns="gistableview.template.kalypso.org"><layer id="1" linktype="gml" ns1:actuate="onRequest" ns1:href="PATH=./calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=project:/.model/schema/modell.xsd#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"><column editable="false" name="Name" width="100"/><column editable="false" name="BodenfeuchteMin" width="100"/><column editable="true" name="Bodenfeuchte" width="100"/><column editable="false" name="BodenfeuchteMax" width="100"/><sort inverse="false" propertyName="BodenfeuchteMin"/></layer></gistableview>
+

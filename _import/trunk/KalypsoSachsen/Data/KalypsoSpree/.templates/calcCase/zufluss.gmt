@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
 	<extent bottom="50.99678799998588" left="14.340792728726877" right="14.986512202195462" top="51.53907066733935"/>
-	<layers>
-		<layer name="Eingabepegel (Zuflusse)" visible="true" id="active_0" linktype="gml" ns1:actuate="onRequest" ns1:href="PATH=calcdir:calcCase.gml#LAYER=Zufluss#SERVICE=RESOURCE#XSD=.modellTyp/modell.xsd#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-			<ns2:style linktype="style" ns1:actuate="onRequest" ns1:href="PATH=.styles/zufluesse.sld#STYLE=Zufluesse#" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+	<layers active="0">
+		<layer name="Eingabepegel (Zuflusse)" visible="true" id="0" 
+			linktype="gml" ns1:actuate="onRequest" 
+			ns1:href="PATH=./calcCase.gml#LAYER=Zufluss#SERVICE=RESOURCE#XSD=../../.model/schema/modell.xsd#" 
+			ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+			<ns2:style linktype="style" ns1:actuate="onRequest" 
+				ns1:href="PATH=project:/.styles/zufluesse.sld#STYLE=Zufluesse#" 
+				ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
 		</layer>
-		<layer name="Gewässerverlauf" visible="true" id="1" linktype="shape" ns3:actuate="onRequest" ns3:href="SRS=EPSG:31469#PATH=.shapes/schoeps_loebauer_wasser#SERVICE=RESOURCE#" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
-			<ns4:style linktype="style" ns3:actuate="onRequest" ns3:href="PATH=.styles/styles.sld#STYLE=sachsenrivers#" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
+		<layer name="Gewässerverlauf" visible="true" id="1" linktype="shape" 
+			ns3:actuate="onRequest" 
+			ns3:href="SRS=EPSG:31469#PATH=project:/Grunddaten/Shapes/gewässer#SERVICE=RESOURCE#" 
+			ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+			<ns4:style linktype="style" ns3:actuate="onRequest" 
+				ns3:href="PATH=project:/.styles/styles.sld#STYLE=sachsenrivers#" 
+				ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
 		</layer>
 	</layers>
 </gismapview>

@@ -5,7 +5,6 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.kalypso.java.net.UrlUtilities;
 
 /**
  * UrlUtilitiesTest

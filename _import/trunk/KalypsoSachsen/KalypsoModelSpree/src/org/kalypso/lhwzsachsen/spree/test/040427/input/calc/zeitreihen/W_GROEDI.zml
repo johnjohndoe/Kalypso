@@ -1,3 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<observation editable="false" xmlns="zml.kalypso.org"><name>W_GROEDI</name><metadataList><metadata name="StartZeit" value="27.4.2005 12:00"/><metadata name="Name" value="W_GROEDI"/><metadata name="Berechnung" value="Prognose"/></metadataList><axis datatype="TYPE=xs:date#FORMAT=yyyy.MM.dd HH:mm:ss" name="Datum" type="value" unit=""><valueArray separator=";">2004.04.27 01:00:00;2004.04.27 04:00:00;2004.04.27 07:00:00;2004.04.27 10:00:00</valueArray></axis><axis datatype="TYPE=xs:double" name="Wert" type="value" unit=""><valueArray separator=";">40;40;40;40</valueArray></axis></observation>
-
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>W_GROEDI</name>
+    <metadataList>
+        <metadata name="WQ-Parameter" value="&lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot; &gt;&lt;set&gt;&lt;params&gt;&lt;w1&gt;-20.01&lt;/w1&gt;&lt;lnk1&gt;-13.03851&lt;/lnk1&gt;&lt;k2&gt;3.48364&lt;/k2&gt;&lt;wgr&gt;20.0&lt;/wgr&gt;&lt;/params&gt;&lt;params&gt;&lt;w1&gt;-0.01&lt;/w1&gt;&lt;lnk1&gt;-4.46986&lt;/lnk1&gt;&lt;k2&gt;1.43458&lt;/k2&gt;&lt;wgr&gt;170.0&lt;/wgr&gt;&lt;/params&gt;&lt;params&gt;&lt;w1&gt;6.59&lt;/w1&gt;&lt;lnk1&gt;-10.52398&lt;/lnk1&gt;&lt;k2&gt;2.63409&lt;/k2&gt;&lt;/params&gt;&lt;/set&gt;&lt;/wechmann&gt;" />
+    </metadataList>
+    <axis datatype="TYPE=xs:date#FORMAT=yyyy.MM.dd HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2004.04.27 01:00:00;2004.04.27 04:00:00;2004.04.27 07:00:00;2004.04.27 10:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=xs:double" key="false" name="Wert" type="W" unit="">
+        <valueArray separator=";">40;40;40;40</valueArray>
+    </axis>
+</observation>
