@@ -205,4 +205,19 @@ public class TimeserieUtils
     // no color found? so return random one
     return ColorUtilities.random();
   }
+
+  /**
+   * @param mdKey
+   * @return color for the given Metadata information
+   */
+  public static Color getColorForMD( final String mdKey )
+  {
+    final String strColor = getProperties().getProperty( "MDCOLOR_" + mdKey );
+
+    if( strColor != null )
+      return StringUtilities.stringToColor( strColor );
+    
+    // no color found? so return random one
+    return ColorUtilities.random();
+  }
 }
