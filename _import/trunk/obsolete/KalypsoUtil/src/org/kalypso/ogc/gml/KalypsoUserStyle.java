@@ -2,6 +2,7 @@ package org.kalypso.ogc.gml;
 
 import org.deegree.graphics.sld.FeatureTypeStyle;
 import org.deegree.graphics.sld.UserStyle;
+import org.deegree.xml.Marshallable;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.event.ModellEventProvider;
@@ -12,7 +13,7 @@ import org.kalypso.ogc.event.ModellEventProviderAdapter;
  * 
  * @author bce
  */
-public class KalypsoUserStyle implements UserStyle, ModellEventProvider
+public class KalypsoUserStyle implements UserStyle, Marshallable, ModellEventProvider
 {
   private UserStyle myUserStyle;
   
@@ -93,5 +94,13 @@ public class KalypsoUserStyle implements UserStyle, ModellEventProvider
   public void removeModellListener( ModellEventListener listener )
   {
     myEventProvider.removeModellListener( listener );
+  }
+
+  /**
+   * @see org.deegree.xml.Marshallable#exportAsXML()
+   */
+  public String exportAsXML()
+  {
+    return ((Marshallable)myUserStyle).exportAsXML();
   }
 }
