@@ -20,6 +20,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -39,6 +42,7 @@ import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.event.ModellEvent;
 import org.kalypso.ogc.gml.event.ModellEventListener;
 import org.kalypso.ogc.gml.table.celleditors.ICellEditorFactory;
+import org.kalypso.ogc.gml.table.command.ChangeSortingCommand;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
@@ -46,11 +50,14 @@ import org.kalypso.template.gistableview.GistableviewType.LayerType.ColumnType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.SortType;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
+import org.kalypso.util.command.InvisibleCommand;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.PoolableObjectType;
 
 /**
+ * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ändert
+ * 
  * @author Belger
  */
 public class LayerTableViewer extends TableViewer implements ISelectionProvider,
@@ -61,6 +68,8 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   public static final String COLUMN_PROP_NAME = "columnName";
 
   public static final String COLUMN_PROP_EDITABLE = "columnEditable";
+
+  public static final String COLUMN_PROP_WIDTH = "columnWidth";
 
   private final ObjectFactory m_gistableviewFactory = new ObjectFactory();
 
@@ -85,6 +94,10 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   private final LayerTableSorter m_sorter = new LayerTableSorter();
 
+  private final ICommandTarget m_templateTarget;
+  
+  private boolean m_isApplyTemplate = false;
+
   /**
    * This class handles selections of the column headers. Selection of the
    * column header will cause resorting of the shown tasks using that column's
@@ -100,38 +113,45 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
      * that column to be the current tasklist sorter. Repeated presses on the
      * same column header will toggle sorting order (ascending/descending).
      */
-    public void widgetSelected( SelectionEvent e )
+    public void widgetSelected( final SelectionEvent e )
     {
       // column selected - need to sort
       final TableColumn tableColumn = (TableColumn)e.widget;
-      final int column = getTable().indexOf( tableColumn );
-      final String propertyName = getPropertyName( column );
       
-      final LayerTableSorter sorter = (LayerTableSorter)getSorter();
-      
-      final String oldPropertyName = sorter.getPropertyName();
-      if( oldPropertyName != null && oldPropertyName.equals( propertyName ) )
-        sorter.setInverse( !sorter.isInverse() );
-      else
-      {
-        sorter.setPropertyName( propertyName );
-        sorter.setInverse( false );
-      }
-
-      final TableColumn[] columns = getTable().getColumns();
-      for( int i = 0; i < columns.length; i++ )
-        setColumnText( columns[i] );
-
-      refresh();
+      m_templateTarget.postCommand( new ChangeSortingCommand( LayerTableViewer.this, tableColumn ), null ); 
     }
   };
+
+  private ControlListener m_headerControlListener = new ControlAdapter() 
+  {
+
+    /**
+     * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
+     */
+    public void controlResized( final ControlEvent e )
+    {
+      if( m_isApplyTemplate == true )
+        return;
+      
+      final TableColumn tc = (TableColumn)e.widget;
+
+      // kann nicht rückgängig gemacht werden, sorgt aber dafür, dass der Editor dirty ist
+      final int width = tc.getWidth();
+      if( width != ((Integer)tc.getData( COLUMN_PROP_WIDTH )).intValue() )
+      {
+        m_templateTarget.postCommand( new InvisibleCommand(), null );
+        tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
+      }
+    }
+  };
+
 
   /**
    * @param bCursorSelects
    *          falls true, wird immer die unter dem Cursor liegende Zeile
    *          selektiert
    */
-  public LayerTableViewer( final Composite parent, final IProject project,
+  public LayerTableViewer( final Composite parent, final ICommandTarget templateTarget, final IProject project,
       final ICellEditorFactory cellEditorFactory, final int selectionID,
       final boolean bCursorSelects )
   {
@@ -141,6 +161,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     m_selectionID = selectionID;
     m_project = project;
     m_bCursorSelects = bCursorSelects;
+    m_templateTarget = templateTarget;
 
     setContentProvider( new LayerTableContentProvider() );
     setLabelProvider( new LayerTableLabelProvider( this ) );
@@ -201,7 +222,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   protected void hookControl( final Control control )
   {
     // wir wollen nicht die Hooks von TableViewer und StrukturedViewer
-    // TODO: geht das auch anders?
+    // geht das auch anders?
     control.addDisposeListener( new DisposeListener()
     {
       public void widgetDisposed( DisposeEvent event )
@@ -218,30 +239,34 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   public void applyTableTemplate( final Gistableview tableView, final IProject project )
   {
+    m_isApplyTemplate = true;
+    
     clearColumns();
     setTheme( null );
 
-    if( tableView == null )
-      return;
-
-    final LayerType layer = tableView.getLayer();
-    setTheme( new PoolableKalypsoFeatureTheme( layer, project ) );
-
-    final SortType sort = layer.getSort();
-    if( sort != null )
+    if( tableView != null )
     {
-      m_sorter.setPropertyName( sort.getPropertyName() );
-      m_sorter.setInverse( sort.isInverse() );
+      final LayerType layer = tableView.getLayer();
+      setTheme( new PoolableKalypsoFeatureTheme( layer, project ) );
+  
+      final SortType sort = layer.getSort();
+      if( sort != null )
+      {
+        m_sorter.setPropertyName( sort.getPropertyName() );
+        m_sorter.setInverse( sort.isInverse() );
+      }
       
-      refresh();
+      final List columnList = layer.getColumn();
+      for( final Iterator iter = columnList.iterator(); iter.hasNext(); )
+      {
+        final ColumnType ct = (ColumnType)iter.next();
+        addColumn( ct.getName(), ct.getWidth(), ct.isEditable(), false );
+      }
     }
     
-    final List columnList = layer.getColumn();
-    for( final Iterator iter = columnList.iterator(); iter.hasNext(); )
-    {
-      final ColumnType ct = (ColumnType)iter.next();
-      addColumn( ct.getName(), ct.getWidth(), ct.isEditable() );
-    }
+    refresh();
+    
+    m_isApplyTemplate = false;
   }
 
   public PoolableKalypsoFeatureTheme getTheme()
@@ -277,20 +302,24 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       columns[i].dispose();
   }
 
-  public void addColumn( final String propertyName, final int width, final boolean isEditable )
+  public void addColumn( final String propertyName, final int width, final boolean isEditable, final boolean bRefresh )
   {
     final Table table = getTable();
 
     final TableColumn tc = new TableColumn( table, SWT.CENTER );
-    tc.setWidth( width );
     tc.setData( COLUMN_PROP_NAME, propertyName );
     tc.setData( COLUMN_PROP_EDITABLE, Boolean.valueOf( isEditable ) );
+    // die Breite noch mal extra speichern, damit das Redo beim Resizen geht
+    tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
+    tc.setWidth( width );
     
     setColumnText( tc );
     
     tc.addSelectionListener( m_headerListener );
-
-    refresh();
+    tc.addControlListener( m_headerControlListener );
+    
+    if( bRefresh )
+      refresh();
   }
 
   protected void setColumnText( final TableColumn tc )
@@ -307,8 +336,6 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   public void removeColumn( final String name )
   {
-    // TODO: Spezialbehandlung für letzte Spalte?
-
     final TableColumn column = getColumn( name );
     if( column != null )
       column.dispose();
@@ -321,11 +348,19 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
    */
   public void refresh()
   {
+    if( isDisposed() )
+      return;
+    
     // zuerst alle celleditoren neu berechnen
     // hack, weil man getCellEditors nicht vernünftig überschreiben kann
     refreshCellEditors();
     setColumnProperties( createColumnProperties() );
 
+    // die Namen der Spalten auffrsichen, wegen der Sortierungs-Markierung
+    final TableColumn[] columns = getTable().getColumns();
+    for( int i = 0; i < columns.length; i++ )
+      setColumnText( columns[i] );
+    
     super.refresh();
 
     // und die tableitems einfärben

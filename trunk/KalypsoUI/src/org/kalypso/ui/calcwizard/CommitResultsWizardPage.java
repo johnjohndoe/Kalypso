@@ -134,8 +134,6 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
       { rightWeight0,rightWeight0+rightWeight1, 100 - rightWeight0-rightWeight1 } );
 
       setControl( sashForm );
- 
-
     }
     catch( final Exception e )
     {
@@ -172,7 +170,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
       final IFile templateFile = (IFile)getProject().findMember( templateFileName );
       final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,   getReplaceProperties()  );
 
-      m_viewer = new LayerTableViewer( parent, getProject(), KalypsoGisPlugin.getDefault()
+      m_viewer = new LayerTableViewer( parent, this, getProject(), KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), SELECTION_ID, true );
       m_viewer.applyTableTemplate( template, getProject() );
     }

@@ -75,7 +75,7 @@ public class SetColumnVisibleCommand implements ICommand
       public void run()
       {
         if( bVisible )
-          viewer.addColumn( propertyName, width, editable );
+          viewer.addColumn( propertyName, width, editable, true );
         else
           viewer.removeColumn( propertyName );
       }

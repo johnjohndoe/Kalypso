@@ -223,7 +223,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
       final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,
           getReplaceProperties() );
 
-      m_viewer = new LayerTableViewer( parent, getProject(), KalypsoGisPlugin.getDefault()
+      m_viewer = new LayerTableViewer( parent, this, getProject(), KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), SELECTION_ID, false );
       m_viewer.applyTableTemplate( template, getProject() );
     }
