@@ -24,11 +24,10 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.sensor.DateRangeArgument;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.tableview.DefaultTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
-import org.kalypso.ogc.sensor.tableview.template.DefaultTableViewTemplate;
-import org.kalypso.ogc.sensor.tableview.template.Rules;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.adapter.IAdaptable;
 import org.kalypso.util.repository.view.RepositoryExplorerPart;
@@ -51,9 +50,6 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
     table.setDefaultRenderer( Number.class, new MaskedNumberTableCellRenderer() );
     
-    // TODO: als Testzweck hier, später komplett entfernen?
-    m_model.setRules( new Rules() );
-
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 
@@ -185,7 +181,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
       c.add( Calendar.DAY_OF_YEAR, -31 );
       Date from = c.getTime();
 
-      DefaultTableViewTemplate tab = new DefaultTableViewTemplate( m_obs );
+      DefaultTableViewTemplate tab = new DefaultTableViewTemplate( m_obs, false );
 
       try
       {
