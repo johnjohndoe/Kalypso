@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gistableview xmlns="gistableview.template.kalypso.org">
-<layer linktype="shape" id="1" featurePath="featureMember" ns1:type="simple" 
-ns1:href="project:/shapes/flg_WE_280403#EPSG:31468" ns1:actuate="onRequest" xmlns:ns1="http://www.w3.org/1999/xlink"><column name="GKZ" width="100" editable="false"/><column name="ID" width="617" editable="false"/></layer></gistableview>
-

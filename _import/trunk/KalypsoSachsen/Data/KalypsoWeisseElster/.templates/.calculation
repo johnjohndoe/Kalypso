@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<SpreeControl fid="foo" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="platform:/resource/KalypsoSpree/.model/schema/control.xsd"><startsimulation>2004-04-27T10:00:00</startsimulation><startforecast>2004-04-27T10:00:00</startforecast><editor>belger</editor><description>super</description><comment>duper</comment><calctime>2004-04-27T10:00:00</calctime></SpreeControl>

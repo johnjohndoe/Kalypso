@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gistableview xmlns="gistableview.template.kalypso.org">
-	<layer linktype="shape" id="1" ns1:type="simple" featurePath="featureMember" 
-	ns1:href="project:/shapes/d1000w_p#EPSG:31468" ns1:actuate="onRequest" xmlns:ns1="http://www.w3.org/1999/xlink">
-		<column name="OBT" width="100" editable="false"/>
-		<column name="ZN" width="100" editable="false"/>
-		<column name="OBS" width="536" editable="false"/>
-	</layer>
-</gistableview>

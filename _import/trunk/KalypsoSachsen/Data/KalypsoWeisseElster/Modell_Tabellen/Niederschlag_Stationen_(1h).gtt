@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gistableview xmlns="gistableview.template.kalypso.org">
-	<layer linktype="shape" id="1" ns1:type="simple" featurePath="featureMember" 
-	ns1:href="project:/shapes/nstat_gk4_clip#EPSG:31468" ns1:actuate="onRequest" xmlns:ns1="http://www.w3.org/1999/xlink">
-		<column name="KE" width="100" editable="false"/>
-		<column name="STAT_ID" width="100" editable="false"/>
-		<column name="STAT_NAME" width="517" editable="false"/>
-	</layer>
-</gistableview>
