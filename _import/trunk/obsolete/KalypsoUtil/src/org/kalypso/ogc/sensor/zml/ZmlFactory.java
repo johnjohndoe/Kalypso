@@ -7,7 +7,9 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -128,8 +130,10 @@ public class ZmlFactory
       final List metadataList = metadataListType.getMetadata();
       for( final Iterator it = obs.getMetadata().entrySet().iterator(); it.hasNext(); )
       {
-        final String mdKey = (String)it.next();
-        final String mdValue = obs.getMetadata().getProperty( mdKey );
+        final Map.Entry entry = (Entry)it.next();
+        
+        final String mdKey = (String)entry.getKey();  //(String)it.next();
+        final String mdValue = (String)entry.getValue(); //obs.getMetadata().getProperty( mdKey );
 
         final MetadataType mdType = m_objectFactory.createMetadataType();
         mdType.setName( mdKey );
