@@ -11,9 +11,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -28,8 +26,6 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
-import org.kalypso.eclipse.jface.action.FullAction;
-import org.kalypso.editor.mapeditor.WidgetAction;
 import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandManager;
@@ -58,7 +54,7 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
     }
   };
 
-  /** Jeder Editor hat sein eigenes Mutex, so dass Jobs schön hintereinander ausgeführt werden */
+  /** Jeder Editor hat sein eigenes Mutex, so dass Jobs sch?n hintereinander ausgef?hrt werden */
   private Mutex myMutexRule = new Mutex();
   
   public AbstractEditorPart()
@@ -66,9 +62,9 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
     ResourcesPlugin.getWorkspace().addResourceChangeListener( this );
   }
   
-  protected abstract FullAction[] createFullActions(  );
-  protected abstract WidgetAction[] createWidgetActions(  );
-      
+//  protected abstract FullAction[] createFullActions(  );
+//  protected abstract WidgetAction[] createWidgetActions(  );
+//      
   public void dispose()
   {
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( this );
@@ -246,20 +242,6 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
     final IActionBars actionBars = getEditorSite().getActionBars();
     actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_undoAction );
     actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_redoAction );
-
-    final String groupName = this.toString();
-    System.out.println( groupName );
-    
-    final IToolBarManager toolBarManager = actionBars.getToolBarManager();
-    toolBarManager.add( new GroupMarker( groupName ) );
-
-    final FullAction[] fullActions=createFullActions();
-    for( int i = 0; i < fullActions.length; i++ )
-      toolBarManager.appendToGroup( groupName, fullActions[i] );
-
-    final WidgetAction[] widgetActions = createWidgetActions();
-    for( int i = 0; i < widgetActions.length; i++ )
-      toolBarManager.appendToGroup( groupName, widgetActions[i] );
 
     actionBars.updateActionBars();
   }

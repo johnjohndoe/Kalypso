@@ -108,6 +108,39 @@
                label="AddRow"
                class="org.kalypso.editor.tableeditor.actions.AddRowActionDelagate"
                id="org.kalypso.tableeditor.AddRowAction"/>
+         <action
+               toolbarPath="karte"
+               label="volle Ausdehnung"
+               tooltip="Zoom to fullextent"
+               icon="icons/full/elcl16/kde_window_fullscreen.gif"
+               class="org.kalypso.ogc.widgets.FullExtentAction"
+               style="push"
+               id="org.kalypso.editor.mapeditor.action.FullExtentAction"/>
+         <action
+               toolbarPath="karte"
+               label="Ausschnitt verkleinern"
+               class="org.kalypso.ogc.widgets.ZoomOutAction"
+               icon="icons/full/elcl16/kde_viewmag-.gif"
+               tooltip="vergrößert den Kartenausschnitt"
+               style="push"
+               id="org.kalypso.editor.mapeditor.action.ZoomOutAction"/>
+         <action
+               disabledIcon="icons/full/elcl16/kde_14_rectangle.gif"
+               toolbarPath="karte"
+               label="Ausschnitt vergrößern"
+               tooltip="vergrößert den Kartenausschnitt"
+               icon="icons/full/elcl16/kde_viewmag+.gif"
+               class="org.kalypso.ogc.widgets.ZoomInWidget"
+               style="radio"
+               id="org.kalypso.editor.mapeditor.action.ZoomInAction"/>
+         <action
+               toolbarPath="karte"
+               label="Kartenausschnitt verschieben"
+               tooltip="verschiebt den Kartenausschnitt"
+               icon="icons/full/elcl16/kde_move.gif"
+               class="org.kalypso.ogc.widgets.PanToWidget"
+               style="radio"
+               id="org.kalypso.editor.mapeditor.action.PanAction"/>
       </viewerContribution>
    </extension>
 
