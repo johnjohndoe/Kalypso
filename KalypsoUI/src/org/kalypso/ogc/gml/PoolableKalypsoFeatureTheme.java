@@ -303,26 +303,34 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
 
   public void saveFeatures()
   {
-    final Job saveJob = new Job( "Daten speichern" )
+//    final Job saveJob = new Job( "Daten speichern" )
+//    {
+//      protected IStatus run( final IProgressMonitor monitor )
+//      {
+//        try
+//        {
+//          m_layerPool.saveObject( getLayer(), monitor );
+//        }
+//        catch( final FactoryException e )
+//        {
+//          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+//              "Fehler beim Speichern der Daten", e );
+//        }
+//
+//        return Status.OK_STATUS;
+//      }
+//    };
+
+    try
     {
-      protected IStatus run( final IProgressMonitor monitor )
-      {
-        try
-        {
-          m_layerPool.saveObject( getLayer(), monitor );
-        }
-        catch( final FactoryException e )
-        {
-          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-              "Fehler beim Speichern der Daten", e );
-        }
-
-        return Status.OK_STATUS;
-      }
-    };
-
-    saveJob.setPriority( Job.LONG );
-    saveJob.schedule();
+      m_layerPool.saveObject( getLayer(), new NullProgressMonitor() );
+//    saveJob.setPriority( Job.LONG );
+//    saveJob.schedule();
+    }
+    catch( final FactoryException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   public void setEditing( final boolean isEditing )
