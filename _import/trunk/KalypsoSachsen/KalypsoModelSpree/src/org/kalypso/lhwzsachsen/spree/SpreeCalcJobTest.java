@@ -60,7 +60,7 @@ public class SpreeCalcJobTest extends TestCase
     final ObjectFactory of = new ObjectFactory();
     final Unmarshaller unmarshaller = of.createUnmarshaller();
 
-    final String calcCase = "calcCase";
+    final String calcCase = "calc";
     final String base = "base";
 
     final File inputdir = new File( basedir, "input" );
@@ -68,7 +68,7 @@ public class SpreeCalcJobTest extends TestCase
     final File inputbasedir = new File( inputdir, base );
 
     final Modelspec spec = (Modelspec)unmarshaller.unmarshal( new InputSource( getClass()
-        .getResourceAsStream( "resources/spec/modelspec.xml" ) ) );
+        .getResourceAsStream( "resources/modelspec.xml" ) ) );
     final List inputList = spec.getInput();
     
     final List inputBeanList = new ArrayList();
@@ -77,13 +77,12 @@ public class SpreeCalcJobTest extends TestCase
       final ModelspecType.InputType input = (InputType)iter.next();
       final String inputPath = input.getPath();
 
-      final String path = ( input.isRelativeToCalcCase() ? calcCase : base ) + "/" + inputPath;
+      final String path = "input/" + ( input.isRelativeToCalcCase() ? calcCase : base ) + "/" + inputPath;
       
       final File dir = input.isRelativeToCalcCase() ? inputcalcdir : inputbasedir;
       final File inputfile = new File( dir, inputPath );
 
-      final String inputresource = "resources/example/" + path;
-
+      final String inputresource = "test/040427/" + path;
       inputfile.getParentFile().mkdirs();
       
       FileUtilities.makeFileFromStream( false, inputfile, getClass().getResourceAsStream(

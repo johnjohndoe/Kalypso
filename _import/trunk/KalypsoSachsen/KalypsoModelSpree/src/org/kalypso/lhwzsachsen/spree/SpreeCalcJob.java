@@ -16,6 +16,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.deegree.model.feature.Feature;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
@@ -46,8 +47,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class SpreeCalcJob extends AbstractCalcJob
 {
-//  public static final String CALC_PROP_STARTTIME = "startTime";
-
   public static final String VHS_FILE = "_vhs.dbf";
 
   public static final String FLP_FILE = "_flp";
@@ -241,11 +240,8 @@ public class SpreeCalcJob extends AbstractCalcJob
     if( isCanceled() )
       return;
 
-    final File inputdir = new File( basedir, "input" );
-    final File nativedir = new File( basedir, "native" );
-    final File exedir = new File( basedir, "exe" );
-
-    final Map props = SpreeInputWorker.createNativeInput( inputdir, nativedir, input );
+    final Properties props = new Properties();
+    final File exedir = SpreeInputWorker.createNativeInput( basedir, input, props );
 
     progress( 33 );
     if( isCanceled() )
@@ -377,10 +373,6 @@ public class SpreeCalcJob extends AbstractCalcJob
   {
     try
     {
-      // das exe-dir resetten
-      FileUtilities.deleteRecursive( exedir );
-      exedir.mkdirs();
-      
       copyFileToTmp( exedir, EXE_FILE );
 
       for( int i = 0; i < OTHER_FILES.length; i++ )

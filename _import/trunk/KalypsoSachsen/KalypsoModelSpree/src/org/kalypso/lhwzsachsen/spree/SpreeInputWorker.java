@@ -3,6 +3,7 @@ package org.kalypso.lhwzsachsen.spree;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,8 +15,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
@@ -49,10 +52,13 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class SpreeInputWorker
 {
+  private final static Logger LOGGER = Logger.getLogger( SpreeInputWorker.class.getName() );
+
   private final static ConvenienceCSFactoryFull CRS_FACT = new ConvenienceCSFactoryFull();
-  private final static CS_CoordinateSystem DEFAULT_CRS = Adapters.getDefault()
-      .export( CRS_FACT.getCSByName( "EPSG:4326" ) );
-  
+
+  private final static CS_CoordinateSystem DEFAULT_CRS = Adapters.getDefault().export(
+      CRS_FACT.getCSByName( "EPSG:4326" ) );
+
   private SpreeInputWorker()
   {
   // wird nicht instantiiert
@@ -71,21 +77,30 @@ public class SpreeInputWorker
     return map;
   }
 
-  public static Map createNativeInput( final File inputdir, final File nativedir,
-      final CalcJobDataBean[] input ) throws CalcJobServiceException
+  /**
+   * <p>
+   * Converts inputfiles to nativefiles and reads control parameters
+   * </p>
+   * 
+   * @return Location of native files
+   */
+  public static File createNativeInput( final File tmpdir, final CalcJobDataBean[] input,
+      final Properties props ) throws CalcJobServiceException
   {
-    nativedir.mkdirs();
-
-    final Map inputMap = hashInput( input );
-
-    final File controlGML = checkInput( "CONTROL_GML", inputMap, inputdir );
-    final File controlXSD = checkInput( "CONTROL_XSD", inputMap, inputdir );
-    final Map props = parseControlFile( controlGML, controlXSD, nativedir );
-
-    final KalypsoFeatureLayer[] layers = loadGML( inputdir, inputMap );
-
     try
     {
+      final File nativedir = new File( tmpdir, "native" );
+      nativedir.mkdirs();
+
+      final Map inputMap = hashInput( input );
+
+      final File controlGML = checkInput( "CONTROL_GML", inputMap, tmpdir );
+      final File controlXSD = checkInput( "CONTROL_XSD", inputMap, tmpdir );
+
+      final Map map = parseControlFile( controlGML, controlXSD, nativedir );
+      props.putAll( map );
+
+      final KalypsoFeatureLayer[] layers = loadGML( tmpdir, inputMap );
       final File vhsFile = (File)props.get( SpreeCalcJob.DATA_VHSFILE );
       final String flpFilename = (String)props.get( SpreeCalcJob.DATA_FLPFILENAME );
       final String napFilename = (String)props.get( SpreeCalcJob.DATA_NAPFILENAME );
@@ -99,16 +114,16 @@ public class SpreeInputWorker
       findAndWriteLayer( layers, SpreeCalcJob.NAP_NAME, SpreeCalcJob.NAP_MAP,
           SpreeCalcJob.NAP_GEOM, napFilename );
 
-      final Map valuesMap = createTsData( inputdir, inputMap );
+      final Map valuesMap = createTsData( tmpdir, inputMap );
       createTimeseriesFile( tsFilename, valuesMap );
+
+      return nativedir;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       throw new CalcJobServiceException( "Fehler beim Erzeugen der Inputdateien", e );
     }
-    
-    return props;
   }
 
   public static void createTimeseriesFile( final String tsFilename, final Map valuesMap )
@@ -117,7 +132,8 @@ public class SpreeInputWorker
     final List ftpList = new LinkedList();
 
     // Layer erzeugen!
-    ftpList.add( FeatureFactory.createFeatureTypeProperty( "GEOM", GM_Point.class.getName(), false ) );
+    ftpList
+        .add( FeatureFactory.createFeatureTypeProperty( "GEOM", GM_Point.class.getName(), false ) );
     ftpList.add( FeatureFactory.createFeatureTypeProperty( "DZAHL", "java.lang.Double", false ) );
     ftpList.add( FeatureFactory.createFeatureTypeProperty( "STUNDE", "java.lang.Double", false ) );
     ftpList.add( FeatureFactory.createFeatureTypeProperty( "DATUM", "java.lang.String", false ) );
@@ -132,16 +148,18 @@ public class SpreeInputWorker
 
     final FeatureTypeProperty[] ftps = (FeatureTypeProperty[])ftpList
         .toArray( new FeatureTypeProperty[ftpList.size()] );
-    final FeatureType type = FeatureFactory.createFeatureType( null, null, "TS_TYPE", ftps );
+
+    final FeatureType type = FeatureFactory.createFeatureType( "shapetype", null, ftps,
+        new int[ftps.length], new int[ftps.length], null, null );
 
     // Werte schreiben
     final DateFormat specialDateFormat = new SimpleDateFormat( "yMM.dd" );
     final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
     final Calendar calendar = Calendar.getInstance();
     final Date[] dateArray = (Date[])valuesMap.get( "DATE" );
-    
-    final Collection shapeFeatures = new ArrayList(dateArray.length);
-    
+
+    final Collection shapeFeatures = new ArrayList( dateArray.length );
+
     for( int i = 0; i < dateArray.length; i++ )
     {
       final Date date = dateArray[i];
@@ -162,27 +180,30 @@ public class SpreeInputWorker
       {
         final String id = SpreeCalcJob.TS_DESCRIPTOR[j].id;
         final Map datesToValuesMap = (Map)valuesMap.get( id );
-        
+
+        if( datesToValuesMap == null )
+          continue;
+
         final Double value = (Double)datesToValuesMap.get( date );
 
         Double outVal = null;
-        
+
         if( value == null )
         {
           if( id.startsWith( "PA_" ) || id.startsWith( "PG" ) )
-            outVal = new Double( -99.9 ); 
+            outVal = new Double( -99.9 );
           else
             outVal = new Double( 0 );
         }
         else
           outVal = value;
-        
+
         data[6 + j] = outVal;
       }
 
       for( int j = 0; j < data.length; j++ )
         System.out.print( data[j] + "\t" );
-      System.out.println( );
+      System.out.println();
 
       final Feature feature = FeatureFactory.createFeature( "" + ( i + 1 ), type, data );
       shapeFeatures.add( feature );
@@ -204,7 +225,8 @@ public class SpreeInputWorker
     //        .getResourceAsStream( "test/HW040427.shx" ) );
   }
 
-  public static Map createTsData( final File inputdir, final Map inputMap ) throws IOException, SensorException
+  public static Map createTsData( final File inputdir, final Map inputMap ) throws IOException,
+      SensorException
   {
     final Map map = new HashMap();
 
@@ -236,7 +258,7 @@ public class SpreeInputWorker
       {
         final IAxis dateAxis = ObservationUtilities.findAxis( axisList, Date.class )[0];
         final IAxis valueAxis = ObservationUtilities.findAxis( axisList, Double.class )[0];
-      
+
         final Map dateToValueMap = new HashMap();
 
         final ITuppleModel model = obs.getValues( null );
@@ -258,7 +280,7 @@ public class SpreeInputWorker
       {
         // passiert, wenn es keine entsprechende Axen giebt
         nse.printStackTrace();
-        
+
         throw new CalcJobServiceException( "Fehlerhafte Eingabedateien", nse );
       }
       catch( final SensorException se )
@@ -296,7 +318,7 @@ public class SpreeInputWorker
     catch( final GmlSerializeException e )
     {
       e.printStackTrace();
-      
+
       throw new CalcJobServiceException( "Fehler beim Schreiben der Eingabedateien", e );
     }
   }
@@ -320,12 +342,19 @@ public class SpreeInputWorker
     }
   }
 
-  public static Map parseControlFile( final File controlGML, final File controlXSD, final File nativedir )
-      throws CalcJobServiceException
+  public static Map parseControlFile( final File controlGML, final File controlXSD,
+      final File nativedir ) throws CalcJobServiceException
   {
     try
     {
-      final Feature controlFeature = GmlSerializer.createGMLWorkspace( controlGML.toURL(), controlXSD.toURL() ).getRootFeature();
+      final URL gmlURL = controlGML.toURL();
+      LOGGER.info( "GML-URL: " + gmlURL.toString() );
+
+      final URL schemaURL = controlXSD.toURL();
+      LOGGER.info( "Schema-URL: " + schemaURL.toString() );
+
+      final Feature controlFeature = GmlSerializer.createGMLWorkspace( gmlURL, schemaURL )
+          .getRootFeature();
 
       final Date startTime = (Date)controlFeature.getProperty( "startforecast" );
 
