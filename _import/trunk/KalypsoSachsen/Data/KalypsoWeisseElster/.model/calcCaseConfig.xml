@@ -13,15 +13,19 @@
 <!-- create zml-directories -->
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.model/.info.txt"/>
-			<argument name="output" value=":calcdir:zml/.info.txt"/>
+			<argument name="output" value=":calcdir:Niederschlag/.info.txt"/>
 		</transformation>
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.model/.info.txt"/>
-			<argument name="output" value=":calcdir:zufluss/.info.txt"/>
+			<argument name="output" value=":calcdir:Zufluss/.info.txt"/>
 		</transformation>
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.model/.info.txt"/>
-			<argument name="output" value=":calcdir:pegel/.info.txt"/>
+			<argument name="output" value=":calcdir:Ergebnisse/.info.txt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/.info.txt"/>
+			<argument name="output" value=":calcdir:Pegel/.info.txt"/>
 		</transformation>
 
 	</createTransformations>
@@ -54,7 +58,6 @@
 			<argument name="targetObservation" value="pegelZR"/>
 			<argument name="targetFolder" value=":calcdir:"/>
 		</transformation>
-
 		<!--
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
