@@ -1,5 +1,6 @@
 package org.kalypsodeegree_impl.gml.schema.virtual;
 
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
@@ -72,5 +73,21 @@ public class VirtualRasterFeatureTypePropertyHandler implements VirtualFeatureTy
   {
     return new FeatureTypeProperty[]
     { new VirtualRasterFeatureTypeProperty( ftp ) };
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.FeatureType)
+   */
+  public boolean isDekoratorOf( FeatureType ft )
+  {
+    return false;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.FeatureType)
+   */
+  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureType ft )
+  {
+    return new FeatureTypeProperty[0];
   }
 }

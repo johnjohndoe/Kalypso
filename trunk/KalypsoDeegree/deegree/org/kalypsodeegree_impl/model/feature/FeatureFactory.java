@@ -348,8 +348,9 @@ public class FeatureFactory
   public static FeatureProperty[] createDefaultFeatureProperty(
       final FeatureTypeProperty[] propTypes, final boolean createGeometry )
   {
-    // TODO handle occurency here and generate empty List or FeatureList as default
-      final List results = new ArrayList();
+    // TODO handle occurency here and generate empty List or FeatureList as
+    // default
+    final List results = new ArrayList();
     for( int i = 0; i < propTypes.length; i++ )
     {
       final FeatureTypeProperty ftp = propTypes[i];
@@ -411,9 +412,9 @@ public class FeatureFactory
       System.out.println( "no Type" );
     final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
         .getTypeHandlerForClassName( type );
-//  TODO give context not null
+    //  TODO give context not null
     if( typeHandler != null )
-      return typeHandler.unmarshall( gmlProperty.getElement() ,null);
+      return typeHandler.unmarshall( gmlProperty.getElement(), null );
     //FeatureAssociationType
     final Object o = gmlProperty.getPropertyValue();
     if( o == null )
@@ -505,19 +506,26 @@ public class FeatureFactory
     return new SplitSort( env );
   }
 
-  public static FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureType realFeatureType )
+  public static FeatureTypeProperty[] createVirtualFeatureTypeProperties(
+      FeatureType realFeatureType )
   {
+    final List result = new ArrayList();
+    final VirtualFeatureTypeRegistry registry = VirtualFeatureTypeRegistry.getInstance();
     final FeatureTypeProperty[] properties = realFeatureType.getProperties();
-    final List newFTP = new ArrayList();
+
     for( int i = 0; i < properties.length; i++ )
     {
       FeatureTypeProperty ftp = properties[i];
-      FeatureTypeProperty[] newFtp = VirtualFeatureTypeRegistry.getInstance()
-          .getVirtualFeatureTypePropertiesFor( ftp );
+      FeatureTypeProperty[] newFtp = registry.getVirtualFeatureTypePropertiesFor( ftp );
       for( int j = 0; j < newFtp.length; j++ )
-        newFTP.add( newFtp[j] );
+        result.add( newFtp[j] );
     }
-    return (FeatureTypeProperty[])newFTP.toArray( new FeatureTypeProperty[newFTP.size()] );       
+
+    final FeatureTypeProperty[] vftp = registry.getVirtualFeatureTypePropertiesFor( realFeatureType );
+    for( int i = 0; i < vftp.length; i++ )
+      result.add( vftp[i] );
+    
+    return (FeatureTypeProperty[])result.toArray( new FeatureTypeProperty[result.size()] );
   }
 
 }

@@ -44,13 +44,50 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public interface VirtualFeatureTypePropertyHandler
+public class VirtualVelocityFeatureTypePropertyHandler implements VirtualFeatureTypePropertyHandler
 {
-  public boolean isDekoratorOf( FeatureType ft );
 
-  public boolean isDekoratorOf( FeatureTypeProperty ftp );
+  /*
+   * 
+   * @author doemming
+   */
+  public VirtualVelocityFeatureTypePropertyHandler()
+  {
+    super();
+  }
 
-  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureType ft );
+  /**
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.FeatureType)
+   */
+  public boolean isDekoratorOf( FeatureType ft )
+  {
+    return "http://elbe.wb.tu-harburg.de/2dModel".equals( ft.getNamespace() )
+        && "featurePoint".equals( ft.getName() );
+  }
 
-  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureTypeProperty ftp );
+  /**
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.FeatureTypeProperty)
+   */
+  public boolean isDekoratorOf( FeatureTypeProperty ftp )
+  {
+    return false;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.FeatureType)
+   */
+  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureType ft )
+  {
+    return new FeatureTypeProperty[]
+    { new VirtualVelocityFeatureTypeProperty( ft ) };
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.FeatureTypeProperty)
+   */
+  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureTypeProperty ftp )
+  {
+    return null;
+  }
+
 }

@@ -1,20 +1,16 @@
 package org.kalypsodeegree_impl.gml.schema.virtual;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -57,31 +53,54 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureTypeProperty
+public class VirtualVelocityFeatureTypeProperty implements VirtualFeatureTypeProperty
 {
+  private final String m_namespace = "virtual";
 
-  private final String m_name;
+  private final static String DECORATED_NS = "http://elbe.wb.tu-harburg.de/2dModel";
 
-  private final String m_type;
+  private final static String PROP_GEOM = DECORATED_NS + ":geometry";
 
-  private final Map m_annotations;
+  private final static String PROP_XVELOCITY = DECORATED_NS + ":xVelocity";
 
-  private final String m_namespace;
+  private final static String PROP_YVELOCITY = DECORATED_NS + ":yVelocity";
 
-  private String m_linkName;
+  private final String m_name="arrow_velocity";
 
   /*
    * 
    * @author doemming
    */
-  public VirtualFeatureAssociationTypeProperty( FeatureAssociationTypeProperty ftp )
+  public VirtualVelocityFeatureTypeProperty( FeatureType ft )
   {
-    m_linkName = ftp.getName();
-    m_name = "link_" + ftp.getName();
-    m_type = GM_LineString.class.getName();
-    m_annotations = new HashMap();
-    m_namespace = "virtual";
+    //
+  }
 
+  /**
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty#getVirtuelValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypsodeegree.model.feature.GMLWorkspace)
+   */
+  public Object getVirtuelValue( Feature feature, GMLWorkspace workspace )
+  {
+    final GM_Point srcP = (GM_Point)feature.getProperty( PROP_GEOM );
+    final Float xv = (Float)feature.getProperty( PROP_XVELOCITY );
+    final Float yv = (Float)feature.getProperty( PROP_YVELOCITY );
+    if( xv == null || srcP == null || yv == null )
+      return null;
+    double factor = 600;
+
+    final GM_Point targetP = GeometryFactory.createGM_Point(
+        srcP.getX() + factor * xv.floatValue(), srcP.getY() + factor * yv.floatValue(), srcP
+            .getCoordinateSystem() );
+    try
+    {
+      return GeometryUtilities.createArrowLineString( srcP, targetP );
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   /**
@@ -97,7 +116,7 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
    */
   public String getType()
   {
-    return m_type;
+    return GM_LineString.class.getName();
   }
 
   /**
@@ -105,7 +124,7 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
    */
   public Annotation getAnnotation( String lang )
   {
-    return (Annotation)m_annotations.get( lang );
+    return null;
   }
 
   /**
@@ -113,7 +132,7 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
    */
   public boolean isNullable()
   {
-    return true;
+    return false;
   }
 
   /**
@@ -137,40 +156,6 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
    */
   public Map getAnnotationMap()
   {
-    return m_annotations;
-  }
-
-  public Object getVirtuelValue( Feature feature, GMLWorkspace workspace )
-  {
-    if( workspace == null )
-      return null;
-    try
-    {
-      final GM_Object srcGeo = feature.getDefaultGeometryProperty();
-      GM_Position src = srcGeo.getCentroid().getPosition();
-      if( srcGeo == null )
-        return null;
-      final GetGeomDestinationFeatureVisitor visitor = new GetGeomDestinationFeatureVisitor(
-          workspace, m_linkName, 2 );
-      visitor.visit( feature );
-      final GM_Object[] destGeo = visitor.getGeometryDestinations();
-      final List curves = new ArrayList();
-      for( int i = 0; i < destGeo.length; i++ )
-      {
-        final GM_Position[] pos = new GM_Position[]
-        {
-            src,
-            destGeo[i].getCentroid().getPosition() };
-        curves.add( GeometryFactory.createGM_Curve( pos, srcGeo.getCoordinateSystem() ) );
-      }
-      return GeometryFactory.createGM_MultiCurve( (GM_Curve[])curves.toArray( new GM_Curve[curves
-          .size()] ) );
-    }
-    catch( GM_Exception e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-
+    return null;
   }
 }

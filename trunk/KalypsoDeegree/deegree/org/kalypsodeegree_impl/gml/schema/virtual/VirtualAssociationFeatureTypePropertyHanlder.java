@@ -65,9 +65,8 @@ public class VirtualAssociationFeatureTypePropertyHanlder implements
   {
     if( ftp instanceof FeatureAssociationTypeProperty )
     {
-      FeatureType linkFT = ( (FeatureAssociationTypeProperty)ftp ).getAssociationFeatureType();
-      return true; 
-//      linkFT.getDefaultGeometryPropertyPosition() > -1;
+      return true;
+      //      linkFT.getDefaultGeometryPropertyPosition() > -1;
     }
     return false;
   }
@@ -79,5 +78,21 @@ public class VirtualAssociationFeatureTypePropertyHanlder implements
   {
     return new FeatureTypeProperty[]
     { new VirtualFeatureAssociationTypeProperty( (FeatureAssociationTypeProperty)ftp ) };
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.FeatureType)
+   */
+  public boolean isDekoratorOf( FeatureType ft )
+  {
+    return false;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.FeatureType)
+   */
+  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureType ft )
+  {
+    return new FeatureTypeProperty[0];
   }
 }
