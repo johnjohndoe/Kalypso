@@ -49,12 +49,13 @@ import java.io.Writer;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
@@ -67,7 +68,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -75,11 +75,9 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
-import org.kalypso.ogc.sensor.diagview.grafik.GrafikYAchsen.GrafikAchse;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
-import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.util.runtime.args.DateRangeArgument;
@@ -134,11 +132,13 @@ public class GrafikLauncher
   }
 
   /**
-   * Opens the grafik tool using an observation template xml object. Note: this method
-   * should be called using a WorkspaceModifyOperation.
+   * Opens the grafik tool using an observation template xml object. Note: this
+   * method should be called using a WorkspaceModifyOperation.
    * 
-   * @param fileName the filename to use for the grafik template file
-   * @param odt the xml binding object
+   * @param fileName
+   *          the filename to use for the grafik template file
+   * @param odt
+   *          the xml binding object
    * @param dest
    * @param monitor
    * @return the created tpl file
@@ -149,15 +149,22 @@ public class GrafikLauncher
       final ObsdiagviewType odt, final IFolder dest,
       final IProgressMonitor monitor ) throws SensorException
   {
+    StringWriter strWriter = null;
     try
     {
+      if( !dest.exists() )
+        dest.create( true, true, monitor );
+
       final IFile tplFile = dest.getFile( FileUtilities
           .nameWithoutExtension( fileName )
           + ".tpl" );
 
-      final StringWriter strWriter = new StringWriter();
+      strWriter = new StringWriter();
 
       odt2tpl( odt, dest, strWriter, monitor );
+
+      // redeclared final for being used in SetContentHelper
+      final StringWriter schWriter = strWriter;
 
       // use the windows encoding for the vorlage because of the grafik tool
       // which uses it when reading...
@@ -165,7 +172,7 @@ public class GrafikLauncher
       {
         protected void write( final Writer writer ) throws Throwable
         {
-          writer.write( strWriter.toString() );
+          writer.write( schWriter.toString() );
         }
       };
 
@@ -179,6 +186,10 @@ public class GrafikLauncher
     catch( Throwable e ) // generic exception caught
     {
       throw new SensorException( e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( strWriter );
     }
   }
 
@@ -255,165 +266,134 @@ public class GrafikLauncher
 
   /**
    * Converts a diagram template file to a grafik tpl.
+   * <p>
+   * Important note: the XML-Schema for the diag template file says that if no
+   * curve element or specified for a given observation, then all curves of that
+   * observation should be displayed. This is not possible here using the grafik
+   * tool. As a conclusion: when a template file is meant to be used with the
+   * grafik tool, then curves need to be explicitely specified in the xml.
    * 
    * @param odt
    * @param dest
    * @param writer
    * @param monitor
+   * 
    * @throws SensorException
+   * @throws CoreException
+   * @throws IOException
    */
   private static void odt2tpl( final ObsdiagviewType odt, final IFolder dest,
       final Writer writer, final IProgressMonitor monitor )
-      throws SensorException
+      throws SensorException, CoreException, IOException
   {
-    InputStream ins = null;
+    final UrlResolver urlRes = new UrlResolver();
+    final URL context = ResourceUtilities.createURL( dest.getParent() );
 
-    try
+    final GrafikAchsen gAchsen = new GrafikAchsen( odt.getAxis() );
+    final GrafikKurven gKurven = new GrafikKurven( gAchsen );
+
+    final Set xLines = new TreeSet();
+    final Map yLines = new HashMap();
+
+    final TypeObservation[] tobs = (TypeObservation[]) odt.getObservation()
+        .toArray( new TypeObservation[0] );
+    for( int i = 0; i < tobs.length; i++ )
     {
-      final UrlResolver urlRes = new UrlResolver();
-      final URL context = ResourceUtilities.createURL( dest );
+      if( monitor.isCanceled() )
+        return;
 
-      final GrafikYAchsen yAchsen = new GrafikYAchsen( odt.getAxis() );
-      String dateAxisLabel = "Datum";
-      String colorSpec = "KNr:  Farbe\tLTyp\tLBreite\tPTyp\n";
+      // now try to locate observation file
+      final URL url = urlRes.resolveURL( context, tobs[i].getHref() );
+      final IFile zmlFile = ResourceUtilities.findFileFromURL( url );
 
-      final List xLines = new ArrayList();
-      final Map yLines = new HashMap();
-
-      int ixObs = 1;
-
-      final List tobsList = odt.getObservation();
-      for( final Iterator ito = tobsList.iterator(); ito.hasNext(); )
+      // if file cannot be found, that probably means it is not local...
+      // maybe make a better test later?
+      if( zmlFile == null )
       {
-        if( monitor.isCanceled() )
-          return;
+        final String msg = "Konvertierung nicht möglich, Zml-Datei ist möglicherweise keine lokale Datei: "
+            + url.toExternalForm();
+        Logger.getLogger( GrafikLauncher.class.getName() ).warning( msg );
+        continue;
+      }
 
-        final TypeObservation tobs = (TypeObservation) ito.next();
-
-        // maps obs axis to diag axis. Can be empty if there are no
-        // curves specified in the xml. In that case, all axes are
-        // taken ( see zml2dat() )
-        final Map obsAxis2Diag = new HashMap();
-        final Map obsAxis2Color = new HashMap();
-
-        final List tcurveList = tobs.getCurve();
-        for( Iterator itc = tcurveList.iterator(); itc.hasNext(); )
-        {
-          final TypeCurve tc = (TypeCurve) itc.next();
-
-          tc.getColor();
-          
-          final List tmList = tc.getMapping();
-          for( Iterator itm = tmList.iterator(); itm.hasNext(); )
-          {
-            final TypeAxisMapping tm = (TypeAxisMapping) itm.next();
-
-            obsAxis2Diag.put( tm.getObservationAxis(), tm.getDiagramAxis() );
-            obsAxis2Color.put( tm.getObservationAxis(), tc.getColor() );
-          }
-        }
-
-        final URL url = urlRes.resolveURL( context, tobs.getHref() );
-        final IFile zmlFile = ResourceUtilities.findFileFromURL( url );
-
-        // if file cannot be found, that probably means it is not local...
-        // maybe make a better test later?
-        if( zmlFile == null )
-        {
-          final String msg = "Konvertierung nicht möglich, Zml-Datei ist keine lokale Datei: "
-              + url.toExternalForm();
-          Logger.getLogger( DiagViewUtils.class.getName() ).warning( msg );
-          continue;
-        }
-
+      final IObservation obs;
+      InputStream ins = null;
+      try
+      {
         ins = zmlFile.getContents();
-        final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ),
-            zmlFile.toString(), context );
-
-        // find out which axes to use
-        final IAxis[] axes = obs.getAxisList();
-        final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes,
-            Date.class, true )[0];
-        final IAxis[] numberAxes = ObservationUtilities.findAxisByClass( axes,
-            Number.class, true );
-
-        // remove date axis from names list, we always take it
-        dateAxisLabel = dateAxis.getName();
-        obsAxis2Diag.remove( dateAxisLabel );
-
-        final IFile datFile = dest.getFile( FileUtilities
-            .nameWithoutExtension( zmlFile.getName() )
-            + ".dat" );
-        zml2dat( obs, datFile, dateAxis, numberAxes, obsAxis2Diag, monitor );
-
-        // adapt grafik-axis type according to real axis type (mapping)
-        final String grafikType = GrafikYAchsen.axis2grafikType( numberAxes[0]
-            .getType() );
-
-        String title = zmlFile.getName()
-            + (tobs.getTitle() != null ? tobs.getTitle() : "");
-        
-        String grafikAxis = "1";
-        final GrafikAchse achse = yAchsen.getFor( (String) obsAxis2Diag
-            .get( numberAxes[0].getName() ) );
-        if( achse != null )
-        {
-          grafikAxis = String.valueOf( achse.getId() );
-          title = achse.getName() + " (" + title + ")";
-        }
-
-        final String strColor = (String) obsAxis2Color.get( numberAxes[0].getName() );
-        if( strColor != null )
-          colorSpec += "K" + grafikAxis + ":\t" + toGrafikColor( strColor ) + "\t0\t1\t" + grafikAxis + "\n";
-        
-        writer.write( ixObs++ + "- " + datFile.getName() + " J " + grafikType
-            + " " + grafikAxis + " " + title + "\n" );
-
-        // is this obs a forecast?
-        final DateRangeArgument fr = TimeserieUtils.isForecast( obs );
-        if( fr != null )
-          xLines.add( GRAFIK_DF.format( fr.getFrom() ) );
-
-        // does is have Alarmstufen?
-        final MetadataList mdl = obs.getMetadataList();
-        final String[] mds = TimeserieUtils.findOutMDAlarmLevel( obs );
-        for( int i = 0; i < mds.length; i++ )
-        {
-          final Double value = new Double( mdl.getProperty( mds[i] ) );
-          yLines.put( value, new ValueAndColor( mds[i] + " ("
-              + mdl.getProperty( mds[i] ) + ")", value.doubleValue(), null ) );
-        }
+        obs = ZmlFactory.parseXML( new InputSource( ins ), zmlFile.toString(),
+            context );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+        Logger.getLogger( GrafikLauncher.class.getName() ).throwing(
+            GrafikLauncher.class.getName(), "odt2tpl", e );
+        continue;
+      }
+      finally
+      {
+        IOUtils.closeQuietly( ins );
       }
 
-      writer.write( "\n" );
-      writer.write( "HTitel:\t" + odt.getTitle() + "\n" );
-      writer.write( "xTitel:\t" + dateAxisLabel + "\n" );
-      writer.write( "yTitel1:\t" + yAchsen.getLeftLabel() + "\n" );
-      writer.write( "yTitel2:\t" + yAchsen.getRightLabel() + "\n" );
-      writer.write( colorSpec );
+      // find out which axes to use
+      final IAxis[] axes = obs.getAxisList();
+      final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes,
+          Date.class, true )[0];
+      final IAxis[] numberAxes = ObservationUtilities.findAxisByClass( axes,
+          Number.class, true );
 
-      // constant vertical lines...
-      for( Iterator it = xLines.iterator(); it.hasNext(); )
+      // create a corresponding dat-File for the current observation file
+      final IFile datFile = dest.getFile( FileUtilities
+          .nameWithoutExtension( zmlFile.getName() )
+          + ".dat" );
+      
+      // convert to dat-file, ready to be read by the grafik tool
+      zml2dat( obs, datFile, dateAxis, numberAxes, monitor );
+
+      final List curves = tobs[i].getCurve();
+      for( final Iterator itc = curves.iterator(); itc.hasNext(); )
       {
-        final String strDate = it.next().toString();
-        writer.write( "Senkrechte: " + strDate + '\n' );
+        final TypeCurve tc = (TypeCurve) itc.next();
+
+        gKurven.addCurve( datFile.getName(), tc, numberAxes );
       }
 
-      // constant horizontal lines...
-      for( final Iterator it = yLines.keySet().iterator(); it.hasNext(); )
+      // is this obs a forecast?
+      final DateRangeArgument fr = TimeserieUtils.isForecast( obs );
+      if( fr != null )
+        xLines.add( GRAFIK_DF.format( fr.getFrom() ) );
+
+      // does is have Alarmstufen?
+      final MetadataList mdl = obs.getMetadataList();
+      final String[] mds = TimeserieUtils.findOutMDAlarmLevel( obs );
+      for( int j = 0; j < mds.length; j++ )
       {
-        final ValueAndColor vac = (ValueAndColor) yLines.get( it.next() );
-        writer.write( "yKonst: " + vac.value + " " + vac.label + '\n' );
+        final Double value = new Double( mdl.getProperty( mds[j] ) );
+        yLines.put( value, new ValueAndColor( mds[j] + " ("
+            + mdl.getProperty( mds[j] ) + ")", value.doubleValue(), null ) );
       }
     }
-    catch( Exception e )
+
+    writer.write( gKurven.toVorlagentext() );
+    writer.write( "\n" );
+    writer.write( "HTitel:\t" + odt.getTitle() + "\n" );
+    writer.write( "xTitel:\t" + gAchsen.getBottomLabel() + "\n" );
+    writer.write( "yTitel1:\t" + gAchsen.getLeftLabel() + "\n" );
+    writer.write( "yTitel2:\t" + gAchsen.getRightLabel() + "\n" );
+
+    // constant vertical lines...
+    for( Iterator it = xLines.iterator(); it.hasNext(); )
     {
-      throw new SensorException( e );
+      final String strDate = it.next().toString();
+      writer.write( "Senkrechte: " + strDate + '\n' );
     }
-    finally
+
+    // constant horizontal lines...
+    for( final Iterator it = yLines.keySet().iterator(); it.hasNext(); )
     {
-      IOUtils.closeQuietly( ins );
-      IOUtils.closeQuietly( writer );
+      final ValueAndColor vac = (ValueAndColor) yLines.get( it.next() );
+      writer.write( "yKonst: " + vac.value + " " + vac.label + '\n' );
     }
   }
 
@@ -424,12 +404,11 @@ public class GrafikLauncher
    * @param datFile
    * @param dateAxis
    * @param numberAxes
-   * @param axisNames
    * @param monitor
    * @throws CoreException
    */
   private static void zml2dat( final IObservation obs, final IFile datFile,
-      final IAxis dateAxis, final IAxis[] numberAxes, final Map axisNames,
+      final IAxis dateAxis, final IAxis[] numberAxes,
       final IProgressMonitor monitor ) throws CoreException
   {
     final SetContentHelper sch = new SetContentHelper()
@@ -451,13 +430,8 @@ public class GrafikLauncher
           {
             final IAxis axis = numberAxes[j];
 
-            // either there are no names or the names are specified and the
-            // current one is one of them
-            if( axisNames.size() == 0 || axisNames.containsKey( axis.getName() ) )
-            {
-              writer.write( values.getElement( i, axis ).toString() );
-              writer.write( '\t' );
-            }
+            writer.write( values.getElement( i, axis ).toString() );
+            writer.write( '\t' );
           }
 
           writer.write( '\n' );
@@ -467,24 +441,8 @@ public class GrafikLauncher
 
     sch.setFileContents( datFile, false, false, monitor );
   }
-  
-  /**
-   * Converts the string representation of the color into an integer as used in the grafik template using
-   * the getRGB() method of the color class.
-   * 
-   * @param strColor
-   * @return integer representation
-   */
-  private static String toGrafikColor( final String strColor )
-  {
-    // TODO: Jörg fragen warum wir die Rot/Blau Komponente tauschen müssen
-    // damit die Farben im Grafik richtig sind...
-    Color c = StringUtilities.stringToColor( strColor );
-    c = new Color( c.getBlue(), c.getGreen(), c.getRed() );
-    
-    // resets the alpha bits since there's no support for it in the grafik tool
-    return Integer.toString( c.getRGB() & 0x00ffffff );
-  }
+
+
 
   /**
    * mini helper class for storing a value and a color

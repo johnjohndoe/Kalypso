@@ -40,12 +40,13 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.navigator;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -58,7 +59,6 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Opens the Grafik tool. Can operate on observation template and grafik
@@ -97,7 +97,7 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation(
         null )
     {
-      protected void execute( IProgressMonitor monitor ) throws CoreException
+      protected void execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException
       {
         monitor.beginTask( "Grafik öffnen", IProgressMonitor.UNKNOWN );
         try
@@ -108,8 +108,6 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
             final IContainer parent = currentFile.getParent();
 
             final IFolder folder = parent.getFolder( new Path( "grafik" ) );
-            if( !folder.exists() )
-              folder.create( true, true, new NullProgressMonitor() );
 
             GrafikLauncher.startGrafikODT( currentFile, folder, monitor );
           }
@@ -121,9 +119,11 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
         }
         catch( SensorException e )
         {
+          // TODO ich verstehe nicht warum, aber die exceptions die hier gethrown werden, werden
+          // nicht richtig in der GUI dargestellt. Eclipse zeit einen Dialogbox mit leerem
+          // Message. Das ist schlecht! Siehe mit Marc.
           e.printStackTrace();
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-              "Grafik konnte nicht gestartet werden", e ) );
+          throw new InvocationTargetException( e );
         }
         finally
         {
