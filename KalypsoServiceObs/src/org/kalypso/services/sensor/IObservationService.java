@@ -4,7 +4,7 @@ import java.rmi.RemoteException;
 import java.util.Map;
 
 import org.kalypso.ogc.sensor.beans.ObservationBean;
-import org.kalypso.ogc.sensor.beans.ObservationDescriptorBean;
+import org.kalypso.ogc.sensor.beans.ObservationDataDescriptorBean;
 import org.kalypso.repository.beans.ItemBean;
 import org.kalypso.services.repository.IRepositoryService;
 
@@ -34,13 +34,11 @@ public interface IObservationService extends IRepositoryService
    * Reads the data out. Does not return the data itself but a descriptor which
    * describes where the data is to be found.
    */
-  public ObservationDescriptorBean readData( final ObservationBean observation ) throws RemoteException;
+  public ObservationDataDescriptorBean readData( final ObservationBean observation ) throws RemoteException;
 
   /**
    * Writes the data in. Does not take the data as argument but a descriptor
    * which describes where the data is to be found.
    */
-  public void writeData( final ObservationBean observation, final ObservationDescriptorBean descriptor ) throws RemoteException;
-  
-  
+  public void writeData( final ObservationBean observation, final ObservationDataDescriptorBean descriptor ) throws RemoteException;
 }
