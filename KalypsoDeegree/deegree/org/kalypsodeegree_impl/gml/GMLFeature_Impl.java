@@ -271,6 +271,22 @@ public class GMLFeature_Impl implements GMLFeature
 //   
 //    return name;
   }
+  
+  /**
+   * @see org.deegree.gml.GMLFeature#getLocalName()
+   */
+  public String getLocalName()
+  {
+    return element.getLocalName();
+  }
+  
+  /**
+   * @see org.deegree.gml.GMLFeature#getNamespace()
+   */
+  public String getNamespaceURI()
+  {
+    return element.getNamespaceURI();
+  }
 
   /**
    * @see org.deegree_impl.gml.GMLFeature_Impl#getName()
@@ -643,6 +659,9 @@ public class GMLFeature_Impl implements GMLFeature
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2005/02/03 18:37:42  belger
+ * *** empty log message ***
+ *
  * Revision 1.5  2005/01/18 12:50:42  doemming
  * *** empty log message ***
  *

@@ -105,9 +105,16 @@ public interface GMLFeature
   public void setDescription( String describtion );
 
   /**
-   * returns the name of the Geometry.
+   * returns the name of the Geometry.  (with namespace qualifier, shortcut)
    */
   public String getName();
+
+  /**
+   * returns the name of the Geometry.
+   */
+  public String getLocalName();
+  
+  public String getNamespaceURI();
 
   /**
    * @see #getName()
@@ -155,6 +162,9 @@ public interface GMLFeature
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.5  2005/02/03 18:37:42  belger
+ * *** empty log message ***
+ *
  * Revision 1.4  2005/01/18 12:50:41  doemming
  * *** empty log message ***
  *

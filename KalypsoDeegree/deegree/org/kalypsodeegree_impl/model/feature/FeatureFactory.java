@@ -276,24 +276,31 @@ public class FeatureFactory
     return feature;
   }
 
-  public static Feature createFeature( GMLFeature gmlFeature, FeatureType featureTypes[] )
+  public static Feature createFeature( final GMLFeature gmlFeature, final FeatureType featureTypes[] )
       throws Exception
   {
     Debug.debugMethodBegin();
+    
+    final String featureName = gmlFeature.getLocalName();
+    final String featureNamespace = gmlFeature.getNamespaceURI();
+
     FeatureType featureType = null;
-
-    String featureName = gmlFeature.getName();
-
-    int ft_i = 0;
-    while( ft_i < featureTypes.length && !featureName.equals( featureTypes[ft_i].getName() ) )
-      ft_i++;
-
-    if( ft_i < featureTypes.length )
-      featureType = featureTypes[ft_i];
-    else
-      throw new Exception( "could not find named feature " + featureName + " in schema" );
-
-    GMLProperty[] gmlProps = gmlFeature.getProperties();
+    for( int ft_i = 0; ft_i < featureTypes.length; ft_i++ )
+    {
+      final String name = featureTypes[ft_i].getName();
+      final String namespace = featureTypes[ft_i].getNamespace();
+      
+      if( featureName.equals( name ) && featureNamespace.equals( namespace ) )
+      {
+        featureType = featureTypes[ft_i];
+        break;
+      }
+    }
+    
+    if( featureType == null )
+      throw new Exception( "Could not find named feature " + featureNamespace + ":" + featureName + " in schema" );
+      
+    final GMLProperty[] gmlProps = gmlFeature.getProperties();
 
     String id = gmlFeature.getId();
     Feature feature = new Feature_Impl( featureType, id );
@@ -343,8 +350,6 @@ public class FeatureFactory
         FeatureAssociationTypeProperty featureAssociationTypeProperty = (FeatureAssociationTypeProperty)ftp;
         FeatureType[] linkFTs = featureAssociationTypeProperty.getAssociationFeatureTypes();
 
-        //        FeatureType[] linkFTs = new FeatureType[]
-        //        { linkFT };
         try
         {
           result = createFeature( (GMLFeature)value, linkFTs );
