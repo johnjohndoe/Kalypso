@@ -25,6 +25,7 @@ import org.kalypso.ui.repository.dialogs.FileRepositoryConfigDialog;
 public class FileRepositoryFactory extends AbstractRepositoryFactory
 {
   private String m_location = "";
+  private String m_identifier = "";
   private String m_filters = "";
 
   /**
@@ -34,7 +35,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
   {
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
    
-    final FileRepositoryConfigDialog dlg = new FileRepositoryConfigDialog( shell, "", "" );
+    final FileRepositoryConfigDialog dlg = new FileRepositoryConfigDialog( shell, "", "", "" );
     
     final int res = dlg.open();
     
@@ -43,6 +44,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
     if( res == Window.OK )
     {
       m_location = dlg.getLocation();
+      m_identifier = dlg.getIdentifier();
       m_filters = dlg.getFilters();
       
       b = true;
@@ -69,6 +71,6 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
     }
 
     // could be improved: instead of directly instantiating we could use class loading...
-    return new ZmlObservationRepository( this, m_location, isReadOnly(), filter );
+    return new ZmlObservationRepository( this, m_location, m_identifier, isReadOnly(), filter );
   }
 }

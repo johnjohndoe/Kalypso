@@ -51,6 +51,7 @@ public class ProxyFactory
 
   /**
    * Configures this factory.
+   * @param conf
    */
   public ProxyFactory( final Properties conf )
   {
@@ -66,6 +67,7 @@ public class ProxyFactory
    *          Name of the Service residing on the server
    * @param intfName
    *          Name of the interface that the service implements
+   * @return stub
    * 
    * @throws ServiceException
    *           if stub or server unavailable
@@ -157,6 +159,8 @@ public class ProxyFactory
   
   /**
    * Helper method that creates a DateRangeBean using a DateRangeArgument.
+   * @param dra
+   * @return bean
    */
   public static DateRangeBean createDateRangeBean( final DateRangeArgument dra )
   {

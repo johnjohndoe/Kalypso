@@ -17,6 +17,10 @@ public abstract class AbstractRepositoryExplorerAction extends org.kalypso.eclip
 
   /**
    * Creates a new instance of the class.
+   * @param explorer
+   * @param text
+   * @param image
+   * @param tooltipText
    */
   public AbstractRepositoryExplorerAction( final RepositoryExplorerPart explorer, final String text,
       final ImageDescriptor image, final String tooltipText )
@@ -27,7 +31,7 @@ public abstract class AbstractRepositoryExplorerAction extends org.kalypso.eclip
   }
 
   /**
-   * Returns the resource navigator for which this action was created.
+   * @return repository explorer
    */
   public RepositoryExplorerPart getExplorer()
   {
@@ -35,7 +39,7 @@ public abstract class AbstractRepositoryExplorerAction extends org.kalypso.eclip
   }
 
   /**
-   * Returns the resource viewer
+   * @return the resource viewer
    */
   protected Viewer getViewer()
   {
@@ -43,7 +47,7 @@ public abstract class AbstractRepositoryExplorerAction extends org.kalypso.eclip
   }
 
   /**
-   * Returns the shell to use within actions.
+   * @return the shell to use within actions.
    */
   protected Shell getShell()
   {
@@ -51,7 +55,7 @@ public abstract class AbstractRepositoryExplorerAction extends org.kalypso.eclip
   }
   
   /**
-   * Returns the repository container
+   * @return the repository container
    */
   protected IRepositoryContainer getRepositoryContainer()
   {
