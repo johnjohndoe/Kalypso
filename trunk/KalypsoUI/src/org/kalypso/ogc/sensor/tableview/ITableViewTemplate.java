@@ -10,7 +10,7 @@ import org.kalypso.ogc.sensor.template.ITemplateEventProvider;
  * 
  * @author schlienger
  */
-public interface ITableViewTemplate extends ITableViewRules, ITemplateEventProvider
+public interface ITableViewTemplate extends ITemplateEventProvider
 {
   /**
    * @return list of <code>ITableViewColumn</code>
@@ -22,6 +22,11 @@ public interface ITableViewTemplate extends ITableViewRules, ITemplateEventProvi
    */
   public Collection getThemes();
 
+  /**
+   * @return list of rules or null if not available
+   */
+  public ITableViewRules getRules();
+  
   /**
    * Clean all possible resources before object is thrown away
    */

@@ -6,10 +6,10 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.kalypso.ogc.sensor.tableview.ITableViewRules;
 import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
-import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
-import org.kalypso.ogc.sensor.tableview.rules.Rules;
+import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.ogc.sensor.template.AbstractTemplateEventProvider;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 
@@ -20,7 +20,7 @@ import org.kalypso.ogc.sensor.template.TemplateEvent;
  */
 public class DefaultTableViewTemplate extends AbstractTemplateEventProvider implements ITableViewTemplate
 {
-  private final Rules m_rules = new Rules();
+  private final ITableViewRules m_rules = RulesFactory.getDefaultRules();
 
   private final Map m_themesMap = new Hashtable();
 
@@ -79,30 +79,6 @@ public class DefaultTableViewTemplate extends AbstractTemplateEventProvider impl
   }
   
   /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#findRules(int)
-   */
-  public RenderingRule[] findRules( int mask )
-  {
-    return m_rules.findRules( mask );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#addRule(org.kalypso.ogc.sensor.tableview.rules.RenderingRule)
-   */
-  public void addRule( RenderingRule rule )
-  {
-    m_rules.addRule( rule );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#removeRule(org.kalypso.ogc.sensor.tableview.rules.RenderingRule)
-   */
-  public void removeRule( RenderingRule rule )
-  {
-    m_rules.removeRule( rule );
-  }
-
-  /**
    * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#dispose()
    */
   public void dispose( )
@@ -120,5 +96,13 @@ public class DefaultTableViewTemplate extends AbstractTemplateEventProvider impl
   public Collection getThemes( )
   {
     return m_themesMap.keySet();
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#getRules()
+   */
+  public ITableViewRules getRules( )
+  {
+    return m_rules;
   }
 }

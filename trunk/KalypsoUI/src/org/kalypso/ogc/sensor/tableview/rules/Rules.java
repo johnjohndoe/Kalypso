@@ -73,4 +73,12 @@ public class Rules implements ITableViewRules
     
     return r;
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewRules#isEmpty()
+   */
+  public boolean isEmpty( )
+  {
+    return m_rules.size() == 0;
+  }
 }

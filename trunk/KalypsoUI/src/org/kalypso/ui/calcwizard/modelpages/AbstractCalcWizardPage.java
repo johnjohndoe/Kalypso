@@ -463,7 +463,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
           .getProperty( PROP_IGNORETYPE1, null );
       m_tableTemplate.setIgnoreType( ignoreType );
 
-      m_tableModel.setRules( m_tableTemplate );
+      m_tableModel.setRules( m_tableTemplate.getRules() );
       m_tableTemplate.addTemplateEventListener( m_table );
 
       final Composite composite = new Composite( parent, SWT.RIGHT

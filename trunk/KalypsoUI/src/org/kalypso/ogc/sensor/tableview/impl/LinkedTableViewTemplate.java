@@ -61,7 +61,7 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
     {
       for( final Iterator it = trules.getRenderingrule().iterator(); it
           .hasNext(); )
-        addRule( RulesFactory.createRenderingRule( (TypeRenderingRule) it
+        getRules().addRule( RulesFactory.createRenderingRule( (TypeRenderingRule) it
             .next() ) );
     }
 

@@ -17,11 +17,11 @@ package org.kalypso.ogc.sensor.status;
  *     0x10 - gesperrt
  *     
  *     Typ
- *     0x12 - gemessene
- *     0x14 - vorhergesagte
+ *     0x20 - gemessene
+ *     0x40 - vorhergesagte
  *     
  *     Änderungen vom Benutzer
- *     0x1F - vom Benutzer geändert
+ *     0x80 - vom Benutzer geändert
  * </pre>
  * 
  * @author schlienger
@@ -44,11 +44,11 @@ public interface KalypsoStati
   public final static int BIT_LOCKED = 0x10;
 
   /** Value is a MEASURE */
-  public final static int BIT_MEASURE = 0x12;
+  public final static int BIT_MEASURE = 0x20;
 
   /** Value is a FORECAST */
-  public final static int BIT_FORECAST = 0x14;
+  public final static int BIT_FORECAST = 0x40;
 
   /** Value has been MODIFIED by user */
-  public final static int BIT_USER_MODIFIED = 0x1F;
+  public final static int BIT_USER_MODIFIED = 0x80;
 }

@@ -70,7 +70,7 @@ public class SaveDataAction extends AbstractEditorActionDelegate
 
           final ITuppleModel values = model.getValues( theme.getColumns() );
 
-          final Job job = new Job( "" )
+          final Job job = new Job( "ZML-Speichern: " + obs.getName() )
           {
             protected IStatus run( IProgressMonitor monitor )
             {
