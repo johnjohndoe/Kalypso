@@ -19,17 +19,46 @@
   es gibt einen NEXT-Button:
  
 -->
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1600" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control_1600.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_1600.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_1600.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1302" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control_1302.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_1302.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_1302.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
+
+		<!--
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/boden.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/teilgebiete.gmt"/>
-        <arg name="tableTemplate" value=".templates/calcCase/teilgebiete.ott"/>
-        <arg name="diagTemplate" value=".templates/calcCase/teilgebiete.odt"/>
+        <arg name="mapTemplate" value=".templates/calcCase/control1.gmt"/>
+        <arg name="tableTemplate" value=".templates/calcCase/control1.ott"/>
+        <arg name="diagTemplate" value=".templates/calcCase/control1.odt"/>
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="1"/>
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=Niederschlag_eingabe"/>
     </page>
-
+-->
 <!--
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Talsperrenabgaben" imageLocation="icons/calcwizard/boden.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>

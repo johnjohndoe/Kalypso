@@ -6,5 +6,5 @@
 	<title>Titel</title>
 	<legend title="Legende" visible="true"/>
 	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
-	<axis id="n" datatype="xs:double" label="Niederschlag" unit="mm" direction="vertical" position="right" inverted="true" />
+	<axis id="q" datatype="xs:double" label="Abfluss" unit="m³/s" direction="vertical" position="right" inverted="false" />
 </obsdiagview>

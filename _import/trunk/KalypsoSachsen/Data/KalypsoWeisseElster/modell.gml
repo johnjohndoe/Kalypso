@@ -11716,6 +11716,7 @@
             </gml:LineString>
           </Ort>
           <inum>1500</inum>
+          <downStreamNodeMember xlink:href="#Node1500"/>
         </VirtualChannel>
       </channelMember>
       <channelMember>
@@ -15115,11 +15116,13 @@
           </Ort>
           <num>1600</num>
           <generateResult>true</generateResult>
-          <downStreamChannelMember xlink:href="#VirtualChannel1777"/>
+          <downStreamChannelMember xlink:href="#VirtualChannel1500"/>
           <zuflussZRRepository/>
           <zuflussZR/>
           <nzufPfad/>
-          <pegelZRRepository/>
+          <pegelZRRepository>
+            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Pegel/Pegel_Node1600.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
+          </pegelZRRepository>
           <pegelZR>
             <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="Pegel/Pegel_Node1600.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
           </pegelZR>
@@ -15662,7 +15665,7 @@
             </gml:Point>
           </Ort>
           <num>1302</num>
-          <generateResult/>
+          <generateResult>true</generateResult>
           <downStreamChannelMember xlink:href="#KMChannel1301"/>
           <zuflussZRRepository/>
           <zuflussZR/>
