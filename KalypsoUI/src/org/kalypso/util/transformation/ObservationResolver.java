@@ -77,6 +77,7 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.url.UrlResolver;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 
 /**
  * Diese Transformation führt das 'Resolven' der Zeitreihen durch. Dies
@@ -388,7 +389,7 @@ public class ObservationResolver extends AbstractTransformation
   private void checkColumn( final FeatureType ft, final String sourceName )
       throws TransformationException
   {
-    final String linkclassname = TimeseriesLink.class.getName();
+    final String linkclassname = TimeseriesLinkType.class.getName();
 
     final FeatureTypeProperty sourceFTP = ft.getProperty( sourceName );
     if( sourceFTP == null || !sourceFTP.getType().equals( linkclassname ) )
