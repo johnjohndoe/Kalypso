@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.ui.internal.ide.IHelpContextIds;
+//import org.eclipse.ui.internal.ide.IHelpContextIds;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -149,8 +149,8 @@ public class KalypsoNAFileImportPage extends WizardPage {
 
 		initializeDialogUnits(parent);
 
-		WorkbenchHelp.setHelp(topComposite,
-				IHelpContextIds.NEW_PROJECT_WIZARD_PAGE);
+//		WorkbenchHelp.setHelp(topComposite,
+//				IHelpContextIds.NEW_PROJECT_WIZARD_PAGE);
 
 		topComposite.setLayout(new GridLayout());
 		topComposite.setLayoutData(new GridData(GridData.FILL_BOTH));

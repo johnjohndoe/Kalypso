@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.ui.internal.ide.IHelpContextIds;
+//import org.eclipse.ui.internal.ide.IHelpContextIds;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -170,7 +170,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage
 
     initializeDialogUnits( parent );
 
-    WorkbenchHelp.setHelp( topComposite, IHelpContextIds.NEW_PROJECT_WIZARD_PAGE );
+//    WorkbenchHelp.setHelp( topComposite, IHelpContextIds.NEW_PROJECT_WIZARD_PAGE );
 
     topComposite.setLayout( new GridLayout() );
     topComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
