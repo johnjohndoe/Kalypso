@@ -10,7 +10,7 @@ import org.kalypso.util.factory.FactoryException;
  */
 public interface ILoaderFactory
 {
-  public ILoader getLoaderInstance( final String type, final ClassLoader cl ) throws FactoryException;
+  public ILoader getLoaderInstance( final String type ) throws FactoryException;
 
   public String[] getTypes();
 }

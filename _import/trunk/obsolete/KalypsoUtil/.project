@@ -3,6 +3,7 @@
 	<name>KalypsoUtil</name>
 	<comment></comment>
 	<projects>
+		<project>backupdeegree</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

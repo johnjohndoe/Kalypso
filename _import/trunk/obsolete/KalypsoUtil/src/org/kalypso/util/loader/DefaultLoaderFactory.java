@@ -13,14 +13,14 @@ import org.kalypso.util.factory.FactoryException;
  */
 public class DefaultLoaderFactory extends ConfigurableCachableObjectFactory implements ILoaderFactory
 {
-  public DefaultLoaderFactory( final Properties props )
+  public DefaultLoaderFactory( final Properties props, final ClassLoader cl )
   {
-    super( props, false );
+    super( props, false, cl );
   }
 
-  public ILoader getLoaderInstance( final String type, final ClassLoader cl ) throws FactoryException
+  public ILoader getLoaderInstance( final String type ) throws FactoryException
   {
-    return (ILoader)getObjectInstance( type, ILoader.class, cl );
+    return (ILoader)getObjectInstance( type, ILoader.class );
   }
 
   /**

@@ -11,12 +11,10 @@ import org.kalypso.util.loader.ILoaderFactory;
 public class TypedKeyedPoolableObjectFactory implements KeyedPoolableObjectFactory
 {
   private final ILoaderFactory m_factory;
-  private ClassLoader m_classLoader;
 
-  public TypedKeyedPoolableObjectFactory( final ILoaderFactory factory, final ClassLoader cl )
+  public TypedKeyedPoolableObjectFactory( final ILoaderFactory factory )
   {
     m_factory = factory;
-    m_classLoader = cl;
   }
 
   /**
@@ -30,7 +28,7 @@ public class TypedKeyedPoolableObjectFactory implements KeyedPoolableObjectFacto
   {
     final IPoolableObjectType objType = testTypeOfKey( key );
     
-    final ILoader loader = m_factory.getLoaderInstance( objType.getType(), m_classLoader );
+    final ILoader loader = m_factory.getLoaderInstance( objType.getType() );
     
     return loader.load( objType.getSource(), objType.getHelper() );
   }
@@ -68,7 +66,7 @@ public class TypedKeyedPoolableObjectFactory implements KeyedPoolableObjectFacto
   {
     final IPoolableObjectType objType = testTypeOfKey( key );
     
-    /*final ILoader loader = */m_factory.getLoaderInstance( objType.getType(), m_classLoader );
+    /*final ILoader loader = */m_factory.getLoaderInstance( objType.getType() );
     
     // TODO: Loader.passivate
   }

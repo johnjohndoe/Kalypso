@@ -23,21 +23,25 @@ public class ConfigurableCachableObjectFactory
   private final Properties m_props;
   private final Map m_objects = new Hashtable();
   private final boolean m_cache;
+  private final ClassLoader m_classLoader;
 
   /**
    * @param props Die Keys sind die in getObjectInstance benutzten type's, die Values sind die
    * namen der Klassen, die jeweils erzeugt werden
    * @param cache falls true, werden die erzeugten Objekte gecached, sonst wird immer ein neues Objekt erzeugt
    */
-  public ConfigurableCachableObjectFactory( final Properties props, final boolean cache )
+  public ConfigurableCachableObjectFactory( final Properties props, final boolean cache, final ClassLoader cl )
   {
     m_props = props;
     m_cache = cache;
+    m_classLoader = cl;
   }
 
-  public Object getObjectInstance( final String type, final Class expected, final ClassLoader cl ) throws FactoryException
+  public Object getObjectInstance( final String type, final Class expected ) throws FactoryException
   {
-    String className = m_props.getProperty( type );
+    final String className = m_props.getProperty( type );
+    if( className == null )
+      throw new FactoryException( "Unknown type: " + type );
 
     Object obj = null;
 
@@ -48,7 +52,7 @@ public class ConfigurableCachableObjectFactory
     {
       try
       {
-        obj = ClassUtilities.newInstance( className, expected, cl );
+        obj = ClassUtilities.newInstance( className, expected, m_classLoader );
       }
       catch( ClassUtilityException e )
       {
