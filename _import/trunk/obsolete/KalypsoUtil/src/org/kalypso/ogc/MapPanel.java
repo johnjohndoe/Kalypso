@@ -125,7 +125,9 @@ public class MapPanel extends Canvas implements IMapModellView
       try
       {
         myModell.paint( gr );
+        gr.setXORMode(Color.red );
         myModell.paintSelected( gr,10 );
+        gr.setPaintMode();
       }
       catch( Exception e )
       {

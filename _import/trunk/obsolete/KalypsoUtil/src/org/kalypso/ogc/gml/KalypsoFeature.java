@@ -62,7 +62,7 @@ public class KalypsoFeature extends Feature_Impl
   
   public boolean toggle(int selectID)
   {
-  select(selectID);// mySelection^=selectID;  
+   mySelection^=selectID;  
    return true;
   }
   

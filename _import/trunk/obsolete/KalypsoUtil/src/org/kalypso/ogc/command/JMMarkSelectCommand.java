@@ -44,7 +44,7 @@ public class JMMarkSelectCommand implements ICommand
 
     private void init(KalypsoTheme theme,int selectionId  )
     {
-        mySelectionMode=JMSelector.MODE_SELECT;
+        mySelectionMode=JMSelector.MODE_TOGGLE;
         myTheme =theme;
         mySelectionId=selectionId;//  this.selectionMode = JMSelectOptionPanel.getInstance(  ).getSelectionMode(  );
     }
@@ -56,7 +56,7 @@ public class JMMarkSelectCommand implements ICommand
 
     public void process(  ) throws Exception
     {
-        JMSelector selector = new JMSelector();
+        JMSelector selector = new JMSelector(mySelectionMode);
         //selector.setSelectionMode( selectionMode );
 
         if( mySelectEnv != null )
@@ -73,7 +73,7 @@ public class JMMarkSelectCommand implements ICommand
 
     public void redo(  ) throws Exception
     {
-      JMSelector selector = new JMSelector();
+      JMSelector selector = new JMSelector(mySelectionMode);
       selector.setSelectionMode( mySelectionMode );
       selector.perform( myListFe,mySelectionId );
       myTheme.getLayer().fireModellEvent(null);        
@@ -82,7 +82,7 @@ public class JMMarkSelectCommand implements ICommand
     public void undo(  ) throws Exception
     {
 
-            JMSelector selector = new JMSelector();
+            JMSelector selector = new JMSelector(mySelectionMode);
             switch(mySelectionMode)
             {
               case JMSelector.MODE_SELECT:

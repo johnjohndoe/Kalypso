@@ -60,15 +60,15 @@ public class JMSelector //implements JMThemeListener
       case MODE_TOGGLE:
         if(fe.toggle( selectionId ))
           result.add(fe); 
-
+break;
       case MODE_SELECT:
         if(fe.select( selectionId ))
         result.add(fe); 
-
+        break;
       case MODE_UNSELECT:
         if(fe.unselect( selectionId ))
         result.add(fe); 
-
+        break;
       case MODE_COLLECT:
         return listFe;
 

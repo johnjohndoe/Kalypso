@@ -145,7 +145,6 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
   {
     if( myIsDirty )
       reStyleAll();
-    g.setXORMode(Color.blue);
     List list = new ArrayList();
     mySort.query( boundingBox, list );
     Iterator it = list.iterator();
@@ -156,7 +155,6 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
       if( kalypsoFeature.isSelected( selectionId ) )
         kalypsoFeature.paint( g, projection, styleNo, scale );
     }
-    g.setPaintMode();
   }
 
   public void paint( Graphics g, GeoTransform projection, UserStyle style, GM_Envelope boundingBox )
