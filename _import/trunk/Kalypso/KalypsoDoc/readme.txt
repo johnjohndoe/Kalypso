@@ -1,0 +1,1 @@
+Dieses Projekt beinhaltet die Dokumentation für alle Kalypso-Projekte.
