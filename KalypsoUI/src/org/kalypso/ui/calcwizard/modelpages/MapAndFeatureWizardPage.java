@@ -103,6 +103,8 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
 
   public void dispose()
   {
+    if(m_templateviewer!=null)
+      m_templateviewer.dispose();
     super.dispose();
   }
 
