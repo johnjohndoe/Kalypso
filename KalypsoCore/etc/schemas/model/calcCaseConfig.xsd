@@ -13,8 +13,8 @@
 		<xs:attribute name="className" type="xs:string" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="transformationList">
-		<xs:sequence minOccurs="0" maxOccurs="unbounded">
-			<xs:element name="transformation" type="transformationType"/>
+		<xs:sequence>
+			<xs:element name="transformation" type="transformationType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="logFile" type="xs:string" use="required" />
 	</xs:complexType>
