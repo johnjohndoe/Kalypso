@@ -14,7 +14,7 @@ import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.event.ModellEvent;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.MapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 

@@ -1,6 +1,6 @@
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
-import org.kalypso.ogc.gml.widgets.CreateGeometryFeatureWidget;
+import org.kalypso.ogc.gml.map.MapPanel;
 
 
 /**
@@ -10,6 +10,6 @@ public class CreateGeometryFeatureWidgetDelegate extends AbstractWidgetActionDel
 {
   public CreateGeometryFeatureWidgetDelegate(  )
   {
-    super( new CreateGeometryFeatureWidget() );
+    super( MapPanel.WIDGET_CREATE_FEATURE );
   }
 }

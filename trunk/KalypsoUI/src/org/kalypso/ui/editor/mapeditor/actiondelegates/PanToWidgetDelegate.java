@@ -1,6 +1,6 @@
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
-import org.kalypso.ogc.gml.widgets.PanToWidget;
+import org.kalypso.ogc.gml.map.MapPanel;
 
 
 /**
@@ -10,6 +10,6 @@ public class PanToWidgetDelegate extends AbstractWidgetActionDelegate
 {
   public PanToWidgetDelegate(  )
   {
-    super( new PanToWidget(  ) );
+    super( MapPanel.WIDGET_PAN );
   }
 }

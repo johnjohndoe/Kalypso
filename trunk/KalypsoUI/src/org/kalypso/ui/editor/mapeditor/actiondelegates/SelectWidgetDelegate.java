@@ -1,6 +1,6 @@
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
-import org.kalypso.ogc.gml.widgets.SelectWidget;
+import org.kalypso.ogc.gml.map.MapPanel;
 
 
 /**
@@ -10,6 +10,6 @@ public class SelectWidgetDelegate extends AbstractWidgetActionDelegate
 {
   public SelectWidgetDelegate()
   {
-    super( new SelectWidget( ) );
+    super( MapPanel.WIDGET_SELECT );
   }
 }

@@ -5,7 +5,7 @@
 package org.kalypso.ogc.gml.command;
 
 import org.deegree.model.geometry.GM_Envelope;
-import org.kalypso.ogc.gml.mapmodel.MapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.util.command.ICommand;
 
 /**

@@ -4,9 +4,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.kalypso.ogc.gml.mapmodel.MapPanel;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
-import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
@@ -16,20 +14,15 @@ import org.kalypso.ui.editor.mapeditor.GisMapEditor;
  */
 public abstract class AbstractWidgetActionDelegate implements IEditorActionDelegate
 {
-  private IWidget m_widget;
-
+  private final String m_widgetID;
+  
   private GisMapEditor m_editor;
 
   private MapPanel myActualMapPanel;
 
-  public AbstractWidgetActionDelegate( final AbstractWidget widget )
+  public AbstractWidgetActionDelegate( final String widgetID )
   {
-    m_widget = widget;
-  }
-
-  public IWidget getWidget()
-  {
-    return m_widget;
+    m_widgetID = widgetID;
   }
 
   /**
@@ -38,20 +31,12 @@ public abstract class AbstractWidgetActionDelegate implements IEditorActionDeleg
    */
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
-    // wenn der editor wechselt:
-    // alte view widget entfernen
-    if( myActualMapPanel != null )
-      myActualMapPanel.changeWidget( null );
-
     if( targetEditor != null )
     {
       m_editor = (GisMapEditor)targetEditor;
       myActualMapPanel = m_editor.getMapPanel();
       if( myActualMapPanel != null )
-      {
-        if( action.isChecked() )
-          myActualMapPanel.changeWidget( m_widget );
-      }
+          action.setChecked( m_widgetID.equals( myActualMapPanel.getActualWidgetID() ) );
     }
   }
 
@@ -60,9 +45,8 @@ public abstract class AbstractWidgetActionDelegate implements IEditorActionDeleg
    */
   public void run( final IAction action )
   {
-    // wenn der Button wechselt aber editor gleich bleibt
-    if( action.isChecked() && myActualMapPanel.getActualWidget() != m_widget )
-      myActualMapPanel.changeWidget( m_widget );
+    if( action.isChecked() && !m_widgetID.equals( myActualMapPanel.getActualWidgetID() ) )
+      myActualMapPanel.changeWidget( m_widgetID );
   }
 
   /**
@@ -72,5 +56,6 @@ public abstract class AbstractWidgetActionDelegate implements IEditorActionDeleg
   public void selectionChanged( IAction action, ISelection selection )
   {
   // nix tun?
+    action.getClass();
   }
 }

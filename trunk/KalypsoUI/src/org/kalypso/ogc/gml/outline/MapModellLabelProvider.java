@@ -6,6 +6,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
@@ -45,8 +46,12 @@ public class MapModellLabelProvider implements ILabelProvider
       if( kalypsoTheme instanceof IKalypsoFeatureTheme )
       {
         final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)kalypsoTheme;
-        if( kft.getWorkspace() == null )
+        
+        final CommandableWorkspace workspace = kft.getWorkspace();
+        if( workspace == null )
           sb.append( " - loading..." );
+        else if( workspace.isDirty() )
+          sb.append( '*' );
       }
       
       return sb.toString();

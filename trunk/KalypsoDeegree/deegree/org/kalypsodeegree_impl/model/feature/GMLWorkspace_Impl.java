@@ -155,8 +155,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   private final Collection m_listener = new ArrayList();
 
-  private boolean m_editing;
-
   /**
    * 
    * @see org.deegree.model.feature.event.ModellEventProvider#addModellListener(org.deegree.model.feature.event.ModellEventListener)
@@ -224,24 +222,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return (Feature[])result.toArray( new Feature[result.size()] );
   }
   
-  /**
-   * @see org.deegree.model.feature.GMLWorkspace#setEditing(boolean)
-   */
-  public void setEditing( boolean edit )
-  {
-    m_editing = edit;
-
-    fireModellEvent( new ModellEvent( this, ModellEvent.EDITING_CHANGED ) );
-  }
-
-  /**
-   * @see org.deegree.model.feature.GMLWorkspace#isEditing()
-   */
-  public boolean isEditing()
-  {
-    return m_editing;
-  }
-
   /**
    * @see org.deegree.model.feature.GMLWorkspace#getModelUrl()
    */

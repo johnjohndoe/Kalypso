@@ -8,7 +8,7 @@ import java.awt.Point;
 
 import org.deegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.mapmodel.MapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.util.command.ICommand;
 
 /**

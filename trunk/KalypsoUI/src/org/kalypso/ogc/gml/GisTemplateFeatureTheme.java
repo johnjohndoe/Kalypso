@@ -11,11 +11,13 @@ import org.deegree.graphics.sld.UserStyle;
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.geometry.GM_Envelope;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.template.types.ObjectFactory;
@@ -25,7 +27,6 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
@@ -55,7 +56,7 @@ import org.kalypso.util.pool.ResourcePool;
 public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener,
     ICommandTarget, IKalypsoFeatureTheme
 {
-  private final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( null );
+  private JobExclusiveCommandTarget m_commandTarget;
 
   private final PoolableObjectType m_layerKey;
 
@@ -116,7 +117,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     pool.removePoolListener( this );
 
-    m_commandTarget.dispose();
+    if( m_commandTarget != null )
+      m_commandTarget.dispose();
 
     if( m_theme != null )
     {
@@ -138,10 +140,17 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       m_theme.paintSelected( g, p, scale, bbox, selectionId );
   }
 
-  public void saveFeatures() throws FactoryException
+  public void saveFeatures( final IProgressMonitor monitor ) throws CoreException
   {
-    // todo: do it in a job
-    KalypsoGisPlugin.getDefault().getPool().saveObject( m_theme.getWorkspace(), new NullProgressMonitor() );
+    try
+    {
+      KalypsoGisPlugin.getDefault().getPool().saveObject( m_theme.getWorkspace(), monitor );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Speichern", e ) );
+    }
   }
 
   /**
@@ -219,8 +228,10 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
           m_theme = null;
         }
         
-        m_theme = new KalypsoFeatureTheme( (GMLWorkspace)newValue, m_featurePath, getName() );
+        m_theme = new KalypsoFeatureTheme( (CommandableWorkspace)newValue, m_featurePath, getName() );
         m_theme.addModellListener( this );
+        
+        m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
 
         // jetzt immer die styles noch mal holen
         // das ist nicht ok! was ist, wenn inzwischen neue styles vom user hinzugefügt wurden?
@@ -288,7 +299,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getWorkspace()
    */
-  public GMLWorkspace getWorkspace()
+  public CommandableWorkspace getWorkspace()
   {
     if( m_theme != null )
       return m_theme.getWorkspace();
@@ -343,5 +354,13 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     if( m_theme != null )
       return m_theme.getFeatureList();
     return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSchedulingRule()
+   */
+  public ISchedulingRule getSchedulingRule()
+  {
+    return m_commandTarget.getSchedulingRule();
   }
 }

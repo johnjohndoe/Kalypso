@@ -18,10 +18,6 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public Feature getFeature( final String id );
 
-  public void setEditing( final boolean edit );
-  
-  public boolean isEditing();
-  
   /**
    * resolves the associationlink to a feature, maxOccurs =1
    */

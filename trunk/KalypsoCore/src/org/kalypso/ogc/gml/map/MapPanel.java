@@ -1,4 +1,4 @@
-package org.kalypso.ogc.gml.mapmodel;
+package org.kalypso.ogc.gml.map;
 
 import java.awt.Canvas;
 import java.awt.Color;
@@ -7,6 +7,8 @@ import java.awt.Image;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.deegree.graphics.RenderException;
 import org.deegree.graphics.transformation.GeoTransform;
@@ -18,6 +20,9 @@ import org.deegree_impl.model.ct.GeoTransformer;
 import org.deegree_impl.model.geometry.GM_Envelope_Impl;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.deegree_impl.tools.Debug;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
+import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.kalypso.util.command.ICommandTarget;
@@ -30,11 +35,24 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class MapPanel extends Canvas implements IMapModellView, ComponentListener
 {
-//  private Image highlightImage = null;
+  public final static String WIDGET_ZOOM_IN = "ZOOM_IN";
+  public final static String WIDGET_ZOOM_IN_RECT = "ZOOM_IN_RECT";
+  public final static String WIDGET_PAN = "PAN";
+  public final static String WIDGET_EDIT_FEATURE = "EDIT_FEATURE";
+  public final static String WIDGET_SELECT = "SELECT";
+  public final static String WIDGET_UNSELECT = "UNSELECT";
+  public final static String WIDGET_TOGGLE_SELECT = "TOGGLE_SELECT";
+  public final static String WIDGET_CREATE_FEATURE = "CREATE_FEATURE";
+  
+  public static final String WIDGET_SINGLE_SELECT = "SINGLE_SELECT";
+
+  /** WIDGET_... -> widget */
+  private Map m_widgets = new HashMap();
+  
+  /** widget -> WIDGET_... */
+  private Map m_widgetIDs = new HashMap();
 
   private Image mapImage = null;
-
-//  private Image selectionImage = null;
 
   private int xOffset = 0;
 
@@ -44,11 +62,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private int myHeight = 0;
 
-//  private boolean validHighlight = false;
-
   private boolean validMap = false;
-
-//  private boolean validSelection = false;
 
   private IMapModell myModell = null;
 
@@ -79,7 +93,13 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     removeMouseMotionListener( myWidgetManager );
     myModell.removeModellListener( this );
   }
-
+  
+  public void setWidget( final String id, final IWidget widget )
+  {
+    m_widgets.put( id, widget );
+    m_widgetIDs.put( widget, id );
+  }
+  
   public void setOffset( int dx, int dy ) // used by pan method
   {
     xOffset = dx;
@@ -463,16 +483,19 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
 
-  public void changeWidget( final IWidget m_widget )
+  public void changeWidget( final String widgetID )
   {
     if( myWidgetManager != null )
-      myWidgetManager.changeWidget( m_widget );
+      myWidgetManager.changeWidget( (IWidget)m_widgets.get( widgetID ) );
   }
 
-  public IWidget getActualWidget()
+  public String getActualWidgetID()
   {
     if( myWidgetManager != null )
-      return myWidgetManager.getActualWidget();
+    {
+      final IWidget actualWidget = myWidgetManager.getActualWidget();
+      return (String)m_widgetIDs.get( actualWidget );
+    }
 
     return null;
   }

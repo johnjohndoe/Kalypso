@@ -25,11 +25,11 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.MapPanel;
-import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -46,7 +46,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /** Pfad auf Vorlage für die Karte (.gmt Datei) */
   public final static String PROP_MAPTEMPLATE = "mapTemplate";
   
-  private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( null );
+  private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
   private Properties m_arguments = null;
 
@@ -147,7 +147,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   /** Erzeugt die Karte und alle Daten die dranhängen und gibt die 
    * enthaltende Control zurück */
-  protected Control initMap( final Composite parent, final IWidget widget ) throws IOException, JAXBException, CoreException
+  protected Control initMap( final Composite parent, final String widgetID ) throws IOException, JAXBException, CoreException
   {
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
@@ -161,6 +161,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_mapModell.addModellListener( this );
 
     m_mapPanel = new MapPanel( this, crs, SELECTION_ID );
+    // TODO: create widgets!
     m_boundingBox = GisTemplateHelper.getBoundingBox( gisview );
     final Composite mapComposite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
     
@@ -173,7 +174,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_mapPanel.setMapModell( m_mapModell );
     m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
-    m_mapPanel.changeWidget( widget );
+    m_mapPanel.changeWidget( widgetID );
 
     m_mapPanel.setBoundingBox( m_boundingBox );
     
