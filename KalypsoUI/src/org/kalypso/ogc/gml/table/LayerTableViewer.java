@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
+import org.deegree.model.feature.Annotation;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureType;
@@ -340,8 +342,23 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   {
     final String propertyName = (String)tc.getData( COLUMN_PROP_NAME );
     final String sortPropertyName = m_sorter.getPropertyName();
-
-    String text = propertyName;
+    String text;
+    try
+    {
+      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)getInput();
+      FeatureType featureType = theme.getFeatureType();
+      FeatureTypeProperty property = featureType.getProperty( propertyName );
+  
+      final String lang = Locale.getDefault().getLanguage();
+      final Annotation annotation = property.getAnnotation( lang);
+      
+      text = annotation.getLabel() + " (" + propertyName + ")";
+    }
+    catch( Exception e )
+    {
+      // if data is not loaded yet, we provide the propertyname
+      text = propertyName;
+    }
     if( propertyName.equals( sortPropertyName ) )
       text += " " + ( m_sorter.isInverse() ? "\u00ab" : "\u00bb" );
 
@@ -724,12 +741,13 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       final TableItem ti = (TableItem)element;
       final Feature feature = (Feature)ti.getData();
       final Object object = modifier.parseInput( feature, value );
-      
+
       final IKalypsoFeatureTheme theme = getTheme();
-      
+
       final FeatureChange fc = new FeatureChange( feature, property, object );
-      
-      final ICommand command = new ChangeFeaturesCommand( theme.getWorkspace(), new FeatureChange[] { fc } );
+
+      final ICommand command = new ChangeFeaturesCommand( theme.getWorkspace(), new FeatureChange[]
+      { fc } );
       theme.postCommand( command, null );
 
     }
