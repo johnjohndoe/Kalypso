@@ -54,16 +54,23 @@ public final class ColumnAction extends Action
 
   private final String m_propertyName;
 
+  private final String m_alignment;
+
+  private final String m_format;
+
   public ColumnAction( final ICommandTarget commandTarget, final LayerTableViewer viewer,
       final String propertyName, final Annotation annotation )
   {
     super( propertyName );
+    
+    final int columnID = viewer.getColumnID( propertyName );
+    
+    m_alignment = viewer.getColumnAlignment( columnID );
+    m_format = viewer.getColumnFormat( columnID );
+    
     if( annotation != null )
-    {
       setText( annotation.getLabel() + " (" + propertyName + ")" );
-//      setDescription( annotation.getDescription() );
-//      setToolTipText( annotation.getTooltip() );
-    }
+
     m_commandTarget = commandTarget;
     m_viewer = viewer;
     m_propertyName = propertyName;
@@ -76,7 +83,7 @@ public final class ColumnAction extends Action
   public void run()
   {
     final SetColumnVisibleCommand setColumnVisibleCommand = new SetColumnVisibleCommand( m_viewer,
-        m_propertyName, isChecked() );
+        m_propertyName, m_alignment, m_format, isChecked() );
 
     m_commandTarget.postCommand( setColumnVisibleCommand, null );
   }

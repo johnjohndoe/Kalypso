@@ -36,21 +36,23 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * @author belger
@@ -59,19 +61,21 @@ public class StringModifier implements IFeatureModifier
 {
   private final DateFormat DATE_FORMATTER = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
   
-  private final FeatureTypeProperty m_ftp;
+  private final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance();
   
-  public StringModifier( final FeatureTypeProperty ftp )
+  private final FeatureTypeProperty m_ftp;
+
+  public StringModifier( final FeatureTypeProperty ftp, final String format )
   {
     m_ftp = ftp;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
    */
   public void dispose()
   {
-    // nix zu tun
+  // nix zu tun
   }
 
   /**
@@ -81,28 +85,26 @@ public class StringModifier implements IFeatureModifier
   {
     if( m_ftp == null )
       return null;
-    
-    final String type = m_ftp.getType();
+
     final Object data = f.getProperty( m_ftp.getName() );
-
-    if( data == null )
-      return "";
-
-    if( "java.util.Date".equals( type ) )
+    if( data instanceof Date )
       return DATE_FORMATTER.format( data );
+    else if( data instanceof Number )
+      return NUMBER_FORMAT.format( data );
 
-    return data.toString();
+    return data == null ? "" : data.toString();
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature, java.lang.Object)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.Object)
    */
   public Object parseInput( final Feature f, final Object value )
   {
     final String text = value == null ? "" : value.toString();
     if( text.length() == 0 )
       return null;
-    
+
     try
     {
       return parseData( text );
@@ -136,7 +138,7 @@ public class StringModifier implements IFeatureModifier
       return new Boolean( text );
     if( typeName.equals( "java.util.Date" ) )
       return DATE_FORMATTER.parse( text );
-    
+
     return null;
   }
 
@@ -158,7 +160,7 @@ public class StringModifier implements IFeatureModifier
       final String text = value.toString();
       if( text.length() == 0 )
         return null;
-      
+
       parseData( text );
       return null;
     }

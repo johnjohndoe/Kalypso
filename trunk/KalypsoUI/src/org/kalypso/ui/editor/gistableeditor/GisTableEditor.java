@@ -269,6 +269,7 @@ public class GisTableEditor extends AbstractEditorPart implements
 
     final FeatureTypeProperty[] ftps = theme.getFeatureType().getProperties();
     final String lang = Locale.getDefault().getLanguage();
+    
     for( int i = 0; i < ftps.length; i++ )
     {
       manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName(),

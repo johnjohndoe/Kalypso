@@ -42,6 +42,7 @@ package org.kalypso.ui.perspectives;
 
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.internal.PageLayout;
 import org.kalypso.ui.IKalypsoUIConstants;
 
 /**
@@ -58,6 +59,10 @@ public class PrognosePerspective implements IPerspectiveFactory
     
     layout.setFixed( true );
     layout.setEditorAreaVisible( false );
+
+    // a bit dirty, but this perspective should be minimalistic
+    if( layout instanceof PageLayout )
+      ((PageLayout)layout).getActionSets().clear();
   }
 
 }

@@ -39,7 +39,6 @@
       </library>
       <library name="kalypsorepository.jar">
          <export name="*"/>
-         <packages prefixes="org.kalypso.repository"/>
       </library>
    </runtime>
 

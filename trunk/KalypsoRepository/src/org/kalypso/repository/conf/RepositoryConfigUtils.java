@@ -68,7 +68,6 @@ public class RepositoryConfigUtils
    * once finished.
    * 
    * @param ins
-   * @return
    * @throws RepositoryException
    */
   public static List loadConfig( final InputStream ins )
