@@ -20,6 +20,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagramTemplateUtils;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
@@ -44,6 +45,9 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
 
   private boolean m_dirty = false;
 
+  // TODO: maybe set a preference for this flag. It is currently always true.
+  private boolean m_useAutoProxy = true;
+
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -63,7 +67,8 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
       m_obsChart = new ObservationChart( m_template );
       m_template.addTemplateEventListener( m_obsChart );
 
-      final ChartPanel chartPanel = new ChartPanel( m_obsChart );
+      // chart panel without any popup menu
+      final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false, false, false, false );
       chartPanel.setMouseZoomable( true, false );
       m_diagFrame.add( chartPanel );
 
@@ -166,6 +171,10 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
       {
         final TemplateStorage ts = (TemplateStorage) storage;
         m_template.setTitle( ts.getName() );
+        
+        if( m_useAutoProxy )
+          m_template.setProxyFactory( AutoProxyFactory.getInstance() );
+        
         m_template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
             "zml", false, null );
       }

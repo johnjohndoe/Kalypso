@@ -53,6 +53,7 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_UTIL_CHECKED = id( "icons/util/checked.gif" );
   public static final ImageDescriptor IMAGE_UTIL_UNCHECKED = id( "icons/util/unchecked.gif" );
   public static final ImageDescriptor IMAGE_UTIL_UPLOAD_WIZ = id("icons/util/upload_wiz.gif");
+  public static final ImageDescriptor IMAGE_UTIL_FILTER = id("icons/util/filter.gif");
   
   public static final ImageDescriptor IMAGE_STYLEEDITOR_SAVE = id( "icons/gistable/save_edit.gif" );
   public static final ImageDescriptor IMAGE_STYLEEDITOR_ADD_RULE = id( "icons/obstable/add_row.gif" );

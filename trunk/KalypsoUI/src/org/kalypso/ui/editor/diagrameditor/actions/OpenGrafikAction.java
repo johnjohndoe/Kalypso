@@ -6,7 +6,7 @@ import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 /**
  * OpenGrafikAction
  * 
- * @author marc
+ * @author schlienger
  */
 public class OpenGrafikAction extends AbstractEditorActionDelegate
 {

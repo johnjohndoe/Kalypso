@@ -425,7 +425,6 @@
             id="org.kalypso.ui.editor.diagrameditor.EditorContribution">
          <action
                label="Im Grafikprogramm öffnen"
-               style="push"
                icon="icons/observation/grafik-icon.gif"
                class="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction"
                tooltip="Öffnet das aktuelle Diagramm im Grafikprogramm"

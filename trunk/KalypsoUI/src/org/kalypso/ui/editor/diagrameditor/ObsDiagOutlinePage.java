@@ -43,6 +43,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
   protected LinkedDiagramTemplate m_template;
 
   private RemoveThemeAction m_removeThemeAction;
+//  private FilterAxesAction m_filterAxesAction;
 
   /**
    * @see org.eclipse.ui.views.contentoutline.ContentOutlinePage#createControl(org.eclipse.swt.widgets.Composite)
@@ -60,6 +61,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
     getTreeViewer().setInput( m_template );
 
     m_removeThemeAction = new RemoveThemeAction( this );
+//    m_filterAxesAction = new FilterAxesAction(this);
   }
 
   /**
@@ -97,7 +99,10 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
   public void setActionBars( IActionBars actionBars )
   {
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
+    
+//    toolBarManager.add( m_filterAxesAction );
     toolBarManager.add( m_removeThemeAction );
+    
     actionBars.updateActionBars();
   }
 

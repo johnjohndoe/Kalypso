@@ -216,7 +216,7 @@ public class InterpolationFilter extends AbstractObservationFilter
     // do we need to fill after the end of the base model?
     if( dr != null && m_fill )
     {
-      while( cal.getTime().compareTo( dr.getTo() ) < 0 )
+      while( cal.getTime().compareTo( dr.getTo() ) <= 0 )
         fillWithDefault( dateAxis, valueAxes, intModel, cal );
     }
 

@@ -8,7 +8,9 @@ import java.util.TreeMap;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
+import org.kalypso.ogc.sensor.proxy.IProxyFactory;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxis;
@@ -31,6 +33,8 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
   private final ResourcePool m_pool;
 
   private final TreeMap m_key2themes;
+
+  private IProxyFactory m_factory;
 
   /**
    * Constructor
@@ -222,7 +226,20 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
 
       if( theme != null )
       {
-        final IObservation obs = (IObservation) newValue;
+        IObservation obs = (IObservation) newValue;
+        
+        if( m_factory != null )
+        {
+          try
+          {
+            obs = m_factory.proxyObservation( obs );
+          }
+          catch( SensorException e )
+          {
+            e.printStackTrace();
+          }
+        }
+        
         theme.setObservation( obs );
 
         obs.addListener( this );
@@ -282,5 +299,20 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
     }
 
     return null;
+  }
+
+  /**
+   * Sets the proxy factory to use when observations are resolved. Clients
+   * can set a custom factory so that observations can be extended by
+   * functionality provided in the proxy-observation.
+   * <p>
+   * By default, the factory for this class is null. At every time, you can 
+   * reset the factory to null, in that case no factory will be used.
+   * 
+   * @param factory [null allowed]
+   */
+  public void setProxyFactory( final IProxyFactory factory )
+  {
+    m_factory = factory;
   }
 }
