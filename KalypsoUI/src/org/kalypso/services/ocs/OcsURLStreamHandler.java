@@ -68,6 +68,8 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
+      e.printStackTrace();
+      
       throw new IOException( "URL could not be resolved: "
           + e.getLocalizedMessage() );
     }
