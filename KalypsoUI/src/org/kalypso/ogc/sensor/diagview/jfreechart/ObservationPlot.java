@@ -307,25 +307,28 @@ public class ObservationPlot extends XYPlot
     }
 
     // add a constant Y line if obs has alarmstufen
-    final String[] alarms = TimeserieUtils.findOutMDAlarmstufen( obs );
-    final MetadataList mdl = obs.getMetadataList();
-    for( int i = 0; i < alarms.length; i++ )
+    if( yAxis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
     {
-      final Double value = new Double( mdl.getProperty( alarms[i] ) );
-      if( !m_yConsts.containsKey( value ) )
-      {
-        final Color color = TimeserieUtils.getColorFor( alarms[i] );
-        m_yConsts.put( value, new ValueAndColor( alarms[i] + " (" + value.doubleValue() + ")", value.doubleValue(), color ) );
-        
-        final double x;
-        if( xyc.getItemCount() > 1 )
-          x = xyc.getXValue(1).doubleValue();
-        else
-          x = getDomainAxis().getLowerBound();
-        final XYTextAnnotation ann = new XYTextAnnotation( alarms[i], x, value.doubleValue() + 0.5 );
-        ann.setPaint( color );
-        addAnnotation( ann );
-      }
+	    final String[] alarms = TimeserieUtils.findOutMDAlarmstufen( obs );
+	    final MetadataList mdl = obs.getMetadataList();
+	    for( int i = 0; i < alarms.length; i++ )
+	    {
+	      final Double value = new Double( mdl.getProperty( alarms[i] ) );
+	      if( !m_yConsts.containsKey( value ) )
+	      {
+	        final Color color = TimeserieUtils.getColorFor( alarms[i] );
+	        m_yConsts.put( value, new ValueAndColor( alarms[i] + " (" + value.doubleValue() + ")", value.doubleValue(), color ) );
+	        
+	        final double x;
+	        if( xyc.getItemCount() > 1 )
+	          x = xyc.getXValue(1).doubleValue();
+	        else
+	          x = getDomainAxis().getLowerBound();
+	        final XYTextAnnotation ann = new XYTextAnnotation( alarms[i], x, value.doubleValue() + 0.5 );
+	        ann.setPaint( color );
+	        addAnnotation( ann );
+	      }
+	    }
     }
   }
 
