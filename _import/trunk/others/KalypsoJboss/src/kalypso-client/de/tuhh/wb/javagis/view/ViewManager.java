@@ -287,6 +287,8 @@ public class ViewManager
 		setCursor(Cursor.getDefaultCursor());
 		repaint();
 	}
+	
+
 
 	public void xmlImport(String themeKey, Object vId, File file) {
 		versionAccess.xmlImport(themeKey, vId, file);

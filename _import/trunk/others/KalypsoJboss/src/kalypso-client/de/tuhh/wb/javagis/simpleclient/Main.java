@@ -17,7 +17,8 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import datacenter.persistent.Database;
+import com.bce.datacenter.ingres.Database;
+
 import de.tuhh.kalypso.data.I_FilterImpl;
 import de.tuhh.wb.javagis.FileSystemUtils;
 import de.tuhh.wb.javagis.simulation.KonfigWrite;
