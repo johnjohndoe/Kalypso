@@ -9,7 +9,7 @@ public class Test implements KalypsoXmlImportListener
     {
 	String zahlen[][]={
 	    {"eins","zwei"},
-	    {"drei"," vier","fünf"},
+	    {"drei"," vier","fuenf"},
 	    {},{},
 	    {"sechs"}
 

@@ -435,7 +435,7 @@ public class SCE_KALYPSO
 				endDate_pegel);
 		//number of data
 		int nData = resultData.size();
-		System.out.println("Anzahl Abflüsse: " + nData);
+		System.out.println("Anzahl Abfluesse: " + nData);
 		Double[] valueRunoff = new Double[nData];
 		//read values of data
 		for (int i = 0; i < nData; i++) {

@@ -175,7 +175,7 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 	if(action.equals("Add to MapView"))
 	    {
 		JOptionPane jop = new JOptionPane();
-		jop.showMessageDialog(this,(Object)"Diese Funktion steht zur Zeit nicht zur Verfügung!","Information",JOptionPane.INFORMATION_MESSAGE);
+		jop.showMessageDialog(this,(Object)"Diese Funktion steht zur Zeit nicht zur Verfuegung!","Information",JOptionPane.INFORMATION_MESSAGE);
 	    }
 	if(action.equals("Show Details"))
 	    {

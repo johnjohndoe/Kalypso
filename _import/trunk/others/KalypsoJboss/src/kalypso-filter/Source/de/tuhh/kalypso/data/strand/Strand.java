@@ -346,7 +346,7 @@ public class Strand implements Comparable
 	//	bw.write( Printf.format("%8.0s%8.0d%8.0s%6.2f", array ) );
 	bw.write( Printf.format("%8.0s%8.0d%8.0d%6.2f", array ) );
 	bw.newLine();
-	bw.write( "\\Name of Rhb ( comment of user, to be implemented )" ) ;
+	bw.write( "\\Name of Rhb" ) ; //TODO  comment of user, to be implemented
 	bw.newLine();
 	bw.write( String.valueOf( getNodeOut().getNodeNr() ) );
 	rhb.writeRhbToFile( bw );
@@ -362,7 +362,7 @@ public class Strand implements Comparable
 	    return;
 	bw.write( Printf.format("%8.0s%8.0d%8.0d%6.2f%4d%14.0s%14.0s", headOfRhtToArray() ) );
 	bw.newLine();
-	bw.write( "\\Name of Rht ( comment of user, to be implemented )" ) ;
+	bw.write( "\\Name of Rht" ) ; //TODO  comment of user, to be implemented
 	bw.newLine();
 	StrandData sd = getData();
 	sd.writeRhtToFile( bw );

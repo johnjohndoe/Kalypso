@@ -121,7 +121,7 @@ public class GisVectorSetTableView
 		int rows = table.getRowCount();
 		int[] selectedRows = table.getSelectedRows();
 		if (action.equals("remove")) {
-			//System.out.println("Ein Objekt ist zu löschen");
+			//System.out.println("Ein Objekt ist zu loeschen");
 			if (selectedRows.length <= 0) {
 				JOptionPane jop = new JOptionPane();
 				jop.showMessageDialog(

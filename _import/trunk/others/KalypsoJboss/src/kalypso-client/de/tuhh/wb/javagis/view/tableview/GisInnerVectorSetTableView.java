@@ -24,7 +24,6 @@ import de.tuhh.wb.javagis.data.GisElementClass;
 import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
 import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.view.ViewManager;
-
 public class GisInnerVectorSetTableView extends JInternalFrame implements InternalFrameListener,ActionListener,MouseListener
 {
     private GisElementClass myGisElementClass;
@@ -83,7 +82,7 @@ public class GisInnerVectorSetTableView extends JInternalFrame implements Intern
 		
 	if (action.equals("remove"))
 	    {
-		System.out.println("Ein Objekt ist zu löschen");
+		System.out.println("Ein Objekt ist zu loeschen");
 		
 		if(selectedRows.length<=0)
 		    {

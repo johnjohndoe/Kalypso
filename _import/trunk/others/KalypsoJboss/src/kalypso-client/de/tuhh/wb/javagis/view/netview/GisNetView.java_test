@@ -266,7 +266,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 				GisBox zoomGisBox=new GisBox(startZoomGisPoint,endZoomGisPoint);
 				double zoomInWidth = endZoomGisPoint.getX()-startZoomGisPoint.getX();
 				double zoomInHeight = startZoomGisPoint.getY()-endZoomGisPoint.getY();
-				System.out.println("Breite: "+zoomInWidth+", Höhe: "+zoomInHeight);
+				System.out.println("Breite: "+zoomInWidth+", Hoehe: "+zoomInHeight);
 				lastscale = scale;
 				scale = scale+0.3;
 				gisMap.zoomTo(zoomGisBox, scale);
@@ -633,7 +633,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 
 	if(action.equals("+"))
 		{
-		System.out.println("Vergrößern");
+		System.out.println("Vergroeßern");
 		scaleplus();
 		}
 	if(action.equals("-"))
@@ -755,7 +755,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 		if(scale<=0)
 		{
 		JOptionPane jop = new JOptionPane();
-		jop.showMessageDialog(this,(Object)"Keine Verkleinerung möglich+++!","Warnung",JOptionPane.WARNING_MESSAGE);
+		jop.showMessageDialog(this,(Object)"Keine Verkleinerung moeglich+++!","Warnung",JOptionPane.WARNING_MESSAGE);
 		scale=0.1;
 		gisMap.updateImage(scale);
 		}

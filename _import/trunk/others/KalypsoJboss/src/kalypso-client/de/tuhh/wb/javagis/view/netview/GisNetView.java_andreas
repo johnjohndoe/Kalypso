@@ -493,7 +493,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 		
 	if(action.equals("+"))
 		{
-		System.out.println("Vergrößern");
+		System.out.println("Vergroeßern");
 		scaleplus();
 		}
 	if(action.equals("-"))
@@ -612,7 +612,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 		if(scale<=0)
 		{
 		JOptionPane jop = new JOptionPane();
-		jop.showMessageDialog(this,(Object)"Keine Verkleinerung möglich+++!","Warnung",JOptionPane.WARNING_MESSAGE);
+		jop.showMessageDialog(this,(Object)"Keine Verkleinerung moeglich+++!","Warnung",JOptionPane.WARNING_MESSAGE);
 		}
 		else{
 		gisMap.updateImage(scale);

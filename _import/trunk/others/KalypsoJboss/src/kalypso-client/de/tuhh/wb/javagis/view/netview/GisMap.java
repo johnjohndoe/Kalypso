@@ -119,7 +119,7 @@ public class GisMap extends JPanel
 
 		JOptionPane jop = new JOptionPane();
 
-		jop.showMessageDialog(this,(Object)"Keine Verkleinerung möglich+++!","Warnung",JOptionPane.WARNING_MESSAGE);
+		jop.showMessageDialog(this,(Object)"Keine Verkleinerung moeglich+++!","Warnung",JOptionPane.WARNING_MESSAGE);
 
 	    }
 
