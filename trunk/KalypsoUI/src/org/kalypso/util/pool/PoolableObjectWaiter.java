@@ -6,7 +6,6 @@ import org.kalypso.ui.KalypsoGisPlugin;
 /**
  * Waits for a key to load
  * 
- * 
  * @author belger
  */
 public abstract class PoolableObjectWaiter implements IPoolListener
@@ -14,7 +13,8 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
   protected final Object[] m_data;
 
-  /** TRICKY:
+  /**
+   * TRICKY:
    * inherited classes may NOT use own fields, because calling this constructor via super()
    * may immediately call {@link #objectLoaded(IPoolableObjectType, Object)} */
   public PoolableObjectWaiter( final PoolableObjectType key, final Object[] data )
@@ -34,7 +34,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
     {
       // error handling!
     }
-    
+
     dispose();
   }
 

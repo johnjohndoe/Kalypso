@@ -111,20 +111,6 @@ public class ObservationTableModel extends AbstractTableModel
    */
   private boolean m_syncObservation = true;
 
-  //  /**
-  //   * TRICKY: this map is used to store the modified themes and the
-  // observations
-  //   * values in order to perform the calls to IObservation.setValues() after
-  //   * having proceeded the themes using the iterator.
-  //   * <p>
-  //   * Moreover, it is used in refreshColumns() to check if the theme to refresh
-  //   * is a saved theme. When this is true, the theme is ignored because this
-  //   * model was the originator of the event, so it knows the theme is up to
-  // date.
-  //   */
-  //  private final Map m_savedThemes = Collections.synchronizedMap( new
-  // HashMap() );
-
   private final static Logger m_logger = Logger.getLogger( ObservationTableModel.class.getName() );
 
   private final Set m_dontRefreshColumns = new HashSet();
@@ -734,6 +720,10 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public IStatus saveDirtyObservations( final IProgressMonitor monitor, final boolean saveFiles )
   {
+    // TODO: this should not be done!
+    // better: just store the one! changed value back to the Observation
+    // why are all values copied into a local structure?
+    
     final Map map = mapItems();
 
     final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0,

@@ -270,7 +270,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
    *      java.lang.Object, org.eclipse.core.runtime.IStatus)
    */
-  public void objectLoaded( final IPoolableObjectType key, Object newValue, IStatus status )
+  public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     try
     {
@@ -284,6 +284,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
           m_theme.dispose();
           m_theme = null;
         }
+        
+        if( newValue == null )
+          return;
 
         m_theme = new KalypsoFeatureTheme( (CommandableWorkspace)newValue, m_featurePath, getName() );
 
@@ -339,9 +342,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
-    System.out.println( "Invalid key: " + key );
-    System.out.println( "Theme: " + getName() );
-    
     m_loaded = false;
     if( key == m_layerKey )
     {
