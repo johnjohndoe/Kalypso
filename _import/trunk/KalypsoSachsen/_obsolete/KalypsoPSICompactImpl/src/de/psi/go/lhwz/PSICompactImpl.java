@@ -266,7 +266,8 @@ public class PSICompactImpl implements PSICompact
    * @return data
    * @throws ECommException
    */
-  private ArchiveData[] readFromZml( String id, Date from, Date to ) throws ECommException
+  private ArchiveData[] readFromZml( String id, Date from, Date to )
+      throws ECommException
   {
     try
     {
@@ -321,17 +322,18 @@ public class PSICompactImpl implements PSICompact
     WQParamSet[] pset = (WQParamSet[]) m_id2wq.get( id );
     if( pset != null )
       return pset;
-    
+
     // try to get the info from the underlying zml, if any
     if( m_id2zml.containsKey( id ) )
     {
-      final String wqParam = getZmlObs( id ).getMetadataList().getProperty( TimeserieConstants.MD_WQ );
-      
+      final String wqParam = getZmlObs( id ).getMetadataList().getProperty(
+          TimeserieConstants.MD_WQ );
+
       if( wqParam != null )
       {
         StringReader sr = new StringReader( wqParam );
         final InputSource src = new InputSource( sr );
-        
+
         final WechmannGroup group;
         try
         {
@@ -342,26 +344,28 @@ public class PSICompactImpl implements PSICompact
           e.printStackTrace();
           throw new ECommException( e );
         }
-        
+
         final ArrayList wqps = new ArrayList();
-        
+
         final Iterator its = group.iterator();
         while( its.hasNext() )
         {
           final WechmannSet ws = (WechmannSet) its.next();
-          
+
           final ArrayList wqds = new ArrayList();
           final Iterator itp = ws.iterator();
           while( itp.hasNext() )
           {
             final WechmannParams params = (WechmannParams) itp.next();
-            final WQData data = new WQData(params.getWGR(), params.getW1(), params.getLNK1(), params.getK2() );
+            final WQData data = new WQData( params.getWGR(), params.getW1(),
+                params.getLNK1(), params.getK2() );
             wqds.add( data );
           }
-          
-          wqps.add( new WQParamSet( ws.getValidity(), (WQData[])wqds.toArray( new WQData[wqds.size()] ) ) );
+
+          wqps.add( new WQParamSet( ws.getValidity(), (WQData[]) wqds
+              .toArray( new WQData[wqds.size()] ) ) );
         }
-        
+
         pset = (WQParamSet[]) wqps.toArray( new WQParamSet[wqps.size()] );
         m_id2wq.put( id, pset );
       }
@@ -377,20 +381,20 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
+    final ObjectMetaData omd = new ObjectMetaData();
+    omd.setId( id );
+
     // try to get the info from the underlying zml, if any
     if( m_id2zml.containsKey( id ) )
     {
       final IObservation obs = getZmlObs( id );
       final MetadataList mdl = obs.getMetadataList();
-      
-      final ObjectMetaData omd = new ObjectMetaData();
-      omd.setId( id );
-      
+
       String p = null;
       p = mdl.getProperty( TimeserieConstants.MD_ALARM_1 );
       if( p != null )
         omd.setAlarm1( Integer.valueOf( p ).doubleValue() );
-        
+
       p = mdl.getProperty( TimeserieConstants.MD_ALARM_2 );
       if( p != null )
         omd.setAlarm2( Integer.valueOf( p ).doubleValue() );
@@ -406,10 +410,14 @@ public class PSICompactImpl implements PSICompact
       p = mdl.getProperty( TimeserieConstants.MD_FLUSS );
       if( p != null )
         omd.setRiver( p );
+      else
+        omd.setRiver( "" );
 
       p = mdl.getProperty( TimeserieConstants.MD_FLUSSGEBIET );
       if( p != null )
         omd.setRiversystem( p );
+      else
+        omd.setRiversystem( "" );
 
       p = mdl.getProperty( TimeserieConstants.MD_GKH );
       if( p != null )
@@ -422,6 +430,8 @@ public class PSICompactImpl implements PSICompact
       p = mdl.getProperty( TimeserieConstants.MD_HOEHENANGABEART );
       if( p != null )
         omd.setLevelUnit( p );
+      else
+        omd.setLevelUnit( "" );
 
       p = mdl.getProperty( TimeserieConstants.MD_MESSTISCHBLATT );
       if( p != null )
@@ -431,16 +441,32 @@ public class PSICompactImpl implements PSICompact
       if( p != null )
         omd.setLevel( Integer.valueOf( p ).doubleValue() );
 
-      final IAxis nba = ObservationUtilities.findAxisByClass( obs.getAxisList(), Number.class )[0];
-      
+      final IAxis nba = ObservationUtilities.findAxisByClass(
+          obs.getAxisList(), Number.class )[0];
+
       omd.setUnit( whichUnit( nba.getUnit() ) );
-      
-      return omd;
+    }
+    else
+    {
+      // fake metadata
+      omd.setAlarm1( 1.0 );
+      omd.setAlarm2( 2.0 );
+      omd.setAlarm3( 3.0 );
+      omd.setAlarm4( 4.0 );
+      omd.setHeight( 34 );
+      omd.setId( id );
+      omd.setLevel( 56.8 );
+      omd.setLevelUnit( "Etwas..." );
+      omd.setMapNo( 7 );
+      omd.setRight( 987654321 );
+      omd.setRiver( "Fluss..." );
+      omd.setRiversystem( "Flussgebiet..." );
+      omd.setUnit( SI_NO_UNIT );
     }
 
-    return null;
+    return omd;
   }
-  
+
   /**
    * Helper that returns the PSI unit according to a unit string
    * 
@@ -449,15 +475,15 @@ public class PSICompactImpl implements PSICompact
    */
   private int whichUnit( final String unit )
   {
-    if( unit.equals( "m") )
+    if( unit.equals( "m" ) )
       return PSICompact.SI_METER;
-    if( unit.equals( "m³/s") )
+    if( unit.equals( "m³/s" ) )
       return PSICompact.SI_CUBIC_METER_PER_SECOND;
-    if( unit.equals( "K") )
+    if( unit.equals( "K" ) )
       return PSICompact.SI_KELVIN;
-    if( unit.equals( "") )
+    if( unit.equals( "" ) )
       return PSICompact.SI_NO_UNIT;
-    if( unit.equals( "m³") )
+    if( unit.equals( "m³" ) )
       return PSICompact.SI_QUBIC_METER;
 
     return PSICompact.SI_UNDEF;
@@ -521,8 +547,38 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    // always measurement, not important for this fake implementation
-    return PSICompact.TYPE_MEASUREMENT;
+    // try to get the info from the underlying zml, if any
+    if( m_id2zml.containsKey( id ) )
+    {
+      final IObservation obs = getZmlObs( id );
+      final IAxis nba = ObservationUtilities.findAxisByClass(
+          obs.getAxisList(), Number.class )[0];
+
+      return toMeasType( nba.getType() );
+    }
+    else
+      return PSICompact.MEAS_LEVEL;
+  }
+
+  /**
+   * Helper that returns the psi measure type (MEAS_*) according to the axis
+   * type
+   * 
+   * @param axisType
+   * @return measure type
+   */
+  private static int toMeasType( final String axisType )
+  {
+    if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
+      return PSICompact.MEAS_RAINFALL;
+    if( axisType.equals( TimeserieConstants.TYPE_RUNOFF ) )
+      return PSICompact.MEAS_FLOW;
+    if( axisType.equals( TimeserieConstants.TYPE_TEMPERATURE ) )
+      return PSICompact.MEAS_TEMPERATUR;
+    if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+      return PSICompact.MEAS_LEVEL;
+    
+    return PSICompact.MEAS_UNDEF;
   }
 
   /**

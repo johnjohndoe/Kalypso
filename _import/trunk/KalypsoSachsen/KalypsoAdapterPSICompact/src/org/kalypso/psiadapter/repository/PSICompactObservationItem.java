@@ -14,6 +14,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.psiadapter.PSICompactFactory;
+import org.kalypso.psiadapter.repository.conversion.IValueConverter;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.xlink.IXlink;
@@ -28,8 +29,8 @@ import de.psi.go.lhwz.PSICompact.WQParamSet;
 /**
  * Eine Observation aus PSICompact welche auch ein Repository Item ist.
  * 
- * TODO: SEHR WICHTIG: EINHEITEN RICHTIG BEHANDELN. Je nach Axistyp
- * sollte ich die PSI Werte dann in die Kalypso Einheit konvertieren.
+ * TODO: SEHR WICHTIG: EINHEITEN RICHTIG BEHANDELN. Je nach Axistyp sollte ich
+ * die PSI Werte dann in die Kalypso Einheit konvertieren.
  * 
  * @author schlienger
  */
@@ -44,20 +45,24 @@ public class PSICompactObservationItem implements IObservation
   private final int m_valueType;
 
   private IAxis[] m_axes = null;
-  
+
   /** Metadaten aus PSICompact */
   private ObjectMetaData m_psicMetaData = null;
 
   /** Metadaten für die Observation */
   private MetadataList m_metadata = null;
-  
+
   private WQParamSet[] m_psicWQParamSet = null;
 
   // used for caching
   private ITuppleModel m_values = null;
+
   private Date m_from = null;
+
   private Date m_to = null;
-  
+
+  private IValueConverter m_vc;
+
   /**
    * Constructor
    * 
@@ -145,9 +150,10 @@ public class PSICompactObservationItem implements IObservation
     {
       if( m_psicWQParamSet != null )
       {
-        final WechmannGroup group = PSICompactRepositoryFactory.readWQParams( m_psicWQParamSet );
+        final WechmannGroup group = PSICompactRepositoryFactory
+            .readWQParams( m_psicWQParamSet );
         final String xml = WechmannFactory.createXMLString( group );
-        
+
         m_metadata.put( TimeserieConstants.MD_WQ, xml );
       }
     }
@@ -178,7 +184,7 @@ public class PSICompactObservationItem implements IObservation
 
     return PSICompactRepositoryFactory.measureTypeToString( measType );
   }
-  
+
   /**
    * @return welche Archivtyp benutzt werden soll
    */
@@ -246,15 +252,14 @@ public class PSICompactObservationItem implements IObservation
           Date.class, 0, true );
 
       // Wert (Einheit abfragen)
-      String label = toString();
-      String unit = PSICompactRepositoryFactory.unitToString( m_psicMetaData
-          .getUnit() );
+      final String label = toString();
+      final String unit = PSICompactRepositoryFactory
+          .toKalypsoUnit( m_psicMetaData.getUnit() );
       m_axes[1] = new DefaultAxis( label, measureTypeToString(), unit,
           Double.class, 1, false );
 
-      // PSI-Status
-      //m_axes[2] = PSICompactFactory.getAxis( "Status", "", "", String.class,
-      // 2 );
+      m_vc = PSICompactRepositoryFactory.getConverter(
+          m_psicMetaData.getUnit(), unit );
 
       // Status
       m_axes[2] = new DefaultAxis( KalypsoStatusUtils
@@ -272,11 +277,13 @@ public class PSICompactObservationItem implements IObservation
       throws SensorException
   {
     final DateRangeArgument dr;
-    
+
     // tricky: when no date range specified, we create a default one
     // according to the config delivered by our PSICompactFactory
-    if( args == null || !(args instanceof DateRangeArgument))
-      dr = DateRangeArgument.createFromPastDays( Integer.valueOf( PSICompactFactory.getProperties().getProperty( "NUMBER_OF_DAYS", "100" ) ).intValue() );
+    if( args == null || !(args instanceof DateRangeArgument) )
+      dr = DateRangeArgument.createFromPastDays( Integer.valueOf(
+          PSICompactFactory.getProperties().getProperty( "NUMBER_OF_DAYS",
+              "100" ) ).intValue() );
     else
       dr = (DateRangeArgument) args;
 
@@ -290,10 +297,10 @@ public class PSICompactObservationItem implements IObservation
       m_to = dr.getTo();
 
       final ArchiveData[] data = PSICompactFactory.getConnection()
-          .getArchiveData( m_objectInfo.getId(), measureTypeToArchiveType(), m_from,
-              m_to );
+          .getArchiveData( m_objectInfo.getId(), measureTypeToArchiveType(),
+              m_from, m_to );
 
-      m_values = new PSICompactTuppleModel( data, getAxisList() );
+      m_values = new PSICompactTuppleModel( data, getAxisList(), m_vc );
       return m_values;
     }
     catch( ECommException e )
@@ -312,7 +319,7 @@ public class PSICompactObservationItem implements IObservation
     if( values instanceof PSICompactTuppleModel )
       model = (PSICompactTuppleModel) values;
     else
-      model = PSICompactTuppleModel.copyModel( values );
+      model = PSICompactTuppleModel.copyModel( values, m_vc );
 
     if( model.getCount() > 0 )
     {

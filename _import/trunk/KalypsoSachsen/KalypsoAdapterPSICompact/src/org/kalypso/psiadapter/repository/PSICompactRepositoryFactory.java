@@ -7,6 +7,9 @@ import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
 import org.kalypso.psiadapter.PSICompactFactory;
+import org.kalypso.psiadapter.repository.conversion.IValueConverter;
+import org.kalypso.psiadapter.repository.conversion.KelvinCelsiusConverter;
+import org.kalypso.psiadapter.repository.conversion.SIConverter;
 import org.kalypso.repository.AbstractRepositoryFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
@@ -20,15 +23,7 @@ import de.psi.go.lhwz.PSICompact.WQParamSet;
  */
 public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 {
-  protected static PSICompactRepository m_psiCompactRep = null; // protected for
-                                                                // access in
-                                                                // thread
-
-  protected static int m_currentVersion = 0;
-
-  private static VersionChecker m_threadVersionChecker = null; // protected for
-                                                               // access in
-                                                               // thread
+  private static PSICompactRepository m_psiCompactRep = null;
 
   private final static Integer m_zero = new Integer( 0 );
 
@@ -66,10 +61,6 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
       // PSICompact Repository is always in read/write mode
       m_psiCompactRep = new PSICompactRepository(
           new PSICompactRepositoryFactory(), false );
-
-      // TODO siehe Kommentar in VersionChecker Klasse
-      // m_threadVersionChecker = new VersionChecker();
-      // m_threadVersionChecker.start();
     }
 
     return m_psiCompactRep;
@@ -202,7 +193,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
    * @param unit
    * @return string
    */
-  public final static String unitToString( int unit )
+  private final static String unitToString( final int unit )
   {
     final Properties props = PSICompactFactory.getProperties();
 
@@ -224,7 +215,54 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
         return props.getProperty( "UNKNOWN" );
     }
   }
-
+  
+  /**
+   * Converts the psi unit to the kalypso one
+   * 
+   * @param psiUnit
+   * @return kalypso unit string
+   */
+  public final static String toKalypsoUnit( final int psiUnit )
+  {
+    final String strPsiUnit = unitToString( psiUnit );
+    
+    // the properties contain the unit string preceded by 'UNIT_'
+    return PSICompactFactory.getProperties().getProperty( "UNIT_" + strPsiUnit );
+  }
+  
+  /**
+   * Creates the adequate converter between psi and kalypso units
+   * 
+   * @param psiUnit
+   * @param kalypsoUnit
+   * @return adequate converter
+   */
+  public final static IValueConverter getConverter( final int psiUnit, final String kalypsoUnit )
+  {
+    switch( psiUnit )
+    {
+      case PSICompact.SI_KELVIN:
+        return KelvinCelsiusConverter.getInstance();
+      
+      case PSICompact.SI_CUBIC_METER_PER_SECOND:
+      case PSICompact.SI_METER:
+      case PSICompact.SI_QUBIC_METER:
+      {
+        final String strPsiUnit = unitToString( psiUnit );
+      
+        if( strPsiUnit.equals( kalypsoUnit ) )
+          return null;
+        
+        return new SIConverter( strPsiUnit, kalypsoUnit );
+      }
+      
+      case PSICompact.SI_NO_UNIT:
+      case PSICompact.SI_UNDEF:
+      default:
+        return null;
+    }
+  }
+  
   /**
    * Helper that converts PSICompact WQParamSet objects to a WechmannSets
    * object.
@@ -308,62 +346,4 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
   //    else
   //      return PSICompact.STATUS_UNDEF;
   //  }
-
-  public static void dispose( )
-  {
-    if( m_threadVersionChecker != null )
-      m_threadVersionChecker.cancel();
-  }
-
-  /**
-   * TODO: vielleicht kein Thread, dafür aber auf jede Struktur Abfrage. Jede
-   * Client soll sich dann die Zeit der letzte aktuelle Version merken und wenn
-   * nicht gleich wie Server, dann Struktur neu darstellen.
-   * 
-   * Internal version checker for the PSICompact Interface.
-   * 
-   * @author schlienger
-   */
-  private final static class VersionChecker extends Thread
-  {
-    private boolean m_cancelled = false;
-
-    public boolean isCancelled( )
-    {
-      return m_cancelled;
-    }
-
-    public void cancel( )
-    {
-      m_cancelled = true;
-    }
-
-    /**
-     * @see java.lang.Runnable#run()
-     */
-    public void run( )
-    {
-      try
-      {
-        while( !m_cancelled )
-        {
-          Thread.sleep( 1000 );
-
-          int version = PSICompactFactory.getConnection().getDataModelVersion();
-
-          if( version > m_currentVersion )
-          {
-            m_currentVersion = version;
-
-            if( m_psiCompactRep != null )
-              m_psiCompactRep.fireRepositoryStructureChanged();
-          }
-        }
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-      }
-    }
-  }
 }
