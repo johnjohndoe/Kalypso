@@ -36,7 +36,6 @@ public class GisTemplateHelper
 
   private static Unmarshaller GTT_UNMARSHALLER;
 
-
   private static Unmarshaller GFT_UNMARSHALLER;
 
 
@@ -79,27 +78,6 @@ public class GisTemplateHelper
   {
     return (Featuretemplate)GFT_UNMARSHALLER.unmarshal( is );
   }
-
-  //  public static final Featureview loadGisFeatureView( final IFile file, final
-  // Properties replaceProps )
-  //      throws CoreException, IOException, JAXBException
-  //  {
-  //    // TODO: replace with 'ReplaceToken'
-  //    final InputStreamReader inputStreamReader = new InputStreamReader(
-  // file.getContents(), file
-  //        .getCharset() );
-  //    final String contents = ReaderUtilities.readAndReplace( inputStreamReader,
-  // replaceProps );
-  //
-  //    return loadGisFeatureView( new InputSource( new StringReader( contents ) )
-  // );
-  //  }
-  //
-  //  public static final Featureview loadGisFeatureView( final InputSource is )
-  // throws JAXBException
-  //  {
-  //    return (Featureview)FeatureviewHelper.UNMARSHALLER.unmarshal(is);
-  //  }
 
   public static final Gismapview loadGisMapView( final IFile file, final Properties replaceProps )
       throws CoreException, IOException, JAXBException

@@ -116,8 +116,7 @@ public class KalypsoWizardHelper
               curves.add( curve );
 
               final PoolableObjectType key = new PoolableObjectType( obsLink.getLinktype(),
-                  "LOCATION=" + obsLink.getHref(), context );
-
+                   obsLink.getHref(), context );
               template.addObservationTheme( key, curves );
             }
           }
