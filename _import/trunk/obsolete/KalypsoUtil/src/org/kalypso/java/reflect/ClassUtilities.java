@@ -33,10 +33,15 @@ public class ClassUtilities
   public static Object newInstance( final String classname, final Class target,
       final ClassLoader cl, final Object[] arguments ) throws ClassUtilityException
   {
-    Class[] argClasses = new Class[arguments.length];
-
-    for( int i = 0; i < argClasses.length; i++ )
-      argClasses[i] = arguments[i].getClass();
+    Class[] argClasses = null;
+    
+    if( arguments != null )
+    {
+      argClasses = new Class[arguments.length];
+  
+      for( int i = 0; i < argClasses.length; i++ )
+        argClasses[i] = arguments[i].getClass();
+    }
 
     return newInstance( classname, target, cl, argClasses, arguments );
   }

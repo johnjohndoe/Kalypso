@@ -5,12 +5,13 @@
 	<!-- -->
 	<!-- typeRenderingRule -->
 	<xs:complexType name="typeRenderingRule">
-		<xs:sequence>
+	 	<xs:sequence>
 			<xs:element name="foregroundcolor" type="xs:string" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="backgroundcolor" type="xs:string" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="tooltip" type="xs:string" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="font" type="xs:string" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
+		<xs:attribute name="mask" type="xs:int" use="required"/>
 	</xs:complexType>
 	<!-- /typeRenderingRule -->
 	<!-- obstableview -->
@@ -34,15 +35,7 @@
 					<xs:complexType>
 						<xs:sequence>
 							<!-- renderingrule -->
-							<xs:element name="renderingrule" maxOccurs="unbounded">
-								<xs:complexType>
-									<xs:complexContent>
-										<xs:extension base="myns:typeRenderingRule">
-											<xs:attribute name="mask" type="xs:int" use="required"/>
-										</xs:extension>
-									</xs:complexContent>
-								</xs:complexType>
-							</xs:element>
+							<xs:element name="renderingrule" type="myns:typeRenderingRule" maxOccurs="unbounded" />
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>

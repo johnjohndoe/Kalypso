@@ -11,9 +11,9 @@ public class MaskedNumber
 
   private final Number m_number;
 
-  public MaskedNumber( final double value )
+  public MaskedNumber( final double value, final int mask )
   {
-    this( new Double( value ), 0 );
+    this( new Double( value ), mask );
   }
   
   public MaskedNumber( final Number number, final int mask )

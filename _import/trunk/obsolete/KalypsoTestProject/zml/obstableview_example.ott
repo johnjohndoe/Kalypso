@@ -15,9 +15,22 @@
 	<!-- wie die Darstellung erfolgt -->
 	<rules>
 		<renderingrule mask="01">
-			<foregroundcolor>red</foregroundcolor>
-			<backgroundcolor>white</backgroundcolor>
-			<tooltip>Ein pseudo-text als Tooltip</tooltip>
+			<foregroundcolor>0;0;0</foregroundcolor>
+			<backgroundcolor>0;153;0</backgroundcolor>
+			<tooltip>ok</tooltip>
 		</renderingrule>
+
+		<renderingrule mask="02">
+			<foregroundcolor>0;0;0</foregroundcolor>
+			<backgroundcolor>255;128;0</backgroundcolor>
+			<tooltip>eventuell nicht geeignet</tooltip>
+		</renderingrule>
+
+		<renderingrule mask="04">
+			<foregroundcolor>0;0;0</foregroundcolor>
+			<backgroundcolor>255;0;0</backgroundcolor>
+			<tooltip>nicht geeignet</tooltip>
+		</renderingrule>
+
 	</rules>
 </obstableview>

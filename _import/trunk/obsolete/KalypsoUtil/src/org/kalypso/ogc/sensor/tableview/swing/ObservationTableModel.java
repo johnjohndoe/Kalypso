@@ -10,6 +10,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.ogc.sensor.tableview.template.Rules;
 import org.kalypso.util.runtime.IVariableArguments;
 
 /**
@@ -29,6 +30,8 @@ public class ObservationTableModel extends AbstractTableModel
 
   /** common fake axis */
   private DefaultAxis m_ccAxis;
+
+  private Rules m_rules = null;
 
   public ObservationTableModel()
   {
@@ -199,5 +202,18 @@ public class ObservationTableModel extends AbstractTableModel
       // TODO: handling
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Sets the template used for building this model
+   */
+  public void setRules( final Rules rules )
+  {
+    m_rules = rules;
+  }
+  
+  public Rules getRules()
+  {
+    return m_rules;
   }
 }

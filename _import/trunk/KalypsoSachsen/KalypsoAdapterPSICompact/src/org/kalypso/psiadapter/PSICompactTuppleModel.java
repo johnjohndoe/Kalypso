@@ -64,7 +64,7 @@ public class PSICompactTuppleModel implements ITuppleModel
   private MaskedNumber getValue( int index )
   {
     if( m_values[ index ] == null )
-      m_values[ index ] = new MaskedNumber( m_data[index].getValue() );
+      m_values[ index ] = new MaskedNumber( m_data[index].getValue(), PSICompactFactory.statusToMask( m_data[index].getStatus() ) );
 
     return m_values[ index ];
   }

@@ -12,6 +12,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.util.status.MaskedNumber;
 
 /**
  * A JFreeChart DataSet that can be created with an IObservation.
@@ -25,7 +26,7 @@ public class ObservationTimeSeries extends TimeSeriesCollection
     super();
 
     IAxis dateAxis = ObservationUtilities.findAxis( obs, Date.class )[0];
-    IAxis[] valueAxis = ObservationUtilities.findAxis( obs, Number.class );
+    IAxis[] valueAxis = ObservationUtilities.findAxis( obs, MaskedNumber.class );
 
     try
     {
@@ -38,7 +39,7 @@ public class ObservationTimeSeries extends TimeSeriesCollection
         for( int j = 0; j < model.getCount(); j++ )
         {
           s.add( new FixedMillisecond( (Date)model.getElement( j, dateAxis.getPosition() ) ),
-              (Number)model.getElement( j, valueAxis[i].getPosition() ) );
+              ((MaskedNumber)model.getElement( j, valueAxis[i].getPosition() ) ).doubleValue() );
         }
 
         addSeries( s );

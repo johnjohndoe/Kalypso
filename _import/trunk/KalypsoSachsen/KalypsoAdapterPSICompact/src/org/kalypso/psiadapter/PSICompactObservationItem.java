@@ -10,6 +10,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.Metadata;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.util.status.MaskedNumber;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
@@ -201,7 +202,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
       // Wert (Einheit abfragen)
       String label = toString();
       String unit = PSICompactFactory.unitToString( m_psicMetaData.getUnit() );
-      m_axes[1] = PSICompactFactory.getAxis( label, unit, Double.class, 1 );
+      m_axes[1] = PSICompactFactory.getAxis( label, unit, MaskedNumber.class, 1 );
 
       // PSI-Status
       m_axes[2] = PSICompactFactory.getAxis( "Status", "", String.class, 2 );
