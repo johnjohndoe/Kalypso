@@ -69,6 +69,8 @@ public class ForecastTuppleModel extends AbstractTuppleModel
   public ForecastTuppleModel( final ITuppleModel[] models )
       throws SensorException
   {
+    super( models[0].getAxisList() );
+    
     Date lastDate = DateUtilities.getMinimum();
 
     m_model = new SimpleTuppleModel( models[0].getAxisList() );
@@ -101,14 +103,6 @@ public class ForecastTuppleModel extends AbstractTuppleModel
         lastDate = date;
       }
     }
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
-   */
-  public IAxis[] getAxisList( )
-  {
-    return m_model.getAxisList();
   }
 
   /**

@@ -52,8 +52,8 @@ import java.util.regex.Pattern;
 
 import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.util.io.AbstractCSV;
 import org.kalypso.util.io.CSV;
-import org.kalypso.util.io.ITabledValues;
 import org.kalypso.util.io.RegexCSV;
 import org.kalypso.util.parser.IParser;
 import org.kalypso.util.parser.ParserException;
@@ -70,7 +70,7 @@ public class ZmlLinkValues implements IZmlValues
    */
   public final static String DATA_REF = "#data";
 
-  private final ITabledValues m_csv;
+  private final AbstractCSV m_csv;
 
   private final IParser m_parser;
 
@@ -118,10 +118,12 @@ public class ZmlLinkValues implements IZmlValues
     }
 
     if( vl.getRegexp() == null || vl.getRegexp().length() == 0 )
-      m_csv = new CSV( reader, vl.getSeparator(), vl.getLine(), true );
+      m_csv = new CSV( vl.getSeparator(), vl.getLine(), true );
     else
-      m_csv = new RegexCSV( reader, Pattern.compile( vl.getRegexp() ), vl
-          .getLine(), true );
+      m_csv = new RegexCSV( Pattern.compile( vl.getRegexp() ), vl.getLine(),
+          true );
+
+    m_csv.fetch( reader );
   }
 
   /**

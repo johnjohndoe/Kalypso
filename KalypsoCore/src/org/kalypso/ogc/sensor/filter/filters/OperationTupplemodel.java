@@ -61,14 +61,11 @@ public class OperationTupplemodel extends AbstractTuppleModel
 
   public OperationTupplemodel( double operand, int operation, ITuppleModel baseModel )
   {
+    super( baseModel.getAxisList() );
+    
     m_operand = operand;
     m_operation = operation;
     m_baseModel = baseModel;
-  }
-
-  public IAxis[] getAxisList()
-  {
-    return m_baseModel.getAxisList();
   }
 
   public int getCount() throws SensorException

@@ -63,6 +63,24 @@ public abstract class AbstractTuppleModel implements ITuppleModel
   /** maps an axis to its position in this tupple model */
   private final Map m_axes2pos = new HashMap();
   
+  private final IAxis[] m_axes;
+  
+  public AbstractTuppleModel( final IAxis[] axes )
+  {
+    for( int ia = 0; ia < axes.length; ia++ )
+      mapAxisToPos( axes[ia], ia );
+    
+    m_axes = axes;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
+   */
+  public IAxis[] getAxisList( )
+  {
+    return m_axes;
+  }
+  
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getPositionFor(org.kalypso.ogc.sensor.IAxis)
    */

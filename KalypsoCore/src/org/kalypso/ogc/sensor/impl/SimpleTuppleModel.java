@@ -63,9 +63,6 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   /** values are backed by this table model */
   private DefaultTableModel m_tupples;
 
-  /** axes used within this model */
-  private final IAxis[] m_axes;
-
   /**
    * Constructor with axes, empty data
    * 
@@ -127,12 +124,9 @@ public class SimpleTuppleModel extends AbstractTuppleModel
    */
   public SimpleTuppleModel( final IAxis[] axes, final Object[][] values )
   {
-    m_tupples = new DefaultTableModel( values, axes );
-    m_axes = axes;
+    super( axes );
     
-    clearAxesPositions();
-    for( int ia = 0; ia < m_axes.length; ia++ )
-      mapAxisToPos( m_axes[ia], ia );
+    m_tupples = new DefaultTableModel( values, axes );
   }
   
   /**
@@ -145,17 +139,19 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   public final void setFrom( final ITuppleModel copyTupples )
       throws SensorException
   {
-    m_tupples = new DefaultTableModel( copyTupples.getCount(), m_axes.length );
+    IAxis[] axes = getAxisList();
+    
+    m_tupples = new DefaultTableModel( copyTupples.getCount(), axes.length );
 
     clearAxesPositions();
-    for( int ia = 0; ia < m_axes.length; ia++ )
-      mapAxisToPos( m_axes[ia], ia );
+    for( int ia = 0; ia < axes.length; ia++ )
+      mapAxisToPos( axes[ia], ia );
     
     for( int ix = 0; ix < copyTupples.getCount(); ix++ )
     {
-      for( int ia = 0; ia < m_axes.length; ia++ )
+      for( int ia = 0; ia < axes.length; ia++ )
       {
-        final Object element = copyTupples.getElement( ix, m_axes[ia] );
+        final Object element = copyTupples.getElement( ix, axes[ia] );
 
         m_tupples.setValueAt( element, ix, ia );
       }
@@ -174,7 +170,9 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   public final void setFrom( final ITuppleModel copyTupples,
       final DateRangeArgument dra ) throws SensorException
   {
-    final IAxis[] dateAxes = ObservationUtilities.findAxisByClass( m_axes,
+    IAxis[] axes = getAxisList();
+    
+    final IAxis[] dateAxes = ObservationUtilities.findAxisByClass( axes,
         Date.class, false );
     if( dra == null || dateAxes.length == 0 )
     {
@@ -185,11 +183,11 @@ public class SimpleTuppleModel extends AbstractTuppleModel
     final IAxis dateAxis = dateAxes[0];
 
     // uses same row count as original model, adjusted before method finishes
-    m_tupples = new DefaultTableModel( copyTupples.getCount(), m_axes.length );
+    m_tupples = new DefaultTableModel( copyTupples.getCount(), axes.length );
 
     clearAxesPositions();
-    for( int ia = 0; ia < m_axes.length; ia++ )
-      mapAxisToPos( m_axes[ia], ia );
+    for( int ia = 0; ia < axes.length; ia++ )
+      mapAxisToPos( axes[ia], ia );
     
     int realIx = 0;
 
@@ -199,9 +197,9 @@ public class SimpleTuppleModel extends AbstractTuppleModel
 
       if( d.compareTo( dra.getFrom() ) >= 0 && d.compareTo( dra.getTo() ) <= 0 )
       {
-        for( int ia = 0; ia < m_axes.length; ia++ )
+        for( int ia = 0; ia < axes.length; ia++ )
         {
-          final Object element = copyTupples.getElement( ix, m_axes[ia] );
+          final Object element = copyTupples.getElement( ix, axes[ia] );
 
           m_tupples.setValueAt( element, realIx, ia );
         }
@@ -270,14 +268,6 @@ public class SimpleTuppleModel extends AbstractTuppleModel
     }
 
     return -1;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
-   */
-  public IAxis[] getAxisList( )
-  {
-    return m_axes;
   }
 
   /**

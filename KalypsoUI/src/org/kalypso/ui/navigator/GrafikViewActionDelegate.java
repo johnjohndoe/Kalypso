@@ -41,6 +41,7 @@
 package org.kalypso.ui.navigator;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Vector;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -114,7 +115,7 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
           else if( currentFile.getFileExtension().equalsIgnoreCase(
               GrafikLauncher.TPL_FILE_EXTENSION ) )
           {
-            GrafikLauncher.startGrafikTPL( currentFile );
+            GrafikLauncher.startGrafikTPL( currentFile, new Vector() );
           }
         }
         catch( SensorException e )

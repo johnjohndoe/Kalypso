@@ -54,6 +54,8 @@ import org.kalypso.java.net.IUrlResolver;
  * <p>Erzeugt aus einem String eine URL</p>
  * <p>Davor kann noch eine Token-Ersetzung stattfinden</p>
  * 
+ * TODO: untersuchen warum es auch org.kalypso.java.net.UrlUtilities gibt??? Marc.
+ * 
  * @author belger
  */
 public class UrlResolver implements IUrlResolver
