@@ -1,0 +1,25 @@
+./de/tuhh/wb/javagis/view/tableview/DateChooser.java:249: warning: getYear() in java.util.Date has been deprecated
+				myCalendar.set(dateEditor.currentDate.getYear()+1900,dateEditor.currentDate.getMonth(),dateEditor.currentDate.getDate(),dateEditor.currentDate.getHours(),dateEditor.currentDate.getMinutes());
+                                                                     ^
+./de/tuhh/wb/javagis/view/tableview/DateChooser.java:249: warning: getMonth() in java.util.Date has been deprecated
+				myCalendar.set(dateEditor.currentDate.getYear()+1900,dateEditor.currentDate.getMonth(),dateEditor.currentDate.getDate(),dateEditor.currentDate.getHours(),dateEditor.currentDate.getMinutes());
+                                                                                                           ^
+./de/tuhh/wb/javagis/view/tableview/DateChooser.java:249: warning: getDate() in java.util.Date has been deprecated
+				myCalendar.set(dateEditor.currentDate.getYear()+1900,dateEditor.currentDate.getMonth(),dateEditor.currentDate.getDate(),dateEditor.currentDate.getHours(),dateEditor.currentDate.getMinutes());
+                                                                                                                                             ^
+./de/tuhh/wb/javagis/view/tableview/DateChooser.java:249: warning: getHours() in java.util.Date has been deprecated
+				myCalendar.set(dateEditor.currentDate.getYear()+1900,dateEditor.currentDate.getMonth(),dateEditor.currentDate.getDate(),dateEditor.currentDate.getHours(),dateEditor.currentDate.getMinutes());
+                                                                                                                                                                              ^
+./de/tuhh/wb/javagis/view/tableview/DateChooser.java:249: warning: getMinutes() in java.util.Date has been deprecated
+				myCalendar.set(dateEditor.currentDate.getYear()+1900,dateEditor.currentDate.getMonth(),dateEditor.currentDate.getDate(),dateEditor.currentDate.getHours(),dateEditor.currentDate.getMinutes());
+                                                                                                                                                                                                                ^
+./de/tuhh/wb/javagis/jcalendar/src/com/toedter/calendar/JCalendar.java:124: warning: getHours() in java.util.Date has been deprecated
+		calendar.set(Calendar.HOUR_OF_DAY,hourDate.getHours());
+                                                          ^
+./de/tuhh/wb/javagis/jcalendar/src/com/toedter/calendar/JCalendar.java:127: warning: getMinutes() in java.util.Date has been deprecated
+		calendar.set(Calendar.MINUTE,minuteDate.getMinutes());
+                                                       ^
+./de/tuhh/wb/javagis/jcalendar/src/com/toedter/calendar/JDayChooser.java:63: warning: isFocusTraversable() in java.awt.Component has been deprecated
+							public boolean isFocusTraversable() {
+                                                                       ^
+8 warnings

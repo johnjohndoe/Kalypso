@@ -1,0 +1,2 @@
+copy hydrotop file 'tis_eik.hyd' here
+copy time area function file 'tis_eik.zft' here

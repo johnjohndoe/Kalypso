@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by Anoby (have no company :-() -->
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MetaDataModel.xsd" ID="Modell">
+  <name>Modell</name>
+  <description>NA-Modell</description>
+  <package>de.tuhh.wb.javagis.model.na</package>
+  <topology ID="top_river">
+    <name>Rivers</name>
+    <description>Topology of Rivers</description>
+  </topology>
+  <topology ID="top_catchment">
+    <name>Catchments</name>
+    <description>Topology of Catchments</description>
+  </topology>
+  <network ID="net_river">
+    <name>Channels</name>
+    <description>Definition of Strands</description>
+  </network>
+  <objectClass ID="nullStrand">
+    <name>Virtual Strand</name>
+    <description>Virtual strand transfers flood wave direct from up- to downstream node</description>
+    <belongsToTopology ref="top_river"/>
+    <geometry>LineString</geometry>
+    <symbol>nullstrand</symbol>
+    <simpleProperty key="m_strandNr">
+      <name>Strand Number</name>
+      <description>Strand number in model network</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_qInitial">
+      <name>Initial Discharge</name>
+      <description/>
+      <unit>m<sup>3</sup>/s</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+  </objectClass>
+  <objectClass ID="channel">
+    <name>Channel Strand</name>
+    <description>Translation and retention of the supply wave during the flow between start and end node of the coagulating network is simulated by a parallel linear memory cascade (Kalinin-Miljukov-Methode)</description>
+    <belongsToTopology ref="top_river"/>
+    <geometry>LineString</geometry>
+    <symbol>channelstrand</symbol>
+    <simpleProperty key="m_strandNr">
+      <name>Strand Number</name>
+      <description>Strand number in model network</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_qBoardfull">
+      <name>Bankfull Discharge</name>
+      <description>Discharge conveyed in a water course without overtopping the flood plains</description>
+      <unit>m<sup>3</sup>/s</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_qInitial">
+      <name>Initial Discharge</name>
+      <description/>
+      <unit>m<sup>3</sup>/s</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_distribFact">
+      <name>Distribution Factor</name>
+      <description>According to higher water levels like bankfull, also channel discharge is increased, compared to bankfull discharge. The coagulating cross section which is situated above the elevation of bankfull is added proportional to channel section.This factor can be given in the model. </description>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <vectorSet key="m_channelData">
+      <name>Channel Data</name>
+      <description>5 discharge levels: 1. and 2. discharge in channel , 3. bankfull, 4. and 5. discharge in channel and over flood plain</description>
+      <simpleProperty key="v_q">
+        <name>Discharge</name>
+        <unit>m<sup>3</sup>/s</unit>
+        <type>java.lang.Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_kRiver">
+        <name>Storage coefficient k, channel </name>
+        <type>java.lang.Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_nRiver">
+        <name>Number of memory elements n, channel </name>
+        <type>java.lang.Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_kLand">
+        <name>&gt;Storage coefficient k, flood plain</name>
+        <type>java.lang.Float</type>
+      </simpleProperty>
+      <simpleProperty key="v_nLand">
+        <name>Number of memory elements n, flood plain </name>
+        <type>java.lang.Float</type>
+      </simpleProperty>
+    </vectorSet>
+  </objectClass>
+  <objectClass ID="rhb">
+    <name>Reservoir Strand</name>
+    <description>Channel which discharge characteristic is given in capacity curve</description>
+    <belongsToTopology ref="top_river"/>
+    <geometry>LineString</geometry>
+    <symbol>reservoirstrand</symbol>
+    <simpleProperty key="m_strandNr">
+      <name>Strand Number</name>
+      <description>Strand number in model network</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_typeName">
+      <name>TypeName</name>
+      <description/>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_targetNode">
+      <name>Overflow Node</name>
+      <description> </description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_qInitial">
+      <name>Initial Discharge</name>
+      <description/>
+      <unit>m<sup>3</sup>/s</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_C">
+      <name>Distribution Factor</name>
+      <description>Distribution Factor 0.000</description>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_comment">
+      <name>Comment</name>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_initVolume">
+      <name>Initial Volume of Reservoir</name>
+      <unit>hm<sup>3</sup></unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_maxVolume">
+      <name>Maximum Volume of Reservoir</name>
+      <unit>hm<sup>3</sup></unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_minVolume">
+      <name>Minimum Volume of Reservoir</name>
+      <unit>hm<sup>3</sup></unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <vectorSet key="m_data">
+      <name>Volume-Discharge-Level-Function</name>
+      <simpleProperty key="m_WaterLevel">
+        <name>Heigth of Watertable</name>
+        <unit>m</unit>
+        <type>java.lang.Float</type>
+      </simpleProperty>
+      <simpleProperty key="m_Volume">
+        <name>Volume of Reservoir</name>
+        <unit>hm<sup>3</sup></unit>
+        <type>java.lang.Float</type>
+      </simpleProperty>
+      <simpleProperty key="m_discharge">
+        <name>Output Discharge</name>
+        <unit>m<sup>3</sup>/s</unit>
+        <type>java.lang.Float</type>
+      </simpleProperty>
+    </vectorSet>
+  </objectClass>
+<!--  <objectClass ID="rht">
+<name>Dam Strand</name>
+<description>riversection</description>
+<belongsToTopology ref="top_river"/>
+<geometry>LineString</geometry>
+<symbol>damstrand</symbol>
+<simpleProperty key="m_strandNr">
+<name>Strand-Number</name>
+<description>String</description>
+<type>java.lang.Integer</type>
+</simpleProperty>
+<simpleProperty key="m_typeName">
+<name>Typename</name>
+<description>String</description>
+<type>java.lang.String</type>
+</simpleProperty>
+<simpleProperty key="m_C">
+<name>DitributionFactor</name>
+<description>String</description>
+<type>java.lang.Float</type>
+</simpleProperty>
+<simpleProperty key="m_evapFile">
+<name>FileName for Temperature and Evaporation</name>
+<description>String</description>
+<type>java.lang.String</type>
+</simpleProperty>
+
+
+<simpleProperty key="m_qInitial">
+<name>Initial Discharge</name>
+<description></description>
+<unit>m<sup>3</sup>/s</unit>
+<type>java.lang.Float</type>
+</simpleProperty>
+
+
+<simpleProperty key="m_comment">
+<name>Comment</name>
+<description>String</description>
+<type>java.lang.String</type>
+</simpleProperty>
+<simpleProperty key="m_longTermFileSim">
+<name>FileName for the longterm-Simulation</name>
+<description>String</description>
+<type>java.lang.String</type>
+</simpleProperty>
+<vectorSet key="m_rhtData">
+<name>ReservoirData</name>
+<simpleProperty key="v_NameFunction">
+<name>Name of the saisonal function</name>
+<type>java.lang.String</type>
+</simpleProperty>
+<simpleProperty key="v_date">
+<name>Date of saisonal function</name>
+<format>MMM</format>
+<type>java.util.Date</type>
+</simpleProperty>
+<simpleProperty key="v_initVolume">
+<name>InitialVolume of reservoir</name>
+<type>java.lang.Float</type>
+</simpleProperty>
+<simpleProperty key="v_maxVolume">
+<name>Maximum Volume of reservoir</name>
+<type>java.lang.Float</type>
+</simpleProperty>
+<simpleProperty key="v_outFlow">
+<name>Discharge of reservoir (Hochwasserentlastung)</name>
+<type>java.lang.Float</type>
+</simpleProperty>
+<simpleProperty key="v_case">
+<name>Type of calculation</name>
+<description>0 bis 8 oder 9</description>
+<type>java.lang.Integer</type>
+</simpleProperty>
+<vectorSet key="m_data">
+<name>Volume-Discharge-Level-function</name>
+<simpleProperty key="m_WaterLevel">
+<name>Heigth of Watertable</name>
+<type>java.lang.Float</type>
+</simpleProperty>
+<simpleProperty key="m_Volume">
+<name>Volume of reservoir at this Watertable</name>
+<type>java.lang.Float</type>
+</simpleProperty>
+<simpleProperty key="m_discharge">
+<name>Discharge at this Watertable / Volume</name>
+<type>java.lang.Float</type>
+</simpleProperty>
+</vectorSet>
+</vectorSet>
+</objectClass>
+  -->
+  <objectClass ID="node">
+    <name>Node</name>
+    <description>Definition of Nodes</description>
+    <belongsToTopology ref="top_river"/>
+    <geometry>Point</geometry>
+    <symbol>node</symbol>
+    <simpleProperty key="m_nodeNr">
+      <name>Node Number</name>
+      <description>Strand number in model network</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_stationName">
+      <name>gauging station</name>
+      <description>name of gauging station</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_fileName">
+      <name>File Name</name>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_mesTableName">
+      <name>database</name>
+      <format>bce_db</format>
+      <description>database timeseries</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+  </objectClass>
+  <objectClass ID="wc">
+    <name>Water Course </name>
+    <description>Water course name is used to index rivers</description>
+    <simpleProperty key="m_wcIndex">
+      <name>Water Course Index</name>
+      <description>Index to identify rivers</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_wcName">
+      <name>Water Course Name</name>
+      <description>Rivername</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+  </objectClass>
+  <objectClass ID="rb">
+    <name>Catchments</name>
+    <description>Definition of catchments</description>
+    <belongsToTopology ref="top_catchment"/>
+    <geometry>Polygon</geometry>
+    <symbol>riverbasin</symbol>
+    <simpleProperty key="m_rbNumber">
+      <name>Catchment number</name>
+      <description>Catchment number in model network</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_avaEle">
+      <name>avarage elevation</name>
+      <description>avarage elevation (use to filter elevation zones for editing)</description>
+      <unit>m</unit>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_comment">
+      <name>Comment</name>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_sealedAreaRb">
+      <name>Sealed Area</name>
+      <description>No infiltration process, only surface flow</description>
+      <unit>m<sup>2</sup></unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_natAreaRb">
+      <name>Natural Area</name>
+      <description>Hydrological processes for diacharge formation inj soil moisture regime take place</description>
+      <unit>m<sup>2</sup></unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_corrRain">
+      <name>Correction Factor Precipitation</name>
+      <description>Factor is applied to change rainfall distribution in order to characteristic surface relief</description>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_corrMaxInter">
+      <name>Correction Factor Maximal Interception Storage</name>
+      <description>Maximal interception storage mm, is plant dependent, fixed in model for specific landuse</description>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_corrInitInter">
+      <name>Correction Factor Initial Interception Storage</name>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_corrUsage">
+      <name>Correction Vaporization</name>
+      <description>Fixed in Model</description>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_key">
+      <name>Type of Rain</name>
+      <description>Standard Flag n for measured precipitation</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_fileClimate">
+      <name>Climate Time-Series</name>
+      <description>Filename for climate time-series of temperature and evapotranspiration</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_fileLongTermSim">
+      <name>Precipitation Time-Series Longterm</name>
+      <description>Filename for precipitation time-series used for langterm simulation</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_fileShortTermSim">
+      <name>Precipitation Time-Series Shortterm</name>
+      <description>Filename for precipitation time-series used for shortterm simulation</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_fileTimeAreaFunct">
+      <name>Time-Area-Function</name>
+      <description>Filename for time-area-functions of catchments</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_fileHydrotop">
+      <name>Hydrotopes</name>
+      <description>Filename for hydrotopes of each catchment</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_flagHydrotop">
+      <name>Hydrotop Flag</name>
+      <description>Default value for calculation with hydrotopes: 7</description>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    <simpleProperty key="m_aquifMaxHeightChannel">
+      <name>Maximum Height of Groundwater</name>
+      <description>Upper channel base to define upper groundwater reservoir</description>
+      <unit>m</unit>
+      <type>java.lang.Double</type>
+    </simpleProperty>
+    <simpleProperty key="m_aquifMinHeightChannel">
+      <name>Minimum Height of Groundwater</name>
+      <description>Lower channel base to define upper groundwater reservoir</description>
+      <unit>m</unit>
+      <type>java.lang.Double</type>
+    </simpleProperty>
+    <simpleProperty key="m_aquifExtract">
+      <name>Draw-off from Shallow Aquifer</name>
+      <unit>m<sup>3</sup>/s</unit>
+      <type>java.lang.Double</type>
+    </simpleProperty>
+    <simpleProperty key="m_aquifPorosity">
+      <name>Porrosity of Shallow Aquifer</name>
+      <unit>0..1</unit>
+      <type>java.lang.Double</type>
+    </simpleProperty>
+    <simpleProperty key="m_aquifSplitAquiferDeep">
+      <name>Splitting for Shallow and Deep Aquifer</name>
+      <description>Procent of groundwater discharge flowing in lower catchment or deep aquifer</description>
+      <unit>0..1</unit>
+      <type>java.lang.Double</type>
+    </simpleProperty>
+    <simpleProperty key="m_fInit">
+      <name>fInit</name>
+      <description>not used in kalypso</description>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_fTar">
+      <name>fTar</name>
+      <description>not used in kalypso</description>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_initAquif">
+      <name>Initial Groundwater Height</name>
+      <description>Initial height of watertable in groundwater storage</description>
+      <unit>m</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_initInterception">
+      <name>Initial Interception Storage</name>
+      <unit>mm</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_retAquif">
+      <name>Retention  Baseflow</name>
+      <unit>h</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_retAquifNeighbour">
+      <name>Retention Shallow Aquifer</name>
+      <unit>h</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_retInterflow">
+      <name>Retention Interflow</name>
+      <unit>h</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_retOutflowAquifDeep">
+      <name>Retention  Deep Aquifer</name>
+      <unit>h</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_retOverlandFlow">
+      <name>Retention  Surface Flow, natural</name>
+      <unit>h</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_retSealedArea">
+      <name>Retention  Surface Flow, sealed </name>
+      <unit>h</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_corrEvap">
+      <name>Correction Factor Evapotranspiration</name>
+      <description>Factor is multipied by time-series values (fixed in Model 1 mm per day)</description>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_corrTemp">
+      <name>Correction Factor Temperature</name>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_initSnowHeight">
+      <name>Initial Snow Height</name>
+      <unit>mm</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_snowMaxWaterCont">
+      <name>Maximum Water Content Snow</name>
+      <description>Maximal possible water content of snow, standard: 0.45 </description>
+      <unit>%</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_snowMeltingRateRad">
+      <name>Radiation Snow Melting</name>
+      <description>Radiation depending snow melting rate (0.1..1), standard: 0.35 </description>
+      <unit>mm/h</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_snowMeltingRateTemp">
+      <name>Temperature Snow Melting</name>
+      <description>Temperature depending snow melting rate (0.1..0.5), standard: 0.25 </description>
+      <unit>mm/h/K</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <simpleProperty key="m_snowWaterCont">
+      <name>Initial Water Content Snow</name>
+      <unit>%</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <vectorSet key="m_corrFactSoil"><name>Correction Soil</name><description>Correction and initial conditions for soil layers in each catchment</description><simpleProperty key="v_infiltShortTime"><name>Infiltration Rate Shortterm</name><description>Proportional Factor for infiltration, depending on characteristic soil properties</description><unit>1/h</unit><type>java.lang.Float</type></simpleProperty><simpleProperty key="v_infiltDailyVal"><name>Infiltration Rate Longterm</name><description>Proportional Factor for infiltration, depending on characteristic soil properties</description><type>java.lang.Float</type></simpleProperty><simpleProperty key="v_perkForLayer"><name>Percolation Rate</name><description>Proportional Factor for percolation, depending on characteristic soil properties</description><unit>1/h</unit><type>java.lang.Float</type></simpleProperty><simpleProperty key="v_maxPoreVolume"><name>Correction Factor Maximum Pore Volume</name><type>java.lang.Float</type></simpleProperty><simpleProperty key="v_initialMoisture"><name>Initial Moisture</name><unit>mm</unit><type>java.lang.Float</type></simpleProperty><simpleProperty key="v_usableFieldCap"><name>Correction Factor Usable Field Capcity</name><type>java.lang.Float</type></simpleProperty><!--			<simpleProperty key="v_retLayer">
+      -->			
+      <simpleProperty key="v_retLayerInterflow"><name>Correction Factor Interflow</name><type>java.lang.Float</type></simpleProperty><simpleProperty key="v_evapLayer"><name>evaporation layer</name><description>Not used in kalypso</description><type>java.lang.Float</type></simpleProperty></vectorSet>
+  </objectClass>
+  <objectClass ID="rainStation">
+    <name>Rain Station</name>
+    <description>Definition of rain station for database connection</description>
+    <simpleProperty key="m_stationName">
+      <name>Station Name</name>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_fileName">
+      <name>File Name</name>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_mesTableName">
+      <name>Table Name Measured</name>
+      <format>bce_db</format>
+      <description>Measured values</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_synTableName">
+      <name>Table Name Synthetic</name>
+      <format>bce_db</format>
+      <description>Forecasted values</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+  </objectClass>
+  <objectClass ID="tempStation">
+    <name>Climate Station</name>
+    <description>Definition of climate station for database connection, time-series: temperature and evapotranspiration</description>
+    <simpleProperty key="m_stationName">
+      <name>Station Name</name>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_fileName">
+      <name>File Name</name>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_mesTableName">
+      <name>Table Name Measured</name>
+      <format>bce_db</format>
+<!-- bce_db : DBTableName,nicetablename-->
+      <description>Measured values</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <simpleProperty key="m_synTableName">
+      <name>Table Name Synthetic</name>
+      <format>bce_db</format>
+      <description>Forecasted values</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+  </objectClass>
+  <relationClass ID="wc2objects">
+    <name>RivernameRelation</name>
+    <description/>
+    <fromObjectClass ref="wc"/>
+    <toObjectClass ref="nullStrand"/>
+    <toObjectClass ref="channel"/>
+    <toObjectClass ref="rhb"/>
+<!--    <toObjectClass ref="rht"/> -->
+    <toObjectClass ref="rb"/>
+<!-- node added on 20.11.2002 to go conform with xml-import/export -->
+    <toObjectClass ref="node"/>
+    <forwardLabel>belongs to</forwardLabel>
+    <backwardLabel>is member of</backwardLabel>
+    <fromCardinalityMax>1</fromCardinalityMax>
+    <toCardinalityMax>unbound</toCardinalityMax>
+  </relationClass>
+  <relationClass ID="wc2nodes">
+    <name>RivernameNodeRelation</name>
+    <description/>
+    <fromObjectClass ref="wc"/>
+    <toObjectClass ref="node"/>
+    <forwardLabel>belongs to</forwardLabel>
+    <backwardLabel>is member of</backwardLabel>
+    <fromCardinalityMax>unbound</fromCardinalityMax>
+    <toCardinalityMax>unbound</toCardinalityMax>
+  </relationClass>
+  <relationClass ID="rb2strand">
+    <name>RiverbasinToStrand</name>
+    <description/>
+    <fromObjectClass ref="rb"/>
+    <toObjectClass ref="nullStrand"/>
+    <toObjectClass ref="channel"/>
+    <toObjectClass ref="rhb"/>
+<!--    <toObjectClass ref="rht"/> -->
+    <forwardLabel>discharges to</forwardLabel>
+    <backwardLabel>recieves from</backwardLabel>
+    <fromCardinalityMax>unbound</fromCardinalityMax>
+    <toCardinalityMax>1</toCardinalityMax>
+  </relationClass>
+  <relationClass ID="strand2node">
+    <name>StrandToNode</name>
+    <description/>
+    <fromObjectClass ref="nullStrand"/>
+    <fromObjectClass ref="channel"/>
+    <fromObjectClass ref="rhb"/>
+<!--    <fromObjectClass ref="rht"/> -->
+    <toObjectClass ref="node"/>
+    <forwardLabel>downstream</forwardLabel>
+    <backwardLabel>upstream</backwardLabel>
+    <fromCardinalityMax>1</fromCardinalityMax>
+    <toCardinalityMax>unbound</toCardinalityMax>
+  </relationClass>
+  <relationClass ID="node2strand">
+    <name>NodeToStrand</name>
+    <description/>
+    <fromObjectClass ref="node"/>
+    <toObjectClass ref="nullStrand"/>
+    <toObjectClass ref="channel"/>
+    <toObjectClass ref="rhb"/>
+<!--    <toObjectClass ref="rht"/> -->
+    <forwardLabel>downstream</forwardLabel>
+    <backwardLabel>upstream</backwardLabel>
+    <fromCardinalityMax>unbound</fromCardinalityMax>
+    <toCardinalityMax>1</toCardinalityMax>
+  </relationClass>
+  <relationClass ID="rb2rb"> 
+    <name>Riverbasin2Riverbasin</name>
+    <description>aquifer connecting riverbasins</description>
+    <fromObjectClass ref="rb"/>
+    <toObjectClass ref="rb"/>
+    <forwardLabel>downstream</forwardLabel>
+    <backwardLabel>upstream</backwardLabel>
+    <fromCardinalityMax>unbound</fromCardinalityMax>
+    <toCardinalityMax>unbound</toCardinalityMax>
+    <simpleProperty key="value"><!--		<simpleProperty key="m_value">
+      --><name>percentage of discharge</name><type>java.lang.Float</type></simpleProperty>
+    <belongsToNetwork/>
+  </relationClass>
+  <relationClass ID="node2nodeOverflow">
+    <name>NodeToNode</name>
+    <description/>
+    <fromObjectClass ref="node"/>
+    <toObjectClass ref="node"/>
+    <forwardLabel>downstream</forwardLabel>
+    <backwardLabel>upstream</backwardLabel>
+    <fromCardinalityMax>unbound</fromCardinalityMax>
+    <toCardinalityMax>unbound</toCardinalityMax>
+    <simpleProperty key="value">
+      <name>percentage of discharge</name>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <belongsToNetwork/>
+  </relationClass>
+  <relationClass ID="node2nodeFunctOut">
+    <name>NodeToNodeFunctOut</name>
+    <description/>
+    <fromObjectClass ref="node"/>
+    <toObjectClass ref="node"/>
+    <forwardLabel>downstream</forwardLabel>
+    <backwardLabel>upstream</backwardLabel>
+    <fromCardinalityMax>unbound</fromCardinalityMax>
+    <toCardinalityMax>unbound</toCardinalityMax>
+    <simpleProperty key="path">
+      <name>FunctionFile</name>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <belongsToNetwork/>
+  </relationClass>
+  <relationClass ID="node2nodeFunctIn">
+    <name>NodeToNodeFunctIn</name>
+    <description/>
+    <fromObjectClass ref="node"/>
+    <toObjectClass ref="node"/>
+    <forwardLabel>downstream</forwardLabel>
+    <backwardLabel>upstream</backwardLabel>
+    <fromCardinalityMax>unbound</fromCardinalityMax>
+    <toCardinalityMax>unbound</toCardinalityMax>
+    <simpleProperty key="path">
+      <name>FunctionFile</name>
+      <type>java.lang.String</type>
+    </simpleProperty>
+    <belongsToNetwork/>
+  </relationClass>
+  <relationClass ID="node2nodeConstOut">
+    <name>NodeToNodeConstOut</name>
+    <description/>
+    <fromObjectClass ref="node"/>
+    <toObjectClass ref="node"/>
+    <forwardLabel>downstream</forwardLabel>
+    <backwardLabel>upstream</backwardLabel>
+    <fromCardinalityMax>unbound</fromCardinalityMax>
+    <toCardinalityMax>unbound</toCardinalityMax>
+    <simpleProperty key="value">
+      <name>percentage of discharge</name>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <belongsToNetwork/>
+  </relationClass>
+  <relationClass ID="node2nodePercent">
+    <name>NodeToNodePercent</name>
+    <description/>
+    <fromObjectClass ref="node"/>
+    <toObjectClass ref="node"/>
+    <forwardLabel>downstream</forwardLabel>
+    <backwardLabel>upstream</backwardLabel>
+    <fromCardinalityMax>unbound</fromCardinalityMax>
+    <toCardinalityMax>unbound</toCardinalityMax>
+    <simpleProperty key="value">
+      <name>percentage of discharge</name>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+    <belongsToNetwork/>
+  </relationClass>
+<!-- ToDo: implemention of riverbasin to deepaquifer- relation "rb2deepAquif"-->
+</theme>

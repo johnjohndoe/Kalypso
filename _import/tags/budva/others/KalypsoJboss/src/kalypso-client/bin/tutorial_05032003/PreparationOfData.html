@@ -1,0 +1,41 @@
+<html>
+
+<title> Kalypso-Tutorial </title>
+<head> <h2> Preparation of Data for Simualtion </h2></head>
+<img src=blueline.gif align="center" >
+<br><br>
+User defines project for structuring all dependant datasets: <b>Model, Control and SimCase.</b><br>
+Modelversion stores parameters for objects of RRM. For UTRB ModelData versions for the flood events 1998 and 2001 are available as xml-file which can be imported in a new created version.
+Important is the validation of hydrological and meteorological stations for each catchment.For continuous simulations a consistent data transfer is necessary. Therefore automatic stations should be part of input data.
+The ModelData versions for the both flood events can be used as basis for further simulations because user has no possibility to change topological, spacial model data.<br>
+(landuse, soiltype, catchments, drainage net)
+<br>
+<body>
+<ul>
+<li> Build up hydrological and meteorological measuring network and define hydrological stations for catchments, <br>
+use ArcView project to select catchments which can be reflected by station: <br>
+Recheck before simulation if correct time-series in DataCeter are existing for simulation interval.<br>
+For temperature average daily values and for precipitation rates per time interval are needed.<br>
+User must prepare time-series in DataCentre and built up connection to station in DataCenter <br>
+(each catchment must get one Climate and one RainStation).
+<li> DataCenter check up continuously data import of automatic stations<br>
+<li> Data from other stations in region import in tables of DataCentre <br>
+<li> Define subsystems by root node for different regions <br>
+<li> Choose ModelData version for simulation<br>
+Validated modelversion with defined initial conditions. If corresponding climate situation is present user can choose from this state a modelversion.<br>
+<li> Recheck of initial conditions when copied version, or define initial condition with Excel table "initial soilmoisture", CD Kalypso.
+Validate correction factors for time-series to consider special hydrological conditions in region <br>
+<li> Set start and end date of simulation. Time step [h] is dependant on quality of input data and interval of simulation (only 1086 timesteps can be calculated by program).
+<li> If no temperature is set within interval for standard 5 °C is set.<br>
+<li> Run simulation <br>
+<li> Open graphic tool for visualization <br>
+<li> Start calibration <br>
+<li> To add measured discharge in same choose in output directory of simulation files for gauging station. Before in DataCentre an aggregation form watertable to discharge at gauges is to practice. <br>
+The file with measuring discharge can be load form results_kalypso/klima.dat.<br>
+<li> Open GraphicTool and validate simulation
+</ul>
+
+<br>
+<hr>
+FLOMATIS Forecast System, User Manual<i> Kalypso</i> RRM 2/2003 and <i>Kalypso</i> Forecast 2/2003
+</HTML>

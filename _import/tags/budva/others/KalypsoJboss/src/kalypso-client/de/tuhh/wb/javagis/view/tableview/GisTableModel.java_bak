@@ -1,0 +1,286 @@
+package de.tuhh.wb.javagis.view.tableview;
+
+import javax.swing.table.AbstractTableModel;
+
+import de.tuhh.wb.javagis.model.ElementSession;
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.Enumeration;
+import de.tuhh.wb.javagis.data.event.GisElementListener;
+import de.tuhh.wb.javagis.data.event.GisElementEvent;
+import de.tuhh.wb.javagis.data.*;
+import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.util.Date;
+
+public class GisTableModel extends AbstractTableModel implements GisInterfaceTableModel, GisElementListener
+{
+    private Vector myIdList;
+    private GisElementClass myGisElementClass;
+
+    public GisTableModel(GisElementClass gisElementClass)
+    {
+	super();       
+	this.myGisElementClass=gisElementClass;
+	this.myIdList=gisElementClass.getAllPrimaryKeys();
+	myGisElementClass.register(this);
+    }
+
+    public void closeTable()
+    {
+	myGisElementClass.unRegister(this);
+    }
+    
+    //GisElementListener
+    public void onGisElementChanged(GisElementEvent event)
+    {
+	switch(event.getEventType())
+	    {
+	    case GisElementEvent.Removed:
+		if(myIdList.removeAll(event.getAffectedElementIds()))
+		    {
+			System.out.println("need update for view...");
+		    }
+		break;
+	    case GisElementEvent.Created:
+		if(myIdList.addAll(0,event.getAffectedElementIds()))
+		    {
+			System.out.println("need update for view...");
+		    }
+		break;
+	    default:
+		break;
+	    }
+    }
+
+    public int getColumnCount()
+    {	
+	 return myGisElementClass.getSimplePropertySize()+1;
+    }
+
+    public int getRowCount()
+    {
+	return myIdList.size();
+    }
+
+    public String getColumnName(int col)
+    {	
+	if(col==0)
+	    return "#ID";
+	return myGisElementClass.getSimplePropertyName(col-1);
+    }
+
+    public String getDescription(int col)
+    {	
+	if(col==0)
+	    return "primaryKey";
+	return myGisElementClass.getSimplePropertyDescription(col-1);
+    }
+
+    public Class getColumnClass(int col)
+    {
+	if(col==0)
+	    return Integer.class;
+	Class propClass=myGisElementClass.getSimplePropertyClass(col-1);
+	if(propClass==java.util.Date.class)
+	    return String.class;
+	else
+	    return propClass;
+    }
+
+    public boolean isCellEditable(int row,int col)
+    {
+	if(col==0)
+	    return false;
+	else
+	    return true;
+    }
+
+    public Object getValueAt(int row,int col)
+    {
+	Object id=myIdList.elementAt(row);
+	if(col==0)
+	    return id;
+	else
+	    {
+		Object value=myGisElementClass.getSimplePropertyValue(id,col-1);
+		if(value instanceof java.util.Date)
+		    {
+			DateFormat dateFormat=new SimpleDateFormat(myGisElementClass.getSimplePropertyFormat(col-1));
+			return dateFormat.format((Date)value);
+		    }
+		return value;
+	    }
+    }
+
+    public void setValueAt(Object value,int row,int col)
+    {
+	Object id=myIdList.elementAt(row);
+	if(col==0)
+	    return;
+	else
+	    {
+		if(myGisElementClass.getSimplePropertyClass(col-1)==Date.class && value instanceof String)
+		{
+		    try
+			{
+			    DateFormat dateFormat=new SimpleDateFormat(myGisElementClass.getSimplePropertyFormat(col-1));
+			    Date date=dateFormat.parse((String)value);
+			    myGisElementClass.setSimplePropertyValue(id,col-1,date);
+			}
+		    catch(ParseException e)
+			{
+			    System.out.println("wrong DateFormat, couldn't parse");
+			}
+		}
+		else
+		    myGisElementClass.setSimplePropertyValue(id,col-1,value);
+	    }
+    }
+    
+    public String getDescription()
+    {
+	return myGisElementClass.getDescription();
+    }
+
+    public String getName()
+    {
+	return myGisElementClass.getName();
+    }
+    
+    // am Anfang der Liste neues Object erzeugen
+    public void createNewObject()
+    {
+	if(myGisElementClass instanceof GisObjectClass)
+	    {
+		GisObjectClass myGisObjectClass=(GisObjectClass)myGisElementClass;
+		try
+		    {
+			Object newId= myGisObjectClass.createObject();
+			//			myIdList.insertElementAt(newId,0);
+		    }
+		catch(javax.ejb.CreateException e)
+		    {
+			System.out.println("could not create new Object :-( \n"+e.getMessage());
+		    }
+		catch(java.rmi.RemoteException e)
+		    {
+			System.out.println("could not create new Object :-( \n"+e.getMessage());
+		    }
+	    }
+	else
+	    System.out.println("create Relations not in TableView, create it in NetView please");
+    }
+    
+    // am Ende der Liste neues Object erzeugen
+    public void appendNewObject()
+    {
+	if(myGisElementClass instanceof GisObjectClass)
+	    {
+		GisObjectClass myGisObjectClass=(GisObjectClass)myGisElementClass;
+		try
+		    {
+			Object newId= myGisObjectClass.createObject();
+			//myIdList.add(newId);
+		    }
+		catch(javax.ejb.CreateException e)
+		    {
+			System.out.println("could not create new Object :-( \n"+e.getMessage());
+		    }
+		catch(java.rmi.RemoteException e)
+		    {
+		System.out.println("could not create new Object :-( \n"+e.getMessage());
+		    }
+	    }
+	else
+	    System.out.println("create Relations not in TableView, create it in NetView please");
+    }
+
+    public void insertNewObjectAt(int position)
+    {
+	if(myGisElementClass instanceof GisObjectClass)
+	    {
+		GisObjectClass myGisObjectClass=(GisObjectClass)myGisElementClass;
+		try
+		    {
+			Object newId= myGisObjectClass.createObject();
+			//myIdList.insertElementAt(newId,position);
+		    }
+		catch(javax.ejb.CreateException e)
+		    {
+			System.out.println("could not create new Object :-( \n"+e.getMessage());
+		    }
+		catch(java.rmi.RemoteException e)
+		    {
+			System.out.println("could not create new Object :-( \n"+e.getMessage());
+		    }
+	    }
+	else
+	    System.out.println("create Relations not in TableView, create it in NetView please");
+    }
+
+
+    public void removeObject(int row)
+    {
+	/*
+	  try
+	    {
+	//	primaryKeyList.removeElementAt(position);
+	    }
+	catch(javax.ejb.CreateException e)
+	    {
+		System.out.println("could not create new Object :-( \n"+e.getMessage());
+	    }
+	catch(java.rmi.RemoteException e)
+	    {
+		System.out.println("could not create new Object :-( \n"+e.getMessage());
+	    }
+	*/
+    }
+
+    // von "startIndex" an soundsoviele Objecte loeschen
+    public void removeObjects(int startIndex, int number)
+    {
+	//number:0 -> nix passiert
+	//number:1 -> ein Element wird gelöscht
+	//number:n -> n Elemente werden gelöscht
+	/*
+	  Vector toDelete=new Vector();
+	  for(int i=startIndex;i<startIndex+number;i++)
+	  toDelete.add(primaryKeyList.elementAt(i));
+	  for(int i=0;i<toDelete.size();i++)
+	  primaryKeyList.removeElement(toDelete.elementAt(i));
+	*/
+    }
+
+
+    public boolean hasVectorSets()
+    {
+	return (myGisElementClass.getVectorSetSize()>0);
+    }
+
+    public Vector getVectorSetTableModels(int row)
+    {
+	Object id=myIdList.elementAt(row);
+	return myGisElementClass.getVectorSets(id);
+    }
+
+    public Object getElementId(int row)
+    {
+	return myIdList.elementAt(row);
+    }
+
+    public GisElement getGisElement(int row)
+    {
+	Object eId= myIdList.elementAt(row);
+	return myGisElementClass.getGisElement(eId);
+    }
+
+    public void storeVectorSets(Object oId,Vector vectorSets)
+    {
+	System.out.println("GisTableModel.storeVectorSets ..."+getName());
+	myGisElementClass.setVectorSets(oId,vectorSets);
+    }
+}
