@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Properties;
 import java.util.Vector;
 
 
@@ -29,16 +28,9 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
     m_reps.addAll( Arrays.asList( repositories ) );
   }
 
-  public void addRepository( final IRepository rep, final Properties props )
+  public void addRepository( final IRepository rep )
   {
-    for( final Iterator it = props.keySet().iterator(); it.hasNext(); )
-    {
-      final String key = (String)it.next();
-      
-      rep.setProperty( key, props.getProperty( key ) );
-    }
-    
-    m_reps.add( rep );
+     m_reps.add( rep );
 
     fireRepositoryChanged();
   }

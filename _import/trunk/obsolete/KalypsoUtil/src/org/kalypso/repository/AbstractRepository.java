@@ -25,6 +25,8 @@ public abstract class AbstractRepository implements IRepository
 
   /**
    * Default constructor, location is empty and readonly is true.
+   * 
+   * @param factory
    */
   public AbstractRepository( final IRepositoryFactory factory )
   {
@@ -166,6 +168,23 @@ public abstract class AbstractRepository implements IRepository
     return m_properties.getProperty( name );
   }
 
+  /**
+   * @see org.kalypso.repository.IRepository#getProperties()
+   */
+  public Properties getProperties( )
+  {
+    return m_properties;
+  }
+  
+  /**
+   * @see org.kalypso.repository.IRepository#setProperties(java.util.Properties)
+   */
+  public void setProperties( final Properties props )
+  {
+    m_properties.clear();
+    m_properties.putAll( props );
+  }
+  
   /**
    * @see org.kalypso.repository.IRepository#setProperty(java.lang.String,
    *      java.lang.String)

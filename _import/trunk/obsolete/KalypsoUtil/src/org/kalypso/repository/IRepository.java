@@ -1,5 +1,7 @@
 package org.kalypso.repository;
 
+import java.util.Properties;
+
 
 /**
  * Eingangspunkt zu einem Repository. Es liefert z.B. die ersten Items. Damit
@@ -55,6 +57,19 @@ public interface IRepository extends IRepositoryItem
    */
   public String getProperty( final String name, final String defaultValue );
 
+  /**
+   * @return convenience method that returns the properties of this repository
+   * in the form of a Properties object.
+   */
+  public Properties getProperties();
+  
+  /**
+   * Convenience method for settings a whole set of properties.
+   * 
+   * @param props
+   */
+  public void setProperties( final Properties props );
+  
   /**
    * Returns the factory that created this repository.
    * @return factory

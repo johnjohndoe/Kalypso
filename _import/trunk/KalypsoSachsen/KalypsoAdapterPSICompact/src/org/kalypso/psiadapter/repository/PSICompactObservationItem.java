@@ -251,11 +251,14 @@ public class PSICompactObservationItem implements IObservation
   public ITuppleModel getValues( final IVariableArguments args )
       throws SensorException
   {
-    if( !(args instanceof DateRangeArgument) )
-      throw new SensorException(
-          "Brauche DateRange as Argument. Kann sonst die PSICompact Schnittstelle nicht abfragen" );
-
-    final DateRangeArgument dr = (DateRangeArgument) args;
+    final DateRangeArgument dr;
+    
+    // tricky: when no date range specified, we create a default one
+    // according to the config delivered by our PSICompactFactory
+    if( args == null || !(args instanceof DateRangeArgument))
+      dr = DateRangeArgument.createFromPastDays( Integer.valueOf( PSICompactFactory.getProperties().getProperty( "NUMBER_OF_DAYS", "100" ) ).intValue() );
+    else
+      dr = (DateRangeArgument) args;
 
     if( m_values != null && dr.getFrom().compareTo( m_from ) == 0
         && dr.getTo().compareTo( m_to ) == 0 )
