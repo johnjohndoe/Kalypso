@@ -27,7 +27,7 @@ public abstract class CatchRunnable implements Runnable
     }
   }
   
-  protected abstract void runIntern()  throws Throwable;
+  protected abstract void runIntern() throws Throwable;
 
   public Throwable getThrown()
   {
