@@ -7,7 +7,7 @@
 	<classpathentry kind="src" path="src/kalypso-filter/Source"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/braju.jar"/>
-	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/edbc.jar"/>
+	<classpathentry kind="lib" path="src/kalypso-bce/dc-kalypso2/lib/edbc.jar"/>
 	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/hwscombination-ejb.jar"/>
 	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/hwslogistics-ejb.jar"/>
 	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/hwssystem-ejb.jar"/>
