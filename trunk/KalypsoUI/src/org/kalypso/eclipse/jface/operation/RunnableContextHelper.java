@@ -8,6 +8,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Helper-Class for IRunnableContext
@@ -33,16 +34,15 @@ public abstract class RunnableContextHelper implements IRunnableWithProgress
     {
       e.printStackTrace();
 
-      IStatus status = null;
-      String msg = message;
-
       final Throwable targetException = e.getTargetException();
+
+      final IStatus status;
       if( targetException instanceof CoreException )
         status = ( (CoreException)targetException ).getStatus();
       else
-        msg += "\n" + targetException.getLocalizedMessage();
+        status = KalypsoGisPlugin.createErrorStatus( targetException.getLocalizedMessage(), targetException );
 
-      ErrorDialog.openError( shell, title, msg, status );
+      ErrorDialog.openError( shell, title, message, status );
     }
     catch( final InterruptedException e )
     {
