@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapview><extent bottom="1245.0" left="123.4" right="456.7" top="111.1"/><layer source="modell.gml" name="Einzugsgebiete" visible="false"/><layer source="modell.gml" name="Pegel" visible="true"><style source="./styles/pegel.sld" name="pegelsymbol"/><style source="./styles/pegel.sld" name="beschriftung1"/></layer></mapview>
+
