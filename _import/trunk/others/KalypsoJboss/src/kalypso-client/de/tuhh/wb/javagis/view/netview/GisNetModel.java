@@ -5,6 +5,7 @@ import javax.swing.table.AbstractTableModel;
 //import de.tuhh.wb.javagis.model.ElementSession;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.HashSet;
 import java.util.Enumeration;
 
 import java.awt.geom.Point2D;
@@ -17,8 +18,11 @@ import java.awt.BasicStroke;
 import java.awt.Font;
 import de.tuhh.wb.javagis.data.*;
 import de.tuhh.wb.javagis.view.netview.GisNetView;
+import javax.swing.JCheckBoxMenuItem;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class GisNetModel
+public class GisNetModel implements ActionListener
 {
     private final static int MAX_CACHE_ROWS=2000;
     private final static int CACHE_PAGE_SIZE=1000;
@@ -26,12 +30,16 @@ public class GisNetModel
     public Vector myGisObjectClasses;
     public Vector myObjectIdListVector;
 
-    private Vector myGisRelationClasses;
+    public Vector myGisRelationClasses;
     private Vector myRelationIdListVector;
     
+    private HashSet hiddenElements=new HashSet();
     // all GisObjectClasses should have symbol-mode
     public GisNetModel(Vector gisObjectClasses, Vector gisRelationClasses)
     {
+	this.hiddenElements.add("wc2objects");
+	this.hiddenElements.add("wc2nodes");
+
 	this.myGisObjectClasses=gisObjectClasses;
 	this.myObjectIdListVector=new Vector();
 	for(int i=0;i<myGisObjectClasses.size();i++)
@@ -93,10 +101,13 @@ public class GisNetModel
 		GisRelationClass gisRelationClass=(GisRelationClass)myGisRelationClasses.elementAt(i);
 
 		// ToDo: !!!!
-		if(!"wc2nodes".equals(gisRelationClass.getKey()) &&
+
+		   /*!"wc2nodes".equals(gisRelationClass.getKey()) &&
 		   !"wc2objects".equals(gisRelationClass.getKey()))
+		   */
 		    // &&
 		    //		   !"rb2rb".equals(gisRelationClass.getKey()))
+		if(!hiddenElements.contains(gisRelationClass.getKey()))
 		    {
 			Image symbol=gisRelationClass.getSymbol();
 			int symbolWidth=symbol.getWidth(null);
@@ -143,48 +154,51 @@ public class GisNetModel
 	for(int i=0;i<myGisObjectClasses.size();i++)
 	    {
 		GisObjectClass gisObjectClass=(GisObjectClass)myGisObjectClasses.elementAt(i);
-		Image symbol=gisObjectClass.getSymbol();
-		int symbolWidth=symbol.getWidth(null);
-		int symbolHeight=symbol.getHeight(null);
-		int xOffset=0;
-		int yOffset=0;
-		if(symbolHeight>0 && symbolWidth>0)
+		if(!hiddenElements.contains(gisObjectClass.getKey()))
 		    {
-			xOffset=symbolWidth/2;
-			yOffset=symbolHeight/2;
-		    }
+			Image symbol=gisObjectClass.getSymbol();
+			int symbolWidth=symbol.getWidth(null);
+			int symbolHeight=symbol.getHeight(null);
+			int xOffset=0;
+			int yOffset=0;
+			if(symbolHeight>0 && symbolWidth>0)
+			    {
+				xOffset=symbolWidth/2;
+				yOffset=symbolHeight/2;
+			    }
 			
-		Graphics2D g2=(Graphics2D)g;
+			Graphics2D g2=(Graphics2D)g;
 			
-		AffineTransform trans_org =  g2.getTransform();
+			AffineTransform trans_org =  g2.getTransform();
 			
-		Vector idList=(Vector)myObjectIdListVector.elementAt(i);
-		for(int n=0;n<idList.size();n++)
-		    {
-			Object oId=idList.elementAt(n);
-			GisPoint gp=gisObjectClass.getBasePoint(oId);
-			ScreenPoint sp=trafo.convert(gp);
-			double cx=sp.getX();
-			double cy=sp.getY();
-			AffineTransform trans = new AffineTransform();
-			trans.translate(cx,cy);
-			trans.scale(scale,scale);
-			g2.transform(trans);
-			g2.drawImage(symbol,(int)-xOffset,(int)-yOffset,null);
-			g2.setTransform(trans_org);
-			g.setColor(Color.blue);
-
-			String text;
-			if(gisObjectClass.getSimplePropertySize()>0)			    
-			    if(gisObjectClass.getSimplePropertyValue(oId,0)!=null)
-				text="No:"+gisObjectClass.getSimplePropertyValue(oId,0).toString();
-			    else
-				text="ID:"+oId.toString();				
-			else
-			    text="ID:"+oId.toString();
-			g.drawString(text,(int)sp.getX(),(int)sp.getY()-yOffset);
-
-			g.setColor(Color.black);
+			Vector idList=(Vector)myObjectIdListVector.elementAt(i);
+			for(int n=0;n<idList.size();n++)
+			    {
+				Object oId=idList.elementAt(n);
+				GisPoint gp=gisObjectClass.getBasePoint(oId);
+				ScreenPoint sp=trafo.convert(gp);
+				double cx=sp.getX();
+				double cy=sp.getY();
+				AffineTransform trans = new AffineTransform();
+				trans.translate(cx,cy);
+				trans.scale(scale,scale);
+				g2.transform(trans);
+				g2.drawImage(symbol,(int)-xOffset,(int)-yOffset,null);
+				g2.setTransform(trans_org);
+				g.setColor(Color.blue);
+				
+				String text;
+				if(gisObjectClass.getSimplePropertySize()>0)			    
+				    if(gisObjectClass.getSimplePropertyValue(oId,0)!=null)
+					text="No:"+gisObjectClass.getSimplePropertyValue(oId,0).toString();
+				    else
+					text="ID:"+oId.toString();				
+				else
+				    text="ID:"+oId.toString();
+				g.drawString(text,(int)sp.getX(),(int)sp.getY()-yOffset);
+				
+				g.setColor(Color.black);
+			    }
 		    }
 	    }
 	return mapBuffer;
@@ -249,5 +263,20 @@ public class GisNetModel
 	else // => 4th quadrant
 	    angle =- Math.atan(-1*dy/dx);
 	return angle;
+    }
+
+    public void actionPerformed(ActionEvent e)
+    {
+	String action = e.getActionCommand();
+	System.out.println(action);
+	Object source=e.getSource();
+	if(source instanceof JCheckBoxMenuItem)
+	    {
+		JCheckBoxMenuItem cb=(JCheckBoxMenuItem)source;
+		if(cb.getState()) //true : show
+		    hiddenElements.remove(action);
+		else
+		    hiddenElements.add(action);
+	    }
     }
 }

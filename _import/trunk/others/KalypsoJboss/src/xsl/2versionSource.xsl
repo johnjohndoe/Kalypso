@@ -108,7 +108,7 @@
 
          public class VersionSessionBean implements SessionBean, KalypsoXmlImportListener 
          {
-         private static int MAX_XML_SIZE=500000;
+         private static int MAX_XML_SIZE=1024*1024; // 1MB
 
          private transient Hashtable env; //Environment
          private transient IdManagerLocalHome idManagerLocalHome;

@@ -267,7 +267,7 @@ public class FileSystemUtils
 
     public static String file2String(File file)
     {
-	byte bufferInp[]=new byte[80];
+	byte bufferInp[]=new byte[10*1024];
         int cInp=0;
 	InputStream streamInp=null;
 	String result="";

@@ -19,6 +19,7 @@ import java.awt.event.ComponentListener;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;
+import javax.swing.JCheckBoxMenuItem;
 
 import javax.swing.JInternalFrame;
 import java.awt.event.MouseListener;
@@ -49,7 +50,8 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
     private int mode;
     private GisNetModel netModel;
     private Vector gisObjectClasses;
-    
+    private Vector gisRelationClasses;
+
     private GisObject selectedGisObject;
     private GisObject movingGisObject;
     private GisPoint movingGisPoint;
@@ -72,6 +74,33 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
     //    public static GisMap gisMap;
     public GisMap gisMap;
 
+
+    public GisNetView(GisNetModel netModel)
+    {
+	super("Net View",true,true,true,true);
+	
+
+	this.movingGisObject=null;
+	this.movingGisPoint=null;
+	this.selectedGisObject=null;
+	this.createGisPoint=null;
+	this.mode=DEFAULT_MODE;
+	this.netModel=netModel;
+	this.gisObjectClasses   = netModel.myGisObjectClasses;
+	this.gisRelationClasses = netModel.myGisRelationClasses;
+	this.gisMap=new GisMap(netModel,this);
+	createFileMenu();
+	getContentPane().add(gisMap);
+	//this.gisMap.repaint();
+	setVisible(true);
+	gisMap.noZoom();
+	this.addComponentListener(this);
+	gisMap.addMouseMotionListener(this);
+	gisMap.addMouseListener(this);
+	gisMap.repaint();
+	
+	pack();
+    }
 
     private String getModeLabel(int mode)
     {
@@ -103,31 +132,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	tfAction.setText(getModeLabel(mode));
     }
 
-    public GisNetView(GisNetModel netModel)
-    {
-	super("Net View",true,true,true,true);
-	
-	createFileMenu();
-	this.movingGisObject=null;
-	this.movingGisPoint=null;
-	this.selectedGisObject=null;
-	this.createGisPoint=null;
-	this.mode=DEFAULT_MODE;
-	this.netModel=netModel;
-	this.gisObjectClasses =	netModel.myGisObjectClasses;
-	
-	this.gisMap=new GisMap(netModel,this);
-	getContentPane().add(gisMap);
-	//this.gisMap.repaint();
-	setVisible(true);
-	gisMap.noZoom();
-	this.addComponentListener(this);
-	gisMap.addMouseMotionListener(this);
-	gisMap.addMouseListener(this);
-	gisMap.repaint();
-	
-	pack();
-    }
+
     
     //ComponentListener:
     //          Invoked when the component has been made invisible.
@@ -412,7 +417,49 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
     public void createFileMenu()
     {
 	JMenu edit = new JMenu ("Edit");
-	JMenu view = new JMenu ("View");
+ 	JMenu view = new JMenu ("View");
+
+ 	JMenu menuObjects = new JMenu ("Objects");
+ 	JMenu menuRelations = new JMenu ("Relations");
+
+	for(int i=0;i<gisObjectClasses.size();i++)
+	    {
+		JCheckBoxMenuItem cb;
+		GisObjectClass gisObjectClass=(GisObjectClass)gisObjectClasses.elementAt(i);
+		Image symbol=gisObjectClass.getSymbol();
+		String Name=gisObjectClass.getName();
+		cb = new JCheckBoxMenuItem(gisObjectClass.getName(),new ImageIcon(symbol),true);
+		cb.setHorizontalTextPosition(SwingConstants.RIGHT);
+		cb.addActionListener(netModel);
+		cb.setActionCommand(gisObjectClass.getKey());
+		menuObjects.add(cb);
+	    }
+
+	for(int i=0;i<gisRelationClasses.size();i++)
+	    {
+		JCheckBoxMenuItem cb;
+		GisRelationClass gisRelationClass=(GisRelationClass)gisRelationClasses.elementAt(i);
+		Image symbol=gisRelationClass.getSymbol();
+		String Name=gisRelationClass.getName();
+		System.out.println("Relation:Key="+gisRelationClass.getKey());
+		if("wc2objects".equals(gisRelationClass.getKey()) ||
+		   "wc2nodes".equals(gisRelationClass.getKey()))
+		    {
+			cb = new JCheckBoxMenuItem(gisRelationClass.getName(),new ImageIcon(symbol),false);
+			cb.setEnabled(false);
+		    }
+		else
+		    {
+			cb = new JCheckBoxMenuItem(gisRelationClass.getName(),new ImageIcon(symbol),true);
+		    }
+		cb.setHorizontalTextPosition(SwingConstants.RIGHT);
+		cb.addActionListener(netModel);
+		cb.setActionCommand(gisRelationClass.getKey());
+		menuRelations.add(cb);
+	    }
+	
+
+
 	//JMenu legend = new JMenu("Legend");
 	
 	JMenuItem mi;
@@ -490,6 +537,8 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	JMenuBar menubar= new JMenuBar();
 	menubar.add(edit);
 	menubar.add(view);
+	menubar.add(menuObjects);
+	menubar.add(menuRelations);
 	menubar.add(plus);
 	menubar.add(minus);
 	menubar.add(fullExtent);
