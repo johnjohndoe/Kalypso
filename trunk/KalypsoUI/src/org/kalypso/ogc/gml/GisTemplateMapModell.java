@@ -54,28 +54,7 @@ public class GisTemplateMapModell implements IMapModell
 
   private IKalypsoTheme loadTheme( final Layer layerType, final IProject project )
   {
-//    if( "wms".equals( layerType.getLinktype() ) )
-//    {
-//      // TODO soll hier wirklich "wms" - coodiert werden, das sollte doch generischer gehen
-//      final ILoaderFactory loaderFactory = KalypsoGisPlugin.getDefault().getLoaderFactory(KalypsoWMSLayer.class);
-//      try
-//      {
-//        final ILoader loaderInstance = loaderFactory.getLoaderInstance(layerType.getLinktype());
-//       X final String source = layerType.getHref();
-//        
-//        final Properties properties = PropertiesHelper.parseFromString( source, '#' );
-//        final KalypsoWMSLayer layer = (KalypsoWMSLayer)loaderInstance.load(properties, project, null);
-//        return new KalypsoWMSTheme( layerType.getName(), layer );
-//      }
-//      catch( FactoryException e )
-//      {
-//        e.printStackTrace();
-//      }
-//      catch( LoaderException e )
-//      {
-//        e.printStackTrace();
-//      }
-//    }
+
 
     return new PoolableKalypsoFeatureTheme( layerType, project );
   }
