@@ -19,9 +19,9 @@ import org.kalypso.repository.beans.RepositoryBean;
 public interface IRepositoryService extends Remote
 {
   /**
-   * Returns the number of repositories.
+   * Returns true if there are configured repositories under this service.
    */
-  public int getRepositoriesCount() throws RemoteException;
+  public boolean hasRepositories() throws RemoteException;
   
   /**
    * Lists the available repositories.
@@ -29,9 +29,9 @@ public interface IRepositoryService extends Remote
   public RepositoryBean[] getRepositories() throws RemoteException;
 
   /**
-   * Returns the number of children a given parent has.
+   * Returns true if the given parent has children.
    */
-  public int getChildrenCount( final ItemBean parent ) throws RemoteException;
+  public boolean hasChildren( final ItemBean parent ) throws RemoteException;
   
   /**
    * Returns the children of the given item (parent node). Returns an empty array
