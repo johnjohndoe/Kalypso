@@ -12,9 +12,10 @@ import java.util.Date;
 public class Mapper
 {
 
-  private static final SimpleDateFormat XML_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-ddTHH:mm:ss" );
+  private static final SimpleDateFormat XML_DATE_FORMAT = new SimpleDateFormat(
+      "yyyy-MM-dd'T'HH:mm:ss" );
 
-public static String mapGMLSchemaType2JavaType( String name )
+  public static String mapGMLSchemaType2JavaType( String name )
   {
     if( "GeometryPropertyType".equals( name ) )
       return "org.deegree.model.geometry.GM_Object";
@@ -36,11 +37,12 @@ public static String mapGMLSchemaType2JavaType( String name )
 
     if( "MultiLineStringPropertyType".equals( name ) )
       return "org.deegree.model.geometry.GM_MultiCurve";
-    
+
     if( "AbstractFeatureType".equals( name ) )
       return "org.deegree.model.feature.Feature";
 
-//    System.out.println( "add mapping for " + name + " in " + Mapper.class.toString() );
+    //    System.out.println( "add mapping for " + name + " in " +
+    // Mapper.class.toString() );
     return null;
   }
 
@@ -54,8 +56,8 @@ public static String mapGMLSchemaType2JavaType( String name )
 
     // TODO: also support date and time XML-Formats
     if( "dateTime".equals( name ) )
-        return "java.lang.Date";
-    
+      return "java.util.Date";
+
     if( "boolean".equals( name ) )
       return "java.lang.Boolean";
 
@@ -70,23 +72,24 @@ public static String mapGMLSchemaType2JavaType( String name )
     throw new Exception( "unsupported Type:" + name );
   }
 
-public static String mapJavaValueToXml(Object value,String xmlType) 
-{	
-	if( value instanceof Date )
-		return XML_DATE_FORMAT.format( (Date)value );
-	else if( value instanceof Number )
-		// TODO: use a special (xml-conform) formatting?
-		return value.toString();
-	
-	return value.toString();
-}
+  public static String mapJavaValueToXml( Object value, String xmlType )
+  {
+    if( value instanceof Date )
+      return XML_DATE_FORMAT.format( (Date)value );
+    else if( value instanceof Number )
+      // TODO: use a special (xml-conform) formatting?
+      return value.toString();
 
-/**
- * @param value
- * @return
- * @throws Exception
- */
-public static Object mapXMLValueToJava(String value,String type) throws Exception {
+    return value.toString();
+  }
+
+  /**
+   * @param value
+   * @return @throws
+   *         Exception
+   */
+  public static Object mapXMLValueToJava( String value, String type ) throws Exception
+  {
     if( "java.lang.String".equals( type ) )
       return value;
     if( "java.lang.Float".equals( type ) )
@@ -98,13 +101,13 @@ public static Object mapXMLValueToJava(String value,String type) throws Exceptio
       double intValue = Double.parseDouble( value );
       Integer integer = new Integer( (int)intValue );
       if( integer.intValue() != intValue )
-        throw new Exception("no valid int value :"+value);
+        throw new Exception( "no valid int value :" + value );
       return integer;
     }
     if( "java.lang.Boolean".equals( type ) )
       return new Boolean( value );
-if("java.util.Date".equals(type))
-return XML_DATE_FORMAT.parseObject(value);
-    throw new Exception("unknown XML type :"+type+ "for value: "+value);
-}
+    if( "java.util.Date".equals( type ) )
+      return XML_DATE_FORMAT.parseObject( value );
+    throw new Exception( "unknown XML type :" + type + "  for value: " + value );
+  }
 }

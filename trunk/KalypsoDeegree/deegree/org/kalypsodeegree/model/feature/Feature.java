@@ -9,7 +9,6 @@ package org.deegree.model.feature;
  */
 public interface Feature extends DeegreeFeature
 {
-
   public void addProperty( FeatureProperty prop );
   
 }

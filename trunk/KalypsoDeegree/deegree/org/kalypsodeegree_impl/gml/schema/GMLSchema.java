@@ -87,7 +87,10 @@ public class GMLSchema
           if( !uri.isAbsolute() )
           {
             String prefix = m_url.toString();
-            final int index = prefix.lastIndexOf( "/" );
+            final int slashIndex = prefix.lastIndexOf( "/" );
+            final int backslashIndex = prefix.lastIndexOf( "\\" );
+            final int index = Math.max( slashIndex, backslashIndex );
+            
             prefix = prefix.substring( 0, index + 1 );
             
             uri = new URI( prefix + schemaLocation );

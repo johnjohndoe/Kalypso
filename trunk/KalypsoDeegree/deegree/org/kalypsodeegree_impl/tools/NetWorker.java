@@ -47,10 +47,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.deegree.tools.IURLConnectionFactory;
+import sun.misc.BASE64Encoder;
 
 /**
  * Performs a HTTP request using the service URL submitted to the constructor
@@ -206,7 +208,8 @@ public class NetWorker
     Debug.debugMethodBegin( this, "getInputStream" );
 
     // open connection to the requested host
-    URLConnection connection = getURLConnection( url );
+    final URLConnection connection = url.openConnection();
+    configureProxy( connection );
     connection.setDoInput( true );
 
     // sets the content type of the request
@@ -254,6 +257,26 @@ public class NetWorker
 
     Debug.debugMethodEnd();
     return is;
+  }
+
+  /**
+   * Configures a URLConnection for Acces via proxy
+   * 
+   * @TODO: move to URLConnectionUtilities-Class
+   * @TODO: handle https
+   */
+  public static void configureProxy( final URLConnection connection )
+  {
+    final URL url = connection.getURL();
+    final PasswordAuthentication authentication = Authenticator.requestPasswordAuthentication( url.getHost(), null, url.getPort(), url.getProtocol(), "Blubberdibla", url.getAuthority() );
+    
+    if( authentication != null )
+    {
+      final String pw = authentication.getUserName() + ":" + authentication.getPassword();
+      final String epw = "Basic " + ( new BASE64Encoder() ).encode( pw.getBytes() );
+
+      connection.addRequestProperty( "Proxy-Authorization", epw );
+    }
   }
 
   /**
@@ -341,20 +364,4 @@ public class NetWorker
     }
     return true;
   }
-
-  private static IURLConnectionFactory m_urlConnectionFactory = null;
-
-  public static void setURLConnectionFactory( IURLConnectionFactory urlConnectionFactory )
-  {
-    m_urlConnectionFactory = urlConnectionFactory;
-  }
-
-  private URLConnection getURLConnection( URL requestUrl ) throws IOException
-  {
-    if( m_urlConnectionFactory != null )
-      return m_urlConnectionFactory.createURLConnection( requestUrl );
-
-    return requestUrl.openConnection();
-  }
-
 }

@@ -2,6 +2,8 @@ package org.kalypso.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.MissingResourceException;
@@ -15,7 +17,6 @@ import javax.swing.UIManager;
 import javax.xml.bind.JAXBException;
 import javax.xml.rpc.ServiceException;
 
-import org.deegree.tools.IURLConnectionFactory;
 import org.deegree_impl.extension.ITypeRegistry;
 import org.deegree_impl.extension.TypeRegistryException;
 import org.deegree_impl.extension.TypeRegistrySingleton;
@@ -80,8 +81,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   private RepositorySpecification[] m_repositoriesSpecification = null;
 
   private final SelectionIdProvider mySelectionIdProvider = new SelectionIdProvider();
-
-  private IURLConnectionFactory m_urlConnectionFactory;
 
   /** factory for webservice proxy for the kalypso client */
   private ProxyFactory m_proxyFactory;
@@ -182,7 +181,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       catch( Exception e ) // generic exception used to simplify processing
       {
         // do nothing, try with next location TODO: message for user?
-      	e.printStackTrace();
+        e.printStackTrace();
       }
       finally
       {
@@ -199,9 +198,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     }
 
     throw new IllegalStateException( "Could not load client configuration from server!" );
-    
+
     // TODO: Marc: cient sollte auch one config file laufen!?
-    //throw new IllegalStateException( "Could not load client configuration from server!" );
+    //throw new IllegalStateException( "Could not load client configuration
+    // from server!" );
   }
 
   /**
@@ -504,58 +504,29 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     }
   }
 
-  private void configureProxy()
-  {
-  //    System.setProperty( "proxySet", "true" );
-  //    System.setProperty( "proxyHost", "172.16.0.1" );
-  //    System.setProperty( "proxyPort", "8080" );
-  //    String pw = "belger:LaufMensch";
-  //    String epw = "Basic " + ( new BASE64Encoder() ).encode( pw.getBytes() );
-  //
-  //    m_urlConnectionFactory = new URLConnectionFactory( "Proxy-Authorization",
-  // epw );
-  //    NetWorker.setURLConnectionFactory( m_urlConnectionFactory );
-  }
-
-  public IURLConnectionFactory getURLConnectionFactory()
-  {
-    return m_urlConnectionFactory;
-  }
-
   public int getDefaultMapSelectionID()
   {
     return 0x1;
   }
 
-  //  private class URLConnectionFactory implements IURLConnectionFactory
-  //  {
-  //    private final String m_property;
-  //
-  //    private final String m_value;
-  //
-  //    private URLConnectionFactory( String property, String value )
-  //    {
-  //      m_property = property;
-  //      m_value = value;
-  //    }
-  //
-  //    private URLConnectionFactory()
-  //    {
-  //      m_property = null;
-  //      m_value = null;
-  //    }
-  //
-  //    /**
-  //     * @see
-  // org.deegree.tools.IURLConnectionFactory#createURLConnection(java.net.URL)
-  //     */
-  //    public URLConnection createURLConnection( URL url ) throws IOException
-  //    {
-  //      if( m_property == null )
-  //        return url.openConnection();
-  //      URLConnection connection = url.openConnection();
-  //      connection.setRequestProperty( m_property, m_value );
-  //      return connection;
-  //    }
-  //  }
+  private void configureProxy()
+  {
+    // TODO: retrieve from preferences
+    System.setProperty( "proxySet", "true" );
+    System.setProperty( "proxyHost", "172.16.0.1" );
+    System.setProperty( "proxyPort", "8080" );
+    
+    // TODO: get login from preferences
+    Authenticator.setDefault(new Authenticator()
+        {
+      /**
+       * @see java.net.Authenticator#getPasswordAuthentication()
+       */
+      protected PasswordAuthentication getPasswordAuthentication()
+      {
+        return new PasswordAuthentication( "belger", "LaufMensch".toCharArray() );
+      }
+        } );
+  }
+
 }

@@ -46,14 +46,15 @@ public final class GmlArrayLoader extends AbstractLoader
       final String schemaPath = source.getProperty( "XSD", "" );
       final IFile schemaFile = project.getFile( schemaPath );
   
-      final URL schemaURL = new URL( "platform:/resource/" + schemaFile.getFullPath().toOSString() );
+      // use toString because URL need / instead of \ 
+      final URL schemaURL = new URL( "platform:/resource/" + schemaFile.getFullPath().toString() );
       
 //      final InputSource schemaSource = new InputSource( schemaFile.getContents() );
 //      schemaSource.setEncoding( schemaFile.getCharset() );
       
       final String gmlPath = source.getProperty( "PATH", "" );
       final IFile gmlFile = project.getFile( gmlPath );
-      final URL gmlURL = new URL( "platform:/resource/" + gmlFile.getFullPath().toOSString() );
+      final URL gmlURL = new URL( "platform:/resource/" + gmlFile.getFullPath().toString() );
 //      final InputSource gmlSource = new InputSource( gmlFile.getContents() );
 //      gmlSource.setEncoding( gmlFile.getCharset() );
   

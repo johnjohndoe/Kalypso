@@ -2,7 +2,6 @@ package org.kalypso.ogc.gml.serialize;
 
 import java.io.Writer;
 import java.net.URL;
-import java.util.HashMap;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;

@@ -612,17 +612,6 @@ public class ShapeFile
   }
 
   /**
-   * returns the number of geometries within a feature collection <BR>
-   * 
-   * @param fc :
-   *          featurecollection which is checked for the number geomtries <BR>
-   */
-  private int getGeometryCount( FeatureCollection fc )
-  {
-    return fc.getSize();
-  }
-
-  /**
    * returns the type of the n'th feature in a featurecollection
    * 
    * @param fc :
@@ -630,12 +619,8 @@ public class ShapeFile
    * @param n :
    *          number of the feature which should be examined starts with 0
    */
-  private int getGeometryType( FeatureCollection fc, int n )
+  private int getGeometryType( final Feature feature )
   {
-    Feature feature = null;
-
-    feature = fc.getFeature( n );
-
     GM_Object[] g = feature.getGeometryProperties();
 
     if( ( g == null ) || ( g.length == 0 ) )
@@ -684,23 +669,15 @@ public class ShapeFile
    * @param n :
    *          number of the feature which should be returned <BR>
    */
-  private GM_Object getFeatureAsGeometry( FeatureCollection fc, int n )
+  private GM_Object getFeatureAsGeometry( final Feature feature )
   {
-    Feature feature = null;
-
-    feature = fc.getFeature( n );
-
     return feature.getGeometryProperties()[0];
   }
 
   /**
    */
-  public FeatureProperty[] getFeatureProperties( FeatureCollection fc, int n )
+  private FeatureProperty[] getFeatureProperties( final Feature feature )
   {
-    Feature feature = null;
-
-    feature = fc.getFeature( n );
-
     FeatureTypeProperty[] ftp = feature.getFeatureType().getProperties();
     FeatureProperty[] fp = new FeatureProperty[ftp.length];
     Object[] fp_ = feature.getProperties();
@@ -715,16 +692,16 @@ public class ShapeFile
 
   /**
    */
-  public void initDBaseFile( FeatureCollection fc ) throws DBaseException
+  private void initDBaseFile( final Feature[] features ) throws DBaseException
   {
     FieldDescriptor[] fieldDesc = null;
 
     // get feature properties
-    FeatureProperty[] pairs = getFeatureProperties( fc, 0 );
+    FeatureProperty[] pairs = getFeatureProperties( features[0] );
 
     // count regular fields
     int cnt = 0;
-    FeatureType featT = fc.getFeature( 0 ).getFeatureType();
+    FeatureType featT = features[0].getFeatureType();
     FeatureTypeProperty[] ftp = featT.getProperties();
     for( int i = 0; i < pairs.length; i++ )
     {
@@ -792,18 +769,16 @@ public class ShapeFile
     }
   }
 
-  /**
-   * writes a OGC FeatureCollection to a ESRI shape file. <BR>
-   * all features in the collection must have the same properties. <BR>
-   */
-  public void writeShape( FeatureCollection fc ) throws Exception
+  public void writeShape( final Feature[] features ) throws Exception
   {
     Debug.debugMethodBegin( this, "writeShape" );
 
+    // TODO: check length 0
+    
     int nbyte = 0;
     int geotype = -1;
     byte shptype = -1;
-    int typ_ = getGeometryType( fc, 0 );
+    int typ_ = getGeometryType( features[0] );
     byte[] bytearray = null;
     IndexRecord record = null;
     SHPEnvelope mbr = null;
@@ -815,18 +790,18 @@ public class ShapeFile
     int offset = ShapeConst.SHAPE_FILE_HEADER_LENGTH;
 
     // initialize the dbasefile associated with the shapefile
-    initDBaseFile( fc );
+    initDBaseFile( features );
 
     // loop throug the Geometries of the feature collection anf write them
     // to a bytearray
-    for( int i = 0; i < getGeometryCount( fc ); i++ )
+    for( int i = 0; i < features.length; i++ )
     {
       // get i'th features properties
-      pairs = getFeatureProperties( fc, i );
+      pairs = getFeatureProperties( features[i] );
 
       // write i'th features properties to a ArrayList
       ArrayList vec = new ArrayList();
-      FeatureTypeProperty[] ftp = fc.getFeature( 0 ).getFeatureType().getProperties();
+      FeatureTypeProperty[] ftp = features[0].getFeatureType().getProperties();
       for( int j = 0; j < pairs.length; j++ )
       {
         if( ( ftp[j].getType().endsWith( "Integer" ) ) || ( ftp[j].getType().endsWith( "Byte" ) )
@@ -855,7 +830,7 @@ public class ShapeFile
       }
 
       // Get Geometry Type of i'th feature
-      geotype = getGeometryType( fc, i );
+      geotype = getGeometryType( features[i] );
 
       if( geotype < 0 )
       {
@@ -890,7 +865,7 @@ public class ShapeFile
       if( geotype == 0 )
       {
         // Geometrie Type = Point
-        GM_Point wks = (GM_Point)getFeatureAsGeometry( fc, i );
+        GM_Point wks = (GM_Point)getFeatureAsGeometry( features[i] );
         SHPPoint shppoint = new SHPPoint( wks.getPosition() );
         nbyte = shppoint.size();
         bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
@@ -908,7 +883,7 @@ public class ShapeFile
       {
         // Geometrie Type = LineString
         GM_Curve[] wks = new GM_Curve[1];
-        wks[0] = (GM_Curve)getFeatureAsGeometry( fc, i );
+        wks[0] = (GM_Curve)getFeatureAsGeometry( features[i] );
 
         SHPPolyLine shppolyline = new SHPPolyLine( wks );
         nbyte = shppolyline.size();
@@ -927,7 +902,7 @@ public class ShapeFile
       {
         // Geometrie Type = Polygon
         GM_Surface[] wks = new GM_Surface[1];
-        wks[0] = (GM_Surface)getFeatureAsGeometry( fc, i );
+        wks[0] = (GM_Surface)getFeatureAsGeometry( features[i] );
 
         SHPPolygon shppolygon = new SHPPolygon( wks );
         nbyte = shppolygon.size();
@@ -945,7 +920,7 @@ public class ShapeFile
       else if( geotype == 3 )
       {
         // Geometrie Type = MultiPoint
-        GM_MultiPoint wks = (GM_MultiPoint)getFeatureAsGeometry( fc, i );
+        GM_MultiPoint wks = (GM_MultiPoint)getFeatureAsGeometry( features[i] );
         SHPMultiPoint shpmultipoint = new SHPMultiPoint( wks );
         nbyte = shpmultipoint.size();
         bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
@@ -956,7 +931,7 @@ public class ShapeFile
       else if( geotype == 4 )
       {
         // Geometrie Type = MultiLineString
-        GM_MultiCurve wks = (GM_MultiCurve)getFeatureAsGeometry( fc, i );
+        GM_MultiCurve wks = (GM_MultiCurve)getFeatureAsGeometry( features[i] );
         SHPPolyLine shppolyline = new SHPPolyLine( wks.getAllCurves() );
         nbyte = shppolyline.size();
         bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
@@ -973,7 +948,7 @@ public class ShapeFile
       else if( geotype == 5 )
       {
         // Geometrie Type = MultiPolygon
-        GM_MultiSurface wks = (GM_MultiSurface)getFeatureAsGeometry( fc, i );
+        GM_MultiSurface wks = (GM_MultiSurface)getFeatureAsGeometry( features[i] );
         SHPPolygon shppolygon = new SHPPolygon( wks.getAllSurfaces() );
         nbyte = shppolygon.size();
         bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
@@ -1031,5 +1006,15 @@ public class ShapeFile
     shp.writeHeader( offset, shptype, shpmbr );
 
     Debug.debugMethodEnd();
+    
+  }
+  
+  /**
+   * writes a OGC FeatureCollection to a ESRI shape file. <BR>
+   * all features in the collection must have the same properties. <BR>
+   */
+  public void writeShape( FeatureCollection fc ) throws Exception
+  {
+    writeShape( fc.getAllFeatures() );
   }
 }
