@@ -1,6 +1,8 @@
 package org.kalypso.ogc.sensor.zml;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 import org.kalypso.java.properties.PropertiesHelper;
@@ -70,9 +72,26 @@ public class ZmlAxis extends DefaultAxis
     return m_axisType;
   }
 
-  public void fetchValues( final String currentPath, final ZmlTuppleModel model ) throws SensorException
+  /**
+   * Helper that fetches the values. Uses a <code>IZmlValuesLoader</code> to
+   * load the values either from the zml (inline) or from some external
+   * resource.
+   * 
+   * @param context url of the ZmlObservation document, used when paths are relative
+   * @param model the model
+   */
+  public void fetchValues( final URL context, final ZmlTuppleModel model ) throws SensorException
   {
-    IZmlValuesLoader loader = ZmlValueFactory.createLoader( currentPath, m_axisType, this );
+    IZmlValuesLoader loader;
+    try
+    {
+      loader = ZmlValueFactory.createLoader( context, m_axisType, this );
+    }
+    catch( MalformedURLException e )
+    {
+      throw new SensorException( e );
+    }
+    
     loader.setModel( model );
     m_values = loader.load();
   }

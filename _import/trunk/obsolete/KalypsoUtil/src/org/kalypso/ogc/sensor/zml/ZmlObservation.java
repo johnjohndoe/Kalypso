@@ -1,8 +1,8 @@
 package org.kalypso.ogc.sensor.zml;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
@@ -46,20 +46,20 @@ public class ZmlObservation implements IObservation
 
   private final String m_sourceName;
 
-  private final InputSource m_inputSource;
-  
-  private final String m_currentPath;
+  private final URL m_url;
 
-  public ZmlObservation( final File file ) throws FileNotFoundException
+  /**
+   * Constructor using a <code>File</code> object.
+   */
+  public ZmlObservation( final File file ) throws MalformedURLException
   {
-    this( file.getAbsolutePath(), file.getName(), new InputSource( new FileReader( file ) ) );
+    this( file.getName(), file.toURL() );
   }
 
-  public ZmlObservation( final String currentPath, final String sourceName, final InputSource inputSource )
+  public ZmlObservation( final String sourceName, final URL url )
   {
     m_sourceName = sourceName;
-    m_inputSource = inputSource;
-    m_currentPath = currentPath;
+    m_url = url;
   }
 
   /**
@@ -81,7 +81,7 @@ public class ZmlObservation implements IObservation
       {
         Unmarshaller u = m_zmlObjectFactory.createUnmarshaller();
 
-        m_obsFile = (Observation)u.unmarshal( m_inputSource );
+        m_obsFile = (Observation)u.unmarshal( new InputSource( m_url.openStream() ) );
       }
       catch( Exception e )
       {
@@ -179,7 +179,8 @@ public class ZmlObservation implements IObservation
     if( m_model == null )
     {
       getAxisList();
-      m_model = new ZmlTuppleModel( m_currentPath, m_axisList );
+
+      m_model = new ZmlTuppleModel( m_url, m_axisList );
     }
 
     return m_model;

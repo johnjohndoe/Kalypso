@@ -1,9 +1,7 @@
 package org.kalypso.ogc.sensor.zml.values;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.InputStreamReader;
-import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
@@ -24,7 +22,7 @@ import org.kalypso.zml.AxisType.ValueLinkType;
  * <pre>
  * href="TYPE=...#LOCATION=...#COLUMN=..."
  * </pre>
- * TYPE: type of the path: relative (to the eclipse-project) or absolute
+ * TYPE: type of the path: relative (to the zml file) or absolute
  * LOCATIOM: the path
  * COLUMN: the column number into which the values for the axis can be found
  * 
@@ -41,13 +39,16 @@ public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
   private Map m_helper = new Hashtable();
   
   private final String m_type;
-  private final String m_location;
   private final int m_column;
+  private final URL m_url;
 
   /**
    * Constructor, parses the href from the valueLink.
+   * 
+   *@param context needed when link type is relative, it is then used as context for building the full url of the document storing the values
+   * @throws MalformedURLException
    */
-  public ValueLink( final String currentPath, final AxisType.ValueLinkType valueLink, final ZmlAxis axis )
+  public ValueLink( final URL context, final AxisType.ValueLinkType valueLink, final ZmlAxis axis ) throws MalformedURLException
   {
     m_valueLink = valueLink;
     m_axis = axis;
@@ -57,13 +58,11 @@ public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
     m_type = hrefProps.getProperty( "TYPE" );
     m_column = Integer.valueOf( hrefProps.getProperty("COLUMN") ).intValue() - 1;
     
-    String loc = hrefProps.getProperty( "LOCATION" );
-    
     // depending on path type, complement with currentPath
     if( m_type.equals( "relative" ) )
-      m_location = currentPath + File.separatorChar + loc;
+      m_url = new URL( context, hrefProps.getProperty( "LOCATION" ) );
     else
-      m_location = loc;
+      m_url = new URL( hrefProps.getProperty( "LOCATION" ) );
   }
 
   /**
@@ -73,18 +72,11 @@ public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
   {
     try
     {
-      m_csv = (CSV)m_model.getPoolObject( m_location );
+      m_csv = (CSV)m_model.getPoolObject( m_url );
       if( m_csv == null )
       {
-        Reader r = null;
-        
-        if( m_type.equals( "relative" ) )
-          r = new FileReader( m_location );
-        else
-          r = new InputStreamReader( new URL( m_location ).openStream() );
-        
-        m_csv = new CSV( r, m_valueLink.getSeparator() );
-        m_model.putPoolObject( m_location, m_csv );
+        m_csv = new CSV( new InputStreamReader( m_url.openStream() ), m_valueLink.getSeparator() );
+        m_model.putPoolObject( m_url, m_csv );
       }
 
       return this;

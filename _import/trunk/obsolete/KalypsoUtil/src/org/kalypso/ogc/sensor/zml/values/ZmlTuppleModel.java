@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.zml.values;
 
+import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -20,15 +21,15 @@ public class ZmlTuppleModel implements ITuppleModel
   private final Map m_map = new Hashtable();
 
   /**
-   * Constructor. Fetches the values for each of the axes. May use the currentPath
-   * argument which denotes how to complete relative path locations.
+   * Constructor. Fetches the values for each of the axes.
+   * @param context the url of the ZmlObservation document used as context for building url with relative path 
    */
-  public ZmlTuppleModel( final String currentPath, final ZmlAxis[] axes ) throws SensorException
+  public ZmlTuppleModel( final URL context, final ZmlAxis[] axes ) throws SensorException
   {
     m_axes = axes;
     
     for( int i = 0; i < m_axes.length; i++ )
-      m_axes[i].fetchValues( currentPath, this );
+      m_axes[i].fetchValues( context, this );
   }
 
   protected Object getPoolObject( Object key )

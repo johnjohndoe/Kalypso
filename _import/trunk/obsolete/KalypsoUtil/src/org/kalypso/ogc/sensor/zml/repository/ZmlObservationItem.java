@@ -1,7 +1,7 @@
 package org.kalypso.ogc.sensor.zml.repository;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlObservation;
@@ -32,25 +32,26 @@ public class ZmlObservationItem extends FileItem
       {
         return getZmlFileObservation();
       }
-      catch( FileNotFoundException e )
+      catch( MalformedURLException e )
       {
         // TODO: ok so?
         throw new RuntimeException( e );
       }
-    
+
     return null;
   }
 
   /**
    * Helper, lazy loading.
-   * @throws FileNotFoundException
+   * 
+   * @throws MalformedURLException
    */
-  private ZmlObservation getZmlFileObservation() throws FileNotFoundException
+  private ZmlObservation getZmlFileObservation() throws MalformedURLException
   {
     // check against the filter
     if( m_zmlFile == null && getRep().getFilter().accept( getFile() ) )
       m_zmlFile = new ZmlObservation( getFile() );
-    
+
     return m_zmlFile;
   }
 }
