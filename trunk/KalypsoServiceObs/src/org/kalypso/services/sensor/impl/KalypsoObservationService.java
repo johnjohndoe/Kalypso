@@ -199,6 +199,8 @@ public class KalypsoObservationService implements IObservationService
       else
         args = new DateRangeArgument( drb.getFrom(), drb.getTo() );
 
+      m_logger.info( "Reading data for observation: " + obs.getName() + " Arguments: " + args );
+      
       final ObservationType obsType = ZmlFactory.createXML( obs, args );
 
       final File f = File.createTempFile( "___" + obs.getName(), ".zml",

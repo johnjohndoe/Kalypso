@@ -10,9 +10,9 @@ import java.util.Date;
  */
 public class DateRangeBean implements Serializable
 {
-  private Date m_from;
+  private long m_from;
 
-  private Date m_to;
+  private long m_to;
 
   public DateRangeBean()
   {
@@ -21,26 +21,26 @@ public class DateRangeBean implements Serializable
 
   public DateRangeBean( final Date from, final Date to )
   {
-    m_from = from;
-    m_to = to;
+    m_from = from.getTime();
+    m_to = to.getTime();
   }
 
-  public Date getFrom()
+  public long getFrom()
   {
     return m_from;
   }
 
-  public void setFrom( Date from )
+  public void setFrom( long from )
   {
     m_from = from;
   }
 
-  public Date getTo()
+  public long getTo()
   {
     return m_to;
   }
 
-  public void setTo( Date to )
+  public void setTo( long to )
   {
     m_to = to;
   }

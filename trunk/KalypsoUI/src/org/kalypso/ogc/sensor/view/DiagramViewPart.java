@@ -15,6 +15,7 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.ChartPanel;
+import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
@@ -90,9 +91,9 @@ public class DiagramViewPart extends ViewPart implements
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    final Runnable runnable = new Runnable()
+    final CatchRunnable runnable = new CatchRunnable()
     {
-      public void run()
+      public void runIntern()
       {
         m_template.removeAllCurves();
 
