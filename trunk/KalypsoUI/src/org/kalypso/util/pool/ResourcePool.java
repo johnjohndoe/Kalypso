@@ -317,7 +317,6 @@ public class ResourcePool implements ILoaderListener
   {
     synchronized( this )
     {
-
       final IPoolableObjectType key = findKey( object );
 
       if( key != null )

@@ -63,9 +63,6 @@ class CurveDataset extends AbstractIntervalXYDataset
   {
     synchronized( m_curves )
     {
-//      if( series >= getSeriesCount() )
-//        return "Daten nicht vorhanden";
-      
       final String name = ((XYCurveSerie) m_curves.get( series )).getName();
       return name;
     }

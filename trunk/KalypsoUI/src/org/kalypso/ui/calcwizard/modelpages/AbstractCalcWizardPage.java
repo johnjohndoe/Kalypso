@@ -778,7 +778,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     try
     {
-      getContainer().run( false, false, op );
+      getContainer().run( true, false, op );
     }
     catch( final InvocationTargetException e )
     {
@@ -829,7 +829,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final IRunnableWithProgress op = new IRunnableWithProgress()
     {
-
       public void run( IProgressMonitor monitor ) throws InvocationTargetException
       {
         try
@@ -870,7 +869,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     runAndHandleOperation( op, "Hochwasser Vorhersage" );
 
-    onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
+    // alle Seiten sollten einen Refresh machen?!
+//    onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
   }
 
   protected void postCreateControl()

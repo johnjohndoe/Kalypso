@@ -129,4 +129,12 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   {
     throw new LoaderException( "Operation not supported" );
   }
+
+  protected void savingResource( final IResource resource )
+  {
+    // den nächsten change event der resource ignorieren
+    // etwas dirty, weil wir nicht sicher sien können, dass
+    // der wirklich vom save kommt
+    m_visitor.ignoreResourceOneTime( resource ); 
+  }
 }

@@ -458,8 +458,6 @@ public class ObservationPlot extends XYPlot
    */
   public LegendItemCollection getLegendItems()
   {
-    System.out.println("have a look: " + this );
-    
     final LegendItemCollection legendItemCollection = super.getLegendItems();
     
     for( final Iterator iter = legendItemCollection.iterator(); iter.hasNext(); )

@@ -123,7 +123,7 @@ Version ...
 - Diverse korrigierte Bugs:
 	* SetContentThread: bessere handhabung der Thread. Die Klasse heisst jetzt
 	SetContentHelper.
-	
+
 - Weisse-Elster-Modell:
    für Zufluesse und Pegel wird jetzt ein InterpolationFilter (1h) verwendet. 
    Die Zufluss-Vorhersage-Zeitreihe ist ebenfalls auf die gemessene ZuflussZR verlinkt. Durch den Filter 
@@ -133,5 +133,7 @@ Version ...
 	- kleinere Bugfixes in der Input-Datenerzeugung
 	- Bugfix beim Übertragen der Erzeugten Dateien zum Client -> die .dbf Dateien lassen sich jetzt auch mit dem alten
 	Programm lesen (Systemzeit vorher umstellen!)
+	- Geodaten für Überleitungen übernommen
+	- Gewässergrunddaten überarbeitet zwecks besserer Darstellung
 	
 - Beim Start eines Vorhersagemodells aus dem Startbildschirm wird jetzt eine Sanduhr angezeigt
