@@ -64,11 +64,14 @@ public class FeatureAssociationTypeProperty_Impl extends FeatureTypeProperty_Imp
         associationFeatureType = (FeatureType)m_schema.getMappedType( m_associatedNode );
       else if( m_associatedFT != null )
         associationFeatureType = m_associatedFT;
-
-      FeatureType[] subStitutionFE = GMLHelper.getResolveSubstitutionGroup( associationFeatureType, m_schema.getFeatureTypes() );
       List list = new ArrayList();
-      list.addAll( Arrays.asList( subStitutionFE ) );
-      // test if some featuretypes are abstract and do not add them
+
+      if(m_schema!=null) // if we have a schema (shape files have none)
+      {
+      	FeatureType[] subStitutionFE = GMLHelper.getResolveSubstitutionGroup( associationFeatureType, m_schema.getFeatureTypes() );
+        list.addAll( Arrays.asList( subStitutionFE ) );
+        // TODO test if some featuretypes are abstract and do not add them
+      }
       list.add( associationFeatureType );
       m_associationFeatureTypes = (FeatureType[])list.toArray( new FeatureType[list.size()] );
 
