@@ -33,6 +33,7 @@ import org.kalypso.ogc.gml.outline.MoveThemeDownAction;
 import org.kalypso.ogc.gml.outline.MoveThemeUpAction;
 import org.kalypso.ogc.gml.outline.OpenStyleDialogAction;
 import org.kalypso.ogc.gml.outline.RemoveThemeAction;
+import org.kalypso.ogc.gml.outline.SaveStyleAction;
 import org.kalypso.plugin.ImageProvider;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.list.IListManipulator;
@@ -52,6 +53,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   protected RemoveThemeAction m_removeAction = null;
 
   protected OpenStyleDialogAction m_openStyleDialogAction = null;
+  
+  protected SaveStyleAction m_saveStyleAction = null;
 
   private final JobExclusiveCommandTarget m_commandTarget;
 
@@ -87,6 +90,9 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
     m_openStyleDialogAction = new OpenStyleDialogAction( "Style verändern",
         ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Style ändern", m_modellView );
+        
+    m_saveStyleAction = new SaveStyleAction( "Style speichern",
+    		ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Style speichern", m_modellView);    
 
     onModellChange( null );
   }
@@ -109,6 +115,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
       m_moveOneUpAction.dispose();
     if( m_removeAction != null )
       m_removeAction.dispose();
+    if(m_saveStyleAction !=null)
+    	m_saveStyleAction.dispose();
   }
 
   /**
@@ -147,6 +155,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
         manager.add( new Separator() );
         manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
         manager.add( m_openStyleDialogAction );
+        manager.add( m_saveStyleAction);
       }
     } );
     final Menu menu = menuMgr.createContextMenu( m_modellView.getControl() );

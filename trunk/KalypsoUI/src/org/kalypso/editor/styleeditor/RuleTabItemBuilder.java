@@ -4,7 +4,17 @@
  */
 package org.kalypso.editor.styleeditor;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.awt.image.DirectColorModel;
+import java.awt.image.IndexColorModel;
+import java.awt.image.WritableRaster;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.StringReader;
 
 import javax.xml.transform.Result;
@@ -14,11 +24,14 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.deegree.graphics.Encoders;
+import org.deegree.graphics.legend.LegendElement;
 import org.deegree.graphics.sld.Rule;
 import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.xml.XMLTools;
+import org.deegree_impl.graphics.legend.LegendFactory;
 import org.deegree_impl.graphics.sld.Rule_Impl;
 import org.deegree_impl.graphics.sld.SLDFactory;
 import org.deegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
@@ -29,6 +42,10 @@ import org.deegree_impl.services.wfs.filterencoding.PropertyName;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -36,6 +53,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.editor.styleeditor.dialogs.FilterDialog;
@@ -47,6 +65,7 @@ import org.kalypso.editor.styleeditor.panels.SliderPanel;
 import org.kalypso.editor.styleeditor.panels.TextInputPanel;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.outline.SaveStyleAction;
 import org.w3c.dom.Document;
 
 /**
@@ -100,7 +119,7 @@ public class RuleTabItemBuilder {
 		for(int i= 0;i<rules.length; i++)
 		{			
 			TabItem tabItem = new TabItem(ruleTabFolder, SWT.NULL);	
-			Composite composite = new Composite(ruleTabFolder,SWT.NULL);		
+			final Composite composite = new Composite(ruleTabFolder,SWT.NULL);		
 			GridLayout compositeLayout = new GridLayout();
 			composite.setSize(270,400);
 			composite.setLayout(compositeLayout);
@@ -276,36 +295,11 @@ public class RuleTabItemBuilder {
 			
 			// ******* SAVING THE SLD-STYLE
 			Button saveButton = new Button(composite,SWT.NULL);
-			saveButton.setText("Save");
-			final FileDialog saveDialog = new FileDialog(composite.getShell(), SWT.SAVE);
-			final String[] filterExtension = new String[1];
-			filterExtension[0] = "sld";
-			saveDialog.setFilterExtensions(filterExtension);
+			final Label label = new Label(composite, SWT.NULL);
+			saveButton.setText("Save");						
 			saveButton.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {						 
-					try {
-						// get current contents
-						String sldContents = "<StyledLayerDescriptor version=\"String\" xmlns=\"http://www.opengis.net/sld\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><NamedLayer><Name>deegree style definition</Name>";
-						sldContents += ((KalypsoUserStyle)userStyle).exportAsXML();
-						sldContents += 	"</NamedLayer></StyledLayerDescriptor>";
-						StyledLayerDescriptor sld =  SLDFactory.createSLD(sldContents);
-						// write XML Document the valid way
-						Document doc = XMLTools.parse(new StringReader(((StyledLayerDescriptor_Impl)sld).exportAsXML()));						
-						Source source = new DOMSource(doc);
-						String filename = saveDialog.open();
-						File file = null;
-						if(filename.indexOf(".") == -1)
-							file = new File(filename + "." + filterExtension[0]);
-						else
-							file = new File(filename.substring(0,filename.indexOf("."))+ "." + filterExtension[0]);																
-					    Result result = new StreamResult(file);
-					    Transformer xformer = TransformerFactory.newInstance().newTransformer();
-					    xformer.transform(source, result);
-					            											
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}								
+					SaveStyleAction.saveUserStyle(userStyle, composite.getShell());							
 				}
 				public void widgetDefaultSelected(SelectionEvent e) {
 					widgetSelected(e);
@@ -341,4 +335,52 @@ public class RuleTabItemBuilder {
 	{
 		ruleTabFolder.setSelection(index);		
 	}	
+	
+	// transforms AWT-BufferedImage into SWT ImageData
+	// Copyright (c) 2000, 2004 IBM Corporation and others.
+	//* All rights reserved. This program and the accompanying 
+	static ImageData convertToSWT(BufferedImage bufferedImage) {
+		if (bufferedImage.getColorModel() instanceof DirectColorModel) {
+			DirectColorModel colorModel = (DirectColorModel)bufferedImage.getColorModel();
+			PaletteData palette = new PaletteData(colorModel.getRedMask(), colorModel.getGreenMask(), colorModel.getBlueMask());
+			ImageData data = new ImageData(bufferedImage.getWidth(), bufferedImage.getHeight(), colorModel.getPixelSize(), palette);
+			WritableRaster raster = bufferedImage.getRaster();
+			int[] pixelArray = new int[3];
+			for (int y = 0; y < data.height; y++) {
+				for (int x = 0; x < data.width; x++) {
+					raster.getPixel(x, y, pixelArray);
+					int pixel = palette.getPixel(new RGB(pixelArray[0], pixelArray[1], pixelArray[2]));
+					data.setPixel(x, y, pixel);
+				}
+			}		
+			return data;		
+		} else if (bufferedImage.getColorModel() instanceof IndexColorModel) {
+			IndexColorModel colorModel = (IndexColorModel)bufferedImage.getColorModel();
+			int size = colorModel.getMapSize();
+			byte[] reds = new byte[size];
+			byte[] greens = new byte[size];
+			byte[] blues = new byte[size];
+			colorModel.getReds(reds);
+			colorModel.getGreens(greens);
+			colorModel.getBlues(blues);
+			RGB[] rgbs = new RGB[size];
+			for (int i = 0; i < rgbs.length; i++) {
+				rgbs[i] = new RGB(reds[i] & 0xFF, greens[i] & 0xFF, blues[i] & 0xFF);
+			}
+			PaletteData palette = new PaletteData(rgbs);
+			ImageData data = new ImageData(bufferedImage.getWidth(), bufferedImage.getHeight(), colorModel.getPixelSize(), palette);
+			data.transparentPixel = colorModel.getTransparentPixel();
+			WritableRaster raster = bufferedImage.getRaster();
+			int[] pixelArray = new int[1];
+			for (int y = 0; y < data.height; y++) {
+				for (int x = 0; x < data.width; x++) {
+					raster.getPixel(x, y, pixelArray);
+					data.setPixel(x, y, pixelArray[0]);
+				}
+			}
+			return data;
+		}
+		return null;
+	}
+	
 }
