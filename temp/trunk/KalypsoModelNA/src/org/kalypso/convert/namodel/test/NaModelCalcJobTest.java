@@ -45,8 +45,8 @@ import java.io.File;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
-import org.deegree_impl.extension.ITypeRegistry;
-import org.deegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;

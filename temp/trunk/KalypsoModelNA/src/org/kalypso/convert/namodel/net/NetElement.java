@@ -48,8 +48,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypso.convert.ASCIIHelper;
 import org.kalypso.convert.namodel.AsciiBuffer;
 import org.kalypso.convert.namodel.CatchmentManager;

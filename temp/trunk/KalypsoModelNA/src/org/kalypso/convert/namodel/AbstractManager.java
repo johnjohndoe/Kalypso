@@ -50,11 +50,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypso.convert.ASCIIHelper;
 import org.kalypso.java.util.FortranFormatHelper;
 

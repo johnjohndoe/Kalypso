@@ -3,10 +3,10 @@ package org.kalypso.convert.namodel.net.visitors;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree_impl.model.feature.FeatureFactory;
-import org.deegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypso.convert.namodel.net.NetElement;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------

@@ -4,7 +4,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.zml.obslink.TimeseriesLink;

@@ -51,15 +51,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.gml.schema.GMLSchema;
-import org.deegree_impl.model.feature.FeatureAssociationTypeProperty_Impl;
-import org.deegree_impl.model.feature.FeatureFactory;
-import org.deegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
+import org.kalypsodeegree_impl.model.feature.FeatureAssociationTypeProperty_Impl;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypso.java.util.FortranFormatHelper;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
@@ -333,7 +333,7 @@ public class CatchmentManager extends AbstractManager
    * (non-Javadoc)
    * 
    * @see org.kalypso.convert.AbstractManager#mapID(int,
-   *      org.deegree.model.feature.FeatureType)
+   *      org.kalypsodeegree.model.feature.FeatureType)
    */
   public String mapID( int id, FeatureType ft )
   {

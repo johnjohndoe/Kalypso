@@ -48,9 +48,9 @@ import java.io.File;
 import java.net.URL;
 import java.util.Date;
 
-import org.deegree.model.feature.FeatureType;
-import org.deegree_impl.gml.schema.GMLSchema;
-import org.deegree_impl.gml.schema.GMLSchemaCache;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
 
 /**
  * @author doemming

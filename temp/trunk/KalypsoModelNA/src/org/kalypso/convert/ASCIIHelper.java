@@ -42,7 +42,7 @@ package org.kalypso.convert;
 
 import java.util.regex.Matcher;
 
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypso.java.util.FortranFormatHelper;
 
 /**

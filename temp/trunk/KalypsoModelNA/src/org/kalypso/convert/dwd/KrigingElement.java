@@ -42,7 +42,7 @@ package org.kalypso.convert.dwd;
 
 import java.util.Vector;
 
-import org.deegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 public class KrigingElement 
 {

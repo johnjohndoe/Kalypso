@@ -55,12 +55,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.model.feature.FeatureFactory;
-import org.deegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.convert.namodel.net.visitors.CompleteDownstreamNetAsciiWriterVisitor;
 import org.kalypso.convert.namodel.net.visitors.DownStreamVisitor;
@@ -330,7 +330,7 @@ public class NetFileManager extends AbstractManager
    * generate ascii netfile from gml workspace
    * 
    * @see org.kalypso.convert.namodel.AbstractManager#writeFile(java.io.Writer,
-   *      org.deegree.model.feature.GMLWorkspace)
+   *      org.kalypsodeegree.model.feature.GMLWorkspace)
    */
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace ) throws Exception
   {

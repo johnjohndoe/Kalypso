@@ -52,18 +52,18 @@ import java.util.Set;
 
 import javax.xml.bind.Marshaller;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.geometry.GM_Exception;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree_impl.extension.ITypeRegistry;
-import org.deegree_impl.extension.TypeRegistrySingleton;
-import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.deegree_impl.model.ct.GeoTransformer;
-import org.deegree_impl.model.geometry.GeometryFactory;
-import org.deegree_impl.model.sort.SplitSort;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypsodeegree_impl.model.ct.GeoTransformer;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.sort.SplitSort;
 import org.kalypso.convert.namodel.schema.KalypsoNADefaultSchema;
 import org.kalypso.dwd.DWDRaster;
 import org.kalypso.dwd.RasterStorage;
@@ -291,7 +291,7 @@ public class ForecastGeneratorConfigurator
     int size = rLat.size();
 
     final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    final CS_CoordinateSystem csLatLon = org.deegree_impl.model.cs.Adapters.getDefault().export(
+    final CS_CoordinateSystem csLatLon = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( "EPSG:4326" ) );
     final DWDRaster geoRaster = new DWDRaster( rLat.getDate(), KEY_GEO_BBOX_4326 );
     final DWDRaster pointRaster = new DWDRaster( rLat.getDate(), KEY_GEO_Point_4326 );

@@ -43,8 +43,8 @@ package org.kalypso.convert.namodel.varymodel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
-import org.deegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypso.optimize.transform.ParameterOptimizeContext;
 
 /**

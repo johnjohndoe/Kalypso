@@ -43,7 +43,7 @@ package org.kalypso.convert.namodel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author doemming

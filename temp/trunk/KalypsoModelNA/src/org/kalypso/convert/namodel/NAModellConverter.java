@@ -48,16 +48,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.extension.ITypeRegistry;
-import org.deegree_impl.extension.TypeRegistrySingleton;
-import org.deegree_impl.gml.schema.GMLSchema;
-import org.deegree_impl.gml.schema.GMLSchemaCache;
-import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.deegree_impl.model.feature.FeatureFactory;
-import org.deegree_impl.model.feature.GMLWorkspace_Impl;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypso.convert.update.UpdateModell;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
@@ -179,7 +179,7 @@ public class NAModellConverter
   {
     // load ShapeFile
     ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    CS_CoordinateSystem cSystem = org.deegree_impl.model.cs.Adapters.getDefault().export(
+    CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( "EPSG:31468" ) );
 
     final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "/ezg_agg2",
@@ -223,7 +223,7 @@ public class NAModellConverter
   {
     // load ShapeFile
     ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    CS_CoordinateSystem cSystem = org.deegree_impl.model.cs.Adapters.getDefault().export(
+    CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( "EPSG:31467" ) );
 
     final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir

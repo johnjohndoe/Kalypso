@@ -8,13 +8,13 @@ package test;
 
 import javax.xml.bind.JAXBException;
 
-import org.deegree.model.feature.*;
-import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypsodeegree.model.feature.*;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
-import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.opengis.cs.CS_CoordinateSystem;
-import org.deegree_impl.extension.*;
+import org.kalypsodeegree_impl.extension.*;
 import org.kalypso.ogc.sensor.deegree.*;
 
 /**
@@ -34,7 +34,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-		CS_CoordinateSystem cs = org.deegree_impl.model.cs.Adapters
+		CS_CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters
 				.getDefault().export(csFac.getCSByName("EPSG:31467"));
 
 		GMLWorkspace gmlWS = null;

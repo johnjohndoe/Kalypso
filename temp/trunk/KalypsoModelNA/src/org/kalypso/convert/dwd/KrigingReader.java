@@ -53,10 +53,10 @@ import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBException;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree_impl.model.cs.ConvenienceCSFactory;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.NOperationFilter;
 import org.kalypso.zml.filters.ObjectFactory;

@@ -47,9 +47,9 @@ package org.kalypso.convert.namodel;
 import java.io.IOException;
 import java.net.URL;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author doemming
@@ -58,7 +58,7 @@ import org.deegree.model.feature.GMLWorkspace;
 public class ModelManager extends AbstractManager {
 
 	/* (non-Javadoc)
-	 * @see org.kalypso.convert.AbstractManager#mapID(int, org.deegree.model.feature.FeatureType)
+	 * @see org.kalypso.convert.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
 	 */
 	public ModelManager() throws IOException 
 	{

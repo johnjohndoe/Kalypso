@@ -44,9 +44,9 @@ import java.io.File;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.IOptimizingJob;
 import org.kalypso.optimize.OptimizerCalJob;
