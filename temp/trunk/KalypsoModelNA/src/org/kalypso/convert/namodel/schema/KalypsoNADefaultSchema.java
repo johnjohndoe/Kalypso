@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.schema;
 
 import java.net.URL;
@@ -58,12 +58,12 @@ public class KalypsoNADefaultSchema
 
   private KalypsoNADefaultSchema()
   {
-    // nothing
+  // nothing
   }
 
-  public URL getDefaultNaModellSchemaURL()
+  public static URL getDefaultNaModellSchemaURL()
   {
-    return getClass().getResource( "namodell.xsd" );
+    return getInstance().getClass().getResource( "namodell.xsd" );
   }
 
 }
