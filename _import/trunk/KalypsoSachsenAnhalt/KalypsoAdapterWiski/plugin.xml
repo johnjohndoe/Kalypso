@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.repository.wiski"
+   name="KalypsoWiskiAdapter Plug-in"
+   version="0.0.1"
+   provider-name="kalypso.org">
+
+   <runtime>
+      <library name="KalypsoWiskiAdapter.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/KiWWClient.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+</plugin>
