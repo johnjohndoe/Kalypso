@@ -2,42 +2,36 @@ package org.kalypso.ogc.sensor.view;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.kalypso.ogc.sensor.DateRangeArgument;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationTimeSeries;
-import org.kalypso.plugin.KalypsoGisPlugin;
 
 /**
  * Job that takes care of fetching data and updating the dataset for the jfreechart.
  * 
  * @author schlienger
  */
-public class ShowObservationInDiagramJob extends Job
+public class ShowObservationInDiagramJob implements Runnable
 {
   private final IObservation m_obs;
   private final TimeSeriesCollection m_tsCol;
   
   public ShowObservationInDiagramJob( final TimeSeriesCollection tsCol, final IObservation obs )
   {
-    super( "Diagram QuickView Update" );
-  
     m_tsCol = tsCol;
     m_obs = obs;
-    
-    setPriority( Job.SHORT );
   }
   
   /**
-   * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+   * @see java.lang.Runnable#run()
    */
-  protected IStatus run( IProgressMonitor monitor )
+  public void run()
   {
     Calendar c = Calendar.getInstance();
 
@@ -47,15 +41,19 @@ public class ShowObservationInDiagramJob extends Job
 
     try
     {
-      m_tsCol.addSeries( new ObservationTimeSeries(m_obs, new DateRangeArgument( from, to ) ) );
+      // TODO: ok so mit der Collection von Series?
+      List series = new ObservationTimeSeries(m_obs, new DateRangeArgument( from, to ) ).getSeries();
+      
+      for( Iterator it = series.iterator(); it.hasNext(); )
+      {
+        TimeSeries s = (TimeSeries)it.next();
+      
+        m_tsCol.addSeries( s );
+      }
     }
     catch( SensorException e )
     {
-      return new Status( IStatus.ERROR,
-          KalypsoGisPlugin.getDefault().getBundle().getSymbolicName(), 0,
-          "Fehler während die Aktualisierung des Diagramms", e );
+      throw new RuntimeException( "Fehler während die Aktualisierung des Diagramms", e );
     }
-    
-    return Status.OK_STATUS;
   }
 }

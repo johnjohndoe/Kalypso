@@ -15,12 +15,9 @@ import org.kalypso.eclipse.jface.viewers.DefaultCellEditorFactory;
 import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
-import org.kalypso.util.factory.ConfigurableCachableObjectFactory;
-import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypso.util.repository.DefaultRepositoryContainer;
 import org.kalypso.util.repository.RepositorySpecification;
-import org.kalypso.util.xml.xlink.resolver.IResolver;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
 
@@ -46,11 +43,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   
   private static final String POOL_PROPERTIES = "resources/pools.properties";
   private final Properties myPoolProperties = new Properties();
-  
-  private static final String RESOLVER_PROPERTIES = "resources/resolver.properties";
-  private final Properties m_resolverProperties = new Properties();
-
-  private ConfigurableCachableObjectFactory m_ccFactory = null;
   
   private Properties m_ftpProperties;
   
@@ -89,11 +81,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       
       m_zmlRepositoriesProperties.load( getClass().getResourceAsStream( ZML_REPOSITORIES_PROPERTIES ) );
       prepareRepositoriesSpecifications();
-      
-      m_resolverProperties.load( this.getClass().getResourceAsStream( RESOLVER_PROPERTIES ) );
-      
-      // könnte auch mit andere Properties ergänzt werden...
-      m_ccFactory = new ConfigurableCachableObjectFactory( m_resolverProperties, true, this.getClass().getClassLoader() );
     }
     catch( final IOException e )
     {
@@ -133,19 +120,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   {
     return m_repositoriesSpecification;
   }
-  
-  /**
-   * Cacheable factory Methode die ein IResolver abhängig vom Typ zurück gibt.
-   * 
-   * @param type siehe in ./resources/resolver.properties
-   * @return die entsprechende Instanz von IResolver.
-   * @throws FactoryException
-   */
-  public IResolver getResolver( String type ) throws FactoryException
-  {
-    return (IResolver)m_ccFactory.getObjectInstance( type, IResolver.class );
-  }
-  
 
   public ImageDescriptor imageDescriptor( final String imageFilePath )
   {

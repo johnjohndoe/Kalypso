@@ -2,7 +2,6 @@ package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
 
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -90,8 +89,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     if( obs == null )
       return;
 
-    Job job = new ShowObservationInDiagramJob( m_tsCol, obs );
-    job.schedule();
+    getViewSite().getShell().getDisplay().asyncExec( new ShowObservationInDiagramJob( m_tsCol, obs ) );
   }
 
   /**

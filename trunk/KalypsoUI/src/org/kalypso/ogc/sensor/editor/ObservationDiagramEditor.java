@@ -3,7 +3,6 @@ package org.kalypso.ogc.sensor.editor;
 import java.awt.Frame;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
@@ -76,8 +75,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart
       setContentDescription( input.getFile().getName() );
       setPartName( input.getFile().getName() );
       
-      Job job = new ShowObservationInDiagramJob( m_tsCol, obs );
-      job.schedule();
+      getEditorSite().getShell().getDisplay().asyncExec( new ShowObservationInDiagramJob( m_tsCol, obs ) );
     }
     catch( Exception e1 )
     {

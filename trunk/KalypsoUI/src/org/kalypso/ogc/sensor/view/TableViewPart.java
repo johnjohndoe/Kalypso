@@ -1,17 +1,11 @@
 package org.kalypso.ogc.sensor.view;
 
-import java.awt.Component;
 import java.awt.Frame;
-import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -180,51 +174,6 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
       m_model.setColumns( tab.getColumns() );
 
       return Status.OK_STATUS;
-    }
-  }
-
-  /**
-   * Helper: formatiert das Datum auf eine richtige Art und Weise
-   * 
-   * @author schlienger
-   */
-  private static class DateTableCellRenderer extends DefaultTableCellRenderer
-  {
-    private final static DateFormat df = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
-
-    /**
-     * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
-     *      java.lang.Object, boolean, boolean, int, int)
-     */
-    public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected,
-        boolean hasFocus, int row, int column )
-    {
-      JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected,
-          hasFocus, row, column );
-
-      label.setText( df.format( value ) );
-
-      return label;
-    }
-  }
-
-  private static class DoubleTableCellRenderer extends DefaultTableCellRenderer
-  {
-    private final static NumberFormat nf = NumberFormat.getInstance();
-
-    /**
-     * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
-     *      java.lang.Object, boolean, boolean, int, int)
-     */
-    public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected,
-        boolean hasFocus, int row, int column )
-    {
-      JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected,
-          hasFocus, row, column );
-
-      label.setText( nf.format( value ) );
-
-      return label;
     }
   }
 }

@@ -4,19 +4,12 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
-import org.kalypso.ogc.sensor.IObservationProvider;
-import org.kalypso.plugin.KalypsoGisPlugin;
+import org.eclipse.core.resources.IFile;
 import org.kalypso.template.obstableview.ObjectFactory;
 import org.kalypso.template.obstableview.ObstableviewType;
-import org.kalypso.template.obstableview.ObstableviewType.ColumnType;
-import org.kalypso.util.factory.FactoryException;
-import org.kalypso.util.xml.xlink.XLinkException;
-import org.kalypso.util.xml.xlink.resolver.IResolver;
 
 /**
- * A TableViewTemplate
+ * A TableViewTemplate that uses a template file.
  * 
  * @author schlienger
  */
@@ -24,22 +17,22 @@ public class TableViewTemplate
 {
   private final static ObjectFactory m_baseFactory = new ObjectFactory();
 
-  private final InputStream m_input;
-
   private ObstableviewType m_baseTemplate;
 
-  private Column[] m_columns = null;
+  private TableViewColumn[] m_columns = null;
+
+  protected IFile m_file;
 
   /**
    * Constructor
    */
-  public TableViewTemplate( final InputStream in )
+  public TableViewTemplate( final IFile file )
   {
-    m_input = in;
+    m_file = file;
   }
 
   /**
-   * Helper, parses the xml
+   * Helper
    */
   private ObstableviewType getBaseTemplate()
   {
@@ -47,9 +40,13 @@ public class TableViewTemplate
     {
       try
       {
-        m_baseTemplate = (ObstableviewType)m_baseFactory.createUnmarshaller().unmarshal( m_input );
+        InputStream ins = m_file.getContents();
+        
+        m_baseTemplate = (ObstableviewType)m_baseFactory.createUnmarshaller().unmarshal( ins );
+
+        ins.close();
       }
-      catch( JAXBException e )
+      catch( Exception e )
       {
         e.printStackTrace();
       }
@@ -59,22 +56,22 @@ public class TableViewTemplate
   }
   
   /**
-   * Returns the columns defined in this template
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#getColumns()
    */
-  public Column[] getColumnsList()
+  public TableViewColumn[] getColumns()
   {
     if( m_columns == null )
     {
       List cols = getBaseTemplate().getColumn();
       
-      m_columns = new Column[ cols.size() ];
+      m_columns = new TableViewColumn[ cols.size() ];
     
       int i = 0;
       for( Iterator it = cols.iterator(); it.hasNext(); )
       {
         ObstableviewType.ColumnType col = (ObstableviewType.ColumnType)it.next();
         
-        m_columns[i++] = new Column( col );
+        m_columns[i++] = new TableViewColumn( this, col );
       }
     }
     
@@ -82,66 +79,10 @@ public class TableViewTemplate
   }
   
   /**
-   * Wrapper over ColumnType from jaxb output.
-   * 
-   * @author schlienger
+   * Liefert den zugeordnete Project
    */
-  public static class Column
+  protected IFile getFile()
   {
-    private final ColumnType m_col;
-    
-    private final TemplateXLink m_xlink;
-
-    public Column( final ObstableviewType.ColumnType col )
-    {
-      m_col = col;
-      m_xlink = new TemplateXLink( col );
-    }
-    
-    public int getWidth()
-    {
-      return m_col.getWidth();
-    }
-    
-    public boolean isEditable()
-    {
-      return m_col.isEditable();
-    }
-    
-    public void setEditable( boolean value )
-    {
-      m_col.setEditable( value );
-    }
-    
-    public void setWidth( int value )
-    {
-      m_col.setWidth( value );
-    }
-    
-    /**
-     * Delivers the IObservationProvider with which the clients can display the
-     * linked IObservation.
-     */
-    public IObservationProvider getProvider()
-    {
-      try
-      {
-        IResolver res = KalypsoGisPlugin.getDefault().getResolver( m_col.getLinktype() );
-        
-        return (IObservationProvider)res.resolve( m_xlink );
-      }
-      catch( FactoryException e )
-      {
-        // TODO handle
-        e.printStackTrace();
-      }
-      catch( XLinkException e )
-      {
-        // TODO handle
-        e.printStackTrace();
-      }
-      
-      return null;
-    }
+    return m_file;
   }
 }
