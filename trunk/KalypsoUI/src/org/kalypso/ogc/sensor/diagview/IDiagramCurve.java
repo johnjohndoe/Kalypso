@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.diagview;
 
+import java.awt.Paint;
 
 
 
@@ -29,4 +30,9 @@ public interface IDiagramCurve
    * @param string
    */
   public void setName( String string );
+  
+  /**
+   * @return paint
+   */
+  public Paint getPaint();
 }

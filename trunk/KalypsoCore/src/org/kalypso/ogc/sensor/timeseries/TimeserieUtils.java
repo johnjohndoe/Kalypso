@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.java.awt.ColorUtilities;
 import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -62,7 +63,7 @@ public class TimeserieUtils
    * @param obs
    * @return list of metadata keys
    */
-  public final static String[] findOutMDAlarmstufen( final IObservation obs )
+  public final static String[] findOutMDAlarmLevel( final IObservation obs )
   {
     return findOutMDBeginningWith( obs, "Alarmstufe" );
   }
@@ -74,7 +75,7 @@ public class TimeserieUtils
    * @param mdAlarm
    * @return color
    */
-  public final static Color getColorFor( final String mdAlarm )
+  public final static Color getColorForAlarmLevel( final String mdAlarm )
   {
     final String strColor = getProperties().getProperty( "COLOR_" + mdAlarm );
     if( strColor == null )
@@ -162,5 +163,46 @@ public class TimeserieUtils
     }
 
     return null;
+  }
+  
+  /**
+   * TODO check if the units are correct in the config.properties file
+   * 
+   * @param type
+   * @return corresponding unit
+   */
+  public static String getUnit( final String type )
+  {
+    final String strUnit = getProperties().getProperty( "AXISUNIT_" + type, "" );
+
+    return strUnit;
+  }
+  
+  /**
+   * TODO fill the names in the config.properties file
+   * 
+   * @param type
+   * @return corresponding name (user friendly)
+   */
+  public static String getName( final String type )
+  {
+    final String strName = getProperties().getProperty( "AXISNAME_" + type, "" );
+
+    return strName;
+  }
+
+  /**
+   * @param type
+   * @return a Color that is defined to be used with the given axis type, or a random color when no fits
+   */
+  public static Color getColorFor( final String type )
+  {
+    final String strColor = getProperties().getProperty( "AXISCOLOR_" + type );
+
+    if( strColor != null )
+      return StringUtilities.stringToColor( strColor );
+    
+    // no color found? so return random one
+    return ColorUtilities.random();
   }
 }
