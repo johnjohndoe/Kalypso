@@ -22,6 +22,7 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import tools.Number;
+import tools.RasterTools;
 import converter.ArcGridConverter;
 import converter.VectorToGridConverter;
 import damageAnalysis.ContextModel;
@@ -451,18 +452,24 @@ public class Main
       // "D://Nadja//floodRiskAnalysis//Kellinghusen//Grid1_neu//";
       //String workingDir2 =
       // "D://Nadja//floodRiskAnalysis//Kellinghusen//Grid2//";
-      String workingDir = "D://Nadja//eclipse//runtime-workspace//FloodRiskAnalysis//AnnualDamage//";
+      String workingDir = "D://Nadja//eclipse//workspace//FloodRiskAnalysis//Test//Waterlevel//";
 
       ITypeRegistry typeRegistry = TypeRegistrySingleton.getTypeRegistry();
       typeRegistry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
       typeRegistry.registerTypeHandler( new RangeSetTypeHandler() );
 
-      RectifiedGridCoverage testGrid = ResultModel.createAnnualDamageGrid( new File( workingDir
+      /*RectifiedGridCoverage testGrid = ResultModel.createAnnualDamageGrid( new File( workingDir
           + "AnnualDamageResultModel.gml" ), new File( schemaDir
           + "AnnualDamageResultModel.xsd" ) );
       ResultModel.writeAnnualDamageData(new File("D://temp//test.gml"), testGrid);
       ResultModel.createAnnualDamageGrid(new File("D://temp//test.gml"), new File( schemaDir
-          + "AnnualDamageResultModel.xsd" ));
+          + "AnnualDamageResultModel.xsd" ));*/
+      
+      ArcGridConverter converter = new ArcGridConverter();
+      RectifiedGridCoverage grid1 = converter.importGridArc(new File(workingDir+"wsp_hq100.asc"));
+      RectifiedGridCoverage grid2 = converter.importGridArc(new File(workingDir+"wsp_hq50.asc"));
+      RectifiedGridCoverage resultGrid = RasterTools.substractGrids(grid1,grid2);
+      converter.exportGridArc(new File(workingDir+"test.asc"), resultGrid);
 
       /*
        * File wsp_HQ10 = new File(workingDir1_neu + "Waterlevel//wsp_HQ10.asc");
