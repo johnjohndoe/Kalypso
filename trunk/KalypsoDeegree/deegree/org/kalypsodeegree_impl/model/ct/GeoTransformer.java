@@ -207,8 +207,27 @@ final public class GeoTransformer
         din[1] = 89.999;
     }
     double[] dout = new double[din.length];
-    trans.transform( din, 0, dout, 0, din.length - 1 );
-
+    try
+    {
+    //TODO 3.dimension
+        if(din.length<3)
+            trans.transform( din, 0, dout, 0, din.length - 1 );
+          else
+          {
+              double[] din2d=new double[2];
+              double[] dout2d=new double[2];
+              din2d[0]=din[0];
+              din2d[1]=din[1];
+              trans.transform( din2d, 0, dout2d, 0, din2d.length - 1 );
+              dout[0]=dout2d[0];
+              dout[1]=dout2d[1];
+              dout[2]=din[2];
+          }                    
+    }
+    catch(Exception e)
+    {
+    e.printStackTrace();
+    }
     geo = GeometryFactory.createGM_Point( dout[0], dout[1], targetOGCCS );
 
     Debug.debugMethodEnd();
@@ -359,7 +378,21 @@ final public class GeoTransformer
     {
       double[] din = pos[k].getAsArray();
       double[] dout = new double[din.length];
-      trans.transform( din, 0, dout, 0, din.length - 1 );
+      
+      //TODO 3.dimension
+      if(din.length<3)
+        trans.transform( din, 0, dout, 0, din.length - 1 );
+      else
+      {
+          double[] din2d=new double[2];
+          double[] dout2d=new double[2];
+          din2d[0]=din[0];
+          din2d[1]=din[1];
+          trans.transform( din2d, 0, dout2d, 0, din2d.length - 1 );
+          dout[0]=dout2d[0];
+          dout[1]=dout2d[1];
+          dout[2]=din[2];
+      }
       newpos[k] = GeometryFactory.createGM_Position( dout );
     }
 
