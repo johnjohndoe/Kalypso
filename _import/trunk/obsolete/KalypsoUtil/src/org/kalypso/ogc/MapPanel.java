@@ -318,6 +318,17 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
+  
+  /**
+   * calculates the current map scale (denominator) as defined in the OGC SLD 1.0.0
+   * specification
+   * 
+   * @return scale of the map
+   */  
+  public double getCurrentScale()
+  {
+  	return calcScale(getWidth(), getHeight());
+  }
 
   /**
    * calculates the map scale (denominator) as defined in the OGC SLD 1.0.0
@@ -353,8 +364,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       final double distance = calcDistance( min.getY(), min.getX(), max.getY(), max.getX() );
 
       // default pixel size defined in SLD specs is 28mm
-      final double scale = distance / 0.00028;
-
+      final double scale = distance / 0.00028;      
       return scale;
     }
     catch( final Exception e )
