@@ -71,10 +71,15 @@
         			<element name="num" type="string"></element>
 					<element name="generateResult" type="boolean"/>
         			<element name="downStreamChannelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="1"/>
-					<!-- Zufluss --> 
+					<!-- ZR Zufluss falls zufluss vorhanden --> 
+		            <element name="zuflussZRRepository" type="obslink:TimeseriesLink"/>
 		            <element name="zuflussZR" type="obslink:TimeseriesLink"/>
-            
-        			<element name="nzufPfad" type="string"/>
+          			<element name="nzufPfad" type="string"/>
+        			<!-- ZR Pegel falls Pegel vorhanden-->
+		            <element name="pegelZRRepository" type="obslink:TimeseriesLink"/>
+		            <element name="pegelZR" type="obslink:TimeseriesLink"/>
+					<!-- ZR berechnet hier wird das ergebnis gespeichert-->
+		            <element name="qberechnetZR" type="obslink:TimeseriesLink"/>
                     <!-- verzweigung -->
 					<element name="zproz" type="string"/>
 					<element name="verzweigungNodeMember" type="na:NodeAssociationType"/>
@@ -141,7 +146,6 @@
                     <element name="pns" type="string"/>
                     <element name="kurzzeit" type="string"/>
                     <element name="langzeit" type="string"/>                
-                    <element name="niederschlagZR" type="obslink:TimeseriesLink"/>
                     <element name="namfn" type="string"/>
                     <element name="faktn" type="string"/>
                     <element name="namft" type="string"/>
@@ -158,6 +162,7 @@
                     <element name="anzlayy" type="string"/>
                     <element name="bimax" type="string"/>
                     <element name="bianf" type="string"/>
+                    <element name="faktorBianf" type="string"/>                    
                     <element name="izkn_vers" type="string"/>
                     <element name="tint" type="string"/>
                     <element name="rintmx" type="string"/>
@@ -174,11 +179,13 @@ siehe bodenkorrekturmember...
                     <element name="f_eva" type="string"/>
                     <element name="aint" type="string"/>
                     <element name="aigw" type="string"/>
+                    <element name="faktorAigw" type="string"/>
                     <element name="fint" type="string"/>
                     <element name="ftra" type="string"/>
                     <element name="retvs" type="string"/>
                     <element name="retob" type="string"/>
                     <element name="retint" type="string"/>
+                    <element name="faktorRetobRetint" type="string"/>                
                     <element name="retbas" type="string"/>
                     <element name="retgw" type="string"/>
                     <element name="retklu" type="string"/>
@@ -187,7 +194,7 @@ siehe bodenkorrekturmember...
  (ngwzu,*)_...
  (gwwi,*)_...
 -->
-                    <!-- TODO -->
+                    
                     <element name="grundwasserabflussMember" type="na:grundwasserabflussAssociationType" maxOccurs="6"/>
                     <element name="entwaesserungsStrangMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="1"/>
                     <!--	<element name="ngwzu" type="string"/>
@@ -204,17 +211,11 @@ siehe bodenkorrekturmember...
                     <element name="gwsent" type="string"/>
                     <element name="klupor" type="string"/>
                     <element name="izkn" type="string"/>
-                    <!--                
-                    <element name="BodenfeuchteMin" type="double"/>
-                    <element name="Bodenfeuchte" type="double"/>
-                    <element name="BodenfeuchteMax" type="double"/>
-                    <element name="Ausdehnung" type="double"/>
-   					<element name="Niederschlag_eingabeEingang" type="obslink:TimeseriesLink"/>
-   					<element name="Niederschlag_eingabe" type="obslink:TimeseriesLink"/>
-                    <element name="Wasserstand_gemessenEingang" type="obslink:TimeseriesLink"/>
-                    <element name="Wasserstand_gemessen" type="obslink:TimeseriesLink"/>
-                    <element name="Wasserstand_gerechnet" type="obslink:TimeseriesLink"/>
--->
+    
+					<!-- ZR niederschlag -->
+   					<element name="niederschlagZRRepository" type="obslink:TimeseriesLink"/>
+   					<element name="niederschlagZR" type="obslink:TimeseriesLink"/>                                        
+
                 </sequence>
 			</extension>
 		</complexContent>
@@ -295,6 +296,8 @@ siehe bodenkorrekturmember...
 				<sequence>
 					<element name="qfmax" type="string"/>
 					<element name="c" type="string"/>
+					<element name="faktorRkf" type="string"/>
+					<element name="faktorRnf" type="string"/>
 					<element name="KMParameterMember" 
 						type="na:KMParameterAssociationType" minOccurs="5" 
 						maxOccurs="5"/>
