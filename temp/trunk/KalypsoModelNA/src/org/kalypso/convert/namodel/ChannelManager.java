@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
 import java.io.IOException;
@@ -56,6 +56,8 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.feature.FeatureFactory;
+import org.kalypso.java.util.FortranFormatHelper;
+import org.kalypso.ogc.gml.typehandler.DiagramProperty;
 
 /**
  * @author doemming
@@ -66,9 +68,13 @@ public class ChannelManager extends AbstractManager
 
   private static final int KMCHANNEL = 1;
 
+  private static final int STORAGECHANNEL = 2;
+
   private static final String KMParameterpropName = "KMParameterMember";
 
   private final FeatureType m_virtualChannelFT;
+
+  private final FeatureType m_storageChannelFT;
 
   private final FeatureType m_kmChannelFT;
 
@@ -78,6 +84,7 @@ public class ChannelManager extends AbstractManager
   {
     super( conf.getChannelFormatURL() );
     m_virtualChannelFT = schema.getFeatureType( "VirtualChannel" );
+    m_storageChannelFT = schema.getFeatureType( "StorageChannel" );
     m_kmChannelFT = schema.getFeatureType( "KMChannel" );
     m_kmParameterFT = schema.getFeatureType( "KMParameter" );
   }
@@ -90,7 +97,8 @@ public class ChannelManager extends AbstractManager
   {
     List result = new ArrayList();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection()
-        .getInputStream() ) );// new FileReader( file ) );
+        .getInputStream() ) );// new FileReader( file
+    // ) );
     Feature fe = null;
     while( ( fe = readNextFeature( reader ) ) != null )
       result.add( fe );
@@ -101,7 +109,7 @@ public class ChannelManager extends AbstractManager
   {
     HashMap propCollector = new HashMap();
     String line;
-
+    //  0-1
     for( int i = 0; i <= 1; i++ )
     {
       line = reader.readLine();
@@ -141,11 +149,14 @@ public class ChannelManager extends AbstractManager
         feature.addProperty( kmProp );
       }
       break;
+    case STORAGECHANNEL:
+      feature = getFeature( asciiID, m_storageChannelFT );
+      break;
     default:
       throw new UnsupportedOperationException( "ChannelType " + art + " is not supported" );
     }
     Collection collection = propCollector.values();
-    setParsedProperties( feature, collection );        
+    setParsedProperties( feature, collection );
     return feature;
   }
 
@@ -154,16 +165,16 @@ public class ChannelManager extends AbstractManager
     Feature rootFeature = workspace.getRootFeature();
     Feature channelCol = (Feature)rootFeature.getProperty( "ChannelCollectionMember" );
     List channelList = (List)channelCol.getProperty( "channelMember" );
-    Iterator iter = channelList.iterator();    
+    Iterator iter = channelList.iterator();
     while( iter.hasNext() )
     {
-      Feature channelFE=(Feature)iter.next();
-      if(asciiBuffer.writeFeature(channelFE))
-        writeFeature(  asciiBuffer, channelFE);
+      Feature channelFE = (Feature)iter.next();
+      if( asciiBuffer.writeFeature( channelFE ) )
+        writeFeature( asciiBuffer, channelFE, workspace );
     }
   }
 
-  private void writeFeature( AsciiBuffer asciiBuffer, Feature feature ) 
+  private void writeFeature( AsciiBuffer asciiBuffer, Feature feature, GMLWorkspace workspace )
   {
     asciiBuffer.getChannelBuffer().append( toAscci( feature, 0 ) + "\n" );
     FeatureType ft = feature.getFeatureType();
@@ -180,6 +191,71 @@ public class ChannelManager extends AbstractManager
         Feature kmFE = (Feature)kmFeatures.get( i );
         asciiBuffer.getChannelBuffer().append( toAscci( kmFE, 3 ) + "\n" );
       }
+
+    }
+    else if( "StorageChannel".equals( ft.getName() ) )
+    {
+      asciiBuffer.getChannelBuffer().append( STORAGECHANNEL + "\n" );
+
+      // (txt,a8)(inum,i8)(iknot,i8)(c,f6.2)      
+      // RHB 5
+
+      asciiBuffer.getRhbBuffer().append( "SPEICHER" + toAscci( feature, 5 ) );
+
+      // RHB 6
+      
+      Feature nodeFE = workspace.resolveLink( feature, "iknotNodeMember" );
+
+      if( nodeFE == null )
+        asciiBuffer.getRhbBuffer().append( "       0" );
+      else
+        asciiBuffer.getRhbBuffer().append( toAscci( nodeFE, 6 ) );
+
+      // RHB 7
+      asciiBuffer.getRhbBuffer().append( toAscci( feature, 7 ) + "\n" );
+
+      // (itext,a80)      
+      // RHB 8
+
+      asciiBuffer.getRhbBuffer().append( toAscci( feature, 8 ) + "\n" );
+      
+      // (lfs,i4)(nams,a10)(sv,f10.6)(vmax,f10.6)(vmin,f10.6)(jev,i4)(itxts,a10)
+      
+      // RHB 9
+      Feature dnodeFE = workspace.resolveLink( feature, "downStreamNodeMember" );
+      asciiBuffer.getRhbBuffer().append( toAscci( dnodeFE, 9 ) );
+    
+      // RHB 10
+      asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + toAscci( feature, 10 ) );
+
+      
+      DiagramProperty rhbDiagram = (DiagramProperty)feature.getProperty( "hvvsqd" );
+      
+      
+      //TODO: maximal 24 Wertepaare zulassen!
+      asciiBuffer.getRhbBuffer().append(FortranFormatHelper.printf(Integer.toString(rhbDiagram.size()),"i4"));
+          
+      asciiBuffer.getRhbBuffer().append("\n" );
+
+      // RHB 11
+      for( int i = 0; i < rhbDiagram.size(); i++ )
+      {
+        Double w = rhbDiagram.getXValue( i );
+        Double v = rhbDiagram.getYValue( i );
+        Double q = rhbDiagram.getZValue( i );
+
+        asciiBuffer.getRhbBuffer().append( "    " );
+        asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( w, "f8.2" ) );
+        asciiBuffer.getRhbBuffer().append( "        " );
+        asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( v, "f9.6" ) );
+        asciiBuffer.getRhbBuffer().append( "      " );
+        asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( q, "f8.3" ) );
+        asciiBuffer.getRhbBuffer().append( "\n" );
+      }
+
+      // RHB 12
+      asciiBuffer.getRhbBuffer().append( "ENDE" + "\n" );
+
     }
     else
       throw new UnsupportedOperationException( "can not write Feature to ascii"

@@ -1,8 +1,47 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+
 /*
  * Created on 31.01.2005
- * 
- * TODO To change the template for this generated file go to Window -
- * Preferences - Java - Code Style - Code Templates
+ *  
  */
 package org.kalypso.wizard;
 
@@ -60,9 +99,7 @@ import org.kalypso.util.url.UrlResolver;
 
 /**
  * @author kuepfer
- * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
+ *  
  */
 public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 {
@@ -90,7 +127,13 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
           FeatureFactory.createFeatureTypeProperty( "inum", "wizard.kalypso.na", Integer.class
               .getName(), false, null ),
           FeatureFactory.createFeatureTypeProperty( "StrangArt", "wizard.kalypso.na", Integer.class
-              .getName(), false, null ) }, new int[] { 1, 1 }, new int[] { 1,  1 }, null, null );
+              .getName(), false, null ) }, new int[]
+      {
+          1,
+          1 }, new int[]
+      {
+          1,
+          1 }, null, null );
 
   private KalypsoNAProjectWizardPage createMappingCatchmentPage;
 
@@ -207,7 +250,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       projectHandel.create( null );
       projectHandel.open( null );
       //set charSet for the new project to the UTF-8 standard
-      projectHandel.setDefaultCharset("UTF-8", null); 
+      projectHandel.setDefaultCharset( "UTF-8", null );
     }
     catch( CoreException e )
     {
@@ -484,7 +527,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     //copy files to workspace
     try
     {
-      
+
       FileUtilities.makeFileFromStream( false, schemaDir.append( "/control.xsd" ).toFile(), is1 );
       FileUtilities.makeFileFromStream( false, schemaDir.append( "/feature.xsd" ).toFile(), is2 );
       FileUtilities.makeFileFromStream( false, schemaDir.append( "/geometry.xsd" ).toFile(), is3 );

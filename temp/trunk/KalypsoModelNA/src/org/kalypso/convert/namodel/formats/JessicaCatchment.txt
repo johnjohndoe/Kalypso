@@ -1,7 +1,7 @@
 ___________(inum,i5)____(ispk,i3)
 (text,a80)
 (flaech,*)
-(pns,a1)_(kurzzeit,a)_(namfn,a)_(langzeit,a)_(faktn,f5.2)
+(pns,a1)_(langzeit,a)_(kurzzeit,a)_(faktn,f5.2)
 (namft,a)_(namept,a)
 (namfzf,a)
 (namhydro,a)
@@ -13,4 +13,6 @@ ___________(inum,i5)____(ispk,i3)
 (igwzu,*)
 (ngwzu,*)
 (gwwi,*)
-(hgru,*)(hgro,*)(rtr,*)(pors,*)(gwsent,*)(klupor,*)(izkn,*)
+(hgru,*)_(hgro,*)_(rtr,*)_(pors,*)_(gwsent,*)_(klupor,*)_(izkn,*)
+# ausgabe:
+(inum,*)_

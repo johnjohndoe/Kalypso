@@ -105,7 +105,7 @@ public class DummyTimeSeriesWriter
     writer.write( "EX2\n" ); //header
     Calendar calendarStart = Calendar.getInstance( m_timeZone );
     calendarStart.setTime( m_start );
-    calendarStart.set( Calendar.DAY_OF_YEAR, 1 );
+    calendarStart.set( Calendar.DAY_OF_YEAR, 0);
     calendarStart.set( Calendar.HOUR, 12 );
 
     Calendar calendarEnd = Calendar.getInstance( m_timeZone );
@@ -134,7 +134,7 @@ public class DummyTimeSeriesWriter
     writer.write( "EX2\n" ); //header
     Calendar calendarStart = Calendar.getInstance( m_timeZone );
     calendarStart.setTime( m_start );
-    calendarStart.set( Calendar.DAY_OF_YEAR, 1 );
+    calendarStart.set( Calendar.DAY_OF_YEAR, 0);
     calendarStart.set( Calendar.HOUR, 12 );
 //    double daysinYear = calendarStart.getActualMaximum( Calendar.DAY_OF_YEAR );
     Calendar calendarEnd = Calendar.getInstance( m_timeZone );

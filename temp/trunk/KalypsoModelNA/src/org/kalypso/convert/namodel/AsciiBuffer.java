@@ -55,6 +55,8 @@ public class AsciiBuffer
   private final StringBuffer m_catchmentBuffer = new StringBuffer();
 
   private final StringBuffer m_channelBuffer = new StringBuffer();
+  
+  private final StringBuffer m_rhbBuffer = new StringBuffer();
 
   private final List m_featuresToWrite=new ArrayList();
   
@@ -87,5 +89,10 @@ public class AsciiBuffer
   public StringBuffer getCatchmentBuffer()
   {
     return m_catchmentBuffer;
+  }
+  
+  public StringBuffer getRhbBuffer()
+  {
+    return m_rhbBuffer;
   }
 }

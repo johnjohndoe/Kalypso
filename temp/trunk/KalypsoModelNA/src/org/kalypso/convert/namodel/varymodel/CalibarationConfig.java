@@ -60,21 +60,20 @@ public class CalibarationConfig
     m_contexts = new ArrayList();
   }
 
-  public void addFromNAControl( Feature rootFeature )
+  public void addFromNAControl( Feature rootFeatureControl )
   {
     // Catchments
-    final String queryBaseCatchment = FeatureHelper.getAsString( rootFeature, "Catchments" );
-    String[] propNamesI = new String[]
+    final String queryBaseCatchment = FeatureHelper.getAsString( rootFeatureControl, "Catchments" );
+    String[] xpathControl = new String[]
     {
         "CatchmentsBianf",
         "CatchmentsFaktorRetobTetint",
         "CatchmentsFaktn",
         "CatchmentsFaktorAigw" };
 
-    String[][] queryCatchments = new String[][]
+    String[][] xpathModel = new String[][]
     {
         new String[]
-//        { queryBaseCatchment + "//banf" },
         { queryBaseCatchment + "/faktorBianf" },
         new String[]
         { queryBaseCatchment + "/faktorRetobRetint" },
@@ -83,9 +82,9 @@ public class CalibarationConfig
         new String[]
         { queryBaseCatchment + "/faktorAigw" } };
 
-    generateAndAddContexts( rootFeature, queryCatchments, propNamesI );
+    generateAndAddContexts( rootFeatureControl, xpathModel, xpathControl );
     // KMChannels
-    final String queryBaseKMChannel = FeatureHelper.getAsString( rootFeature, "KMChannels" );
+    final String queryBaseKMChannel = FeatureHelper.getAsString( rootFeatureControl, "KMChannels" );
     final String[] propNamesII = new String[]
     {
         "KMChannelsFaktorRkf",
@@ -97,20 +96,20 @@ public class CalibarationConfig
         { queryBaseKMChannel + "/faktorRkf" },
         new String[]
         { queryBaseKMChannel + "/faktorRnf" } };
-    generateAndAddContexts( rootFeature, queryKMChannels, propNamesII );
+    generateAndAddContexts( rootFeatureControl, queryKMChannels, propNamesII );
   }
 
-  private void generateAndAddContexts( Feature rootFeature, String[][] queryStrings,
-      String[] propNames )
+  private void generateAndAddContexts( Feature rootFeatureControl, String[][] xpathModel,
+      String[] xpathControl )
   {
-    final int n = propNames.length;
+    final int n = xpathControl.length;
     for( int i = 0; i < n; i++ )
     {
-      final String value = FeatureHelper.getAsString( rootFeature, propNames[i] );
+      final String value = FeatureHelper.getAsString( rootFeatureControl, xpathControl[i] );
       if( value == null || value.length() == 0 )
         return;
       final double initialValue = Double.parseDouble( value );
-      final String[] xPaths = queryStrings[i];
+      final String[] xPaths = xpathModel[i];
       addContext( new ParameterOptimizeContext( initialValue, 1, 0, 2, ParameterOptimizeContext.MODE_DIRECT, xPaths ) );
     }
   }

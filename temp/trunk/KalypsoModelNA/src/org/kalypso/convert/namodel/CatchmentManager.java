@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
 import java.io.File;
@@ -145,6 +145,7 @@ public class CatchmentManager extends AbstractManager
     }
     // 12
     line = reader.readLine();
+    System.out.println( "12: " + line );
     createProperties( propCollector, line, 12 );
 
     prop = (FeatureProperty)propCollector.get( "igwzu" );
@@ -160,8 +161,10 @@ public class CatchmentManager extends AbstractManager
       String format13 = FortranFormatHelper.createFormatLine( "ngwzu", "*", "_", igwzu );
       String format14 = FortranFormatHelper.createFormatLine( "gwwi", "*", "_", igwzu );
       line = reader.readLine();
+      System.out.println( "13: " + line );
       createProperties( col2, line, format13 );
       line = reader.readLine();
+      System.out.println( "14: " + line );
       createProperties( col2, line, format14 );
       for( int i = 0; i < igwzu; i++ )
       {
@@ -197,12 +200,16 @@ public class CatchmentManager extends AbstractManager
     // repository LINK
     // is absolute
     // do copy
-    Object link = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(),
-        TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_RAINFALL, m_conf.getGmlBaseDir(),
-        relativeZmlPath, false, false );
-    FeatureProperty niederschlagZRRepositoryProp = FeatureFactory.createFeatureProperty(
-        "niederschlagZRRepository", link );
-    propCollector.put( "niederschlagZRRrepository", niederschlagZRRepositoryProp );
+    //TODO: JH, ZML erzeugen, dies funktioniert nicht mehr
+    //    Object link = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(),
+    //        TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_RAINFALL,
+    // m_conf.getGmlBaseDir(),
+    //        relativeZmlPath, false, false );
+    //    FeatureProperty niederschlagZRRepositoryProp =
+    // FeatureFactory.createFeatureProperty(
+    //        "niederschlagZRRepository", link );
+    //    propCollector.put( "niederschlagZRRrepository",
+    // niederschlagZRRepositoryProp );
     // calculation LINK
     // is relative
     // no copy
@@ -221,7 +228,6 @@ public class CatchmentManager extends AbstractManager
     line = reader.readLine();
     return feature;
   }
-
 
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace ) throws Exception
   {
@@ -245,20 +251,40 @@ public class CatchmentManager extends AbstractManager
     for( int i = 0; i <= 2; i++ )
       asciiBuffer.getCatchmentBuffer().append( toAscci( feature, i ) + "\n" );
 
+    // 3
     StringBuffer b = new StringBuffer();
     b.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "pns" ), "a1" ) );
     b.append( " " + getNiederschlagEingabeDateiString( feature ) );
     b.append( " " + getNiederschlagEingabeDateiString( feature ) );
-    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "faktn" ), "f5.2" )
+    b.append( " "
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "faktn" ), "f5.2" )
         + "\n" );
-    // 5
+    // 4
     b.append( "std.tmp std.ver\n" );
     asciiBuffer.getCatchmentBuffer().append( b.toString() );
 
-    // 5-8
-    for( int i = 5; i <= 8; i++ )
-      asciiBuffer.getCatchmentBuffer().append( toAscci( feature, i ) + "\n" );
+    asciiBuffer.getCatchmentBuffer().append( "we999.zfl\n" );
+    asciiBuffer.getCatchmentBuffer().append( "we.hyd\n" );
+    //7
 
+    asciiBuffer.getCatchmentBuffer().append( toAscci( feature, 7 ) + "\n" );
+    //8
+    StringBuffer buf = new StringBuffer();
+    buf.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "vsg" ), "f5.3" ) );
+    buf
+        .append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "anzlayy" ), "i5" ) );
+    buf.append( "     "
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bimax" ), "f5.1" ) );
+    buf.append( "     "
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bianf" ), "f5.1" ) );
+    buf.append( FortranFormatHelper
+        .printf( FeatureHelper.getAsString( feature, "izkn_vers" ), "i5" ) );
+    buf.append( "     "
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "tint" ), "f5.1" ) );
+    buf.append( "     "
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "rintmx" ), "f5.1" )
+        + "\n" );
+    asciiBuffer.getCatchmentBuffer().append( buf.toString() );
     Double banf = (Double)feature.getProperty( "faktorBianf" );
 
     // 9
@@ -289,17 +315,9 @@ public class CatchmentManager extends AbstractManager
       if( linkedFE == null )
         throw new Exception( "broken NA-Modell: grundwasserabfluss in unbekanntes Teilgebiet: #"
             + FeatureHelper.getAsString( fe, "ngwzu" ) );
-      if( linkedFE == null )
-        line13.append( "\nbroken NA-Modell: grundwasserabfluss in unbekanntes Teilgebiet: #"
-            + FeatureHelper.getAsString( fe, "ngwzu" ) );
-      else
-      {
 
-        //      line13.append( toAscci( fe, 13 ) );
-        line13.append( toAscci( linkedFE, 17 ) );
-        line14.append( toAscci( fe, 14 ) );
-      }
-
+      line13.append( toAscci( linkedFE, 17 ) + " " );
+      line14.append( toAscci( fe, 14 ) + " " );
     }
     asciiBuffer.getCatchmentBuffer().append( line13 + "\n" );
     asciiBuffer.getCatchmentBuffer().append( line14 + "\n" );
