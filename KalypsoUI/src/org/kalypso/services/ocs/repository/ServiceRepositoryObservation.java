@@ -1,7 +1,11 @@
 package org.kalypso.services.ocs.repository;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.net.URI;
 import java.net.URL;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -18,6 +22,7 @@ import org.kalypso.services.proxy.ObservationBean;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.xlink.IXlink;
+import org.kalypso.zml.ObservationType;
 
 /**
  * @author schlienger
@@ -198,6 +203,34 @@ public class ServiceRepositoryObservation implements IObservation
    */
   public void setValues( final ITuppleModel values ) throws SensorException
   {
-    getRemote( new DateRangeArgument() ).setValues( values );
+    // sets values
+    final IObservation obs = getRemote( new DateRangeArgument() );
+    obs.setValues( values );
+    
+    FileWriter fw = null;
+    
+    try
+    {
+      OCSDataBean db = m_srv.prepareForWrite( m_ob );
+      
+      // save zml
+      final ObservationType obst = ZmlFactory.createXML( obs, null );
+      fw = new FileWriter( new File( new URI( db.getLocation() ) ) );
+      ZmlFactory.getMarshaller().marshal( obst, fw );
+      
+      // let server read file and save on its own
+      m_srv.writeData( m_ob, db );
+
+      // and clean temp stuff
+      m_srv.clearTempData( db );
+    }
+    catch( Exception e ) // generic for simplicity
+    {
+      throw new SensorException( e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( fw );
+    }
   }
 }

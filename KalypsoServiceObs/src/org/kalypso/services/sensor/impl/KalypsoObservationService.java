@@ -82,8 +82,8 @@ public class KalypsoObservationService implements IObservationService
     catch( Exception e ) // generic Exception caught for simplicity
     {
       e.printStackTrace();
-      throw new RemoteException(
-          "Exception in constructor von: " + getClass().getName(), e );
+      throw new RemoteException( "Exception in constructor von: "
+          + getClass().getName(), e );
     }
 
     m_tmpDir = FileUtilities.createNewTempDir( "Observations", ServiceConfig
@@ -131,7 +131,7 @@ public class KalypsoObservationService implements IObservationService
 
         m_mapId2Rep.put( rep.getIdentifier(), rep );
       }
-      
+
       // tricky: set the list of repositories to the ZmlFilter so that
       // it can directly fetch the observations without using the default
       // URL resolving stuff
@@ -160,7 +160,7 @@ public class KalypsoObservationService implements IObservationService
     m_mapId2Rep.clear();
 
     ZmlFilter.configureFor( null );
-    
+
     // delete temp files
     for( final Iterator iter = m_mapBean2File.keySet().iterator(); iter
         .hasNext(); )
@@ -204,8 +204,9 @@ public class KalypsoObservationService implements IObservationService
       if( drb != null )
         args = new DateRangeArgument( drb.getFrom(), drb.getTo() );
 
-      m_logger.info( "Reading data for observation: " + obs.getName() + " Arguments: " + args );
-      
+      m_logger.info( "Reading data for observation: " + obs.getName()
+          + " Arguments: " + args );
+
       final ObservationType obsType = ZmlFactory.createXML( obs, args );
 
       final File f = File.createTempFile( "___" + obs.getName(), ".zml",
@@ -270,6 +271,34 @@ public class KalypsoObservationService implements IObservationService
   }
 
   /**
+   * @see org.kalypso.services.sensor.IObservationService#prepareForWrite(org.kalypso.ogc.sensor.beans.ObservationBean)
+   */
+  public OCSDataBean prepareForWrite( final ObservationBean obs )
+      throws RemoteException
+  {
+    try
+    {
+      final File f = File.createTempFile( "___" + obs.getName(), ".zml",
+          m_tmpDir );
+
+      // we say delete on exit even if we allow the client to delete the file
+      // explicitely in the clearTempData() service call. This allows us to
+      // clear temp files on shutdown in the case the client forgets it.
+      f.deleteOnExit();
+
+      final OCSDataBean oddb = new OCSDataBean( m_lastId++,
+          obs.getId(), f.toURL().toExternalForm() );
+
+      return oddb;
+    }
+    catch( IOException e )
+    {
+      m_logger.throwing( getClass().getName(), "prepareForWrite", e );
+      throw new RemoteException( "", e );
+    }
+  }
+
+  /**
    * @see org.kalypso.services.sensor.IObservationService#writeData(org.kalypso.ogc.sensor.beans.ObservationBean,
    *      org.kalypso.ogc.sensor.beans.OCSDataBean)
    */
@@ -301,7 +330,6 @@ public class KalypsoObservationService implements IObservationService
       m_logger.throwing( getClass().getName(), "writeData", e );
       throw new RemoteException( "", e );
     }
-
   }
 
   /**
@@ -334,10 +362,11 @@ public class KalypsoObservationService implements IObservationService
       final IRepository rep = (IRepository) m_mapId2Rep.get( obean.getRepId() );
 
       final IRepositoryItem item = rep.findItem( obean.getId() );
-      
+
       if( item == null )
-        throw new RepositoryException( "Item does not exist or could not be found: " + obean.getId() );
-      
+        throw new RepositoryException(
+            "Item does not exist or could not be found: " + obean.getId() );
+
       return item;
     }
 
@@ -347,13 +376,14 @@ public class KalypsoObservationService implements IObservationService
       final IRepository rep = (IRepository) it.next();
 
       final IRepositoryItem item = rep.findItem( obean.getId() );
-      
+
       if( item != null )
         return item;
     }
 
-    final RemoteException e = new RemoteException( "Unknonwn Repository or item. Repository: "
-        + obean.getRepId() + ", Item: " + obean.getId() );
+    final RemoteException e = new RemoteException(
+        "Unknonwn Repository or item. Repository: " + obean.getRepId()
+            + ", Item: " + obean.getId() );
     m_logger.throwing( getClass().getName(), "itemFromBean", e );
     throw e;
   }
@@ -457,15 +487,16 @@ public class KalypsoObservationService implements IObservationService
 
     if( item == null )
       return null;
-    
-    final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
+
+    final IObservation obs = (IObservation) item
+        .getAdapter( IObservation.class );
 
     if( obs != null )
     {
       return new ObservationBean( ib.getId(), obs.getName(), item
           .getRepository().getIdentifier(), obs.getMetadataList() );
     }
-    
+
     return null;
   }
 
@@ -519,32 +550,32 @@ public class KalypsoObservationService implements IObservationService
     {
       final IRepository rep = (IRepository) it.next();
 
-        final IRepositoryItem item;
-        
-        try
-        {
-          item = rep.findItem( id );
-        }
-        catch( RepositoryException e )
-        {
-          m_logger.throwing( getClass().getName(), "findItem", e);
-          throw new RemoteException( "findItem()", e );
-        }
-        
-        if( item == null )
-          continue;
+      final IRepositoryItem item;
 
-        ItemBean bean = new ItemBean( item.getIdentifier(), item.getName(), item
-              .getRepository().getIdentifier() );
+      try
+      {
+        item = rep.findItem( id );
+      }
+      catch( RepositoryException e )
+      {
+        m_logger.throwing( getClass().getName(), "findItem", e );
+        throw new RemoteException( "findItem()", e );
+      }
 
-        // store it for future referencing
-        m_mapBean2Item.put( bean.getId(), item );
+      if( item == null )
+        continue;
 
-        return bean;
+      ItemBean bean = new ItemBean( item.getIdentifier(), item.getName(), item
+          .getRepository().getIdentifier() );
+
+      // store it for future referencing
+      m_mapBean2Item.put( bean.getId(), item );
+
+      return bean;
     }
 
     m_logger.warning( "Item not found: " + id );
-    
+
     return null;
   }
 }
