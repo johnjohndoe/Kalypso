@@ -1,4 +1,4 @@
-package org.kalypso.ui.repository.services;
+package org.kalypso.services.ocs.repository;
 
 import java.rmi.RemoteException;
 
@@ -45,7 +45,7 @@ public class ObservationServiceRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren()
+  public boolean hasChildren() throws RepositoryException
   {
     try
     {
@@ -53,15 +53,14 @@ public class ObservationServiceRepository extends AbstractRepository
     }
     catch( RemoteException e )
     {
-      e.printStackTrace();
-      return false;
+      throw new RepositoryException( e );
     }
   }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren()
+  public IRepositoryItem[] getChildren() throws RepositoryException
   {
     try
     {
@@ -76,9 +75,7 @@ public class ObservationServiceRepository extends AbstractRepository
     }
     catch( RemoteException e )
     {
-      // TODO modify interface IRepositoryItem to throw a RepositoryException
-      e.printStackTrace();
-      return null;
+      throw new RepositoryException( e );
     }
   }
 
@@ -108,7 +105,7 @@ public class ObservationServiceRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
-  public IRepositoryItem findItem( String id ) throws RepositoryException
+  public IRepositoryItem findItem( final String id ) throws RepositoryException
   {
     final IRepositoryItem item = findItemRecursive( id, this );
     
@@ -123,7 +120,7 @@ public class ObservationServiceRepository extends AbstractRepository
    * TODO: better performance by caching items that were already found? do not forget
    * to clear the cache in reload()
    */
-  private IRepositoryItem findItemRecursive( final String id, final IRepositoryItem item )
+  private IRepositoryItem findItemRecursive( final String id, final IRepositoryItem item ) throws RepositoryException
   {
     if( item.getIdentifier().equalsIgnoreCase( id ) )
       return item;

@@ -1,13 +1,17 @@
 package org.kalypso.ui.repository.view;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.repository.IRepositoryContainer;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.RepositoryException;
 
 /**
+ * Tree Content provider for contents of the RepositoryExplorer.
+ * 
  * @author schlienger
- *  
  */
 public class RepositoryTreeContentProvider implements ITreeContentProvider
 {
@@ -29,7 +33,17 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   {
     final IRepositoryItem item = testArg( parentElement );
 
-    return item.getChildren();
+    try
+    {
+      return item.getChildren();
+    }
+    catch( RepositoryException e )
+    {
+      e.printStackTrace();
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+      
+      return new Object[0];
+    }
   }
 
   /**
@@ -42,7 +56,17 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     if( item == null )
       return null;
 
-    return item.getParent();
+    try
+    {
+      return item.getParent();
+    }
+    catch( RepositoryException e )
+    {
+      e.printStackTrace();
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+      
+      return null;
+    }
   }
 
   /**
@@ -52,7 +76,17 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   {
     final IRepositoryItem item = testArg( element );
 
-    return item.hasChildren();
+    try
+    {
+      return item.hasChildren();
+    }
+    catch( RepositoryException e )
+    {
+      e.printStackTrace();
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+      
+      return false;
+    }
   }
 
   /**

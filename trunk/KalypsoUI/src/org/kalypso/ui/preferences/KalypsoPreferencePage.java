@@ -1,5 +1,6 @@
 package org.kalypso.ui.preferences;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
@@ -34,17 +35,22 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
    */
   public void createFieldEditors()
   {
+    addField( new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS, "Verfügbare &Server (Komma-getrennte Liste):", getFieldEditorParent() ) );
+
     addField( new StringFieldEditor( IKalypsoPreferences.NUMBER_OF_DAYS, "&Tagesanzahl (Zeitreihenbrowser):", getFieldEditorParent() ) );
 
-//    addField( new BooleanFieldEditor( P_BOOLEAN, "&An example of a boolean preference",
-//        getFieldEditorParent() ) );
+    addField( new BooleanFieldEditor( IKalypsoPreferences.HTTP_PROXY_USE, "Http-&Proxy benutzen", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_HOST, "Http-Proxy &Hostname:", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PORT, "Http-Proxy Port&nummer:", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_USER, "Http-Proxy &Benutzername:", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PASS, "Http-Proxy Pass&wort:", getFieldEditorParent() ) );
+    
 //
 //    addField( new RadioGroupFieldEditor( P_CHOICE, "An example of a multiple-choice preference", 1,
 //        new String[][]
 //        {
 //        { "&Choice 1", "choice1" },
 //        { "C&hoice 2", "choice2" } }, getFieldEditorParent() ) );
-//    addField( new StringFieldEditor( P_STRING, "A &text preference:", getFieldEditorParent() ) );
   }
 
   public void init( IWorkbench workbench )
