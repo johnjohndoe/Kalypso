@@ -201,7 +201,7 @@ public class KalypsoObservationService implements IObservationService
       }
 
       DateRangeArgument args = null;
-      if( drb == null )
+      if( drb != null )
         args = new DateRangeArgument( drb.getFrom(), drb.getTo() );
 
       m_logger.info( "Reading data for observation: " + obs.getName() + " Arguments: " + args );
