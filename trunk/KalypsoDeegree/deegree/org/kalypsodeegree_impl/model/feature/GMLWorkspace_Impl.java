@@ -1,5 +1,6 @@
 package org.deegree_impl.model.feature;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   private final GMLSchema m_schema;
 
   private final Feature m_rootFeature;
+  private final URL m_modelURL;
 
   // final UndoManager ??
 
@@ -116,9 +118,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return (Feature[])result.toArray( new Feature[result.size()] );
   }
 
-  public GMLWorkspace_Impl( GMLSchema schema, Feature feature )
+  public GMLWorkspace_Impl( GMLSchema schema, Feature feature,URL gmlURL )
   {
     m_schema = schema;
+    m_modelURL=gmlURL;
     FeatureType[] featureTypes = m_schema.getFeatureTypes();
     for( int i = 0; i < featureTypes.length; i++ )
     {
@@ -254,6 +257,14 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
 
     return (Feature[])result.toArray( new Feature[result.size()] );
+  }
+
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#getModelUrl()
+   */
+  public URL getModelUrl()
+  {
+    return m_modelURL;
   }
 
 }

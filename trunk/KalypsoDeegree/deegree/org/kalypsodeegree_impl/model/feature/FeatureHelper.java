@@ -38,4 +38,24 @@ public class FeatureHelper
     return defaultValue;
 
   }
+
+  public static double getAsDouble( Feature feature, String propName, double defaultValue )
+  {
+    Object value = feature.getProperty( propName );
+    if( value == null )
+      return defaultValue;
+    if( value instanceof String )
+      return Double.valueOf( (String)value ).doubleValue();
+    // should be a Double
+    return ( (Double)value ).doubleValue();
+  }
+
+  public static String getAsString( Feature nodeFE, String string )
+  {
+    // TODO use numberformat
+    Object value = nodeFE.getProperty(string);
+    if(value instanceof String)
+      return (String)value;
+    return value.toString();
+  }
 }

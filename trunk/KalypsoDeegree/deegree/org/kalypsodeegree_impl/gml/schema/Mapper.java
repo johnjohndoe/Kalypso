@@ -67,6 +67,9 @@ public class Mapper
     if( "double".equals( name ) )
       return "java.lang.Double";
 
+    if( "long".equals( name ) )
+      return "java.lang.Long";
+    
     // TODO: map them all over registry
 
     throw new Exception( "unsupported Type:" + name );
@@ -98,11 +101,21 @@ public class Mapper
       return new Double( value );
     if( "java.lang.Integer".equals( type ) )
     {
-      double intValue = Double.parseDouble( value );
-      Integer integer = new Integer( (int)intValue );
-      if( integer.intValue() != intValue )
+      // shapefiles give string like "10.0" 
+      double doubleValue = Double.parseDouble( value );
+      Integer integer = new Integer( (int)doubleValue );
+      if( integer.intValue() != doubleValue )
         throw new Exception( "no valid int value :" + value );
       return integer;
+    }
+    if( "java.lang.Long".equals( type ) )
+    {
+      // shapefiles give strings like "10.0" 
+      double doubleValue = Double.parseDouble( value );
+      Long longValue = new Long( (long)doubleValue );
+      if( longValue.longValue() != doubleValue )
+        throw new Exception( "no valid long value :" + value );
+      return longValue;
     }
     if( "java.lang.Boolean".equals( type ) )
     {

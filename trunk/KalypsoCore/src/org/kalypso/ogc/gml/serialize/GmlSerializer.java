@@ -245,7 +245,7 @@ public final class GmlSerializer
     final FeatureType[] types = schema.getFeatureTypes();
     final Feature feature = FeatureFactory.createFeature( gmlFeature, types );
 
-    return new GMLWorkspace_Impl( schema, feature );
+    return new GMLWorkspace_Impl( schema, feature,gmlURL );
     //    GMLHelper.checkCrs( feature, targetCrs );
 
     // optimize layers
