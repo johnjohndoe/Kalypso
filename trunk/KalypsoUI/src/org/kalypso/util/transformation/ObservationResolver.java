@@ -1,14 +1,19 @@
 package org.kalypso.util.transformation;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.io.Writer;
+import java.net.URL;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -20,10 +25,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.eclipse.util.SetContentThread;
 import org.kalypso.java.util.PropertiesHelper;
-import org.kalypso.loader.ILoader;
-import org.kalypso.loader.ILoaderFactory;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -46,11 +50,9 @@ public class ObservationResolver extends AbstractTransformation
 
   private static final String PROP_TARGETOBS = "targetObservation";
 
-  private static final String PROP_HREF = "href";
-
-  private static final String PROP_TYPE = "type";
-
-  private static final String PROP_PROJECT = "project";
+  private static final String PROP_GML = "gml";
+  private static final String PROP_XSD = "xsd";
+  private static final String PROP_FEATURE = "feature";
 
   private static final String PROP_TARGETFOLDER = "targetFolder";
 
@@ -61,12 +63,12 @@ public class ObservationResolver extends AbstractTransformation
   protected void transformIntern( final Properties properties, final IProgressMonitor monitor )
       throws TransformationException
   {
-    monitor.beginTask( "Zeitreihen aufl?sen", 3000 );
+    monitor.beginTask( "Zeitreihen auflösen", 3000 );
 
     // PROPS parsen
-    final String projectName = properties.getProperty( PROP_PROJECT, "" );
-    final String type = properties.getProperty( PROP_TYPE, "" );
-    final String href = properties.getProperty( PROP_HREF, "" );
+    final String gmlPath = properties.getProperty( PROP_GML, "" );
+    final String schemaPath = properties.getProperty( PROP_XSD, "" );
+    final String featureName = properties.getProperty( PROP_FEATURE, "" );
     final String sourceObsName = properties.getProperty( PROP_SOURCEOBS, "" );
     final String targetObsName = properties.getProperty( PROP_TARGETOBS, "" );
     final String targetFolderName = properties.getProperty( PROP_TARGETFOLDER, "" );
@@ -78,28 +80,42 @@ public class ObservationResolver extends AbstractTransformation
       if( !targetFolder.exists() )
         targetFolder.create( false, true, new SubProgressMonitor( monitor, 1000 ) );
 
-      final IProject project = root.getProject( projectName );
+      final IProject project = targetFolder.getProject();
+      final IFile gmlFile = root.getFile( new Path( gmlPath ) );
+      if( gmlFile == null )
+        throw new TransformationException( "Datei nicht gefunden: " + gmlPath );
+      
+      final URL gmlURL = gmlFile.getLocation().toFile().toURL();
 
-      final Properties sourceProps = PropertiesHelper.parseFromString( href, '#' );
+      final IFile schemaFile = root.getFile( new Path( schemaPath ) );
+      if( schemaFile == null )
+        throw new TransformationException( "Datei nicht gefunden: " + schemaPath );
+      final URL schemaURL = schemaFile.getLocation().toFile().toURL();
 
-      final Properties replaceProperties = new Properties();
-      replaceProperties.setProperty( project.getFullPath().toString(), "" );
-      final Properties newSourceProps = PropertiesHelper.replaceValues( sourceProps,
-          replaceProperties );
+      // TODO: read via replaceToken
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, schemaURL );
+      final FeatureType ft = workspace.getSchema().getFeatureType( featureName );
+      if( ft == null )
+        throw new TransformationException( "Featurename unbekannt: " + featureName );
+      
+      final Feature[] features = workspace.getFeatures( ft );
 
-      final ILoaderFactory loaderFactory = KalypsoGisPlugin.getDefault().getLoaderFactory(
-          KalypsoFeatureLayer.class );
-      final ILoader loaderInstance = loaderFactory.getLoaderInstance( type );
-
-      final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)loaderInstance.load( newSourceProps,
-          project, new SubProgressMonitor( monitor, 1000 ) );
-      loaderInstance.release( layer );
-
-      resolveTimeseries( project, layer, sourceObsName, targetObsName, targetFolder,
+      resolveTimeseries( project, features, sourceObsName, targetObsName, targetFolder,
           new SubProgressMonitor( monitor, 1000 ) );
 
       // GML wieder speichern
-      loaderInstance.save( newSourceProps, project, monitor, layer );
+      final SetContentThread thread = new SetContentThread( gmlFile, false, false, true, new  NullProgressMonitor() )
+      {
+        protected void writeStream() throws Throwable
+        {
+          final Writer writer = new OutputStreamWriter( getOutputStream(), gmlFile.getCharset() );
+          GmlSerializer.serializeFeature( writer, workspace.getRootFeature(), new NullProgressMonitor() );
+        }
+      };
+      thread.start();
+      thread.join();
+
+      monitor.done(  );
     }
     catch( final Exception e )
     {
@@ -107,25 +123,27 @@ public class ObservationResolver extends AbstractTransformation
     }
   }
 
-  private void resolveTimeseries( final IProject project, final KalypsoFeatureLayer layer,
+  private void resolveTimeseries( final IProject project, final Feature[] features,
       final String sourceName, final String targetName, final IFolder targetFolder,
       final IProgressMonitor monitor ) throws TransformationException
   {
-    checkColumn( layer, sourceName );
-    checkColumn( layer, targetName );
+    if( features.length == 0 )
+      return;
+    
+    final FeatureType featureType = features[0].getFeatureType();
+    checkColumn( featureType, sourceName );
+    checkColumn( featureType, targetName );
 
-    final String zmlPrefix = layer.getName() + "-" + sourceName + "-";
+    final String zmlPrefix = featureType.getName() + "-" + sourceName + "-";
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool( IObservation.class );
     final ObjectFactory factory = new ObjectFactory();
 
-    final Feature[] allFeatures = layer.getAllFeatures();
+    monitor.beginTask( "Zeitreihen auslesen", features.length * 2 );
 
-    monitor.beginTask( "Zeitreihen ausl?sen", allFeatures.length * 2 );
-
-    for( int i = 0; i < allFeatures.length; i++ )
+    for( int i = 0; i < features.length; i++ )
     {
-      final Feature feature = allFeatures[i];
+      final Feature feature = features[i];
 
       final TimeseriesLink obslink = (TimeseriesLink)feature.getProperty( sourceName );
       if( obslink == null )
@@ -166,12 +184,12 @@ public class ObservationResolver extends AbstractTransformation
 
   }
 
-  private void checkColumn( final KalypsoFeatureLayer layer, final String sourceName )
+  private void checkColumn( final FeatureType ft, final String sourceName )
       throws TransformationException
   {
     final String linkclassname = TimeseriesLink.class.getName();
 
-    final FeatureTypeProperty sourceFTP = layer.getFeatureType().getProperty( sourceName );
+    final FeatureTypeProperty sourceFTP = ft.getProperty( sourceName );
     if( sourceFTP == null || !sourceFTP.getType().equals( linkclassname ) )
       throw new TransformationException( "Spalte existiert nicht oder ist nicht vom Typ "
           + linkclassname + ": " + sourceName );
