@@ -3,7 +3,6 @@ package org.kalypso.util.pool;
 import java.net.URL;
 import java.util.Properties;
 
-import org.eclipse.core.resources.IProject;
 import org.kalypso.java.util.PropertiesHelper;
 
 /**
@@ -17,29 +16,7 @@ public class PoolableObjectType implements IPoolableObjectType
 
   private final Properties mySource;
 
-  /** @deprecated */
-  private IProject myProject;
-
   private final URL m_context;
-
-  /**
-   * @deprecated
-   */
-  public PoolableObjectType( final String type, final String source, final IProject project )
-  {
-    this( type, PropertiesHelper.parseFromString( source, PROPERTY_SEPARATOR ), project );
-  }
-
-  /**
-   * @deprecated
-   */
-  public PoolableObjectType( final String type, final Properties source, final IProject project )
-  {
-    myType = type;
-    mySource = source;
-    myProject = project;
-    m_context = null;
-  }
 
   /**
    * Constructor with location information as string. It is parsed by
@@ -85,14 +62,6 @@ public class PoolableObjectType implements IPoolableObjectType
     return m_context;
   }
 
-  /**
-   * @see org.kalypso.util.pool.IPoolableObjectType#getProject()
-   */
-  public IProject getProject()
-  {
-    return myProject;
-  }
-
   public boolean equals( Object obj )
   {
     if( !( obj instanceof IPoolableObjectType ) )
@@ -102,8 +71,6 @@ public class PoolableObjectType implements IPoolableObjectType
     if( !getType().equals( other.getType() ) )
       return false;
     if( !getSource().equals( other.getSource() ) )
-      return false;
-    if( getProject() != null && !getProject().equals( other.getProject() ) )
       return false;
     if( getContext() != null && !getContext().equals( other.getContext() ) )
       return false;
@@ -123,10 +90,6 @@ public class PoolableObjectType implements IPoolableObjectType
    */
   public String toString()
   {
-    if( getProject() != null )
-      return getClass().getName() + ": source=" + getSource() + " type=" + getType() + " project="
-          + getProject().getName() + " context= " + getContext();
-    else
       return getClass().getName() + ": source=" + getSource() + " type=" + getType() + " context= "
           + getContext();
   }
