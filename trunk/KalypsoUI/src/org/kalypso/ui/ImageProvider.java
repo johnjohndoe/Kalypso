@@ -9,6 +9,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class ImageProvider
 {
+
   public static final ImageDescriptor id( final String location )
   {
     return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.ui", location );
@@ -25,6 +26,7 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ADD = id("icons/observation_repository_add.gif");
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_REMOVE = id("icons/observation_repository_rem.gif");
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_CONF = id("icons/observation_repository_conf.gif");
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_RELOAD = id("icons/observation_repository_reload.gif");
   
   public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMOUT = id( "icons/full/elcl16/kde_viewmag-.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_PAN = id( "icons/full/elcl16/kde_move.gif" );

@@ -10,14 +10,19 @@ import org.kalypso.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
 import org.kalypso.repository.AbstractRepositoryFactory;
 import org.kalypso.repository.IRepository;
-import org.kalypso.ui.repository.dialog.ZmlRepositoryConfigDialog;
+import org.kalypso.ui.repository.dialogs.FileRepositoryConfigDialog;
 
 /**
- * A GUI oriented ZmlRepository factory.
+ * A GUI oriented File-<code>RepositoryFactory</code>. Please note that this factory
+ * currently creates a <code>ZmlObservationRepository</code>. This could be changed
+ * to some other subclass of <code>FileRepository</code> as long as the constructor
+ * sticks to the arguments used here. To achieve more flexibility, this class could
+ * be improved so that the concrete <code>FileRepository</code> class to instantiate
+ * could be parametrised. 
  * 
  * @author schlienger
  */
-public class ZmlRepositoryFactory extends AbstractRepositoryFactory
+public class FileRepositoryFactory extends AbstractRepositoryFactory
 {
   private String m_location = "";
   private String m_filters = "";
@@ -29,19 +34,23 @@ public class ZmlRepositoryFactory extends AbstractRepositoryFactory
   {
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
    
-    final ZmlRepositoryConfigDialog dlg = new ZmlRepositoryConfigDialog( shell, "", "" );
+    final FileRepositoryConfigDialog dlg = new FileRepositoryConfigDialog( shell, "", "" );
     
     final int res = dlg.open();
+    
+    boolean b = false;
     
     if( res == Window.OK )
     {
       m_location = dlg.getLocation();
       m_filters = dlg.getFilters();
       
-      return true;
+      b = true;
     }
     
-    return false;
+    dlg.dispose();
+    
+    return b;
   }
 
   /**
@@ -59,6 +68,7 @@ public class ZmlRepositoryFactory extends AbstractRepositoryFactory
       filter = new MultipleWildCardFileFilter( exts, false, true, false );
     }
 
+    // could be improved: instead of directly instantiating we could use class loading...
     return new ZmlObservationRepository( m_location, isReadOnly(), filter );
   }
 }

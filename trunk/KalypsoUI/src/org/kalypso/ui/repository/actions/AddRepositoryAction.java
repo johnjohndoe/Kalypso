@@ -1,4 +1,4 @@
-package org.kalypso.ui.repository.action;
+package org.kalypso.ui.repository.actions;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -9,9 +9,9 @@ import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.repository.IRepositoryContainer;
 import org.kalypso.repository.IRepositoryFactory;
+import org.kalypso.repository.RepositorySpecification;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.repository.RepositorySpecification;
 
 /**
  * Ein Repository hinzufügen.

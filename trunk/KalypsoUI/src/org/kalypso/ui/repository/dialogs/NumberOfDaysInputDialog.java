@@ -1,4 +1,4 @@
-package org.kalypso.ui.repository.dialog;
+package org.kalypso.ui.repository.dialogs;
 
 import java.text.NumberFormat;
 import java.text.ParseException;

@@ -1,4 +1,4 @@
-package org.kalypso.ui.repository.dialog;
+package org.kalypso.ui.repository.dialogs;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -13,13 +13,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Config Dialog for ZmlRepositoryFactory.
+ * Config Dialog for FileRepositoryFactory.
  * 
  * TODO: use plugin's dialog store to store default values
  * 
  * @author schlienger
  */
-public class ZmlRepositoryConfigDialog extends TitleAreaDialog
+public class FileRepositoryConfigDialog extends TitleAreaDialog
 {
   private final static String msg = "Bitte wählen Sie zuerst ein Basisverzeichnis aus.\n"
       + "Geben Sie anschliessend eine oder mehrere Dateiendungen (Komma getrennt)";
@@ -34,7 +34,7 @@ public class ZmlRepositoryConfigDialog extends TitleAreaDialog
 
   private DirectoryFieldEditor m_fLocation;
 
-  public ZmlRepositoryConfigDialog( final Shell parentShell, final String location,
+  public FileRepositoryConfigDialog( final Shell parentShell, final String location,
       final String filters )
   {
     super( parentShell );
@@ -44,6 +44,12 @@ public class ZmlRepositoryConfigDialog extends TitleAreaDialog
     m_store.setDefault( FILTER, filters );
   }
 
+  public void dispose()
+  {
+    m_fFilters.dispose();
+    m_fLocation.dispose();
+  }
+  
   /**
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
