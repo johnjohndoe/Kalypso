@@ -2,9 +2,12 @@
 <feature
       id="org.kalypso.enterprise"
       label="Kalypso Enterprise"
-      version="0.0.2"
+      version="0.0.3"
       provider-name="kalypso.org"
       plugin="org.kalypso.ui"
+      os="win32"
+      ws="win32"
+      arch="x86"
       image="splash.bmp"
       primary="true"
       application="org.kalypso.ui.application">
