@@ -51,7 +51,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.deegree.gml.GMLFeature;
 import org.deegree.services.OGCWebServiceException;
@@ -993,40 +992,15 @@ public class CASProtocolFactory
     return rsr;
   }
 
-  /**
-   * puts a http-GET request to a <tt>HashMap</tt>
-   */
-  private static Map toMap( String request )
-  {
-    StringTokenizer st = new StringTokenizer( request, "&?" );
-    HashMap map = new HashMap();
-
-    while( st.hasMoreTokens() )
-    {
-      String s = st.nextToken();
-
-      if( s != null )
-      {
-        int pos = s.indexOf( '=' );
-
-        if( pos > -1 )
-        {
-          String s1 = s.substring( 0, pos );
-          String s2 = s.substring( pos + 1, s.length() );
-          map.put( s1.toUpperCase(), s2 );
-        }
-      }
-    }
-
-    return map;
-  }
-
 }
 
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.4  2004/10/30 17:46:31  belger
+ * *** empty log message ***
+ *
  * Revision 1.3  2004/10/07 14:09:04  doemming
  * *** empty log message ***
  *

@@ -21,7 +21,9 @@ public class FeaturePath
     else
       m_typename = null;
 
-    if( i1 != -1 )
+    if( path.trim().length() == 0 )
+      m_segments = new String[] {};
+    else if( i1 != -1 )
       m_segments = path.substring( 0, i1 ).split( "/" );
     else
       m_segments = path.split( "/" );

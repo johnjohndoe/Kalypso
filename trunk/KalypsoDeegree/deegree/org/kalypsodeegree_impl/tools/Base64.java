@@ -123,7 +123,7 @@ public final class Base64
 
   static private final int SIXTEENBIT = 16;
 
-  static private final int SIXBIT = 6;
+//  static private final int SIXBIT = 6;
 
   static private final int FOURBYTE = 4;
 

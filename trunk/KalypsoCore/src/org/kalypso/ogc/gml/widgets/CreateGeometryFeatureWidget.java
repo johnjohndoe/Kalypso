@@ -27,8 +27,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   private AbstractWidget myWidget = null;
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.mapmodel.MapPanel)
+   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
   public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
   {

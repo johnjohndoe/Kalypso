@@ -249,7 +249,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
   {
     new Job( "Dokument laden" )
     {
-      protected IStatus run( IProgressMonitor monitor )
+      protected IStatus run( final IProgressMonitor monitor )
       {
         final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
@@ -270,7 +270,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
 
           monitor.done();
           return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-              "Fehler beim Laden der Tabellenvorlage", e );
+              "Fehler beim Laden der Ansicht", e );
         }
 
         m_commandTarget.resetDirty();
@@ -306,7 +306,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
       {
         // TODO: ask user?
         if( !m_isSaving
-            && MessageDialog.openQuestion( getSite().getShell(), "GisTableEditor",
+            && MessageDialog.openQuestion( getSite().getShell(), "FeatureEditor",
                 "Die Vorlagendatei hat sich geändert. Neu laden?" ) )
           load();
       }

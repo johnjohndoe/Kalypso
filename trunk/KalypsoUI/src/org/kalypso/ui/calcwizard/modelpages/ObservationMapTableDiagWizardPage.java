@@ -29,7 +29,6 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
@@ -81,7 +80,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
   private final ObservationTableModel m_tableModel = new ObservationTableModel();
 
-  private TimeserieFeatureProps[] m_tsProps;
+  protected TimeserieFeatureProps[] m_tsProps;
 
   public ObservationMapTableDiagWizardPage()
   {
@@ -280,28 +279,24 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     m_diagTemplate.removeAllCurves();
     m_tableTemplate.removeAllColumns();
 
+    final LinkedDiagramTemplate diagTemplate = m_diagTemplate;
+    final LinkedTableViewTemplate tableTemplate = m_tableTemplate;
+    
     if( selectedFeatures.size() > 0 )
     {
       final Runnable runnable = new Runnable()
       {
         public void run()
         {
-          m_diagTemplate.removeAllCurves();
-          m_tableTemplate.removeAllColumns();
+          diagTemplate.removeAllCurves();
+          tableTemplate.removeAllColumns();
 
           if( selectedFeatures.size() > 0 )
           {
-            try
-            {
-              KalypsoWizardHelper.updateDiagramTemplate( m_tsProps, selectedFeatures,
-                  m_diagTemplate, getContext() );
-              KalypsoWizardHelper.updateTableTemplate( m_tsProps, selectedFeatures,
-                  m_tableTemplate, getContext() );
-            }
-            catch( final SensorException e )
-            {
-              e.printStackTrace();
-            }
+            KalypsoWizardHelper.updateDiagramTemplate( m_tsProps, selectedFeatures,
+                diagTemplate, getContext() );
+            KalypsoWizardHelper.updateTableTemplate( m_tsProps, selectedFeatures,
+                tableTemplate, getContext() );
           }
         }
       };

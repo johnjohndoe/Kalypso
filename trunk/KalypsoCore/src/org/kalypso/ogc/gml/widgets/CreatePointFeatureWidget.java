@@ -15,25 +15,27 @@ import org.kalypso.util.command.ICommand;
  */
 public class CreatePointFeatureWidget extends AbstractWidget
 {
-  private Point myPoint = null;
+//  private Point myPoint = null;
 
-  private final FeatureTypeProperty myFtp;
+//  private final FeatureTypeProperty myFtp;
 
   private final CreateGeometryFeatureWidget myParentWidget;
 
-  private final IKalypsoFeatureTheme m_theme;
+//  private final IKalypsoFeatureTheme m_theme;
 
   public CreatePointFeatureWidget( CreateGeometryFeatureWidget parentWidget,
       final IKalypsoFeatureTheme theme, FeatureTypeProperty ftp )
   {
     myParentWidget = parentWidget;
-    m_theme = theme;
-    myFtp = ftp;
+    theme.getClass();
+    ftp.getClass();
+//    m_theme = theme;
+//    myFtp = ftp;
   }
 
   public void leftPressed( Point p )
   {
-    myPoint = p;
+//    myPoint = p;
     myParentWidget.perform();
   }
 

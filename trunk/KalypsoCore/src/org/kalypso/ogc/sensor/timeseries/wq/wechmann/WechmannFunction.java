@@ -34,9 +34,8 @@ public class WechmannFunction
    * @return Q
    * @see WechmannFunction#computeQ(double, double, double, double)
    * 
-   * @throws WechmannException
    */
-  public static final double computeQ( final WechmannParams wp, final double W ) throws WechmannException
+  public static final double computeQ( final WechmannParams wp, final double W ) 
   {
     return computeQ( wp.getLNK1(), W, wp.getW1(), wp.getK2() );
   }
@@ -53,9 +52,8 @@ public class WechmannFunction
    * @param K2
    * @return Q
    * 
-   * @throws WechmannException if W - W1 <= 0
    */
-  public static final double computeQ( final double LNK1, final double W, final double W1, final double K2 ) throws WechmannException
+  public static final double computeQ( final double LNK1, final double W, final double W1, final double K2 ) 
   {
     if( W - W1 <= 0 )
     {

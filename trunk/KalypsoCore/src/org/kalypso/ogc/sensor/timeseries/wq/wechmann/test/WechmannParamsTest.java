@@ -2,7 +2,6 @@ package org.kalypso.ogc.sensor.timeseries.wq.wechmann.test;
 
 import junit.framework.TestCase;
 
-import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
 
 /**
@@ -10,7 +9,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
  */
 public class WechmannParamsTest extends TestCase
 {
-  public void testWechmannParams() throws WechmannException
+  public void testWechmannParams() 
   {
     final WechmannParams wp1 = new WechmannParams( -38.12, -7.87274, 2.25925, 170 );
     

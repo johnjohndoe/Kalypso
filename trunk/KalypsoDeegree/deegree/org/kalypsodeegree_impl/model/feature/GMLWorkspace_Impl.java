@@ -443,4 +443,12 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return aktuType;
   }
 
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#getFeaturepathForFeature(org.deegree.model.feature.Feature)
+   */
+  public String getFeaturepathForFeature( final Feature feature )
+  {
+    // TODO: implement it!
+    return "";
+  }
 }

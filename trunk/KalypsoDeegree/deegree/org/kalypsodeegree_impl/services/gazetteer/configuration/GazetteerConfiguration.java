@@ -62,14 +62,11 @@ public class GazetteerConfiguration
 {
   private HashMap ltyp = new HashMap();
 
-  private String name = null;
-
   private Relation[] relations = null;
 
   /** Creates a new instance of Configuration */
   public GazetteerConfiguration( String name, Relation[] relations )
   {
-    this.name = name;
     this.relations = relations;
 
     for( int i = 0; i < relations.length; i++ )

@@ -26,11 +26,11 @@ import org.kalypso.ui.editor.AbstractEditorPart;
  */
 public class ObservationDiagramEditor extends AbstractEditorPart
 {
-  private IDiagramTemplate m_template = null;
+  protected IDiagramTemplate m_template = null;
 
-  private Frame m_diagFrame = null;
+  protected Frame m_diagFrame = null;
 
-  private ObservationChart m_obsChart = null;
+  protected ObservationChart m_obsChart = null;
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)

@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
-<xs:schema targetNamespace="featureview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="featureview.template.kalypso.org">
-	<xs:element name="featureview">
+<xs:schema targetNamespace="featureview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="featureview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org">
+
+	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd"/>
+
+	<xs:element name="featuretemplate">
 		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="ns1:compositeType">
-					<xs:attribute name="typename" type="xs:string" use="required"/>
-				</xs:extension>
-			</xs:complexContent>
+			<xs:sequence>
+				<xs:element name="layer">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="kalypso:layerType"/>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="view" type="ns1:featureviewType">
+				</xs:element>
+			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+
+	<xs:element name="featureview" type="ns1:featureviewType"/>
+	<xs:complexType name="featureviewType">
+		<xs:complexContent>
+			<xs:extension base="ns1:compositeType">
+				<xs:attribute name="typename" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="controlType">
 		<xs:sequence minOccurs="0">
 			<xs:element ref="ns1:layoutData"/>

@@ -67,7 +67,6 @@ public class RepositoryConfigItem
 
   /**
    * Saves the state of this object in a simple string representation.
-   * @return
    */
   public String saveState()
   {

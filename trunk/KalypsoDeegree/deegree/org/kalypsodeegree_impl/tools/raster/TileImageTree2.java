@@ -479,8 +479,8 @@ public class TileImageTree2
 
     String file = dir + "/" + sx + "_" + sy + ".wld";
     FileWriter fos = new FileWriter( file );
-    double resx = ( xmax_ - xmin_ ) / (double)tilex;
-    double resy = ( ymin_ - ymax_ ) / (double)tiley;
+    double resx = ( xmax_ - xmin_ ) / tilex;
+    double resy = ( ymin_ - ymax_ ) / tiley;
     fos.write( resx + "\n" );
     fos.write( "0\n" );
     fos.write( "0\n" );

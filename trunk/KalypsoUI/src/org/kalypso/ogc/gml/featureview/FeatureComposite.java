@@ -27,7 +27,7 @@ import org.kalypso.ogc.gml.featureview.control.TextFeatureControl;
 import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.Featureview;
+import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayoutType;
 import org.kalypso.template.featureview.GroupType;
@@ -61,7 +61,7 @@ public class FeatureComposite implements IFeatureControl
     {
       for( int i = 0; i < templateURL.length; i++ )
       {
-        final Featureview view = (Featureview)FeatureviewHelper.UNMARSHALLER
+        final FeatureviewType view = (FeatureviewType)FeatureviewHelper.UNMARSHALLER
             .unmarshal( templateURL[i] );
         m_viewMap.put( view.getTypename(), view );
       }
@@ -70,6 +70,14 @@ public class FeatureComposite implements IFeatureControl
     {
       e.printStackTrace();
     }
+  }
+  
+  public FeatureComposite( final Feature feature, final FeatureviewType[] views )
+  {
+    m_feature = feature;
+    
+    for( int i = 0; i < views.length; i++ )
+      m_viewMap.put( views[i].getTypename(), views[i] );
   }
 
   /**
@@ -101,11 +109,9 @@ public class FeatureComposite implements IFeatureControl
    */
   public void dispose()
   {
-    for( final Iterator iter = m_controls.iterator(); iter.hasNext(); )
-    {
-      final IFeatureControl fc = (IFeatureControl)iter.next();
-      fc.dispose();
-    }
+    disposeControl();
+
+    m_viewMap.clear();
   }
 
   /**
@@ -136,14 +142,14 @@ public class FeatureComposite implements IFeatureControl
    * Gibt zu einem TypNamen eine FeatureView zurück. Existiert keine solche wird
    * ein Default erzeugt.
    */
-  public Featureview getFeatureview( final FeatureType featureType )
+  public FeatureviewType getFeatureview( final FeatureType featureType )
   {
     final String typename = featureType.getName();
-    final Featureview view = (Featureview)m_viewMap.get( typename );
+    final FeatureviewType view = (FeatureviewType)m_viewMap.get( typename );
     if( view != null )
       return view;
 
-    final Featureview newView = FeatureviewHelper.createFeatureviewFromFeatureType( featureType );
+    final FeatureviewType newView = FeatureviewHelper.createFeatureviewFromFeatureType( featureType );
 
     m_viewMap.put( typename, newView );
 
@@ -152,7 +158,7 @@ public class FeatureComposite implements IFeatureControl
 
   public Control createControl( final Composite parent, final int style, final FeatureType ft )
   {
-    final Featureview view = getFeatureview( ft );
+    final FeatureviewType view = getFeatureview( ft );
 
     return createControl( parent, style, view );
   }
@@ -358,4 +364,17 @@ public class FeatureComposite implements IFeatureControl
     }
   }
 
+  public void addView( final FeatureviewType view )
+  {
+    m_viewMap.put( view.getTypename(), view );
+  }
+
+  public void disposeControl()
+  {
+    for( final Iterator iter = m_controls.iterator(); iter.hasNext(); )
+    {
+      final IFeatureControl fc = (IFeatureControl)iter.next();
+      fc.dispose();
+    }
+  }
 }

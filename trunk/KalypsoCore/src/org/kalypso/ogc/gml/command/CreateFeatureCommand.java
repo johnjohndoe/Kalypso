@@ -10,13 +10,15 @@ import org.kalypso.util.command.ICommand;
  */
 public class CreateFeatureCommand implements ICommand
 {
-  private final Feature[] m_features;
-  private final GMLWorkspace m_workspace;
+//  private final Feature[] m_features;
+//  private final GMLWorkspace m_workspace;
   
   public CreateFeatureCommand( final GMLWorkspace workspace, final Feature[] features )
   {
-    m_workspace = workspace;
-    m_features = features;
+//    m_workspace = workspace;
+//    m_features = features;
+    workspace.getClass();
+    features.getClass();
   }
 
   /**

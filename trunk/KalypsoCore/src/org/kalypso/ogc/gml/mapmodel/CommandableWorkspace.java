@@ -147,5 +147,10 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   {
     return m_workspace;
   }
+
+  public String getFeaturepathForFeature( final Feature feature )
+  {
+    return m_workspace.getFeaturepathForFeature(feature);
+  }
   
 }

@@ -75,9 +75,6 @@ import org.w3c.dom.Element;
  */
 public class GazetteerFactory
 {
-
-  private static String LINS = null;//"http://www.opengis.net/wfs-g";
-
   /**
    * creates an array of <tt>SI_LocationInstance</tt> s from the passed
    * <tt>Document</tt>

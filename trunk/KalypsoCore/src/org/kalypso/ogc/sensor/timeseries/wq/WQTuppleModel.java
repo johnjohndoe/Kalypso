@@ -104,14 +104,7 @@ public class WQTuppleModel implements ITuppleModel
         {
           final double w = ((Number) m_model.getElement( index, m_srcAxis ))
               .doubleValue();
-          try
-          {
-            value = new Double( WechmannFunction.computeQ( set.getForW( w ), w ) );
-          }
-          catch( WechmannException e )
-          {
-            value = new Double( Double.NaN );
-          }
+          value = new Double( WechmannFunction.computeQ( set.getForW( w ), w ) );
         }
         else if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
         {
@@ -170,14 +163,7 @@ public class WQTuppleModel implements ITuppleModel
       {
         final double w = ((Number) element).doubleValue();
         double q;
-        try
-        {
-          q = WechmannFunction.computeQ( set.getForW( w ), w );
-        }
-        catch( WechmannException e )
-        {
-          q = Double.NaN;
-        }
+        q = WechmannFunction.computeQ( set.getForW( w ), w );
 
         m_model.setElement( index, new Double( q ), m_srcAxis );
       }
