@@ -45,7 +45,7 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
       
       try
       {
-        File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe", GrafikViewActionDelegate.class.getResourceAsStream( "/org/kalypso/plugin/resources/exe/grafik.exe"), true );
+        File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe", GrafikViewActionDelegate.class.getResourceAsStream( "/org/kalypso/plugin/resources/exe/grafik.exe_"), true );
 
         // get the file where project resides in order to complete the relative path
         String projectDir = m_currentFile.getProject().getLocation().toString();
