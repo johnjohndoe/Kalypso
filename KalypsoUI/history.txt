@@ -15,6 +15,12 @@ unterstüzung der Eingabe
 - Bug75: bei 'Modell aktualisieren' (d.h. insbesondere in der Start-Seite) wurden lokale Rechenvairanten immer gelöscht,
 wenn sie nicht auch auf dem Server waren.
 - Fake-PSICompact: jetzt sind alle Spree-W-Zmls eindeutig definiert (Achseneinheit).
+- neue MultiStatus Klasse im KalypsoUI plugin: optimiert um in Loops benutzt zu werden,
+  da wo nicht direkt einen Status zurückgeben werden muss, sondern erst beim vollständigen
+  Bearbeitung der Loop (Beispiel: Siehe GrafikLauncher und ExportResultsWizardPage).
+- Fehlerbehanldung verbessert in ExportResultsWizardPage: der Benutzer wird besser informiert
+  wenn eine Zeitreihe nicht zurückgespeichert werden konnte.
+- Fehlerbehanldung verbessert in GrafikLauncher.
 - Bug #79
 - Bug #80
 - Bug #83
