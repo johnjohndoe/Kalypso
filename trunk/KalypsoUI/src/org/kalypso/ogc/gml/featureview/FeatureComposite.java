@@ -45,6 +45,7 @@ public class FeatureComposite implements IFeatureControl
   private final Map m_viewMap = new HashMap();
 
   private final Collection m_featureControls = new ArrayList();
+
   private final Collection m_swtControls = new ArrayList();
 
   private Control m_control = null;
@@ -60,27 +61,16 @@ public class FeatureComposite implements IFeatureControl
   {
     m_feature = feature;
 
-    try
-    {
-      for( int i = 0; i < templateURL.length; i++ )
-      {
-        final FeatureviewType view = (FeatureviewType)FeatureviewHelper.UNMARSHALLER
-            .unmarshal( templateURL[i] );
-        m_viewMap.put( view.getTypename(), view );
-      }
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-    }
+    for( int i = 0; i < templateURL.length; i++ )
+      addView( templateURL[i] );
   }
-  
+
   public FeatureComposite( final Feature feature, final FeatureviewType[] views )
   {
     m_feature = feature;
-    
+
     for( int i = 0; i < views.length; i++ )
-      m_viewMap.put( views[i].getTypename(), views[i] );
+      addView( views[i] );
   }
 
   /**
@@ -133,7 +123,7 @@ public class FeatureComposite implements IFeatureControl
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
-      
+
       if( !fc.isValid() )
         return false;
     }
@@ -152,7 +142,8 @@ public class FeatureComposite implements IFeatureControl
     if( view != null )
       return view;
 
-    final FeatureviewType newView = FeatureviewHelper.createFeatureviewFromFeatureType( featureType );
+    final FeatureviewType newView = FeatureviewHelper
+        .createFeatureviewFromFeatureType( featureType );
 
     m_viewMap.put( typename, newView );
 
@@ -166,18 +157,19 @@ public class FeatureComposite implements IFeatureControl
     m_control = createControl( parent, style, view );
     return m_control;
   }
-  
+
   public Control createControl( final Composite parent, final int style )
   {
     return createControl( parent, style, getFeature().getFeatureType() );
   }
 
-  public Control createControl( final Composite parent, final int style, final ControlType controlType )
+  public Control createControl( final Composite parent, final int style,
+      final ControlType controlType )
   {
     final Control control = createControlFromControlType( parent, style, controlType );
 
     m_swtControls.add( control );
-    
+
     control.setVisible( controlType.isVisible() );
 
     // einen bereits gesetzten Tooltip nicht überschreiben
@@ -191,7 +183,7 @@ public class FeatureComposite implements IFeatureControl
     return control;
   }
 
-  private Control createControlFromControlType( final Composite parent, final int style, 
+  private Control createControlFromControlType( final Composite parent, final int style,
       final ControlType controlType )
   {
     if( controlType instanceof CompositeType )
@@ -362,11 +354,24 @@ public class FeatureComposite implements IFeatureControl
   public void setFeature( final Feature feature )
   {
     m_feature = feature;
-    
+
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
       fc.setFeature( feature );
+    }
+  }
+
+  public void addView( final URL url )
+  {
+    try
+    {
+      final FeatureviewType view   = (FeatureviewType)FeatureviewHelper.UNMARSHALLER.unmarshal( url );
+      addView( view );
+    }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
     }
   }
 
@@ -382,11 +387,19 @@ public class FeatureComposite implements IFeatureControl
       final IFeatureControl fc = (IFeatureControl)iter.next();
       fc.dispose();
     }
+    m_featureControls.clear();
 
     for( final Iterator iter = m_swtControls.iterator(); iter.hasNext(); )
     {
       final Control c = (Control)iter.next();
       c.dispose();
+    }
+    m_swtControls.clear();
+    
+    if( m_control != null )
+    {
+      m_control.dispose();
+      m_control = null;
     }
   }
 
@@ -396,7 +409,7 @@ public class FeatureComposite implements IFeatureControl
   public void addChangeListener( final IFeatureChangeListener l )
   {
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
-      ((IFeatureControl)iter.next()).addChangeListener( l );
+      ( (IFeatureControl)iter.next() ).addChangeListener( l );
   }
 
   /**
@@ -405,7 +418,7 @@ public class FeatureComposite implements IFeatureControl
   public void removeChangeListener( final IFeatureChangeListener l )
   {
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
-      ((IFeatureControl)iter.next()).removeChangeListener( l );
+      ( (IFeatureControl)iter.next() ).removeChangeListener( l );
   }
 
   public Control getControl()

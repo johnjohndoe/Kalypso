@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -45,7 +46,8 @@ public class SteuerparameterWizardPage extends WizardPage
 {
   private final IProjectProvider m_projectProvider;
 
-  private FeatureComposite m_featureComposite;
+  private final FeatureComposite m_featureComposite = new FeatureComposite( null, new URL[]
+  {  } );
 
   private boolean m_overrideCanFlipToNextPage;
 
@@ -56,6 +58,8 @@ public class SteuerparameterWizardPage extends WizardPage
   private GMLWorkspace m_workspace;
 
   private IFolder m_currentCalcCase;
+
+  private Composite m_panel;
 
   public SteuerparameterWizardPage( final IProjectProvider pp,
       final boolean overrideCanFlipToNextPage, final ImageDescriptor image )
@@ -71,60 +75,32 @@ public class SteuerparameterWizardPage extends WizardPage
    */
   public void createControl( final Composite parent )
   {
-    try
+    m_panel = new Composite( parent, SWT.NONE );
+    m_panel.setLayout( new GridLayout() );
+    m_panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+    createFeatureControl( m_panel );
+
+    final Button checkUpdate = new Button( m_panel, SWT.CHECK );
+    checkUpdate.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    checkUpdate.setText( "Zeitreihen aktualisieren" );
+    checkUpdate
+        .setToolTipText( "falls aktiv, werden die Zeitreihen im nächsten Schritt aktualisiert" );
+    checkUpdate.setSelection( m_update );
+    m_checkUpdate = checkUpdate;
+
+    checkUpdate.addSelectionListener( new SelectionAdapter()
     {
-      final IProject project = m_projectProvider.getProject();
-
-      // gleich mal den Workspace auf das default setzen
-      final ModelNature nature = (ModelNature)project.getNature( ModelNature.ID );
-      m_workspace = nature.loadOrCreateControl( m_currentCalcCase );
-
-      // Vorlage auslesen
-      final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/"
-          + ModelNature.CONTROL_VIEW_PATH );
-
-      final Feature f = m_workspace.getRootFeature();
-
-      m_featureComposite = new FeatureComposite( f, new URL[]
-      { viewURL } );
-
-      final Composite panel = new Composite( parent, SWT.NONE );
-      panel.setLayout( new GridLayout() );
-      panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
-      final Control featureControl = m_featureComposite.createControl( panel, SWT.NONE );
-      featureControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
-      final Button checkUpdate = new Button( panel, SWT.CHECK );
-      checkUpdate.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-      checkUpdate.setText( "Zeitreihen aktualisieren" );
-      checkUpdate
-          .setToolTipText( "falls aktiv, werden die Zeitreihen im nächsten Schritt aktualisiert" );
-      checkUpdate.setSelection( m_update );
-      m_checkUpdate = checkUpdate;
-
-      checkUpdate.addSelectionListener( new SelectionAdapter()
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      public void widgetSelected( final SelectionEvent e )
       {
-        /**
-         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-         */
-        public void widgetSelected( final SelectionEvent e )
-        {
-            setUpdate( checkUpdate.getSelection() );
-        }
-      } );
+        setUpdate( checkUpdate.getSelection() );
+      }
+    } );
 
-      setControl( panel );
-    }
-    catch( final MalformedURLException e )
-    {
-      // ERROR handling
-      e.printStackTrace();
-    }
-    catch( CoreException e )
-    {
-      e.printStackTrace();
-    }
+    setControl( m_panel );
   }
 
   public void saveChanges( final IFolder folder, final IProgressMonitor monitor )
@@ -160,7 +136,7 @@ public class SteuerparameterWizardPage extends WizardPage
     {
       public void write( final Writer w ) throws Throwable
       {
-        GmlSerializer.serializeWorkspace( w, workspace);
+        GmlSerializer.serializeWorkspace( w, workspace );
       }
     };
     thread.start();
@@ -219,45 +195,80 @@ public class SteuerparameterWizardPage extends WizardPage
           }
         } );
     }
-
   }
 
   /**
    * Setzt dne aktuellen Rechenfall, ist dort schon eine .calculation vorhanden,
    * wird diese geladen, sonst die default.
    * 
-   * @throws CoreException
    */
-  public void setFolder( final IFolder currentCalcCase ) throws CoreException
+  public void setFolder( final IFolder currentCalcCase )
   {
     m_currentCalcCase = currentCalcCase;
-    
-    final ModelNature nature = (ModelNature)m_projectProvider.getProject().getNature(
-        ModelNature.ID );
 
-    GMLWorkspace workspace = nature.loadOrCreateControl( currentCalcCase );
-    setWorkspace( workspace );
+    createFeatureControl( m_panel );
   }
 
-  public void setWorkspace( final GMLWorkspace workspace )
+  private void createFeatureControl( final Composite panel )
   {
-    m_workspace = workspace;
+      // dispose old control
+      m_featureComposite.disposeControl();
+    final IProject project = m_projectProvider.getProject();
+    if( project == null )
+      return;
 
-    final FeatureComposite featureComposite = m_featureComposite;
-    if( featureComposite != null )
+    try
     {
-      featureComposite.setFeature( workspace.getRootFeature() );
+      // gleich mal den Workspace auf das default setzen
+      final ModelNature nature = (ModelNature)project.getNature( ModelNature.ID );
+      m_workspace = nature.loadOrCreateControl( m_currentCalcCase );
+
+      // Vorlage auslesen
+      final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/"
+          + ModelNature.CONTROL_VIEW_PATH );
+
+      final Feature f = m_workspace.getRootFeature();
+
+      m_featureComposite.setFeature( f );
+      m_featureComposite.addView( viewURL );
       
-      final Control control = m_featureComposite.getControl();
-      if( control != null && !control.isDisposed() )
+      final Control featureControl = m_featureComposite.createControl( panel, SWT.NONE );
+      featureControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+      
+      final FeatureComposite featureComposite = m_featureComposite;
+      if( featureComposite != null )
       {
-        control.getDisplay().asyncExec( new Runnable( ) {
-          public void run()
+        featureComposite.setFeature( m_workspace.getRootFeature() );
+
+        final Control control = m_featureComposite.getControl();
+        if( control != null && !control.isDisposed() )
+        {
+          control.getDisplay().asyncExec( new Runnable()
           {
-            featureComposite.updateControl();
-          }} );
+            public void run()
+            {
+              featureComposite.updateControl();
+            }
+          } );
+        }
       }
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
     }
   }
 
+  /**
+   * @see org.eclipse.jface.wizard.WizardPage#getPreviousPage()
+   */
+  public IWizardPage getPreviousPage()
+  {
+    return null;
+  }
+  
 }

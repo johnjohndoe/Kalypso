@@ -108,7 +108,6 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
     setControl( composite );
   }
 
-
   /**
    * The <code>WizardNewFolderCreationPage</code> implementation of this
    * <code>Listener</code> method handles all events and enablements for

@@ -226,11 +226,11 @@ public class ObservationResolver extends AbstractTransformation
         if( obs2 == null )
         {
           obs = obs1;
-          //          dateRange = new DateRangeArgument( from1, to1 );
+          //  dateRange = new DateRangeArgument( from1, to1 );
         }
         else
         {
-          //          dateRange = new DateRangeArgument( from1, to2 );
+          //  dateRange = new DateRangeArgument( from1, to2 );
 
           // NOTE: the order is important:
           // obs( i ) has a higher priority than obs( i + 1 )

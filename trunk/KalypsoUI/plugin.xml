@@ -379,43 +379,6 @@
       <options allowLinking="true"/>
    </extension>
    <extension
-         point="org.eclipse.ui.newWizards">
-      <category
-            name="Kalypso"
-            id="org.kalypso.ui.wizardCategory"/>
-      <wizard
-            icon="icons/sample.gif"
-            class="org.kalypso.ui.wizard.calccase.NewCalculationCaseWizard"
-            category="org.kalypso.ui.wizardCategory"
-            name="Rechenfall"
-            id="org.kalypso.wizard.newCalcCase">
-      </wizard>
-      <wizard
-            icon="icons/kalypso_gmt.gif"
-            class="org.kalypso.ui.wizard.NewMapWizard"
-            category="org.kalypso.ui.wizardCategory"
-            name="Karte"
-            id="org.kalypso.wizard.newMap"/>
-      <wizard
-            icon="icons/kalypso_gtt.gif"
-            class="org.kalypso.ui.wizard.NewGttWizard"
-            category="org.kalypso.ui.wizardCategory"
-            name="Tabelle (GIS)"
-            id="org.kalypso.wizard.newGtt"/>
-      <wizard
-            icon="icons/kalypso_odt.gif"
-            class="org.kalypso.ui.wizard.NewOdtWizard"
-            category="org.kalypso.ui.wizardCategory"
-            name="Diagramm"
-            id="org.kalypso.wizard.newOdt"/>
-      <wizard
-            icon="icons/kalypso_ott.gif"
-            class="org.kalypso.ui.wizard.NewOttWizard"
-            category="org.kalypso.ui.wizardCategory"
-            name="Tabelle (Zeitreihen)"
-            id="org.kalypso.wizard.newOtt"/>
-   </extension>
-   <extension
          point="org.eclipse.ui.viewActions">
       <viewContribution
             targetID="org.eclipse.ui.views.ResourceNavigator"
@@ -501,8 +464,6 @@
                id="org.kalypso.menu.model">
             <groupMarker name="modelStart"/>
             <separator name="modelSep"/>
-            <groupMarker name="calcCaseStart"/>
-            <separator name="modelSep2"/>
             <groupMarker name="prognoseStart"/>
          </menu>
 		 <action
@@ -516,29 +477,8 @@
                class="org.kalypso.ui.action.StartCalculationActionDelegate"
                icon="icons/rechne.gif"
                tooltip="führt die Berechnung der selektierten Rechenvariante aus, bereits vorhandene Ergebnisdaten werden überschrieben"
-               menubarPath="org.kalypso.menu.model/calcCaseStart"
-               id="org.kalypso.action.model.runCalcCase"/>
-         <action
-               label="Rechenvariante anlegen"
-               class="org.kalypso.ui.action.CopyCalcCase"
-               tooltip="legt eine Variante vom selektierten Rechenfall an"
-               icon="icons/util/copy_edit.gif"
-               menubarPath="org.kalypso.menu.model/calcCaseStart"
-               id="org.kalypso.action.model.copyCalcCase"/>
-<!--
-         <action
-               label="Rechenvariante archivieren"
-               icon="icons/util/copy_r_co.gif"
-               tooltip="legt eine Variante auf dem Server ab"
-               menubarPath="org.kalypso.menu.model/calcCaseStart"
-               id="org.kalypso.action.model.commitCalcCase"/>
-         <action
-               label="Rechenvariante vom Server laden"
-               icon="icons/util/copy_l_co.gif"
-               tooltip="lädt eine vorhandene Rechenvariante vom Server"
-               menubarPath="org.kalypso.menu.model/calcCaseStart"
-               id="org.kalypso.action.model.getCalcCase"/>
--->               
+               menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
+               id="org.kalypso.action.model.runCalcCase"/>               
          <action
                retarget="false"
                label="Modellvariante anlegen"
@@ -569,6 +509,47 @@
                icon="icons/util/copy_l_co.gif"
                menubarPath="org.kalypso.menu.model/modelStart"
                id="org.kalypso.action.model.checkoutModel"/>
+         <menu
+               label="Rechenvariante"
+               path="org.kalypso.menu.model"
+               id="org.kalypso.menu.calcCase">
+            <groupMarker name="calcCaseStart"/>
+         </menu>
+
+         <action
+               label="archivieren"
+               class="org.kalypso.ui.action.CommitCalcCaseDelegate"
+               icon="icons/util/copy_r_co.gif"
+               tooltip="legt eine Rechenvariante auf dem Server ab"
+               menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
+               id="org.kalypso.action.model.commitCalcCase"/>
+         <action
+               label="vom Server laden"
+               class="org.kalypso.ui.action.GetCalcCaseDelegate"
+               icon="icons/util/copy_l_co.gif"
+               tooltip="lädt eine vorhandene Rechenvariante vom Server"
+               menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
+               id="org.kalypso.action.model.getCalcCase"/>
+         <action
+               label="Zeitreihen aktualisieren"
+               class="org.kalypso.ui.action.UpdateCalcCaseTimeseries"
+               tooltip="aktualisiert die Zeitreihen anhand der in den Steuerparametern definierten Zeiträume"
+               menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
+               id="org.kalypso.action.model.updateCalcCaseTimeseries"/>
+         <action
+               label="kopieren..."
+               class="org.kalypso.ui.action.CopyCalcCase"
+               tooltip="legt eine Variante vom selektierten Rechenfall an"
+               icon="icons/util/copy_edit.gif"
+               menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
+               id="org.kalypso.action.model.copyCalcCase"/>
+         <action
+               label="Neu..."
+               icon="icons/util/new_wiz.gif"
+               tooltip="Erzeugt einen neuen Rechenfall"
+               class="org.kalypso.ui.action.NewCalcCaseAction"
+               menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
+               id="org.kalypso.action.model.newCalcCase"/>
       </actionSet>
    </extension>
    <extension
