@@ -46,7 +46,7 @@
  */
 package org.kalypso.ogc.gml.outline;
 
-import org.deegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;

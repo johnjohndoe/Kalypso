@@ -58,16 +58,16 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
-import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.deegree_impl.model.cs.CoordinateSystem;
-import org.deegree_impl.model.cs.GeographicCoordinateSystem;
-import org.deegree_impl.model.cs.ProjectedCoordinateSystem;
-import org.deegree_impl.model.ct.CoordinateTransformation;
-import org.deegree_impl.model.ct.CoordinateTransformationFactory;
-import org.deegree_impl.model.ct.MathTransform;
-import org.deegree_impl.model.ct.MathTransformFactory;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.GeographicCoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.ProjectedCoordinateSystem;
+import org.kalypsodeegree_impl.model.ct.CoordinateTransformation;
+import org.kalypsodeegree_impl.model.ct.CoordinateTransformationFactory;
+import org.kalypsodeegree_impl.model.ct.MathTransform;
+import org.kalypsodeegree_impl.model.ct.MathTransformFactory;
 
 /**
  * A Tranformation Factory: The <tt>Transform</tt> object, that this class

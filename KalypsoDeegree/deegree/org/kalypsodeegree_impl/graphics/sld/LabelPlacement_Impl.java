@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
-import org.deegree.graphics.sld.LabelPlacement;
-import org.deegree.graphics.sld.LinePlacement;
-import org.deegree.graphics.sld.PointPlacement;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.graphics.sld.LabelPlacement;
+import org.kalypsodeegree.graphics.sld.LinePlacement;
+import org.kalypsodeegree.graphics.sld.PointPlacement;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Used to position a label relative to a point or a line string. For a point,

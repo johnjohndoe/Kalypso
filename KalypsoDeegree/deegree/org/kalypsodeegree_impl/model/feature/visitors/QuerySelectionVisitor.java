@@ -1,10 +1,10 @@
-package org.deegree_impl.model.feature.visitors;
+package org.kalypsodeegree_impl.model.feature.visitors;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
  * Schreibt die Selektionen aller besuchten Features in eine Map: id -> new
@@ -32,7 +32,7 @@ public class QuerySelectionVisitor implements FeatureVisitor
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureVisitor#visit(org.deegree.model.feature.Feature)
+   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
   public boolean visit( final Feature f )
   {

@@ -4,7 +4,7 @@
  * Created on 13. Februar 2003, 16:54
  */
 
-package org.deegree.model.coverage;
+package org.kalypsodeegree.model.coverage;
 
 /**
  * 

@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.resources;
+package org.kalypsodeegree_impl.model.resources;
 
 // Collections
 import java.lang.ref.ReferenceQueue;
@@ -150,12 +150,12 @@ public class WeakHashSet extends AbstractSet
         }
         catch( Exception exception )
         {
-          Utilities.unexpectedException( "org.deegree_impl.model", "WeakHashSet", "remove",
+          Utilities.unexpectedException( "org.kalypsodeegree_impl.model", "WeakHashSet", "remove",
               exception );
         }
       /*
        * //----- BEGIN JDK 1.4 DEPENDENCIES ---- catch (// assertionError
-       * exception) { Utilities.unexpectedException("org.deegree_impl.model",
+       * exception) { Utilities.unexpectedException("org.kalypsodeegree_impl.model",
        * "WeakHashSet", "remove", exception); // Do not kill the thread on //
        * assertion failure, in order to // keep the same behaviour as if //
        * assertions were turned off. }
@@ -306,7 +306,7 @@ public class WeakHashSet extends AbstractSet
     }
     /*
      * //----- BEGIN JDK 1.4 DEPENDENCIES ---- final Logger logger =
-     * Logger.getLogger("org.deegree_impl.model"); final Level level =
+     * Logger.getLogger("org.kalypsodeegree_impl.model"); final Level level =
      * Level.FINEST; if (logger.isLoggable(level)) { final LogRecord record =
      * new LogRecord(level, "Rehash from "+oldTable.length+" to "+table.length);
      * record.setSourceMethodName(augmentation ? "intern" : "remove");

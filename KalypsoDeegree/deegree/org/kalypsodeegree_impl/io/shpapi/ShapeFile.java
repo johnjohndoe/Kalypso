@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -66,28 +66,28 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.geometry.ByteUtils;
-import org.deegree.model.geometry.GM_Curve;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Exception;
-import org.deegree.model.geometry.GM_MultiCurve;
-import org.deegree.model.geometry.GM_MultiPoint;
-import org.deegree.model.geometry.GM_MultiSurface;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree_impl.io.rtree.HyperBoundingBox;
-import org.deegree_impl.io.rtree.HyperPoint;
-import org.deegree_impl.io.rtree.RTree;
-import org.deegree_impl.io.rtree.RTreeException;
-import org.deegree_impl.model.feature.FeatureFactory;
-import org.deegree_impl.model.geometry.GeometryFactory;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.ByteUtils;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.io.rtree.HyperBoundingBox;
+import org.kalypsodeegree_impl.io.rtree.HyperPoint;
+import org.kalypsodeegree_impl.io.rtree.RTree;
+import org.kalypsodeegree_impl.io.rtree.RTreeException;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Class representing an ESRI Shape File.

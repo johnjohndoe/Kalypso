@@ -58,12 +58,12 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.filterencoding;
+package org.kalypsodeegree_impl.filterencoding;
 
 import java.util.ArrayList;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Encapsulates the information of a <Filter>element that consists of a number

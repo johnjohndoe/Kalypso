@@ -40,13 +40,13 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import org.deegree.graphics.sld.FeatureTypeStyle;
-import org.deegree.graphics.sld.UserStyle;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.model.feature.event.ModellEventListener;
-import org.deegree.model.feature.event.ModellEventProvider;
-import org.deegree.model.feature.event.ModellEventProviderAdapter;
-import org.deegree.xml.Marshallable;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
+import org.kalypsodeegree.xml.Marshallable;
 
 /**
  * Wrapped UserStyle to provide fireModellEvent Method
@@ -137,7 +137,7 @@ public class KalypsoUserStyle implements UserStyle, Marshallable, ModellEventPro
   }
 
   /**
-   * @see org.deegree.xml.Marshallable#exportAsXML()
+   * @see org.kalypsodeegree.xml.Marshallable#exportAsXML()
    */
   public String exportAsXML()
   {

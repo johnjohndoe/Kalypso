@@ -42,8 +42,8 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -122,8 +122,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme //implements
   //
   //  /**
   //   * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
-  //   * org.deegree.graphics.transformation.GeoTransform, double,
-  //   * org.deegree.model.geometry.GM_Envelope, int)
+  //   * org.kalypsodeegree.graphics.transformation.GeoTransform, double,
+  //   * org.kalypsodeegree.model.geometry.GM_Envelope, int)
   //   */
   //  public void paintSelected( Graphics g, GeoTransform p, double scale,
   // GM_Envelope bbox,
@@ -215,7 +215,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme //implements
   //  }
   //
   //  /**
-  //   * @see org.deegree.services.OGCWebServiceClient#write(java.lang.Object)
+  //   * @see org.kalypsodeegree.services.OGCWebServiceClient#write(java.lang.Object)
   //   */
   //  public void write( final Object result )
   //  {
@@ -283,8 +283,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme //implements
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
-   *      org.deegree.graphics.transformation.GeoTransform, double,
-   *      org.deegree.model.geometry.GM_Envelope, int)
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, int)
    */
   public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
       int selectionId )

@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.model.coverage;
+package org.kalypsodeegree.model.coverage;
 
 /**
  * The <tt>GridExtentDescription</tt> that extends the shared

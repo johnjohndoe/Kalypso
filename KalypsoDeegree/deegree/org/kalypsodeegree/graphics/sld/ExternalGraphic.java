@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.graphics.sld;
+package org.kalypsodeegree.graphics.sld;
 
 import java.awt.image.BufferedImage;
 import java.net.URL;

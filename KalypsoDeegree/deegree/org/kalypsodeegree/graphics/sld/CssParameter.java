@@ -58,10 +58,10 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics.sld;
+package org.kalypsodeegree.graphics.sld;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * The simple SVG/CSS2 styling parameters are given with the CssParameter

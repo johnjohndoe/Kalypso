@@ -58,12 +58,12 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.geometry;
+package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
-import org.deegree.model.geometry.GM_Exception;
-import org.deegree.model.geometry.GM_SurfaceInterpolation;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 
 /**
  * default implementation of the GM_SurfaceInterpolation interface from the

@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.ogcbasic;
+package org.kalypsodeegree.ogcbasic;
 
 import java.net.URL;
 

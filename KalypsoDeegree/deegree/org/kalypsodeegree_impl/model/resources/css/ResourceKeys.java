@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.resources.css;
+package org.kalypsodeegree_impl.model.resources.css;
 
 /**
  * Resource keys. This interface is used when compiling sources, but no
@@ -67,7 +67,7 @@ package org.deegree_impl.model.resources.css;
  * identifiers will not bloat constant pools of classes compiled against the
  * interface, providing that no class implements this interface.
  * 
- * @see org.deegree_impl.model.resources.ResourceBundle
+ * @see org.kalypsodeegree_impl.model.resources.ResourceBundle
  */
 public interface ResourceKeys
 {

@@ -45,9 +45,9 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -205,7 +205,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
       // collect available geometry properties
       for( int i = 0; i < ftps.length; i++ )
       {
-        if( ftps[i].getType().startsWith( "org.deegree.model.geometry" ) )
+        if( ftps[i].getType().startsWith( "org.kalypsodeegree.model.geometry" ) )
           geoFtps.add( ftps[i] );
       }
 
@@ -220,21 +220,21 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
 
   private void setGeometryWidget( final IKalypsoFeatureTheme theme, final FeatureTypeProperty ftp )
   {
-    if( ftp.getType().equals( "org.deegree.model.geometry.GM_Point" ) )
+    if( ftp.getType().equals( "org.kalypsodeegree.model.geometry.GM_Point" ) )
       myWidget = new CreatePointFeatureWidget( this, theme, ftp );
-    //    else if( ftp.getType().equals( "org.deegree.model.geometry.GM_MultiPoint"
+    //    else if( ftp.getType().equals( "org.kalypsodeegree.model.geometry.GM_MultiPoint"
     // ) )
     //      myWidget = new CreateMultipointFeatureWidget();
-    //    else if( ftp.getType().equals( "org.deegree.model.geometry.GM_Polygon" )
+    //    else if( ftp.getType().equals( "org.kalypsodeegree.model.geometry.GM_Polygon" )
     // )
     //      myWidget = new CreatePolygonFeatureWidget();
     //    else if( ftp.getType().equals(
-    // "org.deegree.model.geometry.GM_MultiSurface" ) )
+    // "org.kalypsodeegree.model.geometry.GM_MultiSurface" ) )
     //      myWidget = new CreateMultipolygonFeatureWidget();
-    //    else if( ftp.getType().equals( "org.deegree.model.geometry.GM_LineString"
+    //    else if( ftp.getType().equals( "org.kalypsodeegree.model.geometry.GM_LineString"
     // ) )
     //      myWidget = new CreateLinestringFeatureWidget();
-    //    else if( ftp.getType().equals( "org.deegree.model.geometry.GM_MultiCurve"
+    //    else if( ftp.getType().equals( "org.kalypsodeegree.model.geometry.GM_MultiCurve"
     // ) )
     //      myWidget = new CreateMultilinestringFeatureWidget();
   }
@@ -250,7 +250,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   }
 
   /**
-   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
+   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( ModellEvent modellEvent )
   {

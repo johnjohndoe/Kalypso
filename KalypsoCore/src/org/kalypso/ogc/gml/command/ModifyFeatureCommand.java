@@ -45,10 +45,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypso.util.command.ICommand;
 
 /**

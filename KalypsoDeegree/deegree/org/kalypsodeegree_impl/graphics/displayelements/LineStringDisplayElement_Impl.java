@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -70,18 +70,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.displayelements.LineStringDisplayElement;
-import org.deegree.graphics.sld.LineSymbolizer;
-import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_Curve;
-import org.deegree.model.geometry.GM_LineString;
-import org.deegree.model.geometry.GM_MultiCurve;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree_impl.graphics.sld.LineSymbolizer_Impl;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement;
+import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * DisplayElement that encapsulates a linestring (<tt>GM_Curve</tt>) or
@@ -182,7 +182,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
     Debug.debugMethodBegin( this, "paint" );
 
     LineSymbolizer sym = (LineSymbolizer)symbolizer;
-    org.deegree.graphics.sld.Stroke stroke = sym.getStroke();
+    org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
 
     // no stroke defined -> don't draw anything
     if( stroke == null )
@@ -300,7 +300,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
    * 
    * TODO: Calculate miterlimit.
    */
-  private void drawLine( Graphics g, int[][] pos, org.deegree.graphics.sld.Stroke stroke )
+  private void drawLine( Graphics g, int[][] pos, org.kalypsodeegree.graphics.sld.Stroke stroke )
       throws FilterEvaluationException
   {
 

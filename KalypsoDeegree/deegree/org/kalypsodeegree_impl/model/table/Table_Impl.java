@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.table;
+package org.kalypsodeegree_impl.model.table;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.deegree.model.table.Table;
-import org.deegree.model.table.TableException;
+import org.kalypsodeegree.model.table.Table;
+import org.kalypsodeegree.model.table.TableException;
 
 /**
  * 
@@ -181,7 +181,7 @@ public class Table_Impl implements Table
   }
 
   /**
-   * @see org.deegree_impl.model.table.Table_Impl#getTableName()
+   * @see org.kalypsodeegree_impl.model.table.Table_Impl#getTableName()
    */
   public void setTableName( String tableName )
   {

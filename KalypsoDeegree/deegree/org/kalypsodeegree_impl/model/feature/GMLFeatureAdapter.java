@@ -58,21 +58,21 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.feature;
+package org.kalypsodeegree_impl.model.feature;
 
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureException;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.model.geometry.GMLAdapter;
-import org.deegree_impl.model.geometry.GeometryFactory;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureException;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Element;
 
 /**

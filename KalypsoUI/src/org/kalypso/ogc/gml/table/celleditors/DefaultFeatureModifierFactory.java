@@ -40,7 +40,7 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.celleditors;
 
-import org.deegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
@@ -51,7 +51,7 @@ import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
 {
   /**
-   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.deegree.model.feature.FeatureTypeProperty)
+   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.kalypsodeegree.model.feature.FeatureTypeProperty)
    */
   public IFeatureModifier createFeatureModifier( final FeatureTypeProperty ftp )
   {

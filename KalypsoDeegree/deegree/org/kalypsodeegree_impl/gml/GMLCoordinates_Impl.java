@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
-import org.deegree.gml.GMLCoordinates;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree.xml.DOMPrinter;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLCoordinates;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree.xml.DOMPrinter;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -203,7 +203,7 @@ public class GMLCoordinates_Impl implements GMLCoordinates
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLCoordinates_Impl#getDecimalSeperator()
+   * @see org.kalypsodeegree_impl.gml.GMLCoordinates_Impl#getDecimalSeperator()
    */
   public void setDecimalSeperator( char decimalSeperator )
   {
@@ -232,7 +232,7 @@ public class GMLCoordinates_Impl implements GMLCoordinates
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLCoordinates_Impl#getCoordinateSeperator()
+   * @see org.kalypsodeegree_impl.gml.GMLCoordinates_Impl#getCoordinateSeperator()
    */
   public void setCoordinateSeperator( char coordinateSeperator )
   {
@@ -261,7 +261,7 @@ public class GMLCoordinates_Impl implements GMLCoordinates
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLCoordinates_Impl#getTupleSeperator()
+   * @see org.kalypsodeegree_impl.gml.GMLCoordinates_Impl#getTupleSeperator()
    */
   public void setTupleSeperator( char tupleSeperator )
   {
@@ -285,6 +285,9 @@ public class GMLCoordinates_Impl implements GMLCoordinates
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.5  2005/03/08 11:01:04  doemming
+ * *** empty log message ***
+ *
  * Revision 1.4  2005/01/18 12:50:42  doemming
  * *** empty log message ***
  *

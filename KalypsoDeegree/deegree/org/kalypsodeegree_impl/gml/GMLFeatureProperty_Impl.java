@@ -58,15 +58,15 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
-import org.deegree.gml.GMLException;
-import org.deegree.gml.GMLFeature;
-import org.deegree.gml.GMLFeatureProperty;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree.xml.DOMPrinter;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLException;
+import org.kalypsodeegree.gml.GMLFeature;
+import org.kalypsodeegree.gml.GMLFeatureProperty;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree.xml.DOMPrinter;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -146,7 +146,7 @@ public class GMLFeatureProperty_Impl extends GMLProperty_Impl implements GMLFeat
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLFeatureProperty_Impl#getFeaturePropertyValue()
+   * @see org.kalypsodeegree_impl.gml.GMLFeatureProperty_Impl#getFeaturePropertyValue()
    */
   public void setFeaturePropetryValue( GMLFeature value ) throws GMLException
   {

@@ -1,21 +1,21 @@
-package org.deegree_impl.model.feature;
+package org.kalypsodeegree_impl.model.feature;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureAssociationTypeProperty;
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
-import org.deegree_impl.model.geometry.GM_Envelope_Impl;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
+import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author doemming
@@ -88,7 +88,7 @@ public class Feature_Impl implements Feature
   }
 
   /**
-   * @see org.deegree.model.feature.Feature#getId()
+   * @see org.kalypsodeegree.model.feature.Feature#getId()
    */
   public String getId()
   {
@@ -96,7 +96,7 @@ public class Feature_Impl implements Feature
   }
 
   /**
-   * @see org.deegree.model.feature.Feature#getFeatureType()
+   * @see org.kalypsodeegree.model.feature.Feature#getFeatureType()
    */
   public FeatureType getFeatureType()
   {
@@ -106,7 +106,7 @@ public class Feature_Impl implements Feature
   /**
    * @return array of properties, properties with maxoccurency>0 (as defined in
    *         applicationschema) will be embedded in java.util.List-objects
-   * @see org.deegree.model.feature.Feature#getProperties()
+   * @see org.kalypsodeegree.model.feature.Feature#getProperties()
    */
   public Object[] getProperties()
   {
@@ -119,7 +119,7 @@ public class Feature_Impl implements Feature
    * @return array of properties, properties with maxoccurency>0 (as defined in
    *         applicationschema) will be embedded in java.util.List-objects
    * 
-   * @see org.deegree.model.feature.Feature#getProperty(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
    */
   public Object getProperty( String name )
   {
@@ -132,7 +132,7 @@ public class Feature_Impl implements Feature
 
   /**
    * 
-   * @see org.deegree.model.feature.Feature#getProperty(int)
+   * @see org.kalypsodeegree.model.feature.Feature#getProperty(int)
    * @return array of properties, properties with maxoccurency>0 (as defined in
    *         applicationschema) will be embedded in java.util.List-objects
    */
@@ -142,7 +142,7 @@ public class Feature_Impl implements Feature
   }
 
   /**
-   * @see org.deegree.model.feature.Feature#getGeometryProperties()
+   * @see org.kalypsodeegree.model.feature.Feature#getGeometryProperties()
    */
   public GM_Object[] getGeometryProperties()
   {
@@ -185,7 +185,7 @@ public class Feature_Impl implements Feature
   }
 
   /**
-   * @see org.deegree.model.feature.Feature#getDefaultGeometryProperty()
+   * @see org.kalypsodeegree.model.feature.Feature#getDefaultGeometryProperty()
    */
   public GM_Object getDefaultGeometryProperty()
   {
@@ -206,7 +206,7 @@ public class Feature_Impl implements Feature
   /**
    * set defaulproperty (occurenceposition=0)
    * 
-   * @see org.deegree.model.feature.Feature#setProperty(org.deegree.model.feature.FeatureProperty)
+   * @see org.kalypsodeegree.model.feature.Feature#setProperty(org.kalypsodeegree.model.feature.FeatureProperty)
    */
   public void setProperty( FeatureProperty property )
   {
@@ -229,7 +229,7 @@ public class Feature_Impl implements Feature
 
   /**
    * 
-   * @see org.deegree.model.feature.Feature#addProperty(org.deegree.model.feature.FeatureProperty)
+   * @see org.kalypsodeegree.model.feature.Feature#addProperty(org.kalypsodeegree.model.feature.FeatureProperty)
    */
   public void addProperty( FeatureProperty property )
   {
@@ -255,7 +255,7 @@ public class Feature_Impl implements Feature
   }
 
   /**
-   * @see org.deegree.model.feature.Feature#getEnvelope()
+   * @see org.kalypsodeegree.model.feature.Feature#getEnvelope()
    */
   public GM_Envelope getEnvelope()
   {
@@ -371,7 +371,7 @@ public class Feature_Impl implements Feature
   }
 
   /**
-   * @see org.deegree.model.feature.Feature#getSelection()
+   * @see org.kalypsodeegree.model.feature.Feature#getSelection()
    */
   public int getSelection()
   {
@@ -379,7 +379,7 @@ public class Feature_Impl implements Feature
   }
 
   /**
-   * @see org.deegree.model.feature.Feature#setSelection(int)
+   * @see org.kalypsodeegree.model.feature.Feature#setSelection(int)
    */
   public void setSelection( final int selection )
   {
@@ -387,7 +387,7 @@ public class Feature_Impl implements Feature
   }
 
   /**
-   * @see org.deegree.model.feature.Feature#getVirtuelProperty(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.Feature#getVirtuelProperty(java.lang.String)
    */
   public Object getVirtuelProperty( String propertyName, GMLWorkspace workspace )
   {

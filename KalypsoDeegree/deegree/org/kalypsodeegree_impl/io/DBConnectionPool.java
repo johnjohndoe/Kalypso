@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.io;
+package org.kalypsodeegree_impl.io;
 
 import java.sql.Connection;
 import java.util.HashMap;

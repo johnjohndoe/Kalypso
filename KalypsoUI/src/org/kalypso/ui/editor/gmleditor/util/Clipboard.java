@@ -1,6 +1,6 @@
 package org.kalypso.ui.editor.gmleditor.util;
 
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author lindemfn

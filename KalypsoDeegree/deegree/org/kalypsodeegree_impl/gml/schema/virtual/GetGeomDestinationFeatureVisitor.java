@@ -1,14 +1,14 @@
-package org.deegree_impl.gml.schema.virtual;
+package org.kalypsodeegree_impl.gml.schema.virtual;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureAssociationTypeProperty;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.feature.FeatureVisitor;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -81,7 +81,7 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureVisitor#visit(org.deegree.model.feature.Feature)
+   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
   public boolean visit( Feature f )
   {

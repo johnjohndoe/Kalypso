@@ -51,10 +51,10 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
-import org.deegree.model.feature.Annotation;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.Annotation;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;

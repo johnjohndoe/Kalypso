@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.model.coverage;
+package org.kalypsodeegree.model.coverage;
 
 /**
  * GridSpacing is required for rectified grids, but undefined for other grids.

@@ -40,7 +40,7 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gistableeditor.actions;
 
-import org.deegree.model.feature.Annotation;
+import org.kalypsodeegree.model.feature.Annotation;
 import org.eclipse.jface.action.Action;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand;

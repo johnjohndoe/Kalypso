@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.tools;
+package org.kalypsodeegree.tools;
 
 /**
  * 

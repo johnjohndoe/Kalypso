@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.gml;
+package org.kalypsodeegree.gml;
 
 import org.w3c.dom.Element;
 
@@ -142,6 +142,9 @@ public interface GMLProperty
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.7  2005/03/08 11:01:10  doemming
+ * *** empty log message ***
+ *
  * Revision 1.6  2005/01/18 12:50:41  doemming
  * *** empty log message ***
  *

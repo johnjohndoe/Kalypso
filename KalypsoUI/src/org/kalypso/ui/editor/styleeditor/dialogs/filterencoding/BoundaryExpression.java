@@ -40,9 +40,9 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.dialogs.filterencoding;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.model.feature.Feature;
-import org.deegree_impl.filterencoding.Expression_Impl;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.filterencoding.Expression_Impl;
 
 /**
  * @author F.Lindemann

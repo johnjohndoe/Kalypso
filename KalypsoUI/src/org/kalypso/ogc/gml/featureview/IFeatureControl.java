@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.featureview;
 
 import java.util.Collection;
 
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.Feature;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;

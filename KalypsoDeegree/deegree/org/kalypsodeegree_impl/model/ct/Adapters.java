@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
 import java.rmi.RemoteException;
@@ -67,8 +67,8 @@ import javax.media.jai.ParameterList;
 import javax.media.jai.ParameterListDescriptorImpl;
 import javax.media.jai.ParameterListImpl;
 
-import org.deegree_impl.model.resources.WeakHashSet;
-import org.deegree_impl.model.resources.XArray;
+import org.kalypsodeegree_impl.model.resources.WeakHashSet;
+import org.kalypsodeegree_impl.model.resources.XArray;
 import org.opengis.ct.CT_CoordinateTransformation;
 import org.opengis.ct.CT_CoordinateTransformationFactory;
 import org.opengis.ct.CT_DomainFlags;
@@ -93,16 +93,16 @@ public class Adapters
   private static Adapters DEFAULT;
 
   /**
-   * The underlying adapters from the <code>org.deegree_impl.model.cs</code>
+   * The underlying adapters from the <code>org.kalypsodeegree_impl.model.cs</code>
    * package.
    */
-  public final org.deegree_impl.model.cs.Adapters CS;
+  public final org.kalypsodeegree_impl.model.cs.Adapters CS;
 
   /**
-   * The underlying adapters from the <code>org.deegree_impl.model.pt</code>
+   * The underlying adapters from the <code>org.kalypsodeegree_impl.model.pt</code>
    * package.
    */
-  public final org.deegree_impl.model.pt.Adapters PT;
+  public final org.kalypsodeegree_impl.model.pt.Adapters PT;
 
   /**
    * A weak hash set for for {@link MathTransformExport}objects.
@@ -126,9 +126,9 @@ public class Adapters
    * 
    * @param CS
    *          The underlying adapters from the
-   *          <code>org.deegree_impl.model.cs</code> package.
+   *          <code>org.kalypsodeegree_impl.model.cs</code> package.
    */
-  protected Adapters( final org.deegree_impl.model.cs.Adapters CS )
+  protected Adapters( final org.kalypsodeegree_impl.model.cs.Adapters CS )
   {
     this.CS = CS;
     this.PT = CS.PT;
@@ -141,7 +141,7 @@ public class Adapters
   {
     if( DEFAULT == null )
     {
-      DEFAULT = new Adapters( org.deegree_impl.model.cs.Adapters.getDefault() );
+      DEFAULT = new Adapters( org.kalypsodeegree_impl.model.cs.Adapters.getDefault() );
     }
     return DEFAULT;
   }

@@ -58,14 +58,14 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Graphics;
 import java.io.Serializable;
 
-import org.deegree.graphics.displayelements.DisplayElement;
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Basic interface of all display elements. A <tt>DisplayElement</tt> is

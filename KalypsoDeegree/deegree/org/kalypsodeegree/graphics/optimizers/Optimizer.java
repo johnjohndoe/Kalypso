@@ -58,12 +58,12 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics.optimizers;
+package org.kalypsodeegree.graphics.optimizers;
 
 import java.awt.Graphics2D;
 
-import org.deegree.graphics.MapView;
-import org.deegree.graphics.Theme;
+import org.kalypsodeegree.graphics.MapView;
+import org.kalypsodeegree.graphics.Theme;
 
 /**
  * This is the general interface for optimizers that need to alter the contents

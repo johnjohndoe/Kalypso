@@ -40,7 +40,7 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.deegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;

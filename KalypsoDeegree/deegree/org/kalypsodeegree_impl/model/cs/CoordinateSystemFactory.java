@@ -27,7 +27,7 @@
  * This package contains documentation from OpenGIS specifications. OpenGIS
  * consortium's work is fully acknowledged here.
  */
-package org.deegree_impl.model.cs;
+package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
 import java.awt.geom.Point2D;
@@ -37,7 +37,7 @@ import java.rmi.server.RemoteObject;
 import javax.media.jai.ParameterList;
 import javax.units.Unit;
 
-import org.deegree_impl.model.resources.WeakHashSet;
+import org.kalypsodeegree_impl.model.resources.WeakHashSet;
 import org.opengis.cs.CS_AngularUnit;
 import org.opengis.cs.CS_AxisInfo;
 import org.opengis.cs.CS_CompoundCoordinateSystem;

@@ -44,8 +44,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 
-import org.deegree.graphics.sld.StyledLayerDescriptor;
-import org.deegree_impl.graphics.sld.SLDFactory;
+import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;

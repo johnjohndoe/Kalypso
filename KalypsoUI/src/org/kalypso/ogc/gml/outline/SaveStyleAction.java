@@ -52,10 +52,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.deegree.graphics.sld.StyledLayerDescriptor;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.graphics.sld.SLDFactory;
-import org.deegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
+import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
+import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;

@@ -58,11 +58,11 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.geometry;
+package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
-import org.deegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * A sequence of decimals numbers which when written on a width are a sequence

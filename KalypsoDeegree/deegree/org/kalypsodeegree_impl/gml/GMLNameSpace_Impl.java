@@ -58,10 +58,10 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
-import org.deegree.gml.GMLNameSpace;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLNameSpace;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * 
@@ -163,7 +163,7 @@ public class GMLNameSpace_Impl implements GMLNameSpace
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLNameSpace_Impl#getNameSpaceValue()
+   * @see org.kalypsodeegree_impl.gml.GMLNameSpace_Impl#getNameSpaceValue()
    */
   public void setNameSpaceValue( String nameSpaceValue )
   {}
@@ -184,6 +184,9 @@ public class GMLNameSpace_Impl implements GMLNameSpace
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.7  2005/03/08 11:01:03  doemming
+ * *** empty log message ***
+ *
  * Revision 1.6  2005/01/18 12:50:42  doemming
  * *** empty log message ***
  *

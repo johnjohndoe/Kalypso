@@ -46,10 +46,10 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.deegree.model.feature.FeatureVisitor;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.model.feature.visitors.ResortVisitor;
-import org.deegree_impl.model.feature.visitors.TransformVisitor;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
+import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;

@@ -1,7 +1,7 @@
-package org.deegree_impl.model.feature.visitors;
+package org.kalypsodeegree_impl.model.feature.visitors;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
  * selects all features with the given id
@@ -18,7 +18,7 @@ public class SelectFeatureVisitor implements FeatureVisitor
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureVisitor#visit(org.deegree.model.feature.Feature)
+   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
   public boolean visit( final Feature f )
   {

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypso.ui.calcwizard.Arguments;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 

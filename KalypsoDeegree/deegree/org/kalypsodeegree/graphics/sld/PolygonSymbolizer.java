@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics.sld;
+package org.kalypsodeegree.graphics.sld;
 
 /**
  * Used to render an interior "fill" and an outlining "stroke" for a polygon or

@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;

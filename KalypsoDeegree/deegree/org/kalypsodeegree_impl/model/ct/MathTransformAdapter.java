@@ -58,16 +58,16 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 
-import org.deegree_impl.model.pt.CoordinatePoint;
-import org.deegree_impl.model.pt.Matrix;
-import org.deegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.pt.CoordinatePoint;
+import org.kalypsodeegree_impl.model.pt.Matrix;
+import org.kalypsodeegree_impl.model.resources.Utilities;
 import org.opengis.ct.CT_MathTransform;
 import org.opengis.pt.PT_CoordinatePoint;
 

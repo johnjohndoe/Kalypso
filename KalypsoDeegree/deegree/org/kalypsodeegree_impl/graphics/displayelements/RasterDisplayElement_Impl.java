@@ -58,7 +58,7 @@
  http://www.lat-lon.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -81,22 +81,22 @@ import javax.media.jai.PlanarImage;
 import javax.media.jai.RasterFactory;
 import javax.media.jai.TiledImage;
 
-import org.deegree.graphics.displayelements.RasterDisplayElement;
-import org.deegree.graphics.sld.ColorMapEntry;
-import org.deegree.graphics.sld.Interval;
-import org.deegree.graphics.sld.RasterSymbolizer;
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.model.geometry.GM_Ring;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.deegree_impl.model.ct.GeoTransformer;
-import org.deegree_impl.model.cv.RangeSet;
-import org.deegree_impl.model.cv.RectifiedGridDomain;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.graphics.displayelements.RasterDisplayElement;
+import org.kalypsodeegree.graphics.sld.ColorMapEntry;
+import org.kalypsodeegree.graphics.sld.Interval;
+import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypsodeegree_impl.model.ct.GeoTransformer;
+import org.kalypsodeegree_impl.model.cv.RangeSet;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -158,7 +158,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     // TODO get target Coordinate system from projection
     String targetSrs = "EPSG:31469";
     ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    CS_CoordinateSystem cs = org.deegree_impl.model.cs.Adapters.getDefault().export(
+    CS_CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( targetSrs ) );
 
     try
@@ -262,7 +262,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
      * (RectifiedGridDomain)feature .getProperty( "rectifiedGridDomain" );
      * String targetSrs = "EPSG:31469"; ConvenienceCSFactoryFull csFac = new
      * ConvenienceCSFactoryFull(); CS_CoordinateSystem cs =
-     * org.deegree_impl.model.cs.Adapters.getDefault().export(
+     * org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
      * csFac.getCSByName( targetSrs ) );
      * 
      * GM_Surface destSurface = rgDomain.getGM_Surface( cs ); GM_Ring

@@ -58,10 +58,10 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.filterencoding;
+package org.kalypsodeegree_impl.filterencoding;
 
-import org.deegree.filterencoding.Filter;
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Abstract superclass representing <Filter>elements (as defined in the Filter

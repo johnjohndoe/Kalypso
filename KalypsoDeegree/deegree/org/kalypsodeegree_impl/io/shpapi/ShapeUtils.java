@@ -59,9 +59,9 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
-import org.deegree.model.geometry.ByteUtils;
+import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
  * Utilities for reading and writing the components of shape files.

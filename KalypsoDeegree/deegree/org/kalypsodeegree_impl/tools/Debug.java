@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.tools;
+package org.kalypsodeegree_impl.tools;
 
 import java.io.PrintStream;
 import java.util.Stack;

@@ -59,9 +59,9 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.graphics.legend;
+package org.kalypsodeegree_impl.graphics.legend;
 
-import org.deegree.graphics.legend.LegendView;
+import org.kalypsodeegree.graphics.legend.LegendView;
 
 /**
  * 

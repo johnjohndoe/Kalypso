@@ -59,11 +59,11 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
-import org.deegree.model.geometry.ByteUtils;
-import org.deegree.model.geometry.GM_Curve;
-import org.deegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.ByteUtils;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 
 /**
  * Class representig a two dimensional ESRI PolyLine <BR>

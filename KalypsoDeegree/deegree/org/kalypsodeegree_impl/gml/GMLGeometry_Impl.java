@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
-import org.deegree.gml.GMLGeometry;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree.xml.DOMPrinter;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLGeometry;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree.xml.DOMPrinter;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Element;
 
 /**
@@ -130,7 +130,7 @@ public class GMLGeometry_Impl implements GMLGeometry
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLGeometry_Impl#getId()
+   * @see org.kalypsodeegree_impl.gml.GMLGeometry_Impl#getId()
    */
   public void setId( String id )
   {
@@ -178,7 +178,7 @@ public class GMLGeometry_Impl implements GMLGeometry
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLGeometry_Impl#getSrs()
+   * @see org.kalypsodeegree_impl.gml.GMLGeometry_Impl#getSrs()
    */
   public void setSrs( String srs )
   {
@@ -212,6 +212,9 @@ public class GMLGeometry_Impl implements GMLGeometry
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2005/03/08 11:01:03  doemming
+ * *** empty log message ***
+ *
  * Revision 1.5  2005/02/28 13:34:14  doemming
  * *** empty log message ***
  *

@@ -1,4 +1,4 @@
-package org.deegree_impl.extension;
+package org.kalypsodeegree_impl.extension;
 
 import java.net.URL;
 

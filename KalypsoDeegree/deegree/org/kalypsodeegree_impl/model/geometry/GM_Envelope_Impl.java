@@ -58,14 +58,14 @@
  http://www.lat-lon.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.geometry;
+package org.kalypsodeegree_impl.model.geometry;
 
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * a boundingbox as child of a GM_Polygon isn't part of the iso19107 spec but it
@@ -357,7 +357,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   }
 
   /**
-   * @see org.deegree.model.geometry.GM_Envelope#getMerged(org.deegree.model.geometry.GM_Envelope)
+   * @see org.kalypsodeegree.model.geometry.GM_Envelope#getMerged(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
   public GM_Envelope getMerged( GM_Envelope envelope )
   {
@@ -401,7 +401,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   }
 
   /**
-   * @see org.deegree.model.geometry.GM_Envelope#getPaned(org.deegree.model.geometry.GM_Point)
+   * @see org.kalypsodeegree.model.geometry.GM_Envelope#getPaned(org.kalypsodeegree.model.geometry.GM_Point)
    */
   public GM_Envelope getPaned( GM_Point center )
   {
@@ -419,6 +419,9 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.10  2005/03/08 11:01:04  doemming
+ * *** empty log message ***
+ *
  * Revision 1.9  2005/03/02 18:17:17  doemming
  * *** empty log message ***
  *

@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics.sld;
+package org.kalypsodeegree.graphics.sld;
 
 /**
  * The GraphicFill element both indicates that a stipple-fill repeated graphic

@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics.displayelements;
+package org.kalypsodeegree.graphics.displayelements;
 
 /**
  * 

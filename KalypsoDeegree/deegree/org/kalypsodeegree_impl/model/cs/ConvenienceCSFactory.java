@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.cs;
+package org.kalypsodeegree_impl.model.cs;
 
 import java.awt.geom.Point2D;
 import java.util.Hashtable;

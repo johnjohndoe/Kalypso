@@ -44,10 +44,10 @@
  */
 package org.kalypso.ui.editor.styleeditor;
 
-import org.deegree.graphics.sld.Rule;
-import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;

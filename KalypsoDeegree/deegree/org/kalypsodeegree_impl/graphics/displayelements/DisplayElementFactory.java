@@ -58,46 +58,46 @@
  http://www.lat-lon.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.util.ArrayList;
 
-import org.deegree.filterencoding.Filter;
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.displayelements.DisplayElement;
-import org.deegree.graphics.displayelements.IncompatibleGeometryTypeException;
-import org.deegree.graphics.displayelements.LabelDisplayElement;
-import org.deegree.graphics.displayelements.LineStringDisplayElement;
-import org.deegree.graphics.displayelements.PointDisplayElement;
-import org.deegree.graphics.displayelements.PolygonDisplayElement;
-import org.deegree.graphics.displayelements.RasterDisplayElement;
-import org.deegree.graphics.sld.FeatureTypeStyle;
-import org.deegree.graphics.sld.Geometry;
-import org.deegree.graphics.sld.LineSymbolizer;
-import org.deegree.graphics.sld.PointSymbolizer;
-import org.deegree.graphics.sld.PolygonSymbolizer;
-import org.deegree.graphics.sld.RasterSymbolizer;
-import org.deegree.graphics.sld.Rule;
-import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.graphics.sld.TextSymbolizer;
-import org.deegree.graphics.sld.UserStyle;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.geometry.GM_Curve;
-import org.deegree.model.geometry.GM_Exception;
-import org.deegree.model.geometry.GM_MultiCurve;
-import org.deegree.model.geometry.GM_MultiPoint;
-import org.deegree.model.geometry.GM_MultiPrimitive;
-import org.deegree.model.geometry.GM_MultiSurface;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree.model.geometry.GM_Primitive;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree_impl.graphics.sld.LineSymbolizer_Impl;
-import org.deegree_impl.graphics.sld.PointSymbolizer_Impl;
-import org.deegree_impl.graphics.sld.PolygonSymbolizer_Impl;
-import org.deegree_impl.model.geometry.GeometryFactory;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
+import org.kalypsodeegree.graphics.displayelements.LabelDisplayElement;
+import org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement;
+import org.kalypsodeegree.graphics.displayelements.PointDisplayElement;
+import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
+import org.kalypsodeegree.graphics.displayelements.RasterDisplayElement;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.Geometry;
+import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Primitive;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.opengis.gc.GC_GridCoverage;
 
 /**

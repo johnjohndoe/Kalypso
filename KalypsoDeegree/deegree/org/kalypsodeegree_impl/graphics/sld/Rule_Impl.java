@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,12 +66,12 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
-import org.deegree.filterencoding.Filter;
-import org.deegree.graphics.sld.LegendGraphic;
-import org.deegree.graphics.sld.Rule;
-import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.graphics.sld.LegendGraphic;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * A rule is used to attach a condition to and group the individual symbolizers

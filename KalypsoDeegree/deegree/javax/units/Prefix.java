@@ -38,7 +38,7 @@ package javax.units;
 // Entrés/sorties
 import java.io.Serializable;
 
-import org.deegree_impl.model.resources.WeakHashSet;
+import org.kalypsodeegree_impl.model.resources.WeakHashSet;
 
 /**
  * Représentation d'un préfix du système métrique. Un objet <code>Prefix</code>

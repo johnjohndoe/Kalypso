@@ -1,6 +1,6 @@
 package org.kalypso.ui.editor.gmleditor.util.model;
 
-import org.deegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 
 /**
  * @author F.Lindemann

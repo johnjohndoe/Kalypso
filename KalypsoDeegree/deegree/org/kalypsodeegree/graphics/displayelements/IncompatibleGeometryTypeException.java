@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics.displayelements;
+package org.kalypsodeegree.graphics.displayelements;
 
 /**
  * Indicates that a certain <tt>GM_Object</tt> -type has been encountered that

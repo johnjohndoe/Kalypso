@@ -58,14 +58,14 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.io.Serializable;
 
-import org.deegree.graphics.displayelements.GeometryDisplayElement;
-import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_Object;
+import org.kalypsodeegree.graphics.displayelements.GeometryDisplayElement;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Basic interface of all display elements that are related to a geometry.

@@ -1,4 +1,4 @@
-package org.deegree_impl.gml.schema;
+package org.kalypsodeegree_impl.gml.schema;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,7 +23,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.deegree.xml.XMLTools;
+import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;

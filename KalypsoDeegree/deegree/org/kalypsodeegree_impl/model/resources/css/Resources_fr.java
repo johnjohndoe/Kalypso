@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.resources.css;
+package org.kalypsodeegree_impl.model.resources.css;
 
 /**
  * French language resource.

@@ -46,7 +46,7 @@ package org.kalypso.ui.editor.styleeditor.rulePattern;
 
 import java.util.ArrayList;
 
-import org.deegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.Rule;
 
 /**
  * @author F.Lindemann

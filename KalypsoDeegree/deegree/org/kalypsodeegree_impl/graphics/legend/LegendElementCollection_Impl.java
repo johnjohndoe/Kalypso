@@ -58,16 +58,16 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.legend;
+package org.kalypsodeegree_impl.graphics.legend;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import org.deegree.graphics.legend.LegendElement;
-import org.deegree.graphics.legend.LegendElementCollection;
-import org.deegree.graphics.legend.LegendException;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.graphics.legend.LegendElement;
+import org.kalypsodeegree.graphics.legend.LegendElementCollection;
+import org.kalypsodeegree.graphics.legend.LegendException;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * <tt>LegendElementCollection</tt> is a collection of <tt>LegendElement</tt>

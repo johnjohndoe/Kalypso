@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -66,13 +66,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.deegree.graphics.displayelements.Label;
-import org.deegree.graphics.displayelements.LabelDisplayElement;
-import org.deegree.graphics.sld.ParameterValueType;
-import org.deegree.graphics.sld.TextSymbolizer;
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_Object;
+import org.kalypsodeegree.graphics.displayelements.Label;
+import org.kalypsodeegree.graphics.displayelements.LabelDisplayElement;
+import org.kalypsodeegree.graphics.sld.ParameterValueType;
+import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * <tt>DisplayElement</tt> that encapsulates a <tt>GM_Object</tt>

@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.model.coverage;
+package org.kalypsodeegree.model.coverage;
 
 /**
  * describes a count value of a histogram

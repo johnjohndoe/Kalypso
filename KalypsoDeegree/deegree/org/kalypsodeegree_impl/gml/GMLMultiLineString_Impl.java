@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
-import org.deegree.gml.GMLGeometry;
-import org.deegree.gml.GMLLineString;
-import org.deegree.gml.GMLMultiLineString;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLGeometry;
+import org.kalypsodeegree.gml.GMLLineString;
+import org.kalypsodeegree.gml.GMLMultiLineString;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -127,7 +127,7 @@ public class GMLMultiLineString_Impl extends GMLGeometryCollection_Impl implemen
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLMultiLineString_Impl#getLineStrings()
+   * @see org.kalypsodeegree_impl.gml.GMLMultiLineString_Impl#getLineStrings()
    */
   public void addLineString( GMLLineString lineString )
   {
@@ -142,6 +142,9 @@ public class GMLMultiLineString_Impl extends GMLGeometryCollection_Impl implemen
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.5  2005/03/08 11:01:04  doemming
+ * *** empty log message ***
+ *
  * Revision 1.4  2005/01/18 12:50:42  doemming
  * *** empty log message ***
  *

@@ -43,28 +43,28 @@ package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 import java.util.ArrayList;
 import javax.swing.event.EventListenerList;
 
-import org.deegree.filterencoding.Expression;
-import org.deegree.filterencoding.Filter;
-import org.deegree.filterencoding.FilterConstructionException;
-import org.deegree.filterencoding.Operation;
-import org.deegree.graphics.sld.Rule;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree_impl.filterencoding.AbstractFilter;
-import org.deegree_impl.filterencoding.BoundaryExpression;
-import org.deegree_impl.filterencoding.ComparisonOperation;
-import org.deegree_impl.filterencoding.ComplexFilter;
-import org.deegree_impl.filterencoding.FeatureFilter;
-import org.deegree_impl.filterencoding.FeatureId;
-import org.deegree_impl.filterencoding.Literal;
-import org.deegree_impl.filterencoding.LogicalOperation;
-import org.deegree_impl.filterencoding.OperationDefines;
-import org.deegree_impl.filterencoding.PropertyIsBetweenOperation;
-import org.deegree_impl.filterencoding.PropertyIsCOMPOperation;
-import org.deegree_impl.filterencoding.PropertyIsLikeOperation;
-import org.deegree_impl.filterencoding.PropertyIsNullOperation;
-import org.deegree_impl.filterencoding.PropertyName;
-import org.deegree_impl.graphics.sld.StyleFactory;
+import org.kalypsodeegree.filterencoding.Expression;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.FilterConstructionException;
+import org.kalypsodeegree.filterencoding.Operation;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
+import org.kalypsodeegree_impl.filterencoding.BoundaryExpression;
+import org.kalypsodeegree_impl.filterencoding.ComparisonOperation;
+import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
+import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
+import org.kalypsodeegree_impl.filterencoding.FeatureId;
+import org.kalypsodeegree_impl.filterencoding.Literal;
+import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
+import org.kalypsodeegree_impl.filterencoding.OperationDefines;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsCOMPOperation;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsNullOperation;
+import org.kalypsodeegree_impl.filterencoding.PropertyName;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -1253,7 +1253,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     ArrayList labelStringItems = new ArrayList();
     FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
-      if( !ftp[i].getType().startsWith( "org.deegree.model.geometry." ) )
+      if( !ftp[i].getType().startsWith( "org.kalypsodeegree.model.geometry." ) )
         labelStringItems.add( ftp[i].getName() );
     final String[] items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )
@@ -1370,7 +1370,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       // any type except for a geometry object
       else
       {
-        if( !ftp[i].getType().startsWith( "org.deegree.model.geometry." ) )
+        if( !ftp[i].getType().startsWith( "org.kalypsodeegree.model.geometry." ) )
           labelStringItems.add( ftp[i].getName() );
       }
     }
@@ -1483,7 +1483,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     ArrayList labelStringItems = new ArrayList();
     FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
-      if( !ftp[i].getType().startsWith( "org.deegree.model.geometry." ) )
+      if( !ftp[i].getType().startsWith( "org.kalypsodeegree.model.geometry." ) )
         labelStringItems.add( ftp[i].getName() );
     final String[] items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )

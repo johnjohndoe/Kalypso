@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.ogcbasic;
+package org.kalypsodeegree.ogcbasic;
 
 /**
  * identification of, and means of communication with a person and/or

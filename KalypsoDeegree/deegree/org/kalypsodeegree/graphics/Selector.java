@@ -59,10 +59,10 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.graphics;
+package org.kalypsodeegree.graphics;
 
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * 

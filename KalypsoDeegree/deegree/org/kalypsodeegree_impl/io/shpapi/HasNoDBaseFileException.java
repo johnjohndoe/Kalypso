@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
 /**
  * class defining an exception that is thrown if no dBase-file is associated
@@ -76,7 +76,7 @@ package org.deegree_impl.io.shpapi;
 public final class HasNoDBaseFileException extends Exception
 {
 
-  private String message = "org.deegree_impl.io.shpapi.HasNoDBaseFileException";
+  private String message = "org.kalypsodeegree_impl.io.shpapi.HasNoDBaseFileException";
 
   //constructor
   public HasNoDBaseFileException()

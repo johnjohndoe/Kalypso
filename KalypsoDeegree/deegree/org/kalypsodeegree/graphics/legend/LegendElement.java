@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics.legend;
+package org.kalypsodeegree.graphics.legend;
 
 import java.awt.image.BufferedImage;
 

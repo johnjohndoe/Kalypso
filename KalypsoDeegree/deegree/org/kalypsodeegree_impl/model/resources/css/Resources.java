@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.resources.css;
+package org.kalypsodeegree_impl.model.resources.css;
 
 // Miscellaneous
 import java.util.Locale;
 import java.util.MissingResourceException;
 
-import org.deegree_impl.model.resources.ResourceBundle;
+import org.kalypsodeegree_impl.model.resources.ResourceBundle;
 
 /**
  * Base class for local-dependent resources. Instances of this class should
@@ -96,11 +96,11 @@ public class Resources extends ResourceBundle
 
   /**
    * Returns the name of the logger to use, which is
-   * <code>org.deegree_impl.model.css</code>.
+   * <code>org.kalypsodeegree_impl.model.css</code>.
    */
   protected String getLoggerName()
   {
-    return "org.deegree_impl.model.css";
+    return "org.kalypsodeegree_impl.model.css";
   }
 
   /**

@@ -16,7 +16,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package org.deegree_impl.tools.shape;
+package org.kalypsodeegree_impl.tools.shape;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -35,16 +35,16 @@ import javax.swing.JProgressBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree_impl.io.rtree.HyperBoundingBox;
-import org.deegree_impl.io.rtree.HyperPoint;
-import org.deegree_impl.io.rtree.RTree;
-import org.deegree_impl.io.shpapi.DBaseIndex;
-import org.deegree_impl.io.shpapi.ShapeFile;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.io.rtree.HyperBoundingBox;
+import org.kalypsodeegree_impl.io.rtree.HyperPoint;
+import org.kalypsodeegree_impl.io.rtree.RTree;
+import org.kalypsodeegree_impl.io.shpapi.DBaseIndex;
+import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class IndexFrame extends JFrame implements ActionListener, ChangeListener
 {

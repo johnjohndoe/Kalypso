@@ -58,19 +58,19 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
 import java.util.ArrayList;
 
-import org.deegree.gml.GMLBox;
-import org.deegree.gml.GMLException;
-import org.deegree.gml.GMLFeature;
-import org.deegree.gml.GMLGeoProperty;
-import org.deegree.gml.GMLProperty;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree.xml.DOMPrinter;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLBox;
+import org.kalypsodeegree.gml.GMLException;
+import org.kalypsodeegree.gml.GMLFeature;
+import org.kalypsodeegree.gml.GMLGeoProperty;
+import org.kalypsodeegree.gml.GMLProperty;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree.xml.DOMPrinter;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -138,7 +138,7 @@ public class GMLFeature_Impl implements GMLFeature
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLFeature_Impl#getId()
+   * @see org.kalypsodeegree_impl.gml.GMLFeature_Impl#getId()
    */
   public void setId( String id )
   {
@@ -177,7 +177,7 @@ public class GMLFeature_Impl implements GMLFeature
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLFeature_Impl#getDescription()
+   * @see org.kalypsodeegree_impl.gml.GMLFeature_Impl#getDescription()
    */
   public void setDescription( String description )
   {
@@ -210,7 +210,7 @@ public class GMLFeature_Impl implements GMLFeature
   }
   
   /**
-   * @see org.deegree.gml.GMLFeature#getLocalName()
+   * @see org.kalypsodeegree.gml.GMLFeature#getLocalName()
    */
   public String getLocalName()
   {
@@ -219,7 +219,7 @@ public class GMLFeature_Impl implements GMLFeature
   
   /**
    * 
-   * @see org.deegree.gml.GMLFeature#getNamespaceURI()
+   * @see org.kalypsodeegree.gml.GMLFeature#getNamespaceURI()
    */
   public String getNamespaceURI()
   {
@@ -227,7 +227,7 @@ public class GMLFeature_Impl implements GMLFeature
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLFeature_Impl#getName()
+   * @see org.kalypsodeegree_impl.gml.GMLFeature_Impl#getName()
    */
   public void setName( String name )
   {
@@ -578,6 +578,9 @@ public class GMLFeature_Impl implements GMLFeature
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.9  2005/03/08 11:01:04  doemming
+ * *** empty log message ***
+ *
  * Revision 1.8  2005/02/28 13:34:14  doemming
  * *** empty log message ***
  *

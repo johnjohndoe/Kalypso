@@ -58,9 +58,9 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
-import org.deegree_impl.model.pt.CoordinatePoint;
+import org.kalypsodeegree_impl.model.pt.CoordinatePoint;
 
 /**
  * Concatened transform where the transfert dimension is the same than source

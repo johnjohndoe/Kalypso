@@ -58,23 +58,23 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.filterencoding;
+package org.kalypsodeegree_impl.filterencoding;
 
-import org.deegree.filterencoding.FilterConstructionException;
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.filterencoding.Operation;
-import org.deegree.gml.GMLBox;
-import org.deegree.gml.GMLException;
-import org.deegree.gml.GMLGeometry;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Exception;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.xml.ElementList;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.gml.GMLFactory;
-import org.deegree_impl.gml.GMLGeometry_Impl;
-import org.deegree_impl.model.geometry.GMLAdapter;
+import org.kalypsodeegree.filterencoding.FilterConstructionException;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.filterencoding.Operation;
+import org.kalypsodeegree.gml.GMLBox;
+import org.kalypsodeegree.gml.GMLException;
+import org.kalypsodeegree.gml.GMLGeometry;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.xml.ElementList;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.gml.GMLFactory;
+import org.kalypsodeegree_impl.gml.GMLGeometry_Impl;
+import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
 import org.w3c.dom.Element;
 
 /**

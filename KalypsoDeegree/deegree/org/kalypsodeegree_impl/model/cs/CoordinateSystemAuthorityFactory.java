@@ -27,7 +27,7 @@
  * This package contains documentation from OpenGIS specifications. OpenGIS
  * consortium's work is fully acknowledged here.
  */
-package org.deegree_impl.model.cs;
+package org.kalypsodeegree_impl.model.cs;
 
 // Properties
 import java.util.Map;

@@ -58,34 +58,34 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.legend;
+package org.kalypsodeegree_impl.graphics.legend;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import org.deegree.filterencoding.Filter;
-import org.deegree.filterencoding.Operation;
-import org.deegree.graphics.legend.LegendElement;
-import org.deegree.graphics.legend.LegendElementCollection;
-import org.deegree.graphics.legend.LegendException;
-import org.deegree.graphics.legend.LegendView;
-import org.deegree.graphics.sld.FeatureTypeStyle;
-import org.deegree.graphics.sld.Rule;
-import org.deegree.graphics.sld.Style;
-import org.deegree.graphics.sld.StyledLayerDescriptor;
-import org.deegree.graphics.sld.UserStyle;
-import org.deegree_impl.filterencoding.ComplexFilter;
-import org.deegree_impl.filterencoding.FeatureFilter;
-import org.deegree_impl.filterencoding.Literal;
-import org.deegree_impl.filterencoding.LogicalOperation;
-import org.deegree_impl.filterencoding.OperationDefines;
-import org.deegree_impl.filterencoding.PropertyIsBetweenOperation;
-import org.deegree_impl.filterencoding.PropertyIsCOMPOperation;
-import org.deegree_impl.filterencoding.PropertyIsLikeOperation;
-import org.deegree_impl.filterencoding.PropertyIsNullOperation;
-import org.deegree_impl.filterencoding.PropertyName;
-import org.deegree_impl.filterencoding.SpatialOperation;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.Operation;
+import org.kalypsodeegree.graphics.legend.LegendElement;
+import org.kalypsodeegree.graphics.legend.LegendElementCollection;
+import org.kalypsodeegree.graphics.legend.LegendException;
+import org.kalypsodeegree.graphics.legend.LegendView;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.Style;
+import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
+import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
+import org.kalypsodeegree_impl.filterencoding.Literal;
+import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
+import org.kalypsodeegree_impl.filterencoding.OperationDefines;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsCOMPOperation;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsNullOperation;
+import org.kalypsodeegree_impl.filterencoding.PropertyName;
+import org.kalypsodeegree_impl.filterencoding.SpatialOperation;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * 
@@ -238,7 +238,7 @@ public class LegendFactory
 
     ArrayList list = new ArrayList();
 
-    org.deegree.graphics.sld.Layer[] nl = sld.getNamedLayers();
+    org.kalypsodeegree.graphics.sld.Layer[] nl = sld.getNamedLayers();
     for( int i = 0; i < nl.length; i++ )
     {
       Style[] styles = nl[i].getStyles();
@@ -309,7 +309,7 @@ public class LegendFactory
     else
     {
       return "no implementation for " + filter.getClass()
-          + " at org.deegree_impl.graphics.legend.LegendFactory";
+          + " at org.kalypsodeegree_impl.graphics.legend.LegendFactory";
     }
   }
 

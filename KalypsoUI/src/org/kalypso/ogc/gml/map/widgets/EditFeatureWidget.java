@@ -42,12 +42,12 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Point;
 
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureList;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree_impl.model.feature.visitors.FindNearestVisitor;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.feature.visitors.FindNearestVisitor;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;

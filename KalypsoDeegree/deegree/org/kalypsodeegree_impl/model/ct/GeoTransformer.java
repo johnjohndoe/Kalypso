@@ -58,24 +58,24 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
-import org.deegree.model.geometry.GM_Curve;
-import org.deegree.model.geometry.GM_CurveSegment;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_MultiCurve;
-import org.deegree.model.geometry.GM_MultiPoint;
-import org.deegree.model.geometry.GM_MultiSurface;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree.model.geometry.GM_SurfacePatch;
-import org.deegree_impl.model.cs.ConvenienceCSFactory;
-import org.deegree_impl.model.cs.CoordinateSystem;
-import org.deegree_impl.model.geometry.GeometryFactory;
-import org.deegree_impl.model.pt.CoordinatePoint;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_CurveSegment;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.pt.CoordinatePoint;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -143,7 +143,7 @@ final public class GeoTransformer
   public void setTargetCS( CS_CoordinateSystem targetCS ) throws Exception
   {
     targetOGCCS = targetCS;
-    this.targetCS = org.deegree_impl.model.cs.Adapters.getDefault().wrap( targetCS );
+    this.targetCS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().wrap( targetCS );
   }
 
   /**
@@ -152,7 +152,7 @@ final public class GeoTransformer
   public void setTargetCS( CoordinateSystem targetCS ) throws Exception
   {
     this.targetCS = targetCS;
-    targetOGCCS = org.deegree_impl.model.cs.Adapters.getDefault().export( targetCS );
+    targetOGCCS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( targetCS );
   }
 
   /**
@@ -169,7 +169,7 @@ final public class GeoTransformer
    */
   public GM_Object transform( GM_Object geo ) throws Exception
   {
-    CoordinateSystem cs = org.deegree_impl.model.cs.Adapters.getDefault().wrap(
+    CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().wrap(
         geo.getCoordinateSystem() );
     ConvenienceTransformFactory ctf = null;
     ctf = ConvenienceTransformFactory.getInstance();
@@ -457,7 +457,7 @@ final public class GeoTransformer
   {
     Debug.debugMethodBegin( this, "transformPositions" );
 
-    CS_CoordinateSystem cs = org.deegree_impl.model.cs.Adapters.getDefault().export( sourceCRS );
+    CS_CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( sourceCRS );
     envelope = transformEnvelope( envelope, cs );
 
     Debug.debugMethodEnd();

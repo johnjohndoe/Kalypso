@@ -58,14 +58,14 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
 import java.net.URL;
 
-import org.deegree.graphics.sld.RemoteOWS;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
-import org.deegree_impl.tools.NetWorker;
+import org.kalypsodeegree.graphics.sld.RemoteOWS;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
+import org.kalypsodeegree_impl.tools.NetWorker;
 
 /**
  * Since a layer is defined as a collection of potentially mixed-type features,

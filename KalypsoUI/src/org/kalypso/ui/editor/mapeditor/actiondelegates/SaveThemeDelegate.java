@@ -42,7 +42,7 @@ package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.deegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;

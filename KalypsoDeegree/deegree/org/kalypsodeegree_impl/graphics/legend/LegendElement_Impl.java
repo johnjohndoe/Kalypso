@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.legend;
+package org.kalypsodeegree_impl.graphics.legend;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -68,26 +68,26 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.displayelements.IncompatibleGeometryTypeException;
-import org.deegree.graphics.displayelements.PolygonDisplayElement;
-import org.deegree.graphics.legend.LegendElement;
-import org.deegree.graphics.legend.LegendException;
-import org.deegree.graphics.sld.LineSymbolizer;
-import org.deegree.graphics.sld.PointSymbolizer;
-import org.deegree.graphics.sld.PolygonSymbolizer;
-import org.deegree.graphics.sld.RasterSymbolizer;
-import org.deegree.graphics.sld.Rule;
-import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.graphics.sld.TextSymbolizer;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree_impl.graphics.displayelements.DisplayElementFactory;
-import org.deegree_impl.graphics.displayelements.PolygonDisplayElement_Impl;
-import org.deegree_impl.graphics.transformation.WorldToScreenTransform;
-import org.deegree_impl.model.geometry.GeometryFactory;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
+import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
+import org.kalypsodeegree.graphics.legend.LegendElement;
+import org.kalypsodeegree.graphics.legend.LegendException;
+import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.kalypsodeegree_impl.graphics.displayelements.PolygonDisplayElement_Impl;
+import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * The implements the basic legend element. a legend element may has a label
@@ -384,7 +384,7 @@ public class LegendElement_Impl implements LegendElement
   }
 
   /**
-   * @see org.deegree_impl.graphics.legend.LegendElement_Impl#getBufferBetweenLegendAndLabel()
+   * @see org.kalypsodeegree_impl.graphics.legend.LegendElement_Impl#getBufferBetweenLegendAndLabel()
    * @param i
    *          the buffer as integer in pixels
    */
@@ -411,10 +411,10 @@ public class LegendElement_Impl implements LegendElement
       throws LegendException
   {
     Debug.debugMethodBegin( "LegendElement_Impl", "drawPointLegend()" );
-    org.deegree.graphics.sld.Graphic deegreegraphic = c.getGraphic();
+    org.kalypsodeegree.graphics.sld.Graphic deegreegraphic = c.getGraphic();
     try
     {
-      BufferedImage buffi = ( (org.deegree_impl.graphics.sld.Graphic_Impl)deegreegraphic )
+      BufferedImage buffi = ( (org.kalypsodeegree_impl.graphics.sld.Graphic_Impl)deegreegraphic )
           .getAsImage( null );
       int w = buffi.getWidth();
       int h = buffi.getHeight();
@@ -448,7 +448,7 @@ public class LegendElement_Impl implements LegendElement
   {
     Debug.debugMethodBegin();
 
-    org.deegree.graphics.sld.Stroke sldstroke = ls.getStroke();
+    org.kalypsodeegree.graphics.sld.Stroke sldstroke = ls.getStroke();
     try
     {
       // color, opacity
@@ -571,7 +571,7 @@ public class LegendElement_Impl implements LegendElement
    * @throws LegendException
    *           if the sld cannot be processed
    */
-  private BasicStroke getBasicStroke( org.deegree.graphics.sld.Stroke sldstroke )
+  private BasicStroke getBasicStroke( org.kalypsodeegree.graphics.sld.Stroke sldstroke )
       throws LegendException
   {
     Debug.debugMethodBegin();

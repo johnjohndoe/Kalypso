@@ -58,9 +58,9 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.filterencoding;
+package org.kalypsodeegree_impl.filterencoding;
 
-import org.deegree.filterencoding.FilterConstructionException;
+import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.w3c.dom.Element;
 
 /**
@@ -117,7 +117,7 @@ public class FeatureId
   }
 
   /**
-   * @see org.deegree_impl.filterencoding.FeatureId#getValue()
+   * @see org.kalypsodeegree_impl.filterencoding.FeatureId#getValue()
    */
   public void setValue( String value )
   {

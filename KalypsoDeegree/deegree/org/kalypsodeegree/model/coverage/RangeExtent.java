@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.model.coverage;
+package org.kalypsodeegree.model.coverage;
 
 /**
  * defines a parameter value for which measurements are available. TODO

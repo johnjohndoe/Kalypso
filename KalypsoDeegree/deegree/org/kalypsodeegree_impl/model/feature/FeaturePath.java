@@ -1,4 +1,4 @@
-package org.deegree_impl.model.feature;
+package org.kalypsodeegree_impl.model.feature;
 
 /**
  * @author belger

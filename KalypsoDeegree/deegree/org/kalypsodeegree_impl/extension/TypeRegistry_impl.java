@@ -1,10 +1,10 @@
-package org.deegree_impl.extension;
+package org.kalypsodeegree_impl.extension;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Standardimplementation von {@link org.deegree_impl.extension.ITypeRegistry}.
+ * Standardimplementation von {@link org.kalypsodeegree_impl.extension.ITypeRegistry}.
  * 
  * @author belger
  */
@@ -21,7 +21,7 @@ public class TypeRegistry_impl implements ITypeRegistry
    * 
    * @throws TypeRegistryException
    * 
-   * @see org.deegree_impl.extension.ITypeRegistry#registerTypeHandler(org.deegree_impl.extension.ITypeHandler)
+   * @see org.kalypsodeegree_impl.extension.ITypeRegistry#registerTypeHandler(org.kalypsodeegree_impl.extension.ITypeHandler)
    */
   public void registerTypeHandler( final ITypeHandler typeHandler ) throws TypeRegistryException
   {
@@ -40,7 +40,7 @@ public class TypeRegistry_impl implements ITypeRegistry
 
   /**
    * @throws TypeRegistryException
-   * @see org.deegree_impl.extension.ITypeRegistry#getTypeHandlerForTypeName(java.lang.String)
+   * @see org.kalypsodeegree_impl.extension.ITypeRegistry#getTypeHandlerForTypeName(java.lang.String)
    */
   public ITypeHandler getTypeHandlerForTypeName( final String typeName )
   {
@@ -52,7 +52,7 @@ public class TypeRegistry_impl implements ITypeRegistry
   /**
    * @throws TypeRegistryException
    *           falls className nicht bekannt ist
-   * @see org.deegree_impl.extension.ITypeRegistry#getTypeHandlerForClassName(java.lang.String)
+   * @see org.kalypsodeegree_impl.extension.ITypeRegistry#getTypeHandlerForClassName(java.lang.String)
    */
   public ITypeHandler getTypeHandlerForClassName( final String className )
   {
@@ -63,7 +63,7 @@ public class TypeRegistry_impl implements ITypeRegistry
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeRegistry#unregisterTypeHandler(org.deegree_impl.extension.ITypeHandler)
+   * @see org.kalypsodeegree_impl.extension.ITypeRegistry#unregisterTypeHandler(org.kalypsodeegree_impl.extension.ITypeHandler)
    */
   public void unregisterTypeHandler( ITypeHandler typeHandler )
   {
@@ -72,7 +72,7 @@ public class TypeRegistry_impl implements ITypeRegistry
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeRegistry#hasTypeName(java.lang.String)
+   * @see org.kalypsodeegree_impl.extension.ITypeRegistry#hasTypeName(java.lang.String)
    */
   public boolean hasTypeName( final String typeName )
   {
@@ -80,7 +80,7 @@ public class TypeRegistry_impl implements ITypeRegistry
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeRegistry#hasClassName(java.lang.String)
+   * @see org.kalypsodeegree_impl.extension.ITypeRegistry#hasClassName(java.lang.String)
    */
   public boolean hasClassName( final String className )
   {

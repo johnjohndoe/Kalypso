@@ -40,10 +40,10 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.model.feature.event.ModellEventListener;
-import org.deegree.model.feature.event.ModellEventProvider;
-import org.deegree.model.feature.event.ModellEventProviderAdapter;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 
 
 /**
@@ -77,7 +77,7 @@ public abstract class AbstractKalypsoTheme implements IKalypsoTheme
   }
 
   /**
-   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
+   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( ModellEvent modellEvent )
   {

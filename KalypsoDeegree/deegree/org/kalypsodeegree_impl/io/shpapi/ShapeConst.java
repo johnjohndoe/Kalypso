@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
 /**
  * Class containing all constants needed for reading of a shape file <BR>

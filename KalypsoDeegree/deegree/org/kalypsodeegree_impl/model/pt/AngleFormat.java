@@ -26,7 +26,7 @@
  * CANADA: Observatoire du Saint-Laurent Institut Maurice-Lamontagne
  * mailto:osl@osl.gc.ca
  */
-package org.deegree_impl.model.pt;
+package org.kalypsodeegree_impl.model.pt;
 
 // Input/output
 import java.io.IOException;
@@ -39,10 +39,10 @@ import java.text.ParseException;
 import java.text.ParsePosition;
 import java.util.Locale;
 
-import org.deegree_impl.model.resources.Utilities;
-import org.deegree_impl.model.resources.XMath;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.resources.XMath;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
  * Parse and format angle according a specified pattern. The pattern is a string

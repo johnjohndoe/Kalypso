@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.model.geometry;
+package org.kalypsodeegree.model.geometry;
 
 /**
  * 

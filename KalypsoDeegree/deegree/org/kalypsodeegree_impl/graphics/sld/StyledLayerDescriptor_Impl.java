@@ -58,18 +58,18 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.ArrayList;
 
-import org.deegree.graphics.sld.Layer;
-import org.deegree.graphics.sld.NamedLayer;
-import org.deegree.graphics.sld.Style;
-import org.deegree.graphics.sld.StyledLayerDescriptor;
-import org.deegree.graphics.sld.UserLayer;
-import org.deegree.graphics.sld.UserStyle;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.graphics.sld.Layer;
+import org.kalypsodeegree.graphics.sld.NamedLayer;
+import org.kalypsodeegree.graphics.sld.Style;
+import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.graphics.sld.UserLayer;
+import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * StyledLayerDescriptor: This is a sequence of styled layers, represented at
@@ -323,7 +323,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
   }
 
   /**
-   * @see org.deegree.graphics.sld.StyledLayerDescriptor#findUserStyle(java.lang.String)
+   * @see org.kalypsodeegree.graphics.sld.StyledLayerDescriptor#findUserStyle(java.lang.String)
    */
   public UserStyle findUserStyle( final String name )
   {

@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -68,10 +68,10 @@ import java.net.URL;
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 
-import org.deegree.graphics.sld.ExternalGraphic;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
-import org.deegree_impl.tools.NetWorker;
+import org.kalypsodeegree.graphics.sld.ExternalGraphic;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
+import org.kalypsodeegree_impl.tools.NetWorker;
 
 import com.sun.media.jai.codec.MemoryCacheSeekableStream;
 

@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.table;
 import java.text.Collator;
 import java.util.Date;
 
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.Feature;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 

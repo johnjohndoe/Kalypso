@@ -1,12 +1,12 @@
-package org.deegree_impl.model.sort;
+package org.kalypsodeegree_impl.model.sort;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class SplitSortContainer
 {
@@ -67,7 +67,7 @@ public class SplitSortContainer
     myParent = parent;
     try
     {
-      //		add(org.deegree_impl.graphics.displayelements.DisplayElementFactory.buildDisplayElement(env));
+      //		add(org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory.buildDisplayElement(env));
     }
     catch( Exception e )
     {

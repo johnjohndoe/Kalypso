@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.resources;
+package org.kalypsodeegree_impl.model.resources;
 
 // Collections
 import java.io.BufferedOutputStream;
@@ -625,7 +625,7 @@ final class ResourceCompiler implements Comparator
         + " * SEAGIS - An OpenSource implementation of OpenGIS specification\n"
         + " *          (C) 2001, Institut de Recherche pour le Développement\n" + " *\n"
         + " *          THIS IS AN AUTOMATICALLY GENERATED FILE. DO NOT EDIT!\n"
-        + " *          Generated with: org.deegree_impl.model.resources.ResourceCompiler\n"
+        + " *          Generated with: org.kalypsodeegree_impl.model.resources.ResourceCompiler\n"
         + " */\n" );
     out.write( "package " );
     out.write( packageName );
@@ -640,8 +640,8 @@ final class ResourceCompiler implements Comparator
         + " * values, using long identifiers will not bloat constant pools of\n"
         + " * classes compiled against the interface, providing that no class\n"
         + " * implements this interface.\n" + " *\n"
-        + " * @see org.deegree_impl.model.resources.ResourceBundle\n"
-        + " * @see org.deegree_impl.model.resources.ResourceCompiler\n" + " */\n" );
+        + " * @see org.kalypsodeegree_impl.model.resources.ResourceBundle\n"
+        + " * @see org.kalypsodeegree_impl.model.resources.ResourceCompiler\n" + " */\n" );
     out.write( "public interface " );
     out.write( toClassName( file ) );
     out.newLine();

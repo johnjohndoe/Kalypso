@@ -58,10 +58,10 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.model.feature;
+package org.kalypsodeegree.model.feature;
 
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Features are, according to the Abstract Specification, digital

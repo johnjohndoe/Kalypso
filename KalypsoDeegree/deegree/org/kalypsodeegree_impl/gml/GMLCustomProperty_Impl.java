@@ -1,6 +1,6 @@
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
-import org.deegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.w3c.dom.Element;
 
 /**

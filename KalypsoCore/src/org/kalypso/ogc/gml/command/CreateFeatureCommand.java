@@ -41,8 +41,8 @@
 package org.kalypso.ogc.gml.command;
 
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypso.util.command.ICommand;
 
 /**

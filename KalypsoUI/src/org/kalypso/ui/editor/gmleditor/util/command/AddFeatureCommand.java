@@ -42,11 +42,11 @@ package org.kalypso.ui.editor.gmleditor.util.command;
 
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypso.util.command.ICommand;
 
 /**

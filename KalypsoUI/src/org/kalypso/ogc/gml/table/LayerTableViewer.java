@@ -50,16 +50,16 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
-import org.deegree.model.feature.Annotation;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureList;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.model.feature.event.ModellEventListener;
-import org.deegree.model.feature.event.ModellEventProvider;
-import org.deegree.model.feature.event.ModellEventProviderAdapter;
-import org.deegree_impl.model.feature.visitors.UnselectFeatureVisitor;
+import org.kalypsodeegree.model.feature.Annotation;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
+import org.kalypsodeegree_impl.model.feature.visitors.UnselectFeatureVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.CellEditor;
@@ -523,7 +523,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   }
 
   /**
-   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
+   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {

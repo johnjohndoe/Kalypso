@@ -44,12 +44,12 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureVisitor;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandManager;
@@ -224,7 +224,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#getSchemaLocation()
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSchemaLocation()
    */
   public String getSchemaLocation()
   {
@@ -232,7 +232,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#getSchemaNamespace()
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSchemaNamespace()
    */
   public String getSchemaNamespace()
   {
@@ -246,8 +246,8 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
 
   /**
    * @throws Exception
-   * @see org.deegree.model.feature.GMLWorkspace#addFeature(org.deegree.model.feature.Feature,
-   *      java.lang.String, int, org.deegree.model.feature.Feature)
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeature(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, int, org.kalypsodeegree.model.feature.Feature)
    */
   public void addFeature( Feature parent, String propName, int pos, Feature newFeature )
       throws Exception
@@ -262,7 +262,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#getNamespaceMap()
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getNamespaceMap()
    */
   public Map getNamespaceMap()
   {

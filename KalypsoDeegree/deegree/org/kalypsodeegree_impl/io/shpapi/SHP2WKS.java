@@ -58,17 +58,17 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
 import java.util.ArrayList;
 
-import org.deegree.model.geometry.GM_Curve;
-import org.deegree.model.geometry.GM_CurveSegment;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree_impl.model.geometry.GM_SurfaceInterpolation_Impl;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_CurveSegment;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.geometry.GM_SurfaceInterpolation_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**

@@ -58,17 +58,17 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
-import org.deegree.graphics.sld.Fill;
-import org.deegree.graphics.sld.Font;
-import org.deegree.graphics.sld.Geometry;
-import org.deegree.graphics.sld.Halo;
-import org.deegree.graphics.sld.LabelPlacement;
-import org.deegree.graphics.sld.ParameterValueType;
-import org.deegree.graphics.sld.TextSymbolizer;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.graphics.sld.Fill;
+import org.kalypsodeegree.graphics.sld.Font;
+import org.kalypsodeegree.graphics.sld.Geometry;
+import org.kalypsodeegree.graphics.sld.Halo;
+import org.kalypsodeegree.graphics.sld.LabelPlacement;
+import org.kalypsodeegree.graphics.sld.ParameterValueType;
+import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Used to render a text label, according to the parameters. A missing Geometry,

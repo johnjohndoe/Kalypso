@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // Geometry
 import java.awt.geom.Point2D;
@@ -70,10 +70,10 @@ import javax.media.jai.util.Range;
 import javax.vecmath.GMatrix;
 import javax.vecmath.SingularMatrixException;
 
-import org.deegree_impl.model.pt.CoordinatePoint;
-import org.deegree_impl.model.pt.Matrix;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.pt.CoordinatePoint;
+import org.kalypsodeegree_impl.model.pt.Matrix;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
  * Transforms multi-dimensional coordinate points using a {@link Matrix}.

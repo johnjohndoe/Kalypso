@@ -1,6 +1,6 @@
-package org.deegree.model.feature;
+package org.kalypsodeegree.model.feature;
 
-import org.deegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * @author doemming

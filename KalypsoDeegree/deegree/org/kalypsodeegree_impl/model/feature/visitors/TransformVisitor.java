@@ -1,15 +1,15 @@
-package org.deegree_impl.model.feature.visitors;
+package org.kalypsodeegree_impl.model.feature.visitors;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.feature.FeatureVisitor;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree_impl.model.ct.GeoTransformer;
-import org.deegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.ct.GeoTransformer;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -47,7 +47,7 @@ public class TransformVisitor implements FeatureVisitor
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureVisitor#visit(org.deegree.model.feature.Feature)
+   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
   public boolean visit( final Feature f )
   {

@@ -43,7 +43,7 @@ package org.kalypso.ui.calcwizard.bericht;
 import java.io.OutputStream;
 import java.net.URL;
 
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypso.ui.calcwizard.Arguments;
 
 /**

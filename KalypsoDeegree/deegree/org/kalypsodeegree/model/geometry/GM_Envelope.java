@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.model.geometry;
+package org.kalypsodeegree.model.geometry;
 
 /**
  * a boundingbox as child of a GM_Polygon isn't part of the iso19107 spec but it

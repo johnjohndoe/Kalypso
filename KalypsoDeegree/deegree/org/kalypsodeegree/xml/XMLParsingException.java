@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.xml;
+package org.kalypsodeegree.xml;
 
 /**
  * This exception is thrown when a syntactic or semantic error has been
@@ -71,7 +71,7 @@ package org.deegree.xml;
 public class XMLParsingException extends Exception
 {
 
-  private String message = "org.deegree.xml.XMLParsingException";
+  private String message = "org.kalypsodeegree.xml.XMLParsingException";
 
   private String st = "";
 

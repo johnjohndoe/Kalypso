@@ -58,15 +58,15 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.optimizers;
+package org.kalypsodeegree_impl.graphics.optimizers;
 
 import java.awt.Graphics2D;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.deegree.graphics.MapView;
-import org.deegree.graphics.Theme;
-import org.deegree.graphics.optimizers.Optimizer;
+import org.kalypsodeegree.graphics.MapView;
+import org.kalypsodeegree.graphics.Theme;
+import org.kalypsodeegree.graphics.optimizers.Optimizer;
 
 /**
  * This is the abstract base class for <tt>Optimizer</tt> s that need to alter

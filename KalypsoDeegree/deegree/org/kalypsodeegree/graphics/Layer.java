@@ -58,9 +58,9 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics;
+package org.kalypsodeegree.graphics;
 
-import org.deegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**

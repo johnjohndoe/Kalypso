@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics.sld;
+package org.kalypsodeegree.graphics.sld;
 
 /**
  * This is the basis of all symbolizers. It defines the method

@@ -2,9 +2,9 @@ package org.kalypso.ogc.gml.typehandler;
 
 import java.net.URL;
 
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.extension.ITypeHandler;
-import org.deegree_impl.extension.TypeRegistryException;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypso.java.xml.XMLUtilities;
 import org.w3c.dom.Node;
 
@@ -64,7 +64,7 @@ public class DiagramTypeHandler implements ITypeHandler
    */
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#getClassName()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
    */
   public String getClassName()
   {
@@ -72,7 +72,7 @@ public class DiagramTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#getTypeName()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
    */
   public String getTypeName()
   {
@@ -81,7 +81,7 @@ public class DiagramTypeHandler implements ITypeHandler
 
   /**
    * 
-   * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
    */
   public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
   {
@@ -113,7 +113,7 @@ public class DiagramTypeHandler implements ITypeHandler
 
   /**
    * 
-   * @see org.deegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
    */
   public Object unmarshall( Node node, URL context ) throws TypeRegistryException
   {
@@ -140,7 +140,7 @@ public class DiagramTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#getShortname()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getShortname()
    */
   public String getShortname()
   {

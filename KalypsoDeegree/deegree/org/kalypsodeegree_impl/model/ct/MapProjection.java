@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // Coordinates
 import java.awt.Shape;
@@ -67,12 +67,12 @@ import java.util.Locale;
 
 import javax.media.jai.ParameterList;
 
-import org.deegree_impl.model.cs.Projection;
-import org.deegree_impl.model.pt.Latitude;
-import org.deegree_impl.model.pt.Longitude;
-import org.deegree_impl.model.resources.Geometry;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.cs.Projection;
+import org.kalypsodeegree_impl.model.pt.Latitude;
+import org.kalypsodeegree_impl.model.pt.Longitude;
+import org.kalypsodeegree_impl.model.resources.Geometry;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
  * Provides transformation services between ellipsoidal and cartographic

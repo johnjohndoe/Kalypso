@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.filterencoding;
+package org.kalypsodeegree_impl.filterencoding;
 
-import org.deegree.filterencoding.Expression;
-import org.deegree.filterencoding.FilterConstructionException;
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.model.feature.Feature;
-import org.deegree.xml.XMLTools;
+import org.kalypsodeegree.filterencoding.Expression;
+import org.kalypsodeegree.filterencoding.FilterConstructionException;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Element;
 
 /**
@@ -121,7 +121,7 @@ public class PropertyName extends Expression_Impl
   }
 
   /**
-   * @see org.deegree_impl.filterencoding.PropertyName#getValue()
+   * @see org.kalypsodeegree_impl.filterencoding.PropertyName#getValue()
    */
   public void setValue( String value )
   {

@@ -42,8 +42,8 @@ package org.kalypso.ui.calcwizard.bericht;
 
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypso.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.java.util.Arrays;
 import org.kalypso.services.proxy.DocBean;

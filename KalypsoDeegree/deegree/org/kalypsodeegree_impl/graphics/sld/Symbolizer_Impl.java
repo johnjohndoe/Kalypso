@@ -58,10 +58,10 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
-import org.deegree.graphics.sld.Geometry;
-import org.deegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.sld.Geometry;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 /**
  * This is the basis of all symbolizers. It defines the method

@@ -42,10 +42,10 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.event.ModellEventListener;
-import org.deegree.model.feature.event.ModellEventProvider;
-import org.deegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author Katharina <a href="mailto:k.lupp@web.de>Katharina Lupp </a>

@@ -1,17 +1,17 @@
-package org.deegree_impl.gml.schema;
+package org.kalypsodeegree_impl.gml.schema;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.deegree.model.feature.Annotation;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree_impl.extension.ITypeHandler;
-import org.deegree_impl.extension.TypeRegistrySingleton;
-import org.deegree_impl.model.feature.FeatureAssociationTypeProperty_Impl;
-import org.deegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree.model.feature.Annotation;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.model.feature.FeatureAssociationTypeProperty_Impl;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -153,7 +153,7 @@ public class FeatureTypeBuilder
       if( baseType != null )
       { // a GMLBaseType
         m_typeName = baseType;
-        //        m_typeName = "org.deegree.model.Feature";
+        //        m_typeName = "org.kalypsodeegree.model.Feature";
         GMLSchemaFactory.map( schema, cNode, this );
         return;
       }
@@ -192,7 +192,7 @@ public class FeatureTypeBuilder
     }
     else if( "simpleType".equals( ( (Element)cNode ).getLocalName() ) )
     {
-      m_typeName = "org.deegree.model.FeatureProperty";
+      m_typeName = "org.kalypsodeegree.model.FeatureProperty";
       GMLSchemaFactory.map( schema, cNode, this );
       return;
     }

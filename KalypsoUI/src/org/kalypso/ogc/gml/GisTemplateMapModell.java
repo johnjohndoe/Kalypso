@@ -46,10 +46,10 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.model.feature.event.ModellEventListener;
-import org.deegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -277,7 +277,7 @@ public class GisTemplateMapModell implements IMapModell
   }
 
   /**
-   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
+   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( ModellEvent modellEvent )
   {

@@ -58,16 +58,16 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
-import org.deegree.graphics.sld.Fill;
-import org.deegree.graphics.sld.Geometry;
-import org.deegree.graphics.sld.Graphic;
-import org.deegree.graphics.sld.Mark;
-import org.deegree.graphics.sld.PointSymbolizer;
-import org.deegree.graphics.sld.Stroke;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.graphics.sld.Fill;
+import org.kalypsodeegree.graphics.sld.Geometry;
+import org.kalypsodeegree.graphics.sld.Graphic;
+import org.kalypsodeegree.graphics.sld.Mark;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
+import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Used to render a "graphic" at a point. If a line-string or polygon geometry

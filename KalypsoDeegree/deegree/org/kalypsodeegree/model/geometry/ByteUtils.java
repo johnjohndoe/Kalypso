@@ -75,7 +75,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.model.geometry;
+package org.kalypsodeegree.model.geometry;
 
 /**
  * Utilities for reading and writing the components of binary files.

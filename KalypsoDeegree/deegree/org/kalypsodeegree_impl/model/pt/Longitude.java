@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.pt;
+package org.kalypsodeegree_impl.model.pt;
 
 /**
  * A longitude angle. Positive longitudes are East, while negative longitudes

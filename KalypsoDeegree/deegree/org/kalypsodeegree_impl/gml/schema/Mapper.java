@@ -1,13 +1,13 @@
-package org.deegree_impl.gml.schema;
+package org.kalypsodeegree_impl.gml.schema;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Exception;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * mapping between xml-typenames and java-classnames for GML-geometry types and
@@ -65,28 +65,28 @@ public class Mapper
   public static String mapGMLSchemaType2JavaType( String name )
   {
     if( "GeometryPropertyType".equals( name ) )
-      return "org.deegree.model.geometry.GM_Object";
+      return "org.kalypsodeegree.model.geometry.GM_Object";
 
     if( "PointPropertyType".equals( name ) )
-      return "org.deegree.model.geometry.GM_Point";
+      return "org.kalypsodeegree.model.geometry.GM_Point";
 
     if( "MultiPointPropertyType".equals( name ) )
-      return "org.deegree.model.geometry.GM_MultiPoint";
+      return "org.kalypsodeegree.model.geometry.GM_MultiPoint";
 
     if( "PolygonPropertyType".equals( name ) )
-      return "org.deegree.model.geometry.GM_Polygon";
+      return "org.kalypsodeegree.model.geometry.GM_Polygon";
 
     if( "MultiPolygonPropertyType".equals( name ) )
-      return "org.deegree.model.geometry.GM_MultiSurface";
+      return "org.kalypsodeegree.model.geometry.GM_MultiSurface";
 
     if( "LineStringPropertyType".equals( name ) )
-      return "org.deegree.model.geometry.GM_LineString";
+      return "org.kalypsodeegree.model.geometry.GM_LineString";
 
     if( "MultiLineStringPropertyType".equals( name ) )
-      return "org.deegree.model.geometry.GM_MultiCurve";
+      return "org.kalypsodeegree.model.geometry.GM_MultiCurve";
 
     if( "AbstractFeatureType".equals( name ) )
-      return "org.deegree.model.feature.Feature";
+      return "org.kalypsodeegree.model.feature.Feature";
 
     //    System.out.println( "add mapping for " + name + " in " +
     // Mapper.class.toString() );
@@ -216,11 +216,11 @@ public class Mapper
     if( !createGeometry )
       return null;
     
-    if( "org.deegree.model.geometry.GM_Point".equals( type ) )
+    if( "org.kalypsodeegree.model.geometry.GM_Point".equals( type ) )
       return DEFAULT_POINT;
-    if( "org.deegree.model.geometry.GM_LineString".equals( type ) )
+    if( "org.kalypsodeegree.model.geometry.GM_LineString".equals( type ) )
       return DEFAULT_LINESTRING;
-    if( "org.deegree.model.geometry.GM_Polygon".equals( type ) )
+    if( "org.kalypsodeegree.model.geometry.GM_Polygon".equals( type ) )
       return DEFAULT_POLYGONE;
     
     return null;

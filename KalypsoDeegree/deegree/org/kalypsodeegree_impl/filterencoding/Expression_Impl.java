@@ -58,10 +58,10 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.filterencoding;
+package org.kalypsodeegree_impl.filterencoding;
 
-import org.deegree.filterencoding.Expression;
-import org.deegree.filterencoding.FilterConstructionException;
+import org.kalypsodeegree.filterencoding.Expression;
+import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.w3c.dom.Element;
 
 /**

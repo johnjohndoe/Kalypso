@@ -58,35 +58,35 @@
  http://www.lat-lon.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.feature;
+package org.kalypsodeegree_impl.model.feature;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.deegree.gml.GMLFeature;
-import org.deegree.gml.GMLGeometry;
-import org.deegree.gml.GMLProperty;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureAssociationTypeProperty;
-import org.deegree.model.feature.FeatureList;
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree_impl.extension.ITypeHandler;
-import org.deegree_impl.extension.TypeRegistrySingleton;
-import org.deegree_impl.gml.schema.Mapper;
-import org.deegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
-import org.deegree_impl.model.geometry.GMLAdapter;
-import org.deegree_impl.model.sort.SplitSort;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLFeature;
+import org.kalypsodeegree.gml.GMLGeometry;
+import org.kalypsodeegree.gml.GMLProperty;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.gml.schema.Mapper;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
+import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
+import org.kalypsodeegree_impl.model.sort.SplitSort;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * This factory offers methods for creating Features, FeatureCollection and all
  * direct related classes/interfaces that are part of the
- * org.deegree.model.feature package.
+ * org.kalypsodeegree.model.feature package.
  * 
  * <p>
  * -----------------------------------------------------------------------
@@ -427,7 +427,7 @@ public class FeatureFactory
     if( o instanceof String )
       return Mapper.mapXMLValueToJava( (String)o, type );
 
-    if( o instanceof GMLGeometry && type.startsWith( "org.deegree.model.geometry." ) )
+    if( o instanceof GMLGeometry && type.startsWith( "org.kalypsodeegree.model.geometry." ) )
       return GMLAdapter.wrap( (GMLGeometry)o );
     if( o instanceof GMLGeometry )
       System.out.println( o.getClass().toString() );
@@ -451,38 +451,38 @@ public class FeatureFactory
       type = "java.lang.String";
       break;
     case GMLProperty.GEOMETRY:
-      type = "org.deegree.model.geometry.GM_Object";
+      type = "org.kalypsodeegree.model.geometry.GM_Object";
       break;
     case GMLProperty.POINT:
-      type = "org.deegree.model.geometry.GM_Point";
+      type = "org.kalypsodeegree.model.geometry.GM_Point";
       break;
     case GMLProperty.LINESTRING:
-      type = "org.deegree.model.geometry.GM_LineString";
+      type = "org.kalypsodeegree.model.geometry.GM_LineString";
       break;
     case GMLProperty.POLYGON:
-      type = "org.deegree.model.geometry.GM_Polygon";
+      type = "org.kalypsodeegree.model.geometry.GM_Polygon";
       break;
     case GMLProperty.MULTIGEOMETRY:
-      type = "org.deegree.model.geometry.GM_Object";
+      type = "org.kalypsodeegree.model.geometry.GM_Object";
       break;
     case GMLProperty.MULTILINESTRING:
-      type = "org.deegree.model.geometry.GM_Object";
+      type = "org.kalypsodeegree.model.geometry.GM_Object";
       break;
     case GMLProperty.MULTIPOINT:
-      type = "org.deegree.model.geometry.GM_MultiPoint";
+      type = "org.kalypsodeegree.model.geometry.GM_MultiPoint";
       break;
     case GMLProperty.MULTIPOLYGON:
       // TODO
-      type = "org.deegree.model.geometry.GM_Object";
+      type = "org.kalypsodeegree.model.geometry.GM_Object";
       break;
     case GMLProperty.FEATURE:
-      type = "org.deegree.model.feature.Feature";
+      type = "org.kalypsodeegree.model.feature.Feature";
       break;
     case GMLProperty.FEATURECOLLECTION:
-      type = "org.deegree.model.feature.FeatureCollection";
+      type = "org.kalypsodeegree.model.feature.FeatureCollection";
       break;
     case GMLProperty.BOX:
-      type = "org.deegree.model.geometry.GM_Envelope";
+      type = "org.kalypsodeegree.model.geometry.GM_Envelope";
       break;
     }
     return type;

@@ -44,20 +44,20 @@
  */
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
-import org.deegree.filterencoding.Expression;
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.sld.Font;
-import org.deegree.graphics.sld.Geometry;
-import org.deegree.graphics.sld.Halo;
-import org.deegree.graphics.sld.LabelPlacement;
-import org.deegree.graphics.sld.ParameterValueType;
-import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.graphics.sld.TextSymbolizer;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree_impl.filterencoding.PropertyName;
-import org.deegree_impl.graphics.sld.StyleFactory;
+import org.kalypsodeegree.filterencoding.Expression;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.Font;
+import org.kalypsodeegree.graphics.sld.Geometry;
+import org.kalypsodeegree.graphics.sld.Halo;
+import org.kalypsodeegree.graphics.sld.LabelPlacement;
+import org.kalypsodeegree.graphics.sld.ParameterValueType;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree_impl.filterencoding.PropertyName;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -346,15 +346,15 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     if( ftp == null )
       return -1;
     final String ft = ftp.getType();
-    if( ft.equals( "org.deegree.model.geometry.GM_Point" ) )
+    if( ft.equals( "org.kalypsodeegree.model.geometry.GM_Point" ) )
       return GM_POINT;
-    else if( ft.equals( "org.deegree.model.geometry.GM_LineString" ) )
+    else if( ft.equals( "org.kalypsodeegree.model.geometry.GM_LineString" ) )
       return GM_LINESTRING;
-    else if( ft.equals( "org.deegree.model.geometry.GM_Polygon" ) )
+    else if( ft.equals( "org.kalypsodeegree.model.geometry.GM_Polygon" ) )
       return GM_POLYGON;
-    else if( ft.equals( "org.deegree.model.geometry.GM_MultiPoint" ) )
+    else if( ft.equals( "org.kalypsodeegree.model.geometry.GM_MultiPoint" ) )
       return GM_MULTIPOINT;
-    else if( ft.equals( "org.deegree.model.geometry.GM_Object" ) ) //multilinestring,
+    else if( ft.equals( "org.kalypsodeegree.model.geometry.GM_Object" ) ) //multilinestring,
       // multipolygon
       return GM_OBJECT;
     return -1;

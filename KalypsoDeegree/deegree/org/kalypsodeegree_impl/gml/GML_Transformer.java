@@ -58,29 +58,29 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
 import java.util.StringTokenizer;
 
-import org.deegree.gml.GMLBox;
-import org.deegree.gml.GMLCoordinates;
-import org.deegree.gml.GMLDocument;
-import org.deegree.gml.GMLGeometry;
-import org.deegree.gml.GMLLineString;
-import org.deegree.gml.GMLLinearRing;
-import org.deegree.gml.GMLMultiLineString;
-import org.deegree.gml.GMLMultiPoint;
-import org.deegree.gml.GMLMultiPolygon;
-import org.deegree.gml.GMLPoint;
-import org.deegree.gml.GMLPolygon;
-import org.deegree.model.geometry.GM_Curve;
-import org.deegree.model.geometry.GM_LineString;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree_impl.model.ct.MathTransform;
-import org.deegree_impl.model.geometry.GMLAdapter;
-import org.deegree_impl.tools.StringExtend;
+import org.kalypsodeegree.gml.GMLBox;
+import org.kalypsodeegree.gml.GMLCoordinates;
+import org.kalypsodeegree.gml.GMLDocument;
+import org.kalypsodeegree.gml.GMLGeometry;
+import org.kalypsodeegree.gml.GMLLineString;
+import org.kalypsodeegree.gml.GMLLinearRing;
+import org.kalypsodeegree.gml.GMLMultiLineString;
+import org.kalypsodeegree.gml.GMLMultiPoint;
+import org.kalypsodeegree.gml.GMLMultiPolygon;
+import org.kalypsodeegree.gml.GMLPoint;
+import org.kalypsodeegree.gml.GMLPolygon;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.ct.MathTransform;
+import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
+import org.kalypsodeegree_impl.tools.StringExtend;
 import org.w3c.dom.Document;
 
 /**

@@ -44,13 +44,13 @@
  */
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.sld.Fill;
-import org.deegree.graphics.sld.PolygonSymbolizer;
-import org.deegree.graphics.sld.Stroke;
-import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree_impl.graphics.sld.StyleFactory;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.Fill;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;

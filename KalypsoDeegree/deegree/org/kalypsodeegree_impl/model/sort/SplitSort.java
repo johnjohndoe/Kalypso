@@ -1,4 +1,4 @@
-package org.deegree_impl.model.sort;
+package org.kalypsodeegree_impl.model.sort;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -7,15 +7,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.deegree.graphics.displayelements.DisplayElement;
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureList;
-import org.deegree.model.feature.FeatureVisitor;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class SplitSort implements FeatureList
 {
@@ -371,7 +371,7 @@ public class SplitSort implements FeatureList
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureList#toFeatures()
+   * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
    */
   public Feature[] toFeatures()
   {
@@ -379,7 +379,7 @@ public class SplitSort implements FeatureList
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureList#accept(org.deegree.model.feature.FeatureVisitor)
+   * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor)
    */
   public void accept( final FeatureVisitor visitor )
   {

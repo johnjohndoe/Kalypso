@@ -1,9 +1,9 @@
-package org.deegree.model.table;
+package org.kalypsodeegree.model.table;
 
 public class TableException extends Exception
 {
 
-  private String message = "org.deegree.model.table.TableException: ";
+  private String message = "org.kalypsodeegree.model.table.TableException: ";
 
   public TableException( String message )
   {

@@ -1,14 +1,14 @@
-package org.deegree_impl.gml.schema.virtual;
+package org.kalypsodeegree_impl.gml.schema.virtual;
 
 import java.util.Map;
 
-import org.deegree.model.feature.Annotation;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.geometry.GM_Polygon;
-import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.deegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree.model.feature.Annotation;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -66,15 +66,15 @@ public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypePrope
   }
 
   /**
-   * @see org.deegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty#getVirtuelValue(org.deegree.model.feature.Feature,
-   *      org.deegree.model.feature.GMLWorkspace)
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty#getVirtuelValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypsodeegree.model.feature.GMLWorkspace)
    */
   public Object getVirtuelValue( Feature feature, GMLWorkspace workspace )
   {
     // TODO fetch cs get somewhere
     String targetSrs = "EPSG:31469";
     ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    CS_CoordinateSystem cs = org.deegree_impl.model.cs.Adapters.getDefault().export(
+    CS_CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( targetSrs ) );
     RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature.getProperty( "rectifiedGridDomain" );
     try
@@ -89,7 +89,7 @@ public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypePrope
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#getName()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getName()
    */
   public String getName()
   {
@@ -97,7 +97,7 @@ public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypePrope
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#getType()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getType()
    */
   public String getType()
   {
@@ -105,7 +105,7 @@ public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypePrope
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#getAnnotation(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getAnnotation(java.lang.String)
    */
   public Annotation getAnnotation( String lang )
   {
@@ -113,7 +113,7 @@ public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypePrope
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#isNullable()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isNullable()
    */
   public boolean isNullable()
   {
@@ -121,7 +121,7 @@ public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypePrope
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#getNamespace()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getNamespace()
    */
   public String getNamespace()
   {
@@ -129,7 +129,7 @@ public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypePrope
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#isGeometryProperty()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()
    */
   public boolean isGeometryProperty()
   {
@@ -137,7 +137,7 @@ public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypePrope
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#getAnnotationMap()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getAnnotationMap()
    */
   public Map getAnnotationMap()
   {

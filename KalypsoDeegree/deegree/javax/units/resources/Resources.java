@@ -30,7 +30,7 @@ package javax.units.resources;
 import java.util.Locale;
 import java.util.MissingResourceException;
 
-import org.deegree_impl.model.resources.ResourceBundle;
+import org.kalypsodeegree_impl.model.resources.ResourceBundle;
 
 /**
  * Base class for local-dependent resources. Instances of this class should

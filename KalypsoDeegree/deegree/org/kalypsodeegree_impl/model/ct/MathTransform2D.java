@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // Miscellaneous
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 
-import org.deegree_impl.model.pt.Matrix;
+import org.kalypsodeegree_impl.model.pt.Matrix;
 
 /**
  * Transforms two-dimensional coordinate points.

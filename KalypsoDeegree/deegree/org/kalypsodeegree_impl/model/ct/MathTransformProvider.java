@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS (SEAS) dependencies
 import java.util.Locale;
@@ -69,11 +69,11 @@ import javax.media.jai.ParameterListDescriptorImpl;
 import javax.media.jai.ParameterListImpl;
 import javax.media.jai.util.Range;
 
-import org.deegree_impl.model.pt.Latitude;
-import org.deegree_impl.model.pt.Longitude;
-import org.deegree_impl.model.resources.Utilities;
-import org.deegree_impl.model.resources.XArray;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.pt.Latitude;
+import org.kalypsodeegree_impl.model.pt.Longitude;
+import org.kalypsodeegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.resources.XArray;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
  * Base class for {@link MathTransform}providers. Instance of this class allow

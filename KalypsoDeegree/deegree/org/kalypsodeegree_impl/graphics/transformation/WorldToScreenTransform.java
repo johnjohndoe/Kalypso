@@ -59,14 +59,14 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.graphics.transformation;
+package org.kalypsodeegree_impl.graphics.transformation;
 
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
-//import org.deegree.graphics.transformation.*;
+//import org.kalypsodeegree.graphics.transformation.*;
 
 /**
  * the class <code>WorldToScreenTransform</code> implements

@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
-import org.deegree_impl.model.cs.ConvenienceCSFactory;
-import org.deegree_impl.model.cs.CoordinateSystem;
-import org.deegree_impl.model.cs.GeographicCoordinateSystem;
-import org.deegree_impl.model.cs.ProjectedCoordinateSystem;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.GeographicCoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.ProjectedCoordinateSystem;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * factory for

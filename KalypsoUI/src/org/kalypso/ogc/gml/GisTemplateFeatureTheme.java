@@ -48,15 +48,15 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
-import org.deegree.graphics.sld.StyledLayerDescriptor;
-import org.deegree.graphics.sld.UserStyle;
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.FeatureList;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree_impl.model.feature.visitors.QuerySelectionVisitor;
-import org.deegree_impl.model.feature.visitors.SetSelectionVisitor;
+import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.feature.visitors.QuerySelectionVisitor;
+import org.kalypsodeegree_impl.model.feature.visitors.SetSelectionVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -187,8 +187,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
-   *      org.deegree.graphics.transformation.GeoTransform, double,
-   *      org.deegree.model.geometry.GM_Envelope, int)
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, int)
    */
   public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
       int selectionId )
@@ -434,7 +434,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.deegree.model.geometry.GM_Envelope)
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
   public FeatureList getFeatureListVisible( GM_Envelope env )
   {

@@ -1,4 +1,4 @@
-package org.deegree_impl.extension;
+package org.kalypsodeegree_impl.extension;
 
 /**
  * Dies sollte irgenwo zentral liegen oder in eine andere solche Klasse

@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.ArrayList;
 
-import org.deegree.graphics.sld.Layer;
-import org.deegree.graphics.sld.LayerFeatureConstraints;
-import org.deegree.graphics.sld.Style;
+import org.kalypsodeegree.graphics.sld.Layer;
+import org.kalypsodeegree.graphics.sld.LayerFeatureConstraints;
+import org.kalypsodeegree.graphics.sld.Style;
 
 /**
  * <p>
@@ -177,7 +177,7 @@ public class Layer_Impl implements Layer
   }
 
   /**
-   * @see org.deegree_impl.graphics.sld.Layer_Impl#getStyles()
+   * @see org.kalypsodeegree_impl.graphics.sld.Layer_Impl#getStyles()
    * @param style
    *          a style to add
    */
@@ -187,7 +187,7 @@ public class Layer_Impl implements Layer
   }
 
   /**
-   * @see org.deegree_impl.graphics.sld.Layer_Impl#getStyles()
+   * @see org.kalypsodeegree_impl.graphics.sld.Layer_Impl#getStyles()
    * @param style
    *          a style to remove
    */

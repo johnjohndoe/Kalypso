@@ -16,7 +16,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package org.deegree_impl.tools.shape;
+package org.kalypsodeegree_impl.tools.shape;
 
 import java.io.File;
 

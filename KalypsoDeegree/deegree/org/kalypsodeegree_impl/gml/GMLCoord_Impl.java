@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
-import org.deegree.gml.GMLCoord;
-import org.deegree.gml.GMLException;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree.xml.DOMPrinter;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLCoord;
+import org.kalypsodeegree.gml.GMLException;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree.xml.DOMPrinter;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -363,6 +363,9 @@ public class GMLCoord_Impl implements GMLCoord
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.5  2005/03/08 11:01:04  doemming
+ * *** empty log message ***
+ *
  * Revision 1.4  2005/01/18 12:50:42  doemming
  * *** empty log message ***
  *

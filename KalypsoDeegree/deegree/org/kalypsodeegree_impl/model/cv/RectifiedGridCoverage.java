@@ -1,4 +1,4 @@
-package org.deegree_impl.model.cv;
+package org.kalypsodeegree_impl.model.cv;
 
 /**
  * @author N. Peiler

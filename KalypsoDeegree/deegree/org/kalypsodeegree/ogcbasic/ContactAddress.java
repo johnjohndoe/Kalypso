@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.ogcbasic;
+package org.kalypsodeegree.ogcbasic;
 
 /**
  * specifies the data structur of a address and the access to its components

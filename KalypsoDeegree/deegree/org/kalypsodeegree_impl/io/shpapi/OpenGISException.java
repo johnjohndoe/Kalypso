@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
 /**
  * OpenGIS related exceptions thrown by methods in this package.
@@ -75,7 +75,7 @@ package org.deegree_impl.io.shpapi;
  */
 public class OpenGISException extends Exception
 {
-  private String message = "org.deegree_impl.io.shpapi.OpenGISException";
+  private String message = "org.kalypsodeegree_impl.io.shpapi.OpenGISException";
 
   public OpenGISException()
   {}

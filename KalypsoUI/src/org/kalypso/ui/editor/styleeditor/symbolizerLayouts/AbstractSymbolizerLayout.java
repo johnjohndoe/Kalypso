@@ -40,8 +40,8 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 

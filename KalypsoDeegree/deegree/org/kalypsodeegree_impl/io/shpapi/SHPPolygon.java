@@ -59,15 +59,15 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
-import org.deegree.model.geometry.ByteUtils;
-import org.deegree.model.geometry.GM_Curve;
-import org.deegree.model.geometry.GM_CurveSegment;
-import org.deegree.model.geometry.GM_Ring;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree_impl.model.geometry.GeometryFactory;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.model.geometry.ByteUtils;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_CurveSegment;
+import org.kalypsodeegree.model.geometry.GM_Ring;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Class representig a two dimensional ESRI Polygon <BR>

@@ -1,13 +1,13 @@
-package org.deegree_impl.model.feature;
+package org.kalypsodeegree_impl.model.feature;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree_impl.model.geometry.GM_Object_Impl;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.geometry.GM_Object_Impl;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**

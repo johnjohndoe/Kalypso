@@ -48,18 +48,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.deegree.graphics.displayelements.DisplayElement;
-import org.deegree.graphics.displayelements.IncompatibleGeometryTypeException;
-import org.deegree.graphics.sld.UserStyle;
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureList;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree_impl.graphics.displayelements.DisplayElementFactory;
-import org.deegree_impl.model.feature.FeatureFactory;
-import org.deegree_impl.model.sort.SplitSort;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
+import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.sort.SplitSort;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.util.command.ICommand;
@@ -161,7 +161,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   }
 
   /**
-   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
+   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( ModellEvent modellEvent )
   {
@@ -184,7 +184,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   /**
    * 
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.deegree.model.geometry.GM_Envelope)
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
   public FeatureList getFeatureListVisible( GM_Envelope env )
   {

@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -69,12 +69,12 @@ import java.awt.TexturePaint;
 import java.awt.font.LineMetrics;
 import java.awt.image.BufferedImage;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.displayelements.Label;
-import org.deegree.graphics.sld.Fill;
-import org.deegree.graphics.sld.GraphicFill;
-import org.deegree.graphics.sld.Halo;
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.displayelements.Label;
+import org.kalypsodeegree.graphics.sld.Fill;
+import org.kalypsodeegree.graphics.sld.GraphicFill;
+import org.kalypsodeegree.graphics.sld.Halo;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * This is a horizontal label with style information and screen coordinates,
@@ -239,7 +239,7 @@ class HorizontalLabel implements Label
     }
 
     // only stroke outline, if Stroke-Element is given
-    org.deegree.graphics.sld.Stroke stroke = halo.getStroke();
+    org.kalypsodeegree.graphics.sld.Stroke stroke = halo.getStroke();
 
     if( stroke != null )
     {

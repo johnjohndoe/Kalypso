@@ -40,8 +40,8 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.dialogs.filterencoding;
 
-import org.deegree.model.feature.Feature;
-import org.deegree_impl.filterencoding.AbstractFilter;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
 
 public class ElseFilter extends AbstractFilter
 {

@@ -58,14 +58,14 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
-import org.deegree.gml.GMLException;
-import org.deegree.gml.GMLLinearRing;
-import org.deegree.gml.GMLPolygon;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLException;
+import org.kalypsodeegree.gml.GMLLinearRing;
+import org.kalypsodeegree.gml.GMLPolygon;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -134,7 +134,7 @@ public class GMLPolygon_Impl extends GMLGeometry_Impl implements GMLPolygon
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLPolygon_Impl#getExteriorRing() If an exterior
+   * @see org.kalypsodeegree_impl.gml.GMLPolygon_Impl#getExteriorRing() If an exterior
    *      ring already exsists, it will be removed before setting the new one.
    */
   public void setExteriorRing( GMLLinearRing exteriorRing )
@@ -217,6 +217,9 @@ public class GMLPolygon_Impl extends GMLGeometry_Impl implements GMLPolygon
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.5  2005/03/08 11:01:04  doemming
+ * *** empty log message ***
+ *
  * Revision 1.4  2005/01/18 12:50:42  doemming
  * *** empty log message ***
  *

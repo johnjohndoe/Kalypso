@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.filterencoding;
+package org.kalypsodeegree.filterencoding;
 
 /**
  * This exception is thrown when the evaluation of a <tt>Filter</tt>

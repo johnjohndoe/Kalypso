@@ -42,9 +42,9 @@ package org.kalypso.ui.editor.styleeditor.dialogs.filterpatterndialog;
 
 import javax.swing.event.EventListenerList;
 
-import org.deegree.filterencoding.Operation;
-import org.deegree_impl.filterencoding.BoundaryExpression;
-import org.deegree_impl.filterencoding.PropertyIsBetweenOperation;
+import org.kalypsodeegree.filterencoding.Operation;
+import org.kalypsodeegree_impl.filterencoding.BoundaryExpression;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;

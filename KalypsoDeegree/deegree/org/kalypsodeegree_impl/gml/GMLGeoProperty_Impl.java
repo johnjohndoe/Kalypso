@@ -58,23 +58,23 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
-import org.deegree.gml.GMLBox;
-import org.deegree.gml.GMLException;
-import org.deegree.gml.GMLGeoProperty;
-import org.deegree.gml.GMLGeometry;
-import org.deegree.gml.GMLGeometryCollection;
-import org.deegree.gml.GMLLineString;
-import org.deegree.gml.GMLMultiLineString;
-import org.deegree.gml.GMLMultiPoint;
-import org.deegree.gml.GMLMultiPolygon;
-import org.deegree.gml.GMLPoint;
-import org.deegree.gml.GMLPolygon;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree.xml.DOMPrinter;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLBox;
+import org.kalypsodeegree.gml.GMLException;
+import org.kalypsodeegree.gml.GMLGeoProperty;
+import org.kalypsodeegree.gml.GMLGeometry;
+import org.kalypsodeegree.gml.GMLGeometryCollection;
+import org.kalypsodeegree.gml.GMLLineString;
+import org.kalypsodeegree.gml.GMLMultiLineString;
+import org.kalypsodeegree.gml.GMLMultiPoint;
+import org.kalypsodeegree.gml.GMLMultiPolygon;
+import org.kalypsodeegree.gml.GMLPoint;
+import org.kalypsodeegree.gml.GMLPolygon;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree.xml.DOMPrinter;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -247,7 +247,7 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLGeoProperty_Impl#getPropertyValue()
+   * @see org.kalypsodeegree_impl.gml.GMLGeoProperty_Impl#getPropertyValue()
    */
   public void setGeoPropetryValue( GMLGeometry value ) throws GMLException
   {
@@ -377,6 +377,9 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2005/03/08 11:01:03  doemming
+ * *** empty log message ***
+ *
  * Revision 1.5  2005/02/28 13:34:14  doemming
  * *** empty log message ***
  *

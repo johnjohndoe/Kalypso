@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.pt;
+package org.kalypsodeegree_impl.model.pt;
 
 /**
  * Interface for dimensioned object. Objects implementing this interface may

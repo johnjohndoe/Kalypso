@@ -58,21 +58,21 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
 import java.util.ArrayList;
 
-import org.deegree.gml.GMLGeometry;
-import org.deegree.gml.GMLGeometryCollection;
-import org.deegree.gml.GMLLineString;
-import org.deegree.gml.GMLMultiLineString;
-import org.deegree.gml.GMLMultiPoint;
-import org.deegree.gml.GMLMultiPolygon;
-import org.deegree.gml.GMLPoint;
-import org.deegree.gml.GMLPolygon;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLGeometry;
+import org.kalypsodeegree.gml.GMLGeometryCollection;
+import org.kalypsodeegree.gml.GMLLineString;
+import org.kalypsodeegree.gml.GMLMultiLineString;
+import org.kalypsodeegree.gml.GMLMultiPoint;
+import org.kalypsodeegree.gml.GMLMultiPolygon;
+import org.kalypsodeegree.gml.GMLPoint;
+import org.kalypsodeegree.gml.GMLPolygon;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -151,7 +151,7 @@ class GMLGeometryCollection_Impl extends GMLGeometry_Impl implements GMLGeometry
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLGeometryCollection_Impl#getGeometries()
+   * @see org.kalypsodeegree_impl.gml.GMLGeometryCollection_Impl#getGeometries()
    */
   public void addGeometry( GMLGeometry geometry )
   {
@@ -198,6 +198,9 @@ class GMLGeometryCollection_Impl extends GMLGeometry_Impl implements GMLGeometry
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.5  2005/03/08 11:01:03  doemming
+ * *** empty log message ***
+ *
  * Revision 1.4  2005/01/18 12:50:42  doemming
  * *** empty log message ***
  *

@@ -58,10 +58,10 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS (SEAS) dependencies
-import org.deegree_impl.model.cs.Projection;
+import org.kalypsodeegree_impl.model.cs.Projection;
 
 /**
  * Classe de base des projections cartographiques coniques. Les projections

@@ -40,9 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
-import org.deegree.graphics.sld.RasterSymbolizer;
-import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;

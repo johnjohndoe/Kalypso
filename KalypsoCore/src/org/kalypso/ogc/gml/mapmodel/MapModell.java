@@ -46,12 +46,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.model.feature.event.ModellEventListener;
-import org.deegree.model.feature.event.ModellEventProvider;
-import org.deegree.model.feature.event.ModellEventProviderAdapter;
-import org.deegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -323,7 +323,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
   }
 
   /**
-   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
+   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {

@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.tools;
+package org.kalypsodeegree_impl.tools;
 
 import java.io.File;
 import java.io.FileInputStream;

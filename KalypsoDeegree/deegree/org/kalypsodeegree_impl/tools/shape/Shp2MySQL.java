@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.tools.shape;
+package org.kalypsodeegree_impl.tools.shape;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -66,13 +66,13 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree_impl.io.shpapi.ShapeFile;
-import org.deegree_impl.model.geometry.WKTAdapter;
-import org.deegree_impl.tools.StringExtend;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
+import org.kalypsodeegree_impl.model.geometry.WKTAdapter;
+import org.kalypsodeegree_impl.tools.StringExtend;
 
 /**
  * 

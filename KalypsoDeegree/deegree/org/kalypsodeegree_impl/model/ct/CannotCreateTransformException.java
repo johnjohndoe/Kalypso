@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependences (SEAGIS)
-import org.deegree_impl.model.cs.CoordinateSystem;
-import org.deegree_impl.model.resources.Utilities;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
+import org.kalypsodeegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
  * Thrown when a coordinate transformation can't be created. It may be because

@@ -42,7 +42,7 @@ package org.kalypso.ui.calcwizard.bericht;
 
 import java.io.OutputStream;
 
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author belger
@@ -50,7 +50,7 @@ import org.deegree.model.feature.Feature;
 public class MapExporter extends AbstractBerichtExporter
 {
   /**
-   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.deegree.model.feature.Feature, java.io.OutputStream)
+   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.kalypsodeegree.model.feature.Feature, java.io.OutputStream)
    */
   public void export( Feature feature, OutputStream os ) throws Exception
   {

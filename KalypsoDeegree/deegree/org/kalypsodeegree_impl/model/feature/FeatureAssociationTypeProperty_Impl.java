@@ -1,13 +1,13 @@
-package org.deegree_impl.model.feature;
+package org.kalypsodeegree_impl.model.feature;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.deegree.model.feature.FeatureAssociationTypeProperty;
-import org.deegree.model.feature.FeatureType;
-import org.deegree_impl.gml.schema.GMLSchema;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.w3c.dom.Node;
 
 /**
@@ -53,7 +53,7 @@ public class FeatureAssociationTypeProperty_Impl extends FeatureTypeProperty_Imp
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureAssociationTypeProperty#getAssociationFeatureType()
+   * @see org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty#getAssociationFeatureType()
    */
   public FeatureType[] getAssociationFeatureTypes()
   {
@@ -80,7 +80,7 @@ public class FeatureAssociationTypeProperty_Impl extends FeatureTypeProperty_Imp
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureAssociationTypeProperty#getAcsociationFeatureType()
+   * @see org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty#getAcsociationFeatureType()
    */
   public FeatureType getAssociationFeatureType()
   {

@@ -21,7 +21,7 @@
  Adapted May 2003 by IDgis, The Netherlands - www.idgis.nl
  
  ---------------------------------------------------------------------------*/
-package org.deegree_impl.io.rtree;
+package org.kalypsodeegree_impl.io.rtree;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

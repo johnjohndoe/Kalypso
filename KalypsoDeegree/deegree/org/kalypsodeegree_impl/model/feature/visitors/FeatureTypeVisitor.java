@@ -1,11 +1,11 @@
-package org.deegree_impl.model.feature.visitors;
+package org.kalypsodeegree_impl.model.feature.visitors;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
  * <p>Collects all features of a given type</p>
@@ -34,7 +34,7 @@ public class FeatureTypeVisitor implements FeatureVisitor
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureVisitor#visit(org.deegree.model.feature.Feature)
+   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
   public boolean visit( final Feature f )
   {

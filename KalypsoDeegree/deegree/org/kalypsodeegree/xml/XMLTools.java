@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.xml;
+package org.kalypsodeegree.xml;
 
 // JDK 1.3
 import java.io.FileInputStream;

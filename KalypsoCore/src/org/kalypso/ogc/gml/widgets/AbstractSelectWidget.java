@@ -45,11 +45,11 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.JMMarkSelectCommand;

@@ -58,12 +58,12 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics.sld;
+package org.kalypsodeegree.graphics.sld;
 
 import java.awt.image.BufferedImage;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * A Mark takes a "shape" and applies coloring to it. The shape can be derived

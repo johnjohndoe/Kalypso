@@ -58,16 +58,16 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
-import org.deegree.gml.GMLComplexProperty;
-import org.deegree.gml.GMLProperty;
-import org.deegree.model.feature.FeatureAssociationTypeProperty;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree.xml.DOMPrinter;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLComplexProperty;
+import org.kalypsodeegree.gml.GMLProperty;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree.xml.DOMPrinter;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -389,7 +389,7 @@ public class GMLProperty_Impl implements GMLProperty
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLProperty_Impl#getPropertyValue()
+   * @see org.kalypsodeegree_impl.gml.GMLProperty_Impl#getPropertyValue()
    *      <p>
    *      This set-method only supports text propetries. More complex property
    *      types must be inherited from this interface and define additional
@@ -459,7 +459,7 @@ public class GMLProperty_Impl implements GMLProperty
   }
 
   /**
-   * @see org.deegree.gml.GMLProperty#getAttributeValue(java.lang.String,
+   * @see org.kalypsodeegree.gml.GMLProperty#getAttributeValue(java.lang.String,
    *      java.lang.String)
    */
   public Object getAttributeValue( String nameSpace, String attributeValue )
@@ -469,7 +469,7 @@ public class GMLProperty_Impl implements GMLProperty
 
   /**
    * 
-   * @see org.deegree.gml.GMLProperty#getElement()
+   * @see org.kalypsodeegree.gml.GMLProperty#getElement()
    */
   public Element getElement()
   {
@@ -492,6 +492,9 @@ public class GMLProperty_Impl implements GMLProperty
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.12  2005/03/08 11:01:04  doemming
+ * *** empty log message ***
+ *
  * Revision 1.11  2005/02/08 18:43:59  belger
  * *** empty log message ***
  *

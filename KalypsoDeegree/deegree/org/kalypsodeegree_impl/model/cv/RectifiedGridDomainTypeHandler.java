@@ -1,17 +1,17 @@
-package org.deegree_impl.model.cv;
+package org.kalypsodeegree_impl.model.cv;
 
 import java.net.URL;
 import java.util.Vector;
 
-import org.deegree.gml.GMLGeometry;
-import org.deegree.model.coverage.GridRange;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree_impl.extension.ITypeHandler;
-import org.deegree_impl.extension.TypeRegistryException;
-import org.deegree_impl.gml.GMLFactory;
-import org.deegree_impl.gml.schema.XMLHelper;
-import org.deegree_impl.model.cv.GridRange_Impl;
-import org.deegree_impl.model.geometry.GMLAdapter;
+import org.kalypsodeegree.gml.GMLGeometry;
+import org.kalypsodeegree.model.coverage.GridRange;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
+import org.kalypsodeegree_impl.gml.GMLFactory;
+import org.kalypsodeegree_impl.gml.schema.XMLHelper;
+import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
+import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -34,7 +34,7 @@ public class RectifiedGridDomainTypeHandler implements ITypeHandler
 
   /**
    * 
-   * @see org.deegree_impl.extension.ITypeHandler#getClassName()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
    */
   public String getClassName()
   {
@@ -43,7 +43,7 @@ public class RectifiedGridDomainTypeHandler implements ITypeHandler
 
   /**
    * 
-   * @see org.deegree_impl.extension.ITypeHandler#getTypeName()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
    */
   public String getTypeName()
   {
@@ -52,7 +52,7 @@ public class RectifiedGridDomainTypeHandler implements ITypeHandler
 
   /**
    * 
-   * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
    */
   public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
   {
@@ -125,7 +125,7 @@ public class RectifiedGridDomainTypeHandler implements ITypeHandler
 
   /**
    * 
-   * @see org.deegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
    */
   public Object unmarshall( Node node, URL context ) throws TypeRegistryException
   {
@@ -194,7 +194,7 @@ public class RectifiedGridDomainTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#getShortname()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getShortname()
    */
   public String getShortname()
   {

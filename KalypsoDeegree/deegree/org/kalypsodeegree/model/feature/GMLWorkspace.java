@@ -1,10 +1,10 @@
-package org.deegree.model.feature;
+package org.kalypsodeegree.model.feature;
 
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import org.deegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * @author doemming

@@ -43,7 +43,7 @@ package org.kalypso.ui.wizard.feature;
 import java.net.URL;
 import java.util.Collection;
 
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.Feature;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;

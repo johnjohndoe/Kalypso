@@ -46,7 +46,7 @@
  */
 package org.kalypso.ogc.gml.serialize;
 
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author doemming

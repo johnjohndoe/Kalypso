@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.tools;
+package org.kalypsodeegree_impl.tools;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -889,6 +889,9 @@ class LecGUIMenuHandler implements ActionListener
 /*******************************************************************************
  * ****************************************************************************
  * Changes to this class. What the people have been up to: $Log$
+ * Changes to this class. What the people have been up to: Revision 1.5  2005/03/08 11:01:10  doemming
+ * Changes to this class. What the people have been up to: *** empty log message ***
+ * Changes to this class. What the people have been up to:
  * Changes to this class. What the people have been up to: Revision 1.4  2005/01/18 12:50:41  doemming
  * Changes to this class. What the people have been up to: *** empty log message ***
  * Changes to this class. What the people have been up to:

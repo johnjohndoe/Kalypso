@@ -58,13 +58,13 @@
  http://www.lat-lon.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
 
 import net.opengis.sld.ObjectFactory;
 
-import org.deegree.graphics.sld.ColorMapEntry;
+import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 /**
  * @author N. Peiler

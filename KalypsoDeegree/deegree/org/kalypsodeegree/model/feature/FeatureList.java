@@ -1,8 +1,8 @@
-package org.deegree.model.feature;
+package org.kalypsodeegree.model.feature;
 
 import java.util.List;
 
-import org.deegree.model.sort.JMSpatialIndex;
+import org.kalypsodeegree.model.sort.JMSpatialIndex;
 
 /**
  * @author belger

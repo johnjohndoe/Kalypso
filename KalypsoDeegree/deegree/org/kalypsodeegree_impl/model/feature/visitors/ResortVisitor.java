@@ -1,6 +1,6 @@
-package org.deegree_impl.model.feature.visitors;
+package org.kalypsodeegree_impl.model.feature.visitors;
 
-import org.deegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * @author belger
@@ -8,7 +8,7 @@ import org.deegree.model.feature.FeatureList;
 public class ResortVisitor extends FeatureListsVisitor
 {
   /**
-   * @see org.deegree_impl.model.feature.visitors.FeatureListsVisitor#visitList(org.deegree.model.feature.FeatureList)
+   * @see org.kalypsodeegree_impl.model.feature.visitors.FeatureListsVisitor#visitList(org.kalypsodeegree.model.feature.FeatureList)
    */
   protected void visitList( final FeatureList fl )
   {

@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.resources;
+package org.kalypsodeegree_impl.model.resources;
 
 // Parameters
 import java.util.HashMap;
@@ -70,12 +70,12 @@ import javax.media.jai.ParameterListDescriptor;
 import javax.media.jai.ParameterListImpl;
 import javax.media.jai.util.CaselessStringKey;
 
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
  * Methods for binding names to {@link ParameterListDescriptor}s. For example,
- * {@link org.deegree_impl.model.cs.Projection}using this class for binding
+ * {@link org.kalypsodeegree_impl.model.cs.Projection}using this class for binding
  * classification name to parameter list descriptors.
  * 
  * @version 1.0
@@ -88,7 +88,7 @@ public final class Naming
    * descriptor.
    */
   public static final Naming PROJECTIONS = new Naming(
-      "org.deegree_impl.model.ct.MathTransformFactory", "org.deegree_impl.model.resources.css" );
+      "org.kalypsodeegree_impl.model.ct.MathTransformFactory", "org.kalypsodeegree_impl.model.resources.css" );
 
   /**
    * Map classification name to {@link ParameterListDescriptor}objects. Keys
@@ -128,7 +128,7 @@ public final class Naming
   /**
    * Try to bind a set of default projections. Those default projections are
    * binded during the static initialization of
-   * {org.deegree_impl.model.ct.MathTransformFactory} class. If the operation
+   * {org.kalypsodeegree_impl.model.ct.MathTransformFactory} class. If the operation
    * fail, a warning is logged but the process continue.
    */
   private void bindDefaults( final String method )

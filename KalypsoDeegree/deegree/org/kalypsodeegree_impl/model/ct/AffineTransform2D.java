@@ -58,18 +58,18 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS (SEAS) dependencies
-//import org.deegree_impl.model.pt.ConvexHull;
+//import org.kalypsodeegree_impl.model.pt.ConvexHull;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
-import org.deegree_impl.model.pt.CoordinatePoint;
-import org.deegree_impl.model.pt.Matrix;
-import org.deegree_impl.model.resources.XAffineTransform;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.pt.CoordinatePoint;
+import org.kalypsodeegree_impl.model.pt.Matrix;
+import org.kalypsodeegree_impl.model.resources.XAffineTransform;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
  * Transforms two-dimensional coordinate points using an {@link AffineTransform}.

@@ -48,7 +48,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypso.java.io.ReaderUtilities;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
@@ -66,7 +66,7 @@ public class DiagrammExporter extends AbstractBerichtExporter
   private static final String EXT = ".jpg";
 
   /**
-   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.deegree.model.feature.Feature, java.io.OutputStream)
+   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.kalypsodeegree.model.feature.Feature, java.io.OutputStream)
    */
   public void export( final Feature feature, final OutputStream os ) throws Exception
   {

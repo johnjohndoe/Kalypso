@@ -59,10 +59,10 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.graphics.sld;
+package org.kalypsodeegree.graphics.sld;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Incarnation of a sld:PointPlacement-element. For a PointPlacement, the anchor

@@ -50,13 +50,13 @@ import java.util.List;
 
 import javax.swing.event.EventListenerList;
 
-import org.deegree.graphics.sld.Graphic;
-import org.deegree.graphics.sld.Mark;
-import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.graphics.sld.TextSymbolizer;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree_impl.graphics.sld.StyleFactory;
+import org.kalypsodeegree.graphics.sld.Graphic;
+import org.kalypsodeegree.graphics.sld.Mark;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -307,7 +307,7 @@ public class AddSymbolizerPanel
     for( int i = 0; i < ftp.length; i++ )
     {
       String type = ftp[i].getType();
-      if( type.startsWith( "org.deegree.model.geometry." ) && !type.endsWith( "GM_Envelope" ) )
+      if( type.startsWith( "org.kalypsodeegree.model.geometry." ) && !type.endsWith( "GM_Envelope" ) )
         list.add( ftp[i].getName() );
     }
     return list;
