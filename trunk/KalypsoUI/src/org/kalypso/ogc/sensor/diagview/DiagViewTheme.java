@@ -235,7 +235,9 @@ public class DiagViewTheme extends AbstractObservationTheme
 
           final Color colorFor = m_defaultcolor != null ? m_defaultcolor : TimeserieUtils
               .getColorFor( valueAxis[i].getType() );
+          
           //System.out.println( "Create curve: " + colorFor );
+          //System.out.println("Adding Curve. Theme Name: " + getName() + " Axis: " + valueAxis[i] + " Obs: " + obs );
           
           final DiagViewCurve curve = new DiagViewCurve( replaceTokens( getName(), obs, valueAxis[i] ), colorFor, this, mappings,
               m_template );

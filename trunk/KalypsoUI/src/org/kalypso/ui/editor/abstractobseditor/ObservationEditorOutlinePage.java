@@ -315,8 +315,9 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
               file = (IFile) wksp.findMember( file.getFullPath() );
               final URL url = ResourceUtilities.createURL( file );
 
-              final AbstractObservationTheme theme = m_template.addObservation( file
-                  .getName(), url, url.toExternalForm(), "zml", false, null );
+              final String themeName = AbstractObservationTheme.prepareDefaultTokens( file.getName() );
+              
+              final AbstractObservationTheme theme = m_template.addObservation( themeName, url, url.toExternalForm(), "zml", false, null );
 
               m_editor2.postCommand( new AddThemeCommand2( m_template, theme ),
                   null );

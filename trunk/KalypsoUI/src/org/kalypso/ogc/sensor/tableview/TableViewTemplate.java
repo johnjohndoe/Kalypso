@@ -84,8 +84,7 @@ public class TableViewTemplate extends AbstractViewTemplate
 
     // the theme should be created using the default properties of the obs
     theme.setUseDefault( true );
-    // and following type should be ignored
-    theme.setIgnoreType( getIgnoreType() );
+    
     theme.setEditableColumns( false );
 
     addTheme( theme );

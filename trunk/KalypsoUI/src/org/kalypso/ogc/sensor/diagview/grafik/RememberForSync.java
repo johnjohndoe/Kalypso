@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
@@ -21,7 +20,6 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -117,8 +115,6 @@ final class RememberForSync
 
       IAxis[] axes = obs.getAxisList();
 
-      SimpleTuppleModel stm = new SimpleTuppleModel( axes );
-
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes,
           Date.class )[0];
 
@@ -142,32 +138,26 @@ final class RememberForSync
         Date date = GrafikLauncher.GRAFIK_DF.parse( csv.getItem( l, 0 ) );
         double d = Double.parseDouble( csv.getItem( l, 1 ) );
 
-        Object[] tupple = new Object[axes.length];
-        java.util.Arrays.fill( tupple, new Double( 0 ) );
-
-        tupple[values.getPositionFor( dateAxis )] = date;
-        tupple[values.getPositionFor( m_numberAxis )] = new Double( d );
-        
-        if( statusAxis != null )
-          tupple[values.getPositionFor(statusAxis)] = KalypsoStati.STATUS_USERMOD;
-
+        /*
+         * Großes TODO: z.Z. werden durch das Grafiktool hinzugefügte oder gelöschte Werte 
+         * nicht berücksichtigt. Ist auch die Frage ob man es überhaupt unterstützen sollte...
+         */
         int ix = values.indexOf( date, dateAxis );
 
         if( ix != -1 )
         {
-          for( Iterator it = axisList.iterator(); it.hasNext(); )
-          {
-            IAxis axis = (IAxis) it.next();
+          values.setElement( ix, new Double( d ), m_numberAxis );
 
-            tupple[values.getPositionFor( axis )] = values
-                .getElement( ix, axis );
-          }
+          if( statusAxis != null )
+            values.setElement( ix, KalypsoStati.STATUS_USERMOD, statusAxis );
         }
-
-        stm.addTupple( tupple );
+        else
+        {
+          // TODO: entweder löschen oder hinzufügen... Wenn überhaupt...
+        }
       }
 
-      obs.setValues( stm );
+      obs.setValues( values );
       final ObservationType xml = ZmlFactory.createXML( obs, null );
       
       SetContentHelper helper = new SetContentHelper()

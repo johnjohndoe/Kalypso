@@ -289,11 +289,8 @@ public class DiagViewTemplate extends AbstractViewTemplate
         context, ignoreExceptions );
 
     final DiagViewTheme theme = new DiagViewTheme( this, themeName, null, args, defaultcolor );
-
     // the theme should be created using the default properties of the obs
     theme.setUseDefault( true );
-    // and following type should be ignored
-    theme.setIgnoreType( getIgnoreType() );
 
     addTheme( theme );
 

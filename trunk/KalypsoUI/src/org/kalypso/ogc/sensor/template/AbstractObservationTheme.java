@@ -61,8 +61,16 @@ import org.kalypso.util.runtime.IVariableArguments;
 public abstract class AbstractObservationTheme implements IThemeEventProvider,
     IPoolListener, IObservationListener
 {
+  public static final String TOKEN_AXISUNIT = "%axisunit%";
+
+  public static final String TOKEN_AXISTYPE = "%axistype%";
+
+  public static final String TOKEN_AXISNAME = "%axisname%";
+
+  public static final String TOKEN_OBSNAME = "%obsname%";
+
   private static final int STATUS_UNKNOWN = 0;
-  
+
   private static final int STATUS_LOADED = 1;
 
   private static final int STATUS_ERROR = 2;
@@ -78,7 +86,7 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
   private ResourcePool m_pool = null;
 
   private Vector m_listeners = null;
-  
+
   /**
    * name of the axis type that should be ignored (can be null, in such case no
    * axis is ignored)
@@ -86,13 +94,12 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
   private String m_ignoreType = null;
 
   /**
-   * when true, the default properties of the underlying observation
-   * should be used when creating members of this theme.
+   * when true, the default properties of the underlying observation should be
+   * used when creating members of this theme.
    */
   private boolean m_useDefault = false;
 
   private int m_loadedStatus = STATUS_UNKNOWN;
-  
 
   private AbstractObservationTheme( final String name )
   {
@@ -112,10 +119,10 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
 
     if( m_pool != null )
       m_pool.removePoolListener( this );
-    
+
     if( m_obs != null )
       m_obs.removeListener( this );
-    
+
     m_loadedStatus = STATUS_UNKNOWN;
   }
 
@@ -141,22 +148,22 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
   {
     return m_name != null;
   }
-  
+
   public String getIgnoreType( )
   {
     return m_ignoreType;
   }
-  
+
   public void setIgnoreType( String ignoreType )
   {
     m_ignoreType = ignoreType;
   }
-  
+
   public boolean isUseDefault( )
   {
     return m_useDefault;
   }
-  
+
   public void setUseDefault( final boolean useDefault )
   {
     m_useDefault = useDefault;
@@ -180,7 +187,7 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
       m_obs = obs;
       m_obs.addListener( this );
     }
-    
+
     if( obs != null )
       m_loadedStatus = STATUS_LOADED;
     else
@@ -231,7 +238,7 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
       m_pool = KalypsoGisPlugin.getDefault().getPool();
 
     m_loadedStatus = STATUS_LOADING;
-    
+
     m_pool.addPoolListener( this, key );
   }
 
@@ -329,38 +336,44 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
       bf.append( m_name );
 
     if( m_obs != null )
-      bf.append( m_obs.getName() ).append( " (" ).append(
+      bf.append( " - " ).append( m_obs.getName() ).append( " (" ).append(
           m_obs.getHref() ).append( ')' );
 
     if( bf.length() == 0 )
       return super.toString();
 
-    return bf.toString();
+    return removeTokens( bf.toString() );
   }
 
-  public boolean isLoading()
+  public boolean isLoading( )
   {
     return m_loadedStatus == STATUS_LOADING;
   }
-  
-  /** Replace tokens in Format-String
+
+  /**
+   * Replace tokens in Format-String
    * 
    * <dl>
-   * <dt>%obsname%</dt><dd>Name der Observation: obs.getName()</dd>
-   * <dt>%axisname%</dt><dd>Name der Wert-Achse: axis.getName()</dd>
-   * <dt>%axistype%</dt><dd>Typ der Wert-Achse: axis.getType()</dd>
-   * <dt>%axisunit%</dt><dd>Einheit der Wert-Achse: axis.getUnit()</dd>
+   * <dt>%obsname%</dt>
+   * <dd>Name der Observation: obs.getName()</dd>
+   * <dt>%axisname%</dt>
+   * <dd>Name der Wert-Achse: axis.getName()</dd>
+   * <dt>%axistype%</dt>
+   * <dd>Typ der Wert-Achse: axis.getType()</dd>
+   * <dt>%axisunit%</dt>
+   * <dd>Einheit der Wert-Achse: axis.getUnit()</dd>
    * </dl>
-   * 
-   * */
-  protected static String replaceTokens( final String formatString, final IObservation obs, final IAxis axis )
+   *  
+   */
+  protected static String replaceTokens( final String formatString,
+      final IObservation obs, final IAxis axis )
   {
     String result = formatString;
-    result = result.replaceAll( "%obsname%", obs.getName() );
-    result = result.replaceAll( "%axisname%", axis.getName() );
-    result = result.replaceAll( "%axistype%", axis.getType() );
-    result = result.replaceAll( "%axisunit%", axis.getUnit() );
-    
+    result = result.replaceAll( TOKEN_OBSNAME, obs.getName() );
+    result = result.replaceAll( TOKEN_AXISNAME, axis.getName() );
+    result = result.replaceAll( TOKEN_AXISTYPE, axis.getType() );
+    result = result.replaceAll( TOKEN_AXISUNIT, axis.getUnit() );
+
     // Metadaten
     int index = 0;
     while( index < result.length() - 1 )
@@ -368,22 +381,57 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
       final int start = result.indexOf( "%metadata-", index );
       if( start == -1 )
         break;
-      
+
       final int stop = result.indexOf( '%', start + 1 );
       if( stop != -1 )
       {
-        final String metaname = result.substring( start + "%metadata-".length(), stop );
+        final String metaname = result.substring(
+            start + "%metadata-".length(), stop );
         final StringBuffer sb = new StringBuffer( result );
-        
-        final String metaval = obs.getMetadataList().getProperty( metaname, "<Metavalue '" + metaname + "' not found>" );
+
+        final String metaval = obs.getMetadataList().getProperty( metaname,
+            "<Metavalue '" + metaname + "' not found>" );
         sb.replace( start, stop + 1, metaval );
-        
+
         result = sb.toString();
       }
-      
+
       index = stop + 1;
     }
-    
+
     return result;
+  }
+
+  /**
+   * Remove the tokens so that name is clean.
+   * 
+   * @param name
+   * @return
+   */
+  protected static String removeTokens( final String name )
+  {
+    String res = name.replaceAll( TOKEN_AXISNAME, "" );
+    res = res.replaceAll( TOKEN_AXISTYPE, "" );
+    res = res.replaceAll( TOKEN_AXISUNIT, "" );
+    res = res.replaceAll( TOKEN_OBSNAME, "" );
+
+    return res;
+  }
+
+  /**
+   * Adds tokens to the themeName in order to produce a default theme name that
+   * looks good enough.
+   * 
+   * @param themeName
+   * @return
+   */
+  public static String prepareDefaultTokens( final String themeName )
+  {
+    String resultName = themeName;
+
+    if( themeName.indexOf( TOKEN_AXISNAME ) == -1 )
+      resultName += " " + TOKEN_AXISNAME;
+
+    return resultName;
   }
 }

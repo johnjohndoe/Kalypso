@@ -82,6 +82,10 @@ public abstract class AbstractViewTemplate extends AbstractTemplateEventProvider
 
   /**
    * Adds a theme.
+   * <p>
+   * 'this' will be a listener on the theme.
+   * <p>
+   * m_ignoreType is set on the theme.
    * 
    * @param theme
    */

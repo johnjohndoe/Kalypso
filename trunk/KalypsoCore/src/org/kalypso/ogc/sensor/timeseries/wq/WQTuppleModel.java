@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq;
 
 import java.util.Date;
@@ -48,6 +48,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFunction;
@@ -60,8 +61,9 @@ import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
 public class WQTuppleModel extends AbstractTuppleModel
 {
   private final static Double NaN = new Double( Double.NaN );
+
   private final static Double ZERO = new Double( 0 );
-  
+
   private final ITuppleModel m_model;
 
   private final IAxis m_srcAxis;
@@ -99,7 +101,7 @@ public class WQTuppleModel extends AbstractTuppleModel
       final WechmannGroup wsets )
   {
     super( axes );
-    
+
     m_model = model;
     m_wsets = wsets;
 
@@ -153,8 +155,8 @@ public class WQTuppleModel extends AbstractTuppleModel
             double q = WechmannFunction.computeQ( set.getForW( w ), w );
             // just leave 3 decimals
             // TODO Q only has 3 decimals, is this ok?
-            q = ((double)((int)(q * 1000))) / 1000;
-            value = new Double( q );            
+            q = ((double) ((int) (q * 1000))) / 1000;
+            value = new Double( q );
           }
           else if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
           {
@@ -197,7 +199,6 @@ public class WQTuppleModel extends AbstractTuppleModel
     {
       final Date d = (Date) m_model.getElement( index, m_dateAxis );
 
-     
       final WechmannSet set = m_wsets.getFor( d );
 
       if( axis.getType().equals( TimeserieConstants.TYPE_RUNOFF ) )
@@ -226,8 +227,8 @@ public class WQTuppleModel extends AbstractTuppleModel
 
       m_values.put( new Integer( index ), element );
     }
-
-    m_model.setElement( index, element, axis );
+    else
+      m_model.setElement( index, element, axis );
   }
 
   /**
@@ -243,22 +244,53 @@ public class WQTuppleModel extends AbstractTuppleModel
 
     return m_model.indexOf( element, axis );
   }
-  
-  public IAxis getDestAxis()
+
+  public IAxis getDestAxis( )
   {
     return m_destAxis;
   }
-  public IAxis getSrcAxis()
+
+  public IAxis getSrcAxis( )
   {
     return m_srcAxis;
   }
-  public WechmannGroup getWsets()
+
+  public WechmannGroup getWsets( )
   {
     return m_wsets;
   }
 
-  public IAxis getDateAxis()
+  public IAxis getDateAxis( )
   {
     return m_dateAxis;
+  }
+
+  /**
+   * Creates a TuppleModel from a potential WQTuppleModel for storing
+   * the values back in the original observation.
+   * 
+   * @param values
+   * @param axes
+   * @return
+   * @throws SensorException
+   */
+  public static ITuppleModel reverse( ITuppleModel values, IAxis[] axes )
+      throws SensorException
+  {
+    final SimpleTuppleModel stm = new SimpleTuppleModel( axes );
+
+    for( int i = 0; i < values.getCount(); i++ )
+    {
+      final Object[] tupple = new Object[axes.length];
+
+      // straighforward: simply take the values for the axes of the original
+      // observation, not the generated W/Q
+      for( int j = 0; j < axes.length; j++ )
+        tupple[ stm.getPositionFor(axes[j]) ] = values.getElement( i, axes[j] );
+      
+      stm.addTupple( tupple );
+    }
+
+    return stm;
   }
 }
