@@ -42,7 +42,7 @@ public class ZmlLoader extends AbstractLoader
     try
     {
       if( type.equals( "relative" ) )
-        url = project.getFile( location ).getLocation().toFile().toURL();
+        url = project.findMember( location ).getLocation().toFile().toURL();
       else if( type.equals( "absolute" ) )
         url = new URL( location );
       else
