@@ -86,13 +86,14 @@ public class JMSchemaTest extends TestCase
   //  {
   //    loadSchemaAndCompareIt( "namodell_schema.xsd", "namodell_schema.txt" );
   //  }
+
   public void testReadingSchema() throws Exception
   {
     try
     {
       loadSchemaAndCompareIt( "spreemodell/modell.xsd", "spreemodell/modell.txt" );
-      //      loadSchemaAndCompareIt( "namodellV3.xsd", "namodellV3.txt" );
-      //      loadSchemaAndCompareIt( "namodellV2.xsd", "namodellV2.txt" );
+      loadSchemaAndCompareIt( "namodell/namodellV4.xsd", "namodell/namodellV4.txt" );
+      loadSchemaAndCompareIt( "namodell/namodellV3.xsd", "namodell/namodellV3.txt" );
     }
     catch( Exception e )
     {
@@ -129,8 +130,8 @@ public class JMSchemaTest extends TestCase
   {
     //    InputSource schemaSource = new InputSource(
     // getClass().getResourceAsStream( xsdFile ) );
-    //    InputSource gmlSource = new InputSource( getClass().getResourceAsStream(
-    // gmlFile ) );
+    //    InputSource gmlSource = new InputSource(
+    // getClass().getResourceAsStream( gmlFile ) );
     ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
     CS_CoordinateSystem crs = Adapters.getDefault().export( csFac.getCSByName( "EPSG:4326" ) );
 
@@ -162,29 +163,30 @@ public class JMSchemaTest extends TestCase
 
     String result = getIndent( indent ) + "--+" + ft.getNamespace() + ":" + ft.getName()
         + " FeatureType ";
-    result=result+ annotationToString(indent,ft.getAnnotationMap());
-    FeatureType[] childs = ft.getChildren();
-
+    result = result + annotationToString( indent, ft.getAnnotationMap() );
+    final String substitutionGroup = ft.getSubstitutionGroup();
+    if( substitutionGroup != null )
+      result = result + getIndent( indent ) + "    substitutiongrup:" + substitutionGroup;
     result = result + getIndent( indent + 1 ) + "-+props:"
         + toString( indent, ft, ft.getProperties() );
 
-    if( childs != null && childs.length > 0 )
-      result = result + toString( indent + 1, childs );
+    //    if(childs!=null && childs.length > 0 )
+    //    result = result + toString( indent + 1, childs );
 
     return result;
   }
 
   private String annotationToString( final int indent, final Map annotationMap )
   {
-    StringBuffer result=new StringBuffer();
+    StringBuffer result = new StringBuffer();
     for( final Iterator iter = annotationMap.values().iterator(); iter.hasNext(); )
     {
       final Annotation entry = (Annotation)iter.next();
-      result.append(getIndent(indent)+"lang:  "+entry.getLang());
-      result.append(getIndent(indent)+"label: "+entry.getLabel());
-      result.append(getIndent(indent)+"toolt: "+entry.getTooltip());
-      result.append(getIndent(indent)+"descr: "+entry.getDescription());
-    }                    
+      result.append( getIndent( indent ) + "lang:  " + entry.getLang() );
+      result.append( getIndent( indent ) + "label: " + entry.getLabel() );
+      result.append( getIndent( indent ) + "toolt: " + entry.getTooltip() );
+      result.append( getIndent( indent ) + "descr: " + entry.getDescription() );
+    }
     return result.toString();
   }
 
@@ -207,7 +209,8 @@ public class JMSchemaTest extends TestCase
     int minOccurs = parent.getMinOccurs( ftpPos );
     String result = getIndent( indent, " +" + ftp.getNamespace() + ":" + ftp.getName(), 55 )
         + ftp.getType();
-    result=result+ annotationToString(indent,ftp.getAnnotationMap());
+    result = result + annotationToString( indent, ftp.getAnnotationMap() );
+
     //    String result = ( getIndent( indent ) +" +"+
     // ftp.getNamespace()+":"+ftp.getName() + " " )
     //        .substring( 0, indent + 55 )
@@ -217,9 +220,12 @@ public class JMSchemaTest extends TestCase
     {
 
       FeatureAssociationTypeProperty fatp = (FeatureAssociationTypeProperty)ftp;
-      FeatureType linkedFT = fatp.getAssociationFeatureType();
-      result = result + getIndent( indent, "", 55 ) + " -->" + linkedFT.getNamespace() + ":"
-          + linkedFT.getName();
+      FeatureType[] linkedFTs = fatp.getAssociationFeatureTypes();
+      for( int i = 0; i < linkedFTs.length; i++ )
+      {
+        result = result + getIndent( indent, "", 55 ) + " -->" + linkedFTs[i].getNamespace() + ":"
+            + linkedFTs[i].getName();
+      }
     }
     if( ftp instanceof XLinkFeatureTypeProperty )
       result = result + toString( (XLinkFeatureTypeProperty)ftp );

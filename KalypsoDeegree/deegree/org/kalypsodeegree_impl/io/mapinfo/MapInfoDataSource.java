@@ -326,7 +326,7 @@ public class MapInfoDataSource
       FeatureTypeProperty[] ftps = (FeatureTypeProperty[])colAttribs
           .toArray( new FeatureTypeProperty[colAttribs.size()] );
       pointType = FeatureFactory.createFeatureType( null, null, filename.toString() + "_point",
-          ftps );
+          ftps);
     }
     catch( Exception schexp )
     {
@@ -344,7 +344,7 @@ public class MapInfoDataSource
     {
       FeatureTypeProperty[] ftps = (FeatureTypeProperty[])colAttribs
           .toArray( new FeatureTypeProperty[colAttribs.size()] );
-      lineType = FeatureFactory.createFeatureType( null, null, filename.toString() + "_line", ftps );
+      lineType = FeatureFactory.createFeatureType( null, null, filename.toString() + "_line", ftps);
     }
     catch( Exception schexp )
     {

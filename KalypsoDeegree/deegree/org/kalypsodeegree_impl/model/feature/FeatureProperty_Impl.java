@@ -127,13 +127,14 @@ class FeatureProperty_Impl implements FeatureProperty, Serializable
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.3  2004/10/07 14:09:16  doemming
+ * Revision 1.4  2004/10/11 14:44:28  doemming
  * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:57:07  doemming
+ * Revision 1.3 2004/10/07 14:09:16 doemming
  * *** empty log message ***
- * Revision 1.3 2004/08/31 14:09:26 doemming
- * *** empty log message *** Revision 1.2 2004/02/09 07:59:57 poth no message
+ * 
+ * Revision 1.1 2004/09/02 23:57:07 doemming *** empty log message *** Revision
+ * 1.3 2004/08/31 14:09:26 doemming *** empty log message *** Revision 1.2
+ * 2004/02/09 07:59:57 poth no message
  * 
  * Revision 1.1.1.1 2002/09/25 16:00:38 poth no message
  * 

@@ -64,9 +64,9 @@ import org.deegree.model.feature.FeatureTypeProperty;
 public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializable
 {
   private final Map m_annotationMap;
-  
+
   private final String m_namespace;
-  
+
   private final String name;
 
   private final String type;
@@ -77,16 +77,17 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
    * initializes a FeatureTypeProperty with its name its associated type and a
    * boolean variable that says if the propetry maybe <tt>null</tt>
    */
-  protected FeatureTypeProperty_Impl( String name,String namespace, String type, boolean nullable,Map annotationMap)
+  protected FeatureTypeProperty_Impl( String name, String namespace, String type, boolean nullable,
+      Map annotationMap )
   {
-    m_annotationMap=annotationMap;
+    m_annotationMap = annotationMap;
     this.name = name;
-    m_namespace=namespace;
+    m_namespace = namespace;
     this.type = type;
     this.nullable = nullable;
-  
+
   }
-  
+
   /**
    * returns the name of the property
    */
@@ -119,7 +120,7 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
     ret += "nullable = " + nullable + "\n";
     return ret;
   }
-  
+
   public String getNamespace()
   {
     return m_namespace;
@@ -130,7 +131,7 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
    */
   public boolean isGeometryProperty()
   {
-    return type.startsWith("org.deegree.model.geometry.") && !type.endsWith("Envelope");
+    return type.startsWith( "org.deegree.model.geometry." ) && !type.endsWith( "Envelope" );
   }
 
   /**
@@ -138,7 +139,7 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
    */
   public Annotation getAnnotation( String lang )
   {
-    return (Annotation)m_annotationMap.get(lang);
+    return (Annotation)m_annotationMap.get( lang );
   }
 
   /**
@@ -148,23 +149,22 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
   {
     return m_annotationMap;
   }
- 
+
 }
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.4  2004/10/09 18:41:20  belger
+ * Revision 1.5  2004/10/11 14:44:28  doemming
  * *** empty log message ***
- *
- * Revision 1.3  2004/10/07 14:09:16  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:57:07  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 14:07:12
- * doemming *** empty log message *** Revision 1.3 2004/02/09 07:59:57 poth no
- * message
+ * Revision 1.4 2004/10/09 18:41:20
+ * belger *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:16 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:57:07 doemming *** empty log message *** Revision
+ * 1.3 2004/08/31 14:07:12 doemming *** empty log message *** Revision 1.3
+ * 2004/02/09 07:59:57 poth no message
  * 
  * Revision 1.2 2002/11/25 09:32:41 poth no message
  * 

@@ -83,9 +83,9 @@ class FeatureCollection_Impl extends Feature_Impl implements FeatureCollection, 
       int initialCapacity )
   {
     //super( id, featureType, properties );
-    super(featureType,id);
-    for(int i=0;i<properties.length;i++)
-      setProperty(properties[i]);
+    super( featureType, id );
+    for( int i = 0; i < properties.length; i++ )
+      setProperty( properties[i] );
     collection = new ArrayList( initialCapacity );
     FeatureTypeProperty[] ftp = new FeatureTypeProperty[1];
     ftp[0] = FeatureFactory.createFeatureTypeProperty( "features",

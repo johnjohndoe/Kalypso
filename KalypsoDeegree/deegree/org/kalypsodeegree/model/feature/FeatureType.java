@@ -97,6 +97,9 @@ public interface FeatureType
   public int getPropertyPosition( String name );
   public int getDefaultGeometryPropertyPosition();
   
+  public String getSubstitutionGroup();
+ 
+  
   public Annotation getAnnotation(String langKey);
   public Map getAnnotationMap();
 }

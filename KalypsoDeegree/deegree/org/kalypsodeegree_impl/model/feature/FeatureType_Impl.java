@@ -66,9 +66,12 @@ class FeatureType_Impl implements FeatureType, Serializable
 {
   private final String m_namespace;
 
+  private final String m_substitutionGroup;
+
   // private final FeatureType[] children;
-  // es werden keine children gebraucht, da keine featuretypes direkt unterhalb
-  // eines featuretypes sein kann, es können höchstens featureassociationtypes
+  // es werden keine children gebraucht, da keine featuretypes direkt
+  // unterhalb
+  // eines featuretypes sein kann, es k?nnen h?chstens featureassociationtypes
   // unterhalb von featuretype sein, diese werden
   // jedoch von featuretypeproperty abgeleitet
 
@@ -86,9 +89,10 @@ class FeatureType_Impl implements FeatureType, Serializable
   private final Map m_annotationsMap;
   
   public FeatureType_Impl( String name, String namespace, FeatureTypeProperty[] properties,
-      int[] minOccurs, int[] maxOccurs,Map annotationMap )
+      int[] minOccurs, int[] maxOccurs, String substitutionGroup ,Map annotationMap)
   {
-    m_annotationsMap=annotationMap;
+      m_annotationsMap=annotationMap;
+    m_substitutionGroup = substitutionGroup;
     this.m_name = name;
     m_namespace = namespace;
     this.m_properties = properties;
@@ -187,7 +191,7 @@ class FeatureType_Impl implements FeatureType, Serializable
     return m_maxOccurs[pos];
   }
 
-  public int getPropertyPosition( String name ) 
+  public int getPropertyPosition( String name )
   {
     return ( (int[])m_posOfFTP.get( name ) )[0];
   }
@@ -199,7 +203,7 @@ class FeatureType_Impl implements FeatureType, Serializable
   {
     return m_defaultGeometryPropPos;
   }
-
+  
   /**
    * @see org.deegree.model.feature.FeatureType#getAnnotation(java.lang.String)
    */
@@ -214,5 +218,11 @@ class FeatureType_Impl implements FeatureType, Serializable
   public Map getAnnotationMap()
   {
     return m_annotationsMap;
+  }
+
+  public String getSubstitutionGroup()
+  {
+    return m_substitutionGroup;
+
   }
 }

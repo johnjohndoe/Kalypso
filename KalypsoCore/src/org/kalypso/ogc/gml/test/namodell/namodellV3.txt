@@ -1,0 +1,148 @@
+
+--+http://www.tuhh.de/kalypsoNA:CatchmentCollection FeatureType 
+    substitutiongrup:http://www.opengis.net/gml:_Feature
+  |-+props:
+  | +http://www.tuhh.de/kalypsoNA:catchmentMember      FeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoNA:Catchment [0..unbounded]
+--+http://www.tuhh.de/kalypsoNA:NaModell FeatureType 
+  |-+props:
+  | +http://www.opengis.net/gml:description            java.lang.String [0..1]
+  | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
+  | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
+  | +http://www.tuhh.de/kalypsoNA:CatchmentCollectionMeFeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoNA:CatchmentCollection [1..1]
+  | +http://www.tuhh.de/kalypsoNA:VirtualChannelCollectFeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoNA:VirtualChannelCollection [1..1]
+  | +http://www.tuhh.de/kalypsoNA:KMChannelCollectionMeFeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoNA:KMChannelCollection [1..1]
+  | +http://www.tuhh.de/kalypsoNA:NodeCollectionMember FeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoNA:NodeCollection [1..1]
+--+http://www.tuhh.de/kalypsoNA:NodeCollection FeatureType 
+    substitutiongrup:http://www.opengis.net/gml:_Feature
+  |-+props:
+  | +http://www.tuhh.de/kalypsoNA:nodeMember           FeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoNA:Node [0..unbounded]
+--+http://www.tuhh.de/kalypsoNA:Node FeatureType 
+    substitutiongrup:http://www.opengis.net/gml:_Feature
+  |-+props:
+  | +http://www.opengis.net/gml:description            java.lang.String [0..1]
+  | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
+  | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
+  | +http://www.tuhh.de/kalypsoNA:num                  java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:channelMember        FeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoNA:VirtualChannel
+  |                                                     -->http://www.tuhh.de/kalypsoNA:KMChannel
+  |                                                     -->http://www.tuhh.de/kalypsoNA:_AbstractChannel [0..1]
+--+http://www.tuhh.de/kalypsoNA:VirtualChannel FeatureType 
+    substitutiongrup:http://www.tuhh.de/kalypsoNA:_AbstractChannel
+  |-+props:
+  | +http://www.opengis.net/gml:description            java.lang.String [0..1]
+  | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
+  | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
+  | +http://www.tuhh.de/kalypsoNA:inum                 java.lang.String [1..1]
+--+http://www.tuhh.de/kalypsoNA:KMChannelCollection FeatureType 
+    substitutiongrup:http://www.opengis.net/gml:_Feature
+  |-+props:
+  | +http://www.tuhh.de/kalypsoNA:kmChannelMember      FeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoNA:KMChannel [0..unbounded]
+--+http://www.tuhh.de/kalypsoNA:VirtualChannelCollection FeatureType 
+    substitutiongrup:http://www.opengis.net/gml:_Feature
+  |-+props:
+  | +http://www.tuhh.de/kalypsoNA:virtualChannelMember FeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoNA:VirtualChannel [0..unbounded]
+--+http://www.tuhh.de/kalypsoNA:KMParameter FeatureType 
+  |-+props:
+  | +http://www.tuhh.de/kalypsoNA:qrk                  java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:rkf                  java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:rnf                  java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:rkv                  java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:rnv                  java.lang.String [1..1]
+--+http://www.tuhh.de/kalypsoNA:Catchment FeatureType 
+    substitutiongrup:http://www.opengis.net/gml:_Feature
+  |-+props:
+  | +http://www.opengis.net/gml:description            java.lang.String [0..1]
+  | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
+  | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
+  | +http://www.tuhh.de/kalypsoNA:Ort                  org.deegree.model.geometry.GM_Polygon [1..1]
+  | +http://www.tuhh.de/kalypsoNA:inum                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:ispk                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:text                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:flaech               java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:pns                  java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:kurzzeit             java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:namfn                java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:langzeit             java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:faktn                java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:namft                java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:namept               java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:namfzf               java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:namhydro             java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:snowtype             java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:ftem                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:fver                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:vsg                  java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:anzlayy              java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:bimax                java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:bianf                java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:izkn_vers            java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:tint                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:rintmx               java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:bodenkorrekturmember FeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoNA:bodenschichtkorrektur [1..10]
+  | +http://www.tuhh.de/kalypsoNA:f_eva                java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:aint                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:aigw                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:fint                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:ftra                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:retvs                java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:retob                java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:retint               java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:retbas               java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:retgw                java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:retklu               java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:igwzu                java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:grundwasserabflussMemFeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoNA:grundwasserabfluss [1..6]
+  | +http://www.tuhh.de/kalypsoNA:EntwaesserungsKnotenMFeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoNA:Node [0..4]
+  | +http://www.tuhh.de/kalypsoNA:hgru                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:hgro                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:rtr                  java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:pors                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:gwsent               java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:klupor               java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:izkn                 java.lang.String [1..1]
+--+http://www.tuhh.de/kalypsoNA:grundwasserabfluss FeatureType 
+    substitutiongrup:http://www.opengis.net/gml:_Feature
+  |-+props:
+  | +http://www.opengis.net/gml:description            java.lang.String [0..1]
+  | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
+  | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
+  | +http://www.tuhh.de/kalypsoNA:ngwzu                FeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoNA:Catchment [1..1]
+  | +http://www.tuhh.de/kalypsoNA:gwwi                 java.lang.String [1..1]
+--+http://www.tuhh.de/kalypsoNA:bodenschichtkorrektur FeatureType 
+    substitutiongrup:http://www.opengis.net/gml:_Feature
+  |-+props:
+  | +http://www.opengis.net/gml:description            java.lang.String [0..1]
+  | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
+  | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
+  | +http://www.tuhh.de/kalypsoNA:cinh                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:cind                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:cex                  java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:bmax                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:banf                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:fko                  java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:retlay               java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:evalay               java.lang.String [1..1]
+--+http://www.tuhh.de/kalypsoNA:KMChannel FeatureType 
+    substitutiongrup:http://www.tuhh.de/kalypsoNA:_AbstractChannel
+  |-+props:
+  | +http://www.opengis.net/gml:description            java.lang.String [0..1]
+  | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
+  | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
+  | +http://www.tuhh.de/kalypsoNA:inum                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:qfmax                java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:c                    java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:KMParameterMember    FeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoNA:KMParameter [5..5]

@@ -45,11 +45,12 @@ public class Feature_Impl implements Feature
 
   private final String m_id;
 
-    // fields from old KalypsoFeature
-    private int mySelection=0;
-    private transient DisplayElement myDE[][] = null;
+  // fields from old KalypsoFeature
+  private int mySelection = 0;
 
-    protected Feature_Impl( FeatureType ft, String id )
+  private transient DisplayElement myDE[][] = null;
+
+  protected Feature_Impl( FeatureType ft, String id )
   {
     if( ft == null )
       throw new UnsupportedOperationException( "must provide a featuretype" );
@@ -176,8 +177,8 @@ public class Feature_Impl implements Feature
   public GM_Object getDefaultGeometryProperty()
   {
     int pos = m_featureType.getDefaultGeometryPropertyPosition();
-    if(pos<0)
-    	return null;
+    if( pos < 0 )
+      return null;
     Object prop = m_properties[pos];
     if( prop instanceof List )
     {
@@ -324,39 +325,38 @@ public class Feature_Impl implements Feature
   {
     return "                                                  ".substring( 0, indent * 4 );
   }
-  
-  
-  // methoded from old KalypsoFeature
-  
-  public boolean select(int selectID)
-  {
-    if(isSelected(selectID))
-     return false;
-    
-      mySelection|=selectID;
-      return true;
-     
-     }
 
-  public boolean unselect(int selectID)
+  // methoded from old KalypsoFeature
+
+  public boolean select( int selectID )
   {
-    if(!isSelected(selectID))
+    if( isSelected( selectID ) )
       return false;
-    mySelection&=~selectID;
+
+    mySelection |= selectID;
+    return true;
+
+  }
+
+  public boolean unselect( int selectID )
+  {
+    if( !isSelected( selectID ) )
+      return false;
+    mySelection &= ~selectID;
     return true;
   }
-  
-  public boolean toggle(int selectID)
+
+  public boolean toggle( int selectID )
   {
-   mySelection^=selectID;  
-   return true;
+    mySelection ^= selectID;
+    return true;
   }
-  
-  public boolean isSelected(int selectID)
+
+  public boolean isSelected( int selectID )
   {
-    return selectID==(mySelection&selectID);
+    return selectID == ( mySelection & selectID );
   }
-  
+
   public void setDisplayElements( UserStyle styles[] )
   {
     myDE = new DisplayElement[styles.length][];
@@ -391,7 +391,7 @@ public class Feature_Impl implements Feature
       myDE[styleNo] = null;
     }
   }
-  
+
   public void paint( Graphics g, GeoTransform projection, int styleNo )
   {
     if( myDE[styleNo] != null )
@@ -406,5 +406,5 @@ public class Feature_Impl implements Feature
         if( myDE[styleNo][i].doesScaleConstraintApply( scale ) )
           myDE[styleNo][i].paint( g, projection );
   }
-  
+
 }

@@ -27,8 +27,8 @@ public class FeatureTypeBuilder
 {
   private GMLSchema m_schema;
 
-  private final Map m_annotationMap=new HashMap();
-  
+  private final Map m_annotationMap = new HashMap();
+   
   private final List m_enumeration = new ArrayList();
 
   private final List m_featureProtoTypes = new ArrayList();
@@ -47,7 +47,9 @@ public class FeatureTypeBuilder
 
   private boolean m_isFeatureAssociation = false;
 
-  private boolean m_isCustomType = false;
+  private boolean m_isCutoumType = false;
+
+  private String m_substitutionGroup = null;
 
   public FeatureTypeBuilder( GMLSchema schema, Node node ) throws Exception
   {
@@ -66,6 +68,19 @@ public class FeatureTypeBuilder
     SchemaAttribute nameAttribute = new SchemaAttribute( m_schema, XMLHelper.getAttributeNode(
         node, "name" ) );
     m_name = nameAttribute.getValue();
+
+    // set substitutiongroup
+    final Node substitutionGroupNode = XMLHelper.getAttributeNode( node, "substitutionGroup" );
+
+    if( substitutionGroupNode != null )
+    {
+      final SchemaAttribute substitueAttribute = new SchemaAttribute( m_schema,
+          substitutionGroupNode );
+      String substitutionNS = substitueAttribute.getValueNS();
+      String substitutionName = substitueAttribute.getValue();
+      m_substitutionGroup = substitutionNS + ":" + substitutionName;
+    }
+
     // set Type
     SchemaAttribute typeAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode( node,
         "type" ) );
@@ -115,7 +130,7 @@ public class FeatureTypeBuilder
       m_typeName = typeHandler.getClassName();
       //      if(m_typeName==null)
       //      	System.out.println("debug");
-      m_isCustomType = true;
+      m_isCutoumType = true;
       return;
     }
     // type is XML SCHEMA TYPE // TODO let typeHandler do this
@@ -253,20 +268,25 @@ public class FeatureTypeBuilder
       if( associateableFeatureType instanceof FeatureType )
       {
         ftp = (FeatureType)associateableFeatureType;
-        return new FeatureAssociationTypeProperty_Impl( m_name, m_namespace, m_typeName, true, ftp,m_annotationMap );
+        return new FeatureAssociationTypeProperty_Impl( m_name, m_namespace, m_typeName, true,
+            m_schema, ftp,m_annotationMap );
       }
       if( associateableFeatureType instanceof FeatureTypeBuilder )
       {
         ftp = ( (FeatureTypeBuilder)associateableFeatureType ).toFeatureType();
-        return new FeatureAssociationTypeProperty_Impl( m_name, m_namespace, m_typeName, true, ftp,m_annotationMap );
+        return new FeatureAssociationTypeProperty_Impl( m_name, m_namespace, m_typeName, true,
+            m_schema, ftp,m_annotationMap );
       }
       if( associateableFeatureType instanceof Node )
       {
         return new FeatureAssociationTypeProperty_Impl( m_name, m_namespace, m_typeName, true,
-            m_schema, (Node)associateableFeatureType ,m_annotationMap);
-        //Object o=m_schema.getMappedType((Node)associateableFeatureType);
+            m_schema, (Node)associateableFeatureType,m_annotationMap );
+        //Object
+        // o=m_schema.getMappedType((Node)associateableFeatureType);
         //  x ftp=(FeatureType)o;
       }
+      if( associateableFeatureType instanceof FeatureTypeProperty )
+        return (FeatureTypeProperty)associateableFeatureType;
       throw new UnsupportedOperationException();
     }
     if( m_enumeration.size() > 0 )
@@ -280,7 +300,7 @@ public class FeatureTypeBuilder
     if( m_typeName == null )
       System.out.println( "debug" );
 
-    if( m_isCustomType )
+    if( m_isCutoumType )
       return new CustoumFeatureTypeProperty( m_name, m_namespace, m_typeName, true,m_annotationMap );
     return FeatureFactory.createFeatureTypeProperty( m_name, m_namespace, m_typeName, true,m_annotationMap );
   }
@@ -319,6 +339,7 @@ public class FeatureTypeBuilder
     for( int i = 0; i < ftProperties.length; i++ )
     {
       String key = ftProperties[i].getNamespace() + ":" + ftProperties[i].getName();
+      //      System.out.println("KEY:"+key);
       minOccurs[i] = Integer.parseInt( (String)m_minOccurs.get( key ) );
       String max = (String)m_maxOccurs.get( key );
       if( "unbounded".equals( max ) )
@@ -327,7 +348,7 @@ public class FeatureTypeBuilder
         maxOccurs[i] = Integer.parseInt( max );
     }
     return FeatureFactory.createFeatureType( m_name, m_namespace, ftProperties, minOccurs,
-        maxOccurs,m_annotationMap );
+        maxOccurs, m_substitutionGroup,m_annotationMap );
   }
 
   public boolean isFeaturePropertyType()
@@ -355,7 +376,8 @@ public class FeatureTypeBuilder
     case GMLSchemaFactory.XLINK_TYPE_SIMPLE:
     {
       //        <attributeGroup name="simpleLink">
-      //        <attribute name="type" type="string" fixed="simple" form="qualified"/>
+      //        <attribute name="type" type="string" fixed="simple"
+      // form="qualified"/>
       m_XLinkProp = new XLinkFeatureTypeProperty( m_name, m_namespace,
           XLinkFeatureTypeProperty.XLINK_SIMPLE, true,m_annotationMap );
 
@@ -382,7 +404,7 @@ public class FeatureTypeBuilder
    */
   public boolean isCustoumType()
   {
-    return m_isCustomType;
+    return m_isCutoumType;
   }
 
   public void addAnnotation( Annotation annotation )

@@ -5,5 +5,5 @@ package org.deegree.model.feature;
  */
 public interface FeatureAssociationTypeProperty extends FeatureTypeProperty
 {
-  public FeatureType getAssociationFeatureType();
+  public FeatureType[] getAssociationFeatureTypes();
 }
