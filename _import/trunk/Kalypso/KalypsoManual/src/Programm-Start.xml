@@ -16,8 +16,8 @@
   Die Benutzerrechte werden dabei innerhalb des Programmsystems PSICompact
   verwaltet und lediglich als Information an KALYPSO weitergereicht.</para>
 
-  <para>Der Programm-Start von KALYPSO erfolgt entweder durch Doppelklick auf
-  das Desktop-Symbol KALYPSO.</para>
+  <para>Der Programm-Start von KALYPSO erfolgt durch Doppelklick auf das
+  Desktop-Symbol KALYPSO.</para>
 
   <section id="kalypso_startseite">
     <sectioninfo>
@@ -65,7 +65,7 @@
       </listitem>
 
       <listitem>
-        <para>Zeitreihen-Ablage: Oberfläche zur Verwaltung von
+        <para>KALYPSO Zeitreihenbrowser: Oberfläche zur Verwaltung von
         Zeitreihen</para>
       </listitem>
     </itemizedlist>

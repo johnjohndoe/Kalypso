@@ -28,7 +28,7 @@
         </mediaobject>
       </figure>
 
-      <para><emphasis>Tabellen</emphasis></para>
+      <para><emphasis>Verzeichnis Tabellen</emphasis></para>
 
       <para>Die Eingabe bzw. Änderung von Parametern erfolgt in Tabellen. Die
       Editierungsmöglichkeiten von Tabellen werden in <xref
@@ -41,40 +41,40 @@
         <listitem>
           <para>Einzugsgebiete</para>
 
-          <para>Parameter für die Pegelgebiete, die vom Modell als N-A-Modell
-          berechnet werden</para>
+          <para>Parameter für die Pegelgebiete, die als N-A-Modell berechnet
+          werden.</para>
         </listitem>
 
         <listitem>
           <para>Flussmodelle</para>
 
-          <para>Parameter für die Pegelgebiete, die vom Modell als
-          Flusslaufmodell berechnet werden</para>
+          <para>Parameter für die Gewässerabschnitte, die als Flusslaufmodell
+          berechnet werden.</para>
         </listitem>
 
         <listitem>
           <para>Flutungen</para>
 
           <para>Definition der Zeitreihen für Abzweigungen aus dem
-          Modell</para>
+          Modell.</para>
         </listitem>
 
         <listitem>
           <para>Talsperren</para>
 
-          <para>Parameter für die im Modell implentierten Rückhaltebecken
-          (Talsperren)</para>
+          <para>Parameter für die im Modell implentierten
+          Rückhaltebecken/Talsperren.</para>
         </listitem>
 
         <listitem>
           <para>Zuflüsse</para>
 
           <para>Definition von Zeitreihen für Einleitungen in das
-          Modell</para>
+          Modell.</para>
         </listitem>
       </itemizedlist>
 
-      <para><emphasis>Ordner Karten</emphasis></para>
+      <para><emphasis>Verzeichnis Karten</emphasis></para>
 
       <para>Im Vorhersagemodell Spree ist standardmäßig eine Karten-Vorlage
       enthalten, die das Einzugsgebiet der Spree im Lageplan zeigt. Angezeigt
@@ -85,12 +85,13 @@
       vorbehalten. Zum Bearbeiten von Kartenvorlagen wird auf die Technische
       Dokumentation verwiesen.</para>
 
-      <para><emphasis>Odner Grunddaten</emphasis></para>
+      <para><emphasis>Verzeichnis Grunddaten</emphasis></para>
 
       <para>Das Verzeichnis Grunddaten enthält Geoinformationen über das
       Einzugsgebiet der Spree in Form von Shape-Files. Diese können genutzt
-      werden, um Lagepläne in Form von Karten zu erstellen (siehe Technische
-      Dokumentation). Folgende Themen sind im Projekt enthalten:</para>
+      werden, um Lagepläne in Form von Kartenvorlagen zu erstellen (siehe
+      Technische Dokumentation). Folgende Themen sind im Projekt
+      enthalten:</para>
 
       <itemizedlist>
         <listitem>
@@ -131,41 +132,42 @@
       </figure>
 
       <para>Unterschieden wird zwischen Zeitreihen, die gemessene
-      Pegelganglinien beschreiben und Modelldateien, die Parameter zur
+      Pegelganglinien beschreiben und Steuerdateien, die Parameter zur
       Modellberechnung enthalten. Die Zeitreihen werden in das gleichnamige
       Verzeichnis abgelegt. Für jeden Vorhersagepegel wird eine Zeitreihe mit
       gemessenen Abflüssen aus PSICompact geladen und in das Verzeichnis
-      gespeichert. Folgende Tabellen sind im Verzeichnis der Rechenvariante
-      enthalten:</para>
+      gespeichert. Folgende Tabellen/Steuerdateien sind im Verzeichnis der
+      Rechenvariante enthalten:</para>
 
       <itemizedlist>
         <listitem>
           <para>Anfangsvolumen</para>
 
-          <para>Eingabe der Anfgangsstauvolumina der Talsperren</para>
+          <para>Eingabe der Anfgangsstauvolumina der Talsperren.</para>
         </listitem>
 
         <listitem>
           <para>Bodenfeuchten</para>
 
           <para>Anfangsbodenfeuchten für die N-A-Modelle (inkl.
-          Min-Max-Werte)</para>
+          Min-Max-Werte/Plausibilitätsintervalle).</para>
         </listitem>
 
         <listitem>
           <para>Flusslaufparameter</para>
 
           <para>Modellparameter der Flusslaufmodelle (Niveau- und
-          Laufzeitkorrektur)</para>
+          Laufzeitkorrektur).</para>
         </listitem>
       </itemizedlist>
 
       <para>Nach erfolgreich durchgeführter Berechnung werden die
-      Ergebnisdateien im Unterordner <emphasis
+      Ergebnisdateien im Unterverzeichnis <emphasis
       role="bold">Ergebnisse</emphasis> gespeichert. Die Speicherung der
       Dateien erfolgt im lokalen Arbeitsverzeichnis und muss ggfs. vom
       Anwender auf dem Server gespeichert werden (siehe <xref
-      linkend="modellverwaltung" />).</para>
+      linkend="modellverwaltung" /> und <xref
+      linkend="spree_ergebnisbearbeitung" />).</para>
     </section>
 
     <section id="spree_modellparameter">
@@ -379,10 +381,10 @@
         </mediaobject>
       </figure>
 
-      <para><emphasis>Tabellen</emphasis></para>
+      <para><emphasis>Verzeichnis Modell_Tabellen</emphasis></para>
 
-      <para>Die Eingabe bzw. Änderung von Parametern erfolgt in Tabellen. Die
-      Editierungsmöglichkeiten von Tabellen wird in <xref
+      <para>Die Eingabe bzw. Änderung von Modellparametern erfolgt in
+      Tabellen. Die Editierungsmöglichkeiten von Tabellen wird in <xref
       linkend="ansichtssteuerung" /> beschrieben. Die in den Tabellen
       enthaltenen Modellparameter werden in <xref
       linkend="weisse_elster_modellparameter" /> erläutert. Folgende Tabellen
@@ -393,13 +395,14 @@
           <para>Teilgebiete</para>
 
           <para>Parameter, die den einzelnen Teilgebieten zugeordnet
-          werden</para>
+          werden.</para>
         </listitem>
 
         <listitem>
           <para>Gewässer</para>
 
-          <para>Parameter für die Gerinnestränge</para>
+          <para>Parameter für die Gerinnestränge (hauptsächlich zur Berechnung
+          der Gerinneretention).</para>
         </listitem>
 
         <listitem>
@@ -409,15 +412,16 @@
         </listitem>
       </itemizedlist>
 
-      <para><emphasis>Ordner Karten</emphasis></para>
+      <para><emphasis>Verzeichnis Modell_Karten</emphasis></para>
 
-      <para>Im Vorhersagemodell Weiße Elster sind standardmäßig zwei Karten
-      enthalten: einen Lageplan des Einzugsgebietes der Weißen Elster, der
-      gleichzeitig alle Modellelemente (Teilgebiete, Knoten, Gerinnestränge)
-      enthält. Zum Anderen ist eine Übersichtskarte mit den für die
-      Modellberechnungen verwendeten Ombrometern enthalten. Dargestellt wird
-      jeweils das gesamte Einzugsgebiet mit der Unterteilung in Teilgebiete.
-      In der Gebietsansicht werden neben den Gewässern auch die
+      <para>Im Vorhersagemodell Weiße Elster sind standardmäßig zwei
+      Kartenvorlagen enthalten: ein Lageplan des Einzugsgebiets der Weißen
+      Elster, der gleichzeitig alle Modellelemente (Teilgebiete, Knoten,
+      Gerinnestränge) enthält. Zum Anderen ist eine Übersichtskarte mit den
+      für das Niederschlagsmodell (Niederschlagsmessungen -&gt;
+      Gebietsniederschläge) verwendeten Ombrometern enthalten. Dargestellt
+      wird jeweils das gesamte Einzugsgebiet mit der Unterteilung in
+      Teilgebiete. In der Gebietsansicht werden neben den Gewässern auch die
       Vorhersagepegel dargstellt. Alle Systemelemente sind mit der
       Nummerierung versehen, die im Modell verwendet wird. Die Kartenansichten
       und die dargestellten Elemente können beliebig geändert werden (siehe
@@ -448,14 +452,15 @@
       </figure>
 
       <para>Um an einem Modellknoten bzw. Pegel Ergebnisse aus Berechnungen
-      auszugeben, muss in der <emphasis>expertTabelleKnoten.gtt</emphasis> ein
-      Häkchen in der Spalte generateResult gesetzt werden. Die Anzahl der
-      gesetzten Häkchen ist dabei beliebig. Für jeden gewählten Ausgabeknoten
-      wird nach der Berechnung eine Zeitreihe im Unterordner
-      <guimenu>Ergebnisse</guimenu> abgelegt.</para>
+      auszugeben, muss in der <emphasis>TabelleKnoten.gtt</emphasis> ein
+      Häkchen in der Spalte <emphasis>berechnen</emphasis><emphasis> (generate
+      Result)</emphasis> gesetzt werden. Die Anzahl der gesetzten Häkchen ist
+      dabei beliebig. Für jeden gewählten Ausgabeknoten wird nach der
+      Berechnung eine Zeitreihe im Unterordner <guimenu>Ergebnisse</guimenu>
+      abgelegt.</para>
 
-      <para>Die Steuerdaten der Berechnung können in Tabelle
-      <emphasis>expertControl.gtt</emphasis> geändert werden. Neben den
+      <para>Die Steuerdaten der Berechnung können in der Eingabemaske
+      <emphasis>expertControl.gft</emphasis> geändert werden. Neben den
       Zeitpunkten für den Start der Berechnung und das Ende der Simulation
       kann auch der Berechnungszeitschritt vorgegeben werden. Daneben folgen
       die Ausgabeoptionen für die Berechnung. Es können Zeitreihen für den
@@ -463,15 +468,19 @@
       Eingangszeitreihen (Niederschlag, Temperatur, Verdunstung) für ein
       Teilgebiet und weitere Rechenergebnisse ausgegeben werden. Die
       Kalibrierungsfaktoren für den Vorhersagewizard können im Expertenmodus
-      ebenfalls verwendet werden. In der Tabelle befinden sich die
-      entsprechenden Spalten.</para>
+      ebenfalls verwendet werden. In der Eingabemaske befinden sich die
+      entsprechenden Felder. Nach Änderung der Steuerdaten werden die
+      Zeitreihen nicht automatisch aktualisiert. Dies muss vom Anwender über
+      <guimenu>Rechenvariante -&gt; Zeitreihen</guimenu> aktualisieren
+      vorgenommen werden.</para>
 
       <para>Nach erfolgreich durchgeführter Berechnung werden die
       Ergebnisdateien im Unterordner <emphasis
       role="bold">Ergebnisse</emphasis> gespeichert. Die Speicherung der
       Dateien erfolgt im lokalen Arbeitsverzeichnis und muss ggfs. vom
-      Anwender auf dem Server aktualisiert werden (siehe Technische
-      Dokumentation).</para>
+      Anwender auf dem Server aktualisiert werden (siehe <xref
+      linkend="modellverwaltung" /> und <xref
+      linkend="weisse_elster_6" />).</para>
     </section>
 
     <section id="weisse_elster_modellparameter">
@@ -608,7 +617,7 @@
 
               <entry>[-]</entry>
 
-              <entry>Korrekturfakor Temperatur (additiv)</entry>
+              <entry>Korrekturfaktor Temperatur (additiv)</entry>
             </row>
 
             <row>
@@ -825,7 +834,7 @@
 
               <entry>[m]</entry>
 
-              <entry>minimale Gerinnehöhe GW-Speicher</entry>
+              <entry>minimale Stauhöhe GW-Speicher</entry>
             </row>
 
             <row>
@@ -833,7 +842,7 @@
 
               <entry>[m]</entry>
 
-              <entry>maximale Gerinnehöhe GW-Speicher</entry>
+              <entry>maximale Stauhöhe GW-Speicher</entry>
             </row>
 
             <row>

@@ -11,17 +11,11 @@
   <title>Einführung</title>
 
   <section id="allgemeines_zu_kalypso">
-    <sectioninfo>
-      <date><indexterm>
-          <primary>KALYPSO-Konzept</primary>
-        </indexterm></date>
-    </sectioninfo>
+    <title>Allgemeines zu Kalypso</title>
 
-    <title>Allgemeines zu KALYPSO</title>
-
-    <para id="para1">Das Programm-System KALYPSO Enterprise ist eine Open
-    Source Entwicklung von Björnsen Beratende Ingenieure GmbH (BCE) in
-    Kooperation mit dem Arbeitsbereich Wasserbau der Technischen Universität
+    <para>Das Programm-System KALYPSO Enterprise ist eine Open Source
+    Entwicklung von Björnsen Beratende Ingenieure GmbH (BCE) in Kooperation
+    mit dem Arbeitsbereich Wasserbau der Technischen Universität
     Hamburg-Harburg (TUHH). KALYPSO erlaubt die Integration und Verwaltung von
     numerischen Modellen - hydraulischer und hydrologischer Art - innerhalb
     einer einheitlichen Benutzeroberfläche. Somit stellt KALYPSO eine
@@ -42,8 +36,6 @@
         Berechnungsverfahren auf Basis unterschiedlicher Rechenkerne</para>
       </listitem>
     </itemizedlist>
-
-    <para></para>
 
     <para>Bezüglich näherer Informationen und Support wenden Sie sich bitte
     an:</para>
@@ -69,24 +61,31 @@
 
     <graphic fileref="img/wasserbau-logo.png" scale="" />
 
-    <para></para>
+    <section id="nymphe_kalypso">
+      <sectioninfo>
+        <date><indexterm>
+            <primary>KALYPSO-Konzept</primary>
+          </indexterm></date>
+      </sectioninfo>
 
-    <para><emphasis role="bold">Die Nymphe Kalypso</emphasis></para>
+      <title>Die Nymphe Kalypso</title>
 
-    <para>In Homers Odyssee wird die Nymphe Kalypso als Tochter von Atlas
-    genannt. Eine der dreitausend Töchter von Thetys trägt ebenfalls diesen
-    Namen.</para>
+      <para>In Homers Odyssee wird die Nymphe Kalypso als Tochter von Atlas
+      genannt. Eine der dreitausend Töchter von Thetys trägt ebenfalls diesen
+      Namen.</para>
 
-    <para>Die Nymphe Kalypso hatte ihr Herz an Odysseus verloren. Nachdem sein
-    Schiff zerstört und gesunken war, wurde Odysseus an Land der Insel Ogygia
-    gespült - die Insel der Nymphe Kalypso. Kalypso hielt ihn aus Liebe dort
-    gefangen und wollte ihn zu Ihrem unsterblichen Ehemann nehmen. Doch selbst
-    nach Jahren des Umwerbens und Betörens von Kalypso's Seite sehnte sich
-    Odysseus immer noch nach seiner Frau und seinem Sohn.</para>
+      <para>Die Nymphe Kalypso hatte ihr Herz an Odysseus verloren. Nachdem
+      sein Schiff zerstört und gesunken war, wurde Odysseus an Land der Insel
+      Ogygia gespült - die Insel der Nymphe Kalypso. Kalypso hielt ihn aus
+      Liebe dort gefangen und wollte ihn zu Ihrem unsterblichen Ehemann
+      nehmen. Doch selbst nach Jahren des Umwerbens und Betörens von Kalypso's
+      Seite sehnte sich Odysseus immer noch nach seiner Frau und seinem
+      Sohn.</para>
 
-    <para>Erst durch die Einmischung von Zeus, der seinen Götterboten Hermes
-    entsandte, liess Kalypso Odysseus frei, sodass er seine Reise Richtung
-    Heimat fortsetzen konnte.</para>
+      <para>Erst durch die Einmischung von Zeus, der seinen Götterboten Hermes
+      entsandte, ließ Kalypso Odysseus frei, sodass er seine Reise Richtung
+      Heimat fortsetzen konnte.</para>
+    </section>
   </section>
 
   <section id="kalypso_installation_lhwz_sachsen">
@@ -102,7 +101,8 @@
     Softwarelösung für die Hochwasservorhersage installiert. Mit Hilfe des
     Programmsystems können primär Wizard-geführte Vorhersageberechnungen
     durchgeführt werden. Komplexe Operationen der Modellpflege werden
-    ebenfalls durch die Oberfläche unterstützt.</para>
+    ebenfalls durch die Oberfläche unterstützt. Dazu ist der sogenannte
+    Expertenmodus vorgesehen.</para>
 
     <para>KALYPSO ist eine Client-Server-Anwendung mit einem über
     Modell-Plugins realisierten modularen Funktionsumfang. Folgende
@@ -230,10 +230,11 @@
     </figure>
 
     <para>Der Punkt 1 Administration ist gesondert in der Technischen
-    Dokumentation beschrieben. Die Benutzung von KALYPSO in Hinblick auf die
-    Modellpflege (<xref linkend="grafische_oberflaeche" />) und den
-    Hochwasserbetrieb (<xref linkend="vorhersage_wizards" />) ist im
-    vorliegenden Handbuch beschrieben.</para>
+    Dokumentation beschrieben. Die Benutzung von KALYPSO im Hinblick auf die
+    Modellpflege (<xref linkend="grafische_oberflaeche" /> und <xref
+    linkend="zeitreihen_repository" />) und den Hochwasserbetrieb (<xref
+    linkend="vorhersage_wizards" />) ist im vorliegenden Handbuch
+    beschrieben.</para>
   </section>
 
   <section id="datenmanagement">
@@ -273,5 +274,32 @@
     geführt wird, die für die Prognose freigeschalteten Modelle vom Server
     abruft und die Ergebnisse der Hochwasservorhersage-Berechnung in einer
     vorgegebenen Struktur wieder auf dem Server ablegt.</para>
+  </section>
+
+  <section id="dokumentationen">
+    <title>Dokumentationen</title>
+
+    <para>Zur KALYPSO-Installation in der LHWZ Sachsen wurden Dokumentationen
+    zu verschiedenen Anwendungsbereichen erstellt, die im folgenden
+    aufgelistet sind.</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>KALYPSO-Anwenderhandbuch (auch als Online-Hilfe)</para>
+      </listitem>
+
+      <listitem>
+        <para>Grafikprogramm-Anwenderhandbuch (auch als Online-Hilfe)</para>
+      </listitem>
+
+      <listitem>
+        <para>Technische Dokumentation zu Kalypso-Enterprise</para>
+      </listitem>
+
+      <listitem>
+        <para>Erläuterungsbericht zur Erstellung des Vorhersagemodells Weiße
+        Elster</para>
+      </listitem>
+    </itemizedlist>
   </section>
 </chapter>

@@ -2,6 +2,41 @@
 <chapter id="vorhersage_wizards">
   <title>Vorhersage-Wizard</title>
 
+  <para>Zur Berechnung von Hochwasservorhersagen wird der Anwender mithilfe
+  eines Wizard durch die verschiedenen Schritte von der Datenkontrolle über
+  die Berechnung bis hin zur Ablage der Berechnungsergebnisse im Berichtswesen
+  geführt. Die Gestaltung und Abfolge der einzelnen Wizard-Masken ist fest in
+  KALYPSO implementiert und kann - im Gegensatz zum Expertenmodus - nicht
+  verändert werden. Im Einzelnen unterscheidet sich der Vorhersagemodus vom
+  Expertenmodus durch die folgenden Punkte:</para>
+
+  <itemizedlist>
+    <listitem>
+      <para>Die Kommunikation mit dem Server (PSI-Compact) läuft weitestgehend
+      automatisiert ab.</para>
+    </listitem>
+
+    <listitem>
+      <para>Es besteht keine Möglichkeit zur Änderung von Modelldaten; nur die
+      Steuerdaten für die Berechnung und die Werte der Zeitreihen können
+      editiert werden.</para>
+    </listitem>
+
+    <listitem>
+      <para>Die in den einzelnen Masken dargestellten Kartenvorlagen sind fest
+      vordefiniert. Die Darstellung kann während der Arbeit im Vorhersagemodus
+      nicht geändert werden.</para>
+    </listitem>
+  </itemizedlist>
+
+  <para>Die Grobstruktur der Bearbeitungsschritte ist bei allen bisher
+  implementierten Modellen identisch. Sie startet mit dem Einlesen und der
+  Kontrolle der Zeitreihen, führt über die Nachkalibierung und Berechnung der
+  Hochwasservorhersagen und endet mit dem Export der berechneten Ergebnisse
+  als Bericht oder als Zeitreihe in PSI-Compact. Die einzelnen Schritte zur
+  Berechnung einer Vorhersage werden im folgenden modellabhängig
+  beschrieben.</para>
+
   <section id="weisse_elster_view_prognose">
     <title id="dummy1">Vorhersagemodell Weiße Elster</title>
 
@@ -35,7 +70,7 @@
     die dazugehörigen Zeitreihen werden vom Server geladen und im lokalen
     Arbeitsverzeichnis abgelegt. Erst nach dem Ende der Berechnungen besteht
     die Möglichkeit, die ermittelten Ergebnisse als Rechenvariante oder
-    Bericht auf dem Server zu abzulegen.</para>
+    Bericht auf dem Server abzulegen.</para>
 
     <figure id="we_erzeuge_vorhersage">
       <title>Erzeugen einer Vorhersage</title>
@@ -85,8 +120,8 @@
           <listitem>
             <para><emphasis>Start der Vorhersage</emphasis></para>
 
-            <para>Beschreibt den Zeitpunkt an dem das Modell die Vorhersage
-            startet, dieser wird automatisch auf die letzte volle Stunde der
+            <para>Beschreibt den Zeitpunkt, an dem das Modell die Vorhersage
+            startet. Dieser wird automatisch auf die letzte volle Stunde der
             aktuellen Uhrzeit gesetzt, ist aber vom Benutzer editierbar. Der
             Endzeitpunkt der Vorhersageberechnung wird durch die Dauer des in
             den Prognosedaten enthaltenen Zeitraums bestimmt. Die Berechnung
@@ -167,7 +202,9 @@
 
       <para>Nach der Eingabe der Steuerparameter erfolgt die Überprüfung der
       Eingansgdaten durch den Benutzer. Die Zeitreihen setzen sich aus
-      Messwerten und Prognosewerten zusammen. Der Vorhersage-Wizard ist so
+      Messwerten und Prognosewerten zusammen. Die Messwerte in den Tabellen
+      sind abhängig vom eingelesenen Status durch Symbole gekennzeichnet (vgl.
+      <xref linkend="tabellen_kennzeichnung" />). Der Vorhersage-Wizard ist so
       aufgebaut, dass die Kontrolle der Zeitreihen einem festen Ablauf folgt
       (<xref linkend="we_ndata" />):</para>
 
@@ -220,13 +257,13 @@
     <section id="weise_elster_5">
       <title>Berechnung einer Vorhersage</title>
 
-      <para>Nach Eingabe der Steuerparameter öffnet sich durch Klick auf
-      <guibutton>weiter</guibutton> das Prognosefenster (<xref
+      <para>Nach Kontrolle und Eingabe der Eingangsdaten öffnet sich durch
+      Klick auf <guibutton>weiter</guibutton> das Prognosefenster (<xref
       linkend="we_berechnung" />) im oberen Bereich des Fensters befindet sich
-      die Information über den Pegel, an dem die aktuelle Prognose
+      die Information über den Pegel, an dem die aktuelle Vorhersage
       durchgeführt wird. Im Kartenfenster wird eine schematische Ansicht des
       Einzuggebietes dargestellt, in der alle Vorhersage- und Zuflusspegel
-      angezeigt werden. Die Tabelle dient zur Angabe der bei der Prognose
+      angezeigt werden. Die Tabelle dient zur Angabe der bei der Vorhersage
       veränderlichen Modellparameter.</para>
 
       <figure id="we_berechnung">
@@ -284,13 +321,13 @@
           <para>FaktorRkf: Faktor für Retentionskonstante (Gerinne)</para>
 
           <para>Die Retentionskonstanten für die Gerinneelemente werden mit
-          dem angegeben Wert multipliziert</para>
+          dem angegebenen Wert multipliziert</para>
         </listitem>
       </itemizedlist>
 
       <para>Der Standartwert für alle Parameter beträgt zu Beginn einer neuen
-      Prognose 1,0. Durch Änderung eines oder mehrerer Parameter können die
-      Berechnungsergebnisse die vor dem Startzeitpunkt der Prognose liegen
+      Vorhersage 1,0. Durch Änderung eines oder mehrerer Parameter können die
+      Berechnungsergebnisse, die vor dem Startzeitpunkt der Vorhersage liegen,
       anhand von Pegelaufzeichnungen angepasst werden (Nachführung). Bezüglich
       der theoretischen Grundlagen der Wirkung der o. g. Parameter auf die
       Berechnungsergebnisse wird auf die Modellbeschreibung des
@@ -300,7 +337,7 @@
 
       <para>Unterhalb der Tabelle befindet sich das Zeitreihenfenster. Es
       dient zur Darstellung der Zeitreihen für gemessene und berechnete
-      Abflüsse am Pegel sowie die in der Prognose verwendeten
+      Abflüsse am Pegel sowie die in der Vorhersage verwendeten
       Niederschlagszeitreihen. Die Ansicht im Zeitreihenfenster ist nicht
       veränderbar; alle Einstellungen sind vordefiniert bzw. ändern sich
       automatisch in Abhängigkeit der Zeitreihe (Anpassung der
@@ -321,9 +358,10 @@
       berechneten Ergebnisse eines Pegels dienen jeweils als Zuflusszeitreihe
       für das darunter liegende Pegeleinzugsgebiet. Es ist allerdings möglich,
       Berechnungen für einen Pegel durchzuführen, ohne dass Ergebnisse für
-      oberhalb gelegene Pegel vorliegen. Praktisch bedeutet dies, dass der
-      Anwender sich bis zu einem beliebigen Pegel 'klicken' und an diesem
-      Berechnungen durchführen kann.</para>
+      oberhalb gelegene Pegel vorliegen. Die Berechnungen erfolgen dann für
+      das gesamte Einzugsgebiet oberhalb des gewählten Pegels. Praktisch
+      bedeutet dies, dass der Anwender sich bis zu einem beliebigen Pegel
+      'klicken' und an diesem Berechnungen durchführen kann.</para>
 
       <para>Die Reihenfolge für die Abarbeitung der Pegel für das
       Einzugsgebiet Weiße Elster ist schematisch in <xref
@@ -344,8 +382,9 @@
       <title>Ergebnisbearbeitung und Veröffentlichung</title>
 
       <para>Nach Abarbeitung der Kalibrierungs- und Berechnungsschritte (siehe
-      Kapitel Berechnung einer Vorhersage) können die ermittelten Ergebnisse
-      im Berichtswesen (auf dem Server) abgelegt werden. Die dazugehörige
+      <xref linkend="weise_elster_5" />) können die ermittelten Ergebnisse an
+      das Berichtswesen übergeben werden. Zudem ist derExport der berechneten
+      Prognose-Zeitreihen nach PSI-Compact möglich. Die dazugehörige
       Eingabemaske zeigt einen Lageplan mit allen im Modell vorhandenen
       Vorhersage-Pegeln (<xref linkend="we_ergebnisbearbeitung" />).</para>
 
@@ -372,30 +411,33 @@
 
       <para>Zur Bearbeitung einer Ergebniszeitreihe ist die Schaltfläche
       <guibutton>Zeitreihe(n) bearbeiten</guibutton> vorgesehen. Durch Klick
-      auf die Schaltfläche wird das im Programm-Umfang enthaltene
+      auf die Schaltfläche wird das im Programmumfang enthaltene
       Grafikprogramm geöffnet. In diesem bestehen zahlreiche Möglichkeiten zur
-      Visualisierung und Editierung der Zeitreihen (siehe Online-Hilfe im
+      Visualisierung und Editierung der Zeitreihen (siehe Handbuch zum
       Grafikprogramm).</para>
 
-      <para>Die Ablage der Ergebnisse auf dem Server kann in unterschiedlichen
-      Formaten erfolgen:</para>
+      <para>Die Ablage der Ergebnisse auf dem Server (Berichtswesen und
+      PSI-Compact) kann in unterschiedlichen Formaten erfolgen:</para>
 
       <itemizedlist>
         <listitem>
-          <para>Berechnete Zeitreihen der Abflüsse (grafisch)</para>
+          <para>Berechnete Zeitreihen der Abflüsse (Grafik für das
+          Berichtswesen)</para>
         </listitem>
 
         <listitem>
-          <para>Berechnete Zeitreihen der Wasserstände (grafisch)</para>
+          <para>Berechnete Zeitreihen der Wasserstände (Grafik für das
+          Berichtswesen)</para>
         </listitem>
 
         <listitem>
-          <para>Berechnete Zeitreihen in Tabellen-Form</para>
+          <para>Berechnete Zeitreihen in Tabellen-Form (csv-Format für das
+          Berichtswesen)</para>
         </listitem>
 
         <listitem>
-          <para>Berechnete Zeitreihen nur für den Zeitraum der
-          Vorhersage</para>
+          <para>Berechnete Zeitreihen nur für den Zeitraum der Vorhersage
+          (Prognosezeitreihe für PSI-Compact)</para>
         </listitem>
 
         <listitem>
@@ -413,7 +455,7 @@
 
       <para>Die berechneten Ergebniszeitreihen können über die Schaltfläche
       <guimenu>Export Prognosen</guimenu> in das
-      Informations-Management-System (PSICompact) gespeichert werden. Es
+      Informations-Management-System (PSI-Compact) gespeichert werden. Es
       erscheint ein Auswahlfenster, in dem diejenigen Ausgabequerschnitte
       gewählt werden können, für die Zeitreihen herausgeschrieben werden. Die
       Ablage der Zeitreihen erfolgt nur für den Vorhersage-Zeitraum.</para>
@@ -425,7 +467,7 @@
 
     <para>Zur Berechnung von HW-Vorhersagen für das Einzugsgebiet der Spree
     ist in der KALYPSO-Oberfläche ein Wizard implementiert. Unabhängig von den
-    ihm zugeordneten Rechte wird der Benutzer direkt bei dem Programmstart in
+    ihm zugeordneten Rechten wird der Benutzer direkt bei dem Programmstart in
     den Vorhersagemodus geführt (<xref linkend="spree_startbildschirm" />).
     Für Benutzer mit erweiterten Rechten ist es jederzeit möglich, aus dem
     Expertenmodus in den Vorhersagemodus zu wechseln (Menü
@@ -444,8 +486,8 @@
       </screenshot>
     </figure>
 
-    <para>Beim Start des Vorhersage-Wizzards öffnet sich eine Maske, in der
-    dem Benutzer drei verschiedene Möglichkeiten gegeben werden, Vorhersagen
+    <para>Beim Start des Vorhersage-Wizards öffnet sich eine Maske, in der dem
+    Benutzer drei verschiedene Möglichkeiten gegeben werden, Vorhersagen
     durchzuführen:</para>
 
     <section id="spree_1">
@@ -548,18 +590,17 @@
     <section>
       <title>Kopieren eines Rechenfalls</title>
 
-      <para>Die Wahl dieser Option erfolgt durch Auswahl des <guibutton>einen
-      auf dem Server vorhandenen Rechenfall kopieren</guibutton> Feldes.
-      Hierdurch werden die Eingangsdaten eines bereits gespeicherten
-      Hochwassers als neuer Datensatz vom Programm im lokalen
-      Arbeitsverzeichnis gespeichert. Dies bietet den Vorteil, dass bei einer
-      gewünschten Änderung der Eingangsdaten die Originaldateien nicht
-      überschrieben werden. Es erscheint eine Auswahl der auf dem Server
-      gespeicherten Rechenläufe. Für die lokale Kopie des Rechenlaufes muss
-      vom Benutzer ein Name angegeben werden. Nach Auswahl des zu kopierenden
-      Rechenfalls wird durch Bestätigung durch <guibutton>weiter</guibutton>
-      die Eingabemaske für die Steuerparameter (<xref linkend="spree_2" />)
-      geöffnet.</para>
+      <para>Die Wahl dieser Option erfolgt durch Auswahl von <guibutton>einen
+      auf dem Server vorhandenen Rechenfall kopieren</guibutton>. Hierdurch
+      werden die Eingangsdaten eines bereits gespeicherten Hochwassers als
+      neuer Datensatz vom Programm im lokalen Arbeitsverzeichnis gespeichert.
+      Dies bietet den Vorteil, dass bei einer gewünschten Änderung der
+      Eingangsdaten die Originaldateien nicht überschrieben werden. Es
+      erscheint eine Auswahl der auf dem Server gespeicherten Rechenläufe. Für
+      die lokale Kopie des Rechenlaufes muss vom Benutzer ein Name angegeben
+      werden. Nach Auswahl des zu kopierenden Rechenfalls wird durch
+      Bestätigung durch <guibutton>weiter</guibutton> die Eingabemaske für die
+      Steuerparameter (<xref linkend="spree_2" />) geöffnet.</para>
     </section>
 
     <section>
@@ -567,7 +608,9 @@
 
       <para>Nach der Eingabe der Steuerdaten erfolgt die Überprüfung der
       Eingansgdaten durch den Benutzer. Die Zeitreihen setzen sich aus
-      Messwerten und Prognosewerten zusammen. Der Vorhersage-Wizard ist so
+      Messwerten und Prognosewerten zusammen. Die Messwerte in den Tabellen
+      sind abhängig vom Daten-Status durch Symbolde gekennzeichnet (vgl. <xref
+      linkend="tabellen_kennzeichnung" />). Der Vorhersage-Wizard ist so
       aufgebaut, dass die Kontrolle der Zeitreihen einem festen Ablauf folgt
       (<xref linkend="spree_eingangsdaten" />):</para>
 
@@ -614,7 +657,7 @@
       </orderedlist>
 
       <para>Die Anzeige der Zeitreihen erfolgt grafisch und tabellarisch. In
-      jeder Eingabemaske wird ein Lageplan mit den zu ändernden Standorten
+      jeder Eingabemaske wird ein Lageplan mit den Erfassungsstandorten
       angezeigt. In der Tabelle werden immer alle Pegelzeitreihen gleichzeitig
       aufgeführt. Durch Markieren eines Pegels wird die dazugehörige Zeitreihe
       auch grafisch dargestellt. Bei Bedarf können die Tabellenwerte vom
@@ -622,7 +665,7 @@
       <guibutton>weiter</guibutton> für die Berechnungen übernommen.</para>
     </section>
 
-    <section>
+    <section id="spree_berechnung_vorhersage">
       <title>Berechnung einer Vorhersage</title>
 
       <para>Die Vorhersageberechnungen erfolgen nach Prüfung der
@@ -631,7 +674,7 @@
       Reihenfolge im Programm implementiert: Zunächst erfolgen Berechnungen
       für Pegel mit vorgeschaltetem N-A-Modell, anschließend für die
       Talsperren-Abgabepegel und daraufhin für die Pegel mit vorgeschaltetem
-      Flusslaufmodell.</para>
+      Flusslaufmodell (d.h. von Ober- Richtung Unterlauf).</para>
 
       <para>Dabei ist vom Benutzer auf die Reihenfolge der Pegel zu achten. An
       einem Pegel sollten erst dann Vorhersageberechnungen vorgenommen werden,
@@ -703,14 +746,15 @@
       bzw. Talsperre.</para>
     </section>
 
-    <section>
+    <section id="spree_ergebnisbearbeitung">
       <title>Ergebnisbearbeitung und Veröffentlichung</title>
 
       <para>Nach Abarbeitung der Kalibrierungs- und Berechnungsschritte (siehe
-      Kapitel Berechnung der Vorhersage) können die ermittelten Ergebnisse im
-      Berichtswesen abgelegt werden. Die dazugehörige Eingabemaske (<xref
-      linkend="spree_ergebnisse" />) zeigt einen Lageplan mit allen im Modell
-      vorhandenen Vorhersage-Pegeln.</para>
+      <xref linkend="spree_berechnung_vorhersage" />) können die ermittelten
+      Ergebnisse an das Berichtswesen übergeben werden. Zudem ist derExport
+      der berechneten Prognose-Zeitreihen nach PSI-Compact möglich. Die
+      dazugehörige Eingabemaske (<xref linkend="spree_ergebnisse" />) zeigt
+      einen Lageplan mit allen im Modell vorhandenen Vorhersage-Pegeln.</para>
 
       <figure id="spree_ergebnisse">
         <title>Bearbeitung und Veröffentlichung der Ergebnisse</title>
@@ -737,28 +781,31 @@
       <guibutton>Zeitreihe(n) bearbeiten</guibutton> vorgesehen. Durch Klick
       auf die Schaltfläche wird das im Programm-Umfang enthaltene
       Grafikprogramm geöffnet. In diesem bestehen zahlreiche Möglichkeiten zur
-      Visualisierung und Editierung der Zeitreihen (siehe Online-Hilfe im
+      Visualisierung und Editierung der Zeitreihen (siehe Handbuch zum
       Grafikprogramm).</para>
 
-      <para>Die Ablage der Ergebnisse auf dem Server kann in unterschiedlichen
-      Formaten erfolgen:</para>
+      <para>Die Ablage der Ergebnisse auf dem Server (Berichtswesen und
+      PSI-Compact) kann in unterschiedlichen Formaten erfolgen:</para>
 
       <itemizedlist>
         <listitem>
-          <para>Berechnete Zeitreihen der Abflüsse (grafisch)</para>
+          <para>Berechnete Zeitreihen der Abflüsse (Graik für das
+          Berichtswesen)</para>
         </listitem>
 
         <listitem>
-          <para>Berechnete Zeitreihen der Wasserstände (grafisch)</para>
+          <para>Berechnete Zeitreihen der Wasserstände (Grafik für das
+          Berichtswesen)</para>
         </listitem>
 
         <listitem>
-          <para>Berechnete Zeitreihen in Tabellen-Form</para>
+          <para>Berechnete Zeitreihen in Tabellen-Form (csv-Format für das
+          Berichtswesen)</para>
         </listitem>
 
         <listitem>
-          <para>Berechnete Zeitreihen nur für den Zeitraum der
-          Vorhersage</para>
+          <para>Berechnete Zeitreihen nur für den Zeitraum der Vorhersage
+          (Prognosezeitreihen für PSI-Compact)</para>
         </listitem>
 
         <listitem>
@@ -775,11 +822,11 @@
       abgelegt.</para>
 
       <para>Die berechneten Ergebniszeitreihen können über die Schaltfläche
-      <guimenu>Export Prognosen</guimenu> auf dem Server (PSICompact)
-      gespeichert werden. Es erscheint ein Auswahlfenster, in dem diejenigen
-      Ausgabequerschnitte gewählt werden können, für die Zeitreihen
-      herausgeschrieben werden. Die Ablage der Zeitreihen erfolgt nur für den
-      Vorhersage-Zeitraum.</para>
+      <guimenu>Export Prognosen</guimenu> in das
+      Informations-Management-System (PSI-Compact) gespeichert werden. Es
+      erscheint ein Auswahlfenster, in dem diejenigen Ausgabequerschnitte
+      gewählt werden können, für die Zeitreihen herausgeschrieben werden. Die
+      Ablage der Zeitreihen erfolgt nur für den Vorhersage-Zeitraum.</para>
     </section>
   </section>
 </chapter>

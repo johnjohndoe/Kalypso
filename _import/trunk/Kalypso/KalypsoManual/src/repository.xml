@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="zeitreihen_repository">
-  <title>Zeitreihen-Ablage</title>
+  <title>Zeitreihenbrowser</title>
 
   <section>
     <title>Allgemeines</title>
@@ -53,7 +53,7 @@
     Datenexport. Somit können z.B. Zeitreihen aus PSI-Compact heruntergeladen
     und in ein beliebiges Verzeichnis im Netzwerk oder lokal gespeichert
     werden. Beim Export werden die Zeitreihen im zml-Format abgelegt. Der
-    Export von Zeitriehen ist in <xref
+    Export von Zeitreihen ist in <xref
     linkend="repository_zeitreihenverwaltung" /> beschrieben.</para>
   </section>
 
@@ -85,10 +85,9 @@
     das die so genannten Metadaten der Zeitreihe enthält. Eine
     Metadaten-Information kann z.B. der Stationsname sein. Die Metadaten sind
     typspezifisch, d.h., dass Niederschlagsstationen prinzipiell andere
-    Metadaten enthalten können als Wasserstandspegel. Die einzelnen
-    Eigenschafts-Zellen enthalten nicht immer konkrete Werte, sondern es
-    können auch Verknüpfungen angegeben werden - wie im Falle der
-    W-Q-Parameter.</para>
+    Metadaten enthalten können als Wasserstandspegel. Die einzelnen Zellen
+    enthalten nicht immer konkrete Werte, sondern es können auch Verknüpfungen
+    angegeben werden - wie im Falle der W-Q-Parameter.</para>
 
     <para></para>
 
@@ -184,9 +183,9 @@
     Angabe des gewünschten Zeitraums.</para>
 
     <para>Wird bei der Anzahl der Tage ´0´ angegeben, werden alle Zeitreihen
-    für den gesamten, in der Ablage zur Verügung stehenden Zeitraum
+    für den gesamten, in der Ablage zur Verfügung stehenden Zeitraum
     eingelesen, soweit dies von der jeweiligen Ablage unterstützt wird
-    (PSI-Compact hat Begrenzung von maximal 7 Monate).</para>
+    (PSI-Compact hat eine Begrenzung von maximal 7 Monaten).</para>
 
     <para></para>
 
@@ -216,7 +215,7 @@
 
     <para>Durch Klick auf die Schaltfläche im Zeitreihenfenster (<xref
     linkend="repository_export" />) kann die aktuell markierte Zeitreihe als
-    Datei in ein beliebiges Verzeichnis gespeichert werden. </para>
+    Datei in ein beliebiges Verzeichnis gespeichert werden.</para>
 
     <figure id="repository_export">
       <title>Exportieren von Zeitreihen</title>
@@ -249,6 +248,6 @@
     Pfades und des Dateinamens, unter der die Zeitreihe abgespeichert werden
     soll. Mit Bestätigung durch Klick auf Fertigstellen wird die Zeitreihe im
     vorgegebenen Verzeichnis gespeichert. Der Export erfolgt - unabhängig von
-    der angegebenen Datei-Endung - immer im zml-Format.</para>
+    der angegebenen Dateiendung - immer im zml-Format.</para>
   </section>
 </chapter>
