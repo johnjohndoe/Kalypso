@@ -2,6 +2,10 @@ package org.kalypso.java.util;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Map.Entry;
 
 /**
  * @author schlienger
@@ -116,5 +120,22 @@ public class StringUtilities
        .append( ";" ).append( f.getSize(  ) );
 
     return buf.toString(  );
+  }
+
+  /** Replacement per Pattern-Matching */
+  public static String replaceAll( final String sourceValue, final Properties replaceProperties )
+  {
+    String newString = sourceValue;
+    
+    for( Iterator replaceIt = replaceProperties.entrySet().iterator(); replaceIt.hasNext(); )
+    {
+      final Map.Entry entry = (Entry)replaceIt.next();
+      final String key = entry.getKey().toString();
+      final String value = entry.getValue().toString();
+      
+      newString = newString.replaceAll( key, value );
+    }
+    
+    return newString;
   }
 }

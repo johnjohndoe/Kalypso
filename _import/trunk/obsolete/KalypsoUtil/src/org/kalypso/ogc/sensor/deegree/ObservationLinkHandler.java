@@ -88,7 +88,7 @@ public class ObservationLinkHandler implements ITypeHandler
           return m_unmarshaller.unmarshal( child );    
       }
       
-      throw new TypeRegistryException( "Could not parse Node" );
+      return null;
     }
     catch( final JAXBException e )
     {

@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformationConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
 	<transformation className="org.kalypso.model.transformation.CalculationTransformation">
-		<arg name="startTime" value="${time}"/>
+		<arg name="output" value="calcdir:.calculation"/>
+		<arg name="entry0" value="startTime=#SYSTEM_TIME#"/>
 	</transformation>
 
 	<transformation className="org.kalypso.model.transformation.CopyTransformation">
-		<arg name="input" value="modell.gml"/>
-		<arg name="output" value="calcCase.gml"/>
+		<arg name="input" value="project:modell.gml"/>
+		<arg name="output" value="calcdir:calcCase.gml"/>
 	</transformation>
 
-<!--
-	<transformation className="org.kalypso.model.transformation.XslTransformation">
-		<arg name="input" value="modell.gml"/>
-		<arg name="xsl" value=".modellTyp/calcCaseTrans.xsl"/>
-		<arg name="output" value="calcCase.gml"/>
+	<transformation className="org.kalypso.model.transformation.ObservationResolver">
+		<arg name="project" value="project:"/>
+		<arg name="type" value="gml"/>
+		<arg name="href" value="PATH=calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
+		<arg name="sourceObservation" value="Niederschlag"/>
+		<arg name="targetObservation" value="Niederschlag_Berechnung"/>
+		<arg name="targetFolder" value="calcdir:zeitreihen"/>
 	</transformation>
--->
 
 </transformationConfig>

@@ -125,6 +125,7 @@
 			<Niederschlag>
 				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Pegel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=absolute#LOCATION=file://PC139/C/tmp/wschirg.zml"/>
 			</Niederschlag>
+			<Niederschlag_Berechnung/>
 			<Wasserstand/>
 		</Einzugsgebiet>
 	</gml:featureMember>
@@ -143,6 +144,7 @@
 			<Niederschlag>
 				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Pegel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=absolute#LOCATION=file://PC139/C/tmp/wschirg.zml"/>
 			</Niederschlag>
+			<Niederschlag_Berechnung/>
 			<Wasserstand/>
 		</Einzugsgebiet>
 	</gml:featureMember>
@@ -161,6 +163,7 @@
 			<Niederschlag>
 				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Pegel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=absolute#LOCATION=file://PC139/C/tmp/wschirg.zml"/>
 			</Niederschlag>
+			<Niederschlag_Berechnung/>
 			<Wasserstand/>
 		</Einzugsgebiet>
 	</gml:featureMember>
@@ -179,6 +182,7 @@
 			<Niederschlag>
 				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Pegel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=absolute#LOCATION=file://PC139/C/tmp/wschirg.zml"/>
 			</Niederschlag>
+			<Niederschlag_Berechnung/>
 			<Wasserstand/>
 		</Einzugsgebiet>
 	</gml:featureMember>
@@ -197,6 +201,7 @@
 			<Niederschlag>
 				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Pegel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=absolute#LOCATION=file://PC139/C/tmp/wschirg.zml"/>
 			</Niederschlag>
+			<Niederschlag_Berechnung/>
 			<Wasserstand/>
 		</Einzugsgebiet>
 	</gml:featureMember>
