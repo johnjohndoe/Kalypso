@@ -119,7 +119,7 @@ public class NAControlConverter
   private static void appendResultInformation( GMLWorkspace modellWorkspace, StringBuffer b )
   {
     // knoten
-    final FeatureType nodeFT = modellWorkspace.getSchema().getFeatureType( "Node" );
+    final FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
     final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
     for( int i = 0; i < nodeFEs.length; i++ )
     {
@@ -128,7 +128,7 @@ public class NAControlConverter
     }
     b.append( "99999\n" );
     // teilgebiete
-    final FeatureType catchmentFT = modellWorkspace.getSchema().getFeatureType( "Catchment" );
+    final FeatureType catchmentFT = modellWorkspace.getFeatureType( "Catchment" );
     final Feature[] catchmentFEs = modellWorkspace.getFeatures( catchmentFT );
     for( int i = 0; i < catchmentFEs.length; i++ )
     {

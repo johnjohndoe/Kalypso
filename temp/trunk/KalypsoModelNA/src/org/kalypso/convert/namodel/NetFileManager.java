@@ -364,7 +364,7 @@ public class NetFileManager extends AbstractManager
         downStreamElement.addUpStream( upStreamElement );
       }
     }
-    final Feature rootNodeFE = workspace.getFeature( m_conf.getNodeFT(), m_conf.getRootNodeId() );
+    final Feature rootNodeFE = workspace.getFeature( m_conf.getRootNodeId() );
     // select netelement from root element
     Feature rootChannel = workspace.resolveLink( rootNodeFE, "downStreamChannelMember" );
     List rootNetElements = new ArrayList();

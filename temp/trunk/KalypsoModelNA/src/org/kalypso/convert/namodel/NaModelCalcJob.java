@@ -233,16 +233,14 @@ public class NaModelCalcJob extends AbstractCalcJob
    */
   private void updateFactorParameter( GMLWorkspace modellWorkspace )
   {
-    final GMLSchema schema = modellWorkspace.getSchema();
-
     // Catchments
     final Feature[] catchmentFEs = modellWorkspace
-        .getFeatures( schema.getFeatureType( "Catchment" ) );
+        .getFeatures( modellWorkspace.getFeatureType( "Catchment" ) );
     update( catchmentFEs, m_catchmentFactorParameterTarget, m_catchmentFactorsParameter );
 
     // KMChannels
     final Feature[] kmChanneFEs = modellWorkspace
-        .getFeatures( schema.getFeatureType( "KMChannel" ) );
+        .getFeatures( modellWorkspace.getFeatureType( "KMChannel" ) );
     for( int i = 0; i < kmChanneFEs.length; i++ )
     {
       Feature feature = kmChanneFEs[i];
@@ -310,7 +308,7 @@ public class NaModelCalcJob extends AbstractCalcJob
       ts.importBlockFile( qgsFiles[0] );
 
       // iterate model nodes and generate zml
-      final FeatureType nodeFT = modellWorkspace.getSchema().getFeatureType( "Node" );
+      final FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
       final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
       for( int i = 0; i < nodeFEs.length; i++ )
       {
@@ -354,7 +352,7 @@ public class NaModelCalcJob extends AbstractCalcJob
         {
           log
               .append( "zu diesem Knoten existiert ein Pegel, einige Pegelmetadaten (z.B. Wechmann-Funktion) werden in Ergebniszeitreihe uebernommen\n" );
-          final URL pegelURL = UrlUtilities.resolveURL( modellWorkspace.getModelUrl(), pegelLink
+          final URL pegelURL = UrlUtilities.resolveURL( modellWorkspace.getContext(), pegelLink
               .getHref() );
           final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" );
           copyMetaData( pegelObservation.getMetadataList(), resultObservation.getMetadataList(),

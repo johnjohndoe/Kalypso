@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.deegree.model.feature.Feature;
@@ -15,7 +16,6 @@ import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.java.io.FileUtilities;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -98,44 +98,46 @@ public class NAModellConverter
     CS_CoordinateSystem cSystem = org.deegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( "EPSG:31468" ) );
 
-    KalypsoFeatureLayer catchmentLayer = ShapeSerializer.deserialize( shapeDir + "/ezg_agg2",
-        cSystem, cSystem, null );
-    Feature[] catchmentFEs = catchmentLayer.getAllFeatures();
-    KalypsoFeatureLayer channelLayer = ShapeSerializer.deserialize( shapeDir + "/river elements",
-        cSystem, cSystem, null );
-    Feature[] channelFEs = channelLayer.getAllFeatures();
-    KalypsoFeatureLayer nodeLayer = ShapeSerializer.deserialize( shapeDir + "/knoten", cSystem,
+    final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "/ezg_agg2", cSystem, null );
+    final List catchmentFeatures = (List)catchmentWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    
+    final GMLWorkspace channelWorkspace = ShapeSerializer.deserialize( shapeDir + "/river elements",
         cSystem, null );
-    Feature[] nodeFEs = nodeLayer.getAllFeatures();
+    final List channelFeatures = (List)channelWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    
+    final GMLWorkspace nodeWorkspace = ShapeSerializer.deserialize( shapeDir + "/knoten", cSystem, null );
+    final List nodeFeatures = (List)nodeWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    
     // insertGeometries
 
     System.out.println( "inserting geometries: catchments" );
     Feature catchmentCollection = (Feature)modelFeature.getProperty( "CatchmentCollectionMember" );
     List catchmentList = (List)catchmentCollection.getProperty( "catchmentMember" );
-    copyProperties( catchmentFEs, "GEOM", "TG_KEN", (Feature[])catchmentList
+    copyProperties( catchmentFeatures, "GEOM", "TG_KEN", (Feature[])catchmentList
         .toArray( new Feature[catchmentList.size()] ), "Ort", "inum" );
 
     System.out.println( "inserting geometries: channels" );
     Feature channelCollection = (Feature)modelFeature.getProperty( "ChannelCollectionMember" );
     List channelList = (List)channelCollection.getProperty( "channelMember" );
-    copyProperties( channelFEs, "GEOM", "RIVER_NO_", (Feature[])channelList
+    copyProperties( channelFeatures, "GEOM", "RIVER_NO_", (Feature[])channelList
         .toArray( new Feature[channelList.size()] ), "Ort", "inum" );
 
     System.out.println( "inserting geometries: nodes" );
     Feature nodeCollection = (Feature)modelFeature.getProperty( "NodeCollectionMember" );
     List nodeList = (List)nodeCollection.getProperty( "nodeMember" );
-    copyProperties( nodeFEs, "GEOM", "KNOTEN_NUM", (Feature[])nodeList
+    copyProperties( nodeFeatures, "GEOM", "KNOTEN_NUM", (Feature[])nodeList
         .toArray( new Feature[nodeList.size()] ), "Ort", "num" );
   }
 
-  private static void copyProperties( Feature[] orgFE, String orgGeomPropName,
+  private static void copyProperties( final List catchmentFeatures, String orgGeomPropName,
       String orgIdPropName, Feature[] destFE, String destGeomPropName, String destIdPropName )
   {
     HashMap orgHash = new HashMap();
-    for( int i = 0; i < orgFE.length; i++ )
+    for( Iterator iter = catchmentFeatures.iterator(); iter.hasNext(); )
     {
-      String id = orgFE[i].getProperty( orgIdPropName ).toString();
-      orgHash.put( id, orgFE[i] );
+      final Feature f = (Feature)iter.next();
+      String id = f.getProperty( orgIdPropName ).toString();
+      orgHash.put( id, f );
     }
     for( int i = 0; i < destFE.length; i++ )
     {
