@@ -55,6 +55,9 @@
       <library name="lib/kalypsoservice_calculation.jar">
          <export name="*"/>
       </library>
+      <library name="lib/kalypsoservice_metadoc.jar">
+         <export name="*"/>
+      </library>
    </runtime>
    <requires>
       <import plugin="org.eclipse.ui.workbench" export="true"/>
