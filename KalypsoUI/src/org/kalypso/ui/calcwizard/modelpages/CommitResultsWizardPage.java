@@ -24,8 +24,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.actions.FullExtentMapAction;
 import org.kalypso.ogc.gml.map.actions.ToggleSingleSelectWidgetAction;
 import org.kalypso.ogc.gml.map.actions.ZoomOutMapAction;
@@ -282,10 +282,10 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
       final String[] timeNames = propNames.split( "#" );
 
       final IKalypsoTheme theme = getMapModel().getActiveTheme();
-      if( !( theme instanceof KalypsoFeatureTheme ) )
+      if( !( theme instanceof IKalypsoFeatureTheme ) )
         return;
 
-      final KalypsoFeatureTheme featureTheme = (KalypsoFeatureTheme)theme;
+      final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)theme;
       final GMLWorkspace workspace = featureTheme.getWorkspace();
 
       try

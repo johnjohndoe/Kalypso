@@ -6,7 +6,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.swt.SWT;
@@ -17,7 +16,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.command.ActivateThemeCommand;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
@@ -27,7 +25,7 @@ import org.kalypso.util.command.ICommandTarget;
 /**
  * @author belger
  */
-public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, SelectionListener
+public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, SelectionListener, ICommandTarget
 {
   protected StructuredViewer m_viewer;
 
@@ -49,9 +47,6 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   {
     m_contentProvider.dispose();
     m_labelProvider.dispose();
-
-    // tabeltree already disposed! (probably released its listeners itself)
-    // m_viewer.getTableTree().removeSelectionListener(this);
   }
 
   public void createControl( final Composite parent )
@@ -95,6 +90,8 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
       m_mapModel.removeModellListener( this );
 
     m_mapModel = modell;
+    
+    m_labelProvider.setMapModell( modell );
 
     if( m_mapModel != null )
       m_mapModel.addModellListener( this );
@@ -148,10 +145,8 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
 
             // und die ganze view refreshen!
             viewer.refresh();
-            if( mm.getActiveTheme() != null )
-              viewer.setSelection( new StructuredSelection( mm.getActiveTheme() ) );
           }
-          catch( RuntimeException e )
+          catch( final RuntimeException e )
           {
             e.printStackTrace();
           }
@@ -167,16 +162,16 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   {
     final TableTreeItem ti = (TableTreeItem)e.item;
     final Object data = ti.getData();
-    if( data instanceof IKalypsoTheme )
-    {
-      if( m_mapModel.getActiveTheme() != (IKalypsoTheme)data )
-      {
-        m_commandTarget.postCommand( new ActivateThemeCommand( m_mapModel, (IKalypsoTheme)data ),
-            null );
-        m_mapModel.activateTheme( (IKalypsoTheme)data );
-        // todo: maybe create MultiCommand (eg. activate and enable )
-      }
-    }
+//    if( data instanceof IKalypsoTheme )
+//    {
+//      if( m_mapModel.getActiveTheme() != (IKalypsoTheme)data )
+//      {
+//        m_commandTarget.postCommand( new ActivateThemeCommand( m_mapModel, (IKalypsoTheme)data ),
+//            null );
+//        m_mapModel.activateTheme( (IKalypsoTheme)data );
+//        // todo: maybe create MultiCommand (eg. activate and enable )
+//      }
+//    }
 
     if( ( e.detail & SWT.CHECK ) != 0 )
     {
@@ -264,6 +259,14 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   public void removeDoubleClickListener( IDoubleClickListener listener )
   {
     m_viewer.removeDoubleClickListener( listener );
+  }
+
+  /**
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
+   */
+  public void postCommand( ICommand command, Runnable runnable )
+  {
+    m_commandTarget.postCommand( command, runnable );
   }
 
 }

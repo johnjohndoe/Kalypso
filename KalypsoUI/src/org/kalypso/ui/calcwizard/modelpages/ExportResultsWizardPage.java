@@ -28,8 +28,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.actions.FullExtentMapAction;
 import org.kalypso.ogc.gml.map.actions.ToggleSingleSelectWidgetAction;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -294,7 +294,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     public void widgetSelected( SelectionEvent e )
     {
       final IKalypsoTheme theme = m_mapModell.getActiveTheme();
-      if( !( theme instanceof KalypsoFeatureTheme ) )
+      if( !( theme instanceof IKalypsoFeatureTheme ) )
         return;
 
       m_obsdiagviewType.getCurve().clear();
@@ -303,7 +303,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
       try
       {
-        final KalypsoFeatureTheme kft = (KalypsoFeatureTheme)theme;
+        final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)theme;
 
         final List selectedFeatures = GetSelectionVisitor.getSelectedFeatures( kft.getWorkspace(), kft.getFeatureType(), SELECTION_ID );
         

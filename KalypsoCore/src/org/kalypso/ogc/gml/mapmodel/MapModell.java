@@ -2,6 +2,7 @@ package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Graphics;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
@@ -36,6 +37,14 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
   public MapModell( final CS_CoordinateSystem crs )
   {
     myCoordinatesSystem = crs;
+  }
+  
+  public void dispose()
+  {
+    for( Iterator iter = myThemes.iterator(); iter.hasNext(); )
+      ((IKalypsoTheme)iter.next()).dispose();
+    
+    myThemes.clear();
   }
 
   public void activateTheme( final IKalypsoTheme theme )

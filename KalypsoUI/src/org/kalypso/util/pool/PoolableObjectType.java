@@ -84,8 +84,6 @@ public class PoolableObjectType implements IPoolableObjectType
   }
 
   /**
-   * TODO: remove project stuff once refactoring is complete
-   * 
    * @see java.lang.Object#toString()
    */
   public String toString()

@@ -9,6 +9,8 @@ import javax.xml.bind.JAXBException;
 import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.feature.FeatureList;
+import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.geometry.GM_Envelope;
@@ -50,8 +52,8 @@ import org.kalypso.util.pool.ResourcePool;
  * 
  * @author Belger
  */
-public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements IPoolListener,
-    ICommandTarget
+public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener,
+    ICommandTarget, IKalypsoFeatureTheme
 {
   private final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( null );
 
@@ -63,9 +65,9 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
 
   private final String[] m_styleNames;
 
-  private KalypsoFeatureTheme m_theme = null;
+  private IKalypsoFeatureTheme m_theme = null;
 
-  public PoolableKalypsoFeatureTheme( final LayerType layerType, final URL context )
+  public GisTemplateFeatureTheme( final LayerType layerType, final URL context )
   {
     super( "<no name>" );
 
@@ -77,8 +79,6 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
 
     m_layerKey = new PoolableObjectType( type, source, context );
     m_featurePath = featurePath;
-
-    pool.addPoolListener( this, m_layerKey );
 
     if( layerType instanceof Layer )
     {
@@ -97,9 +97,9 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
         m_styleKeys[i] = new PoolableObjectType( styleType.getLinktype(), styleType.getHref(),
             context );
         m_styleNames[i] = styleType.getStyle();
-
-        pool.addPoolListener( this, m_styleKeys[i] );
       }
+
+      pool.addPoolListener( this, m_layerKey );
     }
     else
     {
@@ -140,7 +140,7 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
 
   public void saveFeatures() throws FactoryException
   {
-    // TODO: do it in a job
+    // todo: do it in a job
     KalypsoGisPlugin.getDefault().getPool().saveObject( m_theme.getWorkspace(), new NullProgressMonitor() );
   }
 
@@ -198,51 +198,64 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
     }
   }
 
-  public KalypsoFeatureTheme getFeatureTheme()
-  {
-    return m_theme;
-  }
-
   /**
    * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
    *      java.lang.Object, org.eclipse.core.runtime.IStatus)
    */
   public void objectLoaded( final IPoolableObjectType key, Object newValue, IStatus status )
   {
-    if( key == m_layerKey )
+    try
     {
-      if( m_theme != null )
+      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+
+      if( pool.equalsKeys( key, m_layerKey ) )
       {
-        m_theme.removeModellListener( this );
-        m_theme.dispose();
-        m_theme = null;
-      }
-  
-      m_theme = new KalypsoFeatureTheme( (GMLWorkspace)newValue, m_featurePath, getName() );
-      m_theme.addModellListener( this );
-  
-      fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
-    }
-    
-    // styles
-    for( int i = 0; i < m_styleKeys.length; i++ )
-    {
-      final IPoolableObjectType styleKey = m_styleKeys[i];
-      if( styleKey == key )
-      {
-        final StyledLayerDescriptor sld = (StyledLayerDescriptor)newValue;
-        final UserStyle style = sld.findUserStyle( m_styleNames[i] );
-        if( style != null && m_theme != null )
-          m_theme.addStyle( new KalypsoUserStyle( style ) );
-        else
+        if( m_theme != null )
         {
-          // TODO error handling
+          m_theme.removeModellListener( this );
+          m_theme.dispose();
+          m_theme = null;
         }
-    
-        fireModellEvent( null );
         
-        break;
+        m_theme = new KalypsoFeatureTheme( (GMLWorkspace)newValue, m_featurePath, getName() );
+        m_theme.addModellListener( this );
+
+        // jetzt immer die styles noch mal holen
+        // das ist nicht ok! was ist, wenn inzwischen neue styles vom user hinzugefügt wurden?
+        for( int i = 0; i < m_styleKeys.length; i++ )
+          pool.addPoolListener( this, m_styleKeys[i] );
+        
+        fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
       }
+      
+      // styles
+      if( m_styleKeys != null && m_styleNames != null )
+      {
+        for( int i = 0; i < m_styleKeys.length; i++ )
+        {
+          final IPoolableObjectType styleKey = m_styleKeys[i];
+          if( pool.equalsKeys( styleKey, key ) )
+          {
+            final StyledLayerDescriptor sld = (StyledLayerDescriptor)newValue;
+            final UserStyle style = sld.findUserStyle( m_styleNames[i] );
+            if( style != null && m_theme != null )
+              m_theme.addStyle( new KalypsoUserStyle( style ) );
+            else
+            {
+              // error handling?
+            }
+        
+            fireModellEvent( null );
+            
+            break;
+          }
+        }
+      }
+    }
+    catch( final Throwable e )
+    {
+      // alles abfangen, damit der Pool trotzdem weitermacht
+      e.printStackTrace();
     }
   }
 
@@ -268,5 +281,65 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
       if( key == styleKey )
         m_theme.removeStyle( (KalypsoUserStyle)oldValue );
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getWorkspace()
+   */
+  public GMLWorkspace getWorkspace()
+  {
+    if( m_theme != null )
+      return m_theme.getWorkspace();
+    
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureType()
+   */
+  public FeatureType getFeatureType()
+  {
+    if( m_theme != null )
+      return m_theme.getFeatureType();
+    
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#addStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
+   */
+  public void addStyle( KalypsoUserStyle style )
+  {
+    if( m_theme != null )
+      m_theme.addStyle(style);
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#removeStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
+   */
+  public void removeStyle( KalypsoUserStyle style )
+  {
+  if( m_theme != null )
+    m_theme.removeStyle(style);
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getStyles()
+   */
+  public UserStyle[] getStyles()
+  {
+    if( m_theme != null )
+      return m_theme.getStyles();
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureList()
+   */
+  public FeatureList getFeatureList()
+  {
+    if( m_theme != null )
+      return m_theme.getFeatureList();
+    return null;
   }
 }

@@ -4,8 +4,6 @@ import java.net.URL;
 import java.util.List;
 
 import org.deegree.model.feature.event.ModellEventProvider;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Position;
 
 /**
  * @author doemming

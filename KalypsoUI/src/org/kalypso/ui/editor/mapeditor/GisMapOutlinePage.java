@@ -27,6 +27,7 @@ import org.kalypso.ogc.gml.command.MoveThemeUpCommand;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
+import org.kalypso.ogc.gml.outline.ActivateThemeAction;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.outline.MoveThemeDownAction;
 import org.kalypso.ogc.gml.outline.MoveThemeUpAction;
@@ -58,6 +59,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   protected RemoveRuleAction m_removeRuleAction = null;
 
   protected SaveStyleAction m_saveStyleAction = null;
+  
+  protected ActivateThemeAction m_activateThemeAction = null;
 
   private final JobExclusiveCommandTarget m_commandTarget;
 
@@ -102,6 +105,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     m_saveStyleAction = new SaveStyleAction( "Style speichern",
         ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Style speichern", m_modellView );
 
+    m_activateThemeAction = new ActivateThemeAction( "Thema aktivieren", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Thema aktivieren", m_modellView );
+
     onModellChange( null );
   }
 
@@ -127,6 +132,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
       m_saveStyleAction.dispose();
     if( m_removeRuleAction != null )
       m_removeRuleAction.dispose();
+    if( m_activateThemeAction != null )
+      m_activateThemeAction.dispose();
   }
 
   /**
@@ -146,6 +153,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
 
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
+    toolBarManager.add( m_activateThemeAction );
     toolBarManager.add( m_moveOneDownAction );
     toolBarManager.add( m_moveOneUpAction );
     toolBarManager.add( m_moveOneDownAction );
@@ -159,6 +167,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     {
       public void menuAboutToShow( IMenuManager manager )
       {
+        manager.add( m_activateThemeAction );
         manager.add( m_moveOneDownAction );
         manager.add( m_moveOneUpAction );
         manager.add( m_removeAction );

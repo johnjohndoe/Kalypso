@@ -1,8 +1,8 @@
 package org.kalypso.ogc.gml.map.actions;
 
 import org.deegree.model.geometry.GM_Envelope;
+import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.mapmodel.MapPanel;
-import org.kalypso.ogc.gml.widgets.ChangeExtentCommand;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;

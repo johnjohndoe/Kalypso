@@ -140,9 +140,9 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     {
       final IKalypsoTheme theme = m_mapModell.getTheme( i );
 
-      if( m_mapModell.isThemeEnabled( theme ) && theme instanceof KalypsoFeatureTheme )
+      if( m_mapModell.isThemeEnabled( theme ) && theme instanceof IKalypsoFeatureTheme )
       {
-        final KalypsoFeatureTheme featureTheme = (KalypsoFeatureTheme)theme;
+        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)theme;
 
         final UserStyle[] styles = featureTheme.getStyles();
         final FeatureType ft = featureTheme.getFeatureType();

@@ -1,6 +1,8 @@
 package org.kalypso.ogc.gml.table;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -14,6 +16,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -34,8 +38,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.eclipse.swt.custom.ExcelLikeTableCursor;
+import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.table.celleditors.ICellEditorFactory;
 import org.kalypso.ogc.gml.table.command.ChangeSortingCommand;
 import org.kalypso.template.gistableview.Gistableview;
@@ -57,7 +62,7 @@ import org.kalypso.util.factory.FactoryException;
 public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     ModellEventListener, ICommandTarget, ISelectionChangedListener
 {
-  private static Logger LOGGER = Logger.getLogger( LayerTableViewer.class.getName() );
+  private Logger LOGGER = Logger.getLogger( LayerTableViewer.class.getName() );
 
   public static final String COLUMN_PROP_NAME = "columnName";
 
@@ -241,7 +246,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     if( tableView != null )
     {
       final LayerType layer = tableView.getLayer();
-      setTheme( new PoolableKalypsoFeatureTheme( layer, context ) );
+      setTheme( new GisTemplateFeatureTheme( layer, context ) );
   
       final SortType sort = layer.getSort();
       if( sort != null )
@@ -263,12 +268,12 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     m_isApplyTemplate = false;
   }
 
-  public PoolableKalypsoFeatureTheme getTheme()
+  public IKalypsoFeatureTheme getTheme()
   {
-    return (PoolableKalypsoFeatureTheme)getInput();
+    return (IKalypsoFeatureTheme)getInput();
   }
 
-  private void setTheme( final PoolableKalypsoFeatureTheme theme )
+  private void setTheme( final IKalypsoFeatureTheme theme )
   {
     // TODO: change to GMLWorkspace!
     final IKalypsoTheme oldTheme = (IKalypsoTheme)getInput();
@@ -563,7 +568,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final Gistableview tableTemplate = m_gistableviewFactory.createGistableview();
     final LayerType layer = m_gistableviewFactory.createGistableviewTypeLayerType();
 
-    getTheme().fillLayerType( layer, "id", true );
+    ((GisTemplateFeatureTheme)getTheme()).fillLayerType( layer, "id", true );
 
     tableTemplate.setLayer( layer );
 
@@ -601,7 +606,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   {
     try
     {
-      getTheme().saveFeatures();
+      ((GisTemplateFeatureTheme)getTheme()).saveFeatures();
     }
     catch( FactoryException e )
     {
@@ -620,39 +625,38 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   public String[][] exportTable( final boolean onlySelected )
   {
-//    Object[] features;
-//    
-//    if( onlySelected )
-//    {
-//      final IStructuredSelection sel = (IStructuredSelection)getSelection();
-//      features = sel.toArray(  );
-//    }
-//    else
-//      features = ((KalypsoFeatureLayer)getTheme().getLayer()).getAllFeatures();
-//
-//    final Collection lines = new ArrayList(); 
-//
-//    final ITableLabelProvider labelProvider = (ITableLabelProvider)getLabelProvider();
-//    
-//    final Table table = getTable();
-//    final TableColumn[] columns = table.getColumns();
-//    
-//    final String[] firstLine = new String[columns.length];
-//    for( int j = 0; j < columns.length; j++ )
-//      firstLine[j] = (String)columns[j].getData( COLUMN_PROP_NAME );
-//    lines.add( firstLine );
-//    
-//    for( int i = 0; i < features.length; i++ )
-//    {
-//      final String[] line = new String[columns.length];
-//      
-//      for( int j = 0; j < columns.length; j++ )
-//        line[j] = labelProvider.getColumnText( features[i], j );
-//
-//      lines.add( line );
-//    }
+    Object[] features;
     
-//    return (String[][])lines.toArray( new String[features.length][] );
-    return null;
+    if( onlySelected )
+    {
+      final IStructuredSelection sel = (IStructuredSelection)getSelection();
+      features = sel.toArray(  );
+    }
+    else
+      features = getTheme().getFeatureList().toFeatures();
+
+    final Collection lines = new ArrayList(); 
+
+    final ITableLabelProvider labelProvider = (ITableLabelProvider)getLabelProvider();
+    
+    final Table table = getTable();
+    final TableColumn[] columns = table.getColumns();
+    
+    final String[] firstLine = new String[columns.length];
+    for( int j = 0; j < columns.length; j++ )
+      firstLine[j] = (String)columns[j].getData( COLUMN_PROP_NAME );
+    lines.add( firstLine );
+    
+    for( int i = 0; i < features.length; i++ )
+    {
+      final String[] line = new String[columns.length];
+      
+      for( int j = 0; j < columns.length; j++ )
+        line[j] = labelProvider.getColumnText( features[i], j );
+
+      lines.add( line );
+    }
+    
+    return (String[][])lines.toArray( new String[features.length][] );
   }
 }

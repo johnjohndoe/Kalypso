@@ -33,4 +33,6 @@ public interface ILoader
   public void addLoaderListener( final ILoaderListener l );
   
   public void removeLoaderListener( final ILoaderListener l );
+
+  public int compareKeys( final Properties source1, final URL context1, final Properties source2, final URL context2 );
 }

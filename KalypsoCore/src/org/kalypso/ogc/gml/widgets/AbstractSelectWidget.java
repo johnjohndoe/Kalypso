@@ -10,8 +10,8 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.JMMarkSelectCommand;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.command.SingleSelectCommand;
@@ -84,7 +84,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     final GeoTransform transform = mapPanel.getProjection();
 
     final IKalypsoTheme activeTheme = getActiveTheme();
-    if( activeTheme == null || !( activeTheme instanceof KalypsoFeatureTheme ) )
+    if( activeTheme == null || !( activeTheme instanceof IKalypsoFeatureTheme ) )
     {
       myStartPoint = null;
       myEndPoint = null;
@@ -105,14 +105,14 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         GM_Position pointSelect = GeometryFactory.createGM_Position( g1x, g1y );
 
         Feature fe = selector.selectNearest( pointSelect, gisRadius,
-            ((KalypsoFeatureTheme)activeTheme).getFeatureList(), false, mapPanel.getSelectionID() );
+            ((IKalypsoFeatureTheme)activeTheme).getFeatureList(), false, mapPanel.getSelectionID() );
         List listFe = new ArrayList();
         if( fe != null )
           listFe.add( fe );
         //List listFe = selector.select( pointSelect, activeTheme,
         // mapPanel.getSelectionID() );
         if( !listFe.isEmpty() )
-          fireCommand( listFe, (KalypsoFeatureTheme)activeTheme, mapPanel.getSelectionID() );
+          fireCommand( listFe, (IKalypsoFeatureTheme)activeTheme, mapPanel.getSelectionID() );
       }
       else
       // dragged
@@ -133,10 +133,10 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         {
           final JMSelector selector = new JMSelector( getSelectionMode() );
           GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
-          List features = selector.select( envSelect, ((KalypsoFeatureTheme)activeTheme).getFeatureList(), withinStatus,
+          List features = selector.select( envSelect, ((IKalypsoFeatureTheme)activeTheme).getFeatureList(), withinStatus,
               mapPanel.getSelectionID() );
           if( !features.isEmpty() )
-            fireCommand( features, (KalypsoFeatureTheme)activeTheme, mapPanel.getSelectionID() );
+            fireCommand( features, (IKalypsoFeatureTheme)activeTheme, mapPanel.getSelectionID() );
         }
       }
     }
@@ -144,7 +144,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     myEndPoint = null;
   }
 
-  private void fireCommand( final List features, final KalypsoFeatureTheme activeTheme, final int selectionId )
+  private void fireCommand( final List features, final IKalypsoFeatureTheme activeTheme, final int selectionId )
   {
     ICommand command = null;
     if( allowOnlyOneSelectedFeature() )

@@ -12,8 +12,8 @@ import java.util.List;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.event.ModellEvent;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.MapPanel;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
@@ -162,9 +162,9 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   {
     final IKalypsoTheme activeTheme = getActiveTheme();
     myWidget = null;
-    if( activeTheme != null && activeTheme instanceof KalypsoFeatureTheme )
+    if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
     {
-      final FeatureType ft = ( (KalypsoFeatureTheme)activeTheme ).getFeatureType();
+      final FeatureType ft = ( (IKalypsoFeatureTheme)activeTheme ).getFeatureType();
       final FeatureTypeProperty[] ftps = ft.getProperties();
       final List geoFtps = new ArrayList();
       // collect available geometry properties
@@ -179,11 +179,11 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
       //        ;
 
       if( geoFtps.size() > 0 )
-        setGeometryWidget( (KalypsoFeatureTheme)activeTheme, (FeatureTypeProperty)geoFtps.get( 0 ) );
+        setGeometryWidget( (IKalypsoFeatureTheme)activeTheme, (FeatureTypeProperty)geoFtps.get( 0 ) );
     }
   }
 
-  private void setGeometryWidget( KalypsoFeatureTheme theme, FeatureTypeProperty ftp )
+  private void setGeometryWidget( final IKalypsoFeatureTheme theme, final FeatureTypeProperty ftp )
   {
     if( ftp.getType().equals( "org.deegree.model.geometry.GM_Point" ) )
       myWidget = new CreatePointFeatureWidget( this, theme, ftp );

@@ -19,8 +19,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.w3c.dom.Document;
 
@@ -45,7 +45,7 @@ public class SaveStyleAction extends AbstractOutlineAction {
 		Object o = ((IStructuredSelection) getOutlineviewer().getSelection()).getFirstElement();
 		if (o instanceof ThemeStyleTreeObject) {
 			final IKalypsoTheme theme = ((ThemeStyleTreeObject) o).getTheme();
-			if (theme instanceof KalypsoFeatureTheme) 
+			if (theme instanceof IKalypsoFeatureTheme) 
 			{
 				KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
 				saveUserStyle(kalypsoStyle,shell);

@@ -366,4 +366,12 @@ public class SplitSort implements FeatureList
   {
     return m_objects.toArray(a);
   }
+
+  /**
+   * @see org.deegree.model.feature.FeatureList#toFeatures()
+   */
+  public Feature[] toFeatures()
+  {
+    return (Feature[])m_objects.toArray( new Feature[m_objects.size()] );
+  }
 }

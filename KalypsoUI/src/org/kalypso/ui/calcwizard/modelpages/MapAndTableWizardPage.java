@@ -28,8 +28,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.ogc.gml.GisTemplateHelper;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.widgets.SingleElementSelectWidget;
 import org.kalypso.ogc.sensor.SensorException;
@@ -245,10 +245,10 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
       return;
 
     final IKalypsoTheme theme = getMapModell().getActiveTheme();
-    if( !( theme instanceof KalypsoFeatureTheme ) )
+    if( !( theme instanceof IKalypsoFeatureTheme ) )
       return;
 
-    final KalypsoFeatureTheme kft = (KalypsoFeatureTheme)theme;
+    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)theme;
     final List selectedFeatures = GetSelectionVisitor.getSelectedFeatures( kft.getWorkspace(), kft.getFeatureType(), SELECTION_ID );
 
     m_diagTemplate.removeAllCurves();

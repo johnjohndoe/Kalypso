@@ -39,7 +39,7 @@ import org.kalypso.editor.styleeditor.RuleCollection;
 import org.kalypso.editor.styleeditor.RuleFilterCollection;
 import org.kalypso.editor.styleeditor.panels.ColorPalettePanel;
 import org.kalypso.editor.styleeditor.panels.RulePatternInputPanel;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog;
@@ -73,7 +73,7 @@ public class RuleTabItemBuilder {
 	private int focusedSymbolizerItem = -1;
 	private RuleFilterCollection rulePatternCollection = null;
 	
-	public RuleTabItemBuilder(Composite composite, RuleFilterCollection rulePatternCollection, KalypsoUserStyle userStyle, KalypsoFeatureTheme theme)
+	public RuleTabItemBuilder(Composite composite, RuleFilterCollection rulePatternCollection, KalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme)
 	{	
 		this.userStyle = userStyle;		
 		if(theme!= null)
