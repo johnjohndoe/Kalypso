@@ -182,7 +182,7 @@ public class ObservationTableModel extends AbstractTableModel
     synchronized( m_columns )
     {
       if( m_columns.size() == 0 )
-        return "Keine Daten vorhaden";
+        return "Keine Daten vorhanden";
 
       if( columnIndex == 0 )
         return m_sharedAxis.getName();
