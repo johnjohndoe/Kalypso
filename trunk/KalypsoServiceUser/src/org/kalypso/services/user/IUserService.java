@@ -16,10 +16,4 @@ public interface IUserService extends Remote, IKalypsoService
    * Returns the rights of the given user.
    */
   public String[] getRights( final String username ) throws RemoteException;
-
-  /**
-   * Returns the rights of the given user.
-   * Allways returns all possible rights
-   */
-  public String[] getFakeRights( final String username ) throws RemoteException;
 }

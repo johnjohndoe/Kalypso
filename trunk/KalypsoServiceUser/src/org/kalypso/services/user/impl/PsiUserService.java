@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import org.kalypso.psiadapter.PSICompactFactory;
 import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.user.IUserService;
-import org.kalypso.services.user.common.IUserServiceConstants;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
@@ -50,7 +49,7 @@ public class PsiUserService implements IUserService
   public String[] getRights( final String username ) throws RemoteException
   {
     if( m_psicompact == null )
-      return getFakeRights( username );
+      return null;
     
     try
     {
@@ -60,20 +59,8 @@ public class PsiUserService implements IUserService
     {
       e.printStackTrace();
 
-      throw new RemoteException( "Fehler beim abfragen der Benutzerrechte", e );
+      throw new RemoteException( "Fehler beim Abfragen der Benutzerrechte", e );
     }
-  }
-
-  /**
-   * @see org.kalypso.services.user.IUserService#getFakeRights(java.lang.String)
-   */
-  public String[] getFakeRights( final String username )
-  {
-    return new String[]
-    {
-        IUserServiceConstants.RIGHT_PROGNOSE,
-        IUserServiceConstants.RIGHT_EXPERT,
-        IUserServiceConstants.RIGHT_ADMIN };
   }
 
   /**

@@ -241,10 +241,20 @@ public class SteuerparameterWizardPage extends WizardPage
   {
     m_workspace = workspace;
 
-    if( m_featureComposite != null )
+    final FeatureComposite featureComposite = m_featureComposite;
+    if( featureComposite != null )
     {
-      m_featureComposite.setFeature( workspace.getRootFeature() );
-      m_featureComposite.updateControl();
+      featureComposite.setFeature( workspace.getRootFeature() );
+      
+      final Control control = m_featureComposite.getControl();
+      if( control != null && !control.isDisposed() )
+      {
+        control.getDisplay().asyncExec( new Runnable( ) {
+          public void run()
+          {
+            featureComposite.updateControl();
+          }} );
+      }
     }
   }
 

@@ -47,6 +47,8 @@ public class FeatureComposite implements IFeatureControl
   private final Collection m_featureControls = new ArrayList();
   private final Collection m_swtControls = new ArrayList();
 
+  private Control m_control = null;
+
   private Feature m_feature;
 
   public FeatureComposite( final Feature feature )
@@ -161,7 +163,8 @@ public class FeatureComposite implements IFeatureControl
   {
     final FeatureviewType view = getFeatureview( ft );
 
-    return createControl( parent, style, view );
+    m_control = createControl( parent, style, view );
+    return m_control;
   }
   
   public Control createControl( final Composite parent, final int style )
@@ -403,5 +406,10 @@ public class FeatureComposite implements IFeatureControl
   {
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
       ((IFeatureControl)iter.next()).removeChangeListener( l );
+  }
+
+  public Control getControl()
+  {
+    return m_control;
   }
 }
