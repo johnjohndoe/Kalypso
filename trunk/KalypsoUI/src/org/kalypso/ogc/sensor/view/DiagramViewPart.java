@@ -13,7 +13,9 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.IProgressService;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate;
@@ -126,7 +128,8 @@ public class DiagramViewPart extends ViewPart implements
 
     try
     {
-      getSite().getWorkbenchWindow().run( false, false, runnable );
+      final IProgressService service = PlatformUI.getWorkbench().getProgressService();
+      service.busyCursorWhile( runnable );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
