@@ -79,7 +79,7 @@ public class SaveThemeDelegate extends GisTableAbstractActionDelagate
     {
       final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 
-      final WorkspaceModifyOperation op = new WorkspaceModifyOperation( theme.getSchedulingRule() )
+      final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
       {
         protected void execute( final IProgressMonitor monitor ) throws CoreException
         {
