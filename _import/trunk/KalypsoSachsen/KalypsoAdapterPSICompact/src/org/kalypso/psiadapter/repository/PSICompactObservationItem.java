@@ -262,9 +262,7 @@ public class PSICompactObservationItem implements IObservation
           m_psicMetaData.getUnit(), unit );
 
       // Status
-      m_axes[2] = new DefaultAxis( KalypsoStatusUtils
-          .getStatusAxisLabelFor( m_axes[1] ), "kalypso_status", "",
-          Integer.class, 2, false );
+      m_axes[2] = KalypsoStatusUtils.getStatusAxisFor( m_axes[1], 2 );
     }
 
     return m_axes;
