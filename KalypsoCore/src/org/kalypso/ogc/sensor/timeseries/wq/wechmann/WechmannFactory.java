@@ -115,6 +115,7 @@ public class WechmannFactory
           sets[i] = new WechmannSet( df.parse( wset.getValidity().getValue() ),
               wparams );
         }
+        i++;
       }
 
       return new WechmannGroup( sets );
