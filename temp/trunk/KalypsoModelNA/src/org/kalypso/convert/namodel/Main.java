@@ -40,7 +40,8 @@ public class Main
     public static void main(String[] args)
     {
         try {
-            Configuration conf = new Configuration(new File("test"));
+//            Configuration conf = new Configuration(new File("test"));
+            Configuration conf = new Configuration(new File("/tmp/weisseElster"));
             Feature fe = asciiToFeature(conf);
             File gmlFile = File.createTempFile("namodell_test", ".gml");
             insertGeometries(fe);

@@ -1,8 +1,5 @@
 package org.kalypso.convert.namodel;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
@@ -31,7 +28,7 @@ private final Configuration m_conf;
     m_schema = schema;
   }
 
-  public Feature asciiToFeature() throws IOException
+  public Feature asciiToFeature() throws Exception, Exception
   {
   	ModelManager modelManager=new ModelManager();
     // get all FeatureTypes...

@@ -49,10 +49,10 @@ public class CatchmentManager extends AbstractManager
 
   
   /**
-   * @throws IOException
-   * @see AbstractManager#parseFile(java.io.File)
+   * @throws Exception
+ * @see AbstractManager#parseFile(java.io.File)
    */
-  public Feature[] parseFile( URL url ) throws IOException
+  public Feature[] parseFile( URL url ) throws Exception
   {
     List result=new ArrayList();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader(url.openConnection().getInputStream()));// new FileReader( file ) );
@@ -62,7 +62,7 @@ public class CatchmentManager extends AbstractManager
        return (Feature[])result.toArray(new Feature[result.size()]);
   }
 
-  private Feature readNextFeature( LineNumberReader reader ) throws IOException
+  private Feature readNextFeature( LineNumberReader reader ) throws Exception
   {
     HashMap propCollector = new HashMap();
     String line;
