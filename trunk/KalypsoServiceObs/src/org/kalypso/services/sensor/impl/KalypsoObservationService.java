@@ -120,4 +120,12 @@ public class KalypsoObservationService implements IObservationService
   {
     return null;
   }
+
+  /**
+   * @see org.kalypso.services.sensor.IObservationService#getServiceVersion()
+   */
+  public int getServiceVersion()
+  {
+    return 0;
+  }
 }

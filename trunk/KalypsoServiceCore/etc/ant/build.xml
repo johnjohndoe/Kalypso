@@ -129,9 +129,8 @@
 		<delete file="${java.io.tmpdir}/${portable.war}" />
 	</target>
 
-	<!-- TODO abhängigkeit zu compile-service wieder einbauen -->
 	<target name="generate-wsdl"
-	        depends="prepare"
+	        depends="prepare,compile-services"
 	        description="Erzegt das wsld File aus dem Service-Interface">
 		<delete verbose="true" failonerror="false">
 			<fileset dir="${java.io.tmpdir}/config-interface" includes="**/*" />
@@ -216,21 +215,6 @@
 			<param name="aproject_lib" value="KalypsoCoreServices/lib" />
 		</antcall>
 
-		<!--		
-		    <javac srcdir="${src}" destdir="${build}" includes="**/*.java" debug="true">
-		      <classpath>
-		      	<fileset dir="${build.web.lib}" includes="**/*.jar"/>
-		      	<fileset refid="compile.jars"/>
-		      </classpath>
-		    </javac>
-		-->
-		<!--    
-		    <copy todir="${build}" >
-		      <fileset dir="${src}" includes="**/*" >
-		        <exclude name="**/*.java"/>
-		      </fileset>
-		    </copy>
-		-->
 	</target>
 
 
@@ -289,10 +273,9 @@
 		<echo message="${config.wsdl.header}${config.wsdl.body}"
 		      file="${java.io.tmpdir}/${config.wsdl.file}" />
 
-		<wscompile import="true"
+		<wscompile client="true"
 		           base="${build.proxy}"
 		           nonclassdir="${build.proxy}"
-		           f="norpcstructures"
 		           config="${java.io.tmpdir}/${config.wsdl.file}">
 			<classpath refid="compile.classpath" />
 		</wscompile>
