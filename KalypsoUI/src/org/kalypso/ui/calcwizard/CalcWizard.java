@@ -60,9 +60,16 @@ public class CalcWizard implements IWizard, IProjectProvider
 
   private IDialogSettings m_dialogSettings;
 
+  private ModelSynchronizer m_synchronizer;
+
   public CalcWizard( final IProject project )
   {
     m_project = project;
+    
+    final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
+    final File serverProject = new File( serverRoot, project.getName() );
+
+    m_synchronizer = new ModelSynchronizer( project, serverProject );
   }
 
   /**
@@ -82,7 +89,7 @@ public class CalcWizard implements IWizard, IProjectProvider
 //    m_addCalcCasePage.addChoice( new CopyCalcCaseChoice(
 //        "einen bereits vorhandenen Rechenfall kopieren", m_project, m_addCalcCasePage ) );
     m_addCalcCasePage.addChoice( new CopyServerCalcCaseChoice(
-        "einen auf dem Server archivierten Rechenfall kopieren", m_project, m_addCalcCasePage ) );
+        "einen auf dem Server archivierten Rechenfall kopieren", m_project, m_addCalcCasePage, m_synchronizer ) );
     
 
     addPage( m_addCalcCasePage );
@@ -172,11 +179,8 @@ public class CalcWizard implements IWizard, IProjectProvider
     if( dialog.open() != Window.OK )
       return false;
 
-    final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
-    final IProject project = getProject();
-    final File serverProject = new File( serverRoot, project.getName() );
-    final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
-
+    final ModelSynchronizer synchronizer = m_synchronizer;
+    
     final Object[] saveCases = dialog.getResult();
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
