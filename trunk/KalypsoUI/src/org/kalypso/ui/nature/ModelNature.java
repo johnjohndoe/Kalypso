@@ -90,6 +90,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
+import org.kalypso.eclipse.core.runtime.LogStatusWrapper;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.model.xml.CalcCaseConfigType;
@@ -106,7 +107,6 @@ import org.kalypso.services.proxy.CalcJobDataBean;
 import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.transformation.TransformationHelper;
-import org.kalypso.util.transformation.TransformationResult;
 import org.kalypso.util.url.UrlResolver;
 import org.xml.sax.InputSource;
 
@@ -400,7 +400,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       if( transList == null )
         return Status.OK_STATUS;
 
-      final TransformationResult res = TransformationHelper.doTranformations( folder, transList, new SubProgressMonitor(
+      final LogStatusWrapper res = TransformationHelper.doTranformations( folder, transList, new SubProgressMonitor(
           monitor, 1000 ) );
       
       return res.toStatus();

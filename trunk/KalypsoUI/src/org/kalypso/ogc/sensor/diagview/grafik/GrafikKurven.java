@@ -81,8 +81,7 @@ public class GrafikKurven
    * 
    * @param tc
    * @param numberAxes
-   * @return
-   * @return
+   * @return the axis for which the curve will be displayed
    */
   public IAxis addCurve( final IFile file, final TypeCurve tc, final IAxis[] numberAxes )
   {

@@ -70,7 +70,7 @@ public class TimeserieUtils
   private static HashMap m_formatMap = null;
 
   private static NumberFormat m_defaultFormat = null;
-
+  
   private TimeserieUtils()
   {
   // no instanciation
@@ -105,14 +105,14 @@ public class TimeserieUtils
   }
 
   /**
-   * Finds out the list of alarmstufen metadata keys.
+   * Finds out the list of alarmstufen metadata keys
    * 
    * @param obs
    * @return list of metadata keys
    */
   public final static String[] findOutMDAlarmLevel( final IObservation obs )
   {
-    return findOutMDBeginningWith( obs, "Alarmstufe" );
+      return findOutMDBeginningWith( obs, "Alarmstufe" );
   }
 
   /**
