@@ -16,6 +16,7 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.model.sort.DisplayContext;
+import org.deegree_impl.model.sort.SplitSort;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.util.command.ICommand;
@@ -32,7 +33,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   private boolean m_isdirty = true;
 
   private List m_styles = new ArrayList();
-  
+
   private Map m_displayContexts = new HashMap();
 
   private final FeatureList m_featureList;
@@ -45,14 +46,22 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     super( name );
 
     m_workspace = workspace;
-    
-    m_featureType = workspace.getFeatureTypeFromPath( featurePath );
+
     final Object featureFromPath = workspace.getFeatureFromPath( featurePath );
     if( featureFromPath instanceof FeatureList )
+    {
+      m_featureType = workspace.getFeatureTypeFromPath( featurePath );
       m_featureList = (FeatureList)featureFromPath;
+    }
+    else if( featureFromPath instanceof Feature )
+    {
+      m_featureList = new SplitSort();
+      m_featureList.add( featureFromPath );
+      m_featureType = ( (Feature)featureFromPath ).getFeatureType();
+    }
     else
-      throw new IllegalArgumentException( "FeaturePath doesn't point to feature collection: " + featurePath );
-
+      throw new IllegalArgumentException( "FeaturePath doesn't point to feature collection: "
+          + featurePath );
     m_workspace.addModellListener( this );
   }
 
@@ -60,17 +69,17 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   {
     m_workspace.removeModellListener( this );
   }
-  
+
   private void setDirty( final boolean dirty )
   {
     m_isdirty = dirty;
   }
-  
+
   public CommandableWorkspace getWorkspace()
   {
     return m_workspace;
   }
-  
+
   public FeatureType getFeatureType()
   {
     return m_featureType;
@@ -98,16 +107,16 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   public void addStyle( final KalypsoUserStyle style )
   {
     m_styles.add( style );
-    
+
     style.addModellListener( this );
-    
+
     setDirty( true );
   }
 
   public void removeStyle( final KalypsoUserStyle style )
   {
     style.removeModellListener( this );
-    
+
     m_styles.remove( style );
 
     setDirty( true );
@@ -123,7 +132,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       final Feature feature = (Feature)iter.next();
       m_displayContexts.put( feature, new DisplayContext( feature, styles ) );
     }
-    
+
     setDirty( false );
   }
 
@@ -137,9 +146,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-      setDirty( true );
+    setDirty( true );
 
-      fireModellEvent( modellEvent );
+    fireModellEvent( modellEvent );
   }
 
   /**
@@ -156,7 +165,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand,
+   *      java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
