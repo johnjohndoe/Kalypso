@@ -360,8 +360,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 
   public void refreshTimeseries( )
   {
-    //    if( !isCurrentPage() )
-    //      return;
     final TSLinkWithName[] obs = getObservationsToShow();
     refreshObservationsForContext( obs, getContext() );
   }
@@ -483,7 +481,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
         if( obsLink != null )
         {
           final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink
-              .getLinktype(), obsLink.getHref() );
+              .getLinktype(), obsLink.getHref(), m_tsProps[i].getFilter() );
           foundObservations.add( linkWithName );
         }
       }
@@ -493,7 +491,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
         .toArray( new TSLinkWithName[foundObservations.size()] );
   }
   
-  protected TSLinkWithName[] getTimeseriesForProperty( final String name, final List features, final String property )
+  protected TSLinkWithName[] getTimeseriesForProperty( final String name, final List features, final String property, final String filter )
   {
     final Collection foundObservations = new ArrayList( features.size() );
 
@@ -506,7 +504,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
         if( obsLink != null )
         {
           final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink
-              .getLinktype(), obsLink.getHref() );
+              .getLinktype(), obsLink.getHref(), filter );
           foundObservations.add( linkWithName );
         }
     }

@@ -40,7 +40,7 @@ public class ShapeSerializer
 
   private ShapeSerializer()
   {
-  // wird nicht instantiiert
+    // wird nicht instantiiert
   }
 
   public static void serialize( final GMLWorkspace workspace, final String filenameBase )

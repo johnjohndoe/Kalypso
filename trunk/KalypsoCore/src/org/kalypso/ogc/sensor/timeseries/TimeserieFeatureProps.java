@@ -9,10 +9,6 @@ import java.util.Properties;
  */
 public class TimeserieFeatureProps
 {
-  private final static String PROP_DIAGDATEAXIS = "diagDateAxis";
-
-  private final static String PROP_DIAGVALUEAXIS = "diagValueAxis";
-
   private final static String PROP_NAMECOLUMN = "nameColumn";
 
   private final static String PROP_LINKCOLUM = "linkColumn";
@@ -21,39 +17,25 @@ public class TimeserieFeatureProps
 
   private final String m_linkColumn;
 
-  private final String m_diagDateAxis;
+  private final String m_filter;
 
-  private final String m_diagValueAxis;
+  private static final String PROP_FILTER = "filter";
 
   public TimeserieFeatureProps( final Properties props )
   {
-    this( props.getProperty( PROP_DIAGDATEAXIS ), props.getProperty( PROP_DIAGVALUEAXIS ), props
-        .getProperty( PROP_NAMECOLUMN ), props.getProperty( PROP_LINKCOLUM ) );
+    this( props.getProperty( PROP_NAMECOLUMN ), props.getProperty( PROP_LINKCOLUM ),props.getProperty( PROP_FILTER ) );
   }
 
-  public TimeserieFeatureProps( final String diagDateAxis, final String diagValueAxis,
-      final String nameColumn, final String linkColumn )
+  public TimeserieFeatureProps( final String nameColumn, final String linkColumn, final String filter )
   {
-    m_diagDateAxis = diagDateAxis;
-    m_diagValueAxis = diagValueAxis;
     m_nameColumn = nameColumn;
     m_linkColumn = linkColumn;
+    m_filter = filter;
   }
   
-  /**
-   * @return Returns the diagDateAxis.
-   */
-  public String getDiagDateAxis( )
+  public String getFilter()
   {
-    return m_diagDateAxis;
-  }
-  
-  /**
-   * @return Returns the diagValueAxis.
-   */
-  public String getDiagValueAxis( )
-  {
-    return m_diagValueAxis;
+    return m_filter;
   }
   
   /**

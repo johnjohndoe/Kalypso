@@ -7,12 +7,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import javax.swing.SwingUtilities;
 import javax.xml.bind.JAXBException;
 
 import org.deegree.model.feature.Feature;
 import org.kalypso.java.util.PropertiesHelper;
-import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
@@ -52,12 +50,12 @@ public class KalypsoWizardHelper
   public static TimeserieFeatureProps[] parseTimeserieFeatureProps(
       final Properties props )
   {
-    ArrayList l = new ArrayList();
+    final ArrayList l = new ArrayList();
 
-    Enumeration names = props.propertyNames();
+    final Enumeration names = props.propertyNames();
     while( names.hasMoreElements() )
     {
-      String pName = (String) names.nextElement();
+      final String pName = (String) names.nextElement();
 
       if( pName
           .startsWith( ObservationMapTableDiagWizardPage.PROP_TIMEPROPNAME ) )
@@ -81,10 +79,6 @@ public class KalypsoWizardHelper
       final LinkedDiagramTemplate template, final TSLinkWithName[] links,
       final URL context, final boolean ignoreExceptions )
   {
-//    final Runnable runnable = new Runnable()
-//    {
-//      public void run( )
-//      {
         template.removeAllThemes();
 
         for( int i = 0; i < links.length; i++ )
@@ -93,18 +87,6 @@ public class KalypsoWizardHelper
           template.addObservation( link.name, context, link.href,
               link.linktype, ignoreExceptions, null );
         }
-//      }
-//    };
-//
-//    try
-//    {
-//      SwingUtilities.invokeAndWait( runnable );
-//    }
-//    catch( Exception e ) // generic exception caught for simplicity
-//    {
-//      // TODO error handling
-//      e.printStackTrace();
-//    }
   }
 
   /**
@@ -119,10 +101,6 @@ public class KalypsoWizardHelper
       final LinkedTableViewTemplate template, final TSLinkWithName[] links,
       final URL context, final boolean ignoreExceptions )
   {
-//    final Runnable runnable = new Runnable()
-//    {
-//      public void run( )
-//      {
         template.removeAllThemes();
 
         for( int i = 0; i < links.length; i++ )
@@ -131,18 +109,6 @@ public class KalypsoWizardHelper
           template.addObservation( link.name, context, link.href,
               link.linktype, ignoreExceptions, null );
         }
-//      }
-//    };
-//
-//    try
-//    {
-//      SwingUtilities.invokeAndWait( runnable );
-//    }
-//    catch( Exception e ) // generic exception caught for simplicity
-//    {
-//      // TODO error handling
-//      e.printStackTrace();
-//    }
   }
 
   /**
@@ -165,9 +131,9 @@ public class KalypsoWizardHelper
         final TimeseriesLink obsLink = (TimeseriesLink) kf
             .getProperty( props[i].getLinkColumn() );
 
-        if( obsLink != null )
-          ObservationTemplateHelper.addTimeseriesLink( template, obsLink, name,
-              props[i].getDiagDateAxis(), props[i].getDiagValueAxis() );
+//        if( obsLink != null )
+//          ObservationTemplateHelper.addTimeseriesLink( template, obsLink, name,
+//              props[i].getDiagDateAxis(), props[i].getDiagValueAxis() );
       }
     }
   }

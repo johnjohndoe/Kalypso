@@ -76,7 +76,7 @@ public class ZmlURL
   {
     int ix = strUrl.indexOf( ":" );
     if( ix != -1 )
-      return strUrl.substring( ix );
+      return strUrl.substring( 0, ix );
 
     return strUrl;
   }
