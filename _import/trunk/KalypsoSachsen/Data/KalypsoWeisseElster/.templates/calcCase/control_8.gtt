@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gistableview xmlns="gistableview.template.kalypso.org">
     <layer featurePath="/" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href=".nacontrol_8.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column editable="true" name="name" width="71"/>
-        <column editable="true" name="timeStep" width="59"/>
-        <column editable="true" name="rootNode" width="59"/>
-        <column editable="true" name="resultForRootNodeOnly" width="43"/>
+        <column editable="false" name="name" width="71"/>
         <column editable="true" name="automaticCallibration" width="49"/>
-        <column editable="true" name="qgs" width="46"/>
-        <column editable="true" name="Catchments" width="71"/>
-        <column editable="true" name="CatchmentsBianf" width="51"/>
-        <column editable="true" name="CatchmentsFaktorRetobTetint" width="57"/>
         <column editable="true" name="CatchmentsFaktn" width="56"/>
+        <column editable="true" name="CatchmentsBianf" width="51"/>
         <column editable="true" name="CatchmentsFaktorAigw" width="35"/>
-        <column editable="true" name="KMChannels" width="100"/>
-        <column editable="true" name="pegelZR" width="100"/>
-        <column editable="true" name="qberechnetZR" width="100"/>
+        <column editable="true" name="CatchmentsFaktorRetobTetint" width="57"/>
+        <column editable="true" name="KMChannelsFaktorRkf" width="100"/>
+        <column editable="true" name="KMChannelsFaktorRnf" width="100"/>
     </layer>
 </gistableview>
 

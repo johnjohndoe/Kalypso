@@ -37,7 +37,7 @@
   es gibt einen NEXT-Button:
  
 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Bad Elster" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Bad Elster 1/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_1.gtt"/>
@@ -51,7 +51,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Adorf" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Adorf 2/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_2.gtt"/>
@@ -65,7 +65,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Oelsnitz" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Oelsnitz 3/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_3.gtt"/>
@@ -82,7 +82,7 @@
 
 
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Strassberg" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Strassberg 4/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_4.gtt"/>
@@ -96,7 +96,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Elsterberg" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Elsterberg 5/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_5.gtt"/>
@@ -110,7 +110,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Rodewisch" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Rodewisch 6/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_6.gtt"/>
@@ -124,7 +124,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Mylau" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Mylau 7/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_7.gtt"/>
@@ -138,7 +138,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Greiz" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Greiz 8/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_8.gtt"/>
@@ -152,7 +152,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Weida" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Weida 9/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_9.gtt"/>
@@ -166,7 +166,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Gera" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Gera 10/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_10.gtt"/>
@@ -180,7 +180,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Zeitz" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Zeitz 11/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_11.gtt"/>
@@ -194,7 +194,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Kleindalzig" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Kleindalzig 12/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_12.gtt"/>
@@ -208,7 +208,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Albrechtshain" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Albrechtshain 13/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_13.gtt"/>
@@ -222,7 +222,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Leipzig-Thekla" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Leipzig-Thekla 14/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_14.gtt"/>
@@ -236,7 +236,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Oberthau" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Oberthau 15/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_15.gtt"/>
@@ -250,7 +250,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Neukirchen" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Neukirchen 16/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_16.gtt"/>
@@ -264,7 +264,7 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Goessnitz" 
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Goessnitz 17/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_17.gtt"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NAModellControl fid="ID000000" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="project:/.model/schema/nacontrol.xsd">
-  <description>beschreibung</description>
+  <description>kein Pegel verfuegbar</description>
   <name>Bad Elster</name>
   <editor>Editor</editor>
   <comment>Kommentar</comment>
