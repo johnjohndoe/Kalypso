@@ -36,6 +36,7 @@ import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
 import de.tuhh.wb.javagis.data.GisElement;
 import de.tuhh.wb.javagis.data.GisElementClass;
 import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
+import de.tuhh.wb.javagis.tools.I18n;
 
 public class GisInnerVectorSetTableView extends JInternalFrame implements InternalFrameListener,ActionListener,MouseListener
 {
@@ -69,8 +70,8 @@ public class GisInnerVectorSetTableView extends JInternalFrame implements Intern
 		JScrollPane scroller=new JScrollPane(jTable);
 		scroller.setBounds(10,10,(getSize().width-30),(getSize().height-120));
 		tabbedPane.addTab(tableModel.getName(),scroller);
-		tabbedPane.setToolTipTextAt(index,tableModel.getDescription());		    
-		jTable.addMouseListener(this);		   
+		tabbedPane.setToolTipTextAt(index,tableModel.getDescription());
+		jTable.addMouseListener(this);
 	    }
 	getContentPane().add(tabbedPane,BorderLayout.CENTER);
 	createFileMenu();
@@ -100,7 +101,7 @@ public class GisInnerVectorSetTableView extends JInternalFrame implements Intern
 		if(selectedRows.length<=0)
 		    {
 			JOptionPane jop = new JOptionPane();
-			jop.showMessageDialog(this,(Object)"Es gibt keine Objekte zu löschen!","Warnung",JOptionPane.WARNING_MESSAGE);
+			jop.showMessageDialog(this,I18n.get("GTV_DiaRemove_Message"),I18n.get("GTV_DiaRemove_Title"),JOptionPane.INFORMATION_MESSAGE);
 		    }
 		else
 		    {
@@ -163,26 +164,26 @@ public class GisInnerVectorSetTableView extends JInternalFrame implements Intern
     
     public void createFileMenu()
     {
-	JMenu edit = new JMenu ("Edit");
+	JMenu edit = new JMenu (I18n.get("TV_GVectorTV_jMenu_edit"));
 
 	JMenuItem mi;
-	mi = new JMenuItem("new");
+	mi = new JMenuItem(I18n.get("TV_GVectorTV_jMenuItem_new"));
 	mi.setActionCommand("new");
 	mi.addActionListener(this);
 	edit.add(mi);
 
-	mi = new JMenuItem("insert");
+	mi = new JMenuItem(I18n.get("TV_GVectorTV_jMenuItem_insert"));
 	mi.setActionCommand("insert");
 	mi.addActionListener(this);
 	edit.add(mi);
 
- 	mi = new JMenuItem("remove");
-	mi.setActionCommand("remove");
+ 	mi = new JMenuItem();
+	mi.setActionCommand(I18n.get("TV_GVectorTV_jMenuItem_remove"));
 	mi.addActionListener(this);
 	edit.add(mi);
 
- 	mi = new JMenuItem("save");
-	mi.setActionCommand("save");
+ 	mi = new JMenuItem();
+	mi.setActionCommand(I18n.get("TV_GVectorTV_jMenuItem_save"));
 	mi.addActionListener(this);
 	edit.add(mi);
 
@@ -196,32 +197,32 @@ public class GisInnerVectorSetTableView extends JInternalFrame implements Intern
     }
 
     
-    private void maybeShowPopup(MouseEvent e) 
+    private void maybeShowPopup(MouseEvent e)
     {
 	int selectedTab = tabbedPane.getSelectedIndex();
 	GisInterfaceTableModel tableModel = (GisInterfaceTableModel)tableModels.elementAt(selectedTab);
 	
-        if (e.isPopupTrigger()) 
+        if (e.isPopupTrigger())
 	    {
 		JMenuItem mi;
 		JPopupMenu popup = new JPopupMenu();
 
-		mi = new JMenuItem("new");
+		mi = new JMenuItem(I18n.get("TV_GVectorTV_PopMen_new"));
 		mi.setActionCommand("new");
 		mi.addActionListener(this);
 		popup.add(mi);
 
-		mi = new JMenuItem("remove");
+		mi = new JMenuItem(I18n.get("TV_GVectorTV_PopMen_remove"));
 		mi.setActionCommand("remove");
 		mi.addActionListener(this);
 		popup.add(mi);
 
-		mi = new JMenuItem("insert");
+		mi = new JMenuItem(I18n.get("TV_GVectorTV_PopMen_insert"));
 		mi.setActionCommand("insert");
 		mi.addActionListener(this);
 		popup.add(mi);
 		
-		mi = new JMenuItem("save");
+		mi = new JMenuItem(I18n.get("TV_GVectorTV_PopMen_save"));
 		mi.setActionCommand("save");
 		mi.addActionListener(this);
 		popup.add(mi);
@@ -229,39 +230,39 @@ public class GisInnerVectorSetTableView extends JInternalFrame implements Intern
 		popup.show(e.getComponent(),
 			   e.getX(), e.getY());
 	    }
-    } 
+    }
 
     // internalFrameListener:
 
     //          Invoked when an internal frame is activated.
-    public void internalFrameActivated(InternalFrameEvent e) 
+    public void internalFrameActivated(InternalFrameEvent e)
     {}
 
     //          Invoked when an internal frame has been closed.
-    public void internalFrameClosed(InternalFrameEvent e) 
+    public void internalFrameClosed(InternalFrameEvent e)
     {
 	//	myGisElementClass.unRegister(this);
     }
 
     //          Invoked when an internal frame is in the process of being closed.
-    public void internalFrameClosing(InternalFrameEvent e) 
+    public void internalFrameClosing(InternalFrameEvent e)
     {
 	store();
     }
 
     //          Invoked when an internal frame is de-activated.
-    public void internalFrameDeactivated(InternalFrameEvent e) 
+    public void internalFrameDeactivated(InternalFrameEvent e)
     {}
 
     //          Invoked when an internal frame is de-iconified.
-    public void internalFrameDeiconified(InternalFrameEvent e) 
+    public void internalFrameDeiconified(InternalFrameEvent e)
     {}
     
     //          Invoked when an internal frame is iconified.
-    public void internalFrameIconified(InternalFrameEvent e) 
+    public void internalFrameIconified(InternalFrameEvent e)
     {}
     
-    public void internalFrameOpened(InternalFrameEvent e)  
+    public void internalFrameOpened(InternalFrameEvent e)
     {}
 
     /*

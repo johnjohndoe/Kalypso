@@ -42,6 +42,8 @@ import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
 import de.tuhh.wb.javagis.data.GisElement;
 import de.tuhh.wb.javagis.data.GisElementClass;
 import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
+import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.view.tableview.DateChooser;
 
 import de.tuhh.wb.javagis.view.LogView;
 import de.tuhh.wb.javagis.data.DoubleKeyHash;
@@ -60,7 +62,8 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
     private JComboBox jcombo=null;
     
     // starting with default profile "all"
-    private String myProfileName="all";
+    //private String myProfileName=I18n.get("TV_GTV_DefaultProfile");
+	private String myProfileName="all";
 
     // storage of TableCols, for easy removes and adds
     private DoubleKeyHash tableColHash=new DoubleKeyHash();
@@ -80,6 +83,7 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 
 
 		JTable jTable=new JTable((TableModel)tableModel,null);
+		DateChooser.setUpDateChooser(jTable);
 		cards.add(jTable);
 		JScrollPane scroller=new JScrollPane(jTable);
 		//		scroller.setBounds(10,10,(getSize().width-30),(getSize().height-120));
@@ -94,14 +98,14 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 		
 		tabbedPane.setToolTipTextAt(index,Main.toHtml(tableModel.getDescription(),50));
 		tabbedPane.doLayout();
-		jTable.addMouseListener(this);		   
+		jTable.addMouseListener(this);
 		if(tableModel.getColumnCount()>1)
 		    {
 			TableColumnModel colModel=jTable.getColumnModel();
 			tableModelHash.put(tableKey,colModel);
 			for(int col=1;col<tableModel.getColumnCount();col++)
 			    {
-				TableColumn tableCol=colModel.getColumn(col);				
+				TableColumn tableCol=colModel.getColumn(col);
 				String colKey=tableModel.getColKey(col);
 				tableColHash.put(tableKey,colKey,tableCol);
 				if(tableModel.isBCEButton(col))
@@ -109,7 +113,11 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 					TableCellRendererBce bceCells= new TableCellRendererBce(jTable,tableModel,col);
 					tableCol.setCellRenderer(bceCells);
 					tableCol.setCellEditor(bceCells);
-				    }   
+				    }
+					/*if(tableModel.isDateButton(col))
+					 {
+					DateChooser dateChooser = new DateChooser(jTable);
+					 }*/
 			    }
 		    }
 		tableModel.setGisView(this);
@@ -135,7 +143,7 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 		if (selectedRows.length<=0)
 		    {
 			JOptionPane jop = new JOptionPane();
-			jop.showMessageDialog(this,(Object)"Es gibt keine Objekte zu löschen!","Warnung",JOptionPane.WARNING_MESSAGE);
+			jop.showMessageDialog(this,I18n.get("GTV_DiaRemove_Message"),I18n.get("GTV_DiaRemove_Title"),JOptionPane.INFORMATION_MESSAGE);
 		    }
 		else
 		    {
@@ -232,7 +240,7 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 		    {
 			jcombo.addItem(newProfileName);
 			jcombo.setSelectedItem(newProfileName);
-		    }		
+		    }
 		//		createFileMenu();
 	    }
 	if(action.equals("removeColumnProfile"))
@@ -258,15 +266,15 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 			TableColumnModel colModel=iTable.getColumnModel();
 			for(int i=0;i<elementClass.getSimplePropertySize();i++)
 			    {
-				String propKey=elementClass.getSimplePropertyKey(i);			
+				String propKey=elementClass.getSimplePropertyKey(i);
 				if(TableProfile.getInstance().shouldBeHidden(myProfileName,elementKey,propKey))
 				    {
-					int viewCol=jTable.convertColumnIndexToView(i+1);				
+					int viewCol=jTable.convertColumnIndexToView(i+1);
 					if(viewCol>=0)
-					    colModel.removeColumn(colModel.getColumn(viewCol));					
+					    colModel.removeColumn(colModel.getColumn(viewCol));
 				    }
 			    }
-		    }		
+		    }
 	    }
 	*/
     }
@@ -326,15 +334,15 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 
     public void createFileMenu()
     {
-	JMenu edit = new JMenu ("Edit");
+	JMenu edit = new JMenu(I18n.get("TV_GTV_jMenu_edit"));
 
 	JMenuItem mi;
-	mi = new JMenuItem("new");
+	mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_new"));
 	mi.setActionCommand("new");
 	mi.addActionListener(this);
 	edit.add(mi);
 
-  	mi = new JMenuItem("remove");
+  	mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_remove"));
 	mi.setActionCommand("remove");
 	mi.addActionListener(this);
 	edit.add(mi);
@@ -342,31 +350,31 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 	//create.addSeparator();
 	edit.addSeparator();
 
-	JMenu open = new JMenu ("View");
+	JMenu open = new JMenu (I18n.get("TV_GTV_jMenu_view"));
 
-	mi = new JMenuItem("refresh all elements");
+	mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_refresh"));
 	mi.setActionCommand("getAllElements");
 	mi.addActionListener(this);
 	open.add(mi);
 
-	mi = new JMenuItem("open detailed View");
+	mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_detail"));
 	mi.setActionCommand("showSingeObjectView");
 	mi.addActionListener(this);
 	open.add(mi);
 
-	mi = new JMenuItem("Show VectorSets");
+	mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_vectorSets"));
 	mi.setActionCommand("showVectorSetView");
 	mi.addActionListener(this);
-	open.add(mi);	
+	open.add(mi);
 	
-	JMenu colProfile = new JMenu ("profile");
+	JMenu colProfile = new JMenu (I18n.get("TV_GTV_jMenu_profile"));
 
-	mi = new JMenuItem("new profile");
+	mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_pNew"));
 	mi.setActionCommand("newColumnProfile");
 	mi.addActionListener(this);
 	colProfile.add(mi);
 
-	mi = new JMenuItem("remove profile");
+	mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_pRemove"));
 	mi.setActionCommand("removeColumnProfile");
 	mi.addActionListener(this);
 	colProfile.add(mi);
@@ -377,7 +385,7 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 	  colProfile.add(mi);
 	*/
 	
-	mi = new JMenuItem("save profile");
+	mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_pSave"));
 	mi.setActionCommand("saveColumnProfile");
 	mi.addActionListener(this);
 	colProfile.add(mi);
@@ -394,80 +402,87 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 
 	//	menubar.add(new JComboBox(tableProfiles.getProfiles()));
 
-	this.setJMenuBar(menubar);	
+	this.setJMenuBar(menubar);
     }
     
-    private void maybeShowPopup(MouseEvent e) 
+    private void maybeShowPopup(MouseEvent e)
     {
 	int selectedTab = tabbedPane.getSelectedIndex();
 	GisTableModel tableModel = (GisTableModel)tableModels.elementAt(selectedTab);
 	JTable table = (JTable)cards.elementAt(selectedTab);
 	selectedPoint=e.getPoint();
 	selectedCol=table.convertColumnIndexToModel(table.columnAtPoint(selectedPoint));
+	//selectedCol=table.columnAtPoint(selectedPoint);
 	selectedRow=table.rowAtPoint(selectedPoint);
 	if(selectedRow>=0 && selectedCol>=0)
-	    selectedValue=tableModel.getValueAt(selectedRow,selectedCol);
+	    {selectedValue=tableModel.getValueAt(selectedRow,selectedCol);
+	
+		}
 	else
 	    selectedValue=null;
 
-        if (e.isPopupTrigger() && selectedRow>=0 && selectedCol>=0) 
+        if (e.isPopupTrigger() && selectedRow>=0 && selectedCol>=0)
 	    {
 	
 
 		JMenuItem mi;
 		JPopupMenu popup = new JPopupMenu();
 
-		mi = new JMenuItem("new");
+		mi = new JMenuItem(I18n.get("TV_GTV_PopMen_New"));
 		mi.setActionCommand("new");
 		mi.addActionListener(this);
 		popup.add(mi);
 
-		mi = new JMenuItem("remove");
+		mi = new JMenuItem(I18n.get("TV_GTV_PopMen_Remove"));
 		mi.setActionCommand("remove");
 		mi.addActionListener(this);
 		popup.add(mi);
 
-		mi = new JMenuItem("open detailed View");
+		mi = new JMenuItem(I18n.get("TV_GTV_PopMen_Detail"));
 		mi.setActionCommand("showSingeObjectView");
 		mi.addActionListener(this);
 		popup.add(mi);
 		
 		if(tableModel.hasVectorSets())
 		    {
-			mi = new JMenuItem("Show VectorSets");
+			mi = new JMenuItem(I18n.get("TV_GTV_PopMen_VectorSets"));
 			mi.setActionCommand("showVectorSetView");
 			mi.addActionListener(this);
 			popup.add(mi);
 		    }
 
-		mi = new JMenuItem("order by Column");
+		mi = new JMenuItem(I18n.get("TV_GTV_PopMen_orderC"));
 		mi.setActionCommand("columnOrder");
 		mi.addActionListener(this);
 		popup.add(mi);
 
-		mi = new JMenuItem("order by Column reverse");
+		mi = new JMenuItem(I18n.get("TV_GTV_PopMen_orderCr"));
 		mi.setActionCommand("columnOrderReverse");
 		mi.addActionListener(this);
 		popup.add(mi);
 
-		if(selectedCol>1 && selectedValue!=null) // do not hide col "ID" 
-		    {              
-			mi = new JMenuItem("set all "+tableModel.getColumnNameNoHtml(selectedCol)+"s to "+selectedValue);
+		if(selectedCol>0 && selectedValue!=null)
+		    {
+			String string1 = I18n.get("TV_GTV_PopMen_setAll1");
+			String string2 = I18n.get("TV_GTV_PopMen_setAll2");
+			mi = new JMenuItem("<html>"+string1+tableModel.getColumnNameNoHtml(selectedCol)+string2+selectedValue+"</html>");
 			mi.setActionCommand("setAllSimplePropertiesTo");
 			mi.addActionListener(this);
-			popup.add(mi);			
+			popup.add(mi);
 		    }
 		
-		mi = new JMenuItem("hide column");
-		mi.setActionCommand("hidecolumn");
-		mi.addActionListener(this);
-		popup.add(mi);
-		
+		if(selectedCol>0) // do not hide col "ID"
+		    {
+				mi = new JMenuItem(I18n.get("TV_GTV_PopMen_hide"));
+				mi.setActionCommand("hidecolumn");
+				mi.addActionListener(this);
+		     	popup.add(mi);
+			}
 		String description=tableModel.getDescription(selectedCol);
 		if(description!=null && !"".equals(description))
 		    {
 
-			mi = new JMenuItem(Main.toHtml("<i>info</i> for \""
+			mi = new JMenuItem(Main.toHtml("<i>"+I18n.get("TV_GTV_PopMen_nothing")+"</i>"+" \""
 						       +tableModel.getColumnNameNoHtml(selectedCol)
 						       +"\": "+description,40));
 			mi.setActionCommand("nothing");
@@ -485,11 +500,11 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
     // internalFrameListener:
 
     //          Invoked when an internal frame is activated.
-    public void internalFrameActivated(InternalFrameEvent e) 
+    public void internalFrameActivated(InternalFrameEvent e)
     {}
 
     //          Invoked when an internal frame has been closed.
-    public void internalFrameClosed(InternalFrameEvent e) 
+    public void internalFrameClosed(InternalFrameEvent e)
     {
 	for(int index=0;index<tableModels.size();index++)
 	    {
@@ -499,23 +514,23 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
     }
 
     //          Invoked when an internal frame is in the process of being closed.
-    public void internalFrameClosing(InternalFrameEvent e) 
+    public void internalFrameClosing(InternalFrameEvent e)
     {
     }
 
     //          Invoked when an internal frame is de-activated.
-    public void internalFrameDeactivated(InternalFrameEvent e) 
+    public void internalFrameDeactivated(InternalFrameEvent e)
     {}
 
     //          Invoked when an internal frame is de-iconified.
-    public void internalFrameDeiconified(InternalFrameEvent e) 
+    public void internalFrameDeiconified(InternalFrameEvent e)
     {}
     
     //          Invoked when an internal frame is iconified.
-    public void internalFrameIconified(InternalFrameEvent e) 
+    public void internalFrameIconified(InternalFrameEvent e)
     {}
     
-    public void internalFrameOpened(InternalFrameEvent e)  
+    public void internalFrameOpened(InternalFrameEvent e)
     {}
 
     // ItemListener

@@ -24,6 +24,8 @@ import java.awt.Point;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import de.tuhh.wb.javagis.tools.I18n;
+
 public class LogView extends JFrame implements ActionListener//, WindoFrameListener
 {
     private static DateFormat dateFormat=new SimpleDateFormat("dd.MM.yyyy HH:mm");
@@ -31,11 +33,11 @@ public class LogView extends JFrame implements ActionListener//, WindoFrameListe
     
     JTextArea jTextArea    = new JTextArea();
     JScrollPane scroller=new JScrollPane();
-    JButton jClear=new JButton("clear");
+    JButton jClear=new JButton(I18n.get("LV_BtnClear"));
     static LogView instance=null;
 
     private LogView(String title)
-    {	
+    {
 	super(title);//,true,true,true,true);
 	setLocation(new Point(600,400));
 	initMask();
@@ -46,7 +48,7 @@ public class LogView extends JFrame implements ActionListener//, WindoFrameListe
     public static LogView getInstance()
     {
 	if(instance==null)
-	    instance=new LogView("logView");
+	    instance=new LogView(I18n.get("LV_Title"));
 	return instance;
     }
 
@@ -55,8 +57,8 @@ public class LogView extends JFrame implements ActionListener//, WindoFrameListe
 	LogView.getInstance().log(text);
     }
 
-    public static void println(String text)  
-    {	
+    public static void println(String text)
+    {
 	LogView.getInstance().logln(text);
     }
 
@@ -84,7 +86,7 @@ public class LogView extends JFrame implements ActionListener//, WindoFrameListe
     
     private void initMask()
     {
-	add2ViewLastInRow(new JLabel("logging..."));
+	add2ViewLastInRow(new JLabel(I18n.get("LV_LabelLog")));
 	jTextArea.setText("");
 	scroller.setViewportView(jTextArea);
 
@@ -101,7 +103,7 @@ public class LogView extends JFrame implements ActionListener//, WindoFrameListe
 
 
 
-	add2ViewLastInRow(jClear);	
+	add2ViewLastInRow(jClear);
 
 	jClear.addActionListener(this);
 	jClear.setActionCommand("clear");
@@ -119,7 +121,7 @@ public class LogView extends JFrame implements ActionListener//, WindoFrameListe
 	    }
     }
     
-    public void add2View(JComponent  component) 
+    public void add2View(JComponent  component)
     {
 	GridBagLayout layout=(GridBagLayout)panel.getLayout();
 	GridBagConstraints layoutConstraints = new GridBagConstraints();
@@ -132,7 +134,7 @@ public class LogView extends JFrame implements ActionListener//, WindoFrameListe
 	panel.add(component);
     }
 
-    public void add2ViewLastInRow(JComponent  component) 
+    public void add2ViewLastInRow(JComponent  component)
     {
 	GridBagLayout layout=(GridBagLayout)panel.getLayout();
 	GridBagConstraints layoutConstraints = new GridBagConstraints();

@@ -14,10 +14,12 @@ import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import de.tuhh.wb.javagis.view.SingleEditorField;
-import java.awt.event.ItemEvent; 
-import java.awt.event.ItemListener; 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import de.tuhh.wb.javagis.tools.I18n;
 
 public class GisTableFilter extends JPanel implements ItemListener
 {
@@ -35,17 +37,17 @@ public class GisTableFilter extends JPanel implements ItemListener
 
 	//	String[] todo={"filter from all:","filter from current selection:"};
 	String[] equation={"<","<=","=",">=",">"};
-	this.myGisTableModel=gisTableModel;	
+	this.myGisTableModel=gisTableModel;
 
 	//	this.todoBox=new JComboBox(todo);
 	this.propertyBox=new JComboBox();
 	this.equationBox=new JComboBox(equation);
 	int max=myGisTableModel.getColumnCount();
 	for(int i=0;i<max;i++)
-	    propertyBox.addItem(myGisTableModel.getColumnNameNoHtml(i));	
+	    propertyBox.addItem(myGisTableModel.getColumnNameNoHtml(i));
 	//	JButton selectAll=new JButton("selectAll");
 	//	JButton unselectAll=new JButton("unselectAll");
-	JButton showAll=new JButton("showAll");
+	JButton showAll=new JButton(I18n.get("TV_GTF_jBut_showAll"));
 	int col=0;
 	
 
@@ -63,7 +65,7 @@ public class GisTableFilter extends JPanel implements ItemListener
 	//	add2View(selectAll);
 	//	add2View(unselectAll);
 	add2View(showAll);
-	add2View(new JLabel("<html><center>Filter:</center></html>"));
+	add2View(new JLabel("<html><center>"+I18n.get("TV_GTF_jLab_Filter")+"</center></html>"));
 
 	//	add2ViewLastInRow(new JSeparator(SwingConstants.HORIZONTAL));
 	//	add2View(todoBox);
@@ -76,7 +78,7 @@ public class GisTableFilter extends JPanel implements ItemListener
 	equationBox.addItemListener(this);
     }
 
-    public void start(Object value) 
+    public void start(Object value)
     {
 	System.out.println("filter...");
 	boolean selectFromAll=true;
@@ -84,7 +86,7 @@ public class GisTableFilter extends JPanel implements ItemListener
 	  switch(todoBox.getSelectedIndex())
 	  {
 	  case 0:
-	  selectFromAll=true;		
+	  selectFromAll=true;
 	  break;
 	  case 1:
 	*/
@@ -97,14 +99,14 @@ public class GisTableFilter extends JPanel implements ItemListener
 	myGisTableModel.filter(col,value,selectFromAll,equationBox.getSelectedIndex());
     }
 
-    public void itemStateChanged(ItemEvent e) 
+    public void itemStateChanged(ItemEvent e)
     {
 	int col=propertyBox.getSelectedIndex();
 	editField.reload(this,myGisTableModel.getColumnName(col),myGisTableModel.getColumnClass(col));
 	
     }
 
-    public void add2View(JComponent  component) 
+    public void add2View(JComponent  component)
     {
 	GridBagLayout layout=(GridBagLayout)getLayout();
 	GridBagConstraints layoutConstraints = new GridBagConstraints();
@@ -117,7 +119,7 @@ public class GisTableFilter extends JPanel implements ItemListener
 	add(component);
     }
 
-    public void add2ViewLastInRow(JComponent  component) 
+    public void add2ViewLastInRow(JComponent  component)
     {
 	GridBagLayout layout=(GridBagLayout)getLayout();
 	GridBagConstraints layoutConstraints = new GridBagConstraints();

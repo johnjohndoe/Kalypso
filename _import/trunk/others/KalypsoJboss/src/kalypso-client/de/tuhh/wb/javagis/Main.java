@@ -2,6 +2,7 @@ package de.tuhh.wb.javagis;
 
 import de.tuhh.wb.javagis.view.ViewManager;
 import de.tuhh.wb.javagis.view.LogView;
+import de.tuhh.wb.javagis.tools.I18n;
 
 import de.tuhh.wb.javagis.data.VersionClass;
 import de.tuhh.wb.javagis.data.Version;
@@ -29,7 +30,7 @@ public class Main
 	props=new Properties();
 	try
 	    {
-		props.load(new FileInputStream(configFile));		    
+		props.load(new FileInputStream(configFile));
 	    }
 	catch(Exception e)
 	    {
@@ -58,7 +59,7 @@ public class Main
     {
 	try
 	    {
-		LogView.print("connect to time series data base ...");
+		LogView.print(I18n.get("LV_Main_connect1"));
 		Database.init(props.getProperty("bce_driver"),
 			      props.getProperty("bce_url"),
 			      props.getProperty("bce_user"),
@@ -68,15 +69,15 @@ public class Main
 		  "jdbc:edbc://128.1.5.67:LP7/BCE_PC067::dbflomatis/INGRES",//url
 		  "ingres",//user
 		  "ingres");//password
-		*/	
-		LogView.println(" established");				
+		*/
+		LogView.println(I18n.get("LV_Main_connect2"));
 	    }
 	catch(Exception e)
 	    {
 		e.printStackTrace();
-		LogView.println(" failed");		
-		LogView.println(" check: properties in file: kalypsoMain.conf");		
-		LogView.println(" maybe wrong url: "+props.getProperty("bce_url"));		
+		LogView.println(I18n.get("LV_Main_connect3"));
+		LogView.println(I18n.get("LV_Main_connect4"));
+		LogView.println(I18n.get("LV_Main_connect5")+props.getProperty("bce_url"));
 	    }
     }
 

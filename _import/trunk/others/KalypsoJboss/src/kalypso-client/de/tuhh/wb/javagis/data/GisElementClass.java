@@ -27,6 +27,7 @@ import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
 import de.tuhh.wb.javagis.data.event.TableListener;
 import de.tuhh.wb.javagis.data.event.ElementClassListener;
 import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
+import de.tuhh.wb.javagis.tools.I18n;
 public abstract class GisElementClass implements TableListener
 {
     private List elementClassListeners;
@@ -93,14 +94,14 @@ public abstract class GisElementClass implements TableListener
 		    symbol = Toolkit.getDefaultToolkit().getImage("symbols/"+mm.elementSymbolNames[met]+".gif");
 		MediaTracker mt = new MediaTracker(dummyComponent);
 		mt.addImage(symbol,0);
-		try 
+		try
 		    {
 			mt.waitForAll();
 		    }
 		catch (InterruptedException e)
 		    {
 			//nothing
-		    }		
+		    }
 	    }
 	return symbol;
     }
@@ -112,7 +113,11 @@ public abstract class GisElementClass implements TableListener
     
     public String getName()
     {
-	return mm.elementNames[met];
+	String language = I18n.getLanguage();
+		if(language.equals("eng"))
+		   return mm.elementNames[met];
+		else
+			return I18n.get("GECName_"+mm.elementNames[met]);
     }
     public String getKey()
     {
@@ -120,7 +125,11 @@ public abstract class GisElementClass implements TableListener
     }
     public String getDescription()
     {
-	return mm.elementDescriptions[met];
+	String language = I18n.getLanguage();
+	if(language.equals("eng"))
+		   return mm.elementDescriptions[met];
+		else
+			return I18n.get("GECDescription_"+mm.elementDescriptions[met]);
     }
     public boolean isRelation()
     {
@@ -140,7 +149,11 @@ public abstract class GisElementClass implements TableListener
     }
     public String getSimplePropertyName(int n)
     {
-	return mm.simplePropertyNames[met][n];
+	String language = I18n.getLanguage();
+	if(language.equals("eng"))
+		   return mm.simplePropertyNames[met][n];
+		else
+			return I18n.get("GECSimplePropName_"+mm.simplePropertyNames[met][n]);
     }
 
     public String getSimplePropertyKey(int n)
@@ -155,7 +168,11 @@ public abstract class GisElementClass implements TableListener
 
     public String getSimplePropertyDescription(int n)
     {
-	return mm.simplePropertyDescriptions[met][n];
+	String language = I18n.getLanguage();
+		if(language.equals("eng"))
+		   return mm.simplePropertyDescriptions[met][n];
+		else
+			return I18n.get("GECDescription_"+mm.simplePropertyDescriptions[met][n]);
     }
 
     public String getSimplePropertyUnit(int n)
@@ -169,12 +186,22 @@ public abstract class GisElementClass implements TableListener
     }
     public String getVectorSetName(int n)
     {
+		/**String language = I18n.getLanguage();
+		if(language.equals("eng"))
+		  	return mm.vectorSetNames[met][n];
+		else
+		 return I18n.get("GECVectorSetName_"+mm.vectorSetNames[met][n]);*/
 	return mm.vectorSetNames[met][n];
     }
     
     public String getVectorSetDescription(int n)
     {
-	return mm.vectorSetDescriptions[met][n];
+	String language = I18n.getLanguage();
+		if(language.equals("eng"))
+		  	return mm.vectorSetDescriptions[met][n];
+		else
+		 return I18n.get("GECVectorSetDescription_"+mm.vectorSetDescriptions[met][n]);
+	//return mm.vectorSetDescriptions[met][n];
     }
 
     public Vector getVectorSets(Object oId)
@@ -228,10 +255,10 @@ public abstract class GisElementClass implements TableListener
     }
 
     public GisElement getGisElement(Object eId)
-    {	
-	if(this instanceof GisRelationClass) 
+    {
+	if(this instanceof GisRelationClass)
 	    return (GisElement) new GisRelation(eId,(GisRelationClass)this);
-	else if(this instanceof GisObjectClass) 
+	else if(this instanceof GisObjectClass)
 	    return (GisElement) new GisObject(eId,(GisObjectClass)this);
 	return null;
     }
@@ -251,7 +278,7 @@ public abstract class GisElementClass implements TableListener
     }
     public void onTableElementRemove(int elementTable,Object eId)
     {
-	simpleProperties.remove(eId);	
+	simpleProperties.remove(eId);
 
 	ElementClassListener listener=null;
 	for(int i=0;i<elementClassListeners.size();i++)

@@ -22,6 +22,7 @@ import de.tuhh.wb.javagis.data.VersionAccessImpl;
 import de.tuhh.wb.javagis.view.ViewManager;
 import de.tuhh.wb.javagis.data.event.VersionListener;
 import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
+import de.tuhh.wb.javagis.tools.I18n;
 import ejb.event.EJBEvent;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -46,7 +47,7 @@ public class VersionDialog extends JInternalFrame implements ActionListener, Ver
     JTextField jState       = new JTextField();
     JTextField jName        = new JTextField();
     JTextField jDescription = new JTextField();
-    JButton jCancel=new JButton("cancel");
+    JButton jCancel=new JButton(I18n.get("PV_VD_Bcancel"));
     JButton jOK;
 
     public VersionDialog(String title,int status,VersionAccess versionAccess,String themeKey,Object vId)
@@ -55,7 +56,7 @@ public class VersionDialog extends JInternalFrame implements ActionListener, Ver
 	this.myTitle=title;
 	this.myVersionAccess=versionAccess;
 	this.myThemeKey=themeKey;
-	this.myVersionId=vId;	
+	this.myVersionId=vId;
 	this.myStatus=status;
 	jOK=new JButton(myTitle);
 	initMask();
@@ -70,13 +71,13 @@ public class VersionDialog extends JInternalFrame implements ActionListener, Ver
 	switch(myStatus)
 	    {
 	    case CREATE:
-		jProject.setText("project");
+		jProject.setText(I18n.get("PV_VD_TFjProject_CREATE"));
 		Vector themeKeys=myVersionAccess.getThemeKeys();
 		for(int i=0;i<themeKeys.size();i++)
 		    jTheme.addItem((String)themeKeys.elementAt(i));
-		jState.setText("state");
-		jName.setText("name");
-		jDescription.setText("description");
+		jState.setText(I18n.get("PV_VD_TFjState_CREATE"));
+		jName.setText(I18n.get("PV_VD_TFjName_CREATE"));
+		jDescription.setText(I18n.get("PV_VD_TFjDescription_CREATE"));
 		break;
 	    case RENAME:
 	    case COPY:
@@ -89,15 +90,15 @@ public class VersionDialog extends JInternalFrame implements ActionListener, Ver
 	    default:
 		break;
  	    }
-	add2View(new JLabel("enter project name: "));
+	add2View(new JLabel(I18n.get("PV_VD_LabeljProject")));
 	add2ViewLastInRow(jProject);
-	add2View(new JLabel("select type of data: "));
+	add2View(new JLabel(I18n.get("PV_VD_LabeljTheme")));
 	add2ViewLastInRow(jTheme);
-	add2View(new JLabel("enter state name: "));
+	add2View(new JLabel(I18n.get("PV_VD_LabeljState")));
 	add2ViewLastInRow(jState);
-	add2View(new JLabel("enter version name: "));
+	add2View(new JLabel(I18n.get("PV_VD_LabeljName")));
 	add2ViewLastInRow(jName);
-	add2View(new JLabel("enter description: "));
+	add2View(new JLabel(I18n.get("PV_VD_LabeljDescription")));
 	add2ViewLastInRow(jDescription);
 	add2View(jOK);
 	add2ViewLastInRow(jCancel);
@@ -135,9 +136,9 @@ public class VersionDialog extends JInternalFrame implements ActionListener, Ver
 			dispose();
 			break;
 		    case COPY:
-			LogView.println("copy version inside database...");
+			LogView.println(I18n.get("LV_VD_copy1"));
 			myVersionAccess.copyVersion(myThemeKey,myVersionId,project,state,name,description);
-			LogView.println("done");
+			LogView.println(I18n.get("LV_VD_copy2"));
 			dispose();
 			break;
 		    }
@@ -147,40 +148,40 @@ public class VersionDialog extends JInternalFrame implements ActionListener, Ver
     //VersionListener:
     public void onVersionChanged(EJBEvent event)
     {
-	//	reloadProjectTree();	
+	//	reloadProjectTree();
     }
 
     //          Invoked when an internal frame is activated.
-    public void internalFrameActivated(InternalFrameEvent e) 
+    public void internalFrameActivated(InternalFrameEvent e)
     {}
 
     //          Invoked when an internal frame has been closed.
-    public void internalFrameClosed(InternalFrameEvent e) 
+    public void internalFrameClosed(InternalFrameEvent e)
     {
 	System.out.println("VersionDialogClosed");
     }
 
     //          Invoked when an internal frame is in the process of being closed.
-    public void internalFrameClosing(InternalFrameEvent e) 
+    public void internalFrameClosing(InternalFrameEvent e)
     {
     }
 
     //          Invoked when an internal frame is de-activated.
-    public void internalFrameDeactivated(InternalFrameEvent e) 
+    public void internalFrameDeactivated(InternalFrameEvent e)
     {}
 
     //          Invoked when an internal frame is de-iconified.
-    public void internalFrameDeiconified(InternalFrameEvent e) 
+    public void internalFrameDeiconified(InternalFrameEvent e)
     {}
     
     //          Invoked when an internal frame is iconified.
-    public void internalFrameIconified(InternalFrameEvent e) 
+    public void internalFrameIconified(InternalFrameEvent e)
     {}
     
-    public void internalFrameOpened(InternalFrameEvent e)  
+    public void internalFrameOpened(InternalFrameEvent e)
     {}
 
-    public void add2View(JComponent  component) 
+    public void add2View(JComponent  component)
     {
 	GridBagLayout layout=(GridBagLayout)panel.getLayout();
 	GridBagConstraints layoutConstraints = new GridBagConstraints();
@@ -192,7 +193,7 @@ public class VersionDialog extends JInternalFrame implements ActionListener, Ver
 	layout.setConstraints(component, layoutConstraints);
 	panel.add(component);
     }
-    public void add2ViewLastInRow(JComponent  component) 
+    public void add2ViewLastInRow(JComponent  component)
     {
 	GridBagLayout layout=(GridBagLayout)panel.getLayout();
 	GridBagConstraints layoutConstraints = new GridBagConstraints();

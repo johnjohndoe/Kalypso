@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.Enumeration;
 import de.tuhh.wb.javagis.view.GisView;
+import de.tuhh.wb.javagis.tools.I18n;
 
 import de.tuhh.wb.javagis.data.*;
 import de.tuhh.wb.javagis.data.event.ElementClassListener;
@@ -27,7 +28,7 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
     
     public GisTableModel(GisElementClass gisElementClass)
     {
-	super();       
+	super();
 	this.myGisElementClass=gisElementClass;
 	this.myIdList=gisElementClass.getAllPrimaryKeys();
 	this.myGisView=null;
@@ -54,7 +55,7 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
     public void setAllSimplePropertiesTo(int col,Object value)
     {
 	for(int row=0;row<getRowCount();row++)
-	    {		
+	    {
 		setValueAt(value,row,col);
 	    }
     }
@@ -71,7 +72,7 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 	Object id=null;
 	
 	for(int i=0;i<idList.size();i++)
-	    {		
+	    {
 		id=idList.elementAt(i);
 		if(comparator.filter(id))
 		    {
@@ -95,15 +96,15 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 		    Comparator comparator=new ByPropertyComparator(myGisElementClass,col);
 		    java.util.Collections.sort(myIdList,comparator);
 		    if(reverse)
-			java.util.Collections.reverse(myIdList);		
+			java.util.Collections.reverse(myIdList);
 		    if(myGisView!=null)
-			myGisView.refreshView();	
+			myGisView.refreshView();
 		}
 	    catch(Exception e)
 		{
 		    System.out.println(e.getMessage());
 		}
-	}	
+	}
     }
     
     public void onTableElementCreate(int elementTable,Object eId)
@@ -132,7 +133,7 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
     }
 
     public int getColumnCount()
-    {	
+    {
 	 return myGisElementClass.getSimplePropertySize()+1;
     }
 
@@ -150,7 +151,7 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 
 
     public String getColumnName(int col)
-    {	
+    {
 	if(col==0)
 	    return "<html>#ID<br></html>";
 	String unit=myGisElementClass.getSimplePropertyUnit(col-1);
@@ -163,16 +164,16 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
     }
 
     public String getColumnNameNoHtml(int col)
-    {	
+    {
 	if(col==0)
 	    return "#ID";
 	return myGisElementClass.getSimplePropertyName(col-1);
     }
 
     public String getDescription(int col)
-    {	
+    {
 	if(col==0)
-	    return "primaryKey";
+	    return I18n.get("GTM_primaryKey");
 	return new String(myGisElementClass.getSimplePropertyDescription(col-1));
 
     }
@@ -182,13 +183,13 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 	if(col==0)
 	    return Integer.class;
 	Class propClass=myGisElementClass.getSimplePropertyClass(col-1);
-	if(propClass==java.util.Date.class)
-	    return String.class;
+		/*if(propClass==java.util.Date.class)
+		 return String.class;*/
 	/*
 	  else if("bce_db".equals(myGisElementClass.getSimplePropertyFormat(col-1)))
 	  return javax.swing.JButton.class;
 	*/
- 	else
+		//else
 	    return propClass;
     }
 
@@ -198,6 +199,14 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 	    return true;
 	return false;
     }
+	
+	public boolean isDateButton(int col)
+	{
+		Class propClass=myGisElementClass.getSimplePropertyClass(col-1);
+		if(propClass==java.util.Date.class)
+			return true;
+		return false;
+	}
 
     public boolean isCellEditable(int row,int col)
     {
@@ -220,11 +229,11 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 	else
 	    {
 		Object value=myGisElementClass.getSimplePropertyValue(id,col-1);
-		if(value instanceof java.util.Date)
+			/*if(value instanceof java.util.Date)
 		    {
 			DateFormat dateFormat=new SimpleDateFormat(myGisElementClass.getSimplePropertyFormat(col-1));
 			return dateFormat.format((Date)value);
-		    }
+			 }*/
 
 		/*
 		  else if("bce_db".equals(myGisElementClass.getSimplePropertyFormat(col-1)))
@@ -258,7 +267,7 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 	    return;
 	else
 	    {
-		if(myGisElementClass.getSimplePropertyClass(col-1)==Date.class && value instanceof String)
+			/*if(myGisElementClass.getSimplePropertyClass(col-1)==Date.class && value instanceof String)
 		{
 		    try
 			{
@@ -270,14 +279,15 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 			{
 			    System.out.println("wrong DateFormat, couldn't parse");
 			}
-		}
+			 }*/
 		/*
 		  else if("bce_db".equals(myGisElementClass.getSimplePropertyFormat(col-1)))
 		  {
 		  System.out.println("bce_db_setValueAt....?");
 		  }
 		*/
-		else
+		//else
+
 		    myGisElementClass.setSimplePropertyValue(id,col-1,value);
 	    }
     }

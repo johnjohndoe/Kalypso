@@ -5,10 +5,12 @@ import java.util.Vector;
 import java.util.Enumeration;
 import javax.swing.table.AbstractTableModel;
 import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
+import de.tuhh.wb.javagis.tools.I18n;
 
 public class DummyTableModel extends AbstractTableModel implements GisInterfaceTableModel
 {
     private GisInterfaceTableModel model;
+	String language = I18n.getLanguage();
 
     public DummyTableModel(GisInterfaceTableModel model)
     {
@@ -25,11 +27,17 @@ public class DummyTableModel extends AbstractTableModel implements GisInterfaceT
     }
     public String getColumnName(int col)
     {
-	return model.getColumnName(col);
+		if(language.equals("eng"))
+		   return model.getColumnName(col);
+		else
+			return I18n.get("DTMVectorSetColumn_"+model.getColumnName(col));
     }
     public String getDescription(int col)
     {
-	return model.getDescription(col);
+		if(language.equals("eng"))
+		 	return model.getDescription(col);
+		else
+			return I18n.get("DTMVectorSetColumnDescription_"+model.getDescription(col));
     }
     public Class getColumnClass(int col)
     {
@@ -49,11 +57,17 @@ public class DummyTableModel extends AbstractTableModel implements GisInterfaceT
     }
     public String getDescription()
     {
-	return model.getDescription();
+		if(language.equals("eng"))
+		 	return model.getDescription();
+		else
+			return I18n.get("DTMVectorSetDescription_"+model.getDescription());
     }
     public String getName()
     {
-	return model.getName();
+		if(language.equals("eng"))
+		   return model.getName();
+		else
+			return I18n.get("DTMVectorSetName_"+model.getName());
     }
     
     // am Anfang der Liste neues Object erzeugen

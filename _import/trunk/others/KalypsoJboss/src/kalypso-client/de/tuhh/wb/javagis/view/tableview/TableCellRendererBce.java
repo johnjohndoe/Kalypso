@@ -12,6 +12,7 @@ import java.awt.Component;
 import de.tuhh.wb.javagis.Main;
 import de.tuhh.wb.javagis.data.*;
 import de.tuhh.wb.javagis.data.event.ElementClassListener;
+import de.tuhh.wb.javagis.tools.I18n;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
@@ -35,7 +36,7 @@ public class TableCellRendererBce implements TableCellRenderer,TableCellEditor ,
 {
     private GisTableModel myModel;
     private JTable myJTable;
-    private Hashtable buttons;
+    private Hashtable buttons; // (id,jbutton)
     private int myCol; //from Model
    
     public TableCellRendererBce(JTable jTable,GisTableModel model,int col)
@@ -60,7 +61,7 @@ public class TableCellRendererBce implements TableCellRenderer,TableCellEditor ,
 	JButton button=(JButton)buttons.get(id);
 	if(value==null)
 	    {
-		button.setText("choose...");
+		button.setText(I18n.get("BCEButton_Choose"));
 		button.setToolTipText("");
 	    }
 	else
@@ -75,7 +76,7 @@ public class TableCellRendererBce implements TableCellRenderer,TableCellEditor ,
 	return button;
     }
     
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) 
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col)
     {
 	return getButton(row);
     }
@@ -90,44 +91,44 @@ public class TableCellRendererBce implements TableCellRenderer,TableCellEditor ,
 	return getButton(row);
     }
     
-    public void addCellEditorListener(CellEditorListener l) 
+    public void addCellEditorListener(CellEditorListener l)
     {
 	System.out.println("addCellEditorListener");
     }
 
-    public void cancelCellEditing() 
+    public void cancelCellEditing()
     {
 	System.out.println("cancelCellEditor");
     }
     //   Tells the editor to cancel editing and not accept any partially edited value.
 
-    public Object getCellEditorValue() 
+    public Object getCellEditorValue()
     {
 	System.out.println("getCellEditorValue");
 	return "value";
     }
     //    Returns the value contained in the editor.
 
-    public boolean isCellEditable(EventObject anEvent) 
+    public boolean isCellEditable(EventObject anEvent)
     {
 	return true;
     }
     //          Asks the editor if it can start editing using anEvent.
     
-    public void removeCellEditorListener(CellEditorListener l) 
+    public void removeCellEditorListener(CellEditorListener l)
     {
 	System.out.println("removeCellEditorListener");
     }
     //          Removes a listener from the list that's notified
 
-    public boolean shouldSelectCell(EventObject anEvent) 
+    public boolean shouldSelectCell(EventObject anEvent)
     {
 	System.out.println("shouldSelectCell");
 	return true;
     }
     //	Returns true if the editing cell should be selected, false otherwise.
 
-    public boolean stopCellEditing() 
+    public boolean stopCellEditing()
     {
 	System.out.println("stopCellEditing");
 	return true;
@@ -150,7 +151,7 @@ public class TableCellRendererBce implements TableCellRenderer,TableCellEditor ,
 			//		    myModel.setValueAt(selectedNode.m_name+","+selectedNode.m_tableName,row,col);
 			myModel.setValueAt(selectedNode,row,myCol);
 			myJTable.tableChanged(new TableModelEvent(myModel, row, row, myCol));
-			getButton(row);		    
+			getButton(row);
 		    }
 	    }
     }

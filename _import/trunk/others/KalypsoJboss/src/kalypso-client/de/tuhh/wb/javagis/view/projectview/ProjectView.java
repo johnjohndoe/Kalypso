@@ -17,6 +17,7 @@ import de.tuhh.wb.javagis.data.VersionAccessImpl;
 import de.tuhh.wb.javagis.view.JobRequest;
 import de.tuhh.wb.javagis.data.event.VersionListener;
 import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
+import de.tuhh.wb.javagis.tools.I18n;
 import ejb.event.EJBEvent;
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +37,7 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 
     public ProjectView()
     {
-	super("ProjectView",true,false,true,true);
+	super(I18n.get("windowTitlePV"),true,false,true,true);
 	this.selectedVersion=-1;
 	this.versionAccess=null;
 	this.versionHash=new Hashtable();
@@ -48,7 +49,7 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
     public void initMask()
     {
 	getContentPane().removeAll();
-	treeModel=new DefaultTreeModel(new DefaultMutableTreeNode("not connected to kalypso-server"));
+	treeModel=new DefaultTreeModel(new DefaultMutableTreeNode(I18n.get("PV_TN_Default")));
 	jTree= new JTree(treeModel);
    //     this.setFrameIcon((new ImageIcon("symbols/Legend16.gif")));
 	JPanel jPanel = new JPanel();
@@ -62,28 +63,28 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
     public void createFileMenu()
     {
         JMenuBar menubar = new JMenuBar ();
-        JMenu edit = new JMenu ("Data Manager");
-        JMenu view = new JMenu ("View");
-	edit.addActionListener(this);
-	view.addActionListener(this);
-     // edit.setActionCommand("Zoom In");
+        JMenu edit = new JMenu (I18n.get("PVJMenuEdit"));
+        JMenu view = new JMenu (I18n.get("PVJMenuView"));
+		edit.addActionListener(this);
+		view.addActionListener(this);
+     	// edit.setActionCommand("Zoom In");
         edit.setIcon((new ImageIcon("symbols/Edit16.gif")));
         JMenuItem mi;
 
-        mi = new JMenuItem("Connect to Database");
+        mi = new JMenuItem(I18n.get("PVJMenuItem_ConnectDatabase"));
         mi.setIcon((new ImageIcon ("symbols/FullExtent16.gif")));
         mi.setActionCommand("connectToServer");
         mi.addActionListener(this);
         edit.add(mi);
 
-        mi = new JMenuItem("Create Version");
+        mi = new JMenuItem(I18n.get("PVJMenuItem_CreateVersion"));
         mi.addActionListener(this);
         mi.setIcon((new ImageIcon("symbols/New16.gif")));
         mi.setActionCommand("createVersion");
 	//        mi.addActionListener(this);
         edit.add(mi);
 
-        mi = new JMenuItem("Reload Project Tree");
+        mi = new JMenuItem(I18n.get("PVJMenuItem_ReloadTree"));
         mi.setIcon((new ImageIcon( "symbols/Refresh16.gif")));
         mi.setActionCommand("updateProjectTree");
         mi.addActionListener(this);
@@ -244,13 +245,13 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 			selectVersion(selectedVersion);
 
 			JPopupMenu popup = new JPopupMenu();
-			JMenuItem menuItem = new JMenuItem("copy Version");
+			JMenuItem menuItem = new JMenuItem(I18n.get("PV_PopMen_CopyVersion"));
                         menuItem.setIcon((new ImageIcon( "symbols/vectorSets16.gif")));
 			menuItem.setActionCommand("copySelectedVersion");
 			menuItem.addActionListener(this);
 			popup.add(menuItem);
 
-			menuItem = new JMenuItem(" Tbl open TableView (objects)");
+			menuItem = new JMenuItem(I18n.get("PV_PopMen_TblObj"));
 			menuItem.setActionCommand("openObjectTableViewFromSelectedVersion");
 			menuItem.addActionListener(this);
 			popup.add(menuItem);
@@ -258,7 +259,7 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 			
 			if("Modell".equals(theme))
 			    {
-				menuItem = new JMenuItem("open TableView (relations)");
+				menuItem = new JMenuItem(I18n.get("PV_PopMen_TblRel"));
 				menuItem.setActionCommand("openRelationTableViewFromSelectedVersion");
 				menuItem.addActionListener(this);
 				popup.add(menuItem);
@@ -266,19 +267,19 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 
 			if("Modell".equals(theme))
 			    {
-				menuItem = new JMenuItem(" Net Open NetView");
+				menuItem = new JMenuItem(I18n.get("PV_PopMen_NetView"));
 				menuItem.setActionCommand("openNetViewFromSelectedVersion");
 				menuItem.addActionListener(this);
 				popup.add(menuItem);
 			    }
 
-			menuItem = new JMenuItem("Rename Version");
+			menuItem = new JMenuItem(I18n.get("PV_PopMen_Rename"));
 			menuItem.setActionCommand("renameSelectedVersion");
                         menuItem.setIcon((new ImageIcon( "symbols/Rename16.gif")));
 			menuItem.addActionListener(this);
 			popup.add(menuItem);
 
-			menuItem = new JMenuItem("Remove Version");
+			menuItem = new JMenuItem(I18n.get("PV_PopMen_Remove"));
 			menuItem.setActionCommand("removeSelectedVersion");
                         menuItem.setIcon((new ImageIcon( "symbols/Delete16.gif")));
 			menuItem.addActionListener(this);
@@ -286,18 +287,18 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 
 			if("SimulationCase".equals(theme))
 			    {
-				menuItem = new JMenuItem("run simulation (from SimulationCase)");
+				menuItem = new JMenuItem(I18n.get("PV_PopMen_Sim"));
 				menuItem.setActionCommand("simulate");
 				menuItem.addActionListener(this);
 				popup.add(menuItem);
 			    }
-			menuItem = new JMenuItem("XML-export");
+			menuItem = new JMenuItem(I18n.get("PV_PopMen_XMLex"));
 			menuItem.setActionCommand("xml-export");
                         menuItem.setIcon((new ImageIcon( "symbols/Export16.gif")));
 			menuItem.addActionListener(this);
 			popup.add(menuItem);
 
-			menuItem = new JMenuItem("XML-import");
+			menuItem = new JMenuItem(I18n.get("PV_PopMen_XMLim"));
 			menuItem.setActionCommand("xml-import");
                         menuItem.setIcon((new ImageIcon( "symbols/FullExtent16.gif")));
 			menuItem.addActionListener(this);
@@ -343,7 +344,7 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 	    {
 		if(versionAccess!=null)
 		    {
-			new VersionDialog("create Version",VersionDialog.CREATE,versionAccess,null,null);
+			new VersionDialog(I18n.get("PV_VD_TitleCreate"),VersionDialog.CREATE,versionAccess,null,null);
 		    }
 		else
 		    System.out.println("please connect to kalypso-server");
@@ -354,7 +355,7 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 		{
 		    String themeKey=versionAccess.getThemeKey(selectedVersion);
 		    Object vId=versionAccess.getVersionId(selectedVersion);
-		    new VersionDialog("rename Version",VersionDialog.RENAME,versionAccess,themeKey,vId);
+		    new VersionDialog(I18n.get("PV_VD_TitleRename"),VersionDialog.RENAME,versionAccess,themeKey,vId);
 		}
 	    }
 	if("copySelectedVersion".equals(e.getActionCommand()))
@@ -364,7 +365,7 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 		    String themeKey=versionAccess.getThemeKey(selectedVersion);
 		    Object vId=versionAccess.getVersionId(selectedVersion);
 
-		    new VersionDialog("copy Version",VersionDialog.COPY,versionAccess,themeKey,vId);
+		    new VersionDialog(I18n.get("PV_VD_TitleCopy"),VersionDialog.COPY,versionAccess,themeKey,vId);
 		}
 	    }
 
@@ -372,7 +373,19 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 	    {
 		if(selectedVersion!=-1)
 		{
-		    versionAccess.removeVersion(selectedVersion);
+				Object[] options = {I18n.get("Dia_Yes"),I18n.get("Dia_No"),I18n.get("Dia_Cancel")};
+         		int n = JOptionPane.showOptionDialog(null,I18n.get("RemoveDia_Question"),I18n.get("RemoveDia_Title"),JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
+
+                switch (n)
+                    {
+                   case JOptionPane.NO_OPTION:
+                    break;
+                    case JOptionPane.YES_OPTION:
+					versionAccess.removeVersion(selectedVersion);
+					case JOptionPane.CANCEL_OPTION:
+					break;
+                    default:
+                        break ;}
 		}
 	    }
 
@@ -402,9 +415,9 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 			if(returnVal == JFileChooser.APPROVE_OPTION)
 			    {
 				File file=fileChooser.getSelectedFile();
-				LogView.print("importing file to database ... ");
+				LogView.print(I18n.get("LV_PV_XML_im1"));
 				versionAccess.xmlImport(themeKey,vId,file);
-				LogView.println("done");
+				LogView.println(I18n.get("LV_PV_XML_im2"));
 			    }
 		    }
 	    }
@@ -419,9 +432,9 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 			if(returnVal == JFileChooser.APPROVE_OPTION)
 			    {
 				File file=fileChooser.getSelectedFile();
-				LogView.print("exporting data to file ... ");
+				LogView.print(I18n.get("LV_PV_XML_ex1"));
 				versionAccess.xmlExport(themeKey,vId,file);
-				LogView.println("done");
+				LogView.println(I18n.get("LV_PV_XML_ex2"));
 			    }
 		    }
 	    }

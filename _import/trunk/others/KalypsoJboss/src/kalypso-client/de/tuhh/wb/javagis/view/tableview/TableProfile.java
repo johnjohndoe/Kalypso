@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import java.io.File;
 import de.tuhh.wb.javagis.data.TrippelKeyHash;
 import de.tuhh.wb.javagis.view.LogView;
+import de.tuhh.wb.javagis.tools.I18n;
 
 public class TableProfile
 {
@@ -19,7 +20,7 @@ public class TableProfile
     private static TableProfile myInstance=null;
     private TableProfile()
     {
-	this.toHide=new TrippelKeyHash();	
+	this.toHide=new TrippelKeyHash();
 	load();
     }
     
@@ -41,8 +42,10 @@ public class TableProfile
     
     public void hide(String profile,String elementKey,String propKey)
     {
+	//Object[] option = {"OK"};
 	if("all".equals(profile))
-	    JOptionPane.showMessageDialog(null,"you can not hide columns in profile \"all\",\n please create a new profile");
+		
+	    JOptionPane.showMessageDialog(null,I18n.get("ProfileDia_hide_Message"),I18n.get("ProfileDia_hide_title"),JOptionPane.INFORMATION_MESSAGE);
 	else
 	    toHide.put(profile,elementKey,propKey,new Boolean(true));
     }
@@ -52,9 +55,9 @@ public class TableProfile
 	String profileName=null;
 	try
 	    {
-		profileName=JOptionPane.showInputDialog(null,
-							"name of profile",
-							"new Profile",
+		profileName=(String)JOptionPane.showInputDialog(null,
+							I18n.get("ProfileDia_new_Question"),
+							I18n.get("ProfileDia_new_Title"),
 							JOptionPane.QUESTION_MESSAGE);
 		if(profileName!=null)
 		    toHide.put(profileName,"-","-",new Boolean(false));
@@ -63,16 +66,33 @@ public class TableProfile
 	    {
 		e.printStackTrace();
 		return null;
-	    }	
+	    }
 	return profileName;
     }
 
     public void removeProfile(String profileName)
     {
-	if(profileName!=null && !"all".equals(profileName))
-	    toHide.remove(profileName);
+	int n;
+	Object[] options = {I18n.get("Dia_Yes"),I18n.get("Dia_No"),I18n.get("Dia_Cancel")};
+	if(profileName!=null && !"all".equals(profileName)){
+    n = JOptionPane.showOptionDialog(null,I18n.get("ProfileDia_removeW_Question"),I18n.get("ProfileDia_removeW_Title"),JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
+
+                switch (n)
+                    {
+                   case JOptionPane.NO_OPTION:
+                    break;
+                    case JOptionPane.YES_OPTION:
+					 toHide.remove(profileName);
+					case JOptionPane.CANCEL_OPTION:
+					break;
+                    default:
+                        break ;
+
+                    }
+	   
+				}
 	else
-	    JOptionPane.showMessageDialog(null,"the profil \"all\" is mandatory,\n you can not remove it");
+	    JOptionPane.showMessageDialog(null,I18n.get("ProfileDia_removeMS_Message"),I18n.get("ProfileDia_removeW_Title"),JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void clearProfile(String profile)
@@ -80,7 +100,7 @@ public class TableProfile
     
     public boolean shouldBeHidden(String profile,String elementKey,String propKey)
     {
-	return toHide.containsKey(profile,elementKey,propKey);	   
+	return toHide.containsKey(profile,elementKey,propKey);
     }
 
     public void load()
@@ -114,7 +134,7 @@ public class TableProfile
 					    {
 						e.printStackTrace();
 						System.out.println(e.getMessage());
-						System.out.println("ignored line: "+line);				    
+						System.out.println("ignored line: "+line);
 					    }
 				    }
 			    }

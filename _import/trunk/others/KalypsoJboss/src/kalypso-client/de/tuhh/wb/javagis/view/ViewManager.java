@@ -19,6 +19,7 @@ import de.tuhh.wb.javagis.data.VersionAccessImpl;
 import de.tuhh.wb.javagis.view.JobRequest;
 import de.tuhh.wb.javagis.data.event.VersionListener;
 import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
+import de.tuhh.wb.javagis.tools.I18n;
 import ejb.event.EJBEvent;
 import javax.swing.*;
 import java.awt.*;
@@ -86,11 +87,16 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
         getContentPane().setLayout(new BorderLayout());
         desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
 
-	desktop.setPreferredSize(new Dimension(600,500));
+		desktop.setPreferredSize(new Dimension(600,500));
         getContentPane().add(desktop,BorderLayout.CENTER);
 
-
-        setTitle("Kalypso-Rainfall-Runoff-Model");
+		I18n.setLanguage("deu");
+		UIDefaults defaults = UIManager.getDefaults();
+		defaults.put("OptionPane.yesButtonText",I18n.get("Dia_Yes"));
+		defaults.put("OptionPane.noButtonText",I18n.get("Dia_No"));
+		defaults.put("OptionPane.cancelButtonText",I18n.get("Dia_Cancel"));
+		defaults.put("OptionPane.okButtonText",I18n.get("Dia_OK"));
+        setTitle(I18n.get("windowTitle"));
         setVisible(true);
 
         ProjectView projectView=new ProjectView();
@@ -128,7 +134,7 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
     public void showObjectTableView(Version version)
     {
       //GisTableView gisTableView = new GisTableView("TestVersion",version.getGisTableModels(),null,0,null,GisTableView.IS_GISELEMENTLIST);
-        GisTableView gisTableView = new GisTableView("TableView: "+version.getLabel(),version.getGisObjectTableModels());
+        GisTableView gisTableView = new GisTableView(I18n.get("windowTitleTV")+version.getLabel(),version.getGisObjectTableModels());
         gisTableView.setVisible(true);
         gisTableView.setSize(670,300);
         desktop.add(gisTableView);
@@ -138,7 +144,7 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
     public void showRelationTableView(Version version)
     {
         // 	GisTableView gisTableView = new GisTableView("TestVersion",version.getGisTableModels(),null,0,null,GisTableView.IS_GISELEMENTLIST);
-         GisTableView gisTableView = new GisTableView("TableView: "+version.getLabel(),version.getGisRelationTableModels());
+         GisTableView gisTableView = new GisTableView(I18n.get("windowTitleTV")+version.getLabel(),version.getGisRelationTableModels());
         gisTableView.setVisible(true);
         gisTableView.setSize(670,300);
         desktop.add(gisTableView);
@@ -169,7 +175,7 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 
 
 
-    private void selectionBar(Vector objectClassNames)
+    /**private void selectionBar(Vector objectClassNames)
     {
         JToolBar selectionBar=new JToolBar("SelectionBar");
         selectionBar.setLayout(new GridLayout (objectClassNames.size(),1));
@@ -180,7 +186,7 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
         selectionBar.addSeparator();
         selectionBar.setVisible(true);
         //	add(selectionBar);
-    }
+	 }*/
 
     public void mouseClicked(MouseEvent e)
     {
@@ -236,7 +242,7 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
     {
         // free resources...
         VersionClass.freeResources();
-        System.out.println("bye");       
+        System.out.println("bye");
     }//  Invoked when the user attempts to close the window from the window's system menu.
 
     public   void windowDeactivated(WindowEvent e)
@@ -251,14 +257,14 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
     public   void windowOpened(WindowEvent e)
     {}
   private void jbInit() throws Exception {
-    jMenu_ProjectManager.setMnemonic('P');
-    jMenu_ProjectManager.setText("Project Manager");
-    jMenu_Preprocessing.setText("Preprocessing");
-    jMenu_Preprocessing.setMnemonic('R');
-    jMenu_Preprocessing.setText("Preprocessing");
-    jMenu_Postprocessing.setMnemonic('e');
-    jMenu_Postprocessing.setText("Processing");
-    jMenuItem_OpenProject.setText("Open Project/Log In");
+    //jMenu_ProjectManager.setMnemonic('P');
+    jMenu_ProjectManager.setText(I18n.get("jMenu_ProjectManager"));
+    jMenu_Preprocessing.setText(I18n.get("jMenu_Preprocessing"));
+    //jMenu_Preprocessing.setMnemonic('R');
+    //jMenu_Preprocessing.setText("Preprocessing");
+    //jMenu_Postprocessing.setMnemonic('e');
+    jMenu_Postprocessing.setText(I18n.get("jMenu_Processing"));
+    jMenuItem_OpenProject.setText(I18n.get("jMenuItem_OpenProject"));
 
   jMenuItem_OpenProject.setActionCommand("getTree");
    jMenuItem_OpenProject.addActionListener(new java.awt.event.ActionListener()
@@ -281,10 +287,10 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
   }
     });
 
-    jMenuItem_Close.setText("Close Project/Log Out");
+    jMenuItem_Close.setText(I18n.get("jMenuItem_Close"));
     jMenuItem_Close.setEnabled(false);
-    jMenuItem_Exit.setText("Exit");
-    jMenuItem_Exit.setMnemonic('X');
+    jMenuItem_Exit.setText(I18n.get("jMenuItem_Exit"));
+    //jMenuItem_Exit.setMnemonic('X');
 
     jMenuItem_Exit.setActionCommand("exit");
     jMenuItem_Exit.addActionListener(new java.awt.event.ActionListener() {
@@ -293,15 +299,18 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
         if("exit".equals(e.getActionCommand()))
             {
                 //       n = JOptionPane.showConfirmDialog(frame, "Do You really want to quit the program?");
-                n = JOptionPane.showConfirmDialog(null, "Do You really want to quit the program?");
+				Object[] options = {I18n.get("Dia_Yes"),I18n.get("Dia_No"),I18n.get("Dia_Cancel")};
+                n = JOptionPane.showOptionDialog(null,I18n.get("ExitDia_Question"),I18n.get("ExitDia_Title"),JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
 
                 switch (n)
                     {
                    case JOptionPane.NO_OPTION:
                     break;
                     case JOptionPane.YES_OPTION:
-			VersionClass.freeResources();
-                        System.exit(0);
+					VersionClass.freeResources();
+                    System.exit(0);
+					case JOptionPane.CANCEL_OPTION:
+					break;
                     default:
                         break ;
 
@@ -310,21 +319,21 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
     }} );
 
     jMenuItem_Print.setEnabled(false);
-    jMenuItem_Print.setText("Print");
-    jMenuItem_View.setMnemonic('V');
-    jMenuItem_View.setText("View");
+    jMenuItem_Print.setText(I18n.get("jMenuItem_Print"));
+    //jMenuItem_View.setMnemonic('V');
+    jMenuItem_View.setText(I18n.get("jMenuItem_View"));
     jMenuItem_View.setEnabled(false);
     jMenuItem_Layout.setEnabled(false);
-    jMenuItem_Layout.setMnemonic('L');
-    jMenuItem_Layout.setText("Layout");
-    jMenuItem_Control.setMnemonic('C');
-    jMenuItem_Control.setText("Control Data Setup");
+    //jMenuItem_Layout.setMnemonic('L');
+    jMenuItem_Layout.setText(I18n.get("jMenuItem_Layout"));
+    //jMenuItem_Control.setMnemonic('C');
+    jMenuItem_Control.setText(I18n.get("jMenuItem_Control"));
     jMenuItem_Control.setEnabled(false);
-    jMenuItem_SimCas.setMnemonic('D');
-    jMenuItem_SimCas.setText("Defining Simualtion Cases");
+    //jMenuItem_SimCas.setMnemonic('D');
+    jMenuItem_SimCas.setText(I18n.get("jMenuItem_SimCas"));
     jMenuItem_SimCas.setEnabled(false);
-    jMenuItem_Run.setMnemonic('U');
-    jMenuItem_Run.setText("Run Model");
+    //jMenuItem_Run.setMnemonic('U');
+    jMenuItem_Run.setText(I18n.get("jMenuItem_Run"));
     jMenuItem_Run.setEnabled(false);
     jMenuItem_Run.setActionCommand("simulate");
     jMenuItem_Run.addActionListener(new java.awt.event.ActionListener() {
@@ -333,13 +342,13 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
             }
     });
 
-    jMenu_Post.setMnemonic('S');
-    jMenu_Post.setText("Postprocessing");
-    jMenuItem_ViewRes.setMnemonic('I');
-    jMenuItem_ViewRes.setText("View Results");
+    //jMenu_Post.setMnemonic('S');
+    jMenu_Post.setText(I18n.get("jMenu_Postprocessing"));
+    //jMenuItem_ViewRes.setMnemonic('I');
+    jMenuItem_ViewRes.setText(I18n.get("jMenuItem_ViewRes"));
     jMenuItem_ViewRes.setEnabled(false);
-    jMenuItem_ViewErr.setMnemonic('W');
-    jMenuItem_ViewErr.setText("View Log File");
+    //jMenuItem_ViewErr.setMnemonic('W');
+    jMenuItem_ViewErr.setText(I18n.get("jMenuItem_ViewErr"));
     jMenuItem_ViewErr.setEnabled(false);
     jMenuItem_ViewErr.setActionCommand("viewLog");
     jMenuItem_ViewErr.addActionListener(new java.awt.event.ActionListener() {
@@ -351,8 +360,8 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 	    }
     }});
 
-    jMenuItem_About.setMnemonic('A');
-    jMenuItem_About.setText("About ");
+    //jMenuItem_About.setMnemonic('A');
+    jMenuItem_About.setText(I18n.get("jMenuItem_About"));
     jMenuItem_About.setActionCommand("about");
     jMenuItem_About.addActionListener(new java.awt.event.ActionListener() {
     public void actionPerformed(ActionEvent e) {
@@ -361,8 +370,8 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
        JOptionPane.showMessageDialog(null, "Kalypso 2003");
     }} );
 
-    jMenuItem_Tutorial.setMnemonic('T');
-    jMenuItem_Tutorial.setText("Tutorial");
+    //jMenuItem_Tutorial.setMnemonic('T');
+    jMenuItem_Tutorial.setText(I18n.get("jMenuItem_Tutorial"));
     jMenuItem_Tutorial.setActionCommand("viewDocs");
     jMenuItem_Tutorial.addActionListener(new java.awt.event.ActionListener()
     {
@@ -374,24 +383,24 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 	       }
    }
     });
-    jMenu_Help.setMnemonic('H');
-    jMenu_Help.setText("Help");
-    jMenu_ModelD.setMnemonic('E');
-    jMenu_ModelD.setText("Edit Model Data");
+    //jMenu_Help.setMnemonic('H');
+    jMenu_Help.setText(I18n.get("jMenu_Help"));
+    //jMenu_ModelD.setMnemonic('E');
+    jMenu_ModelD.setText(I18n.get("jMenuItem_Model1D"));
     jMenu_ModelD.setEnabled(false);
-    jMenuItem_Net_Param.setText("Edit Parameters");
+    jMenuItem_Net_Param.setText(I18n.get("jMenuItem_NetParam"));
     jMenuItem_Net.setEnabled(false);
-    jMenuItem_Net.setText("Edit Network Data");
+    jMenuItem_Net.setText(I18n.get("jMenuItem_Net"));
     jPanel1.setLayout(borderLayout1);
     this.getContentPane().setLayout(borderLayout2);
     jPanel1.setPreferredSize(new Dimension(300, 40));
     createVButton.setMaximumSize(new Dimension(35, 309));
     createVButton.setPreferredSize(new Dimension(35, 35));
-    createVButton.setToolTipText("CreateVersion");
+    createVButton.setToolTipText(I18n.get("ButtonCreateTT"));
     createVButton.setIcon((new ImageIcon( "symbols/CreateV24.gif")));
     copyButton.setMaximumSize(new Dimension(35, 309));
     copyButton.setPreferredSize(new Dimension(35, 35));
-    copyButton.setToolTipText("CopyVersion");
+    copyButton.setToolTipText(I18n.get("ButtonCopyTT"));
     copyButton.setIcon((new ImageIcon( "symbols/Copy24.gif")));
     tableButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -400,19 +409,19 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
     });
     tableButton.setMaximumSize(new Dimension(35, 110));
     tableButton.setPreferredSize(new Dimension(35, 35));
-    tableButton.setToolTipText("OpenTableView");
-    tableButton.setText("Tbl");
+    tableButton.setToolTipText(I18n.get("ButtonTableTT"));
+    tableButton.setText(I18n.get("ButtonTable"));
     netButton.setMaximumSize(new Dimension(35, 110));
     netButton.setPreferredSize(new Dimension(35, 35));
-    netButton.setToolTipText("OpenNetView");
-    netButton.setText("Net");
+    netButton.setToolTipText(I18n.get("ButtonNetTT"));
+    netButton.setText(I18n.get("ButtonNet"));
     renameButton.setMaximumSize(new Dimension(35, 110));
     renameButton.setPreferredSize(new Dimension(35, 35));
-    renameButton.setToolTipText("RenameVersion");
+    renameButton.setToolTipText(I18n.get("ButtonRenameTT"));
     renameButton.setIcon((new ImageIcon( "symbols/Rename24.gif")));
     removeButton.setMaximumSize(new Dimension(35, 110));
     removeButton.setPreferredSize(new Dimension(35, 35));
-    removeButton.setToolTipText("RemoveVersion");
+    removeButton.setToolTipText(I18n.get("ButtonRemoveTT"));
     removeButton.setIcon((new ImageIcon( "symbols/Delete24.gif")));
     removeButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -421,11 +430,11 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
     });
     xmlEDataButton.setMaximumSize(new Dimension(35, 110));
     xmlEDataButton.setPreferredSize(new Dimension(35, 35));
-    xmlEDataButton.setToolTipText("XML-Export");
+    xmlEDataButton.setToolTipText(I18n.get("ButtonXMLEDataTT"));
     xmlEDataButton.setIcon((new ImageIcon( "symbols/Export24.gif")));
     xmlIButton.setMaximumSize(new Dimension(35, 119));
     xmlIButton.setPreferredSize(new Dimension(35, 35));
-    xmlIButton.setToolTipText("XML-Import");
+    xmlIButton.setToolTipText(I18n.get("ButtonXMLIDataTT"));
     xmlIButton.setIcon((new ImageIcon( "symbols/Import24.gif")));
     menubar.add(jMenu_ProjectManager);
     menubar.add(jMenu_Preprocessing);
