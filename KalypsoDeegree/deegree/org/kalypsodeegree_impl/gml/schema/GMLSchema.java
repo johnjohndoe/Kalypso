@@ -35,17 +35,17 @@ public class GMLSchema
   private final URL m_url;
 
   /**
-   * @param schemaDoc
-   *          DOM-root element of schema instance
+   * @param documentURL
+   *          url of schema
    * @throws Exception
    *           Falls GML nicht geladen werden kann
    */
-  public GMLSchema( final URL documentURL ) throws Exception
+  GMLSchema( final URL documentURL ) throws Exception
   {
     m_url = documentURL;
     m_nodeFeatureTypeMap = new HashMap();
 
-    m_schemaDoc = XMLHelper.getAsDOM( documentURL,true );
+    m_schemaDoc = XMLHelper.getAsDOM( documentURL, true );
 
     setNameSpaces();
     setImportedSchemas();
@@ -64,11 +64,12 @@ public class GMLSchema
         final String schemaLocation = attributeNode.getNodeValue();
 
         final URI uri = new URI( schemaLocation );
-        final URL url = uri.isAbsolute() ? new URL( schemaLocation ) : new URL( m_url, schemaLocation );
-        
-//        System.out.println( "m_url: " + m_url.toString() );
-//        System.out.println( "SchemaLocation: " + schemaLocation );
-//        System.out.println( "url: " + url.toString() );
+        final URL url = uri.isAbsolute() ? new URL( schemaLocation ) : new URL( m_url,
+            schemaLocation );
+
+        //        System.out.println( "m_url: " + m_url.toString() );
+        //        System.out.println( "SchemaLocation: " + schemaLocation );
+        //        System.out.println( "url: " + url.toString() );
 
         final GMLSchema schema = new GMLSchema( url );
         m_importedSchemas.put( schema.getTargetNS(), schema );
