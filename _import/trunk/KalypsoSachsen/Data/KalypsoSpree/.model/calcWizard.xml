@@ -91,16 +91,19 @@
         <arg name="tableTemplate" value=".templates/calcCase/talsperren.gtt"/>
         <arg name="diagTemplate" value=".templates/calcCase/talsperren.odt"/>
 
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="40"/>
+        <arg name="selectionID" value="64"/>
+
         <arg name="ignoreType1" value="V"/>
         <arg name="ignoreType2" value="Q"/>
         <arg name="ignoreLabel2" value="Abfluss"/>
         <arg name="ignoreLabel2" value="Volumen"/>
 
-        <arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe_eingang"/>
-
-        <arg name="mainSash" value="50"/>
-        <arg name="rightSash" value="40"/>
-        <arg name="selectionID" value="64"/>
+        <arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
+        <arg name="timeserie2" value="nameColumn=Name#linkColumn=Abgabe_plausibilisiert"/>
+        <arg name="timeserie3" value="nameColumn=Name#linkColumn=Zufluss_berechnet"/>
+        <arg name="timeserie4" value="nameColumn=Name#linkColumn=Stauinhalt"/>
     </page>
 
     <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Flusslaufmodelle" imageLocation="icons/calcwizard/kalypso32.gif" >

@@ -141,6 +141,8 @@
 					<element name="Ort" type="gml:PointPropertyType"/>
 					<element name="Abgabe_eingang" type="spree:TimeseriesLinkType"/>
 					<element name="Abgabe" type="spree:TimeseriesLinkType"/>
+					<element name="Abgabe_plausibilisiert" type="spree:TimeseriesLinkType"/>
+					<element name="Zufluss_berechnet" type="spree:TimeseriesLinkType"/>
 					<element name="Stauinhalt" type="spree:TimeseriesLinkType"/>
 				</sequence>
 			</extension>

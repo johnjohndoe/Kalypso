@@ -356,8 +356,14 @@
           <Abgabe>
             <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./zeitreihen/QV_TSQUITZ.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Abgabe>
+          <Abgabe_plausibilisiert>
+            <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Ergebnisse/zeitreihen/QP_TSQUITZ.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </Abgabe_plausibilisiert>
+          <Zufluss_berechnet>
+            <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Ergebnisse/zeitreihen/Q_TSQUITZ.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </Zufluss_berechnet>
           <Stauinhalt>
-            <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./zeitreihen/V_TSQUITZ.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Ergebnisse/zeitreihen/V_TSQUITZ.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Stauinhalt>
         </Talsperre>
       </TalsperreMember>
@@ -376,8 +382,14 @@
           <Abgabe>
             <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./zeitreihen/QV_TSBAUTZ.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Abgabe>
+          <Abgabe_plausibilisiert>
+            <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Ergebnisse/zeitreihen/QP_TSBAUTZ.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </Abgabe_plausibilisiert>
+          <Zufluss_berechnet>
+            <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Ergebnisse/zeitreihen/Q_TSBAUTZ.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+          </Zufluss_berechnet>
           <Stauinhalt>
-            <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./zeitreihen/V_TSBAUTZ.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Ergebnisse/zeitreihen/V_TSBAUTZ.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Stauinhalt>
         </Talsperre>
       </TalsperreMember>
