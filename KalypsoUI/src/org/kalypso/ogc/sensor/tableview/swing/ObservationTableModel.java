@@ -187,58 +187,61 @@ public class ObservationTableModel extends AbstractTableModel
   public void addTableViewColumn( final ITableViewColumn col )
       throws SensorException
   {
-    if( col == null )
-      return;
-
-    m_columns.add( col );
-
-    final IAxis keyAxis = col.getKeyAxis();
-
-    if( m_sharedAxis == null )
-      m_sharedAxis = keyAxis;
-    else
+    synchronized( m_columns )
     {
-      // verify compatibility of the axes
-      if( m_sharedAxis.getDataClass() != keyAxis.getDataClass()
-          || !m_sharedAxis.getUnit().equals( keyAxis.getUnit() )
-          || !m_sharedAxis.getType().equals( keyAxis.getType() ) )
+      if( col == null )
+        return;
+
+      m_columns.add( col );
+
+      final IAxis keyAxis = col.getKeyAxis();
+
+      if( m_sharedAxis == null )
+        m_sharedAxis = keyAxis;
+      else
       {
-        throw new SensorException( m_sharedAxis + " ist nicht mit " + keyAxis
-            + " kompatibel." );
-      }
-    }
-
-    // values of observation of the column
-    final ITuppleModel tupModel = col.getObservation().getValues( null );
-
-    // fill shared column values
-    for( int r = 0; r < tupModel.getCount(); r++ )
-      m_sharedModel.add( tupModel.getElement( r, keyAxis ) );
-
-    // add tablecolumn to tablemodel
-    m_valuesModel.addColumn( col.getName() );
-    final int colIndex = m_valuesModel.findColumn( col.getName() );
-
-    if( m_sharedModel.size() > m_valuesModel.getRowCount() )
-      m_valuesModel.setRowCount( m_sharedModel.size() );
-    
-    // fill valued column values
-    int r = 0;
-    for( final Iterator it = m_sharedModel.iterator(); it.hasNext(); )
-    {
-      final Object sharedElement = it.next();
-
-      final int index = tupModel.indexOf( sharedElement, keyAxis );
-      if( index != -1 )
-      {
-        m_valuesModel.setValueAt( tupModel.getElement( index, col.getAxis() ), r,
-            colIndex );
+        // verify compatibility of the axes
+        if( m_sharedAxis.getDataClass() != keyAxis.getDataClass()
+            || !m_sharedAxis.getUnit().equals( keyAxis.getUnit() )
+            || !m_sharedAxis.getType().equals( keyAxis.getType() ) )
+        {
+          throw new SensorException( m_sharedAxis + " ist nicht mit " + keyAxis
+              + " kompatibel." );
+        }
       }
 
-      r++;
+      // values of observation of the column
+      final ITuppleModel tupModel = col.getObservation().getValues( null );
+
+      // fill shared column values
+      for( int r = 0; r < tupModel.getCount(); r++ )
+        m_sharedModel.add( tupModel.getElement( r, keyAxis ) );
+
+      // add tablecolumn to tablemodel
+      m_valuesModel.addColumn( col.getName() );
+      final int colIndex = m_valuesModel.findColumn( col.getName() );
+
+      if( m_sharedModel.size() > m_valuesModel.getRowCount() )
+        m_valuesModel.setRowCount( m_sharedModel.size() );
+
+      // fill valued column values
+      int r = 0;
+      for( final Iterator it = m_sharedModel.iterator(); it.hasNext(); )
+      {
+        final Object sharedElement = it.next();
+
+        final int index = tupModel.indexOf( sharedElement, keyAxis );
+        if( index != -1 )
+        {
+          m_valuesModel.setValueAt(
+              tupModel.getElement( index, col.getAxis() ), r, colIndex );
+        }
+
+        r++;
+      }
+
+      fireTableStructureChanged();
     }
-    
-    fireTableStructureChanged();
   }
 
   /**
@@ -443,7 +446,7 @@ public class ObservationTableModel extends AbstractTableModel
 
       // insert values
       for( int i = 1; i < row.size(); i++ )
-        setValueAt( row.get( i ), index, i - 1 );
+        setValueAt( row.get( i ), index, i );
 
       return index;
     }
@@ -470,7 +473,7 @@ public class ObservationTableModel extends AbstractTableModel
 
         row.add( m_valuesModel.getValueAt( index, colIndex ) );
         col.setDirty( true );
-        
+
         colIndex++;
       }
 
