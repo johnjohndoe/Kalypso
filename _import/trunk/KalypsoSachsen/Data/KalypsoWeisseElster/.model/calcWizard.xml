@@ -448,7 +448,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="timeserie2" 
 			value="nameColumn=Name#linkColumn=pegelZR#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;"/>
 -->
-<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 <arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 
 		<arg name="mainSash" value="50"/>
@@ -461,12 +461,47 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="pegelNameProperty" value="name"/>
 		<arg name="resultProperty" value="qberechnetZR"/>
 		<arg name="prognoseProperty" value="pegelBerechnetZRAblage"/>
+<!--
 		<arg name="exporter1" value="class=org.kalypso.ui.calcwizard.bericht.MapExporter;name=Karte"/>
 		<arg name="exporter2" value="class=org.kalypso.ui.calcwizard.bericht.ZmlTableExporter;name=Tabelle"/>
 		<arg name="exporter3" value="class=org.kalypso.ui.calcwizard.bericht.DiagrammExporter;name=Abflussgrafik"/>
 		<arg name="exporter4" value="class=org.kalypso.ui.calcwizard.bericht.DiagrammExporter;name=Wasserstandgrafik;"/>
+-->
 		
-		    	<arg name="maximizeMap" value="true"/>
+	   	<arg name="maximizeMap" value="true"/>
 
+	   	<arg name="exporter1">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.ZmlTableExporter"/>
+	   		<arg name="name" value="Tabelle"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtTabelle.ott"/>
+			<arg name="tokens">
+				<arg name="title" value="name"/>
+				<arg name="href1" value="qberechnetZR"/>
+			</arg>
+	   	</arg>
+	   	<arg name="exporter2">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
+	   		<arg name="name" value="Abflussgrafik"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
+	   		<arg name="width" value="1024"/>
+	   		<arg name="height" value ="768"/>
+			<arg name="tokens">
+				<arg name="title" value="name"/>
+				<arg name="href1" value="qberechnetZR"/>
+    			<arg name="href2" value="pegelZR"/>
+			</arg>
+	   	</arg>	   	
+	   	<arg name="exporter3">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
+	   		<arg name="name" value="Wasserstandgrafik"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagW.odt"/>
+	   		<arg name="width" value="1024"/>
+	   		<arg name="height" value ="768"/>
+			<arg name="tokens">
+				<arg name="title" value="name"/>
+				<arg name="href1" value="qberechnetZR"/>
+    			<arg name="href2" value="pegelZR"/>
+			</arg>
+	   	</arg>
 	</page>
 </calcwizard>
