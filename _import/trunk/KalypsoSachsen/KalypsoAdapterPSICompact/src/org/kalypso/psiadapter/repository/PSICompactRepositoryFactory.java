@@ -106,16 +106,18 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
   }
 
   /**
-   * Converts bitMask (Kalypso Status) to PSI-Status
+   * Converts bitMask (Kalypso Status) to PSI-Status. Always returns
+   * <code>PSICompact.STATUS_AUTO</code>. PSICompact automatically
+   * converts it to STATUS_REKO, independently from the status.
    * 
    * @param mask
    * @return PSICompact-Status
    */
   public final static int maskToPsiStatus( int mask )
   {
-    if( KalypsoStatusUtils.checkMask( mask,
-        KalypsoStati.BIT_USER_MODIFIED ) )
-      return PSICompact.STATUS_MANKOR;
+//    if( KalypsoStatusUtils.checkMask( mask,
+//        KalypsoStati.BIT_USER_MODIFIED ) )
+//      return PSICompact.STATUS_MANKOR;
 
     return PSICompact.STATUS_AUTO;
   }
