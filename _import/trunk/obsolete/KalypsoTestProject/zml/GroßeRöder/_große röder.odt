@@ -5,20 +5,20 @@
 	<title>Große Röder</title>
 	<legend title="Legende" visible="true"/>
 
-	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
-	<axis id="w" datatype="xs:double" label="Pegel" unit="m³/s" direction="vertical" position="left" />
+	<axis id="date" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
+	<axis id="Q" datatype="xs:double" label="Pegel" unit="m³/s" direction="vertical" position="left" />
 
 	<observation linktype="zml" xlink:href="grossenhain.zml" >
 	   	<curve id="C1" name="Grossenhain"  >
-		   	<mapping observation-axis="Datum" diagram-axis="d" />
-	   		<mapping observation-axis="Pegel-Grossenhain" diagram-axis="w" />
+		   	<mapping observation-axis="Datum" diagram-axis="date" />
+	   		<mapping observation-axis="Pegel-Grossenhain" diagram-axis="Q" />
 	   	</curve>
 	</observation>
 	   	
 	<observation linktype="zml" xlink:href="nauwalde.zml" >
 		<curve id="C2" name="Nauwalde" >
-			<mapping observation-axis="Datum" diagram-axis="d" />
-			<mapping observation-axis="Pegel-Nauwalde" diagram-axis="w" />
+			<mapping observation-axis="Datum" diagram-axis="date" />
+			<mapping observation-axis="Pegel-Nauwalde" diagram-axis="Q" />
 	   	</curve>
 	</observation>
    
