@@ -19,37 +19,51 @@ public class DateRangeArgument implements IVariableArguments
   private final Date m_to;
 
   /**
+   * Simple constructor. Uses current date as from and to.
+   */
+  public DateRangeArgument()
+  {
+    this( new Date(), new Date() );
+  }
+  
+  /**
+   * Consructor with longs
    * 
    * @param from
    * @param to
    */
   public DateRangeArgument( final long from, final long to )
   {
-    this( new Date(from), new Date(to) );
+    this( new Date( from ), new Date( to ) );
   }
-  
+
   /**
-   * @param from if null, minimum date is used
-   * @param to if null, current date is used
+   * Constructor with Dates
+   * 
+   * @param from
+   *          range from. If null minimum date is used (@see
+   *          DateUtilities#getMinimum())
+   * @param to
+   *          range to. If null, current date is used.
    */
   public DateRangeArgument( Date from, Date to )
   {
     if( from == null )
       from = DateUtilities.getMinimum();
-    
+
     if( to == null )
       to = new Date();
-      
+
     m_from = from;
     m_to = to;
   }
 
-  public Date getFrom()
+  public Date getFrom( )
   {
     return m_from;
   }
 
-  public Date getTo()
+  public Date getTo( )
   {
     return m_to;
   }
@@ -57,23 +71,29 @@ public class DateRangeArgument implements IVariableArguments
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString()
+  public String toString( )
   {
     return getClass().getName() + ": " + m_from + " - " + m_to;
   }
-  
+
   /**
    * Creates a <code>DateRangeArgument</code> containing the range:
    * 
-   * <pre>[now - pastDays, now]</pre>.
+   * <pre>
+   * [now - pastDays, now]
+   * </pre>.
    * 
    * If pastDays == 0, then the range is as follows:
    * 
-   * <pre>[ cal.getTime() - now]</pre>
+   * <pre>
+   * [ cal.getTime() - now]
+   * </pre>
    * 
    * for a Calendar instance which was set like:
    * 
-   * <pre>cal.set( 0,0,0,0,0,0 );</pre>
+   * <pre>
+   * cal.set( 0, 0, 0, 0, 0, 0 );
+   * </pre>
    * 
    * @param pastDays
    * @return new argument
