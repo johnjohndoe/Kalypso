@@ -404,7 +404,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     final List outputList = modelspec.getOutput();
     int count = 0;
-    if( results == null || results.length != outputList.size() )
+    if( results == null || results.length < outputList.size() )
       throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
           "Ergebnisdaten passen nicht zur Modellspezifikation", null ) );
 
@@ -416,54 +416,64 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     for( final Iterator iter = outputList.iterator(); iter.hasNext(); )
     {
-      final ModelspecType.OutputType output = (ModelspecType.OutputType)iter.next();
-      final String path = output.getPath();
-
-      final IFile file = resultsFolder.getFile( path );
-      final PipedInputStream pis = new PipedInputStream();
-
-      final int index = count;
-      final Job readJob = new Job( "Ergebnis lesen: " + path )
+      try
       {
-        protected IStatus run( final IProgressMonitor jobmonitor )
+        final ModelspecType.OutputType output = (ModelspecType.OutputType)iter.next();
+        final String path = output.getPath();
+
+        final IFile file = resultsFolder.getFile( path );
+        final PipedInputStream pis = new PipedInputStream();
+        final PipedOutputStream pos = new PipedOutputStream( pis );
+
+        final int index = count;
+        final Thread readThread = new Thread( "Ergebnis lesen: " + path )
         {
-          PipedOutputStream pos = null;
-          try
+          public void run()
           {
-            pos = new PipedOutputStream( pis );
-            final URL url = results[index];
-            jobmonitor.beginTask( "URL lesen: " + url.toExternalForm(), IProgressMonitor.UNKNOWN );
+            try
+            {
+              final URL url = results[index];
+              //            jobmonitor.beginTask( "URL lesen: " + url.toExternalForm(),
+              // IProgressMonitor.UNKNOWN );
 
-            final InputStream urlStream = url.openStream();
-            StreamUtilities.streamCopy( urlStream, pos );
+              final InputStream urlStream = url.openStream();
+              StreamUtilities.streamCopy( urlStream, pos );
 
-            pos.close();
+              pos.close();
+            }
+            catch( final IOException e )
+            {
+              e.printStackTrace();
+              //            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+              //                "Fehler beim Zugriff auf Ergebnisdaten", e );
+            }
+            finally
+            {
+              if( pos != null )
+                try
+                {
+                  pos.close();
+                }
+                catch( IOException e )
+                {
+                  e.printStackTrace();
+                  //                return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(),
+                  // 0,
+                  //                    "Fehler beim Zugriff auf Ergebnisdaten", e );
+                }
+            }
+
+            //          return Status.OK_STATUS;
           }
-          catch( final IOException e )
-          {
-            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-                "Fehler beim Zugriff auf Ergebnisdaten", e );
-          }
-          finally
-          {
-            if( pos != null )
-              try
-              {
-                pos.close();
-              }
-              catch( IOException e )
-              {
-                return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-                    "Fehler beim Zugriff auf Ergebnisdaten", e );
-              }
-          }
+        };
+        readThread.start();
 
-          return Status.OK_STATUS;
-        }
-      };
-      readJob.schedule();
-
-      file.create( pis, false, null );
+        file.create( pis, false, null );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
 
       count++;
     }
@@ -606,50 +616,14 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  public synchronized CalcJobDescription checkCalculation( final String jobID ) throws CoreException
+  public synchronized CalcJobDescription checkCalculation( final String jobID )
+      throws CoreException
   {
     try
     {
       final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
 
       final CalcJobDescription description = calcService.getJobDescription( jobID );
-
-      switch( description.getState() )
-      {
-      case CalcJobStatus.FINISHED:
-      {
-        final IFolder folder = (IFolder)m_calcJobMap.get( jobID );
-
-        synchronized( folder )
-        {
-          final URL[] results = calcService.retrieveResults( jobID );
-
-          try
-          {
-            putCalcCaseOutputData( folder, results, new NullProgressMonitor() );
-            calcService.removeJob( jobID );
-          }
-          catch( CoreException e )
-          {
-            description.setState( CalcJobStatus.ERROR );
-            description.setDescription( e.getStatus().getMessage() );
-
-            e.printStackTrace();
-          }
-          finally
-          {
-            m_calcJobMap.remove( jobID );
-          }
-        }
-      }
-      break;
-      
-      case CalcJobStatus.ERROR:
-      case CalcJobStatus.CANCELED:
-        calcService.removeJob( jobID );
-        m_calcJobMap.remove( jobID );
-        break;
-      }
 
       return description;
     }
@@ -661,4 +635,37 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           "Fehler beim Prüfen des Rechenstatus: ID=" + jobID, cse ) );
     }
   }
+
+  public void retrieveCalculation( final String jobID ) throws CoreException
+  {
+    try
+    {
+      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
+      final CalcJobDescription description = calcService.getJobDescription( jobID );
+
+      if( description.getState() != CalcJobStatus.FINISHED )
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+            "Berechnung nicht beendet: ID=" + jobID, null ) );
+
+      final IFolder folder = (IFolder)m_calcJobMap.get( jobID );
+
+      final URL[] results = calcService.retrieveResults( jobID );
+
+      putCalcCaseOutputData( folder, results, new NullProgressMonitor() );
+
+      calcService.removeJob( jobID );
+    }
+    catch( CalcJobServiceException e )
+    {
+      e.printStackTrace();
+
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+          "Fehler beim Prüfen des Rechenstatus: ID=" + jobID, null ) );
+    }
+    finally
+    {
+      m_calcJobMap.remove( jobID );
+    }
+  }
+
 }

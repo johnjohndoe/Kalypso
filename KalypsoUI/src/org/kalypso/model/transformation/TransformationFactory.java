@@ -35,7 +35,7 @@ public class TransformationFactory
     }
     catch( final ClassUtilityException e )
     {
-      throw new TransformationException( "Could not create Transformation", e );
+      throw new TransformationException( "Could not create Transformation: " + trans.getClassName(), e );
     }
   }
 }
