@@ -170,26 +170,43 @@
 	   	<arg name="rightSash" value="25"/>
 	   	<arg name="selectionID" value="256"/>
 
-	   	<arg name="exporter1">
-	   		<arg name="class" value="org.kalypso.ui.calcwizard.bericht.MapExporter"/>
-	   		<arg name="name" value="Karte"/>
-	   	</arg>
 	   	<arg name="exporter2">
 			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.ZmlTableExporter"/>
 	   		<arg name="name" value="Tabelle"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtTabelle.ott"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Wasserstand_vorhersage"/>
+			</arg>
 	   	</arg>
 	   	<arg name="exporter3">
 			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
 	   		<arg name="name" value="Abflussgrafik"/>
 	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
+	   		<arg name="width" value="1024"/>
+	   		<arg name="height" value ="768"/>
 			<arg name="tokens">
-				<arg name="tok1" value="Wasserstand_vorhersage"/>
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Wasserstand_gemessen"/>
+    			<arg name="href2" value="Wasserstand_gerechnet"/>
+				<arg name="href3" value="Wasserstand_vorhersage"/>
+    			<arg name="href4" value="Niederschlag_rechnung"/>
 			</arg>
 	   	</arg>
+	   	
 	   	<arg name="exporter4">
 			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
 	   		<arg name="name" value="Wasserstandgrafik"/>
-	   		<arg name="template" value="project:.templates/calcCase/berichtDiagW.odt"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagW.odt"/>
+	   		<arg name="width" value="1024"/>
+	   		<arg name="height" value ="768"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Wasserstand_gemessen"/>
+    			<arg name="href2" value="Wasserstand_gerechnet"/>
+				<arg name="href3" value="Wasserstand_vorhersage"/>
+    			<arg name="href4" value="Niederschlag_rechnung"/>
+			</arg>
 	   	</arg>
         
    		<arg name="maximizeMap" value="true"/>

@@ -6,7 +6,7 @@
 	<legend title="" visible="true"/>
 
 	<axis id="D" datatype="date" label="Datum" unit="" direction="horizontal" position="bottom" />
-	<axis id="Q" datatype="double" label="Abfluß" unit="m³" direction="vertical" position="left" />
+	<axis id="W" datatype="double" label="Wasserstand" unit="cm" direction="vertical" position="left" />
    	<axis id="N" datatype="double" label="Niederschlag" unit="cm" direction="vertical" position="right" inverted="true" />
    	
    	<!-- Kodierung color:
@@ -17,7 +17,7 @@
 
 	<!-- Niederschlag_rechnung -->
    	<observation linktype="zml" xlink:href="%href4%">
-		<curve id="C4" name="Niederschlag" color="0;0;128" >
+		<curve id="C2" name="Niederschlag" color="0;0;128" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Niederschlag" diagram-axis="N" />
 	   	</curve>
@@ -25,25 +25,25 @@
 
 	<!-- Wasserstand_gemessen -->
    	<observation linktype="zml" xlink:href="%href1%">
-		<curve id="C1" name="Abfluß - Beobachtet" color="0;255;128" >
+		<curve id="C1" name="Wasserstand - Beobachtet" color="0;255;128" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
-			<mapping observation-axis="Abfluß" diagram-axis="Q" />
+			<mapping observation-axis="Abfluß" diagram-axis="W" />
 	   	</curve>
 	</observation>
 
 	<!-- Wasserstand_gerechnet -->
    	<observation linktype="zml" xlink:href="%href2%">
-		<curve id="C2" name="Abfluß - Rechnung" color="255;0;0" >
+		<curve id="C2" name="Wasserstand - Rechnung" color="255;0;0" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
-			<mapping observation-axis="Abfluß" diagram-axis="Q" />
+			<mapping observation-axis="Abfluß" diagram-axis="W" />
 	   	</curve>
 	</observation>
 
 	<!-- Wasserstand_vorhersage -->
    	<observation linktype="zml" xlink:href="%href3%">
-		<curve id="C3" name="Abfluß - Vorhersage" color="0;255;0" >
+		<curve id="C2" name="Wasserstand - Vorhersage" color="0;255;0" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
-			<mapping observation-axis="Abfluß" diagram-axis="Q" />
+			<mapping observation-axis="Abfluß" diagram-axis="W" />
 	   	</curve>
 	</observation>
 </obsdiagview>
