@@ -30,7 +30,7 @@ public final class PSICompactFactory
 
   protected static int m_currentVersion = 0;
 
-  private static Thread m_threadVersionChecker = null;
+  private static VersionChecker m_threadVersionChecker = null;
 
   private static Properties m_factoryProperties = null;
 
@@ -87,8 +87,9 @@ public final class PSICompactFactory
       // TODO: specify location of the service here
       m_psiCompactRep = new PSICompactRepository( "PSICompact@localhost" );
 
-      m_threadVersionChecker = new Thread( new VersionChecker() );
-      m_threadVersionChecker.start();
+      // TODO siehe Kommentar in VersionChecker Klasse
+      // m_threadVersionChecker = new VersionChecker();
+      // m_threadVersionChecker.start();
     }
 
     return m_psiCompactRep;
@@ -97,7 +98,7 @@ public final class PSICompactFactory
   public static void dispose()
   {
     if( m_threadVersionChecker != null )
-      m_threadVersionChecker.stop();
+      m_threadVersionChecker.cancel();
   }
 
   /**
@@ -258,12 +259,28 @@ public final class PSICompactFactory
   }
 
   /**
+   * TODO: vielleicht kein Thread, dafür aber auf jede Struktur Abfrage. Jede
+   * Client soll sich dann die Zeit der letzte aktuelle Version merken und wenn
+   * nicht gleich wie Server, dann Struktur neu darstellen.
+   * 
    * Internal version checker for the PSICompact Interface.
    * 
    * @author schlienger
    */
-  private final static class VersionChecker implements Runnable
+  private final static class VersionChecker extends Thread
   {
+    private boolean m_cancelled = false;
+
+    public boolean isCancelled()
+    {
+      return m_cancelled;
+    }
+
+    public void cancel( )
+    {
+      m_cancelled = true;
+    }
+
     /**
      * @see java.lang.Runnable#run()
      */
@@ -271,16 +288,19 @@ public final class PSICompactFactory
     {
       try
       {
-        Thread.sleep( 10 );
-
-        int version = m_psiCompact.getDataModelVersion();
-
-        if( version > m_currentVersion )
+        while( !m_cancelled )
         {
-          m_currentVersion = version;
+          Thread.sleep( 1000 );
 
-          if( m_psiCompactRep != null )
-            m_psiCompactRep.fireRepositoryStructureChanged();
+          int version = m_psiCompact.getDataModelVersion();
+
+          if( version > m_currentVersion )
+          {
+            m_currentVersion = version;
+
+            if( m_psiCompactRep != null )
+              m_psiCompactRep.fireRepositoryStructureChanged();
+          }
         }
       }
       catch( Exception e )
@@ -332,12 +352,12 @@ public final class PSICompactFactory
 
         bf.append( ds[j].getWGR() ).append( ';' ).append( ds[j].getW1() ).append( ';' ).append(
             ds[j].getLNK1() ).append( ';' ).append( ds[j].getK2() );
-        
+
         if( j == ds.length - 1 )
-          bf.append(" < ");
+          bf.append( " < " );
       }
-      
-      bf.append(" | ");
+
+      bf.append( " | " );
     }
 
     return bf.toString();

@@ -1,0 +1,26 @@
+URL Erweiterungen
+-----------------
+
+In Kalypso werden URL benutzt um Resourcen (Dokumente oder Dateien) zu referenzieren.
+
+Die standard Schemes sind:
+- file: absolute oder relative Pfadangabe im lokale Filesystem.
+- http: HTTP-Adresse.
+
+Kalypso baut auch auf folgende Schemes:
+- project: der Pfad ist relativ zum Projekt
+- workspace: der Pfad ist relativ zum Workspace
+- kalypsoserver: der Pfad ist relativ zum KalypsoServer.
+
+
+WICHTIG: Anmerkung zum Konzept 'relativ':
+-----------------------------------------
+
+Bei 'project', 'workspace', 'kalypsoserver' ist der Pfad IMMER relativ, und zwar
+zum jeweiligen angegebenen Element: also Project, Workspace, oder KalypsoServer.
+
+Bei 'file' KANN der Pfad relativ sein. In diesem Fall ist der Pfad (wie in RFC 2396)
+relativ zu einem Kontext, was von einer Basis-URL definiert wird. In Kalypso ist
+es öfter der Fall dass diese Basis-URL die URL des besitzende Dokument ist. Beispiel:
+ein ZML-Dokument hat ein Link auf externe Werte welche mit eine relative URL definiert
+ist. Die Basis-URL ist in diesem Fall die URL des ZML-Dokuments.
