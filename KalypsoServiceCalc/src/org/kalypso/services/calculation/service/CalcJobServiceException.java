@@ -1,4 +1,4 @@
-package org.kalypso.services.calculation;
+package org.kalypso.services.calculation.service;
 
 import java.rmi.RemoteException;
 

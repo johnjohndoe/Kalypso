@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/backupdeegree"/>
-	<classpathentry kind="src" path="/KalypsoUtil"/>
 	<classpathentry kind="src" path="/KalypsoCore"/>
 	<classpathentry kind="lib" path="lib/activation.jar"/>
 	<classpathentry kind="lib" path="lib/dom.jar"/>
@@ -16,5 +15,6 @@
 	<classpathentry kind="lib" path="lib/saaj-api.jar"/>
 	<classpathentry kind="lib" path="lib/saaj-impl.jar"/>
 	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
+	<classpathentry kind="src" path="/KalypsoCoreServices"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

@@ -43,10 +43,9 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlObservation;
-import org.kalypso.services.calculation.CalcJobBean;
-import org.kalypso.services.calculation.CalcJobServiceException;
-import org.kalypso.services.calculation.impl.jobs.AbstractCalcJob;
-import org.kalypso.services.calculation.impl.jobs.CalcJobProgressMonitor;
+import org.kalypso.services.calculation.job.impl.AbstractCalcJob;
+import org.kalypso.services.calculation.service.CalcJobDataBean;
+import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.util.progress.NullProgressMonitor;
 import org.kalypso.zml.ObservationType;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -60,7 +59,10 @@ import org.xml.sax.InputSource;
  * Erwartet als Argumente ein Schema und ein GML
  * </p>.
  * 
- * @author gernot
+ * TODO: canceled beachten!
+ * TODO: progress benutzen
+ * 
+ * @author Belger
  */
 public class SpreeCalcJob extends AbstractCalcJob
 {
@@ -253,30 +255,30 @@ public class SpreeCalcJob extends AbstractCalcJob
   }
 
   /**
-   * @see org.kalypso.services.calculation.impl.jobs.AbstractCalcJob#runIntern(java.lang.String[], org.kalypso.services.calculation.impl.jobs.CalcJobProgressMonitor)
+   * @see org.kalypso.services.calculation.job.impl.AbstractCalcJob#runIntern(org.kalypso.services.calculation.service.CalcJobDataBean[])
    */
-  protected void runIntern( final String[] arguments, final CalcJobProgressMonitor monitor )
+  protected void runIntern( final CalcJobDataBean[] arguments )
       throws CalcJobServiceException
   {
     checkArguments( arguments );
-    parseProperties( arguments[0], monitor );
+    parseProperties( arguments[0] );
     final KalypsoFeatureLayer[] layers = parseInput( arguments );
-    writeInput( layers, monitor, arguments );
+    writeInput( layers, arguments );
 
     startCalculation();
 
-    loadOutput( monitor );
+    loadOutput();
     
     // TODO: set results to bean
   }
 
-  private void parseProperties( final String properties, final CalcJobProgressMonitor monitor )
+  private void parseProperties( final CalcJobDataBean properties )
       throws CalcJobServiceException
   {
     final Properties props = new Properties();
     try
     {
-      props.load( new URL( properties ).openStream() );
+      props.load( new URL( properties.getUrl() ).openStream() );
 
       final String date = props.getProperty( CALC_PROP_STARTTIME );
       final Date startTime = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ).parse( date );
@@ -307,27 +309,23 @@ public class SpreeCalcJob extends AbstractCalcJob
       m_data.put( DATA_NAPFILENAME, napFilename );
       m_data.put( DATA_TSFILENAME, tsFilename );
       m_data.put( DATA_TSFILE, tsFile );
-      m_data.put( DATA_LABEL, getJobBean().getDescription() );
+      m_data.put( DATA_LABEL, getDescription() );
 
     }
     catch( final Exception e )
     {
       throw new CalcJobServiceException( "Fehler beim Einlesen der Berechnungsparameter", e );
     }
-    finally
-    {
-      monitor.worked( 100 );
-    }
   }
 
-  private void checkArguments( final String[] arguments ) throws CalcJobServiceException
+  private void checkArguments( final CalcJobDataBean[] arguments ) throws CalcJobServiceException
   {
     if( arguments.length < 3 || arguments[0] == null || arguments[1] == null
         || arguments[2] == null )
       throw new CalcJobServiceException( "Argumente falsch", null );
   }
 
-  private String[] loadOutput( final CalcJobProgressMonitor monitor ) throws CalcJobServiceException
+  private String[] loadOutput() throws CalcJobServiceException
   {
     try
     {
@@ -337,15 +335,11 @@ public class SpreeCalcJob extends AbstractCalcJob
       final File tsFile = (File)m_data.get( DATA_TSFILE );
       final String tsFilename = (String)m_data.get( DATA_TSFILENAME );
 
-      monitor.beginTask( "Ergebnisdaten erzeugen" );
-
       final File dataDir = (File)m_data.get( DATA_DATADIR );
       final File resultDir = new File( dataDir, "resultTS" );
       resultDir.mkdir();
 
       final Collection tsUrls = writeResultsToFolder( tsFilename, resultDir, m_data );
-
-      monitor.done();
 
       final Collection urls = new ArrayList();
       urls.add( napFile.toURL().toExternalForm() );
@@ -407,9 +401,10 @@ public class SpreeCalcJob extends AbstractCalcJob
           // noch nicht fertig
         }
 
-        if( getJobBean().getState() == CalcJobBean.CANCELED )
+        if( isCanceled() )
         {
           process.destroy();
+          // TODO: nicht werfen, sondern einfach zurückkehren
           throw new CalcJobServiceException( "Benutzerabbruch", null );
         }
 
@@ -443,8 +438,7 @@ public class SpreeCalcJob extends AbstractCalcJob
     }
   }
 
-  private void writeInput( final KalypsoFeatureLayer[] layers, final CalcJobProgressMonitor monitor,
-      final String[] arguments ) throws CalcJobServiceException
+  private void writeInput( final KalypsoFeatureLayer[] layers, final CalcJobDataBean[] arguments ) throws CalcJobServiceException
   {
     // Basisdateinamen ermitteln
     try
@@ -462,8 +456,6 @@ public class SpreeCalcJob extends AbstractCalcJob
 
       final Map valuesMap = createTsData( arguments );
       createTimeseriesFile( tsFilename, valuesMap );
-
-      monitor.worked( 25 );
     }
     catch( final Exception e )
     {
@@ -472,7 +464,7 @@ public class SpreeCalcJob extends AbstractCalcJob
     }
   }
 
-  private Map createTsData( final String[] arguments ) throws JAXBException, IOException,
+  private Map createTsData( final CalcJobDataBean[] arguments ) throws JAXBException, IOException,
       SensorException
   {
     final Map map = new HashMap();
@@ -488,7 +480,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       if( urlIndex < 3 )
         continue;
 
-      final URL u = new URL( arguments[urlIndex] );
+      final URL u = new URL( arguments[urlIndex].getUrl() );
       final ZmlObservation obs = new ZmlObservation( u );
 
       final IAxis[] axisList = obs.getAxisList();
@@ -559,24 +551,25 @@ public class SpreeCalcJob extends AbstractCalcJob
     }
   }
 
-  private KalypsoFeatureLayer[] parseInput( final String[] arguments )
+  private KalypsoFeatureLayer[] parseInput( final CalcJobDataBean[] arguments )
   {
     try
     {
-      final InputSource schemaSource = new InputSource( new URL( arguments[1] ).openStream() );
-      final InputSource gmlSource = new InputSource( new URL( arguments[2] ).openStream() );
+      final InputSource schemaSource = new InputSource( new URL( arguments[1].getUrl() ).openStream() );
+      final InputSource gmlSource = new InputSource( new URL( arguments[2].getUrl() ).openStream() );
 
       return GmlSerializer.deserialize( schemaSource, gmlSource, m_targetCrs, null );
     }
     catch( final Exception ioe )
     {
-      getJobBean().setMessage( ioe.getLocalizedMessage() );
+      // TODO: das macht doch das Framework?
+      //setMessage( ioe.getLocalizedMessage() );
       return null;
     }
   }
 
   /**
-   * @see org.kalypso.services.calculation.ICalcJob#disposeJob()
+   * @see org.kalypso.services.calculation.job.ICalcJob#disposeJob()
    */
   public void disposeJob()
   {
