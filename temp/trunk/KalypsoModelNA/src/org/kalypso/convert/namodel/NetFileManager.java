@@ -24,18 +24,18 @@ import org.deegree_impl.model.feature.FeatureHelper;
 import org.kalypso.convert.ASCIIHelper;
 import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
  * @author doemming
  * 
- * erstellt die netzdatei aus namodell.gml
- * oder
- * liest aus netzdatei und erstellt namodell.gml
+ * erstellt die netzdatei aus namodell.gml oder liest aus netzdatei und erstellt
+ * namodell.gml
  * 
- * ----
- * logik bei der netzerstellung:
+ * ---- logik bei der netzerstellung:
  * 
  * wird im control ein rootnode angegeben, so wird das netz hierfuer erstellt.
  * vorhandene ergebnisse oberhalb des rootnode werden als zufluss gerechnet.
@@ -43,9 +43,9 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  * oder
  * 
  * wird im control kein rotnode angegeben so wird das netz fuer die zu
- * generierenden ergebnisse erstellt
- * vorhandene ergebnisse oberhalb der zu berechneneden knoten werden als zufluss gerechnet.
- * Wobei zu generierende Ergebnisse stets neu berechnet werden und niemals als Zufluss dienen.
+ * generierenden ergebnisse erstellt vorhandene ergebnisse oberhalb der zu
+ * berechneneden knoten werden als zufluss gerechnet. Wobei zu generierende
+ * Ergebnisse stets neu berechnet werden und niemals als Zufluss dienen.
  */
 public class NetFileManager extends AbstractManager
 {
@@ -60,7 +60,9 @@ public class NetFileManager extends AbstractManager
     final TimeseriesLink link = (TimeseriesLink)nodeFE.getProperty( "qberechnetZR" );
     if( link == null )
       return null;
-    final String href = link.getHref();
+    final String href = link.getHref().replaceAll( "\\?.*", "" ); // optionen
+    // loeschen
+
     final URL url = m_urlUtilities.resolveURL( m_conf.getGMLModelURL(), href );
     return new File( url.getFile() );
   }
@@ -85,7 +87,7 @@ public class NetFileManager extends AbstractManager
     super( conf.getNetFormatURL() );
     m_conf = conf;
     m_urlUtilities = new UrlUtilities();
-    NetElement.setNetAsciiFormats(getAsciiFormats());
+    NetElement.setNetAsciiFormats( getAsciiFormats() );
   }
 
   public String mapID( int id, FeatureType ft )
@@ -94,10 +96,11 @@ public class NetFileManager extends AbstractManager
   }
 
   /**
- * 
- * importing ascii file to gml-modell
- * @see org.kalypso.convert.namodel.AbstractManager#parseFile(java.net.URL)
- */
+   * 
+   * importing ascii file to gml-modell
+   * 
+   * @see org.kalypso.convert.namodel.AbstractManager#parseFile(java.net.URL)
+   */
   public Feature[] parseFile( URL url ) throws Exception
   {
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection()
@@ -175,13 +178,15 @@ public class NetFileManager extends AbstractManager
                 + "/Zufluss/" );
         File tsFile = new File( correctedPath );
         TimeseriesLink link1 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(),
-            NAZMLGenerator.NA_ZUFLUSS_EINGABE, m_conf.getGmlBaseDir(), zmlPath, false, false );
+            TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf
+                .getGmlBaseDir(), zmlPath, false, false );
         FeatureProperty linkPropertyRepository = FeatureFactory.createFeatureProperty(
             "zuflussZRRepository", link1 );
         propCollector.put( "zuflussZRRepository", linkPropertyRepository );
 
         TimeseriesLink link2 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(),
-            NAZMLGenerator.NA_ZUFLUSS_EINGABE, m_conf.getGmlBaseDir(), zmlPath, true, true );
+            TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf
+                .getGmlBaseDir(), zmlPath, true, true );
         FeatureProperty linkProperty = FeatureFactory.createFeatureProperty( "zuflussZR", link2 );
         propCollector.put( "zuflussZR", linkProperty );
       }
@@ -209,13 +214,14 @@ public class NetFileManager extends AbstractManager
       // adding Timeseries links
 
       final TimeseriesLink pegelLink = NAZMLGenerator.copyToTimeseriesLink( null,
-          NAZMLGenerator.NA_ABFLUSS_BERECHNET, m_conf // TODO NA_PEGEL
+          TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf // TODO
+                                                                                   // NA_PEGEL
               .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true );
       FeatureProperty pegelProp = FeatureFactory.createFeatureProperty( "pegelZR", pegelLink );
       propCollector.put( "pegelZR", pegelProp );
 
       final TimeseriesLink resultLink = NAZMLGenerator.copyToTimeseriesLink( null,
-          NAZMLGenerator.NA_ABFLUSS_BERECHNET, m_conf.getGmlBaseDir(),
+          TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_RUNOFF, m_conf.getGmlBaseDir(),
           "Ergebnisse/Berechnet/Abfluss_" + fe.getId() + ".zml", true, true );
       FeatureProperty ergProp = FeatureFactory.createFeatureProperty( "qberechnetZR", resultLink );
       propCollector.put( "qberechnetZR", ergProp );
@@ -325,12 +331,12 @@ public class NetFileManager extends AbstractManager
 
     // list of network elements
     final HashMap netElements = new HashMap();
-    NetElement.setDefaultGmlWorkSpace(workspace);
+    NetElement.setDefaultGmlWorkSpace( workspace );
     // generate net elements, each channel represents a netelement
     final Feature[] channelFEs = (Feature[])channelList.toArray( new Feature[channelList.size()] );
     for( int i = 0; i < channelFEs.length; i++ )
       netElements.put( channelFEs[i].getId(), new NetElement( this, channelFEs[i] ) );
-    
+
     // find dependencies
     //   dependency: node - node
     final Feature[] nodeFEs = workspace.getFeatures( m_conf.getNodeFT() );
@@ -386,7 +392,7 @@ public class NetFileManager extends AbstractManager
 
       downStreamElement.addUpStream( upStreamElement );
     }
-    //   dependency:   catchment -> catchment
+    //   dependency: catchment -> catchment
     Feature[] catchmentFEs = workspace.getFeatures( m_conf.getCatchemtFT() );
     for( int i = 0; i < catchmentFEs.length; i++ )
     {
@@ -431,7 +437,6 @@ public class NetFileManager extends AbstractManager
       }
     }
 
-    
     // find root elements
     final List rootNetElements = new ArrayList();
     final Feature rootNodeFE = workspace.getFeature( m_conf.getRootNodeId() );
@@ -440,52 +445,51 @@ public class NetFileManager extends AbstractManager
     // falls rootnode angegeben hierfuer auch ein ergebnis generieren
     if( rootNodeFE != null )
     {
-      // if rootnode is set, net and results are generated for this 
-      // root node only 
+      // if rootnode is set, net and results are generated for this
+      // root node only
       final FeatureProperty createResultProp = FeatureFactory.createFeatureProperty(
           "generateResult", new Boolean( true ) );
       rootNodeFE.setProperty( createResultProp );
-      addRootNode( workspace, rootNodeFE, rootNetElements, netElements,
-       channelFEs );
+      addRootNode( workspace, rootNodeFE, rootNetElements, netElements, channelFEs );
     }
-    else // no root node given -> alle results nodes will act as root node
+    else
+      // no root node given -> alle results nodes will act as root node
       for( int i = 0; i < nodeFEs.length; i++ )
       {
         Feature nodeFE = nodeFEs[i];
         if( FeatureHelper.booleanIsTrue( nodeFE, "generateResult", false ) )
           addRootNode( workspace, nodeFE, rootNetElements, netElements, channelFEs );
       }
-    
-        
+
     final List nodeCollector = new ArrayList();
-    
+
     // generate net file for upstream of root net elements
-//    for( Iterator iter = rootNetElements.iterator(); iter.hasNext(); )
-//    {
-//      NetElement rootElement = (NetElement)iter.next();
-//      rootElement.berechneOberlauf( buffer, nodeCollector );
-//    }
+    //    for( Iterator iter = rootNetElements.iterator(); iter.hasNext(); )
+    //    {
+    //      NetElement rootElement = (NetElement)iter.next();
+    //      rootElement.berechneOberlauf( buffer, nodeCollector );
+    //    }
     // generate net for root net elements
     for( Iterator iter = rootNetElements.iterator(); iter.hasNext(); )
     {
       NetElement rootElement = (NetElement)iter.next();
-      rootElement.berechne(asciiBuffer, nodeCollector, true );
+      rootElement.berechne( asciiBuffer, nodeCollector, true );
     }
     // generate net for root channels
-    final List processedRootNodes=new ArrayList(); 
+    final List processedRootNodes = new ArrayList();
     for( Iterator iter = rootNetElements.iterator(); iter.hasNext(); )
     {
       NetElement rootElement = (NetElement)iter.next();
       List downStreamNetElements = rootElement.getDownStreamNetElements();
-      boolean needsDownStreamElement=true;
+      boolean needsDownStreamElement = true;
       for( Iterator iterator = downStreamNetElements.iterator(); iterator.hasNext(); )
-      {        
+      {
         NetElement downStreamElement = (NetElement)iterator.next();
-        if(downStreamElement.isCalculated() && !downStreamElement.resultExists())
-          needsDownStreamElement=false;
+        if( downStreamElement.isCalculated() && !downStreamElement.resultExists() )
+          needsDownStreamElement = false;
       }
-      if(needsDownStreamElement)
-        rootElement.writeRootChannel(asciiBuffer,processedRootNodes);
+      if( needsDownStreamElement )
+        rootElement.writeRootChannel( asciiBuffer, processedRootNodes );
     }
     asciiBuffer.getNetBuffer().append( "99999\n" );
     appendNodeList( workspace, nodeCollector, asciiBuffer );
@@ -566,17 +570,21 @@ public class NetFileManager extends AbstractManager
       if( zuflussLink != null )
         izuf = 5;
 
-      asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( FeatureHelper.getAsString( nodeFE, "num" ), "i5" ) );
+      asciiBuffer.getNetBuffer().append(
+          ASCIIHelper.toAscii( FeatureHelper.getAsString( nodeFE, "num" ), "i5" ) );
       asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( String.valueOf( izug ), "i5" ) );
       asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( String.valueOf( iabg ), "i5" ) );
       asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( String.valueOf( iueb ), "i5" ) );
       asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( String.valueOf( izuf ), "i5" ) );
-      asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( String.valueOf( ivzwg ), "i5" ) + "\n" );
+      asciiBuffer.getNetBuffer().append(
+          ASCIIHelper.toAscii( String.valueOf( ivzwg ), "i5" ) + "\n" );
 
       if( ivzwg != 0 )
       {
-        asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( FeatureHelper.getAsString( nodeFE, "zproz" ), "f10.3" ) );
-        asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( FeatureHelper.getAsString( linkedNodeFE, "num" ), "i8" ) + "\n" );
+        asciiBuffer.getNetBuffer().append(
+            ASCIIHelper.toAscii( FeatureHelper.getAsString( nodeFE, "zproz" ), "f10.3" ) );
+        asciiBuffer.getNetBuffer().append(
+            ASCIIHelper.toAscii( FeatureHelper.getAsString( linkedNodeFE, "num" ), "i8" ) + "\n" );
       }
       if( izuf != 0 )
       {
@@ -584,18 +592,23 @@ public class NetFileManager extends AbstractManager
         final File parent = targetFile.getParentFile();
         if( !parent.exists() )
           parent.mkdirs();
-        final URL linkURL = m_urlUtilities.resolveURL( m_conf.getGMLModelURL(), zuflussLink
-            .getHref() );
+        String zuflussFile = ZmlURL.getIdentifierPart( zuflussLink.getHref() );
+        final URL linkURL = m_urlUtilities.resolveURL( m_conf.getGMLModelURL(), zuflussFile );
+
+        //        final URL linkURL = m_urlUtilities.resolveURL(
+        // m_conf.getGMLModelURL(), zuflussLink
+        //            .getHref() );
 
         if( !DEBUG )
         {
           final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" );
           final FileWriter writer = new FileWriter( targetFile );
-          NAZMLGenerator.createFile( writer, NAZMLGenerator.NA_ZUFLUSS_EINGABE, observation );
+          NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RUNOFF, observation );
           writer.close();
         }
         asciiBuffer.getNetBuffer().append( "    1234\n" ); // dummyLine
-        asciiBuffer.getNetBuffer().append( ".." + File.separator + "zufluss" + File.separator + zuflussFileName + "\n" );
+        asciiBuffer.getNetBuffer().append(
+            ".." + File.separator + "zufluss" + File.separator + zuflussFileName + "\n" );
       }
     }
     // ENDKNOTEN

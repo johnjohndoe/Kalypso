@@ -27,16 +27,18 @@ import org.kalypso.zml.obslink.TimeseriesLink;
 public class UpdateModell
 {
   private final URL m_modellURL;
-  public final static String PSI_PROGNOSE_SUFFIX=".P1_MW";
+
+  private final static String FILTER_WQ = "?" + UpdateHelper.createWQFilter();
+
+  public final static String PSI_PROGNOSE_SUFFIX = ".P1_MW";
+
   public static void main( String[] args )
   {
     try
     {
       final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
       registry.registerTypeHandler( new ObservationLinkHandler() );
-      File modell = new File( "C:\\TMP\\modell.gml" );
-      URL modellURL = modell.toURL();
-      UpdateModell modell2 = new UpdateModell( modellURL );
+      UpdateModell modell2 = new UpdateModell();
       modell2.updateIt();
     }
     catch( Exception e )
@@ -48,6 +50,11 @@ public class UpdateModell
   public UpdateModell( URL modellURL ) throws Exception
   {
     m_modellURL = modellURL;
+  }
+
+  public UpdateModell() throws Exception
+  {
+    m_modellURL = getClass().getResource( "resources/modell.gml" );
   }
 
   public void updateIt() throws Exception
@@ -67,7 +74,8 @@ public class UpdateModell
     updatePegel( workspace );
 
     //    updateZuflussNamen( workspace );
-    File file = File.createTempFile( "modellUpdate", ".gml" );
+    File tmpDir = new File( "C:\\TMP" );
+    File file = File.createTempFile( "modellUpdate", ".gml", tmpDir );
     Writer writer = new FileWriter( file );
     GmlSerializer.serializeWorkspace( writer, workspace );
     writer.close();
@@ -80,19 +88,18 @@ public class UpdateModell
     {
       final Feature feature = features[i];
       // messung
-      TimeseriesLink linkMessung = NAZMLGenerator.generateobsLink(
-          WeisseElsterConstants.PREFIX_LINK_GebietsNiederschlagModell + feature.getId(),
-          NAZMLGenerator.NA_LINK_N );
+      TimeseriesLink linkMessung = NAZMLGenerator
+          .generateobsLink( WeisseElsterConstants.PREFIX_LINK_GebietsNiederschlagModell
+              + feature.getId() );
       setTSLink( feature, "niederschlagZRRepository", linkMessung );
       // vorhersage
-      TimeseriesLink linkVorhersage = NAZMLGenerator.generateobsLink(
-          WeisseElsterConstants.PREFIX_LINK_NIEDERSCHLAGVORHERSAGE + feature.getId() + ".zml",
-          NAZMLGenerator.NA_LINK_N );
+      TimeseriesLink linkVorhersage = NAZMLGenerator
+          .generateobsLink( WeisseElsterConstants.PREFIX_LINK_NIEDERSCHLAGVORHERSAGE
+              + feature.getId() + ".zml" );
       setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkVorhersage );
       // berechnung
-      TimeseriesLink linkBerechnung = NAZMLGenerator.generateobsLink(
-          WeisseElsterConstants.PREFIX_LINK_N_LOKAL + feature.getId() + ".zml",
-          NAZMLGenerator.NA_LINK_N );
+      TimeseriesLink linkBerechnung = NAZMLGenerator
+          .generateobsLink( WeisseElsterConstants.PREFIX_LINK_N_LOKAL + feature.getId() + ".zml" );
       setTSLink( feature, "niederschlagZR", linkBerechnung );
     }
   }
@@ -108,10 +115,19 @@ public class UpdateModell
   // "P":Pegel "Z":Zufluss "-":nicht verfuegbar
   private final static int POS_TYPE = 4;
 
+  //  <Wasserstand_gemessenEingang>
+  //  <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink"
+  //  xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum"
+  //    valueaxis="Wert" ns1:actuate="onRequest"
+  //      ns1:href="project:/.model/zeitreihen/W_leer.zml?&lt;filter&gt;&lt;interpolationFilter
+  // xmlns=&quot;filters.zml.kalypso.org&quot;
+  // calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot;
+  // forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot;
+  // defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
+  //</Wasserstand_gemessenEingang>
+
   private final static String[][] m_pegel =
   {
-      // kaputte pegel und noch nicht verfuegbare pegel sind kommentiert
-      //  new String[]{"Bad Elster","Node1800","adorf.zml"},
       /*
        * [1] Pegel-Name [2] FeatureID [3] zml [4] PSI-ID
        */
@@ -122,7 +138,7 @@ public class UpdateModell
           "Node1800",
           null, // TODO
           "576391",
-          "-P", },
+          "P", },
       // 2
       new String[]
       {
@@ -162,14 +178,14 @@ public class UpdateModell
           "Node4200",
           null, // TODO
           "577211",
-          "-P" },
+          "P" },
       //7
       new String[]
       {
           "Mylau",
           "Node4100",
           "q_mylau.zml",
-          "577211",
+          "577220",
           "P" },
       //8
       new String[]
@@ -178,7 +194,7 @@ public class UpdateModell
           "Node1220",
           "q_greiz.zml",
           "576470", // TODO ist nicht in PSI enthalten
-          "-P" },
+          "P" },
       //9
       new String[]
       {
@@ -186,7 +202,7 @@ public class UpdateModell
           "Node2002",
           "q_weida.zml",
           "577320", // TODO ist nicht in PSI enthlten
-          "-P" },
+          "P" },
       //10
       new String[]
       {
@@ -202,7 +218,7 @@ public class UpdateModell
           "Node1110",
           "q_zeitz.zml",
           "576610", // TODO evt nicht in PSI-fake vorhanden
-          "-P" },
+          "P" },
       //12
       new String[]
       {
@@ -218,7 +234,7 @@ public class UpdateModell
           "Node3201",
           null, // TODO
           "578090", // TODO nicht in PSI enthalten
-          "-P" },
+          "P" },
       //14
       new String[]
       {
@@ -234,7 +250,7 @@ public class UpdateModell
           "Node1001",
           "q_oberthau.zml",
           "576900", // evt nicht in PSI-fake enthalten
-          "-P" },
+          "P" },
       //16
       new String[]
       {
@@ -258,7 +274,7 @@ public class UpdateModell
           "Node6100",
           "q_droeda.zml",
           "577050", // TODO nicht in PSI enthalten
-          "-Z" },
+          "Z" },
       //Z2
       new String[]
       {
@@ -266,7 +282,7 @@ public class UpdateModell
           "Node1500",
           null, // TODO
           "576420",
-          "-Z" },
+          "Z" },
       //Z3
       new String[]
       {
@@ -274,7 +290,7 @@ public class UpdateModell
           "Node1301",
           null, // TODO
           "577110",
-          "-Z" },
+          "Z" },
       //Z4
       new String[]
       {
@@ -282,7 +298,7 @@ public class UpdateModell
           "Node7100",
           "q_boehlen.zml",
           "577571", // TODO nicht in PSI enthalten
-          "-Z" },
+          "Z" },
       //Z5 ist auch 16 Koberbach
       // TODO darf nicht gleichzeitig zufluss und pegel sein
       new String[]
@@ -309,47 +325,60 @@ public class UpdateModell
 
       final Feature fe = workspace.getFeature( fId );
       fe.setProperty( FeatureFactory.createFeatureProperty( "name", name ) );
-      //zuflussRep
       if( type.indexOf( "Z" ) > -1 )
       {
+        //zuflussRep
         String interpolationFilter = "?" + UpdateHelper.createInterpolationFilter( 1, 0, true );
-        if( available )
-        {
-          TimeseriesLink zuflussRep = NAZMLGenerator.generateobsLink(
-              WeisseElsterConstants.PREFIX_LINK_WQ_Zufluss_Rep + psiID + interpolationFilter,
-              NAZMLGenerator.NA_LINK_Q );
-          setTSLink( fe, "zuflussZRRepository", zuflussRep );
-        }
-        else
-        {
-          TimeseriesLink zuflussRep = NAZMLGenerator.generateobsLink(
-              WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Zufluss_Rep + fId
-                  + interpolationFilter, NAZMLGenerator.NA_LINK_Q );
-          setTSLink( fe, "zuflussZRRepository", zuflussRep );
-        }
-      }
-      //zuflussRepVorhersage
-      if( type.indexOf( "Z" ) > -1 )
-      {
-        String interpolationFilter = "?" + UpdateHelper.createInterpolationFilter( 1, 0, true );
-        if( available )
-        {
-          TimeseriesLink zuflussRepVorhersage = NAZMLGenerator.generateobsLink(
-              WeisseElsterConstants.PREFIX_LINK_WQ_Zufluss_Rep_Vorhersage + psiID
-                  + interpolationFilter, NAZMLGenerator.NA_LINK_Q );
-          setTSLink( fe, "zuflussZRRepositoryVorhersage", zuflussRepVorhersage );
-        }
-        else
-        {
-          TimeseriesLink zuflussRepVorhersage = NAZMLGenerator.generateobsLink(
-              WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Zufluss_Rep + fId
-                  + interpolationFilter, NAZMLGenerator.NA_LINK_Q );
-          setTSLink( fe, "zuflussZRRepositoryVorhersage", zuflussRepVorhersage );
-        }
+        TimeseriesLink zuflussRep = NAZMLGenerator
+            .generateobsLink( "project:/.model/zeitreihen/Q_leer.zml" + interpolationFilter );
+        setTSLink( fe, "zuflussZRRepository", zuflussRep );
+
+        //        if( available )
+        //        {
+        //          TimeseriesLink zuflussRep = NAZMLGenerator
+        //              .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_Zufluss_Rep +
+        // psiID
+        //                  + interpolationFilter );
+        //          setTSLink( fe, "zuflussZRRepository", zuflussRep );
+        //        }
+        //        else
+        //        {
+        //          TimeseriesLink zuflussRep = NAZMLGenerator
+        //              .generateobsLink(
+        // WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Zufluss_Rep
+        // + fId
+        //                  + interpolationFilter );
+        //          setTSLink( fe, "zuflussZRRepository", zuflussRep );
+        //        }
+
+        //zuflussRepVorhersage
+        TimeseriesLink zuflussRepVorhersage = NAZMLGenerator
+            .generateobsLink( "project:/.model/zeitreihen/Q_leer.zml" + interpolationFilter );
+        setTSLink( fe, "zuflussZRRepositoryVorhersage", zuflussRepVorhersage );
+
+        //        if( available )
+        //        {
+        //          TimeseriesLink zuflussRepVorhersage = NAZMLGenerator
+        //              .generateobsLink(
+        // WeisseElsterConstants.PREFIX_LINK_WQ_Zufluss_Rep_Vorhersage + psiID
+        //                  + interpolationFilter );
+        //          setTSLink( fe, "zuflussZRRepositoryVorhersage", zuflussRepVorhersage
+        // );
+        //        }
+        //        else
+        //        {
+        //          TimeseriesLink zuflussRepVorhersage = NAZMLGenerator
+        //              .generateobsLink(
+        // WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Zufluss_Rep + fId
+        //                  + interpolationFilter );
+        //          setTSLink( fe, "zuflussZRRepositoryVorhersage", zuflussRepVorhersage
+        // );
+        //        }
+
         // zufluss lokal
-        TimeseriesLink linkZufluss = NAZMLGenerator.generateobsLink(
-            WeisseElsterConstants.PREFIX_LINK_WQ_ZUFLUSS_LOKAL + fe.getId() + ".zml",
-            NAZMLGenerator.NA_LINK_Q );
+        TimeseriesLink linkZufluss = NAZMLGenerator
+            .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_ZUFLUSS_LOKAL + fe.getId()
+                + ".zml" );// + FILTER_WQ );
         setTSLink( fe, "zuflussZR", linkZufluss );
       }
       //pegelRep
@@ -358,22 +387,22 @@ public class UpdateModell
         String interpolationFilter = "?" + UpdateHelper.createInterpolationFilter( 1, 0, true );
         if( available )
         {
-          TimeseriesLink pegelRep = NAZMLGenerator.generateobsLink(
-              WeisseElsterConstants.PREFIX_LINK_WQ_Pegel_Rep + psiID + interpolationFilter,
-              NAZMLGenerator.NA_LINK_Q );
+          TimeseriesLink pegelRep = NAZMLGenerator
+              .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_Pegel_Rep + psiID
+                  + interpolationFilter );
           setTSLink( fe, "pegelZRRepository", pegelRep );
         }
         else if( zml != null )
         {
           TimeseriesLink pegelRep = NAZMLGenerator
               .generateobsLink( WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Pegel_Rep + zml
-                  + interpolationFilter, NAZMLGenerator.NA_LINK_Q );
+                  + interpolationFilter );
           setTSLink( fe, "pegelZRRepository", pegelRep );
         }
-        //        pegelBerechnetZRRepository
-        TimeseriesLink pegelBerechnetRep = NAZMLGenerator.generateobsLink(
-            WeisseElsterConstants.PREFIX_LINK_WQ_Pegel_Rep + psiID + PSI_PROGNOSE_SUFFIX,
-            NAZMLGenerator.NA_LINK_W );
+        //        pegelBerechnetZRRepository (Ablage)
+        TimeseriesLink pegelBerechnetRep = NAZMLGenerator
+            .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_Pegel_Rep + psiID
+                + PSI_PROGNOSE_SUFFIX );
         setTSLink( fe, "pegelBerechnetZRAblage", pegelBerechnetRep );
       }
     }
@@ -386,14 +415,13 @@ public class UpdateModell
     {
       final Feature fe = features[i];
       // pegel lokal
-      TimeseriesLink linkPegel = NAZMLGenerator.generateobsLink(
-          WeisseElsterConstants.PREFIX_LINK_WQ_PEGEL_LOKAL + fe.getId() + ".zml",
-          NAZMLGenerator.NA_LINK_Q );
+      TimeseriesLink linkPegel = NAZMLGenerator
+          .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_PEGEL_LOKAL + fe.getId() + ".zml" );
       setTSLink( fe, "pegelZR", linkPegel );
       // berechnet
-      TimeseriesLink linkBerechnet = NAZMLGenerator.generateobsLink(
-          WeisseElsterConstants.PREFIX_LINK_WQ_BERECHNET_LOKAL + fe.getId() + ".zml",
-          NAZMLGenerator.NA_LINK_Q );
+      TimeseriesLink linkBerechnet = NAZMLGenerator
+          .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_BERECHNET_LOKAL + fe.getId()
+              + ".zml" + FILTER_WQ );
       setTSLink( fe, "qberechnetZR", linkBerechnet );
       setTSLink( fe, "pegelBerechnetZRRepository", null );
       setTSLink( fe, "zuflussZR", null );

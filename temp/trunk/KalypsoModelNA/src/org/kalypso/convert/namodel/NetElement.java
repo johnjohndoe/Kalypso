@@ -13,6 +13,7 @@ import org.deegree.model.feature.GMLWorkspace;
 import org.kalypso.convert.ASCIIHelper;
 import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
@@ -34,7 +35,6 @@ public class NetElement
 
   private static final String ENDKNOTEN = "   10000";
 
-  // TODO check if this is possible
   private int m_status = UNCALCULATED;
 
   private final UrlUtilities m_urlUtils = new UrlUtilities();
@@ -47,9 +47,10 @@ public class NetElement
   {
     m_netAsciiFormat = formats;
   }
-  public static void setDefaultGmlWorkSpace(GMLWorkspace workspace)
+
+  public static void setDefaultGmlWorkSpace( GMLWorkspace workspace )
   {
-    m_workspace=workspace;
+    m_workspace = workspace;
   }
 
   public NetElement( NetFileManager manager, Feature channelFE )
@@ -67,35 +68,36 @@ public class NetElement
   {
     return m_status == CALCULATED;
   }
+
   public boolean resultExists()
   {
     final Feature knotU = m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
     return m_manager.resultExists( knotU );
   }
+
   /**
    * @param isRootElement
    *          upstream from root node, only first channel is not upstream from
    *          rootnode
    */
-  public void berechne(  AsciiBuffer asciiBuffer, List nodeList,
-      boolean isRootElement ) throws IOException, Exception
+  public void berechne( AsciiBuffer asciiBuffer, List nodeList, boolean isRootElement )
+      throws IOException, Exception
   {
-    if( isCalculated())
+    if( isCalculated() )
       return;
 
     // if result does not exists, calculate upstrem
-    boolean resultExists=resultExists();
+    boolean resultExists = resultExists();
     if( !resultExists )
-      berechneOberlauf(asciiBuffer, nodeList );
+      berechneOberlauf( asciiBuffer, nodeList );
 
     // calculate me
     write( asciiBuffer, nodeList, resultExists, isRootElement );
-    generateTimeSeries( );
+    generateTimeSeries();
     m_status = CALCULATED;
   }
 
-  public void berechneOberlauf( AsciiBuffer asciiBuffer, List nodeList )
-      throws Exception
+  public void berechneOberlauf( AsciiBuffer asciiBuffer, List nodeList ) throws Exception
   {
     for( Iterator iter = m_upStreamDepends.iterator(); iter.hasNext(); )
     {
@@ -127,7 +129,7 @@ public class NetElement
 
         final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" );
         final FileWriter writer = new FileWriter( targetFile );
-        NAZMLGenerator.createFile( writer, NAZMLGenerator.NA_LINK_N, observation );
+        NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RAINFALL, observation );
         writer.close();
       }
     }
@@ -138,6 +140,7 @@ public class NetElement
     if( !m_downStreamDepends.contains( downStreamElement ) )
       m_downStreamDepends.add( downStreamElement );
   }
+
   public List getDownStreamNetElements()
   {
     return m_downStreamDepends;
@@ -150,19 +153,19 @@ public class NetElement
     upStreamElement.addDownStream( this );
   }
 
-  public void writeRootChannel(AsciiBuffer asciiBuffer,List processedRootNodes)
+  public void writeRootChannel( AsciiBuffer asciiBuffer, List processedRootNodes )
   {
-    final Feature knotO = m_workspace.resolveLink(m_channelFE, "downStreamNodeMember" );    
-    if(!processedRootNodes.contains(knotO))
+    final Feature knotO = m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
+    if( !processedRootNodes.contains( knotO ) )
     {
-      processedRootNodes.add(knotO);
-      int channelID=10000+processedRootNodes.size();
-      asciiBuffer.getNetBuffer().append("   "+channelID);
+      processedRootNodes.add( knotO );
+      int channelID = 10000 + processedRootNodes.size();
+      asciiBuffer.getNetBuffer().append( "   " + channelID );
       asciiBuffer.getNetBuffer().append( ASCIIHelper.toAsciiLine( knotO, m_netAsciiFormat[11] ) );
       asciiBuffer.getNetBuffer().append( ENDKNOTEN );
       asciiBuffer.getNetBuffer().append( " 0\n" );
-      
-      asciiBuffer.getChannelBuffer().append(channelID+"\n");
+
+      asciiBuffer.getChannelBuffer().append( channelID + "\n" );
       asciiBuffer.getChannelBuffer().append( ChannelManager.VIRTUALCHANNEL + "\n" );
     }
   }
@@ -173,14 +176,15 @@ public class NetElement
    * @param isRootElement
    *          false: this is a source node
    */
-  public void write(  AsciiBuffer asciiBuffer, List nodeList,
-      boolean resultExists, boolean isRootElement )
+  public void write( AsciiBuffer asciiBuffer, List nodeList, boolean resultExists,
+      boolean isRootElement )
   {
-    asciiBuffer.addFeatureToWrite(getChannel());
+    asciiBuffer.addFeatureToWrite( getChannel() );
     final Feature knotU = m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
 
     //  append channel:
-    asciiBuffer.getNetBuffer().append( ASCIIHelper.toAsciiLine( m_channelFE, m_netAsciiFormat[12] ) );
+    asciiBuffer.getNetBuffer()
+        .append( ASCIIHelper.toAsciiLine( m_channelFE, m_netAsciiFormat[12] ) );
 
     // append upstream node:
     //    if( !resultExists || isRootElement )
@@ -206,7 +210,7 @@ public class NetElement
     }
 
     // append upstream node:
-    if( knotO != null && !resultExists)
+    if( knotO != null && !resultExists )
       asciiBuffer.getNetBuffer().append( ASCIIHelper.toAsciiLine( knotO, m_netAsciiFormat[11] ) );
     else
       asciiBuffer.getNetBuffer().append( ANFANGSKNOTEN );
@@ -221,8 +225,9 @@ public class NetElement
       for( Iterator iter = catchmentList.iterator(); iter.hasNext(); )
       {
         Feature catchmentFE = (Feature)iter.next();
-        asciiBuffer.addFeatureToWrite(catchmentFE);
-        asciiBuffer.getNetBuffer().append( ASCIIHelper.toAsciiLine( catchmentFE, m_netAsciiFormat[12] ) + "\n" );
+        asciiBuffer.addFeatureToWrite( catchmentFE );
+        asciiBuffer.getNetBuffer().append(
+            ASCIIHelper.toAsciiLine( catchmentFE, m_netAsciiFormat[12] ) + "\n" );
       }
     }
     else
@@ -231,17 +236,17 @@ public class NetElement
     }
     // unterhalb des rootnodes letzter strang zum endknoten
     // ohne teilgebiete
-//    if( isRootElement )
-//    {
-//      // end channel
-////      buffer.append( ENDSTRANG );
-//      buffer.append("    "+1000xxx);
-//      // upstream node
-//      buffer.append( ASCIIHelper.toAsciiLine( knotU, m_netAsciiFormat[11] ) );
-//      // downstream node
-//      buffer.append( ENDKNOTEN );
-//      buffer.append( " 0\n" ); // no catchments
-//    }
+    //    if( isRootElement )
+    //    {
+    //      // end channel
+    //// buffer.append( ENDSTRANG );
+    //      buffer.append(" "+1000xxx);
+    //      // upstream node
+    //      buffer.append( ASCIIHelper.toAsciiLine( knotU, m_netAsciiFormat[11] ) );
+    //      // downstream node
+    //      buffer.append( ENDKNOTEN );
+    //      buffer.append( " 0\n" ); // no catchments
+    //    }
     if( knotO != null && !nodeList.contains( knotO ) )
       nodeList.add( knotO );
     //    }

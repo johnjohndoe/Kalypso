@@ -8,6 +8,7 @@ import javax.xml.bind.Marshaller;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.filters.InterpolationFilter;
 import org.kalypso.zml.filters.ObjectFactory;
+import org.kalypso.zml.filters.WqFilter;
 
 /**
  * @author doemming
@@ -24,7 +25,7 @@ public class UpdateHelper
   public static String createInterpolationFilter( int amountHours, double defaultValue,
       boolean forceFill ) throws JAXBException
   {
-    ObjectFactory of = new ObjectFactory();
+    final ObjectFactory of = new ObjectFactory();
     InterpolationFilter interpolationFilter = of.createInterpolationFilter();
     interpolationFilter.setAmount( amountHours );
     interpolationFilter.setCalendarField( "HOUR_OF_DAY" );
@@ -34,7 +35,7 @@ public class UpdateHelper
     Marshaller marshaller = of.createMarshaller();
     StringWriter writer = new StringWriter( 0 );
     marshaller.marshal( interpolationFilter, writer );
-    String result = writer.toString();
+    final String result = writer.toString();
     return prepareInLineFilter( result );
   }
 
@@ -48,5 +49,25 @@ public class UpdateHelper
   private static String removeXMLHeader( String xmlString )
   {
     return xmlString.replaceFirst( "<\\?.+?\\?>", "" );
+  }
+
+  public static String createWQFilter()
+  {
+    try
+    {
+      ObjectFactory of = new ObjectFactory();
+      WqFilter wqFilter = of.createWqFilter();
+      wqFilter.setType( "Q" );
+      Marshaller marshaller = of.createMarshaller();
+      StringWriter writer = new StringWriter( 0 );
+      marshaller.marshal( wqFilter, writer );
+      String result = writer.toString();
+      return prepareInLineFilter( result );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 }

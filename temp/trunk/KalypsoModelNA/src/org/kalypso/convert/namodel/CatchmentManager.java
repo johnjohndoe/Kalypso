@@ -21,6 +21,7 @@ import org.deegree_impl.model.feature.FeatureAssociationTypeProperty_Impl;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.FeatureHelper;
 import org.kalypso.convert.ASCIIHelper;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
  * @author doemming
@@ -156,8 +157,9 @@ public class CatchmentManager extends AbstractManager
     // repository LINK
     // is absolute
     // do copy
-    Object link = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(), NAZMLGenerator.NA_LINK_N,
-        m_conf.getGmlBaseDir(), relativeZmlPath, false, false );
+    Object link = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(),
+        TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_RAINFALL, m_conf.getGmlBaseDir(),
+        relativeZmlPath, false, false );
     FeatureProperty niederschlagZRRepositoryProp = FeatureFactory.createFeatureProperty(
         "niederschlagZRRepository", link );
     propCollector.put( "niederschlagZRRrepository", niederschlagZRRepositoryProp );
@@ -166,7 +168,8 @@ public class CatchmentManager extends AbstractManager
     // no copy
 
     Object relativeLink = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(),
-        NAZMLGenerator.NA_LINK_N, m_conf.getGmlBaseDir(), relativeZmlPath, true, true );
+        TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_RAINFALL, m_conf.getGmlBaseDir(),
+        relativeZmlPath, true, true );
     FeatureProperty niederschlagZRProp = FeatureFactory.createFeatureProperty( "niederschlagZR",
         relativeLink );
     propCollector.put( "niederschlagZR", niederschlagZRProp );

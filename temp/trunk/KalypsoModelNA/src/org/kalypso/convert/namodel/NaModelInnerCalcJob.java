@@ -49,6 +49,7 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.optimize.transform.OptimizeModelUtils;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.impl.AbstractCalcJob;
@@ -427,9 +428,11 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
           continue;
         }
         //        String resultPathRelative = resultLink.getHref();
-        String resultPathRelative = FileUtilities.getRelativePathTo( new File( outputDir,
-            "Ergebnisse" ), new File( outputDir, resultLink.getHref() ) );
+        String resultPathRelative = ZmlURL.getIdentifierPart( FileUtilities.getRelativePathTo(
+            new File( outputDir, "Ergebnisse" ), new File( outputDir, resultLink.getHref() ) ) );
+
         final File resultFile = new File( outputDir, resultPathRelative );
+        //        final File resultFile = new File( outputDir, resultPathRelative );
         resultFile.getParentFile().mkdirs();
 
         // create observation object
