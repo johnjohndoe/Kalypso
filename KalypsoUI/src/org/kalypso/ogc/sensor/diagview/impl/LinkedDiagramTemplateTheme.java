@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.java.awt.ColorUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -16,20 +17,24 @@ import org.kalypso.template.obsdiagview.TypeObservation;
 /**
  * LinkedDiagramTemplateTheme
  * 
+ * TODO: binding erweitern damit man die Farbe der Kurve spezifizieren kann
+ * 
  * @author schlienger
  */
 public class LinkedDiagramTemplateTheme extends DefaultDiagramTemplateTheme
 {
   private final TypeObservation m_tobs;
+
   private final ObservationDiagramTemplate m_template;
-  
+
   /**
    * Constructor.
    * 
    * @param template
    * @param tobs
    */
-  public LinkedDiagramTemplateTheme( final ObservationDiagramTemplate template, final TypeObservation tobs )
+  public LinkedDiagramTemplateTheme( final ObservationDiagramTemplate template,
+      final TypeObservation tobs )
   {
     m_tobs = tobs;
     m_template = template;
@@ -41,28 +46,31 @@ public class LinkedDiagramTemplateTheme extends DefaultDiagramTemplateTheme
   public void setObservation( IObservation obs )
   {
     super.setObservation( obs );
-    
+
     for( final Iterator it = m_tobs.getCurve().iterator(); it.hasNext(); )
     {
       final TypeCurve tcurve = (TypeCurve) it.next();
 
       final List tmaps = tcurve.getMapping();
       final List mappings = new ArrayList( tmaps.size() );
-      
+
       for( final Iterator itm = tmaps.iterator(); itm.hasNext(); )
       {
         final TypeAxisMapping tmap = (TypeAxisMapping) itm.next();
 
-        final IAxis obsAxis = ObservationUtilities.findAxisByName( obs.getAxisList(), tmap.getObservationAxis() );
-        final IDiagramAxis diagAxis = m_template.getDiagramAxis( tmap.getDiagramAxis() );
+        final IAxis obsAxis = ObservationUtilities.findAxisByName( obs
+            .getAxisList(), tmap.getObservationAxis() );
+        final IDiagramAxis diagAxis = m_template.getDiagramAxis( tmap
+            .getDiagramAxis() );
 
         mappings.add( new AxisMapping( obsAxis, diagAxis ) );
       }
 
       // create curve and add it to theme
-      final DiagramCurve curve = new DiagramCurve( tcurve.getName(), this,
-          (IAxisMapping[])mappings.toArray( new IAxisMapping[0] ), m_template );
-      
+      final DiagramCurve curve = new DiagramCurve( tcurve.getName(),
+          ColorUtilities.random(), this, (IAxisMapping[]) mappings
+              .toArray( new IAxisMapping[0] ), m_template );
+
       addCurve( curve );
     }
   }

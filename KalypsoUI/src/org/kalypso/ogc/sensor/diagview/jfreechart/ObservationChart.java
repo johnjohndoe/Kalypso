@@ -57,19 +57,27 @@ public class ObservationChart extends JFreeChart implements
    */
   protected void clearChart( )
   {
-    ((ObservationPlot) getPlot()).clearCurves();
+    getObservationPlot().clearCurves();
+  }
+  
+  /**
+   * @return plot casted as obs plot
+   */
+  public ObservationPlot getObservationPlot()
+  {
+    return (ObservationPlot) getPlot();
   }
 
   /**
    * @see org.kalypso.ogc.sensor.template.ITemplateEventListener#onTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)
    */
   public void onTemplateChanged( final TemplateEvent evt )
-  {
+  {   
     final CatchRunnable runnable = new CatchRunnable()
     {
       protected void runIntern( ) throws Throwable
       {
-        final ObservationPlot obsPlot = ((ObservationPlot) getPlot());
+        final ObservationPlot obsPlot = getObservationPlot();
         
         // ADD A CURVE
         if( evt.isType( TemplateEvent.TYPE_ADD )
@@ -103,6 +111,8 @@ public class ObservationChart extends JFreeChart implements
               obsPlot
                   .addCurve( (IDiagramCurve) it.next() );
           }
+          
+          fireChartChanged();
         }
         
         // REFRESH ONE THEME
@@ -117,6 +127,8 @@ public class ObservationChart extends JFreeChart implements
             obsPlot.removeCurve( crv );
             obsPlot.addCurve( crv );
           }
+          
+          fireChartChanged();
         }
 
         // REMOVE ALL THEMES

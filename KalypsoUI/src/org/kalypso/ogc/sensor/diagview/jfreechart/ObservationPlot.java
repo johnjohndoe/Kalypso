@@ -274,7 +274,10 @@ public class ObservationPlot extends XYPlot
       int pos = m_axes2ds.values().size();
 
       setDataset( pos, cds );
-      setRenderer( pos, getRenderer( yAxis.getType() ) );
+      
+      final XYItemRenderer renderer = getRenderer( yAxis.getType() );
+      renderer.setSeriesPaint( pos, curve.getPaint() );
+      setRenderer( pos, renderer );
 
       mapDatasetToDomainAxis( pos, ((Integer) m_chartAxes2Pos
           .get( m_diag2chartAxis.get( xDiagAxis ) )).intValue() );
@@ -309,7 +312,7 @@ public class ObservationPlot extends XYPlot
     // add a constant Y line if obs has alarmstufen
     if( yAxis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
     {
-	    final String[] alarms = TimeserieUtils.findOutMDAlarmstufen( obs );
+	    final String[] alarms = TimeserieUtils.findOutMDAlarmLevel( obs );
 	    final MetadataList mdl = obs.getMetadataList();
 	    for( int i = 0; i < alarms.length; i++ )
 	    {

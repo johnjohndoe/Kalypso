@@ -32,6 +32,8 @@ public abstract class TimeserieConstants implements ObservationConstants
   /** Füllung (VOLUMEN) */
   public static final String TYPE_VOLUME = "V";
 
+  // METADATEN
+  
   public final static String MD_WQ = "WQ-Parameter";
 
   public final static String MD_GKR = "Rechtswert";
@@ -61,39 +63,4 @@ public abstract class TimeserieConstants implements ObservationConstants
    * handelt es sich um eine Vorhersage Zeitreihe.
    */
   public final static String MD_VORHERSAGE = "Vorhersage";
-  
-  /**
-   * TODO check if the units are correct!
-   * 
-   * @param type
-   * @return corresponding unit
-   */
-  public static String getUnit( final String type )
-  {
-    if( type.equals( TYPE_DATE ) )
-      return "";
-    if( type.equals( TYPE_RAINFALL ) )
-      return "mm";
-    if( type.equals( TYPE_RUNOFF ) )
-      return "m³/s";
-    if( type.equals( TYPE_TEMPERATURE ) )
-      return "°C";
-    if( type.equals( TYPE_VOLUME ) )
-      return "m³";
-    if( type.equals( TYPE_WATERLEVEL ) )
-      return "cm";
-    
-    return "";
-  }
-  
-  /**
-   * @param type
-   * @return corresponding name (user friendly)
-   */
-  public static String getName( final String type )
-  {
-    // TODO!
-    
-    return type;
-  }
 }

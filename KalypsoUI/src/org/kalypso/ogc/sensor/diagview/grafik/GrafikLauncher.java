@@ -297,7 +297,7 @@ public class GrafikLauncher
         
         // does is have Alarmstufen?
         final MetadataList mdl = obs.getMetadataList();
-        final String[] mds = TimeserieUtils.findOutMDAlarmstufen( obs );
+        final String[] mds = TimeserieUtils.findOutMDAlarmLevel( obs );
         for( int i = 0; i < mds.length; i++ )
         {
           final Double value = new Double( mdl.getProperty( mds[i] ) );
