@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
-<xs:schema targetNamespace="model.xml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="model.xml.kalypso.org">
-	<xs:element name="transformationConfig">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="transformation" type="transformationType" maxOccurs="unbounded"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+<xs:schema targetNamespace="xml.model.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="xml.model.kalypso.org">
 	<xs:complexType name="transformationType">
 		<xs:sequence>
 			<xs:element name="arg" minOccurs="0" maxOccurs="unbounded">
@@ -19,4 +12,11 @@
 		</xs:sequence>
 		<xs:attribute name="className" type="xs:string" use="required"/>
 	</xs:complexType>
+	<xs:element name="transformationConfig">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="transformation" type="transformationType" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 </xs:schema>

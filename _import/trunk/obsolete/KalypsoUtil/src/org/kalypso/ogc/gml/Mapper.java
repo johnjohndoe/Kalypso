@@ -57,6 +57,10 @@ public class Mapper
 	
 	    if( "double".equals( name ) )
 	        return "java.lang.Double";
+      
+      // TODO: Andreas: über eine Registrierung mappen
+      if( "observation".equals( name ) )
+        return "org.kalypso.ogc.sensor.ObservationSource";
 	
 	    throw new Exception( "unsupported Type:" + name );
 	}

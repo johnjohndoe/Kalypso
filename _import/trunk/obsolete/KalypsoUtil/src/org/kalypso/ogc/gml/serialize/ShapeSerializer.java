@@ -3,7 +3,6 @@ package org.kalypso.ogc.gml.serialize;
 import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
 
 import org.deegree.model.feature.Feature;
@@ -30,20 +29,23 @@ public class ShapeSerializer
   // wird nicht instantiiert
   }
 
-  public final static void serialize( final KalypsoFeatureLayer layer, final Properties mapping,
-      final File file ) throws GmlSerializeException
+  public final static void serialize( final KalypsoFeatureLayer layer, final Map mapping,
+      final String geometryName, final File file ) throws GmlSerializeException
   {
     final FeatureType featureType = layer.getFeatureType();
     
-    final FeatureTypeProperty[] ftps = new FeatureTypeProperty[mapping.size()];
-    int count = 0;
+    final FeatureTypeProperty geomFeatureType = featureType.getProperty(geometryName);
+    
+    final FeatureTypeProperty[] ftps = new FeatureTypeProperty[mapping.size() + 1];
+    ftps[0] = FeatureFactory.createFeatureTypeProperty( "GEOM", geomFeatureType.getType(), geomFeatureType.isNullable() );
+    int count = 1;
     for( final Iterator mIt = mapping.entrySet().iterator(); mIt.hasNext(); )
     {
       final Map.Entry entry = (Entry)mIt.next();
       
-      final FeatureTypeProperty ftp = featureType.getProperty( (String)entry.getKey() );
+      final FeatureTypeProperty ftp = featureType.getProperty( (String)entry.getValue() );
       
-      ftps[count++] = FeatureFactory.createFeatureTypeProperty( (String)entry.getValue(), ftp.getType(), ftp.isNullable() );
+      ftps[count++] = FeatureFactory.createFeatureTypeProperty( (String)entry.getKey(), ftp.getType(), ftp.isNullable() );
     }    
     
     final FeatureType shapeFeatureType = FeatureFactory.createFeatureType( null, null, featureType.getName(), ftps );
@@ -60,13 +62,16 @@ public class ShapeSerializer
       {
         final KalypsoFeature kalypsoFeature = features[i];
 
-        final Object[] data = new Object[mapping.size()];
-        int datacount = 0;
+        final Object[] data = new Object[mapping.size() + 1];
+
+        data[0] = kalypsoFeature.getProperty( geometryName );
+        
+        int datacount = 1;
         for( final Iterator mIt = mapping.entrySet().iterator(); mIt.hasNext(); )
         {
           final Map.Entry entry = (Entry)mIt.next();
           
-          data[datacount++] = kalypsoFeature.getProperty( (String)entry.getKey() );
+          data[datacount++] = kalypsoFeature.getProperty( (String)entry.getValue() );
         }
         
        final Feature feature = FeatureFactory.createFeature( "" + i, shapeFeatureType, data );

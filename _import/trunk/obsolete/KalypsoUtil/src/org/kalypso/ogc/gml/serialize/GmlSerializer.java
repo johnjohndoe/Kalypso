@@ -139,11 +139,14 @@ public final class GmlSerializer
         }
       }
 
-      final double minx = boundingBox.getMin().getX();
-      final double maxx = boundingBox.getMax().getX();
-      final double miny = boundingBox.getMin().getY();
-      final double maxy = boundingBox.getMax().getY();
-      gmlCollection.setBoundingBox( minx, miny, maxx, maxy );
+      if( boundingBox != null )
+      {
+        final double minx = boundingBox.getMin().getX();
+        final double maxx = boundingBox.getMax().getX();
+        final double miny = boundingBox.getMin().getY();
+        final double maxy = boundingBox.getMax().getY();
+        gmlCollection.setBoundingBox( minx, miny, maxx, maxy );
+      }
 
       // muss NACH dem adden aller Features und dem setzen der Bounding Box
       // passieren

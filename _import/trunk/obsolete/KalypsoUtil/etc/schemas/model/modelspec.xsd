@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
-<xs:schema targetNamespace="model.xml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema targetNamespace="xml.model.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:element name="modelspec">
 		<xs:complexType>
 			<xs:sequence>
