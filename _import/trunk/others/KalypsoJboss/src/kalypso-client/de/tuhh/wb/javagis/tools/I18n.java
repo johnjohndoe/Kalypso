@@ -121,7 +121,8 @@ public class I18n
 	    langFile=new File("i18n/","jm-i18n-"+lang+".conf");
 	else
 	    langFile=new File("i18n/","jm-i18n-"+Prefs.getString("LangDefault")+".conf");
-    }
+    	System.out.println("LangFile:"+langFile.getAbsolutePath().toString());
+	}
     
     private void save()
     {

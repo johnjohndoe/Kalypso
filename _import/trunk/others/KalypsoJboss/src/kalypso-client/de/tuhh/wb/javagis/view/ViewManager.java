@@ -177,7 +177,7 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 	Toolkit.getDefaultToolkit().sync();
 	repaint();
 
-        GisNetView gisNetView = new GisNetView(version.getGisNetModel());
+        GisNetView gisNetView = new GisNetView(I18n.get("windowTitleNV")+version.getLabel(),version.getGisNetModel());
         gisNetView.setVisible(true);
         gisNetView.setSize(400,300);
         desktop.add(gisNetView);

@@ -234,13 +234,13 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 	return false;
     }
 	
-	public boolean isDateButton(int col)
+	/**public boolean isDateButton(int col)
 	{
 		Class propClass=myGisElementClass.getSimplePropertyClass(col-1);
 		if(propClass==java.util.Date.class)
 			return true;
 		return false;
-	}
+	 }*/
 
     public boolean isCellEditable(int row,int col)
     {

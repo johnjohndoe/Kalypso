@@ -39,6 +39,7 @@ import de.tuhh.wb.javagis.Main;
 import de.tuhh.wb.javagis.view.ViewManager;
 import de.tuhh.wb.javagis.view.GisView;
 import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
+import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView1;
 import de.tuhh.wb.javagis.data.GisElement;
 import de.tuhh.wb.javagis.data.GisElementClass;
 import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
@@ -212,7 +213,7 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 		GisElement gisElement=((GisTableModel)tableModel).getGisElement(row);
 		Object eId=((GisTableModel)tableModel).getElementId(row);
 		String title=getTitle()+"/"+tableModel.getName()+"#"+eId.toString();
-		GisSingleObjectView.load(title,gisElement);
+		GisSingleObjectView1.load(title,gisElement);
 		/*
 		  gisSingleObjectView.setVisible(true);
 		  ViewManager.desktop.add(gisSingleObjectView);
