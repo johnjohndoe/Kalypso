@@ -1,6 +1,5 @@
 package org.kalypso.convert.dwd;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
