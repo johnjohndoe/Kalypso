@@ -36,11 +36,13 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_MAPVIEW_PAN = id( "icons/full/elcl16/kde_move.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_FULLEXTENT = id( "icons/full/elcl16/kde_window_fullscreen.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_TOGGLESELECT = id( "icons/full/elcl16/kde_14_polyline.gif" );
+
   public static final ImageDescriptor IMAGE_MAPVIEW_SELECT = id( "icons/full/elcl16/kde_14_rectangle.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_UNSELECT = id( "icons/full/elcl16/kde_abort.gif" );
 
   public static final ImageDescriptor IMAGE_ICON_GTT = id( "icons/kalypso_gtt.gif" );
 
+  public static final ImageDescriptor IMAGE_KALYPSO_ICON = id( "etc/kalypso16.gif" );
   public static final ImageDescriptor IMAGE_INTRO_BACKGROUND = id( "etc/kalypso32.gif" );
   
   public static final ImageDescriptor IMAGE_UTIL_CHECKED = id( "icons/util/checked.gif" );

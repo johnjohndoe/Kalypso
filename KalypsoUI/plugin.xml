@@ -171,6 +171,7 @@
             name="Style Editor"
             id="org.kalypso.ui.editor.mapeditor.views.styleeditor"/>
       <view
+            icon="etc/kalypso16.gif"
             class="org.kalypso.ui.view.prognose.PrognoseView"
             category="Kalypso"
             name="Hochwasser Vorhersage"
@@ -469,6 +470,7 @@
             name="Kalypso Modeler"
             id="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"/>
       <perspective
+            icon="etc/kalypso16.gif"
             class="org.kalypso.ui.perspectives.PrognosePerspective"
             fixed="true"
             name="Hochwasser Vorhersage"
