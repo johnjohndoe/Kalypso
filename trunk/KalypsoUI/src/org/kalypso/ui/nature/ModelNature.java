@@ -196,12 +196,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public static void createCalculationCaseInFolder( final IFolder folder,
       final IProgressMonitor monitor ) throws Exception
   {
-    monitor.beginTask( "Rechenfall erzeugen...", 1000 );
-
     // maybe check requirements? (Project is of this nature an folder is not
     // contained in other CalcCase)
 
-    tranformModelData( folder, new SubProgressMonitor( monitor, 500 ) );
+    tranformModelData( folder, monitor );
 
     final IFile calcFile = folder.getFile( CALCULATION_FILE );
     if( !calcFile.exists() )
@@ -221,13 +219,16 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     contents.close();
 
     final List transList = trans.getTransformation();
+    
+    monitor.beginTask( "Transformationen durchführen" , transList.size() );
+    
     for( Iterator iter = transList.iterator(); iter.hasNext(); )
     {
       final TransformationType element = (TransformationType)iter.next();
       final ICalculationCaseTransformation ccTrans = TransformationFactory
           .createTransformation( element );
 
-      ccTrans.transform( targetFolder, monitor );
+      ccTrans.transform( targetFolder, new SubProgressMonitor( monitor, 1 ) );
     }
   }
 

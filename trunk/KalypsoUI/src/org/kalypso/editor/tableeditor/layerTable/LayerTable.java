@@ -187,15 +187,23 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     final CellEditor[] cellEditors = new CellEditor[columns.length];
     for( int i = 0; i < columns.length; i++ )
     {
+      final FeatureTypeProperty ftp = columns[i].ftp;
+      if( ftp == null )
+      {
+        LOGGER.warning( "Column doesnt exist: " + i );
+        continue;
+      }
+      
       final TableColumn tc = new TableColumn( table, SWT.CENTER );
       tc.setWidth( 100 );
 
-      final FeatureTypeProperty ftp = columns[i].ftp;
-      tc.setText( ftp.getName() );
+      final String columnName = ftp.getName();
+      if( columnName != null )
+        tc.setText( columnName );
       tc.setData( ftp );
       tc.setWidth( m_model.getInitialWidth( ftp ) );
 
-      colProperties[i] = ftp.getName();
+      colProperties[i] = columnName;
 
       m_ftp2ColumnMap.put( ftp, tc );
 

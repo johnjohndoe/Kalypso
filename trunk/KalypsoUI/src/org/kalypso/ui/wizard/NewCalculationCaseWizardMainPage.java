@@ -11,8 +11,6 @@
  ******************************************************************************/
 package org.kalypso.ui.wizard;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.Iterator;

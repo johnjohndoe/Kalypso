@@ -7,17 +7,17 @@ import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.java.lang.CatchThread;
 import org.w3c.dom.Document;
 
 /**
@@ -33,6 +33,8 @@ public class XslTransformation extends AbstractTransformation
   public void transformIntern( final IFolder targetFolder, final Properties properties, final IProgressMonitor monitor )
       throws TransformationException
   {
+    monitor.beginTask( "XSL Transformation", 2000 );
+    
     final String input = properties.getProperty( "input" );
     final String xsl = properties.getProperty( "xsl" );
     final String output = properties.getProperty( "output" );
@@ -43,37 +45,43 @@ public class XslTransformation extends AbstractTransformation
     final IFile xslFile = (IFile)project.findMember( xsl );
     final IFile outputFile = targetFolder.getFile( output );
 
-    System.out.println( "input exists:" + inputFile.exists() );
-    System.out.println( "xsl exists:" + xslFile.exists() );
-
     try
     {
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      final StreamSource xslSource = new StreamSource( xslFile.getContents(), xslFile.getCharset() );  
+      
+      final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setNamespaceAware( true );
-      DocumentBuilder docuBuilder = factory.newDocumentBuilder();
-      Document xmlDOM = docuBuilder.parse( inputFile.getContents() );
-      Document xslDOM = docuBuilder.parse( xslFile.getContents() );
-      TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      //    transformerFactory.setAttribute("version",new String("1.0"));
-      Transformer transformer = transformerFactory.newTransformer( new DOMSource( xslDOM ) );
-
-      PipedOutputStream outStream = new PipedOutputStream();
-      outputFile.create( new PipedInputStream( outStream ), true, new NullProgressMonitor() );
-      transformer.transform( new DOMSource( xmlDOM ), new StreamResult( outStream ) );
-    }
-    catch( CoreException e )
-    {
-      throw new TransformationException( e );
-    }
-    catch( TransformerException e )
-    {
-      throw new TransformationException( e );
+      final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
+      final Document xmlDOM = docuBuilder.parse( inputFile.getContents() );
+      //final Document xslDOM = docuBuilder.parse( xslFile.getContents() );
+      final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      final Transformer transformer = transformerFactory.newTransformer( xslSource );
+      
+      final PipedInputStream pis = new PipedInputStream();
+      final PipedOutputStream pos = new PipedOutputStream( pis );
+      final CatchThread thread = new CatchThread()
+      {
+        protected void runIntern() throws Throwable
+        {
+          transformer.transform( new DOMSource( xmlDOM ), new StreamResult( pos ) );
+          pos.close();
+        }
+      };
+      thread.start();
+      
+      monitor.worked( 1000 );
+      
+      // TODO: stimmt das, oder sollte das was im XM Lsteht genommen werden?
+      outputFile.create( pis, false, new SubProgressMonitor( monitor, 1000 ) );
+      outputFile.setCharset( inputFile.getCharset() );
+      
+      if( thread.getThrowable() != null )
+        throw new TransformationException( thread.getThrowable() );
     }
     catch( Exception e )
     {
       throw new TransformationException( e );
     }
-
   }
 
 }
