@@ -23,10 +23,10 @@ public class ObsTemplateLauncher implements IEditorLauncher
     final FileFilter filter = FileFilterUtils.orFileFilter( odtFilter, ottFilter );
 
     // virtuelle Vorlagen finden
-    final Object odtDefault = "<Standard Diagrammansicht>";
-    final Object ottDefault = "<Standard Tabellenansicht>";
+//    final Object odtDefault = "<Standard Diagrammansicht>";
+//    final Object ottDefault = "<Standard Tabellenansicht>";
 
-    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new Object[] { odtDefault, ottDefault } );
+    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[] {  } );
   }
 
 }

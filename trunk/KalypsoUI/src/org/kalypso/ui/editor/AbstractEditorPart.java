@@ -99,6 +99,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
       {
         doSaveInternal( monitor, input );
         m_commandTarget.resetDirty(  );
+        fireDirty();
       }
       catch( CoreException e )
       {
@@ -192,11 +193,6 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
     try
     {
       monitor.beginTask( "Save file", 1000 );
-      //      file.create( new StringInputStream( "" ), false, new
-      // SubProgressMonitor( monitor, 1000 ) );
-      //      file.setCharset( original.getCharset(), new SubProgressMonitor(
-      // monitor, 1000 ) );
-
       doSaveInternal( new SubProgressMonitor( monitor, 1000 ), newInput );
       m_commandTarget.resetDirty(  );
 

@@ -22,7 +22,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
    */
   private final ISchedulingRule m_mutexRule = new MutexSchedulingRule();
 
-  private final ICommandManager m_commandManager;
+  private ICommandManager m_commandManager;
 
   public final UndoRedoAction undoAction;
 
@@ -37,8 +37,8 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
     
     undoAction = new UndoRedoAction( m_commandManager, m_mutexRule, true );
     redoAction = new UndoRedoAction( m_commandManager, m_mutexRule, false );
-    
-    m_commandManager.addCommandManagerListener( this );
+
+    setCommandManager( commandManager );
   }
 
   public void dispose()
@@ -46,12 +46,13 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
     undoAction.dispose();
     redoAction.dispose();
 
-    m_commandManager.removeCommandManagerListener( this );
+    if( m_commandManager != null )
+      m_commandManager.removeCommandManagerListener( this );
   }
 
   public boolean isDirty()
   {
-    return m_commandManager.isDirty();
+    return m_commandManager == null ? false : m_commandManager.isDirty();
   }
   
   public void resetDirty()
@@ -65,7 +66,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
    */
   public void postCommand( ICommand command, Runnable runnable )
   {
-    new CommandJob( command, m_commandManager, m_mutexRule, null, CommandJob.POST );
+    new CommandJob( command, m_commandManager, m_mutexRule, m_dirtyRunnable, CommandJob.POST );
   }
 
   /**
@@ -73,12 +74,28 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
    */
   public void onCommandManagerChanged( final ICommandManager source )
   {
-    if( source == m_commandManager && source.isDirty() && m_dirtyRunnable != null )
+    if( source != null && source == m_commandManager && source.isDirty() && m_dirtyRunnable != null )
       m_dirtyRunnable.run();
   }
   
   public ISchedulingRule getSchedulingRule()
   {
     return m_mutexRule;
+  }
+
+  public void setCommandManager( final ICommandManager manager )
+  {
+    if( m_commandManager != null )
+      m_commandManager.removeCommandManagerListener( this );
+    
+    m_commandManager = manager;
+    
+    undoAction.setCommandManager( manager );
+    redoAction.setCommandManager( manager );
+
+    if( m_commandManager != null )
+      m_commandManager.addCommandManagerListener( this );
+    
+    onCommandManagerChanged( manager );
   }
 }

@@ -84,6 +84,9 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   protected void buttonPressed()
   {
     MessageDialog.openInformation( m_button.getShell(), "Feature editieren", "Die Operation ist noch nicht implementiert." );
+    
+    // todo: fireChange(  );
+    // todo: fireModify
   }
   
   /**

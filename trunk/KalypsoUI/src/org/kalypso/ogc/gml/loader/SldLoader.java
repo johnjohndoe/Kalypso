@@ -60,7 +60,7 @@ public class SldLoader extends AbstractLoader
   private URL getSLDUrl( final Properties source, final URL context ) throws MalformedURLException
   {
     final String sourcePath = source.getProperty( "PATH", "" );
-    return UrlResolver.resolveURL( context, sourcePath );
+    return new UrlResolver().resolveURL( context, sourcePath );
   }
 
   /**

@@ -146,15 +146,62 @@ public class GMLDocument_Impl implements GMLDocument
   /**
    * returns the location of the schema the document based on
    */
-  public URL getSchemaLocation() throws MalformedURLException
+  public URL getSchemaLocation( ) throws MalformedURLException
   {
     Debug.debugMethodBegin( this, "getSchemaLocation" );
 
-    String schemaL = XMLTools.getAttrValue( document.getDocumentElement(), "xsi:schemaLocation" );
-    Debug.debugMethodEnd();
-    return new URL( schemaL );
+    try
+    {
+      final String schemaLocation = document.getDocumentElement().getAttributeNS(
+          "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation" );
+      if( schemaLocation == null )
+        return null;
+
+      final String namespaceURI = document.getDocumentElement().getNamespaceURI();
+      if( namespaceURI != null && schemaLocation.startsWith( namespaceURI ) )
+      {
+        final String path = schemaLocation.substring( namespaceURI.length() );
+        return new URL( path );
+      }
+
+      return new URL( schemaLocation );
+    }
+    finally
+    {
+      Debug.debugMethodEnd();
+    }
   }
 
+  /**
+   * returns the location of the schema the document based on
+   */
+  public String getSchemaLocationName( ) 
+  {
+    Debug.debugMethodBegin( this, "getSchemaLocation" );
+
+    try
+    {
+      final String schemaLocation = document.getDocumentElement().getAttributeNS(
+          "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation" );
+      if( schemaLocation == null )
+        return null;
+
+      final String namespaceURI = document.getDocumentElement().getNamespaceURI();
+      if( namespaceURI != null && schemaLocation.startsWith( namespaceURI ) )
+      {
+        final String path = schemaLocation.substring( namespaceURI.length() ).trim();
+        return path;
+      }
+
+      return schemaLocation;
+    }
+    finally
+    {
+      Debug.debugMethodEnd();
+    }
+  }
+
+  
   /**
    * sets the location of schema the document based on
    */
@@ -223,7 +270,7 @@ public class GMLDocument_Impl implements GMLDocument
   {
     return new GMLFeatureCollection_Impl( document.getDocumentElement() );
   }
-  
+
   public GMLFeature getRootFeature()
   {
     return new GMLFeature_Impl( document.getDocumentElement() );
@@ -291,13 +338,14 @@ public class GMLDocument_Impl implements GMLDocument
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.4  2004/10/07 14:09:14  doemming
+ * Revision 1.5  2004/10/31 18:34:01  belger
  * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:58  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 13:03:31 doemming ***
- * empty log message *** Revision 1.7 2004/03/02 07:38:14 poth no message
+ * Revision 1.4 2004/10/07 14:09:14 doemming ***
+ * empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision
+ * 1.3 2004/08/31 13:03:31 doemming *** empty log message *** Revision 1.7
+ * 2004/03/02 07:38:14 poth no message
  * 
  * Revision 1.6 2004/02/19 10:08:56 poth no message
  * 

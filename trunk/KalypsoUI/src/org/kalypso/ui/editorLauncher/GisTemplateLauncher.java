@@ -1,7 +1,5 @@
 package org.kalypso.ui.editorLauncher;
 
-import java.io.FileFilter;
-
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.eclipse.core.runtime.IPath;
@@ -19,12 +17,15 @@ public class GisTemplateLauncher implements IEditorLauncher
   {
     final IOFileFilter gttFilter = FileFilterUtils.suffixFileFilter( ".gmt" );
     final IOFileFilter gmtFilter = FileFilterUtils.suffixFileFilter( ".gtt" );
-    final FileFilter filter = FileFilterUtils.orFileFilter( gmtFilter, gttFilter );
+    final IOFileFilter gftFilter = FileFilterUtils.suffixFileFilter( ".gft" );
+    final IOFileFilter filter1 = FileFilterUtils.orFileFilter( gmtFilter, gttFilter );
+    final IOFileFilter filter = FileFilterUtils.orFileFilter( filter1, gftFilter );
     
     // virtuelle Vorlagen finden
-    final Object gmtDefault = "<Standard Kartenansicht>";
-    final Object gttDefault = "<Standard Datenansicht>";
+//    final Object gmtDefault = "<Standard Kartenansicht>";
+//    final Object gttDefault = "<Standard Datenansicht>";
+    final IDefaultTemplateLauncher featureDefault = new FeatureTemplateLauncher();
 
-    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new Object[] { gmtDefault, gttDefault } );
+    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[] { featureDefault } );
   }
 }

@@ -7,6 +7,8 @@ import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
@@ -39,7 +41,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   public TextFeatureControl( final Feature feature, final FeatureTypeProperty ftp )
   {
     super( feature, ftp );
-    
+
     m_modifier = new StringModifier( ftp );
   }
 
@@ -48,6 +50,8 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
    */
   public void dispose()
   {
+    super.dispose();
+
     if( m_text != null )
       m_text.dispose();
 
@@ -67,6 +71,14 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
       public void modifyText( final ModifyEvent e )
       {
         updateValid();
+      }
+    } );
+
+    m_text.addFocusListener( new FocusAdapter()
+    {
+      public void focusLost( final FocusEvent e )
+      {
+        fireChange( getChange() );
       }
     } );
 
@@ -124,7 +136,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
   public String toString()
   {
-    return m_modifier.getValue( getFeature() ).toString(); 
+    return m_modifier.getValue( getFeature() ).toString();
   }
 
   /**
@@ -132,9 +144,16 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
    */
   public void collectChanges( final Collection c )
   {
+    final FeatureChange change = getChange();
+    if( change != null )
+      c.add( change );
+  }
+
+  protected FeatureChange getChange()
+  {
     updateValid();
     if( !isValid() )
-      return;
+      return null;
 
     final Feature feature = getFeature();
 
@@ -147,7 +166,9 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
     // nur ändern, wenn sich wirklich was geändert hat
     if( ( newData == null && oldData != null ) || ( newData != null && !newData.equals( oldData ) ) )
-      c.add( new FeatureChange( feature, name, newData ) );
+      return new FeatureChange( feature, name, newData );
+
+    return null;
   }
 
   protected void updateValid()
@@ -162,7 +183,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   {
     updateControl();
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
    */

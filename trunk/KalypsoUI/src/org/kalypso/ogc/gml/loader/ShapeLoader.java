@@ -45,17 +45,18 @@ public class ShapeLoader extends AbstractLoader
   {
     try
     {
+      final UrlResolver urlResolver = new UrlResolver();
 
       IResource shpResource = null;
       IResource dbfResource = null;
       IResource shxResource = null;
       
       final String sourceLocation = source.getProperty( "PATH", "" );
-      final URL sourceURL = UrlResolver.resolveURL( context, sourceLocation );
+      final URL sourceURL = urlResolver.resolveURL( context, sourceLocation );
 
-      final URL shpURL = UrlResolver.resolveURL( context, sourceLocation + ".shp" );
-      final URL dbfURL = UrlResolver.resolveURL( context, sourceLocation + ".dbf" );
-      final URL shxURL = UrlResolver.resolveURL( context, sourceLocation + ".shx" );
+      final URL shpURL = urlResolver.resolveURL( context, sourceLocation + ".shp" );
+      final URL dbfURL = urlResolver.resolveURL( context, sourceLocation + ".dbf" );
+      final URL shxURL = urlResolver.resolveURL( context, sourceLocation + ".shx" );
       
       // leider können Shapes nicht aus URL geladen werden -> protocoll checken
       File sourceFile = null;
@@ -125,11 +126,13 @@ public class ShapeLoader extends AbstractLoader
   {
     try
     {
+      final UrlResolver urlResolver = new UrlResolver();
+      
       final String sourceLocation1 = source1.getProperty( "PATH", "" );
-      final URL sourceURL1 = UrlResolver.resolveURL( context1, sourceLocation1 );
+      final URL sourceURL1 = urlResolver.resolveURL( context1, sourceLocation1 );
 
       final String sourceLocation2 = source2.getProperty( "PATH", "" );
-      final URL sourceURL2 = UrlResolver.resolveURL( context2, sourceLocation2 );
+      final URL sourceURL2 = urlResolver.resolveURL( context2, sourceLocation2 );
 
       return sourceURL1.hashCode() - sourceURL2.hashCode();
     }

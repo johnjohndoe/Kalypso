@@ -44,7 +44,8 @@ public class FeatureComposite implements IFeatureControl
   /** FeatureType -> FeatureView */
   private final Map m_viewMap = new HashMap();
 
-  private final Collection m_controls = new ArrayList();
+  private final Collection m_featureControls = new ArrayList();
+  private final Collection m_swtControls = new ArrayList();
 
   private Feature m_feature;
 
@@ -85,7 +86,7 @@ public class FeatureComposite implements IFeatureControl
    */
   public void updateControl()
   {
-    for( final Iterator iter = m_controls.iterator(); iter.hasNext(); )
+    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
       fc.updateControl();
@@ -97,7 +98,7 @@ public class FeatureComposite implements IFeatureControl
    */
   public void collectChanges( Collection c )
   {
-    for( final Iterator iter = m_controls.iterator(); iter.hasNext(); )
+    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
       fc.collectChanges( c );
@@ -127,15 +128,15 @@ public class FeatureComposite implements IFeatureControl
    */
   public boolean isValid()
   {
-    boolean valid = true;
-    final Iterator iter = m_controls.iterator();
-    while( valid == true && iter.hasNext() )
+    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
-      valid = valid & fc.isValid();
+      
+      if( !fc.isValid() )
+        return false;
     }
 
-    return valid;
+    return true;
   }
 
   /**
@@ -172,6 +173,8 @@ public class FeatureComposite implements IFeatureControl
   {
     final Control control = createControlFromControlType( parent, style, controlType );
 
+    m_swtControls.add( control );
+    
     control.setVisible( controlType.isVisible() );
 
     // einen bereits gesetzten Tooltip nicht überschreiben
@@ -242,7 +245,7 @@ public class FeatureComposite implements IFeatureControl
       final Control control = tfc.createControl( parent, editorType.getStyle() );
       tfc.setEnabled( editorType.isEditable() );
 
-      addControl( tfc );
+      addFeatureControl( tfc );
 
       return control;
     }
@@ -256,7 +259,7 @@ public class FeatureComposite implements IFeatureControl
 
       final Control control = bfc.createControl( parent, buttonType.getStyle() );
 
-      addControl( bfc );
+      addFeatureControl( bfc );
 
       return control;
     }
@@ -324,9 +327,9 @@ public class FeatureComposite implements IFeatureControl
     return null;
   }
 
-  private void addControl( final IFeatureControl fc )
+  private void addFeatureControl( final IFeatureControl fc )
   {
-    m_controls.add( fc );
+    m_featureControls.add( fc );
   }
 
   /**
@@ -334,7 +337,7 @@ public class FeatureComposite implements IFeatureControl
    */
   public void addModifyListener( final ModifyListener l )
   {
-    for( final Iterator iter = m_controls.iterator(); iter.hasNext(); )
+    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
       fc.addModifyListener( l );
@@ -346,7 +349,7 @@ public class FeatureComposite implements IFeatureControl
    */
   public void removeModifyListener( final ModifyListener l )
   {
-    for( final Iterator iter = m_controls.iterator(); iter.hasNext(); )
+    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
       fc.removeModifyListener( l );
@@ -357,7 +360,7 @@ public class FeatureComposite implements IFeatureControl
   {
     m_feature = feature;
     
-    for( final Iterator iter = m_controls.iterator(); iter.hasNext(); )
+    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
       fc.setFeature( feature );
@@ -371,10 +374,34 @@ public class FeatureComposite implements IFeatureControl
 
   public void disposeControl()
   {
-    for( final Iterator iter = m_controls.iterator(); iter.hasNext(); )
+    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
       fc.dispose();
     }
+
+    for( final Iterator iter = m_swtControls.iterator(); iter.hasNext(); )
+    {
+      final Control c = (Control)iter.next();
+      c.dispose();
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addChangeListener(org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   */
+  public void addChangeListener( final IFeatureChangeListener l )
+  {
+    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
+      ((IFeatureControl)iter.next()).addChangeListener( l );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeChangeListener(org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   */
+  public void removeChangeListener( final IFeatureChangeListener l )
+  {
+    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
+      ((IFeatureControl)iter.next()).removeChangeListener( l );
   }
 }
