@@ -1,5 +1,7 @@
 package org.kalypso.ogc.sensor.timeseries;
 
+import java.text.DateFormat;
+
 import org.kalypso.ogc.sensor.ObservationConstants;
 
 /**
@@ -9,6 +11,9 @@ import org.kalypso.ogc.sensor.ObservationConstants;
  */
 public abstract class TimeserieConstants implements ObservationConstants
 {
+  /** default date format used within some of the timeseries dependent properties */
+  public final static DateFormat DEFAULT_DF = DateFormat.getDateTimeInstance();
+  
   /** Niederschlag */
   public final static String TYPE_RAINFALL = "N";
   
@@ -51,6 +56,11 @@ public abstract class TimeserieConstants implements ObservationConstants
   
   public final static String MD_FLUSS = "Fluss";
 
+  /**
+   * Markierung für eine Vorhersage. Wenn die Property gesetzt ist (true),
+   * handelt es sich um eine Vorhersage Zeitreihe.
+   */
+  public final static String MD_VORHERSAGE = "Vorhersage";
   
   /**
    * @param type

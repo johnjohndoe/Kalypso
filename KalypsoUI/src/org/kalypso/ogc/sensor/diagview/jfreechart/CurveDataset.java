@@ -3,7 +3,7 @@ package org.kalypso.ogc.sensor.diagview.jfreechart;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jfree.data.AbstractIntervalXYDataset;
+import org.jfree.data.xy.AbstractIntervalXYDataset;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
@@ -33,7 +33,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   }
 
   /**
-   * @see org.jfree.data.AbstractSeriesDataset#getSeriesCount()
+   * @see org.jfree.data.general.SeriesDataset#getSeriesCount()
    */
   public int getSeriesCount( )
   {
@@ -44,7 +44,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   }
 
   /**
-   * @see org.jfree.data.AbstractSeriesDataset#getSeriesName(int)
+   * @see org.jfree.data.general.SeriesDataset#getSeriesName(int)
    */
   public String getSeriesName( int series )
   {
@@ -55,7 +55,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   }
 
   /**
-   * @see org.jfree.data.XYDataset#getItemCount(int)
+   * @see org.jfree.data.xy.XYDataset#getItemCount(int)
    */
   public int getItemCount( int series )
   {
@@ -74,62 +74,69 @@ class CurveDataset extends AbstractIntervalXYDataset
   }
 
   /**
-   * @see org.jfree.data.XYDataset#getXValue(int, int)
+   * @see org.jfree.data.xy.XYDataset#getXValue(int, int)
    */
-  public Number getXValue( int series, int item )
+  public double getXValue( int series, int item )
+  {
+    final Number x = getX( series, item );
+    
+    return x == null ? Double.NaN : x.doubleValue();
+  }
+
+  /**
+   * @see org.jfree.data.xy.XYDataset#getX(int, int)
+   */
+  public Number getX( int series, int item )
   {
     synchronized( m_curves )
     {
       try
       {
-        return ((XYCurveSerie) m_curves.get( series )).getXValue( item );
+        final Number value = ((XYCurveSerie) m_curves.get( series )).getXValue( item );
+        return value;
       }
       catch( SensorException e )
       {
         e.printStackTrace();
-        return new Integer( 0 );
+        return null;
       }
     }
   }
 
   /**
-   * @see org.jfree.data.XYDataset#getX(int, int)
+   * @see org.jfree.data.xy.XYDataset#getYValue(int, int)
    */
-  public double getX( int series, int item )
+  public double getYValue( int series, int item )
   {
-    Number value = getXValue( series, item );
-    return value == null ? Double.NaN : value.doubleValue();
+    final Number y = getY( series, item );
+    
+    return y == null ? Double.NaN : y.doubleValue();
   }
 
   /**
-   * @see org.jfree.data.XYDataset#getYValue(int, int)
+   * @see org.jfree.data.xy.XYDataset#getY(int, int)
    */
-  public Number getYValue( int series, int item )
+  public Number getY( int series, int item )
   {
-    try
+    synchronized( m_curves )
     {
-      return ((XYCurveSerie) m_curves.get( series )).getYValue( item );
-    }
-    catch( SensorException e )
-    {
-      e.printStackTrace();
-      return new Integer( 0 );
+      try
+      {
+        final Number value = ((XYCurveSerie) m_curves.get( series )).getYValue( item );
+        return value;
+      }
+      catch( SensorException e )
+      {
+        e.printStackTrace();
+        return null;
+      }
     }
   }
 
   /**
-   * @see org.jfree.data.XYDataset#getY(int, int)
+   * @see org.jfree.data.xy.IntervalXYDataset#getStartXValue(int, int)
    */
-  public double getY( int series, int item )
-  {
-    Number value = getYValue( series, item );
-    return value == null ? Double.NaN : value.doubleValue();
-  }
-
-  /**
-   * @see org.jfree.data.IntervalXYDataset#getStartXValue(int, int)
-   */
-  public Number getStartXValue( int series, int item )
+  public double getStartXValue( int series, int item )
   {
     if( item > 0 )
       return getXValue( series, item - 1 );
@@ -138,17 +145,17 @@ class CurveDataset extends AbstractIntervalXYDataset
   }
 
   /**
-   * @see org.jfree.data.IntervalXYDataset#getEndXValue(int, int)
+   * @see org.jfree.data.xy.IntervalXYDataset#getEndXValue(int, int)
    */
-  public Number getEndXValue( int series, int item )
+  public double getEndXValue( int series, int item )
   {
     return getXValue( series, item );
   }
 
   /**
-   * @see org.jfree.data.IntervalXYDataset#getStartYValue(int, int)
+   * @see org.jfree.data.xy.IntervalXYDataset#getStartYValue(int, int)
    */
-  public Number getStartYValue( int series, int item )
+  public double getStartYValue( int series, int item )
   {
     if( item > 0 )
       return getYValue( series, item - 1 );
@@ -157,10 +164,48 @@ class CurveDataset extends AbstractIntervalXYDataset
   }
 
   /**
-   * @see org.jfree.data.IntervalXYDataset#getEndYValue(int, int)
+   * @see org.jfree.data.xy.IntervalXYDataset#getEndYValue(int, int)
    */
-  public Number getEndYValue( int series, int item )
+  public double getEndYValue( int series, int item )
   {
     return getYValue( series, item );
+  }
+
+  /**
+   * @see org.jfree.data.xy.IntervalXYDataset#getStartX(int, int)
+   */
+  public Number getStartX( int series, int item )
+  {
+    if( item > 0 )
+      return getX( series, item - 1 );
+
+    return getX( series, item );
+  }
+
+  /**
+   * @see org.jfree.data.xy.IntervalXYDataset#getEndX(int, int)
+   */
+  public Number getEndX( int series, int item )
+  {
+    return getX( series, item );
+  }
+
+  /**
+   * @see org.jfree.data.xy.IntervalXYDataset#getStartY(int, int)
+   */
+  public Number getStartY( int series, int item )
+  {
+    if( item > 0 )
+      return getY( series, item - 1 );
+
+    return getY( series, item );
+  }
+
+  /**
+   * @see org.jfree.data.xy.IntervalXYDataset#getEndY(int, int)
+   */
+  public Number getEndY( int series, int item )
+  {
+    return getY( series, item );
   }
 }

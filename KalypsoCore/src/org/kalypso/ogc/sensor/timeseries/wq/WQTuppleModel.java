@@ -7,6 +7,7 @@ import java.util.Map;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFunction;
@@ -16,7 +17,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
 /**
  * @author schlienger
  */
-public class WQTuppleModel implements ITuppleModel
+public class WQTuppleModel extends AbstractTuppleModel
 {
   private final ITuppleModel m_model;
 
