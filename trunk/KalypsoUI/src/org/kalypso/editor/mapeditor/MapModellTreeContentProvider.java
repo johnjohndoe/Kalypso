@@ -6,7 +6,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
-import org.kalypso.ogc.gml.KalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 
 /**
  * Dieser TreeContentProvider akzeptiert nur MapModell'e als Input.
@@ -22,9 +23,9 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
    */
   public Object[] getChildren( final Object parentElement )
   {
-    if( parentElement instanceof KalypsoTheme )
+    if( parentElement instanceof IKalypsoTheme )
     {
-      KalypsoTheme theme = (KalypsoTheme)parentElement;
+      KalypsoFeatureTheme theme = (KalypsoFeatureTheme)parentElement;
       System.out.println( "TreeContentProvider.getChildren(" + theme.getName() + ")" );
       final UserStyle[] styles = theme.getStyles();
       final ThemeStyleTreeObject[] result = new ThemeStyleTreeObject[styles.length];
@@ -49,7 +50,7 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
    */
   public boolean hasChildren( final Object element )
   {
-    return ( element instanceof KalypsoTheme );
+    return ( element instanceof IKalypsoTheme );
   }
 
   /**

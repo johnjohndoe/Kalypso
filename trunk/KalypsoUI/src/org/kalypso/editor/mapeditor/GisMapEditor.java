@@ -25,8 +25,9 @@ import org.kalypso.ogc.IMapModellProvider;
 import org.kalypso.ogc.IMapPanelProvider;
 import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.MapPanel;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.ogc.gml.KalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.template.gismapview.Gismapview;
@@ -300,7 +301,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)m_layerPool.getObject(
           layerHelper.layerKey, new NullProgressMonitor() );
 
-      final KalypsoTheme theme = new KalypsoTheme( layer, layerHelper.layerType.getName() );
+      final KalypsoFeatureTheme theme = new KalypsoFeatureTheme( layer, layerHelper.layerType.getName() );
 
       try
       {
@@ -322,7 +323,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       // TODO thema finden und style hinzufuegen
 
       // TODO was passiert, wenn der name doppelt vorkommt
-      final KalypsoTheme[] allThemes = m_mapModell.getAllThemes();
+      final IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
       for( int i = 0; i < allThemes.length; i++ )
       {
         if( allThemes[i].getName().equals( styleHelper.themeName ) )
