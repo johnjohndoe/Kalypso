@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="DEADJOE|bin/|classpath2|client2ps|compile|compile.ps|compile_simple|java2ps|jboss_libs_classpath|kalypso.conf|packages/|run_client.bat|start|start_simple|themeclasspath|working_classpath" kind="src" path="src/kalypso-client"/>
+	<classpathentry excluding="DEADJOE|classpath2|client2ps|compile|compile.ps|compile_simple|java2ps|jboss_libs_classpath|kalypso.conf|packages/|run_client.bat|start|start_simple|themeclasspath|working_classpath|bin/" kind="src" path="src/kalypso-client"/>
+	<classpathentry including="i18n/|sce_tool/|symbols/|template/|tutorial/|xsl/" kind="src" path="src/kalypso-client/bin"/>
 	<classpathentry kind="src" path="src/kalypso-src"/>
 	<classpathentry kind="src" path="src/kalypso-bce/dc-kalypso2/src"/>
 	<classpathentry kind="src" path="src/kalypso-bce/ZBrowser/src"/>
