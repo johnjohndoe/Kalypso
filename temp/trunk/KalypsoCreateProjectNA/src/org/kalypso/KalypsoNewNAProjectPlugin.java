@@ -67,7 +67,9 @@ public class KalypsoNewNAProjectPlugin extends AbstractUIPlugin
     plugin = this;
     try
     {
-      resourceBundle = ResourceBundle.getBundle( "kalypso.wizard.KalypsoNewProjectPluginResources" );
+      //      resourceBundle = ResourceBundle.getBundle(
+      // "kalypso.wizard.KalypsoNewProjectPluginResources" );
+      resourceBundle = ResourceBundle.getBundle( "org.kalypso.wizard.resources.KalypsoNewProjectPluginResources" );
     }
     catch( MissingResourceException x )
     {

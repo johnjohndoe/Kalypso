@@ -48,6 +48,8 @@ package org.kalypso.wizard;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -58,21 +60,12 @@ import java.util.List;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_LineString;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -96,6 +89,16 @@ import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType.StyleType;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.util.url.UrlResolver;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author kuepfer
@@ -145,12 +148,13 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private WizardNewProjectCreationPage createProjectPage;
 
-  private GMLSchema modelSchema;
+  private GMLSchema m_modelSchema;
 
   private URL sourceURL;
 
-  private URL modelSchemaURL = getClass().getResource(
-      "../../../resources/.model/schema/namodell.xsd" );
+  private URL m_modelSchemaURL = getClass().getResource( "resources/.model/schema/namodell.xsd" );
+
+  //      "../../../resources/.model/schema/namodell.xsd" );
 
   private GMLWorkspace modelWS;
 
@@ -172,7 +176,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     super();
     try
     {
-      modelSchema = GMLSchemaCache.getSchema( modelSchemaURL );
+      m_modelSchema = GMLSchemaCache.getSchema( m_modelSchemaURL );
       setNeedsProgressMonitor( true );
     }
     catch( MalformedURLException e )
@@ -190,11 +194,18 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   public void addPages()
   {
-    createProjectPage = new WizardNewProjectCreationPage( PROJECT_PAGE );
-    createProjectPage.setDescription( "Dieser Dialog erstellt ein neues NA-Modell Projekt." );
-    createProjectPage.setTitle( "Neues NA-Modell Projekt" );
-    createProjectPage.setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
-    addPage( createProjectPage );
+    try
+    {
+      createProjectPage = new WizardNewProjectCreationPage( PROJECT_PAGE );
+      createProjectPage.setDescription( "Dieser Dialog erstellt ein neues NA-Modell Projekt." );
+      createProjectPage.setTitle( "Neues NA-Modell Projekt" );
+      createProjectPage.setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+      addPage( createProjectPage );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
 
     createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE,
         "Einzugsgebiet einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG,
@@ -211,7 +222,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     addPage( createMappingNodePage );
     createMappingHydrotopPage = new KalypsoNAFileImportPage( HYDROTOP_PAGE,
         "Hydrotopdatei in den Workspace importieren", ImageProvider.IMAGE_KALYPSO_ICON_BIG );
-    //		createMappingHydrotopPage = new KalypsoNAProjectWizardPage(
+    //		creaSteMappingHydrotopPage = new KalypsoNAProjectWizardPage(
     //				HYDROTOP_PAGE, "Hydrotope einlesen",
     //				ImageProvider.IMAGE_KALYPSO_ICON_BIG,
     //				getFeatureType("_Hydrotop"));
@@ -220,7 +231,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private FeatureType getFeatureType( String featureName )
   {
-    FeatureType ft = modelSchema.getFeatureType( featureName );
+    FeatureType ft = m_modelSchema.getFeatureType( featureName );
     return ft;
   }
 
@@ -353,8 +364,9 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   {
     String path = workspacePath.append( projectHandel.getFullPath() + "/Modell_Karten/Karten.gmt" )
         .toFile().toString();
-    InputStream inputStream = getClass().getResourceAsStream(
-        "../../../resources/Modell_Karten/Karte.gmt" );
+    InputStream inputStream = getClass().getResourceAsStream( "resources/Modell_Karten/Karte.gmt" );
+    //        "../../../resources/Modell_Karten/Karte.gmt" );
+
     ObjectFactory typeOF = new ObjectFactory();
     org.kalypso.template.gismapview.ObjectFactory mapTemplateOF = new org.kalypso.template.gismapview.ObjectFactory();
     Unmarshaller unmarshaller = mapTemplateOF.createUnmarshaller();
@@ -428,102 +440,88 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     sourceDir.toFile().mkdirs();
 
     //get resouces as input stream
-    final InputStream is1 = getClass().getResourceAsStream(
-        "../../../resources/.model/schema/control.xsd" );
-    final InputStream is2 = getClass().getResourceAsStream(
-        "../../../resources/.model/schema/feature.xsd" );
-    final InputStream is3 = getClass().getResourceAsStream(
-        "../../../resources/.model/schema/geometry.xsd" );
-    final InputStream is4 = getClass().getResourceAsStream(
-        "../../../resources/.model/schema/nacontrol.xsd" );
-    final InputStream is5 = getClass().getResourceAsStream(
-        "../../../resources/.model/schema/namodell.xsd" );
-    final InputStream is6 = getClass().getResourceAsStream(
-        "../../../resources/.model/schema/obslink.xsd" );
+    final InputStream is1 = getClass().getResourceAsStream( "resources/.model/schema/control.xsd" );
+    //        "../../../resources/.model/schema/control.xsd" );
+    final InputStream is2 = getClass().getResourceAsStream( "resources/.model/schema/feature.xsd" );
+    final InputStream is3 = getClass().getResourceAsStream( "resources/.model/schema/geometry.xsd" );
+    final InputStream is4 = getClass()
+        .getResourceAsStream( "resources/.model/schema/nacontrol.xsd" );
+    final InputStream is5 = getClass().getResourceAsStream( "resources/.model/schema/namodell.xsd" );
+    final InputStream is6 = getClass().getResourceAsStream( "resources/.model/schema/obslink.xsd" );
     //		final InputStream is7 = getClass().getResourceAsStream(
     //				"../../../resources/.model/schema/ombrometer.xsd");
-    final InputStream is8 = getClass().getResourceAsStream(
-        "../../../resources/.model/schema/xlink.xsd" );
-    final InputStream is10 = getClass().getResourceAsStream(
-        "../../../resources/.model/schema/xlinks.xsd" );
+    final InputStream is8 = getClass().getResourceAsStream( "resources/.model/schema/xlink.xsd" );
+    final InputStream is10 = getClass().getResourceAsStream( "resources/.model/schema/xlinks.xsd" );
     final InputStream is11 = getClass().getResourceAsStream(
-        "../../../resources/.model/schema/xlinksext.xsd" );
+        "resources/.model/schema/xlinksext.xsd" );
 
     final InputStream is12 = getClass().getResourceAsStream(
-        "../../../resources/.model/.calculation.template" );
-    final InputStream is13 = getClass().getResourceAsStream(
-        "../../../resources/.model/.calculation.view" );
+        "resources/.model/.calculation.template" );
+    final InputStream is13 = getClass().getResourceAsStream( "resources/.model/.calculation.view" );
     //		final InputStream is14 = getClass().getResourceAsStream(
     //				"../../../resources/.model/info.txt");
-    final InputStream is15 = getClass().getResourceAsStream(
-        "../../../resources/.model/calcCaseConfig.xml" );
-    final InputStream is16 = getClass().getResourceAsStream(
-        "../../../resources/.model/calcWizard.xml" );
-    final InputStream is17 = getClass().getResourceAsStream(
-        "../../../resources/.model/modelspec.xml" );
+    final InputStream is15 = getClass().getResourceAsStream( "resources/.model/calcCaseConfig.xml" );
+    final InputStream is16 = getClass().getResourceAsStream( "resources/.model/calcWizard.xml" );
+    final InputStream is17 = getClass().getResourceAsStream( "resources/.model/modelspec.xml" );
 
-    final InputStream is18 = getClass().getResourceAsStream(
-        "../../../resources/.styles/RHBChannel.sld" );
+    final InputStream is18 = getClass().getResourceAsStream( "resources/.styles/RHBChannel.sld" );
     final InputStream is19 = getClass().getResourceAsStream(
-        "../../../resources/.styles/expertCatchment.sld" );
+        "resources/.styles/expertCatchment.sld" );
     final InputStream is20 = getClass().getResourceAsStream(
-        "../../../resources/.styles/expertKMChannel.sld" );
-    final InputStream is21 = getClass().getResourceAsStream(
-        "../../../resources/.styles/expertNode.sld" );
-    final InputStream is22 = getClass().getResourceAsStream(
-        "../../../resources/.styles/expertVChannel.sld" );
-    final InputStream is23 = getClass().getResourceAsStream(
-        "../../../resources/.styles/exportNode.sld" );
-    final InputStream is24 = getClass().getResourceAsStream(
-        "../../../resources/.styles/KMChannel.sld" );
-    final InputStream is25 = getClass().getResourceAsStream( "../../../resources/.styles/Node.sld" );
+        "resources/.styles/expertKMChannel.sld" );
+    final InputStream is21 = getClass().getResourceAsStream( "resources/.styles/expertNode.sld" );
+    final InputStream is22 = getClass()
+        .getResourceAsStream( "resources/.styles/expertVChannel.sld" );
+    final InputStream is23 = getClass().getResourceAsStream( "resources/.styles/exportNode.sld" );
+    final InputStream is24 = getClass().getResourceAsStream( "resources/.styles/KMChannel.sld" );
+    final InputStream is25 = getClass().getResourceAsStream( "resources/.styles/Node.sld" );
     //		final InputStream is26 = getClass().getResourceAsStream(
     //				"../../../resources/.styles/Pegel.sld");
     final InputStream is27 = getClass().getResourceAsStream(
-        "../../../resources/.styles/Subcatchments.sld" );
+        "resources/.styles/Subcatchments.sld" );
     final InputStream is28 = getClass().getResourceAsStream(
-        "../../../resources/.styles/hydrotop.sld" );
+        "resources/.styles/hydrotop.sld" );
     final InputStream is29 = getClass().getResourceAsStream(
-        "../../../resources/.styles/VChannel.sld" );
+        "resources/.styles/VChannel.sld" );
     //		final InputStream is30 = getClass().getResourceAsStream(
     //				"../../../resources/.styles/Zufluss.sld");
 
     final InputStream is31 = getClass().getResourceAsStream(
-        "../../../resources/.templates/steuerparameter.gft" );
+        "resources/.templates/steuerparameter.gft" );
 
     final InputStream is32 = getClass().getResourceAsStream(
-        "../../../resources/.templates/calcCase/calcCase.gml" );
+        "resources/.templates/calcCase/calcCase.gml" );
     final InputStream is33 = getClass().getResourceAsStream(
-        "../../../resources/.templates/calcCase/control.gmt" );
+        "resources/.templates/calcCase/control.gmt" );
     final InputStream is34 = getClass().getResourceAsStream(
-        "../../../resources/.templates/calcCase/control.odt" );
+        "resources/.templates/calcCase/control.odt" );
     final InputStream is35 = getClass().getResourceAsStream(
-        "../../../resources/.templates/calcCase/expertControl.gml" );
+        "resources/.templates/calcCase/expertControl.gml" );
     final InputStream is36 = getClass().getResourceAsStream(
-        "../../../resources/.templates/calcCase/expertControl.gtt" );
+        "resources/.templates/calcCase/expertControl.gtt" );
     final InputStream is37 = getClass().getResourceAsStream(
-        "../../../resources/.templates/calcCase/expertKarte.gmt" );
+        "resources/.templates/calcCase/expertKarte.gmt" );
     final InputStream is38 = getClass().getResourceAsStream(
-        "../../../resources/.templates/calcCase/expertTabelleGewaesser.gtt" );
+        "resources/.templates/calcCase/expertTabelleGewaesser.gtt" );
     final InputStream is39 = getClass().getResourceAsStream(
-        "../../../resources/.templates/calcCase/expertTabelleKnoten.gtt" );
+        "resources/.templates/calcCase/expertTabelleKnoten.gtt" );
     final InputStream is40 = getClass().getResourceAsStream(
-        "../../../resources/.templates/calcCase/expertTabelleTeilgebiete.gtt" );
+        "resources/.templates/calcCase/expertTabelleTeilgebiete.gtt" );
     final InputStream is41 = getClass().getResourceAsStream(
-        "../../../resources/.templates/calcCase/sce.xml" );
+        "resources/.templates/calcCase/sce.xml" );
 
     final InputStream is42 = getClass().getResourceAsStream(
-        "../../../resources/Modell_Baumansicht/modell.gmv" );
+        "resources/Modell_Baumansicht/modell.gmv" );
 
     final InputStream is43 = getClass().getResourceAsStream(
-        "../../../resources/Modell_Tabellen/Tabelle_KMGewaesser.gtt" );
+        "resources/Modell_Tabellen/Tabelle_KMGewaesser.gtt" );
     final InputStream is44 = getClass().getResourceAsStream(
-        "../../../resources/Modell_Tabellen/Tabelle_Knoten.gtt" );
+        "resources/Modell_Tabellen/Tabelle_Knoten.gtt" );
     final InputStream is45 = getClass().getResourceAsStream(
-        "../../../resources/Modell_Tabellen/Tabelle_Teilgebiete.gtt" );
+        "resources/Modell_Tabellen/Tabelle_Teilgebiete.gtt" );
 
-    final InputStream is46 = getClass().getResourceAsStream( "../../../resources/modell.gml" );
-    final InputStream is47 = getClass().getResourceAsStream( "../../../resources/.metadata" );
+    final InputStream is46 = getClass().getResourceAsStream( "resources/modell.gml" );
+    final InputStream is47 = getClass().getResourceAsStream( "resources/.metadata" );
     //copy files to workspace
     try
     {
@@ -753,7 +751,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   public GMLSchema getModelSchema()
   {
-    return modelSchema;
+    return m_modelSchema;
   }
 
   public boolean performCancle()

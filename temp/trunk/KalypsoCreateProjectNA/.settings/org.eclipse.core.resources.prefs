@@ -1,5 +1,4 @@
-#Wed Feb 23 12:19:33 CET 2005
-encoding//src/resources/.model/schema/namodell.xsd=UTF8
+#Wed Mar 23 10:11:42 CET 2005
 eclipse.preferences.version=1
-encoding//src/resources/Modell_Karten/Karte.gmt=UTF-8
-encoding//src/resources/modell.gml=UTF-8
+encoding//src/org/kalypso/wizard/resources/modell.gml=UTF-8
+encoding//src/org/kalypso/wizard/resources/Modell_Karten/Karte.gmt=UTF-8

@@ -2,13 +2,13 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.kalypso.wizard"
-   name="KalypsoNewNAProject"
+   name="KalypsoCreateNAProject"
    version="0.0.1"
    provider-name="org.kalypso"
    class="org.kalypso.KalypsoNewNAProjectPlugin">
 
    <runtime>
-      <library name="kalypso.wizard.jar">
+      <library name="KalypsoCreateNAProject.jar">
          <export name="*"/>
       </library>
    </runtime>
