@@ -32,6 +32,7 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
+import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.editor.mapeditor.IGisviewEditorListener;
 import org.kalypso.editor.mapeditor.WidgetAction;
 import org.kalypso.util.command.DefaultCommandManager;
@@ -50,13 +51,13 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
 
   private EventListenerList m_listeners = new EventListenerList();
 
-  private final ICommandManager m_commandManager = new DefaultCommandManager();
+  protected final ICommandManager m_commandManager = new DefaultCommandManager();
   
   public final UndoAction m_undoAction = new UndoAction( this );
 
   public final RedoAction m_redoAction = new RedoAction( this );
 
-  /** Jeder Editor hat sein eigenes Mutex, so dass Jobs schön hintereinander ausgeführt werden */
+  /** Jeder Editor hat sein eigenes Mutex, so dass Jobs sch?n hintereinander ausgef?hrt werden */
   private Mutex myMutexRule = new Mutex();
   
   /** Used, to update SWT in DisplayThread */
@@ -72,6 +73,8 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
   {
     ResourcesPlugin.getWorkspace().addResourceChangeListener( this );
   }
+ 
+  protected abstract FullAction[] createFullActions(  );
   
   protected abstract WidgetAction[] createWidgetActions(  );
       
@@ -259,7 +262,10 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
     toolBarManager.add( new GroupMarker( groupName ) );
 
-    // TODO: move to createPartcontrol
+    final FullAction[] fullActions=createFullActions();
+    for( int i = 0; i < fullActions.length; i++ )
+      toolBarManager.appendToGroup( groupName, fullActions[i] );
+
     final WidgetAction[] widgetActions = createWidgetActions();
     for( int i = 0; i < widgetActions.length; i++ )
       toolBarManager.appendToGroup( groupName, widgetActions[i] );

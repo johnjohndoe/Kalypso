@@ -14,12 +14,12 @@ import org.kalypso.util.command.ICommandManager;
  *
  * @author von Dömming
  */
-public class ZoomOutAction extends FullAction
+public class FullExtentAction extends FullAction
 {
   private final ICommandManager myCommandManager;
   private final MapPanel myMapPanel;
   
-    public ZoomOutAction(final String text,final ImageDescriptor imageDescriptor,final String toolTipText, final MapPanel mapPanel, final ICommandManager commandManager  )
+    public FullExtentAction(final String text,final ImageDescriptor imageDescriptor,final String toolTipText, final MapPanel mapPanel, final ICommandManager commandManager  )
     {
       super(text,imageDescriptor,toolTipText);
       myCommandManager=commandManager;
@@ -28,8 +28,7 @@ public class ZoomOutAction extends FullAction
     
     public void run()
     {
-      GM_Envelope zoomBox = myMapPanel.getMapModell().getZoomOutBoundingBox();
-
-      myCommandManager.postCommand( new ChangeExtentCommand(myMapPanel.getMapModell(),zoomBox));
+      GM_Envelope fullExtent = myMapPanel.getMapModell().getFullExtentBoundingBox();
+      myCommandManager.postCommand( new ChangeExtentCommand(myMapPanel.getMapModell(),fullExtent));
     }  
 }

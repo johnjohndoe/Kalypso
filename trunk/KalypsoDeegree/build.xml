@@ -121,14 +121,14 @@ author: Markus Schneider - mschneider@lat-lon.de
 		<javac srcdir="${src}/org/deegree_impl/model/resources/" destdir="${build}" includes="Utilities.java,XArray.java,WeakHashSet.java,
                                                                                                       ResourceBundle.java"/>
 
-		<javac srcdir="${src}/org/deegree_impl/tools/" destdir="${build}" includes="StringExtend.java"/>
+		<javac srcdir="${src}/org/deegree_impl/tools/" destdir="${build}" includes="StringExtend.java" debug="true" />
 		<javac srcdir="${src}/javax" destdir="${build}"/>
 	</target>
 	<target name="compile-opengis" depends="init" description="compile OpenGIS interfaces">
 		<javac srcdir="${src}/org/opengis" destdir="${build}"/>
 	</target>
 	<target name="compile-interfaces" depends="compile-javax, compile-opengis" description="compile deegree interfaces">
-		<javac srcdir="${src}/org/deegree" destdir="${build}">
+		<javac srcdir="${src}/org/deegree" destdir="${build}"  debug="true" >
 			<classpath>
 <!--			<fileset dir="${src}" >
 	 	    <include name="org/**/*java"/>
@@ -153,7 +153,7 @@ author: Markus Schneider - mschneider@lat-lon.de
                                                                                      io/PostgisDBAccess.java,services/wfs/postgis/*,
                                                                                      services/wfs/filterencoding/PostgisSQLBuilder.java,
                                                                                      model/geometry/SDEAdapter.java"
-			verbose="true" fork="true" memorymaximumsize="200m">
+			verbose="true" fork="true" memorymaximumsize="200m"  debug="true" >
 			<classpath>
 				<pathelement path="${classpath}"/>
 				<pathelement path="${java3dlibs}"/>
@@ -169,7 +169,7 @@ author: Markus Schneider - mschneider@lat-lon.de
 	</target>
 	<target name="compile-arcsde-support" depends="compile-classes" description="compile ArcSDE support for deegree" if="esrilibs">
 		<javac srcdir="${src}/org/deegree_impl" destdir="${build}" includes="io/sdeapi/*,services/wfs/sde/*,
-                                                                                     model/geometry/SDEAdapter.java">
+                                                                                     model/geometry/SDEAdapter.java"  debug="true" >
 			<classpath>
 				<pathelement path="${classpath}"/>
 				<pathelement path="${java3dlibs}"/>
@@ -183,7 +183,7 @@ author: Markus Schneider - mschneider@lat-lon.de
 	<target name="compile-oracle-support" depends="compile-classes" description="compile Oracle support for deegree" if="oraclelibs">
 		<javac srcdir="${src}/org/deegree_impl" destdir="${build}" includes="io/OracleSpatialAccess.java,services/wfs/oracle/*,
                                                                                      model/geometry/OracleAdapter.java,
-                                                                                     services/wfs/filterencoding/OracleSQLBuilder.java">
+                                                                                     services/wfs/filterencoding/OracleSQLBuilder.java"  debug="true" >
 			<classpath>
 				<pathelement path="${classpath}"/>
 				<pathelement path="${java3dlibs}"/>
@@ -195,7 +195,7 @@ author: Markus Schneider - mschneider@lat-lon.de
 	</target>
 	<target name="compile-mysql-support" depends="compile-classes" description="compile MySQL support for deegree" if="mysqllibs">
 		<javac srcdir="${src}/org/deegree_impl" destdir="${build}" includes="io/MySQLDBAccess.java,services/wfs/mysql/*,
-                                                                                     services/wfs/filterencoding/MySQLSQLBuilder.java">
+                                                                                     services/wfs/filterencoding/MySQLSQLBuilder.java"  debug="true" >
 			<classpath>
 				<pathelement path="${classpath}"/>
 				<pathelement path="${java3dlibs}"/>
@@ -208,7 +208,7 @@ author: Markus Schneider - mschneider@lat-lon.de
 	<target name="compile-postgis-support" depends="compile-classes" description="compile Postgis support for deegree" if="pglibs">
 		<javac srcdir="${src}/org/deegree_impl" destdir="${build}" includes="model/geometry/PostGISAdapter.java,
                                                                                      io/PostgisDBAccess.java,services/wfs/postgis/*,
-                                                                                     services/wfs/filterencoding/PostgisSQLBuilder.java">
+                                                                                     services/wfs/filterencoding/PostgisSQLBuilder.java"  debug="true" >
 			<classpath>
 				<pathelement path="${classpath}"/>
 				<pathelement path="${java3dlibs}"/>
