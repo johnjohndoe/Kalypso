@@ -14,7 +14,7 @@
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582010?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_SCHIRG.zml" ns1:type="simple"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_SCHIRG.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./ergebnisse/zeitreihen/QX_SCHIRG.zml" ns1:type="simple"/>
@@ -52,7 +52,7 @@
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582030?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_BAUTZWB.zml" ns1:type="simple"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_BAUTZWB.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./ergebnisse/zeitreihen/QX_BAUTZWB.zml" ns1:type="simple"/>
@@ -90,7 +90,7 @@
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583121?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_GROEDI.zml" ns1:type="simple"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_GROEDI.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./ergebnisse/zeitreihen//QX_GROEDI.zml" ns1:type="simple"/>
@@ -128,7 +128,7 @@
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583250?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_JAENKD.zml" ns1:type="simple"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_JAENKD.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./ergebnisse/zeitreihen//QX_JAENKD.zml" ns1:type="simple"/>
@@ -166,7 +166,7 @@
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583290?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_SAERI.zml" ns1:type="simple"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_SAERI.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./ergebnisse/zeitreihen//QX_SAERI.zml" ns1:type="simple"/>
@@ -204,7 +204,7 @@
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582060?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_LIESKE.zml" ns1:type="simple"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_LIESKE.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./ergebnisse/zeitreihen//QX_LIESKE.zml" ns1:type="simple"/>
@@ -233,7 +233,7 @@
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583200?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_BOXBRG.zml" ns1:type="simple"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_BOXBRG.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./ergebnisse/zeitreihen//QX_BOXBRG.zml" ns1:type="simple"/>
@@ -262,7 +262,7 @@
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582080?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_SPREY.zml" ns1:type="simple"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_SPREY.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./ergebnisse/zeitreihen//QX_SPREY.zml" ns1:type="simple"/>
@@ -291,7 +291,7 @@
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582820?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_SPWITZ.zml" ns1:type="simple"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_SPWITZ.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./ergebnisse/zeitreihen//QX_SPWITZ.zml" ns1:type="simple"/>
@@ -320,7 +320,7 @@
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="project:/.model/zeitreihen/W_leer.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_SPREMB.zml" ns1:type="simple"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./zeitreihen/W_SPREMB.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href="./ergebnisse/zeitreihen//QX_SPREMB.zml" ns1:type="simple"/>
