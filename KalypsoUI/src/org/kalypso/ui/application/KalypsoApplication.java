@@ -3,7 +3,6 @@ package org.kalypso.ui.application;
 import javax.xml.rpc.ServiceException;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
@@ -46,7 +45,7 @@ public class KalypsoApplication implements IPlatformRunnable
       return null;
     
     for( int i = 0; i < rights.length; i++ )
-      System.out.println( rights[i] );
+      System.out.println( "'" + rights[i] + "'" );
     
     return startWorkbench( new KalypsoWorkbenchAdvisor( rights ) );
   }
@@ -61,7 +60,7 @@ public class KalypsoApplication implements IPlatformRunnable
     
     shell.setImage( id.createImage() );
     
-    if( rights == null )
+    if( rights == null || rights.length == 0 )
     {
       while( true )
       {
@@ -80,12 +79,12 @@ public class KalypsoApplication implements IPlatformRunnable
         }
       }
     }
-    else if( rights.length == 0 )
-    {
-      MessageDialog.openInformation( shell, "Benutzerrechte",
-          "Es konnten keine Benutzerrechte für Benutzer '" + username
-              + "' ermittelt werden. Bitte wenden Sie sich an den System-Administrator" );
-    }
+//    else if( rights.length == 0 )
+//    {
+//      MessageDialog.openInformation( shell, "Benutzerrechte",
+//          "Es konnten keine Benutzerrechte für Benutzer '" + username
+//              + "' ermittelt werden. Bitte wenden Sie sich an den System-Administrator" );
+//    }
     else /* if( rights.length == 1 ) */
     {
 //      choosenRights = rights[0];

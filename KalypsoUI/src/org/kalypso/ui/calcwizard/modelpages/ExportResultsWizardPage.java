@@ -2,7 +2,6 @@ package org.kalypso.ui.calcwizard.modelpages;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -300,8 +299,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
       {
         protected void execute( IProgressMonitor monitor )
-            throws CoreException, InvocationTargetException,
-            InterruptedException
+            throws CoreException
         {
           performPrognoseExport( resultTss, prognoseTss, context, monitor );
         }
@@ -309,7 +307,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
       getContainer().run( false, true, op );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO handling
       e.printStackTrace();

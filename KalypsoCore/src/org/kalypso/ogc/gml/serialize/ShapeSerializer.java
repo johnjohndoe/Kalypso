@@ -240,6 +240,8 @@ public class ShapeSerializer
         final Feature feature = dbf.getFRow( i + 1, true );
         features.add( feature );
       }
+      
+      dbf.close();
     }
     catch( IOException e )
     {
