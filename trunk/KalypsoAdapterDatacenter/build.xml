@@ -62,14 +62,6 @@
 
 	</target>
 
-	<!-- DEPLOY -->
-	<target name="deploy" depends="jar">
-
-		<copy todir="../KalypsoObsService/lib">
-			<fileset dir="${deploy.dir}" includes="*.jar" />
-		</copy>
-	</target>
-
 	<!-- JAVADOC
 NOTE: be sure to have javadoc.exe in the path when run under Eclipse -->
 	<target name="javadoc" depends="init" description="Erzeugt die Quellcode-Documentation">
