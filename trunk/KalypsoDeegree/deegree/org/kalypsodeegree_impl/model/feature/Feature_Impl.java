@@ -72,8 +72,8 @@ public class Feature_Impl implements Feature
     final FeatureProperty[] properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
     for( int i = 0; i < ftp.length; i++ )
     {
-      if( properties[i].getValue() != null )
-        setProperty( properties[i] );
+      if( properties[i].getValue() != null && ft.getMaxOccurs(i)==1 )
+        setProperty( properties[i] );      
     }
   }
 
