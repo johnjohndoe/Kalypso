@@ -1,0 +1,14 @@
+/CapabilitiesFactory.java/1.2/Thu Mar 25 14:24:18 2004//
+/Capability.java/1.2/Thu Mar 25 14:24:18 2004//
+/DescribeFeatureType.java/1.2/Thu Mar 25 14:24:18 2004//
+/FeatureType.java/1.2/Thu Mar 25 14:24:18 2004//
+/FeatureTypeList.java/1.2/Thu Mar 25 14:24:18 2004//
+/GetCapabilities.java/1.2/Thu Mar 25 14:24:18 2004//
+/GetFeature.java/1.2/Thu Mar 25 14:24:18 2004//
+/GetFeatureWithLock.java/1.3/Thu Mar 25 14:24:18 2004//
+/LockFeature.java/1.2/Thu Mar 25 14:24:18 2004//
+/Operation.java/1.5/Thu Mar 25 14:24:18 2004//
+/Request.java/1.2/Thu Mar 25 14:24:18 2004//
+/Transaction.java/1.2/Thu Mar 25 14:24:18 2004//
+/WFSCapabilities.java/1.5/Thu Mar 25 14:24:18 2004//
+D

@@ -1,0 +1,23 @@
+D/capabilities////
+D/gazetteer////
+D/wcas////
+D/wcs////
+D/wcts////
+D/wfs////
+D/wms////
+D/wts////
+/AbstractHandler.java/1.12/Thu Mar 25 14:24:18 2004//
+/DoubleExtent_Impl.java/1.2/Thu Mar 25 14:24:18 2004//
+/ElevationExtent_Impl.java/1.2/Thu Mar 25 14:24:18 2004//
+/NotSupportedFormatException.java/1.2/Thu Mar 25 14:24:18 2004//
+/OGCWebServiceEvent_Impl.java/1.7/Thu Mar 25 14:24:18 2004//
+/OGCWebServiceException_Impl.java/1.10/Thu Mar 25 14:24:18 2004//
+/OGCWebServiceRequest_Impl.java/1.7/Thu Mar 25 14:24:18 2004//
+/OGCWebServiceResponse_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/OGCWebService_Impl.java/1.2/Thu Mar 25 14:24:18 2004//
+/RangeParam.java/1.1/Thu Mar 25 14:24:18 2004//
+/RangeParamElevation.java/1.1/Thu Mar 25 14:24:18 2004//
+/RangeParamFactory.java/1.2/Thu Mar 25 14:24:18 2004//
+/RangeParamList_Impl.java/1.1/Thu Mar 25 14:24:18 2004//
+/RangeParamTime.java/1.1/Thu Mar 25 14:24:18 2004//
+/TimeExtent_Impl.java/1.1/Thu Mar 25 14:24:18 2004//

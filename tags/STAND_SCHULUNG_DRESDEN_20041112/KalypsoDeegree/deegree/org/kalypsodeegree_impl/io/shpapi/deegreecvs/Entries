@@ -1,0 +1,32 @@
+/DBaseFile.java/1.20/Result of merge+Thu Mar 25 13:02:38 2004//
+/MainFile.java/1.4/Result of merge//
+/ShapeFile.java/1.16/Result of merge//
+/DBFDataSection.java/1.4/Thu Mar 25 14:24:18 2004//
+/DBFHeader.java/1.1.1.1/Thu Mar 25 14:24:18 2004//
+/DBaseException.java/1.2/Thu Mar 25 14:24:18 2004//
+/DBaseIndex.java/1.2/Thu Mar 25 14:24:18 2004//
+/DBaseIndexException.java/1.1/Thu Mar 25 14:24:18 2004//
+/FieldDescriptor.java/1.1.1.1/Thu Mar 25 14:24:18 2004//
+/FileHeader.java/1.1.1.1/Thu Mar 25 14:24:18 2004//
+/HasNoDBaseFileException.java/1.1.1.1/Thu Mar 25 14:24:18 2004//
+/IndexFile.java/1.4/Thu Mar 25 14:24:18 2004//
+/IndexRecord.java/1.2/Thu Mar 25 14:24:18 2004//
+/InvalidKeyTypeException.java/1.1/Thu Mar 25 14:24:18 2004//
+/KeyAlreadyExistException.java/1.1/Thu Mar 25 14:24:18 2004//
+/KeyNotFoundException.java/1.1/Thu Mar 25 14:24:18 2004//
+/KeyTooLongException.java/1.1/Thu Mar 25 14:24:18 2004//
+/OpenGISException.java/1.1.1.1/Thu Mar 25 14:24:18 2004//
+/PartsArrayItem.java/1.1.1.1/Thu Mar 25 14:24:18 2004//
+/SHP2WKB.java/1.3/Thu Mar 25 14:24:18 2004//
+/SHP2WKS.java/1.8/Thu Mar 25 14:24:18 2004//
+/SHPEnvelope.java/1.2/Thu Mar 25 14:24:18 2004//
+/SHPException.java/1.2/Thu Mar 25 14:24:18 2004//
+/SHPGeometry.java/1.2/Thu Mar 25 14:24:18 2004//
+/SHPMultiPoint.java/1.3/Thu Mar 25 14:24:18 2004//
+/SHPNullShape.java/1.1.1.1/Thu Mar 25 14:24:18 2004//
+/SHPPoint.java/1.2/Thu Mar 25 14:24:18 2004//
+/SHPPolyLine.java/1.3/Thu Mar 25 14:24:18 2004//
+/SHPPolygon.java/1.3/Thu Mar 25 14:24:18 2004//
+/ShapeConst.java/1.1.1.1/Thu Mar 25 14:24:18 2004//
+/ShapeUtils.java/1.4/Thu Mar 25 14:24:18 2004//
+D
