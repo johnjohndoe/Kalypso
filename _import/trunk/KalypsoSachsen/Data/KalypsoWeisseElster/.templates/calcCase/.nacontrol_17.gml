@@ -42,14 +42,14 @@
   <CatchmentsFaktn>1.0</CatchmentsFaktn>
   <CatchmentsFaktorAigw>1.0</CatchmentsFaktorAigw>
   <KMChannels><![CDATA[//KMChannel[@fid="KMChannel1800" or @fid="KMChannel1700" or @fid="KMChannel1600" or @fid="KMChannel1601"]]]></KMChannels>
-  <KMChannelsFaktorRkf>0.5</KMChannelsFaktorRkf>
-  <KMChannelsFaktorRnf>0.5</KMChannelsFaktorRnf>
+  <KMChannelsFaktorRkf>1.0</KMChannelsFaktorRkf>
+  <KMChannelsFaktorRnf>1.0</KMChannelsFaktorRnf>
   <rootNode>Node7200</rootNode>
   <resultForRootNodeOnly>true</resultForRootNodeOnly>
   <pegelZR>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Node7300.zml" ns1:type="simple"/>
+    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Node7200.zml" ns1:type="simple"/>
   </pegelZR>
   <qberechnetZR>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7300.zml" ns1:type="simple"/>
+    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7200.zml" ns1:type="simple"/>
   </qberechnetZR>
 </NAModellControl>
