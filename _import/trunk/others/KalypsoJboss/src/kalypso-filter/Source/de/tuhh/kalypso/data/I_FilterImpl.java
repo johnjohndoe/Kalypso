@@ -36,7 +36,7 @@ public class I_FilterImpl implements I_Filter
 					{
 					    I_Filter filter=new I_FilterImpl();
 					    String xmlFile=args[0];
-						File files[]=getInputFiles("Import NA-ASCII Files");
+					    File files[]=getInputFiles("Import NA-ASCII Files");
 						filter.importASCIIFilesToDb(files,xmlFile);
 					}
 					break;
@@ -145,20 +145,32 @@ public class I_FilterImpl implements I_Filter
 	// HYDROTOP-FILE...
 	try
 	    {
+		File xmlFile=new File(xmlSource);
+ 		File tempFile=File.createTempFile( "kalypso_transform_tmp_", ".xml" );
+		File hydrotopFile=new File(exportFileName+".hyd");
+		ServiceTools.xslTransform(xmlFile ,new File("xsl/xml_2_hydrotop_part1.xsl"),tempFile);
+		ServiceTools.xslTransform(tempFile,new File("xsl/xml_2_hydrotop_part2.xsl"),hydrotopFile);
+		tempFile.delete();
+		/*
+
 		//xmlFile:	xmlSource
 		//hydrotopfile: exportFileName+.hyd
 		File xmlFile=new File(xmlSource);
 		File xslFile=new File("xsl/xml2hydrotop.xsl");
 		System.out.println("starting transformation");
 		Runtime.getRuntime().gc();
+		
 		String hydrotopString=ServiceTools.xslTransform(xmlFile,xslFile);
 		System.out.println("  transformation ready");
-
+		
 		File hydrotopFile=new File(exportFileName+".hyd");
 		System.out.println(" writing to file: "+hydrotopFile.toString());
 		FileWriter out=new FileWriter(hydrotopFile);
 		out.write(hydrotopString);
 		out.close();
+		*/
+		
+
 	    }
 	catch(Exception e)
 	    {

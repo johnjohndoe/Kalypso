@@ -63,7 +63,7 @@
         
         <xsl:text>&#xA;</xsl:text>
         <xsl:call-template name="format">
-          <xsl:with-param name="value" select="$areaHyd"/>
+          <xsl:with-param name="value" select="$areaHyd * (1 - $versGrad)"/>
           <xsl:with-param name="digits" select="10"/>
           <xsl:with-param name="format" select="'0'"/>
         </xsl:call-template>

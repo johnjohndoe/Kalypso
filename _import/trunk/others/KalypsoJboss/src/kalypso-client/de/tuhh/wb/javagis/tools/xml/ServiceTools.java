@@ -298,6 +298,21 @@ public class ServiceTools
 
     }
 
+    public static void xslTransform(File xmlFile,File xslFile,File outputFile) throws Exception
+    {
+	Runtime.getRuntime().gc();
+	System.out.println("Transformation can take some minutes ...");
+	String outString=xslTransform(xmlFile,xslFile);
+	
+	System.out.println(" writing to file: "+outputFile.toString());
+	FileWriter out=new FileWriter(outputFile);
+	out.write(outString);
+	out.close();
+	outString=null;
+	Runtime.getRuntime().gc();
+	// File.createTempFile( filename, suffix )
+    }
+    
     public static String xslTransform(File xmlFile,File xslFile) throws Exception
     {
 	System.out.println("xml:"+xmlFile.toString());
