@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.zml.ZmlObservation;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.repository.file.FileItem;
 import org.kalypso.repository.file.FileRepository;
 
@@ -15,7 +15,7 @@ import org.kalypso.repository.file.FileRepository;
  */
 public class ZmlObservationItem extends FileItem
 {
-  private ZmlObservation m_zmlFile = null;
+  private IObservation m_zmlFile = null;
 
   public ZmlObservationItem( final FileRepository rep, final File file )
   {
@@ -46,13 +46,16 @@ public class ZmlObservationItem extends FileItem
    * 
    * @throws SensorException
    */
-  private ZmlObservation getZmlFileObservation() throws SensorException
+  private IObservation getZmlFileObservation() throws SensorException
   {
     try
     {
       // check against the filter
       if( m_zmlFile == null && getRep().getFilter().accept( getFile() ) )
-        m_zmlFile = new ZmlObservation( getFile() );
+      {
+        final File f = getFile();
+        m_zmlFile = ZmlFactory.parseXML( f.toURL(), f.getAbsolutePath() );
+      }
 
       return m_zmlFile;
     }

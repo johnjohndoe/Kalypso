@@ -22,6 +22,7 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  */
 public class KalypsoObservationServiceTest extends TestCase
 {
+  private final static String KALYPSO_SERVER_BASE = "\\\\pc242\\KalypsoServer";
   private KalypsoObservationService m_srv;
 
   /**
@@ -123,6 +124,72 @@ public class KalypsoObservationServiceTest extends TestCase
       
       for( int j = 0; j < children.length; j++ )
         readData( children[j], space + " " );
+    }
+  }
+  
+  public void testFindItem() throws RemoteException
+  {
+    final ItemBean b1 = m_srv.findItem( KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations\\NEU\\PA_GROEDI.zml" );
+    
+    assertNotNull( b1 );
+    
+    assertFalse( m_srv.hasChildren( b1 ) );
+    
+    assertTrue( b1 instanceof ObservationBean );
+    
+    
+    final ItemBean b3 = m_srv.findItem( KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations" );
+    
+    assertNotNull( b3 );
+    
+    assertTrue( m_srv.hasChildren( b3 ) );
+    
+    assertFalse( b3 instanceof ObservationBean );
+    
+    try
+    {
+      m_srv.findItem( "inexistent-id" );
+      
+      throw new IllegalStateException("Precedent call should throw exception");
+    }
+    catch( RemoteException e )
+    {
+      // ok if exception is thrown
+    }
+
+    try
+    {
+      m_srv.findItem( KALYPSO_SERVER_BASE + "\\XYZ" );
+      
+      throw new IllegalStateException("Precedent call should throw exception");
+    }
+    catch( RemoteException e )
+    {
+      // ok if exception is thrown
+    }
+  }
+
+  public void testWriteData() throws RemoteException
+  {
+    // real
+    final ObservationBean ob1 = new ObservationBean( KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations\\test\\test.zml", "test", "file", null );
+    final OCSDataBean db1 = new OCSDataBean( 0, ob1.getId(), "file:" + KALYPSO_SERVER_BASE + "\\data\\tmp\\test\\example.zml" );
+    
+    m_srv.writeData( ob1, db1 );
+
+    // fake
+    final ObservationBean ob2 = new ObservationBean( KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations\\fake-fake-fake", "test", "file", null );
+    final OCSDataBean db2 = new OCSDataBean( 0, ob2.getId(), KALYPSO_SERVER_BASE + "\\data\\tmp\\test\\example.zml" );
+    
+    try
+    {
+      m_srv.writeData( ob2, db2 );
+      
+      throw new IllegalStateException( "Precedent call should throw exception" );
+    }
+    catch( RemoteException e )
+    {
+      // ok, should throw exception
     }
   }
 }

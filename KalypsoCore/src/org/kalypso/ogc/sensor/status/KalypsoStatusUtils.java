@@ -1,5 +1,7 @@
 package org.kalypso.ogc.sensor.status;
 
+import java.util.NoSuchElementException;
+
 import org.kalypso.ogc.sensor.IAxis;
 
 /**
@@ -17,7 +19,6 @@ import org.kalypso.ogc.sensor.IAxis;
  * 
  * <b>Benutzer Eingabe</b>
  * 0x08 - benötigt
- * 0x0F - optional
  * 0x10 - gesperrt
  * 
  * <b>Typ</b>
@@ -25,7 +26,6 @@ import org.kalypso.ogc.sensor.IAxis;
  * 0x14 - vorhergesagte
  * 
  * <b>Änderungen vom Benutzer</b>
- * 0x18 - vom Benutzer nicht geändert
  * 0x1F - vom Benutzer geändert
  * </pre>
  * 
@@ -39,6 +39,18 @@ public class KalypsoStatusUtils
   public final static String STATUS_AXIS_UNIT = "";
   public final static String STATUS_AXIS_SEPARATOR = " ";
   public final static String STATUS_AXIS_VALUES = "";
+  
+  public final static int BIT_OK = 0x01;
+  public final static int BIT_MAYBE = 0x02;
+  public final static int BIT_NOT = 0x04;
+  
+  public final static int BIT_REQUIRED = 0x08;
+  public final static int BIT_LOCKED = 0x10;
+  
+  public final static int BIT_MEASURE = 0x12;
+  public final static int BIT_FORECAST = 0x14;
+  
+  public final static int BIT_USER_MODIFIED = 0x1F;
 
   private KalypsoStatusUtils()
   {
@@ -71,5 +83,27 @@ public class KalypsoStatusUtils
   public static boolean isStatusAxis( final IAxis axis )
   {
     return axis.getLabel().startsWith( STATUS_AXIS_LABEL );
+  }
+
+  /**
+   * Finds the first status axis among the given list.
+   */
+  public static IAxis findStatusAxis( final IAxis[] axes ) throws NoSuchElementException
+  {
+    for( int i = 0; i < axes.length; i++ )
+    {
+      if( isStatusAxis( axes[i]) )
+        return axes[i];
+    }
+    
+    throw new NoSuchElementException( "No Status-Axis found" );
+  }
+
+  /**
+   * Checks if bit is in the mask.
+   */
+  public static boolean checkMask( final int mask, final int bit )
+  {
+    return (mask & bit) == bit;
   }
 }

@@ -22,30 +22,26 @@ public class ObservationUtilities
   /**
    * Finds the axis of the given observation that has the given name.
    * 
-   * @param obs the observation to scan
+   * @param axes the list of axes to scan
    * @param axisName the name of the axis which is searched
    * @throws NoSuchElementException when no axis matches the name
    */
-  public static IAxis findAxis( final IObservation obs, final String axisName ) throws NoSuchElementException
+  public static IAxis findAxis( final IAxis[] axes, final String axisName ) throws NoSuchElementException
   {
-    final IAxis[] axes = obs.getAxisList();
-    
     for( int i = 0; i < axes.length; i++ )
     {
       if( axes[i].getLabel().equalsIgnoreCase( axisName ) )
         return axes[i];
     }
     
-    throw new NoSuchElementException( "No axis found with name '" + axisName + "' in observation '" + obs.getName() + "'" );
+    throw new NoSuchElementException( "No axis found with name: " + axisName );
   }
   
   /**
    * Helper that returns an axis which is compatible with specified Class of data
    */
-  public static IAxis[] findAxis( final IObservation obs, final Class desired ) throws NoSuchElementException
+  public static IAxis[] findAxis( final IAxis[] axes, final Class desired ) throws NoSuchElementException
   {
-    final IAxis[] axes = obs.getAxisList();
-    
     final ArrayList list = new ArrayList( axes.length );
     
     for( int i = 0; i < axes.length; i++ )
@@ -55,7 +51,23 @@ public class ObservationUtilities
     }
     
     if( list.size() == 0 )
-      throw new NoSuchElementException( "No axis found with class '" + desired + "' in observation '" + obs.getName() + "'" );
+      throw new NoSuchElementException( "No axis found with class: " + desired );
+    
+    return (IAxis[])list.toArray( new IAxis[list.size()] );
+  }
+  
+  /**
+   * Returns the axes which are keys. Returns an empty array if no axis found.
+   */
+  public static IAxis[] extractKeyAxis( final IAxis[] axes )
+  {
+    final ArrayList list = new ArrayList( axes.length );
+    
+    for( int i = 0; i < axes.length; i++ )
+    {
+      if( axes[i].isKey() )
+        list.add( axes[i] );
+    }
     
     return (IAxis[])list.toArray( new IAxis[list.size()] );
   }
