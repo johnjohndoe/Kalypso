@@ -327,6 +327,14 @@ public class ServiceRepositoryObservation implements IObservation
   {
     m_evtPrv.removeListener( listener );
   }
+  
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
+   */
+  public void clearListeners( )
+  {
+    m_evtPrv.clearListeners();
+  }
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getHref()

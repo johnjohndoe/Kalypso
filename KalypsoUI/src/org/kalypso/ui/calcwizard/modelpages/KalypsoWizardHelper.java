@@ -29,8 +29,10 @@ public class KalypsoWizardHelper
    * TimeserieFeatureProps is created for each of these elements.
    * 
    * <pre>
-   * &lt;arg name=&quot;timeserie1&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
-   * &lt;arg name=&quot;timeserie2&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
+   * 
+   *  &lt;arg name=&quot;timeserie1&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
+   *  &lt;arg name=&quot;timeserie2&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
+   *  
    * </pre>
    * 
    * @param props
@@ -68,14 +70,14 @@ public class KalypsoWizardHelper
       final LinkedDiagramTemplate template, final TSLinkWithName[] links,
       final URL context, final boolean ignoreExceptions )
   {
-        template.removeAllThemes();
+    template.removeAllThemes();
 
-        for( int i = 0; i < links.length; i++ )
-        {
-          final TSLinkWithName link = links[i];
-          template.addObservation( link.name, context, link.href,
-              link.linktype, ignoreExceptions, null );
-        }
+    for( int i = 0; i < links.length; i++ )
+    {
+      final TSLinkWithName link = links[i];
+      template.addObservation( link.name, context, link.href, link.linktype,
+          ignoreExceptions, null );
+    }
   }
 
   /**
@@ -90,13 +92,13 @@ public class KalypsoWizardHelper
       final LinkedTableViewTemplate template, final TSLinkWithName[] links,
       final URL context, final boolean ignoreExceptions )
   {
-        template.removeAllThemes();
+    template.removeAllThemes();
 
-        for( int i = 0; i < links.length; i++ )
-        {
-          final TSLinkWithName link = links[i];
-          template.addObservation( link.name, context, link.href,
-              link.linktype, ignoreExceptions, null );
-        }
+    for( int i = 0; i < links.length; i++ )
+    {
+      final TSLinkWithName link = links[i];
+      template.addObservation( link.name, context, link.href, link.linktype,
+          ignoreExceptions, null );
+    }
   }
 }
