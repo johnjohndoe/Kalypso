@@ -65,10 +65,15 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="num" type="string"></element>
+                    <element name="Ort" type="gml:PointPropertyType"/>            
+        			<element name="num" type="string"></element>
 					<element name="generateResult" type="boolean"/>
         			<element name="downStreamChannelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="1"/>
-					<element name="zproz" type="float"/>
+					<!-- Zufluss --> 
+                    <!-- TODO nzufPfad als ZML-Link modellieren  -->
+					<element name="nzufPfad" type="string"/>
+                    <!-- verzweigung -->
+					<element name="zproz" type="string"/>
 					<element name="verzweigungNodeMember" type="na:NodeAssociationType"/>
 				</sequence>
 			</extension>
@@ -254,8 +259,10 @@ siehe bodenkorrekturmember...
 			<complexContent>
 				<extension base="gml:AbstractFeatureType">
 					<sequence>
-						<element name="downStreamNodeMember" type="na:NodeAssociationType" minOccurs="0" maxOccurs="1"/>
-					</sequence>		
+         				<element name="Ort" type="gml:LineStringPropertyType"/>            
+            			<element name="inum" type="string"/>
+                		<element name="downStreamNodeMember" type="na:NodeAssociationType" minOccurs="0" maxOccurs="1"/>		
+        			</sequence>		
 				</extension>
 			</complexContent>
 		</complexType>
@@ -268,7 +275,6 @@ siehe bodenkorrekturmember...
 		<complexContent>
 			<extension base="na:AbstractChannelType">
 				<sequence>
-					<element name="inum" type="string"/>
 					<!-- virtueller channel hat sonst keine properties -->
 					<!--<element name="kjh" type="string"/>-->
 				</sequence>
@@ -283,7 +289,6 @@ siehe bodenkorrekturmember...
 		<complexContent>
 			<extension base="na:AbstractChannelType">
 				<sequence>
-					<element name="inum" type="string"/>
 					<element name="qfmax" type="string"/>
 					<element name="c" type="string"/>
 					<element name="KMParameterMember" 

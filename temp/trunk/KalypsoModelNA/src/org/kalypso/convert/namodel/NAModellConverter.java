@@ -41,7 +41,7 @@ public class NAModellConverter
 //            Configuration conf = new Configuration(new File("test"));
             NAConfiguration conf = new NAConfiguration(new File("/home/doemming/weisseElster"));
             Feature fe = asciiToFeature(conf);
-            insertGeometries(fe,"/home/doemming/weisseElster/shapes");
+//            insertGeometries(fe,"/home/doemming/weisseElster/shapes");
 
             File gmlFile = File.createTempFile("namodell_test", ".gml");
             GmlSerializer.serializeFeature(new FileWriter(gmlFile), fe, null);
@@ -68,16 +68,35 @@ public class NAModellConverter
         ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
         CS_CoordinateSystem cSystem = org.deegree_impl.model.cs.Adapters
                 .getDefault().export(csFac.getCSByName("EPSG:31468"));
-//        CS_CoordinateSystem cSystem = org.deegree_impl.model.cs.Adapters
-//                .getDefault().export(csFac.getCSByName("EPSG:4326"));
-        KalypsoFeatureLayer layer = ShapeSerializer.deserialize(shapeDir+"/ezg_agg2", cSystem, cSystem, null);
-        Feature[] orgFEs = layer.getAllFeatures();// insertGeometries
         
-        Feature fe2 = (Feature) modelFeature
+        KalypsoFeatureLayer catchmentLayer = ShapeSerializer.deserialize(shapeDir+"/ezg_agg2", cSystem, cSystem, null);
+        Feature[] catchmentFEs = catchmentLayer.getAllFeatures();
+        KalypsoFeatureLayer channelLayer = ShapeSerializer.deserialize(shapeDir+"/river elements", cSystem, cSystem, null);
+        Feature[] channelFEs = channelLayer.getAllFeatures();
+        KalypsoFeatureLayer nodeLayer = ShapeSerializer.deserialize(shapeDir+"/knoten", cSystem, cSystem, null);
+        Feature[] nodeFEs = nodeLayer.getAllFeatures();
+        // insertGeometries
+        
+        System.out.println("inserting geometries: catchments");
+        Feature catchmentCollection = (Feature) modelFeature
                 .getProperty("CatchmentCollectionMember");
-        List list = (List) fe2.getProperty("catchmentMember");
-        copyProperties(orgFEs, "GEOM", "TG_KEN", (Feature[]) list
-                .toArray(new Feature[list.size()]), "Ort", "inum");
+        List catchmentList = (List) catchmentCollection.getProperty("catchmentMember");
+        copyProperties(catchmentFEs, "GEOM", "TG_KEN", (Feature[]) catchmentList
+                .toArray(new Feature[catchmentList.size()]), "Ort", "inum");
+        
+        System.out.println("inserting geometries: channels"); 
+        Feature channelCollection = (Feature) modelFeature
+        .getProperty("ChannelCollectionMember");
+        List channelList = (List) channelCollection.getProperty("channelMember");
+        copyProperties(channelFEs, "GEOM", "RIVER_NO_", (Feature[]) channelList
+                .toArray(new Feature[channelList.size()]), "Ort", "inum");
+        
+        System.out.println("inserting geometries: nodes");
+        Feature nodeCollection = (Feature) modelFeature
+        .getProperty("NodeCollectionMember");
+        List nodeList = (List) nodeCollection.getProperty("nodeMember");
+        copyProperties(nodeFEs, "GEOM", "KNOTEN_NUM", (Feature[]) nodeList
+                .toArray(new Feature[nodeList.size()]), "Ort", "num");
     }
 
     private static void copyProperties(Feature[] orgFE, String orgGeomPropName,
@@ -92,7 +111,7 @@ public class NAModellConverter
         for (int i = 0; i < destFE.length; i++) {
             Feature destFeature = destFE[i];
             String id = destFeature.getProperty(destIdPropName).toString();
-            System.out.println("processing id=" + id);
+//            System.out.println("processing id=" + id);
             Feature orgFeaure = (Feature) orgHash.get(id);
             if (orgFeaure != null) {
                 Object value = orgFeaure.getProperty(orgGeomPropName);
@@ -134,6 +153,11 @@ public class NAModellConverter
         Writer writer2 = new FileWriter(m_conf.getChannelFile());
         m_gerinneManager.writeFile(writer2, workspace);
         writer2.close();
+        
+        Writer writer3 = new FileWriter(m_conf.getNetFile());
+        m_nodeManager.writeFile(writer3, workspace);
+        writer3.close();
+        
     }
 
    
