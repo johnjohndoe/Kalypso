@@ -48,8 +48,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -60,9 +62,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.util.command.ICommand;
 
 /**
  * @author vdoemming
@@ -316,19 +315,12 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         for( Iterator iter = features.iterator(); iter.hasNext(); )
         {
           Feature feature = (Feature)iter.next();
-          try
-          {
-            DisplayElement[] elements = DisplayElementFactory.createDisplayElement( feature,
-                m_style,m_workspace);
-            if( elements.length > 0 )
-              m_dispayElements.add( elements );
-            if( elements.length > m_maxDisplayArray )
-              m_maxDisplayArray = elements.length;
-          }
-          catch( IncompatibleGeometryTypeException e )
-          {
-            e.printStackTrace();
-          }
+          DisplayElement[] elements = DisplayElementFactory.createDisplayElement( feature,
+              m_style,m_workspace);
+          if( elements.length > 0 )
+            m_dispayElements.add( elements );
+          if( elements.length > m_maxDisplayArray )
+            m_maxDisplayArray = elements.length;
         }
       }
     }
