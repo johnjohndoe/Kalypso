@@ -16,6 +16,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -712,9 +713,11 @@ public class ViewManager
 		calibrationButton.setMaximumSize(new Dimension(30, 110));
 		calibrationButton.setPreferredSize(new Dimension(30, 30));
 		calibrationButton.setToolTipText(I18n.get("ButtonAutomateCalibration"));
-	//	calibrationButton.setIcon(
-	//		(new ImageIcon(cl.getResource("symbols/calibration.gif"))));
-		calibrationButton.addActionListener(this);
+		URL resource = cl.getResource("symbols/calibration.gif");
+        calibrationButton.setIcon(
+			(new ImageIcon(resource)));
+     
+        calibrationButton.addActionListener(this);
 		calibrationButton.setActionCommand("automateCalibration");
 
 		comboBox = new JComboBox();
