@@ -24,6 +24,7 @@ public class FileUtilities
   /**
    * See makeFileFromStream(). this method calls makeFileFromStream with
    * url.openStream() as parameter.
+   * 
    * @param charMode
    * 
    * @param prefix
@@ -40,17 +41,17 @@ public class FileUtilities
    * @throws IOException
    *           there are problems!
    */
-  public static File makeFileFromUrl( boolean charMode, final String prefix,
-      final String suffix, URL url, boolean useCache ) throws IOException
+  public static File makeFileFromUrl( boolean charMode, final String prefix, final String suffix,
+      URL url, boolean useCache ) throws IOException
   {
-    return makeFileFromStream( charMode, prefix, suffix, url.openStream(),
-        useCache );
+    return makeFileFromStream( charMode, prefix, suffix, url.openStream(), useCache );
   }
 
   /**
    * Creates a new temporary file given its pathName and an InputStream. The
    * content from the InputStream is written into the file. The file will be
    * deleted after the VM shuts down
+   * 
    * @param charMode
    * 
    * @param prefix
@@ -68,8 +69,7 @@ public class FileUtilities
    *           problems reading from stream or writing to temp. file
    */
   public static File makeFileFromStream( boolean charMode, final String prefix,
-      final String suffix, InputStream ins, boolean useCache )
-      throws IOException
+      final String suffix, InputStream ins, boolean useCache ) throws IOException
   {
     if( useCache )
     {
@@ -99,13 +99,14 @@ public class FileUtilities
    * Wie
    * {@link #makeFileFromStream(boolean, String, String, InputStream, boolean)},
    * benutzt aber eine vorgegebene Dateiposition
+   * 
    * @param charMode
    * @param file
    * @param ins
    * @throws IOException
    */
-  public static void makeFileFromStream( final boolean charMode,
-      final File file, final InputStream ins ) throws IOException
+  public static void makeFileFromStream( final boolean charMode, final File file,
+      final InputStream ins ) throws IOException
   {
     if( charMode )
     {
@@ -117,8 +118,7 @@ public class FileUtilities
     else
     {
       final BufferedInputStream in = new BufferedInputStream( ins );
-      final BufferedOutputStream out = new BufferedOutputStream(
-          new FileOutputStream( file ) );
+      final BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( file ) );
 
       StreamUtilities.streamCopy( in, out );
     }
@@ -158,8 +158,8 @@ public class FileUtilities
         return files[0];
     }
 
-    throw new FileNotFoundException( "File with prefix (" + prefix
-        + ") and suffix (" + suffix + ") was not found in " + path );
+    throw new FileNotFoundException( "File with prefix (" + prefix + ") and suffix (" + suffix
+        + ") was not found in " + path );
   }
 
   /**
@@ -187,6 +187,7 @@ public class FileUtilities
 
   /**
    * Creates a temp directory in java.io.tmpdir.
+   * 
    * @param prefix
    * @return temporary directory
    * 
@@ -194,8 +195,7 @@ public class FileUtilities
    */
   public static File createNewTempDir( final String prefix )
   {
-    return createNewTempDir( prefix, new File( System
-        .getProperty( "java.io.tmpdir" ) ) );
+    return createNewTempDir( prefix, new File( System.getProperty( "java.io.tmpdir" ) ) );
   }
 
   /**
@@ -203,6 +203,7 @@ public class FileUtilities
    * <code>System.currentTimeMillis</code> for naming the new temp dir. This
    * method can hang a little while in the case the directory it tries to create
    * already exist.
+   * 
    * @param prefix
    * @param parentDir
    * @return temporary directory
@@ -211,8 +212,7 @@ public class FileUtilities
   {
     while( true )
     {
-      final File newDir = new File( parentDir, prefix
-          + System.currentTimeMillis() );
+      final File newDir = new File( parentDir, prefix + System.currentTimeMillis() );
       if( newDir.mkdir() )
         return newDir;
     }
@@ -220,6 +220,7 @@ public class FileUtilities
 
   /**
    * Macht aus einer absoluten Dateiangabe eine relative
+   * 
    * @param basedir
    * @param absoluteFile
    * 
@@ -227,8 +228,7 @@ public class FileUtilities
    *         <code>basedir</code> kein Parent-Dir von
    *         <code>absoluteFile</code> ist
    */
-  public static File getRelativeFileTo( final File basedir,
-      final File absoluteFile )
+  public static File getRelativeFileTo( final File basedir, final File absoluteFile )
   {
     final String rel = getRelativePathTo( basedir, absoluteFile );
 
@@ -247,16 +247,15 @@ public class FileUtilities
    * @param absoluteFile
    * @return the relative path from absoluteFile to basedir
    */
-  public static String getRelativePathTo( final File basedir,
-      final File absoluteFile )
+  public static String getRelativePathTo( final File basedir, final File absoluteFile )
   {
     final String baseAbs = basedir.getAbsolutePath();
     final String absAbs = absoluteFile.getAbsolutePath();
     if( !absAbs.startsWith( baseAbs ) )
       return null;
 
-    final String rel = absAbs.length() == baseAbs.length() ? "" : absAbs
-        .substring( baseAbs.length() );
+    final String rel = absAbs.length() == baseAbs.length() ? "" : absAbs.substring( baseAbs
+        .length() );
 
     return rel;
   }
@@ -264,6 +263,7 @@ public class FileUtilities
   /**
    * Returns true if childCandidate is stored under the path of parent, either
    * directly or in a sub directory.
+   * 
    * @param parent
    * @param childCandidate
    * @return true if childCandidate is a child of the given parent.
@@ -281,5 +281,14 @@ public class FileUtilities
     }
 
     return false;
+  }
+
+  public static String getSuffix( final File file )
+  {
+    final String name = file.getAbsolutePath();
+    final String[] strings = name.split( "." );
+    if( strings.length != 0 )
+      return strings[strings.length - 1];
+    return null;
   }
 }
