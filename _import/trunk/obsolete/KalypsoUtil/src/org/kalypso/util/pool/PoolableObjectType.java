@@ -55,7 +55,7 @@ public class PoolableObjectType implements IPoolableObjectType
   {
     if( !( obj instanceof IPoolableObjectType ) )
       return false;
-    IPoolableObjectType other = (IPoolableObjectType)obj;
+    final IPoolableObjectType other = (IPoolableObjectType)obj;
     if( !getType().equals( other.getType() ) )
       return false;
     if( !getSource().equals( other.getSource() ) )
