@@ -60,6 +60,7 @@ import org.deegree_impl.services.wfs.filterencoding.ComplexFilter;
 import org.deegree_impl.services.wfs.filterencoding.Literal;
 import org.deegree_impl.services.wfs.filterencoding.LogicalOperation;
 import org.deegree_impl.services.wfs.filterencoding.OperationDefines;
+import org.deegree_impl.services.wfs.filterencoding.PropertyIsBetweenOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyIsCOMPOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyIsLikeOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyName;
@@ -210,7 +211,7 @@ public class LegendFactory
    * @param width
    * @param height
    * @return @throws
-   *         LegendException
+   *                LegendException
    */
   public BufferedImage[] createAllThumbnails( StyledLayerDescriptor sld, int width, int height )
       throws LegendException
@@ -290,7 +291,7 @@ public class LegendFactory
    * 
    * @param operation
    * @return @throws
-   *         LegendException
+   *                LegendException
    */
   private String getPropertyNameFromOperation( Operation operation ) throws LegendException
   {
@@ -392,6 +393,13 @@ public class LegendFactory
           + getOperationString( prilop.getOperatorId() ) + prilop.getLiteral().getValue();
       // LOGICAL
     }
+    else if( operation instanceof PropertyIsBetweenOperation )
+    {
+      PropertyIsBetweenOperation propIsbetween = (PropertyIsBetweenOperation)operation;
+      legendlabel = propIsbetween.getPropertyName().getValue()
+          + getOperationString( propIsbetween.getOperatorId() ) + propIsbetween.getLowerBoundary()
+          + propIsbetween.getUpperBoundary();
+    }
     else
     {
       System.out.println( operation );
@@ -461,7 +469,7 @@ public class LegendFactory
    * sets the label of the <tt>LegendElement</tt>
    * 
    * @param label
-   *          label of the <tt>LegendElement</tt>
+   *                   label of the <tt>LegendElement</tt>
    */
   public void setLabel( String label )
   {
@@ -502,7 +510,7 @@ public class LegendFactory
 
   /**
    * @return private String getLegendTitleFilterProperty() { return
-   *         legendtitlefilterproperty; }
+   *                legendtitlefilterproperty; }
    */
 
   /**

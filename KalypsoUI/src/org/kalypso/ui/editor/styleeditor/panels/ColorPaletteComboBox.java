@@ -9,16 +9,17 @@ import org.eclipse.swt.widgets.Composite;
  * @author F.Lindemann
  *  
  */
-public class LogicalFilterComboPanel extends FilterComboPanel
+public class ColorPaletteComboBox extends FilterComboPanel
 {
 
-  public LogicalFilterComboPanel( Composite parent )
+  public ColorPaletteComboBox( Composite parent )
   {
     super( parent );
-    items = new String[3];
-    items[0] = "AND";
-    items[1] = "OR";
-    items[2] = "NOT";
+    items = new String[4];
+    items[0] = "RedGreen";
+    items[1] = "BlueGreen";
+    items[2] = "RedBlue";
+    items[3] = "Custom";
     init();
   }
 
@@ -30,7 +31,7 @@ public class LogicalFilterComboPanel extends FilterComboPanel
   /*
    * (non-Javadoc)
    * 
-   * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
+   * @see org.kalypso.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
   public void setSelection( int index )
   {

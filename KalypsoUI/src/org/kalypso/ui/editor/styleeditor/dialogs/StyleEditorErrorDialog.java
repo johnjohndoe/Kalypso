@@ -6,26 +6,31 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * @author Administrator
- *
+ * @author F.Lindemann
+ *  
  */
-public class StyleEditorErrorDialog {
-  
+public class StyleEditorErrorDialog
+{
+
   private IStatus status = null;
+
   private String message = null;
+
   private Shell shell = null;
+
   private final String STYLE_EDITOR_PLUGIN_ID = "org.kalypso.editor.mapeditor.views.styleeditor";
-  private final String TITLE ="Error - StyleEditor";
-  
-  public StyleEditorErrorDialog(Shell shell, String message, String reason)
+
+  private final String TITLE = "Error - StyleEditor";
+
+  public StyleEditorErrorDialog( Shell m_shell, String m_message, String reason )
   {
-    this.message = message;
-    status = new Status(IStatus.ERROR,STYLE_EDITOR_PLUGIN_ID,0,reason, null);   
-    this.shell = shell;
+    this.message = m_message;
+    status = new Status( IStatus.ERROR, STYLE_EDITOR_PLUGIN_ID, 0, reason, null );
+    this.shell = m_shell;
   }
-  
+
   public void showError()
   {
-    ErrorDialog.openError(shell, TITLE,message,status);
+    ErrorDialog.openError( shell, TITLE, message, status );
   }
 }

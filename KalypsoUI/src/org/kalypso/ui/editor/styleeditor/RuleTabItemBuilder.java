@@ -1,6 +1,6 @@
 /*
  * Created on 12.07.2004
- *  
+ *
  */
 package org.kalypso.ui.editor.styleeditor;
 
@@ -35,10 +35,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.kalypso.editor.styleeditor.RuleCollection;
-import org.kalypso.editor.styleeditor.RuleFilterCollection;
-import org.kalypso.editor.styleeditor.panels.ColorPalettePanel;
-import org.kalypso.editor.styleeditor.panels.RulePatternInputPanel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
@@ -46,17 +42,22 @@ import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialogEvent;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialogListener;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterencoding.BoundaryExpression;
+import org.kalypso.ui.editor.styleeditor.panels.AddPatternPanel;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
+import org.kalypso.ui.editor.styleeditor.panels.ColorPalettePanel;
 import org.kalypso.ui.editor.styleeditor.panels.DenominatorInputPanel;
 import org.kalypso.ui.editor.styleeditor.panels.EditSymbolizerPanel;
 import org.kalypso.ui.editor.styleeditor.panels.LegendLabel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
+import org.kalypso.ui.editor.styleeditor.panels.RulePatternInputPanel;
 import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
+import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
+import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
 
 /**
- * @author Administrator
- *  
+ * @author F.Lindemann
+ *
  */
 public class RuleTabItemBuilder
 {
@@ -79,13 +80,13 @@ public class RuleTabItemBuilder
 
   private RuleFilterCollection rulePatternCollection = null;
 
-  public RuleTabItemBuilder( Composite composite, RuleFilterCollection rulePatternCollection,
-      KalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme )
+  public RuleTabItemBuilder( Composite composite, RuleFilterCollection m_rulePatternCollection,
+      KalypsoUserStyle m_userStyle, final IKalypsoFeatureTheme theme )
   {
-    this.userStyle = userStyle;
+    this.userStyle = m_userStyle;
     if( theme != null )
       this.featureType = theme.getFeatureType();
-    this.rulePatternCollection = rulePatternCollection;
+    this.rulePatternCollection = m_rulePatternCollection;
     globalComposite = new Composite( composite, SWT.NULL );
   }
 
@@ -133,7 +134,6 @@ public class RuleTabItemBuilder
   {
     if( ruleTabFolder != null )
       return ruleTabFolder.getSelectionIndex();
-
     return -1;
   }
 
@@ -183,31 +183,10 @@ public class RuleTabItemBuilder
         else
         {
           rule.setTitle( title );
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          getUserStyle().fireModellEvent(
+              new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
         }
-        focusedRuleItem = ruleTabFolder.getSelectionIndex();
-      }
-    } );
-
-    TextInputPanel nameInputPanel = new TextInputPanel( composite, "Name:", rule.getName() );
-    nameInputPanel.addPanelListener( new PanelListener()
-    {
-      public void valueChanged( PanelEvent event )
-      {
-        String name = ( (TextInputPanel)event.getSource() ).getLabelText();
-        if( name == null || name.trim().length() == 0 )
-        {
-          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
-              "Invalid input value", "Name should not be null" );
-          errorDialog.showError();
-          titleInputPanel.setInputText( rule.getTitle() );
-        }
-        else
-        {
-          rule.setName( name );
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
-        }
-        focusedRuleItem = ruleTabFolder.getSelectionIndex();
+        setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
       }
     } );
 
@@ -232,13 +211,14 @@ public class RuleTabItemBuilder
         {
           rule.setMinScaleDenominator( min );
           Symbolizer symbolizers[] = rule.getSymbolizers();
-          for( int i = 0; i < symbolizers.length; i++ )
+          for( int counter2 = 0; counter2 < symbolizers.length; counter2++ )
           {
-            symbolizers[i].setMinScaleDenominator( min );
+            symbolizers[counter2].setMinScaleDenominator( min );
           }
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          getUserStyle().fireModellEvent(
+              new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
         }
-        focusedRuleItem = ruleTabFolder.getSelectionIndex();
+        setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
       }
     } );
 
@@ -279,22 +259,24 @@ public class RuleTabItemBuilder
           max += 0.01;
           rule.setMaxScaleDenominator( max );
           Symbolizer symbolizers[] = rule.getSymbolizers();
-          for( int i = 0; i < symbolizers.length; i++ )
+          for( int counter3 = 0; counter3 < symbolizers.length; counter3++ )
           {
-            symbolizers[i].setMaxScaleDenominator( max );
+            symbolizers[counter3].setMaxScaleDenominator( max );
           }
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          getUserStyle().fireModellEvent(
+              new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
         }
-        focusedRuleItem = ruleTabFolder.getSelectionIndex();
+        setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
       }
     } );
 
     AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite, "Symbolizer:",
         featureType );
+    
     EditSymbolizerPanel editSymbolizerPanel = new EditSymbolizerPanel( composite, rule
         .getSymbolizers().length );
 
-    LegendLabel legendLabel = new LegendLabel( composite, userStyle, i );
+    new LegendLabel( composite, userStyle, i );
 
     symbolizerTabFolder = new TabFolder( composite, SWT.NULL );
 
@@ -312,9 +294,10 @@ public class RuleTabItemBuilder
             Symbolizer s[] = rule.getSymbolizers();
             rule.removeSymbolizer( s[index] );
             symbolizerTabFolder.getItem( index ).dispose();
-            focusedSymbolizerItem = index;
-            focusedRuleItem = ruleTabFolder.getSelectionIndex();
-            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+            setFocusedSymbolizerItem( index );
+            setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
+            getUserStyle().fireModellEvent(
+                new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
           }
           draw();
         }
@@ -322,23 +305,24 @@ public class RuleTabItemBuilder
         {
           int index = symbolizerTabFolder.getSelectionIndex();
           if( index == ( rule.getSymbolizers().length - 1 ) || index < 0 )
-          {}
+          {/**/}
           else
           {
             Symbolizer newOrderedObjects[] = new Symbolizer[rule.getSymbolizers().length];
-            for( int i = 0; i < rule.getSymbolizers().length; i++ )
+            for( int counter4 = 0; counter4 < rule.getSymbolizers().length; counter4++ )
             {
-              if( i == index )
-                newOrderedObjects[i] = rule.getSymbolizers()[i + 1];
-              else if( i == ( index + 1 ) )
-                newOrderedObjects[i] = rule.getSymbolizers()[i - 1];
+              if( counter4 == index )
+                newOrderedObjects[counter4] = rule.getSymbolizers()[counter4 + 1];
+              else if( counter4 == ( index + 1 ) )
+                newOrderedObjects[counter4] = rule.getSymbolizers()[counter4 - 1];
               else
-                newOrderedObjects[i] = rule.getSymbolizers()[i];
+                newOrderedObjects[counter4] = rule.getSymbolizers()[counter4];
             }
             rule.setSymbolizers( newOrderedObjects );
-            focusedSymbolizerItem = index + 1;
-            focusedRuleItem = ruleTabFolder.getSelectionIndex();
-            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+            setFocusedSymbolizerItem( index + 1 );
+            setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
+            getUserStyle().fireModellEvent(
+                new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
             draw();
           }
         }
@@ -349,19 +333,20 @@ public class RuleTabItemBuilder
           if( index > 0 )
           {
             Symbolizer newOrderedObjects[] = new Symbolizer[rule.getSymbolizers().length];
-            for( int i = 0; i < rule.getSymbolizers().length; i++ )
+            for( int counter5 = 0; counter5 < rule.getSymbolizers().length; counter5++ )
             {
-              if( i == index )
-                newOrderedObjects[i] = rule.getSymbolizers()[i - 1];
-              else if( i == ( index - 1 ) )
-                newOrderedObjects[i] = rule.getSymbolizers()[i + 1];
+              if( counter5 == index )
+                newOrderedObjects[counter5] = rule.getSymbolizers()[counter5 - 1];
+              else if( counter5 == ( index - 1 ) )
+                newOrderedObjects[counter5] = rule.getSymbolizers()[counter5 + 1];
               else
-                newOrderedObjects[i] = rule.getSymbolizers()[i];
+                newOrderedObjects[counter5] = rule.getSymbolizers()[counter5];
             }
             rule.setSymbolizers( newOrderedObjects );
-            focusedSymbolizerItem = index - 1;
-            focusedRuleItem = ruleTabFolder.getSelectionIndex();
-            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+            setFocusedSymbolizerItem( index - 1 );
+            setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
+            getUserStyle().fireModellEvent(
+                new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
             draw();
           }
         }
@@ -373,12 +358,13 @@ public class RuleTabItemBuilder
       public void valueChanged( PanelEvent event )
       {
         Symbolizer symbolizer = ( (AddSymbolizerPanel)event.getSource() ).getSelection();
-        if( symbolizer instanceof Symbolizer )
+        if( symbolizer != null )
         {
           rule.addSymbolizer( symbolizer );
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
-          focusedRuleItem = ruleTabFolder.getSelectionIndex();
-          focusedSymbolizerItem = rule.getSymbolizers().length - 1;
+          getUserStyle().fireModellEvent(
+              new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+          setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
+          setFocusedSymbolizerItem( rule.getSymbolizers().length - 1 );
           draw();
         }
       }
@@ -394,14 +380,15 @@ public class RuleTabItemBuilder
     {
       public void filterUpdated( FilterDialogEvent event )
       {
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        getUserStyle()
+            .fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
       }
     } );
     button.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
       {
-        int returnCode = filterDialog.open();
+        filterDialog.open();
       }
 
       public void widgetDefaultSelected( SelectionEvent e )
@@ -431,6 +418,16 @@ public class RuleTabItemBuilder
       symbolizerTabFolder.setSelection( focusedSymbolizerItem );
 
     composite.pack( true );
+  }
+
+  public KalypsoUserStyle getUserStyle()
+  {
+    return userStyle;
+  }
+
+  public void setUserStyle( KalypsoUserStyle m_userStyle )
+  {
+    this.userStyle = m_userStyle;
   }
 
   // -----------------------------------
@@ -471,8 +468,8 @@ public class RuleTabItemBuilder
 
     final TabFolder symbolizerTabFolder;
 
-    TextInputPanel nameInputPanel = new TextInputPanel( composite, "Name:", rulePatternName );
-    nameInputPanel.addPanelListener( new PanelListener()
+    TextInputPanel titleInputPanel = new TextInputPanel( composite, "Title:", rulePatternName );
+    titleInputPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
@@ -480,16 +477,19 @@ public class RuleTabItemBuilder
         if( name == null || name.trim().length() == 0 )
         {
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
-              "Invalid input value", "Name should not be null" );
+              "Invalid input value", "Title should not be null" );
           errorDialog.showError();
         }
         else
         {
-          for( int counter = 0; counter < ruleCollection.size(); counter++ )
-            ruleCollection.get( counter ).setName( name );
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          for( int counter6 = 0; counter6 < ruleCollection.size(); counter6++ )
+          {
+            ruleCollection.get( counter6 ).setTitle( name );
+          }
+          getUserStyle().fireModellEvent(
+              new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
         }
-        focusedRuleItem = ruleTabFolder.getSelectionIndex();
+        setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
       }
     } );
 
@@ -512,18 +512,19 @@ public class RuleTabItemBuilder
         }
         else
         {
-          for( int counter = 0; counter < ruleCollection.size(); counter++ )
+          for( int counter7 = 0; counter7 < ruleCollection.size(); counter7++ )
           {
-            ruleCollection.get( counter ).setMinScaleDenominator( min );
-            Symbolizer symbolizers[] = ruleCollection.get( counter ).getSymbolizers();
+            ruleCollection.get( counter7 ).setMinScaleDenominator( min );
+            Symbolizer symbolizers[] = ruleCollection.get( counter7 ).getSymbolizers();
             for( int i = 0; i < symbolizers.length; i++ )
             {
               symbolizers[i].setMinScaleDenominator( min );
             }
           }
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          getUserStyle().fireModellEvent(
+              new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
         }
-        focusedRuleItem = ruleTabFolder.getSelectionIndex();
+        setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
       }
     } );
 
@@ -562,18 +563,19 @@ public class RuleTabItemBuilder
           // to keep the current view -> otherwise the rule would automatically
           // exculde this configuration
           max += 0.01;
-          for( int counter = 0; counter < ruleCollection.size(); counter++ )
+          for( int counter8 = 0; counter8 < ruleCollection.size(); counter8++ )
           {
-            ruleCollection.get( counter ).setMaxScaleDenominator( max );
-            Symbolizer symbolizers[] = ruleCollection.get( counter ).getSymbolizers();
+            ruleCollection.get( counter8 ).setMaxScaleDenominator( max );
+            Symbolizer symbolizers[] = ruleCollection.get( counter8 ).getSymbolizers();
             for( int i = 0; i < symbolizers.length; i++ )
             {
               symbolizers[i].setMaxScaleDenominator( max );
             }
           }
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          getUserStyle().fireModellEvent(
+              new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
         }
-        focusedRuleItem = ruleTabFolder.getSelectionIndex();
+        setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
       }
     } );
 
@@ -617,7 +619,6 @@ public class RuleTabItemBuilder
                     .getLowerBoundary() ).getValue() );
                 double tmpMaxValue = Double.parseDouble( ( (BoundaryExpression)isBetweenOperation
                     .getUpperBoundary() ).getValue() );
-                double tmpStep = tmpMaxValue - tmpMinValue;
                 if( tmpMinValue < minValue )
                   minValue = tmpMinValue;
                 if( tmpMaxValue > maxValue )
@@ -646,21 +647,21 @@ public class RuleTabItemBuilder
             // TODO ID hardgecodet
             PropertyName propertyName = new PropertyName( "ID" );
             PropertyIsBetweenOperation operation = null;
-            //						TODO ID hardgecodet
-            String[] geometryObjects = AddSymbolizerPanel.getGeometries( featureType );
+            //            TODO ID hardgecodet
+            String[] geometryObjects = AddSymbolizerPanel.getGeometries( getFeatureType() );
             if( geometryObjects.length > 0 )
             {
               // I choose to use a ploygon-symbolier hopeing that it works
               Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( geometryObjects[0], "Polygon",
-                  featureType );
+                  getFeatureType() );
               Geometry geom = symbo.getGeometry();
 
               String patternTitle = ruleCollection.get( 0 ).getTitle();
+              int colorCounter = (int)Math.ceil( ( maxValue - minValue ) / step );
+              colorPalettePanel.initializeColors( colorPalettePanel.getType(), colorCounter );
+              colorArray = colorPalettePanel.getColorPalette();
 
-              int counter = (int)Math.ceil( ( maxValue - minValue ) / step );
-              colorArray = ColorPalettePanel.initializeColors(
-                  ColorPalettePanel.BLUE_GREEN_TRANSITION, counter );
-              for( int i = 0; i < counter; i++ )
+              for( int i = 0; i < colorCounter; i++ )
               {
                 lowerBoundary = new BoundaryExpression( "" + ( minValue + ( i * step ) ) );
                 if( ( minValue + ( ( i + 1 ) * step ) ) > maxValue )
@@ -686,21 +687,22 @@ public class RuleTabItemBuilder
             int collSize = ruleCollection.size() - 1;
             for( int i = collSize; i >= 0; i-- )
             {
-              removeRule( ruleCollection.get( i ), userStyle );
-              rulePatternCollection.removeRule( ruleCollection.get( i ) );
+              removeRule( ruleCollection.get( i ), getUserStyle() );
+              getRulePatternCollection().removeRule( ruleCollection.get( i ) );
             }
 
             // add new ones
             for( int j = 0; j < ruleList.size(); j++ )
             {
-              rulePatternCollection.addRule( (Rule)ruleList.get( j ) );
-              userStyle.getFeatureTypeStyles()[0].addRule( (Rule)ruleList.get( j ) );
+              getRulePatternCollection().addRule( (Rule)ruleList.get( j ) );
+              getUserStyle().getFeatureTypeStyles()[0].addRule( (Rule)ruleList.get( j ) );
             }
             // update ColorPalettePanel
             colorPalettePanel.setColorPalette( colorArray );
             // update
             draw();
-            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+            getUserStyle().fireModellEvent(
+                new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
           }
         } );
       }
@@ -708,57 +710,112 @@ public class RuleTabItemBuilder
     else
       return;
 
-    //		AddSymbolizerPanel addSymbolizerPanel = new
+    //    AddSymbolizerPanel addSymbolizerPanel = new
     // AddSymbolizerPanel(composite,"Symbolizer:",featureType);
-    //		addSymbolizerPanel.addPanelListener(new PanelListener() {
-    //			public void valueChanged(PanelEvent event) {
-    //				Symbolizer symbolizer =
+    //    addSymbolizerPanel.addPanelListener(new PanelListener() {
+    //      public void valueChanged(PanelEvent event) {
+    //        Symbolizer symbolizer =
     // ((AddSymbolizerPanel)event.getSource()).getSelection();
-    //				if(symbolizer instanceof Symbolizer)
-    //				{
+    //        if(symbolizer instanceof Symbolizer)
+    //        {
     //// rule.addSymbolizer(symbolizer);
     //// userStyle.fireModellEvent(new ModellEvent(userStyle,
     // ModellEvent.STYLE_CHANGE));
     //// focusedRuleItem = ruleTabFolder.getSelectionIndex();
     //// focusedSymbolizerItem = rule.getSymbolizers().length-1;
     //// draw();
-    //				}
-    //			}
-    //		});
+    //        }
+    //      }
+    //    });
 
     int numberOfColors = (int)Math.ceil( ( maxValue - minValue ) / step );
     if( colorPalettePanel == null )
+    {
       colorPalettePanel = new ColorPalettePanel( composite, colorArray, numberOfColors );
+      colorPalettePanel.addColorPalettePanelListener( new PanelListener()
+      {
+        public void valueChanged( PanelEvent event )
+        {
+          colorArray = colorPalettePanel.getColorPalette();
+          for( int i = 0; i < ruleCollection.size(); i++ )
+          {
+            Symbolizer[] symb = ruleCollection.get( i ).getSymbolizers();
+            for( int j = 0; j < symb.length; j++ )
+            {
+              if( symb[j] instanceof PolygonSymbolizer )
+              {
+                ( (PolygonSymbolizer)symb[j] ).setFill( StyleFactory
+                    .createFill( new java.awt.Color( colorArray[i].getRed(), colorArray[i]
+                        .getGreen(), colorArray[i].getBlue() ) ) );
+              }
+            }
+          }
+          draw();
+          getUserStyle().fireModellEvent(
+              new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+        }
+      } );
+    }
     else
       colorPalettePanel.draw( composite );
-    colorPalettePanel.addColorPalettePanelListener( new PanelListener()
-    {
-      public void valueChanged( PanelEvent event )
-      {
-        colorArray = colorPalettePanel.getColorPalette();
-        for( int i = 0; i < ruleCollection.size(); i++ )
-        {
-          Symbolizer[] symb = ruleCollection.get( i ).getSymbolizers();
-          for( int j = 0; j < symb.length; j++ )
-          {
-            if( symb[j] instanceof PolygonSymbolizer )
-              ( (PolygonSymbolizer)symb[j] ).setFill( StyleFactory.createFill( new java.awt.Color(
-                  colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) ) );
-          }
-        }
-        draw();
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
-      }
-    } );
 
     focusedRuleItem = index;
     composite.pack( true );
   }
 
-  private void removeRule( Rule rule, UserStyle style )
+  void removeRule( Rule rule, UserStyle style )
   {
     FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
     fts[0].removeRule( rule );
   }
 
+  public int getFocusedRuleItem()
+  {
+    return focusedRuleItem;
+  }
+
+  public void setFocusedRuleItem( int m_focusedRuleItem )
+  {
+    this.focusedRuleItem = m_focusedRuleItem;
+  }
+
+  public TabFolder getRuleTabFolder()
+  {
+    return ruleTabFolder;
+  }
+
+  public void setRuleTabFolder( TabFolder m_ruleTabFolder )
+  {
+    this.ruleTabFolder = m_ruleTabFolder;
+  }
+
+  public int getFocusedSymbolizerItem()
+  {
+    return focusedSymbolizerItem;
+  }
+
+  public void setFocusedSymbolizerItem( int m_focusedSymbolizerItem )
+  {
+    this.focusedSymbolizerItem = m_focusedSymbolizerItem;
+  }
+
+  public RuleFilterCollection getRulePatternCollection()
+  {
+    return rulePatternCollection;
+  }
+
+  public void setRulePatternCollection( RuleFilterCollection m_rulePatternCollection )
+  {
+    this.rulePatternCollection = m_rulePatternCollection;
+  }
+
+  public FeatureType getFeatureType()
+  {
+    return featureType;
+  }
+
+  public void setFeatureType( FeatureType m_featureType )
+  {
+    this.featureType = m_featureType;
+  }
 }

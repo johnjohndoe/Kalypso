@@ -351,7 +351,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public int getHeight()
   {
-    return this.width;
+    return this.height;
   }
 
   /**

@@ -1,7 +1,6 @@
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
 import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -11,32 +10,34 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 
 /**
- * @author Administrator
- *
+ * @author F.Lindemann
+ *  
  */
 
-public class RasterSymbolizerLayout extends SymbolizerLayout{ 
-  
-  public RasterSymbolizerLayout(Composite composite, Symbolizer symbolizer, KalypsoUserStyle userStyle)
+public class RasterSymbolizerLayout extends SymbolizerLayout
+{
+
+  public RasterSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer,
+      KalypsoUserStyle m_userStyle )
   {
-    super(composite,symbolizer,userStyle);
+    super( m_composite, m_symbolizer, m_userStyle );
   }
-  
-  public void draw() throws FilterEvaluationException
-  {     
-    GridLayout compositeLayout = new GridLayout();    
-    compositeLayout.marginHeight = 2; 
-        
+
+  public void draw()
+  {
+    GridLayout compositeLayout = new GridLayout();
+    compositeLayout.marginHeight = 2;
+
     // ***** Label Group
-    Group labelGroup = new Group(composite,SWT.NULL);   
+    Group labelGroup = new Group( composite, SWT.NULL );
     GridData labelGroupData = new GridData();
     labelGroupData.widthHint = 210;
-    labelGroupData.heightHint = 298;  
-    labelGroup.setLayoutData(labelGroupData);     
-    labelGroup.setLayout(compositeLayout);
+    labelGroupData.heightHint = 298;
+    labelGroup.setLayoutData( labelGroupData );
+    labelGroup.setLayout( compositeLayout );
     labelGroup.layout();
-    
-    Label label = new Label(labelGroup,SWT.NULL);
-    label.setText("Not implemented yet");
-  } 
+
+    Label label = new Label( labelGroup, SWT.NULL );
+    label.setText( "Not implemented yet" );
+  }
 }

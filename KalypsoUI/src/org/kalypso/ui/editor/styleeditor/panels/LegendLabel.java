@@ -30,113 +30,152 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 
 /**
- * @author Administrator
- *
+ * @author F.Lindemann
+ *  
  */
-public  class LegendLabel implements ModellEventListener, DisposeListener
+public class LegendLabel implements ModellEventListener, DisposeListener
 {
   private Label label = null;
+
   private KalypsoUserStyle userStyle = null;
+
   private int ruleIndex = -1;
+
   private Composite composite = null;
-  
-  public LegendLabel(Composite parent, KalypsoUserStyle userStyle)
+
+  public LegendLabel( Composite parent, KalypsoUserStyle m_userStyle )
   {
-    new LegendLabel(parent, userStyle, -1); 
+    new LegendLabel( parent, m_userStyle, -1 );
   }
-  
-  public LegendLabel(Composite parent, KalypsoUserStyle userStyle, int i)
-  {   
-    composite = new Composite(parent, SWT.NULL);
+
+  public LegendLabel( Composite parent, KalypsoUserStyle m_userStyle, int i )
+  {
+    composite = new Composite( parent, SWT.NULL );
     FormLayout compositeLayout = new FormLayout();
     GridData compositeData = new GridData();
     compositeData.widthHint = 180;
-    composite.setLayoutData(compositeData);     
-    composite.setLayout(compositeLayout);           
+    composite.setLayoutData( compositeData );
+    composite.setLayout( compositeLayout );
     compositeLayout.marginWidth = 0;
     compositeLayout.marginHeight = 0;
     compositeLayout.spacing = 0;
-    composite.layout();                   
-  
-    Label legendLabel = new Label(composite,SWT.NULL);          
+    composite.layout();
+
+    Label legendLabel = new Label( composite, SWT.NULL );
     FormData legendLabelData = new FormData();
     legendLabelData.height = 15;
     legendLabelData.width = 35;
-    legendLabelData.left =  new FormAttachment(0, 1000, 0);   
-    legendLabelData.top =  new FormAttachment(150, 1000, 0);
-    legendLabel.setLayoutData(legendLabelData); 
-    legendLabel.setText("Legend:");                     
-          
-    label = new Label(composite, SWT.NULL);
-    FormData labelData = new FormData();          
-    labelData.left =  new FormAttachment(340, 1000, 0);
-    labelData.top =  new FormAttachment(0, 1000, 0);
+    legendLabelData.left = new FormAttachment( 0, 1000, 0 );
+    legendLabelData.top = new FormAttachment( 150, 1000, 0 );
+    legendLabel.setLayoutData( legendLabelData );
+    legendLabel.setText( "Legend:" );
+
+    setLabel( new Label( composite, SWT.NULL ) );
+    FormData labelData = new FormData();
+    labelData.left = new FormAttachment( 340, 1000, 0 );
+    labelData.top = new FormAttachment( 0, 1000, 0 );
     labelData.width = 41;
-    label.setLayoutData(labelData);
-    
-    ruleIndex = i;
-    
-    this.userStyle = userStyle;
-    label.addDisposeListener(this);
-    setLegendImage(label, userStyle);             
-    userStyle.addModellListener(this);            
+    getLabel().setLayoutData( labelData );
+
+    setRuleIndex( i );
+    setUserStyle( m_userStyle );
+    getLabel().addDisposeListener( this );
+    setLegendImage( getLabel(), m_userStyle );
+    m_userStyle.addModellListener( this );
   }
-  
-  public void onModellChange(ModellEvent modellEvent) {
-    setLegendImage(label, (UserStyle)modellEvent.getEventSource());     
+
+  public void onModellChange( ModellEvent modellEvent )
+  {
+    setLegendImage( getLabel(), (UserStyle)modellEvent.getEventSource() );
   }
-  
-  
-  private void setLegendImage(Label label, UserStyle userStyle)
+
+  private void setLegendImage( Label m_label, UserStyle m_userStyle )
   {
     LegendFactory factory = new LegendFactory();
-    try {
+    try
+    {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       LegendElement le = null;
-      
-      if(ruleIndex != -1 && ruleIndex < userStyle.getFeatureTypeStyles()[0].getRules().length)
-      {   
+
+      if( ruleIndex != -1 && ruleIndex < m_userStyle.getFeatureTypeStyles()[0].getRules().length )
+      {
         // NECESSARY IF TO SHOW STYLE OF ONLY ONE RULE
-                FeatureTypeStyle_Impl fts = new FeatureTypeStyle_Impl();               
-                Rule rule = userStyle.getFeatureTypeStyles()[0].getRules()[ruleIndex];
-                Rule m_rules[] = { rule };
-                fts.setRules(m_rules);
-                FeatureTypeStyle_Impl[] ftStyles = {fts};
-        UserStyle ruleStyle = new UserStyle_Impl(null,null,null,true,ftStyles);                     
-        le = factory.createLegendElement(ruleStyle,40,20,"");
-        // This is necessary, as I don't want title of the filter to appear in the label but only 
+        FeatureTypeStyle_Impl fts = new FeatureTypeStyle_Impl();
+        Rule rule = m_userStyle.getFeatureTypeStyles()[0].getRules()[ruleIndex];
+        Rule m_rules[] =
+        { rule };
+        fts.setRules( m_rules );
+        FeatureTypeStyle_Impl[] ftStyles =
+        { fts };
+        UserStyle ruleStyle = new UserStyle_Impl( null, null, null, true, ftStyles );
+        le = factory.createLegendElement( ruleStyle, 40, 20, "" );
+        // This is necessary, as I don't want title of the filter to appear in
+        // the label but only
         // an image of the filter itself
-        if(le instanceof LegendElementCollection)
+        if( le instanceof LegendElementCollection )
         {
-          LegendElement elements[] = ((LegendElementCollection_Impl)le).getLegendElements();
-          if(elements.length>0)
+          LegendElement elements[] = ( (LegendElementCollection_Impl)le ).getLegendElements();
+          if( elements.length > 0 )
             le = elements[0];
-        }       
+        }
       }
       else
       {
-        le = factory.createLegendElement(userStyle,40,20,"");       
+        le = factory.createLegendElement( m_userStyle, 40, 20, "" );
       }
-      
-      if(le == null)
+
+      if( le == null )
         return;
-      BufferedImage bi = le.exportAsImage();  
-      BufferedImage outbi = new BufferedImage(40,20, BufferedImage.TYPE_INT_ARGB);        
+      BufferedImage bi = le.exportAsImage();
+      BufferedImage outbi = new BufferedImage( 40, 20, BufferedImage.TYPE_INT_ARGB );
       Graphics g = outbi.getGraphics();
-      g.drawImage(bi, 0, 0,Color.WHITE,null);       
-      Encoders.encodeGif(outputStream, outbi);      
-      ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());      
-      Image img = new Image(null,inputStream);
+      g.drawImage( bi, 0, 0, Color.WHITE, null );
+      Encoders.encodeGif( outputStream, outbi );
+      ByteArrayInputStream inputStream = new ByteArrayInputStream( outputStream.toByteArray() );
+      Image img = new Image( null, inputStream );
       inputStream.read();
       inputStream.close();
-      outputStream.close();       
-      label.setImage(img);      
-    } catch (Exception e1) {
+      outputStream.close();
+      m_label.setImage( img );
+    }
+    catch( Exception e1 )
+    {
       e1.printStackTrace();
-    }           
+    }
   }
 
-  public void widgetDisposed(DisposeEvent e) {
-    userStyle.removeModellListener(this);     
-  }   
+  public void widgetDisposed( DisposeEvent e )
+  {
+    getUserStyle().removeModellListener( this );
+  }
+
+  public Label getLabel()
+  {
+    return label;
+  }
+
+  public void setLabel( Label m_label )
+  {
+    this.label = m_label;
+  }
+
+  public int getRuleIndex()
+  {
+    return ruleIndex;
+  }
+
+  public void setRuleIndex( int m_ruleIndex )
+  {
+    this.ruleIndex = m_ruleIndex;
+  }
+
+  public KalypsoUserStyle getUserStyle()
+  {
+    return userStyle;
+  }
+
+  public void setUserStyle( KalypsoUserStyle m_userStyle )
+  {
+    this.userStyle = m_userStyle;
+  }
 }
