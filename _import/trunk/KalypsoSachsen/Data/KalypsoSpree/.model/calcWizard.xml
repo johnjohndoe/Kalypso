@@ -8,7 +8,7 @@
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
 
-        <arg name="mainSash" value="50"/>
+        <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="1"/>
         <arg name="zmlTableShow" value="all"/>
@@ -20,7 +20,7 @@
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Talsperrenabgaben" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>
 
-        <arg name="mainSash" value="50"/>
+        <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="4"/>
         <arg name="zmlTableShow" value="all"/>
@@ -31,7 +31,7 @@
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
 
-        <arg name="mainSash" value="50"/>
+        <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="2"/>
         <arg name="zmlTableShow" value="all"/>
@@ -44,7 +44,7 @@
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/flusslauf.gmt"/>
 
-        <arg name="mainSash" value="50"/>
+        <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="2"/>
         <arg name="zmlTableShow" value="all"/>
@@ -57,7 +57,7 @@
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Flutungen und Zuflüsse" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/vorgabepegel.gmt"/>
 
-        <arg name="mainSash" value="50"/>
+        <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="16"/>
         <arg name="zmlTableShow" value="all"/>
@@ -98,8 +98,8 @@
         <arg name="tableTemplate" value=".templates/calcCase/talsperren.gtt"/>
         <arg name="diagTemplate" value=".templates/calcCase/talsperren.odt"/>
 
-        <arg name="mainSash" value="50"/>
-        <arg name="rightSash" value="40"/>
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="30"/>
         <arg name="selectionID" value="64"/>
 
         <arg name="ignoreType1" value="V"/>
@@ -131,8 +131,8 @@
         <arg name="timeserie3" 
         	value="nameColumn=Name#linkColumn=Wasserstand_vorhersage#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
 
-        <arg name="mainSash" value="50"/>
-        <arg name="rightSash" value="40"/>
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="30"/>
         <arg name="selectionID" value="128"/>
     </page>
 
@@ -164,8 +164,8 @@
 		<arg name="resultProperty" value="Wasserstand_vorhersage"/>
 		<arg name="prognoseProperty" value="Wasserstand_vorhersageAblage"/>
 
-	   	<arg name="mainSash" value="50"/>
-	   	<arg name="rightSash" value="40"/>
+	   	<arg name="mainSash" value="40"/>
+	   	<arg name="rightSash" value="25"/>
 	   	<arg name="selectionID" value="256"/>
 
 	   	<arg name="exporter1" value="class=org.kalypso.ui.calcwizard.bericht.MapExporter;name=Karte"/>

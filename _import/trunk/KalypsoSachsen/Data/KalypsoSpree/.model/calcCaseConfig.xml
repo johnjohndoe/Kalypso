@@ -7,7 +7,7 @@
 		</transformation>
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.templates/steuerparameter.gft"/>
-			<argument name="output" value=":calcdir:steuerparameter.gft"/>
+			<argument name="output" value=":calcdir:Steuerparameter.gft"/>
 		</transformation>
 
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
@@ -28,7 +28,7 @@
 		</transformation>
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.templates/Diagramm.odt"/>
-			<argument name="output" value=":calcdir:zeitreihen/Diagramm.odt"/>
+			<argument name="output" value=":calcdir:Zeitreihen/Diagramm.odt"/>
 		</transformation>
 	</createTransformations>
 	
