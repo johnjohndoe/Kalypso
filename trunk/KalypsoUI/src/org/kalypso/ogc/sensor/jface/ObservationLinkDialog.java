@@ -140,7 +140,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
         if( bCannotReload )
         {
           m_tsCol.removeAllSeries();
-          m_model.setColumns( null, null );
+          m_model.clearColumns();
         }
         else
           startLoadTimeserie();

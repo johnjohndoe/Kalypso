@@ -27,7 +27,7 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
     botLeft.addView( IPageLayout.ID_PROP_SHEET );
 
     final IFolderLayout leftBottom = layout.createFolder( "leftBottom", IPageLayout.BOTTOM,
-        (float)0.60, layout.getEditorArea() );
+        (float)0.0, layout.getEditorArea() );
     leftBottom.addView( IKalypsoUIConstants.ID_OBSDIAGRAM_VIEW );
 
     final IFolderLayout rightBottom = layout.createFolder( "rightBottom", IPageLayout.RIGHT,
@@ -35,6 +35,7 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
     rightBottom.addView( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
 
     setContentsOfShowViewMenu( layout );
+    layout.setEditorAreaVisible( false );
   }
 
   /**

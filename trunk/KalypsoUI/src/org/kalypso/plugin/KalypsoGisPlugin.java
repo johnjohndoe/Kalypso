@@ -40,7 +40,7 @@ import org.osgi.framework.BundleContext;
 public class KalypsoGisPlugin extends AbstractUIPlugin
 {
   private static final String BUNDLE_NAME = KalypsoGisPlugin.class.getPackage().getName()
-      + ".resources.KalypsoGisPluginResources";
+      + ".resources.KalypsoGisPluginResources"; //$NON-NLS-N$
 
   private static KalypsoGisPlugin m_plugin = null;
 
@@ -52,22 +52,22 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   private final HashMap myLoaderFactories = new HashMap();
 
-  private static final String POOL_PROPERTIES = "resources/pools.properties";
+  private static final String POOL_PROPERTIES = "resources/pools.properties"; //$NON-NLS-N$
 
   private final Properties myPoolProperties = new Properties();
 
   private Properties m_ftpProperties;
 
   /**
-   * Contains the list of available repositories that can be selected by the user.
-   * For each available repository, the IRepositoryFactory is provided.
+   * Contains the list of available repositories that can be selected by the
+   * user. For each available repository, the IRepositoryFactory is provided.
    */
   private final Properties m_zmlRepositoriesProperties = new Properties();
 
   /**
    * Location of the properties file.
    */
-  private static final String ZML_REPOSITORIES_PROPERTIES = "resources/zml_repositories.properties";
+  private static final String ZML_REPOSITORIES_PROPERTIES = "resources/zml_repositories.properties"; //$NON-NLS-N$
 
   /** Manages the list of repositories. */
   private DefaultRepositoryContainer m_tsRepositoryContainer = null;
@@ -128,7 +128,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   private void configureLogger()
   {
-    final Logger logger = Logger.getLogger( "" );
+    final Logger logger = Logger.getLogger( "org.kalypso" ); //$NON-NLS-N$
     logger.setLevel( Level.INFO );
 
     final Handler[] handlers = logger.getHandlers();
@@ -273,7 +273,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
       myCoordinateSystem = org.deegree_impl.model.cs.Adapters.getDefault().export(
           csFac.getCSByName( "EPSG:4326" ) );
-          //csFac.getCSByName( "EPSG:31494" ) );
+      //csFac.getCSByName( "EPSG:31494" ) );
     }
     return myCoordinateSystem;
   }
@@ -360,14 +360,15 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   private void configureProxy()
   {
-//    System.setProperty( "proxySet", "true" );
-//    System.setProperty( "proxyHost", "172.16.0.1" );
-//    System.setProperty( "proxyPort", "8080" );
-//    String pw = "belger:LaufMensch";
-//    String epw = "Basic " + ( new BASE64Encoder() ).encode( pw.getBytes() );
-//
-//    m_urlConnectionFactory = new URLConnectionFactory( "Proxy-Authorization", epw );
-//    NetWorker.setURLConnectionFactory( m_urlConnectionFactory );
+  //    System.setProperty( "proxySet", "true" );
+  //    System.setProperty( "proxyHost", "172.16.0.1" );
+  //    System.setProperty( "proxyPort", "8080" );
+  //    String pw = "belger:LaufMensch";
+  //    String epw = "Basic " + ( new BASE64Encoder() ).encode( pw.getBytes() );
+  //
+  //    m_urlConnectionFactory = new URLConnectionFactory( "Proxy-Authorization",
+  // epw );
+  //    NetWorker.setURLConnectionFactory( m_urlConnectionFactory );
   }
 
   public IURLConnectionFactory getURLConnectionFactory()
