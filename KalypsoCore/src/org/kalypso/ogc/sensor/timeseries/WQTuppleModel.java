@@ -9,6 +9,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.timeseries.wq.WechmannException;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannFunction;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannSet;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannSets;
@@ -115,12 +116,26 @@ public class WQTuppleModel implements ITuppleModel
         if( axis.getType().equals( TimeserieConstants.TYPE_RUNOFF ) )
         {
           final double w = ( (Number)m_model.getElement( index, m_srcAxis ) ).doubleValue();
-          value = new Double( WechmannFunction.computeQ( set.getForW( w ), w ) );
+          try
+          {
+            value = new Double( WechmannFunction.computeQ( set.getForW( w ), w ) );
+          }
+          catch( WechmannException e )
+          {
+            value = new Double( Double.NaN );
+          }
         }
         else if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
         {
           final double q = ( (Number)m_model.getElement( index, m_srcAxis ) ).doubleValue();
-          value = new Double( WechmannFunction.computeW( set.getForQ( q ), q ) );
+          try
+          {
+            value = new Double( WechmannFunction.computeW( set.getForQ( q ), q ) );
+          }
+          catch( WechmannException e )
+          {
+            value = new Double( Double.NaN );
+          }
         }
 
         m_values.set( index, value );
@@ -148,15 +163,31 @@ public class WQTuppleModel implements ITuppleModel
       if( axis.getType().equals( TimeserieConstants.TYPE_RUNOFF ) )
       {
         final double q = ( (Number)element ).doubleValue();
-        final double w = WechmannFunction.computeW( set.getForQ( q ), q );
-
+        double w;
+        try
+        {
+          w = WechmannFunction.computeW( set.getForQ( q ), q );
+        }
+        catch( WechmannException e )
+        {
+          w = Double.NaN;
+        }
+        
         m_model.setElement( index, new Double( w ), m_srcAxis );
       }
       else if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
       {
         final double w = ( (Number)element ).doubleValue();
-        final double q = WechmannFunction.computeQ( set.getForW( w ), w );
-
+        double q;
+        try
+        {
+          q = WechmannFunction.computeQ( set.getForW( w ), w );
+        }
+        catch( WechmannException e )
+        {
+          q = Double.NaN;
+        }
+        
         m_model.setElement( index, new Double( q ), m_srcAxis );
       }
 

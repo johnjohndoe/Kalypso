@@ -15,6 +15,9 @@ import java.util.TreeMap;
  */
 public class WechmannSets
 {
+  // used for persistence
+  private final static String TAG_SET = "set";
+  
   private final SortedMap m_map;
 
   public WechmannSets( final WechmannSet[] wsets )
@@ -54,9 +57,12 @@ public class WechmannSets
 
     for( final Iterator it = iterator(); it.hasNext(); )
     {
-      final WechmannSet ws = (WechmannSet)it.next();
+      bf.append( "<" ).append( TAG_SET ).append( ">" );
 
+      final WechmannSet ws = (WechmannSet)it.next();
       bf.append( ws );
+      
+      bf.append( "</" ).append( TAG_SET ).append( ">" );
     }
 
     return bf.toString();

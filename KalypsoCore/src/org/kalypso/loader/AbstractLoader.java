@@ -1,5 +1,6 @@
 package org.kalypso.loader;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +35,7 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   {
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( this );
   }
-  
+
   /**
    * @see org.kalypso.loader.ILoader#load(java.util.Properties,
    *      org.eclipse.core.resources.IProject,
@@ -50,7 +51,36 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
     return newObject;
   }
 
-  protected abstract Object loadIntern( final Properties source, final IProject project,
+  /**
+   * @see org.kalypso.loader.ILoader#load(java.util.Properties, java.net.URL,
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public Object load( Properties source, URL context, IProgressMonitor monitor )
+      throws LoaderException
+  {
+    final Object newObject = loadIntern( source, context, monitor );
+
+    m_objectList.add( newObject );
+
+    return newObject;
+  }
+
+  /**
+   * removed the abstract modifier and let it throw exception because method is
+   * deprecated
+   * 
+   * @deprecated see load( Properties, IProject, IProgressMonitor )
+   */
+  protected Object loadIntern( final Properties source, final IProject project,
+      final IProgressMonitor monitor ) throws LoaderException
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * This method should be overriden by clients extending this class.
+   */
+  protected abstract Object loadIntern( final Properties source, final URL context,
       final IProgressMonitor monitor ) throws LoaderException;
 
   /**
@@ -117,9 +147,12 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
 
   /**
    * @throws LoaderException
-   * @see org.kalypso.loader.ILoader#save(java.util.Properties, org.eclipse.core.resources.IProject, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
+   * @see org.kalypso.loader.ILoader#save(java.util.Properties,
+   *      org.eclipse.core.resources.IProject,
+   *      org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
-  public void save( final Properties source, final IProject project, final IProgressMonitor monitor, final Object data ) throws LoaderException
+  public void save( final Properties source, final IProject project,
+      final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
     throw new LoaderException( "Operation not supported" );
   }

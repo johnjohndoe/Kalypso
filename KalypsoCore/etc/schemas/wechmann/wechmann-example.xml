@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wechmann xmlns="wechmann.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="wechmann.kalypso.org
+./wechmann.xsd">
+	<set>
+		<validity format="dd.MM.yyy">01.11.1997</validity>
+		<params>
+			<w1>0.43</w1>
+			<lnk1>-7.05799</lnk1>
+			<k2>1.80080</k2>
+			<wgr>30</wgr>
+		</params>
+		<params>
+			<w1>13.98</w1>
+			<lnk1>-6.24542</lnk1>
+			<k2>1.90139</k2>
+		</params>
+	</set>
+	<set>
+		<validity format="dd.MM.yyy">01.11.1995</validity>
+		<params>
+			<w1>-28.97</w1>
+			<lnk1>-17.91270</lnk1>
+			<k2>4.16058</k2>
+			<wgr>30</wgr>
+		</params>
+		<params>
+			<w1>-92.68</w1>
+			<lnk1>-41.93975</lnk1>
+			<k2>8.53523</k2>
+		</params>
+	</set>
+	<set>
+		<validity format="dd.MM.yyy">01.11.1987</validity>
+		<params>
+			<w1>-3.5</w1>
+			<lnk1>-9.02470</lnk1>
+			<k2>2.33</k2>
+			<wgr>30</wgr>
+		</params>
+		<params>
+			<w1>-161.1</w1>
+			<lnk1>-58.84302</lnk1>
+			<k2>11.04</k2>
+		</params>
+	</set>
+</wechmann>

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
+import org.kalypso.ogc.sensor.timeseries.wq.WechmannException;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannFunction;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannParams;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannSet;
@@ -35,7 +36,7 @@ public class WechmannSetTest extends TestCase
     assertNotSame( m_ws.getForW( 188 ), m_wp1 );
   }
 
-  public void testGetForQ()
+  public void testGetForQ() throws WechmannException
   {
     assertEquals( m_ws.getForQ( 20.5 ), m_wp1 );
     
