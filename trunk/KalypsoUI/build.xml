@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="KalypsoGisUI" default="generate">
+
+  <!-- Source properties -->
+  <property name="lib.dir" value="./libs" />
+  <property name="etc.dir" value="./libs" />
+
+  <!-- Build properties -->
+  <property name="build.dir" value="./build" />
+  <property name="generate.dir" value="${build.dir}/generate" />
+
+  <path id="build.cp">
+    <fileset dir="${lib.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+  
+  <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="build.cp"/>
+
+  <target name="init">
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${generate.dir}" />
+  </target>
+
+  <target name="cleanup"
+          description="cleans generated stuff except deployed stuff"
+  >
+    <delete>
+      <fileset dir="${generate.dir}" includes="*/**" />
+      <fileset dir="${build.dir}" includes="*/**" />
+    </delete>
+  </target>
+
+  <target name="generate" depends="init" description="generate java-binding classes">
+  	<xjc target="${generate.dir}">
+  	  <schema dir="${etc.dir}" includes="*.xsd"/>
+  	</xjc>
+  </target>
+</project>
