@@ -3,8 +3,9 @@
 <plugin
    id="org.kalypso.deegree"
    name="org.kalypso.deegree"
-   version="0.0.1"
+   version="0.0.2"
    provider-name="org.kalypso">
+
    <runtime>
       <library name="kalypsodeegree.jar">
          <export name="*"/>
@@ -127,4 +128,5 @@
          <export name="*"/>
       </library>
    </runtime>
+
 </plugin>
