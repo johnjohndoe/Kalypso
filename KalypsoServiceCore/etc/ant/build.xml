@@ -2,7 +2,7 @@
 <project name="KalypsoCoreServicesBuild" default="deploy">
 
   <!-- Propertys aus einer Datei laden -->
-  <property file="../../../projectbuild.properties" />
+  <property file="../../../KalypsoBuild/projectbuild.properties" />
 
   <property name="project" value="${workspace}/KalypsoCoreServices" />
   <property name="project.build" value="${project}/build" />

@@ -4,7 +4,7 @@
 		Builds KalypsoServices and Runs Junit-Tests
     </description>
 
-  <property file="../../projectbuild.properties" />
+  <property file="../../KalypsoBuild/projectbuild.properties" />
 
   <property name="dist" value="${workspace}/KalypsoBuild/output" />
   <property name="dist.base" value="${dist}/base" />

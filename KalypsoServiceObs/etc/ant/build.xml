@@ -3,7 +3,7 @@
 <project name="KalypsoObsService" default="build" basedir="../..">
 
   <!-- Propertys aus einer Datei laden -->
-  <property file="../projectbuild.properties" />
+  <property file="../KalypsoBuild/projectbuild.properties" />
 
   <!-- this Project full path -->
   <property name="project.path" value="${workspace}/KalypsoObsService" />

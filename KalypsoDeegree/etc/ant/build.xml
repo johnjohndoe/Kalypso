@@ -2,7 +2,7 @@
 <project name="KalypsoDeegreeBuild" default="deploy" basedir="../..">
 
   <!-- Propertys aus einer Datei laden -->
-  <property file="../projectbuild.properties" />
+  <property file="../KalypsoBuild/projectbuild.properties" />
 
   <property name="project" value="${workspace}/KalypsoDeegree" />
   <property name="project.build" value="${project}/build" />
