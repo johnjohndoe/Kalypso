@@ -64,7 +64,7 @@ public class GmlLoader extends AbstractLoader implements IPoolListener
     catch( Exception e )
     {
       e.printStackTrace();
-      throw new LoaderException( e );
+      throw new LoaderException(source.toString(), e );
     }
   }
 

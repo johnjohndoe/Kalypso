@@ -45,21 +45,32 @@ package org.deegree_impl.graphics.legend;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.FontMetrics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import org.deegree.graphics.displayelements.*;
-import org.deegree.graphics.legend.*;
-import org.deegree.graphics.sld.*;
-import org.deegree.model.geometry.*;
-import org.deegree.services.wfs.filterencoding.*;
-
-import org.deegree_impl.graphics.displayelements.*;
-import org.deegree_impl.graphics.transformation.*;
-import org.deegree_impl.model.geometry.*;
+import org.deegree.graphics.displayelements.IncompatibleGeometryTypeException;
+import org.deegree.graphics.displayelements.PolygonDisplayElement;
+import org.deegree.graphics.legend.LegendElement;
+import org.deegree.graphics.legend.LegendException;
+import org.deegree.graphics.sld.LineSymbolizer;
+import org.deegree.graphics.sld.PointSymbolizer;
+import org.deegree.graphics.sld.PolygonSymbolizer;
+import org.deegree.graphics.sld.RasterSymbolizer;
+import org.deegree.graphics.sld.Rule;
+import org.deegree.graphics.sld.Symbolizer;
+import org.deegree.graphics.sld.TextSymbolizer;
+import org.deegree.model.geometry.GM_Envelope;
+import org.deegree.model.geometry.GM_Position;
+import org.deegree.model.geometry.GM_Surface;
+import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
+import org.deegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.deegree_impl.graphics.displayelements.PolygonDisplayElement_Impl;
+import org.deegree_impl.graphics.sld.TextSymbolizer_Impl;
+import org.deegree_impl.graphics.transformation.WorldToScreenTransform;
+import org.deegree_impl.model.geometry.GeometryFactory;
 import org.deegree_impl.tools.Debug;
 
 /**
@@ -325,7 +336,6 @@ public class LegendElement_Impl implements LegendElement {
 	
 	public void drawTextLegend(Graphics g, TextSymbolizer c, int width, int height) throws LegendException {
 		Debug.debugMethodBegin("LegendElement_Impl", "drawTexttLegend()");
-			
 		org.deegree.graphics.sld.Font font = c.getFont();		
 		java.awt.Font awtFont = null;
 		Color color = null;
