@@ -1,6 +1,5 @@
 package org.kalypso.services.calcjob.impl.jobs;
 
-import java.net.URL;
 
 /**
  * @author belger
@@ -8,9 +7,9 @@ import java.net.URL;
 public class CopyCalcJob extends AbstractCalcJob
 {
   /**
-   * @see org.kalypso.services.calcjob.impl.jobs.AbstractCalcJob#runIntern(java.net.URL[], org.kalypso.services.calcjob.impl.jobs.CalcJobProgressMonitor)
+   * @see org.kalypso.services.calcjob.impl.jobs.AbstractCalcJob#runIntern(java.lang.String[], org.kalypso.services.calcjob.impl.jobs.CalcJobProgressMonitor)
    */
-  protected URL[] runIntern( final URL[] arguments, final CalcJobProgressMonitor monitor ) 
+  protected String[] runIntern( final String[] arguments, final CalcJobProgressMonitor monitor ) 
   {
     monitor.worked( 100 );
     return arguments;

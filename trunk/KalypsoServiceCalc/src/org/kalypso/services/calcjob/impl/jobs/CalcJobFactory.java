@@ -1,7 +1,6 @@
 package org.kalypso.services.calcjob.impl.jobs;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Properties;
 
 import org.kalypso.services.calcjob.CalcJob;
@@ -31,7 +30,7 @@ public class CalcJobFactory
     return (String[])m_jobTypes.keySet().toArray( new String[0] );
   }
 
-  public CalcJob createJob( final String id, final String description, final URL[] arguments, final String typeID ) throws CalcJobServiceException
+  public CalcJob createJob( final String id, final String description, final String[] arguments, final String typeID ) throws CalcJobServiceException
   {
     try
     {

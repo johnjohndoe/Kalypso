@@ -43,10 +43,11 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlObservation;
-import org.kalypso.services.calcjob.CalcJobException;
+import org.kalypso.services.calcjob.CalcJobServiceException;
 import org.kalypso.services.calcjob.CalcJobStatus;
 import org.kalypso.services.calcjob.impl.jobs.AbstractCalcJob;
 import org.kalypso.services.calcjob.impl.jobs.CalcJobProgressMonitor;
+import org.kalypso.util.progress.NullProgressMonitor;
 import org.kalypso.zml.ObservationType;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.InputSource;
@@ -252,10 +253,10 @@ public class SpreeCalcJob extends AbstractCalcJob
   }
 
   /**
-   * @see org.kalypso.services.calcjob.impl.jobs.AbstractCalcJob#runIntern(java.net.URL[], org.kalypso.services.calcjob.impl.jobs.CalcJobProgressMonitor)
+   * @see org.kalypso.services.calcjob.impl.jobs.AbstractCalcJob#runIntern(java.lang.String[], org.kalypso.services.calcjob.impl.jobs.CalcJobProgressMonitor)
    */
-  protected URL[] runIntern( final URL[] arguments, final CalcJobProgressMonitor monitor )
-      throws CalcJobException
+  protected String[] runIntern( final String[] arguments, final CalcJobProgressMonitor monitor )
+      throws CalcJobServiceException
   {
     checkArguments( arguments );
     parseProperties( arguments[0], monitor );
@@ -267,13 +268,13 @@ public class SpreeCalcJob extends AbstractCalcJob
     return loadOutput( monitor );
   }
 
-  private void parseProperties( final URL properties, final CalcJobProgressMonitor monitor )
-      throws CalcJobException
+  private void parseProperties( final String properties, final CalcJobProgressMonitor monitor )
+      throws CalcJobServiceException
   {
     final Properties props = new Properties();
     try
     {
-      props.load( properties.openStream() );
+      props.load( new URL( properties ).openStream() );
 
       final String date = props.getProperty( CALC_PROP_STARTTIME );
       final Date startTime = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ).parse( date );
@@ -283,7 +284,7 @@ public class SpreeCalcJob extends AbstractCalcJob
 
       final File dataDir = FileUtilities.createRandomTmpDir( "SpreeCalculation" );
       if( dataDir == null )
-        throw new CalcJobException( "Konnte Temporäres Verzeichnis nicht erzeugen" );
+        throw new CalcJobServiceException( "Konnte Temporäres Verzeichnis nicht erzeugen", null );
 
       final String tsFilename = new File( dataDir, baseFileName ).getAbsolutePath();
       final File tsFile = new File( tsFilename + ".dbf" );
@@ -309,7 +310,7 @@ public class SpreeCalcJob extends AbstractCalcJob
     }
     catch( final Exception e )
     {
-      throw new CalcJobException( "Fehler beim Einlesen der Berechnungsparameter", e );
+      throw new CalcJobServiceException( "Fehler beim Einlesen der Berechnungsparameter", e );
     }
     finally
     {
@@ -317,14 +318,14 @@ public class SpreeCalcJob extends AbstractCalcJob
     }
   }
 
-  private void checkArguments( final URL[] arguments ) throws CalcJobException
+  private void checkArguments( final String[] arguments ) throws CalcJobServiceException
   {
     if( arguments.length < 3 || arguments[0] == null || arguments[1] == null
         || arguments[2] == null )
-      throw new CalcJobException( "Argumente falsch" );
+      throw new CalcJobServiceException( "Argumente falsch", null );
   }
 
-  private URL[] loadOutput( final CalcJobProgressMonitor monitor ) throws CalcJobException
+  private String[] loadOutput( final CalcJobProgressMonitor monitor ) throws CalcJobServiceException
   {
     try
     {
@@ -345,21 +346,21 @@ public class SpreeCalcJob extends AbstractCalcJob
       monitor.done();
 
       final Collection urls = new ArrayList();
-      urls.add( napFile.toURL() );
-      urls.add( vhsFile.toURL() );
-      urls.add( flpFile.toURL() );
-      urls.add( tsFile.toURL() );
+      urls.add( napFile.toURL().toExternalForm() );
+      urls.add( vhsFile.toURL().toExternalForm() );
+      urls.add( flpFile.toURL().toExternalForm() );
+      urls.add( tsFile.toURL().toExternalForm() );
       urls.addAll( tsUrls );
 
-      return (URL[])urls.toArray( new URL[urls.size()] );
+      return (String[])urls.toArray( new String[urls.size()] );
     }
     catch( final Exception e )
     {
-      throw new CalcJobException( e );
+      throw new CalcJobServiceException( "", e );
     }
   }
 
-  private void startCalculation() throws CalcJobException
+  private void startCalculation() throws CalcJobServiceException
   {
     InputStreamReader inStream = null;
     InputStreamReader errStream = null;
@@ -407,7 +408,7 @@ public class SpreeCalcJob extends AbstractCalcJob
         if( getDescription().getState() == CalcJobStatus.CANCELED )
         {
           process.destroy();
-          throw new CalcJobException( "Benutzerabbruch" );
+          throw new CalcJobServiceException( "Benutzerabbruch", null );
         }
 
         Thread.sleep( 100 );
@@ -416,12 +417,12 @@ public class SpreeCalcJob extends AbstractCalcJob
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CalcJobException( "Fehler beim Ausführen der hw.exe", e );
+      throw new CalcJobServiceException( "Fehler beim Ausführen der hw.exe", e );
     }
     catch( InterruptedException e )
     {
       e.printStackTrace();
-      throw new CalcJobException( "Fehler beim Ausführen der hw.exe", e );
+      throw new CalcJobServiceException( "Fehler beim Ausführen der hw.exe", e );
     }
     finally
     {
@@ -441,7 +442,7 @@ public class SpreeCalcJob extends AbstractCalcJob
   }
 
   private void writeInput( final KalypsoFeatureLayer[] layers, final CalcJobProgressMonitor monitor,
-      final URL[] arguments ) throws CalcJobException
+      final String[] arguments ) throws CalcJobServiceException
   {
     // Basisdateinamen ermitteln
     try
@@ -465,11 +466,11 @@ public class SpreeCalcJob extends AbstractCalcJob
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CalcJobException( "Fehler beim Erzeugen der Inputdateien", e );
+      throw new CalcJobServiceException( "Fehler beim Erzeugen der Inputdateien", e );
     }
   }
 
-  private Map createTsData( final URL[] arguments ) throws JAXBException, IOException,
+  private Map createTsData( final String[] arguments ) throws JAXBException, IOException,
       SensorException
   {
     final Map map = new HashMap();
@@ -485,7 +486,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       if( urlIndex < 3 )
         continue;
 
-      final URL u = arguments[urlIndex];
+      final URL u = new URL( arguments[urlIndex] );
       final ZmlObservation obs = new ZmlObservation( u );
 
       final IAxis[] axisList = obs.getAxisList();
@@ -533,7 +534,7 @@ public class SpreeCalcJob extends AbstractCalcJob
   }
 
   private void findAndWriteLayer( final KalypsoFeatureLayer[] layers, final String layerName,
-      final Map mapping, final String geoName, final String filenameBase ) throws CalcJobException
+      final Map mapping, final String geoName, final String filenameBase ) throws CalcJobServiceException
   {
     try
     {
@@ -546,22 +547,22 @@ public class SpreeCalcJob extends AbstractCalcJob
         }
       }
 
-      throw new CalcJobException(
+      throw new CalcJobServiceException(
           "EIngabedatei für Rechenmodell konnte nicht erzeugt werden. Layer nicht gefunden: "
-              + layerName );
+              + layerName, null );
     }
     catch( final GmlSerializeException e )
     {
-      throw new CalcJobException( "Fehler beim Schreiben der Eingabedateien", e );
+      throw new CalcJobServiceException( "Fehler beim Schreiben der Eingabedateien", e );
     }
   }
 
-  private KalypsoFeatureLayer[] parseInput( final URL[] arguments )
+  private KalypsoFeatureLayer[] parseInput( final String[] arguments )
   {
     try
     {
-      final InputSource schemaSource = new InputSource( arguments[1].openStream() );
-      final InputSource gmlSource = new InputSource( arguments[2].openStream() );
+      final InputSource schemaSource = new InputSource( new URL( arguments[1] ).openStream() );
+      final InputSource gmlSource = new InputSource( new URL( arguments[2] ).openStream() );
 
       return GmlSerializer.deserialize( schemaSource, gmlSource, m_targetCrs, null );
     }
@@ -660,7 +661,7 @@ public class SpreeCalcJob extends AbstractCalcJob
     final CS_CoordinateSystem crs = org.deegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( "EPSG:4326" ) );
 
-    final KalypsoFeatureLayer layer = ShapeSerializer.deserialize( tsFilename, crs, crs, null );
+    final KalypsoFeatureLayer layer = ShapeSerializer.deserialize( tsFilename, crs, crs, new NullProgressMonitor() );
 
     final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
     final Calendar calendar = new GregorianCalendar();
@@ -783,7 +784,7 @@ public class SpreeCalcJob extends AbstractCalcJob
         FileUtilities.makeFileFromStream( false, outFile, getClass().getResourceAsStream(
             "resources/empty.zml" ) );
 
-      urls.add( outFile.toURL() );
+      urls.add( outFile.toURL().toExternalForm() );
     }
 
     return urls;

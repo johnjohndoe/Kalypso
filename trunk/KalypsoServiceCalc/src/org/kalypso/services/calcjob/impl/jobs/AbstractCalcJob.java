@@ -1,10 +1,7 @@
 package org.kalypso.services.calcjob.impl.jobs;
 
-import java.net.URL;
-
 import org.kalypso.services.calcjob.CalcJob;
 import org.kalypso.services.calcjob.CalcJobDescription;
-import org.kalypso.services.calcjob.CalcJobException;
 import org.kalypso.services.calcjob.CalcJobServiceException;
 import org.kalypso.services.calcjob.CalcJobStatus;
 
@@ -15,11 +12,11 @@ public abstract class AbstractCalcJob implements CalcJob
 {
   private CalcJobDescription m_calcJobDescription = null;
   
-  private URL[] m_arguments = null;
+  private String[] m_arguments = null;
   
-  private URL[] m_results = null;
+  private String[] m_results = null;
 
-  public final void init( final String id, final String description, final URL[] arguments, final String type )
+  public final void init( final String id, final String description, final String[] arguments, final String type )
       throws CalcJobServiceException
   {
     if( m_calcJobDescription != null )
@@ -62,10 +59,10 @@ public abstract class AbstractCalcJob implements CalcJob
   /**
    * @see org.kalypso.services.calcjob.CalcJob#getResults()
    */
-  public final URL[] getResults()
+  public final String[] getResults()
   {
     return m_results;
   }
   
-  protected abstract URL[] runIntern( final URL[] arguments, final CalcJobProgressMonitor monitor ) throws CalcJobException;
+  protected abstract String[] runIntern( final String[] arguments, final CalcJobProgressMonitor monitor ) throws CalcJobServiceException;
 }

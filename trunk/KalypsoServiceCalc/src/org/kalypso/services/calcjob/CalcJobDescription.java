@@ -15,16 +15,22 @@ import java.io.Serializable;
  */
 public class CalcJobDescription implements Serializable
 {
+  /** ID des beschriebenen Jobs*/
   private String m_id;
 
-  private String m_description;
-
+  /** Typ des Jobs */
   private String m_type;
 
+  /** Textuelle Beschreibung des Jobs, beim Erzeugen des Jobs an den Service übergeben */
+  private String m_description;
+
+  /** Status des Jobs, eine der Konstanten aus {@link CalcJobStatus} */
   private int m_state;
 
+  /** Fortschritt des Jobs, ziwschen 0 und 100, -1 bedeutet: unbekannt */
   private int m_progress;
 
+  /** Beschreibung des Job-Zustandes, falls Status der Fehlerstatus: die Fehlermeldung */
   private String m_message = "";
 
   public CalcJobDescription()
