@@ -29,9 +29,6 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
 
   private final Integer[] m_kalypsoStati;
 
-  /** list of axes (0: date, 1:value, 2:status) */
-  private final IAxis[] m_axes;
-
   private final IValueConverter m_vc;
 
   /**
@@ -54,7 +51,8 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
    */
   public PSICompactTuppleModel( final ArchiveData[] data, final IAxis[] axes, final IValueConverter vc )
   {
-    m_axes = axes;
+    super( axes );
+
     m_data = data;
     m_vc = vc;
 
@@ -192,14 +190,6 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     // sein da es sich um eine Zeitreihe handelt.
     return Arrays.binarySearch( m_data, element,
         new ArchiveDataDateComparator() );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
-   */
-  public IAxis[] getAxisList( )
-  {
-    return m_axes;
   }
 
   /**

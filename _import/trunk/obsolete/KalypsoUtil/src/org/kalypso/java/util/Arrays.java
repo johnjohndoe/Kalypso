@@ -40,6 +40,9 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.util;
 
+import java.util.List;
+import java.util.Vector;
+
 /**
  * utility stuff for arrays
  * 
@@ -47,6 +50,21 @@ package org.kalypso.java.util;
  */
 public class Arrays
 {
+  /**
+   * Return a list containing the elements of the array.
+   * 
+   * @param array
+   * @return
+   */
+  public static List asList( final Object[] array )
+  {
+    final Vector v = new Vector( array.length );
+    for( int i = 0; i < array.length; i++ )
+      v.add( array[i] );
+    
+    return v;
+  }
+  
   /**
    * creates an array of raw ints with a given array of Integer Objects by
    * copying the int values.

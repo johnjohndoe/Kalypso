@@ -40,157 +40,43 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.io;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.Writer;
-import java.util.Iterator;
-import java.util.Vector;
 
 /**
- * Parses a CSV file. Save is possible using a Writer.
+ * Parses CSV-Values from a Reader. Save is possible using a Writer.
  * 
  * @author schlienger
  */
-public class CSV implements ITabledValues
+public class CSV extends AbstractCSV
 {
-  private final Reader m_reader;
-
   private final String m_split;
 
-  private final Vector m_lines = new Vector();
-
-  private final int m_line;
-
-  private final boolean m_ignoreEmptyLines;
-
   /**
-   * Constructor. Fetches the file and closes the reader;
+   * Constructor
    * 
-   * @param reader
    * @param split
    *          the string used for spliting each line into chunks
-   * @param line
-   *          the line number to start reading the values at
-   * @param ignoreEmptyLines
-   *          when true, empty lines are not stored in this object
-   * 
    * @throws IOException
    */
-  public CSV( final Reader reader, final String split, final int line,
+  public CSV( final String split, final int startLine,
       final boolean ignoreEmptyLines ) throws IOException
   {
-    m_reader = reader;
+    super( startLine, ignoreEmptyLines );
+
     m_split = split;
-    m_line = line;
-    m_ignoreEmptyLines = ignoreEmptyLines;
-
-    fetchFile();
+    
+    // note: m_split is used as separator, maybe that's not good enough to
+    // use the same token as the one for spliting
+    setSeparator( m_split);
   }
 
   /**
-   * Fetches the CSV-File. Closes the reader once finished.
-   * 
-   * @throws IOException
+   * @see org.kalypso.util.io.AbstractCSV#handleCurrentLine(java.lang.String)
    */
-  private void fetchFile( ) throws IOException
+  protected void handleCurrentLine( final String line )
   {
-    BufferedReader r = null;
-
-    try
-    {
-      r = new BufferedReader( m_reader );
-
-      String line = r.readLine();
-
-      // steps over the lines until start-line-number is reached
-      int lineNR = 1;
-      while( lineNR < m_line && line != null )
-      {
-        line = r.readLine();
-        lineNR++;
-      }
-
-      while( line != null )
-      {
-        if( m_ignoreEmptyLines && line.length() == 0 )
-        {
-          line = r.readLine();
-          continue;
-        }
-
-        m_lines.add( line.split( m_split ) );
-
-        line = r.readLine();
-      }
-
-      r.close();
-    }
-    catch( IOException e )
-    {
-      throw e;
-    }
-    finally
-    {
-      if( r != null )
-        r.close();
-    }
-  }
-
-  /**
-   * @see org.kalypso.util.io.ITabledValues#getLines()
-   */
-  public int getLines( )
-  {
-    return m_lines.size();
-  }
-
-  /**
-   * @see org.kalypso.util.io.ITabledValues#getItem(int, int)
-   */
-  public String getItem( final int row, final int col )
-  {
-    return ((String[]) m_lines.get( row ))[col];
-  }
-
-  /**
-   * @see org.kalypso.util.io.ITabledValues#setItem(int, int, java.lang.String)
-   */
-  public void setItem( final int row, final int col, String element )
-  {
-    ((String[]) m_lines.get( row ))[col] = element;
-  }
-
-  /**
-   * Saves the contents in the given Writer.
-   * 
-   * @param writer
-   * 
-   * @throws IOException
-   */
-  public void save( final Writer writer ) throws IOException
-  {
-    BufferedWriter bw = new BufferedWriter( writer );
-
-    for( Iterator iter = m_lines.iterator(); iter.hasNext(); )
-    {
-      String[] items = (String[]) iter.next();
-
-      for( int i = 0; i < items.length; i++ )
-      {
-        bw.write( items[i] );
-
-        // note: m_split is used as separator, maybe that's not good enough to
-        // use the same token as the one for spliting
-        if( i != items.length - 1 )
-          bw.write( m_split );
-      }
-
-      // end of line
-      bw.write( '\n' );
-    }
+    m_lines.add( line.split( m_split ) );
   }
 
   /**
@@ -219,5 +105,4 @@ public class CSV implements ITabledValues
       pw.println();
     }
   }
-
 }

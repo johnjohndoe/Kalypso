@@ -1,5 +1,5 @@
 
- about()={build_gmt=1106822833969, buildsystem=Linux i386 2.4.22, buildjava=1.4.2_01-b06, buildinfo=Release_WEBDATAPROVIDER_1-1-1, builddate=2005-01-27 10:47:14 UTC}
+ about()={build_gmt=1107532397044, buildsystem=Linux i386 2.4.22, buildjava=1.4.2_01-b06, buildinfo=Develop_WEBDATAPROVIDER_20050204, builddate=2005-02-04 15:53:17 UTC}
  login={primaryKey=4711, groups=[Ljava.lang.String;@ff94b1, domainName=-, permissions=[Ljava.lang.String;@17b0998, login=em, fullName=Erika Mustermann, system=wiski web data provider oa, allowed=1}
  login permitted
  stationlist= {resultList=[{station_no=432324, station_name=Codford, station_id=447491}], idHash={447491=0}, count=1}
