@@ -13,7 +13,6 @@ import org.kalypso.util.xml.XMLTools;
  */
 public class KalypsoFeatureTest extends TestCase
 {
-
   private KalypsoFeature createFeature()
   {
   try

@@ -2,6 +2,7 @@ package org.kalypso.ogc.gml.table;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
@@ -99,7 +100,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
-    final TableCursor tc = new ExcelLikeTableCursor( this, SWT.NONE ); 
+    final TableCursor tc = new ExcelLikeTableCursor( this, SWT.NONE );
     m_tableCursor = tc;
     m_tableCursor.addSelectionListener( new SelectionAdapter()
     {
@@ -277,7 +278,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final Table table = getTable();
     if( table.isDisposed() )
       return;
-    
+
     final TableColumn[] columns = table.getColumns();
     final CellEditor[] editors = new CellEditor[columns.length];
 
@@ -296,15 +297,21 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       final FeatureTypeProperty ftp = featureType.getProperty( propName );
       if( ftp != null )
       {
-        try
+        if( m_cellEditorFactory.isCellEditorKnown( ftp ) )
         {
-          editors[i] = m_cellEditorFactory.createEditor( ftp, m_project, table, SWT.NONE );
+          try
+          {
+            editors[i] = m_cellEditorFactory.createEditor( ftp, m_project, table, SWT.NONE );
+          }
+          catch( final FactoryException e )
+          {
+            LOGGER.log( Level.SEVERE, "Could not create cellEditor for type: " + ftp.getType(), e );
+          }
         }
-        catch( final FactoryException e )
-        {
-          // ignore: Type not supported
-          LOGGER.warning( "CellEditor not found for type: " + ftp.getType() );
-        }
+
+        if( editors[i] == null )
+          LOGGER.warning( "No cellEditor found for type: " + ftp.getType() );
+
       }
     }
 
@@ -332,12 +339,12 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final KalypsoFeature[] features = layer.getAllFeatures();
     for( int i = 0; i < features.length; i++ )
       features[i].unselect( m_selectionID );
-    
+
     feature.select( m_selectionID );
 
     layer.fireModellEvent( null );
   }
-  
+
   public void selectRow( final KalypsoFeature feature )
   {
     getControl().getDisplay().asyncExec( new Runnable()

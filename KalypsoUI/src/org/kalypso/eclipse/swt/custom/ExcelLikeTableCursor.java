@@ -91,7 +91,13 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
       // deshalb einfach den text setzen
       final Widget editorControl = cellEditor.getControl();
       if( editorControl instanceof Text )
-        ( (Text)editorControl ).insert( "" + ke.character );
+      {
+        final Text text = (Text)editorControl;
+        
+        text.setText( "" + ke.character );
+        
+        //text.insert( "" + ke.character );
+      }
     }
 
   }

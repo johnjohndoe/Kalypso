@@ -7,10 +7,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
-import javax.xml.rpc.ServiceException;
-
-import org.kalypso.services.calcjob.CalcJobService;
-import org.kalypso.services.calcjob.swing.JobQueueView;
 //import org.kalypso.services.factory.WebServiceFactory;
 
 /**
@@ -21,7 +17,7 @@ public class CalcJobGuiTest
 	//private static final String SERVICE_NAME = "WebService";
   //	private static final String SERVICE_ARG = "http://localhost:8080/";
 	
-  public static JComponent createJobView() throws ServiceException
+  public static JComponent createJobView()
   {
 		//final WebServiceFactory jsf = new WebServiceFactory( "http://localhost:8080" );
 	  	

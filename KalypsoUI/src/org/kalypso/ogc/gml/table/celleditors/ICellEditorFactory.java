@@ -10,5 +10,7 @@ import org.kalypso.util.factory.FactoryException;
  */
 public interface ICellEditorFactory
 {
+  public boolean isCellEditorKnown( final FeatureTypeProperty ftp );
+  
   public AbstractFeatureCellEditor createEditor( final FeatureTypeProperty ftp, final IProject project, final Composite parent, final int style ) throws FactoryException;
 }

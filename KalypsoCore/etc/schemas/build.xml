@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="KalypsoCore-binding" default="deploy">
+  <description>Erzeugt die Binding-Klassen aus den Schemata</description>
+
+  <property name="build" value="${java.io.tmpdir}/KalypsoCoreBindingTmpDir" />
+  <property name="build.source" value="${build}/src" />
+  <property name="build.compile" value="${build}/compile" />
+
+  <property name="lib.dir" value="../../lib" />
+  <property name="dest.file.name" value="coreBinding.jar" />
+
+  <property name="jwsdp.root" value="/opt/jwsdp-1.4" />
+
+  <path id="cpref">
+    <fileset dir="${jwsdp.root}">
+      <include name="jaxb/lib/*.jar" />
+      <include name="jaxp/**/*.jar" />
+      <include name="jwsdp-shared/lib/**/*.jar" />
+    </fileset>
+  </path>
+
+  <taskdef name="xjc"
+           classname="com.sun.tools.xjc.XJCTask"
+           classpathref="cpref"
+  />
+
+  <target name="init" description="erzeugt die Build-Verzeichnisse">
+    <mkdir dir="${build.source}" />
+    <mkdir dir="${build.compile}" />
+  </target>
+
+  <target name="clean" description="cleans it up - totally">
+    <delete includeemptydirs="true">
+      <fileset dir="${build}" includes="**/*" />
+    </delete>
+  </target>
+
+  <target name="generate"
+          depends="init"
+          description="erzeugt die sourcen"
+  >
+    <echo message="Generating binding sources..."/>
+    <xjc target="${build.source}">
+      <!-- TODO: check if depends/produces really do work - I'm in doubt! (Gernot) -->
+      <schema dir=".">
+        <include name="**/*.xsd" />
+      </schema>
+
+      <depends dir=".">
+        <include name="**/*.xsd" />
+      </depends>
+
+      <produces dir="${build.source}">
+        <include name="**/*.jar" />
+      </produces>
+    </xjc>
+  </target>
+
+  <!-- depends="generate-source" -->
+  <target name="compile" depends="generate" description="compiles the generated sources">
+    <echo message="Compiling binding classes"/>
+    <javac debug="false"
+           destdir="${build.compile}"
+           optimize="on"
+           srcdir="${build.source}"
+           classpathref="cpref"
+    >
+    </javac>
+  </target>
+
+  <target name="deploy" depends="compile" description="package jar">
+    <echo message="Packaging binding classes"/>
+    <jar destfile="${lib.dir}/${dest.file.name}"
+         basedir="${build.compile}"
+         includes="**/*"
+    />
+  </target>
+</project>
+
