@@ -64,7 +64,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
   protected OpenStyleDialogAction m_openStyleDialogAction = null;
 
-  private TableTreeViewer m_viewer;
+  protected TableTreeViewer m_viewer;
 
   private final MapModellTreeContentProvider m_contentProvider = new MapModellTreeContentProvider();
 
@@ -255,7 +255,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   /**
    * @see org.kalypso.ogc.IMapModellView#setMapModell(org.kalypso.ogc.MapModell)
    */
-  public void setMapModell( MapModell modell )
+  public void setMapModell( final MapModell modell )
   {
     if( m_mapModell != null )
       m_mapModell.removeModellListener( this );
@@ -266,7 +266,15 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
       m_mapModell.addModellListener( this );
 
     if( m_viewer != null && m_viewer.getContentProvider() != null )
-      m_viewer.setInput( modell );
+    {
+      m_viewer.getControl().getDisplay().asyncExec( new Runnable()
+      {
+        public void run()
+        {
+          m_viewer.setInput( modell );
+        }
+      } );
+    }
 
     onModellChange( null );
   }
@@ -281,6 +289,9 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     {
       final StructuredViewer viewer = m_viewer;
       final TableTree tt = (TableTree)m_viewer.getControl();
+      if( tt.isDisposed() )
+        return;
+      
       final TableTreeItem[] items = tt.getItems();
       final MapModell mm = getMapModell();
 
@@ -296,7 +307,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
             if( !item.isDisposed() )
               item.setChecked( mm.isThemeEnabled( (IKalypsoTheme)item.getData() ) );
           }
-          
+
           // und die ganze view refreshen!
           viewer.refresh();
         }
@@ -392,5 +403,4 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
       } );
     }
   }
-
 }
