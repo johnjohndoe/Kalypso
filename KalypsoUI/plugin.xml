@@ -86,6 +86,26 @@
                id="org.kalypso.editors.tableeditor.RemoveRowsAction">
          </action>
       </editorContribution>
+      <editorContribution
+            targetID="org.kalypso.editor.mapeditor.GisMapEditor"
+            id="org.kalypso.editor.mapeditor.GisMapEditorActionDelegate">
+         <action
+               toolbarPath="karte"
+               label="volle Ausdehnung"
+               tooltip="Zoom to fullextent"
+               icon="icons/full/elcl16/kde_window_fullscreen.gif"
+               class="org.kalypso.editor.mapeditor.actions.FullExtentAction"
+               style="push"
+               id="org.kalypso.editor.mapeditor.action.FullExtentAction"/>
+         <action
+               toolbarPath="karte"
+               label="Ausschnitt vergrößern"
+               tooltip="vergrößert den Kartenausschnitt"
+               icon="icons/full/elcl16/kde_viewmag-.gif"
+               class="org.kalypso.editor.mapeditor.actions.ZoomOutAction"
+               style="push"
+               id="org.kalypso.editor.mapeditor.action.ZoomOutAction"/>
+      </editorContribution>
    </extension>
 
 </plugin>

@@ -28,8 +28,8 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.editor.AbstractEditorPart;
-import org.kalypso.editor.mapeditor.commands.FullExtentAction;
-import org.kalypso.editor.mapeditor.commands.ZoomOutAction;
+import org.kalypso.editor.mapeditor.actions.FullExtentAction;
+import org.kalypso.editor.mapeditor.actions.ZoomOutAction;
 import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.widgets.PanToWidget;
@@ -98,10 +98,10 @@ public class GisMapEditor extends AbstractEditorPart
  protected FullAction[] createFullActions()
    {
      final List list = new ArrayList();
-
+/*
      list.add(new ZoomOutAction("Zoom out",ImageProvider.IMAGE_MAPVIEW_ZOOMOUT,"Kartenausschnitt verkleinern",myMapPanel,this));
      list.add(new FullExtentAction("full Extent",ImageProvider.IMAGE_MAPVIEW_FULLEXTENT,"vollen Kartenausschnitt anzeigen",myMapPanel,this));
-
+*/
      return (FullAction[])list.toArray(new FullAction[list.size()]);
    }
 
@@ -111,9 +111,9 @@ public class GisMapEditor extends AbstractEditorPart
 
     list.add( new WidgetAction( new ZoomInWidget( myMapPanel, this ),
         myMapPanel.getWidgetManager(), "ZoomIn", ImageProvider.IMAGE_MAPVIEW_ZOOMIN,
-        "Kartenausschnitt vergrössern" ) );
+        "Kartenausschnitt vergr?ssern" ) );
     list.add( new WidgetAction( new PanToWidget( myMapPanel, this ), myMapPanel.getWidgetManager(),
-        "PanTo", ImageProvider.IMAGE_MAPVIEW_ZOOMIN, "Kartenausschnitt verschieben" ) );
+        "PanTo", ImageProvider.IMAGE_MAPVIEW_PAN, "Kartenausschnitt verschieben" ) );
 
     return (WidgetAction[])list.toArray( new WidgetAction[list.size()] );
   }
@@ -286,5 +286,10 @@ public class GisMapEditor extends AbstractEditorPart
     }
 
     return null;
+  }
+  
+  public MapModell getMapModell()
+  {
+    return m_mapModell;
   }
 }
