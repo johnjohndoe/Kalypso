@@ -253,7 +253,7 @@ public class NAZMLGenerator
     for( int i = 0; i < axisList.length; i++ )
     {
       IAxis axis = axisList[i];
-      if( axisLabel.equals( axis.getLabel() ) )
+      if( axisLabel.equals( axis.getName() ) )
         return axis;
     }
     return null;
