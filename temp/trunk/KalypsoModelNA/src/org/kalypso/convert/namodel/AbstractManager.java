@@ -18,6 +18,7 @@ import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.feature.FeatureFactory;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 
 /**
  * @author doemming
@@ -37,7 +38,7 @@ public abstract class AbstractManager
   private String[] m_asciiFormat;
 
   public AbstractManager( URL parseDefinition ) throws IOException
-  {
+  {   
     if( parseDefinition != null )
       readParseDefinition( parseDefinition );
     //    m_rootFeature = rootFeature;
