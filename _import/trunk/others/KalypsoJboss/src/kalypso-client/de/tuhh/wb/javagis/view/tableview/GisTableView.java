@@ -59,7 +59,7 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
     private int selectedCol=-1;
     private int selectedRow=-1;
     private Object selectedValue=null;
-    private JComboBox jcombo=null;
+    public static JComboBox jcombo=null;
     
     // starting with default profile "all"
     //private String myProfileName=I18n.get("TV_GTV_DefaultProfile");
@@ -246,9 +246,9 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 	if(action.equals("removeColumnProfile"))
 	    {
 		TableProfile.getInstance().removeProfile(myProfileName);
-		if(myProfileName!=null && !"all".equals(myProfileName))
-		    jcombo.removeItem(myProfileName);
-		jcombo.setSelectedItem("all");
+		//if(myProfileName!=null && !"all".equals(myProfileName))
+		//jcombo.removeItem(myProfileName);
+		//jcombo.setSelectedItem("all");
 		//		createFileMenu();
 	    }
 	/*

@@ -82,7 +82,9 @@ public class TableProfile
                    case JOptionPane.NO_OPTION:
                     break;
                     case JOptionPane.YES_OPTION:
-					 toHide.remove(profileName);
+					toHide.remove(profileName);
+					GisTableView.jcombo.removeItem(profileName);
+					GisTableView.jcombo.setSelectedItem("all");
 					case JOptionPane.CANCEL_OPTION:
 					break;
                     default:
