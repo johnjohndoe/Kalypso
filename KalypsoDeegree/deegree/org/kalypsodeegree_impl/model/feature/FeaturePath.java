@@ -5,12 +5,25 @@ package org.kalypsodeegree_impl.model.feature;
  */
 public class FeaturePath
 {
+  private final String m_fid;
+  
   private final String[] m_segments;
   
   private final String m_typename;
 
   public FeaturePath( final String path )
   {
+    if( path.startsWith( "#fid#" ) )
+    {
+      m_fid = path.substring( "#fid#".length() );
+      m_segments = new String[0];
+      m_typename = null;
+      
+      return;
+    }
+
+    m_fid = null;
+    
     // TODO: match against a regexp
     
     final int i1 = path.indexOf( '[' );
@@ -42,5 +55,15 @@ public class FeaturePath
   public String getTypename()
   {
     return m_typename;
+  }
+  
+  public boolean isID()
+  {
+    return m_fid != null;
+  }
+  
+  public String getID()
+  {
+    return m_fid;
   }
 }
