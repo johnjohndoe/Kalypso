@@ -1,0 +1,7 @@
+String str = "spree://foo.bar.zml?<from>2004-01-01T12:00:34</from><to>2004-01-01T12:00:34</to><filter>blablabla</filter>";
+//
+//System.out.println( str.replaceFirst( "<from>" + ".*" + "</from>" , "" ) );  (No explicit return value)
+
+str = org.kalypso.ogc.sensor.zml.ZmlURL.insertDateRange( str, new org.kalypso.util.runtime.args.DateRangeArgument() );
+
+System.out.println( str ); (No explicit return value)
