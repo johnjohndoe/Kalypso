@@ -38,6 +38,7 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.createpages.AddCalcCasePage;
 import org.kalypso.ui.calcwizard.createpages.AddNewCalcCaseChoice;
+import org.kalypso.ui.calcwizard.createpages.ContinueOldCalcCaseChoice;
 import org.kalypso.ui.calcwizard.createpages.CopyServerCalcCaseChoice;
 import org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage;
 import org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage;
@@ -85,14 +86,12 @@ public class CalcWizard implements IWizard, IProjectProvider
 
     m_addCalcCasePage.addChoice( new AddNewCalcCaseChoice( "einen neuen Rechenfall erzeugen",
         m_project, m_addCalcCasePage ) );
-//    m_addCalcCasePage.addChoice( new ContinueOldCalcCaseChoice(
-//        "einen bereits vorhandenen Rechenfall fortführen", m_project, m_addCalcCasePage ) );
+    m_addCalcCasePage.addChoice( new ContinueOldCalcCaseChoice(
+        "einen bereits vorhandenen Rechenfall fortführen", m_project, m_addCalcCasePage ) );
 //    m_addCalcCasePage.addChoice( new CopyCalcCaseChoice(
 //        "einen bereits vorhandenen Rechenfall kopieren", m_project, m_addCalcCasePage ) );
     m_addCalcCasePage.addChoice( new CopyServerCalcCaseChoice(
         "einen auf dem Server archivierten Rechenfall kopieren", m_project, m_addCalcCasePage, m_synchronizer ) );
-    
-
     addPage( m_addCalcCasePage );
     addPage( m_controlPage );
   }

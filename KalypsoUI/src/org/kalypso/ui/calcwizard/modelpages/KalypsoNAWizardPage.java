@@ -52,7 +52,6 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
-  private LayerTableViewer m_viewer;
 
   public KalypsoNAWizardPage()
   {
@@ -157,22 +156,22 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
    */
   public boolean performFinish()
   {
-    try
-    {
-      // TODO: error handling?
-      m_viewer.saveData( new NullProgressMonitor() );
-    }
-    catch( CoreException e )
-    {
-      e.printStackTrace();
-    }
+//    try
+//    {
+//      // TODO: error handling?
+//      getLayerTable().saveData( new NullProgressMonitor() );
+//    }
+//    catch( CoreException e )
+//    {
+//      e.printStackTrace();
+//    }
 
     return true;
   }
 
   protected void runCalculation()
   {
-    final LayerTableViewer viewer = m_viewer;
+    final LayerTableViewer viewer =  getLayerTable();
 
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
     {
@@ -230,6 +229,6 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
    */
   protected TSLinkWithName[] getObservationsToShow()
   {
-    return getObservationsFromMap();
+    return getObservationsFromMap(true);
   }
 }

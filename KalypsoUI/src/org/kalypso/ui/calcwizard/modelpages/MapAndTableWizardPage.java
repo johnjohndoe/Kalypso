@@ -210,6 +210,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
    */
   protected TSLinkWithName[] getObservationsToShow()
   {
-    return getObservationsFromMap();
+    return getObservationsFromMap(false);
   }
 }
