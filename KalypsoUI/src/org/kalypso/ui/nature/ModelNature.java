@@ -74,7 +74,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public static final String MODELLTYP_CALCCASECONFIG_XML = MODELLTYP_FOLDER + "/"
       + "calcCaseConfig.xml";
 
-  public static final String MODELLTYP_MODELSPEC_XML = MODELLTYP_FOLDER + "/" + "modelspec.xml";
+  public static final String MODELLTYP_MODELSPEC_XML = "modelspec.xml";
 
   public static final String ID = "org.kalypso.ui.ModelNature";
 
@@ -106,7 +106,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
   // nix tun
   }
-  
+
   public final IFolder getPrognoseFolder()
   {
     return m_project.getFolder( PROGNOSE_FOLDER );
@@ -269,7 +269,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     try
     {
       FolderUtilities.mkdirs( folder );
-      
+
       final CalcCaseConfigType trans = readCalcCaseConfig( folder );
 
       monitor.worked( 1000 );
@@ -361,7 +361,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public String getCalcType() throws CoreException
   {
-    final Modelspec modelspec = getModelspec();
+    final Modelspec modelspec = getModelspec( MODELLTYP_MODELSPEC_XML );
 
     return modelspec.getTypeID();
   }
@@ -448,7 +448,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       if( inputResource == null )
         throw new CoreException( KalypsoGisPlugin.createErrorStatus(
             "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Datei "
-                + MODELLTYP_MODELSPEC_XML, null ) );
+                + MODELLTYP_FOLDER + "/" + MODELLTYP_MODELSPEC_XML, null ) );
 
       final File basedir = input.isRelativeToCalcCase() ? serverCalcDir : serverBaseDir;
       final String reldir = ( input.isRelativeToCalcCase() ? "calc" : "base" ) + "/" + inputPath;
@@ -471,11 +471,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   }
 
-  private Modelspec getModelspec() throws CoreException
+  private Modelspec getModelspec( String modelSpec ) throws CoreException
   {
     try
     {
-      final IFile file = m_project.getFile( MODELLTYP_MODELSPEC_XML );
+      final IFile file = m_project.getFile( MODELLTYP_FOLDER + "/" + modelSpec );
 
       final ObjectFactory faktory = new ObjectFactory();
       final Unmarshaller unmarshaller = faktory.createUnmarshaller();
@@ -496,19 +496,19 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     monitor.beginTask( "Berechnungsergebniss abrufen", results.length );
 
     System.out.println( "Results: " + results.length );
-    
+
     for( int i = 0; i < results.length; i++ )
     {
       final CalcJobDataBean bean = results[i];
 
       final String beanPath = bean.getPath();
       final File serverfile = new File( serveroutputdir, beanPath );
-      
+
       final IFile targetfile = targetfolder.getFile( beanPath );
       FolderUtilities.mkdirs( targetfile.getParent() );
-
+      if(targetfile.exists()) // loeschen, auch wenn er gerade geladen ist
+        targetfile.delete(true, false, new NullProgressMonitor() );
       System.out.println( "Write: " + serverfile.getAbsolutePath() );
-      
       final SetContentThread thread = new SetContentThread( targetfile, true, false, false,
           new NullProgressMonitor() )
       {
@@ -531,7 +531,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       try
       {
         thread.join();
-        
+
         System.out.println( "Wrote: " + serverfile.getAbsolutePath() );
       }
       catch( final InterruptedException e )
@@ -546,7 +546,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
             "Fehler beim Zurückladen der Ergebnisdateien", thrown ) );
       final CoreException fileException = thread.getFileException();
       if( fileException != null )
-          throw fileException;
+        throw fileException;
 
       monitor.worked( 1 );
 
@@ -562,21 +562,21 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     return loadOrCreateControl( null );
   }
-  
+
   public GMLWorkspace loadOrCreateControl( final IFolder folder ) throws CoreException
   {
     try
     {
       // gibts das file schon, dann laden
       String gmlPath = getProject().getName() + "/" + CONTROL_TEMPLATE_GML_PATH;
-      
+
       if( folder != null )
       {
         final IFile controlFile = folder.getFile( CONTROL_NAME );
         if( controlFile.exists() )
           gmlPath = controlFile.getFullPath().toString();
       }
-      
+
       final URL gmlURL = new URL( "platform:/resource/" + gmlPath );
       final URL schemaURL = new URL( "platform:/resource/" + getProject().getName() + "/"
           + CONTROL_TEMPLATE_XSD_PATH );
@@ -594,11 +594,22 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  public void runCalculation( final IFolder folder, final IProgressMonitor monitor )
+  public void runCalculation( final IFolder folder, final IProgressMonitor monitor)
       throws CoreException
   {
-    monitor.beginTask( "Modellrechnung wird durchgeführt", 4000  );
-    
+    runCalculation( folder, monitor, MODELLTYP_MODELSPEC_XML, true  );
+  }
+
+  public void runCalculation( final IFolder folder, final IProgressMonitor monitor,
+      final String modelSpec,boolean clearResults ) throws CoreException
+  {
+    if( modelSpec == null )
+    {
+      runCalculation( folder, monitor );
+      return;
+    }
+    monitor.beginTask( "Modellrechnung wird durchgeführt", 4000 );
+
     final CoreException cancelException = new CoreException( new Status( IStatus.CANCEL,
         KalypsoGisPlugin.getId(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) );
 
@@ -608,7 +619,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault().getServiceProxyFactory();
 
-    final Modelspec modelspec = getModelspec();
+    final Modelspec modelspec = getModelspec( modelSpec );
 
     final SubProgressMonitor subMonitor1 = new SubProgressMonitor( monitor, 1000 );
     subMonitor1.beginTask( "Rechendienst wird initialisiert", 1000 );
@@ -716,7 +727,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         // Ergebniss abholen
         final CalcJobDataBean[] results = jobBean.getResults();
         final IFolder outputfolder = folder.getFolder( "Ergebnisse" );
-        if( outputfolder.exists() )
+        if(clearResults && outputfolder.exists() ) 
           outputfolder.delete( false, false, new NullProgressMonitor() );
 
         final File serveroutputdir = new File( jobBean.getBasedir(),
@@ -750,17 +761,17 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
     finally
     {
-//            try
-//            {
-//              calcService.disposeJob( job.getId() );
-//            }
-//            catch( final RemoteException e1 )
-//            {
-//              e1.printStackTrace();
-//      
-//              throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-//                  "Kritischer Fehler bei Löschen des Rechen-Jobs", e1 ) );
-//            }
+      //            try
+      //            {
+      //              calcService.disposeJob( job.getId() );
+      //            }
+      //            catch( final RemoteException e1 )
+      //            {
+      //              e1.printStackTrace();
+      //      
+      //              throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+      //                  "Kritischer Fehler bei Löschen des Rechen-Jobs", e1 ) );
+      //            }
     }
   }
 

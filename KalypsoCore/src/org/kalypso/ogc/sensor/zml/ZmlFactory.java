@@ -157,7 +157,7 @@ public class ZmlFactory
       
       // stream is closed in finally
       inputStream = tmpUrl.openStream();
-
+      
       return parseXML( new InputSource( inputStream ), identifier, url );
     }
     catch( IOException e )

@@ -15,6 +15,7 @@ import org.deegree_impl.model.geometry.GeometryFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.java.io.ReaderUtilities;
+import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.gistableview.Gistableview;
@@ -29,17 +30,27 @@ import org.xml.sax.InputSource;
  */
 public class GisTemplateHelper
 {
-  private static Unmarshaller UNMARSHALLER;
+  private static Unmarshaller GMT_UNMARSHALLER;
 
-  private static Marshaller MARSHALLER;
+  private static Marshaller GMT_MARSHALLER;
+
+  private static Unmarshaller GTT_UNMARSHALLER;
+
+
+  private static Unmarshaller GFT_UNMARSHALLER;
+
 
   static
   {
     try
     {
       final ObjectFactory objectFactory = new ObjectFactory();
-      UNMARSHALLER = objectFactory.createUnmarshaller();
-      MARSHALLER = objectFactory.createMarshaller();
+      GMT_UNMARSHALLER = objectFactory.createUnmarshaller();
+      GMT_MARSHALLER = objectFactory.createMarshaller();
+
+      GTT_UNMARSHALLER = new org.kalypso.template.gistableview.ObjectFactory().createUnmarshaller();
+
+      GFT_UNMARSHALLER = new org.kalypso.template.featureview.ObjectFactory().createUnmarshaller();
     }
     catch( final JAXBException e )
     {
@@ -51,6 +62,44 @@ public class GisTemplateHelper
   {
   // never instantiate this class
   }
+
+  public static final Featuretemplate loadGisFeatureTemplate( final IFile file,
+      final Properties replaceProps ) throws CoreException, IOException, JAXBException
+  {
+    // TODO: replace with 'ReplaceToken'
+    final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file
+        .getCharset() );
+    final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
+
+    return loadGisFeatureTemplate( new InputSource( new StringReader( contents ) ) );
+  }
+
+  public static final Featuretemplate loadGisFeatureTemplate( final InputSource is )
+      throws JAXBException
+  {
+    return (Featuretemplate)GFT_UNMARSHALLER.unmarshal( is );
+  }
+
+  //  public static final Featureview loadGisFeatureView( final IFile file, final
+  // Properties replaceProps )
+  //      throws CoreException, IOException, JAXBException
+  //  {
+  //    // TODO: replace with 'ReplaceToken'
+  //    final InputStreamReader inputStreamReader = new InputStreamReader(
+  // file.getContents(), file
+  //        .getCharset() );
+  //    final String contents = ReaderUtilities.readAndReplace( inputStreamReader,
+  // replaceProps );
+  //
+  //    return loadGisFeatureView( new InputSource( new StringReader( contents ) )
+  // );
+  //  }
+  //
+  //  public static final Featureview loadGisFeatureView( final InputSource is )
+  // throws JAXBException
+  //  {
+  //    return (Featureview)FeatureviewHelper.UNMARSHALLER.unmarshal(is);
+  //  }
 
   public static final Gismapview loadGisMapView( final IFile file, final Properties replaceProps )
       throws CoreException, IOException, JAXBException
@@ -74,7 +123,7 @@ public class GisTemplateHelper
 
   public static final Gismapview loadGisMapView( final InputSource is ) throws JAXBException
   {
-    return (Gismapview)UNMARSHALLER.unmarshal( is );
+    return (Gismapview)GMT_UNMARSHALLER.unmarshal( is );
   }
 
   /**
@@ -108,14 +157,13 @@ public class GisTemplateHelper
 
   public static Gistableview loadGisTableview( final InputSource is ) throws JAXBException
   {
-    return (Gistableview)new org.kalypso.template.gistableview.ObjectFactory().createUnmarshaller()
-        .unmarshal( is );
+    return (Gistableview)GTT_UNMARSHALLER.unmarshal( is );
   }
 
   public static void saveGisMapView( final Gismapview modellTemplate, final OutputStream outStream )
       throws JAXBException
   {
-    MARSHALLER.marshal( modellTemplate, outStream );
+    GMT_MARSHALLER.marshal( modellTemplate, outStream );
   }
 
   public static GM_Envelope getBoundingBox( Gismapview gisview )
