@@ -14,6 +14,9 @@ public class JAXBXLink implements IXlink
 
   public JAXBXLink( final SimpleLinkType xlink )
   {
+    if( xlink == null )
+      throw new IllegalArgumentException( "xlink is null" );
+    
     m_xlink = xlink;
   }
 
