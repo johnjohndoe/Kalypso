@@ -3,9 +3,16 @@
     <page className="org.kalypso.ui.calcwizard.MapAndTableWizardPage" pageTitle="Eingabe NA-Modelle" imageLocation="icons/calcwizard/boden.gif" >
         <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/karte1.gmt"/>
         <arg name="tableTemplate" value=".modellTyp/vorlagen/rechenfall/table1.gtt"/>
+        <arg name="diagTemplate" value="...odt"/>
+
         <arg name="timeseriesPropertyNames" value="Wasserstand#Wasserstand_gerechnet"/>
+
         <arg name="mainSash" value="80"/>
         <arg name="rightSash" value="40"/>
+        
+        <arg name="timeserie1" value="type=...#typeName=...#nameColumn=...#linkColumn=..."/>
+        <arg name="timeserie2" value="type=...#typeName=...#nameColumn=...#linkColumn=..."/>
+
     </page>
 
     <page className="org.kalypso.ui.calcwizard.MapAndTableWizardPage" pageTitle="Eingabe Flusslaufmodelle" imageLocation="icons/calcwizard/boden.gif" >
