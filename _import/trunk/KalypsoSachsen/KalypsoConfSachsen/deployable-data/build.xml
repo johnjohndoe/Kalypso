@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="Kalypso-data" default="build-data.zip" basedir="..">
+
+	<!-- Project full path -->
+	<property name="project.path" value="${workspace}/KalypsoConfSachsen" />
+	<property name="dist" value="${workspace}/KalypsoConfSachsen/deploy" />
+
+	<target name="prepare" description="Creates the build directory">
+		<echo message="Creating the required directories...." />
+		<mkdir dir="${dist}" />
+	</target>
+
+	<target name="clean" description="Removes the build directories">
+		<delete dir="${dist}" />
+	</target>
+
+	<!-- BUILD: data.zip (ready to be deployed in %SERVER%/kalypso/data...) -->
+	<target name="build-data.zip" depends="prepare" description="Builds the data zip file">
+		<zip destfile="${dist}/data.zip">
+			<fileset dir="${project.path}/deployable-data/data" includes="*/**" />
+		</zip>
+	</target>
+
+</project>
