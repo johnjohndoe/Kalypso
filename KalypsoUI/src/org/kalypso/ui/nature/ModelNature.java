@@ -119,8 +119,7 @@ public class ModelNature implements IProjectNature
     if( resource instanceof IFolder )
     {
       final IFolder folder = (IFolder)resource;
-      final IResource calcFile = folder.findMember( CALCULATION_FILE );
-      if( calcFile != null && calcFile.exists() && calcFile instanceof IFile )
+      if( isCalcCalseFolder( folder ) )
         return "Rechenfall darf nicht innerhalb eines anderen Rechenfalls angelegt werden";
 
       return checkCanCreateCalculationCase( folder.getParent().getFullPath() );
@@ -142,6 +141,12 @@ public class ModelNature implements IProjectNature
     }
 
     return "???";
+  }
+  
+  public static boolean isCalcCalseFolder( final IFolder folder )
+  {
+    final IResource calcFile = folder.findMember( CALCULATION_FILE );
+    return ( calcFile != null && calcFile.exists() && calcFile instanceof IFile );
   }
 
   public static void createCalculationCaseInFolder( final IFolder folder,
