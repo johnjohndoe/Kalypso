@@ -26,6 +26,10 @@
 			<argument name="input" value=":project:.templates/Gesamtansicht.gmt"/>
 			<argument name="output" value=":calcdir:Gesamtansicht.gmt"/>
 		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/Diagramm.odt"/>
+			<argument name="output" value=":calcdir:zeitreihen/Diagramm.odt"/>
+		</transformation>
 	</createTransformations>
 	
 	<!-- TODO: Results.xml erzeugen/kopieren? -->

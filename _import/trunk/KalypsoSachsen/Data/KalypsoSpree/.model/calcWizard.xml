@@ -46,7 +46,7 @@
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="16"/>
         
-        <arg name="timeserie4" value="diagDateAxis=d#diagValueAxis=z#nameColumn=Name#linkColumn=Zugabe"/>
+        <arg name="timeserie4" value="diagDateAxis=d#diagValueAxis=z#nameColumn=Name#linkColumn=Abgabe"/>
     </page>
 
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Zuflüsse" imageLocation="icons/calcwizard/kalypso32.gif" >
@@ -98,7 +98,6 @@
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="40"/>
         <arg name="selectionID" value="128"/>
-        
     </page>
 
 	<!-- Ergebnisablage -->
@@ -109,8 +108,9 @@
 	   	<arg name="tableTemplate"  value="project:.templates/calcCase/pegel.gtt"/>
 		<arg name="diagTemplate" value=".templates/calcCase/results.odt"/>
 	
-		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=PegelBerechnung"/>
-		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=NiederschlagMessung"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_rechnung"/>
+        <arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=w2#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
+        <arg name="timeserie3" value="diagDateAxis=d#diagValueAxis=w2#nameColumn=Name#linkColumn=Wasserstand_gerechnet"/>
 	
 	   	<arg name="mainSash" value="50"/>
 	   	<arg name="rightSash" value="40"/>

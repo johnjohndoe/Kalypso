@@ -1,0 +1,4 @@
+&lt;interpolationFilter calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0&quot;&gt;&lt;zmlFilter&gt;&lt;zml href=&quot;PUT_IT_HERE&quot;/&gt;&lt;/zmlFilter&gt;&lt;/interpolationFilter&gt;
+
+
+<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="&lt;interpolationFilter calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0&quot;&gt;&lt;zmlFilter&gt;&lt;zml href=&quot;kalypso-ocs:Spree://2004/QP_BURGNEU.zml&quot;/&gt;&lt;/zmlFilter&gt;&lt;/interpolationFilter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
