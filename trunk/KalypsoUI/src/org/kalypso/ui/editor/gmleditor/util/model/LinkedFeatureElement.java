@@ -18,18 +18,6 @@ public class LinkedFeatureElement extends Model
     this.name = linkedFeatureName.trim();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.ui.editor.gmleditor.util.model.Model#accept(org.kalypso.ui.editor.gmleditor.util.model.IModelVisitor,
-   *      java.lang.Object)
-   */
-  public void accept( IModelVisitor visitor, Object passAlongArgument )
-  {
-  // TODO Auto-generated method stub
-
-  }
-
   public FeatureElement getLinkedFeature()
   {
     return linkedFeatureElement;

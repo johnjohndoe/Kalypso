@@ -248,8 +248,15 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
    * @see org.deegree.model.feature.GMLWorkspace#addFeature(org.deegree.model.feature.Feature,
    *      java.lang.String, int, org.deegree.model.feature.Feature)
    */
-  public void addFeature( Feature parent, String propName, int pos, Feature newFeature ) throws Exception
+  public void addFeature( Feature parent, String propName, int pos, Feature newFeature )
+      throws Exception
   {
     m_workspace.addFeature( parent, propName, pos, newFeature );
+  }
+
+  public void addLinkedFeature( Feature parent, String propName, int pos, Feature newFeature )
+      throws Exception
+  {
+    m_workspace.addLinkedFeature( parent, propName, pos, newFeature );
   }
 }

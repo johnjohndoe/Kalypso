@@ -116,6 +116,11 @@ public class GMLReader implements IPoolListener
                   propertyElement.addFeature( fe );
                   recursiveRead( feature, fe );
                 }
+                else if(ss.get(j) instanceof String)
+                {
+                  LinkedFeatureElement lfe = new LinkedFeatureElement( ss.get(j).toString() );
+                  propertyElement.addLinkedFeature( lfe );                  
+                }                   
               }
             }
             else

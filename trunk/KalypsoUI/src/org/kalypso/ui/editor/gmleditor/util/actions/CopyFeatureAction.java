@@ -41,39 +41,28 @@
 package org.kalypso.ui.editor.gmleditor.util.actions;
 
 import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.util.Clipboard;
+import org.kalypso.ui.editor.gmleditor.util.command.CopyFeatureCommand;
 
-public final class AddFeatureAction extends Action
+public final class CopyFeatureAction extends Action
 {
-  private String m_propertyName;
-
-  private int pos = 0;
 
   private CommandableWorkspace m_workspace;
 
-  private FeatureType m_type;
+  private Feature m_originalFeature;
 
-  private Feature m_parentFeature;
+  public static final String NAME = "Copy As Link";
 
-  private Shell m_shell;
+  private Clipboard m_clipboard;
 
-  public AddFeatureAction( FeatureType type, CommandableWorkspace workspace, Feature parentFeature,
-      String propertyName, int i, Shell shell )
+  public CopyFeatureAction( Feature originalFeature, CommandableWorkspace workspace, Clipboard clipboard )
   {
-    super( type.getName() );
-    m_propertyName = propertyName;
-    pos = i;
+    super( NAME );
+    m_originalFeature = originalFeature;
+    m_clipboard = clipboard;
     m_workspace = workspace;
-    m_type = type;
-    m_parentFeature = parentFeature;
-    m_shell = shell;
   }
 
   /**
@@ -81,8 +70,7 @@ public final class AddFeatureAction extends Action
    */
   public void run()
   {
-    AddFeatureCommand command = new AddFeatureCommand( m_workspace, m_type, m_parentFeature,
-        m_propertyName, pos );
+    CopyFeatureCommand command = new CopyFeatureCommand( m_originalFeature, m_clipboard );
     try
     {
       m_workspace.postCommand( command );
@@ -90,10 +78,6 @@ public final class AddFeatureAction extends Action
     }
     catch( Exception e )
     {
-      // TODO notify user
-      IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.editor.GMLEditor", 0, e
-          .getMessage(), null );
-      ErrorDialog.openError( m_shell, "ERROR", e.getMessage(), status );
       e.printStackTrace();
     }
   }

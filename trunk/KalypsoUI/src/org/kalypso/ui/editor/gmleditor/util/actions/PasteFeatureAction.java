@@ -42,15 +42,18 @@ package org.kalypso.ui.editor.gmleditor.util.actions;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.event.ModellEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.editor.gmleditor.util.Clipboard;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.util.model.LinkedFeatureElement;
 
-public final class AddFeatureAction extends Action
+public final class PasteFeatureAction extends Action
 {
   private String m_propertyName;
 
@@ -63,38 +66,37 @@ public final class AddFeatureAction extends Action
   private Feature m_parentFeature;
 
   private Shell m_shell;
+  
+  private Clipboard m_clipboard = null;
+  
+  public static final String NAME = "Paste Feature";
 
-  public AddFeatureAction( FeatureType type, CommandableWorkspace workspace, Feature parentFeature,
-      String propertyName, int i, Shell shell )
+  public PasteFeatureAction(CommandableWorkspace workspace, Feature parentFeature,
+      String propertyName, Clipboard clipboard)
   {
-    super( type.getName() );
-    m_propertyName = propertyName;
-    pos = i;
-    m_workspace = workspace;
-    m_type = type;
-    m_parentFeature = parentFeature;
-    m_shell = shell;
+    super(NAME);
+    m_propertyName = propertyName;   
+    m_workspace = workspace;   
+    m_parentFeature = parentFeature;    
+    m_clipboard = clipboard;
   }
 
   /**
    * @see org.eclipse.jface.action.IAction#run()
    */
   public void run()
-  {
-    AddFeatureCommand command = new AddFeatureCommand( m_workspace, m_type, m_parentFeature,
-        m_propertyName, pos );
-    try
-    {
-      m_workspace.postCommand( command );
-      return;
-    }
-    catch( Exception e )
-    {
-      // TODO notify user
-      IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.editor.GMLEditor", 0, e
-          .getMessage(), null );
-      ErrorDialog.openError( m_shell, "ERROR", e.getMessage(), status );
-      e.printStackTrace();
-    }
+  {    
+    //m_clipboard.setClipboardFeature(null);
+    if(m_clipboard.getClipboardFeature() != null)
+      try
+      {
+        m_workspace.addLinkedFeature(m_parentFeature, m_propertyName, 0, m_clipboard.getClipboardFeature());
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+      
+    m_workspace.fireModellEvent(new ModellEvent(m_workspace, ModellEvent.FULL_CHANGE));
   }
 }

@@ -40,18 +40,6 @@ public class FeatureElement extends Model
     return f;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.ui.editor.gmleditor.util.model.Model#accept(org.kalypso.ui.editor.gmleditor.util.model.IModelVisitor,
-   *      java.lang.Object)
-   */
-  public void accept( IModelVisitor visitor, Object passAlongArgument )
-  {
-  // TODO Auto-generated method stub
-
-  }
-
   public Object[] getElements()
   {
     return elements.toArray();

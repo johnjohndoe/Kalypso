@@ -13,7 +13,7 @@ public class GMLEditorContentProvider implements ITreeContentProvider, IGMLDocum
 {
   private static Object[] EMPTY_ARRAY = new Object[0];
 
-  protected TreeViewer m_viewer;
+  protected TreeViewer viewer;
 
   /*
    * @see IContentProvider#dispose()
@@ -21,67 +21,17 @@ public class GMLEditorContentProvider implements ITreeContentProvider, IGMLDocum
   public void dispose()
   {/**/}
 
-  /*
-   * @see IContentProvider#inputChanged(Viewer, Object, Object)
-   */
-  /**
-   * Notifies this content provider that the given viewer's input has been
-   * switched to a different element.
-   * <p>
-   * A typical use for this method is registering the content provider as a
-   * listener to changes on the new input (using model-specific means), and
-   * deregistering the viewer from the old input. In response to these change
-   * notifications, the content provider propagates the changes to the viewer.
-   * </p>
-   * 
-   * @param viewer
-   *          the viewer
-   * @param oldInput
-   *          the old input element, or <code>null</code> if the viewer did
-   *          not previously have an input
-   * @param newInput
-   *          the new input element, or <code>null</code> if the viewer does
-   *          not have an input
-   */
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( Viewer m_viewer, Object oldInput, Object newInput )
   {
-    m_viewer = (TreeViewer)viewer;
-    //		if(oldInput != null) {
-    //			removeListenerFrom((FeaturePropertyElement)oldInput);
-    //		}
-    //		if(newInput != null) {
-    //			addListenerTo((MovingBox)newInput);
-    //		}
+    this.viewer = (TreeViewer)m_viewer;
   }
-
-  /**
-   * Because the domain model does not have a richer listener model, recursively
-   * remove this listener from each child box of the given box
-   * 
-   * @param fe
-   */
   protected void removeListenerFrom( FeatureElement fe )
   {
-  //		box.removeListener(this);
-  //		for (Iterator iterator = box.getBoxes().iterator(); iterator.hasNext();) {
-  //			MovingBox aBox = (MovingBox) iterator.next();
-  //			removeListenerFrom(aBox);
-  //		}
+    /**/
   }
 
-  /**
-   * Because the domain model does not have a richer listener model, recursively
-   * add this listener to each child box of the given box
-   * 
-   * @param fe
-   */
   protected void addListenerTo( FeatureElement fe )
-  {
-  //		box.addListener(this);
-  //		for (Iterator iterator = box.getBoxes().iterator(); iterator.hasNext();) {
-  //			MovingBox aBox = (MovingBox) iterator.next();
-  //			addListenerTo(aBox);
-  //		}
+  {/**/
   }
 
   /*
@@ -130,18 +80,12 @@ public class GMLEditorContentProvider implements ITreeContentProvider, IGMLDocum
     return getChildren( inputElement );
   }
 
-  /*
-   * @see IDeltaListener#add(DeltaEvent)
-   */
+
   public void add( GMLDocumentEvent event )
   {
-  //    Object movingBox = ( (Model)event.receiver() ).getParent();
-  //    viewer.refresh( movingBox, false );
+
   }
 
-  /*
-   * @see IDeltaListener#remove(DeltaEvent)
-   */
   public void remove( GMLDocumentEvent event )
   {
     add( event );

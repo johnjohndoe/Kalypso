@@ -40,7 +40,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   /**
    * 
-   * @see org.deegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
+   * @see org.deegree.model.feature.GMLWorkspace#getFeature(org.deegree.model.feature.FeatureType,
+   *      java.lang.String)
    */
   public Feature getFeature( final String id )
   {
@@ -236,8 +237,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * 
-   * @see org.deegree.model.feature.GMLWorkspace#getContext()
+   * @see org.deegree.model.feature.GMLWorkspace#getModelUrl()
    */
   public URL getContext()
   {
@@ -332,6 +332,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       if( m_indexMap.containsKey( id ) )
         System.out.println( "Workspace already contains a feature with id: " + id );
       m_indexMap.put( id, f );
+
       return true;
     }
   }
@@ -413,7 +414,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
           return newList;
         }
-        return null;
+        else
+          return null;
       }
     }
 
@@ -498,7 +500,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     String id = type.getName();
     int no = 0;
-    while( !m_indexMap.containsKey( id + Integer.toString( no ) ) )
+    while( m_indexMap.containsKey( id + Integer.toString( no ) ) )
       no++;
     return id + Integer.toString( no );
   }
@@ -510,24 +512,45 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public void addFeature( Feature parent, String propName, int pos, Feature newFeature )
       throws Exception
   {
-    final Object prop = parent.getProperty( propName );
-    // if maxOccurs > 1
+    Object prop = parent.getProperty( propName );
+
     if( prop instanceof List )
     {
       ( (List)prop ).add( pos, newFeature );
       m_indexMap.put( newFeature.getId(), newFeature );
       return;
     }
-    // if maxOccurs == 1 and property not set
-    else if( prop == null )
+    else if( prop == null ) // element not set
     {
+    
       FeatureProperty newProp = FeatureFactory.createFeatureProperty( propName, newFeature );
       parent.setProperty( newProp );
       m_indexMap.put( newFeature.getId(), newFeature );
       return;
     }
-    // TODO design a better exception
-    // we do not overwrite propertiess, so we throw an exception
+    // TODO eigene exception entwerfen
+    throw new Exception( "New Feature violates maxOccurs" );
+  }
+
+  public void addLinkedFeature( Feature parent, String propName, int pos, Feature newFeature )
+      throws Exception
+  {
+    Object prop = parent.getProperty( propName );
+    if( prop instanceof List )
+    {
+      ( (List)prop ).add( pos, newFeature.getId()) ;      
+      return;
+    }
+    else if( prop == null ) // element not set
+    {
+      int propPos = parent.getFeatureType().getPropertyPosition( propName );
+      if( propPos != -1 )
+      {
+        parent.getProperties()[propPos] = newFeature.getId();        
+      }
+      return;
+    }
+    // TODO eigene exception entwerfen
     throw new Exception( "New Feature violates maxOccurs" );
   }
 }
