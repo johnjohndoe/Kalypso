@@ -447,11 +447,6 @@
             name="Kalypso Observation Repositories"
             id="org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"/>
       <perspective
-            icon="icons/admin.gif"
-            class="org.kalypso.ui.perspectives.AdminPerspectiveFactory"
-            name="Kalypso Administrator"
-            id="org.kalypso.ui.perspectives.AdminPerspectiveFactory"/>
-      <perspective
             class="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"
             icon="icons/modeler.gif"
             fixed="false"
@@ -507,15 +502,15 @@
             <groupMarker name="modelStart"/>
             <separator name="modelSep"/>
             <groupMarker name="calcCaseStart"/>
+            <separator name="modelSep2"/>
             <groupMarker name="prognoseStart"/>
          </menu>
 		 <action
-         label="Hochwasser Vorhersage durchführen"
-         icon="etc/kalypso16.gif"
-         class="org.kalypso.ui.action.StartCalcWizardAction"
-         menubarPath="org.kalypso.menu.model/prognoseStart"
-         id="org.kalypso.action.model.checkoutModel"/>
-               
+	         label="Hochwasser Vorhersage durchführen"
+	         icon="etc/kalypso16.gif"
+	         class="org.kalypso.ui.action.StartCalcWizardAction"
+	         menubarPath="org.kalypso.menu.model/prognoseStart"
+	         id="org.kalypso.action.model.checkoutModel"/>
          <action
                label="Berechnung durchführen"
                class="org.kalypso.ui.action.StartCalculationActionDelegate"
@@ -525,27 +520,51 @@
                id="org.kalypso.action.model.runCalcCase"/>
          <action
                label="Rechenvariante anlegen"
+               class="org.kalypso.ui.action.CopyCalcCase"
                tooltip="legt eine Variante vom selektierten Rechenfall an"
+               icon="icons/util/copy_edit.gif"
                menubarPath="org.kalypso.menu.model/calcCaseStart"
                id="org.kalypso.action.model.copyCalcCase"/>
+<!--
+         <action
+               label="Rechenvariante archivieren"
+               icon="icons/util/copy_r_co.gif"
+               tooltip="legt eine Variante auf dem Server ab"
+               menubarPath="org.kalypso.menu.model/calcCaseStart"
+               id="org.kalypso.action.model.commitCalcCase"/>
+         <action
+               label="Rechenvariante vom Server laden"
+               icon="icons/util/copy_l_co.gif"
+               tooltip="lädt eine vorhandene Rechenvariante vom Server"
+               menubarPath="org.kalypso.menu.model/calcCaseStart"
+               id="org.kalypso.action.model.getCalcCase"/>
+-->               
          <action
                retarget="false"
                label="Modellvariante anlegen"
+               icon="icons/util/copy_edit.gif"
+               class="org.kalypso.ui.action.CopyModelDelegate"
                tooltip="legt eine Variante vom aktuelle gewählten Modell an"
                menubarPath="org.kalypso.menu.model/modelStart"
                id="org.kalypso.action.model.copyModel"/>
          <action
                label="Modell zurückspeichern"
+               icon="icons/util/copy_r_co.gif"
+               class="org.kalypso.ui.action.CommitModelDelegate"
                tooltip="Speichert die Änderungen am Modell auf den Server zurück"
                menubarPath="org.kalypso.menu.model/modelStart"
                id="org.kalypso.action.model.commitModel"/>
          <action
                label="Modell aktualisieren"
+               icon="icons/util/copy_l_co.gif"
+               class="org.kalypso.ui.action.UpdateModelDelegate"
                tooltip="aktualisiert ein bereits vorhandenes Modell mit Daten vom Server"
                menubarPath="org.kalypso.menu.model/modelStart"
                id="org.kalypso.action.model.updateModel"/>
          <action
-               label="Modell vom Server laden"
+               label="Modelle vom Server laden"
+               icon="icons/util/copy_l_co.gif"
+               class="org.kalypso.ui.action.LoadServerModelDelegate"
                tooltip="lädt ein Modell vom Sever, falls es nicht bereits vorhanden ist"
                menubarPath="org.kalypso.menu.model/modelStart"
                id="org.kalypso.action.model.checkoutModel"/>

@@ -28,6 +28,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
@@ -39,6 +40,7 @@ import org.kalypso.repository.RepositorySpecification;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.ocs.OcsURLStreamHandler;
 import org.kalypso.services.proxy.IObservationService;
+import org.kalypso.services.proxy.IUserService;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -94,6 +96,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private ILoaderFactory m_loaderFactory;
 
   private DefaultFeatureModifierFactory m_defaultFeatureControlFactory;
+
+  private String[] m_userRights;
   
   /**
    * The constructor. Manages the configuration of the kalypso client.
@@ -595,5 +599,44 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       return null;
 
     return new File( locations[0] );
+  }
+
+  public boolean checkUserRight( final String right )
+  {
+    final String[] userRights = getUserRights();
+    
+    if( userRights == null )
+      return false;
+    
+    for( int i = 0; i < userRights.length; i++ )
+    {
+      if( right.equals(userRights[i]) )
+        return true;
+    }
+    
+    return false;
+  }
+
+  public String[] getUserRights()
+  {
+    if( m_userRights != null )
+      return m_userRights;
+    
+    try
+    {
+        final String username = System.getProperty( "user.name" ).toLowerCase();
+        final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault()
+            .getServiceProxyFactory();
+        final  IUserService service = (IUserService)serviceProxyFactory.getProxy( "Kalypso_UserService", ClassUtilities
+            .getOnlyClassName( IUserService.class ) );
+
+         m_userRights = service == null ? null : service.getRights( username ); // todo avoid nullpointerexception
+    }
+    catch( final Throwable e1 )
+    {
+      e1.printStackTrace();
+    }
+
+    return m_userRights;
   }
 }

@@ -3,8 +3,6 @@ package org.kalypso.ui.application;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.rpc.ServiceException;
-
 import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
@@ -13,9 +11,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.kalypso.eclipse.jface.dialogs.PasswordDialog;
-import org.kalypso.java.lang.reflect.ClassUtilities;
-import org.kalypso.services.ProxyFactory;
-import org.kalypso.services.proxy.IUserService;
 import org.kalypso.services.user.common.IUserServiceConstants;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -30,27 +25,13 @@ public class KalypsoApplication implements IPlatformRunnable
    */
   public Object run( final Object args ) throws Exception
   {
-    String[] rights = new String[] {};
-    final String username = System.getProperty( "user.name" ).toLowerCase();
-    try
-    {
-      final IUserService service = prepareService();
-      rights = service == null ? null : service.getRights( username ); // todo avoid nullpointerexception
-    }
-    catch( final Throwable e1 )
-    {
-      e1.printStackTrace();
-    }
-    
-    rights = chooseRight( rights /*, username */);
+    final String[] rights = chooseRight( KalypsoGisPlugin.getDefault().getUserRights() /*, username */);
     
     if( rights == null )
       return null;
     
     for( int i = 0; i < rights.length; i++ )
       System.out.println( "Rights dump: '" + rights[i] + "'" );
-    
-//    rights = new String[]{ IUserServiceConstants.RIGHT_ADMIN };
     
     return startWorkbench( new KalypsoWorkbenchAdvisor( rights ) );
   }
@@ -108,23 +89,6 @@ public class KalypsoApplication implements IPlatformRunnable
 
     return returnCode == PlatformUI.RETURN_RESTART ? IPlatformRunnable.EXIT_RESTART
         : IPlatformRunnable.EXIT_OK;
-  }
-
-  private IUserService prepareService()
-  {
-    try
-    {
-      final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault()
-          .getServiceProxyFactory();
-      return (IUserService)serviceProxyFactory.getProxy( "Kalypso_UserService", ClassUtilities
-          .getOnlyClassName( IUserService.class ) );
-    }
-    catch( final ServiceException e )
-    {
-      e.printStackTrace();
-
-      return null;
-    }
   }
 
 }
