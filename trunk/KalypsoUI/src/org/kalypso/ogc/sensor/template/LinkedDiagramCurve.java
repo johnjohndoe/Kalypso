@@ -8,6 +8,7 @@ import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.impl.DiagramCurve;
 import org.kalypso.util.link.ObjectLink;
+import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.xml.xlink.IXlink;
 
 /**
@@ -23,7 +24,10 @@ public class LinkedDiagramCurve extends ObjectLink implements IDiagramCurve
 
   private DiagramCurve m_curve = null;
 
-  public LinkedDiagramCurve( final String linkType, final IXlink xlink, final String name, final Properties mappings, final IDiagramTemplate template )
+  private IVariableArguments m_args = null;
+
+  public LinkedDiagramCurve( final String linkType, final IXlink xlink, final String name,
+      final Properties mappings, final IDiagramTemplate template )
   {
     super( linkType, xlink );
 
@@ -47,6 +51,19 @@ public class LinkedDiagramCurve extends ObjectLink implements IDiagramCurve
     return m_curve.getName();
   }
 
+  public IVariableArguments getArguments()
+  {
+    return m_curve.getArguments();
+  }
+
+  public void setArguments( IVariableArguments args )
+  {
+    if( m_curve == null )
+      m_args = args;
+    else
+      m_curve.setArguments( args );
+  }
+
   public IObservation getObservation()
   {
     return m_curve.getObservation();
@@ -59,6 +76,6 @@ public class LinkedDiagramCurve extends ObjectLink implements IDiagramCurve
   {
     super.linkResolved( object );
 
-    m_curve = new DiagramCurve( m_name, (IObservation)getLinkedObject(), m_mappings, m_template );
+    m_curve = new DiagramCurve( m_name, (IObservation)getLinkedObject(), m_mappings, m_template, m_args );
   }
 }

@@ -6,6 +6,7 @@ import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
 import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.util.link.ObjectLink;
+import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.xml.xlink.IXlink;
 import org.kalypso.util.xml.xlink.JAXBXLink;
 
@@ -29,11 +30,14 @@ public class LinkedTableViewColumn extends ObjectLink implements ITableViewColum
 
   private TableViewColumn m_column;
 
+  private IVariableArguments m_args = null;
+
   public LinkedTableViewColumn( final ObstableviewType.ColumnpairType col )
   {
-    this( col.getValueAxis(), col.getLinktype(), new JAXBXLink(col), col.isEditable(), col.getWidth(), col.getSharedAxis(), col.getValueAxis() );
+    this( col.getValueAxis(), col.getLinktype(), new JAXBXLink( col ), col.isEditable(), col
+        .getWidth(), col.getSharedAxis(), col.getValueAxis() );
   }
-  
+
   public LinkedTableViewColumn( final String name, final String linkType, final IXlink xlink,
       final boolean isEditable, final int width, final String sharedAxisName,
       final String valueAxisName )
@@ -55,12 +59,7 @@ public class LinkedTableViewColumn extends ObjectLink implements ITableViewColum
     super.linkResolved( object );
 
     m_column = new TableViewColumn( m_name, (IObservation)getLinkedObject(), m_isEditable, m_width,
-        m_sharedAxisName, m_valueAxisName );
-  }
-
-  public boolean equals( Object obj )
-  {
-    return m_column.equals( obj );
+        m_sharedAxisName, m_valueAxisName, m_args );
   }
 
   public String getName()
@@ -96,5 +95,18 @@ public class LinkedTableViewColumn extends ObjectLink implements ITableViewColum
   public void setWidth( int width )
   {
     m_column.setWidth( width );
+  }
+
+  public IVariableArguments getArguments()
+  {
+    return m_column.getArguments();
+  }
+
+  public void setArguments( IVariableArguments args )
+  {
+    if( m_column != null )
+      m_column.setArguments( args );
+    else
+      m_args = args;
   }
 }
