@@ -1095,7 +1095,7 @@ public class StyleFactory {
                                                 double max ) {
         Geometry geom = null;
         if ( geometryPropertyName != null ) {
-            new Geometry_Impl( geometryPropertyName, null );
+        	geom = new Geometry_Impl( geometryPropertyName, null );
         }
         ParameterValueType label = createParameterValueType( attribute );
         return createTextSymbolizer( geom, label, font, labelPlacement, halo, 
