@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<obstableview xmlns="obstableview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="gistableview.template.kalypso.org
+<obstableview xmlns="obstableview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="obstableview.template.kalypso.org
 .\obstableview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<columnlayer id="argls1" linktype="zml"  editable="true" width="50" xlink:type="simple" xlink:href="RESOURCE#shapes/example#unknown" xlink:actuate="onRequest" />
 		<columnlayer id="argls2" linktype="psicompact"  editable="false" width="50" xlink:type="simple" xlink:href="RESOURCE#shapes/example#unknown" xlink:actuate="onRequest" />
 		<columnlayer id="argls3" linktype="zml"  editable="true" width="100" xlink:type="simple" xlink:href="RESOURCE#shapes/example#unknown" xlink:actuate="onRequest" />
-
 </obstableview>

@@ -1,6 +1,9 @@
 package org.kalypso.ogc.sensor.zml;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -29,8 +32,6 @@ import org.kalypso.zml.TargetPropertyType;
  */
 public class ZmlFileObservation implements IObservation
 {
-  private final File m_file;
-  
   private Observation m_obsFile = null;
 
   private Metadata m_metadata = null;
@@ -42,10 +43,20 @@ public class ZmlFileObservation implements IObservation
   private ZmlTuppleModel m_model = null;
 
   private final static ObjectFactory m_zmlObjectFactory = new ObjectFactory();
+
+  private final String m_name;
+
+  private final InputStream m_inputStream;
   
-  public ZmlFileObservation( final File file )
+  public ZmlFileObservation( final File file ) throws FileNotFoundException
   {
-    m_file = file;
+    this( file.getName(), new FileInputStream(file) );
+  }
+  
+  public ZmlFileObservation( final String name, final InputStream inputStream )
+  {
+    m_name = name;
+    m_inputStream = inputStream;
   }
   
   /**
@@ -57,7 +68,7 @@ public class ZmlFileObservation implements IObservation
     {
       Unmarshaller u = m_zmlObjectFactory.createUnmarshaller();
 
-      m_obsFile = (Observation)u.unmarshal( m_file );
+      m_obsFile = (Observation)u.unmarshal( m_inputStream );
     }
 
     return m_obsFile;
@@ -68,7 +79,7 @@ public class ZmlFileObservation implements IObservation
    */
   public String getName()
   {
-    return m_file.getName();
+    return m_name;
   }
 
   /**
@@ -107,8 +118,6 @@ public class ZmlFileObservation implements IObservation
         Observation obs = getObservation();
         
         m_metadata.put( Metadata.MD_NAME, obs.getName() );
-        m_metadata.put( "Filename", getName() );
-        m_metadata.put( "Folder", m_file.getParentFile() );
 
         List mdList = obs.getMetadataList().getMetadata();
 

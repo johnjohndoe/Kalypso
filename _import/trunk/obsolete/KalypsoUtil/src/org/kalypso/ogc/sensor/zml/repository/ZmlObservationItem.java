@@ -1,6 +1,7 @@
 package org.kalypso.ogc.sensor.zml.repository;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFileObservation;
@@ -27,15 +28,24 @@ public class ZmlObservationItem extends FileItem
   public Object getAdapter( Class anotherClass )
   {
     if( anotherClass == IObservation.class )
-      return getZmlFileObservation();
+      try
+      {
+        return getZmlFileObservation();
+      }
+      catch( FileNotFoundException e )
+      {
+        // TODO: ok so?
+        throw new RuntimeException( e );
+      }
     
     return null;
   }
 
   /**
    * Helper, lazy loading.
+   * @throws FileNotFoundException
    */
-  private ZmlFileObservation getZmlFileObservation()
+  private ZmlFileObservation getZmlFileObservation() throws FileNotFoundException
   {
     // check against the filter
     if( m_zmlFile == null && getRep().getFilter().accept( getFile() ) )
