@@ -57,6 +57,8 @@ import org.kalypso.convert.namodel.NAZMLGenerator;
 import org.kalypso.convert.namodel.schema.KalypsoNADefaultSchema;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.wq.WQFilterUtilities;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
@@ -68,7 +70,8 @@ public class UpdateModell
 {
   private final URL m_modellURL;
 
-  private final static String FILTER_WQ = "?" + UpdateHelper.createWQFilter();
+  private final static String FILTER_WQ = "?"
+      + WQFilterUtilities.createWQFilterInline( TimeserieConstants.TYPE_RUNOFF );
 
   public final static String PSI_PROGNOSE_SUFFIX = ".P1_MW";
 

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.update;
 
 import java.io.StringWriter;
@@ -45,10 +45,10 @@ import java.io.StringWriter;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.kalypso.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.filters.InterpolationFilter;
 import org.kalypso.zml.filters.ObjectFactory;
-import org.kalypso.zml.filters.WqFilter;
 
 /**
  * @author doemming
@@ -76,38 +76,6 @@ public class UpdateHelper
     StringWriter writer = new StringWriter( 0 );
     marshaller.marshal( interpolationFilter, writer );
     final String result = writer.toString();
-    return prepareInLineFilter( result );
-  }
-
-  private static String prepareInLineFilter( String xmlString )
-  {
-    String result = xmlString.replaceAll( "\n", "" );
-    result = removeXMLHeader( result );
-    return "<filter>" + result + "</filter>";
-  }
-
-  private static String removeXMLHeader( String xmlString )
-  {
-    return xmlString.replaceFirst( "<\\?.+?\\?>", "" );
-  }
-
-  public static String createWQFilter()
-  {
-    try
-    {
-      ObjectFactory of = new ObjectFactory();
-      WqFilter wqFilter = of.createWqFilter();
-      wqFilter.setType( "Q" );
-      Marshaller marshaller = of.createMarshaller();
-      StringWriter writer = new StringWriter( 0 );
-      marshaller.marshal( wqFilter, writer );
-      String result = writer.toString();
-      return prepareInLineFilter( result );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+    return XMLUtilities.prepareInLine( result );
   }
 }
