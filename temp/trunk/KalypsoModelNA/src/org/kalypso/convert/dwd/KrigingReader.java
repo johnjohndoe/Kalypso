@@ -109,10 +109,10 @@ public class KrigingReader
                 filter.setOperand(Double.toString(rel.getFactor()));
                 final ZmlFilter zmlLink = filterFac.createZmlFilter();
                 final SimpleLinkType type = linkFac.createSimpleLinkType();
-                type.setHref(rel.getId());
+                type.setHref("Ombrometer_"+rel.getId());
                 zmlLink.setZml(type);
                 filter.setFilter(zmlLink);
-                System.out.println("" + rel.getId() + " " + rel.getFactor());
+                System.out.println(rel.getId() + " " + rel.getFactor());
             }
             StringWriter writer=new StringWriter();
             m_marshaller.marshal(nOperationFilter,writer);
