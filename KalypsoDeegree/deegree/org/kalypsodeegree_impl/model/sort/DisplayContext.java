@@ -66,11 +66,11 @@ public class DisplayContext
 
   public void paint( Graphics g, GeoTransform projection, int styleNo, double scale )
   {
-    if( myDE[styleNo] != null )
+   if( myDE.length>styleNo && myDE[styleNo] != null )
       for( int i = 0; i < myDE[styleNo].length; i++ )
         if( myDE[styleNo][i].doesScaleConstraintApply( scale ) )
           myDE[styleNo][i].paint( g, projection );
-  }
+   }
 
   public void updateDisplayElements( UserStyle styles[] )
   {
