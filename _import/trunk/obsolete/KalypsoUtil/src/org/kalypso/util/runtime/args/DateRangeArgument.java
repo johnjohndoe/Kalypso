@@ -13,7 +13,7 @@ import org.kalypso.util.runtime.IVariableArguments;
  * 
  * @author schlienger
  */
-public class DateRangeArgument implements IVariableArguments
+public class DateRangeArgument implements IVariableArguments, Comparable
 {
   private final Date m_from;
 
@@ -68,6 +68,21 @@ public class DateRangeArgument implements IVariableArguments
   {
     return m_to;
   }
+  
+  /**
+   * Returns true when this range contains the given date.
+   * <p>
+   * 
+   * @param date
+   * @return true if date is in [from, to]
+   */
+  public boolean contains( final Date date )
+  {
+    if( date == null )
+      return false;
+    
+    return m_from.compareTo( date ) <= 0 && m_to.compareTo( date ) >= 0;
+  }
 
   /**
    * @see java.lang.Object#toString()
@@ -104,5 +119,23 @@ public class DateRangeArgument implements IVariableArguments
     final Date d1 = cal.getTime();
 
     return new DateRangeArgument( d1, d2 );
+  }
+
+  /**
+   * @see java.lang.Comparable#compareTo(java.lang.Object)
+   */
+  public int compareTo( final Object other )
+  {
+    if( !(other instanceof DateRangeArgument) )
+      throw new IllegalArgumentException( "Not comparing with a DateRangeArgument" );
+    
+    final DateRangeArgument dra = (DateRangeArgument) other;
+    
+    int cmp = this.m_from.compareTo( dra.m_from );
+    if( cmp != 0 )
+      return cmp;
+    
+    cmp = this.m_to.compareTo( dra.m_to );
+    return cmp;
   }
 }

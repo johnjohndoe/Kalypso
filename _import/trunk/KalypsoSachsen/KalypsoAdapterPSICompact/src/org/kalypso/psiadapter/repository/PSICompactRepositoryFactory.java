@@ -2,6 +2,7 @@ package org.kalypso.psiadapter.repository;
 
 import java.util.Properties;
 
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
@@ -113,7 +114,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
   public final static int maskToPsiStatus( int mask )
   {
     if( KalypsoStatusUtils.checkMask( mask,
-        KalypsoStatusUtils.BIT_USER_MODIFIED ) )
+        KalypsoStati.BIT_USER_MODIFIED ) )
       return PSICompact.STATUS_MANKOR;
 
     return PSICompact.STATUS_AUTO;
