@@ -320,4 +320,23 @@ public class FileUtilities
 
     return fileName.substring( 0, lastIndexOf );
   }
+
+  /** Lässt den FileVisitor die angegebene Datei (Verzeichnis) und alle Ihre Unterverzeichnisse und enthaltenen Dateien besuchen. */
+  public static void accept( final File root, final FileVisitor visitor )
+  {
+    // zuerst die Datei selbst
+    boolean recurse = visitor.visit( root );
+    if( recurse == false || !root.isDirectory() )
+      return;
+    
+    final File[] files = root.listFiles();
+    if( files == null )
+      return;
+    
+    for( int i = 0; i < files.length; i++ )
+    {
+      final File file = files[i];
+      accept( file, visitor );
+    }
+  }
 }
