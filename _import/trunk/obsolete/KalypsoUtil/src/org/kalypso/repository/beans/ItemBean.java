@@ -9,27 +9,38 @@ import java.io.Serializable;
  */
 public class ItemBean implements Serializable
 {
-  private int m_id;
+  private String m_id;
 
   private String m_name;
 
+  private String m_repId;
+
   public ItemBean()
   {
-    this( 0, "" );
+    this( "", "", "" );
   }
 
-  public ItemBean( final int id, final String name )
+  /**
+   * @param id
+   *          identifier of this item
+   * @param name
+   *          name of this item
+   * @param repId
+   *          identifier of the repository this item belongs to
+   */
+  public ItemBean( final String id, final String name, final String repId )
   {
     m_id = id;
     m_name = name;
+    m_repId = repId;
   }
 
-  public int getId()
+  public String getId()
   {
     return m_id;
   }
 
-  public void setId( int id )
+  public void setId( final String id )
   {
     m_id = id;
   }
@@ -39,8 +50,18 @@ public class ItemBean implements Serializable
     return m_name;
   }
 
-  public void setName( String name )
+  public void setName( final String name )
   {
     m_name = name;
+  }
+
+  public String getRepId()
+  {
+    return m_repId;
+  }
+
+  public void setRepId( String repId )
+  {
+    m_repId = repId;
   }
 }

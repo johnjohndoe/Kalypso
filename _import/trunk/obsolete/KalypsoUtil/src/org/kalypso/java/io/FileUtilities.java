@@ -215,10 +215,30 @@ public class FileUtilities
     final String absAbs = absoluteFile.getAbsolutePath();
     if( !absAbs.startsWith( baseAbs ) )
       return null;
-    
-    final String rel = absAbs.length() == baseAbs.length() ? "" : absAbs.substring( baseAbs.length() );
-    
+
+    final String rel = absAbs.length() == baseAbs.length() ? "" : absAbs.substring( baseAbs
+        .length() );
+
     final File file = new File( "." + rel );
     return file;
+  }
+
+  /**
+   * Returns true if childCandidate is stored under the path of parent, either
+   * directly or in a sub directory.
+   */
+  public static boolean isChildOf( final File parent, final File childCandidate )
+  {
+    File f = childCandidate;
+    
+    while( f != null )
+    {
+      if( f.equals( parent ) )
+        return true;
+      
+      f = f.getParentFile();
+    }
+
+    return false;
   }
 }

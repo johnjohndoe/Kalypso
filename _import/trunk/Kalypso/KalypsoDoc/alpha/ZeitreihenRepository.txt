@@ -18,3 +18,20 @@ Diagram-QuickView
 
 Table-QuickView
 - Siehe Beschreibung für Diagramm-QuickView (aber hier in Tabellenform)
+
+
+URL auf Observation:
+- beinhaltet Repository ID, Repository Location, und Observation ID.
+	- Repository ID identifiziert das Repository. Z.B. psicompact, file.
+	- Repository Location: ev. Konfiguration (für FileRepository der Pfad,
+	für PSICompact Repository, nichts).
+	- Observation ID: Kennzeichen anhand man wieder die Zeitreihe finden kann.
+
+
+Repository Reload/Refresh:
+es gibt grundsätzlich zwei Möglichkeiten: clientseitige oder
+clientseitig und serverseitige Refresh.
+- clientseitig: nur die View wird aktualisiert, d.h. die View holt erbaut sich neu.
+- clientseitig und serverseitig: nicht nur die View wird aktualisiert, sondern auch der
+Dienst wird aufgefordert sich zu aktualisiert. So lang der Dienst nicht fertig mit dem Update
+ist, wartet der Client (Benutzer hat die Möglichkeit abzubrechen).

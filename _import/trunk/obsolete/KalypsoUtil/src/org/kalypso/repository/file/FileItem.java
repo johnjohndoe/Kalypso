@@ -2,6 +2,7 @@ package org.kalypso.repository.file;
 
 import java.io.File;
 
+import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 
 /**
@@ -76,6 +77,25 @@ public class FileItem implements IRepositoryItem
    */
   public Object getAdapter( Class anotherClass )
   {
+    if( anotherClass == File.class )
+      return m_file;
+    
     return null;
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#getRepository()
+   */
+  public IRepository getRepository()
+  {
+    return m_rep;
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
+   */
+  public String getIdentifier()
+  {
+    return m_file.getAbsolutePath();
   }
 }

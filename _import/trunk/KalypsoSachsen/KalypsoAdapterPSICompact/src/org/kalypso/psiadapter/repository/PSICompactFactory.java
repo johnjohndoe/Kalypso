@@ -84,8 +84,7 @@ public final class PSICompactFactory
   {
     if( m_psiCompactRep == null )
     {
-      // TODO: specify location of the service here
-      m_psiCompactRep = new PSICompactRepository( "PSICompact" );
+      m_psiCompactRep = new PSICompactRepository( );
 
       // TODO siehe Kommentar in VersionChecker Klasse
       // m_threadVersionChecker = new VersionChecker();

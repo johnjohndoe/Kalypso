@@ -93,4 +93,12 @@ public abstract class AbstractRepository implements IRepository
   {
     return null;
   }
+  
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#getRepository()
+   */
+  public IRepository getRepository()
+  {
+    return this;
+  }
 }

@@ -15,19 +15,16 @@ import org.kalypso.util.xml.xlink.IXlink;
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.ArchiveData;
-import de.psi.go.lhwz.PSICompact.ObjectInfo;
 import de.psi.go.lhwz.PSICompact.ObjectMetaData;
 import de.psi.go.lhwz.PSICompact.WQParamSet;
 
 /**
- * Eine Observation aus PSICompact was auch ein Repository Item ist.
+ * Eine Observation aus PSICompact welche auch ein Repository Item ist.
  * 
  * @author schlienger
  */
 public class PSICompactObservationItem extends PSICompactItem implements IObservation
 {
-  private final ObjectInfo m_objectInfo;
-
   private final int m_valueType;
 
   /** Metadaten aus PSICompact */
@@ -80,9 +77,8 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   public PSICompactObservationItem( final PSICompactItem parent, final String name,
       final PSICompact.ObjectInfo info, final int valueType )
   {
-    super( parent, name );
+    super( parent, name, info );
 
-    m_objectInfo = info;
     m_valueType = valueType;
 
     try
@@ -284,5 +280,13 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   {
     // only editable when it represents a forecast
     return m_valueType == PSICompact.TYPE_VALUE;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getIdentifier()
+   */
+  public String getIdentifier()
+  {
+    return m_objectInfo.getId();
   }
 }
