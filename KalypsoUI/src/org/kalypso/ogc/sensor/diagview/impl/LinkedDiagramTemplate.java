@@ -101,7 +101,7 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
    * 
    * TODO: use themeName as name for the curve of the observation...
    * 
-   * @param themeName
+   * @param themeName used as part of the curve name if not null
    * @param context
    * @param href
    * @param linktype
@@ -116,7 +116,7 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
         ignoreExceptions );
 
     // fake theme because it won't be added directly to this template
-    final DefaultDiagramTemplateTheme fakeTheme = new DefaultDiagramTemplateTheme();
+    final DefaultDiagramTemplateTheme fakeTheme = new DefaultDiagramTemplateTheme( themeName );
     fakeTheme.setArguments( args );
 
     // use load mechanism
@@ -190,6 +190,8 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
           addTheme( theme );
       }
     }
+    else
+      m_key2themes.remove( key );
   }
 
   /**

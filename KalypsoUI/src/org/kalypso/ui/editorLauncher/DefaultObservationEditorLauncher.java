@@ -12,21 +12,28 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.ui.editorinput.StorageEditorInput;
-import org.kalypso.ui.editor.diagrameditor.TemplateStorage;
+import org.kalypso.ogc.sensor.template.TemplateStorage;
 
 /**
  * DefaultObservationTemplateLauncher
  * 
  * @author schlienger
  */
-public class DefaultObsDiagTemplateLauncher implements IDefaultTemplateLauncher
+public class DefaultObservationEditorLauncher implements IDefaultTemplateLauncher
 {
+  private final String m_pseudoFilename;
+
+  public DefaultObservationEditorLauncher( final String pseudoFilename )
+  {
+    m_pseudoFilename = pseudoFilename;
+  }
+  
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
    */
   public String getFilename( )
   {
-    return "<Standard Diagram Editor>.odt";
+    return m_pseudoFilename;
   }
 
   /**

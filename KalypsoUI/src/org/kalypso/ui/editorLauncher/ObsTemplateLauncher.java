@@ -22,8 +22,9 @@ public class ObsTemplateLauncher implements IEditorLauncher
     final IOFileFilter odtFilter = FileFilterUtils.suffixFileFilter( ".odt" );
     final FileFilter filter = FileFilterUtils.orFileFilter( odtFilter, ottFilter );
 
-    final IDefaultTemplateLauncher dl = new DefaultObsDiagTemplateLauncher();
+    final IDefaultTemplateLauncher dlTable = new DefaultObservationEditorLauncher( "<Standard Table Editor>.ott" );
+    final IDefaultTemplateLauncher dlDiag = new DefaultObservationEditorLauncher( "<Standard Table Editor>.odt" );
 
-    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[] { dl } );
+    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[] { dlTable, dlDiag } );
   }
 }

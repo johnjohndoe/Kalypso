@@ -13,6 +13,11 @@ import org.kalypso.util.runtime.IVariableArguments;
 public interface ITableViewTheme
 {
   /**
+   * @return name of the theme
+   */
+  public String getName();
+  
+  /**
    * @return observation on which this theme is based
    */
   public IObservation getObservation();

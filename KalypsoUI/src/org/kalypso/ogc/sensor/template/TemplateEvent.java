@@ -13,10 +13,6 @@ public class TemplateEvent extends EventObject
   
   public final static int TYPE_REMOVE_ALL = 4;
   
-  public final static int TYPE_LOADED = 8;
-  
-  //public final static int TYPE_REFRESH = 16;
-
   private final Object m_obj;
 
   private final int m_type;

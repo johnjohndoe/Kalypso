@@ -12,7 +12,7 @@ import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
  */
 public class DiagramCurve implements IDiagramCurve
 {
-  private final String m_name;
+  private String m_name;
   private final IDiagramTemplate m_template;
   private final IAxisMapping[] m_mappings;
   private IDiagramTemplateTheme m_theme;
@@ -80,5 +80,13 @@ public class DiagramCurve implements IDiagramCurve
   public IDiagramTemplateTheme getTheme( )
   {
     return m_theme;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramCurve#setName(java.lang.String)
+   */
+  public void setName( String name )
+  {
+    m_name = name;
   }
 }

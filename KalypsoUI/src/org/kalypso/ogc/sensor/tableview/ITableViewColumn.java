@@ -11,6 +11,8 @@ import org.kalypso.ogc.sensor.IAxis;
 public interface ITableViewColumn
 {
   public String getName( );
+  public void setName( final String name );
+
   public boolean isEditable( );
 
   public int getWidth( );
@@ -41,5 +43,5 @@ public interface ITableViewColumn
   /**
    * @return the observation theme on which this column is based
    */
-  public ITableViewTheme getTheme();
+  public ITableViewTheme getTheme();  
 }

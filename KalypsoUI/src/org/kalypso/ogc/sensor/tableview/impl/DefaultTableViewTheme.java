@@ -16,9 +16,36 @@ import org.kalypso.util.runtime.IVariableArguments;
 public class DefaultTableViewTheme implements ITableViewTheme
 {
   private IObservation m_obs = null;
+
   private IVariableArguments m_args = null;
 
   private final List m_columns = new ArrayList();
+
+  private final String m_themeName;
+
+  public DefaultTableViewTheme( )
+  {
+    this( null );
+  }
+
+  public DefaultTableViewTheme( final String name )
+  {
+    m_themeName = name;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewTheme#getName()
+   */
+  public String getName( )
+  {
+    if( m_themeName != null )
+      return m_themeName;
+    
+    if( m_obs != null )
+      return m_obs.getName();
+    
+    return super.toString();
+  }
   
   /**
    * @see org.kalypso.ogc.sensor.tableview.ITableViewTheme#getObservation()
@@ -45,15 +72,18 @@ public class DefaultTableViewTheme implements ITableViewTheme
   }
 
   /**
-   * Adds a column.
+   * Adds a column. Renames the column using this theme's name if not null.
    * 
    * @param column
    */
   public void addColumn( final ITableViewColumn column )
   {
-    m_columns.add( column );
+    if( m_themeName != null )
+      column.setName( m_themeName + " (" + column.getName() + ")" );
+
+      m_columns.add( column );
   }
-  
+
   /**
    * Removes a column
    * 
@@ -63,7 +93,7 @@ public class DefaultTableViewTheme implements ITableViewTheme
   {
     m_columns.remove( column );
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.tableview.ITableViewTheme#dispose()
    */
@@ -86,5 +116,13 @@ public class DefaultTableViewTheme implements ITableViewTheme
   public void setArguments( IVariableArguments args )
   {
     m_args = args;
+  }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString( )
+  {
+    return getName();
   }
 }

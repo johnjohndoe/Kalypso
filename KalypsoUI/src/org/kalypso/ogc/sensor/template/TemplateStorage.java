@@ -1,4 +1,4 @@
-package org.kalypso.ui.editor.diagrameditor;
+package org.kalypso.ogc.sensor.template;
 
 import java.io.InputStream;
 import java.net.URL;
