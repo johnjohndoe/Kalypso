@@ -26,10 +26,6 @@
 			<argument name="input" value=":project:.templates/Gesamtansicht.gmt"/>
 			<argument name="output" value=":calcdir:Gesamtansicht.gmt"/>
 		</transformation>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Diagramm.odt"/>
-			<argument name="output" value=":calcdir:Zeitreihen/Diagramm.odt"/>
-		</transformation>
 	</createTransformations>
 	
 <!-- Einzugsgebiete -->
