@@ -81,10 +81,6 @@ public class ObservationTableModel extends AbstractTableModel
 {
   private static final RenderingRule[] EMPTY_RENDERING_RULES = new RenderingRule[0];
 
-  /** status used when user modifies the values */
-  private static final Integer STATUS_USERMOD = new Integer(
-      KalypsoStati.BIT_USER_MODIFIED );
-
   /** rendering rules, defaults to some standard rules */
   private ITableViewRules m_rules = RulesFactory.getDefaultRules();
 
@@ -466,7 +462,7 @@ public class ObservationTableModel extends AbstractTableModel
         .get( columnIndex - 1 );
     col.setDirty( true );
 
-    m_statusModel.setValueAt( STATUS_USERMOD, rowIndex, columnIndex - 1 );
+    m_statusModel.setValueAt( KalypsoStati.STATUS_USERMOD, rowIndex, columnIndex - 1 );
     m_valuesModel.setValueAt( aValue, rowIndex, columnIndex - 1 );
 
     if( m_syncObservation )

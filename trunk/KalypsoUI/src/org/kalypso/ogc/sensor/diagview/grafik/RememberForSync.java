@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
@@ -21,6 +22,8 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.util.io.CSV;
 import org.kalypso.zml.ObservationType;
@@ -122,6 +125,17 @@ final class RememberForSync
       final List axisList = Arrays.asList( axes );
       axisList.remove( dateAxis );
       axisList.remove( m_numberAxis );
+      
+      IAxis statusAxis = null;
+      try
+      {
+        statusAxis = KalypsoStatusUtils.findStatusAxisFor( axes, m_numberAxis );
+        axisList.remove( statusAxis );
+      }
+      catch( NoSuchElementException e )
+      {
+        // ignored
+      }
 
       for( int l = 0; l < csv.getLines(); l++ )
       {
@@ -133,6 +147,9 @@ final class RememberForSync
 
         tupple[values.getPositionFor( dateAxis )] = date;
         tupple[values.getPositionFor( m_numberAxis )] = new Double( d );
+        
+        if( statusAxis != null )
+          tupple[values.getPositionFor(statusAxis)] = KalypsoStati.STATUS_USERMOD;
 
         int ix = values.indexOf( date, dateAxis );
 
