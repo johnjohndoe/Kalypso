@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
+import java.util.Date;
 import java.util.NoSuchElementException;
 
 import org.jfree.data.AbstractSeriesDataset;
@@ -19,7 +20,11 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
 {
   private IAxis m_xAxis = null;
 
+  private IDiagramAxis m_xDiagAxis = null;
+
   private IAxis m_yAxis = null;
+
+  private IDiagramAxis m_yDiagAxis = null;
 
   private final ICurve m_curve;
 
@@ -35,20 +40,26 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
     for( int i = 0; i < mings.length; i++ )
     {
       if( mings[i].getDiagramAxis().getDirection().equals( IDiagramAxis.DIRECTION_HORIZONTAL ) )
+      {
         m_xAxis = mings[i].getObservationAxis();
+        m_xDiagAxis = mings[i].getDiagramAxis();
+      }
       else
+      {
         m_yAxis = mings[i].getObservationAxis();
+        m_yDiagAxis = mings[i].getDiagramAxis();
+      }
     }
   }
 
-  public IAxis getXAxis()
+  public IDiagramAxis getXDiagAxis()
   {
-    return m_xAxis;
+    return m_xDiagAxis;
   }
 
-  public IAxis getYAxis()
+  public IDiagramAxis getYDiagAxis()
   {
-    return m_yAxis;
+    return m_yDiagAxis;
   }
 
   /**
@@ -84,8 +95,11 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
 
     if( obj instanceof Number )
       return (Number)obj;
+    else if( obj instanceof Date )
+      return new Double( ((Date)obj).getTime() );
 
-    throw new NoSuchElementException();
+    //throw new NoSuchElementException();
+    return null;
   }
 
   /**
@@ -106,7 +120,8 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
     if( obj instanceof Number )
       return (Number)obj;
 
-    throw new NoSuchElementException();
+    //throw new NoSuchElementException();
+    return null;
   }
 
   /**

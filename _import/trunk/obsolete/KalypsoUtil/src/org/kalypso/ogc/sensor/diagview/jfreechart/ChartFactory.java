@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Vector;
 
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
@@ -53,14 +52,42 @@ public class ChartFactory
     IDiagramAxis[] diagAxes = template.getAxisList();
 
     Map diag2chartAxis = new Hashtable( diagAxes.length );
-    Vector chartAxes = new Vector( diagAxes.length );
+    Map chartAxes2Pos = new Hashtable( diagAxes.length );
+    int domPos = 0;
+    int ranPos = 0;
 
     for( int i = 0; i < diagAxes.length; i++ )
     {
-      ValueAxis va = prepareChartAxis( i, diagAxes[i], plot );
+      ValueAxis vAxis = (ValueAxis)m_objFactory.getObjectInstance( diagAxes[i].getDataType(),
+          ValueAxis.class, new Object[]
+          { diagAxes[i].getLabel() + " [" + diagAxes[i].getUnit() + "]" } );
 
-      diag2chartAxis.put( diagAxes[i], va );
-      chartAxes.add( va );
+      vAxis.setInverted( diagAxes[i].isInverted() );
+      vAxis.setLowerMargin( 0.02 );
+      vAxis.setUpperMargin( 0.02 );
+
+      AxisLocation loc = getLocation( diagAxes[i] );
+
+      if( diagAxes[i].getDirection().equals( IDiagramAxis.DIRECTION_HORIZONTAL ) )
+      {
+        plot.setDomainAxis( domPos, vAxis );
+        plot.setDomainAxisLocation( domPos, loc );
+
+        chartAxes2Pos.put( vAxis, new Integer( domPos ) );
+        
+        domPos++;
+      }
+      else
+      {
+        plot.setRangeAxis( ranPos, vAxis );
+        plot.setRangeAxisLocation( ranPos, loc );
+        
+        chartAxes2Pos.put( vAxis, new Integer( ranPos ) );
+
+        ranPos++;
+      }
+
+      diag2chartAxis.put( diagAxes[i], vAxis );
     }
 
     ICurve[] curves = template.getCurveList();
@@ -72,8 +99,10 @@ public class ChartFactory
 
         plot.setDataset( i, cds );
 
-        plot.mapDatasetToDomainAxis( i, chartAxes.indexOf( diag2chartAxis.get( cds.getXAxis() ) ) );
-        plot.mapDatasetToRangeAxis( i, chartAxes.indexOf( diag2chartAxis.get( cds.getYAxis() ) ) );
+        plot.mapDatasetToDomainAxis( i, ( (Integer)chartAxes2Pos.get( diag2chartAxis.get( cds
+            .getXDiagAxis() ) ) ).intValue() );
+        plot.mapDatasetToRangeAxis( i, ( (Integer)chartAxes2Pos.get( diag2chartAxis.get( cds
+            .getYDiagAxis() ) ) ).intValue() );
       }
       catch( SensorException e )
       {
@@ -81,41 +110,14 @@ public class ChartFactory
       }
     }
 
+//    plot.configureDomainAxes();
+//    plot.configureRangeAxes();
+
     plot.setRenderer( new StandardXYItemRenderer( StandardXYItemRenderer.LINES ) );
     JFreeChart chart = new JFreeChart( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, plot,
         template.isShowLegend() );
 
     return chart;
-  }
-
-  /**
-   * @throws FactoryException
-   */
-  private static ValueAxis prepareChartAxis( final int pos, final IDiagramAxis diagAxis,
-      final XYPlot plot ) throws FactoryException
-  {
-    ValueAxis vAxis = (ValueAxis)m_objFactory.getObjectInstance( diagAxis.getDataType(),
-        ValueAxis.class, new Object[]
-        { diagAxis.getLabel() + " [" + diagAxis.getUnit() + "]" } );
-
-    vAxis.setInverted( diagAxis.isInverted() );
-    vAxis.setLowerMargin( 0.02 );
-    vAxis.setUpperMargin( 0.02 );
-
-    AxisLocation loc = getLocation( diagAxis );
-
-    if( diagAxis.getDirection().equals( IDiagramAxis.DIRECTION_HORIZONTAL ) )
-    {
-      plot.setDomainAxis( pos, vAxis );
-      plot.setDomainAxisLocation( pos, loc );
-    }
-    else
-    {
-      plot.setRangeAxis( pos, vAxis );
-      plot.setRangeAxisLocation( pos, loc );
-    }
-
-    return vAxis;
   }
 
   /**
