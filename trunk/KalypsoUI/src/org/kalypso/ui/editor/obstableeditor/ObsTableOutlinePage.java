@@ -1,4 +1,4 @@
-package org.kalypso.ui.editor.diagrameditor;
+package org.kalypso.ui.editor.obstableeditor;
 
 import java.io.File;
 
@@ -19,24 +19,24 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
-import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
-import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
+import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
+import org.kalypso.ogc.sensor.tableview.impl.ObservationTableViewTemplate;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.diagrameditor.actions.RemoveThemeAction;
+import org.kalypso.ui.editor.obstableeditor.actions.RemoveThemeAction;
 
 /**
  * ObsDiagOutlinePage
  * 
  * @author schlienger
  */
-public class ObsDiagOutlinePage extends ContentOutlinePage implements
+public class ObsTableOutlinePage extends ContentOutlinePage implements
     ITemplateEventListener
 {
-  protected ObservationDiagramTemplate m_template;
+  protected ObservationTableViewTemplate m_template;
 
   private RemoveThemeAction m_removeThemeAction;
 
@@ -52,7 +52,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
     getTreeViewer().addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers,
         new DropAdapter( getTreeViewer() ) );
 
-    getTreeViewer().setContentProvider( new ObsDiagTemplateContentProvider() );
+    getTreeViewer().setContentProvider( new ObsTableTemplateContentProvider() );
     getTreeViewer().setInput( m_template );
 
     m_removeThemeAction = new RemoveThemeAction( this );
@@ -61,7 +61,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
   /**
    * @return the selected theme or null
    */
-  public IDiagramTemplateTheme getSelectedTheme( )
+  public ITableViewTheme getSelectedTheme( )
   {
     final ISelection sel = getSelection();
 
@@ -69,11 +69,11 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
     {
       final Object element = ((IStructuredSelection) sel).getFirstElement();
 
-      if( element instanceof IDiagramTemplateTheme )
-        return (IDiagramTemplateTheme) element;
+      if( element instanceof ITableViewTheme )
+        return (ITableViewTheme) element;
 
-      if( element instanceof IDiagramCurve )
-        return ((IDiagramCurve) element).getTheme();
+      if( element instanceof ITableViewColumn )
+        return ((ITableViewColumn) element).getTheme();
     }
 
     return null;
@@ -82,7 +82,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
   /**
    * @return template
    */
-  public ObservationDiagramTemplate getTemplate( )
+  public ObservationTableViewTemplate getTemplate( )
   {
     return m_template;
   }
@@ -133,7 +133,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
   /**
    * @param template
    */
-  public void setTemplate( ObservationDiagramTemplate template )
+  public void setTemplate( ObservationTableViewTemplate template )
   {
     if( m_template != null )
       m_template.removeTemplateEventListener( this );
@@ -195,7 +195,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
 
       final String[] files = (String[]) data;
 
-      final Job updateTemplateJob = new Job( "Diagram aktualisieren" )
+      final Job updateTemplateJob = new Job( "Tabelle aktualisieren" )
       {
         protected IStatus run( IProgressMonitor monitor )
         {
@@ -209,7 +209,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
                   .toURL(), files[i] );
 
               // TODO use other version of addObs...
-              m_template.addObservation( obs, null );
+              m_template.addObservation( obs, true, null );
             }
 
             return Status.OK_STATUS;

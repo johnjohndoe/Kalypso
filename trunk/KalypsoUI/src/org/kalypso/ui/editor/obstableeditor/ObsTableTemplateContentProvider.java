@@ -1,35 +1,35 @@
-package org.kalypso.ui.editor.diagrameditor;
+package org.kalypso.ui.editor.obstableeditor;
 
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
-import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
-import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
 
 /**
  * ObsDiagTemplateContentProvider
  * 
  * @author schlienger
  */
-public class ObsDiagTemplateContentProvider implements ITreeContentProvider
+public class ObsTableTemplateContentProvider implements ITreeContentProvider
 {
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   public Object[] getChildren( Object parentElement )
   {
-    if( parentElement instanceof IDiagramTemplate )
+    if( parentElement instanceof ITableViewTemplate )
     {
-      IDiagramTemplate tpl = (IDiagramTemplate) parentElement;
+      ITableViewTemplate tpl = (ITableViewTemplate) parentElement;
       
       return tpl.getThemes().toArray();
     }
     
-    if( parentElement instanceof IDiagramTemplateTheme )
+    if( parentElement instanceof ITableViewTheme )
     {
-      IDiagramTemplateTheme theme = (IDiagramTemplateTheme) parentElement;
+      ITableViewTheme theme = (ITableViewTheme) parentElement;
       
-      return theme.getCurves().toArray();
+      return theme.getColumns().toArray();
     }
       
     return null;
@@ -40,11 +40,11 @@ public class ObsDiagTemplateContentProvider implements ITreeContentProvider
    */
   public Object getParent( Object element )
   {
-    if( element instanceof IDiagramCurve )
+    if( element instanceof ITableViewColumn )
     {
-      IDiagramCurve curve = (IDiagramCurve) element;
+      ITableViewColumn col = (ITableViewColumn) element;
       
-      return curve.getTheme();
+      return col.getTheme();
     }
     
     return null;
@@ -55,18 +55,18 @@ public class ObsDiagTemplateContentProvider implements ITreeContentProvider
    */
   public boolean hasChildren( Object element )
   {
-    if( element instanceof IDiagramTemplate )
+    if( element instanceof ITableViewTemplate )
     {
-      IDiagramTemplate tpl = (IDiagramTemplate) element;
+      ITableViewTemplate tpl = (ITableViewTemplate) element;
       
       return tpl.getThemes().size() > 0;
     }
     
-    if( element instanceof IDiagramTemplateTheme )
+    if( element instanceof ITableViewTheme )
     {
-      IDiagramTemplateTheme theme = (IDiagramTemplateTheme) element;
+      ITableViewTheme theme = (ITableViewTheme) element;
       
-      return theme.getCurves().size() > 0;
+      return theme.getColumns().size() > 0;
     }
     
     return false;
@@ -77,7 +77,7 @@ public class ObsDiagTemplateContentProvider implements ITreeContentProvider
    */
   public Object[] getElements( Object inputElement )
   {
-    IDiagramTemplate template = (IDiagramTemplate) inputElement;
+    ITableViewTemplate template = (ITableViewTemplate) inputElement;
     
     return template.getThemes().toArray();
   }

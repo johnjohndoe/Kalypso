@@ -22,6 +22,7 @@ import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
+import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
@@ -40,7 +41,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
 
   protected ObservationChart m_obsChart = null;
 
-  protected ObsDiagOutlinePage m_outline;
+  protected ObsDiagOutlinePage m_outline = null;
 
   private boolean m_dirty = false;
 

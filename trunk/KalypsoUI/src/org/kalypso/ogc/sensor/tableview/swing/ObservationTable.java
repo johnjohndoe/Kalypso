@@ -1,13 +1,12 @@
 package org.kalypso.ogc.sensor.tableview.swing;
 
 import java.awt.Color;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 
-import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
@@ -40,28 +39,20 @@ public class ObservationTable extends JTable implements ITemplateEventListener
    */
   public void onTemplateChanged( final TemplateEvent evt )
   {
-    final Runnable runnable = new Runnable()
+    final CatchRunnable runnable = new CatchRunnable()
     {
-      public void run( )
+      protected void runIntern( ) throws Throwable
       {
-
-        try
+        if( evt.getType() == TemplateEvent.TYPE_ADD
+            && evt.getObject() instanceof ITableViewColumn )
         {
-          if( evt.getType() == TemplateEvent.TYPE_ADD
-              && evt.getObject() instanceof ITableViewColumn )
-          {
-            final ITableViewColumn col = (ITableViewColumn) evt.getObject();
-            m_model.addTableViewColumn( col );
-          }
-
-          if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
-          {
-            m_model.clearColumns();
-          }
+          final ITableViewColumn col = (ITableViewColumn) evt.getObject();
+          m_model.addTableViewColumn( col );
         }
-        catch( SensorException e )
+
+        if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
         {
-          throw new RuntimeException( e );
+          m_model.clearColumns();
         }
       }
     };
@@ -69,15 +60,12 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     try
     {
       SwingUtilities.invokeAndWait( runnable );
+      
+      if( runnable.getThrown() != null )
+        throw runnable.getThrown();
     }
-    catch( InterruptedException e )
+    catch( Throwable e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( InvocationTargetException e )
-    {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }

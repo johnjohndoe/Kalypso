@@ -24,4 +24,9 @@ public interface IDiagramCurve
    * @return theme to which this curve belongs to
    */
   public IDiagramTemplateTheme getTheme();
+
+  /**
+   * @param string
+   */
+  public void setName( String string );
 }

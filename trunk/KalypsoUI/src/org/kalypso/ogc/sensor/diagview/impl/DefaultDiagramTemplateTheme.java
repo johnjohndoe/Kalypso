@@ -16,22 +16,37 @@ import org.kalypso.util.runtime.IVariableArguments;
 public class DefaultDiagramTemplateTheme implements IDiagramTemplateTheme
 {
   private final List m_curves = new ArrayList();
-  private IObservation m_obs = null;
-  private IVariableArguments m_args = null;
-  private String m_themeName;
 
-  public DefaultDiagramTemplateTheme()
+  private IObservation m_obs = null;
+
+  private IVariableArguments m_args = null;
+
+  private String m_themeName = null;
+
+  public DefaultDiagramTemplateTheme( )
   {
     this( null );
   }
-  
+
   public DefaultDiagramTemplateTheme( final String themeName )
   {
     m_themeName = themeName;
   }
-  
+
+  public String getName( )
+  {
+    if( m_themeName != null )
+      return m_themeName;
+
+    if( m_obs != null )
+      return m_obs.getName();
+
+    return super.toString();
+  }
+
   /**
-   * @param obs The obs to set.
+   * @param obs
+   *          The obs to set.
    */
   public void setObservation( final IObservation obs )
   {
@@ -53,15 +68,15 @@ public class DefaultDiagramTemplateTheme implements IDiagramTemplateTheme
   {
     m_args = args;
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme#getArguments()
    */
-  public IVariableArguments getArguments()
+  public IVariableArguments getArguments( )
   {
     return m_args;
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme#getCurves()
    */
@@ -69,12 +84,22 @@ public class DefaultDiagramTemplateTheme implements IDiagramTemplateTheme
   {
     return m_curves;
   }
-  
+
+  /**
+   * Adds a curve to this template. Renames the curve using this theme's name if
+   * not null.
+   * 
+   * @param curve
+   */
   public void addCurve( final IDiagramCurve curve )
   {
+    // update curve name
+    if( m_themeName != null )
+      curve.setName( m_themeName + " (" + curve.getName() + ")" );
+
     m_curves.add( curve );
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme#dispose()
    */
@@ -82,18 +107,12 @@ public class DefaultDiagramTemplateTheme implements IDiagramTemplateTheme
   {
     m_curves.clear();
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
   public String toString( )
   {
-    if( m_themeName != null )
-      return m_themeName;
-    
-    if( m_obs != null )
-      return m_obs.getName();
-    
-    return super.toString();
+    return getName();
   }
 }

@@ -99,7 +99,7 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
    *
    * TODO: use themeName as name for the column
    * 
-   * @param themeName
+   * @param themeName used as part of the col name if not null
    * @param context
    * @param href
    * @param linktype
@@ -112,7 +112,7 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
     final PoolableObjectType key = new PoolableObjectType( linktype, href, context, ignoreExceptions );
 
     // fake theme because it won't be added directly to this template
-    DefaultTableViewTheme fakeTheme = new DefaultTableViewTheme();
+    DefaultTableViewTheme fakeTheme = new DefaultTableViewTheme( themeName );
     fakeTheme.setArguments( args );
     
     // use load mechanism
@@ -210,6 +210,11 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
    */
   public void objectInvalid( IPoolableObjectType key, Object oldValue )
   {
-    // TODO Auto-generated method stub
+    final ITableViewTheme theme = (ITableViewTheme) m_key2themes.get( key );
+
+    if( theme == null )
+      return;
+    
+    removeTheme( theme );
   }
 }

@@ -54,6 +54,14 @@ public class DefaultTableViewColumn implements ITableViewColumn
   {
     return m_name;
   }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString( )
+  {
+    return getName();
+  }
 
   /**
    * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#isEditable()
@@ -126,5 +134,13 @@ public class DefaultTableViewColumn implements ITableViewColumn
   public ITableViewTheme getTheme( )
   {
     return m_theme;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#setName(java.lang.String)
+   */
+  public void setName( String name )
+  {
+    m_name = name;
   }
 }
