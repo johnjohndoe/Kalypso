@@ -1,8 +1,6 @@
 package org.kalypso.ogc.sensor.diagview.impl;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -10,7 +8,6 @@ import java.util.TreeMap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxis;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
@@ -27,11 +24,12 @@ import org.kalypso.util.pool.ResourcePool;
  * 
  * @author schlienger
  */
-public class LinkedDiagramTemplate extends DefaultDiagramTemplate implements IPoolListener
+public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
+    IPoolListener
 {
   private final ResourcePool m_pool;
-  private final TreeMap m_key2curves;
-  private final Hashtable m_curve2key;
+
+  private final TreeMap m_key2themes;
 
   /**
    * Constructor
@@ -42,14 +40,16 @@ public class LinkedDiagramTemplate extends DefaultDiagramTemplate implements IPo
   public LinkedDiagramTemplate( final ObsdiagviewType obsDiagView,
       final URL context )
   {
-    super( obsDiagView.getTitle(), obsDiagView.getLegend() == null ? ""
-        : obsDiagView.getLegend().getTitle(),
-        obsDiagView.getLegend() == null ? false : obsDiagView.getLegend()
-            .isVisible() );
+    super();
 
-    m_pool = KalypsoGisPlugin.getDefault().getPool( );
-    m_key2curves = new TreeMap( m_pool.getKeyComparator() );
-    m_curve2key = new Hashtable();
+    setTitle( obsDiagView.getTitle() );
+    setLegendName( obsDiagView.getLegend() == null ? "" : obsDiagView
+        .getLegend().getTitle() );
+    setShowLegend( obsDiagView.getLegend() == null ? false : obsDiagView
+        .getLegend().isVisible() );
+
+    m_pool = KalypsoGisPlugin.getDefault().getPool();
+    m_key2themes = new TreeMap( m_pool.getKeyComparator() );
 
     for( final Iterator it = obsDiagView.getAxis().iterator(); it.hasNext(); )
     {
@@ -57,129 +57,107 @@ public class LinkedDiagramTemplate extends DefaultDiagramTemplate implements IPo
 
       addAxis( new DiagramAxis( baseAxis ) );
     }
-    
+
     final List list = obsDiagView.getObservation();
     for( final Iterator it = list.iterator(); it.hasNext(); )
     {
       final TypeObservation tobs = (TypeObservation) it.next();
-
-      final List curves = new ArrayList();
       final List tcurves = tobs.getCurve();
+
+      // no observation yet, will be updated once loaded
+      final DefaultDiagramTemplateTheme theme = new DefaultDiagramTemplateTheme( null );
+
       for( final Iterator itcurves = tcurves.iterator(); itcurves.hasNext(); )
       {
         final TypeCurve tcurve = (TypeCurve) itcurves.next();
 
         final Properties mappings = new Properties();
-        
+
         final List tmaps = tcurve.getMapping();
         for( final Iterator itm = tmaps.iterator(); itm.hasNext(); )
         {
           final TypeAxisMapping mapping = (TypeAxisMapping) itm.next();
-          
-          mappings.setProperty( mapping.getObservationAxis(), mapping.getDiagramAxis() );
+
+          mappings.setProperty( mapping.getObservationAxis(), mapping
+              .getDiagramAxis() );
         }
 
-        // new curve, here no observation yet (null) but will be updated once loaded
-        final DiagramCurve curve = new DiagramCurve( tcurve.getName(), null, mappings, this );
-        curves.add( curve );
+        // create curve and add it to theme
+        final DiagramCurve curve = new DiagramCurve( tcurve.getName(), theme,
+            mappings, this );
+        theme.addCurve( curve );
       }
-  
-      final PoolableObjectType key = new PoolableObjectType( tobs.getLinktype(), tobs
-          .getHref(), context );
 
-      addObservationTheme( key, curves );
+      // create key according to observation link
+      final PoolableObjectType key = new PoolableObjectType(
+          tobs.getLinktype(), tobs.getHref(), context );
+
+      startLoading( key, theme );
     }
   }
-  
+
   /**
-   * Adds a list of curves as an observation them
+   * Starts the loading process for the given theme
    * 
    * @param key
-   * @param curves
+   * @param theme
    */
-  public void addObservationTheme( final PoolableObjectType key, final List curves )
+  public void startLoading( final PoolableObjectType key,
+      final DefaultDiagramTemplateTheme theme )
   {
     // store key-tobs in map before adding to pool
-    m_key2curves.put( key, curves );
-    
-    // store ref for curve to key, used in removeCurve( ... )
-    final Iterator it = curves.iterator();
-    while( it.hasNext() )
-      m_curve2key.put( it.next(), key );
-    
+    m_key2themes.put( key, theme );
+
     // now add to pool
     m_pool.addPoolListener( this, key );
   }
   
   /**
-   * @see org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate#removeAllCurves()
+   * @see org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate#removeAllThemes()
    */
-  public void removeAllCurves( )
+  public void removeAllThemes( )
   {
-    super.removeAllCurves();
-    
-    m_key2curves.clear();
-    m_curve2key.clear();
+    m_key2themes.clear();
+
+    super.removeAllThemes();
   }
-  
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate#removeCurve(org.kalypso.ogc.sensor.diagview.IDiagramCurve)
-   */
-  public void removeCurve( final IDiagramCurve curve )
-  {
-    super.removeCurve( curve );
-    
-    final Object key = m_curve2key.get( curve );
-    
-    final ArrayList list = (ArrayList) m_key2curves.get( key );
-    list.remove( curve );
-    if( list.isEmpty() )
-      m_key2curves.remove( key );
-    
-    m_curve2key.remove( curve );
-  }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#dispose()
    */
   public void dispose( )
   {
-    super.dispose();
-
-    m_curve2key.clear();
-    m_key2curves.clear();
-    
+    m_key2themes.clear();
     m_pool.removePoolListener( this );
+
+    super.dispose();
   }
-  
+
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
+   *      java.lang.Object, org.eclipse.core.runtime.IStatus)
    */
-  public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
+  public void objectLoaded( final IPoolableObjectType key,
+      final Object newValue, final IStatus status )
   {
     if( status.isOK() )
     {
-      final List curves = (List) m_key2curves.get( key );
+      final DefaultDiagramTemplateTheme theme = (DefaultDiagramTemplateTheme) m_key2themes
+          .get( key );
 
-      if( curves == null || curves.size() == 0 )
+      if( theme == null )
         return;
-      
-      for( final Iterator it = curves.iterator(); it.hasNext(); )
-      {
-        final DiagramCurve curve = (DiagramCurve) it.next();
-        curve.setObservation( (IObservation) newValue );
-      }
-      
-      for( final Iterator it = curves.iterator(); it.hasNext(); )
-      {
-        // now add the curve since observation has been loaded
-        addCurve( (IDiagramCurve) it.next() );
-      }
+
+      theme.setObservation( (IObservation) newValue );
+
+      // now that theme is ready, add it
+      addTheme( theme );
     }
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
+   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType,
+   *      java.lang.Object)
    */
   public void objectInvalid( IPoolableObjectType key, Object oldValue )
   {

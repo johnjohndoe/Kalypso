@@ -22,11 +22,8 @@ public class ObsTemplateLauncher implements IEditorLauncher
     final IOFileFilter odtFilter = FileFilterUtils.suffixFileFilter( ".odt" );
     final FileFilter filter = FileFilterUtils.orFileFilter( odtFilter, ottFilter );
 
-    // virtuelle Vorlagen finden
-//    final Object odtDefault = "<Standard Diagrammansicht>";
-//    final Object ottDefault = "<Standard Tabellenansicht>";
+    final IDefaultTemplateLauncher dl = new DefaultObsDiagTemplateLauncher();
 
-    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[] {  } );
+    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[] { dl } );
   }
-
 }

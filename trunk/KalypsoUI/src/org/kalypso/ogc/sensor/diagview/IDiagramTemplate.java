@@ -1,7 +1,6 @@
 package org.kalypso.ogc.sensor.diagview;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Collection;
 
 import org.kalypso.ogc.sensor.template.ITemplateEventProvider;
 
@@ -13,36 +12,31 @@ import org.kalypso.ogc.sensor.template.ITemplateEventProvider;
 public interface IDiagramTemplate extends ITemplateEventProvider
 {
   public String getTitle();
-//  public void setTitle( String title );
-  
   public String getLegendName();
-//  public void setLegendName( String name );
   public boolean isShowLegend();
-//  public void setShowLegend( boolean show );
   
   /**
    * @return list of <code>IDiagramAxis</code>
    */
-  public List getDiagramAxes();
-//  public void addAxis( IDiagramAxis axis );
-//  public void removeAxis( IDiagramAxis axis );
+  public Collection getDiagramAxes();
   
   /**
-   * Finds the given axis within the template's axes.
+   * Returns the axis that has the given id.
    * 
-   * @param id
-   * @return diagram axis if found
-   * @throws NoSuchElementException
+   * @param diagAxisId
+   * @return diagram axis if found or null if not found
    */
-  public IDiagramAxis findAxis( final String id ) throws NoSuchElementException;
+  public IDiagramAxis getDiagramAxis( final String diagAxisId );
+  
+  /**
+   * @return list of <code>IDiagramTemplateTheme</code>
+   */
+  public Collection getThemes();
   
   /**
    * @return list of <code>IDiagramCurve</code>
    */
-  public List getCurves();
-//  public void addCurve( IDiagramCurve curve );
-//  public void removeCurve( IDiagramCurve curve );
-//  public void removeAllCurves();
+  public Collection getCurves();
   
   /**
    * Clean all possible resources before object is thrown away

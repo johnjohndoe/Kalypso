@@ -96,6 +96,10 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
       // lazy loading
       if( m_propsPage == null || m_propsPage.getControl().isDisposed() )
       {
+        // TODO check if this is ok to dispose it when not null
+        if( m_propsPage != null )
+          m_propsPage.dispose();
+        
         // PropertySheetPage erzeugen. Sie wird in das standard PropertySheet
         // von Eclipse dargestellt
         m_propsPage = new PropertySheetPage();

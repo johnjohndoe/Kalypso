@@ -25,7 +25,6 @@ import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.proxy.ArgsObservationProxy;
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlArrayValues;
@@ -271,7 +270,7 @@ public class ZmlFactory
     if( obs.getTarget() != null )
       target = new JAXBXLink( obs.getTarget() );
 
-    final IObservation zmlObs = new SimpleObservation( identifier, obs
+    final ZmlObservation zmlObs = new ZmlObservation( context.toExternalForm(), identifier, obs
         .getName(), obs.isEditable(), target, metadata, model.getAxisList(),
         model );
 

@@ -179,7 +179,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     {
       // actually creates the template
       // actually creates the template
-      final ObsdiagviewType obsdiagviewType = ObservationTemplateHelper.loadDiagramTemplateXML( diagFile );
+      final ObsdiagviewType obsdiagviewType = ObservationTemplateHelper.loadDiagramTemplateXML( diagFile.getContents() );
       m_diagTemplate = new LinkedDiagramTemplate( obsdiagviewType, ResourceUtilities.createURL( diagFile ) );
 
       final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
@@ -276,7 +276,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     final List selectedFeatures = GetSelectionVisitor.getSelectedFeatures( kft.getWorkspace(), kft
         .getFeatureType(), SELECTION_ID );
 
-    m_diagTemplate.removeAllCurves();
+    m_diagTemplate.removeAllThemes();
     m_tableTemplate.removeAllColumns();
 
     final LinkedDiagramTemplate diagTemplate = m_diagTemplate;
@@ -288,7 +288,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       {
         public void run()
         {
-          diagTemplate.removeAllCurves();
+          diagTemplate.removeAllThemes();
           tableTemplate.removeAllColumns();
 
           if( selectedFeatures.size() > 0 )

@@ -1,13 +1,11 @@
 package org.kalypso.ogc.sensor.diagview.impl;
 
-import java.util.Properties;
-
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.diagview.IAxisMapping;
 import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.util.runtime.IVariableArguments;
 
 /**
@@ -17,37 +15,35 @@ import org.kalypso.util.runtime.IVariableArguments;
  */
 public class ObservationDiagramTemplate extends DefaultDiagramTemplate
 {
-  private static final String ID_DATE_AXIS = "d";
-  private static final String ID_VALUE_AXIS = "v";
-  
-  private final DiagramAxis m_dateAxis;
-
-  private final DiagramAxis m_valueAxis;
-
   public ObservationDiagramTemplate()
   {
-    super( "", "", true );
-    
-    m_dateAxis = new DiagramAxis( ID_DATE_AXIS, "xs:date", TimeserieConstants.TYPE_DATE, "", IDiagramAxis.DIRECTION_HORIZONTAL,
-        IDiagramAxis.POSITION_BOTTOM, false );
-    m_valueAxis = new DiagramAxis( ID_VALUE_AXIS, "xs:double", "", "", IDiagramAxis.DIRECTION_VERTICAL,
-        IDiagramAxis.POSITION_LEFT, false );
-
-    addAxis( m_dateAxis );
-    addAxis( m_valueAxis );
+    super( "Diagram", "", true );
   }
 
   /**
-   * Sets the observation used by this template.
+   * Sets the observation used by this template. Removes all curves before adding the
+   * given observation.
    * 
    * @param obs
    * @param args
    */
   public void setObservation( final IObservation obs, final IVariableArguments args  )
   {
-    removeAllCurves();
+    removeAllAxes();
+    removeAllThemes();
     setTitle( obs.getName() );
     
+    addObservation( obs, args );
+  }
+ 
+  /**
+   * Adds an observation as a theme to this template
+   * 
+   * @param obs
+   * @param args
+   */
+  public void addObservation( final IObservation obs, final IVariableArguments args )
+  {
     final IAxis[] valueAxis = ObservationUtilities.findAxisByClass( obs.getAxisList(), Number.class );
     final IAxis[] keyAxes = ObservationUtilities.findAxisByKey( obs.getAxisList() );
 
@@ -56,19 +52,38 @@ public class ObservationDiagramTemplate extends DefaultDiagramTemplate
     
     final IAxis dateAxis = keyAxes[0];
     
+    final DefaultDiagramTemplateTheme theme = new DefaultDiagramTemplateTheme( obs );
+    theme.setArguments( args );
+    
     for( int i = 0; i < valueAxis.length; i++ )
     {
       if( !KalypsoStatusUtils.isStatusAxis( valueAxis[i] ) )
       {
-        final Properties mappings = new Properties();
-        mappings.setProperty( dateAxis.getName(), "d" );
-        mappings.setProperty( valueAxis[i].getName(), "v" );
+        final IAxisMapping[] mappings = new IAxisMapping[2];
+        
+        // look for a date diagram axis
+        IDiagramAxis daDate = getDiagramAxis( dateAxis.getType() );
+        if( daDate == null )
+        {
+          daDate = DiagramAxis.createAxisFor( dateAxis );
+          addAxis( daDate );
+        }
+        mappings[0] = new AxisMapping( dateAxis, daDate );
 
-        final DiagramCurve curve = new DiagramCurve( valueAxis[i].getName(), obs, mappings, this );
-        curve.setArguments( args );
+        // look for a value diagram axis
+        IDiagramAxis daValue = getDiagramAxis( valueAxis[i].getType() );
+        if( daValue == null )
+        {
+          daValue = DiagramAxis.createAxisFor( valueAxis[i] );
+          addAxis( daValue );
+        }
+        mappings[1] = new AxisMapping( valueAxis[i], daValue );
 
-        addCurve( curve );
+        final DiagramCurve curve = new DiagramCurve( valueAxis[i].getName(), theme, AxisMapping.saveAsProperties( mappings ), this );
+        theme.addCurve( curve );
       }
     }
+    
+    addTheme( theme );
   }
 }
