@@ -32,11 +32,10 @@ import java.text.DateFormat;
 import java.text.ParsePosition;
 import de.tuhh.wb.javagis.view.LogView;
 
-
 public class BlockTimeSeries {
 	//    SortedMap myTable;
 	private DateFormat dateFormat = new SimpleDateFormat("yyMMdd");
-	
+
 	private Hashtable blocks;
 
 	public BlockTimeSeries() {
@@ -54,7 +53,7 @@ public class BlockTimeSeries {
 		int valuesToGo = 0;
 		int valueIndex = 0;
 		int valueOffset = 0;
-		
+
 		SortedMap timeSeries = null;
 		try {
 			Pattern pTime =
@@ -82,15 +81,27 @@ public class BlockTimeSeries {
 								String sStep = m.group(3);
 								startDate = (dateFormat.parse(sDate)).getTime();
 								int sTime_int = Integer.parseInt(sTime);
-								if(sTime_int==24){
-									sTime="0";
+								if (sTime_int == 24) {
+									sTime = "0";
 								}
 								startDate += Long.parseLong(sTime)
 									* 1000l
 									* 3600l;
-								timeStep =
-									((long) (Float.parseFloat(sStep) * 1000f))
-										* 3600l;
+								if (sStep.equals("0.083")) {
+									int sTimeStep_int = (1/12);
+									Integer sTimeStep_Int = new Integer(sTimeStep_int);
+									float sTimeStep_float = Float.parseFloat("0.083");
+									System.out.println("TimeStep_float: "+sTimeStep_float);
+									/*timeStep =
+										((long) (sTimeStep_float * 1000f)) * 3600l;*/
+										timeStep = 300000l;
+								System.out.println("TimeStep: "+timeStep);
+								} else {
+									timeStep =
+										((long) (Float.parseFloat(sStep)
+											* 1000f))
+											* 3600l;
+								}
 								Date testDate = new Date(startDate);
 								System.out.println(
 									"startdate: "
@@ -106,21 +117,19 @@ public class BlockTimeSeries {
 								String key = m.group(1);
 								String unknown = m.group(2);
 								valuesToGo = Integer.parseInt(m.group(3));
-								
+
 								if (allowedKeys == null
-									|| allowedKeys.contains(key))
-									 {
-										if(blocks.containsKey(key))
-										 timeSeries=(TreeMap)blocks.get(key);
-										else 
-										{
-											timeSeries = new TreeMap(); 
-									        blocks.put(key, timeSeries);
-										}
-									    step++;
-										valueIndex = 0;
-							
-										valueOffset = timeSeries.size();
+									|| allowedKeys.contains(key)) {
+									if (blocks.containsKey(key))
+										timeSeries = (TreeMap) blocks.get(key);
+									else {
+										timeSeries = new TreeMap();
+										blocks.put(key, timeSeries);
+									}
+									step++;
+									valueIndex = 0;
+
+									valueOffset = timeSeries.size();
 								}
 							}
 							break;
@@ -132,8 +141,17 @@ public class BlockTimeSeries {
 									String value = m.group(1);
 									Date valueDate =
 										new Date(
-											startDate + (valueIndex+valueOffset) * timeStep);
-									//						    System.out.println(valueIndex+" ("+valuesToGo+"): "+valueDate.toString()+" "+value);
+											startDate
+												+ (valueIndex + valueOffset)
+													* timeStep);
+									System.out.println(
+										valueIndex
+											+ " ("
+											+ valuesToGo
+											+ "): "
+											+ valueDate.toString()
+											+ " "
+											+ value);
 									timeSeries.put(valueDate, value);
 									valueIndex += 1;
 									if (valueIndex >= valuesToGo)
@@ -189,7 +207,7 @@ public class BlockTimeSeries {
 
 		Vector resultData = new Vector();
 
-		SortedMap map_all = (TreeMap)blocks.get(key);
+		SortedMap map_all = (TreeMap) blocks.get(key);
 		SortedMap map_result = null;
 
 		Date start_dateKey = null;
@@ -216,10 +234,9 @@ public class BlockTimeSeries {
 			}
 		}
 
-		map_result = map_all.subMap(start_dateKey,end_dateKey);
+		map_result = map_all.subMap(start_dateKey, end_dateKey);
 		Iterator it_result = map_result.keySet().iterator();
-		while (it_result.hasNext())
-		{
+		while (it_result.hasNext()) {
 			Object dateKey = it_result.next();
 			Object value = (String) map_result.get(dateKey);
 			resultData.add(value);

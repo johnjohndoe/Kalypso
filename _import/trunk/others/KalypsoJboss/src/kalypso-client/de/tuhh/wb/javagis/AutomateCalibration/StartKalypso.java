@@ -24,6 +24,7 @@ import de.tuhh.wb.javagis.simulation.BlockTimeSeries;
 public class StartKalypso implements KalypsoXmlImportListener {
 
 	File modelFile = null;
+	public File modelxml = null;
 	File controlFile = null;
 	//File simCaseFile = null;
 	File targetDir = null;
@@ -103,8 +104,8 @@ public class StartKalypso implements KalypsoXmlImportListener {
 
 			System.out.println(I18n.get("LV_SD_runSim6"));
 			
-			File modelxml = new File(resultDir,"modelData.xml");
-			FileSystemUtils.copyFile(modelFile,modelxml);
+			//modelxml = new File(resultDir,"modelData.xml");
+			//FileSystemUtils.copyFile(modelFile,modelxml);
 
 			/*if (kalypsoExe != null && kalypsoExe.isAlive()) {
 				kalypsoExe.interrupt();
@@ -124,6 +125,8 @@ public class StartKalypso implements KalypsoXmlImportListener {
 						targetDir,
 						"out_tis.eik",
 						OUT_DIR);
+				modelxml = new File(resultsDir,"modelData.xml");
+				FileSystemUtils.copyFile(modelFile,modelxml);
 				commandLine =
 					resultsDir.getPath()
 						+ System.getProperty("file.separator")

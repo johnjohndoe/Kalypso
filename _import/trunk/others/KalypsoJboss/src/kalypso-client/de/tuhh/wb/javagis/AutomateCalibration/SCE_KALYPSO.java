@@ -38,6 +38,8 @@ import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.tools.xml.ServiceTools;
 import de.tuhh.wb.javagis.view.ViewManager;
 import de.tuhh.wb.javagis.FileSystemUtils;
+import de.tuhh.wb.javagis.Main;
+import de.tuhh.wb.javagis.simulation.BlockTimeSeries;
 //import de.tuhh.wb.javagis.simulation.BlockTimeSeries;
 
 public class SCE_KALYPSO
@@ -51,6 +53,9 @@ public class SCE_KALYPSO
 	//private File simCaseFile = new File(xmlDir, "simulationCase.xml");
 	//results Kalypso
 	private File targetDir = null; //new File("C://Kalypso//simulation1");
+
+	private File controlXML = null;
+	//new File("C://Kalypso//TestMode//input_Loop.xml");
 
 	//location SCE-Routine
 	private String myCommand_SCE = "kalypsoMain.exe";
@@ -92,17 +97,24 @@ public class SCE_KALYPSO
 	private JButton btTargetDir = new JButton(I18n.get("SCE_ButtonStarttext"));
 	private JButton btStart = new JButton(I18n.get("SCE_ButtonStart"));
 
+	private JButton btControlXML = new JButton(I18n.get("SCE_ButtonStarttext"));
+	private JButton btStart_neu = new JButton(I18n.get("SCE_ButtonStart_neu"));
+
 	//Labels
 	private JLabel lbSCEInp = new JLabel(I18n.get("SCE_LabelSCEInp"));
 	private JLabel lbModel = new JLabel(I18n.get("SCE_LabelModelData"));
 	private JLabel lbControl = new JLabel(I18n.get("SCE_LabelControlData"));
 	private JLabel lbTargetDir = new JLabel(I18n.get("SCE_LabelTargetDir"));
 
+	private JLabel lbControlXML = new JLabel(I18n.get("SCE_LabelControlXML"));
+
 	//FileChooser
 	private JFileChooser sceInpFileChooser = new JFileChooser();
 	private JFileChooser modelFileChooser = new JFileChooser();
 	private JFileChooser controlFileChooser = new JFileChooser();
 	private JFileChooser targetDirFileChooser = new JFileChooser();
+
+	private JFileChooser controlXMLFileChooser = new JFileChooser();
 
 	//Panels
 	private JPanel buttonPanel = new JPanel();
@@ -119,7 +131,15 @@ public class SCE_KALYPSO
 
 	private SCE_KALYPSO(String title) {
 		super(title, true, true, true, true);
-		initView();
+
+		/*String autoCal = Main.props.getProperty("automatedCalibration");
+		System.out.println("Automated Calibration: " + autoCal);
+		if (autoCal.equals("enabled1")) {
+			initView();
+		}
+		if (autoCal.equals("enabled2")) {
+			initView2();
+		}*/
 		updateStatus();
 		pack();
 		this.addInternalFrameListener(this);
@@ -173,6 +193,29 @@ public class SCE_KALYPSO
 		getContentPane().add(buttonPanel, BorderLayout.CENTER);
 		getContentPane().add(startPanel, BorderLayout.SOUTH);
 
+	}
+
+	private void initView2() {
+		btControlXML.setActionCommand("controlXML");
+		btControlXML.addActionListener(this);
+		btControlXML.setBackground(Color.white);
+		btControlXML.setBorderPainted(false);
+		btControlXML.setMargin(new Insets(0, 0, 0, 0));
+
+		buttonPanel.setLayout(new GridLayout(1, 2));
+		buttonPanel.add(lbControlXML);
+		buttonPanel.add(btControlXML);
+
+		btStart_neu.setActionCommand("start1");
+		btStart_neu.addActionListener(this);
+
+		getContentPane().setLayout(new BorderLayout());
+
+		startPanel.setLayout(new BorderLayout());
+		startPanel.add(btStart_neu, BorderLayout.CENTER);
+
+		getContentPane().add(buttonPanel, BorderLayout.CENTER);
+		getContentPane().add(startPanel, BorderLayout.SOUTH);
 	}
 
 	public void updateStatus() {
@@ -619,6 +662,8 @@ public class SCE_KALYPSO
 					endDate_pegel);
 
 			}
+			modelFile = startKalypso.modelxml;
+			System.out.println(modelFile);
 			ps.close();
 		}
 	}
@@ -632,8 +677,10 @@ public class SCE_KALYPSO
 			//String query = "/theme/parameter/@key";
 			/*String query =
 				"/theme/table[@key=\"rb\"]/o/sp[@m_rbNumber=\"104\" or @m_rbNumber=\"102\"]/@m_retAquif";*/
+			/*String query =
+				"/theme/table[@key=\"rb\"]/o/sp[@m_rbNumber=\"104\" or @m_rbNumber=\"101\"]/@m_retInterflow";*/
 			String query =
-				"/theme/table[@key=\"rb\"]/o/sp[@m_rbNumber=\"104\" or @m_rbNumber=\"101\"]/@m_retInterflow";
+				"/theme/table[@key=\"rb\"]/o/sp[@m_rbNumber=\"104\"]/v/v_row/@v_infiltShortTime";
 			String[] querys = new String[1];
 			System.out.println(xmlServiceTools.getParameter(query, doc));
 			querys[0] = query;
@@ -1066,6 +1113,94 @@ public class SCE_KALYPSO
 				I18n.get("sceView.terminationMassage"));
 		}
 		updateStatus();
+
+		if ("controlXML".equals(action)) {
+			int returnVal =
+				controlXMLFileChooser.showDialog(
+					this,
+					I18n.get("sceView.selectcontrolXMLFile"));
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				controlXML = controlXMLFileChooser.getSelectedFile();
+				btControlXML.setText(controlXML.toString());
+			}
+		}
+
+		if ("start1".equals(action)) {
+			if (controlXML != null && (controlXML.exists())) {
+				try {
+					Document doc = xmlServiceTools.getXML(controlXML);
+
+					String queryModelFile = "/autoCalibration/model/file";
+					Node file =
+						xmlServiceTools.getXPath_singleNode(
+							queryModelFile,
+							doc);
+					Node fValue = file.getFirstChild();
+					String fileValue = fValue.getNodeValue();
+					instance.modelFile = new File(fileValue);
+					System.out.println("ModelFile: " + instance.modelFile);
+
+					String queryID = "/autoCalibration/stationlist/station/@ID";
+					NodeList nlID = xmlServiceTools.getXPath(queryID, doc);
+					int anzStations = nlID.getLength();
+					System.out.println("Anzahl der Stationen: " + anzStations);
+					for (int i = 0; i < anzStations; i++) {
+						System.out.println("ModelFile: " + instance.modelFile);
+						String id = (nlID.item(i)).getNodeValue();
+						String controlquery =
+							"/autoCalibration/stationlist/station[@ID=\""
+								+ id
+								+ "\"]/controlFile";
+						Node node =
+							xmlServiceTools.getXPath_singleNode(
+								controlquery,
+								doc);
+						Node cFileNode = node.getFirstChild();
+						String control = cFileNode.getNodeValue();
+						instance.controlFile = new File(control);
+						System.out.println(
+							"ControlFile: " + instance.controlFile);
+						String setupquery =
+							"/autoCalibration/stationlist/station[@ID=\""
+								+ id
+								+ "\"]/setupFile";
+						node =
+							xmlServiceTools.getXPath_singleNode(
+								setupquery,
+								doc);
+						Node sFileNode = node.getFirstChild();
+						String setup = sFileNode.getNodeValue();
+						instance.inputFile = new File(setup);
+						System.out.println("InputFile: " + instance.inputFile);
+						String targetquery =
+							"/autoCalibration/stationlist/station[@ID=\""
+								+ id
+								+ "\"]/targetDir";
+						node =
+							xmlServiceTools.getXPath_singleNode(
+								targetquery,
+								doc);
+						Node tFileNode = node.getFirstChild();
+						String target = tFileNode.getNodeValue();
+						instance.targetDir = new File(target);
+						System.out.println("targetDir: " + instance.targetDir);
+						System.out.println("SCE_KALYPSO###" + i);
+						instance.readXMLinput();
+						instance.makeinputFiles();
+						instance.startSCE();
+					}
+					JOptionPane.showMessageDialog(
+						null,
+						I18n.get("sceView.terminationMassage"));
+				} catch (Exception ex) {
+					System.out.println(ex.getMessage());
+				}
+			} else {
+				JOptionPane.showMessageDialog(
+					null,
+					I18n.get("sceView.selectControlXMLMessage"));
+			}
+		}
 	}
 
 	//	internalFrameListener:
@@ -1097,13 +1232,32 @@ public class SCE_KALYPSO
 	public void internalFrameOpened(InternalFrameEvent e) {
 	}
 
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		openSCEView();
-		inputFile = new File("C://Kalypso//TestMode//input_neu2.xml");
-		controlFile = new File("C://Kalypso//TestMode//control.xml");
-		modelFile = new File("C://Kalypso//TestMode//model.xml");
+		instance.inputFile =
+			new File("C://Kalypso//Test_Meike//input_Meike.xml");
+		//inputFile = new File("C://Kalypso//TestMode//input_neu2.xml");
+		instance.controlFile = new File("C://Kalypso//TestMode//control.xml");
+		instance.modelFile = new File("C://Kalypso//TestMode//model.xml");
+		instance.targetDir = new File("C://Kalypso//Test_Meike");
 		instance.readXMLinput();
-		Double[] param =
+		//instance.makeinputFiles();
+		int rootNode = 7765;
+		File outFile = new File("C://Kalypso//Test_Meike//node_discharge.dat");
+		BlockTimeSeries blockSerie = new BlockTimeSeries();
+		Vector allowedKeys = new Vector();
+		allowedKeys.addElement(String.valueOf(rootNode));
+		blockSerie.importBlockFile(outFile, allowedKeys);
+	    Vector resultData = new Vector();
+		resultData =
+			blockSerie.getDischarge(
+				String.valueOf(rootNode),
+				instance.startDate_pegel,
+				instance.endDate_pegel);
+		for (int i = 0; i < resultData.size(); i++) {
+			System.out.println(i+": "+resultData.get(i));
+		}
+		/*Double[] param =
 			{
 				new Double(10.0),
 				new Double(20.0),
@@ -1112,5 +1266,6 @@ public class SCE_KALYPSO
 				new Double(50.0),
 				new Double(60.0)};
 		instance.makeModelxml(param, true);
-	}*/
+		instance.testInputFile();*/
+	}
 }
