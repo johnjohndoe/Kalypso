@@ -9,19 +9,32 @@ import org.kalypso.util.runtime.IVariableArguments;
  */
 public interface ITableViewColumn extends ITableObservationProvider
 {
-  public String getName();
+  public String getName( );
 
-  public boolean isEditable();
+  public boolean isEditable( );
 
-  public int getWidth();
+  public int getWidth( );
 
   public void setWidth( final int width );
-  
+
   public void setArguments( IVariableArguments args );
-  public IVariableArguments getArguments();
+
+  public IVariableArguments getArguments( );
+
+  /**
+   * @return true when data hold in the observation hold by this column has
+   *         changed
+   */
+  public boolean isDirty( );
+
+  /**
+   * Sets the dirty flag
+   * @param b
+   */
+  public void setDirty( boolean b );
   
   /**
    * Clean all possible resources before object is thrown away
    */
-  public void dispose();
+  public void dispose( );
 }

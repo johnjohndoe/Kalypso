@@ -25,6 +25,8 @@ public class DefaultTableViewColumn implements ITableViewColumn
 
   private IVariableArguments m_args = null;
 
+  private boolean m_dirty;
+
   public DefaultTableViewColumn( final String name, final IObservation obs, final boolean isEditable,
       final int width, final String sharedAxisName, final String valueAxisName,
       final IVariableArguments args )
@@ -116,5 +118,21 @@ public class DefaultTableViewColumn implements ITableViewColumn
   public void dispose( )
   {
     // empty
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#isDirty()
+   */
+  public boolean isDirty( )
+  {
+    return m_dirty;
+  }
+  
+  /**
+   * @param dirty The dirty to set.
+   */
+  public void setDirty( boolean dirty )
+  {
+    m_dirty = dirty;
   }
 }

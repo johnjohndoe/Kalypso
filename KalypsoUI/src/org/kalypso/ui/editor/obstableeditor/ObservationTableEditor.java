@@ -6,10 +6,12 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
+import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.tableview.template.LinkedTableViewTemplate;
@@ -87,7 +89,22 @@ public class ObservationTableEditor extends AbstractEditorPart
   protected void doSaveInternal( IProgressMonitor monitor,
       IFileEditorInput input )
   {
-    // TODO: implement it
+    final ITableViewColumn[] columns = m_template.getColumns();
+    
+    for( int i = 0; i < columns.length; i++ )
+    {
+      if( columns[i].isDirty() )
+      {
+        final String msg = "Sie haben Änderungen in " + columns[i].getName() + " vorgenommen. Wollen \n" +
+        		"Sie die Änderungen übernehmen und die grundliegende Datei speichern?";
+        final boolean b = MessageDialog.openConfirm( getSite().getShell(), "Änderungen speichern", msg );
+        
+        if( b )
+        {
+          
+        }
+      }
+    }
   }
 
   /**

@@ -26,8 +26,6 @@ public class LinkedTableViewTemplate implements ITableViewTemplate
 {
   private final DefaultTableViewTemplate m_template;
 
-  private final URL m_context;
-
   private final ISchedulingRule m_rule = new MutexSchedulingRule();
 
   /**
@@ -39,12 +37,9 @@ public class LinkedTableViewTemplate implements ITableViewTemplate
   public LinkedTableViewTemplate( final ObstableviewType obsTableView,
       final URL context )
   {
-    m_context = context;
-
     m_template = new DefaultTableViewTemplate();
 
     final List cols = obsTableView.getColumnpair();
-
     for( final Iterator it = cols.iterator(); it.hasNext(); )
     {
       ObstableviewType.ColumnpairType col = (ObstableviewType.ColumnpairType) it

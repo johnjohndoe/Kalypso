@@ -152,4 +152,23 @@ public class LinkedTableViewColumn implements ITableViewColumn, IPoolListener
     m_pool.releaseKey( m_key );
     m_column.dispose();
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#isDirty()
+   */
+  public boolean isDirty( )
+  {
+    return m_column.isDirty();
+  }
+ 
+  /**
+   * Sets the dirty flag. Call this method when you know the data in the observation
+   * has changed.
+   * 
+   * @param dirty
+   */
+  public void setDirty( final boolean dirty )
+  {
+    m_column.setDirty( dirty );
+  }
 }

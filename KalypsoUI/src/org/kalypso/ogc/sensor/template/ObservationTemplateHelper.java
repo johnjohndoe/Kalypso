@@ -85,6 +85,7 @@ public class ObservationTemplateHelper
    * Creates a LinkedDiagramCurve for the given binding object.
    * @param baseCurve
    * @param template
+   * @param context
    * @return curve for the template
    */
   public static LinkedDiagramCurve createCurve( final ObsdiagviewType.CurveType baseCurve,
