@@ -20,6 +20,7 @@ public class ObservationUtilities
    * 
    * @param axes the list of axes to scan
    * @param axisName the name of the axis which is searched
+   * @return first axis found
    * @throws NoSuchElementException when no axis matches the name
    */
   public static IAxis findAxisByName( final IAxis[] axes, final String axisName ) throws NoSuchElementException
@@ -34,10 +35,11 @@ public class ObservationUtilities
   }
   
   /**
-   * Finds the axis of the given observation that has the given type. Returns the first axis found.
+   * Finds the axis of the given observation that has the given type.
    * 
    * @param axes the list of axes to scan
    * @param axisType the type of the axis which is searched
+   * @return the first axis found
    * @throws NoSuchElementException when no axis matches the name
    */
   public static IAxis findAxisByType( final IAxis[] axes, final String axisType ) throws NoSuchElementException
@@ -52,7 +54,10 @@ public class ObservationUtilities
   }
   
   /**
-   * Helper that returns an axis which is compatible with specified Class of data
+   * @param axes
+   * @param desired
+   * @return an axis which is compatible with specified Class of data
+   * @throws NoSuchElementException
    */
   public static IAxis[] findAxisByClass( final IAxis[] axes, final Class desired ) throws NoSuchElementException
   {
@@ -71,7 +76,8 @@ public class ObservationUtilities
   }
   
   /**
-   * Returns the axes which are keys. Returns an empty array if no axis found.
+   * @param axes
+   * @return the axes which are key-axes. Returns an empty array if no axis found.
    */
   public static IAxis[] findAxisByKey( final IAxis[] axes )
   {
@@ -84,5 +90,33 @@ public class ObservationUtilities
     }
     
     return (IAxis[])list.toArray( new IAxis[list.size()] );
+  }
+  
+  /**
+   * @param model
+   * @param sep string separator between elements
+   * @return simple string representation of the given model
+   * 
+   * @throws SensorException
+   */
+  public static String dump( final ITuppleModel model, final String sep ) throws SensorException
+  {
+    final StringBuffer bf = new StringBuffer();
+    
+    final IAxis[] axes = model.getAxisList();
+    
+    for( int i = 0; i < model.getCount(); i++ )
+    {
+      for( int j = 0; j < axes.length; j++ )
+      {
+        final IAxis axis = axes[j];
+        
+        bf.append( model.getElement(i, axis).toString() ).append( sep );
+      }
+      
+      bf.append('\n');
+    }
+    
+    return bf.toString();
   }
 }
