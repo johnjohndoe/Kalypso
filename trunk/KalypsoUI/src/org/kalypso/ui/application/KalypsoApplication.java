@@ -1,30 +1,22 @@
 package org.kalypso.ui.application;
 
-import java.net.URL;
-
 import javax.xml.rpc.ServiceException;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
-import org.eclipse.ui.dialogs.ListDialog;
-import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
 import org.kalypso.eclipse.jface.dialogs.PasswordDialog;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.proxy.IUserService;
 import org.kalypso.services.user.common.IUserServiceConstants;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.view.prognose.PrognosePanel;
 
 /**
  * @author belger
@@ -47,28 +39,22 @@ public class KalypsoApplication implements IPlatformRunnable
     {
       e1.printStackTrace();
     }
-
-    final String choosenRight = chooseRight( rights, username );
-
-    // start application
-    if( IUserServiceConstants.RIGHT_PROGNOSE.equals( choosenRight ) )
-      return startPrognose();
-    else if( IUserServiceConstants.RIGHT_EXPERT.equals( choosenRight ) )
-      return startWorkbench( new KalypsoWorkbenchAdvisor() );
-    if( IUserServiceConstants.RIGHT_ADMIN.equals( choosenRight ) )
-      return startWorkbench( new IDEWorkbenchAdvisor()
-      {
-        //
-        } );
-
-    return null;
+    
+    rights = chooseRight( rights, username );
+    
+    return startWorkbench( new KalypsoWorkbenchAdvisor( rights ) );
   }
 
-  private String chooseRight( final String[] rights, final String username )
+  private String[] chooseRight( final String[] rights, final String username )
   {
-    String choosenRight = null;
+    String[] choosenRights = null;
     final Display display = new Display();
     final Shell shell = new Shell( display );
+    
+    final ImageDescriptor id = ImageProvider.IMAGE_KALYPSO_ICON;
+    
+    shell.setImage( id.createImage() );
+    
     if( rights == null )
     {
       while( true )
@@ -83,7 +69,7 @@ public class KalypsoApplication implements IPlatformRunnable
 
         if( !"arglgargl".equals( dialog.getValue() ) )
         {
-          choosenRight = IUserServiceConstants.RIGHT_ADMIN;
+          choosenRights = new String[] { IUserServiceConstants.RIGHT_ADMIN };
           break;
         }
       }
@@ -96,28 +82,29 @@ public class KalypsoApplication implements IPlatformRunnable
     }
     else if( rights.length == 1 )
     {
-      choosenRight = rights[0];
-    }
-    else
-    {
-      // auswahldialog
-      final ListDialog dialog = new ListDialog( shell );
-      dialog.setTitle( "Kalypso" );
-      dialog
-          .setMessage( "Bitte wählen Sie den Modus, in welchem Sie Kalypso starten möchten." );
-      dialog.setContentProvider( new ArrayContentProvider() );
-      dialog.setLabelProvider( new LabelProvider() );
-      dialog.setInput( rights );
-      dialog.setInitialSelections( new Object[]
-      { rights[0] } );
-
-      if( dialog.open() == Window.OK )
-        choosenRight = (String)dialog.getResult()[0];
+//      choosenRights = rights[0];
+//    }
+//    else
+//    {
+//      // auswahldialog
+//      final ListDialog dialog = new ListDialog( shell );
+//      dialog.setTitle( "Kalypso" );
+//      dialog
+//          .setMessage( "Bitte wählen Sie den Modus, in welchem Sie Kalypso starten möchten." );
+//      dialog.setContentProvider( new ArrayContentProvider() );
+//      dialog.setLabelProvider( new LabelProvider() );
+//      dialog.setInput( rights );
+//      dialog.setInitialSelections( new Object[]
+//      { rights[0] } );
+//
+//      if( dialog.open() == Window.OK )
+//        choosenRights = (String)dialog.getResult()[0];
+      choosenRights = rights;
     }
 
     shell.dispose();
     display.dispose();
-    return choosenRight;
+    return choosenRights;
   }
 
   private Object startWorkbench( final WorkbenchAdvisor advisor )
@@ -127,44 +114,6 @@ public class KalypsoApplication implements IPlatformRunnable
 
     return returnCode == PlatformUI.RETURN_RESTART ? IPlatformRunnable.EXIT_RESTART
         : IPlatformRunnable.EXIT_OK;
-  }
-
-  private Object startPrognose()
-  {
-//    final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-
-    final Display display = new Display();
-    final Shell shell = new Shell( display );
-
-    // first, choose project
-    final URL location = KalypsoGisPlugin.getDefault().getModellistLocation();
-    if( location == null )
-    {
-      MessageDialog.openError( shell, "Hochwasser Vorhersage", "Die Liste der Vorhersage Modelle konnten nicht geladen werden. Bitte wenden Sie sich an den System Administrator." );
-      return null;
-    }
-    
-    final PrognosePanel prognosePanel = new PrognosePanel( location );
-    
-    final Dialog dialog = new Dialog( shell ) 
-    {
-      /**
-       * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-       */
-      protected Control createDialogArea( final Composite parent )
-      {
-        return prognosePanel.createControl( parent );
-      }
-    };
-
-    dialog.open();
-    
-    // now start calculation wizard
-//    final CalcWizard wizard = new CalcWizard( projects[0] );
-//    final WizardDialog dialog = new WizardDialog( shell, wizard );
-//    dialog.open();
-
-    return null;
   }
 
   private IUserService prepareService()

@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -24,8 +25,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.eclipse.swt.graphics.FontUtilities;
 import org.kalypso.model.xml.Modellist;
 import org.kalypso.model.xml.ModellistType;
@@ -51,6 +50,12 @@ public class PrognosePanel
 
   private final URL m_location;
 
+  private Label m_imageLabel;
+  
+  private Composite m_control;
+
+  private ModelType m_model;
+
   public PrognosePanel( final URL modellistLocation )
   {
     m_location = modellistLocation;
@@ -72,39 +77,41 @@ public class PrognosePanel
 
   public void dispose()
   {
-  // TODO
-
-  // fonts
-
-  // images
-
-  // control
+    m_labelProvider.dispose();
+    
+    for( final Iterator iter = m_disposeFonts.iterator(); iter.hasNext(); )
+      ((Font)iter.next()).dispose();
   }
 
   public Composite createControl( final Composite parent )
   {
     final Display display = parent.getDisplay();
-    final FormToolkit toolkit = new FormToolkit( display );
-    final Form form = toolkit.createForm( parent );
+    
+    m_control = new Composite( parent, SWT.NONE );
 
     final GridLayout gridLayout = new GridLayout( 2, false );
-    form.getBody().setLayout( gridLayout );
-    final GridData formGridData = new GridData( GridData.FILL_BOTH );
-    formGridData.horizontalAlignment = GridData.CENTER;
-    form.setLayoutData( formGridData );
+    gridLayout.horizontalSpacing = 20;
+    gridLayout.verticalSpacing = 20;
+    gridLayout.marginHeight = 20;
+    gridLayout.marginWidth = 20;
+    m_control.setLayout( gridLayout );
+    final GridData gridData = new GridData( GridData.FILL_BOTH );
+    gridData.horizontalAlignment = GridData.CENTER;
+    m_control.setLayoutData( gridData );
 
     if( m_modellist == null )
     {
       final Label label = new Label( parent, SWT.CENTER );
       label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
       label.setText( "Die Modellliste konnte nicht geladen werden: " + m_errorMessage );
-      return form;
+      return m_control;
     }
 
-    final Label mainImageLabel = toolkit.createLabel( form.getBody(), null, SWT.NONE );
+    final Label mainImageLabel = new Label( m_control, SWT.NONE );
     final GridData mainLabelgridData = new GridData();
     mainLabelgridData.horizontalSpan = 2;
     mainLabelgridData.horizontalAlignment = GridData.CENTER;
+    mainLabelgridData.grabExcessHorizontalSpace = true;
     mainLabelgridData.verticalSpan = 1;
     mainLabelgridData.verticalAlignment = GridData.FILL;
     mainImageLabel.setLayoutData( mainLabelgridData );
@@ -125,22 +132,21 @@ public class PrognosePanel
       e.printStackTrace();
     }
 
-    final Label headingLabel = new Label( form.getBody(), SWT.SINGLE );
+    final Label headingLabel = new Label( m_control, SWT.SINGLE );
     final GridData headingGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false,
         false, 2, 2 );
     headingLabel.setLayoutData( headingGridData );
     final Font headingFont = FontUtilities.createChangedFontData( headingLabel.getFont()
         .getFontData(), 10, SWT.BOLD, headingLabel.getDisplay() );
     headingLabel.setFont( headingFont );
+    headingLabel.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
     m_disposeFonts.add( headingFont );
-    headingLabel.setText( "Bitte wählen Sie ein Vorhersagegebiet" );
+    headingLabel.setText( "Bitte wählen Sie ein Einzugsgebiet" );
 
-    // TODO
-    final List list = new List( form.getBody(), SWT.SINGLE );
+    final List list = new List( m_control, SWT.SINGLE );
     final GridData listGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false,
         false );
     list.setLayoutData( listGridData );
-    list.setToolTipText( "Doppelklick startet die Prognoserechnung" );
     final Font listfont = FontUtilities.createChangedFontData( list.getFont().getFontData(), 10,
         SWT.NONE, list.getDisplay() );
     list.setFont( listfont );
@@ -150,71 +156,19 @@ public class PrognosePanel
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( m_labelProvider );
 
-    final Label imageLabel = toolkit.createLabel( form.getBody(), null, SWT.NONE );
-    imageLabel.setLayoutData( new GridData() );
+    m_imageLabel = new Label( m_control, SWT.NONE );
+    m_imageLabel.setLayoutData( new GridData() );
 
-    //    m_button = toolkit.createButton( form.getBody(), "Prognoserechnung
-    // starten", SWT.PUSH );
-    //    m_button.setEnabled( false );
-
-    //    // event handling
-    //    viewer.addDoubleClickListener( new IDoubleClickListener()
-    //    {
-    //      public void doubleClick( DoubleClickEvent event )
-    //      {
-    //        startModel( event.getSelection() );
-    //      }
-    //    } );
-
-    //    final Control button = m_button;
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final ModellistType.ModelType model = (ModelType)( (IStructuredSelection)event
             .getSelection() ).getFirstElement();
-
-        //        button.setEnabled( model != null );
-
-        final Image oldImage = imageLabel.getImage();
-
-        ImageData imageData = (ImageData)m_imageHash.get( model );
-        if( imageData == null )
-        {
-          try
-          {
-            final URL imageURL = new URL( m_location, model.getImage() );
-            imageData = new ImageData( imageURL.openStream() );
-            m_imageHash.put( model, imageData );
-          }
-          catch( MalformedURLException e )
-          {
-            e.printStackTrace();
-          }
-          catch( IOException e )
-          {
-            e.printStackTrace();
-          }
-        }
-
-        final Image newImage = imageData == null ? null : new Image( display, imageData ); 
-        imageLabel.setImage( newImage );
-
-        if( oldImage != null )
-          oldImage.dispose();
-
-        form.getBody().layout();
-        form.getBody().redraw();
+        
+        setModel( model );
       }
     } );
-
-    //    m_button.addSelectionListener( new SelectionAdapter()
-    //    {
-    //      public void widgetSelected( final SelectionEvent e )
-    //      {
-    //        startModel( viewer.getSelection() );
-    //      }
-    //    } );
 
     // create content
     viewer.setInput( m_modellist.getModel() );
@@ -227,7 +181,47 @@ public class PrognosePanel
       }
     } );
 
-    return form;
+    return m_control;
+  }
+  
+  public void setModel( final ModellistType.ModelType model )
+  {
+    m_model = model;
+    
+    final Image oldImage = m_imageLabel.getImage();
+
+    ImageData imageData = (ImageData)m_imageHash.get( model );
+    if( imageData == null )
+    {
+      try
+      {
+        final URL imageURL = new URL( m_location, model.getImage() );
+        imageData = new ImageData( imageURL.openStream() );
+        m_imageHash.put( model, imageData );
+      }
+      catch( MalformedURLException e )
+      {
+        e.printStackTrace();
+      }
+      catch( IOException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    final Image newImage = imageData == null ? null : new Image( m_control.getDisplay(), imageData ); 
+    m_imageLabel.setImage( newImage );
+
+    if( oldImage != null )
+      oldImage.dispose();
+
+    m_control.layout();
+    m_control.redraw();
+  }
+
+  public String getModel()
+  {
+    return m_model.getName();
   }
 
 }

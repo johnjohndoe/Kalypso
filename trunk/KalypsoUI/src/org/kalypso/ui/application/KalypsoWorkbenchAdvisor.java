@@ -5,8 +5,11 @@ import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -14,6 +17,7 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
+import org.kalypso.services.user.common.IUserServiceConstants;
 import org.kalypso.ui.IKalypsoUIConstants;
 
 /**
@@ -21,9 +25,13 @@ import org.kalypso.ui.IKalypsoUIConstants;
  */
 public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
 {
-  public KalypsoWorkbenchAdvisor()
+  private final String[] m_rights;
+
+  public KalypsoWorkbenchAdvisor( final String[] rights )
   {
     super();
+    
+    m_rights = rights;
   }
   
   /**
@@ -44,12 +52,23 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     }
   }
   
+  private boolean hasRight( final String right )
+  {
+    for( int i = 0; i < m_rights.length; i++ )
+    {
+      if( m_rights[i].equals( right ) )
+        return true;
+    }
+    
+    return false;
+  }
+  
   /**
    * @see org.eclipse.ui.application.WorkbenchAdvisor#getInitialWindowPerspectiveId()
    */
   public String getInitialWindowPerspectiveId()
   {
-    return IKalypsoUIConstants.MODELER_PERSPECTIVE;
+    return IKalypsoUIConstants.PROGNOSE_PERSPECTIVE;
   }
   
   /**
@@ -60,30 +79,33 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   {
     super.fillActionBars( window, actionConfigurer, flags );
 
-    final IMenuManager menuManager = actionConfigurer.getMenuManager();
-    
-    // Menüs umbauen
-    final IMenuManager windowMenu = (IMenuManager)menuManager.find( IWorkbenchActionConstants.M_WINDOW );
-    final IMenuManager showViewMenu = (IMenuManager)windowMenu.find( "showView" );
-    menuManager.insertAfter( IWorkbenchActionConstants.M_EDIT, showViewMenu );
-
-    // Menüs entfernen
-    menuManager.remove( IWorkbenchActionConstants.M_PROJECT );
-    menuManager.remove( IWorkbenchActionConstants.M_NAVIGATE );
-    menuManager.remove( IWorkbenchActionConstants.M_WINDOW );
-    
-    final IMenuManager fileMenu = (IMenuManager)menuManager.find( IWorkbenchActionConstants.M_FILE );
-    fileMenu.remove( "move" );
-    fileMenu.remove( "openWorkspace" );
-    fileMenu.remove( "import" );
-    fileMenu.remove( "export" );
-
-    final IMenuManager editMenu = (IMenuManager)menuManager.find( IWorkbenchActionConstants.M_EDIT );
-    editMenu.remove( "bookmark" );
-    editMenu.remove( "addTask" );
-
-    final IMenuManager helpMenu = menuManager.findMenuUsingPath( IWorkbenchActionConstants.M_HELP );
-    helpMenu.remove( "tipsAndTricks" );
+    if( !hasRight( IUserServiceConstants.RIGHT_ADMIN ) )
+    {
+      final IMenuManager menuManager = actionConfigurer.getMenuManager();
+      
+//      // Menüs umbauen
+//      final IMenuManager windowMenu = (IMenuManager)menuManager.find( IWorkbenchActionConstants.M_WINDOW );
+//      final IMenuManager showViewMenu = (IMenuManager)windowMenu.find( "showView" );
+//      menuManager.insertAfter( IWorkbenchActionConstants.M_EDIT, showViewMenu );
+  
+      // Menüs entfernen
+      menuManager.remove( IWorkbenchActionConstants.M_PROJECT );
+//      menuManager.remove( IWorkbenchActionConstants.M_NAVIGATE );
+//      menuManager.remove( IWorkbenchActionConstants.M_WINDOW );
+      
+//      final IMenuManager fileMenu = (IMenuManager)menuManager.find( IWorkbenchActionConstants.M_FILE );
+//      fileMenu.remove( "move" );
+//      fileMenu.remove( "openWorkspace" );
+//      fileMenu.remove( "import" );
+//      fileMenu.remove( "export" );
+  
+      final IMenuManager editMenu = (IMenuManager)menuManager.find( IWorkbenchActionConstants.M_EDIT );
+      editMenu.remove( "bookmark" );
+      editMenu.remove( "addTask" );
+  
+      final IMenuManager helpMenu = menuManager.findMenuUsingPath( IWorkbenchActionConstants.M_HELP );
+      helpMenu.remove( "tipsAndTricks" );
+    }
   }
   
   /**
@@ -93,7 +115,16 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   {
     super.preWindowOpen( windowConfigurer );
     
-    windowConfigurer.setShowPerspectiveBar( false );
+
+    if( !hasRight( IUserServiceConstants.RIGHT_EXPERT ) && !hasRight( IUserServiceConstants.RIGHT_ADMIN ) )
+    {
+      windowConfigurer.setShowCoolBar( false );
+      windowConfigurer.setShowFastViewBars( false );
+      windowConfigurer.setShowMenuBar( false );
+      windowConfigurer.setShowPerspectiveBar( false );
+      windowConfigurer.setShowProgressIndicator( false );
+      windowConfigurer.setShowStatusLine( false );
+    }
   }
   
   /**
@@ -113,6 +144,17 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
       workspace.setDescription( description );
     }
     catch( CoreException e )
+    {
+      e.printStackTrace();
+    }
+    
+    // immer in der Prognose-Perspective starten!
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    try
+    {
+      workbench.showPerspective( IKalypsoUIConstants.PROGNOSE_PERSPECTIVE, workbench.getActiveWorkbenchWindow() );
+    }
+    catch( final WorkbenchException e )
     {
       e.printStackTrace();
     }
