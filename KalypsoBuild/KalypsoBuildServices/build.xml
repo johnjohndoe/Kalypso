@@ -10,12 +10,15 @@
   <property name="dist.base" value="${dist}/base" />
   <property name="dist.server" value="${dist}/server" />
   <property name="dist.client" value="${dist}/client" />
+  <property name="dist.doc" value="${dist}/doc" />
+
 
   <target name="prepare">
     <mkdir dir="${dist}" />
     <mkdir dir="${dist.base}" />
     <mkdir dir="${dist.client}" />
     <mkdir dir="${dist.server}" />
+    <mkdir dir="${dist.doc}" />
   </target>
 
   <target name="clean-base">
@@ -78,12 +81,23 @@
     <delete dir="${dist.base}" />
     <delete dir="${dist.client}" />
     <delete dir="${dist.server}" />
+    <delete dir="${dist.doc}" />
   </target>
 
   <target name="fake-psi-compact" depends="prepare">
+    <delete file="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" />
+    <ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml"
+         target="deploy"
+         inheritall="false"
+    />
+    <property name="psi" value="true" />
   </target>
 
-  <target name="real-psi-compact" depends="prepare">
+  <target name="real-psi-compact" depends="prepare" unless="psi">
+    <delete file="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" />
+    <copy file="${workspace}/KalypsoBuild/echte-psicompact/PSICompact.jar"
+          tofile="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar"
+    />
   </target>
 
   <target name="build-base" depends="prepare">
@@ -93,7 +107,7 @@
          inheritall="true"
          target="deploy"
     />
-    <copy file="${workspace}/KalypsoUtil/build/KalypsoUil.jar"
+    <copy file="${workspace}/KalypsoUtil/build/KalypsoUtil.jar"
           todir="${dist.base}"
           overwrite="true"
     />
@@ -117,7 +131,7 @@
           todir="${dist.base}"
           overwrite="true"
     />
-    <copy file="${workspace}/KalypsoUtil/lib/repositoryBinding.jar"
+    <copy file="${workspace}/KalypsoRepository/lib/repositoryBinding.jar"
           todir="${dist.base}"
           overwrite="true"
     />
@@ -131,11 +145,54 @@
           todir="${dist.base}"
           overwrite="true"
     />
-    <copy file="${workspace}/KalypsoCore/coreBinding.jar"
+    <copy file="${workspace}/KalypsoCore/lib/coreBinding.jar"
           todir="${dist.base}"
           overwrite="true"
     />
 
+  </target>
+
+  <target name="build-base-plugin" depends="prepare">
+
+    <ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml"
+         dir="${workspace}/KalypsoUtil/etc/ant/"
+         inheritall="true"
+         target="deploy.plugin"
+    />
+    <copy file="${workspace}/KalypsoUtil/build/org.kalypso.*.zip"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
+    <ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml"
+         dir="${workspace}/KalypsoDeegree/etc/ant/"
+         inheritall="true"
+         target="deploy.plugin"
+    />
+    <copy file="${workspace}/KalypsoUtil/build/org.kalypso.*.zip"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
+    <ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml"
+         dir="${workspace}/KalypsoRepository/etc/ant/"
+         inheritall="true"
+         target="deploy.plugin"
+    />
+    <copy file="${workspace}/KalypsoRepository/build/org.kalypso.*.zip"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
+    <ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCore/etc/ant/"
+         inheritall="true"
+         target="deploy.plugin"
+    />
+    <copy file="${workspace}/KalypsoCore/build/org.kalypso.*.zip"
+          todir="${dist.base}"
+          overwrite="true"
+    />
   </target>
 
   <target name="build-server" depends="prepare,real-psi-compact">
@@ -151,8 +208,8 @@
          inheritall="true"
          target="build"
     />
-    <rename dest="${dist.server}/jaxrpc-kalypsoservice_calculation.zip"
-            src="${dist.server}/jaxrpc-kalypsoservice_calculation.war"
+    <move dest="${dist.server}/jaxrpc-kalypsoservice_calculation.zip"
+          src="${dist.server}/jaxrpc-kalypsoservice_calculation.war"
     />
 
     <ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml"
@@ -160,8 +217,8 @@
          inheritall="true"
          target="build"
     />
-    <rename dest="${dist.server}/jaxrpc-kalypsoservice_observation.zip"
-            src="${dist.server}/jaxrpc-kalypsoservice_observation.war"
+    <move dest="${dist.server}/jaxrpc-kalypsoservice_observation.zip"
+          src="${dist.server}/jaxrpc-kalypsoservice_observation.war"
     />
 
     <ant antfile="${workspace}/KalypsoUserServices/etc/ant/build.xml"
@@ -169,8 +226,8 @@
          inheritall="true"
          target="build"
     />
-    <rename dest="${dist.server}/jaxrpc-kalypsoservice_user.zip"
-            src="${dist.server}/jaxrpc-kalypsoservice_user.zip"
+    <move dest="${dist.server}/jaxrpc-kalypsoservice_user.zip"
+          src="${dist.server}/jaxrpc-kalypsoservice_user.zip"
     />
 
     <ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml"
@@ -178,8 +235,8 @@
          inheritall="true"
          target="build"
     />
-    <rename dest="${dist.server}/jaxrpc-kalypsoservice_metadoc.zip"
-            src="${dist.server}/jaxrpc-kalypsoservice_metadoc.war"
+    <move dest="${dist.server}/jaxrpc-kalypsoservice_metadoc.zip"
+          src="${dist.server}/jaxrpc-kalypsoservice_metadoc.war"
     />
 
   </target>
@@ -246,6 +303,109 @@
   </target>
 
   <target name="junit-test" depends="junit-test-base,junit-test-server">
+  </target>
+
+  <target name="javadoc" depends="prepare">
+    <echo message="Erzeuge Javadoc ..." />
+    <ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml"
+         dir="${workspace}/KalypsoUtil/etc/ant/"
+         inheritall="true"
+         target="javadoc"
+    />
+    <copy todir="${dist.doc}/KalypsoUtil">
+      <fileset dir="${workspace}/KalypsoUtil/build/doc" includes="**/**" />
+    </copy>
+
+    <ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml"
+         dir="${workspace}/KalypsoDeegree/etc/ant/"
+         inheritall="true"
+         target="javadoc"
+    />
+    <copy todir="${dist.doc}/KalypsoDeegree">
+      <fileset dir="${workspace}/KalypsoDeegree/build/doc" includes="**/**" />
+    </copy>
+
+    <ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml"
+         dir="${workspace}/KalypsoRepository/etc/ant/"
+         inheritall="true"
+         target="javadoc"
+    />
+    <copy todir="${dist.doc}/KalypsoRepository">
+      <fileset dir="${workspace}/KalypsoRepository/build/doc"
+               includes="**/**"
+      />
+    </copy>
+
+    <ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCore/etc/ant/"
+         inheritall="true"
+         target="javadoc"
+    />
+    <copy todir="${dist.doc}/KalypsoCore">
+      <fileset dir="${workspace}/KalypsoCore/build/doc" includes="**/**" />
+    </copy>
+
+    <ant antfile="${workspace}/KalypsoCoreServices/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCoreServices/etc/ant/"
+         inheritall="true"
+         target="javadoc"
+    />
+    <copy todir="${dist.doc}/KalypsoCoreServices">
+      <fileset dir="${workspace}/KalypsoCoreServices/build/doc"
+               includes="**/**"
+      />
+    </copy>
+
+    <ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCalcService/etc/ant/"
+         inheritall="true"
+         target="javadoc"
+    />
+    <copy todir="${dist.doc}/KalypsoCalcService">
+      <fileset dir="${workspace}/KalypsoCalcService/build/doc"
+               includes="**/**"
+      />
+    </copy>
+
+    <ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml"
+         dir="${workspace}/KalypsoObsService/etc/ant/"
+         inheritall="true"
+         target="javadoc"
+    />
+    <copy todir="${dist.doc}/KalypsoObsService">
+      <fileset dir="${workspace}/KalypsoObsService/build/doc"
+               includes="**/**"
+      />
+    </copy>
+
+    <ant antfile="${workspace}/KalypsoUserServices/etc/ant/build.xml"
+         dir="${workspace}/KalypsoUserServices/etc/ant/"
+         inheritall="true"
+         target="javadoc"
+    />
+    <copy todir="${dist.doc}/KalypsoUserServices">
+      <fileset dir="${workspace}/KalypsoUserServices/build/doc"
+               includes="**/**"
+      />
+    </copy>
+
+    <ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml"
+         dir="${workspace}/KalypsoMetaDocService/etc/ant/"
+         inheritall="true"
+         target="javadoc"
+    />
+    <copy todir="${dist.doc}/KalypsoMetaDocService">
+      <fileset dir="${workspace}/KalypsoMetaDocService/build/doc"
+               includes="**/**"
+      />
+    </copy>
+
+  </target>
+
+  <target name="zip-javadoc" depends="javadoc">
+    <zip destfile="${dist.doc}/KalypsoDoc.zip">
+      <fileset dir="${dist.doc}" includes="**/**" />
+    </zip>
   </target>
 
   <target name="nightly-build" depends="build,junit-test">

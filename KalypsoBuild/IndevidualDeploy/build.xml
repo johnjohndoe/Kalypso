@@ -16,13 +16,31 @@
     <mkdir dir="${deploy.temp}" />
   </target>
 
-  <target name="build">
-    <!-- Die nötigen Dateien erzeugen -->
+  <target name="fake-psi" unless="psi">
+    <!--ant antfile="${build}/KalypsoBuildServices/build.xml"
+         target="fake-psi-compact"
+         inheritall="false"
+    /-->
+    <property name="psi-target" value="fake-psi-compact" />
+
+
+  </target>
+
+  <target name="real-psi" if="psi" depends="fake-psi">
+    <!--ant antfile="${build}/KalypsoBuildServices/build.xml"
+         target="real-psi-compact"
+         inheritall="false"
+    /-->
+    <property name="psi-target" value="real-psi-compact" />
+  </target>
+
+  <target name="build" depends="prepare,real-psi">
     <ant antfile="${build}/KalypsoBuildServices/build.xml"
-         target="build"
+         target="build ${psi-target}"
          inheritall="false"
     />
   </target>
+
 
   <target name="package-calc" if="KalypsoCalc" depends="prepare">
     <copy file="${build.output}/server/jaxrpc-kalypsoservice_calculation.war"

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<project name="KalypsoDeegreeBuild" default="deploy">
+<project name="KalypsoDeegreeBuild" default="deploy" basedir="../..">
 
   <!-- Propertys aus einer Datei laden -->
-  <property file="../../../projectbuild.properties" />
-  
+  <property file="../projectbuild.properties" />
+
   <property name="project" value="${workspace}/KalypsoDeegree" />
   <property name="project.build" value="${project}/build" />
   <property name="project.bin" value="${project.build}/bin" />
@@ -19,7 +19,15 @@
     <mkdir dir="${project.bin}" />
   </target>
 
-  <target name="compile" depends="prepare">
+  <target name="wsdp">
+    <ant antfile="${project}/etc/schemas/build.xml"
+         inheritall="true"
+         target="deploy"
+         dir="${project}/etc/schemas"
+    />
+  </target>
+
+  <target name="compile" depends="prepare,wsdp">
     <echo message="Compiliere Sourcen ..." />
     <javac srcdir="${project.src}"
            destdir="${project.bin}"
@@ -52,6 +60,41 @@
       <fileset dir="${project.bin}" includes="**/*" />
     </jar>
   </target>
+
+  <target name="deploy.plugin" depends="wsdp">
+    <eclipse.buildScript elements="plugin@org.kalypso.deegree"
+                         install="${project}"
+                         children="true"
+                         recursivegeneration="true"
+    />
+
+    <ant antfile="${project}/build.xml"
+         inheritall="false"
+         target="zip.plugin"
+    />
+    <move todir="${project.build}">
+      <fileset dir="${project}">
+        <include name="**/org.kalypso*.zip" />
+        <include name="**/kalypso*.zip" />
+        <include name="**/kalypso*.jar" />
+      </fileset>
+    </move>
+    <delete file="${project}/build.xml" />
+  </target>
+
+  <target name="javadoc" depends="prepare">
+    <echo message="Erzeuge die Dokumentation ..." />
+    <javadoc destdir="${project.doc}"
+             failonerror="true"
+             classpathref="project.classpath"
+    >
+      <fileset dir="${project.src}" casesensitive="false">
+        <include name="**/*.java" />
+        <exclude name="**/*test*.java" />
+      </fileset>
+    </javadoc>
+  </target>
+
 
   <target name="clean">
     <echo message="Räume auf ..." />
