@@ -161,7 +161,7 @@ public class SLDFactory
 
     try
     {
-      Document doc = XMLTools.parse( reader );
+      Document doc = XMLTools.parse( reader );      
       sld = createStyledLayerDescriptor( doc.getDocumentElement() );
     }
     catch( IOException e )

@@ -402,7 +402,7 @@ public class Rule_Impl implements Rule, Marshallable
     }
     if( filter != null )
     {
-      sb.append( "<Filter>" ).append( filter.toXML() ).append( "</Filter>" );
+      sb.append( filter.toXML() );
     }
     if( elseFilter )
     {

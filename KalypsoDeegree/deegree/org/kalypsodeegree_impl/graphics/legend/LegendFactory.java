@@ -58,9 +58,12 @@ import org.deegree.services.wfs.filterencoding.Filter;
 import org.deegree.services.wfs.filterencoding.Operation;
 import org.deegree_impl.services.wfs.filterencoding.ComplexFilter;
 import org.deegree_impl.services.wfs.filterencoding.Literal;
+import org.deegree_impl.services.wfs.filterencoding.LogicalOperation;
 import org.deegree_impl.services.wfs.filterencoding.OperationDefines;
+import org.deegree_impl.services.wfs.filterencoding.PropertyIsBetweenOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyIsCOMPOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyIsLikeOperation;
+import org.deegree_impl.services.wfs.filterencoding.PropertyIsNullOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyName;
 import org.deegree_impl.services.wfs.filterencoding.SpatialOperation;
 import org.deegree_impl.tools.Debug;
@@ -275,8 +278,13 @@ public class LegendFactory
     Debug.debugMethodBegin( "LegendFactory", "getPropertyNameFromFilter()" );
 
     String legendlabel = "";
-
-    ComplexFilter cf = (ComplexFilter)filter;
+    
+    ComplexFilter cf = null;
+    
+    if(filter instanceof ComplexFilter)
+    	cf = (ComplexFilter)filter;    
+    else
+    	return "noComplexFilter";
 
     // System.out.println("Name der Operation: " +
     // cf.getOperation().getOperatorName()); //DEBUG
@@ -334,6 +342,21 @@ public class LegendFactory
           + getOperationString( prilop.getOperatorId() ) + prilop.getLiteral().getValue();
 
     }
+    else if( operation instanceof PropertyIsBetweenOperation )
+    {
+    	PropertyIsBetweenOperation prilop = (PropertyIsBetweenOperation)operation;
+        legendlabel = prilop.getPropertyName().getValue()+ getOperationString( prilop.getOperatorId() );
+    }  
+    else if( operation instanceof LogicalOperation)
+    {
+    	LogicalOperation logop = (LogicalOperation)operation;
+    	legendlabel = logop.getOperatorName() + logop.getOperatorId();
+    }
+    else if( operation instanceof PropertyIsNullOperation)
+    {
+    	PropertyIsNullOperation op = (PropertyIsNullOperation)operation;
+    	legendlabel = op.getOperatorName() + op.getOperatorId();
+    }    
     else
     {
       // TODO implement other filter-operations

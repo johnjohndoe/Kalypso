@@ -176,7 +176,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
   public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 500 );
-    sb.append( "<ogc:" ).append( getOperatorName() );
+    sb.append( "<ogc:" ).append( getOperatorName() ).append(">");    
     sb.append( propertyName.toXML() );
     sb.append( "<ogc:LowerBoundary>" );
     sb.append( lowerBoundary.toXML() );
