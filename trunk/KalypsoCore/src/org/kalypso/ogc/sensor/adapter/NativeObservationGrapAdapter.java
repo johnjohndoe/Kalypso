@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -83,7 +82,7 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
    */
-  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
+  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_title = config.getAttribute( "label" );
     m_axisTypeValue = config.getAttribute( "axisType" );
@@ -172,8 +171,7 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
   }
 
   /**
-   * 
-   * @see org.kalypso.ogc.sensor.adapter.NativeObservationAdapter#createAxis()
+   * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#createAxis()
    */
   public IAxis[] createAxis()
   {
