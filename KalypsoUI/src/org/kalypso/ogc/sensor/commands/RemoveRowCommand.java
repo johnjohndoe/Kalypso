@@ -1,6 +1,6 @@
 package org.kalypso.ogc.sensor.commands;
 
-import java.util.Vector;
+import java.util.List;
 
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.util.command.ICommand;
@@ -12,9 +12,9 @@ import org.kalypso.util.command.ICommand;
  */
 public class RemoveRowCommand implements ICommand
 {
-  private ObservationTableModel m_model;
-  private int m_index;
-  private Vector m_row;
+  private final ObservationTableModel m_model;
+  private final int m_index;
+  private List m_row = null;
 
   /**
    * Constructor

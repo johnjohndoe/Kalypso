@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.tableview;
 
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 
 
@@ -11,26 +12,9 @@ import org.kalypso.ogc.sensor.IObservation;
 public interface ITableViewColumn
 {
   public String getName( );
-
   public boolean isEditable( );
 
   public int getWidth( );
-
-  /**
-   * @return the name of the observation axis on which this column is based
-   */
-  public String getAxisName();
-  
-  /**
-   * @return the observation on which this column is based
-   */
-  public IObservation getObservation();
-  
-  /**
-   * Sets the column width
-   * 
-   * @param width
-   */
   public void setWidth( final int width );
 
   /**
@@ -38,10 +22,25 @@ public interface ITableViewColumn
    *         changed
    */
   public boolean isDirty( );
-
+  public void setDirty( boolean dirty );
+  
   /**
-   * Sets the dirty flag
-   * @param b
+   * @return the class of the values in this column
    */
-  public void setDirty( boolean b );
+  public Class getColumnClass();
+  
+  /**
+   * @return the value axis for which this column displays values
+   */
+  public IAxis getAxis();
+  
+  /**
+   * @return the key axis of the underyling observation
+   */
+  public IAxis getKeyAxis();
+  
+  /**
+   * @return the observation on which this column is based
+   */
+  public IObservation getObservation();
 }

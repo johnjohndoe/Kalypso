@@ -27,8 +27,13 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     m_model = model;
 
     setDefaultRenderer( Date.class, new DateTableCellRenderer() );
-    setDefaultRenderer( Number.class, new MaskedNumberTableCellRenderer() );
-
+    
+    final MaskedNumberTableCellRenderer nr = new MaskedNumberTableCellRenderer();
+    setDefaultRenderer( Number.class, nr );
+    setDefaultRenderer( Double.class, nr );
+    setDefaultRenderer( Integer.class, nr );
+    setDefaultRenderer( Float.class, nr );
+    
     setSelectionForeground( getSelectionBackground() );
     setSelectionBackground( Color.YELLOW );
   }
@@ -42,8 +47,8 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     {
       if( evt.getType() == TemplateEvent.TYPE_ADD && evt.getObject() instanceof ITableViewColumn )
       {
-        ITableViewColumn col = (ITableViewColumn)evt.getObject();
-        m_model.addColumn( col );
+        final ITableViewColumn col = (ITableViewColumn)evt.getObject();
+        m_model.addTableViewColumn( col );
       }
 
       if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
