@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="xsl/grafik-vorlage.xsl"?>
+<obsdiagview xmlns="obsdiagview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="obsdiagview.template.kalypso.org
+.\obsdiagview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<title>Große Röder</title>
+	<legend title="Legend" visible="true"/>
+
+	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
+	<axis id="w" datatype="xs:double" label="Pegel" unit="m³/s" direction="vertical" position="left" />
+
+   	<curve id="C1" name="Grossenhain" linktype="zml" xlink:type="simple" xlink:href="TYPE=relative#LOCATION=zml/Große Röder/grossenhain.zml" xlink:actuate="onRequest">
+	   	<mapping observation-axis="Datum" diagram-axis="d" />
+	   	<mapping observation-axis="Pegel-Grossenhain" diagram-axis="w" />
+   	</curve>
+	   	
+	<curve id="C2" name="Nauwalde" linktype="zml" xlink:type="simple" xlink:href="TYPE=relative#LOCATION=zml/Große Röder/nauwalde.zml" xlink:actuate="onRequest">
+		<mapping observation-axis="Datum" diagram-axis="d" />
+		<mapping observation-axis="Pegel-Nauwalde" diagram-axis="w" />
+   	</curve>
+   	
+	<curve id="C3" name="Pegel" linktype="zml" xlink:type="simple" xlink:href="TYPE=relative#LOCATION=zml/Beispiel/inline.zml" xlink:actuate="onRequest">
+		<mapping observation-axis="Datum" diagram-axis="d" />
+		<mapping observation-axis="Pegel" diagram-axis="w" />
+   	</curve>
+
+</obsdiagview>
