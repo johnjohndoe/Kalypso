@@ -162,8 +162,30 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
       // TODO status axis...
       m_axes = new IAxis[2];
       
-      m_axes[0] = new DefaultAxis("Datum", TimeserieConstants.TYPE_DATE, "unit", Date.class, true, true );
-      m_axes[1] = new DefaultAxis("Wert", TimeserieConstants.TYPE_RUNOFF, "unit", Double.class, true, true );
+      m_axes[0] = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true, true );
+      
+      String type = "?";
+      String unit = "?";
+      
+      try
+      {
+        type = DataCenterUtils.toKalypsoType( m_parent.getChannel().getType() );
+      }
+      catch( SQLException e )
+      {
+        e.printStackTrace();
+      }
+
+      try
+      {
+        unit = DataCenterUtils.toKalypsoUnit( m_parent.getChannel().getUnit() );
+      }
+      catch( SQLException e )
+      {
+        e.printStackTrace();
+      }
+
+      m_axes[1] = new DefaultAxis( m_ts.getName(), type, unit, Double.class, false, true );
     }
     
     return m_axes;

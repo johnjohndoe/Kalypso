@@ -266,6 +266,7 @@ public class TimeserieUtils
    * <p>Uses UNIT_TO_TYPE_ Keys in config.properties</p>
    * 
    * @param unit
+   * @return type
    */
   public static String getTypeForUnit( final String unit )
   {
