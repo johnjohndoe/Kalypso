@@ -203,6 +203,11 @@ public class GisObjectClass extends GisElementClass
 	myVersion.createObject(mot);
     }
    
+    public void createObject(GisPoint basePoint)
+    {
+	myVersion.createObject(mot,basePoint);
+    }
+
     // remove
     public void remove(Object oId)
     {

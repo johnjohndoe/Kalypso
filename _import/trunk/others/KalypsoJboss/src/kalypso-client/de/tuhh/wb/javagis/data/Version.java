@@ -308,8 +308,13 @@ public class Version // implements ActionListener
     {
 	return Main.versionClass.returnBackwardRelations(myThemeKey,ot,oId);
     }
+
     public void createObject(int ot)
     {
 	Main.versionClass.objectCreate(myThemeKey,myVersionId,ot);
+    }    
+    public void createObject(int ot,GisPoint basePoint)
+    {
+	Main.versionClass.objectCreate(myThemeKey,myVersionId,ot,basePoint);
     }    
 }

@@ -118,12 +118,12 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 	// JMenuBar menubar= new JMenuBar();
 
           menubar.add(edit);
-    //    menubar.add(view);
-    //    menubar.add(connect);
-    //    menubar.add(createV);
-    //    menubar.add(reload);
+	  //    menubar.add(view);
+	  //    menubar.add(connect);
+	  //    menubar.add(createV);
+	  //    menubar.add(reload);
 
-	this.setJMenuBar(menubar);
+	  this.setJMenuBar(menubar);
     }
 
     private void reloadProjectTree()

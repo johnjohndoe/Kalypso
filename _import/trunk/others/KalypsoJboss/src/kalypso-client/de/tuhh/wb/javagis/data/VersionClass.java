@@ -1127,6 +1127,32 @@ public class VersionClass implements EJBEventListener
 	    }
     }
 
+    //emulated ObjectSession
+    public synchronized void objectCreate(String themeKey,Object vId,int ot,GisPoint basePoint)
+    {
+	try
+	    {
+		VersionSession vs=getVersionSession(themeKey);		
+		vs.objectCreate(ot,vId,basePoint.toBasePointTransfer());
+		lostVersionSession=false;
+	    }
+	catch(Exception e)
+	    {
+		if(!lostVersionSession)
+		    {
+			lostVersionSession=true;
+			versions.remove(themeKey);		
+			objectCreate(themeKey,vId,ot,basePoint);
+		    }
+		else
+		    {
+			lostVersionSession=false;
+			log(e);
+			System.out.println(e.getMessage());
+		    }
+	    }
+    }
+
     public synchronized Vector returnForwardRelations(String themeKey,int ot,Object oId)
 	throws ObjectNotFoundException
     {

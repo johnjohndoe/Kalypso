@@ -22,7 +22,7 @@
          
          import javax.naming.InitialContext;
          import javax.rmi.PortableRemoteObject;
- 
+  
          import javax.ejb.CreateException;
          import javax.ejb.EJBLocalObject;
          import javax.ejb.RemoveException;
@@ -698,7 +698,7 @@
             if(objectLocalHomes.containsKey(tableName))
             {
               int objectTable=getObjectTable(tableName);
-              Object oId=objectCreate(objectTable,importXmlDestinationVID,false);
+              Object oId=objectCreate(objectTable,importXmlDestinationVID,false,null);
               if(!importIdMapping.containsKey(tableName))
                 importIdMapping.put(tableName,new Hashtable());
               ((Hashtable)importIdMapping.get(tableName)).put(gto.getIdentifier(),oId);
@@ -1381,10 +1381,20 @@
            */
            public Object objectCreate(int objectTable,Object vId) throws CreateException
               {
-              return objectCreate(objectTable,vId,true);
+              return objectCreate(objectTable,vId,true,null);
               }
 
-              private Object objectCreate(int objectTable,Object vId,boolean withEvent) throws CreateException
+              /**
+              * @ejb:interface-method
+              */
+              public Object objectCreate(int objectTable,Object vId,BasePointTransfer point) throws CreateException
+              {
+                Object oId=objectCreate(objectTable,vId,true,point);
+                return oId;
+              }
+
+
+              private Object objectCreate(int objectTable,Object vId,boolean withEvent,BasePointTransfer point) throws CreateException
            {
              String objectKey=objectKeys[objectTable];
              Integer newId=null;
@@ -1408,7 +1418,15 @@
                   </xsl:call-template>
                 </xsl:variable>
                 case <xsl:value-of select="position()-1"/>:
-                  newObject=(ElementLocal)((<xsl:value-of select="$name"/>LocalHome)objectLocalHomes(objectKey)).create(newId,version,withEvent);
+                {
+                 newObject=(ElementLocal)((<xsl:value-of select="$name"/>LocalHome)objectLocalHomes(objectKey)).create(newId,version,withEvent);
+                <xsl:if test="symbol">
+                 if(point!=null)
+                  {
+                  newObject.setBasePoint(point);
+                  }                  
+                </xsl:if>
+                }
                 break;
               </xsl:for-each>
               default:

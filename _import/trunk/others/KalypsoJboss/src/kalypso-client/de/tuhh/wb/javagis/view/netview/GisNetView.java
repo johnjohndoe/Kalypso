@@ -2,6 +2,7 @@ package de.tuhh.wb.javagis.view.netview;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.*;
+import de.tuhh.wb.javagis.tools.I18n;
 
 //import de.tuhh.wb.javagis.model.ElementSession;
 import de.tuhh.wb.javagis.view.ViewManager;
@@ -70,11 +71,8 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 
     private JTextField tfAction;
 	
-
-    
     //    public static GisMap gisMap;
     public GisMap gisMap;
-
 
     public GisNetView(GisNetModel netModel)
     {
@@ -220,11 +218,13 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 		break;
 		
 	    case MouseEvent.BUTTON3_MASK:  // right
+		showPopupMenu(e);
 		//switch(mode)
 		//{
 		//case MOVE_MODE:
 		//select Object
-		if(mode==PAN_MODE || mode==MOVE_MODE)
+
+		/*		if(mode==PAN_MODE || mode==MOVE_MODE)
 		    {
 			System.out.println("singleObjectView...");
 			GisObject singleObject=netModel.snap(gisPoint);
@@ -234,6 +234,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 		    {
 			setMode(DEFAULT_MODE);
 		    }
+		*/
 		//break;
 		//case RELATION_MODE:
 		//select Object
@@ -331,6 +332,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 
     private void maybeShowPopupCreate(MouseEvent e)
     {
+
         if (e.isPopupTrigger())
 	    {
 		JPopupMenu popup = new JPopupMenu();
@@ -718,5 +720,27 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	legend.setSize(300,300);
 	ViewManager.desktop.add(legend);
 	legend.moveToFront();
+    }
+
+    public void showPopupMenu(MouseEvent e)
+    {
+	gisMap.setLastClick(gisMap.trafo.convert(e));
+        if (e.isPopupTrigger())
+	    {
+		JPopupMenu popup = new JPopupMenu();
+		JMenu subMenu=new JMenu(I18n.get("netViewCreateObject"));
+		popup.add(subMenu);
+		for(int i=0;i<gisObjectClasses.size();i++)
+		    {
+			GisObjectClass gisObjectClass = (GisObjectClass)gisObjectClasses.elementAt(i);
+			JMenuItem menuItem = new JMenuItem(gisObjectClass.getName());
+			menuItem.setIcon(new ImageIcon(gisObjectClass.getSymbol()));
+			menuItem.setActionCommand("createObject_"+gisObjectClass.getKey());
+			menuItem.addActionListener(netModel);
+			subMenu.add(menuItem);
+		    }
+		popup.show(e.getComponent(),
+			   e.getX(), e.getY());
+	    }
     }
 }

@@ -340,9 +340,25 @@ public class GisNetModel implements ActionListener,ElementClassListener
 		else
 		    hiddenElements.add(action);
 	    }
+	if(action.startsWith("createObject_"))
+	    {
+		GisPoint gp=myGisMap.getLastClick();
+		if(gp!=null)
+		    {
+			for(int i=0;i<myGisObjectClasses.size();i++)
+			    {
+				
+				GisObjectClass gisObjectClass = (GisObjectClass)myGisObjectClasses.elementAt(i);
+				if(("createObject_"+gisObjectClass.getKey()).equals(action))
+				    {
+					gisObjectClass.createObject(gp);
+				    }	
+			    }
+		    }	
+	    }
     }
-
-
+    
+    
     private Vector getIds(int elementTable)
     {
 	for(int i=0;i<myGisObjectClasses.size();i++)

@@ -114,6 +114,7 @@ public interface VersionSession extends EJBObject
     public Vector objectGetBackwardRelations(int objectTable,Object oId) throws FinderException, RemoteException;
 
     public Object objectCreate(int objectTable,Object vId) throws CreateException, RemoteException;
+    public Object objectCreate(int objectTable,Object vId,BasePointTransfer point) throws CreateException, RemoteException;
     public Object createRelation(int relationTable,Object vId,String srcKey,Object srcId,String destKey,Object destId) throws CreateException,FinderException, RemoteException;
     public void removeElement(int elementTable,Object eId) throws RemoveException, FinderException, RemoteException;
 }

@@ -44,6 +44,18 @@ public class GisMap extends JPanel
     private Vector objectIdListVector;
     private double scale=1d;
 
+    private GisPoint lastClick=null;
+
+    public void setLastClick(GisPoint gp)
+    {
+	lastClick=gp;
+    }
+
+    public GisPoint getLastClick()
+    {
+	return lastClick;
+    }
+
     public void setScale(double scale)
     {
 	this.scale=scale;
