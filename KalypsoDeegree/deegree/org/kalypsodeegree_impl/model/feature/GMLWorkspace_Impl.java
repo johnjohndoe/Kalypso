@@ -235,7 +235,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    *      org.deegree.model.feature.FeatureType, int)
    */
   public void accept( final FeatureVisitor fv, final FeatureType ft, final int depth )
-      throws Throwable
   {
     final Feature[] features = getFeatures( ft );
 
@@ -251,7 +250,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    *      org.deegree.model.feature.Feature, int)
    */
   public void accept( final FeatureVisitor fv, final Feature feature, final int depth )
-      throws Throwable
   {
     final FeatureType ft = feature.getFeatureType();
     final FeatureTypeProperty[] ftps = ft.getProperties();
@@ -290,7 +288,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    *      java.util.List, int)
    */
   public void accept( final FeatureVisitor fv, final List features, final int depth )
-      throws Throwable
   {
     for( Iterator iter = features.iterator(); iter.hasNext(); )
     {
@@ -315,7 +312,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     /**
      * @see org.deegree.model.feature.FeatureVisitor#visit(org.deegree.model.feature.Feature)
      */
-    public boolean visit( final Feature f ) throws Throwable
+    public boolean visit( final Feature f )
     {
       final FeatureType featureType = f.getFeatureType();
 

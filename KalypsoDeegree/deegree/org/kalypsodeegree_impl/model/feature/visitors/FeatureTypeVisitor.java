@@ -26,7 +26,7 @@ public class FeatureTypeVisitor implements FeatureVisitor
   /**
    * @see org.deegree.model.feature.FeatureVisitor#visit(org.deegree.model.feature.Feature)
    */
-  public boolean visit( final Feature f ) throws Throwable
+  public boolean visit( final Feature f )
   {
     if( f.getFeatureType().equals( m_ft ) )
       m_results.add( f );

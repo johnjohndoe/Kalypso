@@ -10,4 +10,7 @@ import org.deegree.model.sort.JMSpatialIndex;
 public interface FeatureList extends List, JMSpatialIndex
 {
   public Feature[] toFeatures();
+  
+  /** Visit all Features in the list. */
+  public void accept( final FeatureVisitor visitor ) throws Throwable;
 }

@@ -18,5 +18,5 @@ public interface FeatureVisitor
    * 
    * @return Return false, if recursion should stop now (overrules DEPTH_INFINITE_... )  
    */
-  public boolean visit( final Feature f ) throws Throwable;
+  public boolean visit( final Feature f );
 }

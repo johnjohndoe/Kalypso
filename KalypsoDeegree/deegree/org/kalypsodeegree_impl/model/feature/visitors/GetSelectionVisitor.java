@@ -39,7 +39,7 @@ public class GetSelectionVisitor implements FeatureVisitor
   /**
    * @see org.deegree.model.feature.FeatureVisitor#visit(org.deegree.model.feature.Feature)
    */
-  public boolean visit( final Feature f ) throws Throwable
+  public boolean visit( final Feature f )
   {
     if( f.isSelected( m_selectionID ) )
       m_selectedFeatures.add( f );

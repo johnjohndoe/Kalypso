@@ -38,18 +38,12 @@ import org.kalypso.util.command.ICommandTarget;
 
 /**
  * <p>
- * Eclipse-Editor zum editieren der GML-Gis-Templates.
+ * Eclipse-Editor zum editieren der Gis-Tabellen-Templates.
  * </p>
  * 
  * <p>
- * Zeigt das ganze als Kartendarstellug, die einzelnen Datenquellen k?nnen
+ * Zeigt das ganze als Tabelendarstellung, die einzelnen Datenquellen k?nnen
  * potentiell editiert werden
- * </p>
- * 
- * <p>
- * Implementiert {@link org.kalypso.util.command.ICommandManager}f?r die Undo
- * und Redo Action. Gibt alles an den DefaultCommandManager weiter, es wird
- * zus?tzlich eine Aktualisierung der View bei jeder Aktion durchgef?hrt
  * </p>
  * 
  * @author belger

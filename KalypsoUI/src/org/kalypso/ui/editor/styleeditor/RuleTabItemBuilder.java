@@ -42,7 +42,6 @@ import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialogEvent;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialogListener;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterencoding.BoundaryExpression;
-import org.kalypso.ui.editor.styleeditor.panels.AddPatternPanel;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
 import org.kalypso.ui.editor.styleeditor.panels.ColorPalettePanel;
 import org.kalypso.ui.editor.styleeditor.panels.DenominatorInputPanel;
@@ -52,8 +51,6 @@ import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.panels.RulePatternInputPanel;
 import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
-import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
-import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
 
 /**
  * @author F.Lindemann

@@ -1,7 +1,9 @@
 package org.kalypso.ogc.gml.table;
 
+import org.deegree.model.feature.FeatureList;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 
 /**
  * @author bce
@@ -9,19 +11,21 @@ import org.eclipse.jface.viewers.Viewer;
 public class LayerTableContentProvider implements IStructuredContentProvider
 {
   /**
+   * Input muss ein IKalypsoFeatureTheme sein
+   * Output sind die Features
+   * 
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
   public Object[] getElements( final Object inputElement )
   {
-    if( inputElement == null )
+    if( inputElement == null || !(inputElement instanceof IKalypsoFeatureTheme ) )
       return new Object[] {};
 
-    return null;
+    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)inputElement;
     
-    // TODO: change input to what?
-//    final GMLWorkspace theme = (KalypsoFeatureTheme)inputElement;
-//    
-//    return theme == null ? new Object[] {} : theme.getWork.getAllFeatures();
+    final FeatureList featureList = kft.getFeatureList();
+    
+    return featureList == null ? new Object[] {} : featureList.toFeatures();
   }
 
   /**

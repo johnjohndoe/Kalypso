@@ -5,15 +5,17 @@ import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureVisitor;
 
 /**
+ * Visits all FeatureLists in a Feature-Hirarchy
+ * 
  * @author belger
  */
-public abstract class FeatureListVisitor implements FeatureVisitor
+public abstract class FeatureListsVisitor implements FeatureVisitor
 {
 
   /**
    * @see org.deegree.model.feature.FeatureVisitor#visit(org.deegree.model.feature.Feature)
    */
-  public boolean visit( final Feature f ) throws Throwable
+  public boolean visit( final Feature f )
   {
     final Object[] properties = f.getProperties();
     for( int i = 0; i < properties.length; i++ )
