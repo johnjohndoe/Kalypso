@@ -7,6 +7,31 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 ###############################################################################
 
 ----------------
+Version 0.0.3 (Deploy vom 26.01.2005)
+----------------
+- Refactoring in Observation Table und Diagram Templates (viele Änderungen)
+- Observation Table Template: die RenderingRules können jetzt auch eine 
+	Icon-Spezifikation beinhalten (<icon> Tag).
+	Standardmäßig werden "question", "warning", und "write" als String anerkannt
+	und die entsprechende Icons werden dargestellt (Siehe KalypsoStatusUtils). Man
+	kann aber auch eine URL
+	Beispiele:
+	<renderingrule mask="4">
+        <tooltip>Eingabe erforderlich</tooltip>
+    	<icon>http://eine-web-adresse/icon.gif</icon>
+    </renderingrule>
+	<renderingrule mask="8">
+        <tooltip>Vom Benutzer geändert</tooltip>
+    	<icon>write</icon>
+    </renderingrule>
+
+- BUG #3 ok
+- BUG #25 ok
+- BUG #31 ok
+- BUG #32 ok
+- BUG #38 ok
+
+----------------
 Version 20050118
 ----------------
 - Refactoring in: IAxis und ITuppleModel.
