@@ -5,5 +5,8 @@ Client gibt es normalerweise eine Liste von URL für jede alternative Konfigurati
 Sollte die erste Konfigurationsdatei nicht zur Verfügung stehen, versucht es der Client
 mit der nächste, usw., bis es klappt.
 
+Vorschlag: Eclipse Preferences Mechanismus für das Setzen der URLs. NB: es wäre
+gut das die Erst-Konfiguration irgendwie automatisch schon gesetzt sein kann.
+
 Die Konfigurationsdatei ist wie eine Properties-Datei aufgebaut. Siehe kalypso-client.ini für
 mehr Information.
