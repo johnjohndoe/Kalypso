@@ -84,7 +84,7 @@ public class WechmannSet
     int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), W );
 
     if( i < 0 )
-      i = -i - 2;
+      i = -i - 1;
 
     return (WechmannParams) m_mapW.get( ds[i] );
   }

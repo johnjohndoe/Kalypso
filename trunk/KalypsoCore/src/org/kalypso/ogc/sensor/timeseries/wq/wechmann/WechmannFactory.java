@@ -96,7 +96,7 @@ public class WechmannFactory
           // (see schema)
 
           // wgr is optional
-          if( wgr == -1 )
+          if( wgr <= 0 )
             wparams[j] = new WechmannParams( w1, lnk1, k2 );
           else
             wparams[j] = new WechmannParams( w1, lnk1, k2, wgr );

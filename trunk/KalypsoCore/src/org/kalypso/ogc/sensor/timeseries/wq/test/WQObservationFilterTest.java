@@ -1,6 +1,7 @@
 package org.kalypso.ogc.sensor.timeseries.wq.test;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
@@ -23,7 +24,7 @@ import junit.framework.TestCase;
  */
 public class WQObservationFilterTest extends TestCase
 {
-  private IObservation obs;
+  private IObservation m_obs;
 
   /**
    * Note: this also tests the FilterFactory class.
@@ -38,10 +39,10 @@ public class WQObservationFilterTest extends TestCase
     {
       ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test.zml" );
 
-      obs = ZmlFactory.parseXML( new InputSource( ins ), "", new URL(
-          "file:/wq-test.zml#filter(wq*W)" ) );
+      m_obs = ZmlFactory.parseXML( new InputSource( ins ), "", new URL(
+          "file:/wq-test.zml?filter(wq*W)" ) );
 
-      assertTrue( obs instanceof WQObservationFilter );
+      assertTrue( m_obs instanceof WQObservationFilter );
     }
     finally
     {
@@ -51,11 +52,33 @@ public class WQObservationFilterTest extends TestCase
 
   public void testGetValues( ) throws SensorException, WechmannException
   {
-    final ITuppleModel wqValues = obs.getValues( null );
+    final ITuppleModel wqValues = m_obs.getValues( null );
 
     assertNotNull( wqValues );
     assertTrue( wqValues instanceof WQTuppleModel );
 
     System.out.println( ObservationUtilities.dump( wqValues, "  " ) );
+  }
+  
+  public void testSchirgiswalde() throws MalformedURLException, SensorException
+  {
+    InputStream ins = null;
+    try
+    {
+      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test2.zml" );
+
+      IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", new URL(
+          "file:/wq-test.zml?filter(wq*W)" ) );
+
+      assertTrue( obs instanceof WQObservationFilter );
+      
+      ITuppleModel values = obs.getValues( null );
+      
+      System.out.println(  ObservationUtilities.dump( values, "  " ) );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( ins );
+    }
   }
 }
