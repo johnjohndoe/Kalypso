@@ -17,10 +17,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.deegree.model.feature.Feature;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.io.ReaderUtilities;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;
@@ -436,10 +436,10 @@ public class SpreeCalcJob extends AbstractCalcJob
     final Map valuesMap = new HashMap();
     final Collection dates = new ArrayList();
 
-    final KalypsoFeature[] features = layer.getAllFeatures();
+    final Feature[] features = layer.getAllFeatures();
     for( int i = 0; i < features.length; i++ )
     {
-      final KalypsoFeature feature = features[i];
+      final Feature feature = features[i];
 
       final String dateString = (String)feature.getProperty( "DATUM" );
       final Date date = dateFormat.parse( dateString );
