@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.deegree.model.feature.FeatureVisitor;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.deegree_impl.model.feature.visitors.ResortVisitor;
 import org.deegree_impl.model.feature.visitors.TransformVisitor;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -94,6 +95,7 @@ public class ShapeLoader extends AbstractLoader
       try
       {
         workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+        workspace.accept( new ResortVisitor(), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
       }
       catch( final Throwable e1 )
       {

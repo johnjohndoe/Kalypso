@@ -135,15 +135,13 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-      if( modellEvent.getType() == ModellEvent.STYLE_CHANGE )
+//      if( modellEvent.getType() == ModellEvent.STYLE_CHANGE )
         setDirty( true );
       
-      if( modellEvent.getType() == ModellEvent.FEATURE_CHANGE )
+//      if( modellEvent.getType() == ModellEvent.FEATURE_CHANGE )
         setDirty( true );
 
-      // TODO: sollte wieder an sein
-//      fireModellEvent( modellEvent );
-      // damit die Map den repaint bekommt
+      fireModellEvent( modellEvent );
   }
 
   /**

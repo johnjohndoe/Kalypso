@@ -16,6 +16,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.GismapviewType;
+import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.gismapview.GismapviewType.LayersType;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.template.types.ExtentType;
@@ -85,9 +86,9 @@ public class GisTemplateMapModell implements IMapModell
   }
 
   // Helper
-  public Gismapview createGismapTemplate( GM_Envelope bbox ) throws JAXBException
+  public Gismapview createGismapTemplate( final GM_Envelope bbox ) throws JAXBException
   {
-    final org.kalypso.template.gismapview.ObjectFactory maptemplateFactory = new org.kalypso.template.gismapview.ObjectFactory();
+    final ObjectFactory maptemplateFactory = new ObjectFactory();
 
     final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
     final Gismapview gismapview = maptemplateFactory.createGismapview();
@@ -110,24 +111,28 @@ public class GisTemplateMapModell implements IMapModell
     IKalypsoTheme[] themes = m_modell.getAllThemes();
     for( int i = 0; i < themes.length; i++ )
     {
+      final Layer layer = maptemplateFactory.createGismapviewTypeLayersTypeLayer();
+
       final IKalypsoTheme kalypsoTheme = themes[i];
       if( kalypsoTheme instanceof GisTemplateFeatureTheme )
       {
-       final Layer layer = maptemplateFactory.createGismapviewTypeLayersTypeLayer();
-
-        ( (GisTemplateFeatureTheme)kalypsoTheme ).fillLayerType( layer, Integer
-            .toString( i ), m_modell.isThemeEnabled( kalypsoTheme ) );
+        ( (GisTemplateFeatureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i, m_modell.isThemeEnabled( kalypsoTheme ) );
         layerList.add( layer );
-
-        if( m_modell.isThemeActivated( kalypsoTheme ) )
-          layersType.setActive( layer );
       }
       else if( kalypsoTheme instanceof KalypsoWMSTheme )
       {
         // TODO: serialize it!
       }
+      
+      if( m_modell.isThemeActivated( kalypsoTheme ) )
+        layersType.setActive( layer );
     }
 
+    // todo: zur Zeit validierts nicht, weil die hrefs keine URIs sind
+    // das sollten sie aber sein
+//    final Validator validator = maptemplateFactory.createValidator();
+//    validator.validate( gismapview );
+    
     return gismapview;
   }
 

@@ -19,9 +19,7 @@ public interface JMSpatialIndex
 
   public boolean remove( Object object );
 
-  public void resort( GM_Envelope newEnv, GM_Envelope oldEnv, Object object );
-
-  public void resort( GM_Envelope newEnv, Object object );
+  public void resort();
 
   public void paint( Graphics g, GeoTransform geoTransform );
 

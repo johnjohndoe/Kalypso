@@ -10,6 +10,7 @@ import java.util.Properties;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureVisitor;
 import org.deegree.model.feature.GMLWorkspace;
+import org.deegree_impl.model.feature.visitors.ResortVisitor;
 import org.deegree_impl.model.feature.visitors.TransformVisitor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -55,6 +56,7 @@ public class GmlLoader extends AbstractLoader
       {
         final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
         workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+        workspace.accept( new ResortVisitor(), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
       }
       catch( final Throwable e1 )
       {

@@ -3,10 +3,7 @@ package org.kalypso.ui.editor.mapeditor;
 import java.awt.Frame;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.URL;
-
-import javax.xml.bind.JAXBException;
 
 import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IFile;
@@ -92,7 +89,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     return super.getAdapter( adapter );
   }
 
-  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
+  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
   {
     if( m_mapModell == null )
       return;
@@ -101,7 +98,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     {
       monitor.beginTask( "Kartenvorlage speichern", 2000 );
       getMapPanel().getBoundingBox();
-      Gismapview modellTemplate = ( (GisTemplateMapModell)m_mapModell )
+      
+      final Gismapview modellTemplate = ( (GisTemplateMapModell)m_mapModell )
           .createGismapTemplate( getMapPanel().getBoundingBox() );
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -121,17 +119,15 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       bis.close();
       monitor.done();
     }
-    catch( JAXBException e )
+    catch( final CoreException e )
     {
-      e.printStackTrace();
+      throw e;
     }
-    catch( IOException e )
+    catch( final Throwable e )
     {
       e.printStackTrace();
-    }
-    catch( CoreException e )
-    {
-      e.printStackTrace();
+      
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "XML-Vorlagendatei konnte nicht erstellt werden.", e ) );
     }
 
   }
