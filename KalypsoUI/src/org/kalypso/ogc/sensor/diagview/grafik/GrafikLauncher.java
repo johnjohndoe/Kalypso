@@ -179,7 +179,7 @@ public class GrafikLauncher
 
       // status might not be ok but we still want to start the grafik tool
       // so inform the use here with the current info
-      if( status != Status.OK_STATUS )
+      if( !status.isOK() )
       {
         final Display disp = KalypsoGisPlugin.getDefault().getWorkbench()
             .getDisplay();

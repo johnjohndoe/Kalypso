@@ -9,8 +9,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
- * Yet another MultiStatus that is more directed to be used for error messages 
- * that should be delivered to the user using the ErrorDialog.
+ * Yet another MultiStatus that is more directed to be used for error messages
+ * that should be delivered to the user using the ErrorDialog. If no error
+ * messages have been added to it, isOK() returns true.
  * 
  * @author schlienger
  */
@@ -29,18 +30,26 @@ public class MultiStatus extends Status
   protected void finalize( ) throws Throwable
   {
     m_errorMessages.clear();
-    
+
     super.finalize();
   }
-  
+
   /**
    * @return true if at least one message is available
    */
-  public boolean hasMessages()
+  public boolean hasMessages( )
   {
-    return m_errorMessages.size() > 0; 
+    return m_errorMessages.size() > 0;
   }
   
+  /**
+   * @see org.eclipse.core.runtime.Status#isOK()
+   */
+  public boolean isOK( )
+  {
+    return !hasMessages();
+  }
+
   /**
    * @see org.eclipse.core.runtime.Status#isMultiStatus()
    */
