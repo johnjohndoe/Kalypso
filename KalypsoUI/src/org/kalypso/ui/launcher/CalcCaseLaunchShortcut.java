@@ -3,6 +3,7 @@ package org.kalypso.ui.launcher;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -60,10 +61,10 @@ public class CalcCaseLaunchShortcut implements ILaunchShortcut
 
       final ILaunchConfigurationWorkingCopy wc = configType.newInstance( null, lm
           .generateUniqueLaunchConfigurationNameFrom( folder.getName() ) );
-//      wc.setAttribute( IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, mainType );
-//      wc.setAttribute( IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, project.getElementName() );
-//      wc.setAttribute( JUnitBaseLaunchConfiguration.ATTR_KEEPRUNNING, false );
-//      wc.setAttribute( JUnitBaseLaunchConfiguration.LAUNCH_CONTAINER_ATTR, container );
+
+      // TODO: attribute setzen
+
+      setAttributes( wc, folder );
 
       final ILaunchConfiguration config = wc.doSave();
 
@@ -75,10 +76,29 @@ public class CalcCaseLaunchShortcut implements ILaunchShortcut
     }
   }
 
-  /**
-   * @see org.eclipse.debug.ui.ILaunchShortcut#launch(org.eclipse.ui.IEditorPart,
-   *      java.lang.String)
-   */
+private void setAttributes( final ILaunchConfigurationWorkingCopy wc, final IFolder folder )
+  {
+    final IProject project = folder.getProject();
+    
+    try
+    {
+      final ModelNature nature = (ModelNature)project.getNature( ModelNature.ID );
+
+      wc.setAttribute( IKalypsoLaunchConfigurationConstants.CALC_TYPE, nature.getCalcType() );
+
+      // TODO: den service auswählen lassen und checken, ob der Typ passt
+      wc.setAttribute( IKalypsoLaunchConfigurationConstants.SERVICE, "default" );
+    }
+    catch( CoreException e )
+    {
+      e.printStackTrace();
+    }
+    
+    
+  }  /**
+      * @see org.eclipse.debug.ui.ILaunchShortcut#launch(org.eclipse.ui.IEditorPart,
+      *      java.lang.String)
+      */
   public void launch( final IEditorPart editor, final String mode )
   {
     throw new UnsupportedOperationException();

@@ -39,9 +39,13 @@ import org.kalypso.xml.util.TransformationType;
  */
 public class ModelNature implements IProjectNature
 {
+  public static final String CALCTYPE = "calcType";
+  
+  public static final String ID = "org.kalypso.ui.ModelNature";
+  
   private IProject m_project;
 
-  private Properties m_metadata = new Properties();
+  private final Properties m_metadata = new Properties();
 
   private static final String METADATA_FILE = ".metadata";
 
@@ -129,7 +133,7 @@ public class ModelNature implements IProjectNature
       final IProject project = (IProject)resource;
       try
       {
-        project.isNatureEnabled( "org.kalypso.ui.ModelNature" );
+        project.isNatureEnabled( ModelNature.ID );
         return null;
       }
       catch( CoreException e )
@@ -187,6 +191,16 @@ public class ModelNature implements IProjectNature
 
       ccTrans.transform( targetFolder, monitor );
     }
+  }
+
+  public String getCalcType()
+  {
+    return getMetadata().getProperty( ModelNature.CALCTYPE );
+  }
+
+  private Properties getMetadata()
+  {
+    return m_metadata;
   }
 
 }

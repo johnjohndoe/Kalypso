@@ -58,7 +58,7 @@
             class="org.kalypso.ogc.sensor.editor.ObservationTableEditor"
             icon="icons/sample.gif"
             default="true"
-            name="Kalypso Obsevation TableEditor"
+            name="Kalypso Observation TableEditor"
             id="org.kalypso.ogc.sensor.editor.ObservationTableEditor"
             extensions="ott"/>
    </extension>
