@@ -5,6 +5,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -17,11 +18,14 @@ import org.eclipse.ui.views.properties.PropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySourceProvider;
 import org.kalypso.repository.DefaultRepositoryContainer;
+import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryContainer;
 import org.kalypso.repository.IRepositoryContainerListener;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.repository.action.AddRepositoryAction;
-import org.kalypso.ui.repository.action.RemoveRepositoryAction;
+import org.kalypso.ui.repository.actions.AddRepositoryAction;
+import org.kalypso.ui.repository.actions.ConfigurePreviewAction;
+import org.kalypso.ui.repository.actions.ReloadAction;
+import org.kalypso.ui.repository.actions.RemoveRepositoryAction;
 
 /**
  * Wird als ZeitreihenBrowser benutzt.
@@ -35,9 +39,13 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
   private final DefaultRepositoryContainer m_repContainer;
 
-  private RemoveRepositoryAction m_removeAction;
+  private RemoveRepositoryAction m_removeAction = null;
+  private ConfigurePreviewAction m_confAction = null;
+  private ReloadAction m_reloadAction = null;
 
   private PropertySheetPage m_propsPage = null;
+
+
 
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
@@ -84,6 +92,12 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     if( m_removeAction != null )
       m_removeAction.dispose();
 
+    if( m_confAction != null )
+      m_confAction.dispose();
+    
+    if( m_reloadAction != null )
+      m_reloadAction.dispose();
+
     if( m_repViewer != null )
       removeSelectionChangedListener( this );
     
@@ -103,17 +117,41 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     m_repViewer.setInput( m_repContainer );
 
     final Shell shell = getSite().getShell();
-    m_removeAction = new RemoveRepositoryAction( shell, this );
 
     final IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
+    
     toolBarManager.add( new AddRepositoryAction( shell, m_repContainer ) );
+    
+    m_removeAction = new RemoveRepositoryAction( shell, this );
     toolBarManager.add( m_removeAction );
+    
+    m_confAction = new ConfigurePreviewAction( shell, this );
+    toolBarManager.add( m_confAction );
+    
+    m_reloadAction = new ReloadAction( shell, this );
+    toolBarManager.add( m_reloadAction );
 
     getViewSite().getActionBars().updateActionBars();
 
     addSelectionChangedListener( this );
   }
 
+  /**
+   * Utility method that checks if given selection is a <code>IRepository</code>.
+   */
+  public IRepository isRepository( final ISelection selection )
+  {
+    final IStructuredSelection sel = (IStructuredSelection)selection;
+    if( sel.isEmpty() )
+      return null;
+
+    final Object element = sel.getFirstElement();
+    if( !( element instanceof IRepository ) )
+      return null;
+
+    return (IRepository)element;
+  }
+  
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */

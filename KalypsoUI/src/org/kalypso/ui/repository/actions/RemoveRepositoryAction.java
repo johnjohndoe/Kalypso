@@ -1,9 +1,7 @@
-package org.kalypso.ui.repository.action;
+package org.kalypso.ui.repository.actions;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.eclipse.jface.action.FullAction;
@@ -15,7 +13,6 @@ import org.kalypso.ui.repository.view.RepositoryExplorerPart;
  * Ein Repository hinzufügen.
  * 
  * @author schlienger
- *  
  */
 public class RemoveRepositoryAction extends FullAction implements ISelectionChangedListener
 {
@@ -32,7 +29,7 @@ public class RemoveRepositoryAction extends FullAction implements ISelectionChan
 
     m_explorer.addSelectionChangedListener( this );
     
-    setEnabled( isRepository( m_explorer.getSelection() ) != null );
+    setEnabled( m_explorer.isRepository( m_explorer.getSelection() ) != null );
   }
 
   public void dispose()
@@ -45,7 +42,7 @@ public class RemoveRepositoryAction extends FullAction implements ISelectionChan
    */
   public void run()
   {
-    final IRepository rep = isRepository( m_explorer.getSelection() );
+    final IRepository rep = m_explorer.isRepository( m_explorer.getSelection() );
     if( rep == null )
       return;
 
@@ -56,24 +53,11 @@ public class RemoveRepositoryAction extends FullAction implements ISelectionChan
     m_explorer.getRepositoryContainer().removeRepository( rep );
   }
 
-  private IRepository isRepository( final ISelection selection )
-  {
-    final IStructuredSelection sel = (IStructuredSelection)selection;
-    if( sel.isEmpty() )
-      return null;
-
-    final Object element = sel.getFirstElement();
-    if( !( element instanceof IRepository ) )
-      return null;
-
-    return (IRepository)element;
-  }
-
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    setEnabled( isRepository( event.getSelection() ) != null );
+    setEnabled( m_explorer.isRepository( event.getSelection() ) != null );
   }
 }

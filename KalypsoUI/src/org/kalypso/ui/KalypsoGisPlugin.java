@@ -30,9 +30,9 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultCellEditorFactory;
 import org.kalypso.ogc.gml.table.celleditors.ICellEditorFactory;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.repository.DefaultRepositoryContainer;
+import org.kalypso.repository.RepositorySpecification;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.proxy.IObservationService;
-import org.kalypso.ui.repository.RepositorySpecification;
 import org.kalypso.util.pool.ResourcePool;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
@@ -52,7 +52,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   private static final String POOL_PROPERTIES = "resources/pools.properties"; //$NON-NLS-N$
 
   /** location of the observation properties file */
-  private static final String OBSERVATION_REPOSITORIES_PROPERTIES = "resources/observation_repositories.properties"; //$NON-NLS-N$
+  private static final String OBSERVATION_REPOSITORIES_PROPERTIES = "resources/repositories.properties"; //$NON-NLS-N$
 
   private static KalypsoGisPlugin m_plugin = null;
 
