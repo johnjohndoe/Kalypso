@@ -146,7 +146,7 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
     m_axesMap.clear();
   }
 
-  public void addTheme( IDiagramTemplateTheme theme )
+  public void addTheme( final IDiagramTemplateTheme theme )
   {
     m_themesMap.put( theme, theme.getCurves() );
     

@@ -144,10 +144,6 @@ public class ZmlFactory
     {
       final String zmlId = ZmlURL.getIdentifierPart( url );
 
-      // if no id specified, only use the filter part to retrieve observation
-      if( zmlId == null || zmlId.length() == 0 )
-        return FilterFactory.createFilter( url.getQuery() );
-
       // check if this is a local url. In the positive, we remove the
       // query part because Eclipse Platform's URLStreamHandler cannot deal with
       // it.
