@@ -429,6 +429,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
   {
     if( modellEvent.getEventSource() instanceof CommandableWorkspace )
     {
+    if( !composite.isDisposed() )
       composite.getDisplay().asyncExec( new Runnable()
       {
         public void run()
