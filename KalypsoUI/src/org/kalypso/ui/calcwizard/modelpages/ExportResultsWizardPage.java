@@ -477,7 +477,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         fos = new FileOutputStream( file );
         ObservationTemplateHelper.saveDiagramTemplateXML( m_obsdiagviewType, fos );
 
-        ObservationTemplateHelper.openGrafik4odt( file, getProject() );
+        // TODO 
+       // ObservationTemplateHelper.openGrafik4odt( file, getProject() );
 
         file.delete();
       }

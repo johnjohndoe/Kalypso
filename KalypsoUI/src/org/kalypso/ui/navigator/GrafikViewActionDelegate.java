@@ -1,13 +1,16 @@
 package org.kalypso.ui.navigator;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 
 /**
@@ -44,13 +47,23 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
     {
       if( m_currentFile.getFileExtension().equalsIgnoreCase(
           ObservationTemplateHelper.ODT_FILE_EXTENSION ) )
-        ObservationTemplateHelper.openGrafik4odt( m_currentFile );
+      {
+        final IContainer parent = m_currentFile.getParent();
+        
+        final IFolder folder = parent.getFolder( new Path( ".grafik" ) );
+        if( !folder.exists() )
+          folder.create( true, true, new NullProgressMonitor() );
+        
+        ObservationTemplateHelper.openGrafik4odt( m_currentFile, folder );
+      }
       else if( m_currentFile.getFileExtension().equalsIgnoreCase(
           ObservationTemplateHelper.TPL_FILE_EXTENSION ) )
+      {
         ObservationTemplateHelper.openGrafik4tpl( m_currentFile );
+      }
     }
     }
-    catch( SensorException e )
+    catch( Exception e )
     {
       MessageDialog.openError( m_view.getSite().getShell(), "Grafik konnte nicht gestartet werden", e.getLocalizedMessage() );
     }

@@ -1,4 +1,0 @@
-String xslFile = "C:/Programme/eclipse-3.0/workspace/KalypsoUI/src/org/kalypso/plugin/resources/xsl/grafik-vorlage.xsl";
-String xmlFile = "C:/Programme/eclipse-3.0/workspace/KalypsoUtil/etc/schemas/template/obsdiagview_example.odt";
-String res = org.kalypso.util.xml.XMLTools.xslTransform( new java.io.File(xmlFile), new java.io.File(xslFile) );
-System.out.println( "Output from transformation:\n" + res );

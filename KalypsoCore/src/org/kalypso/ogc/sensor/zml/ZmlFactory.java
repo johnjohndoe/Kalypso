@@ -164,7 +164,7 @@ public class ZmlFactory
       }
 
       // url is given as an argument here (and not tmpUrl) in order not to
-      // loose the query part we might have removed because of Eclipse's 
+      // loose the query part we might have removed because of Eclipse's
       // url handling.
       return parseXML( new InputSource( inputStream ), identifier, url );
     }
@@ -266,9 +266,9 @@ public class ZmlFactory
     if( obs.getTarget() != null )
       target = new JAXBXLink( obs.getTarget() );
 
-    final ZmlObservation zmlObs = new ZmlObservation( context.toExternalForm(), identifier, obs
-        .getName(), obs.isEditable(), target, metadata, model.getAxisList(),
-        model );
+    final ZmlObservation zmlObs = new ZmlObservation( context.toExternalForm(),
+        identifier, obs.getName(), obs.isEditable(), target, metadata, model
+            .getAxisList(), model );
 
     // tricky: maybe make a filtered observation out of this one
     final IObservation filteredObs = FilterFactory.createFilterFrom( context,
@@ -276,7 +276,7 @@ public class ZmlFactory
 
     // tricky: first check if a proxy has been specified in the url
     final IObservation proxyObs = createProxyFrom( context, filteredObs );
-    
+
     return proxyObs;
   }
 
