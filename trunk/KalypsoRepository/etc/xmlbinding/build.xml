@@ -16,6 +16,7 @@
     <fileset dir="${ENV.JWSDP_HOME}">
       <include name="jaxb/lib/*.jar" />
       <include name="jaxp/**/*.jar" />
+      <include name="jwsdp-shared/bin/**/*.jar" />
       <include name="jwsdp-shared/lib/**/*.jar" />
     </fileset>
   </path>

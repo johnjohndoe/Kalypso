@@ -2,223 +2,313 @@
 
 <project name="KalypsoMetaDocService" default="build" basedir="../..">
 
-	<!-- this Project full path -->
-	<property name="project.path" value="${workspace}/KalypsoMetaDocService" />
+  <!-- Propertys aus einer Datei laden -->
+  <property file="../projectbuild.properties" />
 
-	<!-- this Project properties -->
-	<property file="${project.path}/etc/ant/service.properties" />
+  <!-- this Project full path -->
+  <property name="project.path" value="${workspace}/KalypsoMetaDocService" />
 
-	<!-- KalypsoCoreServices properties -->
-	<property file="../KalypsoCoreServices/etc/ant/build.properties" />
-	<property file="../KalypsoCoreServices/etc/ant/tomcat.properties" />
+  <!-- this Project properties -->
+  <property file="${project.path}/etc/ant/service.properties" />
 
-	<path id="full.classpath">
-		<fileset dir="./lib/" includes="*.jar" />
-		<fileset dir="../KalypsoCoreServices/lib" includes="*.jar" />
-		<pathelement location="${build.proxy}" />
-		<pathelement location="${build}" />
-		<pathelement location="${workspace}/KalypsoCore/build/bin" />
-		<pathelement location="${workspace}/KalypsoCoreServices/build/bin" />
-		<pathelement location="${workspace}/KalypsoUtil/build/bin" />
-	</path>
+  <!-- KalypsoCoreServices properties -->
+  <property file="${workspace}/KalypsoCoreServices/etc/ant/build.properties" />
+  <property file="${workspace}/KalypsoCoreServices/etc/ant/tomcat.properties" />
 
-	<path id="ant.classpath">
-		<fileset dir="../KalypsoCoreServices/lib" includes="*.jar" />
-		<fileset dir="../KalypsoCoreServices/lib/build" includes="*.jar" />
-	</path>
+  <path id="full.classpath">
+    <fileset dir="${project.path}/lib/" includes="*.jar" />
+    <fileset dir="${workspace}/KalypsoCoreServices/lib" includes="*.jar" />
+    <pathelement location="${build.proxy}" />
+    <pathelement location="${build}" />
+    <pathelement location="${workspace}/KalypsoCore/build/bin" />
+    <pathelement location="${workspace}/KalypsoCoreServices/build/bin" />
+    <pathelement location="${workspace}/KalypsoUtil/build/bin" />
+  </path>
 
-	<path id="compile.classpath">
-		<path refid="full.classpath" />
-		<!-- schon in build.properties pathelement location="${project.path}/build/bin" /-->
-		<!-- schon in full.classpath pathelement location="${workspace}/KalypsoCoreServices/build/bin" /-->
-	</path>
+  <path id="ant.classpath">
+    <fileset dir="${workspace}/KalypsoCoreServices/lib" includes="*.jar" />
+    <fileset dir="${workspace}/KalypsoCoreServices/lib/build" includes="*.jar" />
+  </path>
 
-	<fileset id="compile.jars" dir="./lib/" includes="*.jar" />
+  <path id="compile.classpath">
+    <path refid="full.classpath" />
+    <!-- schon in build.properties pathelement location="${project.path}/build/bin" /-->
+    <!-- schon in full.classpath pathelement location="${workspace}/KalypsoCoreServices/build/bin" /-->
+  </path>
 
-	<taskdef name="wscompile" classpathref="ant.classpath" classname="com.sun.xml.rpc.tools.ant.Wscompile">
-	</taskdef>
+  <fileset id="compile.jars" dir="${project.path}/lib/" includes="*.jar" />
 
-	<taskdef name="wsdeploy" classpathref="ant.classpath" classname="com.sun.xml.rpc.tools.ant.Wsdeploy">
-	</taskdef>
+  <taskdef name="wscompile"
+           classpathref="ant.classpath"
+           classname="com.sun.xml.rpc.tools.ant.Wscompile"
+  >
+  </taskdef>
 
-	<target name="prepare" description="Creates the build directory">
-		<echo message="Creating the required directories...." />
-		<mkdir dir="${build}" />
-		<mkdir dir="${build.proxy}" />
-		<mkdir dir="${build.web}" />
-		<mkdir dir="${build.web.inf}" />
-		<mkdir dir="${build.web.lib}" />
-		<mkdir dir="${build.web.inf}/classes" />
-		<mkdir dir="${javadoc.dir}" />
-		<mkdir dir="${dist}" />
+  <taskdef name="wsdeploy"
+           classpathref="ant.classpath"
+           classname="com.sun.xml.rpc.tools.ant.Wsdeploy"
+  >
+  </taskdef>
 
-		<echo message="${project.path}" />
-		<echo message="${interface.package}" />
-	</target>
+  <target name="prepare" description="Creates the build directory">
+    <echo message="Creating the required directories...." />
+    <mkdir dir="${build}" />
+    <mkdir dir="${build.proxy}" />
+    <mkdir dir="${build.web}" />
+    <mkdir dir="${build.web.inf}" />
+    <mkdir dir="${build.web.lib}" />
+    <mkdir dir="${build.web.inf}/classes" />
+    <mkdir dir="${javadoc.dir}" />
+    <mkdir dir="${dist.server}" />
 
-	<target name="clean" description="Removes the build directories">
-		<delete dir="${javadoc.dir}" />
-		<delete dir="${build.web.lib}" />
-		<delete dir="${build.web.inf}/classes" />
-		<delete dir="${build.web.inf}" />
-		<delete dir="${build.web}" />
-		<delete dir="${build.proxy}" />
-		<delete dir="${build}" />
-		<delete dir="${dist}" />
-	</target>
+    <echo message="${project.path}" />
+    <echo message="${interface.package}" />
+  </target>
 
-	<!--  HIER GEHTS LOS -->
-	<target name="build" depends="build-client,build-war" description="Executes the targets needed to build the webservice and the client jar.">
-	</target>
+  <target name="clean" description="Removes the build directories">
+    <delete dir="${javadoc.dir}" />
+    <delete dir="${build.web.lib}" />
+    <delete dir="${build.web.inf}/classes" />
+    <delete dir="${build.web.inf}" />
+    <delete dir="${build.web}" />
+    <delete dir="${build.proxy}" />
+    <delete dir="${build}" />
+    <delete dir="${dist.server}" />
+  </target>
 
-	<!-- BUILD-WAR -->
-	<target name="build-war" depends="prepare,generate-wsdl" description="Runs wsdeploy to generate the ties and 
-                     create a deployable WAR file">
+  <!--  HIER GEHTS LOS -->
+  <target name="build"
+          depends="build-client,build-war"
+          description="Executes the targets needed to build the webservice and the client jar."
+  >
+  </target>
 
-		<echo message="Creating web.xml and jaxrpc.ri.xml..." />
+  <!-- BUILD-WAR -->
+  <target name="build-war"
+          depends="prepare,generate-wsdl,compile"
+          description="Runs wsdeploy to generate the ties and 
+                     create a deployable WAR file"
+  >
 
-		<delete verbose="true" failonerror="false">
-			<fileset dir="${build.web}">
-				<include name="jaxrpc-ri.xml" />
-			</fileset>
-		</delete>
+    <echo message="Creating web.xml and jaxrpc.ri.xml..." />
 
-		<echo message="${war.xml}" file="${build.web.inf}/web.xml" append="false" />
+    <delete verbose="true" failonerror="false">
+      <fileset dir="${build.web}">
+        <include name="jaxrpc-ri.xml" />
+      </fileset>
+    </delete>
 
-		<echo message="${jaxrpc-ri.xml}" file="${build.web.inf}/jaxrpc-ri.xml" append="false" />
+    <echo message="${war.xml}" file="${build.web.inf}/web.xml" append="false" />
 
-		<!-- delete existing .wsdl file -->
-		<delete>
-			<fileset dir="${build.web.inf}">
-				<filename name="*.wsdl" />
-			</fileset>
-		</delete>
+    <echo message="${jaxrpc-ri.xml}"
+          file="${build.web.inf}/jaxrpc-ri.xml"
+          append="false"
+    />
 
-		<echo message="Packaging the WAR...." />
+    <!-- delete existing .wsdl file -->
+    <delete>
+      <fileset dir="${build.web.inf}">
+        <filename name="*.wsdl" />
+      </fileset>
+    </delete>
 
-		<copy todir="${build.web.inf}/classes">
-			<fileset dir="${build}">
-				<include name="**/*" />
-			</fileset>
-		</copy>
+    <echo message="Packaging the WAR...." />
 
-		<jar jarfile="${java.io.tmpdir}/${portable.war}">
-			<fileset dir="${build.web}" includes="*/**" />
-		</jar>
+    <copy todir="${build.web.inf}/classes">
+      <fileset dir="${build}">
+        <include name="**/*" />
+      </fileset>
+    </copy>
 
-		<echo message="Process WAR File to generate ties...." />
+    <jar jarfile="${java.io.tmpdir}/${portable.war}">
+      <fileset dir="${build.web}" includes="*/**" />
+    </jar>
 
-		<!--delete file="${dist}/${deployable.war}" /-->
+    <echo message="Process WAR File to generate ties...." />
 
-		<wsdeploy verbose="true" outwarfile="${dist}/${deployable.war}" inwarfile="${java.io.tmpdir}/${portable.war}">
-			<classpath refid="compile.classpath" />
-		</wsdeploy>
+    <!--delete file="${dist.server}/${deployable.war}" /-->
 
-		<delete file="${java.io.tmpdir}/${portable.war}" />
-	</target>
+    <wsdeploy verbose="true"
+              outwarfile="${dist.server}/${deployable.war}"
+              inwarfile="${java.io.tmpdir}/${portable.war}"
+    >
+      <classpath refid="compile.classpath" />
+    </wsdeploy>
 
-	<target name="generate-wsdl" depends="prepare,compile-services" description="Erzegt das wsld File aus dem Service-Interface">
-		<delete verbose="true" failonerror="false">
-			<fileset dir="${java.io.tmpdir}/config-interface" includes="**/*" />
-		</delete>
+    <delete file="${java.io.tmpdir}/${portable.war}" />
+  </target>
 
-		<mkdir dir="${java.io.tmpdir}/config-interface" />
+  <target name="generate-wsdl"
+          depends="prepare,compile-services,compile"
+          description="Erzegt das wsld File aus dem Service-Interface"
+  >
+    <delete verbose="true" failonerror="false">
+      <fileset dir="${java.io.tmpdir}/config-interface" includes="**/*" />
+    </delete>
 
-		<echo message="config interface file: ${config.interface.file}" />
-		<echo message="header: ${config.interface.header}" />
-		<echo message="body: ${config.interface.body}" />
+    <mkdir dir="${java.io.tmpdir}/config-interface" />
 
-		<echo message="${config.interface.header}${config.interface.body}" file="${java.io.tmpdir}/config-interface/${config.interface.file}" />
+    <echo message="config interface file: ${config.interface.file}" />
+    <echo message="header: ${config.interface.header}" />
+    <echo message="body: ${config.interface.body}" />
 
-		<wscompile define="true" model="${build.web.inf}/${model.file}" base="${build.web.inf}" nonClassDir="${build.web.inf}" verbose="true" config="${java.io.tmpdir}config-interface/${config.interface.file}">
-			<classpath refid="compile.classpath" />
-		</wscompile>
+    <echo message="${config.interface.header}${config.interface.body}"
+          file="${java.io.tmpdir}/config-interface/${config.interface.file}"
+    />
 
-		<delete file="${java.io.tmpdir}/config-interface/${config.interface.file}" />
+    <wscompile define="true"
+               model="${build.web.inf}/${model.file}"
+               base="${build.web.inf}"
+               nonClassDir="${build.web.inf}"
+               verbose="true"
+               config="${java.io.tmpdir}config-interface/${config.interface.file}"
+    >
+      <classpath refid="compile.classpath" />
+    </wscompile>
 
-	</target>
+    <delete file="${java.io.tmpdir}/config-interface/${config.interface.file}"
+    />
 
-	<target name="package-a-plugin" depends="prepare" description="Packt ein Plugin in ein jar und kopiert alle benötigten jars">
-		<echo message="packaging ${package_jar}..." />
-		<jar destfile="${build.web.lib}/${package_jar}" basedir="${workspace}/${package_bin}" includes="**/*" />
+  </target>
 
-		<copy todir="${build.web.lib}" flatten="true">
-			<fileset dir="${workspace}/${package_lib}" includes="**/*.jar" />
-		</copy>
-	</target>
+  <target name="package-a-plugin"
+          depends="prepare"
+          description="Packt ein Plugin in ein jar und kopiert alle benötigten jars"
+  >
+    <echo message="packaging ${package_jar}..." />
+    <jar destfile="${build.web.lib}/${package_jar}"
+         basedir="${workspace}/${package_bin}"
+         includes="**/*"
+    />
 
-	<target name="package-a-project" depends="prepare" description="Packt ein Java-Project in ein Jar und kopiert die libs
-			Arguments: aproject_jar, aproject_bin, aproject_lib">
-		<echo message="packaging ${aproject_jar}..." />
-		<jar destfile="${build.web.lib}/${aproject_jar}" basedir="${workspace}/${aproject_bin}" includes="**/*" />
-		<copy todir="${build.web.lib}" flatten="true">
-			<fileset dir="${workspace}/${aproject_lib}" includes="**/*.jar" />
-		</copy>
-	</target>
+    <copy todir="${build.web.lib}" flatten="true">
+      <fileset dir="${workspace}/${package_lib}" includes="**/*.jar" />
+    </copy>
+  </target>
 
-	<target name="compile-services" depends="prepare" description="Compiles the basic-source code">
-		<echo message="Compiling the source code...." />
+  <target name="package-a-project"
+          depends="prepare"
+          description="Packt ein Java-Project in ein Jar und kopiert die libs
+			Arguments: aproject_jar, aproject_bin, aproject_lib"
+  >
+    <echo message="packaging ${aproject_jar}..." />
+    <jar destfile="${build.web.lib}/${aproject_jar}"
+         basedir="${workspace}/${aproject_bin}"
+         includes="**/*"
+    />
+    <copy todir="${build.web.lib}" flatten="true">
+      <fileset dir="${workspace}/${aproject_lib}" includes="**/*.jar" />
+    </copy>
+  </target>
 
-		<antcall target="package-a-plugin">
-			<param name="package_jar" value="KalypsoUtil.jar" />
-			<param name="package_bin" value="KalypsoUtil/build/bin" />
-			<param name="package_lib" value="KalypsoUtil/lib" />
-		</antcall>
-		<antcall target="package-a-plugin">
-			<param name="package_jar" value="KalypsoCore.jar" />
-			<param name="package_bin" value="KalypsoCore/build/bin" />
-			<param name="package_lib" value="KalypsoCore/lib" />
-		</antcall>
-		<antcall target="package-a-project">
-			<param name="aproject_jar" value="KalypsoCoreServices.jar" />
-			<param name="aproject_bin" value="KalypsoCoreServices/build/bin" />
-			<param name="aproject_lib" value="KalypsoCoreServices/lib" />
-		</antcall>
+  <target name="compile-services"
+          depends="prepare,compile"
+          description="Compiles the basic-source code"
+  >
+    <echo message="Compiling the source code...." />
 
-		<antcall target="package-a-project">
-			<param name="aproject_jar" value="KalypsoPSICompactAdapter.jar" />
-			<param name="aproject_bin" value="KalypsoPSICompactAdapter/build/bin" />
-			<param name="aproject_lib" value="KalypsoPSICompactAdapter/lib" />
-		</antcall>
+    <antcall target="package-a-plugin">
+      <param name="package_jar" value="KalypsoUtil.jar" />
+      <param name="package_bin" value="KalypsoUtil/build/bin" />
+      <param name="package_lib" value="KalypsoUtil/lib" />
+    </antcall>
+    <antcall target="package-a-plugin">
+      <param name="package_jar" value="KalypsoCore.jar" />
+      <param name="package_bin" value="KalypsoCore/build/bin" />
+      <param name="package_lib" value="KalypsoCore/lib" />
+    </antcall>
+    <antcall target="package-a-project">
+      <param name="aproject_jar" value="KalypsoCoreServices.jar" />
+      <param name="aproject_bin" value="KalypsoCoreServices/build/bin" />
+      <param name="aproject_lib" value="KalypsoCoreServices/lib" />
+    </antcall>
 
-	</target>
+    <antcall target="package-a-project">
+      <param name="aproject_jar" value="KalypsoPSICompactAdapter.jar" />
+      <param name="aproject_bin" value="KalypsoPSICompactAdapter/build/bin" />
+      <param name="aproject_lib" value="KalypsoPSICompactAdapter/lib" />
+    </antcall>
+
+  </target>
 
 
-	<!-- BUILD-CLIENT -->
+  <!-- BUILD-CLIENT -->
 
-	<target name="build-client" depends="generate-proxy" description="Erzegt die Bibliothek fuer den Client">
+  <target name="build-client"
+          depends="generate-proxy"
+          description="Erzegt die Bibliothek fuer den Client"
+  >
 
-		<tstamp>
-			<format property="TODAY_DE" pattern="d.M.yyyy" locale="de" />
-		</tstamp>
+    <tstamp>
+      <format property="TODAY_DE" pattern="d.M.yyyy" locale="de" />
+    </tstamp>
 
-		<pathconvert property="clientjar_cp" pathsep=" " refid="full.classpath" dirsep="/">
-			<map from="${basedir}" to="." />
-		</pathconvert>
+    <pathconvert property="clientjar_cp"
+                 pathsep=" "
+                 refid="full.classpath"
+                 dirsep="/"
+    >
+      <map from="${basedir}" to="." />
+    </pathconvert>
 
-		<!-- package all -->
-		<jar jarfile="${dist}/${client.jar}">
-			<fileset dir="${build}" includes="**/*" />
-			<fileset dir="${build.proxy}" includes="**/*" />
-		</jar>
+    <!-- package all -->
+    <jar jarfile="${dist.server}/${client.jar}">
+      <fileset dir="${build}" includes="**/*" />
+      <fileset dir="${build.proxy}" includes="**/*" />
+    </jar>
 
-		<copy todir="${dist}/libs">
-			<fileset refid="compile.jars" />
-		</copy>
+    <copy todir="${dist.server}/libs">
+      <fileset refid="compile.jars" />
+    </copy>
 
-	</target>
+  </target>
 
-	<target name="generate-proxy" depends="generate-wsdl" description="Erzeugt die Proxy-Klassen aus der WSDL">
+  <target name="generate-proxy"
+          depends="generate-wsdl"
+          description="Erzeugt die Proxy-Klassen aus der WSDL"
+  >
 
-		<echo message="${config.wsdl.header}${config.wsdl.body}" file="${java.io.tmpdir}/${config.wsdl.file}" />
+    <echo message="${config.wsdl.header}${config.wsdl.body}"
+          file="${java.io.tmpdir}/${config.wsdl.file}"
+    />
 
-		<wscompile client="true" base="${build.proxy}" nonclassdir="${build.proxy}" config="${java.io.tmpdir}/${config.wsdl.file}">
-			<classpath refid="compile.classpath" />
-		</wscompile>
+    <wscompile client="true"
+               base="${build.proxy}"
+               nonclassdir="${build.proxy}"
+               config="${java.io.tmpdir}/${config.wsdl.file}"
+    >
+      <classpath refid="compile.classpath" />
+    </wscompile>
 
-	</target>
+  </target>
 
-	<!--target name="javadoc-client"
+  <target name="compile" description="Compiles the sources" depends="prepare">
+    <javac srcdir="${project.path}/src"
+           destdir="${project.path}/build/bin"
+           classpathref="full.classpath"
+    />
+  </target>
+
+  <target name="junit-test"
+          description="Runs the junit-tests of the projekt"
+          depends="prepare,compile"
+  >
+    <junit haltonerror="false" fork="true">
+      <classpath>
+        <path refid="compile.classpath" />
+      </classpath>
+
+      <formatter type="xml" />
+
+      <batchtest fork="yes" todir=".">
+        <fileset dir="${project.path}/src">
+          <include name="**/*Test*.java" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <!--target name="javadoc-client"
 	        depends="prepare"
 	        description="Erzeugt die JavaDoc für die client-jar">
 
@@ -230,62 +320,106 @@
 		         linksource="true"
 		         classpathref="run.classpath" />
 
-		<zip destfile="${dist}/client-source.zip"
+		<zip destfile="${dist.server}/client-source.zip"
 		     basedir="${javadoc.dir}"
 		     includes="**/*" />
 	</target-->
 
-	<!-- Build and (re-)deploy service -->
-	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" classpathref="ant.classpath" />
-	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" classpathref="ant.classpath" />
-	<taskdef name="list" classname="org.apache.catalina.ant.ListTask" classpathref="ant.classpath" />
-	<taskdef name="start" classname="org.apache.catalina.ant.StartTask" classpathref="ant.classpath" />
-	<taskdef name="stop" classname="org.apache.catalina.ant.StopTask" classpathref="ant.classpath" />
-	<taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask" classpathref="ant.classpath" />
-	<taskdef name="remove" classname="org.apache.catalina.ant.RemoveTask" classpathref="ant.classpath" />
+  <!-- Build and (re-)deploy service -->
+  <taskdef name="deploy"
+           classname="org.apache.catalina.ant.DeployTask"
+           classpathref="ant.classpath"
+  />
+  <taskdef name="undeploy"
+           classname="org.apache.catalina.ant.UndeployTask"
+           classpathref="ant.classpath"
+  />
+  <taskdef name="list"
+           classname="org.apache.catalina.ant.ListTask"
+           classpathref="ant.classpath"
+  />
+  <taskdef name="start"
+           classname="org.apache.catalina.ant.StartTask"
+           classpathref="ant.classpath"
+  />
+  <taskdef name="stop"
+           classname="org.apache.catalina.ant.StopTask"
+           classpathref="ant.classpath"
+  />
+  <taskdef name="reload"
+           classname="org.apache.catalina.ant.ReloadTask"
+           classpathref="ant.classpath"
+  />
+  <taskdef name="remove"
+           classname="org.apache.catalina.ant.RemoveTask"
+           classpathref="ant.classpath"
+  />
 
 
-	<target name="deploy" description="Deploys a Web application">
+  <target name="deploy" description="Deploys a Web application">
 
-		<echo message="Deploying the web application..." />
-		<echo message="URL: ${tomcat.manager.url}" />
-		<echo message="UNAME: ${tomcat.username}" />
-		<echo message="PWD: ${tomcat.password}" />
-		<echo message="PATH: /${service.name}" />
-		<echo message="WAR: ${war.path}" />
+    <echo message="Deploying the web application..." />
+    <echo message="URL: ${tomcat.manager.url}" />
+    <echo message="UNAME: ${tomcat.username}" />
+    <echo message="PWD: ${tomcat.password}" />
+    <echo message="PATH: /${service.name}" />
+    <echo message="WAR: ${war.path}" />
 
-		<deploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" war="${war.path}" />
-	</target>
+    <deploy url="${tomcat.manager.url}"
+            username="${tomcat.username}"
+            password="${tomcat.password}"
+            path="/${service.name}"
+            war="${war.path}"
+    />
+  </target>
 
-	<target name="undeploy" description="Undeploys a Web application">
+  <target name="undeploy" description="Undeploys a Web application">
 
-		<echo message="Undeploying the web application..." />
+    <echo message="Undeploying the web application..." />
 
-		<undeploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
-	</target>
+    <undeploy url="${tomcat.manager.url}"
+              username="${tomcat.username}"
+              password="${tomcat.password}"
+              path="/${service.name}"
+    />
+  </target>
 
-	<target name="redeploy" description="Undeploys and deploys a Web aplication">
-		<antcall target="undeploy" />
-		<antcall target="deploy" />
-	</target>
+  <target name="redeploy" description="Undeploys and deploys a Web aplication">
+    <antcall target="undeploy" />
+    <antcall target="deploy" />
+  </target>
 
-	<target name="redeploy-all" depends="build,redeploy" description="Erzeugt alles und kopiert die Client-Jar zum KalypsoUI Projekt">
-		<copy file="${dist}/${client.jar}" todir="${workspace}/KalypsoUI/lib" />
-	</target>
+  <target name="redeploy-all"
+          depends="build,redeploy"
+          description="Erzeugt alles und kopiert die Client-Jar zum KalypsoUI Projekt"
+  >
+    <copy file="${dist.server}/${client.jar}" todir="${workspace}/KalypsoUI/lib" />
+  </target>
 
-	<target name="list" description="Lists Web applications">
-		<echo message="Listing the applications...." />
-		<list url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" />
-	</target>
+  <target name="list" description="Lists Web applications">
+    <echo message="Listing the applications...." />
+    <list url="${tomcat.manager.url}"
+          username="${tomcat.username}"
+          password="${tomcat.password}"
+    />
+  </target>
 
-	<target name="start" description="Starts a Web application">
-		<echo message="Starting the application...." />
-		<start url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
-	</target>
+  <target name="start" description="Starts a Web application">
+    <echo message="Starting the application...." />
+    <start url="${tomcat.manager.url}"
+           username="${tomcat.username}"
+           password="${tomcat.password}"
+           path="/${service.name}"
+    />
+  </target>
 
-	<target name="stop" description="Stops a Web application">
-		<echo message="Stopping the application...." />
-		<stop url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
-	</target>
+  <target name="stop" description="Stops a Web application">
+    <echo message="Stopping the application...." />
+    <stop url="${tomcat.manager.url}"
+          username="${tomcat.username}"
+          password="${tomcat.password}"
+          path="/${service.name}"
+    />
+  </target>
 
 </project>

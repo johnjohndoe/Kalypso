@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<project name="KalypsoDeegreeBuild" default="deploy">
+
+  <!-- Propertys aus einer Datei laden -->
+  <property file="../../../projectbuild.properties" />
+  
+  <property name="project" value="${workspace}/KalypsoDeegree" />
+  <property name="project.build" value="${project}/build" />
+  <property name="project.bin" value="${project.build}/bin" />
+  <property name="project.src" value="${project}/deegree" />
+  <property name="project.lib" value="${project}/lib" />
+
+  <path id="project.classpath">
+    <fileset dir="${project.lib}" includes="**/*.jar" />
+  </path>
+
+
+  <target name="prepare">
+    <mkdir dir="${project.bin}" />
+  </target>
+
+  <target name="compile" depends="prepare">
+    <echo message="Compiliere Sourcen ..." />
+    <javac srcdir="${project.src}"
+           destdir="${project.bin}"
+           classpathref="project.classpath"
+    >
+    </javac>
+  </target>
+
+  <target name="junit-test"
+          description="Runs the junit-tests of the projekt"
+          depends="prepare,compile"
+  >
+    <junit haltonerror="false" fork="true">
+      <classpath>
+        <path refid="project.classpath" />
+      </classpath>
+
+      <formatter type="xml" />
+
+      <batchtest fork="yes" todir=".">
+        <fileset dir="${project.src}">
+          <include name="**/*Test*.java" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="deploy" depends="compile">
+    <jar destfile="${project.build}/KalypsoDeegree.jar">
+      <fileset dir="${project.bin}" includes="**/*" />
+    </jar>
+  </target>
+
+  <target name="clean">
+    <echo message="Räume auf ..." />
+    <delete dir="${project.build}" />
+  </target>
+
+</project>
+
