@@ -121,7 +121,10 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
       
       try
       {
-        final DefaultTableViewTemplate tab = new DefaultTableViewTemplate( obs, false );
+        final DefaultTableViewTemplate tab = new DefaultTableViewTemplate( );
+        tab.setObservation( obs, false, null );
+        
+        // TODO: marc, check if still ok since refactoring...
         m_model.setColumns( tab.getColumns(), null );
       }
       catch( final SensorException e )

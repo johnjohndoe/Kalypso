@@ -7,10 +7,6 @@ import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -21,11 +17,9 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.adapter.IAdaptable;
 import org.kalypso.util.repository.view.RepositoryExplorerPart;
 import org.kalypso.util.runtime.args.DateRangeArgument;
@@ -39,19 +33,22 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
 {
   protected final ObservationTableModel m_model = new ObservationTableModel();
 
+  private final DefaultTableViewTemplate m_template = new DefaultTableViewTemplate();
+
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   public void createPartControl( final Composite parent )
   {
     final ObservationTable table = new ObservationTable( m_model );
-    
+    m_template.addTemplateEventListener( m_model );
+
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 
     vFrame.setVisible( true );
     table.setVisible( true );
-    
+
     final JScrollPane pane = new JScrollPane( table );
     pane.setBorder( BorderFactory.createEmptyBorder() );
     vFrame.add( pane );
@@ -66,6 +63,8 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   {
     getSite().getPage().removePartListener( this );
 
+    m_template.removeTemplateEventListener( m_model );
+    
     super.dispose();
   }
 
@@ -82,7 +81,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
    */
   public void selectionChanged( SelectionChangedEvent event )
   {
-    m_model.clearColumns();
+    m_template.removeAllColumns();
 
     StructuredSelection selection = (StructuredSelection)event.getSelection();
 
@@ -94,8 +93,18 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     if( obs == null )
       return;
 
-    Job job = new ShowObservationJob( obs );
-    job.schedule();
+    Calendar c = Calendar.getInstance();
+    Date to = c.getTime();
+    c.add( Calendar.DAY_OF_YEAR, -31 );
+    Date from = c.getTime();
+
+    synchronized( obs )
+    {
+      m_template.setObservation( obs, false, new DateRangeArgument( from, to ) );
+    }
+
+    //    Job job = new ShowObservationJob( obs );
+    //    job.schedule();
   }
 
   /**
@@ -141,46 +150,40 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   // Siehe partActivated...
   }
 
-  /**
-   * Specific job for showing observation in table quickview.
-   * 
-   * @author schlienger
-   */
-  private class ShowObservationJob extends Job
-  {
-    private final IObservation m_obs;
-
-    public ShowObservationJob( final IObservation obs )
-    {
-      super( "Aktualisierung von Tabelle-QuickView" );
-
-      m_obs = obs;
-
-      setPriority( Job.SHORT );
-    }
-
-    /**
-     * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-     */
-    protected IStatus run( IProgressMonitor monitor )
-    {
-      Calendar c = Calendar.getInstance();
-      Date to = c.getTime();
-      c.add( Calendar.DAY_OF_YEAR, -31 );
-      Date from = c.getTime();
-
-      DefaultTableViewTemplate tab = new DefaultTableViewTemplate( m_obs, false );
-
-      try
-      {
-        m_model.setColumns( tab.getColumns(), new DateRangeArgument( from, to ) );
-      }
-      catch( SensorException e )
-      {
-        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, "Fehler beim Laden der Tabellendaten", e );
-      }
-
-      return Status.OK_STATUS;
-    }
-  }
+  //
+  //  /**
+  //   * Specific job for showing observation in table quickview.
+  //   *
+  //   * @author schlienger
+  //   */
+  //  private class ShowObservationJob extends Job
+  //  {
+  //    private final IObservation m_obs;
+  //
+  //    public ShowObservationJob( final IObservation obs )
+  //    {
+  //      super( "Aktualisierung von Tabelle-QuickView" );
+  //
+  //      m_obs = obs;
+  //
+  //      setPriority( Job.SHORT );
+  //    }
+  //
+  //    /**
+  //     * @see
+  // org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+  //     */
+  //    protected IStatus run( IProgressMonitor monitor )
+  //    {
+  //      Calendar c = Calendar.getInstance();
+  //      Date to = c.getTime();
+  //      c.add( Calendar.DAY_OF_YEAR, -31 );
+  //      Date from = c.getTime();
+  //
+  //      m_template.setObservation( m_obs, false, new DateRangeArgument( from, to )
+  // );
+  //
+  //      return Status.OK_STATUS;
+  //    }
+  //  }
 }
