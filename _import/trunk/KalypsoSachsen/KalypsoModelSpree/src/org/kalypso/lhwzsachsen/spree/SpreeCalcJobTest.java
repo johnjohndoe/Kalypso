@@ -53,7 +53,7 @@ public class SpreeCalcJobTest extends TestCase
     FileUtilities.deleteRecursive( basedir );
   }
 
-  private CalcJobDataBean[] createInput( final File basedir) throws IOException, TypeRegistryException, JAXBException
+  private CalcJobDataBean[] createInput( final File basedir ) throws IOException, TypeRegistryException, JAXBException
   {
     TypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new ObservationLinkHandler() );
     
@@ -62,7 +62,7 @@ public class SpreeCalcJobTest extends TestCase
 
     final String calcCase = "calcCase";
     final String base = "base";
-    
+
     final File inputdir = new File( basedir, "input" );
     final File inputcalcdir = new File( inputdir, calcCase );
     final File inputbasedir = new File( inputdir, base );
