@@ -1,4 +1,4 @@
-package org.deegree_impl.model.cv;
+package org.kalypsodeegree_impl.model.cv;
 
 import java.io.File;
 import java.util.Vector;

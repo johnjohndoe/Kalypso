@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.cs;
+package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
 import java.rmi.RemoteException;
 import java.util.Map;
 
-import org.deegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.resources.Utilities;
 import org.opengis.cs.CS_Ellipsoid;
 import org.opengis.cs.CS_HorizontalDatum;
 import org.opengis.cs.CS_WGS84ConversionInfo;

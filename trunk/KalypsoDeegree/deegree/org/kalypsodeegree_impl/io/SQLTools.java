@@ -63,9 +63,9 @@
  * 
  * Created on 26. November 2002, 17:27
  */
-package org.deegree_impl.io;
+package org.kalypsodeegree_impl.io;
 
-import org.deegree_impl.tools.TimeTools;
+import org.kalypsodeegree_impl.tools.TimeTools;
 
 /**
  * 

@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,7 +71,7 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Stack;
 
-import org.deegree.model.geometry.ByteUtils;
+import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
  * <p>

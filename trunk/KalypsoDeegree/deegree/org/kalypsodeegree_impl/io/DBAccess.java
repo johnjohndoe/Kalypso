@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.io;
+package org.kalypsodeegree_impl.io;
 
 /**
  * 
@@ -79,10 +79,10 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.Properties;
 
-import org.deegree.model.table.Table;
-import org.deegree_impl.model.table.Table_Impl;
-import org.deegree_impl.tools.Debug;
-import org.deegree_impl.tools.StringExtend;
+import org.kalypsodeegree.model.table.Table;
+import org.kalypsodeegree_impl.model.table.Table_Impl;
+import org.kalypsodeegree_impl.tools.Debug;
+import org.kalypsodeegree_impl.tools.StringExtend;
 
 public class DBAccess
 {

@@ -58,9 +58,9 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.model.feature;
+package org.kalypsodeegree.model.feature;
 
-import org.deegree_impl.tools.StringExtend;
+import org.kalypsodeegree_impl.tools.StringExtend;
 
 /**
  * 
@@ -69,7 +69,7 @@ import org.deegree_impl.tools.StringExtend;
 public class FeatureException extends java.lang.Exception
 {
 
-  private String st = "org.deegree.model.feature.FeatureException";
+  private String st = "org.kalypsodeegree.model.feature.FeatureException";
 
   /**
    * Creates a new instance of <code>FeatureException</code> without detail

@@ -1,4 +1,4 @@
-package org.deegree_impl.gml.schema;
+package org.kalypsodeegree_impl.gml.schema;
 
 import java.net.URL;
 import java.util.WeakHashMap;

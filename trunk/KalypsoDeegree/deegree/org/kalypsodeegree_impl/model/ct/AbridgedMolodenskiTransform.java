@@ -58,17 +58,17 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies (SEAGIS)
 import java.io.Serializable;
 
 import javax.media.jai.ParameterList;
 
-import org.deegree_impl.model.cs.Ellipsoid;
-import org.deegree_impl.model.cs.HorizontalDatum;
-import org.deegree_impl.model.cs.WGS84ConversionInfo;
-import org.deegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.cs.Ellipsoid;
+import org.kalypsodeegree_impl.model.cs.HorizontalDatum;
+import org.kalypsodeegree_impl.model.cs.WGS84ConversionInfo;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 
 /**
  * Transforms a three dimensional geographic points using abridged versions of

@@ -52,16 +52,16 @@ import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
-import org.deegree.model.feature.Annotation;
-import org.deegree.model.feature.FeatureAssociationTypeProperty;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.extension.TypeRegistryException;
-import org.deegree_impl.extension.TypeRegistrySingleton;
-import org.deegree_impl.gml.schema.EnumerationFeatureTypeProperty;
-import org.deegree_impl.gml.schema.GMLSchema;
-import org.deegree_impl.gml.schema.GMLSchemaCache;
+import org.kalypsodeegree.model.feature.Annotation;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.gml.schema.EnumerationFeatureTypeProperty;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
 import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;

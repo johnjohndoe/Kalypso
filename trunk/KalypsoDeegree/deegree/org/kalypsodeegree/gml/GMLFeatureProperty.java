@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.gml;
+package org.kalypsodeegree.gml;
 
 /**
  * The class definies a property that a feature that may has different

@@ -58,9 +58,9 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics.sld;
+package org.kalypsodeegree.graphics.sld;
 
-import org.deegree.gml.GMLGeometry;
+import org.kalypsodeegree.gml.GMLGeometry;
 
 /**
  * The Geometry element is optional and if it is absent then the default

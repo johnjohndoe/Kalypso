@@ -58,16 +58,16 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.pt;
+package org.kalypsodeegree_impl.model.pt;
 
 // Miscellaneous
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import org.deegree_impl.model.resources.Utilities;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
  * A position defined by a list of numbers. The ordinate values are indexed from

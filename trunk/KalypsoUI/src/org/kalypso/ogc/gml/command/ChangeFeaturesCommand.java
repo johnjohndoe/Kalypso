@@ -40,10 +40,10 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.model.feature.event.ModellEventProvider;
-import org.deegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.util.command.ICommand;
 

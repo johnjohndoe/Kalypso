@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.xml;
+package org.kalypsodeegree.xml;
 
 /**
  * This interface describes the ability of an object to produce an

@@ -58,14 +58,14 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.geometry;
+package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
-import org.deegree.model.geometry.GM_Aggregate;
-import org.deegree.model.geometry.GM_Exception;
-import org.deegree.model.geometry.GM_MultiPrimitive;
-import org.deegree.model.geometry.GM_Primitive;
+import org.kalypsodeegree.model.geometry.GM_Aggregate;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
+import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**

@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.model.geometry;
+package org.kalypsodeegree.model.geometry;
 
 /**
  * A sequence of decimals numbers which when written on a width are a sequence

@@ -59,7 +59,7 @@
  
  ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.model.feature;
+package org.kalypsodeegree.model.feature;
 
 import java.util.Map;
 

@@ -58,16 +58,16 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.sld.Fill;
-import org.deegree.graphics.sld.Halo;
-import org.deegree.graphics.sld.ParameterValueType;
-import org.deegree.graphics.sld.Stroke;
-import org.deegree.model.feature.Feature;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.Fill;
+import org.kalypsodeegree.graphics.sld.Halo;
+import org.kalypsodeegree.graphics.sld.ParameterValueType;
+import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Incarnation of a sld:Halo-element. A Halo is a type of Fill that is applied
@@ -203,7 +203,7 @@ public class Halo_Impl implements Halo, Marshallable
   }
 
   /**
-   * @see org.deegree_impl.graphics.sld.Halo_Impl#getRadius(Feature)
+   * @see org.kalypsodeegree_impl.graphics.sld.Halo_Impl#getRadius(Feature)
    *      <p>
    * @param radius
    *          radius to be set for the halo

@@ -59,14 +59,14 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
-import org.deegree.model.geometry.ByteUtils;
+import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
  * Class representing an ESRI Shape File.

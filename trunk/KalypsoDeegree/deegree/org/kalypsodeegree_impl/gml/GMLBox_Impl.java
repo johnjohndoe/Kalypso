@@ -58,15 +58,15 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
-import org.deegree.gml.GMLBox;
-import org.deegree.gml.GMLCoord;
-import org.deegree.gml.GMLCoordinates;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLBox;
+import org.kalypsodeegree.gml.GMLCoord;
+import org.kalypsodeegree.gml.GMLCoordinates;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -197,7 +197,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLBox_Impl#getMin()
+   * @see org.kalypsodeegree_impl.gml.GMLBox_Impl#getMin()
    */
   public void setMin( GMLCoord min )
   {
@@ -308,7 +308,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLBox_Impl#getMax()
+   * @see org.kalypsodeegree_impl.gml.GMLBox_Impl#getMax()
    */
   public void setMax( GMLCoord max )
   {
@@ -369,7 +369,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLBox_Impl#getMin()
+   * @see org.kalypsodeegree_impl.gml.GMLBox_Impl#getMin()
    */
   public void setCoordinates( GMLCoordinates coordinates )
   {
@@ -410,6 +410,9 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.5  2005/03/08 11:01:04  doemming
+ * *** empty log message ***
+ *
  * Revision 1.4  2005/01/18 12:50:42  doemming
  * *** empty log message ***
  *

@@ -1,4 +1,4 @@
-package org.deegree.model.table;
+package org.kalypsodeegree.model.table;
 
 public interface Table
 {

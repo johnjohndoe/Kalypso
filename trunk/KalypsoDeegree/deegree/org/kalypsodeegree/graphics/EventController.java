@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.graphics;
+package org.kalypsodeegree.graphics;
 
 /**
  * 

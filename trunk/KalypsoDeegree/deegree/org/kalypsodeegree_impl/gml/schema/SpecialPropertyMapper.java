@@ -2,7 +2,7 @@
  * Created on 09.02.2005
  *  
  */
-package org.deegree_impl.gml.schema;
+package org.kalypsodeegree_impl.gml.schema;
 
 import java.util.HashMap;
 

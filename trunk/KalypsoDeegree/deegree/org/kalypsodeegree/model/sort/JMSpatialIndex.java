@@ -1,11 +1,11 @@
-package org.deegree.model.sort;
+package org.kalypsodeegree.model.sort;
 
 import java.awt.Graphics;
 import java.util.List;
 
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Position;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 public interface JMSpatialIndex
 {

@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.featureview;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.deegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;

@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.cs;
+package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
 import java.io.ObjectStreamException;
@@ -71,10 +71,10 @@ import java.util.Map;
 
 import javax.units.Unit;
 
-import org.deegree_impl.model.resources.Utilities;
-import org.deegree_impl.model.resources.WeakHashSet;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.resources.WeakHashSet;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 import org.opengis.cs.CS_AngularUnit;
 import org.opengis.cs.CS_Info;
 import org.opengis.cs.CS_LinearUnit;
@@ -88,13 +88,13 @@ import org.opengis.cs.CS_LinearUnit;
  * This specification does not dictate what the contents of these items should
  * be. However, the following guidelines are suggested:
  * <ul>
- * <li>When {@link org.deegree_impl.model.cs.CoordinateSystemAuthorityFactory}
+ * <li>When {@link org.kalypsodeegree_impl.model.cs.CoordinateSystemAuthorityFactory}
  * is used to create an object, the "Authority" and "AuthorityCode" values
  * should be set to the authority name of the factory object, and the authority
  * code supplied by the client, respectively. The other values may or may not be
  * set. (If the authority is EPSG, the implementer may consider using the
  * corresponding metadata values in the EPSG tables.)</li>
- * <li>When {@link org.deegree_impl.model.cs.CoordinateSystemFactory}creates
+ * <li>When {@link org.kalypsodeegree_impl.model.cs.CoordinateSystemFactory}creates
  * an object, the "Name" should be set to the value supplied by the client. All
  * of the other metadata items should be left empty.</li>
  * </ul>

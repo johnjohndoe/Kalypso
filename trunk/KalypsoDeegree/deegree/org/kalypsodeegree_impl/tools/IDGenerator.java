@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.tools;
+package org.kalypsodeegree_impl.tools;
 
 /**
  * Produces unique IDs (used to generate Request-IDs, for example).

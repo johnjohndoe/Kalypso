@@ -59,16 +59,16 @@
  
  ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.model.feature;
+package org.kalypsodeegree_impl.model.feature;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.deegree.model.feature.Annotation;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.Annotation;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * 
@@ -205,7 +205,7 @@ class FeatureType_Impl implements FeatureType, Serializable
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureType#getDefaultGeometryPropertyPosition()
+   * @see org.kalypsodeegree.model.feature.FeatureType#getDefaultGeometryPropertyPosition()
    */
   public int getDefaultGeometryPropertyPosition()
   {
@@ -213,7 +213,7 @@ class FeatureType_Impl implements FeatureType, Serializable
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureType#getAnnotation(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.FeatureType#getAnnotation(java.lang.String)
    */
   public Annotation getAnnotation( String langKey )
   {
@@ -221,7 +221,7 @@ class FeatureType_Impl implements FeatureType, Serializable
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureType#getAnnotationMap()
+   * @see org.kalypsodeegree.model.feature.FeatureType#getAnnotationMap()
    */
   public Map getAnnotationMap()
   {
@@ -235,7 +235,7 @@ class FeatureType_Impl implements FeatureType, Serializable
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureType#setVirtuelFeatureTypeProperty(org.deegree.model.feature.FeatureTypeProperty[])
+   * @see org.kalypsodeegree.model.feature.FeatureType#setVirtuelFeatureTypeProperty(org.kalypsodeegree.model.feature.FeatureTypeProperty[])
    */
   public void setVirtuelFeatureTypeProperty( FeatureTypeProperty[] virtualProperties )
   {
@@ -243,7 +243,7 @@ class FeatureType_Impl implements FeatureType, Serializable
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureType#getVirtuelFeatureTypeProperty()
+   * @see org.kalypsodeegree.model.feature.FeatureType#getVirtuelFeatureTypeProperty()
    */
   public FeatureTypeProperty[] getVirtuelFeatureTypeProperty()
   {
@@ -251,7 +251,7 @@ class FeatureType_Impl implements FeatureType, Serializable
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureType#getDefaultGeometryProperty()
+   * @see org.kalypsodeegree.model.feature.FeatureType#getDefaultGeometryProperty()
    */
   public FeatureTypeProperty getDefaultGeometryProperty()
   {
@@ -261,7 +261,7 @@ class FeatureType_Impl implements FeatureType, Serializable
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureType#getVirtuelFeatureTypeProperty(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.FeatureType#getVirtuelFeatureTypeProperty(java.lang.String)
    */
   public FeatureTypeProperty getVirtuelFeatureTypeProperty( String propName )
   {
@@ -298,7 +298,7 @@ class FeatureType_Impl implements FeatureType, Serializable
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureType#isVirtuelProperty(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.FeatureType#isVirtuelProperty(java.lang.String)
    */
   public boolean isVirtuelProperty( String propertyName )
   {
@@ -306,7 +306,7 @@ class FeatureType_Impl implements FeatureType, Serializable
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureType#getMaxOccurs(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.FeatureType#getMaxOccurs(java.lang.String)
    */
   public int getMaxOccurs( String linkName )
   {
@@ -314,7 +314,7 @@ class FeatureType_Impl implements FeatureType, Serializable
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureType#getMinOccurs(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.FeatureType#getMinOccurs(java.lang.String)
    */
   public int getMinOccurs( String linkName )
   {

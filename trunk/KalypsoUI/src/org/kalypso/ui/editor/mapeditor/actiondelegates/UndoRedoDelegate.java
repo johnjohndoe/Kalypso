@@ -40,7 +40,7 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
-import org.deegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;

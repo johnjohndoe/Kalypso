@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.graphics.displayelements;
+package org.kalypsodeegree.graphics.displayelements;
 
 import java.awt.Component;
 

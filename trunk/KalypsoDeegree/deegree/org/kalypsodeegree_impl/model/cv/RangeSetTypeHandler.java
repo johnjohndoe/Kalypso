@@ -1,4 +1,4 @@
-package org.deegree_impl.model.cv;
+package org.kalypsodeegree_impl.model.cv;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,9 +9,9 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Vector;
 
-import org.deegree_impl.extension.ITypeHandler;
-import org.deegree_impl.extension.TypeRegistryException;
-import org.deegree_impl.gml.schema.XMLHelper;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
+import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -27,7 +27,7 @@ public class RangeSetTypeHandler implements ITypeHandler
   public static final String NSRGC = "http://elbe.wb.tu-harburg.de/rectifiedGridCoverage";
   public static final String TYPENAME= NSRGC + ":" + "RangeSetType";
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#getClassName()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
    */
   public String getClassName()
   {
@@ -35,7 +35,7 @@ public class RangeSetTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#getTypeName()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
    */
   public String getTypeName()
   {
@@ -44,7 +44,7 @@ public class RangeSetTypeHandler implements ITypeHandler
 
   /**
    * 
-   * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
    */
   public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
   
@@ -72,7 +72,7 @@ public class RangeSetTypeHandler implements ITypeHandler
 
   /**
    * 
-   * @see org.deegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
    */
   public Object unmarshall( Node node, URL context ) throws TypeRegistryException  
   {
@@ -95,7 +95,7 @@ public class RangeSetTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#getShortname()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getShortname()
    */
   public String getShortname()
   {

@@ -1,4 +1,4 @@
-package org.deegree_impl.extension;
+package org.kalypsodeegree_impl.extension;
 
 /**
  * Die Type - Registry dient dazu, neue Typen im System anzumelden und die

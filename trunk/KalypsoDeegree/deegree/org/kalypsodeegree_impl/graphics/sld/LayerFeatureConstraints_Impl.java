@@ -58,14 +58,14 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.ArrayList;
 
-import org.deegree.graphics.sld.FeatureTypeConstraint;
-import org.deegree.graphics.sld.LayerFeatureConstraints;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.graphics.sld.FeatureTypeConstraint;
+import org.kalypsodeegree.graphics.sld.LayerFeatureConstraints;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * The LayerFeatureConstraints element is optional in a NamedLayer and allows

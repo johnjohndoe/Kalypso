@@ -59,10 +59,10 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
-import org.deegree.model.geometry.ByteUtils;
-import org.deegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.ByteUtils;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * Class representig a two dimensional point <BR>

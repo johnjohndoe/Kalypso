@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.tools;
+package org.kalypsodeegree.tools;
 
 /**
  * The interface defines the access to a list of paramters that can be used as

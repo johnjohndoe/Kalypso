@@ -58,14 +58,14 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.sld.LinePlacement;
-import org.deegree.graphics.sld.ParameterValueType;
-import org.deegree.model.feature.Feature;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.LinePlacement;
+import org.kalypsodeegree.graphics.sld.ParameterValueType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Incarnation of an sld:LinePlacement-element.
@@ -145,7 +145,7 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
   }
 
   /**
-   * @see org.deegree_impl.graphics.sld.LinePlacement_Impl#getPerpendicularOffset(Feature)
+   * @see org.kalypsodeegree_impl.graphics.sld.LinePlacement_Impl#getPerpendicularOffset(Feature)
    *      <p>
    * @param perpendicularOffset
    */

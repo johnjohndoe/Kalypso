@@ -59,14 +59,14 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.gml;
+package org.kalypsodeegree.gml;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -166,6 +166,9 @@ public interface GMLDocument extends Document
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.11  2005/03/08 11:01:10  doemming
+ * *** empty log message ***
+ *
  * Revision 1.10  2005/02/28 13:34:14  doemming
  * *** empty log message ***
  *

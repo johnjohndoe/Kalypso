@@ -59,9 +59,9 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
-import org.deegree.model.geometry.ByteUtils;
+import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
  * Class representing a record of an ESRI .shx file.

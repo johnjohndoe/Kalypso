@@ -40,9 +40,9 @@
 
  
  ---------------------------------------------------------------------------*/
-package org.deegree_impl.model.cv;
+package org.kalypsodeegree_impl.model.cv;
 
-import org.deegree.model.coverage.GridRange;
+import org.kalypsodeegree.model.coverage.GridRange;
 
 /**
  * Implements the range of valid coordinates for each dimension of the coverage.

@@ -1,4 +1,4 @@
-package org.deegree.graphics.sld;
+package org.kalypsodeegree.graphics.sld;
 
 /**
  * @author N. Peiler

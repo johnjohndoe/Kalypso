@@ -58,12 +58,12 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.HashMap;
 
-import org.deegree.graphics.sld.Drawing;
-import org.deegree.graphics.sld.GraphicFill;
+import org.kalypsodeegree.graphics.sld.Drawing;
+import org.kalypsodeegree.graphics.sld.GraphicFill;
 
 /**
  * This is the top level interface of <tt>Fill</tt> and <tt>Stroke</tt>

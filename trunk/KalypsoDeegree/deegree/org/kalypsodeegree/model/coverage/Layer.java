@@ -58,11 +58,11 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.model.coverage;
+package org.kalypsodeegree.model.coverage;
 
 import java.net.URL;
 
-import org.deegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * The Layer(Type), is meant to be shared with the Web Map Service and Web

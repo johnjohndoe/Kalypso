@@ -58,14 +58,14 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
-import org.deegree.graphics.sld.LayerFeatureConstraints;
-import org.deegree.graphics.sld.RemoteOWS;
-import org.deegree.graphics.sld.Style;
-import org.deegree.graphics.sld.UserLayer;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.graphics.sld.LayerFeatureConstraints;
+import org.kalypsodeegree.graphics.sld.RemoteOWS;
+import org.kalypsodeegree.graphics.sld.Style;
+import org.kalypsodeegree.graphics.sld.UserLayer;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * In addition to using named layers, it is also useful to be able to define

@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.ogcbasic;
+package org.kalypsodeegree.ogcbasic;
 
 /**
  * names the conatct based on ISO 19115

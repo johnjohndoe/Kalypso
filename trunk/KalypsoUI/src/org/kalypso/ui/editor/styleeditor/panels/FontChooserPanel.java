@@ -48,9 +48,9 @@ import java.awt.Color;
 
 import javax.swing.event.EventListenerList;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.sld.Font;
-import org.deegree_impl.graphics.sld.StyleFactory;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.Font;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;

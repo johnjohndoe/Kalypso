@@ -58,14 +58,14 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Component;
 import java.io.Serializable;
 
-import org.deegree.graphics.displayelements.LocalizedDisplayElement;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.graphics.displayelements.LocalizedDisplayElement;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 
 /**
  * Basic interface for DisplayElements that are not Geometries but shall be

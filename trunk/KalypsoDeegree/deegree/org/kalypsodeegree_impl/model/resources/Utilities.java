@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.resources;
+package org.kalypsodeegree_impl.model.resources;
 
 // Collections
 import java.util.Arrays;

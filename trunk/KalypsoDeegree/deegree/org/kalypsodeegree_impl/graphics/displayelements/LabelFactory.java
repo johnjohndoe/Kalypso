@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -71,27 +71,27 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.displayelements.Label;
-import org.deegree.graphics.displayelements.LabelDisplayElement;
-import org.deegree.graphics.sld.Halo;
-import org.deegree.graphics.sld.LabelPlacement;
-import org.deegree.graphics.sld.LinePlacement;
-import org.deegree.graphics.sld.PointPlacement;
-import org.deegree.graphics.sld.TextSymbolizer;
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_Curve;
-import org.deegree.model.geometry.GM_Exception;
-import org.deegree.model.geometry.GM_LineString;
-import org.deegree.model.geometry.GM_MultiCurve;
-import org.deegree.model.geometry.GM_MultiSurface;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree_impl.model.geometry.GeometryFactory;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.displayelements.Label;
+import org.kalypsodeegree.graphics.displayelements.LabelDisplayElement;
+import org.kalypsodeegree.graphics.sld.Halo;
+import org.kalypsodeegree.graphics.sld.LabelPlacement;
+import org.kalypsodeegree.graphics.sld.LinePlacement;
+import org.kalypsodeegree.graphics.sld.PointPlacement;
+import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Does the labeling, i.e. creates (screen) <tt>Label</tt> representations
@@ -200,7 +200,7 @@ public class LabelFactory
     TextSymbolizer symbolizer = (TextSymbolizer)element.getSymbolizer();
 
     // gather font information
-    org.deegree.graphics.sld.Font sldFont = symbolizer.getFont();
+    org.kalypsodeegree.graphics.sld.Font sldFont = symbolizer.getFont();
     java.awt.Font font = new java.awt.Font( sldFont.getFamily( feature ), sldFont
         .getStyle( feature )
         | sldFont.getWeight( feature ), sldFont.getSize( feature ) );
@@ -391,7 +391,7 @@ public class LabelFactory
 
     // get width & height of the caption
     String caption = element.getLabel().evaluate( element.getFeature() );
-    org.deegree.graphics.sld.Font sldFont = symbolizer.getFont();
+    org.kalypsodeegree.graphics.sld.Font sldFont = symbolizer.getFont();
     java.awt.Font font = new java.awt.Font( sldFont.getFamily( element.getFeature() ), sldFont
         .getStyle( element.getFeature() )
         | sldFont.getWeight( element.getFeature() ), sldFont.getSize( element.getFeature() ) );

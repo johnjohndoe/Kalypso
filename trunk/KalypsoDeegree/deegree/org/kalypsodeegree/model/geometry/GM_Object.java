@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.model.geometry;
+package org.kalypsodeegree.model.geometry;
 
 import org.opengis.cs.CS_CoordinateSystem;
 

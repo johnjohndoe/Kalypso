@@ -46,16 +46,16 @@ package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
 import java.net.URL;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.sld.ExternalGraphic;
-import org.deegree.graphics.sld.Fill;
-import org.deegree.graphics.sld.Graphic;
-import org.deegree.graphics.sld.Mark;
-import org.deegree.graphics.sld.PointSymbolizer;
-import org.deegree.graphics.sld.Stroke;
-import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree_impl.graphics.sld.StyleFactory;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.ExternalGraphic;
+import org.kalypsodeegree.graphics.sld.Fill;
+import org.kalypsodeegree.graphics.sld.Graphic;
+import org.kalypsodeegree.graphics.sld.Mark;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
+import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FormAttachment;

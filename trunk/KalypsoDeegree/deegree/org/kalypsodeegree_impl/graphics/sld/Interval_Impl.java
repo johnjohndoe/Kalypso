@@ -1,6 +1,6 @@
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
-import org.deegree.graphics.sld.Interval;
+import org.kalypsodeegree.graphics.sld.Interval;
 
 /**
  * 

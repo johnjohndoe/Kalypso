@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
 import java.rmi.RemoteException;
@@ -69,27 +69,27 @@ import javax.media.jai.ParameterList;
 import javax.units.Unit;
 import javax.vecmath.SingularMatrixException;
 
-import org.deegree_impl.model.cs.AxisOrientation;
-import org.deegree_impl.model.cs.CompoundCoordinateSystem;
-import org.deegree_impl.model.cs.CoordinateSystem;
-import org.deegree_impl.model.cs.Ellipsoid;
-import org.deegree_impl.model.cs.GeocentricCoordinateSystem;
-import org.deegree_impl.model.cs.GeographicCoordinateSystem;
-import org.deegree_impl.model.cs.HorizontalCoordinateSystem;
-import org.deegree_impl.model.cs.HorizontalDatum;
-import org.deegree_impl.model.cs.PrimeMeridian;
-import org.deegree_impl.model.cs.ProjectedCoordinateSystem;
-import org.deegree_impl.model.cs.Projection;
-import org.deegree_impl.model.cs.TemporalCoordinateSystem;
-import org.deegree_impl.model.cs.VerticalCoordinateSystem;
-import org.deegree_impl.model.cs.VerticalDatum;
-import org.deegree_impl.model.cs.WGS84ConversionInfo;
-import org.deegree_impl.model.pt.Dimensioned;
-import org.deegree_impl.model.pt.Matrix;
-import org.deegree_impl.model.resources.OpenGIS;
-import org.deegree_impl.model.resources.Utilities;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.cs.AxisOrientation;
+import org.kalypsodeegree_impl.model.cs.CompoundCoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.Ellipsoid;
+import org.kalypsodeegree_impl.model.cs.GeocentricCoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.GeographicCoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.HorizontalCoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.HorizontalDatum;
+import org.kalypsodeegree_impl.model.cs.PrimeMeridian;
+import org.kalypsodeegree_impl.model.cs.ProjectedCoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.Projection;
+import org.kalypsodeegree_impl.model.cs.TemporalCoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.VerticalCoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.VerticalDatum;
+import org.kalypsodeegree_impl.model.cs.WGS84ConversionInfo;
+import org.kalypsodeegree_impl.model.pt.Dimensioned;
+import org.kalypsodeegree_impl.model.pt.Matrix;
+import org.kalypsodeegree_impl.model.resources.OpenGIS;
+import org.kalypsodeegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.opengis.ct.CT_CoordinateTransformation;
 import org.opengis.ct.CT_CoordinateTransformationFactory;

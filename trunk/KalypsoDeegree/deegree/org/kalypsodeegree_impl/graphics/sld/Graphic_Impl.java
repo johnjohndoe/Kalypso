@@ -58,20 +58,20 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.sld.ExternalGraphic;
-import org.deegree.graphics.sld.Graphic;
-import org.deegree.graphics.sld.Mark;
-import org.deegree.graphics.sld.ParameterValueType;
-import org.deegree.model.feature.Feature;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.ExternalGraphic;
+import org.kalypsodeegree.graphics.sld.Graphic;
+import org.kalypsodeegree.graphics.sld.Mark;
+import org.kalypsodeegree.graphics.sld.ParameterValueType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * A Graphic is a "graphic symbol" with an inherent shape, color, and size.
@@ -323,7 +323,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * @see org.deegree_impl.graphics.sld.Graphic_Impl#getSize(Feature)
+   * @see org.kalypsodeegree_impl.graphics.sld.Graphic_Impl#getSize(Feature)
    *      <p>
    * @param size
    *          size to be set for the graphic
@@ -372,7 +372,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * @see org.deegree_impl.graphics.sld.Graphic_Impl#getRotation(Feature)
+   * @see org.kalypsodeegree_impl.graphics.sld.Graphic_Impl#getRotation(Feature)
    *      <p>
    * @param rotation
    *          rotation to be set for the graphic

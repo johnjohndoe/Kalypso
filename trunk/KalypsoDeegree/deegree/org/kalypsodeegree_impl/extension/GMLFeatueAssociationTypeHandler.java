@@ -1,9 +1,9 @@
-package org.deegree_impl.extension;
+package org.kalypsodeegree_impl.extension;
 
 import java.net.URL;
 
-import org.deegree.model.feature.Feature;
-import org.deegree_impl.gml.schema.XMLHelper;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Node;
 
 /**
@@ -13,7 +13,7 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
 {
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#getClassName()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
    */
   public String getClassName()
   {
@@ -23,7 +23,7 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
   private static String m_nameSpaceURI = XMLHelper.GMLSCHEMA_NS + ":" + "FeatureAssociationType";
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#getTypeName()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
    */
   public String getTypeName()
   {
@@ -31,7 +31,7 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object,
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#marshall(java.lang.Object,
    *      org.w3c.dom.Node)
    */
   public void marshall( Object object, Node node,URL context  ) throws TypeRegistryException
@@ -40,7 +40,7 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node)
    */
   public Object unmarshall( Node node,URL context  ) throws TypeRegistryException
   {
@@ -48,7 +48,7 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#getShortname()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getShortname()
    */
   public String getShortname()
   {

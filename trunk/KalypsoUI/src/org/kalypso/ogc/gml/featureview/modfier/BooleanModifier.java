@@ -40,8 +40,8 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
@@ -69,7 +69,7 @@ public class BooleanModifier implements IFeatureModifier
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getValue(org.deegree.model.feature.Feature)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getValue(org.kalypsodeegree.model.feature.Feature)
    */
   public Object getValue( final Feature f )
   {
@@ -81,7 +81,7 @@ public class BooleanModifier implements IFeatureModifier
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.deegree.model.feature.Feature, java.lang.Object)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature, java.lang.Object)
    */
   public Object parseInput( final Feature f, final Object value )
   {
@@ -116,7 +116,7 @@ public class BooleanModifier implements IFeatureModifier
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.deegree.model.feature.Feature)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.kalypsodeegree.model.feature.Feature)
    */
   public String getLabel( final Feature f )
   {
@@ -124,7 +124,7 @@ public class BooleanModifier implements IFeatureModifier
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.deegree.model.feature.Feature)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.kalypsodeegree.model.feature.Feature)
    */
   public Image getImage( final Feature f )
   {

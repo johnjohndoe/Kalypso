@@ -1,5 +1,5 @@
 
-package org.deegree_impl.gml.schema;
+package org.kalypsodeegree_impl.gml.schema;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -59,11 +59,11 @@ import javax.swing.UIManager;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.io.IOUtils;
-import org.deegree_impl.extension.ITypeRegistry;
-import org.deegree_impl.extension.TypeRegistrySingleton;
-import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.deegree_impl.model.cv.RangeSetTypeHandler;
-import org.deegree_impl.model.cv.RectifiedGridDomainTypeHandler;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -451,7 +451,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
     if( myCoordinateSystem == null )
     {
       ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-      myCoordinateSystem = org.deegree_impl.model.cs.Adapters.getDefault()
+      myCoordinateSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault()
           .export( csFac.getCSByName( DEFAULT_CRS ) );
     }
     return myCoordinateSystem;

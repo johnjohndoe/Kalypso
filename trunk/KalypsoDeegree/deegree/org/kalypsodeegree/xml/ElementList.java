@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.xml;
+package org.kalypsodeegree.xml;
 
 import java.util.ArrayList;
 

@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics;
+package org.kalypsodeegree.graphics;
 
 import java.awt.Color;
 import java.awt.Font;

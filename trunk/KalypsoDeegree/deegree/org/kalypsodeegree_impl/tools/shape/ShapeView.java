@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.tools.shape;
+package org.kalypsodeegree_impl.tools.shape;
 
 import java.io.File;
 

@@ -58,10 +58,10 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.optimizers;
+package org.kalypsodeegree_impl.graphics.optimizers;
 
-import org.deegree.graphics.displayelements.Label;
-import org.deegree.graphics.displayelements.LabelDisplayElement;
+import org.kalypsodeegree.graphics.displayelements.Label;
+import org.kalypsodeegree.graphics.displayelements.LabelDisplayElement;
 
 public class LabelChoice
 {

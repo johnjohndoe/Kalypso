@@ -1,8 +1,8 @@
-package org.deegree_impl.gml.schema;
+package org.kalypsodeegree_impl.gml.schema;
 
 import java.util.Map;
 
-import org.deegree_impl.model.feature.FeatureTypeProperty_Impl;
+import org.kalypsodeegree_impl.model.feature.FeatureTypeProperty_Impl;
 
 
 /**

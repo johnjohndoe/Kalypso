@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -71,19 +71,19 @@ import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.displayelements.PolygonDisplayElement;
-import org.deegree.graphics.sld.GraphicFill;
-import org.deegree.graphics.sld.PolygonSymbolizer;
-import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_MultiSurface;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree.model.geometry.GM_SurfacePatch;
-import org.deegree_impl.graphics.sld.PolygonSymbolizer_Impl;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
+import org.kalypsodeegree.graphics.sld.GraphicFill;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * DisplayElement for handling polygons
@@ -202,7 +202,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
     Area areaouter = null;
 
     PolygonSymbolizer sym = (PolygonSymbolizer)symbolizer;
-    org.deegree.graphics.sld.Stroke stroke = sym.getStroke();
+    org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
     float width = 1;
     if( stroke != null )
     {
@@ -299,8 +299,8 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
     Graphics2D g2 = (Graphics2D)g;
 
     PolygonSymbolizer sym = (PolygonSymbolizer)symbolizer;
-    org.deegree.graphics.sld.Fill fill = sym.getFill();
-    org.deegree.graphics.sld.Stroke stroke = sym.getStroke();
+    org.kalypsodeegree.graphics.sld.Fill fill = sym.getFill();
+    org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
 
     // only draw filled polygon, if Fill-Element is given
     if( fill != null )

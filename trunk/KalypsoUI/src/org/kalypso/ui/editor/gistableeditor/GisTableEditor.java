@@ -50,7 +50,7 @@ import java.util.Locale;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.deegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;

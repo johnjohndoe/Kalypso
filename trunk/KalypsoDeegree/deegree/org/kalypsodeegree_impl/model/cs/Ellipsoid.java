@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.cs;
+package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
 import java.awt.geom.Point2D;
@@ -67,10 +67,10 @@ import java.util.Map;
 
 import javax.units.Unit;
 
-import org.deegree_impl.model.resources.Utilities;
-import org.deegree_impl.model.resources.XMath;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.resources.XMath;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 import org.opengis.cs.CS_Ellipsoid;
 import org.opengis.cs.CS_LinearUnit;
 
@@ -95,7 +95,7 @@ public class Ellipsoid extends Info
 
   /**
    * WGS 1984 ellipsoid. This ellipsoid is used in GPS system and is the default
-   * for most <code>org.deegree_impl.model</code> packages.
+   * for most <code>org.kalypsodeegree_impl.model</code> packages.
    */
   public static final Ellipsoid WGS84 = (Ellipsoid)pool.intern( createFlattenedSphere( "WGS84",
       6378137.0, 298.257223563, Unit.METRE ) );

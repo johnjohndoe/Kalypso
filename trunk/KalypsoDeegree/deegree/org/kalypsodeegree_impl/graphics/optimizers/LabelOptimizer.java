@@ -58,16 +58,16 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.optimizers;
+package org.kalypsodeegree_impl.graphics.optimizers;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import org.deegree.graphics.Theme;
-import org.deegree.graphics.displayelements.Label;
-import org.deegree.graphics.displayelements.LabelDisplayElement;
-import org.deegree.graphics.sld.TextSymbolizer;
-import org.deegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.graphics.Theme;
+import org.kalypsodeegree.graphics.displayelements.Label;
+import org.kalypsodeegree.graphics.displayelements.LabelDisplayElement;
+import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 
 /**
  * Selects optimized <tt>Label</tt> s (graphical representations generated

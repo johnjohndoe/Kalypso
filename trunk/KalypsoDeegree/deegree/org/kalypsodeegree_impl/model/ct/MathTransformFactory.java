@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
 import java.awt.geom.AffineTransform;
@@ -68,12 +68,12 @@ import java.util.NoSuchElementException;
 
 import javax.media.jai.ParameterList;
 
-import org.deegree_impl.model.cs.Projection;
-import org.deegree_impl.model.pt.Matrix;
-import org.deegree_impl.model.resources.Naming;
-import org.deegree_impl.model.resources.WeakHashSet;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.cs.Projection;
+import org.kalypsodeegree_impl.model.pt.Matrix;
+import org.kalypsodeegree_impl.model.resources.Naming;
+import org.kalypsodeegree_impl.model.resources.WeakHashSet;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 import org.opengis.ct.CT_MathTransform;
 import org.opengis.ct.CT_MathTransformFactory;
 import org.opengis.ct.CT_Parameter;

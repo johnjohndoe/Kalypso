@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.io;
+package org.kalypsodeegree_impl.io;
 
 import java.sql.Connection;
 import java.sql.Driver;
@@ -67,7 +67,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.deegree_impl.tools.ObjectPool;
+import org.kalypsodeegree_impl.tools.ObjectPool;
 
 /**
  * class to manage a pool of database connections.

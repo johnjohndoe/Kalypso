@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.cs;
+package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
 import java.io.Serializable;
@@ -67,11 +67,11 @@ import java.util.Map;
 
 import javax.units.Unit;
 
-import org.deegree_impl.model.pt.Dimensioned;
-import org.deegree_impl.model.pt.Envelope;
-import org.deegree_impl.model.resources.Utilities;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.pt.Dimensioned;
+import org.kalypsodeegree_impl.model.pt.Envelope;
+import org.kalypsodeegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 import org.opengis.cs.CS_AxisInfo;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.opengis.cs.CS_Unit;
@@ -252,7 +252,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
    * Returns <code>true</code> if this coordinate system is equivalents to the
    * specified coordinate system. Two coordinate systems are considered
    * equivalent if the
-   * {@link org.deegree_impl.model.ct.CoordinateTransformation}from
+   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from
    * <code>this</code> to <code>cs</code> would be the identity transform.
    * The <code>equivalents</code> method is less strict than
    * <code>equals</code> in that it doesn't compare names, alias, authority

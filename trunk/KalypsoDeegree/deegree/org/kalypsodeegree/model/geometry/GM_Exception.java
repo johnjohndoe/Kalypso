@@ -59,12 +59,12 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.model.geometry;
+package org.kalypsodeegree.model.geometry;
 
 public class GM_Exception extends Exception
 {
 
-  private String message = "org.deegree.model.geometry.GM_Exception: ";
+  private String message = "org.kalypsodeegree.model.geometry.GM_Exception: ";
 
   public GM_Exception( String message )
   {

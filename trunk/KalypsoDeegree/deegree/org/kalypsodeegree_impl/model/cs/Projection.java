@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.cs;
+package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
 import java.awt.geom.Point2D;
@@ -70,10 +70,10 @@ import javax.media.jai.ParameterListDescriptor;
 import javax.media.jai.ParameterListImpl;
 import javax.units.Unit;
 
-import org.deegree_impl.model.ct.MathTransformProvider;
-import org.deegree_impl.model.ct.MissingParameterException;
-import org.deegree_impl.model.resources.Naming;
-import org.deegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.ct.MathTransformProvider;
+import org.kalypsodeegree_impl.model.ct.MissingParameterException;
+import org.kalypsodeegree_impl.model.resources.Naming;
+import org.kalypsodeegree_impl.model.resources.Utilities;
 import org.opengis.cs.CS_Projection;
 import org.opengis.cs.CS_ProjectionParameter;
 
@@ -135,7 +135,7 @@ public class Projection extends Info
   /**
    * Creates a projection. The set of parameters (<code>parameters</code>)
    * may be queried with
-   * <code>{@link org.deegree_impl.model.ct.MathTransformFactory#getMathTransformProvider
+   * <code>{@link org.kalypsodeegree_impl.model.ct.MathTransformFactory#getMathTransformProvider
    *              MathTransformFactory.getMathTransformProvider}(classification).{@link
    *              MathTransformProvider#getParameterList getParameterList()}</code>.
    * 

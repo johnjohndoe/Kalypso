@@ -1,12 +1,12 @@
-package org.deegree_impl.extension;
+package org.kalypsodeegree_impl.extension;
 
 import java.net.URL;
 
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree_impl.gml.schema.XMLHelper;
-import org.deegree_impl.model.geometry.GM_Envelope_Impl;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree_impl.gml.schema.XMLHelper;
+import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -19,7 +19,7 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
 {
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#getClassName()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
    */
   public String getClassName()
   {
@@ -28,7 +28,7 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
 
   private static String m_nameSpaceURI=XMLHelper.GMLSCHEMA_NS+":"+"BoundingShapeType";
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#getTypeName()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
    */
   public String getTypeName()
   {
@@ -36,7 +36,7 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node)
    */
   public void marshall( final Object object, final Node node ,URL context ) throws TypeRegistryException
   {
@@ -114,7 +114,7 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node)
    */
   public Object unmarshall( Node node ,URL context ) throws TypeRegistryException
   {
@@ -123,7 +123,7 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#getShortname()
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getShortname()
    */
   public String getShortname()
   {

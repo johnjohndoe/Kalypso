@@ -59,15 +59,15 @@
  
  ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.model.feature;
+package org.kalypsodeegree_impl.model.feature;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.deegree.model.feature.Annotation;
-import org.deegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.Annotation;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * 
@@ -151,15 +151,15 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#isGeometryProperty()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()
    */
   public boolean isGeometryProperty()
   {
-    return m_type.startsWith( "org.deegree.model.geometry." ) && !m_type.endsWith( "Envelope" );
+    return m_type.startsWith( "org.kalypsodeegree.model.geometry." ) && !m_type.endsWith( "Envelope" );
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#getAnnotation(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getAnnotation(java.lang.String)
    */
   public Annotation getAnnotation( String lang )
   {
@@ -167,7 +167,7 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#getAnnotationMap()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getAnnotationMap()
    */
   public Map getAnnotationMap()
   {
@@ -179,6 +179,9 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.9  2005/03/08 11:01:10  doemming
+ * *** empty log message ***
+ *
  * Revision 1.8  2005/02/20 18:56:50  doemming
  * *** empty log message ***
  * Revision 1.7 2005/01/26 17:55:31

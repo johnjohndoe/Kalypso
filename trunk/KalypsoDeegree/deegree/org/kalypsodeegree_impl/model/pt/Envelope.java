@@ -58,16 +58,16 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.pt;
+package org.kalypsodeegree_impl.model.pt;
 
 // Miscellaneous
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import org.deegree_impl.model.resources.XRectangle2D;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.resources.XRectangle2D;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
  * A box defined by two positions. The two positions must have the same

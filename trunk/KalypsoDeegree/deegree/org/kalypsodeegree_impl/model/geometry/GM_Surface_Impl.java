@@ -58,18 +58,18 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.geometry;
+package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
-import org.deegree.model.geometry.GM_Exception;
-import org.deegree.model.geometry.GM_GenericSurface;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.model.geometry.GM_Ring;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree.model.geometry.GM_SurfaceBoundary;
-import org.deegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_GenericSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
  * 

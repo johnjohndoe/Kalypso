@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.tools;
+package org.kalypsodeegree_impl.tools;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -72,17 +72,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.deegree.graphics.Encoders;
-import org.deegree.graphics.legend.LegendElement;
-import org.deegree.graphics.legend.LegendException;
-import org.deegree.graphics.sld.NamedLayer;
-import org.deegree.graphics.sld.Style;
-import org.deegree.graphics.sld.StyledLayerDescriptor;
-import org.deegree.graphics.sld.UserLayer;
-import org.deegree.graphics.sld.UserStyle;
-import org.deegree.xml.XMLParsingException;
-import org.deegree_impl.graphics.legend.LegendFactory;
-import org.deegree_impl.graphics.sld.SLDFactory;
+import org.kalypsodeegree.graphics.Encoders;
+import org.kalypsodeegree.graphics.legend.LegendElement;
+import org.kalypsodeegree.graphics.legend.LegendException;
+import org.kalypsodeegree.graphics.sld.NamedLayer;
+import org.kalypsodeegree.graphics.sld.Style;
+import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.graphics.sld.UserLayer;
+import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.xml.XMLParsingException;
+import org.kalypsodeegree_impl.graphics.legend.LegendFactory;
+import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 
 /**
  * This executable class is an application, which reads out an sld-document,
@@ -270,11 +270,11 @@ public class LegendElementCreator
   }
 
   /**
-   * saves the resulting buffered Image from org.deegree.graphics.legend as an
+   * saves the resulting buffered Image from org.kalypsodeegree.graphics.legend as an
    * image.
    * 
    * @param bi
-   *          the BufferedImage from org.deegree.graphics.legend.*
+   *          the BufferedImage from org.kalypsodeegree.graphics.legend.*
    * @param outdir
    *          the output-directory (application-parameter)
    * @param filename

@@ -40,7 +40,7 @@
  
  
  ---------------------------------------------------------------------------*/
-package org.deegree_impl.tools;
+package org.kalypsodeegree_impl.tools;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,7 +50,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.deegree.tools.Cache;
+import org.kalypsodeegree.tools.Cache;
 
 /**
  * This class provides a cache for feature collections created by the wms filter

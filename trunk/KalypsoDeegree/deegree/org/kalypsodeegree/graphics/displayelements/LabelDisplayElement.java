@@ -58,9 +58,9 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics.displayelements;
+package org.kalypsodeegree.graphics.displayelements;
 
-import org.deegree.graphics.sld.ParameterValueType;
+import org.kalypsodeegree.graphics.sld.ParameterValueType;
 
 /**
  * The interface describes a Label-DisplayElement.

@@ -43,11 +43,11 @@ package org.kalypso.ogc.gml.loader;
 import java.io.File;
 import java.net.URL;
 
-import org.deegree.model.feature.FeatureVisitor;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.deegree_impl.model.feature.visitors.ResortVisitor;
-import org.deegree_impl.model.feature.visitors.TransformVisitor;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
+import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -134,7 +134,7 @@ public class ShapeLoader extends AbstractLoader
 
       // Workspace laden
       final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-      final CS_CoordinateSystem sourceCrs = org.deegree_impl.model.cs.Adapters.getDefault().export(
+      final CS_CoordinateSystem sourceCrs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
           csFac.getCSByName( sourceSrs ) );
       
       final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();

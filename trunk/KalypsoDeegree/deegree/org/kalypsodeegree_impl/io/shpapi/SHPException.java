@@ -59,12 +59,12 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
 /** Shapefile related exceptions thrown by methods in this package. */
 public class SHPException extends Exception
 {
-  private String message = "org.deegree_impl.io.shpapi.SHPException";
+  private String message = "org.kalypsodeegree_impl.io.shpapi.SHPException";
 
   public SHPException()
   {}

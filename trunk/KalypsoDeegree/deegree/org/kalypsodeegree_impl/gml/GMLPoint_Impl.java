@@ -58,14 +58,14 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
-import org.deegree.gml.GMLCoord;
-import org.deegree.gml.GMLCoordinates;
-import org.deegree.gml.GMLPoint;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLCoord;
+import org.kalypsodeegree.gml.GMLCoordinates;
+import org.kalypsodeegree.gml.GMLPoint;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -135,7 +135,7 @@ public class GMLPoint_Impl extends GMLGeometry_Impl implements GMLPoint
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLPoint_Impl#getCoord()
+   * @see org.kalypsodeegree_impl.gml.GMLPoint_Impl#getCoord()
    */
   public void setCoord( GMLCoord coord )
   {
@@ -184,7 +184,7 @@ public class GMLPoint_Impl extends GMLGeometry_Impl implements GMLPoint
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLPoint_Impl#getCoordinates()
+   * @see org.kalypsodeegree_impl.gml.GMLPoint_Impl#getCoordinates()
    */
   public void setCoordinates( GMLCoordinates coordinates )
   {
@@ -217,6 +217,9 @@ public class GMLPoint_Impl extends GMLGeometry_Impl implements GMLPoint
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.5  2005/03/08 11:01:04  doemming
+ * *** empty log message ***
+ *
  * Revision 1.4  2005/01/18 12:50:42  doemming
  * *** empty log message ***
  *

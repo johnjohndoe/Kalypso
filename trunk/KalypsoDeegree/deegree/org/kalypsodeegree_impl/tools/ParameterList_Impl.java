@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.tools;
+package org.kalypsodeegree_impl.tools;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.deegree.tools.Parameter;
-import org.deegree.tools.ParameterList;
+import org.kalypsodeegree.tools.Parameter;
+import org.kalypsodeegree.tools.ParameterList;
 
 /**
  * The interface defines the access to a list of paramters that can be used as

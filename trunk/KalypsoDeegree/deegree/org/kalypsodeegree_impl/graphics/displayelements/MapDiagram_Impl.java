@@ -58,16 +58,16 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Component;
 import java.awt.Graphics;
 import java.io.Serializable;
 
-import org.deegree.graphics.displayelements.MapDiagram;
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.graphics.displayelements.MapDiagram;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 
 /**
  * The interface describes a MapDiagram-DisplayElement. A MapDiagram can be a

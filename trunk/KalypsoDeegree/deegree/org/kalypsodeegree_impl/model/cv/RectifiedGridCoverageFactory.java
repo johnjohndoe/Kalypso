@@ -1,8 +1,8 @@
-package org.deegree_impl.model.cv;
+package org.kalypsodeegree_impl.model.cv;
 
-import org.deegree.model.feature.Feature;
-import org.deegree_impl.extension.ITypeHandler;
-import org.deegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

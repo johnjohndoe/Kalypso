@@ -59,10 +59,10 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
-import org.deegree.model.geometry.ByteUtils;
-import org.deegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.model.geometry.ByteUtils;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 
 /**
  * Class representig a collection of points <BR>

@@ -59,12 +59,12 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.graphics;
+package org.kalypsodeegree.graphics;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-import org.deegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.graphics.sld.UserStyle;
 
 /**
  * 

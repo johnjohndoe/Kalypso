@@ -46,8 +46,8 @@ package org.kalypso.ui.editor.styleeditor;
 
 import java.util.ArrayList;
 
-import org.deegree.graphics.sld.Rule;
-import org.deegree.model.feature.FeatureType;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;

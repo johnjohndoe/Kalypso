@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.cs;
+package org.kalypsodeegree_impl.model.cs;
 
 // Miscellaneous
 import java.io.Serializable;
 
-import org.deegree_impl.model.pt.Matrix;
-import org.deegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.pt.Matrix;
+import org.kalypsodeegree_impl.model.resources.Utilities;
 
 /**
  * Parameters for a geographic transformation into WGS84. The Bursa Wolf

@@ -52,7 +52,7 @@ import java.util.Vector;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
-import org.deegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;

@@ -1,8 +1,8 @@
-package org.deegree.xml;
+package org.kalypsodeegree.xml;
 
 import java.io.PrintWriter;
 
-import org.deegree_impl.tools.StringExtend;
+import org.kalypsodeegree_impl.tools.StringExtend;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;

@@ -58,15 +58,15 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.ArrayList;
 
-import org.deegree.filterencoding.Filter;
-import org.deegree.graphics.sld.Extent;
-import org.deegree.graphics.sld.FeatureTypeConstraint;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.graphics.sld.Extent;
+import org.kalypsodeegree.graphics.sld.FeatureTypeConstraint;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * A FeatureTypeConstraint element is used to identify a feature type by

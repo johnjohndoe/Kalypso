@@ -1,10 +1,10 @@
-package org.deegree_impl.gml.schema.virtual;
+package org.kalypsodeegree_impl.gml.schema.virtual;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.deegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * virtual featuretypes are not defined in schema

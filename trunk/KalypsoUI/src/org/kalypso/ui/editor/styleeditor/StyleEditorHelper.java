@@ -1,7 +1,7 @@
 package org.kalypso.ui.editor.styleeditor;
 
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *

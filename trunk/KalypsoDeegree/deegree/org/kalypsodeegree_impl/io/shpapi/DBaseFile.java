@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.io.shpapi;
+package org.kalypsodeegree_impl.io.shpapi;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -67,12 +67,12 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.geometry.ByteUtils;
-import org.deegree_impl.model.feature.FeatureFactory;
-import org.deegree_impl.tools.TimeTools;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.ByteUtils;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.tools.TimeTools;
 
 /**
  * 
@@ -397,15 +397,15 @@ public class DBaseFile
     switch( m_defaultFileShapeType )
     {
     case ShapeConst.SHAPE_TYPE_POINT:
-      return "org.deegree.model.geometry.GM_Point";
+      return "org.kalypsodeegree.model.geometry.GM_Point";
     case ShapeConst.SHAPE_TYPE_MULTIPOINT:
-      return "org.deegree.model.geometry.GM_MultiPoint";
+      return "org.kalypsodeegree.model.geometry.GM_MultiPoint";
     case ShapeConst.SHAPE_TYPE_POLYLINE:
-      return "org.deegree.model.geometry.GM_LineString";
+      return "org.kalypsodeegree.model.geometry.GM_LineString";
     case ShapeConst.SHAPE_TYPE_POLYGON:
-      return "org.deegree.model.geometry.GM_Polygon";
+      return "org.kalypsodeegree.model.geometry.GM_Polygon";
     default:
-      return "org.deegree.model.geometry.GM_Object";
+      return "org.kalypsodeegree.model.geometry.GM_Object";
     }
   }
 

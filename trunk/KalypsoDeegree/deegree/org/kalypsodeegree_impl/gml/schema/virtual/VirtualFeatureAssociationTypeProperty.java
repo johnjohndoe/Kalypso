@@ -1,20 +1,20 @@
-package org.deegree_impl.gml.schema.virtual;
+package org.kalypsodeegree_impl.gml.schema.virtual;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.deegree.model.feature.Annotation;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureAssociationTypeProperty;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.geometry.GM_Curve;
-import org.deegree.model.geometry.GM_Exception;
-import org.deegree.model.geometry.GM_LineString;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.model.feature.Annotation;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -88,7 +88,7 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#getName()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getName()
    */
   public String getName()
   {
@@ -96,7 +96,7 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#getType()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getType()
    */
   public String getType()
   {
@@ -104,7 +104,7 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#getAnnotation(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getAnnotation(java.lang.String)
    */
   public Annotation getAnnotation( String lang )
   {
@@ -112,7 +112,7 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#isNullable()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isNullable()
    */
   public boolean isNullable()
   {
@@ -120,7 +120,7 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#getNamespace()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getNamespace()
    */
   public String getNamespace()
   {
@@ -128,7 +128,7 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#isGeometryProperty()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()
    */
   public boolean isGeometryProperty()
   {
@@ -136,7 +136,7 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#getAnnotationMap()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getAnnotationMap()
    */
   public Map getAnnotationMap()
   {

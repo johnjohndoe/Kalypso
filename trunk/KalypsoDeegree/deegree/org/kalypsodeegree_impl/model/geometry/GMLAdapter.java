@@ -58,43 +58,43 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.geometry;
+package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.StringReader;
 import java.rmi.RemoteException;
 
-import org.deegree.gml.GMLBox;
-import org.deegree.gml.GMLCoord;
-import org.deegree.gml.GMLCoordinates;
-import org.deegree.gml.GMLGeometry;
-import org.deegree.gml.GMLLineString;
-import org.deegree.gml.GMLLinearRing;
-import org.deegree.gml.GMLMultiLineString;
-import org.deegree.gml.GMLMultiPoint;
-import org.deegree.gml.GMLMultiPolygon;
-import org.deegree.gml.GMLPoint;
-import org.deegree.gml.GMLPolygon;
-import org.deegree.model.geometry.GM_Curve;
-import org.deegree.model.geometry.GM_CurveSegment;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Exception;
-import org.deegree.model.geometry.GM_MultiCurve;
-import org.deegree.model.geometry.GM_MultiPoint;
-import org.deegree.model.geometry.GM_MultiSurface;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree.model.geometry.GM_Polygon;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree.model.geometry.GM_SurfaceInterpolation;
-import org.deegree.model.geometry.GM_SurfacePatch;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.gml.GMLCoordinatesParser_Impl;
-import org.deegree_impl.gml.GMLFactory;
-import org.deegree_impl.model.cs.Adapters;
-import org.deegree_impl.model.cs.ConvenienceCSFactory;
-import org.deegree_impl.model.cs.CoordinateSystem;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLBox;
+import org.kalypsodeegree.gml.GMLCoord;
+import org.kalypsodeegree.gml.GMLCoordinates;
+import org.kalypsodeegree.gml.GMLGeometry;
+import org.kalypsodeegree.gml.GMLLineString;
+import org.kalypsodeegree.gml.GMLLinearRing;
+import org.kalypsodeegree.gml.GMLMultiLineString;
+import org.kalypsodeegree.gml.GMLMultiPoint;
+import org.kalypsodeegree.gml.GMLMultiPolygon;
+import org.kalypsodeegree.gml.GMLPoint;
+import org.kalypsodeegree.gml.GMLPolygon;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_CurveSegment;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.gml.GMLCoordinatesParser_Impl;
+import org.kalypsodeegree_impl.gml.GMLFactory;
+import org.kalypsodeegree_impl.model.cs.Adapters;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 

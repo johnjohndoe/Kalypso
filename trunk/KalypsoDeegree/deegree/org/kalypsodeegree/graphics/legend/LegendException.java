@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.graphics.legend;
+package org.kalypsodeegree.graphics.legend;
 
 /**
  * This Exception is thrown, if an error occured in creating the legend of the

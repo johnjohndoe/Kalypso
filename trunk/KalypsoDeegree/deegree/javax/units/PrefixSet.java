@@ -39,7 +39,7 @@ package javax.units;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import org.deegree_impl.model.resources.WeakHashSet;
+import org.kalypsodeegree_impl.model.resources.WeakHashSet;
 
 /**
  * Ensemble de préfix. Cette classe maintient une liste d'objets {@link Prefix}

@@ -58,18 +58,18 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
 import java.util.ArrayList;
 
-import org.deegree.gml.GMLBox;
-import org.deegree.gml.GMLCoord;
-import org.deegree.gml.GMLFeature;
-import org.deegree.gml.GMLFeatureCollection;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree.xml.DOMPrinter;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLBox;
+import org.kalypsodeegree.gml.GMLCoord;
+import org.kalypsodeegree.gml.GMLFeature;
+import org.kalypsodeegree.gml.GMLFeatureCollection;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree.xml.DOMPrinter;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -404,6 +404,9 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.7  2005/03/08 11:01:04  doemming
+ * *** empty log message ***
+ *
  * Revision 1.6  2005/02/08 18:43:59  belger
  * *** empty log message ***
  *

@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.cs;
+package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
 import java.rmi.RemoteException;
@@ -70,9 +70,9 @@ import javax.media.jai.ParameterListDescriptorImpl;
 import javax.media.jai.ParameterListImpl;
 import javax.units.Unit;
 
-import org.deegree_impl.model.resources.XArray;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.resources.XArray;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 import org.opengis.cs.CS_AngularUnit;
 import org.opengis.cs.CS_AxisInfo;
 import org.opengis.cs.CS_AxisOrientationEnum;
@@ -115,10 +115,10 @@ public class Adapters
   private static Adapters DEFAULT;
 
   /**
-   * The underlying adapters for the <code>org.deegree_impl.model.pt</code>
+   * The underlying adapters for the <code>org.kalypsodeegree_impl.model.pt</code>
    * package.
    */
-  public org.deegree_impl.model.pt.Adapters PT = null;
+  public org.kalypsodeegree_impl.model.pt.Adapters PT = null;
 
   protected Adapters()
   {}
@@ -127,10 +127,10 @@ public class Adapters
    * Default constructor.
    * 
    * @param PT
-   *          The underlying adapters for <code>org.deegree_impl.model.pt</code>
+   *          The underlying adapters for <code>org.kalypsodeegree_impl.model.pt</code>
    *          package.
    */
-  protected Adapters( final org.deegree_impl.model.pt.Adapters PT )
+  protected Adapters( final org.kalypsodeegree_impl.model.pt.Adapters PT )
   {
     this.PT = PT;
   }
@@ -142,7 +142,7 @@ public class Adapters
   {
     if( DEFAULT == null )
     {
-      DEFAULT = new Adapters( org.deegree_impl.model.pt.Adapters.getDefault() );
+      DEFAULT = new Adapters( org.kalypsodeegree_impl.model.pt.Adapters.getDefault() );
     }
     return DEFAULT;
   }

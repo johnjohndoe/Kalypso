@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -70,22 +70,22 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.deegree.gml.GMLDocument;
-import org.deegree.gml.GMLException;
-import org.deegree.gml.GMLFeature;
-import org.deegree.gml.GMLFeatureCollection;
-import org.deegree.gml.GMLGeometry;
-import org.deegree.gml.GMLNameSpace;
-import org.deegree.gml.GMLProperty;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree.xml.DOMPrinter;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.extension.ITypeHandler;
-import org.deegree_impl.extension.TypeRegistrySingleton;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLDocument;
+import org.kalypsodeegree.gml.GMLException;
+import org.kalypsodeegree.gml.GMLFeature;
+import org.kalypsodeegree.gml.GMLFeatureCollection;
+import org.kalypsodeegree.gml.GMLGeometry;
+import org.kalypsodeegree.gml.GMLNameSpace;
+import org.kalypsodeegree.gml.GMLProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree.xml.DOMPrinter;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
@@ -241,7 +241,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLDocument_Impl#getNameSpaces()
+   * @see org.kalypsodeegree_impl.gml.GMLDocument_Impl#getNameSpaces()
    */
   public void addNameSpace( GMLNameSpace nameSpace )
   {
@@ -285,7 +285,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLDocument_Impl#getRoot()
+   * @see org.kalypsodeegree_impl.gml.GMLDocument_Impl#getRoot()
    * @deprecated
    */
   public void setRoot( GMLFeatureCollection root )
@@ -336,7 +336,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   }
 
   /**
-   * @see org.deegree.gml.GMLDocument#getNameSpaces()
+   * @see org.kalypsodeegree.gml.GMLDocument#getNameSpaces()
    */
   public GMLNameSpace[] getNameSpaces()
   {
@@ -687,8 +687,8 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   }
 
   /**
-   * @see org.deegree.gml.GMLDocument#createGMLFeature(org.deegree.model.feature.FeatureType,
-   *      java.lang.String, org.deegree.gml.GMLProperty[])
+   * @see org.kalypsodeegree.gml.GMLDocument#createGMLFeature(org.kalypsodeegree.model.feature.FeatureType,
+   *      java.lang.String, org.kalypsodeegree.gml.GMLProperty[])
    */
   public GMLFeature createGMLFeature( final FeatureType featureType, final String id,
       GMLProperty[] properties ) throws GMLException
@@ -755,8 +755,8 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   /**
    * 
    * @throws GMLException
-   * @see org.deegree.gml.GMLDocument#createGMLGeoProperty(org.deegree.model.feature.FeatureTypeProperty,
-   *      org.deegree.model.geometry.GM_Object)
+   * @see org.kalypsodeegree.gml.GMLDocument#createGMLGeoProperty(org.kalypsodeegree.model.feature.FeatureTypeProperty,
+   *      org.kalypsodeegree.model.geometry.GM_Object)
    */
   public GMLProperty createGMLGeoProperty( FeatureTypeProperty ftp, GM_Object geom ) throws GMLException
   {

@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Point;
 
-import org.deegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.util.command.ICommand;
 

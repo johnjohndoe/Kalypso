@@ -58,40 +58,40 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
-import org.deegree.filterencoding.Expression;
-import org.deegree.filterencoding.Filter;
-import org.deegree.graphics.sld.CssParameter;
-import org.deegree.graphics.sld.ExternalGraphic;
-import org.deegree.graphics.sld.FeatureTypeStyle;
-import org.deegree.graphics.sld.Fill;
-import org.deegree.graphics.sld.Font;
-import org.deegree.graphics.sld.Geometry;
-import org.deegree.graphics.sld.Graphic;
-import org.deegree.graphics.sld.GraphicFill;
-import org.deegree.graphics.sld.GraphicStroke;
-import org.deegree.graphics.sld.Halo;
-import org.deegree.graphics.sld.LabelPlacement;
-import org.deegree.graphics.sld.LegendGraphic;
-import org.deegree.graphics.sld.LinePlacement;
-import org.deegree.graphics.sld.LineSymbolizer;
-import org.deegree.graphics.sld.Mark;
-import org.deegree.graphics.sld.ParameterValueType;
-import org.deegree.graphics.sld.PointPlacement;
-import org.deegree.graphics.sld.PointSymbolizer;
-import org.deegree.graphics.sld.PolygonSymbolizer;
-import org.deegree.graphics.sld.Rule;
-import org.deegree.graphics.sld.Stroke;
-import org.deegree.graphics.sld.Style;
-import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.graphics.sld.TextSymbolizer;
-import org.deegree_impl.tools.StringExtend;
+import org.kalypsodeegree.filterencoding.Expression;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.graphics.sld.CssParameter;
+import org.kalypsodeegree.graphics.sld.ExternalGraphic;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.Fill;
+import org.kalypsodeegree.graphics.sld.Font;
+import org.kalypsodeegree.graphics.sld.Geometry;
+import org.kalypsodeegree.graphics.sld.Graphic;
+import org.kalypsodeegree.graphics.sld.GraphicFill;
+import org.kalypsodeegree.graphics.sld.GraphicStroke;
+import org.kalypsodeegree.graphics.sld.Halo;
+import org.kalypsodeegree.graphics.sld.LabelPlacement;
+import org.kalypsodeegree.graphics.sld.LegendGraphic;
+import org.kalypsodeegree.graphics.sld.LinePlacement;
+import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.Mark;
+import org.kalypsodeegree.graphics.sld.ParameterValueType;
+import org.kalypsodeegree.graphics.sld.PointPlacement;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.graphics.sld.Style;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree_impl.tools.StringExtend;
 
 /**
  * An utility class designed to easy creation of style by convinience methods.

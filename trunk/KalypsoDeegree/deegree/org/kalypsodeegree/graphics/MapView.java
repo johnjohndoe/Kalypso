@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics;
+package org.kalypsodeegree.graphics;
 
 import java.awt.Graphics;
 
-import org.deegree.graphics.optimizers.Optimizer;
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.graphics.optimizers.Optimizer;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**

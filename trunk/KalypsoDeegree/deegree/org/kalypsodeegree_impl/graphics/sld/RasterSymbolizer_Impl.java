@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
 import java.io.StringWriter;
@@ -70,10 +70,10 @@ import javax.xml.bind.Marshaller;
 
 import net.opengis.sld.ObjectFactory;
 
-import org.deegree.graphics.sld.ColorMapEntry;
-import org.deegree.graphics.sld.Interval;
-import org.deegree.graphics.sld.RasterSymbolizer;
-import org.deegree.xml.Marshallable;
+import org.kalypsodeegree.graphics.sld.ColorMapEntry;
+import org.kalypsodeegree.graphics.sld.Interval;
+import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
+import org.kalypsodeegree.xml.Marshallable;
 
 /**
  * 

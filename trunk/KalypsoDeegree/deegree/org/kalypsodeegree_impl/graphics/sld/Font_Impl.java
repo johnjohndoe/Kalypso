@@ -58,18 +58,18 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.sld.CssParameter;
-import org.deegree.graphics.sld.Font;
-import org.deegree.model.feature.Feature;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.CssParameter;
+import org.kalypsodeegree.graphics.sld.Font;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * The Font element identifies a font of a certain family, style, weight, size

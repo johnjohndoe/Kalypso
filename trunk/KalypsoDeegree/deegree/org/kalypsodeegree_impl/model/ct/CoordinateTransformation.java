@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
 import java.io.Serializable;
@@ -67,11 +67,11 @@ import java.lang.ref.WeakReference;
 import java.rmi.RemoteException;
 import java.util.Locale;
 
-import org.deegree_impl.model.cs.CoordinateSystem;
-import org.deegree_impl.model.cs.Info;
-import org.deegree_impl.model.resources.Utilities;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.Info;
+import org.kalypsodeegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.opengis.ct.CT_CoordinateTransformation;
 import org.opengis.ct.CT_MathTransform;

@@ -58,9 +58,9 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.graphics.sld;
+package org.kalypsodeegree.graphics.sld;
 
-import org.deegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.Filter;
 
 /**
  * A FeatureTypeConstraint element is used to identify a feature type by

@@ -47,10 +47,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureList;
-import org.deegree.model.feature.event.ModellEventListener;
-import org.deegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;

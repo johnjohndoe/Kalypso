@@ -42,11 +42,11 @@ package org.kalypso.ogc.gml.test;
 
 import junit.framework.TestCase;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
-import org.deegree_impl.gml.schema.GMLSchema;
-import org.deegree_impl.gml.schema.GMLSchemaCache;
-import org.deegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author sbad0205

@@ -58,47 +58,47 @@
  http://www.lat-lon.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.gml;
+package org.kalypsodeegree_impl.gml;
 
 import java.util.Iterator;
 import java.util.List;
 
-import org.deegree.gml.GMLCoordinates;
-import org.deegree.gml.GMLDocument;
-import org.deegree.gml.GMLException;
-import org.deegree.gml.GMLFeature;
-import org.deegree.gml.GMLFeatureCollection;
-import org.deegree.gml.GMLGeometry;
-import org.deegree.gml.GMLLineString;
-import org.deegree.gml.GMLLinearRing;
-import org.deegree.gml.GMLMultiLineString;
-import org.deegree.gml.GMLMultiPoint;
-import org.deegree.gml.GMLMultiPolygon;
-import org.deegree.gml.GMLPoint;
-import org.deegree.gml.GMLPolygon;
-import org.deegree.gml.GMLProperty;
-import org.deegree.model.feature.DeegreeFeature;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureAssociationTypeProperty;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.geometry.GM_Curve;
-import org.deegree.model.geometry.GM_LineString;
-import org.deegree.model.geometry.GM_MultiCurve;
-import org.deegree.model.geometry.GM_MultiPoint;
-import org.deegree.model.geometry.GM_MultiSurface;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree.ogcbasic.CommonNamespaces;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.extension.ITypeHandler;
-import org.deegree_impl.extension.TypeRegistryException;
-import org.deegree_impl.extension.TypeRegistrySingleton;
-import org.deegree_impl.gml.schema.Mapper;
-import org.deegree_impl.tools.Debug;
-import org.deegree_impl.tools.StringExtend;
+import org.kalypsodeegree.gml.GMLCoordinates;
+import org.kalypsodeegree.gml.GMLDocument;
+import org.kalypsodeegree.gml.GMLException;
+import org.kalypsodeegree.gml.GMLFeature;
+import org.kalypsodeegree.gml.GMLFeatureCollection;
+import org.kalypsodeegree.gml.GMLGeometry;
+import org.kalypsodeegree.gml.GMLLineString;
+import org.kalypsodeegree.gml.GMLLinearRing;
+import org.kalypsodeegree.gml.GMLMultiLineString;
+import org.kalypsodeegree.gml.GMLMultiPoint;
+import org.kalypsodeegree.gml.GMLMultiPolygon;
+import org.kalypsodeegree.gml.GMLPoint;
+import org.kalypsodeegree.gml.GMLPolygon;
+import org.kalypsodeegree.gml.GMLProperty;
+import org.kalypsodeegree.model.feature.DeegreeFeature;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.ogcbasic.CommonNamespaces;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.gml.schema.Mapper;
+import org.kalypsodeegree_impl.tools.Debug;
+import org.kalypsodeegree_impl.tools.StringExtend;
 import org.w3c.dom.Element;
 
 /**
@@ -714,6 +714,9 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.13  2005/03/08 11:01:04  doemming
+ * *** empty log message ***
+ *
  * Revision 1.12  2005/03/04 15:05:04  doemming
  * *** empty log message ***
  *

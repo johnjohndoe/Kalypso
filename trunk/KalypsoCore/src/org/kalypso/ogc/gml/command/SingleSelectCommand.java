@@ -43,13 +43,13 @@ package org.kalypso.ogc.gml.command;
 import java.util.Iterator;
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureVisitor;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.model.feature.event.ModellEventProvider;
-import org.deegree_impl.model.feature.visitors.GetSelectionVisitor;
-import org.deegree_impl.model.feature.visitors.UnselectFeatureVisitor;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree_impl.model.feature.visitors.GetSelectionVisitor;
+import org.kalypsodeegree_impl.model.feature.visitors.UnselectFeatureVisitor;
 import org.kalypso.util.command.ICommand;
 
 /**

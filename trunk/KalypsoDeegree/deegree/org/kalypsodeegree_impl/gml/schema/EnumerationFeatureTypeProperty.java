@@ -1,9 +1,9 @@
-package org.deegree_impl.gml.schema;
+package org.kalypsodeegree_impl.gml.schema;
 
 import java.util.Map;
 
-import org.deegree.model.feature.Annotation;
-import org.deegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.Annotation;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * FeatureTypeProperty that represents a property with a enumeration restriction
@@ -49,7 +49,7 @@ public class EnumerationFeatureTypeProperty implements FeatureTypeProperty, Vali
   /*
    * (non-Javadoc)
    * 
-   * @see org.deegree.model.feature.FeatureTypeProperty#isNullable()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isNullable()
    */
   public boolean isNullable()
   {
@@ -59,7 +59,7 @@ public class EnumerationFeatureTypeProperty implements FeatureTypeProperty, Vali
   /*
    * (non-Javadoc)
    * 
-   * @see org.deegree.model.feature.FeatureTypeProperty#getType()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getType()
    */
   public String getType()
   {
@@ -91,7 +91,7 @@ public class EnumerationFeatureTypeProperty implements FeatureTypeProperty, Vali
   }
 
   /**
-   * @see org.deegree.model.feature.FeatureTypeProperty#isGeometryProperty()
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()
    */
   public boolean isGeometryProperty()
   {

@@ -59,7 +59,7 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.gml;
+package org.kalypsodeegree.gml;
 
 /**
  * 
@@ -75,7 +75,7 @@ package org.deegree.gml;
 public class GMLException extends Exception
 {
 
-  private String message = "org.deegree.gml.GMLException";
+  private String message = "org.kalypsodeegree.gml.GMLException";
 
   public GMLException( String message )
   {
@@ -93,6 +93,9 @@ public class GMLException extends Exception
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.5  2005/03/08 11:01:10  doemming
+ * *** empty log message ***
+ *
  * Revision 1.4  2005/01/18 12:50:41  doemming
  * *** empty log message ***
  *

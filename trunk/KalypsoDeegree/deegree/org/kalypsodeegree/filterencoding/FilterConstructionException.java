@@ -58,9 +58,9 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.filterencoding;
+package org.kalypsodeegree.filterencoding;
 
-import org.deegree.xml.XMLParsingException;
+import org.kalypsodeegree.xml.XMLParsingException;
 
 /**
  * This exception is thrown when invalid data (such as an incoherent

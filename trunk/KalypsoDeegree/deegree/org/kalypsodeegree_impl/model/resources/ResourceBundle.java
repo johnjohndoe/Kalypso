@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.resources;
+package org.kalypsodeegree_impl.model.resources;
 
 // Utilities
 import java.io.BufferedInputStream;
@@ -150,7 +150,7 @@ public class ResourceBundle extends java.util.ResourceBundle
   {
     final String name = getClass().getName();
     final int index = name.lastIndexOf( '.' );
-    return ( index >= 0 ) ? name.substring( 0, index ) : "org.deegree_impl.model";
+    return ( index >= 0 ) ? name.substring( 0, index ) : "org.kalypsodeegree_impl.model";
   }
 
   /**

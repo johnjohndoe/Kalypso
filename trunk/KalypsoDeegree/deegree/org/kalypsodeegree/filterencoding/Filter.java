@@ -59,9 +59,9 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree.filterencoding;
+package org.kalypsodeegree.filterencoding;
 
-import org.deegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * <p>

@@ -58,15 +58,15 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.cs;
+package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
 import java.rmi.RemoteException;
 import java.util.Map;
 
-import org.deegree_impl.model.resources.Utilities;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 import org.opengis.cs.CS_HorizontalCoordinateSystem;
 import org.opengis.cs.CS_HorizontalDatum;
 
@@ -202,7 +202,7 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
    * Returns <code>true</code> if this coordinate system is equivalents to the
    * specified coordinate system. Two coordinate systems are considered
    * equivalent if the
-   * {@link org.deegree_impl.model.ct.CoordinateTransformation}from
+   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from
    * <code>this</code> to <code>cs</code> would be the identity transform.
    * The default implementation compare datum, units and axis, but ignore name,
    * alias and other meta-data informations.

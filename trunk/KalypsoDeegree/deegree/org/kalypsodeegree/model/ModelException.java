@@ -63,7 +63,7 @@
  * 
  * Created on 22. April 2003, 13:10
  */
-package org.deegree.model;
+package org.kalypsodeegree.model;
 
 /**
  * 

@@ -48,20 +48,20 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.graphics.displayelements.DisplayElement;
-import org.deegree.graphics.displayelements.IncompatibleGeometryTypeException;
-import org.deegree.graphics.sld.UserStyle;
-import org.deegree.graphics.transformation.GeoTransform;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.model.feature.event.ModellEventListener;
-import org.deegree.model.feature.event.ModellEventProviderAdapter;
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree_impl.graphics.displayelements.DisplayElementFactory;
-import org.deegree_impl.graphics.transformation.WorldToScreenTransform;
-import org.deegree_impl.model.feature.FeatureFactory;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
+import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
@@ -122,8 +122,8 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
-   *      org.deegree.graphics.transformation.GeoTransform, double,
-   *      org.deegree.model.geometry.GM_Envelope, int)
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, int)
    */
   public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
       int selectionId )
@@ -155,7 +155,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
   }
 
   /**
-   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
+   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {

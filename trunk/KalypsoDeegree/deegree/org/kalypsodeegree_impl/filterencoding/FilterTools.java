@@ -58,13 +58,13 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.filterencoding;
+package org.kalypsodeegree_impl.filterencoding;
 
 import java.util.ArrayList;
 import java.util.Stack;
 
-import org.deegree.filterencoding.Operation;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.filterencoding.Operation;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * 

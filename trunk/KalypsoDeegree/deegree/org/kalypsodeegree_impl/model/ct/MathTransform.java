@@ -58,17 +58,17 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
 import java.rmi.server.RemoteObject;
 
-import org.deegree_impl.model.pt.CoordinatePoint;
-import org.deegree_impl.model.pt.Matrix;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.pt.CoordinatePoint;
+import org.kalypsodeegree_impl.model.pt.Matrix;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 import org.opengis.ct.CT_DomainFlags;
 import org.opengis.ct.CT_MathTransform;
 import org.opengis.pt.PT_CoordinatePoint;
@@ -111,7 +111,7 @@ public interface MathTransform
    * against the source domain. The flags of all these tests are then combined.
    * In practice, implementations of different transforms will use different
    * short-cuts to avoid doing an infinite number of tests. <br><br> Convex
-   * hull are not yet implemented in the <code> org.deegree_impl.model </code>
+   * hull are not yet implemented in the <code> org.kalypsodeegree_impl.model </code>
    * package. Consequently, the default implementation for this method always
    * throws a {@link UnsupportedOperationException}.
    * 

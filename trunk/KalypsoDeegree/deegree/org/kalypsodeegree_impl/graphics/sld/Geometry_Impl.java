@@ -58,14 +58,14 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
-import org.deegree.gml.GMLGeometry;
-import org.deegree.graphics.sld.Geometry;
-import org.deegree.xml.DOMPrinter;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.gml.GMLGeometry_Impl;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.gml.GMLGeometry;
+import org.kalypsodeegree.graphics.sld.Geometry;
+import org.kalypsodeegree.xml.DOMPrinter;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.gml.GMLGeometry_Impl;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * The Geometry element is optional and if it is absent then the default

@@ -44,7 +44,7 @@
  */
 package org.kalypso.ui.editor.styleeditor.panels;
 
-import org.deegree.graphics.sld.LinePlacement;
+import org.kalypsodeegree.graphics.sld.LinePlacement;
 import org.eclipse.swt.widgets.Composite;
 
 /**

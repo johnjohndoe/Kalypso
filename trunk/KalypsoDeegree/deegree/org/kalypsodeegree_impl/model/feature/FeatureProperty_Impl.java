@@ -59,11 +59,11 @@
  
 ---------------------------------------------------------------------------------------------------*/
 
-package org.deegree_impl.model.feature;
+package org.kalypsodeegree_impl.model.feature;
 
 import java.io.Serializable;
 
-import org.deegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureProperty;
 
 /**
  * 
@@ -145,6 +145,9 @@ class FeatureProperty_Impl implements FeatureProperty, Serializable
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2005/03/08 11:01:10  doemming
+ * *** empty log message ***
+ *
  * Revision 1.5  2005/01/18 12:50:42  doemming
  * *** empty log message ***
  *

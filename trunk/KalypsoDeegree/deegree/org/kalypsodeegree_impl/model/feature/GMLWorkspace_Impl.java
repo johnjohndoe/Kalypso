@@ -1,4 +1,4 @@
-package org.deegree_impl.model.feature;
+package org.kalypsodeegree_impl.model.feature;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -8,17 +8,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureAssociationTypeProperty;
-import org.deegree.model.feature.FeatureList;
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.feature.FeatureVisitor;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.model.feature.event.ModellEventListener;
-import org.deegree_impl.model.feature.visitors.FeatureTypeVisitor;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
 
 /**
  * @author doemming
@@ -43,7 +43,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   /**
    * 
-   * @see org.deegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
    */
   public Feature getFeature( final String id )
   {
@@ -99,7 +99,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#resolveLinks(org.deegree.model.feature.Feature,
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#resolveLinks(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String)
    */
   public Feature[] resolveLinks( Feature srcFeature, String linkPropertyName )
@@ -173,7 +173,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   /**
    * 
-   * @see org.deegree.model.feature.event.ModellEventProvider#addModellListener(org.deegree.model.feature.event.ModellEventListener)
+   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
    */
   public void addModellListener( final ModellEventListener listener )
   {
@@ -182,7 +182,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   /**
    * 
-   * @see org.deegree.model.feature.event.ModellEventProvider#removeModellListener(org.deegree.model.feature.event.ModellEventListener)
+   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
    */
   public void removeModellListener( final ModellEventListener listener )
   {
@@ -191,7 +191,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   /**
    * 
-   * @see org.deegree.model.feature.event.ModellEventProvider#fireModellEvent(org.deegree.model.feature.event.ModellEvent)
+   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   public void fireModellEvent( final ModellEvent event )
   {
@@ -200,8 +200,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#resolveWhoLinksTo(org.deegree.model.feature.Feature,
-   *      org.deegree.model.feature.FeatureType, java.lang.String)
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#resolveWhoLinksTo(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypsodeegree.model.feature.FeatureType, java.lang.String)
    */
   public Feature[] resolveWhoLinksTo( Feature linkTargetfeature, FeatureType linkSrcFeatureType,
       String linkPropertyName )
@@ -241,7 +241,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   /**
    * 
-   * @see org.deegree.model.feature.GMLWorkspace#getContext()
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getContext()
    */
   public URL getContext()
   {
@@ -249,8 +249,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#accept(org.deegree.model.feature.FeatureVisitor,
-   *      org.deegree.model.feature.FeatureType, int)
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
+   *      org.kalypsodeegree.model.feature.FeatureType, int)
    */
   public void accept( final FeatureVisitor fv, final FeatureType ft, final int depth )
   {
@@ -264,8 +264,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#accept(org.deegree.model.feature.FeatureVisitor,
-   *      org.deegree.model.feature.Feature, int)
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
+   *      org.kalypsodeegree.model.feature.Feature, int)
    */
   public void accept( final FeatureVisitor fv, final Feature feature, final int depth )
   {
@@ -302,7 +302,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#accept(org.deegree.model.feature.FeatureVisitor,
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
    *      java.util.List, int)
    */
   public void accept( final FeatureVisitor fv, final List features, final int depth )
@@ -328,7 +328,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   private final class RegisterVisitor implements FeatureVisitor
   {
     /**
-     * @see org.deegree.model.feature.FeatureVisitor#visit(org.deegree.model.feature.Feature)
+     * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
      */
     public boolean visit( final Feature f )
     {
@@ -342,7 +342,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#getFeatureType(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureType(java.lang.String)
    */
   public FeatureType getFeatureType( final String featureName )
   {
@@ -373,7 +373,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * FeatureList zurückgegeben, deren Elemente alle vom angegebenen Typ sind
    * </p>
    * 
-   * @see org.deegree.model.feature.GMLWorkspace#getFeatureFromPath(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureFromPath(java.lang.String)
    */
   public Object getFeatureFromPath( final String featurePath )
   {
@@ -431,7 +431,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * der featureTypeName optional ist
    * 
    * 
-   * @see org.deegree.model.feature.GMLWorkspace#getFeatureTypeFromPath(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureTypeFromPath(java.lang.String)
    */
   public FeatureType getFeatureTypeFromPath( final String featurePath )
   {
@@ -466,7 +466,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#getFeaturepathForFeature(org.deegree.model.feature.Feature)
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeaturepathForFeature(org.kalypsodeegree.model.feature.Feature)
    */
   public String getFeaturepathForFeature( final Feature feature )
   {
@@ -475,7 +475,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#getSchemaLocation()
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSchemaLocation()
    */
   public String getSchemaLocation()
   {
@@ -483,7 +483,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#getSchemaNamespace()
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSchemaNamespace()
    */
   public String getSchemaNamespace()
   {
@@ -491,7 +491,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#createFeature(org.deegree.model.feature.FeatureType)
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#createFeature(org.kalypsodeegree.model.feature.FeatureType)
    */
   public Feature createFeature( FeatureType type )
   {
@@ -557,7 +557,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#getNamespaceMap()
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getNamespaceMap()
    */
   public Map getNamespaceMap()
   {

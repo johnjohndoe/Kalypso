@@ -21,7 +21,7 @@
  Adapted May 2003 by IDgis, The Netherlands - www.idgis.nl
  
  ---------------------------------------------------------------------------*/
-package org.deegree_impl.io.rtree;
+package org.kalypsodeegree_impl.io.rtree;
 
 /**
  * Implementierung eines Blatt-Knotens. Erbt Methoden von AbstractNode.

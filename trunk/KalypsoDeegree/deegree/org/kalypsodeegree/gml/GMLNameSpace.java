@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree.gml;
+package org.kalypsodeegree.gml;
 
 /**
  * 
@@ -108,6 +108,9 @@ public interface GMLNameSpace
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.5  2005/03/08 11:01:10  doemming
+ * *** empty log message ***
+ *
  * Revision 1.4  2005/01/18 12:50:41  doemming
  * *** empty log message ***
  *

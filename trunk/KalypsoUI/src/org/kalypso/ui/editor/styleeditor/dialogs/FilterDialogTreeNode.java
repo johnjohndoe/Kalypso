@@ -46,7 +46,7 @@ package org.kalypso.ui.editor.styleeditor.dialogs;
 
 import java.util.ArrayList;
 
-import org.deegree_impl.filterencoding.OperationDefines;
+import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 
 /**
  * @author F.Lindemann

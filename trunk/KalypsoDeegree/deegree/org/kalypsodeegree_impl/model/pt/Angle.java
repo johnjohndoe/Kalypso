@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.pt;
+package org.kalypsodeegree_impl.model.pt;
 
 // Miscellaneous
 import java.io.Serializable;
@@ -68,7 +68,7 @@ import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
 
-import org.deegree_impl.model.resources.ClassChanger;
+import org.kalypsodeegree_impl.model.resources.ClassChanger;
 
 /**
  * An angle in degrees. An angle is the amount of rotation needed to bring one

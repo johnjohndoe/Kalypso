@@ -58,22 +58,22 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.graphics.sld;
+package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
-import org.deegree.filterencoding.Expression;
-import org.deegree.filterencoding.FilterEvaluationException;
-import org.deegree.graphics.sld.CssParameter;
-import org.deegree.graphics.sld.GraphicFill;
-import org.deegree.graphics.sld.GraphicStroke;
-import org.deegree.graphics.sld.Stroke;
-import org.deegree.model.feature.Feature;
-import org.deegree.xml.Marshallable;
-import org.deegree_impl.tools.Debug;
+import org.kalypsodeegree.filterencoding.Expression;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.CssParameter;
+import org.kalypsodeegree.graphics.sld.GraphicFill;
+import org.kalypsodeegree.graphics.sld.GraphicStroke;
+import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * A Stroke allows a string of line segments (or any linear geometry) to be
@@ -97,7 +97,7 @@ import org.deegree_impl.tools.Debug;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-public class Stroke_Impl extends Drawing_Impl implements org.deegree.graphics.sld.Stroke,
+public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.graphics.sld.Stroke,
     Marshallable
 {
   private GraphicStroke graphicStroke = null;
@@ -487,7 +487,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.deegree.graphics.sl
   }
 
   /**
-   * @see org.deegree_impl.graphics.sld.Stroke_Impl#getStroke(Feature)
+   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getStroke(Feature)
    *      <p>
    * @param stroke
    *          the stroke to be set
@@ -555,7 +555,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.deegree.graphics.sl
   }
 
   /**
-   * @see org.deegree_impl.graphics.sld.Stroke_Impl#getOpacity(Feature)
+   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getOpacity(Feature)
    *      <p>
    * @param opacity
    *          the opacity to be set for the stroke
@@ -629,7 +629,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.deegree.graphics.sl
   }
 
   /**
-   * @see org.deegree_impl.graphics.sld.Stroke_Impl#getWidth(Feature)
+   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getWidth(Feature)
    *      <p>
    * @param width
    *          the width to be set for the stroke
@@ -698,7 +698,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.deegree.graphics.sl
   }
 
   /**
-   * @see org.deegree_impl.graphics.sld.Stroke_Impl#getLineJoin(Feature)
+   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getLineJoin(Feature)
    *      <p>
    * @param lineJoin
    *          the lineJoin to be set for the stroke
@@ -785,7 +785,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.deegree.graphics.sl
   }
 
   /**
-   * @see org.deegree_impl.graphics.sld.Stroke_Impl#getLineCap(Feature)
+   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getLineCap(Feature)
    *      <p>
    * @param lineCap
    *          lineCap to be set for the stroke
@@ -894,7 +894,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.deegree.graphics.sl
   }
 
   /**
-   * @see org.deegree_impl.graphics.sld.Stroke_Impl#getDashArray(Feature)
+   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getDashArray(Feature)
    *      <p>
    * @param dashArray
    *          the dashArray to be set for the Stroke

@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.ct;
+package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies (SEAGIS)
 import java.io.Serializable;
@@ -67,9 +67,9 @@ import javax.media.jai.ParameterList;
 import javax.media.jai.util.Range;
 import javax.units.Unit;
 
-import org.deegree_impl.model.cs.Ellipsoid;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.cs.Ellipsoid;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
  * Transforms three dimensional geographic points to geocentric coordinate

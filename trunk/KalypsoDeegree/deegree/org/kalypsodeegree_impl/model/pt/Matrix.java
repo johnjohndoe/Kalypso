@@ -58,7 +58,7 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.pt;
+package org.kalypsodeegree_impl.model.pt;
 
 // OpenGIS dependencies (SEAGIS)
 import java.awt.geom.AffineTransform;
@@ -67,10 +67,10 @@ import java.text.NumberFormat;
 
 import javax.vecmath.GMatrix;
 
-import org.deegree_impl.model.cs.AxisOrientation;
-import org.deegree_impl.model.resources.Utilities;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.cs.AxisOrientation;
+import org.kalypsodeegree_impl.model.resources.Utilities;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
  * A two dimensional array of numbers. Row and column numbering begins with
@@ -204,7 +204,7 @@ public class Matrix extends GMatrix
     this( srcAxis.length + 1 );
     /*
      * Arguments check. NOTE: those exceptions are catched by
-     * 'org.deegree_impl.model.ct.CoordinateTransformationFactory'. If exception
+     * 'org.kalypsodeegree_impl.model.ct.CoordinateTransformationFactory'. If exception
      * type change, update the factory class.
      */
     final int dimension = srcAxis.length;

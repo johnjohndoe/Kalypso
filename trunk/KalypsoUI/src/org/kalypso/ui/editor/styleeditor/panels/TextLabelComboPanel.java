@@ -46,8 +46,8 @@ package org.kalypso.ui.editor.styleeditor.panels;
 
 import java.util.ArrayList;
 
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -64,7 +64,7 @@ public class TextLabelComboPanel extends ComboPanel
     ArrayList labelStringItems = new ArrayList();
     FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
-      if( !ftp[i].getType().startsWith( "org.deegree.model.geometry." ) )
+      if( !ftp[i].getType().startsWith( "org.kalypsodeegree.model.geometry." ) )
         labelStringItems.add( ftp[i].getName() );
     items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )

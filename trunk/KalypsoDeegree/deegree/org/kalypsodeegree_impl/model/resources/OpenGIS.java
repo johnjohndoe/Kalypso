@@ -58,36 +58,36 @@
  http://www.lat-lon.de
  
 ---------------------------------------------------------------------------------------------------*/
-package org.deegree_impl.model.resources;
+package org.kalypsodeegree_impl.model.resources;
 
 // OpenGIS dependencies (SEAGIS)
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import org.deegree_impl.model.cs.AxisInfo;
-import org.deegree_impl.model.cs.AxisOrientation;
-import org.deegree_impl.model.cs.CompoundCoordinateSystem;
-import org.deegree_impl.model.cs.CoordinateSystem;
-import org.deegree_impl.model.cs.GeographicCoordinateSystem;
-import org.deegree_impl.model.cs.HorizontalCoordinateSystem;
-import org.deegree_impl.model.cs.HorizontalDatum;
-import org.deegree_impl.model.cs.TemporalCoordinateSystem;
-import org.deegree_impl.model.cs.TemporalDatum;
-import org.deegree_impl.model.cs.VerticalCoordinateSystem;
-import org.deegree_impl.model.cs.VerticalDatum;
-import org.deegree_impl.model.ct.CoordinateTransformation;
-import org.deegree_impl.model.ct.CoordinateTransformationFactory;
-import org.deegree_impl.model.ct.MathTransform;
-import org.deegree_impl.model.ct.MathTransform2D;
-import org.deegree_impl.model.ct.TransformException;
-import org.deegree_impl.model.pt.AngleFormat;
-import org.deegree_impl.model.pt.CoordinatePoint;
-import org.deegree_impl.model.pt.Envelope;
-import org.deegree_impl.model.pt.Latitude;
-import org.deegree_impl.model.pt.Longitude;
-import org.deegree_impl.model.pt.MismatchedDimensionException;
-import org.deegree_impl.model.resources.css.ResourceKeys;
-import org.deegree_impl.model.resources.css.Resources;
+import org.kalypsodeegree_impl.model.cs.AxisInfo;
+import org.kalypsodeegree_impl.model.cs.AxisOrientation;
+import org.kalypsodeegree_impl.model.cs.CompoundCoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.GeographicCoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.HorizontalCoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.HorizontalDatum;
+import org.kalypsodeegree_impl.model.cs.TemporalCoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.TemporalDatum;
+import org.kalypsodeegree_impl.model.cs.VerticalCoordinateSystem;
+import org.kalypsodeegree_impl.model.cs.VerticalDatum;
+import org.kalypsodeegree_impl.model.ct.CoordinateTransformation;
+import org.kalypsodeegree_impl.model.ct.CoordinateTransformationFactory;
+import org.kalypsodeegree_impl.model.ct.MathTransform;
+import org.kalypsodeegree_impl.model.ct.MathTransform2D;
+import org.kalypsodeegree_impl.model.ct.TransformException;
+import org.kalypsodeegree_impl.model.pt.AngleFormat;
+import org.kalypsodeegree_impl.model.pt.CoordinatePoint;
+import org.kalypsodeegree_impl.model.pt.Envelope;
+import org.kalypsodeegree_impl.model.pt.Latitude;
+import org.kalypsodeegree_impl.model.pt.Longitude;
+import org.kalypsodeegree_impl.model.pt.MismatchedDimensionException;
+import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
+import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
  * A set of static methods working on OpenGIS objects. Some of those methods are
