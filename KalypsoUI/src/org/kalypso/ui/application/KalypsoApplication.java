@@ -3,10 +3,17 @@ package org.kalypso.ui.application;
 import javax.xml.rpc.ServiceException;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
+import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
+import org.kalypso.eclipse.jface.dialogs.PasswordDialog;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.proxy.IUserService;
@@ -23,38 +30,19 @@ public class KalypsoApplication implements IPlatformRunnable
    */
   public Object run( final Object args ) throws Exception
   {
-    final IUserService service = prepareService();
-
+    String[] rights = new String[] {};
     final String username = System.getProperty( "user.name" ).toLowerCase();
-
     try
     {
-      final String[] fakeRights = service.getFakeRights( username );
-      System.out.println( "Fake rights for " + username );
-      for( int i = 0; i < fakeRights.length; i++ )
-        System.out.println( fakeRights[i] );
-      System.out.println( "Fake rights END" );
-    }
-    catch( final Throwable e )
-    {
-      e.printStackTrace();
-    }
-
-    try
-    {
-      final String[] rights = service.getRights( username );
-      System.out.println( "Rights for " + username );
-      for( int i = 0; i < rights.length; i++ )
-        System.out.println( rights[i] );
-      System.out.println( "Rights END" );
+      final IUserService service = prepareService();
+      rights = service.getRights( username );
     }
     catch( final Throwable e1 )
     {
       e1.printStackTrace();
     }
 
-    final String choosenRight = IUserServiceConstants.RIGHT_ADMIN;
-    // TODO: choose from righs
+    final String choosenRight = chooseRight( rights, username );
 
     // start application
     if( IUserServiceConstants.RIGHT_PROGNOSE.equals( choosenRight ) )
@@ -65,43 +53,70 @@ public class KalypsoApplication implements IPlatformRunnable
       return startWorkbench( new IDEWorkbenchAdvisor()
       {
         //
-      } );
-
-    // dann BerechnungsWizard
+        } );
 
     return null;
+  }
 
-    //    for( int i = 0; i < projects.length; i++ )
-    //    {
-    //      System.out.println( projects[i].getName() );
-    //
-    //      // wir können direkt den PrognoseWizard laufen lassen!!!
-    //      
-    //      // JUHU!
-    //      
-    //      
-    //    }
-    //    
-    //    boolean bPrognose = false;
-    //    if( args instanceof String[] )
-    //    {
-    //      final String[] strgargs = (String[])args;
-    //      for( int i = 0; i < strgargs.length; i++ )
-    //      {
-    //        if( "-prognose".equals( strgargs[i] ) )
-    //        {
-    //          bPrognose = true;
-    //          break;
-    //        }
-    //      }
-    //    }
-    //    
+  private String chooseRight( final String[] rights, final String username )
+  {
+    String choosenRight = null;
+    final Display display = new Display();
+    final Shell shell = new Shell( display );
+    if( rights == null )
+    {
+      while( true )
+      {
+        final PasswordDialog dialog = new PasswordDialog(
+            shell,
+            "Passworteingabe",
+            "Es konnten keine Benutzerrechte vom Server ermittelt erden. Geben Sie das Administrator-Passwort ein, um im Administrator-Modus zu starten." );
+
+        if( dialog.open() != Window.OK )
+          break;
+
+        if( !"arglgargl".equals( dialog.getValue() ) )
+        {
+          choosenRight = IUserServiceConstants.RIGHT_ADMIN;
+          break;
+        }
+      }
+    }
+    else if( rights.length == 0 )
+    {
+      MessageDialog.openInformation( shell, "Benutzerrechte",
+          "Es konnten keine Benutzerrechte für Benutzer '" + username
+              + "' ermittelt werden. Bitte wenden Sie sich an den System-Administrator" );
+    }
+    else if( rights.length == 1 )
+    {
+      choosenRight = rights[0];
+    }
+    else
+    {
+      // auswahldialog
+      final ListDialog dialog = new ListDialog( shell );
+      dialog.setTitle( "Kalypso" );
+      dialog
+          .setMessage( "Bitte wählen Sie den Modus, in welchem Sie Kalypso starten möchten." );
+      dialog.setContentProvider( new ArrayContentProvider() );
+      dialog.setLabelProvider( new LabelProvider() );
+      dialog.setInput( rights );
+      dialog.setInitialSelections( new Object[]
+      { rights[0] } );
+
+      if( dialog.open() == Window.OK )
+        choosenRight = (String)dialog.getResult()[0];
+    }
+
+    shell.dispose();
+    display.dispose();
+    return choosenRight;
   }
 
   private Object startWorkbench( final WorkbenchAdvisor advisor )
   {
     final Display display = PlatformUI.createDisplay();
-
     final int returnCode = PlatformUI.createAndRunWorkbench( display, advisor );
 
     return returnCode == PlatformUI.RETURN_RESTART ? IPlatformRunnable.EXIT_RESTART
@@ -110,21 +125,22 @@ public class KalypsoApplication implements IPlatformRunnable
 
   private Object startPrognose()
   {
-//    final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+    //    final IProject[] projects =
+    // ResourcesPlugin.getWorkspace().getRoot().getProjects();
 
-//    final Display display = new Display();
-//    final Shell shell = new Shell( display );
+    //    final Display display = new Display();
+    //    final Shell shell = new Shell( display );
 
     // TODO!
-//    final CalcWizard wizard = new CalcWizard( projects[0] );
-//
-//    final WizardDialog dialog = new WizardDialog( shell, wizard );
-//    dialog.open();
+    //    final CalcWizard wizard = new CalcWizard( projects[0] );
+    //
+    //    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    //    dialog.open();
 
     return null;
   }
 
-  private IUserService prepareService() 
+  private IUserService prepareService()
   {
     try
     {
