@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.grafik;
 
 import java.awt.Color;
@@ -67,6 +67,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.java.io.FileUtilities;
+import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -118,15 +119,45 @@ public class GrafikLauncher
   public static IFile startGrafikODT( final IFile odtFile, final IFolder dest,
       final IProgressMonitor monitor ) throws SensorException
   {
+    final ObsdiagviewType odt;
+    try
+    {
+      odt = DiagViewUtils.loadDiagramTemplateXML( odtFile.getContents() );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      throw new SensorException( e );
+    }
+
+    return startGrafikODT( odtFile.getName(), odt, dest, monitor );
+  }
+
+  /**
+   * Opens the grafik tool using an observation template xml object. Note: this method
+   * should be called using a WorkspaceModifyOperation.
+   * 
+   * @param fileName the filename to use for the grafik template file
+   * @param odt the xml binding object
+   * @param dest
+   * @param monitor
+   * @return the created tpl file
+   * 
+   * @throws SensorException
+   */
+  public static IFile startGrafikODT( final String fileName,
+      final ObsdiagviewType odt, final IFolder dest,
+      final IProgressMonitor monitor ) throws SensorException
+  {
     try
     {
       final IFile tplFile = dest.getFile( FileUtilities
-          .nameWithoutExtension( odtFile.getName() )
+          .nameWithoutExtension( fileName )
           + ".tpl" );
 
       final StringWriter strWriter = new StringWriter();
 
-      odt2tpl( odtFile, dest, strWriter, monitor );
+      odt2tpl( odt, dest, strWriter, monitor );
 
       // use the windows encoding for the vorlage because of the grafik tool
       // which uses it when reading...
@@ -225,13 +256,13 @@ public class GrafikLauncher
   /**
    * Converts a diagram template file to a grafik tpl.
    * 
-   * @param odtFile
+   * @param odt
    * @param dest
    * @param writer
    * @param monitor
    * @throws SensorException
    */
-  private static void odt2tpl( final IFile odtFile, final IFolder dest,
+  private static void odt2tpl( final ObsdiagviewType odt, final IFolder dest,
       final Writer writer, final IProgressMonitor monitor )
       throws SensorException
   {
@@ -239,14 +270,12 @@ public class GrafikLauncher
 
     try
     {
-      final ObsdiagviewType odt = DiagViewUtils
-          .loadDiagramTemplateXML( odtFile.getContents() );
-
       final UrlResolver urlRes = new UrlResolver();
-      final URL context = ResourceUtilities.createURL( odtFile );
+      final URL context = ResourceUtilities.createURL( dest );
 
       final GrafikYAchsen yAchsen = new GrafikYAchsen( odt.getAxis() );
       String dateAxisLabel = "Datum";
+      String colorSpec = "KNr:  Farbe\tLTyp\tLBreite\tPTyp\n";
 
       final List xLines = new ArrayList();
       final Map yLines = new HashMap();
@@ -261,22 +290,26 @@ public class GrafikLauncher
 
         final TypeObservation tobs = (TypeObservation) ito.next();
 
-        // maps obs axis to diag axis. Can be empty if there are no 
+        // maps obs axis to diag axis. Can be empty if there are no
         // curves specified in the xml. In that case, all axes are
         // taken ( see zml2dat() )
-        final Map axisNames = new HashMap();
+        final Map obsAxis2Diag = new HashMap();
+        final Map obsAxis2Color = new HashMap();
 
         final List tcurveList = tobs.getCurve();
         for( Iterator itc = tcurveList.iterator(); itc.hasNext(); )
         {
           final TypeCurve tc = (TypeCurve) itc.next();
 
+          tc.getColor();
+          
           final List tmList = tc.getMapping();
           for( Iterator itm = tmList.iterator(); itm.hasNext(); )
           {
             final TypeAxisMapping tm = (TypeAxisMapping) itm.next();
 
-            axisNames.put( tm.getObservationAxis(), tm.getDiagramAxis() );
+            obsAxis2Diag.put( tm.getObservationAxis(), tm.getDiagramAxis() );
+            obsAxis2Color.put( tm.getObservationAxis(), tc.getColor() );
           }
         }
 
@@ -289,8 +322,7 @@ public class GrafikLauncher
         {
           final String msg = "Konvertierung nicht möglich, Zml-Datei ist keine lokale Datei: "
               + url.toExternalForm();
-          Logger.getLogger( DiagViewUtils.class.getName() )
-              .warning( msg );
+          Logger.getLogger( DiagViewUtils.class.getName() ).warning( msg );
           continue;
         }
 
@@ -307,26 +339,33 @@ public class GrafikLauncher
 
         // remove date axis from names list, we always take it
         dateAxisLabel = dateAxis.getName();
-        axisNames.remove( dateAxisLabel );
+        obsAxis2Diag.remove( dateAxisLabel );
 
         final IFile datFile = dest.getFile( FileUtilities
             .nameWithoutExtension( zmlFile.getName() )
             + ".dat" );
-        zml2dat( obs, datFile, dateAxis, numberAxes, axisNames, monitor );
+        zml2dat( obs, datFile, dateAxis, numberAxes, obsAxis2Diag, monitor );
 
         // adapt grafik-axis type according to real axis type (mapping)
         final String grafikType = GrafikYAchsen.axis2grafikType( numberAxes[0]
             .getType() );
 
+        String title = zmlFile.getName()
+            + (tobs.getTitle() != null ? tobs.getTitle() : "");
+        
         String grafikAxis = "1";
-        final GrafikAchse achse = yAchsen.getFor( (String) axisNames
+        final GrafikAchse achse = yAchsen.getFor( (String) obsAxis2Diag
             .get( numberAxes[0].getName() ) );
         if( achse != null )
+        {
           grafikAxis = String.valueOf( achse.getId() );
+          title = achse.getName() + " (" + title + ")";
+        }
 
-        final String title = zmlFile.getName()
-            + (tobs.getTitle() != null ? tobs.getTitle() : "");
-
+        final String strColor = (String) obsAxis2Color.get( numberAxes[0].getName() );
+        if( strColor != null )
+          colorSpec += "K" + grafikAxis + ":\t" + toGrafikColor( strColor ) + "\t0\t1\t" + grafikAxis + "\n";
+        
         writer.write( ixObs++ + "- " + datFile.getName() + " J " + grafikType
             + " " + grafikAxis + " " + title + "\n" );
 
@@ -349,8 +388,9 @@ public class GrafikLauncher
       writer.write( "\n" );
       writer.write( "HTitel:\t" + odt.getTitle() + "\n" );
       writer.write( "xTitel:\t" + dateAxisLabel + "\n" );
-      writer.write( "yTitel1:\t" + yAchsen.getLabelAt( 1 ) + "\n" );
-      writer.write( "yTitel2:\t" + yAchsen.getLabelAt( 2 ) + "\n" );
+      writer.write( "yTitel1:\t" + yAchsen.getLeftLabel() + "\n" );
+      writer.write( "yTitel2:\t" + yAchsen.getRightLabel() + "\n" );
+      writer.write( colorSpec );
 
       // constant vertical lines...
       for( Iterator it = xLines.iterator(); it.hasNext(); )
@@ -411,8 +451,8 @@ public class GrafikLauncher
           {
             final IAxis axis = numberAxes[j];
 
-            // either there are no names or the names are specified and the current one is
-            // one of them
+            // either there are no names or the names are specified and the
+            // current one is one of them
             if( axisNames.size() == 0 || axisNames.containsKey( axis.getName() ) )
             {
               writer.write( values.getElement( i, axis ).toString() );
@@ -426,6 +466,24 @@ public class GrafikLauncher
     };
 
     sch.setFileContents( datFile, false, false, monitor );
+  }
+  
+  /**
+   * Converts the string representation of the color into an integer as used in the grafik template using
+   * the getRGB() method of the color class.
+   * 
+   * @param strColor
+   * @return integer representation
+   */
+  private static String toGrafikColor( final String strColor )
+  {
+    // TODO: Jörg fragen warum wir die Rot/Blau Komponente tauschen müssen
+    // damit die Farben im Grafik richtig sind...
+    Color c = StringUtilities.stringToColor( strColor );
+    c = new Color( c.getBlue(), c.getGreen(), c.getRed() );
+    
+    // resets the alpha bits since there's no support for it in the grafik tool
+    return Integer.toString( c.getRGB() & 0x00ffffff );
   }
 
   /**

@@ -59,7 +59,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
-import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
@@ -167,9 +166,6 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
       {
         final TemplateStorage ts = (TemplateStorage) storage;
         template.setTitle( ts.getName() );
-
-        if( m_useAutoProxy )
-          template.setProxyFactory( AutoProxyFactory.getInstance() );
 
         template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
             "zml", false, null );

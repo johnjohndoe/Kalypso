@@ -42,6 +42,13 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+
+
+/**
+ * SimpleAxis
+ * 
+ * @author doemming
+ */
 public class SimpleAxis implements IAxis
 {
   private String m_type;
@@ -52,10 +59,6 @@ public class SimpleAxis implements IAxis
 
   private boolean m_isPersistable;
 
-  /*
-   * 
-   * @author doemming
-   */
   public SimpleAxis( IAxis axis )
   {
     m_type = axis.getType();

@@ -260,7 +260,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
    */
   private void initContextMenu()
   {
-    final MenuManager menuMgr = new MenuManager( "#PopupMenu" ); //$NON-NLS-1$
+    final MenuManager menuMgr = new MenuManager( );
     menuMgr.setRemoveAllWhenShown( true );
     menuMgr.addMenuListener( new IMenuListener()
     {
@@ -276,7 +276,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
     m_copyLinkAction = new CopyLinkAction( this );
   }
-
+  
   /**
    * Called when the context menu is about to open.
    * @param menu
@@ -287,9 +287,9 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     {
       menu.add( m_copyLinkAction );
       menu.add( new Separator() );
-      menu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
-      menu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS + "-end" ) );
     }
+    
+    menu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
   }
 
   /**

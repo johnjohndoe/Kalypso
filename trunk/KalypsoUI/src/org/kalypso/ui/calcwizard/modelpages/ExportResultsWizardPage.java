@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
-import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -66,7 +65,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -94,7 +92,6 @@ import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilityException;
 import org.kalypso.java.util.PropertiesHelper;
@@ -699,21 +696,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
           if( !grafikFolder.exists() )
             grafikFolder.create( false, true, monitor );
 
-          final IFile grafikOdt = grafikFolder.getFile( "grafik.odt" );
-
-          final SetContentHelper sct = new SetContentHelper()
-          {
-            protected void write( Writer writer ) throws Throwable
-            {
-              DiagViewUtils.saveDiagramTemplateXML( xml, writer );
-            }
-          };
-
           if( !monitor.isCanceled() )
-            sct.setFileContents( grafikOdt, false, false, new NullProgressMonitor() );
-
-          if( !monitor.isCanceled() )
-            GrafikLauncher.startGrafikODT( grafikOdt, grafikFolder, monitor );
+            GrafikLauncher.startGrafikODT( "grafik", xml, grafikFolder, monitor );
         }
         catch( final SensorException se )
         {

@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.proxy.IProxyFactory;
 import org.kalypso.ogc.sensor.template.AbstractObservationTheme;
 import org.kalypso.ogc.sensor.template.AbstractViewTemplate;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
@@ -70,8 +69,6 @@ public class DiagViewTemplate extends AbstractViewTemplate
   private boolean m_showLegend;
 
   private final Map m_axesMap = new Hashtable();
-
-  private IProxyFactory m_factory = null;
 
   public DiagViewTemplate( )
   {
@@ -96,7 +93,6 @@ public class DiagViewTemplate extends AbstractViewTemplate
    */
   public void dispose( )
   {
-    m_factory = null;
     m_axesMap.clear();
 
     super.dispose();
@@ -293,26 +289,5 @@ public class DiagViewTemplate extends AbstractViewTemplate
     theme.loadObservation( key );
     
     return theme;
-  }
-
-  /**
-   * Sets the proxy factory to use when observations are resolved. Clients can
-   * set a custom factory so that observations can be extended by functionality
-   * provided in the proxy-observation.
-   * <p>
-   * By default, the factory for this class is null. At every time, you can
-   * reset the factory to null, in that case no factory will be used.
-   * 
-   * @param factory
-   *          [null allowed]
-   */
-  public void setProxyFactory( final IProxyFactory factory )
-  {
-    m_factory = factory;
-  }
-
-  public IProxyFactory getProxyFactory( )
-  {
-    return m_factory;
   }
 }
