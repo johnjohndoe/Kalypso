@@ -91,7 +91,11 @@ public class SpreeCalcJob extends AbstractCalcJob
     NAP_MAP.put( "MAX", "BodenfeuchteMax" );
   }
 
-  public static final Object DATA_STARTDATE = "startDate";
+  public static final Object DATA_STARTFORECAST_STRING = "startDate";
+
+  public static final Object DATA_STARTSIM_DATE = "startSimulation";
+
+  public static final Object DATA_STARTFORECAST_DATE = "startForecast";
 
   public static final Object DATA_STARTDATESTRING = "startDateString";
 
@@ -363,7 +367,7 @@ public class SpreeCalcJob extends AbstractCalcJob
 
     try
     {
-      final Date startTime = (Date)m_data.get( DATA_STARTDATE );
+      final Date startTime = (Date)m_data.get( DATA_STARTFORECAST_DATE );
       final String timeString = new SimpleDateFormat( "yyyy,MM,dd,HH,mm,ss" ).format( startTime );
 
       final File tsFile = (File)m_data.get( DATA_TSFILE );

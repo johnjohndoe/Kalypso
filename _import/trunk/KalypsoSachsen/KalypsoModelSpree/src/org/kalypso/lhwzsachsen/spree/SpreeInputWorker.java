@@ -1,6 +1,7 @@
 package org.kalypso.lhwzsachsen.spree;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,7 +29,9 @@ import org.deegree_impl.io.shpapi.ShapeFile;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.java.io.StreamUtilities;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
@@ -46,11 +49,6 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
 public class SpreeInputWorker
 {
   private final static Logger LOGGER = Logger.getLogger( SpreeInputWorker.class.getName() );
-
-//  private final static ConvenienceCSFactoryFull CRS_FACT = new ConvenienceCSFactoryFull();
-
-//  private final static CS_CoordinateSystem DEFAULT_CRS = Adapters.getDefault().export(
-//      CRS_FACT.getCSByName( "EPSG:4326" ) );
 
   private SpreeInputWorker()
   {
@@ -100,23 +98,12 @@ public class SpreeInputWorker
       logwriter.println( "Lese Modelldaten: " + controlGML );
       
       final GMLWorkspace workspace = loadGML( tmpdir, inputMap );
-      final File vhsFile = (File)props.get( SpreeCalcJob.DATA_VHSFILE );
-      final String flpFilename = (String)props.get( SpreeCalcJob.DATA_FLPFILENAME );
-      final String napFilename = (String)props.get( SpreeCalcJob.DATA_NAPFILENAME );
-      final String tsFilename = (String)props.get( SpreeCalcJob.DATA_TSFILENAME );
+      
+      final String tsFilename = writeNonTs( props, logwriter, workspace );
 
-      logwriter.println( "Erzeuge _vhs Datei: " + vhsFile.getName() );
-      StreamUtilities.streamCopy( SpreeInputWorker.class.getResourceAsStream( "resources/"
-          + SpreeCalcJob.VHS_FILE ), new FileOutputStream( vhsFile ) );
-
-      logwriter.println( "Erzeuge _flp Datei: " + flpFilename );
-      findAndWriteLayer( workspace, SpreeCalcJob.FLP_NAME, SpreeCalcJob.FLP_MAP,
-          SpreeCalcJob.FLP_GEOM, flpFilename );
-
-      logwriter.println( "Erzeuge _nap Datei: " + napFilename );
-      findAndWriteLayer( workspace, SpreeCalcJob.NAP_NAME, SpreeCalcJob.NAP_MAP,
-          SpreeCalcJob.NAP_GEOM, napFilename );
-
+      final Date startDate = (Date)props.get( SpreeCalcJob.DATA_STARTSIM_DATE );
+      setAnfangsstauvolumen( "V_TSQUITZ", startDate, "TS_QUITZDORF", tsmap, workspace, logwriter );
+      setAnfangsstauvolumen( "V_TSBAUTZ", startDate, "TS_BAUTZEN", tsmap, workspace, logwriter );
       
       logwriter.println( "Erzeuge Zeitreihen-Datei: " + tsFilename );
       readZML( tmpdir, inputMap, tsmap );
@@ -129,6 +116,38 @@ public class SpreeInputWorker
       e.printStackTrace();
       throw new CalcJobServiceException( "Fehler beim Erzeugen der Inputdateien", e );
     }
+  }
+
+  private static void setAnfangsstauvolumen( final String name, final Date startDate, final String fid, final TSMap tsmap, final GMLWorkspace workspace, final PrintWriter logwriter )
+  {
+    // das Anfangsstauvolumen aus der GMl raussuchen und als Wert in den Zeitreihen setzen
+    final Feature feature = workspace.getFeature( fid );
+    final Object property = feature.getProperty( "Anfangsstauvolumen" );
+    if( property != null && property instanceof Double )
+      tsmap.putValue( name, startDate, (Double)property );
+    else
+      logwriter.println( "Kein Anfangsstauvolumen angegeben für: " + fid );
+  }
+
+  private static String writeNonTs( final Properties props, final PrintWriter logwriter, final GMLWorkspace workspace ) throws IOException, FileNotFoundException, CalcJobServiceException
+  {
+    final File vhsFile = (File)props.get( SpreeCalcJob.DATA_VHSFILE );
+    final String flpFilename = (String)props.get( SpreeCalcJob.DATA_FLPFILENAME );
+    final String napFilename = (String)props.get( SpreeCalcJob.DATA_NAPFILENAME );
+    final String tsFilename = (String)props.get( SpreeCalcJob.DATA_TSFILENAME );
+
+    logwriter.println( "Erzeuge _vhs Datei: " + vhsFile.getName() );
+    StreamUtilities.streamCopy( SpreeInputWorker.class.getResourceAsStream( "resources/"
+        + SpreeCalcJob.VHS_FILE ), new FileOutputStream( vhsFile ) );
+
+    logwriter.println( "Erzeuge _flp Datei: " + flpFilename );
+    findAndWriteLayer( workspace, SpreeCalcJob.FLP_NAME, SpreeCalcJob.FLP_MAP,
+        SpreeCalcJob.FLP_GEOM, flpFilename );
+
+    logwriter.println( "Erzeuge _nap Datei: " + napFilename );
+    findAndWriteLayer( workspace, SpreeCalcJob.NAP_NAME, SpreeCalcJob.NAP_MAP,
+        SpreeCalcJob.NAP_GEOM, napFilename );
+    return tsFilename;
   }
 
   public static void createTimeseriesFile( final String tsFilename, final TSMap valuesMap, final PrintWriter logwriter ) throws CalcJobServiceException
@@ -160,7 +179,6 @@ public class SpreeInputWorker
     final DateFormat specialDateFormat = new SimpleDateFormat( "yMM.dd" );
     final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
     final Calendar calendar = Calendar.getInstance();
-    
     
     final Date[] dateArray = valuesMap.getDates();
 
@@ -245,7 +263,7 @@ public class SpreeInputWorker
       catch( final CalcJobServiceException cse )
       {
         // ignore, file is not present
-        // TODO: better: check if required?
+        // todo: better: check if required?
         continue;
       }
 
@@ -288,25 +306,24 @@ public class SpreeInputWorker
       final Map mapping, final String geoName, final String filenameBase )
       throws CalcJobServiceException
   {
-//    try
-//    {
+    try
+    {
       final FeatureType featureType = workspace.getFeatureType( layerName );
       if( featureType == null )
       throw new CalcJobServiceException(
           "Eingabedatei für Rechenmodell konnte nicht erzeugt werden. Layer nicht gefunden: "
               + layerName, null );
       
-//      final Feature[] features = workspace.getFeatures(featureType);
+      final Feature[] features = workspace.getFeatures(featureType);
       
-      // TODO: restore mapping
-//      ShapeSerializer.serialize( features, mapping, geoName, filenameBase );
-//    }
-//    catch( final GmlSerializeException e )
-//    {
-//      e.printStackTrace();
-//
-//      throw new CalcJobServiceException( "Fehler beim Schreiben der Eingabedateien", e );
-//    }
+      ShapeSerializer.serializeFeatures( features, mapping, geoName, filenameBase );
+    }
+    catch( final GmlSerializeException e )
+    {
+      e.printStackTrace();
+
+      throw new CalcJobServiceException( "Fehler beim Schreiben der Eingabedateien", e );
+    }
   }
 
   public static GMLWorkspace loadGML( final File inputdir, final Map map )
@@ -342,9 +359,10 @@ public class SpreeInputWorker
       final Feature controlFeature = GmlSerializer.createGMLWorkspace( gmlURL, schemaURL )
           .getRootFeature();
 
-      final Date startTime = (Date)controlFeature.getProperty( "startforecast" );
+      final Date startSimTime = (Date)controlFeature.getProperty( "startsimulation" );
+      final Date startForecastTime = (Date)controlFeature.getProperty( "startforecast" );
 
-      final String startTimeString = new SimpleDateFormat( "yyMMdd" ).format( startTime );
+      final String startTimeString = new SimpleDateFormat( "yyMMdd" ).format( startForecastTime );
       final String baseFileName = "HW" + startTimeString;
 
       final String tsFilename = new File( nativedir, baseFileName ).getAbsolutePath();
@@ -356,7 +374,8 @@ public class SpreeInputWorker
       final File flpFile = new File( flpFilename + ".dbf" );
 
       final Map dataMap = new HashMap();
-      dataMap.put( SpreeCalcJob.DATA_STARTDATE, startTime );
+      dataMap.put( SpreeCalcJob.DATA_STARTSIM_DATE, startSimTime );
+      dataMap.put( SpreeCalcJob.DATA_STARTFORECAST_DATE, startForecastTime );
       dataMap.put( SpreeCalcJob.DATA_STARTDATESTRING, startTimeString );
       dataMap.put( SpreeCalcJob.DATA_BASEFILENAME, baseFileName );
       dataMap.put( SpreeCalcJob.DATA_FLPFILE, flpFile );

@@ -11,7 +11,7 @@
 						</gml:Point>
 					</Ort>
 					<BodenfeuchteMin>0.01</BodenfeuchteMin>
-					<Bodenfeuchte>70.0</Bodenfeuchte>
+					<Bodenfeuchte>9.11</Bodenfeuchte>
 					<BodenfeuchteMax>70.0</BodenfeuchteMax>
 					<Ausdehnung/>
 					<Niederschlag_eingabeEingang>
@@ -40,7 +40,7 @@
 						</gml:Point>
 					</Ort>
 					<BodenfeuchteMin>0.01</BodenfeuchteMin>
-					<Bodenfeuchte>0.0</Bodenfeuchte>
+					<Bodenfeuchte>35.85</Bodenfeuchte>
 					<BodenfeuchteMax>130.0</BodenfeuchteMax>
 					<Ausdehnung/>
 					<Niederschlag_eingabeEingang>
@@ -69,7 +69,7 @@
 						</gml:Point>
 					</Ort>
 					<BodenfeuchteMin>0.01</BodenfeuchteMin>
-					<Bodenfeuchte>0.0</Bodenfeuchte>
+					<Bodenfeuchte>11.44</Bodenfeuchte>
 					<BodenfeuchteMax>70.0</BodenfeuchteMax>
 					<Ausdehnung/>
 					<Niederschlag_eingabeEingang>
@@ -98,7 +98,7 @@
 						</gml:Point>
 					</Ort>
 					<BodenfeuchteMin>0.01</BodenfeuchteMin>
-					<Bodenfeuchte>0.0</Bodenfeuchte>
+					<Bodenfeuchte>12.51</Bodenfeuchte>
 					<BodenfeuchteMax>200.0</BodenfeuchteMax>
 					<Ausdehnung/>
 					<Niederschlag_eingabeEingang>
@@ -127,7 +127,7 @@
 						</gml:Point>
 					</Ort>
 					<BodenfeuchteMin>0.01</BodenfeuchteMin>
-					<Bodenfeuchte>0.0</Bodenfeuchte>
+					<Bodenfeuchte>17.88</Bodenfeuchte>
 					<BodenfeuchteMax>310.0</BodenfeuchteMax>
 					<Ausdehnung/>
 					<Niederschlag_eingabeEingang>
@@ -265,11 +265,11 @@
 		</FlusslaufModellCollection>
 	</FlusslaufModellCollectionAssociation>
 	<TalsperreCollectionAssociation>
-		<TalsperreCollection fid="">
+		<TalsperreCollection fid="tc_1">
 			<TalsperreMember>
-				<Talsperre fid="ID2">
+				<Talsperre fid="TS_QUITZDORF">
 					<Name>Quitzdorf</Name>
-					<Anfangsstauvolumen>0.0</Anfangsstauvolumen>
+					<Anfangsstauvolumen>10.0</Anfangsstauvolumen>
 					<Ort>
 						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
 							<gml:coordinates cs="," decimal="." ts=" ">5482460.0,5683900.0</gml:coordinates>
@@ -287,9 +287,9 @@
 				</Talsperre>
 			</TalsperreMember>
 			<TalsperreMember>
-				<Talsperre fid="ID1">
+				<Talsperre fid="TS_BAUTZEN">
 					<Name>Bautzen</Name>
-					<Anfangsstauvolumen>0.0</Anfangsstauvolumen>
+					<Anfangsstauvolumen>30.0</Anfangsstauvolumen>
 					<Ort>
 						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
 							<gml:coordinates cs="," decimal="." ts=" ">5463280.0,5675800.0</gml:coordinates>
@@ -312,7 +312,7 @@
 		<FlutungCollection fid="">
 			<FlutungMember>
 				<Flutung fid="">
-					<Name>Überleitung Restlochkette</Name>
+					<Name>Ãœberleitung Restlochkette</Name>
 					<Ort/>
 					<Abgabe_eingang>
 						<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href=":project:/.tmp/zml-040427/QV_RLKETTE.zml" ns1:type="simple"/>
@@ -336,7 +336,7 @@
 			</FlutungMember>
 			<FlutungMember>
 				<Flutung fid="">
-					<Name>Zuleiter Restloch Bärwalde</Name>
+					<Name>Zuleiter Restloch BÃ¤rwalde</Name>
 					<Ort/>
 					<Abgabe_eingang>
 						<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Wert" ns1:actuate="onRequest" ns1:href=":project:/.tmp/zml-040427/QV_BWALDE.zml" ns1:type="simple"/>
