@@ -134,45 +134,57 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
   /**
    * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
    */
-  public Class getColumnClass( int columnIndex )
+  public synchronized Class getColumnClass( int columnIndex )
   {
-    if( columnIndex == 0 )
-      return m_ccAxis.getDataClass();
+    synchronized( m_lock )
+    {
+      if( columnIndex == 0 )
+        return m_ccAxis.getDataClass();
 
-    return m_columns[columnIndex - 1].getValueAxis().getDataClass();
+      return m_columns[columnIndex - 1].getValueAxis().getDataClass();
+    }
   }
 
   /**
    * @see javax.swing.table.AbstractTableModel#getColumnName(int)
    */
-  public String getColumnName( int column )
+  public synchronized String getColumnName( int column )
   {
-    if( column == 0 )
-      return m_ccAxis.getLabel();
+    synchronized( m_lock )
+    {
+      if( column == 0 )
+        return m_ccAxis.getLabel();
 
-    return m_columns[column - 1].getName();
+      return m_columns[column - 1].getName();
+    }
   }
 
   /**
    * @see javax.swing.table.TableModel#getColumnCount()
    */
-  public int getColumnCount()
+  public synchronized int getColumnCount()
   {
-    if( m_columns == EMPTY_COLS )
-      return 0;
+    synchronized( m_lock )
+    {
+      if( m_columns == EMPTY_COLS )
+        return 0;
 
-    return m_columns.length + 1;
+      return m_columns.length + 1;
+    }
   }
 
   /**
    * @see javax.swing.table.TableModel#getRowCount()
    */
-  public int getRowCount()
+  public synchronized int getRowCount()
   {
-    if( m_cc == null )
-      return 0;
+    synchronized( m_lock )
+    {
+      if( m_cc == null )
+        return 0;
 
-    return m_cc.size();
+      return m_cc.size();
+    }
   }
 
   /**
@@ -258,13 +270,16 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
    */
   public RenderingRule[] findRules( int row, int column ) throws NoSuchElementException
   {
-    final String kStatusCol = KalypsoStatusUtils.getStatusAxisLabelFor( m_columns[column - 1]
-        .getValueAxis() );
+    synchronized( m_lock )
+    {
+      final String kStatusCol = KalypsoStatusUtils.getStatusAxisLabelFor( m_columns[column - 1]
+          .getValueAxis() );
 
-    final IAxis valueAxis = findValueAxis( kStatusCol );
+      final IAxis valueAxis = findValueAxis( kStatusCol );
 
-    return m_rules.findRules( ( (Integer)getValueAt( row, valueAxis.getPosition() + 1 ) )
-        .intValue() );
+      return m_rules.findRules( ( (Integer)getValueAt( row, valueAxis.getPosition() + 1 ) )
+          .intValue() );
+    }
   }
 
   /**
@@ -275,13 +290,16 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
    */
   private IAxis findValueAxis( final String name ) throws NoSuchElementException
   {
-    for( int i = 0; i < m_columns.length; i++ )
+    synchronized( m_lock )
     {
-      if( m_columns[i].getValueAxis().getLabel().equals( name ) )
-        return m_columns[i].getValueAxis();
-    }
+      for( int i = 0; i < m_columns.length; i++ )
+      {
+        if( m_columns[i].getValueAxis().getLabel().equals( name ) )
+          return m_columns[i].getValueAxis();
+      }
 
-    throw new NoSuchElementException();
+      throw new NoSuchElementException();
+    }
   }
 
   /**

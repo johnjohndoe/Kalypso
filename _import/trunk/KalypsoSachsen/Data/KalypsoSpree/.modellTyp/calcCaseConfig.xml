@@ -67,5 +67,11 @@
 		<arg name="targetObservation" value="Zugabe"/>
 		<arg name="targetFolder" value="calcdir:zeitreihen"/>
 	</transformation>
+	
+	<transformation className="org.kalypso.model.transformation.CopyTransformation">
+		<arg name="input" value="project:.examples/results.gml"/>
+		<arg name="output" value="calcdir:results.gml"/>
+	</transformation>
+	
 
 </transformationConfig>
