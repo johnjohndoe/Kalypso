@@ -1,102 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.bode.modell" version="0.1" xmlns:bode="org.kalypso.bode.modell" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+<schema targetNamespace="org.kalypso.bode.modell" version="0.1" xmlns:bodepegel="org.kalypso.bode.pegel" xmlns:bodeombrometer="org.kalypso.bode.ombrometer" xmlns:bodespeicher="org.kalypso.bode.speicher" xmlns:bode="org.kalypso.bode.modell" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="gml/bce/obslink.xsd"/>
-	<complexType name="TimeseriesLinkType">
-		<sequence>
-			<element name="TimeseriesLink" type="obslink:TimeseriesLinkType" minOccurs="0"/>
-		</sequence>
-	</complexType>
+	<import namespace="org.kalypso.bode.pegel" schemaLocation="pegel.xsd"/>
+	<import namespace="org.kalypso.bode.ombrometer" schemaLocation="ombrometer.xsd"/>
+	<import namespace="org.kalypso.bode.speicher" schemaLocation="speicher.xsd"/>
 	<element name="BodeModell" type="bode:_BodeModellType"/>
 	<complexType name="_BodeModellType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element ref="bode:PegelCollectionAssociation"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<element name="PegelCollectionAssociation" type="bode:PegelCollectionAssociationType"/>
-	<complexType name="PegelCollectionAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="bode:PegelCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="PegelCollection" type="bode:PegelCollectionType" substitutionGroup="gml:_FeatureCollection"/>
-	<complexType name="PegelCollectionType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
-				<sequence>
-					<element ref="gml:boundedBy"/>
-					<element ref="bode:PegelMember" minOccurs="0" maxOccurs="unbounded"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="PegelMember" type="bode:PegelAssociationType" substitutionGroup="gml:featureMember"/>
-	<complexType name="PegelAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="bode:Pegel"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<complexType name="EmptyFeatureBaseType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureType"/>
-		</complexContent>
-	</complexType>
-	<element name="Pegel" abstract="false" type="bode:PegelType" substitutionGroup="gml:_Feature"/>
-	<complexType name="PegelType">
-		<complexContent>
-			<extension base="bode:EmptyFeatureBaseType">
-				<sequence>
-					<element name="Name" type="string"/>
-					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="WISKI_Name" type="string"/>
-					<!-- Server-Daten-->
-					<element name="Wasserstand_gemessenEingang" type="bode:TimeseriesLinkType"/>
-					<!-- lokal, W und Q (tolle Zeitreihe) *.vw -->
-					<element name="Ganglinie_gemessen" type="bode:TimeseriesLinkType"/>
-					<!-- lokal, W und Q (tolle Zeitreihe) *.q -->
-					<element name="Ganglinie_ergebnis" type="bode:TimeseriesLinkType"/>
-					<!-- Server-Daten (offizielle Prognose)-->
-					<element name="Ganglinie_prognoseAblage" type="bode:TimeseriesLinkType"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<element name="Niederschlagsgebiet" type="bode:NiederschlagsgebietType" substitutionGroup="bode:Pegel"/>
-	<complexType name="NiederschlagsgebietType">
-		<complexContent>
-			<extension base="bode:PegelType">
-				<sequence>
-					<!-- Server, aus Gebietsniederschlagsmodell -->
-					<element name="Niederschlag_gemessenEingang" type="obslink:TimeseriesLinkType"/>
-					<!-- Server, aus Rasterdaten -->
-					<element name="Niederschlag_prognoseEingang" type="obslink:TimeseriesLinkType"/>
-					<!-- lokal;   -->
-					<element name="Niederschlag_gesamt" type="bode:TimeseriesLinkType"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<element name="FlusslaufModell" type="bode:FlusslaufModellType" substitutionGroup="bode:Pegel"/>
-	<complexType name="FlusslaufModellType">
-		<complexContent>
-			<extension base="bode:PegelType">
-				<sequence>
-					<element name="Korrektur_Faktor" type="double"/>
-					<element name="Korrektur_Niveau" type="double"/>
-					<element name="Korrektur_Laufzeit" type="double"/>
-					<element name="KorrekturEmpfehlungLaufzeit" type="double"/>
+					<element ref="bodepegel:PegelCollectionAssociation"/>
+					<element ref="bodeombrometer:OmbrometerCollectionAssociation"/>
+					<element ref="bodespeicher:SpeicherCollectionAssociation"/>
 				</sequence>
 			</extension>
 		</complexContent>

@@ -5,7 +5,7 @@
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
 	<complexType name="TimeseriesLinkType">
 		<sequence>
-			<element name="TimeseriesLink" type="obslink:TimeseriesLink" minOccurs="0"/>
+			<element name="TimeseriesLink" type="obslink:TimeseriesLinkType" minOccurs="0"/>
 		</sequence>
 	</complexType>
 	<element name="SpreeModell" type="spree:_SpreeModellType"/>
@@ -81,8 +81,8 @@
 					<element name="Bodenfeuchte" type="double"/>
 					<element name="BodenfeuchteMax" type="double"/>
 					<element name="Ausdehnung" type="double"/>
-					<element name="Niederschlag_gemessen" type="obslink:TimeseriesLink"/>
-					<element name="Niederschlag_prognose" type="obslink:TimeseriesLink"/>
+					<element name="Niederschlag_gemessen" type="spree:TimeseriesLinkType"/>
+					<element name="Niederschlag_prognose" type="spree:TimeseriesLinkType"/>
 					<element name="Niederschlag_rechnung" type="spree:TimeseriesLinkType"/>
 				</sequence>
 			</extension>

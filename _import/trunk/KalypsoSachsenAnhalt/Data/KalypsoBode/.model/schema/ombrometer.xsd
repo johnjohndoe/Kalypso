@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.bode.ombrometer" version="0.1" xmlns:bodecommon="org.kalypso.bode.common" xmlns:bodeombrometer="org.kalypso.bode.ombrometer" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="gml/bce/obslink.xsd"/>
+	<import namespace="org.kalypso.bode.common" schemaLocation="common.xsd"/>
+
+	<element name="OmbrometerCollectionAssociation" type="bodeombrometer:OmbrometerCollectionAssociationType"/>
+	<complexType name="OmbrometerCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="bodeombrometer:OmbrometerCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="OmbrometerCollection" type="bodeombrometer:OmbrometerCollectionType" substitutionGroup="gml:_FeatureCollection"/>
+	<complexType name="OmbrometerCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element ref="gml:boundedBy"/>
+					<element ref="bodeombrometer:OmbrometerMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="OmbrometerMember" type="bodeombrometer:OmbrometerAssociationType" substitutionGroup="gml:featureMember"/>
+	<complexType name="OmbrometerAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="bodeombrometer:Ombrometer"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Ombrometer" abstract="false" type="bodeombrometer:OmbrometerType" substitutionGroup="gml:_Feature"/>
+	<complexType name="OmbrometerType">
+		<complexContent>
+			<extension base="bodecommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="Name" type="string"/>
+					<element name="Ort" type="gml:PointPropertyType"/>
+					<element name="WISKI_Name" type="string" minOccurs="0"/>
+					<!-- Server-Daten-->
+					<element name="Niederschlag_gemessenEingang" type="bodecommon:TimeseriesLinkType" minOccurs="0"/>
+					<!-- lokal,  *.vns, nur zum Gucken!!!-->
+					<element name="Niederschlag_gemessen" type="bodecommon:TimeseriesLinkType" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
