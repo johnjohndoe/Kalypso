@@ -16,6 +16,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
@@ -93,6 +94,9 @@ public class ObservationResolver extends AbstractTransformation
 
       final Properties replaceProperties = ReplaceHelper.configureReplaceProps( project, targetFolder );
       
+      if( monitor.isCanceled() )
+        throw new OperationCanceledException();
+      
       resolveTimeseries( gmlURL, replaceProperties, features, sourceObsName, targetObsName, targetFolder,
           new SubProgressMonitor( monitor, 1000 ) );
 
@@ -123,6 +127,9 @@ public class ObservationResolver extends AbstractTransformation
 
     for( int i = 0; i < features.length; i++ )
     {
+      if( monitor.isCanceled() )
+        throw new OperationCanceledException();
+      
       final Feature feature = features[i];
 
       final TimeseriesLink sourcelink = (TimeseriesLink)feature.getProperty( sourceName );

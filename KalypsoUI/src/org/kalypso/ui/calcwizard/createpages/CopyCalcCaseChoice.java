@@ -6,8 +6,10 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -17,6 +19,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -29,7 +33,7 @@ import org.kalypso.ui.nature.CalcCaseCollector;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
- * Die Implementierung erzeugt einen völlig neuen Rechenfall im
+ * Diese Implementierung erzeugt einen völlig neuen Rechenfall im
  * Prognoseverzeichnis
  * 
  * @author belger
@@ -50,7 +54,7 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
 
   private final AddCalcCasePage m_page;
 
-  private Text m_edit;
+  private String m_name;
 
   public CopyCalcCaseChoice( final String label, final IProject project, final AddCalcCasePage page )
   {
@@ -99,7 +103,13 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
     final Text edit = new Text( panel, SWT.BORDER );
     edit.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     edit.setToolTipText( AddNewCalcCaseChoice.TOOLTIP );
-    m_edit = edit;
+    edit.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( ModifyEvent e )
+      {
+        setName( edit.getText() );
+      }
+    } );
 
     m_control = panel;
 
@@ -113,9 +123,18 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
     }
   }
 
+  protected void setName( final String text )
+  {
+    m_name = text;
+    
+    validateChoice();
+  }
+
   protected void setFolder( final IFolder folder )
   {
     m_folder = folder;
+    
+    validateChoice();
   }
 
   public void refresh( final IProgressMonitor monitor ) throws CoreException
@@ -152,7 +171,7 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
     final Viewer viewer = m_viewer;
     if( viewer != null )
     {
-      viewer.getControl().getDisplay().asyncExec( new Runnable()
+      viewer.getControl().getDisplay().syncExec( new Runnable()
       {
         public void run()
         {
@@ -178,15 +197,14 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
     final ModelNature nature = (ModelNature)m_project.getNature( ModelNature.ID );
 
     final IFolder folder = nature.getPrognoseFolder();
-    final String name = m_edit.getText();
-    if( name.length() == 0 )
+    if( m_name.length() == 0 )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Geben Sie einen Namen für die Vorhersage ein", null ) );
 
-    final IFolder calcCaseFolder = folder.getFolder( name );
+    final IFolder calcCaseFolder = folder.getFolder( m_name );
     if( calcCaseFolder.exists() )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Eine Vorhersage mit diesem namen existiert bereits: " + name, null ) );
+          "Eine Vorhersage mit diesem namen existiert bereits: " + m_name, null ) );
 
     if( m_folder == null )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
@@ -222,4 +240,30 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
     return true;
   }
 
+  /**
+   * @see org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice#validateChoice()
+   */
+  public void validateChoice()
+  {
+    if( m_folder == null )
+    {
+      m_page.setErrorMessage( "Es muss ein vorhandener Rechenfall ausgewählt werden." );
+      m_page.setMessage( null );
+      m_page.setPageComplete( false );
+    }
+    
+    final IStatus status = m_project.getWorkspace().validateName( m_name, IResource.FOLDER );
+    if( status.getSeverity() == IStatus.OK )
+    {
+      m_page.setErrorMessage( null );
+      m_page.setMessage( null );
+      m_page.setPageComplete( true );
+    }
+    else
+    {
+      m_page.setErrorMessage( status.getMessage() );
+      m_page.setMessage( null );
+      m_page.setPageComplete( false );
+    }
+  }
 }

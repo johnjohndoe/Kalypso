@@ -97,7 +97,7 @@ public class ShapeSerializer
   }
 
   /**
-   * @deprecated TODO: deserialize a RootedFeature
+   * TODO: deserialize a RootedFeature
    */
   public final static KalypsoFeatureLayer deserialize( final String fileBase,
       final CS_CoordinateSystem sourceCrs, final CS_CoordinateSystem targetCrs,

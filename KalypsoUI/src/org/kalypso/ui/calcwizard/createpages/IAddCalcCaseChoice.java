@@ -31,4 +31,6 @@ public interface IAddCalcCaseChoice
 
   /** Ob bei dieser Wahl der Rechenfall nach Eingabe der Steuerparameter aktualisiert werden sollte */
   public boolean shouldUpdate();
+  
+  public void validateChoice();
 }

@@ -303,7 +303,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public static void updateCalcCase( final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
   {
-    monitor.beginTask( "Rechenfall erzeugen", 2000 );
+    monitor.beginTask( "Rechenfall aktualisieren", 2000 );
 
     // Protokolle ersetzen
     try
