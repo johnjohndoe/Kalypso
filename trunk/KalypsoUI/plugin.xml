@@ -147,13 +147,14 @@
                style="radio"
                id="org.kalypso.editor.mapeditor.action.PanAction"/>
           <action
-               toolbarPath="karte"
-               label="Elemente selektieren"
-               tooltip="selektiert dinge"
-               icon="icons/full/elcl16/kde_14_polyline.gif"
-               class="org.kalypso.ogc.widgets.SelectWidget"
-               style="radio"
-               id="org.kalypso.editor.mapeditor.action.SelectAction"/>
+                toolbarPath="karte"
+                label="Elemente selektieren"
+                class="org.kalypso.ogc.widgets.SelectWidget"
+                icon="icons/full/elcl16/kde_14_polyline.gif"
+                tooltip="selektiert dinge"
+                style="radio"
+                menubarPath="/karte"
+                id="org.kalypso.editor.mapeditor.action.SelectAction"/>
             </editorContribution>
    </extension>
    <extension
