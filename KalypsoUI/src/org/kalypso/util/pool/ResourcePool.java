@@ -3,13 +3,23 @@ package org.kalypso.util.pool;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.kalypso.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.loader.ILoaderListener;
 import org.kalypso.loader.LoaderException;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.factory.FactoryException;
 
 /**
@@ -17,15 +27,25 @@ import org.kalypso.util.factory.FactoryException;
  */
 public class ResourcePool implements ILoaderListener
 {
-  /** type -> CountableObject */
-  private final Map myPool = new HashMap();
-
-  private final IObjectChangeProvider m_objectChangeProvider = new ObjectChangeAdapter();
-
   private final ILoaderFactory m_factory;
 
   /** type -> loader */
   private final Map m_loaderCache = new HashMap();
+
+  /**
+   * für den BorrowObjecJob, damit alle Objekte eines Pools nacheinander geladen
+   * werden
+   */
+  private final ISchedulingRule m_schedulingRule = new MutexSchedulingRule();
+
+  /** key -> List(IPoolListener) */
+  private Map m_keys = new HashMap();
+
+  /** key -> object */
+  private Map m_objects = new HashMap();
+
+  /** key -> job */
+  private Map m_jobs = new HashMap();
 
   public ResourcePool( final ILoaderFactory factory )
   {
@@ -34,117 +54,107 @@ public class ResourcePool implements ILoaderListener
 
   public void dispose()
   {
+    for( final Iterator iter = m_keys.entrySet().iterator(); iter.hasNext(); )
+    {
+      final Map.Entry entry = (Entry)iter.next();
+      ( (Set)entry.getValue() ).clear();
+
+      releaseKey( (IPoolableObjectType)entry.getKey() );
+
+      iter.remove();
+    }
+
     for( Iterator iter = m_loaderCache.values().iterator(); iter.hasNext(); )
       ( (ILoader)iter.next() ).removeLoaderListener( this );
   }
 
-  public Object getObject( final IPoolableObjectType key, final IProgressMonitor monitor )
-      throws Exception
+  /**
+   * Fügt einen neuen Listener zum Pool für eine bestimmten Key hinzu Ist das
+   * Objekt für den key vorhanden, wird der Listener sofort informiert
+   */
+  public void addPoolListener( final IPoolListener l, final IPoolableObjectType key )
   {
-    addObject( key, monitor );
+    Set listeners = (Set)m_keys.get( key );
 
-    final CountableObject obj = (CountableObject)myPool.get( key );
-    obj.increment();
-    return obj.getObject();
-  }
-
-  public void releaseObject( final IPoolableObjectType key, final Object obj ) throws Exception
-  {
-    final CountableObject cObj = (CountableObject)myPool.get( key );
-    if( cObj == null || cObj.getObject() != obj )
-      throw new Exception( "invalid key or invalid object returned to pool" );
-
-    cObj.decrement();
-
-    if( cObj.isUnused() )
-      myPool.remove( key );
-
-    // TODO evt. statt aus dem pool werfen einen IDLE-state setzen?
-
-    destroyObject( key, cObj.getObject() );
-  }
-
-  public void releaseKey( final IPoolableObjectType key )
-  {
-    final CountableObject cObj = (CountableObject)myPool.get( key );
-    if( cObj == null )
-      return;
-
-    cObj.decrement();
-
-    if( cObj.isUnused() )
-      myPool.remove( key );
-
-    // TODO evt. statt aus dem pool werfen einen IDLE-state setzen?
-
-    destroyObject( key, cObj.getObject() );
-  }
-
-  private void addObject( final IPoolableObjectType key, final IProgressMonitor monitor )
-      throws Exception
-  {
-    if( !myPool.containsKey( key ) )
+    // falls noch keine Listener da waren eine neue Liste anlegen
+    if( listeners == null )
     {
-      final Object newObject = makeObject( key, monitor );
-      final CountableObject cObj = new CountableObject( newObject );
-
-      myPool.put( key, cObj );
-    }
-  }
-
-  private class CountableObject
-  {
-    private Object myObject;
-
-    private int myCounter;
-
-    public CountableObject( Object object )
-    {
-      myObject = object;
-      myCounter = 0;
+      listeners = new TreeSet();
+      m_keys.put( key, l );
     }
 
-    public void increment()
-    {
-      myCounter++;
-    }
+    listeners.add( l );
 
-    public void decrement()
-    {
-      myCounter--;
-    }
-
-    public Object getObject()
-    {
-      return myObject;
-    }
-
-    public void setObject( final Object o )
-    {
-      myObject = o;
-    }
-
-    public boolean isUnused()
-    {
-      return myCounter == 0;
-    }
-  }
-
-  public void addPoolListener( final IPoolListener l )
-  {
-    m_objectChangeProvider.addPoolListener( l );
-  }
-
-  public void fireOnObjectInvalid( final Object oldObject, final boolean bCannotReload )
-      throws Exception
-  {
-    m_objectChangeProvider.fireOnObjectInvalid( this, findKey( oldObject ), oldObject,
-        bCannotReload );
+    final Object o = checkValid( key );
+    if( o != null )
+      l.objectLoaded( key, o, Status.OK_STATUS );
   }
 
   public void removePoolListener( final IPoolListener l )
   {
-    m_objectChangeProvider.removePoolListener( l );
+    // von allen keys den Listener löschen
+    for( final Iterator iter = m_keys.entrySet().iterator(); iter.hasNext(); )
+    {
+      final Map.Entry entry = (Entry)iter.next();
+
+      final IPoolableObjectType key = (IPoolableObjectType)entry.getKey();
+      final Set listeners = (Set)entry.getValue();
+
+      listeners.remove( l );
+      if( listeners.isEmpty() )
+      {
+        // aktuellen Eintrag löschen!
+        iter.remove();
+
+        releaseKey( key );
+      }
+    }
+  }
+
+  /**
+   * Prüft, ob das Objekt für den Key vorhanden ist Falls ja wird es
+   * zurückgegeben. Falls nein wird der Ladevorgang gestartet
+   */
+  private Object checkValid( final IPoolableObjectType key )
+  {
+    // falls das objekt da ist, einfach zurückgeben
+    final Object object = m_objects.get( key );
+    if( object != null )
+      return object;
+
+    // falls nicht den Ladevorgng starten
+    startLoading( key );
+
+    return null;
+  }
+
+  private void startLoading( final IPoolableObjectType key )
+  {
+    // falls nicht bereits geladen wird, jetzt Ladevorgang starten
+    if( m_jobs.containsKey( key ) )
+      return;
+    
+    final BorrowObjectJob job = new BorrowObjectJob( key );
+    m_jobs.put( key, job );
+    
+    job.schedule();
+  }
+  
+  private void onObjectLoaded( final IPoolableObjectType key, final Object object, final IStatus status )
+  {
+    // das Objekt eintragen
+    m_objects.put( key, object );
+    
+    // alle Listener informieren
+    final Set listeners = (Set)m_keys.get( key );
+    for( final Iterator iter = listeners.iterator(); iter.hasNext(); )
+    {
+      final IPoolListener l = (IPoolListener)iter.next();
+      l.objectLoaded( key, object, status );
+    }
+
+    // die job markierung entfernen
+    m_jobs.remove( key );
   }
 
   /**
@@ -157,29 +167,33 @@ public class ResourcePool implements ILoaderListener
     final IPoolableObjectType key = findKey( oldValue );
     if( key != null )
     {
-      myPool.remove( key );
-
-      fireOnObjectInvalid( oldValue, bCannotReload );
+      m_objects.remove( key );
+      
+      final Set listeners = (Set)m_keys.get( key );
+      for( Iterator iter = listeners.iterator(); iter.hasNext(); )
+      {
+        final IPoolListener l = (IPoolListener)iter.next();
+        l.objectInvalid( key, oldValue );
+      }
+      
+      checkValid( key );
     }
   }
 
-  private IPoolableObjectType findKey( Object oldValue )
+  private IPoolableObjectType findKey( final Object oldValue )
   {
-    for( final Iterator iter = myPool.entrySet().iterator(); iter.hasNext(); )
+    for( final Iterator iter = m_objects.entrySet().iterator(); iter.hasNext(); )
     {
-      final Map.Entry element = (Entry)iter.next();
-      final CountableObject co = (CountableObject)element.getValue();
-      if( co.getObject() == oldValue )
-        return (IPoolableObjectType)element.getKey();
+       final Map.Entry entry = (Entry)iter.next();
+       if( entry.getValue() == oldValue )
+         return (IPoolableObjectType)entry.getKey();
     }
-
+    
     return null;
   }
 
   /**
    * Erzeugt ein Objekt anhand seines Typs. Benutzt den entsprechenden ILoader.
-   * 
-   * TODO: remove project stuff once refactoring is complete
    */
   private Object makeObject( final IPoolableObjectType key, final IProgressMonitor monitor )
       throws Exception
@@ -189,7 +203,7 @@ public class ResourcePool implements ILoaderListener
     final ILoader loader = getLoader( type );
 
     final Object object = loader.load( key.getSource(), key.getContext(), monitor );
-     
+
     return object;
   }
 
@@ -208,18 +222,34 @@ public class ResourcePool implements ILoaderListener
     return loader;
   }
 
-  private void destroyObject( final IPoolableObjectType key, final Object object )
+  private void releaseKey( final IPoolableObjectType key )
   {
-    try
+    final BorrowObjectJob job = (BorrowObjectJob)m_jobs.get( key );
+    if( job != null )
+      job.cancel();
+    
+    m_jobs.remove( key );
+    
+    final Set listeners = (Set)m_keys.get( key );
+    if( listeners != null )
+      listeners.clear();
+    m_keys.remove( key );
+    
+    final Object object = m_objects.get( m_keys );
+    if( object != null )
     {
-      final ILoader loader = getLoader( key.getType() );
-      loader.release( object );
+      try
+      {
+        final ILoader loader = getLoader( key.getType() );
+        loader.release( object );
+      }
+      catch( final FactoryException e1 )
+      {
+        e1.printStackTrace();
+      }
     }
-    catch( final FactoryException e )
-    {
-      e.printStackTrace();
-      return;
-    }
+    
+    m_objects.remove( key );
   }
 
   public void saveObject( final Object object, final IProgressMonitor monitor )
@@ -242,4 +272,67 @@ public class ResourcePool implements ILoaderListener
     }
   }
 
+  public ISchedulingRule getSchedulingRule()
+  {
+    return m_schedulingRule;
+  }
+
+  private class BorrowObjectJob extends Job
+  {
+    private final IPoolableObjectType m_key;
+    
+    private Object m_object = null;
+    
+    public BorrowObjectJob( final IPoolableObjectType key )
+    {
+      super( "Lade " + key.toString() );
+
+      m_key = key;
+
+      setPriority( Job.LONG );
+
+      // Jobs auf dem gleichen Pool müssen nacheinander laufen!
+      setRule( getSchedulingRule() );
+
+      addJobChangeListener( new JobChangeAdapter()
+      {
+        /**
+         * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+         */
+        public void done( final IJobChangeEvent event )
+        {
+          try
+          {
+            if( event.getResult().isOK() )
+              onObjectLoaded( key, m_object, event.getResult() );
+            else
+              onObjectLoaded( key, null, event.getResult() );
+          }
+          finally
+          {
+            removeJobChangeListener( this );
+            // means: removeJobChangeListener( JobChangeAdapter.this );
+          }
+        }
+      } );
+    }
+
+    /**
+     * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    protected IStatus run( final IProgressMonitor monitor )
+    {
+      try
+      {
+        m_object = makeObject( m_key, monitor );
+      }
+      catch( final Exception e )
+      {
+        return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+            "Fehler beim Laden einer Resource", e );
+      }
+
+      return Status.OK_STATUS;
+    }
+  }
 }
