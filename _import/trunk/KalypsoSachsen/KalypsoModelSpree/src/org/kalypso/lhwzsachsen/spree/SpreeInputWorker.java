@@ -325,7 +325,7 @@ public class SpreeInputWorker
   {
     try
     {
-      final Feature controlFeature = GmlSerializer.deserializeFeature( controlGML.toURL(), controlXSD.toURL() );
+      final Feature controlFeature = GmlSerializer.createGMLWorkspace( controlGML.toURL(), controlXSD.toURL() ).getRootFeature();
 
       final Date startTime = (Date)controlFeature.getProperty( "startforecast" );
 
