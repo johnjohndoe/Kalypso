@@ -89,6 +89,25 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
     return ratio;
   }
 
+  /*
+   * returns GM_Envelope for the pixel xmin, ymin, xmax, ymax.
+   *   
+   * GeoTransformInterface declares the methods which have to be implemented
+   * by each class that executes a geographical coordinat transformation.
+   */
+  protected final GM_Envelope getBox(double x, double y, double x2, double y2) {
+     
+      final GeoTransform gt = m_mapPanel.getProjection();
+      
+      double xmin = gt.getSourceX(x);
+      double ymin = gt.getSourceY(y);
+      double xmax = gt.getSourceX(x2);
+      double ymax = gt.getSourceY(y2);
+
+      GM_Envelope bbox = GeometryFactory.createGM_Envelope(xmin, ymin, xmax, ymax);
+      return bbox;
+  }
+  
   /**
    * @see org.kalypso.ogc.widgets.IWidget#clickPopup(java.awt.Point)
    */
