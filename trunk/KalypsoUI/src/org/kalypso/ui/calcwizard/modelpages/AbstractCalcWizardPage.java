@@ -437,6 +437,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       text.setText( "Keine Tabelle vorhanden" );
     }
   }
+  
 
   public TSLinkWithName[] getObservationsFromMap( final boolean useTable )
   {
