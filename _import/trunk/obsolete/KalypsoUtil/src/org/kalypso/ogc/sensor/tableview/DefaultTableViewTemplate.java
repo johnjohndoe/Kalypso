@@ -9,6 +9,9 @@ import org.kalypso.ogc.sensor.IObservation;
  * <p>
  * The ITableViewColumn that can be build by this class are constructed using the first
  * axis of the observation as sharedAxis.
+ * <p>
+ * Example: if the observation has 3 axis (A1, A2, A3), the default template creates 2 columns 
+ * for A2 and A3, using A1 as a shared axis.
  * 
  * @author schlienger
  */
@@ -30,10 +33,12 @@ public class DefaultTableViewTemplate implements ITableViewTemplate
     if( m_cols == null )
     {
       IAxis[] axes = m_obs.getAxisList();
-      m_cols = new ITableViewColumn[ axes.length ];
       
-      for( int i = 1; i < axes.length; i++ )
-        m_cols[i] = new DefaultTableViewColumn( axes[i].getLabel() + " - " + axes[i].getUnit(), m_obs, axes[0], axes[i] );
+      // one column less than the number of axis
+      m_cols = new ITableViewColumn[ axes.length - 1];
+      
+      for( int i = 0; i < m_cols.length; i++ )
+        m_cols[i] = new DefaultTableViewColumn( axes[i + 1].getLabel() + " - " + axes[i + 1].getUnit(), m_obs, axes[0], axes[i + 1] );
     }
     
     return m_cols;

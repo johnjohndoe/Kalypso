@@ -1,6 +1,5 @@
 package org.kalypso.ogc.sensor.tableview.swing;
 
-
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -14,27 +13,31 @@ import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.util.runtime.IVariableArguments;
 
 /**
- * TableModel das mit IObservation benutzt werden kann. Kann in eine JTable benutzt werden.
+ * TableModel das mit IObservation benutzt werden kann. Kann in eine JTable
+ * benutzt werden.
  * 
  * @author schlienger
  */
 public class ObservationTableModel extends AbstractTableModel
 {
   private ITableViewColumn[] m_columns;
+
   private IVariableArguments m_args;
-  
+
   /** common column */
   private Set m_cc = null;
+
   /** common fake axis */
   private DefaultAxis m_ccAxis;
 
   public ObservationTableModel()
   {
-    // nix
+  // nix
   }
-  
+
   /**
    * Constructor with columns. Calls setColumns( ITableViewColumn[] ).
+   * 
    * @throws SensorException
    */
   public ObservationTableModel( ITableViewColumn[] columns ) throws SensorException
@@ -45,51 +48,60 @@ public class ObservationTableModel extends AbstractTableModel
   /**
    * Sets the columns.
    * 
-   * @param columns can be null. In that case the table model is empty.
-   * @param args the arguments that will be used when fetching the values
+   * @param columns
+   *          can be null. In that case the table model is empty.
+   * @param args
+   *          the arguments that will be used when fetching the values
    * @throws SensorException
    */
-  public void setColumns( final ITableViewColumn[] columns, final IVariableArguments args ) throws SensorException
+  public void setColumns( final ITableViewColumn[] columns, final IVariableArguments args )
+      throws SensorException
   {
     m_columns = columns;
     m_args = args;
 
-    // the common column, merges all the values from the common axes
-    m_cc = new TreeSet();
+    // reset
+    m_cc = null;
     m_ccAxis = null;
-    
-    for( int col = 0; col < m_columns.length; col++ )
-    {
-      IAxis sharedAxis = m_columns[col].getSharedAxis();
-      
-      // create common axis (fake)
-      if( m_ccAxis == null )
-        m_ccAxis = new DefaultAxis( sharedAxis );
 
-      // verify compatibility of the axes
-      if( m_ccAxis.getDataClass() != sharedAxis.getDataClass() ||
-          !m_ccAxis.getUnit().equals( sharedAxis.getUnit() ) )
-        throw new SensorException( m_ccAxis + " ist nicht mit " + sharedAxis + " kompatibel." );
-      
-      ITuppleModel sharedModel = m_columns[col].getObservation().getValues(m_args);
-      
-      for( int row = 0; row < sharedModel.getCount(); row++ )
-        m_cc.add( sharedModel.getElement( row, sharedAxis.getPosition() ) );
+    if( columns != null )
+    {
+      // the common column, merges all the values from the common axes
+      m_cc = new TreeSet();
+
+      for( int col = 0; col < m_columns.length; col++ )
+      {
+        IAxis sharedAxis = m_columns[col].getSharedAxis();
+
+        // create common axis (fake)
+        if( m_ccAxis == null )
+          m_ccAxis = new DefaultAxis( sharedAxis );
+
+        // verify compatibility of the axes
+        if( m_ccAxis.getDataClass() != sharedAxis.getDataClass()
+            || !m_ccAxis.getUnit().equals( sharedAxis.getUnit() ) )
+          throw new SensorException( m_ccAxis + " ist nicht mit " + sharedAxis + " kompatibel." );
+
+        ITuppleModel sharedModel = m_columns[col].getObservation().getValues( m_args );
+
+        for( int row = 0; row < sharedModel.getCount(); row++ )
+          m_cc.add( sharedModel.getElement( row, sharedAxis.getPosition() ) );
+      }
     }
-    
+
     fireTableStructureChanged();
     fireTableDataChanged();
   }
-  
+
   /**
    * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
    */
   public Class getColumnClass( int columnIndex )
   {
     if( columnIndex == 0 )
-       return m_ccAxis.getDataClass();
-    
-    return m_columns[ columnIndex - 1 ].getValueAxis().getDataClass();
+      return m_ccAxis.getDataClass();
+
+    return m_columns[columnIndex - 1].getValueAxis().getDataClass();
   }
 
   /**
@@ -100,7 +112,7 @@ public class ObservationTableModel extends AbstractTableModel
     if( column == 0 )
       return m_ccAxis.getLabel();
 
-    return m_columns[ column - 1 ].getName();
+    return m_columns[column - 1].getName();
   }
 
   /**
@@ -119,19 +131,10 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public int getRowCount()
   {
-    if( m_columns == null || m_args == null )
+    if( m_cc == null )
       return 0;
 
-    try
-    {
-      return m_columns[0].getObservation().getValues(m_args).getCount();
-    }
-    catch( SensorException e )
-    {
-      // TODO: handling
-      e.printStackTrace();
-      return 0;
-    }
+    return m_cc.size();
   }
 
   /**
@@ -141,10 +144,18 @@ public class ObservationTableModel extends AbstractTableModel
   {
     if( columnIndex == 0 )
       return m_cc.toArray()[rowIndex];
-    
+
     try
     {
-      return m_columns[ columnIndex - 1].getObservation().getValues(m_args).getElement(rowIndex, m_columns[ columnIndex ].getValueAxis().getPosition() );
+      // Retrieve object of common column at given position
+      Object obj = m_cc.toArray()[rowIndex];
+
+      // Use this object to retrieve real index from tupple (with shared axis)
+      ITuppleModel values = m_columns[columnIndex - 1].getObservation().getValues( m_args );
+      int index = values.indexOf( obj, m_columns[columnIndex - 1].getSharedAxis() );
+
+      // Now we can retrieve the element using value axis
+      return values.getElement( index, m_columns[columnIndex - 1].getValueAxis().getPosition() );
     }
     catch( SensorException e )
     {
@@ -161,18 +172,27 @@ public class ObservationTableModel extends AbstractTableModel
   {
     if( columnIndex == 0 )
       return false;
-    
-    return m_columns[ columnIndex - 1 ].isEditable();
+
+    return m_columns[columnIndex - 1].isEditable();
   }
-  
+
   /**
-   * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
+   * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int,
+   *      int)
    */
   public void setValueAt( Object aValue, int rowIndex, int columnIndex )
   {
     try
     {
-      m_columns[ columnIndex - 1 ].getObservation().getValues(m_args).setElement(rowIndex, aValue, m_columns[ columnIndex ].getValueAxis().getPosition() );
+      // Retrieve object of common column at given position
+      Object obj = m_cc.toArray()[rowIndex];
+
+      // Use this object to retrieve real index from tupple (with shared axis)
+      ITuppleModel values = m_columns[columnIndex - 1].getObservation().getValues( m_args );
+      int index = values.indexOf( obj, m_columns[columnIndex - 1].getSharedAxis() );
+
+      // Now we can retrieve the element using value axis
+      values.setElement( index, aValue, m_columns[columnIndex - 1].getValueAxis().getPosition() );
     }
     catch( SensorException e )
     {

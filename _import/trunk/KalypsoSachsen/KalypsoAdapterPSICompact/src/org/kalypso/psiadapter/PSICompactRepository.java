@@ -1,9 +1,9 @@
 package org.kalypso.psiadapter;
 
-import java.util.Comparator;
 import java.util.Hashtable;
 
 import org.kalypso.java.util.Arrays;
+import org.kalypso.psiadapter.util.ObjectInfoLengthComparator;
 import org.kalypso.util.repository.AbstractRepository;
 import org.kalypso.util.repository.IRepositoryItem;
 import org.kalypso.util.repository.RepositoryException;
@@ -67,7 +67,7 @@ public class PSICompactRepository extends AbstractRepository
      * 
      * Siehe auch TRICK #2 unten.  
      */
-    java.util.Arrays.sort( objInfos, new ObjectInfoComparator() );    
+    java.util.Arrays.sort( objInfos, new ObjectInfoLengthComparator() );    
     
     PSICompactItem parent = null;
 
@@ -129,29 +129,5 @@ public class PSICompactRepository extends AbstractRepository
   public IRepositoryItem[] getChildren()
   {
     return m_psiRoot.getChildren();
-  }
-  
-  /**
-   * Helper class. Wird benutzt um ObjectInfo zu sortieren. Siehe TRICKs in der Hauptklasse.
-   * 
-   * @author schlienger
-   */
-  private static final class ObjectInfoComparator implements Comparator
-  {
-    /**
-     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-     */
-    public int compare( Object arg0, Object arg1 )
-    {
-      int l1 = ((ObjectInfo)arg0).getId().length();
-      int l2 = ((ObjectInfo)arg1).getId().length();
-      
-      if( l1 > l2 )
-        return -1;
-      else if( l1 < l2 )
-        return 1;
-      else     
-        return 0;
-    }
   }
 }

@@ -51,7 +51,7 @@ public class ValueArray implements IZmlValuesLoader, IZmlValuesProvider
   /**
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesLoader#setModel(org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel)
    */
-  public void setModel( ZmlTuppleModel model )
+  public void setModel( final ZmlTuppleModel model )
   {
     // nix
   }
@@ -67,7 +67,7 @@ public class ValueArray implements IZmlValuesLoader, IZmlValuesProvider
   /**
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider#getElement(int)
    */
-  public Object getElement( int index )
+  public Object getElement( final int index )
   {
     return m_values.get( index );
   }
@@ -75,8 +75,16 @@ public class ValueArray implements IZmlValuesLoader, IZmlValuesProvider
   /**
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider#setElement(int, java.lang.Object)
    */
-  public void setElement( int index, Object element )
+  public void setElement( final int index, final Object element )
   {
     m_values.set( index, element );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider#indexOf(java.lang.Object)
+   */
+  public int indexOf( final Object obj )
+  {
+    return m_values.indexOf( obj );
   }
 }

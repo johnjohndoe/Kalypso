@@ -3,6 +3,7 @@ package org.kalypso.ogc.sensor.zml.values;
 import java.util.Hashtable;
 import java.util.Map;
 
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlAxis;
@@ -53,7 +54,7 @@ public class ZmlTuppleModel implements ITuppleModel
   public Object getElement( int index, int position )
   {
     if( m_axes.length == 0 )
-      return null;
+      throw new IllegalArgumentException( "No Axis" );
 
     return m_axes[position].getValues().getElement( index );
   }
@@ -65,8 +66,19 @@ public class ZmlTuppleModel implements ITuppleModel
   public void setElement( int index, Object element, int position )
   {
     if( m_axes.length == 0 )
-      return;
-
+      throw new IllegalArgumentException( "No Axis" );
+    
     m_axes[position].getValues().setElement( index, element );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
+   */
+  public int indexOf( Object element, IAxis axis )
+  {
+    if( m_axes.length == 0 )
+      throw new IllegalArgumentException( "No Axis" );
+    
+    return m_axes[ axis.getPosition() ].getValues().indexOf( element );
   }
 }

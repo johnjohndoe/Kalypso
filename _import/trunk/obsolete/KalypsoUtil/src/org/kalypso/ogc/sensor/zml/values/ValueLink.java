@@ -2,6 +2,8 @@ package org.kalypso.ogc.sensor.zml.values;
 
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.Properties;
 
 import org.kalypso.java.properties.PropertiesHelper;
@@ -27,6 +29,8 @@ public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
 
   private CSV m_csv = null;
 
+  private Map m_helper = new Hashtable();
+  
   private String m_path = null;
   private int m_column = 0;
 
@@ -87,9 +91,16 @@ public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
   {
     try
     {
+      // get item from csv file
       String item = m_csv.getItem( index, m_column );
       
-      return m_axis.getParser().parse( item );
+      // parse item using axis parser
+      Object obj = m_axis.getParser().parse( item );
+      
+      // tricky: store relation between element and index for future needs
+      m_helper.put( obj, new Integer( index ) );
+      
+      return obj;
     }
     catch( ParserException e )
     {
@@ -105,11 +116,23 @@ public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
   {
     try
     {
+      // tricky: set it in our map-helper (Siehe this.indexOf() )
+      m_helper.put( element, new Integer( index ) );
+      
+      // set it in CSV
       m_csv.setItem( index, m_column, m_axis.getParser().toString( element ) );
     }
     catch( ParserException e )
     {
       throw new RuntimeException( e );
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider#indexOf(java.lang.Object)
+   */
+  public int indexOf( final Object obj )
+  {
+    return ((Integer)m_helper.get( obj )).intValue();
   }
 }

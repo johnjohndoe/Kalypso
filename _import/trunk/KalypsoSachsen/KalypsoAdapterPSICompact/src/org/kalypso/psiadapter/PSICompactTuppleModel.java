@@ -1,8 +1,11 @@
 package org.kalypso.psiadapter;
 
+import java.util.Arrays;
 import java.util.Date;
 
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.psiadapter.util.ArchiveDataDateComparator;
 
 import de.psi.go.lhwz.PSICompact.ArchiveData;
 
@@ -130,4 +133,15 @@ public class PSICompactTuppleModel implements ITuppleModel
   {
     return m_data.length;
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
+   */
+  public int indexOf( Object element, IAxis axis )
+  {
+    // wir gehen davon aus dass m_data sortiert ist! Sollte eigentlich der Fall
+    // sein da es sich um eine Zeitreihe handelt.
+    
+    return Arrays.binarySearch( m_data, element, new ArchiveDataDateComparator() );
+  } 
 }

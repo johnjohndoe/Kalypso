@@ -9,6 +9,7 @@ package org.kalypso.ogc.sensor.zml.values;
 public interface IZmlValuesProvider
 {
   public int getCount();
-  public Object getElement( int index );
-  public void setElement( int index, Object element );
+  public Object getElement( final int index );
+  public void setElement( final int index, final Object element );
+  public int indexOf( final Object obj );
 }

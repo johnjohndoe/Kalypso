@@ -61,16 +61,16 @@ public class CSV
   /**
    * Returns the item at the given position in the CSV-File.
    */
-  public String getItem( int line, int col )
+  public String getItem( final int row, final int col )
   {
-    return ( (String[])m_lines.get( line ) )[col];
+    return ( (String[])m_lines.get( row ) )[col];
   }
 
   /**
    * Sets the item at the given position.
    */
-  public void setItem( int index, int col, String element )
+  public void setItem( final int row, final int col, String element )
   {
-    ((String[])m_lines.get( index ))[col] = element;
+    ((String[])m_lines.get( row ))[col] = element;
   }
 }
