@@ -12,6 +12,7 @@ import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.progress.EclipseProgressMonitor;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -65,7 +66,7 @@ public class ShapeLoader extends AbstractLoader
       if( sourceCrs == null )
         throw new LoaderException( "Kein Koordinaten-System für Shape gefunden: " + sourceSrs );
 
-      final KalypsoFeatureLayer layer = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), monitor );
+      final KalypsoFeatureLayer layer = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), new EclipseProgressMonitor( monitor ) );
       
       if( shpResource != null )
         addResource( shpResource, layer );
