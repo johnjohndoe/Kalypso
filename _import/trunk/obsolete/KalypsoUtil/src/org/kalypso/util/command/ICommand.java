@@ -13,6 +13,6 @@ public interface ICommand
     public void redo(  ) throws Exception;
 
     public void undo(  ) throws Exception;
-    
+
     public String getDescription();
 }
