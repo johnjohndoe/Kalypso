@@ -20,7 +20,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class KalypsoFeatureLayer implements ModellEventProvider, ModellEventListener //, FeatureLayer
 {
-
   private ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
 
   private String myName = null;
@@ -226,12 +225,12 @@ public class KalypsoFeatureLayer implements ModellEventProvider, ModellEventList
     return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy );
   }
 
-  public void addModellListener( ModellEventListener listener )
+  public void addModellListener( final ModellEventListener listener )
   {
     myEventProvider.addModellListener( listener );
   }
 
-  public void fireModellEvent( ModellEvent event )
+  public void fireModellEvent( final ModellEvent event )
   {
     myEventProvider.fireModellEvent( event );
   }
@@ -241,16 +240,12 @@ public class KalypsoFeatureLayer implements ModellEventProvider, ModellEventList
     myEventProvider.removeModellListener( listener );
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
    */
-  public void onModellChange( ModellEvent modellEvent )
+  public void onModellChange( final ModellEvent modellEvent )
   {
-
     fireModellEvent( modellEvent );
-
   }
 
 }

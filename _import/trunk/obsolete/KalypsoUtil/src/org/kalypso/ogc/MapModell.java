@@ -23,12 +23,12 @@ import org.kalypso.ogc.event.ModellEventProviderAdapter;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.KalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.template.gismapview.GismapviewType;
+import org.kalypso.template.gismapview.GismapviewType.LayersType;
+import org.kalypso.template.types.StyledLayerType.StyleType;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypso.xml.gisview.Gisview;
-import org.kalypso.xml.gisview.GisviewType.LayersType;
-import org.kalypso.xml.types.GisviewLayerType;
-import org.kalypso.xml.types.GisviewLayerType.StyleType;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -67,7 +67,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
 
   }
 
-  public MapModell( final Gisview gisview, final CS_CoordinateSystem crs,
+  public MapModell( final Gismapview gisview, final CS_CoordinateSystem crs,
       final KeyedObjectPool layerPool, final KeyedObjectPool stylePool, final Object helper,
       final Component component )
   {
@@ -83,13 +83,13 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
 
     for( int i = 0; i < layerList.size(); i++ )
     {
-      final GisviewLayerType layerType = (GisviewLayerType)layerList.get( i );
+      final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList.get( i );
 
       final KalypsoFeatureLayer layer;
       try
       {
         layer = (KalypsoFeatureLayer)layerPool.borrowObject( new PoolableObjectType( layerType
-            .getType(), layerType.getSource(), helper ) );
+            .getLinktype(), layerType.getHref(), helper ) );
       }
       catch( Exception e1 )
       {
@@ -104,8 +104,8 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
       for( int is = 0; is < stylesList.size(); is++ )
       {
         final StyleType styleType = ( (StyleType)stylesList.get( is ) );
-        final IPoolableObjectType styleID = new PoolableObjectType( styleType.getType(), styleType
-            .getSource(), helper );
+        final IPoolableObjectType styleID = new PoolableObjectType( styleType.getLinktype(), styleType
+            .getHref(), helper );
         try
         {
           final KalypsoUserStyle style = (KalypsoUserStyle)stylePool.borrowObject( styleID );
