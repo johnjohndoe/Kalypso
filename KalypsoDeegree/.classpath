@@ -19,5 +19,8 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/java3d/vecmath.jar"/>
+	<classpathentry kind="lib" path="lib/jwsdp/mail.jar"/>
+	<classpathentry kind="lib" path="lib/jwsdp/saaj-api.jar"/>
+	<classpathentry kind="lib" path="lib/jwsdp/saaj-impl.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -21,7 +21,6 @@ import org.deegree_impl.extension.TypeRegistryException;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.gml.schema.EnumerationFeatureTypeProperty;
 import org.deegree_impl.gml.schema.GMLSchema;
-import org.deegree_impl.model.feature.XLinkFeatureTypeProperty;
 import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
@@ -223,8 +222,6 @@ public class JMSchemaTest extends TestCase
             + linkedFTs[i].getName();
       }
     }
-    if( ftp instanceof XLinkFeatureTypeProperty )
-      result = result + toString( (XLinkFeatureTypeProperty)ftp );
 
     if( ftp instanceof EnumerationFeatureTypeProperty )
       result = result + toString( (EnumerationFeatureTypeProperty)ftp );
@@ -238,11 +235,6 @@ public class JMSchemaTest extends TestCase
   {
     return ( getIndent( indent ) + text + "                                                                     " )
         .substring( 0, indent + distance );
-  }
-
-  private String toString( final XLinkFeatureTypeProperty xlinkftp )
-  {
-    return " [" + xlinkftp.toString() + "]";
   }
 
   private String toString( final EnumerationFeatureTypeProperty eftp )

@@ -132,15 +132,17 @@ public class DBaseFile
 
   // file position the caches starts
   private long startIndex = 0;
-final int m_defaultFileShapeType;
+
+  final int m_defaultFileShapeType;
+
   /**
    * constructor <BR>
    * only for reading a dBase file <BR>
    */
-  public DBaseFile( String url,int defaultFileShapeType ) throws IOException
+  public DBaseFile( String url, int defaultFileShapeType ) throws IOException
   {
     fname = url;
-    m_defaultFileShapeType=defaultFileShapeType;
+    m_defaultFileShapeType = defaultFileShapeType;
     //creates rafDbf
     rafDbf = new RandomAccessFile( url + _dbf, "r" );
 
@@ -166,7 +168,7 @@ final int m_defaultFileShapeType;
    */
   public DBaseFile( String url, FieldDescriptor[] fieldDesc ) throws DBaseException
   {
-    m_defaultFileShapeType=-1;
+    m_defaultFileShapeType = -1;
     fname = url;
 
     // create header
@@ -188,7 +190,8 @@ final int m_defaultFileShapeType;
       rafDbf.close();
     }
     catch( Exception ex )
-    {}
+    {
+    }
   }
 
   /**
@@ -258,7 +261,6 @@ final int m_defaultFileShapeType;
       char[] c = new char[1];
       c[0] = (char)rafDbf.readByte();
 
-      String ftyp = new String( c );
 
       // skip four bytes
       rafDbf.skipBytes( 4 );
@@ -294,8 +296,6 @@ final int m_defaultFileShapeType;
 
   /**
    * 
-   * 
-   * @return
    */
   private FeatureType createFeatureType()
   {
@@ -370,8 +370,8 @@ final int m_defaultFileShapeType;
     }
 
     ftp[ftp.length - 1] = FeatureFactory
-    .createFeatureTypeProperty( "GEOM",getGeometryType(), true );
-    return FeatureFactory.createFeatureType( null, null, ftName, ftp);
+        .createFeatureTypeProperty( "GEOM", getGeometryType(), true );
+    return FeatureFactory.createFeatureType( ftName, ftp );
   }
 
   private String getGeometryType()
@@ -435,10 +435,7 @@ final int m_defaultFileShapeType;
       record_number++;
       return true;
     }
-    else
-    {
-      return false;
-    }
+    return false;
   }
 
   /**
@@ -588,7 +585,6 @@ final int m_defaultFileShapeType;
       throw new DBaseException( "class is initialized in write-only mode" );
     }
 
-    String[] datatypes = null;
     ArrayList vec = new ArrayList();
     dbfCol column;
 
@@ -613,7 +609,9 @@ final int m_defaultFileShapeType;
    * returns a row of the dBase-file as Feature containing a place holder (field
    * name = "GEOM") for a geometry.
    * 
-   * @param allowNull if true, everything wich cannot read or parsed gets 'null' instead of ""
+   * @param allowNull
+   *          if true, everything wich cannot read or parsed gets 'null' instead
+   *          of ""
    */
   public Feature getFRow( int rowNo, boolean allowNull ) throws DBaseException
   {
