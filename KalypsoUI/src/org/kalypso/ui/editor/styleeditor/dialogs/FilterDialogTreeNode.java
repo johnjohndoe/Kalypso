@@ -63,7 +63,7 @@ public class FilterDialogTreeNode
   private int subtype = -1;
 
   private FilterDialogTreeNode()
-  {/**/}
+  {}
 
   public FilterDialogTreeNode( String string, int m_type )
   {

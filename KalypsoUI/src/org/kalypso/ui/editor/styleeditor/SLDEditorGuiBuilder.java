@@ -206,7 +206,7 @@ public class SLDEditorGuiBuilder
         {
           int index4 = ruleTabItemBuilder.getSelectedRule();
           if( index4 == ( getRulePatternCollection().size() - 1 ) || index4 < 0 )
-          {/**/}
+          {}
           else
           {
             ArrayList newOrdered = new ArrayList();
@@ -293,7 +293,7 @@ public class SLDEditorGuiBuilder
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     ruleTabItemBuilder.draw();

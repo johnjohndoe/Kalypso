@@ -157,7 +157,7 @@ public class StrokeDasharrayPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
   }
 

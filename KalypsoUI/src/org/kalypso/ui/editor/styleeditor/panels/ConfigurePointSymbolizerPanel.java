@@ -87,7 +87,7 @@ public class ConfigurePointSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     Label removeMarkButton = new Label( composite, SWT.PUSH );
@@ -115,7 +115,7 @@ public class ConfigurePointSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     Label moveBackwardMarkButton = new Label( composite, SWT.PUSH );
@@ -141,7 +141,7 @@ public class ConfigurePointSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     Label moveForwardMarkButton = new Label( composite, SWT.PUSH );
@@ -167,7 +167,7 @@ public class ConfigurePointSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
   }
 

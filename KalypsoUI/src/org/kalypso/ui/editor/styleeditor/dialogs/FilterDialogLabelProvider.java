@@ -40,7 +40,7 @@ public class FilterDialogLabelProvider implements ILabelProvider
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
   public void addListener( ILabelProviderListener listener )
-  {/**/
+  {
   }
 
   /*
@@ -50,7 +50,7 @@ public class FilterDialogLabelProvider implements ILabelProvider
    */
   public void dispose()
   {
-  /**/
+  
   }
 
   /*
@@ -71,7 +71,7 @@ public class FilterDialogLabelProvider implements ILabelProvider
    */
   public void removeListener( ILabelProviderListener listener )
   {
-  /**/
+  
   }
 
 }

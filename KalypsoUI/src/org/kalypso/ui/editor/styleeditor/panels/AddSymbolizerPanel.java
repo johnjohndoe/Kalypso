@@ -149,7 +149,7 @@ public class AddSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     // ***** Label

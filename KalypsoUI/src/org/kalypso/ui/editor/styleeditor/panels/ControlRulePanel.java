@@ -105,7 +105,7 @@ public class ControlRulePanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     Label addPatternRuleButton = new Label( composite, SWT.PUSH );
@@ -133,7 +133,7 @@ public class ControlRulePanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     Label removeRuleButton = new Label( composite, SWT.PUSH );
@@ -161,7 +161,7 @@ public class ControlRulePanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     Label moveBackwardRuleButton = new Label( composite, SWT.PUSH );
@@ -190,7 +190,7 @@ public class ControlRulePanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     Label moveForwardRuleButton = new Label( composite, SWT.PUSH );
@@ -218,7 +218,7 @@ public class ControlRulePanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
   }
 

@@ -93,7 +93,7 @@ public class TextInputPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     Label urlLabel = new Label( composite, SWT.NULL );

@@ -41,7 +41,7 @@ public class FilterDialogLabelProvider implements ILabelProvider
    */
   public void addListener( ILabelProviderListener listener )
   {
-  /**/
+  
   }
 
   /*
@@ -51,7 +51,7 @@ public class FilterDialogLabelProvider implements ILabelProvider
    */
   public void dispose()
   {
-  /**/
+  
   }
 
   /*
@@ -72,7 +72,7 @@ public class FilterDialogLabelProvider implements ILabelProvider
    */
   public void removeListener( ILabelProviderListener listener )
   {
-  /**/
+  
   }
 
 }

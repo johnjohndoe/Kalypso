@@ -93,7 +93,7 @@ public class EditSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     moveBackwardSymbolizerButton = new Label( composite, SWT.PUSH );
@@ -121,7 +121,7 @@ public class EditSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     moveForwardSymbolizerButton = new Label( composite, SWT.PUSH );
@@ -149,7 +149,7 @@ public class EditSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
   }
 

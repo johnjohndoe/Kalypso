@@ -45,7 +45,7 @@ public class FilterDialogTreeContentProvider implements ITreeContentProvider
    */
   public void dispose()
   {
-  /**/
+      //
   }
 
   /**
@@ -54,6 +54,6 @@ public class FilterDialogTreeContentProvider implements ITreeContentProvider
    */
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-  /**/
+  //
   }
 }

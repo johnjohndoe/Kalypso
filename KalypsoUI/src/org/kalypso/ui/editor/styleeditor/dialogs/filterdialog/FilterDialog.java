@@ -276,7 +276,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     // ++++ Comparison filter line
@@ -307,7 +307,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     //	++++ Comparison FilterFilter line
@@ -336,7 +336,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     // ----- SLD Filter
@@ -367,7 +367,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     // **** FOURTH ROW

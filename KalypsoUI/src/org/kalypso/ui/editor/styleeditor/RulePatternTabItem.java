@@ -464,7 +464,9 @@ public class RulePatternTabItem
         {
           int index1 = symbolizerTabFolder.getSelectionIndex();
           if( index1 == ( ruleCollection.get( 0 ).getSymbolizers().length - 1 ) || index1 < 0 )
-          {/**/}
+          {
+              // nothing
+          }
           else
           {
             for( int i = 0; i < ruleCollection.size(); i++ )
