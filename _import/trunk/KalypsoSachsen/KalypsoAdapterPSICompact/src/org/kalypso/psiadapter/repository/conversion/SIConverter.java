@@ -45,14 +45,15 @@ public class SIConverter implements IValueConverter
    */
   private final static double factor( final String unit )
   {
+    // BEWARE: 10^-x does not give the right value 
     if( unit.equals( "m") )
       return 1;
     if( unit.equals( "dm") )
-      return 10^-1;
+      return 0.1;
     if( unit.equals( "cm") )
-      return 10^-2;
+      return 0.01;
     if( unit.equals( "mm") )
-      return 10^-3;
+      return 0.001;
     
     if( unit.equals( "m³") )
       return 1;

@@ -103,12 +103,13 @@ public class PSICompactObservationItem implements IObservation
 
     // Wert (Einheit abfragen)
     final String label = toString();
-    final String unit = PSICompactRepositoryFactory.toKalypsoUnit( psiMD
-        .getUnit() );
+    final int psiUnit = psiMD.getUnit();
+    final String unit = PSICompactRepositoryFactory.toKalypsoUnit( psiUnit );
+    
     axes[1] = new DefaultAxis( label, measureTypeToString(), unit,
         Double.class, 1, false );
-
-    m_vc = PSICompactRepositoryFactory.getConverter( psiMD.getUnit(), unit );
+    
+    m_vc = PSICompactRepositoryFactory.getConverter( psiUnit, unit );
 
     // Status
     axes[2] = KalypsoStatusUtils.getStatusAxisFor( axes[1], 2 );

@@ -154,7 +154,7 @@ public class MetaDocSerializer
 
     if( splits.length > 1 )
       return splits[1];
-    else
-      return prop;
+
+    return prop;
   }
 }
