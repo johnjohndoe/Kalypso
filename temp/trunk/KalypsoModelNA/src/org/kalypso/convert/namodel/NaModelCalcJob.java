@@ -470,11 +470,13 @@ public class NaModelCalcJob extends AbstractCalcJob
   {
     // TODO: use it, or REMOVE it
     log.getClass();
-
-    addDirToResults( simDir, "inp.dat", outputdir );
-    addDirToResults( simDir, "start", outputdir );
-    addDirToResults( simDir, "klima.dat", outputdir );
-    addDirToResults( simDir, "out_we.nat", outputdir );
+    
+    File hiddenDir=new File(outputdir,".ascci");
+    
+    addDirToResults( simDir, "inp.dat", hiddenDir );
+    addDirToResults( simDir, "start", hiddenDir );
+    addDirToResults( simDir, "klima.dat", hiddenDir );
+    addDirToResults( simDir, "out_we.nat", hiddenDir );
     //    final File inpDir = new File( simDir, "inp.dat" );
     //    // inputdateien
     //    final File[] inpDirResults = inpDir.listFiles();

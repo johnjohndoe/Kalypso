@@ -126,7 +126,7 @@ public class NAControlConverter
     for( int i = 0; i < nodeFEs.length; i++ )
     {
       // fuer root node immer ein ergebnis generieren
-      if(rootNodeID.equals(nodeFEs[i].getId()))
+      if(rootNodeID!=null && rootNodeID.equals(nodeFEs[i].getId()))
         b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
       // fuer nicht root node nur ergebnisse generieren wenn gewuenscht
       else if( !onlyRootNodeResult && FeatureHelper.booleanIsTrue( nodeFEs[i], "generateResult", false ) )

@@ -4,22 +4,12 @@
 	<import namespace="obslink.zml.kalypso.org" 
 		schemaLocation="obslink.xsd"/>
 	<element name="NAModellControl" type="na:_NAModellControlType"/>
-      <complexType name="baseFeatureType">
+    
+	<complexType name="_NAModellControlType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-				</sequence>
-			</extension>
-		</complexContent>
-	  </complexType>
-
-	<complexType name="_NAModellControlType">
-		<complexContent>
-			<extension base="na:baseFeatureType">
-				<sequence>
-					<element name="description" type="string"/>					
-					<element name="name" type="string"/>					
-					<element name="editor" type="string"/>					
+					<element name="editor" type="string"/>			
 					<element name="comment" type="string"/>
 					<element name="calctime" type="dateTime"/>
 					<element name="startsimulation" type="dateTime"/>

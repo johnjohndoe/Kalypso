@@ -157,7 +157,7 @@ public class CatchmentManager extends AbstractManager
     // is absolute
     // do copy
     Object link = NAZMLGenerator
-        .copyToTimeseriesLink( orgTsFile.toURL(), NAZMLGenerator.NA_NIEDERSCHLAG_EINGABE, m_conf
+        .copyToTimeseriesLink( orgTsFile.toURL(), NAZMLGenerator.NA_LINK_N, m_conf
             .getGmlBaseDir(),relativeZmlPath, false ,false);
     FeatureProperty niederschlagZRRepositoryProp = FeatureFactory.createFeatureProperty( "niederschlagZRRepository",
         link );
@@ -167,7 +167,7 @@ public class CatchmentManager extends AbstractManager
     // no copy
 
     Object relativeLink = NAZMLGenerator
-    .copyToTimeseriesLink( orgTsFile.toURL(), NAZMLGenerator.NA_NIEDERSCHLAG_EINGABE, m_conf
+    .copyToTimeseriesLink( orgTsFile.toURL(), NAZMLGenerator.NA_LINK_N, m_conf
         .getGmlBaseDir(),relativeZmlPath, true ,true);
     FeatureProperty niederschlagZRProp = FeatureFactory.createFeatureProperty( "niederschlagZR",
         relativeLink );

@@ -26,7 +26,6 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class UpdateModell
 {
-
   private final URL m_modellURL;
 
   public UpdateModell( URL modellURL ) throws Exception
@@ -38,8 +37,19 @@ public class UpdateModell
   {
     URL schemaURL = KalypsoNADefaultSchema.getInstance().getDefaultNaModellSchemaURL();
     GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modellURL, schemaURL );
-    updateRepositoryLinks( workspace );
-    updateZuflussNamen(workspace);
+
+    // Catchments...
+    final FeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
+    final Feature[] catchmentFEs = workspace.getFeatures( catchmentFT );
+    updateCatchments( catchmentFEs );
+    // Nodes
+    final FeatureType nodeFT = workspace.getFeatureType( "Node" );
+    final Feature[] nodeFEs = workspace.getFeatures( nodeFT );
+    updateNodes( nodeFEs );        
+    
+    updatePegel(workspace);
+
+    //    updateZuflussNamen( workspace );
     File file = File.createTempFile( "modellUpdate", ".gml" );
     Writer writer = new FileWriter( file );
     GmlSerializer.serializeWorkspace( writer, workspace );
@@ -64,186 +74,327 @@ public class UpdateModell
     }
   }
 
-  public static void updateRepositoryLinks( GMLWorkspace workspace ) throws Exception
-  {
-    // Catchments...
-    final FeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
-    final Feature[] catchmentFEs = workspace.getFeatures( catchmentFT );
-    updateCatchments( catchmentFEs );
-    updateCatchments( catchmentFEs );
-    updatePegel( workspace );
-    final FeatureType nodeFT = workspace.getFeatureType( "Node" );
-    final Feature[] nodeFEs = workspace.getFeatures( nodeFT );
-    updateNodes( nodeFEs );
-  }
 
   private static void updateCatchments( Feature[] features ) throws Exception
   {
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
-      // messung setzten:
-      TimeseriesLink tsLinkMessung = (TimeseriesLink)feature
-          .getProperty( "niederschlagZRRepository" );
-      tsLinkMessung.setHref( WeisseElsterConstants.PREFIX_LINK_GebietsNiederschlagModell
-          + feature.getId() );
-
-      // vorhersage setzen:
-//      TimeseriesLink tsLinkVorhersage = (TimeseriesLink)feature
-//          .getProperty( "niederschlagZRRepositoryVorhersage" );
-//      tsLinkVorhersage.setHref( WeisseElsterConstants.PREFIX_LINK_NIEDERSCHLAGVORHERSAGE
-//          + feature.getId() + ".zml" );
-
+      // messung
+      TimeseriesLink linkMessung = NAZMLGenerator.generateobsLink(
+          WeisseElsterConstants.PREFIX_LINK_GebietsNiederschlagModell + feature.getId(),
+          NAZMLGenerator.NA_LINK_N );
+      setTSLink( feature, "niederschlagZRRepository", linkMessung );
+      // vorhersage
       TimeseriesLink linkVorhersage = NAZMLGenerator.generateobsLink(
           WeisseElsterConstants.PREFIX_LINK_NIEDERSCHLAGVORHERSAGE + feature.getId() + ".zml",
-          NAZMLGenerator.NA_NIEDERSCHLAG_EINGABE );
-      FeatureProperty property = FeatureFactory.createFeatureProperty(
-          "niederschlagZRRepositoryVorhersage", linkVorhersage );
-      feature.setProperty( property );
+          NAZMLGenerator.NA_LINK_N );
+      setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkVorhersage );
+      // berechnung
+      TimeseriesLink linkBerechnung = NAZMLGenerator.generateobsLink(
+          WeisseElsterConstants.PREFIX_LINK_N_LOKAL + feature.getId() + ".zml",
+          NAZMLGenerator.NA_LINK_N );
+      setTSLink( feature, "niederschlagZR", linkBerechnung );
     }
   }
 
-  private final static String[][] m_zufluss =
-  {
-      new String[]
-      {
-          "Neukirchen",
-          "Node7300" },
-      new String[]
-      {
-          "Poehl",
-          "Node1301" },
-      new String[]
-      {
-          "Droeda",
-          "Node6100" },
-      new String[]
-      {
-          "Boehlen",
-          "Node7100" },
-      new String[]
-      {
-          "Magwitz",
-          "Node1500" } };
+  private final static int POS_NAME = 0;
 
-  private static void updateZuflussNamen( GMLWorkspace workspace )
-  {
-    for( int i = 0; i < m_zufluss.length; i++ )
-    {
-      final String[] zuflussContext = m_zufluss[i];
-      final String zuflussID = zuflussContext[1];
-      final Feature feature = workspace.getFeature( zuflussID );
-      final FeatureProperty nameProp = FeatureFactory.createFeatureProperty( "name",
-          zuflussContext[0] );
-      feature.setProperty( nameProp );
-    }
-  }
+  private final static int POS_FID = 1;
+
+  private final static int POS_ZML = 2;
+
+  private final static int POS_PSI_ID = 3;
+
+  // "P":Pegel "Z":Zufluss "-":nicht verfuegbar
+  private final static int POS_TYPE = 4;
 
   private final static String[][] m_pegel =
   {
       // kaputte pegel und noch nicht verfuegbare pegel sind kommentiert
       //  new String[]{"Bad Elster","Node1800","adorf.zml"},
+      /*
+       * [1] Pegel-Name [2] FeatureID [3] zml [4] PSI-ID
+       */
+      // 1
+      new String[]
+      {
+          "Bad Elster",
+          "Node1800",
+          null, // TODO
+          "576391",
+          "-P", },
+      // 2
       new String[]
       {
           "Adorf",
           "Node1700",
-          "adorf.zml" },
+          "q_adorf.zml",
+          "576400",
+          "P" },
+      //3
       new String[]
       {
           "Oelsnitz",
           "Node1600",
-          "oelsnitz.zml" },
+          "q_oelsnitz.zml",
+          "576410",
+          "P" },
+      //4
       new String[]
       {
           "Strassberg",
           "Node1401",
-          "strassberg.zml" },
+          "q_strassberg.zml",
+          "576421",
+          "P" },
+      //5
       new String[]
       {
           "Elsterberg",
           "Node1300",
-          "elsterberg.zml" },
-      //  new String[]{"Rodewisch","Node4200","rodewisch.zml"},
+          "q_elsterberg.zml",
+          "576440",
+          "P" },
+      //6
+      new String[]
+      {
+          "Rodewisch",
+          "Node4200",
+          null, // TODO
+          "577211",
+          "-P" },
+      //7
       new String[]
       {
           "Mylau",
           "Node4100",
-          "mylau.zml" },
+          "q_mylau.zml",
+          "577211",
+          "P" },
+      //8
       new String[]
       {
           "Greiz",
           "Node1220",
-          "greiz.zml" },
+          "q_greiz.zml",
+          "576470", // TODO ist nicht in PSI enthalten
+          "-P" },
+      //9
       new String[]
       {
           "Weida",
           "Node2002",
-          "weida.zml" },
+          "q_weida.zml",
+          "577320", // TODO ist nicht in PSI enthlten
+          "-P" },
+      //10
       new String[]
       {
-          "Gera",
+          "Gera-Langenberg",
           "Node1210",
-          "gera.zml" },
-      //  new String[]{"Zeitz","Node1110","zeitz.zml"},
+          "q_gera.zml",
+          "576520",
+          "P" },
+      //11
+      new String[]
+      {
+          "Zeitz",
+          "Node1110",
+          "q_zeitz.zml",
+          null, // TODO keine PSI-ID
+          "-P" },
+      //12
       new String[]
       {
           "Kleindalzig",
           "Node1020",
-          "kleindalzig.zml" },
-      //  new String[]{"Albrechtshain","Node3201","albrechtshain.zml"},
+          "q_kleindalzig.zml",
+          "576631",
+          "P" },
+      //13
+      new String[]
+      {
+          "Albrechtshain",
+          "Node3201",
+          null, // TODO
+          "578090", // TODO nicht in PSI enthalten
+          "-P" },
+      //14
       new String[]
       {
           "Leipzig-Thekla",
           "Node3100",
-          "leipzig-thekla.zml" },
+          "q_leipzig-thekla.zml",
+          "578110",
+          "P" },
+      //15
       new String[]
       {
           "Oberthau",
           "Node1001",
-          "oberthau.zml" },
+          "q_oberthau.zml",
+          null, // keine PSI-ID
+          "-P" },
+      //16
       new String[]
       {
           "Neukirchen",
           "Node7300",
-          "neukirchen.zml" },
+          "q_neukirchen.zml",
+          "577501",
+          "P" },
+      //17
       new String[]
       {
           "Goessnitz",
           "Node7200",
-          "goessnitz.zml" } };
+          "q_goessnitz.zml",
+          "577510",
+          "P" },
+      // Z1
+      new String[]
+      {
+          "Droeda",
+          "Node6100",
+          "q_droeda.zml",
+          "577050", // TODO nicht in PSI enthalten
+          "-Z" },
+      //Z2
+      new String[]
+      {
+          "Magwitz",
+          "Node1500",
+          null, // TODO
+          "576420",
+          "-Z" },
+      //Z3
+      new String[]
+      {
+          "Poehl",
+          "Node1301",
+          null, // TODO
+          "577110",
+          "-Z" },
+      //Z4
+      new String[]
+      {
+          "Boehlen",
+          "Node7100",
+          "q_boehlen.zml",
+          "577571", // TODO nicht in PSI enthalten
+          "-Z" },
+      //Z5 ist auch 16 Koberbach
+      // TODO darf nicht gleichzeitig zufluss und pegel sein
+      new String[]
+      {
+          "Neukirchen",
+          "Node7300",
+          "q_neukirchen.zml",
+          "577501",
+          "Z" }, };
 
-  private static void updatePegel( GMLWorkspace workspace )
+  private static void updatePegel( GMLWorkspace workspace ) throws Exception
   {
     for( int i = 0; i < m_pegel.length; i++ )
     {
       final String[] pegelContext = m_pegel[i];
-      final String nodeID = pegelContext[1];
-      final Feature feature = workspace.getFeature( nodeID );
-      final FeatureProperty nameProp = FeatureFactory.createFeatureProperty( "name",
-          pegelContext[0] );
-      feature.setProperty( nameProp );
-      try
-      {
-        TimeseriesLink link = NAZMLGenerator.generateobsLink(
-            WeisseElsterConstants.PREFIX_LINK_FLUSSPEGEL + pegelContext[2],
-            NAZMLGenerator.NA_PEGEL_MESSUNG );
-        FeatureProperty linkProp = FeatureFactory.createFeatureProperty( "pegelZRRepository", link );
-        feature.setProperty( linkProp );
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-      }
+      final String fId = pegelContext[POS_FID];
+      final String name = pegelContext[POS_NAME];
+      final String psiID = pegelContext[POS_PSI_ID];
+      final String zml = pegelContext[POS_ZML];
+      final String type = pegelContext[POS_TYPE];
+      boolean available = true;
+      if( type.indexOf( "-" ) > -1 )
+        available = false;
 
+      final Feature fe = workspace.getFeature( fId );
+      fe.setProperty( FeatureFactory.createFeatureProperty( "name", name ) );
+      //zuflussRep
+      if( type.indexOf( "Z" ) > -1 )
+      {
+        if( available )
+        {
+          TimeseriesLink zuflussRep = NAZMLGenerator.generateobsLink(
+              WeisseElsterConstants.PREFIX_LINK_WQ_Zufluss_Rep + psiID,
+              NAZMLGenerator.NA_LINK_WQ );
+          setTSLink( fe, "zuflussZRRepository", zuflussRep );
+        }
+        else
+        {
+          TimeseriesLink zuflussRep = NAZMLGenerator.generateobsLink(
+              WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Zufluss_Rep + fId,
+              NAZMLGenerator.NA_LINK_WQ );
+          setTSLink( fe, "zuflussZRRepository", zuflussRep );
+        }
+      }
+      //zuflussRepVorhersage
+      if( type.indexOf( "Z" ) > -1 )
+      {
+        if( available )
+        {
+          TimeseriesLink zuflussRepVorhersage = NAZMLGenerator.generateobsLink(
+              WeisseElsterConstants.PREFIX_LINK_WQ_Zufluss_Rep_Vorhersage + psiID,
+              NAZMLGenerator.NA_LINK_WQ );
+          setTSLink( fe, "zuflussZRRepositoryVorhersage", zuflussRepVorhersage );
+        }
+        else
+        {
+          TimeseriesLink zuflussRepVorhersage = NAZMLGenerator.generateobsLink(
+              WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Zufluss_Rep + fId,
+              NAZMLGenerator.NA_LINK_WQ );
+          setTSLink( fe, "zuflussZRRepositoryVorhersage", zuflussRepVorhersage );
+        }
+          // zufluss lokal
+          TimeseriesLink linkZufluss = NAZMLGenerator.generateobsLink(
+              WeisseElsterConstants.PREFIX_LINK_WQ_ZUFLUSS_LOKAL + fe.getId() + ".zml",
+              NAZMLGenerator.NA_LINK_WQ );
+          setTSLink( fe, "zuflussZR", linkZufluss );
+      }
+      //pegelRep
+      if( type.indexOf( "P" ) > -1)        
+      {
+        if(available)
+        {
+        TimeseriesLink pegelRep = NAZMLGenerator
+            .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_Pegel_Rep + psiID,
+                NAZMLGenerator.NA_LINK_WQ );
+        setTSLink( fe, "pegelZRRepository", pegelRep );
+        }
+        else if(zml!=null)
+        {
+          TimeseriesLink pegelRep = NAZMLGenerator.generateobsLink(
+              WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Pegel_Rep + zml,
+              NAZMLGenerator.NA_LINK_WQ );
+          setTSLink( fe, "pegelZRRepository", pegelRep );
+          }
+      }
     }
-
   }
 
-  private static void updateNodes( Feature[] features )
+  private static void updateNodes( Feature[] features ) throws Exception
   {
+    // lokale ZR werden fuer alle gesetzt.
     for( int i = 0; i < features.length; i++ )
     {
-      final Feature feature = features[i];
+      final Feature fe = features[i];
+      // pegel lokal
+      TimeseriesLink linkPegel = NAZMLGenerator.generateobsLink(
+          WeisseElsterConstants.PREFIX_LINK_WQ_PEGEL_LOKAL + fe.getId() + ".zml",
+          NAZMLGenerator.NA_LINK_WQ );
+      setTSLink( fe, "pegelZR", linkPegel );
+      // berechnet
+      TimeseriesLink linkBerechnet = NAZMLGenerator.generateobsLink(
+          WeisseElsterConstants.PREFIX_LINK_WQ_BERECHNET_LOKAL + fe.getId() + ".zml",
+          NAZMLGenerator.NA_LINK_WQ );
+      setTSLink( fe, "qberechnetZR", linkBerechnet );
+      
+      setTSLink( fe, "zuflussZR", null );
+      setTSLink( fe, "pegelZRRepository",null);
+      setTSLink( fe, "zuflussZRRepository",null);
+      setTSLink( fe, "zuflussZRRepositoryVorhersage",null);
+      FeatureProperty nameProp=FeatureFactory.createFeatureProperty("name",null);
+      fe.setProperty(nameProp);
       //      final TimeseriesLink messPegel =
       // (TimeseriesLink)feature.getProperty( "pegelZRRepository" );
       //      if( messPegel != null )
@@ -253,12 +404,18 @@ public class UpdateModell
       //        if( m_availablePegel.indexOf( feature.getId() ) < 0 )
       //          feature.setProperty( null );
       //      }
-      TimeseriesLink zuflussPegel = (TimeseriesLink)feature.getProperty( "zuflussZRRepository" );
-      if( zuflussPegel != null )
-        zuflussPegel.setHref( WeisseElsterConstants.PREFIX_LINK_ZUFLUSSPEGEL + feature.getId() );
+      //      TimeseriesLink zuflussPegel = (TimeseriesLink)feature.getProperty(
+      // "zuflussZRRepository" );
+      //      if( zuflussPegel != null )
+      //        zuflussPegel.setHref( WeisseElsterConstants.PREFIX_LINK_ZUFLUSSPEGEL +
+      // feature.getId() );
     }
   }
 
+  private static void setTSLink( Feature fe, String propName, TimeseriesLink tsLink )
+  {
+    fe.setProperty( FeatureFactory.createFeatureProperty( propName, tsLink ) );
+  }
   // TODO
   //    <temperaturZRRepository/>
   //    <temperaturZRRepositoryVorhersage/>

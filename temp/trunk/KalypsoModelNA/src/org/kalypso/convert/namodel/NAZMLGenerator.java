@@ -31,13 +31,13 @@ public class NAZMLGenerator
 
   final static SimpleDateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
 
-  public static final int NA_NIEDERSCHLAG_EINGABE = 1;
+  public static final int NA_LINK_N = 1;
 
   public static final int NA_ZUFLUSS_EINGABE = 2;
 
   public static final int NA_ABFLUSS_BERECHNET = 3;
 
-  public static final int NA_PEGEL_MESSUNG = 4;
+  public static final int NA_LINK_WQ = 4;
   
   final static NAZMLGenerator m_singelton = new NAZMLGenerator();
 
@@ -173,7 +173,7 @@ public class NAZMLGenerator
     buffer.append( "<axis name=\"" + getAxisName( 2, type ) + "\" " );
     switch( type )
     {
-    case NA_NIEDERSCHLAG_EINGABE:
+    case NA_LINK_N:
       buffer.append( " type=\"pegel\" unit=\"m\" datatype=\"TYPE=xs:double\">" );
       break;
     case NA_ZUFLUSS_EINGABE:
@@ -192,7 +192,7 @@ public class NAZMLGenerator
   {
     switch( type )
     {
-    case NA_NIEDERSCHLAG_EINGABE:
+    case NA_LINK_N:
       return col == 1 ? TimeserieConstants.TYPE_DATE : TimeserieConstants.TYPE_RAINFALL;
     case NA_ZUFLUSS_EINGABE:
       return col == 1 ? TimeserieConstants.TYPE_DATE : TimeserieConstants.TYPE_RUNOFF;
@@ -206,13 +206,13 @@ public class NAZMLGenerator
   {
     switch( type )
     {
-    case NA_NIEDERSCHLAG_EINGABE:
+    case NA_LINK_N:
       return col == 1 ? "Datum" : TimeserieConstants.TYPE_RAINFALL;//"Niederschlag";
     case NA_ZUFLUSS_EINGABE:
       return col == 1 ? "Datum" : TimeserieConstants.TYPE_RUNOFF;//"Abfluss";
     case NA_ABFLUSS_BERECHNET:
         return col == 1 ? "Datum" : TimeserieConstants.TYPE_RUNOFF;//"Abfluss";
-    case NA_PEGEL_MESSUNG:
+    case NA_LINK_WQ:
         return col == 1 ? "Datum" : TimeserieConstants.TYPE_RUNOFF;//"Abfluss";
     default:
       break;
@@ -225,7 +225,7 @@ public class NAZMLGenerator
   {
     switch( type )
     {
-    case NA_NIEDERSCHLAG_EINGABE:
+    case NA_LINK_N:
     case NA_ZUFLUSS_EINGABE:
       createGRAPFile( writer, type, observation );
       break;
