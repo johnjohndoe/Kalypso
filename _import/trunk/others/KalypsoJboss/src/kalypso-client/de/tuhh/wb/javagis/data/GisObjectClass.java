@@ -9,7 +9,7 @@ import java.util.Vector;
 import java.util.Enumeration;
 
 import java.awt.geom.Point2D;
-import de.tuhh.wb.javagis.model.BasePointTransfer;         
+import de.tuhh.wb.javagis.model.BasePointTransfer;
 import de.tuhh.wb.javagis.view.netview.GisPoint;
 import javax.ejb.ObjectNotFoundException;
 
@@ -54,7 +54,7 @@ public class GisObjectClass extends GisElementClass
 				newRelation.add(gisRelationClass); // 0
 				newRelation.add(idList.elementAt(r)); // 1
 				newRelations.add(newRelation);
-			    }				
+			    }
 		    }
 		forwardRelations.put(oId,newRelations);
 	    }
@@ -77,7 +77,7 @@ public class GisObjectClass extends GisElementClass
 		    {
 			Vector relations=(Vector)allRelations.elementAt(i);
 			String relationClassKey=(String)relations.elementAt(0);
-			System.out.println("relation from \""+relationClassKey+"\"");				
+			System.out.println("relation from \""+relationClassKey+"\"");
 			GisRelationClass gisRelationClass=myVersion.getGisRelationClass(relationClassKey);
 			Vector idList=(Vector)relations.elementAt(1);
 			System.out.println("numer of Relations :"+idList.size());
@@ -160,12 +160,15 @@ public class GisObjectClass extends GisElementClass
 			}
 		if(!toLoad.isEmpty())
 		    {
-			Hashtable bps=myVersion.getBasePoints(met,toLoad);
-			for (Enumeration e = bps.keys() ; e.hasMoreElements();)
-			    {
-				Object oId=e.nextElement();
-				basePoints.put(oId,new GisPoint((BasePointTransfer)bps.get(oId)));
-			    }
+				if(hasSymbol())
+				{
+				    Hashtable bps=myVersion.getBasePoints(met,toLoad);
+					for (Enumeration e = bps.keys() ; e.hasMoreElements();)
+			    	{
+						Object oId=e.nextElement();
+						basePoints.put(oId,new GisPoint((BasePointTransfer)bps.get(oId)));
+			    	}
+				}
 		    }
 	    }
 	catch(ObjectNotFoundException e)

@@ -98,12 +98,12 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 	desktop.setPreferredSize(new Dimension(600,500));
         getContentPane().add(desktop,BorderLayout.CENTER);
 
-	I18n.setLanguage("deu");
+//	I18n.setLanguage("deu");
 	UIDefaults defaults = UIManager.getDefaults();
 	defaults.put("OptionPane.yesButtonText",I18n.get("Dia_Yes"));
 	defaults.put("OptionPane.noButtonText",I18n.get("Dia_No"));
 	defaults.put("OptionPane.cancelButtonText",I18n.get("Dia_Cancel"));
-	defaults.put("OptionPane.okButtonText",I18n.get("Dia_OK"));
+		 defaults.put("OptionPane.okButtonText",I18n.get("Dia_OK"));
         setTitle(I18n.get("windowTitle"));
         setVisible(true);
 

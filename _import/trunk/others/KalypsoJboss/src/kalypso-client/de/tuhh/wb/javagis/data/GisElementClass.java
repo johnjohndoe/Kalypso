@@ -126,10 +126,7 @@ public abstract class GisElementClass implements TableListener
     
     public String getName()
     {
-	String language = I18n.getLanguage();
-		if(language.equals("eng"))
-		   return mm.elementNames[met];
-		else
+
 			return I18n.get("GECName_"+mm.elementNames[met]);
     }
     public String getKey()
@@ -138,10 +135,7 @@ public abstract class GisElementClass implements TableListener
     }
     public String getDescription()
     {
-	String language = I18n.getLanguage();
-	if(language.equals("eng"))
-		   return mm.elementDescriptions[met];
-		else
+
 			return I18n.get("GECDescription_"+mm.elementDescriptions[met]);
     }
     public boolean isRelation()
@@ -168,10 +162,7 @@ public abstract class GisElementClass implements TableListener
     }
     public String getSimplePropertyName(int n)
     {
-	String language = I18n.getLanguage();
-	if(language.equals("eng"))
-		   return mm.simplePropertyNames[met][n];
-		else
+
 			return I18n.get("GECSimplePropName_"+mm.simplePropertyNames[met][n]);
     }
 
@@ -186,11 +177,7 @@ public abstract class GisElementClass implements TableListener
     }
 
     public String getSimplePropertyDescription(int n)
-    {
-	String language = I18n.getLanguage();
-		if(language.equals("eng"))
-		   return mm.simplePropertyDescriptions[met][n];
-		else
+	{
 			return I18n.get("GECDescription_"+mm.simplePropertyDescriptions[met][n]);
     }
 
@@ -215,10 +202,7 @@ public abstract class GisElementClass implements TableListener
     
     public String getVectorSetDescription(int n)
     {
-	String language = I18n.getLanguage();
-		if(language.equals("eng"))
-		  	return mm.vectorSetDescriptions[met][n];
-		else
+
 		 return I18n.get("GECVectorSetDescription_"+mm.vectorSetDescriptions[met][n]);
 	//return mm.vectorSetDescriptions[met][n];
     }
