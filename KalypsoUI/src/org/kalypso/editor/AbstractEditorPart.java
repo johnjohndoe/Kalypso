@@ -345,7 +345,7 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
     m_commandManager.removeCommandManagerListener( l );
   }
   
-  public ISchedulingRule getShedulingRule()
+  public ISchedulingRule getSchedulingRule()
   {
     return myMutexRule;
   }

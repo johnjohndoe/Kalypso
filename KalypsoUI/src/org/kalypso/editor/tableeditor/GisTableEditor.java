@@ -207,7 +207,6 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     {
       final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)plugin.getPool( KalypsoFeatureLayer.class )
           .borrowObject( new PoolableObjectType( m_type, m_source, project ) );
-
       final List columnList = layerType.getColumn();
       final LayerTableModel.Column[] columns = new LayerTableModel.Column[columnList.size()];
       int count = 0;

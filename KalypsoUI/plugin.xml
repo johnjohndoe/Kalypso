@@ -177,5 +177,27 @@
             selected="false"
             pattern="*.gml"/>
    </extension>
+   <extension
+         id="ModelNature"
+         name="ModelNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run class="org.kalypso.ui.nature.ModelNature"/>
+      </runtime>
+      <options allowLinking="true"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="Kalypso"
+            id="org.kalypso.ui.wizardCategory"/>
+      <wizard
+            icon="icons/sample.gif"
+            class="org.kalypso.ui.wizard.NewCalculationCaseWizard"
+            category="org.kalypso.ui.wizardCategory"
+            name="Rechenfall"
+            id="org.kalypso.wizard.newCalcCase">
+      </wizard>
+   </extension>
 
 </plugin>

@@ -167,8 +167,6 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
 
   protected void createColumns()
   {
-    System.out.println( "clear columns" );
-
     if( m_model == null )
       return;
 
@@ -216,7 +214,6 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
    */
   public void onColumnsChanged()
   {
-    System.out.println( "on columns changhed" );
     m_viewer.getControl().getDisplay().asyncExec( new Runnable()
     {
       public void run()

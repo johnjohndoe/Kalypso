@@ -185,6 +185,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     super.stop( context );
   }
 
+  public static String getId()
+  {
+    return getDefault().getBundle().getSymbolicName();
+  }
+  
   /**
    * Returns the shared instance.
    */
