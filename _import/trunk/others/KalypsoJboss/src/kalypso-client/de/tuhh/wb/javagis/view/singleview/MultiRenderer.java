@@ -41,8 +41,6 @@ public class MultiRenderer extends DefaultTableCellRenderer {
 	}
 	
 	
-	
-	
     String str = (value == null) ? "" : value.toString();
     return super.getTableCellRendererComponent(
          table,str,isSelected,hasFocus,row,column);
