@@ -19,8 +19,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class TransformVisitor implements FeatureVisitor
 {
-  private final CS_CoordinateSystem m_targetCRS;
-
   private GeoTransformer m_transformer;
 
   /** feature -> exception */
@@ -28,8 +26,6 @@ public class TransformVisitor implements FeatureVisitor
 
   public TransformVisitor( final CS_CoordinateSystem targetCRS )
   {
-    m_targetCRS = targetCRS;
-
     try
     {
       m_transformer = new GeoTransformer( targetCRS );

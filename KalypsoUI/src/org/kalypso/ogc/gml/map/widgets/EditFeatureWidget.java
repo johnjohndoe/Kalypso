@@ -4,12 +4,13 @@ import java.awt.Point;
 
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.geometry.GM_Position;
+import org.deegree_impl.model.feature.visitors.FindNearestVisitor;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
@@ -48,19 +49,17 @@ public class EditFeatureWidget extends AbstractWidget
       if( activeTheme instanceof IKalypsoFeatureTheme )
       {
         final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)activeTheme;
-        featureTheme.getFeatureList().query( position, null );
 
-        // todo: Sollte so etwas nicht eine Zentrale Stelle machen?
+        // TODO: Sollte so etwas nicht eine Zentrale Stelle machen?
         final GeoTransform transform = getMapPanel().getProjection();
         final double gisRadius = transform.getSourceX( m_point.getX() + 20 ) - position.getX();
-
-        // TODO: geht nur bei Punkten
-        final JMSelector selector = new JMSelector( JMSelector.MODE_COLLECT );
-
-        final Feature fe = selector.selectNearest( position, gisRadius, featureTheme.getFeatureList(), false,
-            -1 );
-
-        editFeature( featureTheme, featureTheme.getWorkspace(), fe );
+        
+        final FindNearestVisitor visitor = new FindNearestVisitor( position, gisRadius );
+        final FeatureList featureList = featureTheme.getFeatureList();
+        featureList.accept( visitor );
+        final Feature result = visitor.getResult();
+        if( result != null )
+          editFeature( featureTheme, featureTheme.getWorkspace(), result );
       }
     }
     return null;

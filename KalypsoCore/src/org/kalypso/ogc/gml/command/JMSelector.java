@@ -171,6 +171,10 @@ public class JMSelector
     for( int i = 0; i < listFE.size(); i++ )
     {
       final Feature fe = (Feature)listFE.get( i );
+      
+      // TODO: ich bin der Meinung das ist bloedsinn, Gernot
+      // TODO: nachtrag: es konnte auch bisher nicht richtig funktionierne,
+      // weil deegree die distance nicht implementiert hat!
       if( result == null
           || result.getDefaultGeometryProperty().distance( fe.getDefaultGeometryProperty() ) < dist )
         result = fe;

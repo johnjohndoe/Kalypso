@@ -111,7 +111,7 @@ public class GMLFeatureAdapter
    *         IOException
    * @throws XMLParsingException
    */
-  public static FeatureCollection wrap( Reader reader ) throws IOException, XMLParsingException,
+  public static FeatureCollection wrap( Reader reader ) throws XMLParsingException,
       GM_Exception
   {
     Debug.debugMethodBegin();
@@ -349,7 +349,7 @@ public class GMLFeatureAdapter
    * @throws FeatureException
    */
   private static void openRootElement( DeegreeFeature feature, Map namespaces, Map prefixes,
-      Map schemaRef, PrintWriter pw ) throws IOException, FeatureException
+      Map schemaRef, PrintWriter pw ) throws FeatureException
   {
     Debug.debugMethodBegin();
 
@@ -559,7 +559,7 @@ public class GMLFeatureAdapter
     Debug.debugMethodBegin();
 
     // <boundedBy>
-    Element elem = XMLTools.getChildByName( "boundedBy", CommonNamespaces.GMLNS, element );
+    /* Element elem = */XMLTools.getChildByName( "boundedBy", CommonNamespaces.GMLNS, element );
     //        GM_Envelope bbox = null;
 
     //        if ( elem != null ) {
@@ -631,7 +631,7 @@ public class GMLFeatureAdapter
    * 
    * @throws XMLParsingException
    */
-  private static FeatureType createFeatureType( Element element ) throws XMLParsingException
+  private static FeatureType createFeatureType( Element element )
   {
     Debug.debugMethodBegin();
 
@@ -785,45 +785,6 @@ public class GMLFeatureAdapter
     return flag;
   }
 
-  /**
-   * returns the boundingbox of the feature
-   * 
-   * @param element
-   *          <boundedBy>
-   * 
-   * @return instance of <tt>GM_Envelope</tt>
-   * 
-   * @throws XMLParsingException
-   */
-  private static GM_Envelope createBoundedBy( Element element ) throws XMLParsingException
-  {
-    Debug.debugMethodBegin();
-
-    GM_Position[] bb = null;
-    Element elem = XMLTools.getRequiredChildByName( "Box", CommonNamespaces.GMLNS, element );
-    ElementList el = XMLTools.getChildElementsByName( "coord", CommonNamespaces.GMLNS, elem );
-
-    if( el != null )
-    {
-      bb = new GM_Position[2];
-      bb[0] = createPositionFromCoord( el.item( 0 ) );
-      bb[1] = createPositionFromCoord( el.item( 1 ) );
-    }
-    else
-    {
-      Element elem_ = XMLTools.getChildByName( "coordinates", CommonNamespaces.GMLNS, elem );
-
-      if( elem_ != null )
-      {
-        bb = createPositionFromCoordinates( elem_ );
-      }
-    }
-
-    GM_Envelope box = GeometryFactory.createGM_Envelope( bb[0], bb[1] );
-
-    Debug.debugMethodEnd();
-    return box;
-  }
 
   /**
    * 
@@ -935,7 +896,6 @@ public class GMLFeatureAdapter
    * @throws XMLParsingException
    */
   public static GM_Position[] createPositionFromCoordinates( Element element )
-      throws XMLParsingException
   {
     Debug.debugMethodBegin();
 

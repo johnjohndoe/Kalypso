@@ -29,7 +29,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
-import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureControlFactory;
+import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.ogc.sensor.view.ObservationCache;
@@ -92,7 +92,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private ILoaderFactory m_loaderFactory;
 
-  private DefaultFeatureControlFactory m_defaultFeatureControlFactory;
+  private DefaultFeatureModifierFactory m_defaultFeatureControlFactory;
 
   /**
    * The constructor. Manages the configuration of the kalypso client.
@@ -555,7 +555,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   public IFeatureModifierFactory createFeatureTypeCellEditorFactory()
   {
     if( m_defaultFeatureControlFactory == null )
-      m_defaultFeatureControlFactory = new DefaultFeatureControlFactory();
+      m_defaultFeatureControlFactory = new DefaultFeatureModifierFactory();
     return m_defaultFeatureControlFactory;
   }
 }

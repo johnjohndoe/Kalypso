@@ -11,7 +11,6 @@ import java.util.TreeMap;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
-import org.kalypso.template.obsdiagview.ObjectFactory;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxis;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
@@ -30,7 +29,6 @@ import org.kalypso.util.pool.ResourcePool;
  */
 public class LinkedDiagramTemplate extends DefaultDiagramTemplate implements IPoolListener
 {
-  private static ObjectFactory m_objectFactory;
   private final ResourcePool m_pool;
   private final TreeMap m_key2curves;
   private final Hashtable m_curve2key;

@@ -182,6 +182,20 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    */
   public double distance( GM_Object gmo )
   {
+    // ziemlicher hack, um die distance zu ermitteln, vermutlich sehr teuer (=langsam)
+    
+    try
+    {
+      final Geometry otherGmo = JTSAdapter.export( gmo );
+      final Geometry thisGmo = JTSAdapter.export( this );
+      
+      return otherGmo.distance( thisGmo );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+    
     return -9999;
   }
 

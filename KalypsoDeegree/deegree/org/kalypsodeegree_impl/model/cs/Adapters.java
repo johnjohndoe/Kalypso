@@ -843,19 +843,19 @@ public class Adapters
    * @throws RemoteException
    *           if a remote call failed.
    */
-  public Unit wrap( final CS_Unit unit ) throws RemoteException
+  public Unit wrap( final CS_Unit unit )
   {
     if( unit == null )
       return null;
     if( unit instanceof CS_LinearUnit )
     {
-      final double metersPerUnit = ( (CS_LinearUnit)unit ).getMetersPerUnit();
+//      final double metersPerUnit = ( (CS_LinearUnit)unit ).getMetersPerUnit();
       //return Unit.METRE.scale(metersPerUnit);
       return null;
     }
     if( unit instanceof CS_AngularUnit )
     {
-      final double radiansPerUnit = ( (CS_AngularUnit)unit ).getRadiansPerUnit();
+//      final double radiansPerUnit = ( (CS_AngularUnit)unit ).getRadiansPerUnit();
       //return Unit.RADIAN.scale(radiansPerUnit);
       return null;
     }

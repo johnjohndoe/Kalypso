@@ -106,6 +106,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
 
         Feature fe = selector.selectNearest( pointSelect, gisRadius,
             ((IKalypsoFeatureTheme)activeTheme).getFeatureList(), false, mapPanel.getSelectionID() );
+        
         List listFe = new ArrayList();
         if( fe != null )
           listFe.add( fe );

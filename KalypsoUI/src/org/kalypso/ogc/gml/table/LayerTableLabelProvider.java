@@ -31,7 +31,15 @@ public class LayerTableLabelProvider implements ITableLabelProvider
    */
   public Image getColumnImage( Object element, int columnIndex )
   {
-    return null;
+    // Extrawurscht, wenn Tabelle leer, da trotzdem mit index 0 aufgerufen wird
+    if( m_viewer.getColumnCount() == 0 )
+      return null;
+
+    final Feature feature = (Feature)element;
+
+    final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
+    
+    return modifier.getImage( feature );
   }
 
   /**
@@ -46,7 +54,8 @@ public class LayerTableLabelProvider implements ITableLabelProvider
     final Feature feature = (Feature)element;
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
-    return modifier.getValue( feature ).toString();
+    
+    return modifier.getLabel( feature ).toString();
   }
 
   /**
@@ -54,7 +63,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider
    */
   public void addListener( final ILabelProviderListener listener )
   {
-    // TODO  Listener informieren, wenn sich der Wert eines Features ge?ndert hat?
+    // TODO  Listener informieren, wenn sich der Wert eines Features geändert hat?
   }
 
   /**
@@ -62,7 +71,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider
    */
   public boolean isLabelProperty( final Object element, final String property )
   {
-    return false;
+    return true;
   }
 
   /**

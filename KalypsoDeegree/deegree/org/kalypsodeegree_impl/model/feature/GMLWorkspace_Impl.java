@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureAssociationTypeProperty;
+import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.FeatureVisitor;
@@ -42,7 +43,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return (Feature)m_indexMap.get( id );
   }
 
-  public GMLWorkspace_Impl( final FeatureType[] featureTypes, final Feature feature, final URL context )
+  public GMLWorkspace_Impl( final FeatureType[] featureTypes, final Feature feature,
+      final URL context )
   {
     m_featureTypes = featureTypes;
     m_context = context;
@@ -74,7 +76,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     for( int _ft = 0; _ft < linkFTs.length; _ft++ )
     {
       Feature[] features = getFeatures( linkFTs[_ft] );
-      // TODO performance-todo: todo oben aufloesen und hier das feature
+      // todo: performance-todo: todo oben aufloesen und hier das feature
       // aus dem hash holen:
       for( int i = 0; i < features.length; i++ )
       {
@@ -111,7 +113,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       for( int _ft = 0; _ft < linkFTs.length; _ft++ )
       {
         Feature[] features = getFeatures( linkFTs[_ft] );
-        // TODO performance-todo: todo oben aufloesen und hier das feature
+        // todo performance-todo: todo oben aufloesen und hier das feature
         // aus dem hash holen:
         for( int i = 0; i < features.length; i++ )
         {
@@ -148,7 +150,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     {
       e.printStackTrace();
     }
-      
+
     final Collection results = visitor.getResults();
     return (Feature[])results.toArray( new Feature[results.size()] );
   }
@@ -204,7 +206,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         result.add( features[i] );
     }
 
-    FeatureType[] substiFTs = GMLHelper.getResolveSubstitutionGroup( linkSrcFeatureType, getFeatureTypes() );
+    FeatureType[] substiFTs = GMLHelper.getResolveSubstitutionGroup( linkSrcFeatureType,
+        getFeatureTypes() );
     for( int _ft = 0; _ft < substiFTs.length; _ft++ )
     {
       final Feature[] substiFeatures = getFeatures( substiFTs[_ft] );
@@ -221,7 +224,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
     return (Feature[])result.toArray( new Feature[result.size()] );
   }
-  
+
   /**
    * @see org.deegree.model.feature.GMLWorkspace#getModelUrl()
    */
@@ -306,7 +309,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         accept( fv, (Feature)next, depth );
     }
   }
-  
+
   private final class RegisterVisitor implements FeatureVisitor
   {
     /**
@@ -314,13 +317,11 @@ public class GMLWorkspace_Impl implements GMLWorkspace
      */
     public boolean visit( final Feature f )
     {
-      final FeatureType featureType = f.getFeatureType();
-
       final String id = f.getId();
       if( m_indexMap.containsKey( id ) )
         System.out.println( "Workspace already contains a feature with id: " + id );
       m_indexMap.put( id, f );
-      
+
       return true;
     }
   }
@@ -333,24 +334,33 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     for( int i = 0; i < m_featureTypes.length; i++ )
     {
       final FeatureType ft = m_featureTypes[i];
-      if( ft.getName().equals(  featureName ) )
+      if( ft.getName().equals( featureName ) )
         return ft;
     }
-    
+
     return null;
   }
 
   /**
+   * <p>Gibt das durch den FeaturPath gegebene Feature zurück.</p>
+   * <p>Syntax des FeaturePath:
+   * <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei
+   * der featureTypeName optional ist
+   * </p>
+   * <p>Es darf innerhalb des Pfads keine (Feature)Liste vorkommen, nur am Ende</p>
+   * <p>Ist der Typ-Name angegeben und wurde eine Liste gefunden, wird eine (neue) FeatureList
+   * zurückgegeben, deren Elemente alle vom angegebenen Typ sind</p> 
+   * 
    * @see org.deegree.model.feature.GMLWorkspace#getFeatureFromPath(java.lang.String)
    */
   public Object getFeatureFromPath( final String featurePath )
   {
-    final String[] segments = featurePath.split( "/" );
-    
+    final FeaturePath path = new FeaturePath( featurePath );
+
     Feature aktuFeature = getRootFeature();
-    for( int i = 0; i < segments.length; i++ )
+    for( int i = 0; i < path.getLength(); i++ )
     {
-      final Object value = aktuFeature.getProperty( segments[i] );
+      final Object value = aktuFeature.getProperty( path.getSegment( i ) );
       if( value instanceof Feature )
       {
         aktuFeature = (Feature)value;
@@ -361,10 +371,32 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         aktuFeature = getFeature( (String)value );
         continue;
       }
-      else if( value instanceof List )
+      else if( value instanceof FeatureList )
       {
-        // TODO: check if i == segemnt.length - 1
-        return value;
+        // wir können nicht in listen absteigen
+        // deshalb: falls wir auf eine Liste stossen, muss es das ergebnios sein
+        // sonst fehler
+        if( i == path.getLength() - 1 )
+        {
+          final String typename = path.getTypename();
+          if( typename == null )
+            return value;
+
+          // falls ein typ angegeben wurde, nur die Elemente
+          // dieses Typs raussuchen
+          final FeatureTypeVisitor visitor = new FeatureTypeVisitor( typename );
+
+          final FeatureList fl = (FeatureList)value;
+          fl.accept( visitor );
+          final Collection results = visitor.getResults();
+          
+          final FeatureList newList = FeatureFactory.createFeatureList();
+          newList.addAll( results );
+          
+          return newList;
+        }
+        else
+          return null;
       }
     }
 
@@ -372,19 +404,42 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
+   * Holt den durch den FeaturePath angegebenen Typ Systax des FeaturePath:
+   * <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei
+   * der featureTypeName optional ist
+   * 
+   * 
    * @see org.deegree.model.feature.GMLWorkspace#getFeatureTypeFromPath(java.lang.String)
    */
   public FeatureType getFeatureTypeFromPath( final String featurePath )
   {
-    final String[] segments = featurePath.split( "/" );
-    
+    final FeaturePath path = new FeaturePath( featurePath );
+    final String typename = path.getTypename();
+
     FeatureType aktuType = getRootFeature().getFeatureType();
-    for( int i = 0; i < segments.length; i++ )
+    for( int i = 0; i < path.getLength(); i++ )
     {
-      final FeatureAssociationTypeProperty property = (FeatureAssociationTypeProperty)aktuType.getProperty( segments[i] );
-      aktuType = property.getAssociationFeatureType();
+      final FeatureAssociationTypeProperty property = (FeatureAssociationTypeProperty)aktuType
+          .getProperty( path.getSegment( i ) );
+
+      if( i == path.getLength() - 1 && typename != null )
+      {
+        // falls ein typname vorgegeben ist, schaun, ob dieser hier vorkommt
+        final FeatureType[] associationFeatureTypes = property.getAssociationFeatureTypes();
+        for( int j = 0; j < associationFeatureTypes.length; j++ )
+        {
+          final FeatureType type = associationFeatureTypes[j];
+          if( type.getName().equals( typename ) )
+          {
+            aktuType = type;
+            break;
+          }
+        }
+      }
+      else
+        aktuType = property.getAssociationFeatureType();
     }
-    
+
     return aktuType;
   }
 

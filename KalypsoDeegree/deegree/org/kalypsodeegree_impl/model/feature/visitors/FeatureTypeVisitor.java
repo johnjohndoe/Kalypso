@@ -8,7 +8,8 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureVisitor;
 
 /**
- * Collects all features of a given type
+ * <p>Collects all features of a given type</p>
+ * <p>Comparisaon is by name of the given type</p>
  * 
  * @author belger
  */
@@ -16,11 +17,16 @@ public class FeatureTypeVisitor implements FeatureVisitor
 {
   private final Collection m_results = new ArrayList();
   
-  private final FeatureType m_ft;
+  private final String m_typename;
 
   public FeatureTypeVisitor( final FeatureType ft )
   {
-    m_ft = ft;
+    this( ft.getName() );
+  }
+
+  public FeatureTypeVisitor( final String typename )
+  {
+    m_typename = typename;
   }
 
   /**
@@ -28,7 +34,7 @@ public class FeatureTypeVisitor implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    if( f.getFeatureType().equals( m_ft ) )
+    if( m_typename.equals( f.getFeatureType().getName() ) )
       m_results.add( f );
     
     return true;
