@@ -79,7 +79,7 @@ public class ObservationPlot extends XYPlot
   private transient final Map m_chartAxes2Pos;
 
   /** maps the diagram axes (from the template) to a dataset */
-  private transient final Map m_axes2ds = new HashMap();
+  private transient final Map m_diagAxis2ds = new HashMap();
 
   /** maps the diagram curve to the data serie */
   private transient final Map m_curve2serie = new HashMap();
@@ -203,7 +203,7 @@ public class ObservationPlot extends XYPlot
     m_serie2dataset.clear();
     m_curve2serie.clear();
 
-    m_axes2ds.clear();
+    m_diagAxis2ds.clear();
 
     m_chartAxes2Pos.clear();
     m_diag2chartAxis.clear();
@@ -265,18 +265,19 @@ public class ObservationPlot extends XYPlot
 
     m_curve2serie.put( curve, xyc );
 
-    final String key = xDiagAxis.getIdentifier() + "#-#"
-        + yDiagAxis.getIdentifier();
+//    final String key = xDiagAxis.getIdentifier() + "#-#"
+//        + yDiagAxis.getIdentifier();
+    final IDiagramAxis key = yDiagAxis;
 
-    CurveDataset cds = (CurveDataset) m_axes2ds.get( key );
+    CurveDataset cds = (CurveDataset) m_diagAxis2ds.get( key );
 
     if( cds == null )
     {
       cds = new CurveDataset();
 
-      m_axes2ds.put( key, cds );
+      m_diagAxis2ds.put( key, cds );
 
-      int pos = m_axes2ds.values().size();
+      int pos = m_diagAxis2ds.values().size();
 
       setDataset( pos, cds );
       
@@ -354,7 +355,47 @@ public class ObservationPlot extends XYPlot
       final CurveDataset ds = (CurveDataset) m_serie2dataset.get( serie );
 
       if( ds != null )
+      {
         ds.removeCurveSerie( serie );
+        
+        // if dataset is empty, also remove it and the range axis to which it belongs
+        if( ds.getSeriesCount() == 0 )
+        {
+          // and remove the dataset
+          for( int i = 0; i < getDatasetCount(); i++ )
+          {
+            if( getDataset( i ) == ds )
+            {
+              setDataset( i, null );
+              
+              break;
+            }
+          }
+          
+          // step though axes and remove the one that is associated to
+          // the dataset we want to remove
+          final Iterator it = m_diagAxis2ds.keySet().iterator();
+          while( it.hasNext() )
+          {
+            final IDiagramAxis dAxis = (IDiagramAxis) it.next();
+            if( m_diagAxis2ds.get( dAxis ) == ds )
+            {
+              final ValueAxis cAxis = (ValueAxis) m_diag2chartAxis.get( dAxis );
+              final Integer pos = (Integer) m_chartAxes2Pos.get( cAxis );
+              
+              if( getRangeAxis() != getRangeAxis( pos.intValue() ) )
+              {
+                setRangeAxis( pos.intValue(), null );
+              	m_chartAxes2Pos.remove( cAxis );
+              	m_diag2chartAxis.remove( dAxis );
+                m_diagAxis2ds.remove( dAxis );
+                
+              	break;
+              }
+            }
+          }
+        }
+      }
 
       m_curve2serie.remove( curve );
     }

@@ -497,4 +497,21 @@ public class ObservationTableModel extends AbstractTableModel
 
     return model;
   }
+
+  /**
+   * Removes the columns associated to the given theme
+   * 
+   * @param theme
+   * @throws SensorException
+   */
+  public void removeTableViewColumns( final ITableViewTheme theme ) throws SensorException
+  {
+    m_columns.removeAll( theme.getColumns() );
+    
+    final ArrayList cols = new ArrayList( m_columns );
+    clearColumns();
+    
+    for( Iterator it = cols.iterator(); it.hasNext(); )
+      addTableViewColumn( (ITableViewColumn) it.next() );
+  }
 }
