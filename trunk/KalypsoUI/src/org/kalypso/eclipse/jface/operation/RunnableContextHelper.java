@@ -80,7 +80,11 @@ public abstract class RunnableContextHelper implements IRunnableWithProgress
       if( targetException instanceof CoreException )
         status = ( (CoreException)targetException ).getStatus();
       else
-        status = KalypsoGisPlugin.createErrorStatus( targetException.getLocalizedMessage(), targetException );
+      {
+        final String locmsg = targetException.getLocalizedMessage();
+        final String msg = locmsg == null ? "" : locmsg; 
+        status = KalypsoGisPlugin.createErrorStatus( msg, targetException );
+      }
 
       ErrorDialog.openError( shell, title, message, status );
     }

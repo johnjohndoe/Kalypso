@@ -99,14 +99,17 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
   {
     if( m_commandManager != null )
       m_commandManager.resetDirty();
+    if( m_dirtyRunnable != null )
+      m_dirtyRunnable.run();
   }
 
   /**
    * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand,
    *      java.lang.Runnable)
    */
-  public void postCommand( ICommand command, Runnable runnable )
+  public void postCommand( final ICommand command, final Runnable runnable )
   {
+    // runnable is unsused!
     new CommandJob( command, m_commandManager, m_mutexRule, m_dirtyRunnable, CommandJob.POST );
   }
 

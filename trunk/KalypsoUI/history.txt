@@ -9,6 +9,7 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 ----------------
 Version ..... XXXXXXXXXXXXXXXXX
 ----------------
+- FeatureEditor: jetzt mit  Scrollbar
 - Beim Neuanlegen von Features (z.B. Baumansicht) werden diese mit Standardwerten gefüllt
 - Feature-Baumansicht: beim Refresh des Baums (falls sich das GML-Modell ändert) kollabiert der Baum nicht mehr (besser gesagt:
 öffnet sich wider wie vorher)

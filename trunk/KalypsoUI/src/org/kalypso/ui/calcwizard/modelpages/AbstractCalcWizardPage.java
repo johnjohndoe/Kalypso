@@ -165,6 +165,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * geladen wurde. Ansonsten das erste Feature
    */
   private static final String PROP_FEATURE_TO_SELECT_ID = "selectFeatureID";
+  
+  /** Falls true, wird die Karte auf den FullExtent maximiert, sonst wird
+   * {@link #m_wishBoundingBox} angesetzt */
+  private static final String PROP_MAXIMIZEMAP = "maximizeMap";
 
   private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget(
       new DefaultCommandManager(), null );
@@ -353,6 +357,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     MapPanelHelper.createWidgetsForMapPanel( parent.getShell(), m_mapPanel );
 
     m_wishBoundingBox = GisTemplateHelper.getBoundingBox( gisview );
+    if( "true".equals( getArguments().getProperty( PROP_MAXIMIZEMAP, "false" ) ) )
+        m_wishBoundingBox = null;
+    
     final Composite mapComposite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
 
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
@@ -364,6 +371,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_mapPanel.setMapModell( m_mapModell );
     m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
+    // TODO: use widgetID from Konfiguration
     m_mapPanel.changeWidget( widgetID );
 
     m_mapPanel.setBoundingBox( m_wishBoundingBox );
@@ -376,9 +384,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return m_mapModell;
   }
 
-  public void maximizeMap()
+  public final void maximizeMap()
   {
-    m_mapPanel.setBoundingBox( m_wishBoundingBox );
+    if( m_wishBoundingBox == null )
+      m_mapPanel.setBoundingBox( m_mapPanel.getMapModell().getFullExtentBoundingBox() );
+    else
+      m_mapPanel.setBoundingBox( m_wishBoundingBox );
   }
 
   protected Control initDiagram( final Composite parent )
@@ -492,7 +503,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       text.setText( "Fehler beim Laden des TableTemplate" );
     }
   }
-
+  
   protected Control initZmlTable( final Composite parent )
   {
     try
@@ -535,7 +546,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       return new ArrayList();
 
     final IKalypsoTheme activeTheme;
-    if( useTable )
+    if( useTable && m_gisTableViewer != null )
       activeTheme = m_gisTableViewer.getTheme();
     else
       activeTheme = mapModell.getActiveTheme();
@@ -857,7 +868,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
           if( status != Status.OK_STATUS )
             throw new CoreException( status );
         }
-        catch( CoreException e )
+        catch( final CoreException e )
         {
           throw new InvocationTargetException( e );
         }
@@ -880,7 +891,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
           final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
           final GMLWorkspace workspace = kft.getWorkspace();
 
-          final FeatureList featureList = kft.getFeatureList();
+          final FeatureList featureList = kft.getFeatureListVisible( null );
           if( featureList != null && featureList.size() != 0 )
           {
             featureList.accept( new UnselectFeatureVisitor( getSelectionID() ) );
@@ -896,6 +907,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
         refreshDiagram();
         refreshZMLTable();
+        maximizeMap();
       }
     } ).start();
   }

@@ -51,6 +51,7 @@ import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.kalypso.template.featureview.ButtonType;
+import org.kalypso.template.featureview.CheckboxType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Featureview;
 import org.kalypso.template.featureview.GridDataType;
@@ -104,6 +105,19 @@ public class FeatureviewHelper
       editor.setLayoutData( griddata );
 
       return editor;
+    }
+    else if( "java.lang.Boolean".equals( typename ) )
+    {
+      final CheckboxType checkbox = FACTORY.createCheckbox();
+      checkbox.setStyle( SWT.NONE );
+      checkbox.setEditable( true );
+      checkbox.setProperty( ftp.getName() );
+
+      griddata.setHorizontalAlignment( GridData.BEGINNING );
+      griddata.setWidthHint( 100 );
+      checkbox.setLayoutData( griddata );
+
+      return checkbox;
     }
 
     final ButtonType button = FACTORY.createButton();

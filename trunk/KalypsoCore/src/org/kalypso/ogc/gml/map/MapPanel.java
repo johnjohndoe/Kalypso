@@ -401,6 +401,9 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       final CS_CoordinateSystem epsg4326crs = myModell.getCoordinatesSystem();
       
       GM_Envelope bbox = getBoundingBox();
+      if( bbox == null )
+        return 0.0;
+      
       if( !myModell.getCoordinatesSystem().getName().equalsIgnoreCase( "EPSG:4326" ) )
       {
         // transform the bounding box of the request to EPSG:4326
@@ -525,7 +528,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   public void changeWidget( final String widgetID )
   {
-    if( myWidgetManager != null )
+    if( myWidgetManager != null && m_widgets.containsKey( widgetID ) )
       myWidgetManager.changeWidget( (IWidget)m_widgets.get( widgetID ) );
   }
 
