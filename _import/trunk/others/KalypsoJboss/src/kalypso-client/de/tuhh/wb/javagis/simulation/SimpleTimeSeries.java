@@ -50,7 +50,7 @@ public abstract class SimpleTimeSeries
 	System.out.println(" table: "+tableName);
 	System.out.println(" startDate:"+startDate);
 	System.out.println(" endDate:"+endDate);
-
+	    
 	LogView.println("  "+LogView.format(startDate)+" to "+LogView.format(endDate)+" < "+tableName);
 	try
 	    {
@@ -60,15 +60,35 @@ public abstract class SimpleTimeSeries
 			String datePattern=getDatePattern();
 			SimpleDateFormat dateFormat=new SimpleDateFormat(datePattern);
 			File input=File.createTempFile("timeseries",".dat");
-			System.out.println("loadfromwadas:"+tableName);
-			
+								
 			Timeserie timeSerie=Timeserie.findTimeserie(tableName);
+			//System.out.println("timeSerie:"+timeSerie);
 			/*
 			  public TimeserieWrapper(	String tableName,
 			  String srcType,
 			  int sourceID,		  
 			  String info )
 			*/       
+			
+            //in Temp-Zeitreihe 1 Tag am Ende hinzuaddiert (um später Tagesverschiebung bei Langzeitsim durchführen zu können.)
+			Calendar calend = Calendar.getInstance(); 
+			calend.setTime(endDate);
+			//System.out.println("enddate_alt" +endDate);
+			calend.add(Calendar.DATE, 1); 
+			Date newEndDate = calend.getTime(); 
+			//System.out.println("newEndDate" + newEndDate);
+			endDate = newEndDate;
+			
+            //in Temp-Zeitreihe 10 Minuten am Anfang hinzuaddiert. 
+			Calendar calanf = Calendar.getInstance(); 
+			calanf.setTime(startDate);
+			//System.out.println("startdate_alt" +startDate);
+			calanf.add(Calendar.MINUTE, -10); 
+			Date newStartDate = calanf.getTime(); 
+			//System.out.println("newStartDate" + newStartDate);
+			startDate = newStartDate;
+			
+			
 			
 			java.sql.Date sqlStartDate=new java.sql.Date(startDate.getTime());
 			java.sql.Date sqlEndDate=new java.sql.Date(endDate.getTime());
@@ -77,7 +97,7 @@ public abstract class SimpleTimeSeries
 			java.util.Date firstDate=new java.util.Date(realStart.getTime());
 			java.util.Date lastDate=new java.util.Date(realEnd.getTime());
 			int i=timeSerie.ExportToFile(input.getPath(), sqlStartDate, sqlEndDate,seperator,datePattern);
-			
+						
 			LogView.println("  "+LogView.format(firstDate)+" ... "+LogView.format(lastDate)+" available in "+tableName);
 
 			// ************
@@ -97,12 +117,14 @@ public abstract class SimpleTimeSeries
 						{
 						    String dateString=line.substring(0,trim);
 						    String valueString=line.substring(trim+1,trimFlag);
-						    //					    System.out.println("line: "+line);
-						    //					    System.out.print("date: \""+dateString+"\"");
-						    //					    System.out.println(" value is: \""+valueString+"\"");
+						    /*
+						   	  System.out.println("line: "+line);
+						      System.out.print("date: \""+dateString+"\"");
+						      System.out.println(" value is: \""+valueString+"\"");
+						    */
 						    Date date=dateFormat.parse(dateString,new ParsePosition(0));
 						    Double value=new Double(valueString);
-						    //					    System.out.println("got: "+date.toString()+" "+value.toString());
+						    //System.out.println("got: "+date.toString()+" "+value.toString());
 						    store(date,value);
 						}
 					}
