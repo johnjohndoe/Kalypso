@@ -36,8 +36,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   private ResourceBundle m_resourceBundle = null;
 
-  // TODO private OutputLogger m_outputLogger = null;
-
   private CS_CoordinateSystem myCoordinateSystem = null;
   
   private final HashMap myPools = new HashMap();
