@@ -125,7 +125,7 @@ public final class ExcelClipboardAdapter
   {
     public PasteAction()
     {
-      super( "Hinzufügen" );
+      super( "Einfügen" );
     }
 
     public void actionPerformed( ActionEvent e )
