@@ -132,7 +132,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   /** name der modelspec datei, die verwendet wird */
   public final static String PROP_MODELSPEC = "modelspec";
-
+  
   /** Ergebnisordner vor Berechnung loeschen ? ["true"|"false"] */
   public final static String PROP_CLEAR_RESULTS = "clearResultFolder";
 
@@ -359,11 +359,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_wishBoundingBox = GisTemplateHelper.getBoundingBox( gisview );
     if( "true".equals( getArguments().getProperty( PROP_MAXIMIZEMAP, "false" ) ) )
         m_wishBoundingBox = null;
-    
+
     final Composite mapComposite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
-
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
-
+    
     virtualFrame.setVisible( true );
     m_mapPanel.setVisible( true );
     virtualFrame.add( m_mapPanel );
@@ -387,7 +386,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   public final void maximizeMap()
   {
     if( m_wishBoundingBox == null )
-      m_mapPanel.setBoundingBox( m_mapPanel.getMapModell().getFullExtentBoundingBox() );
+    {
+      final GM_Envelope fullExtentBoundingBox = m_mapPanel.getMapModell().getFullExtentBoundingBox();
+      if( fullExtentBoundingBox != null )
+      {
+        final double buffer = Math.max( fullExtentBoundingBox.getWidth(), fullExtentBoundingBox.getHeight() ) * 0.025;
+        m_mapPanel.setBoundingBox( fullExtentBoundingBox.getBuffer( buffer ) );
+      }
+    }
     else
       m_mapPanel.setBoundingBox( m_wishBoundingBox );
   }
@@ -576,13 +582,24 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
       for( int i = 0; i < m_tsProps.length; i++ )
       {
-        final String name = (String)kf.getProperty( m_tsProps[i].getNameColumn() );
+        final TimeserieFeatureProps tsprop = m_tsProps[i];
+        
+        final String nameColumn = tsprop.getNameColumn();
+        String name = tsprop.getNameString();
+        if( nameColumn != null )
+        {
+          final String fname = (String)kf.getProperty( tsprop.getNameColumn() );
+          name = name.replaceAll( "%featureprop%", fname );
+        }
+        else
+          name = tsprop.getNameString();
+        
         final TimeseriesLink obsLink = (TimeseriesLink)kf
-            .getProperty( m_tsProps[i].getLinkColumn() );
+            .getProperty( tsprop.getLinkColumn() );
         if( obsLink != null )
         {
           final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink.getLinktype(),
-              obsLink.getHref(), m_tsProps[i].getFilter() );
+              obsLink.getHref(), tsprop.getFilter(), tsprop.getColor() );
           foundObservations.add( linkWithName );
         }
       }
@@ -605,7 +622,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       if( obsLink != null )
       {
         final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink.getLinktype(),
-            obsLink.getHref(), filter );
+            obsLink.getHref(), filter, null );
         foundObservations.add( linkWithName );
       }
     }

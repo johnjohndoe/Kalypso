@@ -91,9 +91,6 @@ public class TableViewTheme extends AbstractObservationTheme
   
   private void addColumn( final TableViewColumn column )
   {
-    //    if( isNameDefined() )
-    //      column.setName( getName() + " (" + column.getName() + ")" );
-
     m_columns.add( column );
   }
 
@@ -188,8 +185,7 @@ public class TableViewTheme extends AbstractObservationTheme
 
           if( !valueAxis.getType().equals( getIgnoreType() ) )
           {
-            final TableViewColumn col = new TableViewColumn( getName() + " ("
-                + axes[i].getName() + " - " + axes[i].getUnit() + ")",
+            final TableViewColumn col = new TableViewColumn( createCurveName( getName(), obs, valueAxis ),
                 m_editableColumns, 50, keyAxes[0], valueAxis, this, m_template );
 
             addColumn( col );

@@ -116,7 +116,7 @@ public class KalypsoWizardHelper
     {
       final TSLinkWithName link = links[i];
       template.addObservation( link.name, context, link.href, link.linktype,
-          ignoreExceptions, null );
+          ignoreExceptions, null, link.color );
     }
   }
 

@@ -72,29 +72,32 @@ public class DiagViewTheme extends AbstractObservationTheme
 
   private final DiagViewTemplate m_template;
 
-  public DiagViewTheme( DiagViewTemplate template, String name,
-      IVariableArguments args )
+  private final Color m_defaultcolor;
+
+  public DiagViewTheme( final DiagViewTemplate template, final String name,
+      final IVariableArguments args )
+  {
+    this( template, name, null, args, null );
+  }
+
+  public DiagViewTheme( final  DiagViewTemplate template, final String name,
+      final TypeObservation xmlObs )
+  {
+    this( template, name, xmlObs, null, null );
+  }
+
+  public DiagViewTheme( final  DiagViewTemplate template, final String name,
+      final TypeObservation xmlObs, final IVariableArguments args, final Color defaultcolor )
   {
     super( name, args );
-
-    m_template = template;
-    m_xmlObs = null;
-  }
-
-  public DiagViewTheme( DiagViewTemplate template, String name,
-      TypeObservation xmlObs )
-  {
-    super( name, null );
-
+    
     m_template = template;
     m_xmlObs = xmlObs;
+    m_defaultcolor = defaultcolor;
   }
-
+  
   private void addCurve( final DiagViewCurve curve )
   {
-    //    if( isNameDefined() )
-    //      curve.setName( getName() + " (" + curve.getName() + ")" );
-
     m_curves.add( curve );
   }
 
@@ -218,9 +221,9 @@ public class DiagViewTheme extends AbstractObservationTheme
           }
           mappings[1] = new AxisMapping( valueAxis[i], daValue );
 
-          final DiagViewCurve curve = new DiagViewCurve( getName() + " ("
-              + valueAxis[i].getName() + ")", TimeserieUtils
-              .getColorFor( valueAxis[i].getType() ), this, mappings,
+          final Color colorFor = m_defaultcolor != null ? m_defaultcolor : TimeserieUtils
+              .getColorFor( valueAxis[i].getType() );
+          final DiagViewCurve curve = new DiagViewCurve( createCurveName( getName(), obs, valueAxis[i] ), colorFor, this, mappings,
               m_template );
 
           addCurve( curve );

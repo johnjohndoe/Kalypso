@@ -49,9 +49,17 @@ import java.util.Properties;
  */
 public class TimeserieFeatureProps
 {
+  /** If set, use this property of the feature to create name */
   private final static String PROP_NAMECOLUMN = "nameColumn";
 
+  /** If {@link #PROP_NAMECOLUMN} is not set, use this name instead */
+  private final static String PROP_NAMESTRING = "nameString";
+
   private final static String PROP_LINKCOLUM = "linkColumn";
+
+  private final static String PROP_COLOR = "color";
+  
+  private final static String DEFAULT_NAMESTRING = "%obsname% (%axisname%)";
 
   private final String m_nameColumn;
 
@@ -61,14 +69,27 @@ public class TimeserieFeatureProps
 
   private static final String PROP_FILTER = "filter";
 
+  private final String m_nameString;
+
+  private final String m_color;
+
   public TimeserieFeatureProps( final Properties props )
   {
-    this( props.getProperty( PROP_NAMECOLUMN ), props.getProperty( PROP_LINKCOLUM ),props.getProperty( PROP_FILTER ) );
+    this( props.getProperty( PROP_NAMECOLUMN ), props.getProperty( PROP_NAMESTRING ), props.getProperty( PROP_LINKCOLUM ),props.getProperty( PROP_FILTER ), props.getProperty( PROP_COLOR ) );
   }
 
-  public TimeserieFeatureProps( final String nameColumn, final String linkColumn, final String filter )
+  public TimeserieFeatureProps( final String nameColumn, final String nameString, final String linkColumn, final String filter, final String color )
   {
     m_nameColumn = nameColumn;
+    m_color = color;
+
+    if( nameColumn != null && nameString == null )
+      m_nameString = "%featureprop%";
+    else if( nameString == null )
+      m_nameString = DEFAULT_NAMESTRING;
+    else
+      m_nameString = nameString;
+    
     m_linkColumn = linkColumn;
     m_filter = filter;
   }
@@ -92,5 +113,15 @@ public class TimeserieFeatureProps
   public String getNameColumn( )
   {
     return m_nameColumn;
+  }
+  
+  public String getNameString()
+  {
+    return m_nameString;
+  }
+  
+  public String getColor()
+  {
+    return m_color;
   }
 }

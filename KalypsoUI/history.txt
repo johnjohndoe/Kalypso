@@ -9,6 +9,8 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 ----------------
 Version ..... XXXXXXXXXXXXXXXXX
 ----------------
+- Wizard: Spaltenbeschriftung und Legendeneinträge jetzt frei konfigurierbar
+- Wizard: Diagrammfarben für Kurven können jetzt festgelegt werden
 - FeatureEditor: jetzt mit  Scrollbar
 - Beim Neuanlegen von Features (z.B. Baumansicht) werden diese mit Standardwerten gefüllt
 - Feature-Baumansicht: beim Refresh des Baums (falls sich das GML-Modell ändert) kollabiert der Baum nicht mehr (besser gesagt:
@@ -18,7 +20,6 @@ beim Durchführen der Berechnung nicht mehr nach Q (leider musste dafür die Posit
 - Bei GIS-Tabellen jetzt auch Eingabe von Dezimahlzahlen mit Komma ',' möglich
 - Bugfix SpreePlugin: Bei Leerstellen in der Bodenfeuchtentabelle gabs ne NullpointerException. 
 Jetzt Behandlung wie bei 0.0: optimaler Wert wird ermittelt und übernommen.
-
 
 ----------------
 Version 0.0.4 (Deploy vom 10.02.2005)

@@ -40,6 +40,8 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
+import java.awt.Color;
+
 /**
  * @author belger
  */
@@ -48,16 +50,9 @@ public class TSLinkWithName
   public final String name;
   public final String linktype;
   public final String href;
+  public final Color color;
 
-  /**
-   * Constructor
-   * 
-   * @param sname
-   * @param slinktype
-   * @param shref
-   * @param filter
-   */
-  public TSLinkWithName( final String sname, final String slinktype, final String shref, final String filter )
+  public TSLinkWithName( final String sname, final String slinktype, final String shref, final String filter, final String scolor )
   {
     this.name = sname;
     this.linktype = slinktype;
@@ -66,5 +61,7 @@ public class TSLinkWithName
       this.href = shref + "?" + filter;
     else
       this.href = shref;
+    
+    color = scolor == null ? null : Color.decode( scolor );
   }
 }
