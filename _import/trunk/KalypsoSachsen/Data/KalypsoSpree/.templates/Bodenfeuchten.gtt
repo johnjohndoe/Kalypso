@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gistableview xmlns="gistableview.template.kalypso.org">
-<layer featurePath="EZCollectionAssociation/EZMember" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="calcCase.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"><column editable="false" name="Name" width="98"/><column editable="false" name="BodenfeuchteMin" width="102"/><column editable="true" name="Bodenfeuchte" width="93"/><column editable="false" name="BodenfeuchteMax" width="108"/>
+<layer featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="calcCase.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"><column editable="false" name="Name" width="98"/><column editable="false" name="BodenfeuchteMin" width="102"/><column editable="true" name="Bodenfeuchte" width="93"/><column editable="false" name="BodenfeuchteMax" width="108"/>
 </layer></gistableview>
 

@@ -6,12 +6,12 @@
 				<Einzugsgebiet fid="EZ_1">
 					<Name>Schirgiswalde</Name>
 					<Ort>
-						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
-							<gml:coordinates cs="," decimal="." ts=" ">14.437256873558024,51.08040338685404</gml:coordinates>
-						</gml:Point>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5460570,5660600</gml:coordinates>
+				</gml:Point>
 					</Ort>
 					<BodenfeuchteMin>0.01</BodenfeuchteMin>
-					<Bodenfeuchte>200.0</Bodenfeuchte>
+					<Bodenfeuchte>0.0</Bodenfeuchte>
 					<BodenfeuchteMax>70.0</BodenfeuchteMax>
 					<Ausdehnung/>
 					<Niederschlag_gemessen>
@@ -38,9 +38,9 @@
 				<Einzugsgebiet fid="EZ_2">
 					<Name>Bautzen</Name>
 					<Ort>
-						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
-							<gml:coordinates cs="," decimal="." ts=" ">14.408197495081502,51.16548358289859</gml:coordinates>
-						</gml:Point>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5458610,5670080</gml:coordinates>
+				</gml:Point>
 					</Ort>
 					<BodenfeuchteMin>0.01</BodenfeuchteMin>
 					<Bodenfeuchte>0.0</Bodenfeuchte>
@@ -70,9 +70,9 @@
 				<Einzugsgebiet fid="EZ_3">
 					<Name>Gröditz 1</Name>
 					<Ort>
-						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
-							<gml:coordinates cs="," decimal="." ts=" ">14.62508257367659,51.2031475145876</gml:coordinates>
-						</gml:Point>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5473800,5674170</gml:coordinates>
+				</gml:Point>
 					</Ort>
 					<BodenfeuchteMin>0.01</BodenfeuchteMin>
 					<Bodenfeuchte>0.0</Bodenfeuchte>
@@ -102,9 +102,9 @@
 				<Einzugsgebiet fid="EZ_4">
 					<Name>Jänkendorf</Name>
 					<Ort>
-						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
-							<gml:coordinates cs="," decimal="." ts=" ">14.813769036234167,51.253582013997914</gml:coordinates>
-						</gml:Point>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5487000,5679730</gml:coordinates>
+				</gml:Point>
 					</Ort>
 					<BodenfeuchteMin>0.01</BodenfeuchteMin>
 					<Bodenfeuchte>100.0</Bodenfeuchte>
@@ -134,9 +134,9 @@
 				<Einzugsgebiet fid="EZ_5">
 					<Name>Särichen</Name>
 					<Ort>
-						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
-							<gml:coordinates cs="," decimal="." ts=" ">14.88692561760173,51.27255353885482</gml:coordinates>
-						</gml:Point>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5492110,5681830</gml:coordinates>
+				</gml:Point>
 					</Ort>
 					<BodenfeuchteMin>0.01</BodenfeuchteMin>
 					<Bodenfeuchte>0.0</Bodenfeuchte>
@@ -170,9 +170,9 @@
 				<FlusslaufModell fid="FM_1">
 					<Name>Lieske</Name>
 					<Ort>
-						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
-							<gml:coordinates cs="," decimal="." ts=" ">14.532194783483517,51.33181354139722</gml:coordinates>
-						</gml:Point>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5467400,5688520</gml:coordinates>
+				</gml:Point>
 					</Ort>
 					<Korrektur_Faktor>1.0</Korrektur_Faktor>
 					<Korrektur_Niveau>0.0</Korrektur_Niveau>
@@ -193,9 +193,9 @@
 				<FlusslaufModell fid="FM_2">
 					<Name>Boxberg</Name>
 					<Ort>
-						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
-							<gml:coordinates cs="," decimal="." ts=" ">14.576562666413441,51.40677424585018</gml:coordinates>
-						</gml:Point>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5470540,5696840</gml:coordinates>
+				</gml:Point>
 					</Ort>
 					<Korrektur_Faktor>1.0</Korrektur_Faktor>
 					<Korrektur_Niveau>0.0</Korrektur_Niveau>
@@ -216,9 +216,9 @@
 				<FlusslaufModell fid="FM_3">
 					<Name>Sprey</Name>
 					<Ort>
-						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
-							<gml:coordinates cs="," decimal="." ts=" ">14.521964471920874,51.432363723905716</gml:coordinates>
-						</gml:Point>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5466760,5699710</gml:coordinates>
+				</gml:Point>
 					</Ort>
 					<Korrektur_Faktor>1.0</Korrektur_Faktor>
 					<Korrektur_Niveau>0.0</Korrektur_Niveau>
@@ -239,9 +239,9 @@
 				<FlusslaufModell fid="FM_4">
 					<Name>Spreewitz</Name>
 					<Ort>
-						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
-							<gml:coordinates cs="," decimal="." ts=" ">14.406166144736858,51.512108877614835</gml:coordinates>
-						</gml:Point>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5458780,5708640</gml:coordinates>
+				</gml:Point>
 					</Ort>
 					<Korrektur_Faktor>1.0</Korrektur_Faktor>
 					<Korrektur_Niveau>0.0</Korrektur_Niveau>
@@ -261,7 +261,11 @@
 			<FlusslaufModellMember>
 				<FlusslaufModell fid="FM_5">
 					<Name>Spremberg</Name>
-					<Ort/>
+					<Ort>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5457218,5712942</gml:coordinates>
+				</gml:Point>
+					</Ort>
 					<Korrektur_Faktor>1.0</Korrektur_Faktor>
 					<Korrektur_Niveau>0.0</Korrektur_Niveau>
 					<Korrektur_Laufzeit>0.0</Korrektur_Laufzeit>
@@ -286,9 +290,10 @@
 					<Name>Quitzdorf</Name>
 					<Anfangsstauvolumen>0.0</Anfangsstauvolumen>
 					<Ort>
-						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
-							<gml:coordinates cs="," decimal="." ts=" ">14.748527499155514,51.290946380065435</gml:coordinates>
-						</gml:Point>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<!-- Koordinaten Pegel Sproitz -->
+					<gml:coordinates cs="," decimal="." ts=" ">5482460,5683900</gml:coordinates>
+				</gml:Point>
 					</Ort>
 					<Abgabe_eingang>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/QV_TSQUITZ.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -306,9 +311,9 @@
 					<Name>Bautzen</Name>
 					<Anfangsstauvolumen>0.0</Anfangsstauvolumen>
 					<Ort>
-						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
-							<gml:coordinates cs="," decimal="." ts=" ">14.47438224624109,51.21722084046126</gml:coordinates>
-						</gml:Point>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5463280,5675800</gml:coordinates>
+				</gml:Point>
 					</Ort>
 					<Abgabe_eingang>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/QV_TSBAUTZ.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -328,7 +333,11 @@
 			<FlutungMember>
 				<Flutung fid="F_1">
 					<Name>Überleitung Restlochkette</Name>
-					<Ort/>
+					<Ort>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5453430,5711860</gml:coordinates>
+				</gml:Point>
+					</Ort>
 					<Abgabe_eingang>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/QV_RLKETTE.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</Abgabe_eingang>
@@ -340,7 +349,11 @@
 			<FlutungMember>
 				<Flutung fid="F_2">
 					<Name>Zuleiter Restloch Lohsa II</Name>
-					<Ort/>
+					<Ort>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5465479,5698587</gml:coordinates>
+				</gml:Point>
+					</Ort>
 					<Abgabe_eingang>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/QV_LOHSA.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</Abgabe_eingang>
@@ -352,7 +365,11 @@
 			<FlutungMember>
 				<Flutung fid="F_3">
 					<Name>Zuleiter Restloch Bärwalde</Name>
-					<Ort/>
+					<Ort>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5466760,5697400</gml:coordinates>
+				</gml:Point>
+					</Ort>
 					<Abgabe_eingang>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/QV_BWALDE.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</Abgabe_eingang>
@@ -364,7 +381,11 @@
 			<FlutungMember>
 				<Flutung fid="F_4">
 					<Name>Abzweig Kleine Spree</Name>
-					<Ort/>
+					<Ort>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5467640,5681840</gml:coordinates>
+				</gml:Point>
+					</Ort>
 					<Abgabe_eingang>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/QV_SPWIESE.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</Abgabe_eingang>
@@ -381,9 +402,9 @@
 				<Zufluss fid="Z_1">
 					<Name>Burgneudorf</Name>
 					<Ort>
-						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
-							<gml:coordinates cs="," decimal="." ts=" ">14.389326189879572,51.5001565935295</gml:coordinates>
-						</gml:Point>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5457600,5707320</gml:coordinates>
+				</gml:Point>
 					</Ort>
 					<Zugabe_eingang>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/QP_BURGNEU.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
