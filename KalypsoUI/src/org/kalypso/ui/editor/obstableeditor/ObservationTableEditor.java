@@ -177,7 +177,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
       if( storage instanceof TemplateStorage )
       {
         final TemplateStorage ts = (TemplateStorage) storage;
-        Thread.sleep( 500 );
+        Thread.sleep( 750 );
         m_template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
             "zml", false, null );
       }

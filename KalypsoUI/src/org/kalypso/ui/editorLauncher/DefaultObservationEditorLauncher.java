@@ -1,8 +1,7 @@
 package org.kalypso.ui.editorLauncher;
 
-import java.io.StringWriter;
+import java.net.MalformedURLException;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.IEditorDescriptor;
@@ -11,7 +10,7 @@ import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.eclipse.ui.editorinput.StorageEditorInput;
+import org.kalypso.ogc.sensor.template.PseudoTemplateEditorInput;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 
 /**
@@ -52,25 +51,20 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
    */
   public IEditorInput createInput( final IFile file )
   {
-    StringWriter writer = null;
     try
     {
       final IPath projectRelativePath = file.getProjectRelativePath();
       
-      final StorageEditorInput input = new StorageEditorInput(
+      final PseudoTemplateEditorInput input = new PseudoTemplateEditorInput(
           new TemplateStorage( file, ResourceUtilities
               .createURL( file ), "project:/" + projectRelativePath ) );
 
       return input;
     }
-    catch( Exception e )
+    catch( MalformedURLException e )
     {
       e.printStackTrace();
       return null;
-    }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
     }
   }
 }

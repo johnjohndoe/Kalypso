@@ -57,6 +57,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
     getTreeViewer().addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers,
         new DropAdapter( getTreeViewer() ) );
 
+    getTreeViewer().setLabelProvider( new ObsDiagTemplateLabelProvider() );
     getTreeViewer().setContentProvider( new ObsDiagTemplateContentProvider() );
     getTreeViewer().setInput( m_template );
 
