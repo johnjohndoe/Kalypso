@@ -7,7 +7,7 @@
 		<column editable="true" name="BodenfeuchteMin" width="120"/>
 		<column editable="true" name="Bodenfeuchte" width="44"/>
 		<column editable="true" name="BodenfeuchteMax" width="45"/>
-		<column editable="true" name="Niederschlag_eingabeEingang" width="78"/>
+		<column editable="true" name="Niederschlag_rechnung" width="78"/>
 		<column editable="true" name="Wasserstand_gemessenEingang" width="100"/>
 		<column editable="false" name="Wasserstand_gemessen" width="100"/>
 		<column editable="false" name="Wasserstand_gerechnet" width="100"/>

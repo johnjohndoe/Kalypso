@@ -66,8 +66,9 @@
 					<element name="Bodenfeuchte" type="double"/>
 					<element name="BodenfeuchteMax" type="double"/>
 					<element name="Ausdehnung" type="double"/>
-					<element name="Niederschlag_eingabeEingang" type="obslink:TimeseriesLink"/>
-					<element name="Niederschlag_eingabe" type="spree:TimeseriesLinkType"/>
+					<element name="Niederschlag_gemessen" type="obslink:TimeseriesLink"/>
+					<element name="Niederschlag_prognose" type="obslink:TimeseriesLink"/>
+					<element name="Niederschlag_rechnung" type="spree:TimeseriesLinkType"/>
 					<element name="Wasserstand_gemessenEingang" type="spree:TimeseriesLinkType"/>
 					<element name="Wasserstand_gemessen" type="spree:TimeseriesLinkType"/>
 					<element name="Wasserstand_gerechnet" type="spree:TimeseriesLinkType"/>

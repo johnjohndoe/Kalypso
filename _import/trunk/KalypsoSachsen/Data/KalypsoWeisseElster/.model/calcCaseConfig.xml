@@ -59,7 +59,7 @@
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
 			<argument name="feature" value="Catchment"/>
-			<argument name="sourceObservation" value="niederschlagZRRepository"/>
+			<argument name="sourceObservation1" value="niederschlagZRRepository"/>
 			<argument name="targetObservation" value="niederschlagZR"/>
 			<argument name="targetFolder" value=":calcdir:"/>
 			<argument name="startsim" value=":startsim:"/>
@@ -70,7 +70,7 @@
 	<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
 			<argument name="feature" value="Node"/>
-			<argument name="sourceObservation" value="zuflussZRRepository"/>
+			<argument name="sourceObservation1" value="zuflussZRRepository"/>
 			<argument name="targetObservation" value="zuflussZR"/>
 			<argument name="targetFolder" value=":calcdir:"/>
 			<argument name="startsim" value=":startsim:"/>
@@ -81,7 +81,7 @@
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
 			<argument name="feature" value="Node"/>
-			<argument name="sourceObservation" value="pegelZRRepository"/>
+			<argument name="sourceObservation1" value="pegelZRRepository"/>
 			<argument name="targetObservation" value="pegelZR"/>
 			<argument name="targetFolder" value=":calcdir:"/>
 			<argument name="startsim" value=":startsim:"/>

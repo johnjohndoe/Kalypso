@@ -14,12 +14,15 @@
 					<Bodenfeuchte>200.0</Bodenfeuchte>
 					<BodenfeuchteMax>70.0</BodenfeuchteMax>
 					<Ausdehnung/>
-					<Niederschlag_eingabeEingang>
+					<Niederschlag_gemessen>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/PA_SCHIRG.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</Niederschlag_eingabeEingang>
-					<Niederschlag_eingabe>
+					</Niederschlag_gemessen>
+					<Niederschlag_prognose>
+						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/PA_SCHIRG.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</Niederschlag_prognose>
+					<Niederschlag_rechnung>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./zeitreihen/PA_SCHIRG.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</Niederschlag_eingabe>
+					</Niederschlag_rechnung>
 					<Wasserstand_gemessenEingang>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/W_SCHIRG.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</Wasserstand_gemessenEingang>
@@ -43,12 +46,15 @@
 					<Bodenfeuchte>0.0</Bodenfeuchte>
 					<BodenfeuchteMax>130.0</BodenfeuchteMax>
 					<Ausdehnung/>
-					<Niederschlag_eingabeEingang>
+					<Niederschlag_gemessen>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/PA_BAUTZWB.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</Niederschlag_eingabeEingang>
-					<Niederschlag_eingabe>
+					</Niederschlag_gemessen>
+					<Niederschlag_prognose>
+						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/PA_BAUTZWB.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</Niederschlag_prognose>
+					<Niederschlag_rechnung>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./zeitreihen/PA_BAUTZWB.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</Niederschlag_eingabe>
+					</Niederschlag_rechnung>
 					<Wasserstand_gemessenEingang>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/W_BAUTZWB.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</Wasserstand_gemessenEingang>
@@ -72,12 +78,15 @@
 					<Bodenfeuchte>0.0</Bodenfeuchte>
 					<BodenfeuchteMax>70.0</BodenfeuchteMax>
 					<Ausdehnung/>
-					<Niederschlag_eingabeEingang>
+					<Niederschlag_gemessen>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/PA_GROEDI.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</Niederschlag_eingabeEingang>
-					<Niederschlag_eingabe>
+					</Niederschlag_gemessen>
+					<Niederschlag_prognose>
+						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/PA_GROEDI.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</Niederschlag_prognose>
+					<Niederschlag_rechnung>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./zeitreihen/PA_GROEDI.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</Niederschlag_eingabe>
+					</Niederschlag_rechnung>
 					<Wasserstand_gemessenEingang>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/W_GROEDI.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</Wasserstand_gemessenEingang>
@@ -101,12 +110,15 @@
 					<Bodenfeuchte>100.0</Bodenfeuchte>
 					<BodenfeuchteMax>200.0</BodenfeuchteMax>
 					<Ausdehnung/>
-					<Niederschlag_eingabeEingang>
+					<Niederschlag_gemessen>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/PA_JAENKD.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</Niederschlag_eingabeEingang>
-					<Niederschlag_eingabe>
+					</Niederschlag_gemessen>
+					<Niederschlag_prognose>
+						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/PA_JAENKD.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</Niederschlag_prognose>
+					<Niederschlag_rechnung>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./zeitreihen/PA_JAENKD.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</Niederschlag_eingabe>
+					</Niederschlag_rechnung>
 					<Wasserstand_gemessenEingang>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/W_JAENKD.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</Wasserstand_gemessenEingang>
@@ -130,12 +142,15 @@
 					<Bodenfeuchte>0.0</Bodenfeuchte>
 					<BodenfeuchteMax>310.0</BodenfeuchteMax>
 					<Ausdehnung/>
-					<Niederschlag_eingabeEingang>
+					<Niederschlag_gemessen>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/PA_SAERI.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</Niederschlag_eingabeEingang>
-					<Niederschlag_eingabe>
+					</Niederschlag_gemessen>
+					<Niederschlag_prognose>
+						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/PA_SAERI.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</Niederschlag_prognose>
+					<Niederschlag_rechnung>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./zeitreihen/PA_SAERI.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</Niederschlag_eingabe>
+					</Niederschlag_rechnung>
 					<Wasserstand_gemessenEingang>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:Spree://2004/W_SAERI.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</Wasserstand_gemessenEingang>
