@@ -218,13 +218,18 @@ public class CatchmentManager extends AbstractManager
     for( int i = 5; i <= 8; i++ )
       writer.write( toAscci( feature, i ) + "\n" );
 
+    Double banf = (Double)feature.getProperty("faktorBianf");
+    
     // 9
     List list = (List)feature.getProperty( "bodenkorrekturmember" );
     Iterator iter = list.iterator();
     while( iter.hasNext() )
     {
       Feature fe = (Feature)iter.next();
-
+      if(banf!=null)
+      {
+        fe.setProperty(FeatureFactory.createFeatureProperty("banf",banf));
+      }
       writer.write( toAscci( fe, 9 ) + "\n" );
     }
     // 10-12

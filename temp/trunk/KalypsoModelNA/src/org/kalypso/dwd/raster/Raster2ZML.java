@@ -57,6 +57,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class Raster2ZML
 {
+    public static boolean TEST_SCENARIO = false;
+
     private final File m_ascciZmlDir;
 
     private final HashMap m_store;
@@ -101,11 +103,11 @@ public class Raster2ZML
 
     private static final int KEY_GEO_Point_4326 = -9970;
 
-    private static final int KEY_GEO_Point_31467 = -9972;
 
     private static final int FAKE_DENSITY = 10;
 
     private static DecimalFormat m_decimalFormat = new DecimalFormat();
+
     static
     {
         DecimalFormatSymbols dfs = new DecimalFormatSymbols();
@@ -154,11 +156,17 @@ public class Raster2ZML
                 continue;
 
             }
-            line.trim();
-            final String[] values = (line.trim()).split(" +", 13);
+            final String[] values;
+             if(raster.getKey()==KEY_RAIN && TEST_SCENARIO)
+               values=line.trim().replaceAll("[0-9]+", "100").split(" +", 13);
+             else
+            values = (line.trim()).split(" +", 13);
+            
             if (raster != null)
-                raster.addValues(values);
-        }
+            {
+              raster.addValues(values);
+            }
+            }
         storeRaster(raster);
     }
 
@@ -183,8 +191,9 @@ public class Raster2ZML
         }
     }
 
-    public void createZML(Feature[] fe) throws Exception
+    public boolean createZML(Feature[] fe) throws Exception
     {
+        boolean result=true;
         final SplitSort featureSort = new SplitSort();
         final HashMap f2rasterPos = new HashMap();
         for (int i = 0; i < fe.length; i++)
@@ -200,23 +209,23 @@ public class Raster2ZML
                 .getDefaultGeometryProperty().getCoordinateSystem());
         final DWDRaster bbox_GK_Raster = transformRaster(bbox_4326_Raster,
                 transformer);
-//        final DWDRaster point_GK_Raster = transformRaster(point_4326_Raster,
-//                transformer);
         final DWDRaster fake_GK_Raster = createFakeRaster(point_4326_Raster,
                 FAKE_DENSITY, transformer);
 
+        System.out.println("calculate raster to catchment mapping");
         for (int i = 0; i < bbox_GK_Raster.size(); i++)
         {
             final GM_Surface bbox = (GM_Surface) bbox_GK_Raster.getElementAt(i);
             final List featureList = featureSort.query(bbox.getEnvelope(),
                     new ArrayList());
+            if(featureList.size()>0)
+              System.out.println(featureList.size()+" catchmets intersect raster");
             for (Iterator iter = featureList.iterator(); iter.hasNext();)
             {
                 final Feature feature = (Feature) iter.next();
                 // for those catchments that will not be catched by the
                 // rasterpoints
                 ((List) f2rasterPos.get(feature)).add(new Integer(i));
-
                 final List pointList = (List) fake_GK_Raster.getElementAt(i);
                 for (Iterator iterator = pointList.iterator(); iterator
                         .hasNext();)
@@ -228,20 +237,22 @@ public class Raster2ZML
                 }
             }
         }
-
         Set set = f2rasterPos.keySet();
+        
         for (Iterator iter = set.iterator(); iter.hasNext();)
         {
             Feature feature = (Feature) iter.next();
             List posList = (List) f2rasterPos.get(feature);
-            createTimserie(feature.getId(), posList);
+            if(!createTimserie(feature.getId(), posList))
+              result=false;
         }
-
+        return result;
     }
 
     private DWDRaster createFakeRaster(DWDRaster pointGeoRaster, int max,
             GeoTransformer transformer) throws Exception
     {
+      System.out.println("increase resolution of raster");
         double dx = rasterDX / (2d *  max);
         double dy = rasterDY / (2d * max);
         final DWDRaster result = new DWDRaster(pointGeoRaster.getDate(),
@@ -270,7 +281,7 @@ public class Raster2ZML
         return result;
     }
 
-    private void createTimserie(String id, List posList) throws IOException
+    private boolean createTimserie(String id, List posList) throws IOException
     {
         System.out.println("Feature: " + id + " has " + posList.size()
                 + " rasterpoints");
@@ -282,7 +293,7 @@ public class Raster2ZML
         for (Iterator iter = set.iterator(); iter.hasNext();)
         {
             final Date date = (Date) iter.next();
-            final Double value = (Double) zr.get(date);
+            final Double value = (Double) zr.get(date);            
             final double niederschlag=value.doubleValue()
             / 100d;
             csvBuffer.append(m_zmlDF.format(date) + "," +m_decimalFormat.format(niederschlag) + "\n");
@@ -290,15 +301,15 @@ public class Raster2ZML
         final File ascciZmlFile = new File(m_ascciZmlDir, id + ".csv");
         if (ascciZmlFile.exists())
             ascciZmlFile.delete();
+        
         final FileWriter writer = new FileWriter(ascciZmlFile);
         writer.write(csvBuffer.toString());
         writer.close();
+        return true;              
     }
 
     private void createTimserie(SortedMap timeserie, List posList, int rasterKey)
-            
     {
-
         final List rasters = (List) m_store.get(new Integer(rasterKey));
         for (Iterator iter = rasters.iterator(); iter.hasNext();)
         {
@@ -326,6 +337,7 @@ public class Raster2ZML
     private DWDRaster transformRaster(DWDRaster geoRaster,
             GeoTransformer transformer) throws Exception
     {
+      System.out.println("transforming coordinates");
         final DWDRaster result = new DWDRaster(geoRaster.getDate(), 0);
         for (int i = 0; i < geoRaster.size(); i++)
         {
@@ -337,6 +349,7 @@ public class Raster2ZML
 
     public void createGeoRaster() throws GM_Exception
     {
+      System.out.println("create geometries from raster data");
         DWDRaster rLat = (DWDRaster) m_store.get(new Integer(KEY_100000_LAT));
         DWDRaster rLon = (DWDRaster) m_store.get(new Integer(KEY_100000_LON));
         int size = rLat.size();
