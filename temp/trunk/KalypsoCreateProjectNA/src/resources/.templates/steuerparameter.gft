@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<layer id="foo" featurePath="" linktype="gml" xlink:href="./nacontrol_1300.gml"/>
+	<view typename="NAModellControl" style="0" tooltip="TopLevel">
+		<gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="4" verticalAlignment="4"/>
+		<gridLayout numColumns="1" horizontalSpacing="10"/>
+		<group style="0" text="Steuerparameter">
+			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			<gridLayout numColumns="2" horizontalSpacing="10"/>
+			<label property="startsimulation" style="0"/>
+			<text property="startsimulation" style="2048">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="startforecast" style="0"/>
+			<text property="startforecast" style="2048">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			
+			timeStep
+			tmp
+	<pre>true</pre>
+	<sch>false</sch>
+	<bof>true</bof>
+	<bsp>false</bsp>
+	<gws>false</gws>
+	<qgs>true</qgs>
+	<qgg>false</qgg>
+	<qna>false</qna>
+	<qif>false</qif>
+	<qvs>false</qvs>
+	<qbs>false</qbs>
+	<qt1>false</qt1>
+	<qtg>false</qtg>
+	<qgw>false</qgw>
+	<kap>false</kap>
+	<vet>false</vet>
+	<hyd>false</hyd>
+	<bil>false</bil>
+	<nmq>false</nmq>
+	<spi>false</spi>
+	<sub>false</sub>
+	<sph>false</sph>
+	<spv>false</spv>
+	<spn>false</spn>
+	<vep>false</vep>
+
+	<CatchmentsBianf>1.0</CatchmentsBianf>
+	<CatchmentsFaktorRetobTetint>1.0</CatchmentsFaktorRetobTetint>
+	<CatchmentsFaktn>1.0</CatchmentsFaktn>
+	<CatchmentsFaktorAigw>1.0</CatchmentsFaktorAigw>
+
+	<KMChannelsFaktorRkf>0.5</KMChannelsFaktorRkf>
+	<KMChannelsFaktorRnf>0.5</KMChannelsFaktorRnf>
+			
+	<rootNode>Node1300</rootNode>
+
+			
+		</group>
+	</view>
+</featuretemplate>

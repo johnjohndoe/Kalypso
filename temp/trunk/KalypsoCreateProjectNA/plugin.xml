@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.wizard"
+   name="KalypsoNewNAProject"
+   version="0.0.1"
+   provider-name="org.kalypso"
+   class="org.kalypso.KalypsoNewNAProjectPlugin">
+
+   <runtime>
+      <library name="kalypso.wizard.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.kalypso.core"/>
+      <import plugin="org.kalypso.deegree"/>
+      <import plugin="org.kalypso.manual"/>
+      <import plugin="org.kalypso.ui"/>
+      <import plugin="org.kalypso.util"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.ide"/>
+   </requires>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="NA-Modell Projekt"
+            id="org.kalypso.wizard"/>
+      <wizard
+            class="org.kalypso.wizard.KalypsoNAProjectWizard"
+            icon="icons/kalypso16.gif"
+            category="org.kalypso"
+            name="NA Projekt"
+            id="org.kalypso.wizard.KalypsoNAProjectWizard"/>
+   </extension>
+
+</plugin>
