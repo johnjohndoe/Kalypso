@@ -1,18 +1,11 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
-import java.util.ArrayList;
 
-import org.deegree.graphics.Highlighter;
-import org.deegree.graphics.Layer;
-import org.deegree.graphics.MapView;
-import org.deegree.graphics.Selector;
-import org.deegree.graphics.Theme;
-import org.deegree.graphics.ThemeEventController;
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.sort.JMSpatialIndex;
+import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.event.ModellEventProvider;
@@ -21,7 +14,7 @@ import org.kalypso.ogc.event.ModellEventProviderAdapter;
 /**
  * @author vdoemming
  */
-public class KalypsoTheme implements Theme, ModellEventProvider, ModellEventListener
+public class KalypsoTheme implements ModellEventProvider, ModellEventListener//Theme, 
 {
   private ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
 
@@ -31,7 +24,7 @@ public class KalypsoTheme implements Theme, ModellEventProvider, ModellEventList
 
   public boolean DEBUG_ENV = false;
 
-  private MapView myParent = null;
+  private MapModell myParent = null;
 
   private String myName;
 
@@ -79,6 +72,18 @@ public class KalypsoTheme implements Theme, ModellEventProvider, ModellEventList
     //      myIndexDE.paint( g, myParent.getProjection() );
   }
 
+  public void paintSelected( Graphics g,int selectionId )
+  {
+    double scale = myParent.getScale( g );
+    GeoTransform p = myParent.getProjection();
+    GM_Envelope bbox = myParent.getBoundingBox();
+    for( int i = 0; i < myStyles.length; i++ )
+      myLayer.getSort().paintSelected( g, p, myStyles[i], scale, bbox ,selectionId);
+
+    //    if( DEBUG_ENV )
+    //      myIndexDE.paint( g, myParent.getProjection() );
+  }
+  
   /**
    * stes the styles used for this <tt>Theme</tt>. If this method will be
    * called all <tt>DisplayElement</tt> s will be recreated to consider the
@@ -89,7 +94,6 @@ public class KalypsoTheme implements Theme, ModellEventProvider, ModellEventList
     for( int i = 0; i < myStyles.length; i++ )
     {
       myLayer.getSort().removeStyle( myStyles[i] );
-    //  myStyles[i].removeModellListener( this );
     }
 
     myStyles = (KalypsoUserStyle[])styles;
@@ -97,36 +101,9 @@ public class KalypsoTheme implements Theme, ModellEventProvider, ModellEventList
     for( int i = 0; i < myStyles.length; i++ )
     {
       final KalypsoUserStyle kus = (KalypsoUserStyle)styles[i];
-   //   kus.addModellListener(this );
       myLayer.getSort().addStyle( kus );
     }
   }
-
-  /*
-   * 
-   * 
-   * public void setStyles( UserStyle[] styles ) { System.out.println( "set
-   * Styles of Theme \"" + getName() + "\"" ); myStyles = styles; // TODO das
-   * muss noch anders werden... // myIndexDE =
-   * JMSpatialIndexFactory.createSpatialIndex( // myLayer.getBoundingBox() );
-   * 
-   * DisplayElementFactory fac = new DisplayElementFactory(); if( myLayer
-   * instanceof FeatureLayer ) { try { for( int i = 0; i < (
-   * (FeatureLayer)myLayer ).getSize(); i++ ) { Feature feature = (
-   * (FeatureLayer)myLayer ).getFeature( i ); myIndexDE.add( new DisplayContext(
-   * feature, styles ) ); } } catch( Exception e ) { e.printStackTrace();
-   * System.out.println( e ); } }
-   */
-  /*
-   * else { try { //instance of RasterLayer RasterLayer rl =
-   * (RasterLayer)myLayer; DisplayElement[] de =
-   * DisplayElementFactory.createDisplayElement( rl.getRaster(), styles ); //
-   * GM_Envelope // env=rl.getBoundingBox(); for( int k = 0; k < de.length; k++ ) { //
-   * displayElementsIndex.add( env, de[k] ); // displayElements.add( de[k] ); } }
-   * catch( Exception e ) { e.printStackTrace();
-   * 
-   * System.out.println( e ); } } }
-   */
 
   /**
    * returns the styles used for this <tt>Theme</tt>.
@@ -139,78 +116,21 @@ public class KalypsoTheme implements Theme, ModellEventProvider, ModellEventList
   /**
    * returns the layer that holds the data of the theme
    */
-  public Layer getLayer()
+  public KalypsoFeatureLayer getLayer()
   {
     return myLayer;
   }
-
-  public void addEventController( ThemeEventController arg0 )
-  {
-  // nothing
-  }
-
-  public void addHighlighter( Highlighter arg0 )
-  {
-  // nothing
-  }
-
-  public void addSelector( Selector arg0 )
-  {
-  // nothing
-  }
-
-  public ArrayList getDisplayElements()
-  {
-    return null;
-  }
-
-  public void paint( Graphics arg0, String[] arg1 )
-  {
-  // nothing
-  }
-
-  public void paintHighlighted( Graphics arg0 )
-  {
-  // nothing
-  }
-
-  public void paintSelected( Graphics arg0 )
-  {
-  // nothing
-  }
-
-  public void removeEventController( ThemeEventController arg0 )
-  {
-  // nothing
-  }
-
-  public void removeHighlighter( Highlighter arg0 )
-  {
-  // nothing
-  }
-
-  public void removeSelector( Selector arg0 )
-  {
-  // nothing
-  }
-
-  public void setDisplayElements( ArrayList arg0 )
-  {
-  // nothing
-  }
-
-  public void setParent( MapView parent )
+  
+  
+ 
+  public void setParent( MapModell parent )
   {
     myParent = parent;
   }
 
-  /**
-   * @see org.deegree.graphics.Theme#getSpatialIndex()
-   */
-  public JMSpatialIndex getSpatialIndex()
+  public String toString()
   {
-    // nothing, wir nicht gebraucht
-    return null;
+      return myName;
   }
 
   /**

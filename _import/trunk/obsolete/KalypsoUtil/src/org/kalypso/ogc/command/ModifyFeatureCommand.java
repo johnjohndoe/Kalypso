@@ -2,8 +2,8 @@ package org.kalypso.ogc.command;
 
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree_impl.model.feature.FeatureFactory;
+import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.ogc.sort.DisplayContext;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -12,19 +12,19 @@ import org.kalypso.util.command.ICommand;
 public class ModifyFeatureCommand implements ICommand
 {
   private final KalypsoFeatureLayer m_layer;
-  private final DisplayContext m_displayContext;
+  private final KalypsoFeature m_feature;
   private final String m_name;
   private final Object m_newValue;
   private Object m_oldValue;
 
-  public ModifyFeatureCommand( final KalypsoFeatureLayer layer, final DisplayContext dc, final String name, final Object value )
+  public ModifyFeatureCommand( final KalypsoFeatureLayer layer, final KalypsoFeature feature, final String name, final Object value )
   {
     m_layer = layer;
-    m_displayContext = dc;
+    m_feature = feature;
     m_name = name;
     m_newValue = value;
     
-    m_oldValue = dc.getFeature().getProperty( name );
+    m_oldValue = m_feature.getProperty( name );
   }
 
   /**
@@ -70,7 +70,7 @@ public class ModifyFeatureCommand implements ICommand
   private void setFeatureProperty( final Object value )
   {
     final FeatureProperty fp = FeatureFactory.createFeatureProperty( m_name, value );
-    m_displayContext.getFeature().setProperty( fp );
+    m_feature.setProperty( fp );
     m_layer.fireModellEvent( null );
   }
 }

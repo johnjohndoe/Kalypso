@@ -1,7 +1,7 @@
 package org.kalypso.ogc.command;
 
-import org.deegree.graphics.MapView;
-import org.deegree.graphics.Theme;
+import org.kalypso.ogc.MapModell;
+import org.kalypso.ogc.gml.KalypsoTheme;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -10,12 +10,12 @@ import org.kalypso.util.command.ICommand;
 public class EnableThemeCommand implements ICommand
 {
   private final boolean m_bEnable;
-  private final Theme m_theme;
-  private final MapView m_mapView;
+  private final KalypsoTheme m_theme;
+  private final MapModell m_mapModell;
 
-  public EnableThemeCommand( final MapView mapView, final Theme theme, final boolean bEnable )
+  public EnableThemeCommand( final MapModell mapModell, final KalypsoTheme theme, final boolean bEnable )
   {
-    m_mapView = mapView;
+    m_mapModell = mapModell;
     m_theme = theme;
     m_bEnable = bEnable;
   }
@@ -33,7 +33,7 @@ public class EnableThemeCommand implements ICommand
    */
   public void process() throws Exception
   {
-  m_mapView.enableTheme(m_theme, m_bEnable);  
+  m_mapModell.enableTheme(m_theme, m_bEnable);  
   }
 
   /**
@@ -41,7 +41,7 @@ public class EnableThemeCommand implements ICommand
    */
   public void redo() throws Exception
   {
-    m_mapView.enableTheme(m_theme, m_bEnable);  
+    m_mapModell.enableTheme(m_theme, m_bEnable);  
   }
 
   /**
@@ -49,7 +49,7 @@ public class EnableThemeCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    m_mapView.enableTheme(m_theme, !m_bEnable);  
+    m_mapModell.enableTheme(m_theme, !m_bEnable);  
   }
 
   /**

@@ -14,6 +14,8 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.ogc.IMapPanelProvider;
 import org.kalypso.ogc.MapPanel;
+import org.kalypso.ogc.event.ModellEvent;
+import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandManager;
 
@@ -22,7 +24,7 @@ import org.kalypso.util.command.ICommandManager;
  * 
  * @author bce
  */
-public abstract class GisMapEditorWidgetActionDelegate implements IEditorActionDelegate, ISelectionListener, IWidget//, IAction
+public abstract class GisMapEditorWidgetActionDelegate implements IEditorActionDelegate, ISelectionListener, IWidget, ModellEventListener//, IAction
 {
   /**
    * @see org.kalypso.ogc.widgets.IWidget#paint(java.awt.Graphics)
@@ -251,4 +253,9 @@ public abstract class GisMapEditorWidgetActionDelegate implements IEditorActionD
   {
     // not implemented by default  
 }
+  /**
+   * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
+   */
+  public void onModellChange( ModellEvent modellEvent )
+  {}
 }

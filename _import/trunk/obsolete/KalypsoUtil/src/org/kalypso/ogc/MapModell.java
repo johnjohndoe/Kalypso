@@ -3,21 +3,19 @@ package org.kalypso.ogc;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 import org.apache.commons.pool.KeyedObjectPool;
-import org.deegree.graphics.Highlighter;
-import org.deegree.graphics.MapEventController;
-import org.deegree.graphics.MapView;
 import org.deegree.graphics.RenderException;
-import org.deegree.graphics.Selector;
-import org.deegree.graphics.Theme;
-import org.deegree.graphics.optimizers.Optimizer;
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
-import org.deegree_impl.graphics.MapFactory;
+import org.deegree.model.geometry.GM_Position;
+import org.deegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.deegree_impl.model.ct.GeoTransformer;
 import org.deegree_impl.model.geometry.GeometryFactory;
+import org.deegree_impl.tools.Debug;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.event.ModellEventProvider;
@@ -34,29 +32,54 @@ import org.kalypso.xml.types.GisviewLayerType.StyleType;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author bce
+ * @author doemming
  */
-public class MapModell implements MapView, ModellEventProvider, ModellEventListener
+public class MapModell implements ModellEventProvider, ModellEventListener//MapView,
 {
-  private ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
-
-  private MapView myModell;
+  private final ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
 
   private final Component myComponent;
 
-  public MapModell( final Component component, final CS_CoordinateSystem crs )
+  private final static Boolean THEME_ENABLED = new Boolean( true );
+
+  private final static Boolean THEME_DISABLED = new Boolean( false );
+
+  private final Vector myThemes;
+
+  private final HashMap myEnabledThemeStatus;
+
+  private final CS_CoordinateSystem myCoordinatesSystem;
+
+  private final GeoTransform myProjection;
+  private KalypsoTheme myActiveTheme = null;
+
+  private GM_Envelope myBoundingBox = null;
+
+  private double myScale = 1;
+
+  public MapModell( Component component, CS_CoordinateSystem crs )
   {
     myComponent = component;
-    myModell = MapFactory.createMapView( "MapView", null, crs );
+    myCoordinatesSystem = crs;
+    myThemes = new Vector();
+    myEnabledThemeStatus = new HashMap();
+    myProjection = new WorldToScreenTransform();    
+
   }
 
-  public MapModell( final Gisview gisview, final CS_CoordinateSystem crs, final KeyedObjectPool layerPool, final KeyedObjectPool stylePool, final Object helper, final Component component )
+  public MapModell( final Gisview gisview, final CS_CoordinateSystem crs,
+      final KeyedObjectPool layerPool, final KeyedObjectPool stylePool, final Object helper,
+      final Component component )
   {
     myComponent = component;
+    myEnabledThemeStatus = new HashMap();
+    myActiveTheme = null;
+    myCoordinatesSystem = crs;
+    myThemes = new Vector();
+    myProjection = new WorldToScreenTransform();    
 
     final LayersType layerListType = gisview.getLayers();
     final List layerList = layerListType.getLayer();
-    myModell = MapFactory.createMapView( "MapView", null, crs );
 
     for( int i = 0; i < layerList.size(); i++ )
     {
@@ -65,8 +88,8 @@ public class MapModell implements MapView, ModellEventProvider, ModellEventListe
       final KalypsoFeatureLayer layer;
       try
       {
-        layer = (KalypsoFeatureLayer)layerPool.borrowObject(
-            new PoolableObjectType( layerType.getType(), layerType.getSource(), helper ) );
+        layer = (KalypsoFeatureLayer)layerPool.borrowObject( new PoolableObjectType( layerType
+            .getType(), layerType.getSource(), helper ) );
       }
       catch( Exception e1 )
       {
@@ -74,7 +97,7 @@ public class MapModell implements MapView, ModellEventProvider, ModellEventListe
         continue;
       }
 
-      final Theme theme = new KalypsoTheme( layer, layerType.getName() );
+      final KalypsoTheme theme = new KalypsoTheme( layer, layerType.getName() );
       final List stylesList = layerType.getStyle();
 
       final List result = new ArrayList();
@@ -85,8 +108,7 @@ public class MapModell implements MapView, ModellEventProvider, ModellEventListe
             .getSource(), helper );
         try
         {
-          final KalypsoUserStyle style = (KalypsoUserStyle)stylePool.borrowObject(
-              styleID );
+          final KalypsoUserStyle style = (KalypsoUserStyle)stylePool.borrowObject( styleID );
           result.add( style );
         }
         catch( Exception e )
@@ -113,208 +135,281 @@ public class MapModell implements MapView, ModellEventProvider, ModellEventListe
     }
   }
 
-  public void activateTheme( Theme arg0 )
+  public void activateTheme( KalypsoTheme theme )
   {
-    myModell.activateTheme( arg0 );
-    fireModellEvent( null );
-
-  }
-
-  public void addEventController( MapEventController arg0 )
-  {
-    myModell.addEventController( arg0 );
-  }
-
-  public void addHighlighter( Highlighter arg0 )
-  {
-    myModell.addHighlighter( arg0 );
+    myActiveTheme = theme;
     fireModellEvent( null );
   }
-
-  public void addOptimizer( Optimizer arg0 )
+  public KalypsoTheme getActiveTheme()
   {
-    myModell.addOptimizer( arg0 );
-    fireModellEvent( null );
+    return myActiveTheme;
   }
 
-  public void addSelector( Selector arg0 )
+  public void addTheme( KalypsoTheme theme ) throws Exception
   {
-    myModell.addSelector( arg0 );
-    fireModellEvent( null );
-  }
-
-  public void addTheme( Theme theme ) throws Exception
-  {
-    myModell.addTheme( theme );
-    ((KalypsoTheme)theme).addModellListener(this);
-    fireModellEvent( null );
-  }
+    if(myActiveTheme==null)
+    myActiveTheme = theme;
+    myThemes.add( theme );
+    theme.setParent(this);
+    theme.getLayer().setCoordinatesSystem( myCoordinatesSystem );   
+    myEnabledThemeStatus.put( theme, THEME_ENABLED );
+    theme.addModellListener( this );
+    fireModellEvent( null );   
+    }
 
   public void clear()
   {
-    myModell.clear();
+    myActiveTheme = null;
+    KalypsoTheme[] themes = getAllThemes();
+    for( int i = 0; i < themes.length; i++ )
+      removeTheme( themes[i] );
     fireModellEvent( null );
   }
 
-  public void enableTheme( Theme arg0, boolean arg1 )
+  public void enableTheme( KalypsoTheme theme, boolean status )
   {
-    myModell.enableTheme( arg0, arg1 );
+    if( status )
+      myEnabledThemeStatus.put( theme, THEME_ENABLED );
+    else
+      myEnabledThemeStatus.put( theme, THEME_DISABLED );
     fireModellEvent( null );
   }
 
-  public Theme[] getAllThemes()
+  public KalypsoTheme[] getAllThemes()
   {
-    return myModell.getAllThemes();
+    return (KalypsoTheme[])myThemes.toArray( new KalypsoTheme[myThemes.size()] );
   }
 
   public GM_Envelope getBoundingBox()
   {
-    return myModell.getBoundingBox();
+    return myBoundingBox;
   }
 
   public CS_CoordinateSystem getCoordinatesSystem()
   {
-    return myModell.getCoordinatesSystem();
-  }
-
-  public String getName()
-  {
-    return myModell.getName();
-  }
-
-  public Optimizer[] getOptimizers()
-  {
-    return myModell.getOptimizers();
+    return myCoordinatesSystem;
   }
 
   public GeoTransform getProjection()
   {
-    return myModell.getProjection();
+    return myProjection;
+  }
+
+  /**
+   * renders the map to the passed graphic context
+   * 
+   * @param g
+   * @throws RenderException
+   *           thrown if the passed <tt>Graphic<tt> haven't
+   *                         clipbounds. use g.setClip( .. );
+   */
+  public void paint( Graphics g ) throws RenderException
+  {
+    if( getThemeSize() == 0 )
+      return;
+    if( g.getClipBounds() == null )
+    {
+      throw new RenderException( "no clip bounds defined for graphic context" );
+    }
+
+    int x = g.getClipBounds().x;
+    int y = g.getClipBounds().y;
+    int w = g.getClipBounds().width;
+    int h = g.getClipBounds().height;
+    myProjection.setDestRect( x - 2, y - 2, w + x, h + y );
+    myScale = calcScale( g.getClipBounds().width, g.getClipBounds().height );
+    for( int i = 0; i < getThemeSize(); i++ )
+    {
+      if( isThemeEnabled( getTheme( i ) ) )
+      {
+        getTheme( i ).paint( g );
+      }
+    }
+  }
+  
+  public void paintSelected( Graphics g,int selectionId ) throws RenderException
+  {
+    if( getThemeSize() == 0 )
+      return;
+    if( g.getClipBounds() == null )
+    {
+      throw new RenderException( "no clip bounds defined for graphic context" );
+    }
+
+    int x = g.getClipBounds().x;
+    int y = g.getClipBounds().y;
+    int w = g.getClipBounds().width;
+    int h = g.getClipBounds().height;
+    myProjection.setDestRect( x - 2, y - 2, w + x, h + y );
+    myScale = calcScale( g.getClipBounds().width, g.getClipBounds().height );
+    for( int i = 0; i < getThemeSize(); i++ )
+    {
+      if( isThemeEnabled( getTheme( i ) ) )
+      {
+        getTheme( i ).paintSelected( g,selectionId );
+      }
+    }
   }
 
   public double getScale()
   {
-    return myModell.getScale();
+    return myScale;
   }
 
-  public double getScale( Graphics arg0 )
+  public double getScale( Graphics g )
   {
-    return myModell.getScale( arg0 );
+    myScale = calcScale( g.getClipBounds().width, g.getClipBounds().height );
+    return myScale;
   }
 
-  public Theme getTheme( int arg0 )
+  /**
+   * calculates the map scale (denominator) as defined in the OGC SLD 1.0.0
+   * specification
+   * 
+   * @return scale of the map
+   */
+  private double calcScale( int mapWidth, int mapHeight )
   {
-    return myModell.getTheme( arg0 );
+
+    try
+    {
+      CS_CoordinateSystem epsg4326crs = getCoordinatesSystem();
+      GM_Envelope bbox = getBoundingBox();
+
+      if( !getCoordinatesSystem().getName().equalsIgnoreCase( "EPSG:4326" ) )
+      {
+        // transform the bounding box of the request to EPSG:4326
+        GeoTransformer transformer = new GeoTransformer( "EPSG:4326" );
+        bbox = transformer.transformEnvelope( bbox, epsg4326crs );
+      }
+
+      double dx = bbox.getWidth() / mapWidth;
+      double dy = bbox.getHeight() / mapHeight;
+
+      // create a box on the central map pixel to determine its size in meters
+      GM_Position min = GeometryFactory.createGM_Position( bbox.getMin().getX() + dx
+          * ( mapWidth / 2d - 1 ), bbox.getMin().getY() + dy * ( mapHeight / 2d - 1 ) );
+      GM_Position max = GeometryFactory.createGM_Position( bbox.getMin().getX() + dx
+          * ( mapWidth / 2d ), bbox.getMin().getY() + dy * ( mapHeight / 2d ) );
+      double distance = calcDistance( min.getY(), min.getX(), max.getY(), max.getX() );
+
+      // default pixel size defined in SLD specs is 28mm
+      double scale = distance / 0.00028;
+
+      return scale;
+    }
+    catch( Exception e )
+    {
+      Debug.debugException( e, "Exception occured when calculating scale!" );
+    }
+    return 0.0;
   }
 
-  public Theme getTheme( String arg0 )
+  /**
+   * calculates the distance in meters between two points in EPSG:4326
+   * coodinates .
+   */
+  private double calcDistance( double lon1, double lat1, double lon2, double lat2 )
   {
-    return myModell.getTheme( arg0 );
+    double r = 6378.137;
+    double rad = Math.PI / 180d;
+    double cose = 0;
+
+    cose = Math.sin( rad * lon1 ) * Math.sin( rad * lon2 ) + Math.cos( rad * lon1 )
+        * Math.cos( rad * lon2 ) * Math.cos( rad * ( lat1 - lat2 ) );
+    double dist = r * Math.acos( cose );
+
+    return dist * 1000;
+  }
+
+  public KalypsoTheme getTheme( int pos )
+  {
+    return (KalypsoTheme)myThemes.elementAt( pos );
+  }
+
+  public KalypsoTheme getTheme( String themeName )
+  {
+    for( int i = 0; i < myThemes.size(); i++ )
+      if( themeName.equals( ( (KalypsoTheme)myThemes.elementAt( i ) ).getName() ) )
+        return (KalypsoTheme)myThemes.elementAt( i );
+    return null;
   }
 
   public int getThemeSize()
   {
-    return myModell.getThemeSize();
+    return myThemes.size();
   }
 
-  public boolean isThemeActivated( Theme arg0 )
+  public boolean isThemeActivated( KalypsoTheme theme )
   {
-    return myModell.isThemeActivated( arg0 );
+    return myActiveTheme == theme;
   }
 
-  public boolean isThemeEnabled( Theme arg0 )
+  public boolean isThemeEnabled( KalypsoTheme theme )
   {
-    return myModell.isThemeEnabled( arg0 );
+    return myEnabledThemeStatus.get( theme ) == THEME_ENABLED;
   }
 
-  public void moveDown( Theme arg0 )
+  public void moveDown( KalypsoTheme theme )
   {
-    myModell.moveDown( arg0 );
-    fireModellEvent( null );
+    int pos = myThemes.indexOf( theme );
+    if( pos > 0 )
+      swapThemes( theme, getTheme( pos - 1 ) );
   }
 
-  public void moveUp( Theme arg0 )
+  public void moveUp( KalypsoTheme theme )
   {
-    myModell.moveUp( arg0 );
-    fireModellEvent( null );
+    int pos = myThemes.indexOf( theme );
+    if( pos + 1 < myThemes.size() )
+      swapThemes( theme, getTheme( pos + 1 ) );
   }
 
-  public void paint( Graphics arg0 ) throws RenderException
+  public void removeTheme( int pos )
   {
-    myModell.paint( arg0 );
+    removeTheme( (KalypsoTheme)myThemes.elementAt( pos ) );
   }
 
-  public void paintHighlighted( Graphics arg0 ) throws RenderException
+  public void removeTheme( String themeName )
   {
-    myModell.paintHighlighted( arg0 );
+    removeTheme( getTheme( themeName ) );
   }
 
-  public void paintSelected( Graphics arg0 ) throws RenderException
+  public void removeTheme( KalypsoTheme theme )
   {
-    myModell.paintSelected( arg0 );
-  }
-
-  public void removeEventController( MapEventController arg0 )
-  {
-    myModell.removeEventController( arg0 );
-  }
-
-  public void removeHighlighter( Highlighter arg0 )
-  {
-    myModell.removeHighlighter( arg0 );
-    fireModellEvent( null );
-  }
-
-  public void removeSelector( Selector arg0 )
-  {
-    myModell.removeSelector( arg0 );
-    fireModellEvent( null );
-  }
-
-  public void removeTheme( int arg0 )
-  {
-    myModell.removeTheme( arg0 );
-    fireModellEvent( null );
-  }
-
-  public void removeTheme( String arg0 )
-  {
-    myModell.removeTheme( arg0 );
-    fireModellEvent( null );
-  }
-
-  public void removeTheme( Theme arg0 )
-  {
-  	myModell.removeTheme( arg0 );
+    myThemes.remove( theme );
+    myEnabledThemeStatus.remove( theme );
+    if( myActiveTheme == theme )
+      myActiveTheme = null;
     fireModellEvent( null );
   }
 
   public void setBoundingBox( GM_Envelope env )
   {
-    myModell.setBoundingBox( adjustBoundingBox( env ) );
+    myBoundingBox = adjustBoundingBox( env );
+    myProjection.setSourceRect (myBoundingBox);   
     fireModellEvent( null );
   }
 
   public void setCoordinateSystem( CS_CoordinateSystem crs ) throws Exception
   {
-    throw new UnsupportedOperationException();
+    if( crs.equals( myCoordinatesSystem ) )
+      throw new UnsupportedOperationException();
   }
 
-  public void setOptimizers( Optimizer[] arg0 )
+  public void swapThemes( KalypsoTheme theme1, KalypsoTheme theme2 )
   {
-    myModell.setOptimizers( arg0 );
-  }
-
-  public void swapThemes( Theme arg0, Theme arg1 )
-  {
-    myModell.swapThemes( arg0, arg1 );
+    int pos1 = myThemes.indexOf( theme1 );
+    int pos2 = myThemes.indexOf( theme2 );
+    myThemes.set( pos1, theme2 );
+    myThemes.set( pos2, theme1 );
+    fireModellEvent( null );
   }
 
   private double getRatio()
   {
-   return ( (double)myComponent.getHeight() ) / ( (double)myComponent.getWidth() );
+    return ( (double)myComponent.getHeight() ) / ( (double)myComponent.getWidth() );
   }
-  
+
   private GM_Envelope adjustBoundingBox( GM_Envelope env )
   {
     if( env == null )
@@ -340,27 +435,26 @@ public class MapModell implements MapView, ModellEventProvider, ModellEventListe
     return GeometryFactory.createGM_Envelope( mx - dx, my - dy, mx + dx, my + dy );
   }
 
-  public GM_Envelope getZoomOutBoundingBox(  )
+  public GM_Envelope getZoomOutBoundingBox()
   {
-      GeoTransform transform = getProjection(  );
-      double ratio = getRatio();
-      double gisMX = transform.getSourceX( myComponent.getWidth() / 2d );
-      double gisMY = transform.getSourceY( myComponent.getHeight() / 2d);
+    GeoTransform transform = getProjection();
+    double ratio = getRatio();
+    double gisMX = transform.getSourceX( myComponent.getWidth() / 2d );
+    double gisMY = transform.getSourceY( myComponent.getHeight() / 2d );
 
-      double gisDX = 2 * ( gisMX - transform.getSourceX( 0 ) );
-      double gisDY = gisDX * ratio;
-      double gisX1 = gisMX - gisDX;
-      double gisX2 = gisMX + gisDX;
-      double gisY1 = gisMY - gisDY;
-      double gisY2 = gisMY + gisDY;
+    double gisDX = 2 * ( gisMX - transform.getSourceX( 0 ) );
+    double gisDY = gisDX * ratio;
+    double gisX1 = gisMX - gisDX;
+    double gisX2 = gisMX + gisDX;
+    double gisY1 = gisMY - gisDY;
+    double gisY2 = gisMY + gisDY;
 
-      return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
+    return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
 
-  
   public GM_Envelope getFullExtentBoundingBox()
   {
-    Theme[] themes = myModell.getAllThemes();
+    KalypsoTheme[] themes = getAllThemes();
     boolean found = false;
     double resultMinX = 0;
     double resultMaxX = 0;
@@ -374,7 +468,7 @@ public class MapModell implements MapView, ModellEventProvider, ModellEventListe
       {
         try
         {
-          GeoTransformer gt = new GeoTransformer( myModell.getCoordinatesSystem() );
+          GeoTransformer gt = new GeoTransformer( getCoordinatesSystem() );
           GM_Envelope env = gt.transformEnvelope( themes[i].getLayer().getBoundingBox(), themes[i]
               .getLayer().getCoordinatesSystem() );
           double minX = env.getMin().getX();

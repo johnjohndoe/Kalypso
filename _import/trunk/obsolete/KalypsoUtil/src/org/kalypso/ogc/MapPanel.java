@@ -48,7 +48,7 @@ public class MapPanel extends Canvas implements IMapModellView
   {
     super();
     // set empty Modell:
-    setMapModell( new MapModell( this, crs ) );
+    setMapModell( new MapModell( this,crs) );
     myWidgetManager = new WidgetManager( this );
     addMouseListener( myWidgetManager );
     addMouseMotionListener( myWidgetManager );
@@ -125,6 +125,7 @@ public class MapPanel extends Canvas implements IMapModellView
       try
       {
         myModell.paint( gr );
+        myModell.paintSelected( gr,10 );
       }
       catch( Exception e )
       {

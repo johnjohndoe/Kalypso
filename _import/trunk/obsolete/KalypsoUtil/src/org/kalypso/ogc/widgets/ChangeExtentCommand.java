@@ -4,8 +4,8 @@
 
 package org.kalypso.ogc.widgets;
 
-import org.deegree.graphics.MapView;
 import org.deegree.model.geometry.GM_Envelope;
+import org.kalypso.ogc.MapModell;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -19,12 +19,12 @@ public class ChangeExtentCommand implements ICommand
 
   private final GM_Envelope myUndoBoundingBox;
 
-  private final MapView myMapView;
+  private final MapModell myMapModell;
 
-  public ChangeExtentCommand( MapView mapView, GM_Envelope boundingBox )
+  public ChangeExtentCommand( MapModell mapModell, GM_Envelope boundingBox )
   {
-    myMapView = mapView;
-    myUndoBoundingBox = mapView.getBoundingBox();
+    myMapModell = mapModell;
+    myUndoBoundingBox = mapModell.getBoundingBox();
     myDoBoundingBox = boundingBox;
   }
 
@@ -35,7 +35,7 @@ public class ChangeExtentCommand implements ICommand
 
   public void process() throws Exception
   {
-    myMapView.setBoundingBox( myDoBoundingBox );
+    myMapModell.setBoundingBox( myDoBoundingBox );
   }
 
   public void redo() throws Exception
@@ -45,7 +45,7 @@ public class ChangeExtentCommand implements ICommand
 
   public void undo() throws Exception
   {
-    myMapView.setBoundingBox( myUndoBoundingBox );
+    myMapModell.setBoundingBox( myUndoBoundingBox );
   }
 
   /**
@@ -53,6 +53,6 @@ public class ChangeExtentCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Ausschnitt ändern";
+    return "Ausschnitt ?ndern";
   }
 }

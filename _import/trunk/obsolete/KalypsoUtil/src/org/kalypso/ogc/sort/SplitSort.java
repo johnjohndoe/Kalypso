@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.deegree.graphics.displayelements.DisplayElement;
-import org.deegree.model.feature.Feature;
+import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.sort.JMSpatialIndex;
 import org.deegree_impl.model.geometry.GeometryFactory;
-import org.deegree.graphics.transformation.GeoTransform;
+import org.kalypso.ogc.gml.KalypsoFeature;
 
 public class SplitSort implements JMSpatialIndex
 {
@@ -118,12 +118,7 @@ public class SplitSort implements JMSpatialIndex
       myObjects.remove( object );
   }
 
-  public void resort( GM_Envelope newEnv, GM_Envelope oldEnv, Object object )
-  {}
-
-  public void resort( GM_Envelope newEnv, Object object )
-  {}
-
+ 
   protected static GM_Envelope getEnvelope( Object object )
   {
     if( object instanceof DisplayContext )
@@ -135,9 +130,9 @@ public class SplitSort implements JMSpatialIndex
       DisplayElement de = (DisplayElement)object;
       return getEnvelope( de.getFeature() );
     }
-    else if( object instanceof Feature )
+    else if( object instanceof KalypsoFeature )
     {
-      Feature fe = (Feature)object;
+      KalypsoFeature fe = (KalypsoFeature)object;
       GM_Object gmObject = fe.getDefaultGeometryProperty();
       if( gmObject == null )
         return null;
@@ -176,4 +171,16 @@ public class SplitSort implements JMSpatialIndex
       return myRootContainer.getEnvelope();
     return null;
   }
+
+  /**
+   * @see org.deegree.model.sort.JMSpatialIndex#resort(org.deegree.model.geometry.GM_Envelope, org.deegree.model.geometry.GM_Envelope, java.lang.Object)
+   */
+  public void resort( GM_Envelope newEnv, GM_Envelope oldEnv, Object object )
+  {}
+
+  /**
+   * @see org.deegree.model.sort.JMSpatialIndex#resort(org.deegree.model.geometry.GM_Envelope, java.lang.Object)
+   */
+  public void resort( GM_Envelope newEnv, Object object )
+  {}
 }
