@@ -2,6 +2,7 @@ package org.kalypso.ogc.sensor.tableview.impl;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
@@ -28,14 +29,18 @@ public class DefaultTableViewTemplate implements ITableViewTemplate
     
     final IAxis[] axes = obs.getAxisList();
 
-    // one column less than the number of axis
-    for( int i = 1; i < axes.length; i++ )
+    final IAxis[] keyAxes = ObservationUtilities.findAxisByKey( axes );
+    
+    if( keyAxes.length != 1 )
+      throw new IllegalArgumentException( "DefaultTableViewTemplate can deal with one and only one key-axis! Found " + keyAxes.length + " key-axes." );
+    
+    for( int i = 0; i < axes.length; i++ )
     {
       // ignore axis if it is a kalypso status axis
-      if( !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
+      if( !KalypsoStatusUtils.isStatusAxis( axes[i] ) && !axes[i].equals( keyAxes[0] ) )
       {
         final TableViewColumn col = new TableViewColumn( axes[i].getLabel() + " - " + axes[i].getUnit(),
-            obs, editableColumns, 50, axes[0].getLabel(), axes[i].getLabel(), args );
+            obs, editableColumns, 50, keyAxes[0].getLabel(), axes[i].getLabel(), args );
 
         m_template.addColumn( col );
       }

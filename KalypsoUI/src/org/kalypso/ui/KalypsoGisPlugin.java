@@ -514,4 +514,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     return new Status( IStatus.ERROR, getId(), 0, msg, cause );
   }
 
+  /**
+   * Clears the pool
+   */
+  public void clearPool()
+  {
+    myPools.clear();
+  }
 }

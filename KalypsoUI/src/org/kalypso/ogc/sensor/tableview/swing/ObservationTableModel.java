@@ -100,7 +100,7 @@ public class ObservationTableModel extends AbstractTableModel
     if( m_columns != EMPTY_COLS )
     {
       // the common column, merges all the values from the common axes
-      m_cc = new TreeSet();
+      m_cc = new TreeSet( );
 
       for( int col = 0; col < m_columns.length; col++ )
       {
