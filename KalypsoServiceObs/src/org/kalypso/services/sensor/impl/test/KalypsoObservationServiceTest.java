@@ -8,7 +8,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.beans.DateRangeBean;
 import org.kalypso.ogc.sensor.beans.OCSDataBean;
 import org.kalypso.ogc.sensor.beans.ObservationBean;
@@ -98,7 +97,7 @@ public class KalypsoObservationServiceTest extends TestCase
       System.out.println( space + "Bean is observation: " + ob.getId() );
       System.out.println( space + "Metadata for " + ob.getName() + " are:" + map );
       
-      final DateRangeArgument dra = ObservationUtilities.createPastDaysArgument( 30 );
+      final DateRangeArgument dra = DateRangeArgument.createFromPastDays( 30 );
       final DateRangeBean drb = new DateRangeBean( dra.getFrom(), dra.getTo() );
       
       final OCSDataBean oddb = m_srv.readData( ob, drb );
