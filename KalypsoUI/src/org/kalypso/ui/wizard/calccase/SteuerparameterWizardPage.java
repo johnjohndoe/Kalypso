@@ -54,6 +54,8 @@ public class SteuerparameterWizardPage extends WizardPage
 
   private GMLWorkspace m_workspace;
 
+  private IFolder m_currentCalcCase;
+
   public SteuerparameterWizardPage( final IProjectProvider pp,
       final boolean overrideCanFlipToNextPage )
   {
@@ -74,7 +76,7 @@ public class SteuerparameterWizardPage extends WizardPage
 
       // gleich mal den Workspace auf das default setzen
       final ModelNature nature = (ModelNature)project.getNature( ModelNature.ID );
-      m_workspace = nature.loadOrCreateControl( null );
+      m_workspace = nature.loadOrCreateControl( m_currentCalcCase );
 
       // Vorlage auslesen
       final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/"
@@ -107,10 +109,7 @@ public class SteuerparameterWizardPage extends WizardPage
          */
         public void widgetSelected( final SelectionEvent e )
         {
-          if( e.detail == SWT.CHECK )
-          {
             setUpdate( checkUpdate.getSelection() );
-          }
         }
       } );
 
@@ -230,6 +229,8 @@ public class SteuerparameterWizardPage extends WizardPage
    */
   public void setFolder( final IFolder currentCalcCase ) throws CoreException
   {
+    m_currentCalcCase = currentCalcCase;
+    
     final ModelNature nature = (ModelNature)m_projectProvider.getProject().getNature(
         ModelNature.ID );
 
