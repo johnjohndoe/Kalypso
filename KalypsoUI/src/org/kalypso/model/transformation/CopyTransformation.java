@@ -8,6 +8,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 
 /**
  * @author belger
@@ -20,6 +21,8 @@ public class CopyTransformation extends AbstractTransformation
    */
   public void transformIntern( final IFolder targetFolder, final Properties properties, final IProgressMonitor monitor ) throws TransformationException
   {
+    monitor.beginTask( "Transform", 2000 );
+    
     final String input = properties.getProperty( "input" );
     final String output = properties.getProperty( "output" );
 
@@ -39,8 +42,8 @@ public class CopyTransformation extends AbstractTransformation
 
     try
     {
-      inputFile.copy( outputFile.getFullPath(), false, monitor );
-      outputFile.setCharset( inputFile.getCharset() );
+      inputFile.copy( outputFile.getFullPath(), false, new SubProgressMonitor( monitor, 1000 ) );
+      outputFile.setCharset( inputFile.getCharset(), new SubProgressMonitor( monitor, 1000 ) );
     }
     catch( final CoreException e )
     {
