@@ -62,9 +62,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * 

@@ -61,12 +61,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree.model.geometry.GM_Ring;
-import org.deegree.model.geometry.GM_Surface;
-import org.deegree.model.geometry.GM_SurfaceBoundary;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 import org.kalypso.util.geom.GeometryHelper;
 
 /**

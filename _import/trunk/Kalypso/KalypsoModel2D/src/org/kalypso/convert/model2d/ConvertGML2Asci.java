@@ -61,8 +61,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 
 /**

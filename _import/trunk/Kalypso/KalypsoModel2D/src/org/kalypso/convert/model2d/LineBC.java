@@ -63,11 +63,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.geometry.GM_Curve;
-import org.deegree.model.geometry.GM_LineString;
-import org.deegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 
 /**

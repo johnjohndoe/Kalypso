@@ -59,8 +59,8 @@ import java.io.StringWriter;
 import java.util.List;
 import java.util.Locale;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * ----------------------------------------------------------------------
