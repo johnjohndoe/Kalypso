@@ -6,7 +6,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.kalypso.editor.mapeditor.GisMapEditor;
-import org.kalypso.ogc.MapModell;
+import org.kalypso.ogc.IMapModell;
+import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.widgets.ChangeExtentCommand;
 
 /**
@@ -33,12 +34,13 @@ public class FullExtentWidgetDelegate implements IEditorActionDelegate
     if( m_editor == null )
       return;
 
-    final MapModell modell = m_editor.getMapModell();
-    if( modell == null )
+    final MapPanel mapPanel = m_editor.getMapPanel();
+    if( mapPanel == null )
       return;
+    final IMapModell modell = mapPanel.getMapModell();
 
     final GM_Envelope fullExtent = modell.getFullExtentBoundingBox();
-    m_editor.postCommand( new ChangeExtentCommand( modell, fullExtent ), null );
+    m_editor.postCommand( new ChangeExtentCommand( mapPanel, fullExtent ), null );
   }
 
   /**

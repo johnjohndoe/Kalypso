@@ -32,8 +32,8 @@ import org.kalypso.editor.mapeditor.actions.MoveThemeUpAction;
 import org.kalypso.editor.mapeditor.actions.OpenStyleDialogAction;
 import org.kalypso.editor.mapeditor.actions.RemoveThemeAction;
 import org.kalypso.editor.mapeditor.views.StyleEditorViewPart;
+import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.IMapModellView;
-import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.command.EnableThemeCommand;
 import org.kalypso.ogc.command.MoveThemeDownCommand;
 import org.kalypso.ogc.command.MoveThemeUpCommand;
@@ -72,7 +72,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
   private final JobExclusiveCommandTarget m_commandTarget;
 
-  private MapModell m_mapModell;
+  private IMapModell m_mapModell;
 
   public GisMapOutlinePage( final JobExclusiveCommandTarget commandTarget )
   {
@@ -247,7 +247,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   /**
    * @see org.kalypso.ogc.IMapModellView#getMapModell()
    */
-  public MapModell getMapModell()
+  public IMapModell getMapModell()
   {
     return m_mapModell;
   }
@@ -255,7 +255,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   /**
    * @see org.kalypso.ogc.IMapModellView#setMapModell(org.kalypso.ogc.MapModell)
    */
-  public void setMapModell( final MapModell modell )
+  public void setMapModell( final IMapModell modell )
   {
     if( m_mapModell != null )
       m_mapModell.removeModellListener( this );
@@ -293,7 +293,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
         return;
       
       final TableTreeItem[] items = tt.getItems();
-      final MapModell mm = getMapModell();
+      final IMapModell mm = getMapModell();
 
       tt.getDisplay().asyncExec( new Runnable()
       {
