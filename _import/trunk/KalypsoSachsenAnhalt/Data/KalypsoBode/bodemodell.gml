@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BodeModell fid="root" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="org.kalypso.bode.modell" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="org.kalypso.bode.modell .model/schema/bodemodell.xsd">
+	<PegelCollectionAssociation>
+		<PegelCollection fid="EZC_1">
+			<gml:boundedBy>
+				<gml:Box>
+					<gml:coord>
+						<gml:X>0.0</gml:X>
+					</gml:coord>
+					<gml:coord>
+						<gml:X>0.0</gml:X>
+					</gml:coord>
+				</gml:Box>
+			</gml:boundedBy>
+			<PegelMember>
+				<Pegel>
+					<Name/>
+					<Ort/>
+					<WISKI_Name/>
+					<Wasserstand_gemessenEingang/>
+					<Ganglinie_gemessen/>
+					<Ganglinie_ergebnis/>
+					<Ganglinie_prognoseAblage/>
+				</Pegel>
+			</PegelMember>
+			<PegelMember>
+				<Pegel>
+					<Name/>
+					<Ort/>
+					<WISKI_Name/>
+					<Wasserstand_gemessenEingang/>
+					<Ganglinie_gemessen/>
+					<Ganglinie_ergebnis/>
+					<Ganglinie_prognoseAblage/>
+				</Pegel>
+			</PegelMember>
+		</PegelCollection>
+	</PegelCollectionAssociation>
+</BodeModell>

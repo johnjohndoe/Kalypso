@@ -2,27 +2,22 @@
 <schema targetNamespace="org.kalypso.bode.modell" version="0.1" xmlns:bode="org.kalypso.bode.modell" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="gml/bce/obslink.xsd"/>
-	
 	<complexType name="TimeseriesLinkType">
 		<sequence>
-			<element name="TimeseriesLink" type="obslink:TimeseriesLink" minOccurs="0"/>
+			<element name="TimeseriesLink" type="obslink:TimeseriesLinkType" minOccurs="0"/>
 		</sequence>
 	</complexType>
-	
 	<element name="BodeModell" type="bode:_BodeModellType"/>
 	<complexType name="_BodeModellType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="PegelCollectionAssociation" type="bode:PegelCollectionAssociationType"/>
-<!--					<element name="TalsperreCollectionAssociation" type="bode:TalsperreCollectionAssociationType"/>
-					<element name="VorgabeCollectionAssociation" type="bode:VorgabeCollectionAssociationType"/>
--->
+					<element ref="bode:PegelCollectionAssociation"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-	
+	<element name="PegelCollectionAssociation" type="bode:PegelCollectionAssociationType"/>
 	<complexType name="PegelCollectionAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
@@ -32,17 +27,18 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	
-	<element name="PegelCollection" type="bode:PegelCollectionType"/>
+	<element name="PegelCollection" type="bode:PegelCollectionType" substitutionGroup="gml:_FeatureCollection"/>
 	<complexType name="PegelCollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="PegelMember" type="bode:PegelAssociationType" minOccurs="10" maxOccurs="10"/>
+					<element ref="gml:boundedBy"/>
+					<element ref="bode:PegelMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
+	<element name="PegelMember" type="bode:PegelAssociationType" substitutionGroup="gml:featureMember"/>
 	<complexType name="PegelAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
@@ -52,14 +48,12 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	
 	<complexType name="EmptyFeatureBaseType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureType"/>
 		</complexContent>
 	</complexType>
-	
-	<element name="Pegel" abstract="false"  type="bode:PegelType" substitutionGroup="gml:_Feature" />
+	<element name="Pegel" abstract="false" type="bode:PegelType" substitutionGroup="gml:_Feature"/>
 	<complexType name="PegelType">
 		<complexContent>
 			<extension base="bode:EmptyFeatureBaseType">
@@ -67,28 +61,33 @@
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
 					<element name="WISKI_Name" type="string"/>
-					<element name="Wasserstand_gemessenEingang" type="bode:TimeseriesLinkType"/> <!-- Server-Daten-->
-					<element name="Ganglinie_gemessen" type="bode:TimeseriesLinkType"/> <!-- lokal, W und Q (tolle Zeitreihe) *.vw -->
-					<element name="Ganglinie_ergebnis" type="bode:TimeseriesLinkType"/> <!-- lokal, W und Q (tolle Zeitreihe) *.q -->
-					<element name="Ganglinie_prognoseAblage" type="bode:TimeseriesLinkType"/> <!-- Server-Daten (offizielle Prognose)-->
+					<!-- Server-Daten-->
+					<element name="Wasserstand_gemessenEingang" type="bode:TimeseriesLinkType"/>
+					<!-- lokal, W und Q (tolle Zeitreihe) *.vw -->
+					<element name="Ganglinie_gemessen" type="bode:TimeseriesLinkType"/>
+					<!-- lokal, W und Q (tolle Zeitreihe) *.q -->
+					<element name="Ganglinie_ergebnis" type="bode:TimeseriesLinkType"/>
+					<!-- Server-Daten (offizielle Prognose)-->
+					<element name="Ganglinie_prognoseAblage" type="bode:TimeseriesLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-
-	<element name="Niederschlagsgebiet" type="bode:NiederschlagsgebietType" substitutionGroup="bode:Pegel" />
+	<element name="Niederschlagsgebiet" type="bode:NiederschlagsgebietType" substitutionGroup="bode:Pegel"/>
 	<complexType name="NiederschlagsgebietType">
 		<complexContent>
 			<extension base="bode:PegelType">
 				<sequence>
-					<element name="Niederschlag_gemessenEingang" type="obslink:TimeseriesLink"/> <!-- Server, aus Gebietsniederschlagsmodell -->
-					<element name="Niederschlag_prognoseEingang" type="obslink:TimeseriesLink"/> <!-- Server, aus Rasterdaten -->
-					<element name="Niederschlag_gesamt" type="bode:TimeseriesLinkType"/> <!-- lokal;   -->
+					<!-- Server, aus Gebietsniederschlagsmodell -->
+					<element name="Niederschlag_gemessenEingang" type="obslink:TimeseriesLinkType"/>
+					<!-- Server, aus Rasterdaten -->
+					<element name="Niederschlag_prognoseEingang" type="obslink:TimeseriesLinkType"/>
+					<!-- lokal;   -->
+					<element name="Niederschlag_gesamt" type="bode:TimeseriesLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-
 	<element name="FlusslaufModell" type="bode:FlusslaufModellType" substitutionGroup="bode:Pegel"/>
 	<complexType name="FlusslaufModellType">
 		<complexContent>
@@ -100,110 +99,6 @@
 					<element name="KorrekturEmpfehlungLaufzeit" type="double"/>
 				</sequence>
 			</extension>
-		</complexContent>
-	</complexType>
-	
-	<complexType name="TalsperreCollectionAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="bode:TalsperreCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="TalsperreCollection" type="bode:TalsperreCollectionType"/>
-	<complexType name="TalsperreCollectionType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
-				<sequence>
-					<element name="TalsperreMember" type="bode:TalsperreAssociationType" minOccurs="2" maxOccurs="2"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<complexType name="TalsperreAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="bode:Talsperre"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="Talsperre" type="bode:_TalsperrenType" substitutionGroup="gml:_Feature"/>
-	<complexType name="_TalsperrenType">
-		<complexContent>
-			<extension base="bode:EmptyFeatureBaseType">
-				<sequence>
-					<element name="Name" type="string"/>
-					<element name="Anfangsstauvolumen" type="double"/>
-					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Abgabe_eingang" type="bode:TimeseriesLinkType"/>
-					<element name="Abgabe" type="bode:TimeseriesLinkType"/>
-					<element name="Abgabe_plausibilisiert" type="bode:TimeseriesLinkType"/>
-					<element name="Zufluss_berechnet" type="bode:TimeseriesLinkType"/>
-					<element name="Stauinhalt" type="bode:TimeseriesLinkType"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	
-	<complexType name="VorgabeCollectionAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="bode:VorgabeCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="VorgabeCollection" type="bode:VorgabeCollectionType"/>
-	<complexType name="VorgabeCollectionType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
-				<sequence>
-					<element name="VorgabeMember" type="bode:VorgabeAssociationType" minOccurs="5" maxOccurs="5"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<complexType name="VorgabeAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="bode:_Vorgabe"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="_Vorgabe" abstract="true" type="bode:_VorgabeType" substitutionGroup="gml:_Feature"/>
-	<complexType name="_VorgabeType">
-		<complexContent>
-			<extension base="bode:EmptyFeatureBaseType">
-				<sequence>
-					<element name="Name" type="string"/>
-					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Abfluss_eingang" type="bode:TimeseriesLinkType"/>
-					<element name="Abfluss" type="bode:TimeseriesLinkType"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-
-	<element name="Flutung" type="bode:_VorgabeType" substitutionGroup="bode:_Vorgabe"/>
-	<complexType name="_FlutungType">
-		<complexContent>
-			<extension base="bode:_VorgabeType">
-				<sequence/>
-			</extension>
-		</complexContent>
-	</complexType>
-
-	<element name="Zufluss" type="bode:_ZuflussType" substitutionGroup="bode:_Vorgabe"/>
-	<complexType name="_ZuflussType">
-		<complexContent>
-			<extension base="bode:_VorgabeType"/>
 		</complexContent>
 	</complexType>
 </schema>
