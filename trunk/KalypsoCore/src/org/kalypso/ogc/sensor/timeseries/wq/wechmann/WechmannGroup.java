@@ -49,6 +49,10 @@ public class WechmannGroup
     if( i < 0 )
       i = -i - 2;
     
+    // TODO: check this please (wenn d smaller than any validity)
+    if( i < 0 )
+      return null;
+    
     return (WechmannSet) m_map.get( dates[i] );
   }
 }
