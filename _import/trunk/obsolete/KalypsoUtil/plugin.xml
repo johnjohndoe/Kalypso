@@ -42,6 +42,30 @@
       <library name="lib/kalypsodeegree.jar">
          <export name="*"/>
       </library>
+      <library name="lib/deegree/jai/jai_codec.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/deegree/jai/jai_core.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/deegree/jai/mlibwrapper_jai.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/deegree/acme/acme.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/deegree/java3d/j3dcore.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/deegree/java3d/j3dutils.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/deegree/java3d/vecmath.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/deegree/jts/jts.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
 </plugin>
