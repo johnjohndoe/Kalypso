@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.util.Date;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -24,13 +23,11 @@ import org.kalypso.ui.preferences.IKalypsoPreferences;
  * 
  * @author schlienger
  */
-public class DateRangeInputDialog extends TitleAreaDialog
+public class DateRangeInputControl
 {
-  public final static String msg = "Wählen Sie zwischen Tagesanzahl- oder Zeitraumeingabe.\n"
+  public final static String DESCRIPTION = "Wählen Sie zwischen Tagesanzahl- oder Zeitraumeingabe.\n"
     + "- Tagesanzahl: Anzahl letzte angezeigte Tagen (0 = ganzer Zeitraum)\n"
     + "- Zeitraum: Eingabe-Von und Eingabe-Bis (Beispielformat: 22.01.2000 13:30:00)";
-  
-  private final static String title = "Repository-Vorschau Konfiguration";
 
   private final static String errTitle = "Eingabe bitte prufen...";
 
@@ -50,6 +47,8 @@ public class DateRangeInputDialog extends TitleAreaDialog
 
   private AbstractUIPlugin m_plugin;
 
+  private final Shell m_parentShell;
+
   /**
    * Constructor. If plugin is specified, then its DialogSettings are used as
    * default values.
@@ -62,12 +61,11 @@ public class DateRangeInputDialog extends TitleAreaDialog
    * @param df
    * @param plugin
    */
-  public DateRangeInputDialog( final Shell parentShell, boolean useRange,
+  public DateRangeInputControl( final Shell parentShell, boolean useRange,
       Date from, Date to, int days, final DateFormat df,
       final AbstractUIPlugin plugin )
   {
-    super( parentShell );
-
+    m_parentShell = parentShell;
     m_df = df;
 
     m_plugin = plugin;
@@ -103,17 +101,9 @@ public class DateRangeInputDialog extends TitleAreaDialog
     m_fUseRange.dispose();
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
-  protected Control createDialogArea( final Composite parent )
+  public Control createControl( final Composite parent )
   {
-    setTitle( title );
-    setMessage( msg );
-
-    final Composite c = (Composite) super.createDialogArea( parent );
-
-    final Composite sub = new Composite( c, SWT.FILL );
+    final Composite sub = new Composite( parent, SWT.FILL );
 
     m_fNumberOfDays = new IntegerFieldEditor(
         IKalypsoPreferences.NUMBER_OF_DAYS, "Anzahl Tagen:", sub );
@@ -147,13 +137,10 @@ public class DateRangeInputDialog extends TitleAreaDialog
     m_fDateFrom.fillIntoGrid( sub, 2 );
     m_fDateTo.fillIntoGrid( sub, 2 );
 
-    return c;
+    return sub;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-   */
-  protected void okPressed( )
+  public boolean okPressed( )
   {
     m_fUseRange.store();
 
@@ -165,17 +152,17 @@ public class DateRangeInputDialog extends TitleAreaDialog
       if( !m_fDateFrom.isValid()
           || parseForDate( m_fDateFrom.getStringValue() ) == null )
       {
-        MessageDialog.openInformation( getParentShell(), errTitle, errMsg
+        MessageDialog.openInformation( m_parentShell, errTitle, errMsg
             + m_fDateFrom.getLabelText() + ": " + m_fDateFrom.getStringValue() );
-        return;
+        return false;
       }
 
       if( !m_fDateTo.isValid()
           || parseForDate( m_fDateTo.getStringValue() ) == null )
       {
-        MessageDialog.openInformation( getParentShell(), errTitle, errMsg
+        MessageDialog.openInformation( m_parentShell, errTitle, errMsg
             + m_fDateTo.getLabelText() + ": " + m_fDateTo.getStringValue() );
-        return;
+        return false;
       }
 
       m_fDateFrom.store();
@@ -186,10 +173,10 @@ public class DateRangeInputDialog extends TitleAreaDialog
       if( !m_fNumberOfDays.isValid()
           || Integer.valueOf( m_fNumberOfDays.getStringValue() ).intValue() < 0 )
       {
-        MessageDialog.openInformation( getParentShell(), errTitle, errMsg
+        MessageDialog.openInformation( m_parentShell, errTitle, errMsg
             + m_fNumberOfDays.getLabelText() + ": "
             + m_fNumberOfDays.getStringValue() );
-        return;
+        return false;
       }
 
       m_fNumberOfDays.store();
@@ -203,7 +190,7 @@ public class DateRangeInputDialog extends TitleAreaDialog
       m_plugin.getDialogSettings().put( IKalypsoPreferences.NUMBER_OF_DAYS, getNumberOfDays() );
     }
     
-    super.okPressed();
+    return true;
   }
 
   /**
