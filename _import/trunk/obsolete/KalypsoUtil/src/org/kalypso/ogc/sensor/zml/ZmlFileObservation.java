@@ -15,8 +15,6 @@ import org.kalypso.ogc.sensor.ITarget;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.Metadata;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.util.repository.file.FileItem;
-import org.kalypso.util.repository.file.FileRepository;
 import org.kalypso.zml.AxisType;
 import org.kalypso.zml.MetadataType;
 import org.kalypso.zml.ObjectFactory;
@@ -24,14 +22,15 @@ import org.kalypso.zml.Observation;
 import org.kalypso.zml.TargetPropertyType;
 
 /**
- * An Observation from a local zml-File.
+ * A class that represents a file based IObservation. The format is zml which
+ * is defined in the observation.xsd schema file.
  * 
  * @author schlienger
  */
-public class ZmlObservationItem extends FileItem implements IObservation
+public class ZmlFileObservation implements IObservation
 {
-  private final static ObjectFactory m_zmlObjectFactory = new ObjectFactory();
-
+  private final File m_file;
+  
   private Observation m_obsFile = null;
 
   private Metadata m_metadata = null;
@@ -42,11 +41,13 @@ public class ZmlObservationItem extends FileItem implements IObservation
 
   private ZmlTuppleModel m_model = null;
 
-  public ZmlObservationItem( final FileRepository rep, final File file )
+  private final static ObjectFactory m_zmlObjectFactory = new ObjectFactory();
+  
+  public ZmlFileObservation( final File file )
   {
-    super( rep, file );
+    m_file = file;
   }
-
+  
   /**
    * Helper that loads the file
    */
@@ -56,10 +57,18 @@ public class ZmlObservationItem extends FileItem implements IObservation
     {
       Unmarshaller u = m_zmlObjectFactory.createUnmarshaller();
 
-      m_obsFile = (Observation)u.unmarshal( getFile() );
+      m_obsFile = (Observation)u.unmarshal( m_file );
     }
 
     return m_obsFile;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getName()
+   */
+  public String getName()
+  {
+    return m_file.getName();
   }
 
   /**
@@ -99,7 +108,7 @@ public class ZmlObservationItem extends FileItem implements IObservation
         
         m_metadata.put( Metadata.MD_NAME, obs.getName() );
         m_metadata.put( "Filename", getName() );
-        m_metadata.put( "Folder", getParent() );
+        m_metadata.put( "Folder", m_file.getParentFile() );
 
         List mdList = obs.getMetadataList().getMetadata();
 

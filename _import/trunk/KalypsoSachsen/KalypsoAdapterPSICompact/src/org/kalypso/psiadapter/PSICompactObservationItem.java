@@ -92,6 +92,17 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   }
 
   /**
+   * @see org.kalypso.psiadapter.PSICompactItem#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( Class anotherClass )
+  {
+    if( anotherClass == IObservation.class )
+      return this;
+        
+    return super.getAdapter( anotherClass );
+  }
+  
+  /**
    * Helper für die Erzeugung der Metadaten
    */
   private void constructMetadata()

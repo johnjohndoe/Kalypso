@@ -53,6 +53,11 @@ public class FileItem implements IRepositoryItem
     return m_file;
   }
   
+  public FileRepository getRep()
+  {
+    return m_rep;
+  }
+  
   /**
    * @see org.kalypso.util.repository.IRepositoryItem#hasChildren()
    */
@@ -64,5 +69,13 @@ public class FileItem implements IRepositoryItem
   public String toString()
   {
     return getName();
+  }
+
+  /**
+   * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( Class anotherClass )
+  {
+    return null;
   }
 }

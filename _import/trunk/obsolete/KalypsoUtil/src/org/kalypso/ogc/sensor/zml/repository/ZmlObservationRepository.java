@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.zml;
+package org.kalypso.ogc.sensor.zml.repository;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -7,17 +7,18 @@ import org.kalypso.util.repository.file.FileItem;
 import org.kalypso.util.repository.file.FileRepository;
 
 /**
+ * A IObservation aware FileRepository.
+ * 
  * @author schlienger
  */
-public class ZmlFileRepository extends FileRepository
+public class ZmlObservationRepository extends FileRepository
 {
-
-  public ZmlFileRepository( String location, FileFilter filter )
+  public ZmlObservationRepository( String location, FileFilter filter )
   {
     super( location, filter );
   }
 
-  public ZmlFileRepository( String location )
+  public ZmlObservationRepository( String location )
   {
     super( location );
   }

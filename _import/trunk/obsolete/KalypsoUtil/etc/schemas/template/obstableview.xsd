@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
+<xs:schema targetNamespace="obstableview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:kalypso="types.template.kalypso.org">
+	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd"/>
+	<xs:element name="obstableview">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="columnlayer" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="kalypso:layerType">
+									<xs:attribute name="editable" type="xs:boolean" use="optional" default="false"/>
+									<xs:attribute name="width" type="xs:int" use="optional" default="100"/>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

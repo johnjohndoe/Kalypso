@@ -7,17 +7,15 @@ import org.kalypso.java.io.AcceptAllFileFilter;
 import org.kalypso.util.repository.AbstractRepository;
 import org.kalypso.util.repository.IRepositoryItem;
 
-
-
 /**
  * Ein File Repository.
  * 
  * @author schlienger
- *
  */
 public class FileRepository extends AbstractRepository
 {
   protected final File m_root;
+
   protected final FileFilter m_filter;
 
   public FileRepository( final String location, final FileFilter filter )
@@ -28,12 +26,12 @@ public class FileRepository extends AbstractRepository
       m_filter = new AcceptAllFileFilter();
     else
       m_filter = filter;
-    
+
     m_root = new File( location );
     if( !m_root.exists() )
-        throw new IllegalArgumentException( "Location existiert nicht! (Location: " + location + ")" );
+      throw new IllegalArgumentException( "Location existiert nicht! (Location: " + location + ")" );
   }
-  
+
   public FileRepository( final String location )
   {
     this( location, null );
@@ -54,12 +52,12 @@ public class FileRepository extends AbstractRepository
   {
     return m_root.isDirectory();
   }
-  
+
   public FileFilter getFilter()
   {
     return m_filter;
   }
-  
+
   /**
    * Factory method
    */

@@ -100,4 +100,12 @@ public class PSICompactItem implements IRepositoryItem, ITarget
   {
     return m_objectInfo.getId();
   }
+
+  /**
+   * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( Class anotherClass )
+  {
+    return null;
+  }
 }

@@ -9,12 +9,12 @@
 		<Metadata name="Alarmstufe1" value="4.3"/>
 	</MetadataList>
 
-	<Axis name="Datum" unit="">
-		<ValueArray datatype="xs:date">12.01.2004 13.01.2004</ValueArray>
+	<Axis name="Datum" unit="" datatype="xs:date">
+		<ValueArray>12.01.2004 13.01.2004</ValueArray>
 	</Axis>
 	
-	<Axis name="Pegel" unit="m">
-		<ValueLink datatype="xs:double" xlink:type="simple" xlink:href="PATH=beispiel.zml.values/values.txt#COLUMN=2" xlink:actuate="onLoad"/>
+	<Axis name="Pegel" unit="m" datatype="xs:double">
+		<ValueLink xlink:type="simple" xlink:href="PATH=beispiel.zml.values/values.txt#COLUMN=2" xlink:actuate="onLoad"/>
 	</Axis>
 
 </Observation>

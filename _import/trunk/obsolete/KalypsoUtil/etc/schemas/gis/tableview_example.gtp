@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<tableview xmlns="tableview.xml.kalypso.org" xmlns:kalypso="types.xml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="tableview.xml.kalypso.org
-.\tableview.xsd">
-		<layer id="argls" source="RESOURCE#shapes/example#unknown" type="shape">
-			<kalypso:column name="flaeche" editable="true" width="100"/>
-			<kalypso:column name="featureID" editable="false" width="0"/>
-		</layer>
-</tableview>

@@ -1,0 +1,1 @@
+xjc.bat -d ../../build/src template/*.xsd zml/*.xsd util/*.xsd

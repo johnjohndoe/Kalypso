@@ -80,4 +80,12 @@ public abstract class AbstractRepository implements IRepository
   {
     return getName();
   }
+  
+  /**
+   * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( Class anotherClass )
+  {
+    return null;
+  }
 }

@@ -1,1 +1,0 @@
-xjc.bat -d ../../../build/src *.xsd

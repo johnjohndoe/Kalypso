@@ -25,7 +25,6 @@
 							<xs:complexType>
 								<xs:complexContent>
 									<xs:extension base="xlink:xlink-base">
-										<xs:attribute name="datatype" type="xs:string" use="required"/>
 									</xs:extension>
 								</xs:complexContent>
 					</xs:complexType>
@@ -35,8 +34,7 @@
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:string">
-							<xs:attribute name="datatype" type="xs:string" use="required"/>
-							<xs:attribute name="separator" type="xs:string" use="optional" default=""/>
+							<xs:attribute name="separator" type="xs:string" use="optional" default=" "/>
 						</xs:extension>
 					</xs:simpleContent>
 				</xs:complexType>
@@ -44,6 +42,7 @@
 		</xs:choice>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="unit" type="xs:string" use="required"/>
+		<xs:attribute name="datatype" type="xs:string" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="MetadataListType">
 		<xs:sequence>

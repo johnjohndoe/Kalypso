@@ -1,11 +1,13 @@
 package org.kalypso.util.repository;
 
+import org.kalypso.util.adapter.IAdaptable;
+
 /**
  * Ein Item innerhalb des Repository. Die Items sind hierarchisch organisiert. 
  * 
  * @author schlienger
  */
-public interface IRepositoryItem
+public interface IRepositoryItem extends IAdaptable
 {
   public String getName();
   
