@@ -53,8 +53,8 @@ public class NAModellConverter
       final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
       registry.registerTypeHandler( new ObservationLinkHandler() );
 
-//      ascii2gml();
-      gml2asciil();
+      ascii2gml();
+//      gml2asciil();
     }
     catch( Exception e )
     {
@@ -84,7 +84,7 @@ public class NAModellConverter
     NAConfiguration conf = NAConfiguration.getAscii2GmlConfiguration( new File(
         "/home/doemming/weisseElster" ), gmlBaseDir );
     Feature fe = asciiToFeature( conf );
-    //            insertGeometries(fe,"/home/doemming/weisseElster/shapes");
+                insertGeometries(fe,"/home/doemming/weisseElster/shapes");
 
     File gmlFile = new File( gmlBaseDir, "naModel.gml" );
     GmlSerializer.serializeFeature( new FileWriter( gmlFile ), fe, null );

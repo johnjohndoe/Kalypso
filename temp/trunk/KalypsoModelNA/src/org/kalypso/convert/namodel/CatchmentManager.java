@@ -152,7 +152,7 @@ public class CatchmentManager extends AbstractManager
     File orgTsFile = new File( m_conf.getAsciiBaseDir(),"klima.dat/"+tsFileString );
     Object link = NAZMLGenerator
         .copyToTimeseriesLink( orgTsFile.toURL(), NAZMLGenerator.NA_NIEDERSCHLAG_EINGABE, m_conf
-            .getGmlBaseDir(),relativeZmlPath, true ,false);
+            .getGmlBaseDir(),relativeZmlPath, true ,true);
     FeatureProperty niederschlagZRProp = FeatureFactory.createFeatureProperty( "niederschlagZR",
         link );
     propCollector.put( "niederschlagZR", niederschlagZRProp );

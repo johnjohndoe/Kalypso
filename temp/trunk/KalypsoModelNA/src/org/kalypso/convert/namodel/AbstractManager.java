@@ -256,16 +256,16 @@ public abstract class AbstractManager
       return "";
     //        System.out.println(s[0]);
     Object property = feature.getProperty( s[0] );
-    
+
     if( property == null )
       return "(" + s[0] + "==NULL ?)";
     String value = property.toString(); // PropertyName
 
     final String format = s[1];
-    return toAscii(value, format);
+    return toAscii( value, format );
   }
-  
-  public String toAscii(String value,String format)
+
+  public String toAscii( String value, String format )
   {
     if( "*".equals( format ) || "a".equals( format ) || "A".equals( format ) )
       return value;
@@ -393,10 +393,14 @@ public abstract class AbstractManager
     {
       if( !( object instanceof IntID ) )
         return false;
-
       IntID other = (IntID)object;
-
-      return ( other.getID() == getID() && other.getFeatureType() == getFeatureType() );
+      if(!( other.getID() == getID() ))
+        return false;
+      if( !other.getFeatureType().getNamespace().equals( getFeatureType().getNamespace() ) )
+        return false;
+      if( !other.getFeatureType().getName().equals( getFeatureType().getName() ) )
+        return false;
+      return true;
     }
 
     /*
@@ -406,7 +410,7 @@ public abstract class AbstractManager
      */
     public int hashCode()
     {
-      return ( m_ft.getName() + m_intID ).hashCode();
+      return ( Integer.toString(m_intID)+m_ft.getName()+m_ft.getNamespace()).hashCode();
     }
 
   }
