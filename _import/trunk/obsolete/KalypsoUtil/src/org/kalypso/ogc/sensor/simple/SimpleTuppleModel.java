@@ -1,5 +1,7 @@
 package org.kalypso.ogc.sensor.simple;
 
+import javax.swing.table.DefaultTableModel;
+
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 
@@ -8,17 +10,19 @@ import org.kalypso.ogc.sensor.ITuppleModel;
  */
 public class SimpleTuppleModel implements ITuppleModel
 {
-  /**
-   *
-   */
+  private DefaultTableModel m_tupples;
+
   public SimpleTuppleModel( final IAxis[] axes )
   {
     this( axes, new Object[0][axes.length] );
   }
-  
+
   public SimpleTuppleModel( final IAxis[] axes, final Object[][] values )
   {
-    
+    if( values == null )
+      throw new IllegalArgumentException( "null values" );
+
+    m_tupples = new DefaultTableModel( axes, values.length );
   }
 
   /**
@@ -26,7 +30,7 @@ public class SimpleTuppleModel implements ITuppleModel
    */
   public int getCount()
   {
-    return 0;
+    return m_tupples.getRowCount();
   }
 
   /**
@@ -34,31 +38,41 @@ public class SimpleTuppleModel implements ITuppleModel
    */
   public Object getElement( int index, int position )
   {
-    return null;
+    return m_tupples.getValueAt( index, position );
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, int)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
+   *      int)
    */
   public void setElement( int index, Object element, int position )
   {
-    
+    m_tupples.setValueAt( element, index, position );
   }
 
   /**
    * Adds a tupple at the end of the model.
-   * @param tupple the 'row' to be added
+   * 
+   * @param tupple
+   *          the 'row' to be added
    */
   public void addTupple( final Object[] tupple )
   {
-    
+    m_tupples.addRow( tupple );
   }
-  
+
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
+   *      org.kalypso.ogc.sensor.IAxis)
    */
   public int indexOf( Object element, IAxis axis )
   {
-    return 0;
+    for( int i = 0; i < m_tupples.getRowCount(); i++ )
+    {
+      if( m_tupples.getValueAt( i, axis.getPosition() ) == element )
+        return i;
+    }
+
+    return -1;
   }
 }

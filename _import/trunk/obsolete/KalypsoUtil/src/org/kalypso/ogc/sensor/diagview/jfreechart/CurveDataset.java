@@ -8,7 +8,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
-import org.kalypso.ogc.sensor.diagview.ICurve;
+import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 
 /**
@@ -25,11 +25,11 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
 
   private IDiagramAxis m_yDiagAxis = null;
 
-  private final ICurve m_curve;
+  private final IDiagramCurve m_curve;
 
   private final ITuppleModel m_values;
 
-  public CurveDataset( final ICurve curve ) throws SensorException
+  public CurveDataset( final IDiagramCurve curve ) throws SensorException
   {
     m_curve = curve;
     m_values = m_curve.getObservation().getValues( null );

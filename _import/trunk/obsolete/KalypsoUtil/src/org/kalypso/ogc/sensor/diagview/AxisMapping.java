@@ -8,12 +8,12 @@ import org.kalypso.ogc.sensor.IAxis;
  * @author schlienger
  *
  */
-public class DefaultMapping implements IAxisMapping
+public class AxisMapping implements IAxisMapping
 {
   private final IAxis m_oAxis;
   private final IDiagramAxis m_dAxis;
 
-  public DefaultMapping( final IAxis oAxis, final IDiagramAxis dAxis )
+  public AxisMapping( final IAxis oAxis, final IDiagramAxis dAxis )
   {
     m_oAxis = oAxis;
     m_dAxis = dAxis;

@@ -8,7 +8,7 @@ import org.kalypso.ogc.sensor.IObservationProvider;
  * 
  * @author schlienger
  */
-public interface ICurve extends IObservationProvider
+public interface IDiagramCurve extends IObservationProvider
 {
   public String getName();
   

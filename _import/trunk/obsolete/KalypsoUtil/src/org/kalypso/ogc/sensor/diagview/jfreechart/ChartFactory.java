@@ -1,18 +1,16 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.StandardXYItemRenderer;
+import org.jfree.chart.plot.Plot;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.ICurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
+import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.util.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.util.factory.FactoryException;
@@ -26,7 +24,7 @@ public class ChartFactory
 
   static
   {
-    Properties props = new Properties();
+    final Properties props = new Properties();
     try
     {
       props.load( ChartFactory.class.getResourceAsStream( "resource/type2valueAxis.properties" ) );
@@ -44,15 +42,15 @@ public class ChartFactory
    * 
    * @throws FactoryException
    */
-  public static JFreeChart createObservationChart( final IDiagramTemplate template )
-      throws FactoryException
+  static Plot createObservationPlot( final IDiagramTemplate template ) throws FactoryException
   {
-    XYPlot plot = new XYPlot();
+    final IDiagramAxis[] diagAxes = template.getAxisList();
 
-    IDiagramAxis[] diagAxes = template.getAxisList();
-
-    Map diag2chartAxis = new Hashtable( diagAxes.length );
-    Map chartAxes2Pos = new Hashtable( diagAxes.length );
+    final Map diag2chartAxis = new HashMap( diagAxes.length );
+    final Map chartAxes2Pos = new HashMap( diagAxes.length );
+    
+    final ObservationPlot plot = new ObservationPlot( diag2chartAxis, chartAxes2Pos );
+    
     int domPos = 0;
     int ranPos = 0;
 
@@ -60,7 +58,7 @@ public class ChartFactory
     {
       ValueAxis vAxis = (ValueAxis)m_objFactory.getObjectInstance( diagAxes[i].getDataType(),
           ValueAxis.class, new Object[]
-          { diagAxes[i].getLabel() + " [" + diagAxes[i].getUnit() + "]" } );
+          { diagAxes[i].toFullString() } );
 
       vAxis.setInverted( diagAxes[i].isInverted() );
       vAxis.setLowerMargin( 0.02 );
@@ -74,14 +72,14 @@ public class ChartFactory
         plot.setDomainAxisLocation( domPos, loc );
 
         chartAxes2Pos.put( vAxis, new Integer( domPos ) );
-        
+
         domPos++;
       }
       else
       {
         plot.setRangeAxis( ranPos, vAxis );
         plot.setRangeAxisLocation( ranPos, loc );
-        
+
         chartAxes2Pos.put( vAxis, new Integer( ranPos ) );
 
         ranPos++;
@@ -90,34 +88,18 @@ public class ChartFactory
       diag2chartAxis.put( diagAxes[i], vAxis );
     }
 
-    ICurve[] curves = template.getCurveList();
-    for( int i = 0; i < curves.length; i++ )
+    try
     {
-      try
-      {
-        CurveDataset cds = new CurveDataset( curves[i] );
-
-        plot.setDataset( i, cds );
-
-        plot.mapDatasetToDomainAxis( i, ( (Integer)chartAxes2Pos.get( diag2chartAxis.get( cds
-            .getXDiagAxis() ) ) ).intValue() );
-        plot.mapDatasetToRangeAxis( i, ( (Integer)chartAxes2Pos.get( diag2chartAxis.get( cds
-            .getYDiagAxis() ) ) ).intValue() );
-      }
-      catch( SensorException e )
-      {
-        throw new FactoryException( e );
-      }
+      final IDiagramCurve[] curves = template.getCurveList();
+      for( int i = 0; i < curves.length; i++ )
+        plot.addCurve( curves[i] );
+    }
+    catch( SensorException e )
+    {
+      throw new FactoryException( e );
     }
 
-//    plot.configureDomainAxes();
-//    plot.configureRangeAxes();
-
-    plot.setRenderer( new StandardXYItemRenderer( StandardXYItemRenderer.LINES ) );
-    JFreeChart chart = new JFreeChart( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, plot,
-        template.isShowLegend() );
-
-    return chart;
+    return plot;
   }
 
   /**

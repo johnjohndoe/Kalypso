@@ -10,8 +10,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
+import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.tableview.template.RenderingRule;
 
 
 /**

@@ -1,7 +1,6 @@
 package org.kalypso.ogc.sensor.tableview;
 
-import org.kalypso.ogc.sensor.tableview.template.Rules;
-import org.kalypso.ogc.sensor.template.ITemplateAdapter;
+import org.kalypso.ogc.sensor.template.ITemplateEventProvider;
 
 
 /**
@@ -9,7 +8,7 @@ import org.kalypso.ogc.sensor.template.ITemplateAdapter;
  * 
  * @author schlienger
  */
-public interface ITableViewTemplate extends ITemplateAdapter
+public interface ITableViewTemplate extends ITableViewRules, ITemplateEventProvider
 {
   /**
    * Returns the list of columns. At the time this method is called, it might
@@ -18,6 +17,8 @@ public interface ITableViewTemplate extends ITemplateAdapter
    * is called.
    */
   public ITableViewColumn[] getColumns();
+  public void addColumn( ITableViewColumn column );
+  public void removeColumn( ITableViewColumn column );
   
-  public Rules getRules();
+  public void removeAllColumns();
 }

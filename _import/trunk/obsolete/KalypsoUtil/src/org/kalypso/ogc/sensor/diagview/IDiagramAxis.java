@@ -27,4 +27,9 @@ public interface IDiagramAxis
   public boolean isInverted();
 
   public String getDataType();
+  
+  public String getIdentifier();
+  
+  /** Returns the complete Label of this axis (concatenates the label and the unit)*/
+  public String toFullString();
 }

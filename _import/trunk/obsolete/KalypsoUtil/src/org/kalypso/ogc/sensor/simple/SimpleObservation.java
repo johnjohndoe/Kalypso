@@ -18,6 +18,7 @@ public class SimpleObservation implements IObservation
   private final ITarget m_target;
   private final Metadata m_metadata;
   private final IAxis[] m_axes;
+  private ITuppleModel m_values = null;
 
   public SimpleObservation( final String name, final boolean editable, final ITarget target, final Metadata metadata, final IAxis[] axes )
   {
@@ -26,6 +27,8 @@ public class SimpleObservation implements IObservation
     m_target = target;
     m_metadata = metadata;
     m_axes = axes;
+    
+    m_values = new SimpleTuppleModel( axes );
   }
   
   /**
@@ -73,12 +76,20 @@ public class SimpleObservation implements IObservation
    */
   public ITuppleModel getValues( IVariableArguments args ) throws SensorException
   {
-    return null;
+    if( m_values == null )
+      throw new SensorException( "Keine Werte vorhanden." );
+    
+    return m_values;
   }
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
   public void setValues( ITuppleModel values ) throws SensorException
-  {}
+  {
+    if( values == null )
+      throw new SensorException( "Null nicht erlaubt." );
+    
+    m_values = values;
+  }
 }

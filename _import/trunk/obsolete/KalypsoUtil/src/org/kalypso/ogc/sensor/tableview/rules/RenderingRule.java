@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.tableview.template;
+package org.kalypso.ogc.sensor.tableview.rules;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -36,6 +36,9 @@ public class RenderingRule
     m_tt = tt;
   }
 
+  /**
+   * Factory method for creating a RenderingRule object with a binding object.
+   */
   public static RenderingRule createRenderingRule( final TypeRenderingRule rr )
   {
     int mask = rr.getMask();

@@ -7,8 +7,9 @@ import org.kalypso.template.obsdiagview.TypeAxis;
  * 
  * @author schlienger
  */
-public class DefaultDiagramAxis implements IDiagramAxis
+public class DiagramAxis implements IDiagramAxis
 {
+  private final String m_id;
   private final String m_label;
   private final String m_unit;
   private final String m_direction;
@@ -16,13 +17,14 @@ public class DefaultDiagramAxis implements IDiagramAxis
   private final boolean m_isInverted;
   private final String m_dataType;
 
-  public DefaultDiagramAxis( final TypeAxis axis )
+  public DiagramAxis( final TypeAxis axis )
   {
-    this( axis.getDatatype(), axis.getLabel(), axis.getUnit(), axis.getDirection(), axis.getPosition(), axis.isInverted() );
+    this( axis.getId(), axis.getDatatype(), axis.getLabel(), axis.getUnit(), axis.getDirection(), axis.getPosition(), axis.isInverted() );
   }
   
-  public DefaultDiagramAxis( final String dataType, final String label, final String unit, final String direction, final String position, final boolean isInverted )
+  public DiagramAxis( final String id, final String dataType, final String label, final String unit, final String direction, final String position, final boolean isInverted )
   {
+    m_id = id;
     m_dataType = dataType;
     m_label = label;
     m_unit = unit;
@@ -77,5 +79,24 @@ public class DefaultDiagramAxis implements IDiagramAxis
   public String getDataType()
   {
     return m_dataType;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#getIdentifier()
+   */
+  public String getIdentifier()
+  {
+    return m_id;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#toFullString()
+   */
+  public String toFullString()
+  {
+    if( m_unit.length() > 0 )
+      return m_label + " [" + m_unit + "]";
+    else
+      return m_label;
   }
 }

@@ -1,5 +1,8 @@
 package org.kalypso.ogc.sensor.tableview.swing;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -11,8 +14,10 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
-import org.kalypso.ogc.sensor.tableview.template.RenderingRule;
-import org.kalypso.ogc.sensor.tableview.template.Rules;
+import org.kalypso.ogc.sensor.tableview.ITableViewRules;
+import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
+import org.kalypso.ogc.sensor.template.ITemplateEventListener;
+import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.util.runtime.IVariableArguments;
 
 /**
@@ -21,19 +26,21 @@ import org.kalypso.util.runtime.IVariableArguments;
  * 
  * @author schlienger
  */
-public class ObservationTableModel extends AbstractTableModel
+public class ObservationTableModel extends AbstractTableModel implements ITemplateEventListener
 {
-  private ITableViewColumn[] m_columns;
+  private final static ITableViewColumn[] EMPTY_COLS = new ITableViewColumn[0];
+  
+  private ITableViewColumn[] m_columns = EMPTY_COLS;
 
-  private IVariableArguments m_args;
+  private IVariableArguments m_args = null;
 
   /** common column */
   private Set m_cc = null;
 
   /** common fake axis */
-  private DefaultAxis m_ccAxis;
+  private DefaultAxis m_ccAxis = null;
 
-  private Rules m_rules = null;
+  private ITableViewRules m_rules = null;
 
   public ObservationTableModel()
   {
@@ -48,6 +55,23 @@ public class ObservationTableModel extends AbstractTableModel
   public ObservationTableModel( ITableViewColumn[] columns ) throws SensorException
   {
     setColumns( columns, null );
+  }
+
+  /**
+   * Adds a column.
+   * 
+   * @throws SensorException
+   */
+  public synchronized void addColumn( final ITableViewColumn column ) throws SensorException
+  {
+    if( m_columns != EMPTY_COLS )
+    {
+      final Set cols = new HashSet( Arrays.asList( m_columns ) );
+      cols.add( column );
+      setColumns( (ITableViewColumn[])cols.toArray( new ITableViewColumn[0] ), m_args );
+    }
+    else
+      setColumns( new ITableViewColumn[] { column }, m_args );
   }
 
   /**
@@ -69,7 +93,7 @@ public class ObservationTableModel extends AbstractTableModel
     m_cc = null;
     m_ccAxis = null;
 
-    if( m_columns != null )
+    if( m_columns != EMPTY_COLS )
     {
       // the common column, merges all the values from the common axes
       m_cc = new TreeSet();
@@ -124,7 +148,7 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public int getColumnCount()
   {
-    if( m_columns == null )
+    if( m_columns == EMPTY_COLS )
       return 0;
 
     return m_columns.length + 1;
@@ -208,9 +232,10 @@ public class ObservationTableModel extends AbstractTableModel
   }
 
   /**
-   * Sets the template used for building this model
+   * Sets the rules. Important: you should call this method if you want the rules rendering
+   * to be enabled.
    */
-  public void setRules( final Rules rules )
+  public void setRules( final ITableViewRules rules )
   {
     m_rules = rules;
   }
@@ -218,26 +243,54 @@ public class ObservationTableModel extends AbstractTableModel
   /**
    * 
    */
-  public RenderingRule[] findRules( int row, int column )
+  public RenderingRule[] findRules( int row, int column ) throws NoSuchElementException
   {
-    final String kStatusCol = KalypsoStatusUtils.getStatusAxisLabelFor( m_columns[column - 1].getValueAxis() );
-    
+    final String kStatusCol = KalypsoStatusUtils.getStatusAxisLabelFor( m_columns[column - 1]
+        .getValueAxis() );
+
     final IAxis valueAxis = findValueAxis( kStatusCol );
-    
-    return m_rules.findRules( ((Integer)getValueAt( row, valueAxis.getPosition() + 1 )).intValue() );
+
+    return m_rules.findRules( ( (Integer)getValueAt( row, valueAxis.getPosition() + 1 ) )
+        .intValue() );
   }
- 
+
   /**
-   * 
+   * Finds a value axis with the given name.
+   * @throws NoSuchElementException when axis could not be found
    */
-  private IAxis findValueAxis( final String name )
+  private IAxis findValueAxis( final String name ) throws NoSuchElementException
   {
     for( int i = 0; i < m_columns.length; i++ )
     {
       if( m_columns[i].getValueAxis().getLabel().equals( name ) )
         return m_columns[i].getValueAxis();
     }
-    
-    return null;
+
+    throw new NoSuchElementException();
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.template.ITemplateEventListener#onTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)
+   */
+  public void onTemplateChanged( TemplateEvent evt )
+  {
+    try
+    {
+      if( evt.getType() == TemplateEvent.TYPE_ADD && evt.getObject() instanceof ITableViewColumn )
+        addColumn( (ITableViewColumn)evt.getObject() );
+      
+      if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
+        clearColumns();
+    }
+    catch( SensorException e )
+    {
+      throw new RuntimeException( e );
+    }
+  }
+
+  private void clearColumns()
+  {
+    m_columns = EMPTY_COLS;
+    fireTableStructureChanged();
   }
 }
