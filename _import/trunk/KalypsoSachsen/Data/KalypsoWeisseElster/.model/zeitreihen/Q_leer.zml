@@ -5,7 +5,7 @@
         <metadata name="Beschreibung" value="Platzhalter für fehlende Q-Zeitreihen"/>
         <metadata name="Name" value="Virtuelle Q-Zeitreihe"/>
     </metadataList>
-    <axis datatype="TYPE=integer" key="false" name="Status" type="kalypso-status" unit="">
+    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_Abfluss" type="kalypso-status" unit="">
         <valueArray separator=";"></valueArray>
     </axis>
     <axis datatype="TYPE=double" key="false" name="Abfluss" type="Q" unit="qm/s">
