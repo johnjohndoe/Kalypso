@@ -3,12 +3,14 @@ package org.kalypso.services.metadoc;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import org.kalypso.services.IKalypsoService;
+
 /**
  * IMetaDocService
  * 
  * @author schlienger
  */
-public interface IMetaDocService extends Remote
+public interface IMetaDocService extends Remote, IKalypsoService
 {
   /**
    * Prepares a DocBean for a new document with the given extension.

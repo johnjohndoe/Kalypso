@@ -176,4 +176,12 @@ public class KalypsoMetaDocService implements IMetaDocService
       throw new RemoteException( "commitNewDocument", e );
     }
   }
+
+  /**
+   * @see org.kalypso.services.IKalypsoService#getServiceVersion()
+   */
+  public int getServiceVersion( ) throws RemoteException
+  {
+    return 0;
+  }
 }
