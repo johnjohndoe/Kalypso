@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/commons-pool-1.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-libs.jar"/>
