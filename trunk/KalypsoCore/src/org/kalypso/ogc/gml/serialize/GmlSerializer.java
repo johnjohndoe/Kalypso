@@ -99,7 +99,7 @@ public final class GmlSerializer
       throws Exception
   {
     // load gml
-    final GMLDocument_Impl gml = new GMLDocument_Impl( XMLHelper.getAsDOM( gmlURL ) );
+    final GMLDocument_Impl gml = new GMLDocument_Impl( XMLHelper.getAsDOM( gmlURL,true ) );
 
     final GMLFeature gmlFeature = gml.getRootFeature();
 
@@ -144,7 +144,7 @@ public final class GmlSerializer
 
     // load gml
     final InputSource inputSource = new InputSource( rt );
-    final Document gmlAsDOM = XMLHelper.getAsDOM( inputSource );
+    final Document gmlAsDOM = XMLHelper.getAsDOM( inputSource ,true);
 
     final GMLDocument_Impl gml = new GMLDocument_Impl( gmlAsDOM );
 
