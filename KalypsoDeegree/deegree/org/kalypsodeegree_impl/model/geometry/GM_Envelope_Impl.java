@@ -106,8 +106,14 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public GM_Envelope_Impl( GM_Position min, GM_Position max )
   {
-    this.min = min;
-    this.max = max;
+    this.min = GeometryFactory.createGM_Position(
+    min.getX()<max.getX() ? min.getX():max.getX(),		
+    min.getY()<max.getY() ? min.getY():max.getY()		
+    );
+    this.max = GeometryFactory.createGM_Position(
+    min.getX()>max.getX() ? min.getX():max.getX(),		
+    min.getY()>max.getY() ? min.getY():max.getY()		
+    );
   }
 
   /**
@@ -413,6 +419,9 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.9  2005/03/02 18:17:17  doemming
+ * *** empty log message ***
+ *
  * Revision 1.8  2005/02/20 18:56:50  doemming
  * *** empty log message ***
  * Revision 1.7 2005/02/15 17:13:49 doemming ***

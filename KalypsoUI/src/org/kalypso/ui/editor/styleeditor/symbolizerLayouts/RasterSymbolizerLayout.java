@@ -36,19 +36,23 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
+import org.deegree.graphics.sld.RasterSymbolizer;
 import org.deegree.graphics.sld.Symbolizer;
+import org.deegree.model.feature.event.ModellEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
+import org.kalypso.ui.editor.styleeditor.panels.ModeSelectionComboPanel;
+import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
+import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 
 /**
  * @author F.Lindemann
@@ -66,19 +70,46 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
 
   public void draw()
   {
+    final RasterSymbolizer rasterSymbolizer = (RasterSymbolizer)symbolizer;
+
     GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
 
     // ***** Label Group
-    Group labelGroup = new Group( composite, SWT.NULL );
-    GridData labelGroupData = new GridData();
-    labelGroupData.widthHint = 210;
-    labelGroupData.heightHint = 246;
-    labelGroup.setLayoutData( labelGroupData );
-    labelGroup.setLayout( compositeLayout );
-    labelGroup.layout();
+    /*
+     * Group labelGroup = new Group( composite, SWT.NULL ); GridData
+     * labelGroupData = new GridData(); labelGroupData.widthHint = 210;
+     * labelGroupData.heightHint = 246; labelGroup.setLayoutData( labelGroupData );
+     * labelGroup.setLayout( compositeLayout ); labelGroup.layout();
+     * 
+     * Label label = new Label( labelGroup, SWT.NULL ); label.setText(
+     * MessageBundle.STYLE_EDITOR_ERROR_NO_IMPLEMENTATION );
+     */
 
-    Label label = new Label( labelGroup, SWT.NULL );
-    label.setText( MessageBundle.STYLE_EDITOR_ERROR_NO_IMPLEMENTATION );
+    // ***** ColorMap Group
+    Group colorMapGroup = new Group( composite, SWT.NULL );
+    GridData colorMapGroupData = new GridData();
+    colorMapGroupData.widthHint = 210;
+    colorMapGroupData.heightHint = 246;
+    colorMapGroup.setLayoutData( colorMapGroupData );
+    colorMapGroup.setLayout( compositeLayout );
+    colorMapGroup.layout();
+    colorMapGroup.setText( MessageBundle.STYLE_EDITOR_COLORMAP );
+
+    // ***** ComboBox Mode Panel
+
+    ModeSelectionComboPanel modeComboPanel = new ModeSelectionComboPanel( colorMapGroup, "Mode:",
+        rasterSymbolizer.getMode() );
+    modeComboPanel.addPanelListener( new PanelListener()
+    {
+      public void valueChanged( PanelEvent event )
+      {
+        int mode = ( (ModeSelectionComboPanel)event.getSource() ).getSelection();
+        rasterSymbolizer.setMode( mode );
+        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+      }
+    } );
+
+    // ***** Table
   }
 }

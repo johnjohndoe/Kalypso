@@ -22,5 +22,14 @@
 	<classpathentry kind="lib" path="lib/jwsdp/mail.jar"/>
 	<classpathentry kind="lib" path="lib/jwsdp/saaj-api.jar"/>
 	<classpathentry kind="lib" path="lib/jwsdp/saaj-impl.jar"/>
+	<classpathentry kind="lib" path="lib/sldRasterSymbolizerBinding.jar"/>
+	<classpathentry kind="lib" path="lib/javaBinding/jaxb-api.jar"/>
+	<classpathentry kind="lib" path="lib/javaBinding/jaxb-impl.jar"/>
+	<classpathentry kind="lib" path="lib/javaBinding/jaxb-libs.jar"/>
+	<classpathentry kind="lib" path="lib/javaBinding/jaxb-xjc.jar"/>
+	<classpathentry kind="lib" path="lib/javaBinding/jax-qname.jar"/>
+	<classpathentry kind="lib" path="lib/javaBinding/namespace.jar"/>
+	<classpathentry kind="lib" path="lib/javaBinding/relaxngDatatype.jar"/>
+	<classpathentry kind="lib" path="lib/javaBinding/xsdlib.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

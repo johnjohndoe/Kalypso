@@ -75,6 +75,10 @@ public abstract class ComboPanel
   protected String items[];
 
   protected int selection_index = -1;
+  
+  protected int style = SWT.NULL;
+  
+  protected int comboBox_width = 70;
 
   protected ComboPanel( Composite parent, String m_label )
   {
@@ -102,9 +106,9 @@ public abstract class ComboPanel
 
   protected void init()
   {
-    comboBox = new Combo( composite, SWT.NULL );
+    comboBox = new Combo( composite, style );
     FormData comboData = new FormData();
-    comboData.width = 70;
+    comboData.width = comboBox_width;
     comboData.height = 10;
     comboData.left = new FormAttachment( 340, 1000, 0 );
     comboData.top = new FormAttachment( 0, 1000, 0 );

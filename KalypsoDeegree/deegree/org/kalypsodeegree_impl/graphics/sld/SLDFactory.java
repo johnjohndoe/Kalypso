@@ -60,6 +60,7 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.deegree_impl.graphics.sld;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -68,9 +69,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.TreeMap;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
+import net.opengis.sld.ObjectFactory;
 
 import org.deegree.filterencoding.Expression;
 import org.deegree.filterencoding.Filter;
+import org.deegree.graphics.sld.ColorMapEntry;
 import org.deegree.graphics.sld.CssParameter;
 import org.deegree.graphics.sld.Extent;
 import org.deegree.graphics.sld.ExternalGraphic;
@@ -219,18 +228,7 @@ public class SLDFactory
     return new StyledLayerDescriptor_Impl( layers, version );
   }
 
-  /**
-   * 
-   * 
-   * @param element
-   * 
-   * @return
-   */
-  private static RasterSymbolizer createRasterSymbolizer( Element element, double min, double max )
-  {
-    return null;
-  }
-
+  
   /**
    * Creates a <tt>TextSymbolizer</tt> -instance according to the contents of
    * the DOM-subtree starting at the given 'TextSymbolizer'- <tt>Element</tt>.
@@ -1221,7 +1219,7 @@ public class SLDFactory
         {
           symbolizerList.add( createRasterSymbolizer( symbolizerElement, min, max ) );
         }
-      }
+      }           
     }
 
     Symbolizer[] symbolizers = (Symbolizer[])symbolizerList.toArray( new Symbolizer[symbolizerList
@@ -1720,5 +1718,57 @@ public class SLDFactory
     ParameterValueType pvt = createParameterValueType( element );
 
     return ( new CssParameter_Impl( name, pvt ) );
+  }
+  
+  /**
+   * 
+   * 
+   * @param element
+   * 
+   * @return
+   */
+  private static RasterSymbolizer createRasterSymbolizer( Element element, double min, double max )
+  {
+    try
+    {
+      ObjectFactory fac = new ObjectFactory();
+      Unmarshaller unmarshaller = fac.createUnmarshaller();
+      net.opengis.sld.RasterSymbolizer rasterSymbolizerElement = (net.opengis.sld.RasterSymbolizer)unmarshaller
+          .unmarshal( element );
+      // TODO implement other properties like geometry and opacity
+      TreeMap colorMap = createColorMap( rasterSymbolizerElement.getColorMap() );
+      return new RasterSymbolizer_Impl( colorMap );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  private static TreeMap createColorMap( net.opengis.sld.ColorMapType colorMapType )
+  {
+    TreeMap colorMap = new TreeMap();
+    List colorMapEntries = colorMapType.getColorMapEntry();
+    for( int i = 0; i < colorMapEntries.size(); i++ )
+    {
+      net.opengis.sld.ColorMapEntry colorMapEntry = (net.opengis.sld.ColorMapEntry)colorMapEntries
+          .get( i );
+      Color color = null;
+      if( colorMapEntry.getColor() != null )
+      {
+        color = Color.decode( colorMapEntry.getColor() );
+      }
+      double opacity = colorMapEntry.getOpacity();
+      double quantity = colorMapEntry.getQuantity();
+      String label = " ";
+      if( colorMapEntry.getLabel() != null )
+      {
+        label = colorMapEntry.getLabel();
+      }
+      ColorMapEntry colorMapEntryObject = new ColorMapEntry_Impl( color, opacity, quantity, label );
+      colorMap.put( new Double( quantity ), colorMapEntryObject );
+    }
+    return colorMap;
   }
 }
