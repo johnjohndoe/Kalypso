@@ -14,13 +14,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.GMLHelper;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.url.UrlResolver;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -46,10 +46,10 @@ public class GmlLoader extends AbstractLoader
       monitor.beginTask( "GML laden", 1000 );
 
       final String schemaPath = source.getProperty( "XSD", "" );
-      final URL schemaURL = UrlUtilities.resolveURL( context, schemaPath );
+      final URL schemaURL = UrlResolver.resolveURL( context, schemaPath );
 
       final String gmlPath = source.getProperty( "PATH", "" );
-      final URL gmlURL = UrlUtilities.resolveURL( context, gmlPath );
+      final URL gmlURL = UrlResolver.resolveURL( context, gmlPath );
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, schemaURL );
 
@@ -120,7 +120,7 @@ public class GmlLoader extends AbstractLoader
     try
     {
       // erstmal: wohin?
-      final URL gmlURL = UrlUtilities.resolveURL( context, gmlPath );
+      final URL gmlURL = UrlResolver.resolveURL( context, gmlPath );
   
       // ists im Workspace?
       Writer w = null;

@@ -118,7 +118,7 @@ public class ShapeSerializer
       final int count = sf.getRecordNum();
       for( int i = 0; i < count; i++ )
       {
-        final Feature fe = sf.getFeatureByRecNo( i + 1 );
+        final Feature fe = sf.getFeatureByRecNo( i + 1, true );
         GMLHelper.setCrs( fe, sourceCrs );
         if( fe != null )
           layer.addFeature( fe );
@@ -138,54 +138,55 @@ public class ShapeSerializer
       throw new GmlSerializeException( "Fehler beim Laden der Shape-Dateien", e );
     }
   }
-  /**
-   * Return a Feature wich contiains a collection of features
-   */
-  public final static Feature deserializeFeature( final String fileBase,
-      final CS_CoordinateSystem sourceCrs, final CS_CoordinateSystem targetCrs,
-      final IProgressMonitor monitor ) throws GmlSerializeException
-  {
-    try
-    {
-      if( monitor != null )
-        monitor.beginTask( "Shape wird geladen", 1000 );
-
-      final ShapeFile sf = new ShapeFile( fileBase );
-      final FeatureType featureType = sf.getFeatureByRecNo( 1 ).getFeatureType();
-      
-      final FeatureTypeProperty collectionFTP = FeatureFactory.createFeatureTypeProperty( "list", Feature.class.getName(), false );
-      final FeatureType collectionType = FeatureFactory.createFeatureType( "collection", null, new FeatureTypeProperty[] { collectionFTP }, new int[] { 0 }, new int[] { 0 }, null, null );
-      
-//      final KalypsoFeatureLayer layer = new KalypsoFeatureLayer( name, featureType, targetCrs );
-
-      final Feature collection = FeatureFactory.createFeature( "0", collectionType );
-      final Object property = collection.getProperty( "list" );
-
-      
-//      // die shape-api liefert stets WGS84 als Koordinatensystem, daher
-//      // Anpassung hier:
-//      final int count = sf.getRecordNum();
-//      for( int i = 0; i < count; i++ )
-//      {
-//        final Feature fe = sf.getFeatureByRecNo( i + 1 );
-//        GMLHelper.setCrs( fe, sourceCrs );
-//        if( fe != null )
-//          layer.addFeature( fe );
-//      }
-
-      sf.close();
-
-//      layer.optimize();
-
-      
-      if( monitor != null )
-        monitor.done();
-
-      return collection; 
-    }
-    catch( final Exception e )
-    {
-      throw new GmlSerializeException( "Fehler beim Laden der Shape-Dateien", e );
-    }
-  }
+  
+//  /**
+//   * Return a Feature wich contiains a collection of features
+//   */
+//  public final static Feature deserializeFeature( final String fileBase,
+//      final CS_CoordinateSystem sourceCrs, final CS_CoordinateSystem targetCrs,
+//      final IProgressMonitor monitor ) throws GmlSerializeException
+//  {
+//    try
+//    {
+//      if( monitor != null )
+//        monitor.beginTask( "Shape wird geladen", 1000 );
+//
+//      final ShapeFile sf = new ShapeFile( fileBase );
+//      final FeatureType featureType = sf.getFeatureByRecNo( 1 ).getFeatureType();
+//      
+//      final FeatureTypeProperty collectionFTP = FeatureFactory.createFeatureTypeProperty( "list", Feature.class.getName(), false );
+//      final FeatureType collectionType = FeatureFactory.createFeatureType( "collection", null, new FeatureTypeProperty[] { collectionFTP }, new int[] { 0 }, new int[] { 0 }, null, null );
+//      
+////      final KalypsoFeatureLayer layer = new KalypsoFeatureLayer( name, featureType, targetCrs );
+//
+//      final Feature collection = FeatureFactory.createFeature( "0", collectionType );
+//      final Object property = collection.getProperty( "list" );
+//
+//      
+////      // die shape-api liefert stets WGS84 als Koordinatensystem, daher
+////      // Anpassung hier:
+////      final int count = sf.getRecordNum();
+////      for( int i = 0; i < count; i++ )
+////      {
+////        final Feature fe = sf.getFeatureByRecNo( i + 1 );
+////        GMLHelper.setCrs( fe, sourceCrs );
+////        if( fe != null )
+////          layer.addFeature( fe );
+////      }
+//
+//      sf.close();
+//
+////      layer.optimize();
+//
+//      
+//      if( monitor != null )
+//        monitor.done();
+//
+//      return collection; 
+//    }
+//    catch( final Exception e )
+//    {
+//      throw new GmlSerializeException( "Fehler beim Laden der Shape-Dateien", e );
+//    }
+//  }
 }

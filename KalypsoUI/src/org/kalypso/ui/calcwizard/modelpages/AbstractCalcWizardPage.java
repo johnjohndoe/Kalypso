@@ -19,8 +19,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
@@ -144,7 +144,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   }
 
 
-  protected void initMap( final Composite parent, final IWidget widget ) throws IOException, JAXBException, CoreException
+  /** Erzeugt die Karte und alle Daten die dranhängen und gibt die 
+   * enthaltende Control zurück */
+  protected Control initMap( final Composite parent, final IWidget widget ) throws IOException, JAXBException, CoreException
   {
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
@@ -153,14 +155,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-    m_mapModell = new GisTemplateMapModell( gisview, ResourceUtilities.createURL(mapFile), crs );
+    m_mapModell = new GisTemplateMapModell( gisview, getContext(), crs );
 
     m_mapModell.addModellListener( this );
 
     m_mapPanel = new MapPanel( this, crs, SELECTION_ID );
     m_boundingBox = GisTemplateHelper.getBoundingBox( gisview );
     final Composite mapComposite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
-    mapComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
 
@@ -174,6 +175,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_mapPanel.changeWidget( widget );
 
     m_mapPanel.setBoundingBox( m_boundingBox );
+    
+    return mapComposite;
   }
 
   protected IMapModell getMapModell()

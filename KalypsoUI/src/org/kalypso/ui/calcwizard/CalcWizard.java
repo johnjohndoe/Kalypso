@@ -263,12 +263,13 @@ public class CalcWizard implements IWizard, IProjectProvider
           m_addCalcCasePage.doNext( monitor );
         else if( page == m_controlPage )
         {
-          monitor.beginTask( "Rechenfall wird aktualisiert", 3000 );
-
+          monitor.beginTask( "aktualisiere Zeitreihen", 3000 );
+          
           final IFolder currentCalcCase = m_addCalcCasePage.getCurrentCalcCase();
           m_controlPage.saveChanges( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
 
           ModelNature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
+          
           addModelPages( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
         }
       }

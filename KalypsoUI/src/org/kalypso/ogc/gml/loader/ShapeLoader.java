@@ -9,13 +9,13 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.progress.EclipseProgressMonitor;
+import org.kalypso.util.url.UrlResolver;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -47,10 +47,10 @@ public class ShapeLoader extends AbstractLoader
       IResource dbfResource = null;
       IResource shxResource = null;
       
-      final URL sourceURL = UrlUtilities.resolveURL( context, sourceLocation );
-      final URL shpURL = UrlUtilities.resolveURL( context, sourceLocation + ".shp" );
-      final URL dbfURL = UrlUtilities.resolveURL( context, sourceLocation + ".dbf" );
-      final URL shxURL = UrlUtilities.resolveURL( context, sourceLocation + ".shx" );
+      final URL sourceURL = UrlResolver.resolveURL( context, sourceLocation );
+      final URL shpURL = UrlResolver.resolveURL( context, sourceLocation + ".shp" );
+      final URL dbfURL = UrlResolver.resolveURL( context, sourceLocation + ".dbf" );
+      final URL shxURL = UrlResolver.resolveURL( context, sourceLocation + ".shx" );
       
       // leider können Shapes nicht aus URL geladen werden -> protocoll checken
       File sourceFile = null;

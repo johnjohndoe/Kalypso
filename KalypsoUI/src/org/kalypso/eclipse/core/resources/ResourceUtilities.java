@@ -8,9 +8,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -112,5 +111,15 @@ public class ResourceUtilities
     final IPath rootLocation = root.getLocation();
     final File rootFile = rootLocation.toFile();
     return new File( rootFile, resource.toString() );
+  }
+
+  public static IProject findProjectFromURL( final URL baseURL )
+  {
+    final IPath path = findPathFromURL( baseURL );
+    if( path == null || path.isRoot() || path.segmentCount() < 1 || !path.isAbsolute() )
+      return null;
+    
+    final String projectName = path.segment( 0 );
+    return ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
   }
 }

@@ -11,7 +11,6 @@ import java.util.Properties;
 import javax.xml.bind.JAXBException;
 
 import org.deegree.model.feature.Feature;
-import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -25,6 +24,7 @@ import org.kalypso.ogc.sensor.tableview.template.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
+import org.kalypso.util.url.UrlResolver;
 import org.kalypso.util.xml.xlink.JAXBXLink;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
@@ -113,7 +113,7 @@ public class KalypsoWizardHelper
             final IObservation obs;
             try
             {
-              final URL url = UrlUtilities.resolveURL( context, obsLink
+              final URL url = UrlResolver.resolveURL( context, obsLink
                   .getHref() );
 
               obs = ZmlFactory.parseXML( url, obsLink.getHref() );
@@ -172,7 +172,7 @@ public class KalypsoWizardHelper
             final IObservation obs;
             try
             {
-              final URL url = UrlUtilities.resolveURL( context, obsLink
+              final URL url = UrlResolver.resolveURL( context, obsLink
                   .getHref() );
 
               obs = ZmlFactory.parseXML( url, obsLink.getHref() );

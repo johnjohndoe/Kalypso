@@ -18,8 +18,10 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.ogc.gml.IKalypsoLayer;
@@ -223,7 +225,6 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       m_table.setVisible( true );
 
       final JScrollPane pane = new JScrollPane( m_table );
-      //pane.setBorder( BorderFactory.createEmptyBorder() );
 
       m_tableFrame.setVisible( true );
       m_table.setVisible( true );
@@ -243,7 +244,8 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     final Composite mapPanel = new Composite( parent, SWT.NONE );
     mapPanel.setLayout( new GridLayout() );
 
-    initMap( mapPanel, new ToggleSelectWidget() );
+    final Control mapControl = initMap( mapPanel, new ToggleSelectWidget() );
+    mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
   /**

@@ -11,7 +11,6 @@ import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -25,6 +24,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.jfree.chart.ChartPanel;
@@ -225,17 +225,11 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
   {
-    ///////////////
-    // MapModell //
-    ///////////////
-
-    ////////
-    // UI //
-    ////////
     final Composite mapPanel = new Composite( parent, SWT.NONE );
     mapPanel.setLayout( new GridLayout() );
 
-    initMap( mapPanel, new SingleElementSelectWidget() );
+    final Control mapControl = initMap( mapPanel, new SingleElementSelectWidget() );
+    mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
   /**
@@ -303,9 +297,8 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     {
       public void execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( "Berechnung läuft...", 1000 );
         final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature( ModelNature.ID );
-        nature.runCalculation( getCalcFolder(), new SubProgressMonitor( monitor, 1000 ) );
+        nature.runCalculation( getCalcFolder(), monitor );
       }
     };
 
