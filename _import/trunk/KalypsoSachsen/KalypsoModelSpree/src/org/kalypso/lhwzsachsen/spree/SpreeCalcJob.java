@@ -312,7 +312,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       try
       {
         final String tsFilename = (String)props.get( DATA_TSFILENAME );
-        writeResultsToFolder( tsFilename, outputdir, props, tsmap );
+        writeResultsToFolder( tsFilename, outputdir, tsmap );
         fetchOptimalValues( props, outputdir );
       }
       catch( final Exception e )
@@ -578,11 +578,8 @@ public class SpreeCalcJob extends AbstractCalcJob
   // die dateien werden extern gelöscht, sonst hab ich nix gemacht
   }
 
-  public void writeResultsToFolder( final String tsFilename, final File outdir, final Map dataMap,
-      final TSMap tsmap ) throws Exception
+  public void writeResultsToFolder( final String tsFilename, final File outdir, final TSMap tsmap ) throws Exception
   {
-    dataMap.getClass();
-    
     final Collection features = ShapeSerializer.readFeaturesFromDbf( tsFilename );
 
     final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
@@ -624,7 +621,7 @@ public class SpreeCalcJob extends AbstractCalcJob
         else
           dblVal = Double.NaN;
 
-        if( Double.isNaN( dblVal ) || Math.abs( dblVal + 99.9 ) < 0.01 )
+        if( Double.isNaN( dblVal ) || Math.abs( dblVal + 99.9 ) < 0.01 || ( column.startsWith( "Q" ) && Double.compare( dblVal, 0.0 ) == 0 ) )
           values.add( null );
         else
           values.add( new Double( dblVal ) );

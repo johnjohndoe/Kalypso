@@ -54,7 +54,7 @@ public class SpreeCalcJobTest extends TestCase
     map.put( SpreeCalcJob.DATA_LABEL, "Prognose" );
     map.put( SpreeCalcJob.DATA_STARTDATESTRING, "27.4.2005 12:00" );
 
-    new SpreeCalcJob().writeResultsToFolder( inputFilenameWOext, resultDir, map, null );
+    new SpreeCalcJob().writeResultsToFolder( inputFilenameWOext, resultDir, null );
     FileUtilities.deleteRecursive( resultDir );
   }
 
