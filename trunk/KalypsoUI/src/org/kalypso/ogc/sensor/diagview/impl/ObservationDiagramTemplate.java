@@ -17,7 +17,7 @@ public class ObservationDiagramTemplate extends DefaultDiagramTemplate
 {
   public ObservationDiagramTemplate()
   {
-    super( "Diagram", "", true );
+    super( "", "", true );
   }
 
   /**

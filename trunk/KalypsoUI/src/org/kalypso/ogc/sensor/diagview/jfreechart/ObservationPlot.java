@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.jfree.chart.axis.AxisLocation;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.StandardXYItemRenderer;
@@ -155,8 +156,13 @@ public class ObservationPlot extends XYPlot
   {
     for( int i = 0; i < getDatasetCount(); i++ )
       setDataset( i, null );
-
+    
     m_axes2ds.clear();
+    
+    m_chartAxes2Pos.clear();
+    m_diag2chartAxis.clear();
+    m_domPos = 0;
+    m_ranPos = 0;
   }
 
   /**
@@ -241,6 +247,32 @@ public class ObservationPlot extends XYPlot
     return LINE_RENDERER;
   }
 
+  /**
+   * overriden to return a default axis when no real axes defined yet
+   * 
+   * @see org.jfree.chart.plot.XYPlot#getDomainAxis()
+   */
+  public ValueAxis getDomainAxis( )
+  {
+    if( m_diag2chartAxis.size() == 0 )
+      return new NumberAxis();
+      
+    return super.getDomainAxis();
+  }
+  
+  /**
+   * overriden to return a default axis when no real axes defined yet
+   * 
+   * @see org.jfree.chart.plot.XYPlot#getRangeAxis()
+   */
+  public ValueAxis getRangeAxis( )
+  {
+    if( m_diag2chartAxis.size() == 0 )
+      return new NumberAxis();
+    
+    return super.getRangeAxis();
+  }
+  
   /**
    * @param diagAxis
    * @return location according to axis

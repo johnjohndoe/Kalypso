@@ -433,16 +433,18 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
         try
         {
           final RepositoryConfigItem item = RepositoryConfigItem.restore( repMem[i].getTextData() );
-
-          final IRepository rep = item.createFactory( getClass().getClassLoader() ).createRepository();
-          
-          final IMemento propsMem = repMem[i].getChild( TAG_REPOSITORY_PROPS );
-          if( propsMem == null )
-            rep.setProperties( KalypsoGisPlugin.getDefault().getDefaultRepositoryProperties() );
-          else
-            MementoUtils.loadProperties( propsMem, rep.getProperties() );
-          
-          m_repContainer.addRepository( rep );
+          if( item != null )
+          {
+	          final IRepository rep = item.createFactory( getClass().getClassLoader() ).createRepository();
+	          
+	          final IMemento propsMem = repMem[i].getChild( TAG_REPOSITORY_PROPS );
+	          if( propsMem == null )
+	            rep.setProperties( KalypsoGisPlugin.getDefault().getDefaultRepositoryProperties() );
+	          else
+	            MementoUtils.loadProperties( propsMem, rep.getProperties() );
+	          
+	          m_repContainer.addRepository( rep );
+          }
         }
         catch( Exception e ) // generic exception caught for simplicity
         {
