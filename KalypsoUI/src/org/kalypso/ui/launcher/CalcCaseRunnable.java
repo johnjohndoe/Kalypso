@@ -50,7 +50,7 @@ public class CalcCaseRunnable implements IProgressRunnable
 
   private IStatus waitForJob( final IProgressMonitor monitor, final String jobID )
   {
-    monitor.beginTask( "Berechnung wird durchgeführt", 100 );
+    monitor.beginTask( "Berechnung wird durchgeführt", 2000 );
 
     try
     {
@@ -89,13 +89,13 @@ public class CalcCaseRunnable implements IProgressRunnable
           return Status.CANCEL_STATUS;
 
         case CalcJobStatus.ERROR:
-          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, jobDescription
-              .getMessage(), null );
+        final String message = jobDescription.getMessage();
+          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, message == null ? "" : message, null );
 
         case CalcJobStatus.FINISHED:
         {
           final String[] results = calcService.retrieveResults( jobID );
-          return nature.putCalcCaseOutputData( folder, results );
+          return nature.putCalcCaseOutputData( folder, results, new SubProgressMonitor( monitor, 1000 ) );
         }
         }
 

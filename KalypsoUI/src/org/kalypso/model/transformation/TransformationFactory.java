@@ -1,4 +1,4 @@
-package org.kalypso.util.transformation;
+package org.kalypso.model.transformation;
 
 import java.util.Iterator;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.Properties;
 
 import org.kalypso.java.reflect.ClassUtilities;
 import org.kalypso.java.reflect.ClassUtilities.ClassUtilityException;
-import org.kalypso.xml.model.TransformationType;
+import org.kalypso.model.xml.TransformationType;
 
 /**
  * Static Helper class for transformations
@@ -15,11 +15,11 @@ import org.kalypso.xml.model.TransformationType;
  */
 public class TransformationFactory
 {
-  public static CalculationCaseTransformation createTransformation( final TransformationType trans ) throws TransformationException
+  public static ICalculationCaseTransformation createTransformation( final TransformationType trans ) throws TransformationException
   {
     try
     {
-      final CalculationCaseTransformation calcTrans = (CalculationCaseTransformation)ClassUtilities.newInstance( trans.getClassName(), CalculationCaseTransformation.class, TransformationFactory.class.getClassLoader() );
+      final ICalculationCaseTransformation calcTrans = (ICalculationCaseTransformation)ClassUtilities.newInstance( trans.getClassName(), ICalculationCaseTransformation.class, TransformationFactory.class.getClassLoader() );
       
       final Properties props = new Properties();
       final List args = trans.getArg();

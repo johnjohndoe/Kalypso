@@ -1,4 +1,4 @@
-package org.kalypso.util.transformation;
+package org.kalypso.model.transformation;
 
 /**
  * @author belger

@@ -315,7 +315,9 @@ public class MainFile {
         int iaIndex = RecNo-1; 
 
         int off = shx.getRecordOffset(iaIndex);
-
+        if( off == -1 )
+          return -1;
+        
         // calculate length from 16-bit words (= 2 bytes) to lenght in bytes
         int len = shx.getRecordLength(iaIndex) * 2;
 

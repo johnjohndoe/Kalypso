@@ -267,7 +267,7 @@ public class IndexFile {
     */
     public int getRecordOffset (int RecNo) {
 
-        if (RecNo >= 0) {
+        if (RecNo >= 0 && RecNo < indexArray.length ) {
             return indexArray[RecNo].offset; 
         } else {
             return -1;
@@ -281,7 +281,7 @@ public class IndexFile {
     */
     public int getRecordLength (int RecNo) {
 
-        if (RecNo >= 0) {
+        if (RecNo >= 0 && RecNo < indexArray.length ) {
             return indexArray[RecNo].length; 
         } else {
             return -1;
