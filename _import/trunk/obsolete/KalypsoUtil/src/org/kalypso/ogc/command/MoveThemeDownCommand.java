@@ -1,6 +1,6 @@
 package org.kalypso.ogc.command;
 
-import org.kalypso.ogc.MapModell;
+import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.util.command.ICommand;
 
@@ -9,11 +9,11 @@ import org.kalypso.util.command.ICommand;
  */
 public class MoveThemeDownCommand implements ICommand
 {
-  private final MapModell m_MapModell;
+  private final IMapModell m_MapModell;
 
   private final IKalypsoTheme m_theme;
 
-  public MoveThemeDownCommand( final MapModell mapModell, final IKalypsoTheme theme )
+  public MoveThemeDownCommand( final IMapModell mapModell, final IKalypsoTheme theme )
   {
     m_MapModell = mapModell;
     m_theme = theme;

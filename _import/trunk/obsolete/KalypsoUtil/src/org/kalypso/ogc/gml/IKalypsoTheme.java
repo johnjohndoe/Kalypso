@@ -3,7 +3,8 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 
 import org.deegree.graphics.sld.UserStyle;
-import org.kalypso.ogc.MapModell;
+import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.event.ModellEventProvider;
@@ -23,12 +24,12 @@ public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener
 
   public void setName( final String name );
 
+//  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox );
+
   /**
    * renders the layer to the submitted graphic context
    */
-  public void paint( Graphics g );
-
-  public void paintSelected( Graphics g, int selectionId );
+  public void paintSelected( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final int selectionId );
 
   public UserStyle[] getStyles();
 
@@ -41,8 +42,6 @@ public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener
    */
   public KalypsoFeatureLayer getLayer();
 
-  public void setParent( MapModell parent );
-  
   public void addModellListener( final ModellEventListener listener );
 
   public void fireModellEvent( final ModellEvent event );

@@ -52,7 +52,7 @@ public abstract class AbstractWidget implements IWidget
 
     final double ratio = getRatio();
 
-    final GeoTransform transform = m_mapPanel.getMapModell().getProjection();
+    final GeoTransform transform = m_mapPanel.getProjection();
     double gisMX = transform.getSourceX( mx );
     double gisMY = transform.getSourceY( my );
 
@@ -70,7 +70,7 @@ public abstract class AbstractWidget implements IWidget
 
   protected final double getRatio()
   {
-    final GM_Envelope boundingBox = m_mapPanel.getMapModell().getBoundingBox();
+    final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
 
     final double ratio = boundingBox.getHeight() / boundingBox.getWidth();
     return ratio;

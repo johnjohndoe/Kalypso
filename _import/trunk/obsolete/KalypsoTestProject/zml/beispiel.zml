@@ -25,9 +25,9 @@
 	</Axis>
 
 	<!-- hier sind die Werte in eine andere CSV-Datei -->
-	<Axis name="Pegel2" unit="m" datatype="TYPE=xs:double">
+<!-- 	<Axis name="Pegel2" unit="m" datatype="TYPE=xs:double"> -->
 		<!-- TODO: z.Z. mit absolute Angabe, sollte aber auch relativ gehen... -->
-		<ValueLink separator=" " xlink:type="simple" xlink:href="PATH=file://PC072/C/Programme/eclipse-3.0/runtime-workspace/KalypsoTestProject/zml/beispiel.values.txt#COLUMN=2" xlink:actuate="onRequest"/>
-	</Axis>
+<!--		<ValueLink separator=" " xlink:type="simple" xlink:href="PATH=file://PC072/C/Programme/eclipse-3.0/runtime-workspace/KalypsoTestProject/zml/beispiel.values.txt#COLUMN=2" xlink:actuate="onRequest"/> -->
+<!--	</Axis> -->
 
 </Observation>

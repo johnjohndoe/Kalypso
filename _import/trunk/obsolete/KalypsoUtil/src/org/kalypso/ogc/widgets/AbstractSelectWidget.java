@@ -5,7 +5,7 @@ import java.awt.Point;
 
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree_impl.model.geometry.GeometryFactory;
-import org.kalypso.ogc.MapModell;
+import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.command.JMMarkSelectCommand;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
@@ -80,9 +80,11 @@ public abstract class AbstractSelectWidget extends AbstractWidget
 
   private void select()
   {
-    final MapModell mapModell = m_mapPanel.getMapModell();
-    GeoTransform transform = mapModell.getProjection();
-    IKalypsoTheme activeTheme=mapModell.getActiveTheme();
+    // TODO: sollte diese ganze umrechnerei nicht einfach die view machen???
+    
+    final IMapModell mapModell = m_mapPanel.getMapModell();
+    GeoTransform transform = m_mapPanel.getProjection();
+    final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if(activeTheme==null || activeTheme instanceof KalypsoFeatureTheme)
         return;
         if( startPoint != null )

@@ -16,9 +16,12 @@ public class ModellEvent
   /** Das sendende Objekt hat sich völlig geändert */
   public static final int FULL_CHANGE = 4;
 
+  public static final int THEME_ADDED = 5;
+
   private final int myType;
 
   private final ModellEventProvider m_eventSource;
+
 
   public ModellEvent( final ModellEventProvider eventSource, final int type )
   {

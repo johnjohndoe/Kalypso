@@ -3,10 +3,10 @@ package org.kalypso.ogc;
 import org.kalypso.ogc.event.ModellEventListener;
 
 /**
- * @author bce
+ * @author vDoemming
  */
 public interface IMapModellView extends ModellEventListener
 {
-  public MapModell getMapModell();
-  public void setMapModell(MapModell modell);
+  public IMapModell getMapModell();
+  public void setMapModell( final IMapModell modell );
 }

@@ -8,7 +8,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import org.deegree.model.geometry.GM_Envelope;
-import org.kalypso.ogc.MapModell;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -85,12 +84,10 @@ public class ZoomInWidget extends AbstractWidget
 
       GM_Envelope zoomBox = getDragbox( (int)startPoint.getX(), (int)startPoint.getY(), (int)dx );
 
-      final MapModell modell = m_mapPanel.getMapModell();
-
       startPoint = null;
       endPoint = null;
 
-      return new ChangeExtentCommand( modell, zoomBox );
+      return new ChangeExtentCommand( m_mapPanel, zoomBox );
     }
 
     return null;

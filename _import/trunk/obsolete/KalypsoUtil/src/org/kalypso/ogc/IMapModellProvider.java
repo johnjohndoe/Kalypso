@@ -6,5 +6,5 @@ package org.kalypso.ogc;
  */
 public interface IMapModellProvider
 {
-  public MapModell getMapModell();
+  public IMapModell getMapModell();
 }

@@ -1,6 +1,6 @@
 package org.kalypso.ogc.command;
 
-import org.kalypso.ogc.MapModell;
+import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.util.command.ICommand;
 
@@ -11,9 +11,9 @@ public class EnableThemeCommand implements ICommand
 {
   private final boolean m_bEnable;
   private final IKalypsoTheme m_theme;
-  private final MapModell m_mapModell;
+  private final IMapModell m_mapModell;
 
-  public EnableThemeCommand( final MapModell mapModell, final IKalypsoTheme theme, final boolean bEnable )
+  public EnableThemeCommand( final IMapModell mapModell, final IKalypsoTheme theme, final boolean bEnable )
   {
     m_mapModell = mapModell;
     m_theme = theme;

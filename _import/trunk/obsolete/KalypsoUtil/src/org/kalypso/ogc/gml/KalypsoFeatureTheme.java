@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
-import org.kalypso.ogc.MapModell;
 
 /**
  * @author vdoemming
@@ -17,8 +16,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme
   //  private KalypsoUserStyle[] myStyles = null;
 
   public boolean DEBUG_ENV = false;
-
-  private MapModell myParent = null;
 
   public KalypsoFeatureTheme( final KalypsoFeatureLayer layer, final String name )
   {
@@ -35,26 +32,26 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme
     myLayer.removeModellListener( this );
   }
 
-  /**
-   * renders the layer to the submitted graphic context
-   */
-  public void paint( Graphics g )
-  {
-    double scale = myParent.getScale( g );
-    GeoTransform p = myParent.getProjection();
-    GM_Envelope bbox = myParent.getBoundingBox();
-    //    for( int i = 0; i < myStyles.length; i++ )
-    myLayer.getSort().paint( g, p, scale, bbox );
+//  /**
+//   * renders the layer to the submitted graphic context
+//   */
+//  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox )
+//  {
+////    final double scale = myParent.getScale( g );
+////    final GeoTransform p = myParent.getProjection();
+////    final GM_Envelope bbox = myParent.getBoundingBox();
+//    //    for( int i = 0; i < myStyles.length; i++ )
+//    myLayer.getSort().paint( g, p, scale, bbox );
+//
+//    //    if( DEBUG_ENV )
+//    //      myIndexDE.paint( g, myParent.getProjection() );
+//  }
 
-    //    if( DEBUG_ENV )
-    //      myIndexDE.paint( g, myParent.getProjection() );
-  }
-
-  public void paintSelected( Graphics g, int selectionId )
+  public void paintSelected( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final int selectionId )
   {
-    double scale = myParent.getScale( g );
-    GeoTransform p = myParent.getProjection();
-    GM_Envelope bbox = myParent.getBoundingBox();
+//    double scale = myParent.getScale( g );
+//    GeoTransform p = myParent.getProjection();
+//    GM_Envelope bbox = myParent.getBoundingBox();
     //    for( int i = 0; i < myStyles.length; i++ )
     myLayer.getSort().paintSelected( g, p, scale, bbox, selectionId );
 
@@ -110,10 +107,5 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme
   public KalypsoFeatureLayer getLayer()
   {
     return myLayer;
-  }
-
-  public void setParent( MapModell parent )
-  {
-    myParent = parent;
   }
 }

@@ -5,13 +5,12 @@
 package org.kalypso.ogc.widgets;
 
 import org.deegree.model.geometry.GM_Envelope;
-import org.kalypso.ogc.MapModell;
+import org.kalypso.ogc.MapPanel;
 import org.kalypso.util.command.ICommand;
 
 /**
- * DOCUMENT ME!
  * 
- * @author $author$
+ * @author Belger
  */
 public class ChangeExtentCommand implements ICommand
 {
@@ -19,12 +18,12 @@ public class ChangeExtentCommand implements ICommand
 
   private final GM_Envelope myUndoBoundingBox;
 
-  private final MapModell myMapModell;
+  private final MapPanel m_mapPanel;
 
-  public ChangeExtentCommand( MapModell mapModell, GM_Envelope boundingBox )
+  public ChangeExtentCommand( final MapPanel mapPanel, final GM_Envelope boundingBox )
   {
-    myMapModell = mapModell;
-    myUndoBoundingBox = mapModell.getBoundingBox();
+    m_mapPanel = mapPanel;
+    myUndoBoundingBox = mapPanel.getBoundingBox();
     myDoBoundingBox = boundingBox;
   }
 
@@ -35,7 +34,7 @@ public class ChangeExtentCommand implements ICommand
 
   public void process() throws Exception
   {
-    myMapModell.setBoundingBox( myDoBoundingBox );
+    m_mapPanel.setBoundingBox( myDoBoundingBox );
   }
 
   public void redo() throws Exception
@@ -45,7 +44,7 @@ public class ChangeExtentCommand implements ICommand
 
   public void undo() throws Exception
   {
-    myMapModell.setBoundingBox( myUndoBoundingBox );
+    m_mapPanel.setBoundingBox( myUndoBoundingBox );
   }
 
   /**

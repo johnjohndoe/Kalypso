@@ -64,7 +64,7 @@ public class PanToWidget extends AbstractWidget
       endPoint = null;
 
       if( panBox != null )
-        return new ChangeExtentCommand( m_mapPanel.getMapModell(), panBox );
+        return new ChangeExtentCommand( m_mapPanel, panBox );
     }
     return null;
   }
