@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview;
 
 import java.util.ArrayList;
@@ -72,14 +72,17 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
 
   private final ICommandTarget m_commandTarget;
 
-  public FeatureviewDialog( final Shell parentShell, final ModellEventProvider eventprovider, final FeatureComposite factory, final ICommandTarget commandTarget )
+  private final Collection m_changes = new ArrayList();
+
+  public FeatureviewDialog( final Shell parentShell, final ModellEventProvider eventprovider,
+      final FeatureComposite featureComposite, final ICommandTarget commandTarget )
   {
     super( parentShell );
 
     m_eventprovider = eventprovider;
-    m_featureComposite = factory;
+    m_featureComposite = featureComposite;
     m_commandTarget = commandTarget;
-    
+
     setShellStyle( getShellStyle() | SWT.RESIZE );
   }
 
@@ -89,19 +92,19 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
   protected Control createDialogArea( final Composite parent )
   {
     getShell().setText( "Feature editieren" );
-    
+
     final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL
-        | SWT.V_SCROLL | SWT.BORDER );
-    
+        | SWT.V_SCROLL );
+
     // don't forget this line!
     scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    
+
     final Control control = m_featureComposite.createControl( scrolledComposite, SWT.NONE );
     control.setSize( control.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
     scrolledComposite.setContent( control );
-    
+
     m_featureComposite.addModifyListener( this );
-    
+
     return scrolledComposite;
   }
 
@@ -114,7 +117,7 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
 
     createButton( parent, APPLY_ID, "Übernehmen", false );
     createButton( parent, RESET_ID, "Zurücksetzen", false );
-    
+
     updateButtons( false );
   }
 
@@ -136,16 +139,23 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
     default:
       super.buttonPressed( buttonId );
     }
+  }
 
+  public void collectChanges( final Collection c )
+  {
+    c.addAll( m_changes );
   }
 
   private void applyPressed()
   {
-    final Collection changes = new ArrayList();
-    m_featureComposite.collectChanges( changes );
-    
-    m_commandTarget.postCommand( new ChangeFeaturesCommand( m_eventprovider, (FeatureChange[])changes.toArray( new FeatureChange[changes.size()] ) ), null );
-    
+    m_changes.clear();
+
+    m_featureComposite.collectChanges( m_changes );
+
+    if( m_commandTarget != null )
+      m_commandTarget.postCommand( new ChangeFeaturesCommand( m_eventprovider,
+          (FeatureChange[])m_changes.toArray( new FeatureChange[m_changes.size()] ) ), null );
+
     updateButtons( false );
   }
 
@@ -160,12 +170,12 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
   protected void okPressed()
   {
     applyPressed();
-    
+
     m_featureComposite.removeModifyListener( this );
-    
+
     super.okPressed();
   }
-  
+
   /**
    * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
    */
@@ -175,8 +185,7 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
 
     super.cancelPressed();
   }
-  
-  
+
   private void updateButtons( final boolean bEnable )
   {
     getButton( IDialogConstants.OK_ID ).setEnabled( bEnable );
@@ -191,7 +200,7 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
   {
     final Collection changes = new ArrayList();
     m_featureComposite.collectChanges( changes );
-    
+
     final boolean bDirty = changes.size() != 0;
 
     updateButtons( bDirty );

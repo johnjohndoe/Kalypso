@@ -45,11 +45,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.gml.schema.DateWithoutTime;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -58,11 +53,20 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.dialog.CalendarFeatureDialog;
+import org.kalypso.ogc.gml.featureview.dialog.FeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog;
+import org.kalypso.util.command.ICommandTarget;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree_impl.gml.schema.DateWithoutTime;
 
 /**
  * @author belger
@@ -73,20 +77,14 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   private IFeatureDialog m_dialog;
   private Collection m_modifyListener = new ArrayList();
 
-  public ButtonFeatureControl( final FeatureTypeProperty ftp )
-  {
-    this( null, ftp );
-  }
-
-
-  public ButtonFeatureControl( final Feature feature, final FeatureTypeProperty ftp )
+  public ButtonFeatureControl( final ModellEventProvider workspace, final ICommandTarget target, final Feature feature, final FeatureTypeProperty ftp )
   {
     super( feature, ftp );
     
-    m_dialog = chooseDialog( feature, ftp );
+    m_dialog = chooseDialog( workspace, target, feature, ftp );
   }
 
-  private IFeatureDialog chooseDialog( final Feature feature, final FeatureTypeProperty ftp )
+  private IFeatureDialog chooseDialog( final ModellEventProvider workspace, final ICommandTarget target, final Feature feature, final FeatureTypeProperty ftp )
   {
     final String typename = ftp.getType();
     
@@ -106,6 +104,14 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 //      return DATE_FORMATTER.parse( text );
     if( DateWithoutTime.class.getName().equals( typename ) )
       return new CalendarFeatureDialog( feature, ftp );
+    else if( "FeatureAssociationType".equals( typename ) )
+    {
+      final Object property = feature.getProperty( ftp.getName() );
+      if( property instanceof Feature )
+        return new FeatureDialog( workspace, target, (Feature)property );
+      
+      // TODO: List und Link
+    }
     
     return new NotImplementedFeatureDialog();
   }
@@ -142,23 +148,6 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     return m_button;
   }
 
-//  public String toString()
-//  {
-//    final FeatureTypeProperty ftp = getFeatureTypeProperty();
-//    final String typename = ftp.getType();
-//    
-//    if( typename.startsWith( GM_Object.class.getPackage().getName() ) )
-//      return "Geometrie editieren";
-//    
-//    if( typename.startsWith( Feature.class.getPackage().getName() ) )
-//      return "Feature editieren";
-//
-//    if( TypeRegistrySingleton.getTypeRegistry().hasClassName( typename ) )
-//      return TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( typename ).getShortname() + " editieren";
-//    
-//    return "<unbekannter Typ>";
-//  }
-
   protected void buttonPressed()
   {
     if( m_dialog.open( m_button.getShell() ) == Window.OK )
@@ -180,9 +169,12 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     {
       final ModifyListener l = (ModifyListener)iter.next();
       final Event event = new Event(  );
+      // hack: widget muss gesetzt sein, sonst gibts ne Exception in SWT
+      event.widget = Display.getCurrent().getActiveShell();
       // TODO: create a real event?
       
-      l.modifyText( new ModifyEvent( event ) );
+      final ModifyEvent modifyEvent = new ModifyEvent( event );
+      l.modifyText( modifyEvent );
     }
   }
 

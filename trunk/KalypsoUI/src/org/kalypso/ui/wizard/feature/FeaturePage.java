@@ -86,7 +86,7 @@ public class FeaturePage extends WizardPage
     group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     group.setText( getTitle() );
 
-    m_featureComposite = new FeatureComposite( null, new URL[] {} );
+    m_featureComposite = new FeatureComposite( null, null, null, new URL[] {} );
     m_featureComposite.setFeature( m_feature );
     final Control control = m_featureComposite.createControl( group, SWT.NONE );
     control.setLayoutData( new GridData( GridData.FILL_BOTH ) );

@@ -46,17 +46,20 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.Validator;
 
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.CheckboxType;
+import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Featureview;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayoutType;
+import org.kalypso.template.featureview.Group;
 import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.ObjectFactory;
+import org.kalypso.template.featureview.Subcomposite;
 import org.kalypso.template.featureview.TextType;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * @author belger
@@ -117,6 +120,36 @@ public class FeatureviewHelper
 
       return checkbox;
     }
+    else if( "FeatureAssociationType".equals( typename ) )
+    {
+      final Subcomposite compo = FACTORY.createSubcomposite();
+      compo.setStyle( "SWT.BORDER" );
+      compo.setProperty( ftp.getName() );
+
+      griddata.setHorizontalAlignment( "GridData.FILL" );
+      griddata.setGrabExcessHorizontalSpace( true );
+      griddata.setGrabExcessVerticalSpace( true );
+      compo.setLayoutData( griddata );
+      
+      final Group group = FACTORY.createGroup();
+
+      final GridDataType groupdata = FACTORY.createGridData();
+      groupdata.setGrabExcessHorizontalSpace( true );
+      groupdata.setGrabExcessVerticalSpace( true );
+      groupdata.setHorizontalAlignment( "GridData.FILL" );
+
+      group.setLayoutData( groupdata );
+      group.setText( ftp.getName() );
+      group.setStyle( "SWT.NONE" );
+
+      final GridLayoutType gridLayout = FACTORY.createGridLayout();
+      gridLayout.setNumColumns( 2 );
+      group.setLayout( gridLayout );
+      
+      group.getControl().add( compo );
+
+      return group;
+    }
 
     final ButtonType button = FACTORY.createButton();
     button.setStyle( "SWT.PUSH" );
@@ -158,19 +191,29 @@ public class FeatureviewHelper
       {
         final FeatureTypeProperty ftp = properties[i];
 
-        final LabelType label = FACTORY.createLabel();
-        label.setStyle( "SWT.NONE" );
-        label.setText( ftp.getName() );
-        label.setVisible( true );
-
-        final GridDataType labelGridData = FACTORY.createGridData();
-        labelGridData.setGrabExcessHorizontalSpace( false );
-        labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
-        label.setLayoutData( labelGridData );
-
-        controlList.add( label );
-
         final ControlType cc = createDefaultFeatureControlTypeForProperty( ftp );
+
+        if( cc instanceof CompositeType )
+        {
+          final GridDataType layoutData = (GridDataType)cc.getLayoutData();
+          layoutData.setHorizontalSpan( 2 );
+        }
+        else
+        {
+
+          final LabelType label = FACTORY.createLabel();
+          label.setStyle( "SWT.NONE" );
+          label.setText( ftp.getName() );
+          label.setVisible( true );
+
+          final GridDataType labelGridData = FACTORY.createGridData();
+          labelGridData.setGrabExcessHorizontalSpace( false );
+          labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
+          label.setLayoutData( labelGridData );
+
+          controlList.add( label );
+        }
+
         if( cc != null )
           controlList.add( cc );
       }
