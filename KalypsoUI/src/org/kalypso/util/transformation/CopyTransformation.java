@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.eclipse.core.resources.FolderUtilities;
 
 /**
  * @author belger
@@ -42,9 +43,10 @@ public class CopyTransformation extends AbstractTransformation
       throw new TransformationException( "input file doesn't exist or is not a file: " + input );
 
     final IFile outputFile = root.getFile( new Path( output ) );
-
+    
     try
     {
+      FolderUtilities.mkdirs( outputFile.getParent() );
       inputFile.copy( outputFile.getFullPath(), false, new SubProgressMonitor( monitor, 1000 ) );
       outputFile.setCharset( inputFile.getCharset(), new SubProgressMonitor( monitor, 1000 ) );
     }

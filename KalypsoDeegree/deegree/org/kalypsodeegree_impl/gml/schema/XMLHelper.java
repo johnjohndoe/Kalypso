@@ -63,7 +63,6 @@ public class XMLHelper {
 		factory.setNamespaceAware(true);
 
 		final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
-
 		final Document dom = docuBuilder.parse(inputSource);
 		return dom;
 	}
@@ -74,7 +73,8 @@ public class XMLHelper {
 		final URLConnection connection = url.openConnection();
 		final InputSource source = new InputSource(connection.getInputStream());
 		final String contentEncoding = connection.getContentEncoding();
-		if (contentEncoding != null)
+		
+    if (contentEncoding != null)
 			source.setEncoding(contentEncoding);
 
 		return getAsDOM(source);
