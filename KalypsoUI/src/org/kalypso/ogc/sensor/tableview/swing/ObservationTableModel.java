@@ -414,11 +414,11 @@ public class ObservationTableModel extends AbstractTableModel
     int rowIndex = 0;
     for( final Iterator ite = m_sharedModel.iterator(); ite.hasNext(); )
     {
+      final Object keyObj = ite.next();
+
       if( rows == null
           || (rows != null && Arrays.binarySearch( rows, rowIndex ) >= 0) )
       {
-        final Object keyObj = ite.next();
-
         final Vector tupple = new Vector( axes.size() );
 
         tupple.add( keyObj );
@@ -434,7 +434,7 @@ public class ObservationTableModel extends AbstractTableModel
 
         model.addTupple( tupple );
       }
-      
+
       rowIndex++;
     }
 
