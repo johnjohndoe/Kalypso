@@ -114,13 +114,13 @@ public class PSICompactRepository extends AbstractRepository
   }
 
   /**
-   * Always returns <pre>psicompact:/</pre>
+   * Always returns <pre>psicompact://</pre>
    * 
    * @see org.kalypso.repository.IRepository#getIdentifier()
    */
   public String getIdentifier()
   {
-    return "psicompact:/";
+    return "psicompact://";
   }
 
   /**
