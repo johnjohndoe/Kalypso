@@ -8,5 +8,8 @@
     <axis datatype="TYPE=xs:double" key="false" name="N Vorhersage" type="N" unit="mm">
         <valueLink separator="," column="2" xlink:href="Catchment4100.csv" />
     </axis>
-    
+
+    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_N Vorhersage" type="kalypso-status" unit="">
+        <valueLink separator="," column="3" xlink:href="Catchment4100.csv" />        
+    </axis>    
 </observation>
