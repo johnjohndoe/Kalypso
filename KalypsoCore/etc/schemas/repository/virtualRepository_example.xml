@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<virtualRepository xmlns="virtual.repository.zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="virtual.repository.zml.kalypso.org
+virtualRepository.xsd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:filters="filters.zml.kalypso.org">
+
+	<level name="root">
+		
+		<level name="Ebene 1">
+			
+			<item name="Zeitreihe 1">
+				<filters:wqFilter type="W">
+					<filters:zmlFilter>
+						<filters:zml xlink:href="zeitreihe1.zml"/>
+					</filters:zmlFilter>
+				</filters:wqFilter>
+			</item>
+			
+			<item name="Zeitreihe 2">
+				<filters:dateRangeFilter from="2004-10-31">
+					<filters:operationFilter operand="34" operator="-">
+						<filters:zmlFilter>
+							<filters:zml xlink:href="zeitreihe2.zml"/>
+						</filters:zmlFilter>
+					</filters:operationFilter>
+				</filters:dateRangeFilter>
+			</item>
+		</level>
+		
+		<level name="Ebene 2">
+			<level name="Ebene 2.1">
+				
+			</level>
+			
+			<level name="Ebene 2.2">
+				
+			</level>
+		</level>
+	</level>
+
+</virtualRepository>

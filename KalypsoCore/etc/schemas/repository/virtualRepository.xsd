@@ -1,18 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema targetNamespace="virtual.repository.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:filters="filters.zml.kalypso.org" xmlns:vrep="virtual.repository.zml.kalypso.org">
+	<import namespace="filters.zml.kalypso.org" schemaLocation="../zml/zmlFilters.xsd"/>
 
-	<import namespace="filters.zml.kalypso.org" 
-		schemaLocation="../zml/zmlFilters.xsd"/>
-
-	<element name="level" type="vrep:levelType"/>
-
-	<complexType name="levelType">
-	
+	<!-- ROOT element -->
+	 <element name="virtualRepository" type="vrep:virtualRepositoryType"/>
+	 
+	<!-- Type of the root element -->
+	<complexType name="virtualRepositoryType">
 		<sequence>
 			<element ref="vrep:level" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+
+	<!-- Level Type: a level contains a list of filters and a list of child-levels -->
+	<complexType name="levelType">
+		<sequence>
+			<element ref="vrep:level" minOccurs="0" maxOccurs="unbounded"/>
+			<element ref="vrep:item" minOccurs="0" maxOccurs="unbounded" />
+		</sequence>
+		<attribute name="name" type="string"/>
+	</complexType>
+	<element name="level" type="vrep:levelType"/>
+
+	<!-- Item Type: an item contains a list of filters -->
+	<complexType name="itemType">
+		<sequence>
 			<element ref="filters:filter" minOccurs="0" maxOccurs="unbounded"/>
 		</sequence>
-	
-		<attribute name="name" type="string"/>		
+		<attribute name="name" type="string"/>
 	</complexType>
+	<element name="item" type="vrep:itemType"/>
+	
 </schema>
