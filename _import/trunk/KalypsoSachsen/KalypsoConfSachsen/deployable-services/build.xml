@@ -95,8 +95,8 @@
 	</target>
 
 	<target name="redeploy-KalypsoConf" description="Undeploys and deploys a Web aplication">
-		<antcall target="undeploy" />
-		<antcall target="deploy" />
+		<antcall target="undeploy-KalypsoConf" />
+		<antcall target="deploy-KalypsoConf" />
 	</target>
 
 	<target name="start-KalypsoConf" description="Starts a Web application">
