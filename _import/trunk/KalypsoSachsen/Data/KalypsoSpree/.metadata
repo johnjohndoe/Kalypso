@@ -1,1 +1,3 @@
-calcType=test
+calcType=spree
+VALID_FORECAST_HOURS=1 4 7 10 13 16 19 22
+DEFAULT_SIMHOURS=48

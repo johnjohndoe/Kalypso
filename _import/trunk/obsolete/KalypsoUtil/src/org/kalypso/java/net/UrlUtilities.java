@@ -4,17 +4,16 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.Properties;
 
 /**
  * @author belger
  */
 public class UrlUtilities implements IUrlResolver
 {
-  public UrlUtilities()
-  {
-  // do not instantiate
-  }
-
+  private Properties m_replaceTokenMap = new Properties();
+  
   /**
    * <p>Resolves a (potential) relative URL to a base URL.</p>
    * 
@@ -38,5 +37,21 @@ public class UrlUtilities implements IUrlResolver
     {
       throw new MalformedURLException( e.getLocalizedMessage() );
     }
+  }
+  
+  /**
+   * @see org.kalypso.java.net.IUrlResolver#getReplaceEntries()
+   */
+  public final Iterator getReplaceEntries()
+  {
+    return m_replaceTokenMap.entrySet().iterator();
+  }
+
+  /**
+   * @see org.kalypso.java.net.IUrlResolver#addReplaceToken(java.lang.String, java.lang.String)
+   */
+  public void addReplaceToken( final String key, final String value )
+  {
+    m_replaceTokenMap.setProperty( key, value );
   }
 }
