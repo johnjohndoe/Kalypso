@@ -13,13 +13,14 @@ import java.util.HashMap;
 public class I18n
 {
     private static boolean SHOWKEY=false;
-    private static boolean LEARN=true;
+    private static boolean LEARN=false;
 	//public String learnLangKey=null;
 	
     private static I18n instance=null;
 	private HashMap translationMap=new HashMap();  // (langKey,Properties)
 	//    private Properties props=null;
     private String actualLangKey=null;
+	private String originalLanguage="de";
     //private File langFile=null;
 	/*
 	 public static void setLanguage(String lang)
@@ -39,7 +40,7 @@ public class I18n
     {
 		load(langKey);
 		if(LEARN)
-			load("deu");
+		load(originalLanguage);
 		actualLangKey=langKey;
     }
     
@@ -81,7 +82,20 @@ public class I18n
 			if ((language != null) && (language.length() > 0) && !language.equals("New Language"))
 			{
 				instance=new I18n(language);
+				Object[] options = {get("Dia_Yes"),get("Dia_No")};
+				int n = JOptionPane.showOptionDialog(null,get("LearnDia_Question"),get("LearnDia_Title"),JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
+				switch (n)
+				{
+					case JOptionPane.NO_OPTION:
+						LEARN=false;
+						break;
+					case JOptionPane.YES_OPTION:
+						LEARN=true;
+					default:
+						break ;
+				}
 				return instance;
+				
 			}
 			
 			if (language.equals("New Language"))
@@ -100,12 +114,8 @@ public class I18n
 					if ((newLanguage == null) || (newLanguage.length() > 3))
 						JOptionPane.showMessageDialog(null,"3 letter are necessary.","error", JOptionPane.ERROR_MESSAGE);
 				}
-				
-				//instance=new I18n("deu");
-				//instance.learn(newLanguage);
 				instance=new I18n(newLanguage);
-				instance.learnAll("deu",newLanguage);
-				//instance.learnLangKey = newLanguage;
+				instance.learnAll(instance.originalLanguage,newLanguage);
 				return instance;
 			}
 			System.exit(0);
@@ -145,8 +155,9 @@ public class I18n
 		{
 			if(LEARN)
 			{
-				String value=learn(key,((Properties)translationMap.get("deu")),
-						  ((Properties)translationMap.get(actualLangKey)));
+				load(originalLanguage);
+				String value=learn(key,((Properties)translationMap.get(originalLanguage)),
+									   ((Properties)translationMap.get(actualLangKey)));
 				save(actualLangKey);
 				load(actualLangKey);
 				return value;
