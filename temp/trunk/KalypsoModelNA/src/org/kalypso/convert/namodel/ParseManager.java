@@ -19,12 +19,15 @@ public class ParseManager
 
     private final NAConfiguration m_conf;
 
+    private final NetFileManager m_nodeManager;
+
     public ParseManager(GMLSchema schema, NAConfiguration conf,
-            CatchmentManager catchmentManager, ChannelManager channelManager)
+            CatchmentManager catchmentManager, ChannelManager channelManager,NetFileManager nodeManager)
     {
         m_conf = conf;
         m_catchmentManager = catchmentManager;
         m_channelManager = channelManager;
+        m_nodeManager=nodeManager;
         m_schema = schema;
     }
 
@@ -35,18 +38,26 @@ public class ParseManager
         FeatureType naModellFT = m_schema.getFeatureType("NaModell");
         FeatureType catchmentCollectionFT = m_schema
                 .getFeatureType("CatchmentCollection");
-        FeatureType virtualChannelCollectionFT = m_schema
-                .getFeatureType("VirtualChannelCollection");
-        FeatureType kmChannelCollectionFT = m_schema
-                .getFeatureType("KMChannelCollection");
+        FeatureType channelCollectionFT = m_schema
+                .getFeatureType("ChannelCollection");
+//        FeatureType virtualChannelCollectionFT = m_schema
+//                .getFeatureType("VirtualChannelCollection");
+//        FeatureType kmChannelCollectionFT = m_schema
+//                .getFeatureType("KMChannelCollection");
+        FeatureType nodeCollectionFT = m_schema
+                .getFeatureType("NodeCollection");
         // create all Features (and FeatureCollections)
         Feature naModellFe = modelManager.createFeature(naModellFT);
         Feature catchmentCollectionFe = modelManager
                 .createFeature(catchmentCollectionFT);
-        Feature virtualChannelCollectionFe = modelManager
-                .createFeature(virtualChannelCollectionFT);
-        Feature kmChannelCollectionFe = modelManager
-                .createFeature(kmChannelCollectionFT);
+        Feature channelCollectionFe = modelManager
+                .createFeature(channelCollectionFT);
+//        Feature virtualChannelCollectionFe = modelManager
+//                .createFeature(virtualChannelCollectionFT);
+//        Feature kmChannelCollectionFe = modelManager
+//                .createFeature(kmChannelCollectionFT);
+        Feature nodeCollectionFe = modelManager
+                .createFeature(nodeCollectionFT);
 
         // complete Feature NaModell
         FeatureProperty prop = FeatureFactory.createFeatureProperty(
@@ -54,11 +65,19 @@ public class ParseManager
         naModellFe.setProperty(prop);
 
         prop = FeatureFactory.createFeatureProperty(
-                "VirtualChannelCollectionMember", virtualChannelCollectionFe);
+                "ChannelCollectionMember", channelCollectionFe);
         naModellFe.setProperty(prop);
 
+//        prop = FeatureFactory.createFeatureProperty(
+//                "VirtualChannelCollectionMember", virtualChannelCollectionFe);
+//        naModellFe.setProperty(prop);
+//
+//        prop = FeatureFactory.createFeatureProperty(
+//                "KMChannelCollectionMember", kmChannelCollectionFe);
+//        naModellFe.setProperty(prop);
+
         prop = FeatureFactory.createFeatureProperty(
-                "KMChannelCollectionMember", kmChannelCollectionFe);
+                "NodeCollectionMember", nodeCollectionFe);
         naModellFe.setProperty(prop);
 
         //complete Feature CatchmentCollection
@@ -78,21 +97,37 @@ public class ParseManager
         {
             Feature channelFE = features[i];
             FeatureType ft = channelFE.getFeatureType();
-            if ("VirtualChannel".equals(ft.getName()))
-            {
-                prop = FeatureFactory.createFeatureProperty(
-                        "virtualChannelMember", channelFE);
-                virtualChannelCollectionFe.addProperty(prop);
-            } else if ("KMChannel".equals(ft.getName()))
-            {
-                prop = FeatureFactory.createFeatureProperty("kmChannelMember",
-                        channelFE);
-                kmChannelCollectionFe.addProperty(prop);
-            } else
-                throw new UnsupportedOperationException(
-                        "channel must be of virtual- or km-type not"
-                                + ft.getName());
+            prop = FeatureFactory.createFeatureProperty(
+                    "channelMember", channelFE);
+                	channelCollectionFe.addProperty(prop);
 
+            //            if ("VirtualChannel".equals(ft.getName()))
+//            {
+//                prop = FeatureFactory.createFeatureProperty(
+//                        "virtualChannelMember", channelFE);
+//                virtualChannelCollectionFe.addProperty(prop);
+//            }
+//            else if ("KMChannel".equals(ft.getName()))
+//            {
+//                prop = FeatureFactory.createFeatureProperty("kmChannelMember",
+//                        channelFE);
+//                kmChannelCollectionFe.addProperty(prop);
+//            } else
+//                throw new UnsupportedOperationException(
+//                        "channel must be of virtual- or km-type not"
+//                                + ft.getName());
+
+        }
+
+        //complete Feature NodeCollection
+        features = m_nodeManager.parseFile(m_conf
+                .getNetFile().toURL());
+        for (int i = 0; i < features.length; i++)
+        {
+            Feature nodeFE = features[i];
+            prop = FeatureFactory.createFeatureProperty("nodeMember",
+                    nodeFE);
+            nodeCollectionFe.addProperty(prop);
         }
         System.out.println("\n\n-----------------");
         return naModellFe;

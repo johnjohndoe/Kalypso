@@ -24,7 +24,7 @@ import org.deegree_impl.model.feature.FeatureFactory;
  */
 public abstract class AbstractManager
 {
-    private final HashMap m_map = new HashMap();
+    private final static HashMap m_map = new HashMap();
 
     // (stringID, intID)
     // und
@@ -52,6 +52,25 @@ public abstract class AbstractManager
         return (Feature) m_allFeatures.get(stringID);
     }
 
+    public Feature getExistingFeature(int id,FeatureType[] ft)
+    {
+        for (int i = 0; i < ft.length; i++)
+        {
+            Feature fe=getExistingFeature(id,ft[i]);
+            if(fe!=null)
+                return fe;
+        }
+        return null;
+    }
+
+    public Feature getExistingFeature(int id,FeatureType ft)
+    {
+        IntID intID = new IntID(id, ft);
+        String stringID = (String) m_map.get(intID);
+        return (Feature) m_allFeatures.get(stringID);
+
+        
+    }
     private static int count = 0;
 
     public Feature createFeature(FeatureType ft)
@@ -75,7 +94,7 @@ public abstract class AbstractManager
             e.printStackTrace();
         }
         if (m_allFeatures.containsKey(stringID))
-            throw new UnsupportedOperationException("IDs are not unique");
+            throw new UnsupportedOperationException("IDs are not unique:"+stringID);
         m_allFeatures.put(stringID, feature);
     }
 

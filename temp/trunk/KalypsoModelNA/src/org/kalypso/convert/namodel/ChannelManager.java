@@ -122,18 +122,23 @@ public class ChannelManager extends AbstractManager
   public void writeFile( Writer writer,GMLWorkspace workspace) throws IOException
   {
       Feature rootFeature=workspace.getRootFeature();
-    Feature kmChannelCol = (Feature)rootFeature.getProperty( "KMChannelCollectionMember" );
-    List kmChannelList = (List)kmChannelCol.getProperty( "kmChannelMember" );
-    Iterator iter = kmChannelList.iterator();
+    Feature channelCol = (Feature)rootFeature.getProperty( "ChannelCollectionMember" );
+    List channelList = (List)channelCol.getProperty( "channelMember" );
+    Iterator iter = channelList.iterator();
     while( iter.hasNext() )
       writeFeature( writer,(Feature)iter.next() );
+//    Feature kmChannelCol = (Feature)rootFeature.getProperty( "KMChannelCollectionMember" );
+//    List kmChannelList = (List)kmChannelCol.getProperty( "kmChannelMember" );
+//    Iterator iter = kmChannelList.iterator();
+//    while( iter.hasNext() )
+//      writeFeature( writer,(Feature)iter.next() );
 
-    Feature vChannelCol = (Feature)rootFeature
-        .getProperty( "VirtualChannelCollectionMember" );
-    List vChannelList = (List)vChannelCol.getProperty( "virtualChannelMember" );
-    iter = vChannelList.iterator();
-    while( iter.hasNext() )
-      writeFeature(writer, (Feature)iter.next() );
+//    Feature vChannelCol = (Feature)rootFeature
+//        .getProperty( "VirtualChannelCollectionMember" );
+//    List vChannelList = (List)vChannelCol.getProperty( "virtualChannelMember" );
+//    iter = vChannelList.iterator();
+//    while( iter.hasNext() )
+//      writeFeature(writer, (Feature)iter.next() );
   }
 
   private void writeFeature( Writer writer, Feature feature ) throws IOException
@@ -142,7 +147,6 @@ public class ChannelManager extends AbstractManager
     writer.write( toAscci( feature, 0 ) + "\n" );
     FeatureType ft = feature.getFeatureType();
     if( "VirtualChannel".equals( ft.getName() ) )
-
       writer.write( VIRTUALCHANNEL + "\n" );
     else if( "KMChannel".equals( ft.getName() ) )
     {

@@ -10,16 +10,8 @@
 		schemaLocation="feature.xsd"/>
 	<!--<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
 	-->
-	<element name="_AbstractChannel" abstract="true" type="na:AbstractChannelType" substitutionGroup="gml:_Feature"/>
-		<complexType name="AbstractChannelType">
-			<complexContent>
-				<extension base="gml:AbstractFeatureType">
-					<sequence/>
-				</extension>
-			</complexContent>
-			
-		</complexType>
-
+	
+	
 	<element name="NaModell" type="na:NaModellType"/>
 	<complexType name="NaModellType">
 		<complexContent>
@@ -27,10 +19,8 @@
 				<sequence>
 					<element name="CatchmentCollectionMember" 
 						type="na:CatchmentCollectionAssociationType"/>
-					<element name="VirtualChannelCollectionMember" 
-						type="na:VirtualChannelCollectionAssociationType"/>
-					<element name="KMChannelCollectionMember" 
-						type="na:KMChannelCollectionAssociationType"/>
+					<element name="ChannelCollectionMember" 
+						type="na:ChannelCollectionAssociationType"/>
 					<element name="NodeCollectionMember" 
 						type="na:NodeCollectionAssociationType"/>
 					<!--<element name="" -->
@@ -76,25 +66,13 @@
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="num" type="string"></element>
-					<element name="channelMember" type="na:AbstractChannelAssociationType" minOccurs="0" maxOccurs="1"/>
+					<element name="downStreamChannelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="1"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 	
-	<complexType name="AbstractChannelAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:_AbstractChannel"/>
-					
-				</sequence>
-				
-			</restriction>
-			
-		</complexContent>
-		
-	</complexType>
+
 	<!-- ___________________________________ -->
 	<complexType name="CatchmentCollectionAssociationType">
 		<complexContent>
@@ -203,9 +181,9 @@ siehe bodenkorrekturmember...
 						type="na:grundwasserabflussAssociationType" 
 						maxOccurs="6"/>
 		
-					<element name="EntwaesserungsKnotenMember" 
-						type="na:NodeAssociationType" minOccurs="0" 
-						maxOccurs="4"/>
+					<element name="entwaesserungsStrangMember" 
+						type="na:ChannelAssociationType" minOccurs="0" 
+						maxOccurs="1"/>
 								
 					<!--	<element name="ngwzu" type="string"/>
 					<element name="gwwi" type="string"/>
@@ -236,44 +214,63 @@ siehe bodenkorrekturmember...
 			</extension>
 		</complexContent>
 	</complexType>
-	<!-- ___________________________________ -->
-	<complexType name="VirtualChannelCollectionAssociationType">
+	<!-- ______________channels_____________________ -->
+	<complexType name="ChannelCollectionAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:VirtualChannelCollection"/>
+					<element ref="na:ChannelCollection"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="VirtualChannelCollection" 
-		type="na:VirtualChannelCollectionType" 
+	
+	<element name="ChannelCollection" 
+		type="na:ChannelCollectionType" 
 		substitutionGroup="gml:_Feature"/>
-	<complexType name="VirtualChannelCollectionType">
+		
+	<complexType name="ChannelCollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="virtualChannelMember" 
-						type="na:VirtualChannelAssociationType" minOccurs="0" 
+					<element name="channelMember" 
+						type="na:ChannelAssociationType" minOccurs="0" 
 						maxOccurs="unbounded"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="VirtualChannelAssociationType">
+	
+		<complexType name="ChannelAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:VirtualChannel"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+					<element ref="na:_Channel"/>					
+				</sequence>				
+			</restriction>			
+		</complexContent>		
 	</complexType>
+
+	
+	<element name="_Channel" abstract="true" type="na:AbstractChannelType" substitutionGroup="gml:_Feature"/>
+<!-- Channel super type -->
+		<complexType name="AbstractChannelType">
+			<complexContent>
+				<extension base="gml:AbstractFeatureType">
+					<sequence>
+						<element name="downStreamNodeMember" type="na:NodeAssociationType" minOccurs="0" maxOccurs="1"/>
+					</sequence>		
+				</extension>
+			</complexContent>
+		</complexType>
+
+
+<!-- Virtual Channel -->	
 	<element name="VirtualChannel" type="na:VirtualChannelFeatureType" 
-		substitutionGroup="na:_AbstractChannel"/>
+		substitutionGroup="na:_Channel"/>
 	<complexType name="VirtualChannelFeatureType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="na:AbstractChannelType">
 				<sequence>
 					<element name="inum" type="string"/>
 					<!-- virtueller channel hat sonst keine properties -->
@@ -282,43 +279,13 @@ siehe bodenkorrekturmember...
 			</extension>
 		</complexContent>
 	</complexType>
-	<!-- ___________________________________ -->
-	<complexType name="KMChannelCollectionAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:KMChannelCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="KMChannelCollection" type="na:KMChannelCollectionType" 
-		substitutionGroup="gml:_Feature"/>
-	<complexType name="KMChannelCollectionType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
-				<sequence>
-					<element name="kmChannelMember" 
-						type="na:KMChannelAssociationType" minOccurs="0" 
-						maxOccurs="unbounded"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<complexType name="KMChannelAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:KMChannel"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
+
+<!-- KM-Channel -->	
 	<element name="KMChannel" type="na:KMChannelFeatureType" 
-		substitutionGroup="na:_AbstractChannel"/>
+		substitutionGroup="na:_Channel"/>
 	<complexType name="KMChannelFeatureType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="na:AbstractChannelType">
 				<sequence>
 					<element name="inum" type="string"/>
 					<element name="qfmax" type="string"/>

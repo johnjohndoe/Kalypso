@@ -31,7 +31,9 @@ public class Main
 
     private final ParseManager m_parseManager;
 
-    private NAConfiguration m_conf;
+    private final NAConfiguration m_conf;
+
+    private final NetFileManager m_nodeManager;
 
     public static void main(String[] args)
     {
@@ -46,6 +48,11 @@ public class Main
 
             GMLWorkspace workspace = GmlSerializer.createGMLWorkspace(gmlFile
                     .toURL(), conf.getSchemaURL());
+            
+//            File gmlFile2 = File.createTempFile("namodell_test", ".gml");
+//            
+//            GmlSerializer.serializeFeature(new FileWriter(gmlFile2),workspace.getRootFeature(),null);
+//            
             NAConfiguration conf2 = new NAConfiguration(new File("/tmp"));
             featureToAscii(conf2, workspace);//fe3,schemaLocation);
 
@@ -106,8 +113,9 @@ public class Main
 
         m_catchmentManager = new CatchmentManager(m_schema, m_conf);
         m_gerinneManager = new ChannelManager(m_schema, m_conf);
+        m_nodeManager= new NetFileManager(m_schema,m_conf);
         m_parseManager = new ParseManager(m_schema, conf, m_catchmentManager,
-                m_gerinneManager);
+                m_gerinneManager,m_nodeManager);
     }
 
    

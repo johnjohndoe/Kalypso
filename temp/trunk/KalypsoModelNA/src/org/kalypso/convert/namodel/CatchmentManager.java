@@ -39,13 +39,12 @@ public class CatchmentManager extends AbstractManager
         FeatureTypeProperty ftp1 = m_featureType
                 .getProperty("bodenkorrekturmember");
         m_bodenKorrekturFT = ((FeatureAssociationTypeProperty_Impl) ftp1)
-                .getAssociationFeatureType();
+                .getAssociationFeatureTypes()[0];
 
         FeatureTypeProperty ftp2 = m_featureType
                 .getProperty("grundwasserabflussMember");
         m_grundwasserabflussFT = ((FeatureAssociationTypeProperty_Impl) ftp2)
-                .getAssociationFeatureType();
-
+                .getAssociationFeatureTypes()[0];
     }
 
     /**

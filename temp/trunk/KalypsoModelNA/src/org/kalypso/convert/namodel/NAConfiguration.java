@@ -29,20 +29,27 @@ public class NAConfiguration
 
     private final File m_channelFile;
 
+    private final URL m_netFormatURL;
+
+    private final File m_netFile;
+
     // ASCII -> GML
     public NAConfiguration(File filePrefix) throws MalformedURLException
     {
         // schema
-        m_schemaURL = getClass().getResource("schema/namodellV3.xsd");
+        m_schemaURL = getClass().getResource("schema/namodellV4.xsd");
+//        m_schemaURL = getClass().getResource("schema/namodellV3.xsd");
 
         // formate:
         m_catchmentFormatURL = getClass().getResource(
                 "formats/WernerCatchment.txt");
         m_ChannelFormatURL = getClass().getResource("formats/gerinne.txt");
 
+        m_netFormatURL=getClass().getResource("formats/netzdatei.txt");
         // ASCII
         m_catchmentFile = new File(filePrefix, "inp.dat/we_nat.geb");
         m_channelFile = new File(filePrefix, "inp.dat/we_nat.ger");
+        m_netFile = new File(filePrefix, "inp.dat/we_nat.ntz");
 
     }
 
@@ -69,5 +76,16 @@ public class NAConfiguration
     public File getCatchmentFile()
     {
         return m_catchmentFile;
+    }
+
+    public URL getNetFormatURL()
+    {
+        // TODO Auto-generated method stub
+        return m_netFormatURL;
+    }
+
+    public File getNetFile()
+    {
+        return m_netFile;
     }
 }

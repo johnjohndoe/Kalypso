@@ -1,0 +1,9 @@
+(istrng,i8)(iknoto,i8)(iknotu,i8)(iteil,i4)
+(nteil,i8)
+(knot,i5)(izug,i5)(iabg,i5)(iueb,i5)(izuf,i5)(ivzwg,i5)
+(qzug)...TODO
+(qabg)(ikzie)
+(queb)(ikzue)
+(nzuf)
+
+
