@@ -31,13 +31,13 @@ public class Main
 
     private final ParseManager m_parseManager;
 
-    private Configuration m_conf;
+    private NAConfiguration m_conf;
 
     public static void main(String[] args)
     {
         try {
 //            Configuration conf = new Configuration(new File("test"));
-            Configuration conf = new Configuration(new File("/home/doemming/weisseElster"));
+            NAConfiguration conf = new NAConfiguration(new File("/home/doemming/weisseElster"));
             Feature fe = asciiToFeature(conf);
             insertGeometries(fe,"/home/doemming/weisseElster/shapes");
 
@@ -46,7 +46,7 @@ public class Main
 
             GMLWorkspace workspace = GmlSerializer.createGMLWorkspace(gmlFile
                     .toURL(), conf.getSchemaURL());
-            Configuration conf2 = new Configuration(new File("/tmp"));
+            NAConfiguration conf2 = new NAConfiguration(new File("/tmp"));
             featureToAscii(conf2, workspace);//fe3,schemaLocation);
 
         } catch (Exception e) {
@@ -99,7 +99,7 @@ public class Main
         }
     }
 
-    public Main(Configuration conf) throws Exception
+    public Main(NAConfiguration conf) throws Exception
     {
         m_conf = conf;
         m_schema = new GMLSchema(conf.getSchemaURL());
@@ -130,13 +130,13 @@ public class Main
 
    
 
-    public static Feature asciiToFeature(Configuration conf) throws Exception
+    public static Feature asciiToFeature(NAConfiguration conf) throws Exception
     {
         Main main = new Main(conf);
         return main.getParseManager().asciiToFeature();
     }
 
-    public static void featureToAscii(Configuration conf, GMLWorkspace workspace)
+    public static void featureToAscii(NAConfiguration conf, GMLWorkspace workspace)
             throws Exception
     {
         Main main = new Main(conf);

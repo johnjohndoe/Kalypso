@@ -17,9 +17,9 @@ public class ParseManager
 
     private final GMLSchema m_schema;
 
-    private final Configuration m_conf;
+    private final NAConfiguration m_conf;
 
-    public ParseManager(GMLSchema schema, Configuration conf,
+    public ParseManager(GMLSchema schema, NAConfiguration conf,
             CatchmentManager catchmentManager, ChannelManager channelManager)
     {
         m_conf = conf;

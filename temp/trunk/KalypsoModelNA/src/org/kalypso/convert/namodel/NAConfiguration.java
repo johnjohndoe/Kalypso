@@ -16,7 +16,7 @@ import java.net.URL;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class Configuration
+public class NAConfiguration
 {
 
     private final URL m_schemaURL;
@@ -30,7 +30,7 @@ public class Configuration
     private final File m_channelFile;
 
     // ASCII -> GML
-    public Configuration(File filePrefix) throws MalformedURLException
+    public NAConfiguration(File filePrefix) throws MalformedURLException
     {
         // schema
         m_schemaURL = getClass().getResource("schema/namodellV3.xsd");

@@ -31,7 +31,7 @@ public class CatchmentManager extends AbstractManager
 
     private final FeatureType m_grundwasserabflussFT;
 
-    public CatchmentManager(GMLSchema schema, Configuration conf)
+    public CatchmentManager(GMLSchema schema, NAConfiguration conf)
             throws IOException
     {
         super(conf.getCatchmentFormatURL());

@@ -36,7 +36,7 @@ public class ChannelManager extends AbstractManager
 
   private FeatureType m_kmParameterFT;
 
-  public ChannelManager( GMLSchema schema, Configuration conf )
+  public ChannelManager( GMLSchema schema, NAConfiguration conf )
       throws IOException
   {
     super( conf.getChannelFormatURL() );
