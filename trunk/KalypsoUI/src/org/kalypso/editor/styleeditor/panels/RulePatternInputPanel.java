@@ -13,7 +13,9 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
-import org.kalypso.editor.styleeditor.dialogs.errordialog.StyleEditorErrorDialog;
+import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
+import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
+import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 
 /**
  * @author Administrator

@@ -12,6 +12,8 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
+import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 
 /**
  * @author Administrator
