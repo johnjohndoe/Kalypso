@@ -23,7 +23,8 @@ public class PSICompactRepository extends AbstractRepository
 {
   private PSICompactItem m_psiRoot = null;
 
-  public PSICompactRepository( final IRepositoryFactory factory, final boolean readOnly ) throws RepositoryException
+  public PSICompactRepository( final IRepositoryFactory factory,
+      final boolean readOnly ) throws RepositoryException
   {
     super( factory, "PSICompact", readOnly );
 
@@ -33,14 +34,17 @@ public class PSICompactRepository extends AbstractRepository
   /**
    * Helper um die PSICompact ObjectInfos in einer Repository enabled Struktur
    * umzuwandeln.
+   * 
    * @param nodes
    * @param valueType
    * @return item
    * @throws ECommException
    */
-  private PSICompactItem buildStructure( Hashtable nodes, int valueType ) throws ECommException
+  private PSICompactItem buildStructure( Hashtable nodes, int valueType )
+      throws ECommException
   {
-    ObjectInfo[] objInfos = PSICompactFactory.getConnection().getInfo( valueType );
+    ObjectInfo[] objInfos = PSICompactFactory.getConnection().getInfo(
+        valueType );
 
     /*
      * TRICK #1:
@@ -73,17 +77,18 @@ public class PSICompactRepository extends AbstractRepository
 
         if( nodes.containsKey( nodeID ) )
         {
-          parent = (PSICompactItem)nodes.get( nodeID );
+          parent = (PSICompactItem) nodes.get( nodeID );
         }
         else
         {
-          PSICompactItem n = null;
+          boolean adaptable = false;
 
           // TRICK #2: nur die Leafs von der PSICompact Struktur sind Zeitreihen
           if( i == path.length - 1 )
-            n = new PSICompactObservationItem( parent, path[i], info, valueType );
-          else
-            n = new PSICompactItem( parent, path[i], info );
+            adaptable = true;
+
+          final PSICompactItem n = new PSICompactItem( parent, path[i], info,
+              adaptable, valueType );
 
           // gleich parent item aktualisieren (wird nicht von der Child gemacht,
           // deswegen hier)
@@ -99,10 +104,11 @@ public class PSICompactRepository extends AbstractRepository
 
     // abnormal case...
     if( parent == null )
-      return new PSICompactItem( null, "Keine Struktur in PSICompact...", new PSICompact.ObjectInfo() );
-    
+      return new PSICompactItem( null, "Keine Struktur in PSICompact...",
+          new PSICompact.ObjectInfo(), false, 0 );
+
     while( parent.getParent() != null )
-      parent = (PSICompactItem)parent.getParent();
+      parent = (PSICompactItem) parent.getParent();
 
     return parent;
   }
@@ -110,7 +116,7 @@ public class PSICompactRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren()
+  public boolean hasChildren( )
   {
     return m_psiRoot.hasChildren();
   }
@@ -118,17 +124,21 @@ public class PSICompactRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren()
+  public IRepositoryItem[] getChildren( )
   {
     return m_psiRoot.getChildren();
   }
 
   /**
-   * Always returns <pre>psicompact://</pre>
+   * Always returns
+   * 
+   * <pre>
+   * psicompact://
+   * </pre>
    * 
    * @see org.kalypso.repository.IRepository#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return "psicompact://";
   }
@@ -136,21 +146,23 @@ public class PSICompactRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload() throws RepositoryException
+  public void reload( ) throws RepositoryException
   {
     try
     {
       final Hashtable nodes = new Hashtable();
 
-      final PSICompactItem nodeMeasurements = buildStructure( nodes, PSICompact.TYPE_MEASUREMENT );
-      final PSICompactItem nodeForecasts = buildStructure( nodes, PSICompact.TYPE_VALUE );
+      final PSICompactItem nodeMeasurements = buildStructure( nodes,
+          PSICompact.TYPE_MEASUREMENT );
+      final PSICompactItem nodeForecasts = buildStructure( nodes,
+          PSICompact.TYPE_VALUE );
 
       if( nodeMeasurements != nodeForecasts )
       {
         System.out
             .println( "PSICompactRepository - Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
 
-        m_psiRoot = new PSICompactItem( null, "psi", null );
+        m_psiRoot = new PSICompactItem( null, "Fehler...", null, false, 0 );
       }
       else
         m_psiRoot = nodeMeasurements;
@@ -175,13 +187,15 @@ public class PSICompactRepository extends AbstractRepository
 
   /**
    * Helper: finds using recursion. Returns null when not found
+   * 
    * @param item
    * @param id
    * @return item or null if not found
    * 
    * @throws RepositoryException
    */
-  private IRepositoryItem findItemRecursive( final IRepositoryItem item, final String id ) throws RepositoryException
+  private IRepositoryItem findItemRecursive( final IRepositoryItem item,
+      final String id ) throws RepositoryException
   {
     if( item.getIdentifier().equalsIgnoreCase( id ) )
       return item;

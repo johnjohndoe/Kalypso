@@ -3,10 +3,12 @@ package org.kalypso.psiadapter.repository;
 import java.util.List;
 import java.util.Vector;
 
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 
+import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.ObjectInfo;
 
@@ -18,9 +20,16 @@ import de.psi.go.lhwz.PSICompact.ObjectInfo;
 public class PSICompactItem implements IRepositoryItem
 {
   private final PSICompactItem m_parent;
+
   private final String m_name;
+
   private final List m_children;
+
   protected final ObjectInfo m_objectInfo;
+
+  private final boolean m_adaptable;
+
+  private final int m_valueType;
 
   /**
    * Constructor
@@ -28,28 +37,34 @@ public class PSICompactItem implements IRepositoryItem
    * @param parent
    * @param name
    * @param info
+   * @param adaptable
+   * @param valueType
    */
-  public PSICompactItem( final PSICompactItem parent, final String name, final PSICompact.ObjectInfo info )
+  public PSICompactItem( final PSICompactItem parent, final String name,
+      final PSICompact.ObjectInfo info, final boolean adaptable,
+      final int valueType )
   {
     m_parent = parent;
     m_name = name;
     m_objectInfo = info;
-    
+    m_adaptable = adaptable;
+    m_valueType = valueType;
+
     m_children = new Vector();
   }
-  
+
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_name;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString()
+  public String toString( )
   {
     return getName();
   }
@@ -61,11 +76,11 @@ public class PSICompactItem implements IRepositoryItem
   {
     m_children.add( item );
   }
-  
+
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent()
+  public IRepositoryItem getParent( )
   {
     return m_parent;
   }
@@ -73,7 +88,7 @@ public class PSICompactItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren()
+  public boolean hasChildren( )
   {
     return getChildren().length != 0;
   }
@@ -81,9 +96,10 @@ public class PSICompactItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren()
+  public IRepositoryItem[] getChildren( )
   {
-    return (IRepositoryItem[])m_children.toArray( new IRepositoryItem[ m_children.size()] );
+    return (IRepositoryItem[]) m_children
+        .toArray( new IRepositoryItem[m_children.size()] );
   }
 
   /**
@@ -91,33 +107,52 @@ public class PSICompactItem implements IRepositoryItem
    */
   public Object getAdapter( final Class anotherClass )
   {
+    try
+    {
+      if( m_adaptable && anotherClass == IObservation.class )
+        return new PSICompactObservationItem( getName(), getIdentifier(),
+            m_objectInfo, m_valueType );
+    }
+    catch( ECommException e )
+    {
+      e.printStackTrace();
+      
+      return null;
+    }
+
     return null;
   }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository()
+  public IRepository getRepository( )
   {
     try
     {
-      return PSICompactRepositoryFactory.getRepository(  );
+      return PSICompactRepositoryFactory.getRepository();
     }
     catch( RepositoryException e )
     {
       e.printStackTrace();
-      
-      throw new IllegalStateException( "Invalid repository. See previous stack trace for the RepositoryException" );
+
+      throw new IllegalStateException(
+          "Invalid repository. See previous stack trace for the RepositoryException" );
     }
   }
 
   /**
-   * Returns <pre>psicompact://psi...id</pre> with psi...id being the id that is delivered 
-   * from the PSICompact interface.
+   * Returns
+   * 
+   * <pre>
+   * psicompact://psi...id
+   * </pre>
+   * 
+   * with psi...id being the id that is delivered from the PSICompact interface.
    * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return getRepository().getIdentifier() + m_objectInfo.getId();
   }

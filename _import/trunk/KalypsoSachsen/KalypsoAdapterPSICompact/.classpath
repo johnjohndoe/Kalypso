@@ -5,7 +5,7 @@
 	<classpathentry kind="src" path="/KalypsoCore"/>
 	<classpathentry kind="src" path="/KalypsoUtil"/>
 	<classpathentry exported="true" sourcepath="/KalypsoPSICompactAdapterCore" kind="lib" path="lib/KalypsoPSICompactAdapterCore.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/PSICompact.jar"/>
+	<classpathentry exported="true" sourcepath="/KalypsoPSICompactImpl/src" kind="lib" path="lib/PSICompact.jar"/>
 	<classpathentry kind="lib" path="lib/OB.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>
