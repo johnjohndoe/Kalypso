@@ -1,11 +1,12 @@
 package org.kalypso.ogc.gml.serialize;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureCollection;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.io.shpapi.ShapeFile;
@@ -55,9 +56,8 @@ public class ShapeSerializer
     try
     {
       final KalypsoFeature[] features = layer.getAllFeatures();
-      final FeatureCollection fc = FeatureFactory.createFeatureCollection( "collection",
-          features.length );
-
+      
+      final Collection shapeFeatures = new ArrayList( features.length );
       for( int i = 0; i < features.length; i++ )
       {
         final KalypsoFeature kalypsoFeature = features[i];
@@ -76,17 +76,17 @@ public class ShapeSerializer
 
         final Feature feature = FeatureFactory.createFeature( "" + i, shapeFeatureType, data );
 
-        // TODO: change CRS to WGS84 als Koordinatensystem ?
-
-        fc.appendFeature( feature );
+        shapeFeatures.add( feature );
       }
 
       final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" );
-      shapeFile.writeShape( fc );
+      shapeFile.writeShape( (Feature[])shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
       shapeFile.close();
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
+      
       throw new GmlSerializeException( "Shape konnte nicht geschrieben werden", e );
     }
   }

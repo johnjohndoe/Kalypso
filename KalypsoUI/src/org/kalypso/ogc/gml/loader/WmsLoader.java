@@ -9,6 +9,7 @@ import java.util.Properties;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
 import org.deegree_impl.services.wms.RemoteWMService;
 import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
+import org.deegree_impl.tools.NetWorker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.loader.AbstractLoader;
@@ -30,7 +31,9 @@ public class WmsLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties, org.eclipse.core.resources.IProject, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties,
+   *      org.eclipse.core.resources.IProject,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
   public Object loadIntern( final Properties source, final IProject project,
       final IProgressMonitor monitor ) throws LoaderException
@@ -40,29 +43,27 @@ public class WmsLoader extends AbstractLoader
       final String name = source.getProperty( "NAME", "WMS" );
       final String service = source.getProperty( "SERVICE", "" );
       final String layers = source.getProperty( "LAYERS", "" );
-     
-      OGCWMSCapabilitiesFactory wmsCapFac=new OGCWMSCapabilitiesFactory();
+
+      final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
+
+      final URL url = new URL( service + "SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities" );
+
+      final URLConnection c = url.openConnection();
+      NetWorker.configureProxy( c );
       
-   
-      URL url=new URL(service+"SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities");
-        
-    
-      URLConnection c = KalypsoGisPlugin.getDefault().getURLConnectionFactory().createURLConnection(url);
-      // TODO put this somewhere else
-      
-      c.addRequestProperty("SERVICE","WMS");
-      c.addRequestProperty("VERSION","1.1.1");
-      c.addRequestProperty("REQUEST","GetCapabilities");
-      Reader reader = new InputStreamReader( c.getInputStream() );
-            
-      WMSCapabilities wmsCaps=wmsCapFac.createCapabilities(reader);
-      RemoteWMService remoteWMS=new RemoteWMService(wmsCaps);
-      CS_CoordinateSystem coordinatesSystem = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-     return new KalypsoWMSLayer(name,layers,coordinatesSystem,remoteWMS);
+      c.addRequestProperty( "SERVICE", "WMS" );
+      c.addRequestProperty( "VERSION", "1.1.1" );
+      c.addRequestProperty( "REQUEST", "GetCapabilities" );
+      final Reader reader = new InputStreamReader( c.getInputStream() );
+
+      final WMSCapabilities wmsCaps = wmsCapFac.createCapabilities( reader );
+      final RemoteWMService remoteWMS = new RemoteWMService( wmsCaps );
+      final CS_CoordinateSystem coordinatesSystem = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+      return new KalypsoWMSLayer( name, layers, coordinatesSystem, remoteWMS );
     }
-   catch( Exception e )
+    catch( Exception e )
     {
-        throw new LoaderException( "wmslayer not found: " + source ,e);
+      throw new LoaderException( "wmslayer not found: " + source, e );
     }
   }
 
