@@ -19,4 +19,9 @@ public interface ITableViewColumn extends ITableObservationProvider
   
   public void setArguments( IVariableArguments args );
   public IVariableArguments getArguments();
+  
+  /**
+   * Clean all possible resources before object is thrown away
+   */
+  public void dispose();
 }

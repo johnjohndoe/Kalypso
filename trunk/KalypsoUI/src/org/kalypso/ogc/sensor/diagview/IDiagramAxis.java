@@ -30,6 +30,8 @@ public interface IDiagramAxis
   
   public String getIdentifier();
   
-  /** Returns the complete Label of this axis (concatenates the label and the unit)*/
+  /**
+   * @return complete Label of this axis (concatenates the label and the unit)
+   */
   public String toFullString();
 }

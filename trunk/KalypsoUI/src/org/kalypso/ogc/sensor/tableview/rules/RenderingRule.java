@@ -38,6 +38,8 @@ public class RenderingRule
 
   /**
    * Factory method for creating a RenderingRule object with a binding object.
+   * @param rr
+   * @return RenderingRule
    */
   public static RenderingRule createRenderingRule( final TypeRenderingRule rr )
   {
@@ -82,6 +84,7 @@ public class RenderingRule
    * 
    * @param mask
    *          some BitMask to test
+   * @return true when mask is part of this
    */
   public boolean contains( final int mask )
   {

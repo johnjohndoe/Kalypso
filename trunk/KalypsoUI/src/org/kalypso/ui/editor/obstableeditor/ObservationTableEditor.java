@@ -71,10 +71,13 @@ public class ObservationTableEditor extends AbstractEditorPart
    */
   public void dispose( )
   {
-    super.dispose();
-
     if( m_template != null )
+    {
       m_template.removeTemplateEventListener( m_table );
+      m_template.dispose();
+    }
+    
+    super.dispose();
   }
 
   /**

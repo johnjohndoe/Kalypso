@@ -7,7 +7,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
+import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewColumn;
 import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.BorrowObjectJob;
@@ -39,13 +39,15 @@ public class LinkedTableViewColumn implements ITableViewColumn, IPoolListener
 
   private final String m_valueAxisName;
 
-  private TableViewColumn m_column;
+  private DefaultTableViewColumn m_column;
 
   private IVariableArguments m_args = null;
 
   private final ResourcePool m_pool;
 
   private final LinkedTableViewTemplate m_template;
+
+  private final PoolableObjectType m_key;
 
   public LinkedTableViewColumn( final LinkedTableViewTemplate template, final ObstableviewType.ColumnpairType col, final URL context )
   {
@@ -64,12 +66,12 @@ public class LinkedTableViewColumn implements ITableViewColumn, IPoolListener
     m_sharedAxisName = sharedAxisName;
     m_valueAxisName = valueAxisName;
 
-    final PoolableObjectType key = new PoolableObjectType( linkType, xlink
+    m_key = new PoolableObjectType( linkType, xlink
         .getHRef(), context );
     m_pool = KalypsoGisPlugin.getDefault().getPool( IObservation.class );
 
     final Job job = new BorrowObjectJob( "Link auslösen für Observation",
-        m_pool, this, key, DUMMY_OBJECT );
+        m_pool, this, m_key, DUMMY_OBJECT );
     job.setRule( m_template.getSchedulingRule() );
     job.schedule();
   }
@@ -134,10 +136,20 @@ public class LinkedTableViewColumn implements ITableViewColumn, IPoolListener
       IObservation obs = (IObservation) m_pool.getObject( key,
           new NullProgressMonitor() );
 
-      m_column = new TableViewColumn( m_name, obs, m_isEditable, m_width,
+      m_column = new DefaultTableViewColumn( m_name, obs, m_isEditable, m_width,
           m_sharedAxisName, m_valueAxisName, m_args );
       
       m_template.addColumn( this );
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#dispose()
+   */
+  public void dispose( )
+  {
+    m_pool.removePoolListener( this );
+    m_pool.releaseKey( m_key );
+    m_column.dispose();
   }
 }

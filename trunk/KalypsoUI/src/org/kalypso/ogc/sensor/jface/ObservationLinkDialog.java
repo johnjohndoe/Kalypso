@@ -22,9 +22,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
-import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.ObservationTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -51,10 +51,10 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
 
   private final TimeseriesLink m_timeserie;
 
-  private final DefaultDiagramTemplate m_diagTemplate = new DefaultDiagramTemplate();
+  private final ObservationDiagramTemplate m_diagTemplate = new ObservationDiagramTemplate();
   private ObservationChart m_chart;
   
-  private final DefaultTableViewTemplate m_tableTemplate = new DefaultTableViewTemplate();
+  private final ObservationTableViewTemplate m_tableTemplate = new ObservationTableViewTemplate();
   private ObservationTable m_table;
   
   

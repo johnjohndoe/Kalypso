@@ -16,7 +16,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
@@ -32,7 +32,7 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
 public class DiagramViewPart extends ViewPart implements
     ISelectionChangedListener, IPartListener
 {
-  protected final DefaultDiagramTemplate m_template = new DefaultDiagramTemplate();
+  protected final ObservationDiagramTemplate m_template = new ObservationDiagramTemplate();
 
   private ObservationChart m_chart;
 

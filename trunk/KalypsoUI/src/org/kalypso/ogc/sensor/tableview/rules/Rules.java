@@ -28,6 +28,7 @@ public class Rules implements ITableViewRules
   
   /**
    * Constructor with given rules
+   * @param rules
    */
   public Rules( final RenderingRule[] rules )
   {
@@ -46,6 +47,9 @@ public class Rules implements ITableViewRules
   
   /**
    * Finds a rule that contains the mask
+   * @param mask
+   * @return list of rules that apply
+   * @throws NoSuchElementException
    */
   public RenderingRule[] findRules( final int mask ) throws NoSuchElementException
   {

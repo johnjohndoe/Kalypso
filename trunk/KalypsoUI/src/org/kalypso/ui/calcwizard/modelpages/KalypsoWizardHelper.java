@@ -177,7 +177,7 @@ public class KalypsoWizardHelper
           //              throw new SensorException( e );
           //            }
           //
-          //            final TableViewColumn col = new TableViewColumn( name + " ("
+          //            final DefaultTableViewColumn col = new DefaultTableViewColumn( name + " ("
           //                + props[i]._linkColumn + ')', obs, true, 50, obsLink
           //                .getTimeaxis(), obsLink.getValueaxis(), null );
           //

@@ -1,156 +1,161 @@
 package org.kalypso.ogc.sensor.diagview.impl;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Properties;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.template.ITemplateEventListener;
+import org.kalypso.ogc.sensor.template.AbstractTemplateEventProvider;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
-import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * @author schlienger
  */
-public class DefaultDiagramTemplate implements IDiagramTemplate
+public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implements IDiagramTemplate
 {
-  private final DiagramTemplate m_template;
+  private String m_title;
 
-  private final DiagramAxis m_dateAxis;
+  private String m_legendName;
 
-  private final DiagramAxis m_valueAxis;
+  private boolean m_showLegend;
 
-  public DefaultDiagramTemplate()
+  private final List m_axisList = new ArrayList();
+
+  private final List m_curveList = new ArrayList();
+
+  public DefaultDiagramTemplate( final String title, final String legendName, final boolean showLegend )
   {
-    m_dateAxis = new DiagramAxis( "d", "xs:date", "Datum", "", IDiagramAxis.DIRECTION_HORIZONTAL,
-        IDiagramAxis.POSITION_BOTTOM, false );
-    m_valueAxis = new DiagramAxis( "v", "xs:double", "Wert", "", IDiagramAxis.DIRECTION_VERTICAL,
-        IDiagramAxis.POSITION_LEFT, false );
-
-    m_template = new DiagramTemplate( "", "", true );
-    m_template.addAxis( m_dateAxis );
-    m_template.addAxis( m_valueAxis );
+    m_title = title;
+    m_legendName = legendName;
+    m_showLegend = showLegend;
   }
 
   /**
-   * 
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#getTitle()
    */
-  public void setObservation( final IObservation obs, final IVariableArguments args )
-  {
-    m_template.removeAllCurves();
-    m_template.setTitle( obs.getName() );
-    
-    final IAxis[] valueAxis = ObservationUtilities.findAxisByClass( obs.getAxisList(), Number.class );
-    final IAxis dateAxis = ObservationUtilities.findAxisByClass( obs.getAxisList(), Date.class )[0];
-
-    for( int i = 0; i < valueAxis.length; i++ )
-    {
-      if( !KalypsoStatusUtils.isStatusAxis( valueAxis[i] ) )
-      {
-        final Properties mappings = new Properties();
-        mappings.setProperty( dateAxis.getLabel(), "d" );
-        mappings.setProperty( valueAxis[i].getLabel(), "v" );
-
-        final DiagramCurve curve = new DiagramCurve( valueAxis[i].getLabel(), obs, mappings, this, args );
-
-        m_template.addCurve( curve );
-      }
-    }
-  }
-
-  public void addAxis( IDiagramAxis axis )
-  {
-    m_template.addAxis( axis );
-  }
-
-  public void addCurve( IDiagramCurve curve )
-  {
-    m_template.addCurve( curve );
-  }
-
-  public void addTemplateEventListener( ITemplateEventListener l )
-  {
-    m_template.addTemplateEventListener( l );
-  }
-
-  public IDiagramAxis findAxis( String id ) throws NoSuchElementException
-  {
-    return m_template.findAxis( id );
-  }
-
-  public void fireTemplateChanged( TemplateEvent evt )
-  {
-    m_template.fireTemplateChanged( evt );
-  }
-
-  public IDiagramAxis[] getAxisList()
-  {
-    return m_template.getAxisList();
-  }
-
-  public IDiagramCurve[] getCurveList()
-  {
-    return m_template.getCurveList();
-  }
-
-  public String getLegendName()
-  {
-    return m_template.getLegendName();
-  }
-
   public String getTitle()
   {
-    return m_template.getTitle();
+    return m_title;
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#getLegendName()
+   */
+  public String getLegendName()
+  {
+    return m_legendName;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#isShowLegend()
+   */
   public boolean isShowLegend()
   {
-    return m_template.isShowLegend();
+    return m_showLegend;
   }
 
-  public void removeAllCurves()
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#getAxisList()
+   */
+  public IDiagramAxis[] getAxisList()
   {
-    m_template.removeAllCurves();
+    return (IDiagramAxis[])m_axisList.toArray( new IDiagramAxis[0] );
   }
 
-  public void removeAxis( IDiagramAxis axis )
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#getCurveList()
+   */
+  public IDiagramCurve[] getCurveList()
   {
-    m_template.removeAxis( axis );
+    return (IDiagramCurve[])m_curveList.toArray( new IDiagramCurve[0] );
   }
 
-  public void removeCurve( IDiagramCurve curve )
-  {
-    m_template.removeCurve( curve );
-  }
-
-  public void removeTemplateEventListener( ITemplateEventListener l )
-  {
-    m_template.removeTemplateEventListener( l );
-  }
-
-  public void setLegendName( String name )
-  {
-    m_template.setLegendName( name );
-  }
-
-  public void setShowLegend( boolean show )
-  {
-    m_template.setShowLegend( show );
-  }
-
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#setTitle(java.lang.String)
+   */
   public void setTitle( String title )
   {
-    m_template.setTitle( title );
+    m_title = title;
   }
 
-  public String toString()
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#setLegendName(java.lang.String)
+   */
+  public void setLegendName( String name )
   {
-    return m_template.toString();
+    m_legendName = name;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#setShowLegend(boolean)
+   */
+  public void setShowLegend( boolean show )
+  {
+    m_showLegend = show;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#addAxis(org.kalypso.ogc.sensor.diagview.IDiagramAxis)
+   */
+  public void addAxis( IDiagramAxis axis )
+  {
+    m_axisList.add( axis );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#removeAxis(org.kalypso.ogc.sensor.diagview.IDiagramAxis)
+   */
+  public void removeAxis( IDiagramAxis axis )
+  {
+    m_axisList.remove( axis );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#addCurve(org.kalypso.ogc.sensor.diagview.IDiagramCurve)
+   */
+  public void addCurve( IDiagramCurve curve )
+  {
+    m_curveList.add( curve );
+    
+    fireTemplateChanged( new TemplateEvent( this, curve, TemplateEvent.TYPE_ADD) );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#removeCurve(org.kalypso.ogc.sensor.diagview.IDiagramCurve)
+   */
+  public void removeCurve( IDiagramCurve curve )
+  {
+    m_curveList.remove( curve );
+    
+    fireTemplateChanged( new TemplateEvent( this, curve, TemplateEvent.TYPE_REMOVE ) );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#findAxis(java.lang.String)
+   */
+  public IDiagramAxis findAxis( String id )
+  {
+    for( Iterator it = m_axisList.iterator(); it.hasNext(); )
+    {
+      IDiagramAxis axis = (IDiagramAxis)it.next();
+      
+      if( axis.getIdentifier().equals( id ) )
+        return axis;      
+    }
+    
+    throw new NoSuchElementException( "Axis with id not found. ID= " + id );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#removeAllCurves()
+   */
+  public void removeAllCurves()
+  {
+    m_curveList.clear();
+    
+    fireTemplateChanged( new TemplateEvent( this, null, TemplateEvent.TYPE_REMOVE_ALL) );
   }
 }

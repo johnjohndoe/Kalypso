@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
@@ -17,14 +17,14 @@ import org.kalypso.template.obstableview.TypeRenderingRule;
 import org.kalypso.template.obstableview.ObstableviewType.RulesType;
 
 /**
- * A TableViewTemplate based on a XML template file. Performs the load
+ * A DefaultTableViewTemplate based on a XML template file. Performs the load
  * operation.
  * 
  * @author schlienger
  */
 public class LinkedTableViewTemplate implements ITableViewTemplate
 {
-  private final TableViewTemplate m_template;
+  private final DefaultTableViewTemplate m_template;
 
   private final URL m_context;
 
@@ -41,7 +41,7 @@ public class LinkedTableViewTemplate implements ITableViewTemplate
   {
     m_context = context;
 
-    m_template = new TableViewTemplate();
+    m_template = new DefaultTableViewTemplate();
 
     final List cols = obsTableView.getColumnpair();
 
@@ -61,6 +61,11 @@ public class LinkedTableViewTemplate implements ITableViewTemplate
         m_template.addRule( RenderingRule
             .createRenderingRule( (TypeRenderingRule) it.next() ) );
     }
+  }
+  
+  public void dispose()
+  {
+    m_template.dispose();
   }
 
   public void addColumn( final ITableViewColumn column )

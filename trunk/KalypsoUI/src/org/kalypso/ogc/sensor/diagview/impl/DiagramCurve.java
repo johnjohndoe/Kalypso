@@ -28,7 +28,13 @@ public class DiagramCurve implements IDiagramCurve
   private IVariableArguments m_args = null;
 
   /**
-   *  
+   * Constructor
+   * 
+   * @param name
+   * @param obs
+   * @param mappings
+   * @param template
+   * @param args
    */
   public DiagramCurve( final String name, final IObservation obs, final Properties mappings,
       final IDiagramTemplate template, final IVariableArguments args )
