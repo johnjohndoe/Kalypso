@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.Properties;
 
 import org.deegree.model.feature.FeatureVisitor;
-import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.deegree_impl.model.feature.visitors.ResortVisitor;
 import org.deegree_impl.model.feature.visitors.TransformVisitor;
@@ -16,6 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.progress.EclipseProgressMonitor;
@@ -89,8 +89,8 @@ public class ShapeLoader extends AbstractLoader
         throw new LoaderException( "Kein Koordinaten-System für Shape gefunden: " + sourceSrs );
 
       final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-      final GMLWorkspace workspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(),
-          sourceCrs, new EclipseProgressMonitor( monitor ) );
+      final CommandableWorkspace workspace = new CommandableWorkspace( ShapeSerializer.deserialize( sourceFile.getAbsolutePath(),
+          sourceCrs, new EclipseProgressMonitor( monitor ) ) );
 
       try
       {

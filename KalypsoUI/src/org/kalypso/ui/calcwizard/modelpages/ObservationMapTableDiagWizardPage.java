@@ -27,10 +27,9 @@ import org.jfree.chart.ChartPanel;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.ToggleSelectWidget;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
@@ -245,7 +244,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     final Composite mapPanel = new Composite( parent, SWT.NONE );
     mapPanel.setLayout( new GridLayout() );
 
-    final Control mapControl = initMap( mapPanel, new ToggleSelectWidget() );
+    final Control mapControl = initMap( mapPanel, MapPanel.WIDGET_TOGGLE_SELECT );
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 

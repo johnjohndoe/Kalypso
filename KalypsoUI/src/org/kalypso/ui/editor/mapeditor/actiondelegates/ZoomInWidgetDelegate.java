@@ -1,6 +1,6 @@
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
-import org.kalypso.ogc.gml.widgets.ZoomInWidget;
+import org.kalypso.ogc.gml.map.MapPanel;
 
 
 /**
@@ -10,6 +10,6 @@ public class ZoomInWidgetDelegate extends AbstractWidgetActionDelegate
 {
   public ZoomInWidgetDelegate(  )
   {
-    super( new ZoomInWidget() );
+    super( MapPanel.WIDGET_ZOOM_IN );
   }
 }

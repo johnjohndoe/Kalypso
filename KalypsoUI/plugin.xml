@@ -254,85 +254,91 @@
       <editorContribution
             targetID="org.kalypso.ui.editor.mapeditor.GisMapEditor"
             id="org.kalypso.ogc.widgets.GisMapEditorActionDelegate">
+         <menu
+               label="Karte"
+               path="additions"
+               id="org.kalypso.ui.editors.mapeditor.menu">
+            <groupMarker name="tools"/>
+            <separator name="sep"/>
+            <groupMarker name="actions"/>
+            <separator name="sep"/>
+            <groupMarker name="edit"/>
+         </menu>
          <action
-               toolbarPath="karte"
-               label="volle Ausdehnung"
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentWidgetDelegate"
+               toolbarPath="karte/actions"
+               label="Ausschnitt maximieren"
+               tooltip="maximiert den angezeigten Ausschnitt"
                icon="icons/full/elcl16/kde_window_fullscreen.gif"
-               tooltip="Zoom to fullextent"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate"
                style="push"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/actions"
                id="org.kalypso.ui.editor.mapeditor.action.FullExtentAction"/>
          <action
-               toolbarPath="karte"
-               label="Ausschnitt verkleinern"
+               toolbarPath="karte/tools"
+               label="Ausschnitt vergrößern"
+               icon="icons/map/zoomin.gif"
                tooltip="vergrößert den Kartenausschnitt"
-               icon="icons/full/elcl16/kde_viewmag-.gif"
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutWidgetDelegate"
-               style="push"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInWidgetDelegate"
+               style="radio"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+               id="org.kalypso.ui.editor.mapeditor.action.ZoomInAction"/>
+         <action
+               toolbarPath="karte/actions"
+               label="Ausschnitt verkleinern"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate"
+               icon="icons/map/zoomout.gif"
+               tooltip="verkleinert den Kartenausschnitt"
+          	   style="push"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/actions"
                id="org.kalypso.ui.editor.mapeditor.action.ZoomOutAction"/>
          <action
-               disabledIcon="icons/full/elcl16/kde_14_rectangle.gif"
-               toolbarPath="karte"
-               label="Ausschnitt vergrößern"
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInWidgetDelegate"
-               tooltip="vergrößert den Kartenausschnitt"
-               icon="icons/full/elcl16/kde_viewmag+.gif"
-               style="radio"
-               id="org.kalypso.ui.editor.mapeditor.action.ZoomInAction"/>
-          <!-- zoomInByRect with start and endpoint bounds -->     
-         <action
-               toolbarPath="karte"
+               toolbarPath="karte/tools"
                label="Kartenausschnitt verschieben"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate"
-               icon="icons/full/elcl16/kde_move.gif"
+               icon="icons/map/pan.gif"
                tooltip="verschiebt den Kartenausschnitt"
                style="radio"
+               state="true"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
                id="org.kalypso.ui.editor.mapeditor.action.PanAction"/>
-
          <action
-               toolbarPath="karte"
-               label="Create Geometry Feature"
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreateGeometryFeatureWidgetDelegate"
-               icon="icons/full/elcl16/kde_contexthelp.gif"
-               tooltip="erzeugt features mit geometrie"
-               style="radio"
-               id="org.kalypso.ui.editor.mapeditor.action.CreateFeatureAction"/>
-
-         <action
-               toolbarPath="karte"
+               toolbarPath="karte/tools"
                label="Edit Feature"
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureWidgetDelegate"
+               tooltip="die Daten eines Objekts anzeigen"
                icon="icons/full/elcl16/kde_contexthelp.gif"
-               tooltip="editiert die Daten eines Features"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureWidgetDelegate"
                style="radio"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
                id="org.kalypso.ui.editor.mapeditor.action.EditFeatureAction"/>
-
-          <action
-                toolbarPath="karte"
-                label="Elemente selektieren"
-                class="org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate"
-                tooltip="selektiert dinge"
-                icon="icons/full/elcl16/kde_14_polyline.gif"
-                style="radio"
-                id="org.kalypso.ui.editor.mapeditor.action.SelectAction"/>
- 	<action
-        toolbarPath="karte"
-        label="Elemente deselektieren"
-        class="org.kalypso.ui.editor.mapeditor.actiondelegates.UnSelectWidgetDelegate"
-        tooltip="deselektiert dinge"
-        icon="icons/full/elcl16/kde_contents.gif"
-        style="radio"
-        id="org.kalypso.ui.editor.mapeditor.action.UnSelectAction"/>
-	 <action
-        toolbarPath="karte"
-        label="Selektion umkehren"
-        class="org.kalypso.ui.editor.mapeditor.actiondelegates.ToggleSelectWidgetDelegate"
-        tooltip="umschalten"
-        icon="icons/full/elcl16/kde_options.gif"
-        style="radio"
-        id="org.kalypso.ui.editor.mapeditor.action.ToggleSelectAction"/>
+         <action
+               disabledIcon="icons/map/save_edit_disabled.gif"
+               toolbarPath="karte/edit"
+               label="Thema speichern"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate"
+               icon="icons/map/save_edit.gif"
+               tooltip="Speichert die Daten des aktiven Themas"
+               style="push"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
+               id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction"/>
+         <action
+               toolbarPath="karte/edit"
+               label="Rückgängig"
+               tooltip="letzte Änderung rückgängig machen"
+               icon="icons/map/undo_edit.gif"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate"
+               style="push"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
+               id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction"/>
+         <action
+               toolbarPath="karte/edit"
+               label="Wiederherstellen"
+               icon="icons/map/redo_edit.gif"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate"
+               style="push"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
+               id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction"/>
 	  </editorContribution>
-      <editorContribution
+	        <editorContribution
             targetID="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
             id="org.kalypso.ui.editor.obstableeditor.EditorContribution">
          <action

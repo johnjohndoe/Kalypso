@@ -1,6 +1,7 @@
 package org.kalypso.util.command;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.kalypso.eclipse.core.runtime.jobs.MutexSchedulingRule;
 
 /**
  * <p>
@@ -16,25 +17,27 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManagerListener
 {
   /**
-   * Jeder Editor hat sein eigenes Mutex, so dass Jobs sch?n hintereinander
-   * ausgef?hrt werden
+   * Jeder Editor hat sein eigenes Mutex, so dass Jobs schön hintereinander
+   * ausgeführt werden
    */
-  private final Mutex m_mutexRule = new Mutex();
+  private final ISchedulingRule m_mutexRule = new MutexSchedulingRule();
 
-  private final ICommandManager m_commandManager = new DefaultCommandManager();
+  private final ICommandManager m_commandManager;
 
-  public final UndoRedoAction undoAction = new UndoRedoAction( m_commandManager, m_mutexRule, true );
+  public final UndoRedoAction undoAction;
 
-  public final UndoRedoAction redoAction = new UndoRedoAction( m_commandManager, m_mutexRule, false );
-
-  private boolean m_isDirty = false;
+  public final UndoRedoAction redoAction;
 
   private final Runnable m_dirtyRunnable;
 
-  public JobExclusiveCommandTarget( final Runnable dirtyRunnable )
+  public JobExclusiveCommandTarget( final ICommandManager commandManager, final Runnable dirtyRunnable )
   {
     m_dirtyRunnable = dirtyRunnable;
-
+    m_commandManager = commandManager;
+    
+    undoAction = new UndoRedoAction( m_commandManager, m_mutexRule, true );
+    redoAction = new UndoRedoAction( m_commandManager, m_mutexRule, false );
+    
     m_commandManager.addCommandManagerListener( this );
   }
 
@@ -46,20 +49,14 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
     m_commandManager.removeCommandManagerListener( this );
   }
 
-  /**
-   * @see org.eclipse.ui.part.EditorPart#isDirty()
-   */
   public boolean isDirty()
   {
-    return m_isDirty;
+    return m_commandManager.isDirty();
   }
-
-  public void setDirty( final boolean dirty )
+  
+  public void resetDirty()
   {
-    m_isDirty = dirty;
-
-    if( m_dirtyRunnable != null )
-      m_dirtyRunnable.run();
+    m_commandManager.resetDirty();
   }
 
   /**
@@ -76,30 +73,12 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
    */
   public void onCommandManagerChanged( final ICommandManager source )
   {
-    if( source == m_commandManager )
-      setDirty( true );
+    if( source == m_commandManager && source.isDirty() )
+      m_dirtyRunnable.run();
   }
   
-  /**
-   * <p>
-   * Diese Regel sichert, dass alle Kommandos die über dieses Target abgesetzt
-   * werden, nacheinander ausgeführt werden.
-   * </p>
-   * <p>
-   * Sollte nicht statisch sein, da sonst alle Kommandos aller solcher Targets
-   * nacheinander abgesetzt werden.
-   * </p>
-   */
-  private final class Mutex implements ISchedulingRule
+  public ISchedulingRule getSchedulingRule()
   {
-    public boolean isConflicting( final ISchedulingRule rule )
-    {
-      return rule == this;
-    }
-
-    public boolean contains( final ISchedulingRule rule )
-    {
-      return rule == this;
-    }
+    return m_mutexRule;
   }
 }

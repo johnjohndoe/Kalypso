@@ -21,6 +21,7 @@ import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentThread;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.url.UrlResolver;
@@ -50,7 +51,7 @@ public class GmlLoader extends AbstractLoader
       final IResource schemaFile = ResourceUtilities.findFileFromURL( schemaURL );
       final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
       
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, schemaURL );
+      final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, schemaURL ) );
 
       try
       {

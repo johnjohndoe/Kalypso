@@ -13,14 +13,23 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.widgets.EditFeatureWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
-import org.kalypso.ogc.gml.mapmodel.MapPanel;
+import org.kalypso.ogc.gml.widgets.CreateGeometryFeatureWidget;
+import org.kalypso.ogc.gml.widgets.PanToWidget;
+import org.kalypso.ogc.gml.widgets.SelectWidget;
+import org.kalypso.ogc.gml.widgets.ToggleSelectWidget;
+import org.kalypso.ogc.gml.widgets.UnSelectWidget;
+import org.kalypso.ogc.gml.widgets.ZoomInByRectWidget;
+import org.kalypso.ogc.gml.widgets.ZoomInWidget;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -50,7 +59,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   private final MapPanel myMapPanel;
 
-  private IMapModell m_mapModell;
+  private GisTemplateMapModell m_mapModell;
 
   public GisMapEditor()
   {
@@ -70,6 +79,18 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       m_outlinePage.dispose();
 
     super.dispose();
+  }
+  
+  private void createWidgets( final MapPanel panel, final Shell shell )
+  {
+    panel.setWidget( MapPanel.WIDGET_ZOOM_IN, new ZoomInWidget() );
+    panel.setWidget( MapPanel.WIDGET_ZOOM_IN_RECT, new ZoomInByRectWidget() );
+    panel.setWidget( MapPanel.WIDGET_PAN, new PanToWidget() );
+    panel.setWidget( MapPanel.WIDGET_EDIT_FEATURE, new EditFeatureWidget( shell ) );
+    panel.setWidget( MapPanel.WIDGET_CREATE_FEATURE, new CreateGeometryFeatureWidget() );
+    panel.setWidget( MapPanel.WIDGET_SELECT, new SelectWidget() );
+    panel.setWidget( MapPanel.WIDGET_UNSELECT, new UnSelectWidget() );
+    panel.setWidget( MapPanel.WIDGET_TOGGLE_SELECT, new ToggleSelectWidget() );
   }
 
   /**
@@ -99,8 +120,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       monitor.beginTask( "Kartenvorlage speichern", 2000 );
       getMapPanel().getBoundingBox();
       
-      final Gismapview modellTemplate = ( (GisTemplateMapModell)m_mapModell )
-          .createGismapTemplate( getMapPanel().getBoundingBox() );
+      final Gismapview modellTemplate = m_mapModell.createGismapTemplate( getMapPanel().getBoundingBox() );
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -139,6 +159,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   {
     super.createPartControl( parent );
 
+    createWidgets( myMapPanel, parent.getShell() );
+    
     // create MapPanel
     final Frame virtualFrame = SWT_AWT
         .new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
@@ -162,7 +184,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     final IFile inputFile = ( (IFileEditorInput)getEditorInput() ).getFile();
     final URL context = ResourceUtilities.createURL( inputFile );
     
-    final IMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin
+    final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin
         .getDefault().getCoordinatesSystem() );
     setMapModell( mapModell );
 
@@ -172,7 +194,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     monitor.done();
   }
 
-  private void setMapModell( final IMapModell mapModell )
+  private void setMapModell( final GisTemplateMapModell mapModell )
   {
     m_mapModell = mapModell;
 
@@ -195,5 +217,10 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   public MapPanel getMapPanel()
   {
     return myMapPanel;
+  }
+
+  public void saveTheme( final IKalypsoFeatureTheme theme, final IProgressMonitor monitor ) throws CoreException
+  {
+    m_mapModell.saveTheme( theme, monitor );
   }
 }

@@ -185,7 +185,6 @@ public class ResourcePool implements ILoaderListener
    *      boolean)
    */
   public void onLoaderObjectInvalid( final Object oldValue, final boolean bCannotReload )
-      throws Exception
   {
     synchronized( this )
     {
@@ -208,12 +207,13 @@ public class ResourcePool implements ILoaderListener
     }
   }
 
-  private IPoolableObjectType findKey( final Object oldValue )
+  private IPoolableObjectType findKey( final Object o )
   {
     for( final Iterator iter = m_objects.entrySet().iterator(); iter.hasNext(); )
     {
       final Map.Entry entry = (Entry)iter.next();
-      if( entry.getValue() == oldValue )
+      final Object value = entry.getValue();
+      if( value == o )
         return (IPoolableObjectType)entry.getKey();
     }
 
@@ -225,10 +225,10 @@ public class ResourcePool implements ILoaderListener
    * @param key
    * @param monitor
    * @return instance using loader
-   * @throws Exception
+   * @throws LoaderException
+   * @throws FactoryException
    */
-  protected Object makeObject( final IPoolableObjectType key, final IProgressMonitor monitor )
-      throws Exception
+  protected Object makeObject( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException, FactoryException
   {
     m_logger.info( "Loading objekt for key: " + key );
     
@@ -241,7 +241,7 @@ public class ResourcePool implements ILoaderListener
     return object;
   }
 
-  protected ILoader getLoader( final String type ) throws FactoryException
+  protected ILoader getLoader( final String type ) throws FactoryException 
   {
     ILoader loader = (ILoader)m_loaderCache.get( type );
     if( loader == null )
@@ -286,8 +286,8 @@ public class ResourcePool implements ILoaderListener
     m_objects.remove( key );
   }
 
-  public void saveObject( final Object object, final IProgressMonitor monitor )
-      throws FactoryException
+  public void saveObject( final Object object, final IProgressMonitor monitor ) throws LoaderException, FactoryException
+
   {
     synchronized( this )
     {
@@ -297,15 +297,7 @@ public class ResourcePool implements ILoaderListener
       if( key != null )
       {
         final ILoader loader = getLoader( key.getType() );
-
-        try
-        {
-          loader.save( key.getSource(), key.getContext(), monitor, object );
-        }
-        catch( LoaderException e )
-        {
-          throw new FactoryException( e );
-        }
+        loader.save( key.getSource(), key.getContext(), monitor, object );
       }
     }
   }

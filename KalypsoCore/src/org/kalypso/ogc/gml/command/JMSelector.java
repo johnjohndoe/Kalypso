@@ -172,7 +172,7 @@ public class JMSelector
     final List listFE = select( pos, r, list, withinStatus, selectionId );
     for( int i = 0; i < listFE.size(); i++ )
     {
-      Feature fe = (Feature)listFE.get( i );
+      final Feature fe = (Feature)listFE.get( i );
       if( result == null
           || result.getDefaultGeometryProperty().distance( fe.getDefaultGeometryProperty() ) < dist )
         result = fe;

@@ -13,10 +13,12 @@ import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.model.sort.DisplayContext;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.util.command.ICommand;
 
 /**
  * @author vdoemming
@@ -25,7 +27,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 {
   public final static UserStyle[] NO_STYLE = new UserStyle[0];
 
-  private GMLWorkspace m_workspace;
+  private CommandableWorkspace m_workspace;
 
   private boolean m_isdirty = true;
 
@@ -37,7 +39,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private final FeatureType m_featureType;
 
-  public KalypsoFeatureTheme( final GMLWorkspace workspace, final String featurePath,
+  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath,
       final String name )
   {
     super( name );
@@ -64,7 +66,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     m_isdirty = dirty;
   }
   
-  public GMLWorkspace getWorkspace()
+  public CommandableWorkspace getWorkspace()
   {
     return m_workspace;
   }
@@ -136,7 +138,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   public void onModellChange( ModellEvent modellEvent )
   {
 //      if( modellEvent.getType() == ModellEvent.STYLE_CHANGE )
-        setDirty( true );
+//        setDirty( true );
       
 //      if( modellEvent.getType() == ModellEvent.FEATURE_CHANGE )
         setDirty( true );
@@ -155,6 +157,30 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   public FeatureList getFeatureList()
   {
     return m_featureList;
+  }
+
+  /**
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
+   */
+  public void postCommand( final ICommand command, final Runnable runnable )
+  {
+    try
+    {
+      m_workspace.postCommand( command );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+    runnable.run();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSchedulingRule()
+   */
+  public ISchedulingRule getSchedulingRule()
+  {
+    return null;
   }
 
 }

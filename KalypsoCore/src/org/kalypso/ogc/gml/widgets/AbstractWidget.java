@@ -10,8 +10,8 @@ import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.MapPanel;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 
@@ -25,8 +25,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   private ICommandTarget m_commandPoster;
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.mapmodel.MapPanel)
+   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
@@ -40,7 +39,9 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
     // TODO: register modelllistener?
     m_commandPoster = commandPoster;
     m_mapPanel = mapPanel;
-    m_mapPanel.getMapModell().addModellListener( this );
+    
+    if( m_mapPanel != null )
+      m_mapPanel.getMapModell().addModellListener( this );
     // registerModelllistener
   }
 

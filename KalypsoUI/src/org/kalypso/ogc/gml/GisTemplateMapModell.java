@@ -12,6 +12,8 @@ import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree.model.geometry.GM_Envelope;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.template.gismapview.Gismapview;
@@ -235,5 +237,13 @@ public class GisTemplateMapModell implements IMapModell
   public void swapThemes( IKalypsoTheme theme1, IKalypsoTheme theme2 )
   {
     m_modell.swapThemes( theme1, theme2 );
+  }
+
+  public void saveTheme( final IKalypsoFeatureTheme theme, final IProgressMonitor monitor ) throws CoreException
+  {
+    if( theme instanceof GisTemplateFeatureTheme )
+      ((GisTemplateFeatureTheme)theme).saveFeatures( monitor );
+    else
+      throw new UnsupportedOperationException( "theme must be of type " + GisTemplateFeatureTheme.class.getName() );
   }
 }

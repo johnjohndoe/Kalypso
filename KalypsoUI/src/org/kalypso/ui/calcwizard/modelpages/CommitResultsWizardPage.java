@@ -9,6 +9,7 @@ import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
@@ -26,14 +27,12 @@ import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.actions.FullExtentMapAction;
-import org.kalypso.ogc.gml.map.actions.ToggleSingleSelectWidgetAction;
 import org.kalypso.ogc.gml.map.actions.ZoomOutMapAction;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.MapPanel;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
-import org.kalypso.ogc.gml.widgets.ToggleSelectWidget;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -224,7 +223,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
 
     tbm.add( new GroupMarker( "radio_group" ) );
 
-    tbm.appendToGroup( "radio_group", new ToggleSingleSelectWidgetAction( m_mapPanel ) );
+//    tbm.appendToGroup( "radio_group", new ToggleSingleSelectWidgetAction( m_mapPanel ) );
 
     tbm.add( new Separator() );
 
@@ -242,7 +241,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
     mapView.setContent( mapComposite );
     mapView.setTopCenter( toolBar );
     mapView.setTopLeft( outlineViewer.getControl() );
-    m_mapPanel.changeWidget( new ToggleSelectWidget() );
+    m_mapPanel.changeWidget( MapPanel.WIDGET_TOGGLE_SELECT );
 
   }
 
@@ -251,8 +250,15 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
    */
   public boolean performFinish()
   {
-    // TODO: error handling?
-    m_viewer.saveData();
+    try
+    {
+      // TODO: do a workspace operation!
+      m_viewer.saveData( new NullProgressMonitor() );
+    }
+    catch( CoreException e )
+    {
+      e.printStackTrace();
+    }
 
     return true;
   }

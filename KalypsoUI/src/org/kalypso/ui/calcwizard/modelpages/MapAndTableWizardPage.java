@@ -12,6 +12,8 @@ import org.deegree_impl.model.feature.visitors.GetSelectionVisitor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -33,8 +35,8 @@ import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
-import org.kalypso.ogc.gml.widgets.SingleElementSelectWidget;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
@@ -238,7 +240,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
     mapPanel.setLayout( new GridLayout() );
 
     final Control mapControl = initMap( mapPanel,
-        new SingleElementSelectWidget() );
+        MapPanel.WIDGET_SINGLE_SELECT );
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
@@ -247,8 +249,15 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
    */
   public boolean performFinish( )
   {
-    // TODO: error handling?
-    m_viewer.saveData();
+    try
+    {
+      // TODO: error handling?
+      m_viewer.saveData( new NullProgressMonitor() );
+    }
+    catch( CoreException e )
+    {
+      e.printStackTrace();
+    }
 
     return true;
   }
@@ -269,7 +278,8 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
     final List selectedFeatures = GetSelectionVisitor.getSelectedFeatures( kft
         .getWorkspace(), kft.getFeatureType(), SELECTION_ID );
 
-    m_diagTemplate.removeAllCurves();
+    final LinkedDiagramTemplate diagTemplate = m_diagTemplate;
+    diagTemplate.removeAllCurves();
 
     if( selectedFeatures.size() > 0 )
     {
@@ -283,7 +293,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
           try
           {
             KalypsoWizardHelper.updateDiagramTemplate( tsProps,
-                selectedFeatures, m_diagTemplate, getContext() );
+                selectedFeatures, diagTemplate, getContext() );
           }
           catch( final SensorException e )
           {
@@ -307,16 +317,19 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
 
   protected void runCalculation( )
   {
-    m_viewer.saveData();
-
+    final LayerTableViewer viewer = m_viewer;
+    
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
     {
       public void execute( final IProgressMonitor monitor )
           throws CoreException
       {
+        monitor.beginTask( "Berechnung wird durchgeführt", 2000 );
+        viewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
+
         final ModelNature nature = (ModelNature) getCalcFolder().getProject()
             .getNature( ModelNature.ID );
-        nature.runCalculation( getCalcFolder(), monitor );
+        nature.runCalculation( getCalcFolder(), new SubProgressMonitor( monitor, 1000 ) );
       }
     };
 

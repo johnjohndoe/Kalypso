@@ -15,7 +15,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.JMMarkSelectCommand;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.command.SingleSelectCommand;
-import org.kalypso.ogc.gml.mapmodel.MapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.util.command.ICommand;
 
 public abstract class AbstractSelectWidget extends AbstractWidget

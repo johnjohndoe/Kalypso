@@ -32,6 +32,7 @@ import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -59,7 +60,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
   private boolean m_isSaving = false;
 
   protected JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget(
-      m_dirtyRunnable );
+      new DefaultCommandManager(), m_dirtyRunnable );
 
   public AbstractEditorPart()
   {
@@ -87,7 +88,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
   /**
    * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public final void doSave( final IProgressMonitor monitor ) 
+  public final void doSave( final IProgressMonitor monitor )
   {
     final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
@@ -97,13 +98,14 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
       try
       {
         doSaveInternal( monitor, input );
-        m_commandTarget.setDirty( false );
+        m_commandTarget.resetDirty(  );
       }
       catch( CoreException e )
       {
         e.printStackTrace();
-        
-        ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", e.getStatus() );
+
+        ErrorDialog.openError( getEditorSite().getShell(), "Fehler",
+            "Fehler beim Speichern der Ansicht", e.getStatus() );
       }
       finally
       {
@@ -140,7 +142,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
   {
     return m_commandTarget.isDirty();
   }
-
+  
   /**
    * Returns the progress monitor related to this editor.
    * 
@@ -189,13 +191,15 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
 
     try
     {
-      monitor.beginTask( "Save file",  1000 );
-//      file.create( new StringInputStream( "" ), false, new SubProgressMonitor( monitor, 1000 ) );
-//      file.setCharset( original.getCharset(), new SubProgressMonitor( monitor, 1000 ) );
-      
+      monitor.beginTask( "Save file", 1000 );
+      //      file.create( new StringInputStream( "" ), false, new
+      // SubProgressMonitor( monitor, 1000 ) );
+      //      file.setCharset( original.getCharset(), new SubProgressMonitor(
+      // monitor, 1000 ) );
+
       doSaveInternal( new SubProgressMonitor( monitor, 1000 ), newInput );
-      m_commandTarget.setDirty( false );
-      
+      m_commandTarget.resetDirty(  );
+
       monitor.done();
     }
     catch( final CoreException ce )
@@ -269,7 +273,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
               "Fehler beim Laden der Tabellenvorlage", e );
         }
 
-        m_commandTarget.setDirty( false );
+        m_commandTarget.resetDirty();
 
         getEditorSite().getShell().getDisplay().syncExec( new Runnable()
         {

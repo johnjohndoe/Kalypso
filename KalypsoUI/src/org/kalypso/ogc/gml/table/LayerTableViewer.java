@@ -13,6 +13,8 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -48,11 +50,11 @@ import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.ColumnType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.SortType;
+import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.InvisibleCommand;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-import org.kalypso.util.factory.FactoryException;
 
 /**
  * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ?ndert
@@ -74,7 +76,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   private final ICellEditorFactory m_cellEditorFactory;
 
-  private ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( null );
+  private ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
   private final int m_selectionID;
 
@@ -602,16 +604,9 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     return tableTemplate;
   }
 
-  public void saveData()
+  public void saveData( final IProgressMonitor monitor ) throws CoreException
   {
-    try
-    {
-      ((GisTemplateFeatureTheme)getTheme()).saveFeatures();
-    }
-    catch( FactoryException e )
-    {
-      e.printStackTrace();
-    }
+    ((GisTemplateFeatureTheme)getTheme()).saveFeatures( monitor  );
   }
 
   /**

@@ -10,7 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import org.kalypso.ogc.gml.mapmodel.MapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.util.command.ICommandTarget;
 
 /**
