@@ -9,6 +9,21 @@
 			<argument name="input" value=":project:.model/nacontrol.gml"/>
 			<argument name="output" value=":calcdir:nacontrol.gml"/>
 		</transformation>
+		
+<!-- create zml-directories -->
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/.info.txt"/>
+			<argument name="output" value=":calcdir:zml/.info.txt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/.info.txt"/>
+			<argument name="output" value=":calcdir:zufluss/.info.txt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/.info.txt"/>
+			<argument name="output" value=":calcdir:pegel/.info.txt"/>
+		</transformation>
+
 	</createTransformations>
 	
 	<updateTransformations>	
