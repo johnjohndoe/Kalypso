@@ -16,7 +16,7 @@ public final class DateUtilities
   }
   
   /**
-   * Returns the minimum Date that the Calendar can deliver.
+   * @return the minimum Date that the Calendar can deliver.
    */
   public final static Date getMinimum()
   {

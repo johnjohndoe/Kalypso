@@ -3,6 +3,7 @@ package org.kalypso.util.runtime.args;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.kalypso.java.util.DateUtilities;
 import org.kalypso.util.runtime.IVariableArguments;
 
 /**
@@ -17,13 +18,28 @@ public class DateRangeArgument implements IVariableArguments
 
   private final Date m_to;
 
+  /**
+   * 
+   * @param from
+   * @param to
+   */
   public DateRangeArgument( final long from, final long to )
   {
     this( new Date(from), new Date(to) );
   }
   
-  public DateRangeArgument( final Date from, final Date to )
+  /**
+   * @param from if null, minimum date is used
+   * @param to if null, current date is used
+   */
+  public DateRangeArgument( Date from, Date to )
   {
+    if( from == null )
+      from = DateUtilities.getMinimum();
+    
+    if( to == null )
+      to = new Date();
+      
     m_from = from;
     m_to = to;
   }
@@ -66,10 +82,7 @@ public class DateRangeArgument implements IVariableArguments
   {
     if( pastDays == 0 )
     {
-      final Calendar cal = Calendar.getInstance();
-      cal.set( 0, 0, 0, 0, 0, 0 );
-
-      final Date d1 = cal.getTime();
+      final Date d1 = DateUtilities.getMinimum();
 
       final Date d2 = new Date();
 
