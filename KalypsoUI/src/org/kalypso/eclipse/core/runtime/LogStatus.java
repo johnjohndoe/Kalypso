@@ -58,7 +58,7 @@ public class LogStatus extends Status
       try
       {
         reader = new BufferedReader( new InputStreamReader( m_logFile
-            .getContents() ) );
+            .getContents(), m_logFile.getCharset() ) );
         String line = reader.readLine();
         while( line != null )
         {
@@ -79,8 +79,11 @@ public class LogStatus extends Status
       // mit der encoding der strings passt.
       m_children = new IStatus[lines.size()];
       for( int i = 0; i < m_children.length; i++ )
+      {
+        String str = lines.get(i).toString();
         m_children[i] = new Status( getSeverity(), getPlugin(),
-          getCode(), (String)lines.get(i), null );
+          getCode(), str, null );
+      }
       
       lines.clear();
     }
