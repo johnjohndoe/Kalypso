@@ -1,7 +1,9 @@
 package org.kalypso.psiadapter.metadoc;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -55,7 +57,7 @@ public class PSICompactCommiter implements IMetaDocCommiter
       final Properties mdProps = new Properties();
       mdProps.putAll( docBean.getMetadata() );
       
-      final FileWriter writer = new FileWriter( xmlFile );
+      final Writer writer = new OutputStreamWriter( new FileOutputStream(xmlFile), "UTF-8" );
       // closes writer 
       MetaDocSerializer.buildXML( serviceProps, mdProps, writer, docFile.getName() );
       
