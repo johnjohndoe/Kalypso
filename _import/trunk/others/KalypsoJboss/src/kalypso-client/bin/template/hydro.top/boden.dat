@@ -1,0 +1,93 @@
+/Bodentypen: oberste Schicht Bodenart, darunter Profiltypen.
+/
+/Typ       Tiefe[dm]
+mS-Sl2_1   4     Feinsand. Mittelsand-schwach lehm. Sand ueber Prof.1
+mS-Sl22  8.0 1.0 
+mSgsld2  2.0 1.0
+mSgsld2  2.0 1.0
+mSgsld2  1.0 1.0
+Sl2-Ls3_1  4     Schwach lehm. Sand- mittel sandiger Lehm ueber Prof.1
+Sl2Ls32  8.0 1.0
+mSgsld2  2.0 1.0
+mSgsld2  2.0 1.0
+mSgsld2  1.0 1.0
+Hn-mSfs_1  4     Niedermoortorf-feinsandiger Mittelsand ueber Profil 1
+Hn-mSfs  8.0 1.0
+mSgsld2  2.0 1.0
+mSgsld2  2.0 1.0
+mSgsld2  1.0 1.0
+Hnz4_1     4     Niedermoortorf ueber Profil 1
+Hnz4SV3  8.0 1.0
+mSgsld2  2.0 0.0
+mSgsld2  2.0 0.0
+mSgsld2  1.0 0.0
+mS-Sl2_2   4     Feinsand. Mittelsand-schwach lehm. Sand ueber Prof.2
+mS-Sl22  8.0 1.0 
+mSfsld2  3.0 1.0
+mSfsld2  2.0 1.0
+Ls4ld3   5.0 0.0
+Sl2_2      4     Schwach lehmiger Sand ueber Profil 2
+Sl2ld2   8.0 1.0
+mSfsld2  3.0 1.0
+mSfsld2  2.0 1.0
+Ls4ld3   5.0 0.0
+Sl2-Ls3_2  4     Schwach lehm. Sand- mittel sandiger Lehm ueber Prof.2
+Sl2Ls32  8.0 1.0
+mSfsld2  3.0 1.0
+mSfsld2  2.0 1.0
+Ls4ld3   5.0 0.0
+Hn-mSfs_2  4     Niedermoortorf-feinsandiger Mittelsand ueber Profil 2
+Hn-mSfs  8.0 1.0
+mSfsld2  3.0 1.0
+mSfsld2  2.0 1.0
+Ls4ld3   5.0 0.0
+Hnz4_2     4     Niedermoortorf ueber Profil 2
+Hnz4SV3  8.0 1.0
+mSfsld2  3.0 1.0
+mSfsld2  2.0 1.0
+Ls4ld3   5.0 0.0
+mSfs_3     4     Feinsandiger Mittelsand ueber Profil 3
+mSfsld2  8.0 1.0
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3   5.0 0.0
+mS-Sl2_3   4     Feinsand. Mittelsand-schwach lehm. Sand ueber Prof.3
+mS-Sl22  8.0 1.0 
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3   5.0 0.0
+Sl2_3      4     Schwach lehmiger Sand ueber Profil 3
+Sl2ld2   8.0 1.0
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3   5.0 0.0
+Sl2-Ls3_3  4     Schwach lehm. Sand- mittel sandiger Lehm ueber Prof.3
+Sl2Ls32  8.0 1.0
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3   5.0 0.0
+Hn-mSfs_3  4     Niedermoortorf-feinsandiger Mittelsand ueber Profil 3
+Hn-mSfs  8.0 1.0
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3   5.0 0.0
+Hnz4_3     4     Niedermoortorf ueber Profil 3
+Hnz4SV3  8.0 1.0
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3   5.0 0.0
+mS-Sl2_4   4     Feinsand. Mittelsand-schwach lehm. Sand ueber Prof.4
+mS-Sl22  8.0 1.0 
+mSfsld2  3.0 1.0
+mSfsld2  2.0 1.0
+Ls4ld3   5.0 0.0
+mS-Sl2_5   4     Feinsand. Mittelsand-schwach lehm. Sand ueber Prof.5
+mS-Sl22  8.0 1.0 
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3   5.0 0.0
+Hn-mSfs_5  4     Niedermoortorf-feinsandiger Mittelsand ueber Prof.5
+Hn-mSfs  8.0 1.0
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3   5.0 0.0
