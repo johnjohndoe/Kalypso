@@ -958,11 +958,11 @@ public class WMSProtocolFactory {
         String units = (String)model.remove( "UNITS" );
 
         if ( !"meter".equals( units ) ) {
-            //TODO zusätliche Maßeinheiten hinzufügen
+            //TODO zus?tliche Ma?einheiten hinzuf?gen
             throw new InconsistentRequestException( 
                     "Parameter 'UNITS' must be one of 'meter', 'additional units " + 
                     "will be supported in future versions'." );
-            //TODO bei zusätzlichen Maßeinheiten anpassen
+            //TODO bei zus?tzlichen Ma?einheiten anpassen
         }
 
         // top label content
@@ -1020,7 +1020,7 @@ public class WMSProtocolFactory {
 
         java.awt.Font font = java.awt.Font.getFont( labelFont );
 
-        //TODO @Andreas: hier beschwert sich meine Testklasse über nullpointer
+        //TODO @Andreas: hier beschwert sich meine Testklasse ?ber nullpointer
         //font = font.deriveFont( labelFontSize );
         //font = font.deriveFont ((float)10);
         String barStyle = (String)model.remove( "STYLE" );
@@ -1293,20 +1293,3 @@ public class WMSProtocolFactory {
         return map;
     }
 }
-<<<<<<< WMSProtocolFactory.java
-=======
-/* ********************************************************************
-   Changes to this class. What the people have been up to:
-   $Log$
-   Revision 1.1  2004/05/11 16:43:26  doemming
-   Initial revision
-
-   Revision 1.52  2004/03/26 11:19:32  poth
-   no message
-
-   Revision 1.51  2004/03/24 12:36:22  poth
-   no message
-
-
-
-********************************************************************** */>>>>>>> 1.52

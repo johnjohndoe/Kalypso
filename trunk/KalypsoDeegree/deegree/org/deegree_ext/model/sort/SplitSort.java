@@ -13,6 +13,7 @@ import org.deegree.graphics.transformation.GeoTransform;
 
 public class SplitSort implements JMSpatialIndex
 {
+	public static boolean showIndexEnv=false;
     private SplitSortContainer myRootContainer=null;
     private static int no=0;
     private List myObjects=new ArrayList(); // objects without geometry

@@ -61,7 +61,7 @@ import org.deegree.model.geometry.GM_Envelope;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider</a>
  * @version $Revision$ $Date$
  */
-abstract class DisplayElement_Impl implements DisplayElement, Serializable {
+public abstract class DisplayElement_Impl implements DisplayElement, Serializable {
 
 	public static boolean DEBUG_PaintEnv=false;
   
