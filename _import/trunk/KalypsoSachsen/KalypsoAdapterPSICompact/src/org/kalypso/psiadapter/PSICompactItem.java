@@ -6,8 +6,9 @@ import java.util.Vector;
 import org.kalypso.util.repository.IRepositoryItem;
 
 /**
+ * A Repository Item from the PSICompact structure
+ * 
  * @author schlienger
- *
  */
 public class PSICompactItem implements IRepositoryItem
 {

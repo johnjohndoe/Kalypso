@@ -177,28 +177,28 @@ public class PSICompactImpl implements PSICompact
 		String id = "PSI-ROOT";
 		map.put( id, new ObjectInfo( id, "PSI-Compact") );
 		
-		id = "PSI-ROOT.PEGEL_1" + suffix;
+		id = "PSI-ROOT.PEGEL_1." + suffix;
 		map.put( id, new ObjectInfo( id, "Pegel1" + suffix) );
 		
-		id = "PSI-ROOT.PEGEL_2" + suffix;
+		id = "PSI-ROOT.PEGEL_2." + suffix;
 		map.put( id, new ObjectInfo( id, "Pegel2" + suffix) );
 		
 		id = "PSI-ROOT.LEVEL_1";
 		map.put( id, new ObjectInfo( id, "Level1") );
 		
-		id = "PSI-ROOT.LEVEL_1.PEGEL_11" + suffix;
+		id = "PSI-ROOT.LEVEL_1.PEGEL_11." + suffix;
 		map.put( id, new ObjectInfo( id, "Pegel11" + suffix ) );
 		
-		id = "PSI-ROOT.LEVEL_1.PEGEL_12" + suffix;
+		id = "PSI-ROOT.LEVEL_1.PEGEL_12." + suffix;
 		map.put( id, new ObjectInfo( id, "Pegel12" + suffix ) );
 		
 		id = "PSI-ROOT.LEVEL_1.SUBLEVEL_1";
 		map.put( id, new ObjectInfo( id, "Sublevel1" ) );
 		
-		id = "PSI-ROOT.LEVEL_1.SUBLEVEL_1.PEGEL_111" + suffix;
+		id = "PSI-ROOT.LEVEL_1.SUBLEVEL_1.PEGEL_111." + suffix;
 		map.put( id, new ObjectInfo( id, "Pegel111" + suffix ) );
 		
-		id = "PSI-ROOT.LEVEL_1.SUBLEVEL_1.PEGEL_112" + suffix;
+		id = "PSI-ROOT.LEVEL_1.SUBLEVEL_1.PEGEL_112." + suffix;
 		map.put( id, new ObjectInfo( id, "Pegel112" + suffix ) );
 		
 		id = "PSI-ROOT.LEVEL_2";

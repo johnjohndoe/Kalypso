@@ -54,6 +54,8 @@ public final class PSICompactFactory
       catch( Exception e )
       {
         e.printStackTrace();
+        
+        return null;
       }
     }
 
@@ -69,7 +71,7 @@ public final class PSICompactFactory
     if( psiCompactRep == null )
     {
       // TODO: specify location of the service here
-      psiCompactRep = new PSICompactRepository( "location" );
+      psiCompactRep = new PSICompactRepository( "PSICompact@localhost" );
 
       threadVersionChecker = new Thread( new VersionChecker() );
       threadVersionChecker.start();
@@ -106,6 +108,9 @@ public final class PSICompactFactory
     }
   }
 
+  /**
+   * Helper für die Übersetzung des valueType in eine leesbare String
+   */
   public final static String valueTypeToString( int valueType )
   {
     switch( valueType )
