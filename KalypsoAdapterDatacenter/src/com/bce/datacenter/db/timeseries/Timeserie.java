@@ -448,7 +448,8 @@ public class Timeserie extends Persistent
    */
   public void setValues( final TimeserieTupple[] tupples )
   {
-    // TODO
+    // TODO implement setValues( final TimeserieTupple[] tupples )
+    throw new UnsupportedOperationException( "setValues() tupples= " + tupples );
   }
   
   /**
