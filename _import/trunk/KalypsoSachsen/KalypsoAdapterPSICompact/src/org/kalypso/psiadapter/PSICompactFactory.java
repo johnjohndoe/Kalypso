@@ -15,6 +15,8 @@ import de.psi.go.lhwz.PSICompact;
  */
 public final class PSICompactFactory
 {
+  private final static String CONFIG = "/org/kalypso/psiadapter/resources/config.ini";
+  
   private static String PSI_CLASS = null;
 
   protected static PSICompact m_psiCompact = null;
@@ -35,8 +37,11 @@ public final class PSICompactFactory
       try
       {
         stream = PSICompactFactory.class
-            .getResourceAsStream( "/org/kalypso/psiadapter/resources/config.ini" );
+            .getResourceAsStream( CONFIG );
 
+        if( stream == null )
+          throw new IllegalStateException( "Could not load configuration file: " + CONFIG );
+        
         m_factoryProperties = new Properties();
         m_factoryProperties.load( stream );
 

@@ -24,10 +24,6 @@ import org.kalypso.util.xml.xlink.IXlink;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
-import de.psi.go.lhwz.PSICompact.ArchiveData;
-import de.psi.go.lhwz.PSICompact.ObjectInfo;
-import de.psi.go.lhwz.PSICompact.ObjectMetaData;
-import de.psi.go.lhwz.PSICompact.WQParamSet;
 
 /**
  * Eine Observation aus PSICompact welche auch ein Repository Item ist.
@@ -40,7 +36,7 @@ public class PSICompactObservationItem implements IObservation
 
   private final String m_identifier;
 
-  private final ObjectInfo m_objectInfo;
+  private final PSICompact.ObjectInfo m_objectInfo;
 
   private final int m_valueType;
 
@@ -80,10 +76,10 @@ public class PSICompactObservationItem implements IObservation
     m_objectInfo = info;
     m_valueType = valueType;
 
-    final ObjectMetaData psiMD = PSICompactFactory.getConnection()
+    final PSICompact.ObjectMetaData psiMD = PSICompactFactory.getConnection()
         .getObjectMetaData( m_objectInfo.getId() );
 
-    final WQParamSet[] psiWQ = PSICompactFactory.getConnection().getWQParams(
+    final PSICompact.WQParamSet[] psiWQ = PSICompactFactory.getConnection().getWQParams(
         m_objectInfo.getId() );
 
     m_axes = prepareAxes( psiMD );
@@ -95,7 +91,7 @@ public class PSICompactObservationItem implements IObservation
    * @param psiMD
    * @return axis list
    */
-  private IAxis[] prepareAxes( ObjectMetaData psiMD )
+  private IAxis[] prepareAxes( PSICompact.ObjectMetaData psiMD )
   {
     final IAxis[] axes = new IAxis[3];
 
@@ -131,8 +127,9 @@ public class PSICompactObservationItem implements IObservation
    * 
    * @throws ECommException
    */
-  private final MetadataList prepareMetadata( final ObjectMetaData psiMD,
-      final WQParamSet[] psiWQ ) throws ECommException
+  private final MetadataList prepareMetadata(
+      final PSICompact.ObjectMetaData psiMD, final PSICompact.WQParamSet[] psiWQ )
+      throws ECommException
   {
     final MetadataList metadata = new MetadataList();
 
@@ -165,7 +162,7 @@ public class PSICompactObservationItem implements IObservation
         metadata.put( TimeserieConstants.MD_ALARM_4, String.valueOf( m_vc
             .psi2kalypso( psiMD.getAlarm4() ) ) );
       }
-      
+
       metadata.put( TimeserieConstants.MD_FLUSS, psiMD.getRiver() );
       metadata.put( TimeserieConstants.MD_FLUSSGEBIET, psiMD.getRiversystem() );
     }
@@ -314,7 +311,7 @@ public class PSICompactObservationItem implements IObservation
       m_from = dr.getFrom();
       m_to = dr.getTo();
 
-      final ArchiveData[] data = PSICompactFactory.getConnection()
+      final PSICompact.ArchiveData[] data = PSICompactFactory.getConnection()
           .getArchiveData( m_objectInfo.getId(), measureTypeToArchiveType(),
               m_from, m_to );
 
