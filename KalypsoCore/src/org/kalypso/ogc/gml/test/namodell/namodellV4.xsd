@@ -66,7 +66,8 @@
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="num" type="string"></element>
-					<element name="downStreamChannelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="1"/>
+					<element name="generateResult" type="boolean"/>
+        			<element name="downStreamChannelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="1"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -110,8 +111,8 @@
 	<complexType name="CatchmentFeatureType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<!--
+                <sequence>
+                    <!--
     ___________(inum,i5)____(ispk,i3)
 (text,a80)
 (flaech,*)
@@ -121,85 +122,78 @@
 (namhydro,a)
 (snowtype,a15)(ftem,*)_(fver,*)
     -->
-					<element name="Ort" type="gml:PolygonPropertyType"/>
-					<element name="inum" type="string"/>
-					<element name="ispk" type="string"/>
-					<element name="text" type="string"/>
-					<element name="flaech" type="string"/>
-					<element name="pns" type="string"/>
-					<element name="kurzzeit" type="string"/>
-					<element name="namfn" type="string"/>
-					<element name="langzeit" type="string"/>
-					<element name="faktn" type="string"/>
-					<element name="namft" type="string"/>
-					<element name="namept" type="string"/>
-					<element name="namfzf" type="string"/>
-					<element name="namhydro" type="string"/>
-					<element name="snowtype" type="string"/>
-					<element name="ftem" type="string"/>
-					<element name="fver" type="string"/>
-					<!--
+                    <element name="Ort" type="gml:PolygonPropertyType"/>
+                    <element name="inum" type="string"/>
+                    <element name="generateResult" type="boolean"/>
+                    <element name="ispk" type="string"/>
+                    <element name="text" type="string"/>
+                    <element name="flaech" type="string"/>
+                    <element name="pns" type="string"/>
+                    <element name="kurzzeit" type="string"/>
+                    <element name="namfn" type="string"/>
+                    <element name="langzeit" type="string"/>
+                    <element name="faktn" type="string"/>
+                    <element name="namft" type="string"/>
+                    <element name="namept" type="string"/>
+                    <element name="namfzf" type="string"/>
+                    <element name="namhydro" type="string"/>
+                    <element name="snowtype" type="string"/>
+                    <element name="ftem" type="string"/>
+                    <element name="fver" type="string"/>
+                    <!--
 (vsg,f5.3)(anzlayy,i5)_____(bimax,f5.1)_____(bianf,f5.1)(izkn_vers,f5.1)_____(tint,f5.1)_____(rintmx,f5.1)
 -->
-					<element name="vsg" type="string"/>
-					<element name="anzlayy" type="string"/>
-					<element name="bimax" type="string"/>
-					<element name="bianf" type="string"/>
-					<element name="izkn_vers" type="string"/>
-					<element name="tint" type="string"/>
-					<element name="rintmx" type="string"/>
-					<!-- 
+                    <element name="vsg" type="string"/>
+                    <element name="anzlayy" type="string"/>
+                    <element name="bimax" type="string"/>
+                    <element name="bianf" type="string"/>
+                    <element name="izkn_vers" type="string"/>
+                    <element name="tint" type="string"/>
+                    <element name="rintmx" type="string"/>
+                    <!-- 
  (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)_(evalay,*)
 siehe bodenkorrekturmember...
 -->
-					<element name="bodenkorrekturmember" 
-						type="na:bodenschichtkorrekturAssociationType" 
-						maxOccurs="10"/>
-					<!--
+                    <element name="bodenkorrekturmember" type="na:bodenschichtkorrekturAssociationType" maxOccurs="10"/>
+                    <!--
 (f_eva,f4.1)_(aint,f4.1)_(aigw,f6.2)_(fint,f4.2)_(ftra,f4.2)
 (retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*)
 (igwzu,*)
 -->
-					<element name="f_eva" type="string"/>
-					<element name="aint" type="string"/>
-					<element name="aigw" type="string"/>
-					<element name="fint" type="string"/>
-					<element name="ftra" type="string"/>
-					<element name="retvs" type="string"/>
-					<element name="retob" type="string"/>
-					<element name="retint" type="string"/>
-					<element name="retbas" type="string"/>
-					<element name="retgw" type="string"/>
-					<element name="retklu" type="string"/>
-					<element name="igwzu" type="string"/>
-					<!--
+                    <element name="f_eva" type="string"/>
+                    <element name="aint" type="string"/>
+                    <element name="aigw" type="string"/>
+                    <element name="fint" type="string"/>
+                    <element name="ftra" type="string"/>
+                    <element name="retvs" type="string"/>
+                    <element name="retob" type="string"/>
+                    <element name="retint" type="string"/>
+                    <element name="retbas" type="string"/>
+                    <element name="retgw" type="string"/>
+                    <element name="retklu" type="string"/>
+                    <element name="igwzu" type="string"/>
+                    <!--
  (ngwzu,*)_...
  (gwwi,*)_...
 -->
-					<!-- TODO -->
-					<element name="grundwasserabflussMember" 
-						type="na:grundwasserabflussAssociationType" 
-						maxOccurs="6"/>
-		
-					<element name="entwaesserungsStrangMember" 
-						type="na:ChannelAssociationType" minOccurs="0" 
-						maxOccurs="1"/>
-								
-					<!--	<element name="ngwzu" type="string"/>
+                    <!-- TODO -->
+                    <element name="grundwasserabflussMember" type="na:grundwasserabflussAssociationType" maxOccurs="6"/>
+                    <element name="entwaesserungsStrangMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="1"/>
+                    <!--	<element name="ngwzu" type="string"/>
 					<element name="gwwi" type="string"/>
 					-->
-					<!--
+                    <!--
 (hgru,*)(hgro,*)(rtr,*)(pors,*)(gwsent,*)(klupor,*)(izkn,*)
 
 -->
-					<element name="hgru" type="string"/>
-					<element name="hgro" type="string"/>
-					<element name="rtr" type="string"/>
-					<element name="pors" type="string"/>
-					<element name="gwsent" type="string"/>
-					<element name="klupor" type="string"/>
-					<element name="izkn" type="string"/>
-					<!--                
+                    <element name="hgru" type="string"/>
+                    <element name="hgro" type="string"/>
+                    <element name="rtr" type="string"/>
+                    <element name="pors" type="string"/>
+                    <element name="gwsent" type="string"/>
+                    <element name="klupor" type="string"/>
+                    <element name="izkn" type="string"/>
+                    <!--                
                     <element name="BodenfeuchteMin" type="double"/>
                     <element name="Bodenfeuchte" type="double"/>
                     <element name="BodenfeuchteMax" type="double"/>
@@ -210,7 +204,7 @@ siehe bodenkorrekturmember...
                     <element name="Wasserstand_gemessen" type="obslink:TimeseriesLink"/>
                     <element name="Wasserstand_gerechnet" type="obslink:TimeseriesLink"/>
 -->
-				</sequence>
+                </sequence>
 			</extension>
 		</complexContent>
 	</complexType>
