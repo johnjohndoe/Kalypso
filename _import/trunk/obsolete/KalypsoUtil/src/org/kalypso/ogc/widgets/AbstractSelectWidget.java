@@ -88,8 +88,11 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     KalypsoFeatureLayer activeLayer;
     if( activeTheme == null || !( activeTheme.getLayer() instanceof KalypsoFeatureLayer ) )
+    {
+      myStartPoint = null;
+      myEndPoint = null;
       return;
-
+    }
     activeLayer = (KalypsoFeatureLayer)activeTheme.getLayer();
     if( myStartPoint != null )
     {
