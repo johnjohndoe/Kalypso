@@ -23,6 +23,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.sensor.DateRangeArgument;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.renderer.DateTableCellRenderer;
+import org.kalypso.ogc.sensor.renderer.NumberTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.DefaultTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.util.adapter.IAdaptable;
@@ -48,7 +50,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   {
     JTable table = new JTable( m_model );
     table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
-    table.setDefaultRenderer( Double.class, new DoubleTableCellRenderer() );
+    table.setDefaultRenderer( Double.class, new NumberTableCellRenderer() );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
