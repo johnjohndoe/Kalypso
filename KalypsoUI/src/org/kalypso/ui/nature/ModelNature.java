@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -16,6 +18,7 @@ import java.util.Properties;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -34,17 +37,25 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.transformation.ICalculationCaseTransformation;
 import org.kalypso.model.transformation.TransformationException;
 import org.kalypso.model.transformation.TransformationFactory;
+import org.kalypso.model.xml.Calcwizard;
+import org.kalypso.model.xml.CalcwizardType;
 import org.kalypso.model.xml.Modelspec;
 import org.kalypso.model.xml.ModelspecType;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.TransformationConfig;
 import org.kalypso.model.xml.TransformationType;
+import org.kalypso.model.xml.CalcwizardType.PageType.ArgType;
+import org.kalypso.plugin.ImageProvider;
 import org.kalypso.plugin.KalypsoGisPlugin;
+import org.xml.sax.InputSource;
 
 import com.sun.xml.bind.StringInputStream;
 
@@ -63,15 +74,17 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public static final String ID = "org.kalypso.ui.ModelNature";
 
-  private IProject m_project;
-
-  private final Properties m_metadata = new Properties();
-
   private static final String METADATA_FILE = ".metadata";
 
   public static final String CALCULATION_FILE = ".calculation";
 
   private static final String CALC_RESULT_FOLDER = ".results";
+
+  private static final String MODELLTYP_CALCWIZARD_XML = MODELLTYP_FOLDER + "/" + "calcWizard.xml";
+
+  private final Properties m_metadata = new Properties();
+
+  private IProject m_project;
 
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
@@ -205,7 +218,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     final IFile calcFile = folder.getFile( CALCULATION_FILE );
     if( !calcFile.exists() )
-      throw new Exception( "Es wurden keine Steuerparameter durch die Transformation erzeugt: " + calcFile.getName() );
+      throw new Exception( "Es wurden keine Steuerparameter durch die Transformation erzeugt: "
+          + calcFile.getName() );
   }
 
   private static void tranformModelData( final IFolder targetFolder, final IProgressMonitor monitor )
@@ -221,9 +235,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     contents.close();
 
     final List transList = trans.getTransformation();
-    
-    monitor.beginTask( "Transformationen durchführen" , transList.size() );
-    
+
+    monitor.beginTask( "Transformationen durchführen", transList.size() );
+
     for( Iterator iter = transList.iterator(); iter.hasNext(); )
     {
       final TransformationType element = (TransformationType)iter.next();
@@ -305,7 +319,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // immer erst mal die .calculation Datei
       final IFile calcFile = folder.getFile( CALCULATION_FILE );
       inputStrings.add( loadFileIntoString( calcFile ) );
-      
+
       for( final Iterator iter = inputList.iterator(); iter.hasNext(); )
       {
         final ModelspecType.InputType input = (ModelspecType.InputType)iter.next();
@@ -315,7 +329,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
             .getFile( path );
 
         inputStrings.add( loadFileIntoString( file ) );
-        
+
         monitor.worked( 1 );
       }
     }
@@ -327,22 +341,24 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       e.printStackTrace();
     }
-    
+
     monitor.done();
 
     return (String[])inputStrings.toArray( new String[inputStrings.size()] );
   }
 
-  private String loadFileIntoString( final IFile file ) throws UnsupportedEncodingException, CoreException, IOException
+  private String loadFileIntoString( final IFile file ) throws UnsupportedEncodingException,
+      CoreException, IOException
   {
-    final BufferedReader br = new BufferedReader( new InputStreamReader( file.getContents(), file.getCharset() ) );
+    final BufferedReader br = new BufferedReader( new InputStreamReader( file.getContents(), file
+        .getCharset() ) );
     final StringBuffer sb = new StringBuffer();
     while( br.ready() )
     {
       final String line = br.readLine();
       if( line == null )
         break;
-      
+
       sb.append( line );
       sb.append( "\n" );
     }
@@ -372,44 +388,146 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  public IStatus putCalcCaseOutputData( final IFolder folder, final String[] results, final IProgressMonitor monitor ) throws CoreException
+  public IStatus putCalcCaseOutputData( final IFolder folder, final String[] results,
+      final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Ergebnisdaten werden abgelegt", 2000 );
-    
+
     final Modelspec modelspec = getModelspec();
-    
+
     final List outputList = modelspec.getOutput();
     int count = 0;
     if( results == null || results.length != outputList.size() )
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Ergebnisdaten passen nicht zur Modellspezifikation", null );
-    
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+          "Ergebnisdaten passen nicht zur Modellspezifikation", null );
+
     final IFolder resultsFolder = folder.getFolder( CALC_RESULT_FOLDER );
     if( resultsFolder.exists() )
       resultsFolder.delete( false, true, new SubProgressMonitor( monitor, 1000 ) );
-    
+
     resultsFolder.create( false, true, null );
-    
+
     for( Iterator iter = outputList.iterator(); iter.hasNext(); )
     {
       final ModelspecType.OutputType output = (ModelspecType.OutputType)iter.next();
       final String path = output.getPath();
-      
-      final IFile file = resultsFolder.getFile(path);
-      
+
+      final IFile file = resultsFolder.getFile( path );
+
       file.create( new StringInputStream( results[count++] ), false, null );
     }
-    
+
     monitor.worked( 1000 );
-    
+
     return Status.OK_STATUS;
   }
 
   public static void runPrognose( final Shell shell, final String name )
   {
-    System.out.println( name );
-    final IProject project = (IProject)ResourcesPlugin.getWorkspace().getRoot().findMember( name );
-    
-    MessageDialog.openInformation( shell, "Prognoserechnung",  project.getName() );
+    try
+    {
+      final IProject project = (IProject)ResourcesPlugin.getWorkspace().getRoot().findMember( name );
+
+      final Wizard wizard = new Wizard()
+      {
+        public boolean performFinish()
+        {
+          // TODO: start calculation and show results
+          return false;
+        }
+      };
+      wizard.setWindowTitle( "Prognoserechnung für " + project.getName() );
+
+      // wizard seiten hinzufügen!
+      final IFile wizardConfigFile = (IFile)project.findMember( MODELLTYP_CALCWIZARD_XML );
+      final InputSource inputSource = new InputSource( wizardConfigFile.getContents() );
+      inputSource.setEncoding( wizardConfigFile.getCharset() );
+
+      final Calcwizard calcwizardData = (Calcwizard)new ObjectFactory().createUnmarshaller()
+          .unmarshal( inputSource );
+      final List pages = calcwizardData.getPage();
+      for( Iterator pIt = pages.iterator(); pIt.hasNext(); )
+      {
+        final CalcwizardType.PageType page = (CalcwizardType.PageType)pIt.next();
+
+        final Properties props = new Properties();
+        final List arglist = page.getArg();
+        for( Iterator aIt = arglist.iterator(); aIt.hasNext(); )
+        {
+          final CalcwizardType.PageType.ArgType arg = (ArgType)aIt.next();
+          props.setProperty( arg.getName(), arg.getValue() );
+        }
+
+        final String className = page.getClassName();
+        final String pageTitle = page.getPageTitle();
+        final String imageLocation = page.getImageLocation();
+        final ImageDescriptor imageDesc = imageLocation == null ? null : ImageProvider.id( imageLocation );
+
+        final Class wizardPageClass = Class.forName( className );
+        final Constructor pageConstructor = wizardPageClass.getConstructor( new Class[] { String.class, ImageDescriptor.class, Properties.class } );
+        final IWizardPage wizardPage = (IWizardPage)pageConstructor.newInstance( new Object[] { pageTitle, imageDesc, props } );
+        
+        wizard.addPage( wizardPage );
+      }
+
+      final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
+      
+      wizardDialog.create();
+      wizardDialog.getShell().setBounds(shell.getBounds());
+      wizardDialog.open();
+    }
+    catch( final ResourceException re )
+    {
+      re.printStackTrace();
+    }
+    catch( CoreException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( JAXBException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( ClassNotFoundException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( InstantiationException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( IllegalAccessException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( SecurityException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( NoSuchMethodException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( IllegalArgumentException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( InvocationTargetException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    //MessageDialog.openInformation( shell, "Prognoserechnung",
+    // project.getName() );
   }
 
 }
