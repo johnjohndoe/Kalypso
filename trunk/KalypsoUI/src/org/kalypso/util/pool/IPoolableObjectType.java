@@ -3,24 +3,30 @@ package org.kalypso.util.pool;
 import java.net.URL;
 
 /**
- * TODO: doc!
+ * Identifies an object than is elligible to be pooled.
  * 
  * @author schlienger
  */
 public interface IPoolableObjectType
 {
   /**
-   * Returns the type of the source
+   * @return the type of the source
    */
-  public String getType();
-  
+  public String getType( );
+
   /**
-   * Returns the location information of the source
+   * @return the location information of the source
    */
-  public String getLocation();
-  
+  public String getLocation( );
+
   /**
-   * Returns the context from which the source is accessed
+   * @return the context from which the source is accessed
    */
-  public URL getContext();
+  public URL getContext( );
+
+  /**
+   * @return ignore exceptions flag. When true, exceptions are ignored during
+   *         pooling process and object won't be pooled.
+   */
+  public boolean isIgnoreExceptions( );
 }

@@ -55,7 +55,7 @@ public class DefaultObsDiagTemplateLauncher implements
       final IPath projectRelativePath = file.getProjectRelativePath();
 
       final LinkedDiagramTemplate template = new LinkedDiagramTemplate();
-      template.addObservation( file.getName(), ResourceUtilities.createURL( file), "project:/" + projectRelativePath, "zml", null );
+      template.addObservation( file.getName(), ResourceUtilities.createURL( file), "project:/" + projectRelativePath, "zml", false, null );
 
       final ObsdiagviewType tType = ObservationTemplateHelper.buildDiagramTemplateXML( template );
       

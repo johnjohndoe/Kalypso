@@ -111,14 +111,15 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
    * @param context
    * @param href
    * @param linktype
+   * @param ignoreExceptions
    * @param args
    */
   public void addObservation( final String themeName, final URL context,
-      final String href, final String linktype, final IVariableArguments args )
+      final String href, final String linktype, final boolean ignoreExceptions, final IVariableArguments args )
   {
     // create key according to observation link
     final PoolableObjectType key = new PoolableObjectType( linktype, href,
-        context );
+        context, ignoreExceptions );
 
     // fake theme because it won't be added directly to this template
     final DefaultDiagramTemplateTheme fakeTheme = new DefaultDiagramTemplateTheme();

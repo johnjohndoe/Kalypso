@@ -103,12 +103,13 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
    * @param context
    * @param href
    * @param linktype
+   * @param ignoreExceptions
    * @param args
    */
-  public void addObservation( String themeName, URL context, String href, String linktype, IVariableArguments args )
+  public void addObservation( final String themeName, final URL context, final String href, final String linktype, final boolean ignoreExceptions, final IVariableArguments args )
   {
     // create key according to observation link
-    final PoolableObjectType key = new PoolableObjectType( linktype, href, context );
+    final PoolableObjectType key = new PoolableObjectType( linktype, href, context, ignoreExceptions );
 
     // fake theme because it won't be added directly to this template
     DefaultTableViewTheme fakeTheme = new DefaultTableViewTheme();
