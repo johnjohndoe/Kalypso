@@ -22,13 +22,13 @@ import org.kalypso.util.status.MaskedNumber;
  */
 public class ObservationTimeSeries extends TimeSeriesCollection
 {
-  public ObservationTimeSeries( IObservation obs, IVariableArguments args ) throws SensorException
+  public ObservationTimeSeries( final IObservation obs, final IVariableArguments args ) throws SensorException
   {
-    super();
-
-    IAxis dateAxis = ObservationUtilities.findAxis( obs, Date.class )[0];
-    IAxis[] valueAxis = ObservationUtilities.findAxis( obs, Number.class );
-
+    this( obs, ObservationUtilities.findAxis( obs, Date.class )[0], ObservationUtilities.findAxis( obs, MaskedNumber.class ), args );
+  }
+  
+  public ObservationTimeSeries( final IObservation obs,  final IAxis dateAxis, final IAxis[] valueAxis, final IVariableArguments args ) throws SensorException
+  {
     try
     {
       for( int i = 0; i < valueAxis.length; i++ )
@@ -42,7 +42,7 @@ public class ObservationTimeSeries extends TimeSeriesCollection
           for( int j = 0; j < model.getCount(); j++ )
           {
             s.addOrUpdate( new FixedMillisecond( (Date)model.getElement( j, dateAxis.getPosition() ) ),
-                ((MaskedNumber)model.getElement( j, valueAxis[i].getPosition() ) ).doubleValue() );
+                ((Number)model.getElement( j, valueAxis[i].getPosition() ) ).doubleValue() );
           }
   
           addSeries( s );
@@ -54,4 +54,5 @@ public class ObservationTimeSeries extends TimeSeriesCollection
       throw new SensorException( e );
     }
   }
+  
 }
