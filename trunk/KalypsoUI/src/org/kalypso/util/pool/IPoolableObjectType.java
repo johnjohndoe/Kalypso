@@ -14,5 +14,7 @@ public interface IPoolableObjectType
   
   public Properties getSource();
   
+  public String getSourceAsString();
+  
   public IProject getProject();
 }

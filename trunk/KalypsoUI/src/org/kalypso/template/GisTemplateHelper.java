@@ -4,11 +4,14 @@ import java.io.OutputStream;
 
 import javax.xml.bind.JAXBException;
 
+import org.deegree.model.geometry.GM_Envelope;
+import org.deegree_impl.model.geometry.GeometryFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.gistableview.Gistableview;
+import org.kalypso.template.types.ExtentType;
 import org.xml.sax.InputSource;
 
 
@@ -48,5 +51,14 @@ public class GisTemplateHelper
     // TODO: create marschaller only once
     
     new ObjectFactory().createMarshaller().marshal( modellTemplate,outStream);  
+  }
+
+  public static GM_Envelope getBoundingBox( Gismapview gisview )
+  {
+     ExtentType extent = gisview.getExtent();
+    return GeometryFactory.createGM_Envelope(extent.getLeft(),
+          extent.getBottom(),
+          extent.getRight(),
+          extent.getTop());    
   }
 }
