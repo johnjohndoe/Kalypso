@@ -1,5 +1,7 @@
 package org.kalypso.util.pool;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -114,6 +116,8 @@ public class ResourcePool implements ILoaderListener
   {
     synchronized( m_listeners )
     {
+      final Collection toRemove = new ArrayList();
+      
       // von allen keys den Listener löschen
       for( final Iterator iter = m_listeners.entrySet().iterator(); iter.hasNext(); )
       {
@@ -126,11 +130,14 @@ public class ResourcePool implements ILoaderListener
         if( listeners.isEmpty() )
         {
           // aktuellen Eintrag löschen!
-          iter.remove();
+          toRemove.add( key );
 
           releaseKey( key );
         }
       }
+      
+      for( final Iterator iter = toRemove.iterator(); iter.hasNext(); )
+        m_listeners.remove( iter.next() );
     }
   }
 
@@ -280,7 +287,9 @@ public class ResourcePool implements ILoaderListener
       final Set listeners = (Set)m_listeners.get( key );
       if( listeners != null )
         listeners.clear();
-      m_listeners.remove( key );
+      
+      // TODO: falls noch immer die comodifikation exception kommt, dies löschen
+//      m_listeners.remove( key );
 
       final Object object = m_objects.get( key );
       if( object != null )

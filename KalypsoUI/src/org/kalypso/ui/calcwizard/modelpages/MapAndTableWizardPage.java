@@ -18,11 +18,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
@@ -109,7 +107,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
   private void createButtonPanel( final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new GridLayout( 4, false ) );
+    panel.setLayout( new GridLayout( 2, false ) );
     panel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     final Button button = new Button( panel, SWT.NONE | SWT.PUSH );
@@ -123,41 +121,8 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
       }
     } );
 
-    final Label label = new Label( panel, SWT.NONE );
-    label.setText( "Diagrammanzeige:" );
-    final GridData gridData = new GridData(  );
-    gridData.grabExcessHorizontalSpace = true;
-    gridData.horizontalAlignment = GridData.END;
-    label.setLayoutData( gridData );
-    
-    final Button radioQ = new Button( panel, SWT.RADIO );
-    radioQ.setText( "Abfluss" );
-    radioQ.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      public void widgetSelected( SelectionEvent e )
-      {
-        setObsIngoreType( TimeserieConstants.TYPE_WATERLEVEL );
-      }
-    } );
-
-    final Button radioW = new Button( panel, SWT.RADIO );
-    radioW.setText( "Wasserstand" );
-
-    radioW.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      public void widgetSelected( SelectionEvent e )
-      {
-        setObsIngoreType( TimeserieConstants.TYPE_RUNOFF );
-      }
-    } );
-
-    radioW.setSelection( true );
+    final Composite ignorePanel = createIgnoreButtonPanel( panel );
+    ignorePanel.setLayoutData( new GridData(  GridData.FILL_HORIZONTAL ) );
   }
 
   private void createDiagramPanel( final Composite parent )

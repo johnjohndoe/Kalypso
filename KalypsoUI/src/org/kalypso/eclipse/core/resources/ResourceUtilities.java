@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 
 /**
  * @author belger
@@ -74,7 +75,13 @@ public class ResourceUtilities
   
   public static IPath findPathFromURL( final URL u )
   {
-    final String urlpath = u.toString();
+    final String utostring = u.toString();
+    final String urlpath;
+    int ix = utostring.indexOf( '?' );
+    if( ix != -1 )
+      urlpath = utostring.substring( 0, ix );
+    else
+      urlpath = utostring;
     
     if( urlpath != null && urlpath.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
     {

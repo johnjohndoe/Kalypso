@@ -48,7 +48,7 @@ public class AbstractLoaderResourceDeltaVisitor implements
    */
   private String pathFor( final IResource resource )
   {
-    String path = resource.getLocation().toString();
+    String path = resource.toString();
 
     // blöder HACK weil sonst werden die Resourcen nicht richtig verglichen
     if( path.indexOf( "//" ) != -1 )

@@ -529,7 +529,7 @@ public class CalcWizard implements IWizard, IProjectProvider
    */
   public boolean isHelpAvailable()
   {
-    return false;
+    return true;
   }
 
   /**
