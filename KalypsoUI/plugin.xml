@@ -26,6 +26,7 @@
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.kalypso.util"/>
       <import plugin="org.kalypso.deegree"/>
+      <import plugin="org.kalypso.psiadapter"/>
    </requires>
    <extension
          point="org.eclipse.ui.editors">
@@ -47,15 +48,27 @@
    </extension>
    <extension
          point="org.eclipse.ui.views">
+      <category
+            name="Kalypso"
+            id="Kalypso"/>
       <view
             class="org.kalypso.util.repository.view.RepositoryExplorerPart"
             icon="icons/sample.gif"
             category="Kalypso"
             name="Zeitreihen Repository"
             id="org.kalypso.util.repository.view.RepositoryExplorerPart"/>
-      <category
-            name="Kalypso"
-            id="Kalypso"/>
+      <view
+            icon="icons/sample.gif"
+            class="org.kalypso.ogc.sensor.view.DiagramViewPart"
+            category="Kalypso"
+            name="Diagram QuickView"
+            id="org.kalypso.ogc.sensor.view.DiagramViewPart"/>
+      <view
+            icon="icons/sample.gif"
+            class="org.kalypso.ogc.sensor.view.TableViewPart"
+            category="Kalypso"
+            name="Table QuickView"
+            id="org.kalypso.ogc.sensor.view.TableViewPart"/>
    </extension>
    <extension
          point="org.eclipse.ui.editorActions">
