@@ -258,11 +258,6 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   {
     final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL
         | SWT.V_SCROLL | style );
-    //    scrolledComposite.setLayout( new GridLayout( ) );
-    //    final Composite composite = m_templateviewer.createControls(
-    // scrolledComposite );
-    //    composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
     m_panel = new Composite( scrolledComposite, SWT.NONE );
     m_panel.setLayout( new GridLayout() );
 

@@ -703,13 +703,11 @@
          point="org.kalypso.repository.factories">
       <repository
             factory="org.kalypso.ui.repository.factory.SWTZmlRepositoryFactory"
-            name="Lokales Verzeichnis"
-            class="org.kalypso.ui.repository.factory.ZmlRepositoryFactory">
+            name="Lokales Verzeichnis">
       </repository>
       <repository
             factory="org.kalypso.services.ocs.repository.ObservationServiceRepositoryFactory"
-            name="Kalypso Zeitreihendienst"
-            class="org.kalypso.services.ocs.repository.ObservationServiceRepositoryFactory">
+            name="Kalypso Zeitreihendienst">
       </repository>
    </extension>
 
