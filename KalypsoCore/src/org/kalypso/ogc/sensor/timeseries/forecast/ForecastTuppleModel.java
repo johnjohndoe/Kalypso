@@ -47,10 +47,10 @@ public class ForecastTuppleModel implements ITuppleModel
 
         if( date.compareTo( lastDate ) > 0 )
         {
-          Vector tupple = new Vector( axes.length );
+          final Object[] tupple = new Object[ axes.length ];
           
           for( int colIx = 0; colIx < axes.length; colIx++ )
-            tupple.set( axes[colIx].getPosition(), models[i].getElement( rowIx, axes[colIx]) );
+            tupple[ axes[colIx].getPosition() ] = models[i].getElement( rowIx, axes[colIx]);
           
           m_model.addTupple( tupple );
         }
