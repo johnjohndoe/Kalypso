@@ -6,11 +6,12 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
 
 /**
  * @author doemming
  */
-public class OperationTupplemodel implements ITuppleModel
+public class OperationTupplemodel extends AbstractTuppleModel
 {
   private final double m_operand;
 

@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,12 +11,19 @@ import java.util.Properties;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.IntervalMarker;
+import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.StandardXYItemRenderer;
-import org.jfree.chart.renderer.XYBarRenderer;
-import org.jfree.chart.renderer.XYItemRenderer;
+import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+import org.jfree.chart.renderer.xy.XYBarRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.ui.Layer;
+import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.Spacer;
+import org.jfree.ui.TextAnchor;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
 import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
@@ -32,6 +40,9 @@ import org.kalypso.util.factory.FactoryException;
  */
 public class ObservationPlot extends XYPlot
 {
+  /** color used for the internal markers this plot creates */
+  private static final Color MARKER_COLOR = new Color( 0f, 0f, 1f, 0.15f );
+
   private static final ConfigurableCachableObjectFactory OF;
 
   /** default line renderer */
@@ -57,7 +68,7 @@ public class ObservationPlot extends XYPlot
     OF = new ConfigurableCachableObjectFactory( props, false,
         ChartFactory.class.getClassLoader() );
   }
-  
+
   /** maps the diagram axis (from the template) to the chart axis */
   private transient final Map m_diag2chartAxis;
 
@@ -84,7 +95,7 @@ public class ObservationPlot extends XYPlot
 
     // space between axes and data area
     setAxisOffset( new Spacer( Spacer.ABSOLUTE, 5, 5, 5, 5 ) );
-    
+
     // standard renderer
     setRenderer( LINE_RENDERER );
 
@@ -171,6 +182,8 @@ public class ObservationPlot extends XYPlot
     m_diag2chartAxis.clear();
     m_domPos = 0;
     m_ranPos = 0;
+
+    clearDomainMarkers();
   }
 
   /**
@@ -239,6 +252,30 @@ public class ObservationPlot extends XYPlot
     }
 
     cds.addCurveSerie( xyc );
+
+    // check metadata of the observation for Vorhersage type
+    // and add a marker if the obs is a forecast
+    final IObservation obs = curve.getTheme().getObservation();
+    final MetadataList mdl = obs.getMetadataList();
+    final String range = mdl.getProperty( TimeserieConstants.MD_VORHERSAGE );
+    if( range != null )
+    {
+      final String[] splits = range.split( ";" );
+      if( splits.length == 2 )
+      {
+        try
+        {
+          long begin = TimeserieConstants.DEFAULT_DF.parse( splits[0] ).getTime();
+          long end = TimeserieConstants.DEFAULT_DF.parse( splits[1] ).getTime();
+          addDomainMarker( createMarker( begin, end, TimeserieConstants.MD_VORHERSAGE ),
+              Layer.BACKGROUND );
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
   }
 
   /**
@@ -272,7 +309,27 @@ public class ObservationPlot extends XYPlot
       return super.getRangeAxis();
     }
   }
-  
+
+  /**
+   * Helper that creates a marker
+   * 
+   * @param start
+   * @param end
+   * @param label
+   * @return marker
+   */
+  private final static Marker createMarker( double start, double end,
+      String label )
+  {
+    final IntervalMarker marker = new IntervalMarker( start, end );
+    marker.setPaint( MARKER_COLOR );
+    marker.setLabel( label );
+    marker.setLabelAnchor( RectangleAnchor.BOTTOM );
+    marker.setLabelTextAnchor( TextAnchor.CENTER );
+
+    return marker;
+  }
+
   /**
    * Returns the adequate renderer for the given axis type.
    * 

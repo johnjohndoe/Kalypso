@@ -7,6 +7,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 
 /**
@@ -14,7 +15,7 @@ import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
  * 
  * @author schlienger
  */
-public class ForecastTuppleModel implements ITuppleModel
+public class ForecastTuppleModel extends AbstractTuppleModel
 {
   private SimpleTuppleModel m_model;
 

@@ -10,7 +10,7 @@
       <library name="KalypsoUi.jar">
          <export name="*"/>
       </library>
-      <library name="lib/jfreechart-0.9.20.jar">
+      <library name="lib/jfreechart-0.9.21.jar">
          <export name="*"/>
       </library>
       <library name="lib/kalypsoservice_observation.jar">
@@ -22,7 +22,7 @@
       <library name="lib/kalypsoservice_metadoc.jar">
          <export name="*"/>
       </library>
-      <library name="lib/jcommon-0.9.5.jar">
+      <library name="lib/jcommon-0.9.6.jar">
          <export name="*"/>
       </library>
       <library name="lib/activation.jar">

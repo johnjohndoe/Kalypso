@@ -20,6 +20,13 @@ public interface ITuppleModel
   public int getCount() throws SensorException;
 
   /**
+   * @param axis
+   * @return the range of the given axis for this tupple model
+   * @throws SensorException
+   */
+  public IAxisRange getRangeFor( IAxis axis ) throws SensorException;
+  
+  /**
    * @param index
    * @param axis
    * @return element at index for axis

@@ -18,7 +18,7 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  * 
  * @author schlienger
  */
-public class SimpleTuppleModel implements ITuppleModel
+public class SimpleTuppleModel extends AbstractTuppleModel
 {
   /** values are backed by this table model */
   private DefaultTableModel m_tupples;
@@ -33,9 +33,9 @@ public class SimpleTuppleModel implements ITuppleModel
    */
   public SimpleTuppleModel( final List axes )
   {
-    this( (IAxis[]) axes.toArray(new IAxis[axes.size()]));
+    this( (IAxis[]) axes.toArray( new IAxis[axes.size()] ) );
   }
-  
+
   /**
    * Constructor with axes, empty data
    * 
@@ -140,7 +140,7 @@ public class SimpleTuppleModel implements ITuppleModel
     m_tupples = new DefaultTableModel( copyTupples.getCount(), m_axes.length );
 
     int realIx = 0;
-    
+
     for( int ix = 0; ix < copyTupples.getCount(); ix++ )
     {
       final Date d = (Date) copyTupples.getElement( ix, dateAxis );
@@ -153,11 +153,11 @@ public class SimpleTuppleModel implements ITuppleModel
 
           m_tupples.setValueAt( element, realIx, m_axes[i].getPosition() );
         }
-        
+
         realIx++;
       }
     }
-    
+
     // readjust row count according to real amount of rows
     m_tupples.setRowCount( realIx );
   }
@@ -180,7 +180,7 @@ public class SimpleTuppleModel implements ITuppleModel
   {
     m_tupples.addRow( tupple );
   }
-  
+
   /**
    * Adds a tupple at the end of the model
    * 

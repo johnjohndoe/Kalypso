@@ -2,7 +2,7 @@ package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.util.Date;
 
-import org.jfree.data.Series;
+import org.jfree.data.general.Series;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -76,9 +76,9 @@ class XYCurveSerie extends Series
     final Object obj = m_values.getElement( item, m_xAxis );
 
     if( obj instanceof Number )
-      return (Number)obj;
+      return (Number) obj;
     else if( obj instanceof Date )
-      return new Double( ( (Date)obj ).getTime() );
+      return new Double(( (Date)obj ).getTime());
 
     return null;
   }
@@ -88,7 +88,7 @@ class XYCurveSerie extends Series
     final Object obj = m_values.getElement( item, m_yAxis );
 
     if( obj instanceof Number )
-      return (Number)obj;
+      return (Number) obj;
 
     return null;
   }
