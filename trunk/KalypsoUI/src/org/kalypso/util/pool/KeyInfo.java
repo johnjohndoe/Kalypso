@@ -159,21 +159,22 @@ public final class KeyInfo extends Job implements ILoaderListener
    */
   protected IStatus run( final IProgressMonitor monitor )
   {
+    Object o = null;
+    IStatus status = null;
     synchronized( this )
     {
-      Object o = null;
-      final IStatus status = loadObject( monitor );
+      status = loadObject( monitor );
       o = m_object;
-
-      final IPoolListener[] ls = (IPoolListener[])m_listeners
-          .toArray( new IPoolListener[m_listeners.size()] );
-      // TRICKY: objectLoaded may add a new PoolListener for this key,
-      // so we cannot iterate over m_listeners
-      for( int i = 0; i < ls.length; i++ )
-        ls[i].objectLoaded( m_key, o, status );
-
-      return status;
     }
+
+    final IPoolListener[] ls = (IPoolListener[])m_listeners.toArray( new IPoolListener[m_listeners
+        .size()] );
+    // TRICKY: objectLoaded may add a new PoolListener for this key,
+    // so we cannot iterate over m_listeners
+    for( int i = 0; i < ls.length; i++ )
+      ls[i].objectLoaded( m_key, o, status );
+
+    return status;
   }
 
   /**
