@@ -104,7 +104,7 @@ public class ZmlFactory
    * 
    * @return parser factory
    */
-  private static synchronized ParserFactory getParserFactory( )
+  public static synchronized ParserFactory getParserFactory( )
   {
     if( m_parserFactory == null )
       m_parserFactory = new ParserFactory( getProperties(), ZmlFactory.class

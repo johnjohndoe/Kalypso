@@ -12,9 +12,9 @@
 		<complexContent>
 			<extension base="vc:abstractValueCompType">
 				<!-- value used for comparison -->
-				<attribute name="value" type="string" use="required"/>
+				<attribute name="value" type="string" use="required" />
 				<!-- mode used when comparing: one of inc (inclusive) or exc (exclusive) -->
-				<attribute name="mode" type="string" use="required"/>
+				<attribute name="modeIncl" type="boolean" />
 			</extension>
 		</complexContent>
 	</complexType>
@@ -38,8 +38,11 @@
 	<!-- 'between' comparison -->
 	<complexType name="betweenValueCompType">
 		<complexContent>
-			<extension base="vc:simpleValueCompType">
-				<attribute name="value2" type="string" use="required"/>
+			<extension base="vc:abstractValueCompType">
+				<attribute name="from" type="string" use="required"/>
+				<attribute name="to" type="string" use="required"/>
+				<attribute name="modeInclFrom" type="boolean" use="required"/>
+				<attribute name="modeInclTo" type="boolean" use="required"/>
 			</extension>
 		</complexContent>
 	</complexType>

@@ -12,7 +12,7 @@ public class ObservationUtilities
 {
   private ObservationUtilities()
   {
-    // not intended to be instanciated
+    //  not intended to be instanciated
   }
   
   /**

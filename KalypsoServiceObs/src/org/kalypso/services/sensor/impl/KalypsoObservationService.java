@@ -20,6 +20,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.beans.DateRangeBean;
 import org.kalypso.ogc.sensor.beans.OCSDataBean;
 import org.kalypso.ogc.sensor.beans.ObservationBean;
+import org.kalypso.ogc.sensor.filter.filters.ZmlFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryFactory;
@@ -130,6 +131,11 @@ public class KalypsoObservationService implements IObservationService
 
         m_mapId2Rep.put( rep.getIdentifier(), rep );
       }
+      
+      // tricky: set the list of repositories to the ZmlFilter so that
+      // it can directly fetch the observations without using the default
+      // URL resolving stuff
+      ZmlFilter.configureFor( m_repositories );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
@@ -153,6 +159,8 @@ public class KalypsoObservationService implements IObservationService
     m_mapItem2Beans.clear();
     m_mapId2Rep.clear();
 
+    ZmlFilter.configureFor( null );
+    
     // delete temp files
     for( final Iterator iter = m_mapBean2File.keySet().iterator(); iter
         .hasNext(); )

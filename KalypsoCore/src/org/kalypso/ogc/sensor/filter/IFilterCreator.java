@@ -16,7 +16,7 @@ public interface IFilterCreator
    * 
    * @param aft
    *          the binding object from which to create the FilterCreator
-   * @param obs
+   * @param baseObs
    *          [optional] the observation on which the filtering will be done.
    *          This argument is optional. Basically there are two possibilities
    *          to define the specification of a filter:
@@ -33,5 +33,5 @@ public interface IFilterCreator
    * @throws SensorException
    */
   public IObservationFilter createFilter( AbstractFilterType aft,
-      IObservation obs ) throws SensorException;
+      IObservation baseObs ) throws SensorException;
 }

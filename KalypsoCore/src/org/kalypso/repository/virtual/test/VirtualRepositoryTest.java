@@ -19,7 +19,7 @@ public class VirtualRepositoryTest extends TestCase
   {
     super.setUp();
     
-    m_vr = new VirtualRepository( null, "F:/kalypso/data/conf/IObservationService/virtual-zml-repository.xml", true );
+    m_vr = new VirtualRepository( null, "F:/kalypso/data/conf/IObservationService/virtual-zml-repository.xml", "Test", true );
   }
 
   public void testGetChildren( ) throws RepositoryException
