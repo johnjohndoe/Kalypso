@@ -46,10 +46,17 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
       try
       {
         File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe", GrafikViewActionDelegate.class.getResourceAsStream( "/org/kalypso/plugin/resources/exe/grafik.exe"), true );
+
+        // get the file where project resides in order to complete the relative path
+        String projectDir = m_currentFile.getProject().getLocation().toString();
         
         String str = XMLTools.xslTransform( m_currentFile.getContents(), xsl );
         
-        File file = File.createTempFile( "grafik", "vorlage", grafikExe.getParentFile() );
+        // complete relative path (prepared by the xslt, all relative path are preceded by _XXXX_)
+        str = str.replaceAll( "_XXXX_", projectDir );
+
+        // create the template file for the grafik tool
+        File file = File.createTempFile( "grafik", "vorlage" );
         file.deleteOnExit();
         
         FileWriter fw = new FileWriter( file );

@@ -5,7 +5,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationProvider;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.plugin.KalypsoGisPlugin;
@@ -28,7 +27,7 @@ public class ColumnPair implements ITableViewColumn, IPoolListener
   private final static Object DUMMY_OBJECT = new Object();
 
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool(
-      IObservationProvider.class );
+      IObservation.class );
 
   private final ColumnpairType m_col;
   private final PoolableObjectType m_key;
