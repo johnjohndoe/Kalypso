@@ -16,11 +16,6 @@ public interface ILoader
   public String getDescription();
   
   /**
-   * @deprecated it's not nice style to give an IProject to the loader.
-   */
-  public Object load( final Properties source, final IProject project, final IProgressMonitor monitor ) throws LoaderException;
-
-  /**
    * Loads an object from somewhere.
    * 
    * @param source information about the location of the resource to load
@@ -29,10 +24,15 @@ public interface ILoader
    */
   public Object load( final Properties source, final URL context, final IProgressMonitor monitor ) throws LoaderException;
   
+  
   /**
    * TODO: check if possible to use an URL instead of IProject here
+   * 
+   * @deprecated
    */
   public void save( final Properties source, final IProject project, final IProgressMonitor monitor, final Object data ) throws LoaderException;
+
+  public void save( final Properties source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException;
 
   /**
    * TODO: document this

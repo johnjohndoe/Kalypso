@@ -12,8 +12,11 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.eclipse.util.SetContentThread;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.GMLHelper;
@@ -60,7 +63,7 @@ public class GmlLoader extends AbstractLoader
       final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
 
       final KalypsoFeatureLayer layer = new KalypsoFeatureLayer( ft.getName(), ft, crs, workspace );
-      // TODO: das folgende könnte eigentlich der Konstruktor machen
+      // TODO: das folgende könnte eigentlich der Konstruktor vom Layer machen
       final Feature[] features = workspace.getFeatures( ft );
       for( int j = 0; j < features.length; j++ )
       {
@@ -119,21 +122,40 @@ public class GmlLoader extends AbstractLoader
 
     try
     {
-      // erstmal: wohin?
+      final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)data;
+      final Feature rootFeature = layer.getWorkspace().getRootFeature();
+
       final URL gmlURL = UrlResolver.resolveURL( context, gmlPath );
   
       // ists im Workspace?
-      Writer w = null;
       final IFile file = ResourceUtilities.findFileFromURL( gmlURL );
-      if( file == null && gmlURL.getProtocol().equals( "file" ) )
-          w = new FileWriter( new File( gmlURL.getFile() ) );
-
-      if( w != null )
+      if( file != null )
       {
-        final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)data;
-        final Feature rootFeature = layer.getWorkspace().getRootFeature();
+        final SetContentThread thread = new SetContentThread( file, !file.exists(), false, true, new NullProgressMonitor() ) 
+        {
+          protected void write( final Writer writer ) throws Throwable
+          {
+            GmlSerializer.serializeFeature( writer, rootFeature, new NullProgressMonitor() );            
+          }
+        };
+        thread.start();
+        thread.join();
+        
+        final CoreException fileException = thread.getFileException();
+        if( fileException != null )
+          throw fileException;
+        
+        final Throwable thrown = thread.getThrown();
+        if( thrown != null )
+          throw thrown;
+      }
+      else if( file == null && gmlURL.getProtocol().equals( "file" ) )
+      {
+        final Writer w = new FileWriter( new File( gmlURL.getFile() ) );
         GmlSerializer.serializeFeature( w, rootFeature, monitor );
       }
+      else
+        throw new LoaderException( "Die URL kann nicht beschrieben werden: " + gmlURL );
     }
     catch( final MalformedURLException e )
     {
@@ -141,7 +163,7 @@ public class GmlLoader extends AbstractLoader
       
       throw new LoaderException( "Der angegebene Pfad ist ungültig: " + gmlPath + "\n" + e.getLocalizedMessage(), e );
     }
-    catch( final Exception e )
+    catch( final Throwable e )
     {
       e.printStackTrace();
       throw new LoaderException( "Fehler beim Speichern der URL\n" + e.getLocalizedMessage(), e );

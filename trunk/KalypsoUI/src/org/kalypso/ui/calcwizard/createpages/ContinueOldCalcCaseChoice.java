@@ -1,6 +1,7 @@
 package org.kalypso.ui.calcwizard.createpages;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
@@ -25,6 +26,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.CalcCaseCollector;
 import org.kalypso.ui.nature.ModelNature;
 
@@ -46,7 +48,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
 
   private ListViewer m_viewer;
 
-  private Collection m_usedCalcCases = null;
+  private Collection m_oldCalcCases = new LinkedList();
 
   private Button m_checkbox;
 
@@ -75,7 +77,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     final ListViewer viewer = new ListViewer( panel, SWT.BORDER ); 
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new WorkbenchLabelProvider() );
-    viewer.setInput( m_page.getCalcCases() );
+    viewer.setInput( m_oldCalcCases );
     viewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final Button checkbox = new Button( panel, SWT.CHECK );
@@ -98,7 +100,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
       }
       
     } );
-    
+
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
@@ -118,7 +120,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     {
       update( new NullProgressMonitor() );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
     }
@@ -134,11 +136,6 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     m_folder = folder;
   }
   
-  public boolean canFlipToNextPage()
-  {
-    return m_folder != null;
-  }
-
   public void update( final IProgressMonitor monitor ) throws CoreException
   {
     final ModelNature nature = (ModelNature)m_project.getNature( ModelNature.ID );
@@ -149,19 +146,20 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     prognoseFolder.accept( calcCaseCollector );
     final IFolder[] calcCases = calcCaseCollector.getCalcCases();
 
-    final List oldCases = m_page.getCalcCases();
-    oldCases.clear();
+    final List usedCalcCases = m_page.getCalcCases();
+    
+    m_oldCalcCases.clear();
 
     IFolder newSelect = null;
-    if( m_usedCalcCases != null )
+    if( usedCalcCases != null )
     {
       for( int i = 0; i < calcCases.length; i++ )
       {
         final IFolder folder = calcCases[i];
         
-        if( !m_usedCalcCases.contains( folder ) )
+        if( !usedCalcCases.contains( folder ) )
         {
-          oldCases.add( folder );
+          m_oldCalcCases.add( folder );
           if( newSelect == null )
             newSelect = folder;
         }
@@ -177,7 +175,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
         public void run()
         {
           viewer.refresh();
-          
+
           if( newSelectFinal == null )
             viewer.setSelection( StructuredSelection.EMPTY );
           else  
@@ -185,13 +183,19 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
         }
       } );
     }
+    
+    m_page.getWizard().getContainer().updateButtons();
   }
 
   /**
+   * @throws CoreException
    * @see org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice#perform(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IFolder perform( final IProgressMonitor monitor )
+  public IFolder perform( final IProgressMonitor monitor ) throws CoreException
   {
+    if( m_folder == null )
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Es muss eine vorhandene Berechnung ausgewählt werden", null ) );
+    
     return m_folder;
   }
 

@@ -296,6 +296,8 @@ public class CalcWizard implements IWizard, IProjectProvider
         MessageDialog.openError( getContainer().getShell(), "Interner Fehler",
             "Fehler beim Aufruf der nächsten Wizard-Seite: " + te.getLocalizedMessage() );
       }
+      
+      return false;
     }
     return true;
   }

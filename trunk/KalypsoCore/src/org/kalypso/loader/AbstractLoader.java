@@ -37,23 +37,6 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#load(java.util.Properties,
-   *      org.eclipse.core.resources.IProject,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   * 
-   * @deprecated
-   */
-  public final Object load( final Properties source, final IProject project,
-      final IProgressMonitor monitor ) throws LoaderException
-  {
-    final Object newObject = loadIntern( source, project, monitor );
-
-    m_objectList.add( newObject );
-
-    return newObject;
-  }
-
-  /**
    * @see org.kalypso.loader.ILoader#load(java.util.Properties, java.net.URL,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
@@ -65,18 +48,6 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
     m_objectList.add( newObject );
 
     return newObject;
-  }
-
-  /**
-   * removed the abstract modifier and let it throw exception because method is
-   * deprecated
-   * 
-   * @deprecated see load( Properties, IProject, IProgressMonitor )
-   */
-  protected Object loadIntern( final Properties source, final IProject project,
-      final IProgressMonitor monitor ) throws LoaderException
-  {
-    throw new UnsupportedOperationException();
   }
 
   /**
@@ -157,5 +128,11 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
       final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
     throw new LoaderException( "Operation not supported" );
+  }
+  
+  public void save( final Properties source, final URL context,
+      final IProgressMonitor monitor, final Object data ) throws LoaderException
+  {
+    throw new UnsupportedOperationException();
   }
 }

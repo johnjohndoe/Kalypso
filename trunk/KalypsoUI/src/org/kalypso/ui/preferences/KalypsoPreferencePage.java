@@ -69,9 +69,11 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
    */
   public boolean performOk( )
   {
+    final boolean result = super.performOk();
+
     // even if on shutdown the preferences are saved, we save them in case of a platfrom crash
     KalypsoGisPlugin.getDefault().savePluginPreferences();
     
-    return true;
+    return result;
   }
 }

@@ -1,6 +1,5 @@
 package org.kalypso.util.transformation;
 
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.util.Properties;
@@ -100,9 +99,8 @@ public class ObservationResolver extends AbstractTransformation
       final SetContentThread thread = new SetContentThread( gmlFile, false, false, true,
           new NullProgressMonitor() )
       {
-        protected void writeStream() throws Throwable
+        protected void write( final Writer writer ) throws Throwable
         {
-          final Writer writer = new OutputStreamWriter( getOutputStream(), gmlFile.getCharset() );
           GmlSerializer.serializeFeature( writer, workspace.getRootFeature(),
               new NullProgressMonitor() );
         }
@@ -164,10 +162,10 @@ public class ObservationResolver extends AbstractTransformation
         final SetContentThread thread = new SetContentThread( targetfile, !targetfile.exists(), false, true,
             new NullProgressMonitor() )
         {
-          protected void writeStream() throws Throwable
+          protected void write( final Writer w ) throws Throwable
           {
             final ObservationType type = ZmlFactory.createXML( obs, null );
-            ZmlFactory.getMarshaller().marshal( type, getOutputStream() );
+            ZmlFactory.getMarshaller().marshal( type, w );
           }
         };
         thread.start();
