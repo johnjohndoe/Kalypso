@@ -13,6 +13,22 @@ import org.deegree.model.feature.GMLWorkspace;
  */
 public class GetSelectionVisitor implements FeatureVisitor
 {
+  public static List getSelectedFeatures( final GMLWorkspace workspace, final int selectionID )
+  {
+    final GetSelectionVisitor visitor = new GetSelectionVisitor( selectionID );
+    try
+    {
+      workspace.accept( visitor, workspace.getRootFeature(), FeatureVisitor.DEPTH_ZERO );
+    }
+    catch( final Throwable e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+    
+    return visitor.getSelectedFeatures();
+  }
+
   public static List getSelectedFeatures( final GMLWorkspace workspace, final FeatureType ft, final int selectionID )
   {
     final GetSelectionVisitor visitor = new GetSelectionVisitor( selectionID );

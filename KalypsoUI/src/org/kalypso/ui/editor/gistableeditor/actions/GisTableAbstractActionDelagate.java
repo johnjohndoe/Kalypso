@@ -1,9 +1,9 @@
 package org.kalypso.ui.editor.gistableeditor.actions;
 
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
@@ -11,8 +11,7 @@ import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
 /**
  * @author belger
  */
-public abstract class GisTableAbstractActionDelagate implements IActionDelegate2,
-    IEditorActionDelegate
+public abstract class GisTableAbstractActionDelagate implements IEditorActionDelegate, ModellEventListener
 {
   private GisTableEditor m_editor;
 
@@ -24,44 +23,38 @@ public abstract class GisTableAbstractActionDelagate implements IActionDelegate2
    */
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
-//    if( m_editor != null )
-//      m_editor.removeSelectionChangedListener( this );
-
-    m_editor = (GisTableEditor)targetEditor;
     m_action = action;
 
-//    if( m_editor != null )
-//      m_editor.addSelectionChangedListener( this );
+    if( m_editor != null )
+      m_editor.getLayerTable().removeModellListener( this );
 
-//    final boolean bEnabled = m_editor == null ? false : isEnabled( m_editor.getSelection() );
-//    action.setEnabled( bEnabled );
-    
-//    final boolean bChecked = m_editor == null ? false : isChecked();
-//    action.setChecked(bChecked);
+    m_editor = (GisTableEditor)targetEditor;
+
+    if( m_editor != null )
+      m_editor.getLayerTable().addModellListener( this );
+
+    refreshAction();
   }
-
+  
   /**
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    action.getClass();
-  // nichts tun
+    m_action = action;
   }
 
-  public GisTableEditor getEditor()
+  protected abstract void refreshAction();
+  
+  protected GisTableEditor getEditor()
   {
     return m_editor;
   }
-
-  /**
-   * @see org.eclipse.ui.IActionDelegate2#dispose()
-   */
-  public void dispose()
+  
+  protected IAction getAction()
   {
-//    if( m_editor != null )
-//      m_editor.removeSelectionChangedListener( this );
+    return m_action;
   }
   
   /**
@@ -69,20 +62,15 @@ public abstract class GisTableAbstractActionDelagate implements IActionDelegate2
    */
   public void init( final IAction action )
   {
-    // nichts zu tun  
+    m_action = action;
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate2#runWithEvent(org.eclipse.jface.action.IAction,
-   *      org.eclipse.swt.widgets.Event)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
    */
-  public void runWithEvent( final IAction action, final Event event )
+  public void onModellChange( final ModellEvent modellEvent )
   {
-    // event wird ignoriert
-
-    run( action );
+    refreshAction();
   }
 
-  protected abstract boolean isEnabled( final ISelection selection );
-  protected abstract boolean isChecked();
 }

@@ -33,7 +33,7 @@ public abstract class AbstractKalypsoTheme implements IKalypsoTheme
   public final void setName( final String name )
   {
     m_name = name;
-//    fireModellEvent( null );
+    fireModellEvent( null );
   }
 
   /**

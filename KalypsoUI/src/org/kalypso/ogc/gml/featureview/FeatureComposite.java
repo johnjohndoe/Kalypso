@@ -201,6 +201,7 @@ public class FeatureComposite implements IFeatureControl
     }
 
     // control erzeugen!
+    final Feature feature = getFeature();
     if( controlType instanceof LabelType )
     {
       final LabelType labelType = (LabelType)controlType;
@@ -212,7 +213,7 @@ public class FeatureComposite implements IFeatureControl
       final String propertyName = labelType.getProperty();
       if( propertyName != null && propertyName.length() > 0 )
       {
-        final FeatureTypeProperty ftp = getFeature().getFeatureType().getProperty( propertyName );
+        final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
         final Annotation annotation = ftp.getAnnotation( "de" );
         if( annotation != null )
         {
@@ -229,7 +230,8 @@ public class FeatureComposite implements IFeatureControl
 
       final String propertyName = editorType.getProperty();
 
-      final TextFeatureControl tfc = new TextFeatureControl( getFeature(), propertyName );
+      final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
+      final TextFeatureControl tfc = new TextFeatureControl( feature, ftp );
 
       final Control control = tfc.createControl( parent, editorType.getStyle() );
       tfc.setEnabled( editorType.isEditable() );
@@ -243,8 +245,8 @@ public class FeatureComposite implements IFeatureControl
       final ButtonType buttonType = (ButtonType)controlType;
 
       final String propertyName = buttonType.getProperty();
-
-      final ButtonFeatureControl bfc = new ButtonFeatureControl( getFeature(), propertyName );
+      final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
+      final ButtonFeatureControl bfc = new ButtonFeatureControl( feature, ftp );
 
       final Control control = bfc.createControl( parent, buttonType.getStyle() );
 

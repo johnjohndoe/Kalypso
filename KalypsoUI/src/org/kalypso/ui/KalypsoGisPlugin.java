@@ -29,8 +29,8 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
-import org.kalypso.ogc.gml.table.celleditors.DefaultCellEditorFactory;
-import org.kalypso.ogc.gml.table.celleditors.ICellEditorFactory;
+import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureControlFactory;
+import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.repository.DefaultRepositoryContainer;
@@ -66,8 +66,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private CS_CoordinateSystem myCoordinateSystem = null;
 
-  private Properties m_ftpProperties;
-
   /**
    * Contains the list of available repositories that can be selected by the
    * user. For each available repository, the IRepositoryFactory is provided.
@@ -93,6 +91,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private final Properties m_poolproperties = new Properties();
 
   private ILoaderFactory m_loaderFactory;
+
+  private DefaultFeatureControlFactory m_defaultFeatureControlFactory;
 
   /**
    * The constructor. Manages the configuration of the kalypso client.
@@ -477,37 +477,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return props;
   }
 
-  private Properties getFeatureTypeCellEditorProperties( )
-  {
-    if( m_ftpProperties == null )
-    {
-      m_ftpProperties = new Properties();
-
-      try
-      {
-        m_ftpProperties.load( KalypsoGisPlugin.class
-            .getResourceAsStream( "resources/featureTypeEditor.properties" ) );
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    return m_ftpProperties;
-  }
-
-  /**
-   * Erzeugt jedesmal eine neue Factory. N?tig, weil die Factory die
-   * CellEditoren cached, diese aber mit schliessen der Tabelle disposed werden.
-   * @return neue Factory
-   */
-  public ICellEditorFactory createFeatureTypeCellEditorFactory( )
-  {
-    return new DefaultCellEditorFactory( getFeatureTypeCellEditorProperties(),
-        this.getClass().getClassLoader() );
-  }
-
   public SelectionIdProvider getSelectionIdProvider( )
   {
     return mySelectionIdProvider;
@@ -581,5 +550,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       configure( m_mainConf );
       configureServiceProxyFactory( m_mainConf );
     }
+  }
+
+  public IFeatureModifierFactory createFeatureTypeCellEditorFactory()
+  {
+    if( m_defaultFeatureControlFactory == null )
+      m_defaultFeatureControlFactory = new DefaultFeatureControlFactory();
+    return m_defaultFeatureControlFactory;
   }
 }

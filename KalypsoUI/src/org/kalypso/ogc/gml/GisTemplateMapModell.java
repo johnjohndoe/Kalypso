@@ -246,4 +246,12 @@ public class GisTemplateMapModell implements IMapModell
     else
       throw new UnsupportedOperationException( "theme must be of type " + GisTemplateFeatureTheme.class.getName() );
   }
+
+  /**
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
+   */
+  public void onModellChange( ModellEvent modellEvent )
+  {
+    fireModellEvent( modellEvent );
+  }
 }
