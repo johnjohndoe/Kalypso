@@ -92,6 +92,18 @@ public class ObservationTable extends JTable implements ITemplateEventListener
           checkForecast( col.getTheme().getObservation() );
         }
 
+        // SHOW/HIDE A COLUMN
+        if( evt.isType( TemplateEvent.TYPE_SHOW_STATE )
+            && evt.getObject() instanceof ITableViewColumn )
+        {
+          final ITableViewColumn col = (ITableViewColumn) evt.getObject();
+          
+          if( col.isShown() )
+            m_model.addTableViewColumn( col );
+          else
+            m_model.removeTableViewColumn( col );
+        }
+        
         // REMOVE THEME
         if( evt.getType() == TemplateEvent.TYPE_REMOVE
             && evt.getObject() instanceof ITableViewTheme )

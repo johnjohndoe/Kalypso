@@ -514,4 +514,21 @@ public class ObservationTableModel extends AbstractTableModel
     for( Iterator it = cols.iterator(); it.hasNext(); )
       addTableViewColumn( (ITableViewColumn) it.next() );
   }
+
+  /**
+   * Removes one column
+   * 
+   * @param col
+   * @throws SensorException
+   */
+  public void removeTableViewColumn( final ITableViewColumn col ) throws SensorException
+  {
+    m_columns.remove( col );
+    
+    final ArrayList cols = new ArrayList( m_columns );
+    clearColumns();
+    
+    for( Iterator it = cols.iterator(); it.hasNext(); )
+      addTableViewColumn( (ITableViewColumn) it.next() );
+  }
 }

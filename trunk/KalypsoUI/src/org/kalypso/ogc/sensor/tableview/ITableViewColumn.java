@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.tableview;
 
+import org.kalypso.eclipse.ui.IViewable;
 import org.kalypso.ogc.sensor.IAxis;
 
 
@@ -8,13 +9,15 @@ import org.kalypso.ogc.sensor.IAxis;
  * 
  * @author schlienger
  */
-public interface ITableViewColumn
+public interface ITableViewColumn extends IViewable
 {
   public String getName( );
   public void setName( final String name );
 
   public boolean isEditable( );
 
+  public void setShown( boolean shown );
+  
   public int getWidth( );
   public void setWidth( final int width );
 

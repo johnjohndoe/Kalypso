@@ -70,7 +70,7 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
     {
       final TypeObservation tobs = (TypeObservation) it.next();
 
-      final LinkedTableViewTheme theme = new LinkedTableViewTheme( tobs );
+      final LinkedTableViewTheme theme = new LinkedTableViewTheme( this, tobs );
 
       final PoolableObjectType key = new PoolableObjectType(
           tobs.getLinktype(), tobs.getHref(), context );

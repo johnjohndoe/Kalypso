@@ -2,7 +2,9 @@ package org.kalypso.ogc.sensor.tableview.impl;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
+import org.kalypso.ogc.sensor.template.TemplateEvent;
 
 /**
  * Default implementation of the <code>ITableViewColumn</code> interface
@@ -25,6 +27,10 @@ public class DefaultTableViewColumn implements ITableViewColumn
 
   private boolean m_dirty = false;
 
+  private final ITableViewTemplate m_template;
+
+  private boolean m_shown = true;
+
   /**
    * Constructor
    * 
@@ -34,10 +40,11 @@ public class DefaultTableViewColumn implements ITableViewColumn
    * @param keyAxis
    * @param valueAxis
    * @param theme
+   * @param template
    */
   public DefaultTableViewColumn( final String name, final boolean isEditable,
       final int width, final IAxis keyAxis, final IAxis valueAxis,
-      final ITableViewTheme theme )
+      final ITableViewTheme theme, final ITableViewTemplate template )
   {
     m_name = name;
     m_isEditable = isEditable;
@@ -45,6 +52,7 @@ public class DefaultTableViewColumn implements ITableViewColumn
     m_keyAxis = keyAxis;
     m_valueAxis = valueAxis;
     m_theme = theme;
+    m_template = template;
   }
 
   /**
@@ -142,5 +150,26 @@ public class DefaultTableViewColumn implements ITableViewColumn
   public void setName( String name )
   {
     m_name = name;
+  }
+
+  /**
+   * @see org.kalypso.eclipse.ui.IViewable#isShown()
+   */
+  public boolean isShown( )
+  {
+    return m_shown;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#setShown(boolean)
+   */
+  public void setShown( boolean shown )
+  {
+    if( shown != m_shown )
+    {
+      m_shown = shown;
+
+      m_template.fireTemplateChanged( new TemplateEvent( this, TemplateEvent.TYPE_SHOW_STATE ) );
+    }
   }
 }
