@@ -1,16 +1,16 @@
-package org.kalypso.services.calcjob.impl.jobs;
+package org.kalypso.services.calculation.impl.jobs;
 
-import org.kalypso.services.calcjob.CalcJobDescription;
+import org.kalypso.services.calculation.CalcJobBean;
 
 /**
  * @author gernot
  */
 public class CalcJobProgressMonitor
 {
-  private CalcJobDescription m_description;
+  private CalcJobBean m_description;
   private boolean m_isCanceled;
 
-  public CalcJobProgressMonitor( final CalcJobDescription description )
+  public CalcJobProgressMonitor( final CalcJobBean description )
   {
     m_description = description;
   }

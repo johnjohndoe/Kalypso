@@ -1,4 +1,4 @@
-package org.kalypso.services.calcjob.spree;
+package org.kalypso.services.calculation.spree;
 
 import java.io.File;
 import java.util.HashMap;
