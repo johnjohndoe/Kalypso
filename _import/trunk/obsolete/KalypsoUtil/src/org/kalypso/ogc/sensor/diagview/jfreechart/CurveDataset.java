@@ -18,14 +18,17 @@ import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 class CurveDataset extends AbstractSeriesDataset implements XYDataset
 {
   private IAxis m_xAxis = null;
+
   private IAxis m_yAxis = null;
+
   private final ICurve m_curve;
+
   private final ITuppleModel m_values;
-  
+
   public CurveDataset( final ICurve curve ) throws SensorException
   {
     m_curve = curve;
-    m_values = m_curve.getObservation().getValues(null);
+    m_values = m_curve.getObservation().getValues( null );
 
     IAxisMapping[] mings = curve.getMappings();
 
@@ -36,6 +39,16 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
       else
         m_yAxis = mings[i].getObservationAxis();
     }
+  }
+
+  public IAxis getXAxis()
+  {
+    return m_xAxis;
+  }
+
+  public IAxis getYAxis()
+  {
+    return m_yAxis;
   }
 
   /**
@@ -68,10 +81,10 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
   public Number getXValue( int series, int item )
   {
     final Object obj = m_values.getElement( item, m_xAxis.getPosition() );
-    
+
     if( obj instanceof Number )
       return (Number)obj;
-    
+
     throw new NoSuchElementException();
   }
 
@@ -89,10 +102,10 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
   public Number getYValue( int series, int item )
   {
     final Object obj = m_values.getElement( item, m_yAxis.getPosition() );
-    
+
     if( obj instanceof Number )
       return (Number)obj;
-    
+
     throw new NoSuchElementException();
   }
 

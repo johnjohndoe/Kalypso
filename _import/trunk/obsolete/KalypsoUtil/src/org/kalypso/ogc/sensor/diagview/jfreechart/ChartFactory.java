@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Vector;
 
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.StandardXYItemRenderer;
-import org.kalypso.ogc.sensor.diagview.IAxisMapping;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.ICurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
@@ -50,14 +51,35 @@ public class ChartFactory
     XYPlot plot = new XYPlot();
 
     IDiagramAxis[] diagAxes = template.getAxisList();
-    Map chartAxes = new Hashtable( diagAxes.length );
+
+    Map diag2chartAxis = new Hashtable( diagAxes.length );
+    Vector chartAxes = new Vector( diagAxes.length );
+
     for( int i = 0; i < diagAxes.length; i++ )
-      prepareChartAxis( chartAxes, diagAxes[i], plot );
+    {
+      ValueAxis va = prepareChartAxis( i, diagAxes[i], plot );
+
+      diag2chartAxis.put( diagAxes[i], va );
+      chartAxes.add( va );
+    }
 
     ICurve[] curves = template.getCurveList();
-    Map curveDatasets = new Hashtable();
     for( int i = 0; i < curves.length; i++ )
-      prepareCurveDataset( curveDatasets, curves[i].getMappings(), plot );
+    {
+      try
+      {
+        CurveDataset cds = new CurveDataset( curves[i] );
+
+        plot.setDataset( i, cds );
+
+        plot.mapDatasetToDomainAxis( i, chartAxes.indexOf( diag2chartAxis.get( cds.getXAxis() ) ) );
+        plot.mapDatasetToRangeAxis( i, chartAxes.indexOf( diag2chartAxis.get( cds.getYAxis() ) ) );
+      }
+      catch( SensorException e )
+      {
+        throw new FactoryException( e );
+      }
+    }
 
     plot.setRenderer( new StandardXYItemRenderer( StandardXYItemRenderer.LINES ) );
     JFreeChart chart = new JFreeChart( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, plot,
@@ -69,7 +91,7 @@ public class ChartFactory
   /**
    * @throws FactoryException
    */
-  private static void prepareChartAxis( final Map chartAxes, final IDiagramAxis diagAxis,
+  private static ValueAxis prepareChartAxis( final int pos, final IDiagramAxis diagAxis,
       final XYPlot plot ) throws FactoryException
   {
     ValueAxis vAxis = (ValueAxis)m_objFactory.getObjectInstance( diagAxis.getDataType(),
@@ -80,29 +102,20 @@ public class ChartFactory
     vAxis.setLowerMargin( 0.02 );
     vAxis.setUpperMargin( 0.02 );
 
-    chartAxes.put( diagAxis, vAxis );
-
     AxisLocation loc = getLocation( diagAxis );
 
     if( diagAxis.getDirection().equals( IDiagramAxis.DIRECTION_HORIZONTAL ) )
     {
-      plot.setDomainAxis( chartAxes.size(), vAxis );
-      plot.setDomainAxisLocation( chartAxes.size(), loc );
+      plot.setDomainAxis( pos, vAxis );
+      plot.setDomainAxisLocation( pos, loc );
     }
     else
     {
-      plot.setRangeAxis( chartAxes.size(), vAxis );
-      plot.setRangeAxisLocation( chartAxes.size(), loc );
+      plot.setRangeAxis( pos, vAxis );
+      plot.setRangeAxisLocation( pos, loc );
     }
-  }
 
-  /**
-   *  
-   */
-  private static void prepareCurveDataset( final Map ds, final IAxisMapping[] mappings,
-      final XYPlot plot )
-  {
-    //plot.setDataset(  );
+    return vAxis;
   }
 
   /**

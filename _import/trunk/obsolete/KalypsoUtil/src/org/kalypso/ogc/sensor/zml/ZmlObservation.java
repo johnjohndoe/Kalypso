@@ -159,7 +159,7 @@ public class ZmlObservation implements IObservation
 
       m_axisList = new ArrayList( tmpList.size() );
 
-      for( int i = 0; i < m_axisList.size(); i++ )
+      for( int i = 0; i < tmpList.size(); i++ )
       {
         AxisType tmpAxis = (AxisType)tmpList.get( i );
 
@@ -214,11 +214,7 @@ public class ZmlObservation implements IObservation
   public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {
     if( m_model == null )
-    {
-      getAxisList();
-
       m_model = new ZmlTuppleModel( m_url, (ZmlAxis[])getAxisList() );
-    }
 
     return m_model;
   }
