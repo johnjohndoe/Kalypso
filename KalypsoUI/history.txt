@@ -7,6 +7,20 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 ###############################################################################
 
 ----------------
+Version 0.0...
+----------------
+- ZML-Format erweitert: Values können jetzt in einem CDATA-Block im <data/> Element
+  verlinkt werden. Dabei benutzt man die selbe Methodik wie bei verlinkte Dateien,
+  nur das href-Attribut soll leer sein oder "#data" beinhalten.
+- AbstractCalcWizardPage: beim WE-Modell z.B. werden die ZMLs nur einzeln in der Tabelle
+  angezeigt. Dies führte zum Bug: Änderungen gehen verloren, sobald man die Selektion
+  in der Karte wächselt. Jetzt ist dieses Bug behoben: nach eine Selektion wird die
+  Observation gespeichert (siehe AbstractCalcWizardPage.onModellChange())
+- Die Obs-Diag Legende im Wizard wird wieder angezeigt. Problem war aufgetaucht
+  nach dem letzten Refactoring. Der showLegend flag war immer auf false gesetzt
+  im DiagViewTemplate-Konstruktor.
+
+----------------
 Version 0.0.3 (Deploy vom 26.01.2005)
 ----------------
 - Refactoring in Observation Table und Diagram Templates (viele Änderungen)

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml;
 
 import java.io.IOException;
@@ -89,8 +89,17 @@ import org.kalypso.zml.AxisType.ValueArrayType;
 import org.kalypso.zml.AxisType.ValueLinkType;
 import org.xml.sax.InputSource;
 
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+
 /**
- * Factory for ZML-Files.
+ * Factory for ZML-Files. ZML is a flexible format that covers following
+ * possibilities:
+ * <ul>
+ * <li>inlined: values are stored as array of items in each axis definition
+ * <li>linked: values are stored in an external CSV-like file
+ * <li>block-inlined: values are stored CSV-like, but in the zml file itself
+ * </ul>
  * 
  * @author schlienger
  */
@@ -266,6 +275,8 @@ public class ZmlFactory
     final List tmpList = obs.getAxis();
     final Map valuesMap = new HashMap( tmpList.size() );
 
+    final String data = obs.getData(); // data is optional and can be null
+
     for( int i = 0; i < tmpList.size(); i++ )
     {
       final AxisType tmpAxis = (AxisType) tmpList.get( i );
@@ -288,7 +299,7 @@ public class ZmlFactory
 
         parser = getParserFactory().createParser( type, format );
 
-        values = createValues( context, tmpAxis, parser );
+        values = createValues( context, tmpAxis, parser, data );
       }
       catch( Exception e ) // generic exception caught for simplicity
       {
@@ -348,8 +359,14 @@ public class ZmlFactory
    * Parses the values and create the corresponding objects.
    * 
    * @param context
+   *          context into which the original file exists
    * @param axisType
+   *          binding object for axis
    * @param parser
+   *          configured parser enabled for parsing the values according to axis
+   *          spec
+   * @param data
+   *          [optional] contains the data-block if observation is block-inline
    * @return corresponding values depending on value axis type
    * 
    * @throws ParserException
@@ -357,8 +374,8 @@ public class ZmlFactory
    * @throws IOException
    */
   private static IZmlValues createValues( final URL context,
-      final AxisType axisType, final IParser parser ) throws ParserException,
-      MalformedURLException, IOException
+      final AxisType axisType, final IParser parser, final String data )
+      throws ParserException, MalformedURLException, IOException
   {
     final ValueArrayType va = axisType.getValueArray();
     if( va != null )
@@ -367,7 +384,7 @@ public class ZmlFactory
     // loader for linked values, here we specify where base location is
     final ValueLinkType vl = axisType.getValueLink();
     if( vl != null )
-      return new ZmlLinkValues( vl, parser, context );
+      return new ZmlLinkValues( vl, parser, context, data );
 
     throw new IllegalArgumentException( "AxisType is not supported: "
         + axisType.toString() );
@@ -530,12 +547,41 @@ public class ZmlFactory
   {
     final Marshaller marshaller = OF.createMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    
     return marshaller;
   }
 
   private static Unmarshaller getUnmarshaller( ) throws JAXBException
   {
-    return OF.createUnmarshaller();
+    final Unmarshaller unmarshaller = OF.createUnmarshaller();
+
+//    unmarshaller.setProperty( "http://apache.org/xml/features/validation/schema/normalized-value", Boolean.FALSE );
+    
+    return unmarshaller;
+  }
+
+  /**
+   * @return an apache XMLSerializer configured to handle CDATA correctly
+   */
+  private static XMLSerializer getXMLSerializer( )
+  {
+    // configure an OutputFormat to handle CDATA
+    OutputFormat of = new OutputFormat();
+
+    // specify which of your elements you want to be handled as CDATA.
+    // The use of the '^' between the namespaceURI and the localname
+    // seems to be an implementation detail of the xerces code.
+    of.setCDataElements( new String[] { "data" } );
+
+    // set any other options you'd like
+    of.setPreserveSpace( true );
+    of.setIndenting( true );
+
+    // create the serializer
+    XMLSerializer serializer = new XMLSerializer( of );
+    serializer.setOutputByteStream( System.out );
+
+    return serializer;
   }
 
   /**

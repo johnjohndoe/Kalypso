@@ -36,12 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml.values;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
@@ -62,6 +64,12 @@ import org.kalypso.zml.AxisType.ValueLinkType;
  */
 public class ZmlLinkValues implements IZmlValues
 {
+  /**
+   * value of the href link that specifies that the zml values are stored in the
+   * data element
+   */
+  public final static String DATA_REF = "#data";
+
   private final ITabledValues m_csv;
 
   private final IParser m_parser;
@@ -70,27 +78,45 @@ public class ZmlLinkValues implements IZmlValues
 
   private final int m_column;
 
-  public ZmlLinkValues( final ValueLinkType vl, final IParser parser, final URL context )
-      throws MalformedURLException, IOException
+  /**
+   * Constructor
+   * 
+   * @param vl
+   *          binding type
+   * @param parser
+   *          configured values parser
+   * @param context
+   *          context into which original file was loaded
+   * @param data
+   *          [optional] contains the values in a block format within CDATA tags
+   *          if the values are linked ZML-internally
+   * @throws MalformedURLException
+   * @throws IOException
+   */
+  public ZmlLinkValues( final ValueLinkType vl, final IParser parser,
+      final URL context, final String data ) throws MalformedURLException,
+      IOException
   {
     m_parser = parser;
 
     // index begins with 0 internally
     m_column = vl.getColumn() - 1;
 
-    final URL url = new UrlUtilities().resolveURL( context, vl.getHref() );
-
-    if( vl.getRegexp() == null || vl.getRegexp().length() == 0 )
-    {
-      // stream is closed in CSV()
-      m_csv = new CSV( new InputStreamReader( url.openStream() ), vl.getSeparator(), vl.getLine(), true );
-    }
+    // stream is closed in either CSV() or RegexCsv()
+    final Reader reader;
+    if( vl.getHref() == null || vl.getHref().equalsIgnoreCase( DATA_REF ) )
+      reader = new StringReader( data );
     else
     {
-      // stream closed in RegexCSV()
-      m_csv = new RegexCSV( new InputStreamReader( url.openStream() ), Pattern.compile( vl
-          .getRegexp() ), vl.getLine(), true );
+      final URL url = new UrlUtilities().resolveURL( context, vl.getHref() );
+      reader = new InputStreamReader( url.openStream() );
     }
+
+    if( vl.getRegexp() == null || vl.getRegexp().length() == 0 )
+      m_csv = new CSV( reader, vl.getSeparator(), vl.getLine(), true );
+    else
+      m_csv = new RegexCSV( reader, Pattern.compile( vl.getRegexp() ), vl
+          .getLine(), true );
   }
 
   /**
@@ -103,11 +129,6 @@ public class ZmlLinkValues implements IZmlValues
       // get item from csv file
       final String item = m_csv.getItem( index, m_column );
 
-      if( item.length() == 0 )
-      {
-        System.out.println( "empty element" );
-      }
-      
       // parse item using axis parser
       final Object obj = m_parser.parse( item );
 
@@ -145,7 +166,7 @@ public class ZmlLinkValues implements IZmlValues
   /**
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#getCount()
    */
-  public int getCount()
+  public int getCount( )
   {
     return m_csv.getLines();
   }
@@ -153,11 +174,21 @@ public class ZmlLinkValues implements IZmlValues
   /**
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#indexOf(java.lang.Object)
    */
-  public int indexOf( final Object obj )
+  public int indexOf( final Object obj ) throws SensorException
   {
-    Integer iobj = (Integer)m_helper.get( obj );
+    Integer iobj = (Integer) m_helper.get( obj );
     if( iobj == null )
+    {
+      // tricky: go through the items serially to find it
+      // it's not so nice, but it's necessary the way
+      // this class is implemented (the helper is lazy
+      // filled...)
+      for( int i = 0; i < getCount(); i++ )
+        if( getElement( i ).equals( obj ) )
+          return i;
+        
       return -1;
+    }
 
     return iobj.intValue();
   }
