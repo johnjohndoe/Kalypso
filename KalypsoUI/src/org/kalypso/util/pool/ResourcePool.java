@@ -171,11 +171,15 @@ public class ResourcePool implements ILoaderListener
     m_objects.put( key, object );
 
     // alle Listener informieren
-    final Set listeners = Collections.synchronizedSet( (Set)m_listeners.get( key ) );
-    for( final Iterator iter = listeners.iterator(); iter.hasNext(); )
+    final Set listenerset = (Set)m_listeners.get( key );
+    if( listenerset != null )
     {
-      final IPoolListener l = (IPoolListener)iter.next();
-      l.objectLoaded( key, object, status );
+      final Set listeners = Collections.synchronizedSet( listenerset );
+      for( final Iterator iter = listeners.iterator(); iter.hasNext(); )
+      {
+        final IPoolListener l = (IPoolListener)iter.next();
+        l.objectLoaded( key, object, status );
+      }
     }
 
     // die job markierung entfernen
@@ -198,10 +202,13 @@ public class ResourcePool implements ILoaderListener
         m_objects.remove( key );
 
         final Set listeners = (Set)m_listeners.get( key );
-        for( Iterator iter = listeners.iterator(); iter.hasNext(); )
+        if( listeners != null )
         {
-          final IPoolListener l = (IPoolListener)iter.next();
-          l.objectInvalid( key, oldValue );
+          for( Iterator iter = listeners.iterator(); iter.hasNext(); )
+          {
+            final IPoolListener l = (IPoolListener)iter.next();
+            l.objectInvalid( key, oldValue );
+          }
         }
 
         checkValid( key );
