@@ -61,7 +61,7 @@ public class ReaderUtilities
   {
     String content = ReaderUtilities.readStringFromReader( r );
 
-    for( Iterator iter = replaceProps.entrySet().iterator(); iter.hasNext(); )
+    for( final Iterator iter = replaceProps.entrySet().iterator(); iter.hasNext(); )
     {
       final Map.Entry entry = (Entry)iter.next();
       final String key = entry.getKey().toString();

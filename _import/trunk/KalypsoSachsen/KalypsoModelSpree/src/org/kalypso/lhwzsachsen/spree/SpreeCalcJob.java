@@ -314,7 +314,7 @@ public class SpreeCalcJob extends AbstractCalcJob
     {
       e.printStackTrace();
 
-      throw new CalcJobServiceException( "Log-Datei konnte nicht geschrieben werden:\n"
+      throw new CalcJobServiceException( "Fehler bei der Berechnung:\n"
           + e.getLocalizedMessage(), e );
     }
     finally

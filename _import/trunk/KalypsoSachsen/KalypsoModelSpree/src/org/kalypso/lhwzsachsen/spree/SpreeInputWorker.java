@@ -24,14 +24,13 @@ import java.util.logging.Logger;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.geometry.GM_Point;
 import org.deegree_impl.io.shpapi.ShapeFile;
-import org.deegree_impl.model.cs.Adapters;
-import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.java.io.StreamUtilities;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.GMLHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -43,7 +42,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Diese Klasse sammelt alles, was mit dem Erzeugen der Nativen Daten aus den
@@ -55,10 +53,10 @@ public class SpreeInputWorker
 {
   private final static Logger LOGGER = Logger.getLogger( SpreeInputWorker.class.getName() );
 
-  private final static ConvenienceCSFactoryFull CRS_FACT = new ConvenienceCSFactoryFull();
+//  private final static ConvenienceCSFactoryFull CRS_FACT = new ConvenienceCSFactoryFull();
 
-  private final static CS_CoordinateSystem DEFAULT_CRS = Adapters.getDefault().export(
-      CRS_FACT.getCSByName( "EPSG:4326" ) );
+//  private final static CS_CoordinateSystem DEFAULT_CRS = Adapters.getDefault().export(
+//      CRS_FACT.getCSByName( "EPSG:4326" ) );
 
   private SpreeInputWorker()
   {
@@ -84,9 +82,11 @@ public class SpreeInputWorker
    * </p>
    * 
    * @return Location of native files
+   * @throws IOException
+   * @throws IOException
    */
   public static File createNativeInput( final File tmpdir, final CalcJobDataBean[] input,
-      final Properties props, final PrintWriter logwriter ) throws CalcJobServiceException
+      final Properties props, final PrintWriter logwriter ) throws IOException
   {
     try
     {
@@ -103,7 +103,9 @@ public class SpreeInputWorker
       final Map map = parseControlFile( controlGML, controlXSD, nativedir );
       props.putAll( map );
 
-      final KalypsoFeatureLayer[] layers = loadGML( tmpdir, inputMap );
+      logwriter.println( "Lese Modelldaten: " + controlGML );
+      
+      final GMLWorkspace workspace = loadGML( tmpdir, inputMap );
       final File vhsFile = (File)props.get( SpreeCalcJob.DATA_VHSFILE );
       final String flpFilename = (String)props.get( SpreeCalcJob.DATA_FLPFILENAME );
       final String napFilename = (String)props.get( SpreeCalcJob.DATA_NAPFILENAME );
@@ -114,11 +116,11 @@ public class SpreeInputWorker
           + SpreeCalcJob.VHS_FILE ), new FileOutputStream( vhsFile ) );
 
       logwriter.println( "Erzeuge _flp Datei: " + flpFilename );
-      findAndWriteLayer( layers, SpreeCalcJob.FLP_NAME, SpreeCalcJob.FLP_MAP,
+      findAndWriteLayer( workspace, SpreeCalcJob.FLP_NAME, SpreeCalcJob.FLP_MAP,
           SpreeCalcJob.FLP_GEOM, flpFilename );
 
       logwriter.println( "Erzeuge _nap Datei: " + napFilename );
-      findAndWriteLayer( layers, SpreeCalcJob.NAP_NAME, SpreeCalcJob.NAP_MAP,
+      findAndWriteLayer( workspace, SpreeCalcJob.NAP_NAME, SpreeCalcJob.NAP_MAP,
           SpreeCalcJob.NAP_GEOM, napFilename );
 
       
@@ -128,15 +130,14 @@ public class SpreeInputWorker
 
       return nativedir;
     }
-    catch( final Exception e )
+    catch( final CalcJobServiceException e )
     {
       e.printStackTrace();
       throw new CalcJobServiceException( "Fehler beim Erzeugen der Inputdateien", e );
     }
   }
 
-  public static void createTimeseriesFile( final String tsFilename, final Map valuesMap, final PrintWriter logwriter )
-      throws Exception
+  public static void createTimeseriesFile( final String tsFilename, final Map valuesMap, final PrintWriter logwriter ) throws CalcJobServiceException
   {
     final List ftpList = new LinkedList();
 
@@ -218,24 +219,21 @@ public class SpreeInputWorker
       shapeFeatures.add( feature );
     }
 
-    final ShapeFile shapeFile = new ShapeFile( tsFilename, "rw" );
-    shapeFile.writeShape( (Feature[])shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
-    shapeFile.close();
-
-    //    // Hack: festes Zeitreihen File
-    //    FileUtilities.makeFileFromStream( false, new File( tsFilename + ".dbf" ),
-    // getClass()
-    //        .getResourceAsStream( "resources/HW040427.dbf" ) );
-    //    FileUtilities.makeFileFromStream( false, new File( tsFilename + ".shp" ),
-    // getClass()
-    //        .getResourceAsStream( "test/HW040427.shp" ) );
-    //    FileUtilities.makeFileFromStream( false, new File( tsFilename + ".shx" ),
-    // getClass()
-    //        .getResourceAsStream( "test/HW040427.shx" ) );
+    try
+    {
+      final ShapeFile shapeFile = new ShapeFile( tsFilename, "rw" );
+      shapeFile.writeShape( (Feature[])shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
+      shapeFile.close();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      
+      throw new CalcJobServiceException( "Fehler beim Schreiben der Datei " + tsFilename + "\n" + e.getLocalizedMessage(), e );
+    }
   }
 
-  public static Map createTsData( final File inputdir, final Map inputMap ) throws IOException,
-      SensorException
+  public static Map createTsData( final File inputdir, final Map inputMap ) throws IOException
   {
     final Map map = new HashMap();
 
@@ -259,12 +257,12 @@ public class SpreeInputWorker
         continue;
       }
 
-      final IObservation obs = ZmlFactory.parseXML( obsFile.toURL(), "" );
-
-      final IAxis[] axisList = obs.getAxisList();
-
       try
       {
+        final IObservation obs = ZmlFactory.parseXML( obsFile.toURL(), "" );
+
+        final IAxis[] axisList = obs.getAxisList();
+
         final IAxis dateAxis = ObservationUtilities.findAxisByClass( axisList, Date.class )[0];
         final IAxis valueAxis = ObservationUtilities.findAxisByClass( axisList, Double.class )[0];
 
@@ -305,24 +303,20 @@ public class SpreeInputWorker
     return map;
   }
 
-  public static void findAndWriteLayer( final KalypsoFeatureLayer[] layers, final String layerName,
+  public static void findAndWriteLayer( final GMLWorkspace workspace, final String layerName,
       final Map mapping, final String geoName, final String filenameBase )
       throws CalcJobServiceException
   {
     try
     {
-      for( int i = 0; i < layers.length; i++ )
-      {
-        if( layers[i].getFeatureType().getName().equals( layerName ) )
-        {
-          ShapeSerializer.serialize( layers[i], mapping, geoName, filenameBase );
-          return;
-        }
-      }
-
+      final FeatureType featureType = GMLHelper.getFeatureType( workspace, layerName );
+      if( featureType == null )
       throw new CalcJobServiceException(
-          "EIngabedatei für Rechenmodell konnte nicht erzeugt werden. Layer nicht gefunden: "
+          "Eingabedatei für Rechenmodell konnte nicht erzeugt werden. Layer nicht gefunden: "
               + layerName, null );
+      
+      final Feature[] features = workspace.getFeatures(featureType);
+      ShapeSerializer.serialize( features, mapping, geoName, filenameBase );
     }
     catch( final GmlSerializeException e )
     {
@@ -332,7 +326,7 @@ public class SpreeInputWorker
     }
   }
 
-  public static KalypsoFeatureLayer[] loadGML( final File inputdir, final Map map )
+  public static GMLWorkspace loadGML( final File inputdir, final Map map )
       throws CalcJobServiceException
   {
     // GML lesen
@@ -341,7 +335,7 @@ public class SpreeInputWorker
       final File xsdFile = checkInput( "MODELL_XSD", map, inputdir );
       final File gmlFile = checkInput( "GML", map, inputdir );
 
-      return GmlSerializer.deserialize( xsdFile.toURL(), gmlFile.toURL(), DEFAULT_CRS, null );
+      return GmlSerializer.createGMLWorkspace( gmlFile.toURL(), xsdFile.toURL() );
     }
     catch( final Exception ioe )
     {

@@ -12,7 +12,6 @@
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=Niederschlag_eingabe"/>
     </page>
 
-<!--
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Eingabe Talsperrenabgaben" imageLocation="icons/calcwizard/boden.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>
         <arg name="tableTemplate" value=".templates/calcCase/table1.ott"/>
@@ -62,7 +61,7 @@
         
         <arg name="timeserie4" value="diagDateAxis=d#diagValueAxis=z#nameColumn=Name#linkColumn=Zugabe"/>
     </page>
--->
+
     <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe NA-Modelle" imageLocation="icons/calcwizard/boden.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
         <arg name="tableTemplate" value=".templates/calcCase/ezg.gtt"/>
@@ -77,7 +76,7 @@
         <arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=w2#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
         <arg name="timeserie3" value="diagDateAxis=d#diagValueAxis=w2#nameColumn=Name#linkColumn=Wasserstand_gerechnet"/>
     </page>
-<!--
+
     <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Talsperren" imageLocation="icons/calcwizard/boden.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>
         <arg name="tableTemplate" value=".templates/calcCase/talsperren.gtt"/>
@@ -103,7 +102,6 @@
         <arg name="selectionID" value="128"/>
         
     </page>
--->
 	<!-- Ergebniskontrolle NA-Modelle-->
 	<!--
 	<page className="org.kalypso.ui.calcwizard.ExportResultsWizardPage"
