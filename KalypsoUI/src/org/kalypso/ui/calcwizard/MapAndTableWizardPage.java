@@ -282,8 +282,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
   {
     try
     {
-      m_viewer.saveData();
-      
       getWizard().getContainer().run( false, true, new IRunnableWithProgress()
       {
         public void run( final IProgressMonitor monitor ) throws InvocationTargetException,
@@ -291,6 +289,8 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
         {
           try
           {
+            m_viewer.saveData();
+            
             monitor.beginTask( "Prognoserechnung durchführen",  2000 );
             
             final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature( ModelNature.ID );
