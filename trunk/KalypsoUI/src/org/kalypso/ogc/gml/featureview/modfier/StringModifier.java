@@ -17,7 +17,7 @@ import org.kalypso.ogc.gml.featureview.IFeatureModifier;
  */
 public class StringModifier implements IFeatureModifier
 {
-  private static final DateFormat DATE_FORMATTER = new SimpleDateFormat();
+  private final DateFormat DATE_FORMATTER = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
   
   private final FeatureTypeProperty m_ftp;
   

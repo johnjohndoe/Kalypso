@@ -1,7 +1,5 @@
 package org.kalypso.ogc.sensor.zml;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 
@@ -24,9 +22,9 @@ public class ZmlURL
 
   private final static String TAG_TO2 = "</to>";
 
-  private ZmlURL( )
+  private ZmlURL()
   {
-    // do not instanciate
+  // do not instanciate
   }
 
   /**
@@ -76,16 +74,11 @@ public class ZmlURL
    */
   public static String getSchemePart( final String strUrl )
   {
-    try
-    {
-      final URI uri = new URI( strUrl );
-      return uri.getScheme();
-    }
-    catch( URISyntaxException e )
-    {
-      e.printStackTrace();
-      return "";
-    }
+    int ix = strUrl.indexOf( ":" );
+    if( ix != -1 )
+      return strUrl.substring( ix );
+
+    return strUrl;
   }
 
   /**
@@ -96,8 +89,7 @@ public class ZmlURL
    * @param dra
    * @return string containing the given date range
    */
-  public static String insertDateRange( final String str,
-      final DateRangeArgument dra )
+  public static String insertDateRange( final String str, final DateRangeArgument dra )
   {
     // first replace the date range spec (does nothing if not present)
     String tmpUrl = str.replaceFirst( TAG_FROM1 + ".*" + TAG_FROM2, "" );
@@ -129,15 +121,13 @@ public class ZmlURL
   {
     final StringBuffer bf = new StringBuffer();
 
-    bf.append( TAG_FROM1 ).append( XmlTypes.PDATE.toString( dra.getFrom() ) )
-        .append( TAG_FROM2 );
-    bf.append( TAG_TO1 ).append( XmlTypes.PDATE.toString( dra.getTo() ) )
-        .append( TAG_TO2 );
+    bf.append( TAG_FROM1 ).append( XmlTypes.PDATE.toString( dra.getFrom() ) ).append( TAG_FROM2 );
+    bf.append( TAG_TO1 ).append( XmlTypes.PDATE.toString( dra.getTo() ) ).append( TAG_TO2 );
 
     // TODO prüfen ob in Ordnung dass die < und > Zeichen mit Entities ersetzt
     // werden...
     return bf.toString();//.replaceAll( "<", "&lt;" ).replaceAll( ">", "&gt;"
-                         // );
+    // );
   }
 
   /**
@@ -186,7 +176,7 @@ public class ZmlURL
     {
       try
       {
-        dFrom = (Date) XmlTypes.PDATE.parse( from );
+        dFrom = (Date)XmlTypes.PDATE.parse( from );
       }
       catch( ParserException e )
       {
@@ -198,7 +188,7 @@ public class ZmlURL
     {
       try
       {
-        dTo = (Date) XmlTypes.PDATE.parse( to );
+        dTo = (Date)XmlTypes.PDATE.parse( to );
       }
       catch( ParserException e )
       {

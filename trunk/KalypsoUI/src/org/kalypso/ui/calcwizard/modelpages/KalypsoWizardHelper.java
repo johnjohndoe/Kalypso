@@ -154,6 +154,10 @@ public class KalypsoWizardHelper
           final String colName = name + " (" + props[i].getLinkColumn() + ')';
 
           // no observation yet
+          // TODO: Marc: nicht mehr über den Namen der Achse zuordnen d.h. aus der Property der Wizard-Page
+          // sondern besser automatisch anhand der Typen zuordnen!
+          // Nachtrag: komisch: beim Niederschlag funktionierts, wenn Daten da sind, 
+          // obwohl keine der Achsen 'n' heisst!
           final DefaultTableViewColumn col = new DefaultTableViewColumn( colName, true, 50,
               props[i].getDiagValueAxis(), null );
 
