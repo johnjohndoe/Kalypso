@@ -42,7 +42,7 @@
         <arg name="zmlTableShow" value="all"/>
         <arg name="ignoreType1" value="Q"/>
 
-        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beoabchtung#linkColumn=Wasserstand_gemessen"/>
+        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beobachtung#linkColumn=Wasserstand_gemessen"/>
         
        	<arg name="maximizeMap" value="true"/>
     </page>
