@@ -30,6 +30,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   
   private final String m_schemaLocation;
 
+  private final String m_schemaNamespace;
+
   /** id -> feature */
   private final Map m_indexMap = new HashMap();
 
@@ -46,11 +48,12 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   public GMLWorkspace_Impl( final FeatureType[] featureTypes, final Feature feature,
-      final URL context, final String schemaLocation )
+      final URL context, final String schemaLocation, final String schemaNamespace )
   {
     m_featureTypes = featureTypes;
     m_context = context;
     m_schemaLocation = schemaLocation;
+    m_schemaNamespace = schemaNamespace;
 
     m_rootFeature = feature;
 
@@ -463,5 +466,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public String getSchemaLocation()
   {
     return m_schemaLocation;
+  }
+  
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#getSchemaNamespace()
+   */
+  public String getSchemaNamespace()
+  {
+    return m_schemaNamespace;
   }
 }

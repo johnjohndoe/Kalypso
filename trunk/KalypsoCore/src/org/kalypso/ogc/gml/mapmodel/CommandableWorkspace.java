@@ -161,4 +161,11 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.getSchemaLocation();
   }
   
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#getSchemaNamespace()
+   */
+  public String getSchemaNamespace()
+  {
+    return m_workspace.getSchemaNamespace();
+  }
 }

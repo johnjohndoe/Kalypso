@@ -188,7 +188,7 @@ public class ShapeSerializer
       return new GMLWorkspace_Impl( new FeatureType[]
       {
           rootFeature.getFeatureType(),
-          featureType }, rootFeature, null, null );
+          featureType }, rootFeature, null, null, null );
     }
     catch( final Exception e )
     {

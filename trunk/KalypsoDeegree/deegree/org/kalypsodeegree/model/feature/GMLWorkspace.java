@@ -55,4 +55,6 @@ public interface GMLWorkspace extends ModellEventProvider
   public String getFeaturepathForFeature( final Feature feature );
   
   public String getSchemaLocation();
+  
+  public String getSchemaNamespace(); 
 }

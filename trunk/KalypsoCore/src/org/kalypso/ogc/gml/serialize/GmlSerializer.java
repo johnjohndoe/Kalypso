@@ -56,10 +56,17 @@ public final class GmlSerializer
           .getRootFeature() );
       gmlDoc.setRoot( gmlFeature );
 
+      final String schemaNamespace = workspace.getSchemaNamespace();
+      if( schemaNamespace != null )
+      {
+        final GMLNameSpace namespace = new GMLNameSpace_Impl( "xmlns=" + schemaNamespace );
+        gmlDoc.addNameSpace( namespace );
+      }
+      
       final GMLNameSpace gmlNameSpace = new GMLNameSpace_Impl(
           "xmlns:gml=http://www.opengis.net/gml" );
       final GMLNameSpace xlinkNameSpace = new GMLNameSpace_Impl(
-          "xmlns:xlink=http://www.w3.org/1999/xlink" );
+          "xmlns:xlink=http://ww  w.w3.org/1999/xlink" );
       final GMLNameSpace xsiNameSpace = new GMLNameSpace_Impl(
           "xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance" );
       gmlDoc.addNameSpace( gmlNameSpace );
@@ -101,7 +108,7 @@ public final class GmlSerializer
     final FeatureType[] types = schema.getFeatureTypes();
     final Feature feature = FeatureFactory.createFeature( gmlFeature, types );
 
-    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaURL.toString() );
+    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaURL.toString(), schema.getTargetNS() );
   }
 
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IUrlResolver urlResolver )
@@ -148,6 +155,6 @@ public final class GmlSerializer
     final FeatureType[] types = schema.getFeatureTypes();
     final Feature feature = FeatureFactory.createFeature( gml.getRootFeature(), types );
 
-    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaLocationName );
+    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaLocationName, schema.getTargetNS() );
   }
 }
