@@ -236,9 +236,11 @@ public class ObservationTableModel extends AbstractTableModel
       }
 
       fillValues();
-
-      fireTableStructureChanged();
     }
+
+    // !WARNING! never fire within synchronized block
+    // -> dead-lock!
+    fireTableStructureChanged();
   }
 
   /**
@@ -369,13 +371,15 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public int getRowCount()
   {
-    synchronized( m_columns )
-    {
-      if( m_columns.size() == 0 )
-        return 0;
-
-      return m_sharedModel.size();
-    }
+    // Gets called by non-swing-thread, so may cause dead-lock
+    // is check for m_columns needed? 
+    
+    //synchronized( m_columns )
+    //{
+    //      if( m_columns.size() == 0 )
+    //        return 0;
+    //}
+    return m_sharedModel.size();
   }
 
   /**
