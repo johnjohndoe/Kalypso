@@ -8,6 +8,9 @@
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="1"/>
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=name#linkColumn=N"/>
+        
+        <arg name="maximizeMap" value="true"/>
+
     </page>
 
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Gebietsniederschlagsmodell" imageLocation="icons/calcwizard/kalypso32.gif" >
@@ -16,6 +19,8 @@
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="1"/>
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=niederschlagZR"/>
+        
+       	<arg name="maximizeMap" value="true"/>
     </page>
 
 		<page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Zuflüsse" 
@@ -25,15 +30,9 @@
 			<arg name="rightSash" value="50"/>
 			<arg name="selectionID" value="4"/>
 			<arg name="selectFeatureID" value="Node6100"/>
-			<!--
-        <arg name="ignoreLabel1" value="Status"/>
-	           <arg name="zmlTableShow" value="all"/>
-       <arg name="ignoreType1" value="W"/>
-        <arg name="ignoreType2" value="Q"/>
-        <arg name="ignoreLabel2" value="Wasserstand"/>
-				
-        <arg name="ignoreType1" value="Q"/>
-						 -->
+			
+	    	<arg name="maximizeMap" value="true"/>
+
 			<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=a#nameColumn=Abfluss#linkColumn=zuflussZR"/>
 		</page>
 <!--
@@ -53,11 +52,35 @@
   es gibt einen NEXT-Button:
  
 -->
+	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Bad Elster 1/17" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="featureTemplate" value=".templates/calcCase/control_1.gft"/> 
+
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+
+    	<arg name="selectFeatureID" value="Node1800"/>
+    	<arg name="maximizeMap" value="true"/>
+
+		<arg name="modelspec" value="modelspec_1.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+	</page>
+
+
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Bad Elster 1/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="tableTemplate" value=".templates/calcCase/control_1.gtt"/>
-		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+<!--		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/> -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
@@ -65,6 +88,7 @@
 		<arg name="modelspec" value="modelspec_1.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -397,5 +421,8 @@
 		<arg name="exporter2" value="class=org.kalypso.ui.calcwizard.bericht.ZmlTableExporter;name=Tabelle"/>
 		<arg name="exporter3" value="class=org.kalypso.ui.calcwizard.bericht.DiagrammExporter;name=Abflussgrafik"/>
 		<arg name="exporter4" value="class=org.kalypso.ui.calcwizard.bericht.DiagrammExporter;name=Wasserstandgrafik;"/>
+		
+		    	<arg name="maximizeMap" value="true"/>
+
 	</page>
 </calcwizard>
