@@ -25,7 +25,7 @@ public class KalypsoApplication implements IPlatformRunnable
   {
     final IUserService service = prepareService();
 
-    final String username = System.getProperty( "user.name" );
+    final String username = System.getProperty( "user.name" ).toLowerCase();
 
     try
     {

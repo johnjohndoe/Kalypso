@@ -2,14 +2,18 @@ package org.kalypso.services.ocs;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.commons.io.FileUtils;
+import org.kalypso.ogc.sensor.zml.ZmlUrlParser;
+import org.kalypso.services.proxy.DateRangeBean;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.OCSDataBean;
 import org.kalypso.services.proxy.ObservationBean;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
 
 /**
@@ -39,19 +43,27 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 
     try
     {
-      String id = strUrl.replaceFirst( SCHEME_OCS + ":", "" );
-      
-      // remove the ?... part of the URL that is supposed to contain filter specific stuff
-      final int ix = id.indexOf('?');
-      if( ix != -1)
-        id = id.substring( 0, ix );
+      final URI srvUri = new URI( strUrl.replaceFirst( SCHEME_OCS + ":", "" ) );
 
-      final ObservationBean ob = new ObservationBean( id, "", "", null );
+      DateRangeBean drb = null;
+      
+      // The query part of the URL (after the ?...) contains some additional
+      // specification: from-to, filter, etc.
+      final String query = srvUri.getQuery();
+      if( query != null )
+      {
+        final DateRangeArgument dra = ZmlUrlParser.checkDateRange( query );
+        
+        drb = new DateRangeBean( dra.getFrom().getTime(), dra.getTo().getTime() );
+      }
+
+      final String obsId = srvUri.getPath();
+      final ObservationBean ob = new ObservationBean( obsId, "", "", null );
 
       final IObservationService srv = KalypsoGisPlugin.getDefault()
           .getObservationServiceProxy();
 
-      final OCSDataBean db = srv.readData( ob, null );
+      final OCSDataBean db = srv.readData( ob, drb );
 
       final File file = File.createTempFile( "local-zml", ".zml" );
       file.deleteOnExit();

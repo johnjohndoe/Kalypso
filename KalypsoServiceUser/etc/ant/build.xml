@@ -175,11 +175,11 @@
 			<param name="package_lib" value="KalypsoCore/lib" />
 		</antcall>
 
-		<antcall target="package-a-project">
+		<!--antcall target="package-a-project">
 			<param name="aproject_jar" value="KalypsoPSICompactAdapter.jar" />
 			<param name="aproject_bin" value="KalypsoPSICompactAdapter/build/bin" />
 			<param name="aproject_lib" value="KalypsoPSICompactAdapter/lib" />
-		</antcall>
+		</antcall-->
 
 	  <antcall target="package-a-project">
 			<param name="aproject_jar" value="KalypsoPSICompactAdapterCore.jar" />

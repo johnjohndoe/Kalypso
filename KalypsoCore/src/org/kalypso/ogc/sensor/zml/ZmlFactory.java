@@ -26,7 +26,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.proxy.ProxyFactory;
+import org.kalypso.ogc.sensor.proxy.ArgsObservationProxy;
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlArrayValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlLinkValues;
@@ -263,12 +263,33 @@ public class ZmlFactory
         .getName(), obs.isEditable(), target, metadata, axes, model );
 
     // tricky: first check if a proxy has been specified in the url
-    final IObservation proxyObs = ProxyFactory.createProxyFrom( context, zmlObs );
+    final IObservation proxyObs = createProxyFrom( context, zmlObs );
     
     // tricky: maybe make a filtered observation out of this one
     final IObservation filteredObs = FilterFactory.createFilterFrom( context, proxyObs );
     
     return filteredObs;
+  }
+  
+  /**
+   * Helper: mey create a proxy observation depending on the information coded in the url.
+   * 
+   * @param context
+   * @param baseObs
+   * @return proxy or original observation
+   */
+  private static IObservation createProxyFrom( final URL context, final IObservation baseObs )
+  {
+    final String str = context.toExternalForm();
+
+    IVariableArguments args = null;
+    
+    // check if a DateRange proxy can be created
+    args = ZmlUrlParser.checkDateRange( str );
+    if( args != null )
+      return new ArgsObservationProxy( args, baseObs );
+    
+    return baseObs;
   }
 
   /**

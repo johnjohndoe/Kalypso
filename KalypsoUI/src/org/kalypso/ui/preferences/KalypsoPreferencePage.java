@@ -37,6 +37,9 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
   {
     addField( new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS, "Verfügbare &Server (Komma-getrennte Liste):", getFieldEditorParent() ) );
 
+    addField( new BooleanFieldEditor( IKalypsoPreferences.USE_RANGE, "&Datum (Von-Bis) benutzen", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.DATE_FROM, "Von-Datum:", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.DATE_TO, "Bis-Datum:", getFieldEditorParent() ) );
     addField( new StringFieldEditor( IKalypsoPreferences.NUMBER_OF_DAYS, "&Tagesanzahl (Zeitreihenbrowser):", getFieldEditorParent() ) );
 
     addField( new BooleanFieldEditor( IKalypsoPreferences.HTTP_PROXY_USE, "Http-&Proxy benutzen", getFieldEditorParent() ) );
@@ -63,6 +66,8 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
   {
     // empty
   }
+  
+  
   
   /**
    * @see org.eclipse.jface.preference.IPreferencePage#performOk()
