@@ -13,6 +13,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.loader.ILoader;
+import org.kalypso.loader.ILoaderFactory;
+import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
@@ -61,7 +64,7 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
 
   private final PoolableObjectType m_layerKey;
 
-  private KalypsoFeatureTheme m_theme = null;
+  private IKalypsoTheme m_theme = null;
 
   private boolean m_isEditing = false;
 
@@ -98,7 +101,9 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
             styleType.getHref(), project );
       }
     }
-
+    if("wms".equals(type))
+      startWMSLayerLoading(m_layerKey, project);
+    else
     startLayerLoading( m_layerKey );
   }
 
@@ -201,15 +206,37 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
     }
   }
   
-  private void startLayerLoading( final IPoolableObjectType layerKey )
+  private void startWMSLayerLoading( final IPoolableObjectType layerKey, IProject project )
   {
-    final String path = layerKey.getSource().getProperty( "PATH" );
-    
+      ILoaderFactory loaderFactory = KalypsoGisPlugin.getDefault().getLoaderFactory(KalypsoWMSLayer.class);
+
+      final ILoader loaderInstance;
+      try
+      {
+        loaderInstance = loaderFactory.getLoaderInstance(layerKey.getType());
+        final KalypsoWMSLayer layer = (KalypsoWMSLayer)loaderInstance.load(layerKey.getSource(), project, null);
+        m_theme=new KalypsoWMSTheme( getName(), layer );
+      }
+      catch( FactoryException e )
+      {
+        e.printStackTrace();
+      }
+      catch( LoaderException e )
+      {
+        e.printStackTrace();
+      }
+      
+    }
+
+  private void startLayerLoading( final IPoolableObjectType layerKey )
+          {
+    final String path = layerKey.getSource().getProperty( "PATH" ,"");
     final Job layerJob = new BorrowObjectJob( "Thema laden: " + path, m_layerPool, this, layerKey, this );
     final LayerRule layerRule = new LayerRule();
     layerJob.setRule( layerRule );
     layerJob.schedule();
-  }
+    
+    }
   
   private void startStyleLoading( final IPoolableObjectType styleKey )
   {
@@ -241,6 +268,10 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
     return m_theme.getStyles();
   }
 
+  public IPoolableObjectType[] getPoolableStyles()
+  {
+    return m_styleKeys;
+  }
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#addStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
    */

@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
+import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -92,8 +93,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     if(m_mapModell ==null)
       return;
     // TODO
-    if(true)
-      return;
+//    if(true)
+//      return;
   
       try
       {
@@ -117,8 +118,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   
         bis.close();
           monitor.done();
-  
-        // setDirty( false );
       }
       catch( JAXBException e )
       {
@@ -168,7 +167,10 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     final IMapModell mapModell = new GisTemplateMapModell( gisview, project, KalypsoGisPlugin
         .getDefault().getCoordinatesSystem() );
     setMapModell( mapModell );
-
+    
+    GM_Envelope env=GisTemplateHelper.getBoundingBox(gisview);
+    
+    getMapPanel().setBoundingBox(env);
     monitor.done();
   }
 

@@ -23,7 +23,9 @@ import org.kalypso.template.gismapview.GismapviewType;
 import org.kalypso.template.gismapview.GismapviewType.LayersType;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.template.types.ExtentType;
+import org.kalypso.template.types.StyledLayerType.StyleType;
 import org.kalypso.util.factory.FactoryException;
+import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.opengis.cs.CS_CoordinateSystem;
 /**
@@ -38,7 +40,7 @@ public class GisTemplateMapModell implements IMapModell
       final CS_CoordinateSystem crs )
   {
     m_modell = new MapModell( crs );
-
+    
     final LayersType layerListType = gisview.getLayers();
     final List layerList = layerListType.getLayer();
 
@@ -59,28 +61,28 @@ public class GisTemplateMapModell implements IMapModell
 
   private IKalypsoTheme loadTheme( final Layer layerType, final IProject project )
   {
-    if( "wms".equals( layerType.getLinktype() ) )
-    {
-      // TODO soll hier wirklich "wms" - coodiert werden, das sollte doch generischer gehen
-      final ILoaderFactory loaderFactory = KalypsoGisPlugin.getDefault().getLoaderFactory(KalypsoWMSLayer.class);
-      try
-      {
-        final ILoader loaderInstance = loaderFactory.getLoaderInstance(layerType.getLinktype());
-        final String source = layerType.getHref();
-        
-        final Properties properties = PropertiesHelper.parseFromString( source, '#' );
-        final KalypsoWMSLayer layer = (KalypsoWMSLayer)loaderInstance.load(properties, project, null);
-        return new KalypsoWMSTheme( layerType.getName(), layer );
-      }
-      catch( FactoryException e )
-      {
-        e.printStackTrace();
-      }
-      catch( LoaderException e )
-      {
-        e.printStackTrace();
-      }
-    }
+//    if( "wms".equals( layerType.getLinktype() ) )
+//    {
+//      // TODO soll hier wirklich "wms" - coodiert werden, das sollte doch generischer gehen
+//      final ILoaderFactory loaderFactory = KalypsoGisPlugin.getDefault().getLoaderFactory(KalypsoWMSLayer.class);
+//      try
+//      {
+//        final ILoader loaderInstance = loaderFactory.getLoaderInstance(layerType.getLinktype());
+//       X final String source = layerType.getHref();
+//        
+//        final Properties properties = PropertiesHelper.parseFromString( source, '#' );
+//        final KalypsoWMSLayer layer = (KalypsoWMSLayer)loaderInstance.load(properties, project, null);
+//        return new KalypsoWMSTheme( layerType.getName(), layer );
+//      }
+//      catch( FactoryException e )
+//      {
+//        e.printStackTrace();
+//      }
+//      catch( LoaderException e )
+//      {
+//        e.printStackTrace();
+//      }
+//    }
 
     return new PoolableKalypsoFeatureTheme( layerType, project );
   }
@@ -101,11 +103,13 @@ public class GisTemplateMapModell implements IMapModell
     extentType.setBottom(bbox.getMin().getY());
     extentType.setLeft(bbox.getMin().getX());
     extentType.setRight(bbox.getMax().getX());
+  
     gismapview.setExtent(extentType);      
+  
     }
     
     List layerList = layersType.getLayer();
-    
+   
     gismapview.setLayers(layersType);
     IKalypsoTheme[] themes = m_modell.getAllThemes();
     for( int i = 0; i < themes.length; i++ )
@@ -122,10 +126,24 @@ public class GisTemplateMapModell implements IMapModell
         layer.setType( "simple" );
         layer.setName(theme.getName());
         layer.setVisible(m_modell.isThemeEnabled(theme));
-        layerList.add(layer);        
+        layer.getDepends();
+        layerList.add(layer);  
+        
+        List stylesList=layer.getStyle();
+        IPoolableObjectType[] styleKeys=theme.getPoolableStyles();
+        for( int j = 0; j < styleKeys.length; j++ )
+        {
+          StyleType styleType=extentFac.createStyledLayerTypeStyleType();
+          IPoolableObjectType styleKey = styleKeys[j];
+          styleType.setActuate("onRequest" );
+          styleType.setHref(styleKey.getSourceAsString());
+          styleType.setLinktype(styleKey.getType());
+          styleType.setType( "simple" );
+          stylesList.add(styleType);
+        }
       }      
     }
-    return null;
+    return gismapview;
   }
   
   public void activateTheme( IKalypsoTheme theme )
