@@ -47,8 +47,10 @@ import org.deegree.model.feature.event.ModellEventProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -77,9 +79,9 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
     m_eventprovider = eventprovider;
     m_featureComposite = factory;
     m_commandTarget = commandTarget;
+    
+    setShellStyle( getShellStyle() | SWT.RESIZE );
   }
-  
-  
 
   /**
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
@@ -87,12 +89,20 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
   protected Control createDialogArea( final Composite parent )
   {
     getShell().setText( "Feature editieren" );
-
-    final Control control = m_featureComposite.createControl( parent, SWT.BORDER );
+    
+    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL
+        | SWT.V_SCROLL | SWT.BORDER );
+    
+    // don't forget this line!
+    scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    
+    final Control control = m_featureComposite.createControl( scrolledComposite, SWT.NONE );
+    control.setSize( control.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+    scrolledComposite.setContent( control );
     
     m_featureComposite.addModifyListener( this );
     
-    return control;
+    return scrolledComposite;
   }
 
   /**

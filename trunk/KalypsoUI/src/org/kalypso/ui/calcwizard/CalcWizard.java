@@ -105,6 +105,8 @@ public class CalcWizard implements IWizard, IProjectProvider
 
   private ModelSynchronizer m_synchronizer;
 
+  private boolean m_buttonsLocked;
+
   public CalcWizard( final IProject project )
   {
     m_project = project;
@@ -325,7 +327,10 @@ public class CalcWizard implements IWizard, IProjectProvider
    */
   public boolean canFinish()
   {
-    return true;
+    final IWizardPage currentPage = getContainer().getCurrentPage();
+    final IWizardPage nextPage = getNextPage( currentPage );
+    
+    return ( currentPage instanceof IModelWizardPage && nextPage == null );
   }
 
   /**
@@ -664,5 +669,16 @@ public class CalcWizard implements IWizard, IProjectProvider
     getContainer().updateButtons();
     
     return;
+  }
+
+  public boolean isButtonsLocked()
+  {
+    return m_buttonsLocked;
+  }
+  
+  public void setButtonsLocked( final boolean buttonsLocked )
+  {
+    m_buttonsLocked = buttonsLocked;
+    getContainer().updateButtons();
   }
 }

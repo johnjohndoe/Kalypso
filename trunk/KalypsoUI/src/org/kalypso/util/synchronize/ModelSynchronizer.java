@@ -118,7 +118,7 @@ public class ModelSynchronizer
           ModelNature.CONTROL_NAME );
       FileUtilities.accept( from, copyVisitor );
 
-      final DeleteObsoleteFilesVisitor deleteVisitor = new DeleteObsoleteFilesVisitor( to, from );
+      final DeleteObsoleteFilesVisitor deleteVisitor = new DeleteObsoleteFilesVisitor( to, from, ModelNature.CONTROL_NAME );
       FileUtilities.accept( to, deleteVisitor );
     }
     finally

@@ -58,6 +58,9 @@
                <documentation>
                   The fully qualified class name of the class that implements &amp;lt;code&amp;gt;org.kalypso.ogc.sensor.adapter.INativeObservationAdapter&amp;lt;/code&amp;gt; to handle import of the observation.
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.kalypso.ogc.sensor.adapter.INativeObservationAdapter"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="axisType" type="string" use="required">

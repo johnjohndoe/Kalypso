@@ -41,6 +41,7 @@
 package org.kalypso.ui.calcwizard;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.graphics.Point;
@@ -109,23 +110,36 @@ public class CalcWizardDialog extends WizardDialog
   public void updateButtons()
   {
     super.updateButtons();
-    
-    final IWizardPage currentPage = getCurrentPage();
 
-    final IWizardPage previousPage = currentPage.getPreviousPage();
-    
     final Button backButton = getButton( IDialogConstants.BACK_ID );
     final Button newPrognoseButton = getButton(  NEW_PROGNOSE_ID );
+    final Button finishedButton = getButton( IDialogConstants.FINISH_ID );
+    final Button cancelButton = getButton( IDialogConstants.CANCEL_ID );
 
+    // lock if locked
+    final IWizard wizard = getWizard();
+    if( wizard instanceof CalcWizard )
+    {
+      if( ((CalcWizard)wizard).isButtonsLocked() )
+      {
+        backButton.setEnabled( false );
+        getButton( IDialogConstants.NEXT_ID ).setEnabled( false );
+        cancelButton.setEnabled( false );
+        finishedButton.setEnabled( false );
+        getButton( IDialogConstants.HELP_ID ).setEnabled( false );
+        newPrognoseButton.setEnabled( false );
+        
+        return;
+      }
+
+      // der cancel button reaktiviert sich nicht von alleine
+      cancelButton.setEnabled( true );
+    }
+    
+    final IWizardPage currentPage = getCurrentPage();
+    final IWizardPage previousPage = currentPage.getPreviousPage();
+    
     backButton.setEnabled( previousPage != null && previousPage instanceof IModelWizardPage );
-    
-//    if( currentPage instanceof IModelWizardPage )
-//    {
-//      if( previousPage != null )
-//    }
-//    else
-//      backButton.setEnabled( false );
-    
     newPrognoseButton.setEnabled( currentPage instanceof IModelWizardPage );
   }
   

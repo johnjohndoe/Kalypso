@@ -117,6 +117,7 @@ import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.Arguments;
+import org.kalypso.ui.calcwizard.CalcWizard;
 import org.kalypso.ui.nature.ModelNature;
 import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommand;
@@ -952,7 +953,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     };
 
-    op.runAndHandleOperation( getShell(), false, true, "Hochwasser Vorhersage", "Berechnung" );
+    // lock buttons
+    try
+    {
+      ((CalcWizard)getWizard()).setButtonsLocked( true );
+      op.runAndHandleOperation( getShell(), true, true, "Hochwasser Vorhersage", "Berechnung" );
+    }
+    finally
+    {
+      ((CalcWizard)getWizard()).setButtonsLocked( false );
+    }
   }
 
   protected void postCreateControl()

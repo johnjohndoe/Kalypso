@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-	         <element ref="repository" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="repository" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -39,44 +39,51 @@
       </complexType>
    </element>
 
-   <element name="repository" minOccurs="0" maxOccurs="unbounded">
-					<complexType>
-						<attribute name="name" type="string" 
-							use="required">
-							<annotation>
-								<documentation>The name of the repository. 
-									The name will be displayed in the user 
-									interface.</documentation>
-							</annotation>
-						</attribute>
-						<attribute name="factory" type="string" 
-							use="required">
-							<annotation>
-								<documentation>The classname of the factory 
-									responsible for creating the repository. 
-									This must be a subclass of 
-									IRepositoryFactory.</documentation>
-							</annotation>
-						</attribute>
-						<attribute name="conf" type="string" 
-							use="optional">
-							<annotation>
-								<documentation>The configuration string
-									to be used when initializing the repository
-									instance.</documentation>
-							</annotation>
-						</attribute>
-						<attribute name="readOnly" type="boolean" 
-							use="optional" default="false">
-							<annotation>
-								<documentation>This property defines if
-									the repository is read only, meaning
-									no data can be written back, just read
-									allowed.</documentation>
-							</annotation>
-						</attribute>
-					</complexType>
-				</element>
+   <element name="repository">
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name of the repository. 
+         The name will be displayed in the user 
+         interface.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="factory" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The classname of the factory 
+         responsible for creating the repository. 
+         This must be a subclass of 
+         IRepositoryFactory.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.kalypso.repository.IRepositoryFactory"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="conf" type="string">
+            <annotation>
+               <documentation>
+                  The configuration string
+         to be used when initializing the repository
+         instance.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="readOnly" type="boolean">
+            <annotation>
+               <documentation>
+                  This property defines if
+         the repository is read only, meaning
+         no data can be written back, just read
+         allowed.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
 
    <annotation>
       <appInfo>
