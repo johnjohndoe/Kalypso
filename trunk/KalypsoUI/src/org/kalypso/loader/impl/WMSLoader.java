@@ -22,20 +22,11 @@ import org.opengis.cs.CS_CoordinateSystem;
  * 
  * @author lupp
  */
-public class WMSLoader extends AbstractLoader //implements IPoolListener
+public class WMSLoader extends AbstractLoader
 {
-  
-  public WMSLoader()
-  {
- //
-    
-  }
-
   public void dispose()
   {
     super.dispose();
-    
-  
   }
 
   /**
@@ -75,8 +66,6 @@ public class WMSLoader extends AbstractLoader //implements IPoolListener
     }
   }
 
-  
-
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
@@ -84,17 +73,4 @@ public class WMSLoader extends AbstractLoader //implements IPoolListener
   {
     return "WMS Layer";
   }
-
-  /**
-   * @see org.kalypso.loader.AbstractLoader#save(java.util.Properties, org.eclipse.core.resources.IProject, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
-   */
-  public void save( final Properties source, final IProject project, final IProgressMonitor monitor, final Object data )
-      throws LoaderException
-  {
-  // TODO benutzer informieren, dass dies keinen Sinn macht ??
-  
-  }
-  
-  
-  
 }

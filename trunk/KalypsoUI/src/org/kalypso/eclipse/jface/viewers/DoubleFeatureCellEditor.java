@@ -11,10 +11,9 @@ import org.kalypso.ogc.gml.KalypsoFeature;
  */
 public class DoubleFeatureCellEditor extends AbstractFeatureCellEditor
 {
-  public DoubleFeatureCellEditor( final String propertyName )
+  public DoubleFeatureCellEditor()
   {
-    super( new TextCellEditor(), propertyName );
-    
+    setCellEditor( new TextCellEditor() );
     setValidator( DefaultCellValidators.DOUBLE_VALIDATOR );
   }
 
@@ -26,7 +25,7 @@ public class DoubleFeatureCellEditor extends AbstractFeatureCellEditor
     final Object value = getEditor().getValue();
 
     final Map map = new HashMap();
-    map.put( getPropertyName(),new Double( value == null ? "0.0" : value.toString() ) );
+    map.put( getPropertyName(), value == null ? null : new Double( value.toString() ) );
 
     return map;
   }
@@ -38,5 +37,14 @@ public class DoubleFeatureCellEditor extends AbstractFeatureCellEditor
   {
     final Object value = feature.getProperty( getPropertyName() );
     getEditor().setValue( value == null ? "" : value.toString() );
+  }
+
+  /**
+   * @see org.kalypso.eclipse.jface.viewers.AbstractFeatureCellEditor#renderLabel(org.kalypso.ogc.gml.KalypsoFeature)
+   */
+  public String renderLabel( final KalypsoFeature feature )
+  {
+    final Object property = feature.getProperty( getPropertyName() );
+    return property == null ? "<kein Wert>" :property.toString();
   }
 }

@@ -46,7 +46,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
     m_chart = ChartFactory
         .createTimeSeriesChart( "", "Datum", "Wert", m_tsCol, false, false, false );

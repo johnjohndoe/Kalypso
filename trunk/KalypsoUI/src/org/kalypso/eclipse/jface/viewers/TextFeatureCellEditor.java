@@ -7,13 +7,13 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.kalypso.ogc.gml.KalypsoFeature;
 
 /**
- * @author belger
+ * @author Belger
  */
 public class TextFeatureCellEditor extends AbstractFeatureCellEditor
 {
-  public TextFeatureCellEditor( final String propertyName )
+  public TextFeatureCellEditor(  )
   {
-    super( new TextCellEditor(), propertyName );
+    setCellEditor( new TextCellEditor() );
   }
 
   /**
@@ -36,5 +36,14 @@ public class TextFeatureCellEditor extends AbstractFeatureCellEditor
   {
     final Object value = feature.getProperty( getPropertyName() );
     getEditor().setValue( value == null ? "" : value.toString() );
+  }
+
+  /**
+   * @see org.kalypso.eclipse.jface.viewers.AbstractFeatureCellEditor#renderLabel(org.kalypso.ogc.gml.KalypsoFeature)
+   */
+  public String renderLabel( KalypsoFeature feature )
+  {
+    final Object property = feature.getProperty( getPropertyName() );
+    return property == null ? "<kein Wert>" :property.toString();
   }
 }

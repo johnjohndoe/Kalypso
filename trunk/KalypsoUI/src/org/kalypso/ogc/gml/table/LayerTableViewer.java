@@ -1,4 +1,4 @@
-package org.kalypso.editor.tableeditor.layerTable;
+package org.kalypso.ogc.gml.table;
 
 import java.util.Iterator;
 import java.util.List;
@@ -72,14 +72,16 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   private final Color m_unselectColor;
 
-  public LayerTableViewer( final Composite parent, final ICellEditorFactory cellEditorFactory,
+  private final IProject m_project;
+
+  public LayerTableViewer( final Composite parent, final IProject project, final ICellEditorFactory cellEditorFactory,
       final int selectionID )
   {
-    //super( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
-    super( parent, SWT.HIDE_SELECTION );
+    super( parent, SWT.BORDER | SWT.HIDE_SELECTION );
 
     m_cellEditorFactory = cellEditorFactory;
     m_selectionID = selectionID;
+    m_project = project;
 
     setContentProvider( new LayerTableContentProvider() );
     setLabelProvider( new LayerTableLabelProvider( this ) );
@@ -99,8 +101,6 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   public void dispose()
   {
     applyTableTemplate( null, null );
-
-    m_selectColor.dispose();
   }
 
   /**
@@ -164,7 +164,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     if( !isDisposed() )
       setInput( theme );
   }
-
+  
   public void clearColumns()
   {
     final Table table = getTable();
@@ -207,7 +207,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   {
     // zuerst alle celleditoren neu berechnen
     // hack, weil man getCellEditors nicht vernünftig überschreiben kann
-    setCellEditors( createCellEditors() );
+    refreshCellEditors();
     setColumnProperties( createColumnProperties() );
 
     super.refresh();
@@ -229,15 +229,28 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   /**
    * @see org.eclipse.jface.viewers.TableViewer#getCellEditors()
    */
-  private CellEditor[] createCellEditors()
+  private void refreshCellEditors()
   {
+    final CellEditor[] oldEditors = getCellEditors();
+    if( oldEditors != null )
+    {
+      for( int i = 0; i < oldEditors.length; i++ )
+      {
+        if( oldEditors[i] != null )
+          oldEditors[i].dispose();
+      }
+    }
+    
     final Table table = getTable();
     final TableColumn[] columns = table.getColumns();
     final CellEditor[] editors = new CellEditor[columns.length];
 
     final IKalypsoTheme theme = (IKalypsoTheme)getInput();
     if( theme == null || theme.getLayer() == null )
-      return editors;
+    {
+      setCellEditors(editors);
+      return;
+    }
 
     final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)theme.getLayer();
     final FeatureType featureType = layer.getFeatureType();
@@ -249,7 +262,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       {
         try
         {
-          editors[i] = m_cellEditorFactory.createEditor( ftp, table, SWT.NONE );
+          editors[i] = m_cellEditorFactory.createEditor( ftp, m_project, table, SWT.NONE );
         }
         catch( final FactoryException e )
         {
@@ -259,7 +272,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       }
     }
 
-    return editors;
+    setCellEditors(editors);
   }
 
   /**

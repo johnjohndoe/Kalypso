@@ -88,16 +88,17 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
   {
     m_timertask.cancel();
     
-    // only dispose this color
-    m_cannotEditColor.dispose();
-
     super.dispose();
   }
 
   private void startEditing( final KeyEvent ke )
   {
     final int column = getColumn();
-    final Object element = getRow().getData();
+    final TableItem tableRow = getRow();
+    final Object element = tableRow.getData();
+    
+    if( !checkCanModify( tableRow, column ) )
+      return;
 
     setVisible( false );
 
@@ -135,22 +136,25 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
   public void widgetSelected( final SelectionEvent e )
   {
     // change color oder so, wenn Zelle nicht editierbar
-
     final TableItem row = getRow();
     final int column = getColumn();
+
+    final boolean canModify = checkCanModify( row, column );
+
+    setBackground( canModify ? m_canEditColor : m_cannotEditColor );
+  }
+
+  private boolean checkCanModify( final TableItem row, final int column )
+  {
+    if( m_viewer == null )
+      return false;
+    
     final String property = m_viewer.getColumnProperties()[column].toString();
-    
     final ICellModifier modifier = m_viewer.getCellModifier();
-    if( modifier != null )
-    {
-      if( modifier.canModify( row.getData(), property ) )
-        setBackground( m_canEditColor );
-      else
-        setBackground( m_cannotEditColor );
-    }
+    if( modifier == null )
+      return false;
     
-    e.getClass();
-  //    nichts tun
+    return modifier.canModify( row.getData(), property );
   }
 
   /**

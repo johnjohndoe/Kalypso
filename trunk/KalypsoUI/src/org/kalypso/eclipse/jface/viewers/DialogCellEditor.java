@@ -1,6 +1,5 @@
 package org.kalypso.eclipse.jface.viewers;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -8,9 +7,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * @author belger
+ * @author Belger
  */
-public class DialogCellEditor extends CellEditor
+public abstract class DialogCellEditor extends CellEditor
 {
   private Object m_value;
 
@@ -34,8 +33,9 @@ public class DialogCellEditor extends CellEditor
    */
   protected Control createControl( final Composite parent )
   {
-    final Text text = new Text( parent, SWT.NONE );
-    text.setText( "editing" );
+    final Text text = new Text( parent, SWT.CENTER );
+    text.setText( "<Element wird gerade editiert>" );
+    text.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY ) );
     return text;
   }
 
@@ -52,10 +52,7 @@ public class DialogCellEditor extends CellEditor
    */
   protected void doSetFocus()
   {
-   // oder hier?
-    final boolean b = MessageDialog.openConfirm( getControl().getShell(), "Editor", "Hall" );
-
-    if( b )
+    if( openDialog( getControl() ) )
     {
       setValueValid( true );
       fireApplyEditorValue();
@@ -63,6 +60,8 @@ public class DialogCellEditor extends CellEditor
     else
       fireCancelEditor();
   }
+
+  protected abstract boolean openDialog( final Control control );
 
   /**
    * @see org.eclipse.jface.viewers.CellEditor#doSetValue(java.lang.Object)

@@ -4,11 +4,11 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.editor.tableeditor.layerTable.LayerTableViewer;
 import org.kalypso.ogc.command.AddFeatureCommand;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.util.command.ICommand;
 
 /**
