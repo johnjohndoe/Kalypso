@@ -1,10 +1,11 @@
 package org.kalypso.ogc.sensor.template;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.eclipse.core.resources.IProject;
-import org.kalypso.java.util.Arrays;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.DiagramAxis;
 import org.kalypso.ogc.sensor.diagview.DiagramTemplate;
@@ -47,16 +48,18 @@ public class LinkedDiagramTemplate implements IDiagramTemplate, ILinkResolverLis
       m_template.addAxis( new DiagramAxis( baseAxis ) );
     }
 
+    // the list of curves, will be added to template once links are resolved
+    final List curves = new ArrayList();
     for( final Iterator it = obsDiagView.getCurve().iterator(); it.hasNext(); )
     {
       final ObsdiagviewType.CurveType baseCurve = (ObsdiagviewType.CurveType)it.next();
 
-      m_template.addCurve( ObservationTemplateHelper.createCurve( baseCurve, this ) );
+      curves.add( ObservationTemplateHelper.createCurve( baseCurve, this ) );
     }
 
     // resolve the links!
-    new LinkResolver( (LinkedDiagramCurve[])Arrays.castArray( m_template.getCurveList(),
-        new LinkedDiagramCurve[0] ), IObservation.class, project, this );
+    new LinkResolver( (LinkedDiagramCurve[])curves.toArray( new LinkedDiagramCurve[0] ),
+        IObservation.class, project, this );
   }
 
   public boolean equals( Object obj )
