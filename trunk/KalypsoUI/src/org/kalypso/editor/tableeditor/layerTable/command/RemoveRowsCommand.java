@@ -1,7 +1,7 @@
 package org.kalypso.editor.tableeditor.layerTable.command;
 
 import org.kalypso.editor.tableeditor.layerTable.LayerTableModel;
-import org.kalypso.ogc.sort.DisplayContext;
+import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -10,12 +10,12 @@ import org.kalypso.util.command.ICommand;
 public class RemoveRowsCommand implements ICommand
 {
   private final LayerTableModel m_model;
-  private DisplayContext[] m_displayContexts;
+  private KalypsoFeature[] m_features;
 
-  public RemoveRowsCommand( final LayerTableModel model, final DisplayContext[] displayContexts )
+  public RemoveRowsCommand( final LayerTableModel model, final KalypsoFeature[] features )
   {
     m_model = model;
-    m_displayContexts = displayContexts;
+    m_features=features;
   }
 
   /**
@@ -31,8 +31,8 @@ public class RemoveRowsCommand implements ICommand
    */
   public void process() throws Exception
   {
-    for( int i = 0; i < m_displayContexts.length; i++ )
-      m_model.removeRow(m_displayContexts[i]);  
+    for( int i = 0; i < m_features.length; i++ )
+      m_model.removeRow(m_features[i]);  
   }
 
   /**
@@ -48,8 +48,8 @@ public class RemoveRowsCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    for( int i = 0; i < m_displayContexts.length; i++ )
-      m_model.addRow( m_displayContexts[i] );  
+    for( int i = 0; i < m_features.length; i++ )
+      m_model.addRow( m_features[i] );  
   }
 
   /**

@@ -3,7 +3,7 @@ package org.kalypso.editor.tableeditor.layerTable;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.ogc.sort.DisplayContext;
+import org.kalypso.ogc.gml.KalypsoFeature;
 
 /**
  * @author bce
@@ -31,7 +31,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider
   public String getColumnText( Object element, int columnIndex )
   {
     final String name = m_layerTable.getFeatureTypePropertyFromIndex(columnIndex).getName();
-    final Object property = ((DisplayContext)element).getFeature().getProperty( name );
+    final Object property = ((KalypsoFeature)element).getProperty( name );
     return property == null ? "" : property.toString();
   }
 

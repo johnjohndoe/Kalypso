@@ -1,6 +1,5 @@
 package org.kalypso.editor.mapeditor;
 
-import org.deegree.graphics.Theme;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -30,6 +29,7 @@ import org.kalypso.ogc.command.MoveThemeDownCommand;
 import org.kalypso.ogc.command.MoveThemeUpCommand;
 import org.kalypso.ogc.command.RemoveThemeCommand;
 import org.kalypso.ogc.event.ModellEvent;
+import org.kalypso.ogc.gml.KalypsoTheme;
 import org.kalypso.plugin.ImageProvider;
 import org.kalypso.util.command.ICommandManager;
 import org.kalypso.util.command.RedoAction;
@@ -37,7 +37,7 @@ import org.kalypso.util.command.UndoAction;
 import org.kalypso.util.list.IListManipulator;
 
 /**
- * OutlinePage für das MapView-Template
+ * OutlinePage f?r das MapView-Template
  * 
  * @author gernot
  */
@@ -92,14 +92,14 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
         ImageProvider.IMAGE_MAPVIEW_OUTLINE_UP, "Thema eins nach oben verschieben", m_viewer,
         this );
 
-    m_removeAction = new RemoveThemeAction( "Thema löschen",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, "Thema löschen", m_viewer, this );
+    m_removeAction = new RemoveThemeAction( "Thema l?schen",
+        ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, "Thema l?schen", m_viewer, this );
 
-    m_addAction = new AddThemeAction( "Thema hinzufügen", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD,
-        "Thema hinzufügen", m_viewer, this );
+    m_addAction = new AddThemeAction( "Thema hinzuf?gen", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD,
+        "Thema hinzuf?gen", m_viewer, this );
     
-    m_openStyleDialogAction = new OpenStyleDialogAction( "Style verändern", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD,
-            "Style ändern", m_viewer, this );
+    m_openStyleDialogAction = new OpenStyleDialogAction( "Style ver?ndern", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD,
+            "Style ?ndern", m_viewer, this );
         
     onModellChange(null);
   }
@@ -260,7 +260,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
           public void run()
           {
             if( !item.isDisposed() )
-              item.setChecked( mm.isThemeEnabled( (Theme)item.getData() ) );
+              item.setChecked( mm.isThemeEnabled( (KalypsoTheme)item.getData() ) );
           }
         } );
       }
@@ -276,8 +276,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     {
       final TableTreeItem ti = (TableTreeItem)e.item;
       final Object data = ti.getData();
-      if( data instanceof Theme )
-        m_commandManager.postCommand( new EnableThemeCommand( m_mapModell, (Theme)data, ti
+      if( data instanceof KalypsoTheme )
+        m_commandManager.postCommand( new EnableThemeCommand( m_mapModell, (KalypsoTheme)data, ti
             .getChecked() ), null );
     }
   }
@@ -296,7 +296,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void moveElementDown( final Object element )
   {
-    m_commandManager.postCommand( new MoveThemeUpCommand( m_mapModell, (Theme)element ), new SelectThemeRunner( (Theme)element ) );
+    m_commandManager.postCommand( new MoveThemeUpCommand( m_mapModell, (KalypsoTheme)element ), new SelectThemeRunner( (KalypsoTheme)element ) );
   }
 
   /**
@@ -304,7 +304,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void moveElementUp( final Object element )
   {
-    m_commandManager.postCommand( new MoveThemeDownCommand( m_mapModell, (Theme)element ), new SelectThemeRunner( (Theme)element ) );
+    m_commandManager.postCommand( new MoveThemeDownCommand( m_mapModell, (KalypsoTheme)element ), new SelectThemeRunner( (KalypsoTheme)element ) );
   }
 
   /**
@@ -312,7 +312,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void removeElement( final Object element )
   {
-    m_commandManager.postCommand( new RemoveThemeCommand( m_mapModell, (Theme)element ), new SelectThemeRunner( (Theme)element ) );
+    m_commandManager.postCommand( new RemoveThemeCommand( m_mapModell, (KalypsoTheme)element ), new SelectThemeRunner( (KalypsoTheme)element ) );
   }
 
   /**
@@ -326,9 +326,9 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   
   private final class SelectThemeRunner implements Runnable
   {
-    public final Theme m_theme;
+    public final KalypsoTheme m_theme;
 
-    public SelectThemeRunner( final Theme theme )
+    public SelectThemeRunner( final KalypsoTheme theme )
     {
       m_theme = theme;
     }

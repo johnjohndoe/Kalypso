@@ -12,6 +12,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ogc.gml.GMLHelper;
+import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.loader.ILoader;
@@ -81,7 +82,8 @@ public class ShapeLoader implements ILoader
       {
           final Feature fe = sf.getFeatureByRecNo( i + 1 );       
           GMLHelper.setCrs( fe, srcCS);
-          layer.addFeature( fe );
+          if(fe!=null)
+           layer.addFeature( new KalypsoFeature(fe) );
       }
 
       sf.close();

@@ -10,7 +10,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.deegree.graphics.Layer;
+
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
@@ -205,7 +205,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
     try
     {
-      final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)plugin.getPool( Layer.class )
+      final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)plugin.getPool( KalypsoFeatureLayer.class )
           .borrowObject( new PoolableObjectType( m_type, m_source, project ) );
 
       final List columnList = layerType.getColumn();

@@ -11,7 +11,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.pool.KeyedObjectPool;
-import org.deegree.graphics.Layer;
 import org.deegree.graphics.sld.UserStyle;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
@@ -30,6 +29,7 @@ import org.kalypso.ogc.IMapModellProvider;
 import org.kalypso.ogc.IMapPanelProvider;
 import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.MapPanel;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.xml.gisview.Gisview;
 import org.kalypso.xml.gisview.ObjectFactory;
@@ -198,7 +198,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
 
-    final KeyedObjectPool layerPool = KalypsoGisPlugin.getDefault().getPool( Layer.class );
+    final KeyedObjectPool layerPool = KalypsoGisPlugin.getDefault().getPool( KalypsoFeatureLayer.class );
     final KeyedObjectPool stylePool = KalypsoGisPlugin.getDefault().getPool( UserStyle.class );
 
     m_mapModell = new MapModell( gisview, KalypsoGisPlugin.getDefault()

@@ -6,7 +6,6 @@
  */
 package org.kalypso.editor.mapeditor;
 
-import org.deegree.graphics.Theme;
 import org.deegree.graphics.sld.UserStyle;
 import org.kalypso.ogc.gml.KalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
@@ -22,7 +21,7 @@ public class ThemeStyleTreeObject {
 
 	private final KalypsoTheme myTheme;
 
-	public ThemeStyleTreeObject(Theme theme, UserStyle style)
+	public ThemeStyleTreeObject(KalypsoTheme theme, UserStyle style)
 	{
 		myTheme = (KalypsoTheme)theme;
 		myStyle = (KalypsoUserStyle)style;
