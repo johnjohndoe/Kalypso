@@ -1,6 +1,5 @@
 package org.kalypso.ogc.sort;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -125,51 +124,56 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
     return mySort.query( position, list );
   }
 
-  public void paint( Graphics g, GeoTransform projection, UserStyle style, double scale,
-      GM_Envelope boundingBox )
+  public void paint( final Graphics g, final GeoTransform projection, final double scale, final GM_Envelope boundingBox )
   {
     if( myIsDirty )
       reStyleAll();
-    List list = new ArrayList();
+
+    final List list = new ArrayList();
+
     mySort.query( boundingBox, list );
-    Iterator it = list.iterator();
-    int styleNo = getStyleNo( style );
-    while( it.hasNext() )
+
+    for( int i = 0; i < myStyles.size(); i++ )
     {
-      ( (KalypsoFeature)it.next() ).paint( g, projection, styleNo, scale );
+      //    final int styleNo = getStyleNo( style );
+      for( final Iterator it = list.iterator(); it.hasNext(); )
+        ( (KalypsoFeature)it.next() ).paint( g, projection, i, scale );
     }
   }
 
-  public void paintSelected( Graphics g, GeoTransform projection, UserStyle style, double scale,
-      GM_Envelope boundingBox, int selectionId )
+  public void paintSelected( final Graphics g, final GeoTransform projection, final double scale,
+      final GM_Envelope boundingBox, final int selectionId )
   {
     if( myIsDirty )
       reStyleAll();
     List list = new ArrayList();
     mySort.query( boundingBox, list );
-    Iterator it = list.iterator();
-    int styleNo = getStyleNo( style );
-    while( it.hasNext() )
+    
+    for( int i = 0; i < myStyles.size(); i++ )
     {
-      KalypsoFeature kalypsoFeature = (KalypsoFeature)it.next();
-      if( kalypsoFeature.isSelected( selectionId ) )
-        kalypsoFeature.paint( g, projection, styleNo, scale );
+      // int styleNo = getStyleNo( style );
+      for( final Iterator it = list.iterator(); it.hasNext(); )
+      {
+        final KalypsoFeature kalypsoFeature = (KalypsoFeature)it.next();
+        if( kalypsoFeature.isSelected( selectionId ) )
+          kalypsoFeature.paint( g, projection, i, scale );
+      }
     }
   }
 
-  public void paint( Graphics g, GeoTransform projection, UserStyle style, GM_Envelope boundingBox )
-  {
-    if( myIsDirty )
-      reStyleAll();
-    List list = new ArrayList();
-    mySort.query( boundingBox, list );
-    Iterator it = list.iterator();
-    int styleNo = getStyleNo( style );
-    while( it.hasNext() )
-    {
-      ( (KalypsoFeature)it.next() ).paint( g, projection, styleNo );
-    }
-  }
+//  public void paint( Graphics g, GeoTransform projection, UserStyle style, GM_Envelope boundingBox )
+//  {
+//    if( myIsDirty )
+//      reStyleAll();
+//    List list = new ArrayList();
+//    mySort.query( boundingBox, list );
+//    Iterator it = list.iterator();
+//    int styleNo = getStyleNo( style );
+//    while( it.hasNext() )
+//    {
+//      ( (KalypsoFeature)it.next() ).paint( g, projection, styleNo );
+//    }
+//  }
 
   private void transformFeature( KalypsoFeature fe ) throws Exception
   {
@@ -207,7 +211,6 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
 
   public void addStyle( KalypsoUserStyle style )
   {
-
     if( myStyles.contains( style ) )
     {
       if( style == null )
@@ -269,15 +272,15 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
     myIsDirty = false;
   }
 
-  private UserStyle[] getStyles()
+  public UserStyle[] getStyles()
   {
     return (UserStyle[])myStyles.toArray( new UserStyle[myStyles.size()] );
   }
 
-  private int getStyleNo( UserStyle style )
-  {
-    return myStyles.indexOf( style );
-  }
+//  private int getStyleNo( UserStyle style )
+//  {
+//    return myStyles.indexOf( style );
+//  }
 
   private void setDirty()
   {

@@ -14,13 +14,13 @@ import org.kalypso.ogc.event.ModellEventProviderAdapter;
 /**
  * @author vdoemming
  */
-public class KalypsoTheme implements ModellEventProvider, ModellEventListener//Theme, 
+public class KalypsoTheme implements ModellEventProvider, ModellEventListener//Theme,
 {
   private ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
 
   private KalypsoFeatureLayer myLayer = null;
 
-  private KalypsoUserStyle[] myStyles = null;
+//  private KalypsoUserStyle[] myStyles = null;
 
   public boolean DEBUG_ENV = false;
 
@@ -31,7 +31,7 @@ public class KalypsoTheme implements ModellEventProvider, ModellEventListener//T
   public KalypsoTheme( final KalypsoFeatureLayer layer, final String name )
   {
     myLayer = layer;
-    myStyles = new KalypsoUserStyle[] {};
+//    myStyles = new KalypsoUserStyle[] {};
     myName = name;
 
     myLayer.addModellListener( this );
@@ -49,12 +49,12 @@ public class KalypsoTheme implements ModellEventProvider, ModellEventListener//T
   {
     return myName;
   }
-  
+
   public void setName( final String name )
   {
     myName = name;
-    
-    fireModellEvent(null);
+
+    fireModellEvent( null );
   }
 
   /**
@@ -65,52 +65,65 @@ public class KalypsoTheme implements ModellEventProvider, ModellEventListener//T
     double scale = myParent.getScale( g );
     GeoTransform p = myParent.getProjection();
     GM_Envelope bbox = myParent.getBoundingBox();
-    for( int i = 0; i < myStyles.length; i++ )
-      myLayer.getSort().paint( g, p, myStyles[i], scale, bbox );
+//    for( int i = 0; i < myStyles.length; i++ )
+      myLayer.getSort().paint( g, p, scale, bbox );
 
     //    if( DEBUG_ENV )
     //      myIndexDE.paint( g, myParent.getProjection() );
   }
 
-  public void paintSelected( Graphics g,int selectionId )
+  public void paintSelected( Graphics g, int selectionId )
   {
     double scale = myParent.getScale( g );
     GeoTransform p = myParent.getProjection();
     GM_Envelope bbox = myParent.getBoundingBox();
-    for( int i = 0; i < myStyles.length; i++ )
-      myLayer.getSort().paintSelected( g, p, myStyles[i], scale, bbox ,selectionId);
+//    for( int i = 0; i < myStyles.length; i++ )
+      myLayer.getSort().paintSelected( g, p, scale, bbox, selectionId );
 
     //    if( DEBUG_ENV )
     //      myIndexDE.paint( g, myParent.getProjection() );
   }
-  
-  /**
-   * stes the styles used for this <tt>Theme</tt>. If this method will be
-   * called all <tt>DisplayElement</tt> s will be recreated to consider the
-   * new style definitions.
-   */
-  public void setStyles( final UserStyle[] styles )
-  {
-    for( int i = 0; i < myStyles.length; i++ )
+
+  //  /**
+  //   * stes the styles used for this <tt>Theme</tt>. If this method will be
+  //   * called all <tt>DisplayElement</tt> s will be recreated to consider the
+  //   * new style definitions.
+  //   */
+  //  public void setStyles( final UserStyle[] styles )
+  //  {
+  //    for( int i = 0; i < myStyles.length; i++ )
+  //      myLayer.getSort().removeStyle( myStyles[i] );
+  //
+  //    myStyles = (KalypsoUserStyle[])styles;
+  //    
+  //    for( int i = 0; i < myStyles.length; i++ )
+  //    {
+  //      final KalypsoUserStyle kus = (KalypsoUserStyle)styles[i];
+  //      myLayer.getSort().addStyle( kus );
+  //    }
+  //  }
+  //
+    /**
+     * returns the styles used for this <tt>Theme</tt>.
+     */
+    public UserStyle[] getStyles()
     {
-      myLayer.getSort().removeStyle( myStyles[i] );
+      //return myStyles;
+      return myLayer.getSort().getStyles();
     }
 
-    myStyles = (KalypsoUserStyle[])styles;
-    
-    for( int i = 0; i < myStyles.length; i++ )
-    {
-      final KalypsoUserStyle kus = (KalypsoUserStyle)styles[i];
-      myLayer.getSort().addStyle( kus );
-    }
+  public void addStyle( final KalypsoUserStyle style )
+  {
+    myLayer.getSort().addStyle( style );
+
+    fireModellEvent( null );
   }
 
-  /**
-   * returns the styles used for this <tt>Theme</tt>.
-   */
-  public UserStyle[] getStyles()
+  public void removeStyle( final KalypsoUserStyle style )
   {
-    return myStyles;
+    myLayer.getSort().removeStyle( style );
+
+    fireModellEvent( null );
   }
 
   /**
@@ -120,9 +133,7 @@ public class KalypsoTheme implements ModellEventProvider, ModellEventListener//T
   {
     return myLayer;
   }
-  
-  
- 
+
   public void setParent( MapModell parent )
   {
     myParent = parent;
@@ -130,7 +141,7 @@ public class KalypsoTheme implements ModellEventProvider, ModellEventListener//T
 
   public String toString()
   {
-      return myName;
+    return myName;
   }
 
   /**
@@ -139,7 +150,7 @@ public class KalypsoTheme implements ModellEventProvider, ModellEventListener//T
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-  	fireModellEvent(modellEvent);
+    fireModellEvent( modellEvent );
   }
 
   public void addModellListener( ModellEventListener listener )

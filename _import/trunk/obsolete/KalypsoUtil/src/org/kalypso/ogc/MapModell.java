@@ -2,12 +2,10 @@ package org.kalypso.ogc;
 
 import java.awt.Component;
 import java.awt.Graphics;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
-import org.apache.commons.pool.KeyedObjectPool;
 import org.deegree.graphics.RenderException;
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
@@ -20,15 +18,7 @@ import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.event.ModellEventProvider;
 import org.kalypso.ogc.event.ModellEventProviderAdapter;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.KalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
-import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.gismapview.GismapviewType;
-import org.kalypso.template.gismapview.GismapviewType.LayersType;
-import org.kalypso.template.types.StyledLayerType.StyleType;
-import org.kalypso.util.pool.IPoolableObjectType;
-import org.kalypso.util.pool.PoolableObjectType;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -44,96 +34,93 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
 
   private final static Boolean THEME_DISABLED = new Boolean( false );
 
-  private final Vector myThemes;
+  private final Vector myThemes = new Vector();
 
-  private final HashMap myEnabledThemeStatus;
+  private final Map myEnabledThemeStatus = new HashMap();
 
   private final CS_CoordinateSystem myCoordinatesSystem;
 
-  private final GeoTransform myProjection;
+  private final GeoTransform myProjection = new WorldToScreenTransform();
+  
   private KalypsoTheme myActiveTheme = null;
 
   private GM_Envelope myBoundingBox = null;
 
   private double myScale = 1;
 
-  public MapModell( Component component, CS_CoordinateSystem crs )
+  public MapModell( final Component component, final CS_CoordinateSystem crs )
   {
     myComponent = component;
     myCoordinatesSystem = crs;
-    myThemes = new Vector();
-    myEnabledThemeStatus = new HashMap();
-    myProjection = new WorldToScreenTransform();    
-
   }
 
-  public MapModell( final Gismapview gisview, final CS_CoordinateSystem crs,
-      final KeyedObjectPool layerPool, final KeyedObjectPool stylePool, final Object helper,
-      final Component component )
-  {
-    myComponent = component;
-    myEnabledThemeStatus = new HashMap();
-    myActiveTheme = null;
-    myCoordinatesSystem = crs;
-    myThemes = new Vector();
-    myProjection = new WorldToScreenTransform();    
-
-    final LayersType layerListType = gisview.getLayers();
-    final List layerList = layerListType.getLayer();
-
-    for( int i = 0; i < layerList.size(); i++ )
-    {
-      final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList.get( i );
-
-      final KalypsoFeatureLayer layer;
-      try
-      {
-        layer = (KalypsoFeatureLayer)layerPool.borrowObject( new PoolableObjectType( layerType
-            .getLinktype(), layerType.getHref(), helper ) );
-      }
-      catch( Exception e1 )
-      {
-        e1.printStackTrace();
-        continue;
-      }
-
-      final KalypsoTheme theme = new KalypsoTheme( layer, layerType.getName() );
-      final List stylesList = layerType.getStyle();
-
-      final List result = new ArrayList();
-      for( int is = 0; is < stylesList.size(); is++ )
-      {
-        final StyleType styleType = ( (StyleType)stylesList.get( is ) );
-        final IPoolableObjectType styleID = new PoolableObjectType( styleType.getLinktype(), styleType
-            .getHref(), helper );
-        try
-        {
-          final KalypsoUserStyle style = (KalypsoUserStyle)stylePool.borrowObject( styleID );
-          result.add( style );
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-        }
-      }
-
-      if( result.size() == 0 )
-        theme.setStyles( new KalypsoUserStyle[]
-        { null } );
-      else
-        theme.setStyles( (KalypsoUserStyle[])result.toArray( new KalypsoUserStyle[result.size()] ) );
-
-      try
-      {
-        addTheme( theme );
-      }
-      catch( Exception ex )
-      {
-        System.out.println( "could not add Theme" );
-        ex.printStackTrace();
-      }
-    }
-  }
+//  public MapModell( final Gismapview gisview, final CS_CoordinateSystem crs,
+//      final KeyedObjectPool layerPool, final KeyedObjectPool stylePool, final Object helper,
+//      final Component component )
+//  {
+//    myComponent = component;
+//    myEnabledThemeStatus = new HashMap();
+//    myActiveTheme = null;
+//    myCoordinatesSystem = crs;
+//    myThemes = new Vector();
+//    myProjection = new WorldToScreenTransform();    
+//
+//    final LayersType layerListType = gisview.getLayers();
+//    final List layerList = layerListType.getLayer();
+//
+//    for( int i = 0; i < layerList.size(); i++ )
+//    {
+//      final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList.get( i );
+//
+//      final KalypsoFeatureLayer layer;
+//      try
+//      {
+//        layer = (KalypsoFeatureLayer)layerPool.borrowObject( new PoolableObjectType( layerType
+//            .getLinktype(), layerType.getHref(), helper ) );
+//      }
+//      catch( Exception e1 )
+//      {
+//        e1.printStackTrace();
+//        continue;
+//      }
+//
+//      final KalypsoTheme theme = new KalypsoTheme( layer, layerType.getName() );
+//      final List stylesList = layerType.getStyle();
+//
+//      final List result = new ArrayList();
+//      for( int is = 0; is < stylesList.size(); is++ )
+//      {
+//        final StyleType styleType = ( (StyleType)stylesList.get( is ) );
+//        final IPoolableObjectType styleID = new PoolableObjectType( styleType.getLinktype(), styleType
+//            .getHref(), helper );
+//        try
+//        {
+//          final KalypsoUserStyle style = (KalypsoUserStyle)stylePool.borrowObject( styleID );
+//          result.add( style );
+//        }
+//        catch( Exception e )
+//        {
+//          e.printStackTrace();
+//        }
+//      }
+//
+//      if( result.size() == 0 )
+//        theme.setStyles( new KalypsoUserStyle[]
+//        { null } );
+//      else
+//        theme.setStyles( (KalypsoUserStyle[])result.toArray( new KalypsoUserStyle[result.size()] ) );
+//
+//      try
+//      {
+//        addTheme( theme );
+//      }
+//      catch( final Exception ex )
+//      {
+//        System.out.println( "could not add Theme" );
+//        ex.printStackTrace();
+//      }
+//    }
+//  }
 
   public void activateTheme( KalypsoTheme theme )
   {

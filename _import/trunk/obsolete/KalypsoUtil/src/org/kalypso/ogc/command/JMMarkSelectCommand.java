@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
-import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.gml.KalypsoTheme;
 import org.kalypso.util.command.ICommand;
 
