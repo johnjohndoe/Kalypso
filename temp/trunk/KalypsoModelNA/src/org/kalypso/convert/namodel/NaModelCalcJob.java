@@ -401,6 +401,7 @@ public class NaModelCalcJob extends AbstractCalcJob
         // write result
         final ObservationType observationType = ZmlFactory.createXML( resultObservation, null );
         final Marshaller marshaller = ZmlFactory.getMarshaller();
+        marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
         final Writer writer = new FileWriter( resultFile );
         marshaller.marshal( observationType, writer );
         writer.close();

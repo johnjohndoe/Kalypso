@@ -133,6 +133,7 @@ public class NAZMLGenerator
     IObservation observation = ZmlFactory.parseXML( zmlTmpFile.toURL(), "ID" );
     ObservationType type = ZmlFactory.createXML( observation, null );
     Marshaller marshaller = ZmlFactory.getMarshaller();
+    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     Writer writer = new FileWriter( targetZmlFile );
     marshaller.marshal( type, writer );
     writer.close();
