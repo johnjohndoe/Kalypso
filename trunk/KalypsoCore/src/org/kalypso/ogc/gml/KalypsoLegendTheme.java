@@ -48,8 +48,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -62,7 +62,6 @@ import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
  * @author sbad0205
@@ -247,19 +246,12 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     g.setPaintMode();
     g.fillRect( 0, 0, width, height );
     final Feature feature = FeatureFactory.createDefaultFeature( ft, true );
-    try
+    DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[]
+    { style }, null );
+    for( int i = 0; i < des.length; i++ )
     {
-      DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[]
-      { style }, null );
-      for( int i = 0; i < des.length; i++ )
-      {
-        DisplayElement de = des[i];
-        de.paint( g, transform );
-      }
-    }
-    catch( IncompatibleGeometryTypeException e )
-    {
-      e.printStackTrace();
+      DisplayElement de = des[i];
+      de.paint( g, transform );
     }
     return image;
   }

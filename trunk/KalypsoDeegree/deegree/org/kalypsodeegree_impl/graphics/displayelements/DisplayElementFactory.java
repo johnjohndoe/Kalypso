@@ -115,7 +115,6 @@ public class DisplayElementFactory
    * returns the display elements associated to a feature
    */
   public static DisplayElement[] createDisplayElement( Object o, UserStyle[] styles,GMLWorkspace workspace )
-      throws IncompatibleGeometryTypeException
   {
     Debug.debugMethodBegin( "DisplayElementFactory", "getDisplayElement" );
 

@@ -387,7 +387,7 @@ public class Feature_Impl implements Feature
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.Feature#getVirtuelProperty(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.Feature#getVirtuelProperty(java.lang.String, org.kalypsodeegree.model.feature.GMLWorkspace)
    */
   public Object getVirtuelProperty( String propertyName, GMLWorkspace workspace )
   {
