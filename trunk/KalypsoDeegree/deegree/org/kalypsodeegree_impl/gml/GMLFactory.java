@@ -42,19 +42,40 @@
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.gml;
 
-import org.deegree.gml.*;
-import org.deegree.model.feature.*;
-import org.deegree.model.geometry.*;
+import org.deegree.gml.GMLCoordinates;
+import org.deegree.gml.GMLException;
+import org.deegree.gml.GMLFeature;
+import org.deegree.gml.GMLFeatureCollection;
+import org.deegree.gml.GMLGeometry;
+import org.deegree.gml.GMLLineString;
+import org.deegree.gml.GMLLinearRing;
+import org.deegree.gml.GMLMultiLineString;
+import org.deegree.gml.GMLMultiPoint;
+import org.deegree.gml.GMLMultiPolygon;
+import org.deegree.gml.GMLPoint;
+import org.deegree.gml.GMLPolygon;
+import org.deegree.gml.GMLProperty;
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.geometry.GM_Curve;
+import org.deegree.model.geometry.GM_LineString;
+import org.deegree.model.geometry.GM_MultiCurve;
+import org.deegree.model.geometry.GM_MultiPoint;
+import org.deegree.model.geometry.GM_MultiSurface;
+import org.deegree.model.geometry.GM_Object;
+import org.deegree.model.geometry.GM_Point;
+import org.deegree.model.geometry.GM_Position;
+import org.deegree.model.geometry.GM_Surface;
 import org.deegree.xml.XMLTools;
-
 import org.deegree_impl.extension.ITypeHandler;
 import org.deegree_impl.extension.ITypeRegistry;
-import org.deegree_impl.extension.TypeRegistryException;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.model.feature.XLinkFeatureTypeProperty;
-import org.deegree_impl.tools.*;
-
-import org.w3c.dom.*;
+import org.deegree_impl.tools.Debug;
+import org.deegree_impl.tools.StringExtend;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * class containing factory methods for creating GML-Objects from DOM-Elements
@@ -558,21 +579,21 @@ public class GMLFactory
       {
         if( properties[i] != null )
         {
-           if( ftp[i] instanceof XLinkFeatureTypeProperty )
+          if( ftp[i] instanceof XLinkFeatureTypeProperty )
             prop = GMLProperty_Impl.createGMLProperty( doc, ftp[i], properties[i].toString() );
           else
-           {
+          {
             final String type = ftp[i].getType();
             final ITypeRegistry typeRegistry = TypeRegistrySingleton.getTypeRegistry();
-            if( typeRegistry.hasClassName(type) )
+            if( typeRegistry.hasClassName( type ) )
             {
-             final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForClassName( type );
-                prop = GMLCustomProperty_Impl.createGMLProperty( doc, ftp[i], properties[i] );
-            }      
+              final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForClassName( type );
+              prop = GMLCustomProperty_Impl.createGMLProperty( doc, ftp[i], properties[i] );
+            }
             else
               prop = GMLProperty_Impl.createGMLProperty( doc, ftp[i].getName(), properties[i]
-                .toString() );
-           }
+                  .toString() );
+          }
         }
         else
         {
@@ -609,13 +630,13 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.3  2004/08/18 20:27:32  belger
+ * Revision 1.4  2004/08/30 00:36:58  doemming
  * *** empty log message ***
- *
- * Revision 1.2  2004/08/11 11:20:16  doemming
- * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:24 doemming
- * backup of local modified deegree sources
+ * Revision 1.3 2004/08/18 20:27:32 belger *** empty
+ * log message ***
+ * 
+ * Revision 1.2 2004/08/11 11:20:16 doemming *** empty log message *** Revision
+ * 1.1.1.1 2004/05/11 16:43:24 doemming backup of local modified deegree sources
  * 
  * Revision 1.8 2004/03/29 10:37:13 poth no message
  * 

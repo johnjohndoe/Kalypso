@@ -42,28 +42,48 @@
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.services.wms;
 
-import com.sun.media.jai.codec.*;
-
-import java.awt.image.*;
-
-import java.io.*;
-
-import java.net.*;
-
-import java.util.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.net.URL;
+import java.util.HashMap;
 
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 
-import org.deegree.services.*;
-import org.deegree.services.capabilities.*;
-import org.deegree.services.wms.capabilities.*;
-import org.deegree.services.wms.protocol.*;
+import org.deegree.services.OGCWebServiceClient;
+import org.deegree.services.OGCWebServiceEvent;
+import org.deegree.services.OGCWebServiceException;
+import org.deegree.services.OGCWebServiceRequest;
+import org.deegree.services.OGCWebServiceResponse;
+import org.deegree.services.WebServiceException;
+import org.deegree.services.capabilities.DCPType;
+import org.deegree.services.capabilities.HTTP;
+import org.deegree.services.wms.capabilities.Operation;
+import org.deegree.services.wms.capabilities.Request;
+import org.deegree.services.wms.capabilities.WMSCapabilities;
+import org.deegree.services.wms.protocol.WMSDescribeLayerRequest;
+import org.deegree.services.wms.protocol.WMSFeatureInfoRequest;
+import org.deegree.services.wms.protocol.WMSFeatureInfoResponse;
+import org.deegree.services.wms.protocol.WMSGetCapabilitiesRequest;
+import org.deegree.services.wms.protocol.WMSGetCapabilitiesResponse;
+import org.deegree.services.wms.protocol.WMSGetLegendGraphicRequest;
+import org.deegree.services.wms.protocol.WMSGetMapRequest;
+import org.deegree.services.wms.protocol.WMSGetMapResponse;
+import org.deegree.services.wms.protocol.WMSGetStylesRequest;
+import org.deegree.services.wms.protocol.WMSPutStylesRequest;
+import org.deegree_impl.services.OGCWebServiceEvent_Impl;
+import org.deegree_impl.services.OGCWebServiceException_Impl;
+import org.deegree_impl.services.OGCWebService_Impl;
+import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
+import org.deegree_impl.services.wms.protocol.WMSProtocolFactory;
+import org.deegree_impl.tools.Debug;
+import org.deegree_impl.tools.MimeTypeMapper;
+import org.deegree_impl.tools.NetWorker;
+import org.deegree_impl.tools.StringExtend;
 
-import org.deegree_impl.services.*;
-import org.deegree_impl.services.wms.capabilities.*;
-import org.deegree_impl.services.wms.protocol.*;
-import org.deegree_impl.tools.*;
+import com.sun.media.jai.codec.MemoryCacheSeekableStream;
 
 /**
  * An instance of the class acts as a wrapper to a remote WMS.
@@ -272,8 +292,8 @@ public class RemoteWMService extends OGCWebService_Impl
 
     String remoteAddress = NetWorker.url2String( url );
     String param = request.getRequestParameter();
-    
-    String us = remoteAddress + "?" + url.getQuery()+param;
+
+    String us = remoteAddress + "?" + url.getQuery() + param;
     Debug.debugObject( "remote wms getmap", us );
 
     if( capabilities.getVersion().compareTo( "1.0.0" ) <= 0 )
@@ -295,7 +315,7 @@ public class RemoteWMService extends OGCWebService_Impl
           URL ur = new URL( laddress );
           // get map from the remote service
           NetWorker nw = new NetWorker( ur );
-         
+
           InputStream is = nw.getInputStream();
 
           String contentType = nw.getContentType();
@@ -658,8 +678,8 @@ public class RemoteWMService extends OGCWebService_Impl
      * 
      * @param is
      * 
-     * @return 
-     * @throws IOException
+     * @return @throws
+     *         IOException
      */
     protected String getInputStreamContent( InputStream is ) throws IOException
     {

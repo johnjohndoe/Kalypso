@@ -1,44 +1,44 @@
 /*----------------    FILE HEADER  ------------------------------------------
 
-This file is part of deegree.
-Copyright (C) 2001 by:
-EXSE, Department of Geography, University of Bonn
-http://www.giub.uni-bonn.de/exse/
-lat/lon Fitzke/Fretter/Poth GbR
-http://www.lat-lon.de
+ This file is part of deegree.
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon Fitzke/Fretter/Poth GbR
+ http://www.lat-lon.de
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
 
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-Contact:
+ Contact:
 
-Andreas Poth
-lat/lon Fitzke/Fretter/Poth GbR
-Meckenheimer Allee 176
-53115 Bonn
-Germany
-E-Mail: poth@lat-lon.de
+ Andreas Poth
+ lat/lon Fitzke/Fretter/Poth GbR
+ Meckenheimer Allee 176
+ 53115 Bonn
+ Germany
+ E-Mail: poth@lat-lon.de
 
-Jens Fitzke
-Department of Geography
-University of Bonn 
-Meckenheimer Allee 166
-53115 Bonn
-Germany
-E-Mail: jens.fitzke@uni-bonn.de
+ Jens Fitzke
+ Department of Geography
+ University of Bonn 
+ Meckenheimer Allee 166
+ 53115 Bonn
+ Germany
+ E-Mail: jens.fitzke@uni-bonn.de
 
-                 
+ 
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.services.wfs.capabilities;
 
@@ -85,667 +85,735 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-
 /**
- * Factory class for creating WFS capability classes from a WFS capabilities
- * XML document that's conform to OGC WFS  specification.
- *
- * <p>----------------------------------------------------------------------</p>
- *
- * @author <a href="mailto:poth@lat-lon.de">Andreas Poth</a>
+ * Factory class for creating WFS capability classes from a WFS capabilities XML
+ * document that's conform to OGC WFS specification.
+ * 
+ * <p>
+ * ----------------------------------------------------------------------
+ * </p>
+ * 
+ * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version 2002-04-16
  */
-public final class WFSCapabilitiesFactory {
-    /**
-    * factory method for creating a <tt>WFSCapabilities</tt> object from
-    * a file that contains a OGC WFS 1.0 conform XML capabilities document
-    */
-    public static synchronized WFSCapabilities createCapabilities( URL url )
-                                                           throws IOException, SAXException, 
-                                                                  Exception {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "createCapabilities" );
+public final class WFSCapabilitiesFactory
+{
+  /**
+   * factory method for creating a <tt>WFSCapabilities</tt> object from a file
+   * that contains a OGC WFS 1.0 conform XML capabilities document
+   */
+  public static synchronized WFSCapabilities createCapabilities( URL url ) throws IOException,
+      SAXException, Exception
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "createCapabilities" );
 
-        InputStreamReader isr = new InputStreamReader( url.openStream() );
+    InputStreamReader isr = new InputStreamReader( url.openStream() );
 
-        WFSCapabilities capabilities = createCapabilities( isr );
+    WFSCapabilities capabilities = createCapabilities( isr );
 
-        Debug.debugMethodEnd();
+    Debug.debugMethodEnd();
 
-        return capabilities;
+    return capabilities;
+  }
+
+  /**
+   * factory method for creating a <tt>WFSCapabilities</tt> object from a file
+   * that contains a OGC WFS 1.0 conform XML capabilities document
+   */
+  public static synchronized WFSCapabilities createCapabilities( Reader reader )
+      throws IOException, SAXException, Exception
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "createCapabilities" );
+
+    Document doc = XMLTools.parse( reader );
+
+    WFSCapabilities capabilities = createCapabilities( doc );
+
+    Debug.debugMethodEnd();
+
+    return capabilities;
+  }
+
+  /**
+   * factory method for creating a <tt>WFSCapabilities</tt> object from a OGC
+   * WFS 1.0 conform XML capabilities document
+   */
+  public static synchronized WFSCapabilities createCapabilities( Document doc ) throws Exception
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "createCapabilities" );
+
+    Element root = doc.getDocumentElement();
+
+    //get general service informations
+    String version = XMLTools.getAttrValue( root, "version" );
+    String updateSequence = XMLTools.getAttrValue( root, "updateSequence" );
+    // get service section
+    Element element = (Element)root.getElementsByTagName( "Service" ).item( 0 );
+    Service service = getService( element );
+
+    // get capability section
+    element = (Element)root.getElementsByTagName( "Capability" ).item( 0 );
+
+    Capability capability = getCapability( element );
+
+    // get feature type list
+    element = (Element)root.getElementsByTagName( "FeatureTypeList" ).item( 0 );
+
+    FeatureTypeList ftl = getFeatureTypeList( element );
+    // create capabilities object
+    WFSCapabilities_Impl capabilities = new WFSCapabilities_Impl( capability, ftl, version,
+        updateSequence, service );
+
+    Debug.debugMethodEnd();
+
+    return capabilities;
+  }
+
+  /**
+   * returns an instance of an object that capsulates the service element of the
+   * WFS capabilities.
+   */
+  private static Service getService( Element serviceElement )
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getService" );
+
+    // get service name
+    Element element = XMLTools.getNamedChild( serviceElement, "Name" );
+    String name = element.getFirstChild().getNodeValue();
+
+    // get service title
+    element = XMLTools.getNamedChild( serviceElement, "Title" );
+
+    String title = element.getFirstChild().getNodeValue();
+
+    // get service abstract
+    element = XMLTools.getNamedChild( serviceElement, "Abstract" );
+
+    String abstract_ = "";
+
+    if( element != null )
+    {
+      abstract_ = element.getFirstChild().getNodeValue();
     }
 
-    /**
-    * factory method for creating a <tt>WFSCapabilities</tt> object from
-    * a file that contains a OGC WFS 1.0 conform XML capabilities document
-    */
-    public static synchronized WFSCapabilities createCapabilities( Reader reader )
-                                                           throws IOException, SAXException, 
-                                                                  Exception {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "createCapabilities" );
+    // get service keywords
+    element = XMLTools.getNamedChild( serviceElement, "Keywords" );
 
-        Document doc = XMLTools.parse( reader );
+    String[] keywords = null;
 
-        WFSCapabilities capabilities = createCapabilities( doc );
-
-        Debug.debugMethodEnd();
-
-        return capabilities;
+    if( element != null )
+    {
+      keywords = getKeywords( element );
     }
 
-    /**
-    * factory method for creating a <tt>WFSCapabilities</tt> object from
-    * a OGC WFS 1.0 conform XML capabilities document
-    */
-    public static synchronized WFSCapabilities createCapabilities( Document doc )
-                                                           throws Exception {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "createCapabilities" );
+    // get service online resource
+    element = XMLTools.getNamedChild( serviceElement, "OnlineResource" );
 
-        Element root = doc.getDocumentElement();
+    URL onlineResource = null;
 
-        //get general service informations
-        String version = XMLTools.getAttrValue( root, "version" );
-        String updateSequence = XMLTools.getAttrValue( root, "updateSequence" );
-        // get service section 
-        Element element = (Element)root.getElementsByTagName( "Service" ).item( 0 );
-        Service service = getService( element );
-
-        // get capability section
-        element = (Element)root.getElementsByTagName( "Capability" ).item( 0 );
-
-        Capability capability = getCapability( element );
-
-        // get feature type list
-        element = (Element)root.getElementsByTagName( "FeatureTypeList" ).item( 0 );
-
-        FeatureTypeList ftl = getFeatureTypeList( element );
-        // create capabilities object
-        WFSCapabilities_Impl capabilities = new WFSCapabilities_Impl( capability, ftl, version, 
-                                                                      updateSequence, service );
-
-        Debug.debugMethodEnd();
-
-        return capabilities;
+    try
+    {
+      onlineResource = new URL( element.getFirstChild().getNodeValue() );
+    }
+    catch( Exception ex )
+    {
+      System.out.println( "getService: " + ex );
     }
 
-    /**
-    * returns an instance of an object that capsulates the service element of
-    * the WFS capabilities.
-    */
-    private static Service getService( Element serviceElement ) {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getService" );
+    // get service fees
+    element = XMLTools.getNamedChild( serviceElement, "Fees" );
 
-        // get service name
-        Element element = XMLTools.getNamedChild( serviceElement, "Name" );
-        String name = element.getFirstChild().getNodeValue();
+    String fees = null;
 
-        // get service title
-        element = XMLTools.getNamedChild( serviceElement, "Title" );
-
-        String title = element.getFirstChild().getNodeValue();
-
-        // get service abstract
-        element = XMLTools.getNamedChild( serviceElement, "Abstract" );
-
-        String abstract_ = "";
-
-        if ( element != null ) {
-            abstract_ = element.getFirstChild().getNodeValue();
-        }
-
-        // get service keywords
-        element = XMLTools.getNamedChild( serviceElement, "Keywords" );
-
-        String[] keywords = null;
-
-        if ( element != null ) {
-            keywords = getKeywords( element );
-        }
-
-        // get service online resource
-        element = XMLTools.getNamedChild( serviceElement, "OnlineResource" );
-
-        URL onlineResource = null;
-
-        try {
-            onlineResource = new URL( element.getFirstChild().getNodeValue() );
-        } catch ( Exception ex ) {
-            System.out.println( "getService: " + ex );
-        }
-
-        // get service fees
-        element = XMLTools.getNamedChild( serviceElement, "Fees" );
-
-        String fees = null;
-
-        if ( element != null ) {
-            fees = element.getFirstChild().getNodeValue();
-        }
-
-        // get service access constraints
-        element = XMLTools.getNamedChild( serviceElement, "AccessConstraints" );
-
-        String accessConstraints = null;
-
-        if ( element != null ) {
-            accessConstraints = element.getFirstChild().getNodeValue();
-        }
-
-        Service service = new Service_Impl( name, title, abstract_, keywords, onlineResource, null, 
-                                            fees, accessConstraints );
-
-        Debug.debugMethodEnd();
-        return service;
+    if( element != null )
+    {
+      fees = element.getFirstChild().getNodeValue();
     }
 
-    /**
-    * returns the keywords associated with the service
-    */
-    private static String[] getKeywords( Element keywordsElement ) {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getKeywords" );
+    // get service access constraints
+    element = XMLTools.getNamedChild( serviceElement, "AccessConstraints" );
 
-        String[] kw = null;
+    String accessConstraints = null;
 
-        Node node = keywordsElement.getFirstChild();
-
-        if ( node != null ) {
-            String keywords = node.getNodeValue();
-
-            if ( keywords != null ) {      	
-                kw = StringExtend.toArray( keywords, ",;", true );
-            }
-        }
-
-        Debug.debugMethodEnd();
-        return kw;
+    if( element != null )
+    {
+      accessConstraints = element.getFirstChild().getNodeValue();
     }
 
-    /**
-    * returns an instance of an object that capsulates the service element of
-    * the WMS capabilities.
-    */
-    private static Capability getCapability( Element capElement ) {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getCapability" );
+    Service service = new Service_Impl( name, title, abstract_, keywords, onlineResource, null,
+        fees, accessConstraints );
 
-        // get capability request element
-        Element element = XMLTools.getNamedChild( capElement, "Request" );
-        Request request = getRequest( element );
+    Debug.debugMethodEnd();
+    return service;
+  }
 
-        // get capability vendor specific capabilities
-        element = XMLTools.getNamedChild( capElement, "VendorSpecificCapabilities" );
+  /**
+   * returns the keywords associated with the service
+   */
+  private static String[] getKeywords( Element keywordsElement )
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getKeywords" );
 
-        Document vendor = getVendorSpecificCapabilities( element );
+    String[] kw = null;
 
-        Capability capability = new Capability_Impl( request, vendor );
+    Node node = keywordsElement.getFirstChild();
 
-        Debug.debugMethodEnd();
-        return capability;
+    if( node != null )
+    {
+      String keywords = node.getNodeValue();
+
+      if( keywords != null )
+      {
+        kw = StringExtend.toArray( keywords, ",;", true );
+      }
     }
 
-    /**
-    * returns an instance of an object that capsulates the request element of
-    * the WMS capabilities/capability.
-    */
-    private static Request getRequest( Element requestElement ) {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getRequest" );
+    Debug.debugMethodEnd();
+    return kw;
+  }
 
-        // get GetCapabilities object/operation (mandatory)
-        Element elem = XMLTools.getNamedChild( requestElement, "GetCapabilities" );
-        DCPType[] dcpTypes = getDCPType( elem.getElementsByTagName( "DCPType" ) );
-        GetCapabilities getCapa = new GetCapabilities_Impl( dcpTypes );
+  /**
+   * returns an instance of an object that capsulates the service element of the
+   * WMS capabilities.
+   */
+  private static Capability getCapability( Element capElement )
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getCapability" );
 
-        // get DescribeFeatureType object/operation (optional)
-        elem = XMLTools.getNamedChild( requestElement, "DescribeFeatureType" );
+    // get capability request element
+    Element element = XMLTools.getNamedChild( capElement, "Request" );
+    Request request = getRequest( element );
 
-        DescribeFeatureType dft = null;
+    // get capability vendor specific capabilities
+    element = XMLTools.getNamedChild( capElement, "VendorSpecificCapabilities" );
 
-        if ( elem != null ) {
-            dft = getDescribeFeatureType( elem );
-        }
+    Document vendor = getVendorSpecificCapabilities( element );
 
-        // get Transaction object/operation (optional)
-        elem = XMLTools.getNamedChild( requestElement, "Transaction" );
+    Capability capability = new Capability_Impl( request, vendor );
 
-        Transaction transaction = null;
+    Debug.debugMethodEnd();
+    return capability;
+  }
 
-        if ( elem != null ) {
-            dcpTypes = getDCPType( elem.getElementsByTagName( "DCPType" ) );
-            transaction = new Transaction_Impl( dcpTypes );
-        }
+  /**
+   * returns an instance of an object that capsulates the request element of the
+   * WMS capabilities/capability.
+   */
+  private static Request getRequest( Element requestElement )
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getRequest" );
 
-        // get GetFeature object/operation (optional)
-        elem = XMLTools.getNamedChild( requestElement, "GetFeature" );
+    // get GetCapabilities object/operation (mandatory)
+    Element elem = XMLTools.getNamedChild( requestElement, "GetCapabilities" );
+    DCPType[] dcpTypes = getDCPType( elem.getElementsByTagName( "DCPType" ) );
+    GetCapabilities getCapa = new GetCapabilities_Impl( dcpTypes );
 
-        GetFeature getFeature = null;
+    // get DescribeFeatureType object/operation (optional)
+    elem = XMLTools.getNamedChild( requestElement, "DescribeFeatureType" );
 
-        if ( elem != null ) {
-            getFeature = getGetFeature( elem );
-        }
+    DescribeFeatureType dft = null;
 
-        // get GetFeatureWithLock object/operation (optional)
-        elem = XMLTools.getNamedChild( requestElement, "GetFeatureWithLock" );
-
-        GetFeatureWithLock getFeatureWithLock = null;
-
-        if ( elem != null ) {
-            getFeatureWithLock = getGetFeatureWithLock( elem );
-        }
-
-        // get LockFeature object/operation (optional)
-        elem = XMLTools.getNamedChild( requestElement, "LockFeature" );
-
-        LockFeature lockFeature = null;
-
-        if ( elem != null ) {
-            dcpTypes = getDCPType( elem.getElementsByTagName( "DCPType" ) );
-            lockFeature = new LockFeature_Impl( dcpTypes );
-        }
-
-        Request request = new Request_Impl( getCapa, dft, transaction, getFeature, 
-                                            getFeatureWithLock, lockFeature );
-
-        Debug.debugMethodEnd();
-        return request;
+    if( elem != null )
+    {
+      dft = getDescribeFeatureType( elem );
     }
 
-   /**
-    * creates list of DCPTypes
-    */
-    private static DCPType[] getDCPType( NodeList nl ) {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getDCPType" );
+    // get Transaction object/operation (optional)
+    elem = XMLTools.getNamedChild( requestElement, "Transaction" );
 
-        ArrayList list = new ArrayList();
+    Transaction transaction = null;
 
-        for ( int k = 0; k < nl.getLength(); k++ ) {
-            Element dcpElement = (Element)nl.item( k );
-            Element httpElement = (Element)dcpElement.getElementsByTagName("HTTP" ).item( 0 );
+    if( elem != null )
+    {
+      dcpTypes = getDCPType( elem.getElementsByTagName( "DCPType" ) );
+      transaction = new Transaction_Impl( dcpTypes );
+    }
 
-            HTTP http = null;
+    // get GetFeature object/operation (optional)
+    elem = XMLTools.getNamedChild( requestElement, "GetFeature" );
 
-            try {
-                NodeList getL = httpElement.getElementsByTagName( "Get" );
-                URL[] getOR = null;
-                if (getL != null) {
-                    getOR = new URL[getL.getLength()];
+    GetFeature getFeature = null;
 
-                    for ( int i = 0; i < getL.getLength(); i++ ) {
-                        getOR[i] = new URL( XMLTools.getAttrValue( getL.item( i ), "onlineResource" ) );
-                    }
-                }
+    if( elem != null )
+    {
+      getFeature = getGetFeature( elem );
+    }
 
-                NodeList postL = httpElement.getElementsByTagName( "Post" );
-                URL[] postOR = null;
-                if (postL != null) {
-                    postOR = new URL[postL.getLength()];
+    // get GetFeatureWithLock object/operation (optional)
+    elem = XMLTools.getNamedChild( requestElement, "GetFeatureWithLock" );
 
-                    for ( int i = 0; i < postL.getLength(); i++ ) {
-                        postOR[i] = new URL( XMLTools.getAttrValue( postL.item( i ), "onlineResource" ) );
-                    }
-                }
+    GetFeatureWithLock getFeatureWithLock = null;
 
-                http = new HTTP_Impl( getOR, postOR );
-            } catch ( Exception e ) {
-                System.out.println( "getDCPType: " + e );
-            }
+    if( elem != null )
+    {
+      getFeatureWithLock = getGetFeatureWithLock( elem );
+    }
 
-            list.add( new DCPType_Impl( http ) );
+    // get LockFeature object/operation (optional)
+    elem = XMLTools.getNamedChild( requestElement, "LockFeature" );
+
+    LockFeature lockFeature = null;
+
+    if( elem != null )
+    {
+      dcpTypes = getDCPType( elem.getElementsByTagName( "DCPType" ) );
+      lockFeature = new LockFeature_Impl( dcpTypes );
+    }
+
+    Request request = new Request_Impl( getCapa, dft, transaction, getFeature, getFeatureWithLock,
+        lockFeature );
+
+    Debug.debugMethodEnd();
+    return request;
+  }
+
+  /**
+   * creates list of DCPTypes
+   */
+  private static DCPType[] getDCPType( NodeList nl )
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getDCPType" );
+
+    ArrayList list = new ArrayList();
+
+    for( int k = 0; k < nl.getLength(); k++ )
+    {
+      Element dcpElement = (Element)nl.item( k );
+      Element httpElement = (Element)dcpElement.getElementsByTagName( "HTTP" ).item( 0 );
+
+      HTTP http = null;
+
+      try
+      {
+        NodeList getL = httpElement.getElementsByTagName( "Get" );
+        URL[] getOR = null;
+        if( getL != null )
+        {
+          getOR = new URL[getL.getLength()];
+
+          for( int i = 0; i < getL.getLength(); i++ )
+          {
+            getOR[i] = new URL( XMLTools.getAttrValue( getL.item( i ), "onlineResource" ) );
+          }
         }
 
-        Debug.debugMethodEnd();
-        return (DCPType[])list.toArray( new DCPType[list.size()] );
-    }
+        NodeList postL = httpElement.getElementsByTagName( "Post" );
+        URL[] postOR = null;
+        if( postL != null )
+        {
+          postOR = new URL[postL.getLength()];
 
-    /**
-    * returns an instance of an DescribeFeatureType object generated from
-    * the submitted dom element
-    */
-    private static DescribeFeatureType getDescribeFeatureType( Element element ) {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getDescribeFeatureType" );
-
-        DCPType[] dcpTypes = getDCPType( element.getElementsByTagName( "DCPType" ) );
-
-        // get schema description languages
-        Element elem = XMLTools.getNamedChild( element, "SchemaDescriptionLanguage" );
-        NodeList nl = elem.getChildNodes();
-        ArrayList list = new ArrayList();
-
-        for ( int i = 0; i < nl.getLength(); i++ ) {
-            if ( nl.item( i ) instanceof Element ) {
-                list.add( nl.item( i ).getNodeName() );
-            }
+          for( int i = 0; i < postL.getLength(); i++ )
+          {
+            postOR[i] = new URL( XMLTools.getAttrValue( postL.item( i ), "onlineResource" ) );
+          }
         }
 
-        String[] sdl = (String[])list.toArray( new String[list.size()] );
+        http = new HTTP_Impl( getOR, postOR );
+      }
+      catch( Exception e )
+      {
+        System.out.println( "getDCPType: " + e );
+      }
 
-        DescribeFeatureType describeFeatureType = new DescribeFeatureType_Impl( sdl, dcpTypes );
-
-        Debug.debugMethodEnd();
-        return describeFeatureType;
+      list.add( new DCPType_Impl( http ) );
     }
 
-     /**
-    * returns an instance of an GetFeature object generated from
-    * the submitted dom element
-    */
-    private static GetFeature getGetFeature( Element element ) {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getGetFeature" );
+    Debug.debugMethodEnd();
+    return (DCPType[])list.toArray( new DCPType[list.size()] );
+  }
 
-        DCPType[] dcpTypes = getDCPType( element.getElementsByTagName( "DCPType" ) );
+  /**
+   * returns an instance of an DescribeFeatureType object generated from the
+   * submitted dom element
+   */
+  private static DescribeFeatureType getDescribeFeatureType( Element element )
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getDescribeFeatureType" );
 
-        // get schema description languages
-        Element elem = XMLTools.getNamedChild( element, "ResultFormat" );
-        NodeList nl = elem.getChildNodes();
-        ArrayList list = new ArrayList();
-        ArrayList list2 = new ArrayList();
+    DCPType[] dcpTypes = getDCPType( element.getElementsByTagName( "DCPType" ) );
 
-        for ( int i = 0; i < nl.getLength(); i++ ) {
-            if ( nl.item( i ) instanceof Element ) {
-                String s = XMLTools.getAttrValue( nl.item( i ), "className" );
-                if (s == null) {
-                    s = "org.deegree_impl.services.wfs.GMLResponseHandler";
-                }
-                list.add( nl.item( i ).getNodeName() );
-                list2.add( s );
-            }
+    // get schema description languages
+    Element elem = XMLTools.getNamedChild( element, "SchemaDescriptionLanguage" );
+    NodeList nl = elem.getChildNodes();
+    ArrayList list = new ArrayList();
+
+    for( int i = 0; i < nl.getLength(); i++ )
+    {
+      if( nl.item( i ) instanceof Element )
+      {
+        list.add( nl.item( i ).getNodeName() );
+      }
+    }
+
+    String[] sdl = (String[])list.toArray( new String[list.size()] );
+
+    DescribeFeatureType describeFeatureType = new DescribeFeatureType_Impl( sdl, dcpTypes );
+
+    Debug.debugMethodEnd();
+    return describeFeatureType;
+  }
+
+  /**
+   * returns an instance of an GetFeature object generated from the submitted
+   * dom element
+   */
+  private static GetFeature getGetFeature( Element element )
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getGetFeature" );
+
+    DCPType[] dcpTypes = getDCPType( element.getElementsByTagName( "DCPType" ) );
+
+    // get schema description languages
+    Element elem = XMLTools.getNamedChild( element, "ResultFormat" );
+    NodeList nl = elem.getChildNodes();
+    ArrayList list = new ArrayList();
+    ArrayList list2 = new ArrayList();
+
+    for( int i = 0; i < nl.getLength(); i++ )
+    {
+      if( nl.item( i ) instanceof Element )
+      {
+        String s = XMLTools.getAttrValue( nl.item( i ), "className" );
+        if( s == null )
+        {
+          s = "org.deegree_impl.services.wfs.GMLResponseHandler";
         }
-
-        String[] resultFormat = (String[])list.toArray( new String[list.size()] );
-        String[] classes = (String[])list2.toArray( new String[list2.size()] );
-
-        GetFeature getFeature = new GetFeature_Impl( resultFormat, classes, dcpTypes );
-
-        Debug.debugMethodEnd();
-        return getFeature;
+        list.add( nl.item( i ).getNodeName() );
+        list2.add( s );
+      }
     }
 
-     /**
-    * returns an instance of an GetFeatureWithLock object generated from
-    * the submitted dom element
-    */
-    private static GetFeatureWithLock getGetFeatureWithLock( Element element) {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory","getGetFeatureWithLock" );
+    String[] resultFormat = (String[])list.toArray( new String[list.size()] );
+    String[] classes = (String[])list2.toArray( new String[list2.size()] );
 
-        DCPType[] dcpTypes = getDCPType( element.getElementsByTagName("DCPType" ) );
+    GetFeature getFeature = new GetFeature_Impl( resultFormat, classes, dcpTypes );
 
-        // get schema description languages
-        Element elem = XMLTools.getNamedChild( element, "ResultFormat" );
-        NodeList nl = elem.getChildNodes();
-        ArrayList list = new ArrayList();
-        ArrayList list2 = new ArrayList();
+    Debug.debugMethodEnd();
+    return getFeature;
+  }
 
-        for ( int i = 0; i < nl.getLength(); i++ ) {
-            if ( nl.item( i ) instanceof Element ) {
-                String s = XMLTools.getAttrValue( nl.item( i ), "className");
-                if (s == null) {
-                    s = "org.deegree_impl.services.wfs.GMLResponseHandler";
-                }
-                list.add( nl.item( i ).getNodeName() );
-                list2.add( s );
-            }
+  /**
+   * returns an instance of an GetFeatureWithLock object generated from the
+   * submitted dom element
+   */
+  private static GetFeatureWithLock getGetFeatureWithLock( Element element )
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getGetFeatureWithLock" );
+
+    DCPType[] dcpTypes = getDCPType( element.getElementsByTagName( "DCPType" ) );
+
+    // get schema description languages
+    Element elem = XMLTools.getNamedChild( element, "ResultFormat" );
+    NodeList nl = elem.getChildNodes();
+    ArrayList list = new ArrayList();
+    ArrayList list2 = new ArrayList();
+
+    for( int i = 0; i < nl.getLength(); i++ )
+    {
+      if( nl.item( i ) instanceof Element )
+      {
+        String s = XMLTools.getAttrValue( nl.item( i ), "className" );
+        if( s == null )
+        {
+          s = "org.deegree_impl.services.wfs.GMLResponseHandler";
         }
-
-        String[] resultFormat = (String[])list.toArray( new String[list.size()] );
-        String[] classes = (String[])list2.toArray( new String[list2.size()]);
-        GetFeatureWithLock getFeature = 
-            new GetFeatureWithLock_Impl( resultFormat, classes, dcpTypes );
-
-        Debug.debugMethodEnd();
-        return getFeature;
+        list.add( nl.item( i ).getNodeName() );
+        list2.add( s );
+      }
     }
 
-    /**
-    * returns an instance of an object that capsulates the vendor specific
-    * capabilities element of the WMS capabilities/capability.
-    */
-    private static Document getVendorSpecificCapabilities( Element vendorElement ) {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getVendorSpecificCapabilities" );
+    String[] resultFormat = (String[])list.toArray( new String[list.size()] );
+    String[] classes = (String[])list2.toArray( new String[list2.size()] );
+    GetFeatureWithLock getFeature = new GetFeatureWithLock_Impl( resultFormat, classes, dcpTypes );
 
-        Document doc = null;
+    Debug.debugMethodEnd();
+    return getFeature;
+  }
 
-        if ( vendorElement != null ) {
-            javax.xml.parsers.DocumentBuilder parser = null;
+  /**
+   * returns an instance of an object that capsulates the vendor specific
+   * capabilities element of the WMS capabilities/capability.
+   */
+  private static Document getVendorSpecificCapabilities( Element vendorElement )
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getVendorSpecificCapabilities" );
 
-            try {
-                parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            } catch ( ParserConfigurationException ex ) {
-                System.out.println( "getVendorSpecificCapabilities: " + ex );
-            }
+    Document doc = null;
 
-            doc = parser.newDocument();
-            XMLTools.insertNodeInto( vendorElement, doc );
+    if( vendorElement != null )
+    {
+      javax.xml.parsers.DocumentBuilder parser = null;
+
+      try
+      {
+        parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      }
+      catch( ParserConfigurationException ex )
+      {
+        System.out.println( "getVendorSpecificCapabilities: " + ex );
+      }
+
+      doc = parser.newDocument();
+      XMLTools.insertNodeInto( vendorElement, doc );
+    }
+
+    Debug.debugMethodEnd();
+    return doc;
+  }
+
+  /**
+   * creates a bounding box from a string containing a comma seperated list of
+   * corner coorinates (minx, miny, maxx, maxy)
+   */
+  private static GM_Envelope createBoundingBox( Element element )
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "createBoundingBox" );
+
+    double minx = Double.parseDouble( XMLTools.getAttrValue( element, "minx" ) );
+    double miny = Double.parseDouble( XMLTools.getAttrValue( element, "miny" ) );
+    double maxx = Double.parseDouble( XMLTools.getAttrValue( element, "maxx" ) );
+    double maxy = Double.parseDouble( XMLTools.getAttrValue( element, "maxy" ) );
+
+    GM_Position min = GeometryFactory.createGM_Position( minx, miny );
+    GM_Position max = GeometryFactory.createGM_Position( maxx, maxy );
+
+    GM_Envelope envelope = GeometryFactory.createGM_Envelope( min, max );
+
+    Debug.debugMethodEnd();
+    return envelope;
+  }
+
+  /**
+   * returns an instance of an object that capsulates the WFS's feature type
+   * list.
+   */
+  private static FeatureTypeList getFeatureTypeList( Element element ) throws Exception
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getFeatureTypeList" );
+
+    Element elem = XMLTools.getNamedChild( element, "Operations" );
+    Operation[] operations = getOperations( elem );
+
+    String className = null;
+    URL url = null;
+    elem = XMLTools.getNamedChild( element, "ResponsibleClass" );
+
+    if( elem != null )
+    {
+      className = XMLTools.getAttrValue( elem, "className" );
+      url = new URL( XMLTools.getAttrValue( elem, "configURL" ) );
+    }
+
+    NodeList nl = element.getElementsByTagName( "FeatureType" );
+
+    FeatureType[] featureTypes = getFeatureTypes( nl, operations, className, url );
+
+    FeatureTypeList ftl = new FeatureTypeList_Impl( operations, featureTypes );
+
+    // set feature types parent list
+    for( int i = 0; i < featureTypes.length; i++ )
+    {
+      ( (FeatureType_Impl)featureTypes[i] ).setParentList( ftl );
+    }
+
+    Debug.debugMethodEnd();
+    return ftl;
+  }
+
+  /**
+   * returns an list of operations
+   */
+  private static Operation[] getOperations( Element element ) throws MalformedURLException
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getOperations" );
+
+    Operation[] operations = null;
+
+    if( element != null )
+    {
+      ArrayList list = new ArrayList();
+      NodeList nl = element.getChildNodes();
+
+      for( int i = 0; i < nl.getLength(); i++ )
+      {
+        if( nl.item( i ) instanceof Element )
+        {
+          String name = nl.item( i ).getNodeName();
+          list.add( new Operation_Impl( name ) );
         }
+      }
 
-        Debug.debugMethodEnd();
-        return doc;
+      operations = (Operation[])list.toArray( new Operation[list.size()] );
     }
 
-    /**
-    * creates a bounding box from a string containing a comma seperated list
-    * of corner coorinates (minx, miny, maxx, maxy)
-    */
-    private static GM_Envelope createBoundingBox( Element element ) {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "createBoundingBox" );
+    Debug.debugMethodEnd();
+    return operations;
+  }
 
-        double minx = Double.parseDouble( XMLTools.getAttrValue( element, "minx" ) );
-        double miny = Double.parseDouble( XMLTools.getAttrValue( element, "miny" ) );
-        double maxx = Double.parseDouble( XMLTools.getAttrValue( element, "maxx" ) );
-        double maxy = Double.parseDouble( XMLTools.getAttrValue( element, "maxy" ) );
+  /**
+   * returns an list of feature types that are contained within the
+   * FeatureTypeList element of the capabilities.
+   */
+  private static FeatureType[] getFeatureTypes( NodeList nl, Operation[] operations_,
+      String className, URL configURL ) throws Exception
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getFeatureTypes" );
 
-        GM_Position min = GeometryFactory.createGM_Position( minx, miny );
-        GM_Position max = GeometryFactory.createGM_Position( maxx, maxy );
+    ArrayList list = new ArrayList();
 
-        GM_Envelope envelope = GeometryFactory.createGM_Envelope( min, max );
+    for( int i = 0; i < nl.getLength(); i++ )
+    {
+      Element element = (Element)nl.item( i );
 
-        Debug.debugMethodEnd();
-        return envelope;
-    }
+      // get service name
+      Element elem = XMLTools.getNamedChild( element, "Name" );
+      String name = elem.getFirstChild().getNodeValue();
 
-    /**
-    * returns an instance of an object that capsulates the WFS's
-    * feature type list.
-    */
-    private static FeatureTypeList getFeatureTypeList( Element element ) throws Exception {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getFeatureTypeList" );
+      // get service title
+      elem = XMLTools.getNamedChild( element, "Title" );
 
-        Element elem = XMLTools.getNamedChild( element, "Operations" );
-        Operation[] operations = getOperations( elem );
+      String title = null;
 
-        String className = null;
-        URL url = null;
-        elem = XMLTools.getNamedChild( element, "ResponsibleClass" );
-
-        if ( elem != null ) {
-            className = XMLTools.getAttrValue( elem, "className" );
-            url = new URL( XMLTools.getAttrValue( elem, "configURL" ) );
+      if( elem != null )
+      {
+        Node node = elem.getFirstChild();
+        if( node != null )
+        {
+          title = node.getNodeValue();
         }
+      }
 
-        NodeList nl = element.getElementsByTagName( "FeatureType" );
+      String abstract_ = XMLTools.getStringValue( "Abstract", null, element, null );
 
-        FeatureType[] featureTypes = getFeatureTypes( nl, operations, className, url );
+      elem = XMLTools.getNamedChild( element, "Operations" );
 
-        FeatureTypeList ftl = new FeatureTypeList_Impl( operations, featureTypes );
+      Operation[] operations = getOperations( elem );
 
-        // set feature types parent list
-        for ( int i = 0; i < featureTypes.length; i++ ) {
-            ( (FeatureType_Impl)featureTypes[i] ).setParentList( ftl );
+      // get spatial reference system
+      elem = XMLTools.getNamedChild( element, "SRS" );
+
+      String srs = elem.getFirstChild().getNodeValue();
+
+      // get service keywords
+      elem = XMLTools.getNamedChild( element, "Keywords" );
+
+      String[] keywords = null;
+
+      if( elem != null )
+      {
+        keywords = getKeywords( elem );
+      }
+
+      // get service lat lon bounding box
+      elem = XMLTools.getNamedChild( element, "LatLonBoundingBox" );
+      if( elem == null )
+      {
+        elem = XMLTools.getNamedChild( element, "LatLongBoundingBox" );
+      }
+
+      GM_Envelope bbox = createBoundingBox( elem );
+
+      // get meta data URL
+      NodeList nl_ = element.getElementsByTagName( "MetadataURL" );
+      MetadataURL[] metadataURL = null;
+
+      if( elem != null )
+      {
+        metadataURL = getMetadataURL( nl_ );
+      }
+
+      // override responsible class and its configuration file
+      // if defined seperatly for this feature type
+      elem = XMLTools.getNamedChild( element, "ResponsibleClass" );
+
+      if( elem != null )
+      {
+        className = XMLTools.getAttrValue( elem, "className" );
+        configURL = new URL( XMLTools.getAttrValue( elem, "configURL" ) );
+        if( !NetWorker.existsURL( configURL ) )
+        {
+          throw new Exception( "URL to configuration file for featuretype: '" + name
+              + "' dosen't exists at the defined " + "position! Please check the WFS capabilities." );
         }
+      }
 
-        Debug.debugMethodEnd();
-        return ftl;
-    }
+      // initialize with inherited operations
+      FeatureType ft = createFeatureType( name, title, abstract_, srs, bbox, null, keywords,
+          operations_, metadataURL, className, configURL );
 
-    /**
-    * returns an list of operations
-    */
-    private static Operation[] getOperations( Element element ) throws MalformedURLException {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getOperations" );
-
-        Operation[] operations = null;
-
-        if ( element != null ) {
-            ArrayList list = new ArrayList();
-            NodeList nl = element.getChildNodes();
-
-            for ( int i = 0; i < nl.getLength(); i++ ) {
-                if ( nl.item( i ) instanceof Element ) {
-                    String name = nl.item( i ).getNodeName();
-                    list.add( new Operation_Impl( name ) );
-                }
-            }
-
-            operations = (Operation[])list.toArray( new Operation[list.size()] );
+      // override inherited operations if new ones are defined
+      if( operations != null )
+      {
+        for( int j = 0; j < operations.length; j++ )
+        {
+          ( (FeatureType_Impl)ft ).addOperation( operations[j] );
         }
+      }
 
-        Debug.debugMethodEnd();
-        return operations;
+      list.add( ft );
     }
 
-      /**
-    * returns an list of feature types that are contained within the
-    * FeatureTypeList element of the capabilities.
-    */
-    private static FeatureType[] getFeatureTypes( NodeList nl, Operation[] operations_,  String className, URL configURL )
-                                          throws Exception {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getFeatureTypes");
+    Debug.debugMethodEnd();
+    return (FeatureType[])list.toArray( new FeatureType[list.size()] );
+  }
 
-        ArrayList list = new ArrayList();
+  /**
+   * creates a <code>FeatureType</code> object
+   */
+  public static FeatureType createFeatureType( String name, String title, String abstract_,
+      String srs, GM_Envelope latLonBoundingBox, FeatureTypeList parentList, String[] keywords,
+      Operation[] operations, MetadataURL[] metadataURL, String responsibleClassName, URL configURL )
+  {
+    return new FeatureType_Impl( name, title, abstract_, srs, latLonBoundingBox, parentList,
+        keywords, operations, metadataURL, responsibleClassName, configURL );
+  }
 
-        for ( int i = 0; i < nl.getLength(); i++ ) {
-            Element element = (Element)nl.item( i );
+  /**
+   * returns a feature types MetadataURL
+   */
+  private static MetadataURL[] getMetadataURL( NodeList nl )
+  {
+    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getMetadataURL" );
 
-            // get service name
-            Element elem = XMLTools.getNamedChild( element, "Name" );
-            String name = elem.getFirstChild().getNodeValue();
+    ArrayList list = new ArrayList();
 
-            // get service title
-            elem = XMLTools.getNamedChild( element, "Title" );
+    for( int i = 0; i < nl.getLength(); i++ )
+    {
+      Element element = (Element)nl.item( i );
 
-            String title = null;
+      String format = XMLTools.getAttrValue( element, "Format" );
+      String type = XMLTools.getAttrValue( element, "type" );
 
-            if ( elem != null ) {
-                Node node = elem.getFirstChild();
-                if ( node != null ) {
-                    title = node.getNodeValue();
-                }
-            }
+      URL onlineResource = null;
 
-            String abstract_ = XMLTools.getStringValue( "Abstract", null, element, null );
+      try
+      {
+        String s = element.getFirstChild().getNodeValue();
+        onlineResource = new URL( s );
+      }
+      catch( Exception ex )
+      {
+        System.out.println( "getMetadataURL: " + ex );
+      }
 
-            elem = XMLTools.getNamedChild( element, "Operations" );
-
-            Operation[] operations = getOperations( elem );
-
-            // get spatial reference system
-            elem = XMLTools.getNamedChild( element, "SRS" );
-
-            String srs = elem.getFirstChild().getNodeValue();
-
-            // get service keywords
-            elem = XMLTools.getNamedChild( element, "Keywords" );
-
-            String[] keywords = null;
-
-            if ( elem != null ) {
-                keywords = getKeywords( elem );
-            }
-
-            // get service lat lon bounding box
-            elem = XMLTools.getNamedChild( element, "LatLonBoundingBox" );
-            if ( elem == null ) {
-                elem = XMLTools.getNamedChild( element, "LatLongBoundingBox");
-            }
-
-            GM_Envelope bbox = createBoundingBox( elem );
-
-            // get meta data URL
-            NodeList nl_ = element.getElementsByTagName( "MetadataURL" );
-            MetadataURL[] metadataURL = null;
-
-            if ( elem != null ) {
-                metadataURL = getMetadataURL( nl_ );
-            }
-
-            // override responsible class and its configuration file
-            // if defined seperatly for this feature type
-            elem = XMLTools.getNamedChild( element, "ResponsibleClass" );
-
-            if ( elem != null ) {
-                className = XMLTools.getAttrValue( elem, "className" );
-                configURL = new URL( XMLTools.getAttrValue( elem, "configURL" ) );
-                if ( !NetWorker.existsURL( configURL ) ) {
-                    throw new Exception( "URL to configuration file for featuretype: '" +
-                                         name + "' dosen't exists at the defined " +
-                                         "position! Please check the WFS capabilities." );
-                }
-            }
-
-            // initialize with inherited operations
-           FeatureType ft = createFeatureType( name, title, abstract_, srs, bbox, null, keywords,
-                                                operations_, metadataURL, className, configURL );
-
-            // override inherited operations if new ones are defined
-            if ( operations != null ) {
-                for ( int j = 0; j < operations.length; j++ ) {
-                    ( (FeatureType_Impl)ft ).addOperation( operations[j] );
-                }
-            }
-
-            list.add( ft );
-        }
-
-        Debug.debugMethodEnd();
-        return (FeatureType[])list.toArray( new FeatureType[list.size()] );
+      list.add( new MetadataURL_Impl( type, format, onlineResource ) );
     }
 
-    /**
-    * creates a <code>FeatureType</code> object
-    */
-    public static FeatureType createFeatureType( String name, String title, String abstract_, 
-                                                 String srs, GM_Envelope latLonBoundingBox, 
-                                                 FeatureTypeList parentList, String[] keywords, 
-                                                 Operation[] operations, MetadataURL[] metadataURL, 
-                                                 String responsibleClassName, URL configURL ) {
-        return new FeatureType_Impl( name, title, abstract_, srs, latLonBoundingBox, parentList, 
-                                     keywords, operations, metadataURL, responsibleClassName, 
-                                     configURL );
+    Debug.debugMethodEnd();
+    return (MetadataURL[])list.toArray( new MetadataURL[list.size()] );
+  }
+
+  public static void main( String[] args )
+  {
+    try
+    {
+      URL url = new URL( "file:///c:/temp/wfs.xml" );
+      WFSCapabilitiesFactory.createCapabilities( url );
     }
-
-    /**
-    * returns a feature types MetadataURL
-    */
-    private static MetadataURL[] getMetadataURL( NodeList nl ) {
-        Debug.debugMethodBegin( "WFSCapabilitiesFactory", "getMetadataURL" );
-
-        ArrayList list = new ArrayList();
-
-        for ( int i = 0; i < nl.getLength(); i++ ) {
-            Element element = (Element)nl.item( i );
-
-            String format = XMLTools.getAttrValue( element, "Format" );
-            String type = XMLTools.getAttrValue( element, "type" );
-
-            URL onlineResource = null;
-
-            try {
-                String s = element.getFirstChild().getNodeValue();
-                onlineResource = new URL( s );
-            } catch ( Exception ex ) {
-                System.out.println( "getMetadataURL: " + ex );
-            }
-
-            list.add( new MetadataURL_Impl( type, format, onlineResource ) );
-        }
-
-        Debug.debugMethodEnd();
-        return (MetadataURL[])list.toArray( new MetadataURL[list.size()] );
+    catch( Exception e )
+    {
+      System.out.println( e );
     }
-    
-    
-    public static void main(String[] args) {
-        try {
-            URL url = new URL( "file:///c:/temp/wfs.xml" );
-            WFSCapabilitiesFactory.createCapabilities( url );
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
+  }
 }

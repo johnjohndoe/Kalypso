@@ -1,44 +1,44 @@
 /*----------------    FILE HEADER  ------------------------------------------
 
-This file is part of deegree.
-Copyright (C) 2001 by:
-EXSE, Department of Geography, University of Bonn
-http://www.giub.uni-bonn.de/exse/
-lat/lon Fitzke/Fretter/Poth GbR
-http://www.lat-lon.de
+ This file is part of deegree.
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon Fitzke/Fretter/Poth GbR
+ http://www.lat-lon.de
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
 
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-Contact:
+ Contact:
 
-Andreas Poth
-lat/lon Fitzke/Fretter/Poth GbR
-Meckenheimer Allee 176
-53115 Bonn
-Germany
-E-Mail: poth@lat-lon.de
+ Andreas Poth
+ lat/lon Fitzke/Fretter/Poth GbR
+ Meckenheimer Allee 176
+ 53115 Bonn
+ Germany
+ E-Mail: poth@lat-lon.de
 
-Jens Fitzke
-Department of Geography
-University of Bonn
-Meckenheimer Allee 166
-53115 Bonn
-Germany
-E-Mail: jens.fitzke@uni-bonn.de
+ Jens Fitzke
+ Department of Geography
+ University of Bonn
+ Meckenheimer Allee 166
+ 53115 Bonn
+ Germany
+ E-Mail: jens.fitzke@uni-bonn.de
 
-                 
+ 
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.services.wcas.protocol;
 
@@ -74,759 +74,849 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-
 /**
- *
- * <p>--------------------------------------------------------</p>
- *
- * @author <a href="mailto:poth@lat-lon>Andreas Poth</a>
+ * 
+ * <p>
+ * --------------------------------------------------------
+ * </p>
+ * 
+ * @author <a href="mailto:poth@lat-lon>Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-public class CASProtocolFactory {    
-    private static String WFSNS = "http://www.opengis.net/wfs";
-//    private static String OGCNS = "http://www.opengis.net/ogc";
+public class CASProtocolFactory
+{
+  private static String WFSNS = "http://www.opengis.net/wfs";
 
-    /**
-     * creates a WFS request from a reader that contains an XML
-     * encoded form of the request
-     */
-    public static OGCWebServiceRequest createRequest(String id, Reader reader) throws Exception {
-        Debug.debugMethodBegin("CASProtocolFactory", "createRequest(Document)");
+  //    private static String OGCNS = "http://www.opengis.net/ogc";
 
-        OGCWebServiceRequest request = null;
+  /**
+   * creates a WFS request from a reader that contains an XML encoded form of
+   * the request
+   */
+  public static OGCWebServiceRequest createRequest( String id, Reader reader ) throws Exception
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createRequest(Document)" );
 
-        Document doc = XMLTools.parse(reader);
+    OGCWebServiceRequest request = null;
 
-        String root = doc.getDocumentElement().getLocalName();
+    Document doc = XMLTools.parse( reader );
 
-        if (root.equals("GetRecord")) {
-            request = createCASGetRecordRequest(id, doc);
-        } else if (root.equals("DescribeRecordType")) {
-            request = createCASDescribeRecordTypeRequest(id, doc);
-        } else if (root.equals("Transaction")) {
-            request = createCASTransactionRequest(id, doc);
-        } else if (root.equals("GetCapabilities")) {
-            request = createCASGetCapabilitiesRequest( id, null);
-        } else if (root.equals("RegisterService")) {
-            request = createCASRegisterServiceRequest(id, doc);
-        }
+    String root = doc.getDocumentElement().getLocalName();
 
-        Debug.debugMethodEnd();
-        return request;
+    if( root.equals( "GetRecord" ) )
+    {
+      request = createCASGetRecordRequest( id, doc );
+    }
+    else if( root.equals( "DescribeRecordType" ) )
+    {
+      request = createCASDescribeRecordTypeRequest( id, doc );
+    }
+    else if( root.equals( "Transaction" ) )
+    {
+      request = createCASTransactionRequest( id, doc );
+    }
+    else if( root.equals( "GetCapabilities" ) )
+    {
+      request = createCASGetCapabilitiesRequest( id, null );
+    }
+    else if( root.equals( "RegisterService" ) )
+    {
+      request = createCASRegisterServiceRequest( id, doc );
     }
 
-    /**
-     * creates a DescribeRecordType request from a reader object that
-     * offers access to a string resource that contains XML document
-     * that encodes the request.
-     */
-    public static CASDescribeRecordTypeRequest createCASDescribeRecordTypeRequest(String id, Document doc)
-                                                                    throws IOException {
-        Debug.debugMethodBegin("CASProtocolFactory", "createCASDescribeRecordTypeRequest");
+    Debug.debugMethodEnd();
+    return request;
+  }
 
-        Element element = (Element) doc.getElementsByTagName("DescribeRecordType").item(0);
+  /**
+   * creates a DescribeRecordType request from a reader object that offers
+   * access to a string resource that contains XML document that encodes the
+   * request.
+   */
+  public static CASDescribeRecordTypeRequest createCASDescribeRecordTypeRequest( String id,
+      Document doc ) throws IOException
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createCASDescribeRecordTypeRequest" );
 
-        String outputFormat = XMLTools.getAttrValue(element, "outputFormat");
+    Element element = (Element)doc.getElementsByTagName( "DescribeRecordType" ).item( 0 );
 
-        NodeList nl = element.getElementsByTagName("TypeName");
+    String outputFormat = XMLTools.getAttrValue( element, "outputFormat" );
 
-        String[] typeNames = null;
-        String[] setNames = null;
+    NodeList nl = element.getElementsByTagName( "TypeName" );
 
-        if ((nl != null) && (nl.getLength() > 0)) {
-            typeNames = new String[nl.getLength()];
-            setNames = new String[nl.getLength()];
+    String[] typeNames = null;
+    String[] setNames = null;
 
-            for (int i = 0; i < nl.getLength(); i++) {
-                typeNames[i] = nl.item(i).getFirstChild().getNodeValue();
-                setNames[i] = XMLTools.getAttrValue(nl.item(i), "setName");
-            }
-        }
+    if( ( nl != null ) && ( nl.getLength() > 0 ) )
+    {
+      typeNames = new String[nl.getLength()];
+      setNames = new String[nl.getLength()];
 
-        CASDescribeRecordTypeRequest request = createCASDescribeRecordTypeRequest("1.0.0", id, null, 
-                                                                                  typeNames, 
-                                                                                  setNames, 
-                                                                                  outputFormat);
-
-        Debug.debugMethodEnd();
-        return request;
+      for( int i = 0; i < nl.getLength(); i++ )
+      {
+        typeNames[i] = nl.item( i ).getFirstChild().getNodeValue();
+        setNames[i] = XMLTools.getAttrValue( nl.item( i ), "setName" );
+      }
     }
 
-    /**
-     * creates a <tt>CASDescribeRecordTypeRequest</tt> object.
-     * @param id id of the request
-     * @param vendorSpecificParameter none standadized parameters as
-     *            name-value pairs
-     * @param outputFormat indicates the format the result shall be formated
-     * @param typeNames names of the feature types that shalle be described
-     */
-    public static CASDescribeRecordTypeRequest createCASDescribeRecordTypeRequest(String version, 
-                                                                           String id, 
-                                                                           HashMap vendorSpecificParameter, 
-                                                                           String[] typeNames, 
-                                                                           String[] setNames, 
-                                                                           String outputFormat) {
-        Debug.debugMethodBegin("CASProtocolFactory", "createCASDescribeRecordTypeRequest");
+    CASDescribeRecordTypeRequest request = createCASDescribeRecordTypeRequest( "1.0.0", id, null,
+        typeNames, setNames, outputFormat );
 
-        CASDescribeRecordTypeRequest req = new CASDescribeRecordTypeRequest_Impl(version, id, 
-                                                                                 vendorSpecificParameter, 
-                                                                                 typeNames, 
-                                                                                 setNames, 
-                                                                                 outputFormat);
+    Debug.debugMethodEnd();
+    return request;
+  }
 
-        Debug.debugMethodEnd();
-        return req;
+  /**
+   * creates a <tt>CASDescribeRecordTypeRequest</tt> object.
+   * 
+   * @param id
+   *          id of the request
+   * @param vendorSpecificParameter
+   *          none standadized parameters as name-value pairs
+   * @param outputFormat
+   *          indicates the format the result shall be formated
+   * @param typeNames
+   *          names of the feature types that shalle be described
+   */
+  public static CASDescribeRecordTypeRequest createCASDescribeRecordTypeRequest( String version,
+      String id, HashMap vendorSpecificParameter, String[] typeNames, String[] setNames,
+      String outputFormat )
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createCASDescribeRecordTypeRequest" );
+
+    CASDescribeRecordTypeRequest req = new CASDescribeRecordTypeRequest_Impl( version, id,
+        vendorSpecificParameter, typeNames, setNames, outputFormat );
+
+    Debug.debugMethodEnd();
+    return req;
+  }
+
+  /**
+   * creates a <tt>CASDescribeRecordTypeResponse</tt> object
+   * 
+   * @param request
+   *          a copy of the request that leads to this response
+   * @param exception
+   *          a describtion of an excetion (only if raised)
+   * @param featureTypeSchema
+   *          schemas of the feature types which describtion has been requested.
+   */
+  public static CASDescribeRecordTypeResponse createCASDescribeRecordTypeResponse(
+      OGCWebServiceRequest request, OGCWebServiceException exception, String featureTypeSchema )
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createCASDescribeRecordTypeResponse" );
+
+    Document doc = null;
+
+    if( exception != null )
+    {
+      StringReader reader = new StringReader( ( (Marshallable)exception ).exportAsXML() );
+      try
+      {
+        doc = XMLTools.parse( reader );
+      }
+      catch( Exception e )
+      {
+        System.out.println( e );
+      }
+
     }
 
-    /**
-     * creates a <tt>CASDescribeRecordTypeResponse</tt> object
-     * @param request a copy of the request that leads to this response
-     * @param exception a describtion of an excetion (only if raised)
-     * @param featureTypeSchema schemas of the feature types which describtion
-     *            has been requested.
-     */
-    public static CASDescribeRecordTypeResponse createCASDescribeRecordTypeResponse(OGCWebServiceRequest request, 
-                                                                             OGCWebServiceException exception, 
-                                                                             String featureTypeSchema) {
-        Debug.debugMethodBegin("CASProtocolFactory", "createCASDescribeRecordTypeResponse");
+    CASDescribeRecordTypeResponse response = new CASDescribeRecordTypeResponse_Impl( request, doc,
+        featureTypeSchema );
 
-        Document doc = null;
+    Debug.debugMethodEnd();
+    return response;
+  }
 
-        if (exception != null) {
-            StringReader reader = new StringReader( ((Marshallable)exception).exportAsXML() );
-            try {
-                doc = XMLTools.parse( reader );
-            } catch(Exception e) {
-                System.out.println(e);	
-            }
-            
+  /**
+   * creates a <tt>CASGetRecordRequest</tt> object.
+   * 
+   * @param id
+   *          id of the request
+   * @param vendorSpecificParameter
+   *          none standadized parameters as name-value pairs
+   * @param outputFormat
+   *          indicates the format the result shall be formated
+   * @param filter
+   *          filter expression that describes the 'global' limitations of the
+   *          query.
+   * @param maxRecords
+   *          maximal amout of featuers that shall be returned
+   * @param startPosition
+   *          index of the feature the query shall start
+   * @param queries
+   *          a set of Query objects that describes the query to perform
+   * @param queryScope
+   *          number that indicates if the request is part of a cascading
+   *          request
+   */
+  public static CASGetRecordRequest createCASGetRecordRequest( String id,
+      HashMap vendorSpecificParameter, int maxRecords, int startPosition, String outputFormat,
+      String outputRecType, CASQuery[] queries, int queryScope, Filter filter )
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createCASGetRecordRequest" );
+
+    CASGetRecordRequest req = new CASGetRecordRequest_Impl( "1.0.0", id, vendorSpecificParameter,
+        maxRecords, startPosition, outputFormat, outputRecType, queries, queryScope, filter );
+    Debug.debugMethodEnd();
+    return req;
+  }
+
+  /**
+   * creates a instance of a <tt>CASGetRecordRequest</tt> object from a reader
+   * that contains the request-xml.
+   * 
+   * @param doc
+   *          DOM object that contains the request
+   * @param id
+   *          id of the request
+   */
+  public static CASGetRecordRequest createCASGetRecordRequest( String id, Document doc )
+      throws Exception
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createCASGetRecordRequest(Reader)" );
+
+    CASGetRecordRequest req = null;
+
+    Element element = element = (Element)doc.getElementsByTagName( "GetRecord" ).item( 0 );
+
+    String outputFormat = XMLTools.getAttrValue( element, "outputFormat" );
+    String handle = XMLTools.getAttrValue( element, "handle" );
+    CASQuery[] queries = getQuery( element );
+    Filter filter = getFilter( element );
+
+    String tmp = null;
+    int maxRecords = -1;
+
+    try
+    {
+      tmp = XMLTools.getAttrValue( element, "maxRecords" ).trim();
+      maxRecords = Integer.parseInt( tmp );
+    }
+    catch( Exception ex )
+    {}
+
+    int startPosition = -1;
+
+    try
+    {
+      tmp = XMLTools.getAttrValue( element, "startPosition" ).trim();
+      startPosition = Integer.parseInt( tmp );
+    }
+    catch( Exception ex )
+    {}
+
+    int queryScope = -1;
+
+    try
+    {
+      tmp = XMLTools.getAttrValue( element, "queryScope" ).trim();
+      queryScope = Integer.parseInt( tmp );
+    }
+    catch( Exception ex )
+    {}
+
+    String outputRecType = XMLTools.getAttrValue( element, "outputRecType" ).trim();
+
+    req = createCASGetRecordRequest( id, null, maxRecords, startPosition, outputFormat,
+        outputRecType, queries, queryScope, filter );
+
+    Debug.debugMethodEnd();
+    return req;
+  }
+
+  /**
+   * The query defines which feature type to query, what properties to retrieve
+   * and what constraints (spatial and non-spatial) to apply to those
+   * properties.
+   * <p>
+   * only used for xml-coded requests
+   */
+  private static CASQuery[] getQuery( Element element ) throws Exception
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "getQuery" );
+
+    NodeList nl = element.getChildNodes();
+    ArrayList list = new ArrayList();
+
+    if( ( nl != null ) && ( nl.getLength() > 0 ) )
+    {
+      for( int i = 0; i < nl.getLength(); i++ )
+      {
+        if( nl.item( i ).getNodeName().equals( "Query" ) )
+        {
+          Element elem = (Element)nl.item( i );
+          String[] propertyNames = getPropertyNames( elem );
+          String propertySetName = getPropertySetName( elem );
+          String handle = XMLTools.getAttrValue( elem, "handle" );
+          String version = XMLTools.getAttrValue( elem, "version" );
+          String typeName = XMLTools.getAttrValue( elem, "typeName" );
+
+          if( !typeName.equals( "Product" ) && !typeName.equals( "Service" )
+              && !typeName.equals( "Collection" ) )
+          {
+            throw new Exception( "not known typeName used within " + "the query" );
+          }
+
+          Filter filter = getFilter( elem );
+          list.add( new CASQuery_Impl( propertyNames, handle, version, typeName, filter,
+              propertySetName ) );
         }
-
-        CASDescribeRecordTypeResponse response = new CASDescribeRecordTypeResponse_Impl(request, 
-                                                                                        doc, 
-                                                                                        featureTypeSchema);
-
-        Debug.debugMethodEnd();
-        return response;
+      }
     }
 
-    /**
-     * creates a <tt>CASGetRecordRequest</tt> object.
-     * @param id id of the request
-     * @param vendorSpecificParameter none standadized parameters as
-     *            name-value pairs
-     * @param outputFormat indicates the format the result shall be formated
-     * @param filter filter expression that describes the 'global' limitations
-     *            of the query.
-     * @param maxRecords maximal amout of featuers that shall be returned
-     * @param startPosition index of the feature the query shall start
-     * @param queries a set of Query objects that describes the query to perform
-     * @param queryScope number that indicates if the request is part of a
-     *                     cascading request
-     */
-    public static CASGetRecordRequest createCASGetRecordRequest(String id, HashMap vendorSpecificParameter, 
-                                                         int maxRecords, int startPosition, 
-                                                         String outputFormat, String outputRecType, 
-                                                         CASQuery[] queries, int queryScope, 
-                                                         Filter filter) {
-        Debug.debugMethodBegin( "CASProtocolFactory", "createCASGetRecordRequest");
+    Debug.debugMethodEnd();
 
-        CASGetRecordRequest req = new CASGetRecordRequest_Impl("1.0.0", id, vendorSpecificParameter, 
-                                                               maxRecords, startPosition, 
-                                                               outputFormat, outputRecType, queries, 
-                                                               queryScope, filter);
-        Debug.debugMethodEnd();
-        return req;
+    return (CASQuery[])list.toArray( new CASQuery[list.size()] );
+  }
+
+  /**
+   * returns the name of the propertySetName of the catalog request from the
+   * passed <tt>Element</tt>
+   * 
+   * @param element
+   * @throws Exception
+   * @return
+   */
+  private static String getPropertySetName( Element element ) throws Exception
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "getPropertySetName" );
+
+    String propertyset = null;
+
+    NodeList nl = element.getElementsByTagName( "PropertySet" );
+
+    if( ( nl != null ) && ( nl.getLength() > 0 ) )
+    {
+      String s = XMLTools.getAttrValue( nl.item( 0 ), "setName" );
+
+      if( !s.equals( "Full" ) && !s.equals( "Brief" ) && !s.equals( "Summary" )
+          && !s.equals( "Hits" ) )
+      {
+        throw new Exception( "not supported porperty set type" + " used within the query." );
+      }
+
+      propertyset = s;
     }
 
-    /**
-     * creates a instance of a <tt>CASGetRecordRequest</tt> object from
-     * a reader that contains the request-xml.
-     * @param doc DOM object that contains the request
-     * @param id id of the request
-     */
-    public static CASGetRecordRequest createCASGetRecordRequest(String id, Document doc)
-                                                  throws Exception {
-        Debug.debugMethodBegin("CASProtocolFactory", "createCASGetRecordRequest(Reader)");
+    Debug.debugMethodEnd();
+    return propertyset;
+  }
 
-        CASGetRecordRequest req = null;
+  /**
+   * The property names is used to enumerate the feature properties or
+   * attributes that should be selected. If no property names are specified then
+   * all properties should be fetched.
+   */
+  private static String[] getPropertyNames( Element element )
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "getPropertyNames" );
 
-        Element element = element = (Element) doc.getElementsByTagName("GetRecord").item(0);
+    String[] propertynames = null;
+    NodeList nl = element.getChildNodes();
+    ArrayList list = new ArrayList();
 
-        String outputFormat = XMLTools.getAttrValue(element, "outputFormat");
-        String handle = XMLTools.getAttrValue(element, "handle");
-        CASQuery[] queries = getQuery(element);
-        Filter filter = getFilter(element);
-
-        String tmp = null;
-        int maxRecords = -1;
-
-        try {
-            tmp = XMLTools.getAttrValue(element, "maxRecords").trim();
-            maxRecords = Integer.parseInt(tmp);
-        } catch (Exception ex) {
+    if( nl != null )
+    {
+      if( nl.getLength() > 0 )
+      {
+        for( int i = 0; i < nl.getLength(); i++ )
+        {
+          if( nl.item( i ).getNodeName().equals( "PropertyName" ) )
+          {
+            list.add( nl.item( i ).getFirstChild().getNodeValue() );
+          }
         }
-
-        int startPosition = -1;
-
-        try {
-            tmp = XMLTools.getAttrValue(element, "startPosition").trim();
-            startPosition = Integer.parseInt(tmp);
-        } catch (Exception ex) {
-        }
-
-        int queryScope = -1;
-
-        try {
-            tmp = XMLTools.getAttrValue(element, "queryScope").trim();
-            queryScope = Integer.parseInt(tmp);
-        } catch (Exception ex) {
-        }
-
-        String outputRecType = XMLTools.getAttrValue(element, "outputRecType").trim();
-
-        req = createCASGetRecordRequest(id, null, maxRecords, startPosition, outputFormat, 
-                                        outputRecType, queries, queryScope, filter);
-
-        Debug.debugMethodEnd();
-        return req;
+      }
     }
 
-    /**
-     * The query defines which feature type to query, what properties
-     * to retrieve and what constraints (spatial and non-spatial) to
-     * apply to those properties. <p>
-     * only used for xml-coded requests
-     */
-    private static CASQuery[] getQuery(Element element) throws Exception {
-        Debug.debugMethodBegin("CASProtocolFactory", "getQuery");
+    propertynames = (String[])list.toArray( new String[list.size()] );
 
-        NodeList nl = element.getChildNodes();
+    Debug.debugMethodEnd();
+    return propertynames;
+  }
+
+  /**
+   * returns the filter that limits the query
+   */
+  public static Filter getFilter( Element element ) throws Exception
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "getFilter" );
+
+    Filter filter = null;
+
+    NodeList nl = element.getChildNodes();
+
+    if( ( nl != null ) && ( nl.getLength() > 0 ) )
+    {
+      for( int i = 0; i < nl.getLength(); i++ )
+      {
+        if( nl.item( i ) instanceof Element && nl.item( i ).getLocalName().equals( "Filter" ) )
+        {
+          filter = AbstractFilter.buildFromDOM( (Element)nl.item( i ) );
+          break;
+        }
+      }
+    }
+
+    Debug.debugMethodEnd();
+    return filter;
+  }
+
+  /**
+   * creates a <tt>CASGetRecordResponse</tt> object
+   * 
+   * @param request
+   *          a copy of the request that leads to this response
+   * @param exception
+   *          a describtion of an excetion (only if raised)
+   * @param response
+   *          the response to the request
+   */
+  public static CASGetRecordResponse createCASGetRecordResponse( OGCWebServiceRequest request,
+      OGCWebServiceException exception, Object response )
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createCASGetRecordResponse" );
+
+    Document doc = null;
+
+    if( exception != null )
+    {
+      StringReader reader = new StringReader( ( (Marshallable)exception ).exportAsXML() );
+      try
+      {
+        doc = XMLTools.parse( reader );
+      }
+      catch( Exception e )
+      {
+        System.out.println( e );
+      }
+    }
+
+    CASGetRecordResponse res = new CASGetRecordResponse_Impl( request, doc, response );
+
+    Debug.debugMethodEnd();
+    return res;
+  }
+
+  /**
+   * creates a <tt>CASGetCapabilitiesRequest</tt> object.
+   * 
+   * @param id
+   *          id of the request
+   * @param vendorSpecificParameter
+   *          none standadized parameters as name-value pairs
+   */
+
+  public static CASGetCapabilitiesRequest createCASGetCapabilitiesRequest( String id,
+      HashMap vendorSpecificParameter )
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createCASGetCapabilitiesRequest" );
+
+    CASGetCapabilitiesRequest req = new CASGetCapabilitiesRequest_Impl( "0.0.6", id,
+        vendorSpecificParameter );
+
+    Debug.debugMethodEnd();
+    return req;
+  }
+
+  /**
+   * creates a <tt>CASGetCapabilitiesResponse</tt> object
+   * 
+   * @param request
+   *          a copy of the request that leads to this response
+   * @param exception
+   *          a describtion of an excetion (only if raised)
+   * @param native_
+   *          is intended to allow access to vendor specific capabilities
+   * @param affectedRecordTypes
+   *          names of the feature types affected by the response
+   * @param response
+   *          the response to the request
+   */
+
+  //    public CASGetCapabilitiesResponse createCASGetCapabilitiesResponse(
+  //   													OGCWebServiceRequest request,
+  //													OGCWebServiceException exception,
+  //													String [] affectedRecordTypes,
+  //													Document response )
+  //	{
+  //		Debug.debugMethodBegin("CASProtocolFactory",
+  // "createCASGetCapabilitiesResponse" );
+  //
+  //		Document doc = null;
+  //
+  //		if ( exception != null ) {
+  //			doc = exception.exportAsXML();
+  //		}
+  //
+  //		CASGetCapabilitiesResponse res =
+  //			new CASGetCapabilitiesResponse_Impl( request, doc, affectedRecordTypes,
+  //												 response);
+  //
+  //		Debug.debugMethodEnd();
+  //		return res;
+  //	}
+  /**
+   * creates a CAS Query object from a dom element.
+   * 
+   * @param element
+   *          dom element containing a CAS query
+   */
+  public CASQuery createQuery( Element element ) throws Exception
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createQuery" );
+
+    String[] propertyNames = getPropertyNames( element );
+    String propertySetName = getPropertySetName( element );
+    String handle = XMLTools.getAttrValue( element, "handle" );
+    String version = XMLTools.getAttrValue( element, "version" );
+    String typeName = XMLTools.getAttrValue( element, "typeName" );
+    Filter filter = getFilter( element );
+    CASQuery query = new CASQuery_Impl( propertyNames, handle, version, typeName, filter,
+        propertySetName );
+
+    Debug.debugMethodEnd();
+    return query;
+  }
+
+  /**
+   * creates a <tt>CASTransactionRequest</tt> object.
+   * 
+   * @param id
+   *          id of the request
+   * @param lockId
+   * @param operations
+   * @param handle
+   */
+  public CASTransactionRequest createCASTransactionRequest( String id,
+      HashMap vendorSpecificParameter, String lockId, String handle, CASOperation[] operations )
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createCASTransactionRequest" );
+
+    CASTransactionRequest tr = new CASTransactionRequest_Impl( "1.0.0", id,
+        vendorSpecificParameter, lockId, handle, operations );
+
+    Debug.debugMethodEnd();
+    return tr;
+  }
+
+  /**
+   * creates a <tt>CASTransactionRequest</tt> object.
+   * 
+   * @param id
+   *          id of the request
+   * @param doc
+   *          DOM objects that contains the request
+   */
+  public static CASTransactionRequest createCASTransactionRequest( String id, Document doc )
+      throws Exception
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createCASTransactionRequest" );
+
+    CASTransactionRequest tr = null;
+
+    Element element = (Element)doc.getElementsByTagName( "Transaction" ).item( 0 );
+
+    String handle = XMLTools.getAttrValue( element, "handle" );
+
+    NodeList nl = element.getElementsByTagName( "Insert" );
+    CASOperation[] ins = createInserts( nl );
+
+    nl = element.getElementsByTagName( "Update" );
+
+    CASOperation[] ups = createUpdates( nl );
+
+    nl = element.getElementsByTagName( "Delete" );
+
+    CASOperation[] dels = createDeletes( nl );
+
+    CASOperation[] ops = new CASOperation[ins.length + ups.length + dels.length];
+    int k = 0;
+
+    for( int i = 0; i < ins.length; i++ )
+    {
+      ops[k++] = ins[i];
+    }
+
+    for( int i = 0; i < ups.length; i++ )
+    {
+      ops[k++] = ups[i];
+    }
+
+    for( int i = 0; i < dels.length; i++ )
+    {
+      ops[k++] = dels[i];
+    }
+
+    String lockId = null;
+
+    Element elem = XMLTools.getNamedChild( element, WFSNS, "LockId" );
+
+    if( elem != null )
+    {
+      lockId = elem.getFirstChild().getNodeValue();
+    }
+
+    tr = new CASTransactionRequest_Impl( "1.0.0", id, null, lockId, handle, ops );
+
+    Debug.debugMethodEnd();
+    return tr;
+  }
+
+  /**
+   * creates insert operations object from a XML-element defined by the OGC CAS
+   * specifications
+   */
+  private static CASOperation[] createInserts( NodeList nl )
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createInserts" );
+
+    CASOperation[] operations = null;
+
+    if( nl != null )
+    {
+      operations = new CASOperation[nl.getLength()];
+
+      // for each insert operation defined within the element
+      for( int i = 0; i < nl.getLength(); i++ )
+      {
+        Element element = (Element)nl.item( i );
+        // get the operations handle (may be null)
+        String handle = XMLTools.getAttrValue( element, "handle" );
         ArrayList list = new ArrayList();
+        NodeList nl_ = element.getChildNodes();
 
-        if ((nl != null) && (nl.getLength() > 0)) {
-            for (int i = 0; i < nl.getLength(); i++) {
-                if (nl.item(i).getNodeName().equals("Query")) {
-                    Element elem = (Element) nl.item(i);
-                    String[] propertyNames = getPropertyNames(elem);
-                    String propertySetName = getPropertySetName(elem);
-                    String handle = XMLTools.getAttrValue(elem, "handle");
-                    String version = XMLTools.getAttrValue(elem, "version");
-                    String typeName = XMLTools.getAttrValue(elem, "typeName");
-
-                    if (!typeName.equals("Product") && !typeName.equals("Service") && 
-                            !typeName.equals("Collection")) {
-                        throw new Exception("not known typeName used within " + "the query");
-                    }
-
-                    Filter filter = getFilter(elem);
-                    list.add(new CASQuery_Impl(propertyNames, handle, version, typeName, filter, 
-                                               propertySetName));
-                }
-            }
+        // create list of features that shall be inserted
+        for( int j = 0; j < nl_.getLength(); j++ )
+        {
+          if( nl_.item( j ) instanceof Element )
+          {
+            list.add( new GMLFeature_Impl( (Element)nl_.item( j ) ) );
+          }
         }
 
-        Debug.debugMethodEnd();
+        GMLFeature[] feat = new GMLFeature[list.size()];
+        feat = (GMLFeature[])list.toArray( feat );
 
-        return (CASQuery[]) list.toArray(new CASQuery[list.size()]);
+        // create insert operation
+        operations[i] = new CASInsert_Impl( handle, feat );
+      }
+    }
+    else
+    {
+      operations = new CASOperation[0];
     }
 
-    /**
-     * returns the name of the propertySetName of the catalog request from the
-     * passed <tt>Element</tt>
-     * @param element
-     * @throws Exception
-     * @return
-     */
-    private static String getPropertySetName(Element element) throws Exception {
-        Debug.debugMethodBegin("CASProtocolFactory", "getPropertySetName");
+    Debug.debugMethodEnd();
+    return operations;
+  }
 
-        String propertyset = null;
+  /**
+   * creates update operations object from a XML-element defined by the OGC CAS
+   * specifications
+   */
+  private static CASOperation[] createUpdates( NodeList nl )
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createUpdates" );
 
-        NodeList nl = element.getElementsByTagName("PropertySet");
+    CASOperation[] operations = new CASOperation[0];
 
-        if ((nl != null) && (nl.getLength() > 0)) {
-            String s = XMLTools.getAttrValue(nl.item(0), "setName");
+    Debug.debugMethodEnd();
+    return operations;
+  }
 
-            if (!s.equals("Full") && !s.equals("Brief") && !s.equals("Summary") && 
-                    !s.equals("Hits")) {
-                throw new Exception("not supported porperty set type" + 
-                                    " used within the query.");
-            }
+  /**
+   * creates delete operations object from a XML-element defined by the OGC CAS
+   * specifications
+   */
+  private static CASOperation[] createDeletes( NodeList nl ) throws Exception
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createDeletes" );
 
-            propertyset = s;
-        }
+    CASOperation[] operations = null;
 
-        Debug.debugMethodEnd();
-        return propertyset;
+    if( nl != null )
+    {
+      operations = new CASOperation[nl.getLength()];
+      for( int i = 0; i < nl.getLength(); i++ )
+      {
+        Element element = (Element)nl.item( i );
+        Filter filter = getFilter( element );
+        String handle = XMLTools.getAttrValue( element, "handle" );
+        String type = XMLTools.getAttrValue( element, "type" );
+        operations[i] = new CASDelete_Impl( handle, filter, type );
+      }
     }
 
-    /**
-     * The property names is used to enumerate the feature properties
-     * or attributes that should be selected. If no property names are
-     * specified then all properties should be fetched.
-     */
-    private static String[] getPropertyNames(Element element) {
-        Debug.debugMethodBegin("CASProtocolFactory", "getPropertyNames");
+    Debug.debugMethodEnd();
+    return operations;
+  }
 
-        String[] propertynames = null;
-        NodeList nl = element.getChildNodes();
-        ArrayList list = new ArrayList();
+  /**
+   * creates nativ operations object from a XML-element defined by the OGC CAS
+   * specifications
+   */
+  //    private static CASOperation[] createNatives(NodeList nl) {
+  //        Debug.debugMethodBegin("CASProtocolFactory", "createNatives");
+  //
+  //        CASOperation[] operations = new CASOperation[0];
+  //
+  //        Debug.debugMethodEnd();
+  //        return operations;
+  //    }
+  /**
+   * creates a <tt>CASTransactionRequest</tt> object.
+   * 
+   * @param request
+   *          request that lead to the response
+   * @param exception
+   *          exception if raised
+   * @param status
+   *          termination status of the transaction (Success|Partial|Failed)
+   * @param handle
+   *          something to identify the failure if one has occured
+   */
+  public static CASTransactionResponse createCASTransactionResponse( OGCWebServiceRequest request,
+      OGCWebServiceException exception, CASInsertResult[] insertResults, String status,
+      String handle )
+  {
+    Debug.debugMethodBegin();
 
-        if (nl != null) {
-            if (nl.getLength() > 0) {
-                for (int i = 0; i < nl.getLength(); i++) {
-                    if (nl.item(i).getNodeName().equals("PropertyName")) {
-                        list.add(nl.item(i).getFirstChild().getNodeValue());
-                    }
-                }
-            }
-        }
+    Document doc = null;
 
-        propertynames = (String[]) list.toArray(new String[list.size()]);
-
-        Debug.debugMethodEnd();
-        return propertynames;
+    if( exception != null )
+    {
+      StringReader reader = new StringReader( ( (Marshallable)exception ).exportAsXML() );
+      try
+      {
+        doc = XMLTools.parse( reader );
+      }
+      catch( Exception e )
+      {
+        System.out.println( e );
+      }
     }
 
-    /**
-     * returns the filter that limits the query
-     */
-    public static Filter getFilter(Element element) throws Exception {
-        Debug.debugMethodBegin("CASProtocolFactory", "getFilter");
+    CASTransactionResponse response = new CASTransactionResponse_Impl( request, doc, insertResults,
+        status, handle );
 
-        Filter filter = null;
+    Debug.debugMethodEnd();
+    return response;
+  }
 
-        NodeList nl = element.getChildNodes();
+  /**
+   * creates a <tt>CASInsertResult</tt>
+   */
+  public static CASInsertResult createCASInsertResult( String handle, String[] featureIds )
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createCASTransactionResponse" );
 
-        if ((nl != null) && (nl.getLength() > 0)) {
-            for (int i = 0; i < nl.getLength(); i++) {
-                if (nl.item(i) instanceof Element && nl.item(i).getLocalName().equals("Filter")) {
-                    filter = AbstractFilter.buildFromDOM((Element) nl.item(i));
-                    break;
-                }
-            }
-        }
+    CASInsertResult result = new CASInsertResult_Impl( handle, featureIds );
 
-        Debug.debugMethodEnd();
-        return filter;
+    Debug.debugMethodEnd();
+    return result;
+  }
+
+  /**
+   * creates a <tt>CASRegisterServiceRequest</tt> object
+   * 
+   * @param id
+   *          id of the request
+   * @param vendorSpecificParameter
+   * @param serviceAddress
+   *          URL of (ISO19119) document that describes the service that shall
+   *          be registered
+   * @param serviceOwnerContactInfo
+   *          information about who to contact to get additional informations
+   *          about the service
+   * @param harvestFrequency
+   *          time interval in hours a catalog shall revisit the service
+   */
+  public static CASRegisterServiceRequest createCASRegisterServiceRequest( String id,
+      HashMap vendorSpecificParameter, URL serviceAddress, String serviceOwnerContactInfo,
+      int harvestFrequency )
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createCASRegisterServiceRequest" );
+
+    CASRegisterServiceRequest rsr = new CASRegisterServiceRequest_Impl( "1.0.0", id,
+        vendorSpecificParameter, serviceAddress, serviceOwnerContactInfo, harvestFrequency );
+
+    Debug.debugMethodEnd();
+    return rsr;
+  }
+
+  /**
+   * creates a <tt>CASRegisterServiceRequest</tt> object
+   * 
+   * @param id
+   *          id of the request
+   * @param doc
+   *          XML document encoding the request
+   */
+  public static CASRegisterServiceRequest createCASRegisterServiceRequest( String id, Document doc )
+      throws MalformedURLException
+  {
+    Debug.debugMethodBegin( "CASProtocolFactory", "createCASRegisterServiceRequest" );
+
+    Element element = (Element)doc.getElementsByTagName( "RegisterService" ).item( 0 );
+
+    String serviceOwnerContactInfo = XMLTools.getAttrValue( element, "serviceOwnerContactInfo" );
+    int harvestFrequency = -1;
+
+    try
+    {
+      String s = XMLTools.getAttrValue( element, "harvestFrequency" );
+      harvestFrequency = Integer.parseInt( s );
     }
+    catch( Exception e )
+    {}
 
-    /**
-     * creates a <tt>CASGetRecordResponse</tt> object
-     * @param request a copy of the request that leads to this response
-     * @param exception a describtion of an excetion (only if raised)
-     * @param response the response to the request
-     */
-    public static CASGetRecordResponse createCASGetRecordResponse(OGCWebServiceRequest request, 
-                                                           OGCWebServiceException exception, 
-                                                           Object response) {
-        Debug.debugMethodBegin("CASProtocolFactory", "createCASGetRecordResponse");
+    Element elem = (Element)element.getElementsByTagName( "ServiceAddr" ).item( 0 );
+    String href = XMLTools.getAttrValue( elem, "href" );
+    URL serviceAddress = new URL( href );
 
-        Document doc = null;
+    CASRegisterServiceRequest rsr = new CASRegisterServiceRequest_Impl( "1.0.0", id, null,
+        serviceAddress, serviceOwnerContactInfo, harvestFrequency );
 
-        if (exception != null) {
-            StringReader reader = new StringReader( ((Marshallable)exception).exportAsXML() );
-            try {
-                doc = XMLTools.parse( reader );
-            } catch(Exception e) {
-                System.out.println(e);	
-            }
-        }
+    Debug.debugMethodEnd();
+    return rsr;
+  }
 
-        CASGetRecordResponse res = new CASGetRecordResponse_Impl(request, doc, response);
-
-        Debug.debugMethodEnd();
-        return res;
-    }
-
-    /**
-     * creates a <tt>CASGetCapabilitiesRequest</tt> object.
-     * @param id id of the request
-     * @param vendorSpecificParameter none standadized parameters as
-     *            name-value pairs
-     */
-
-	public static CASGetCapabilitiesRequest createCASGetCapabilitiesRequest(
-										   		     	  String id,
-										   		     	  HashMap vendorSpecificParameter)
-	{
-		Debug.debugMethodBegin("CASProtocolFactory", "createCASGetCapabilitiesRequest" );
-
-		CASGetCapabilitiesRequest req =
-			new CASGetCapabilitiesRequest_Impl( "0.0.6", id, vendorSpecificParameter);
-
-		Debug.debugMethodEnd();
-		return req;
-	}
-
-    /**
-     * creates a <tt>CASGetCapabilitiesResponse</tt> object
-     * @param request a copy of the request that leads to this response
-     * @param exception a describtion of an excetion (only if raised)
-     * @param native_ is intended to allow access to vendor specific capabilities
-     * @param affectedRecordTypes names of the feature types affected by the
-     *            response
-     * @param response the response to the request
-     */
-
-    //    public CASGetCapabilitiesResponse createCASGetCapabilitiesResponse(
-    //   													OGCWebServiceRequest request,
-    //													OGCWebServiceException exception,
-    //													String [] affectedRecordTypes,
-    //													Document response )
-    //	{
-    //		Debug.debugMethodBegin("CASProtocolFactory", "createCASGetCapabilitiesResponse" );
-    //
-    //		Document doc = null;
-    //
-    //		if ( exception != null ) {
-    //			doc = exception.exportAsXML();
-    //		}
-    //
-    //		CASGetCapabilitiesResponse res =
-    //			new CASGetCapabilitiesResponse_Impl( request, doc, affectedRecordTypes,
-    //												 response);
-    //
-    //		Debug.debugMethodEnd();
-    //		return res;
-    //	}
-
-    /**
-     * creates a CAS Query object from a dom element.
-     * @param element dom element containing a CAS query
-     */
-    public CASQuery createQuery(Element element) throws Exception {
-        Debug.debugMethodBegin("CASProtocolFactory", "createQuery");
-
-        String[] propertyNames = getPropertyNames(element);
-        String propertySetName = getPropertySetName(element);
-        String handle = XMLTools.getAttrValue(element, "handle");
-        String version = XMLTools.getAttrValue(element, "version");
-        String typeName = XMLTools.getAttrValue(element, "typeName");
-        Filter filter = getFilter(element);
-        CASQuery query = new CASQuery_Impl(propertyNames, handle, version, typeName, filter, 
-                                           propertySetName);
-
-        Debug.debugMethodEnd();
-        return query;
-    }
-
-    /**
-     * creates a <tt>CASTransactionRequest</tt> object.
-     * @param id id of the request
-     * @param lockId
-     * @param operations
-     * @param handle
-     */
-    public CASTransactionRequest createCASTransactionRequest(String id, 
-                                                             HashMap vendorSpecificParameter, 
-                                                             String lockId, String handle, 
-                                                             CASOperation[] operations) {
-        Debug.debugMethodBegin("CASProtocolFactory", "createCASTransactionRequest");
-
-        CASTransactionRequest tr = new CASTransactionRequest_Impl("1.0.0", id, 
-                                                                  vendorSpecificParameter, lockId, 
-                                                                  handle, operations);
-
-        Debug.debugMethodEnd();
-        return tr;
-    }
-
-    /**
-     * creates a <tt>CASTransactionRequest</tt> object.
-     * @param id id of the request
-     * @param doc DOM objects that contains the request
-     */
-    public static CASTransactionRequest createCASTransactionRequest(String id, Document doc)
-                                                      throws Exception {
-        Debug.debugMethodBegin("CASProtocolFactory", "createCASTransactionRequest");
-
-        CASTransactionRequest tr = null;
-
-        Element element = (Element) doc.getElementsByTagName("Transaction").item(0);
-
-        String handle = XMLTools.getAttrValue(element, "handle");
-
-        NodeList nl = element.getElementsByTagName("Insert");
-        CASOperation[] ins = createInserts(nl);
-
-        nl = element.getElementsByTagName("Update");
-
-        CASOperation[] ups = createUpdates(nl);
-
-        nl = element.getElementsByTagName("Delete");
-
-        CASOperation[] dels = createDeletes(nl);
-
-        CASOperation[] ops = new CASOperation[ins.length + ups.length + dels.length];
-        int k = 0;
-
-        for (int i = 0; i < ins.length; i++) {
-            ops[k++] = ins[i];
-        }
-
-        for (int i = 0; i < ups.length; i++) {
-            ops[k++] = ups[i];
-        }
-
-        for (int i = 0; i < dels.length; i++) {
-            ops[k++] = dels[i];
-        }
-
-        String lockId = null;
-
-        Element elem = XMLTools.getNamedChild(element, WFSNS, "LockId");
-
-        if (elem != null) {
-            lockId = elem.getFirstChild().getNodeValue();
-        }
-
-        tr = new CASTransactionRequest_Impl("1.0.0", id, null, lockId, handle, ops);
-
-        Debug.debugMethodEnd();
-        return tr;
-    }
-
-    /**
-     * creates insert operations object from a XML-element defined
-     * by the OGC CAS specifications
-     */
-    private static CASOperation[] createInserts(NodeList nl) {
-        Debug.debugMethodBegin("CASProtocolFactory", "createInserts");
-
-        CASOperation[] operations = null;
-
-        if (nl != null) {
-            operations = new CASOperation[nl.getLength()];
-
-            // for each insert operation defined within the element
-            for (int i = 0; i < nl.getLength(); i++) {
-                Element element = (Element) nl.item(i);
-                // get the operations handle (may be null)
-                String handle = XMLTools.getAttrValue(element, "handle");
-                ArrayList list = new ArrayList();
-                NodeList nl_ = element.getChildNodes();
-
-                // create list of features that shall be inserted
-                for (int j = 0; j < nl_.getLength(); j++) {
-                    if (nl_.item(j) instanceof Element) {
-                        list.add(new GMLFeature_Impl((Element) nl_.item(j)));
-                    }
-                }
-
-                GMLFeature[] feat = new GMLFeature[list.size()];
-                feat = (GMLFeature[]) list.toArray(feat);
-
-                // create insert operation
-                operations[i] = new CASInsert_Impl(handle, feat);
-            }
-        } else {
-            operations = new CASOperation[0];
-        }
-
-        Debug.debugMethodEnd();
-        return operations;
-    }
-
-    /**
-     * creates update operations object from a XML-element defined
-     * by the OGC CAS specifications
-     */
-    private static CASOperation[] createUpdates(NodeList nl) {
-        Debug.debugMethodBegin("CASProtocolFactory", "createUpdates");
-
-        CASOperation[] operations = new CASOperation[0];
-
-        Debug.debugMethodEnd();
-        return operations;
-    }
-
-    /**
-     * creates delete operations object from a XML-element defined
-     * by the OGC CAS specifications
-     */
-    private static CASOperation[] createDeletes(NodeList nl) throws Exception {
-        Debug.debugMethodBegin("CASProtocolFactory", "createDeletes");
-
-		CASOperation [] operations = null;
-
-		if (nl != null) {
-			operations = new CASOperation [nl.getLength ()];
-			for (int i = 0; i < nl.getLength(); i++) {
-				Element element = (Element) nl.item (i);
-				Filter filter = getFilter (element);
-				String handle = XMLTools.getAttrValue (element, "handle");	
-				String type = XMLTools.getAttrValue (element, "type");
-				operations [i] = new CASDelete_Impl (handle, filter, type);
-			}    
-		}
-
-        Debug.debugMethodEnd();
-        return operations;
-    }
-
-    /**
-     * creates nativ operations object from a XML-element defined
-     * by the OGC CAS specifications
-     */
-//    private static CASOperation[] createNatives(NodeList nl) {
-//        Debug.debugMethodBegin("CASProtocolFactory", "createNatives");
-//
-//        CASOperation[] operations = new CASOperation[0];
-//
-//        Debug.debugMethodEnd();
-//        return operations;
-//    }
-
-    /**
-     * creates a <tt>CASTransactionRequest</tt> object.
-     * @param request request that lead to the response
-     * @param exception exception if raised
-     * @param status termination status of the transaction
-     *         (Success|Partial|Failed)
-     * @param handle something to identify the failure if one has occured
-     */
-    public static CASTransactionResponse createCASTransactionResponse(OGCWebServiceRequest request, 
-                                                               OGCWebServiceException exception, 
-                                                               CASInsertResult[] insertResults, 
-                                                               String status, String handle) {
-        Debug.debugMethodBegin();
-
-        Document doc = null;
-
-        if (exception != null) {
-            StringReader reader = new StringReader( ((Marshallable)exception).exportAsXML() );
-            try {
-                doc = XMLTools.parse( reader );
-            } catch(Exception e) {
-                System.out.println(e);	
-            }
-        }
-
-        CASTransactionResponse response = new CASTransactionResponse_Impl(request, doc, 
-                                                                          insertResults, status, 
-                                                                          handle);
-
-        Debug.debugMethodEnd();
-        return response;
-    }
-
-    /**
-     * creates a <tt>CASInsertResult</tt>
-     */
-    public static CASInsertResult createCASInsertResult(String handle, String[] featureIds) {
-        Debug.debugMethodBegin("CASProtocolFactory", "createCASTransactionResponse");
-
-        CASInsertResult result = new CASInsertResult_Impl(handle, featureIds);
-
-        Debug.debugMethodEnd();
-        return result;
-    }
-
-    /**
-     * creates a <tt>CASRegisterServiceRequest</tt> object
-     * @param id id of the request
-     * @param vendorSpecificParameter
-     * @param serviceAddress URL of (ISO19119) document that describes the
-     *            service that shall be registered
-     * @param serviceOwnerContactInfo information about who to contact to
-     *            get additional informations about the service
-     * @param harvestFrequency time interval in hours a catalog shall
-     *            revisit the service
-     */
-    public static CASRegisterServiceRequest createCASRegisterServiceRequest(String id, 
-                                                                     HashMap vendorSpecificParameter, 
-                                                                     URL serviceAddress, 
-                                                                     String serviceOwnerContactInfo, 
-                                                                     int harvestFrequency) {
-        Debug.debugMethodBegin("CASProtocolFactory", "createCASRegisterServiceRequest");
-
-        CASRegisterServiceRequest rsr = new CASRegisterServiceRequest_Impl("1.0.0", id, 
-                                                                           vendorSpecificParameter, 
-                                                                           serviceAddress, 
-                                                                           serviceOwnerContactInfo, 
-                                                                           harvestFrequency);
-
-        Debug.debugMethodEnd();
-        return rsr;
-    }
-
-    /**
-     * creates a <tt>CASRegisterServiceRequest</tt> object
-     * @param id id of the request
-     * @param doc XML document encoding the request
-     */
-    public static CASRegisterServiceRequest createCASRegisterServiceRequest(String id, Document doc)
-                                                              throws MalformedURLException {
-        Debug.debugMethodBegin("CASProtocolFactory", "createCASRegisterServiceRequest");
-
-        Element element = (Element) doc.getElementsByTagName("RegisterService").item(0);
-
-        String serviceOwnerContactInfo = XMLTools.getAttrValue(element, "serviceOwnerContactInfo");
-        int harvestFrequency = -1;
-
-        try {
-            String s = XMLTools.getAttrValue(element, "harvestFrequency");
-            harvestFrequency = Integer.parseInt(s);
-        } catch (Exception e) {
-        }
-
-        Element elem = (Element) element.getElementsByTagName("ServiceAddr").item(0);
-        String href = XMLTools.getAttrValue(elem, "href");
-        URL serviceAddress = new URL(href);
-
-        CASRegisterServiceRequest rsr = new CASRegisterServiceRequest_Impl("1.0.0", id, null, 
-                                                                           serviceAddress, 
-                                                                           serviceOwnerContactInfo, 
-                                                                           harvestFrequency);
-
-        Debug.debugMethodEnd();
-        return rsr;
-    }
-
-   
 }
 
 /*
  * Changes to this class. What the people haven been up to:
- *
+ * 
  * $Log$
- * Revision 1.1  2004/05/11 16:43:26  doemming
- * Initial revision
- *
- * Revision 1.16  2004/03/29 10:39:04  poth
- * no message
- *
- * Revision 1.15  2004/02/19 10:08:58  poth
- * no message
- *
- * Revision 1.14  2004/02/18 15:08:54  mrsnyder
- * Corrections to the WFS-Delete functionality. Worked on WCAS, too.
- *
- * Revision 1.13  2004/02/11 08:06:06  poth
- * no message
- *
- * Revision 1.12  2004/01/08 09:50:23  poth
- * no message
- *
- * Revision 1.5  2003/06/10 07:52:12  poth
- * no message
- *
- * Revision 1.4  2003/05/27 06:55:25  poth
- * no message
- *
- * Revision 1.3  2003/04/07 07:26:17  poth
- * no message
- *
- * Revision 1.2  2002/12/12 13:11:17  poth
- * no message
- *
- * Revision 1.1.1.1  2002/09/25 16:01:33  poth
- * no message
- *
- * Revision 1.1  2002/08/20 15:56:54  ap
- * no message
- *
- *
+ * Revision 1.2  2004/08/30 00:36:48  doemming
+ * *** empty log message ***
+ * Revision 1.1.1.1 2004/05/11 16:43:26
+ * doemming backup of local modified deegree sources
+ * 
+ * Revision 1.16 2004/03/29 10:39:04 poth no message
+ * 
+ * Revision 1.15 2004/02/19 10:08:58 poth no message
+ * 
+ * Revision 1.14 2004/02/18 15:08:54 mrsnyder Corrections to the WFS-Delete
+ * functionality. Worked on WCAS, too.
+ * 
+ * Revision 1.13 2004/02/11 08:06:06 poth no message
+ * 
+ * Revision 1.12 2004/01/08 09:50:23 poth no message
+ * 
+ * Revision 1.5 2003/06/10 07:52:12 poth no message
+ * 
+ * Revision 1.4 2003/05/27 06:55:25 poth no message
+ * 
+ * Revision 1.3 2003/04/07 07:26:17 poth no message
+ * 
+ * Revision 1.2 2002/12/12 13:11:17 poth no message
+ * 
+ * Revision 1.1.1.1 2002/09/25 16:01:33 poth no message
+ * 
+ * Revision 1.1 2002/08/20 15:56:54 ap no message
+ * 
+ *  
  */

@@ -124,16 +124,16 @@ public class XLinkFeatureTypeProperty implements FeatureTypeProperty
   {
     return myLabelTo;
   }
-  
+
   public String toString()
   {
-      StringBuffer result=new StringBuffer("xlink:");
-      switch(getXLinkType())
-      {
-        case XLINK_SIMPLE:
-          result.append("simple");
-          break;
-      }
-      return result.toString();
+    StringBuffer result = new StringBuffer( "xlink:" );
+    switch( getXLinkType() )
+    {
+    case XLINK_SIMPLE:
+      result.append( "simple" );
+      break;
+    }
+    return result.toString();
   }
 }

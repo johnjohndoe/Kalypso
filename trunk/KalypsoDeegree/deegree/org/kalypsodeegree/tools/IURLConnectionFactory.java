@@ -9,6 +9,6 @@ import java.net.URLConnection;
  */
 public interface IURLConnectionFactory
 {
-  public URLConnection createURLConnection(URL url) throws IOException;
-  
+  public URLConnection createURLConnection( URL url ) throws IOException;
+
 }

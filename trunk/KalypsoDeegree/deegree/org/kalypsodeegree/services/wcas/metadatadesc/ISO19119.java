@@ -1,42 +1,42 @@
 /*----------------    FILE HEADER  ------------------------------------------
  
-This file is part of deegree.
-Copyright (C) 2001 by:
-EXSE, Department of Geography, University of Bonn
-http://www.giub.uni-bonn.de/exse/
-lat/lon Fitzke/Fretter/Poth GbR
-http://www.lat-lon.de
+ This file is part of deegree.
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon Fitzke/Fretter/Poth GbR
+ http://www.lat-lon.de
  
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
  
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
  
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
-Contact:
+ Contact:
  
-Andreas Poth
-lat/lon Fitzke/Fretter/Poth GbR
-Meckenheimer Allee 176
-53115 Bonn
-Germany
-E-Mail: poth@lat-lon.de
+ Andreas Poth
+ lat/lon Fitzke/Fretter/Poth GbR
+ Meckenheimer Allee 176
+ 53115 Bonn
+ Germany
+ E-Mail: poth@lat-lon.de
  
-Jens Fitzke
-Department of Geography
-University of Bonn
-Meckenheimer Allee 166
-53115 Bonn
-Germany
-E-Mail: jens.fitzke@uni-bonn.de
+ Jens Fitzke
+ Department of Geography
+ University of Bonn
+ Meckenheimer Allee 166
+ 53115 Bonn
+ Germany
+ E-Mail: jens.fitzke@uni-bonn.de
  
  
  ---------------------------------------------------------------------------*/
@@ -45,138 +45,134 @@ package org.deegree.services.wcas.metadatadesc;
 
 /**
  * ISO19119.java
- *
+ * 
  * Created on 11. September 2002, 15:55
- * <p>----------------------------------------------------------------------</p>
- *
- * @author <a href="mailto:schaefer@lat-lon.de">Axel Schaefer</a>
- * @version $Revision$ $Date$ 
- *
+ * <p>
+ * ----------------------------------------------------------------------
+ * </p>
+ * 
+ * @author <a href="mailto:schaefer@lat-lon.de">Axel Schaefer </a>
+ * @version $Revision$ $Date$
+ *  
  */
-public interface ISO19119 {
-    
-/**
-     * @return
-     */
-    ServiceType getServiceType();
+public interface ISO19119
+{
 
+  /**
+   * @return
+   */
+  ServiceType getServiceType();
 
-    /**
-     * @return String
-     */
-    String getServiceTypeVersion();
+  /**
+   * @return String
+   */
+  String getServiceTypeVersion();
 
+  /**
+   * @return
+   */
+  Citation getCitation();
 
-    /**
-     * @return
-     */
-    Citation getCitation();
+  /**
+   * @return
+   */
+  String getAbstract();
 
+  /**
+   * @return
+   */
+  AccessProperties getAccessProperties();
 
-    /**
-     * @return
-     */
-    String getAbstract();
+  /**
+   * minOccurs="0" maxOccurs="unbounded"
+   * 
+   * @return
+   */
+  Keywords[] getKeywords();
 
+  /**
+   * @return
+   */
+  String getPurpose();
 
-    /**
-     * @return
-     */
-    AccessProperties getAccessProperties();
+  /**
+   * @return
+   */
+  String getCredit();
 
+  /**
+   * minOccurs="0" maxOccurs="unbounded"
+   * 
+   * @return
+   */
+  StatusCode[] getStatusCode();
 
-    /**
-     * minOccurs="0" maxOccurs="unbounded"
-     * @return
-     */
-    Keywords[] getKeywords();
+  /**
+   * minOccurs="0" maxOccurs="unbounded"
+   * 
+   * @return
+   */
+  PointOfContact[] getPointOfContact();
 
+  /**
+   * minOccurs="0" maxOccurs="unbounded"
+   * 
+   * @return
+   */
+  ResourceSpecifiedUsage[] getResourceSpecifiedUsage();
 
-    /**
-     * @return
-     */
-    String getPurpose();
+  /**
+   * minOccurs="0" maxOccurs="unbounded"
+   * 
+   * @return
+   */
+  TypeProperty[] getTypeProperty();
 
+  /**
+   * minOccurs="0" maxOccurs="unbounded"
+   * 
+   * @return
+   */
+  LegalConstraints[] getLegalConstraints();
 
-    /**
-     * @return
-     */
-    String getCredit();
+  /**
+   * minOccurs="0" maxOccurs="unbounded"
+   * 
+   * @return
+   */
+  SecurityConstraints[] getSecurityConstraints();
 
+  /**
+   * minOccurs="0"
+   * 
+   * @return
+   */
+  Quality getQuality();
 
-    /**
-     * minOccurs="0" maxOccurs="unbounded"
-     * @return
-     */
-    StatusCode[] getStatusCode();
+  /**
+   * minOccurs="0" maxOccurs="unbounded"
+   * 
+   * @return
+   */
+  OperationMetadata[] getOperationMetadata();
 
+  /**
+   * minOccurs="0"
+   * 
+   * @return
+   */
+  String getLatLonBoundingBox();
 
-    /**
-     * minOccurs="0" maxOccurs="unbounded"
-     * @return
-     */
-    PointOfContact[] getPointOfContact();
+  /**
+   * @return
+   */
+  DataCoupling getDataCoupling();
 
+  /**
+   * minOccurs="0" maxOccurs="unbounded"
+   * 
+   * @return
+   */
+  ISO19115[] getMD_Metadata();
 
-    /**
-     * minOccurs="0" maxOccurs="unbounded"
-     * @return
-     */
-    ResourceSpecifiedUsage[] getResourceSpecifiedUsage();
-
-
-    /**
-     * minOccurs="0" maxOccurs="unbounded"
-     * @return
-     */
-    TypeProperty[] getTypeProperty();
-
-
-    /**
-     * minOccurs="0" maxOccurs="unbounded"
-     * @return
-     */
-    LegalConstraints[] getLegalConstraints();
-
-
-    /**
-     * minOccurs="0" maxOccurs="unbounded"
-     * @return
-     */
-    SecurityConstraints[] getSecurityConstraints();
-
-
-    /**
-     * minOccurs="0"
-     * @return
-     */
-    Quality getQuality();
-
-
-    /**
-     * minOccurs="0" maxOccurs="unbounded"
-     * @return
-     */
-    OperationMetadata[] getOperationMetadata();
-
-
-    /**
-     * minOccurs="0"
-     * @return
-     */
-    String getLatLonBoundingBox();
-
-
-    /**
-     * @return
-     */
-    DataCoupling getDataCoupling();
-
-
-    /**
-     * minOccurs="0" maxOccurs="unbounded"
-     * @return
-     */
-    ISO19115[] getMD_Metadata();    
-    
 }

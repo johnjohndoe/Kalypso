@@ -46,63 +46,73 @@ import java.net.URL;
 
 import org.deegree.xml.Marshallable;
 
-
 /**
- * Implements the description of the access to directories used by
- * a deegree web map context
- *
+ * Implements the description of the access to directories used by a deegree web
+ * map context
+ * 
  * @version $Revision$
- * @author <a href="mailto:poth@lat-lon.de">Andreas Poth</a>
+ * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
-public class DirectoryAccess implements Marshallable {
-	
-	private URL onlineResource = null;
-	private String directoryName = null; 
+public class DirectoryAccess implements Marshallable
+{
 
-	/**
-	 * @param directoryName
-	 * @param onlineResource
-	 */
-	DirectoryAccess(String directoryName, URL onlineResource) {
-		this.directoryName = directoryName;
-		this.onlineResource = onlineResource;
-	}
-		
-	
-	/**
-	 * @return Returns the directoryName.
-	 */
-	public String getDirectoryName() {
-		return directoryName;
-	}
+  private URL onlineResource = null;
 
-	/**
-	 * @param directoryName The directoryName to set.
-	 */
-	public void setDirectoryName(String directoryName) {
-		this.directoryName = directoryName;
-	}
+  private String directoryName = null;
 
-	/**
-	 * @return Returns the onlineResource.
-	 */
-	public URL getOnlineResource() {
-		return onlineResource;
-	}
+  /**
+   * @param directoryName
+   * @param onlineResource
+   */
+  DirectoryAccess( String directoryName, URL onlineResource )
+  {
+    this.directoryName = directoryName;
+    this.onlineResource = onlineResource;
+  }
 
-	/**
-	 * @param onlineResource The onlineResource to set.
-	 */
-	public void setOnlineResource(URL onlineResource) {
-		this.onlineResource = onlineResource;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.deegree.xml.Marshallable#exportAsXML()
-	 */
-	public String exportAsXML() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  /**
+   * @return Returns the directoryName.
+   */
+  public String getDirectoryName()
+  {
+    return directoryName;
+  }
+
+  /**
+   * @param directoryName
+   *          The directoryName to set.
+   */
+  public void setDirectoryName( String directoryName )
+  {
+    this.directoryName = directoryName;
+  }
+
+  /**
+   * @return Returns the onlineResource.
+   */
+  public URL getOnlineResource()
+  {
+    return onlineResource;
+  }
+
+  /**
+   * @param onlineResource
+   *          The onlineResource to set.
+   */
+  public void setOnlineResource( URL onlineResource )
+  {
+    this.onlineResource = onlineResource;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.deegree.xml.Marshallable#exportAsXML()
+   */
+  public String exportAsXML()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
 }

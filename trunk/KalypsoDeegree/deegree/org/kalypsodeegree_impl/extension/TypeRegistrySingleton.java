@@ -1,7 +1,8 @@
 package org.deegree_impl.extension;
 
 /**
- * Dies sollte irgenwo zentral liegen oder in eine andere solche Klasse integriert werden
+ * Dies sollte irgenwo zentral liegen oder in eine andere solche Klasse
+ * integriert werden
  * 
  * @author belger
  */
@@ -11,14 +12,14 @@ public class TypeRegistrySingleton
 
   private TypeRegistrySingleton()
   {
-    // wird nicht instantiiert
+  // wird nicht instantiiert
   }
-  
+
   public static ITypeRegistry getTypeRegistry()
   {
     if( m_typeRegistry == null )
       m_typeRegistry = new TypeRegistry_impl();
-    
+
     return m_typeRegistry;
   }
 }
