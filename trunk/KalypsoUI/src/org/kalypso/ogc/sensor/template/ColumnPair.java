@@ -96,7 +96,7 @@ public class ColumnPair implements ITableViewColumn
    */
   public String getName()
   {
-    return null;
+    return m_provider.getValueAxis().getLabel();
   }
 
   /**

@@ -73,7 +73,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
    */
   public Object getAdapter( Class adapter )
   {
-    System.out.println( adapter.getName() );
+    //System.out.println( adapter.getName() );
     return null;
   }
 
