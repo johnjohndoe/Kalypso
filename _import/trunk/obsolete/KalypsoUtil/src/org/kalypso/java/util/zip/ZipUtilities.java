@@ -41,16 +41,16 @@
 package org.kalypso.java.util.zip;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.CopyUtils;
+import org.apache.commons.io.IOUtils;
 
 /**
  * @author belger
@@ -64,11 +64,28 @@ public class ZipUtilities
 
   public static void unzip( final File zip, final File targetdir ) throws ZipException, IOException
   {
-    final ZipFile file = new ZipFile( zip );
-    for( final Enumeration enum = file.entries(); enum.hasMoreElements(); )
+    FileInputStream zipIS = null;
+    try
     {
-      final ZipEntry entry = (ZipEntry)enum.nextElement();
+      zipIS = new FileInputStream( zip );
+      unzip( zipIS, targetdir );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( zipIS );
+    }
+  }
 
+  public static void unzip( final InputStream inputStream, final File targetdir )
+      throws IOException
+  {
+    final ZipInputStream zis = new ZipInputStream( inputStream );
+    while( true )
+    {
+      final ZipEntry entry = zis.getNextEntry();
+      if( entry == null )
+        break;
+      
       final File newfile = new File( targetdir, entry.getName() );
       if( entry.isDirectory() )
         newfile.mkdirs();
@@ -76,28 +93,19 @@ public class ZipUtilities
       {
         if( !newfile.getParentFile().exists() )
           newfile.getParentFile().mkdirs();
-        CopyUtils.copy( file.getInputStream( entry ), new FileOutputStream( newfile ) );
-      }
-    }
-  }
 
-  public static void unzip( final InputStream inputStream, final File targetDir )
-      throws IOException
-  {   
-    final ZipInputStream zis = new ZipInputStream( inputStream );
-    ZipEntry entry;
-    while( ( entry = zis.getNextEntry() ) != null )
-    {
-      final File newFile = new File( targetDir, entry.getName() );
-      if( entry.isDirectory() )
-        newFile.mkdirs();
-      else
-      {
-        if( !newFile.getParentFile().exists() )
-          newFile.getParentFile().mkdirs();
-        CopyUtils.copy( zis, new FileOutputStream( newFile ) );
+        FileOutputStream os = null;
+        try
+        {
+          os = new FileOutputStream( newfile );
+          CopyUtils.copy( zis, os );
+        }
+        finally
+        {
+          IOUtils.closeQuietly( os );
+          zis.closeEntry();
+        }
       }
     }
-    zis.close();
   }
 }
