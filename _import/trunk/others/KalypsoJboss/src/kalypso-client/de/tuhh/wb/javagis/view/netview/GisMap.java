@@ -690,6 +690,7 @@ public class GisMap extends JPanel
     public void updateImage()
 
     {
+    System.out.println("Update Image!!");
 
 	this.mapBuffer=netModel.getBufferedMap((Component)this,trafo,scale);
 

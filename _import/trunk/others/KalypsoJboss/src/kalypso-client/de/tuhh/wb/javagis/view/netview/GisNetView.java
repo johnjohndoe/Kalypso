@@ -36,6 +36,7 @@ import de.tuhh.wb.javagis.data.GisObject;
 import de.tuhh.wb.javagis.data.GisObjectClass;
 import de.tuhh.wb.javagis.data.GisRelation;
 import de.tuhh.wb.javagis.data.GisRelationClass;
+import de.tuhh.wb.javagis.data.Version;
 import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.view.ViewManager;
 
@@ -518,7 +519,9 @@ public class GisNetView
 						I18n.get(
 							"netView_removeObjectDialog_message1")
 								+ selectedGisObject.getName()
-								+ " #"+selectedGisObject.getId()+" "
+								+ " #"
+								+ selectedGisObject.getId()
+								+ " "
 								+ I18n.get("netView_removeObjectDialog_message2"),
 						//Object message,
 						I18n.get(
@@ -574,8 +577,10 @@ public class GisNetView
 							"netView_removeRelationDialog_message1")
 								+ selectedGisRelation.getName()
 								+ " #"
-								+ selectedGisRelation.getId()+" "+I18n.get(
-						"netView_removeRelationDialog_message2"),
+								+ selectedGisRelation.getId()
+								+ " "
+								+ I18n.get(
+									"netView_removeRelationDialog_message2"),
 						//Object message,
 						I18n.get(
 								"netView_removeRelationDialog_title"),
@@ -1117,6 +1122,10 @@ public class GisNetView
 
 		//previousView.addActionListener(this);
 
+		JButton refreshView = new JButton(I18n.get("netView_JButton_refresh"));
+		refreshView.setActionCommand("refresh");
+		refreshView.addActionListener(this);
+
 		JButton legend = new JButton(I18n.get("netView_JButton_Show Legend"));
 
 		legend.setActionCommand("showLegend");
@@ -1144,6 +1153,7 @@ public class GisNetView
 		menubar.add(fullExtent);
 
 		//menubar.add(previousView);
+		menubar.add(refreshView);
 
 		menubar.add(legend);
 
@@ -1210,6 +1220,9 @@ public class GisNetView
 
 		if (action.equals("fullExtent"))
 			gisMap.zoomToFullExtent();
+
+		if (action.equals("refresh"))
+			refreshView();
 
 		if (action.equals("showLegend"))
 			showLegend();
@@ -1508,6 +1521,11 @@ public class GisNetView
 
 		}
 
+	}
+
+	private void refreshView() {
+		netModel.updateGisNetModel(gisObjectClasses, gisRelationClasses);
+		gisMap.updateImage();
 	}
 
 	//InternalFrameListener
