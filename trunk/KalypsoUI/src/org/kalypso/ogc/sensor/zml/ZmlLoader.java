@@ -1,16 +1,16 @@
 package org.kalypso.ogc.sensor.zml;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.DefaultObservationProvider;
 import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.xml.sax.InputSource;
 
 /**
  * A specific loader for ZML-Files. Load liefert ein IObservationProvider.
@@ -34,29 +34,33 @@ public class ZmlLoader extends AbstractLoader
 
     monitor.beginTask( "Laden von ZML-Datei von " + location, 2 );
 
-    InputSource ins = null;
+    URL url = null;
 
     try
     {
       if( type.equals( "relative" ) )
-      {
-        IFile f = project.getFile( location );
-        ins = new InputSource( f.getContents() );
-        ins.setEncoding( f.getCharset() );
-      }
+        url = project.getFile( location ).getLocation().toFile().toURL();
       else if( type.equals( "absolute" ) )
-      {
-        ins = new InputSource( new URL( location ).openStream() );
-      }
+        url = new URL( location );
+      else
+        throw new LoaderException( "Href Type is not supported: " + type );
     }
-    catch( Exception e )
+    catch( MalformedURLException e )
     {
-      throw new LoaderException( e );
+      try
+      {
+        // try with file
+        url = new File( location ).toURL();
+      }
+      catch( MalformedURLException e1 )
+      {
+        throw new LoaderException( e );
+      }
     }
 
     monitor.worked( 1 );
 
-    ZmlObservation obs = new ZmlObservation( project.getLocation().toOSString(), location, ins );
+    ZmlObservation obs = new ZmlObservation( location, url );
 
     monitor.worked( 1 );
 

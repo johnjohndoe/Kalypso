@@ -1,9 +1,9 @@
 package org.kalypso.ogc.sensor.editor;
 
 import java.awt.Frame;
+import java.net.MalformedURLException;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -16,7 +16,6 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.kalypso.editor.AbstractEditorPart;
 import org.kalypso.ogc.sensor.view.ShowObservationInDiagramJob;
 import org.kalypso.ogc.sensor.zml.ZmlObservation;
-import org.xml.sax.InputSource;
 
 /**
  * @author schlienger
@@ -59,16 +58,17 @@ public class ObservationDiagramEditor extends AbstractEditorPart
   }
 
   /**
-   * @throws CoreException
+   * @throws MalformedURLException
    * @see org.kalypso.editor.AbstractEditorPart#load()
    */
-  protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input  ) throws CoreException
+  protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input  ) throws MalformedURLException
   {
       final IFile f = input.getFile();
-      final InputSource ins = new InputSource( f.getContents() );
-      ins.setEncoding( f.getCharset() );
+      //final InputSource ins = new InputSource( f.getContents() );
+      //ins.setEncoding( f.getCharset() );
+      //ins.
       
-      final ZmlObservation obs = new ZmlObservation( f.getProject().getLocation().toOSString(), input.getName(), ins );
+      final ZmlObservation obs = new ZmlObservation( f.getLocation().toFile() );
 
       getEditorSite().getShell().getDisplay().asyncExec( new ShowObservationInDiagramJob( m_tsCol, obs ) );
   }
