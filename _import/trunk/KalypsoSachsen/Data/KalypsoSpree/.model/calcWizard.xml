@@ -176,6 +176,7 @@
 	   	<arg name="exporter2">
 			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.ZmlTableExporter"/>
 	   		<arg name="name" value="Tabelle"/>
+	   		<arg name="nameproperty" value="Name"/>
 	   		<arg name="template" value="project:/.templates/calcCase/berichtTabelle.ott"/>
 			<arg name="tokens">
 				<arg name="title" value="Name"/>
@@ -185,6 +186,7 @@
 	   	<arg name="exporter3">
 			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
 	   		<arg name="name" value="Abflussgrafik"/>
+	   		<arg name="nameproperty" value="Name"/>
 	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
 	   		<arg name="width" value="1024"/>
 	   		<arg name="height" value ="768"/>
@@ -200,6 +202,7 @@
 	   	<arg name="exporter4">
 			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
 	   		<arg name="name" value="Wasserstandsgrafik"/>
+	   		<arg name="nameproperty" value="Name"/>
 	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagW.odt"/>
 	   		<arg name="width" value="1024"/>
 	   		<arg name="height" value ="768"/>

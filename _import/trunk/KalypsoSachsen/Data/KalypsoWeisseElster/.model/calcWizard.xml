@@ -479,18 +479,13 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="pegelNameProperty" value="name"/>
 		<arg name="resultProperty" value="qberechnetZR"/>
 		<arg name="prognoseProperty" value="pegelBerechnetZRAblage"/>
-<!--
-		<arg name="exporter1" value="class=org.kalypso.ui.calcwizard.bericht.MapExporter;name=Karte"/>
-		<arg name="exporter2" value="class=org.kalypso.ui.calcwizard.bericht.ZmlTableExporter;name=Tabelle"/>
-		<arg name="exporter3" value="class=org.kalypso.ui.calcwizard.bericht.DiagrammExporter;name=Abflussgrafik"/>
-		<arg name="exporter4" value="class=org.kalypso.ui.calcwizard.bericht.DiagrammExporter;name=Wasserstandgrafik;"/>
--->
 		
 	   	<arg name="maximizeMap" value="true"/>
 
 	   	<arg name="exporter1">
 			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.ZmlTableExporter"/>
 	   		<arg name="name" value="Tabelle"/>
+	   		<arg name="nameproperty" value="name"/>
 	   		<arg name="template" value="project:/.templates/calcCase/berichtTabelle.ott"/>
 			<arg name="tokens">
 				<arg name="title" value="name"/>
@@ -500,6 +495,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 	   	<arg name="exporter2">
 			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
 	   		<arg name="name" value="Abflussgrafik"/>
+	   		<arg name="nameproperty" value="name"/>
 	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
 	   		<arg name="width" value="1024"/>
 	   		<arg name="height" value ="768"/>
@@ -512,6 +508,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 	   	<arg name="exporter3">
 			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
 	   		<arg name="name" value="Wasserstandgrafik"/>
+	   		<arg name="nameproperty" value="name"/>
 	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagW.odt"/>
 	   		<arg name="width" value="1024"/>
 	   		<arg name="height" value ="768"/>
