@@ -94,6 +94,9 @@ public class DefaultAxis implements IAxis
    */
   public String toString()
   {
-    return getLabel() + " - " + getUnit();
+    if( getUnit().length() == 0 )
+      return getLabel();
+    else
+      return getLabel() + " - " + getUnit();
   }
 }

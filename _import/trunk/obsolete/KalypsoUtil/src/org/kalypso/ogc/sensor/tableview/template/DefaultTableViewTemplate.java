@@ -1,7 +1,10 @@
 package org.kalypso.ogc.sensor.tableview.template;
 
+import java.util.ArrayList;
+
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
 import org.kalypso.ogc.sensor.template.AbstractTemplateAdapter;
@@ -23,7 +26,7 @@ public class DefaultTableViewTemplate extends AbstractTemplateAdapter implements
 {
   private final IObservation m_obs;
 
-  private ITableViewColumn[] m_cols = null;
+  private final ArrayList m_cols = new ArrayList();
 
   public DefaultTableViewTemplate( final IObservation obs )
   {
@@ -34,21 +37,18 @@ public class DefaultTableViewTemplate extends AbstractTemplateAdapter implements
 
   private void loadColumns()
   {
-    if( m_cols == null )
+    IAxis[] axes = m_obs.getAxisList();
+
+    // one column less than the number of axis
+    for( int i = 1; i < axes.length; i++ )
     {
-      IAxis[] axes = m_obs.getAxisList();
-
-      // one column less than the number of axis
-      m_cols = new ITableViewColumn[axes.length - 1];
-
-      for( int i = 0; i < m_cols.length; i++ )
-      {
-        m_cols[i] = new DefaultTableViewColumn( axes[i + 1].getLabel() + " - "
-            + axes[i + 1].getUnit(), m_obs, axes[0], axes[i + 1] );
-      }
-      
-      fireTemplateLoaded();
+      // ignore axis if it is a kalypso status axis
+      if( !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
+        m_cols.add( new DefaultTableViewColumn( axes[i].getLabel() + " - "
+            + axes[i].getUnit(), m_obs, axes[0], axes[i] ) );
     }
+
+    fireTemplateLoaded();
   }
 
   /**
@@ -64,6 +64,6 @@ public class DefaultTableViewTemplate extends AbstractTemplateAdapter implements
    */
   public ITableViewColumn[] getColumns()
   {
-    return m_cols;
+    return (ITableViewColumn[])m_cols.toArray( new ITableViewColumn[0] );
   }
 }

@@ -13,7 +13,6 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.util.runtime.IVariableArguments;
-import org.kalypso.util.status.MaskedNumber;
 
 /**
  * A JFreeChart DataSet that can be created with an IObservation.
@@ -24,7 +23,7 @@ public class ObservationTimeSeries extends TimeSeriesCollection
 {
   public ObservationTimeSeries( final IObservation obs, final IVariableArguments args ) throws SensorException
   {
-    this( obs, ObservationUtilities.findAxis( obs, Date.class )[0], ObservationUtilities.findAxis( obs, MaskedNumber.class ), args );
+    this( obs, ObservationUtilities.findAxis( obs, Date.class )[0], ObservationUtilities.findAxis( obs, Number.class ), args );
   }
   
   public ObservationTimeSeries( final IObservation obs,  final IAxis dateAxis, final IAxis[] valueAxis, final IVariableArguments args ) throws SensorException
