@@ -118,7 +118,7 @@ public class KalypsoObservationService implements IObservationService
       for( final Iterator it = items.iterator(); it.hasNext(); )
       {
         final RepositoryConfigItem item = (RepositoryConfigItem)it.next();
-        final IRepositoryFactory fact = item.createFactory();
+        final IRepositoryFactory fact = item.createFactory( getClass().getClassLoader() );
 
         final IRepository rep = fact.createRepository();
         m_repositories.add( rep );
