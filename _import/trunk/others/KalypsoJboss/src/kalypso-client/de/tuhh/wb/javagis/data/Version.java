@@ -67,13 +67,17 @@ public class Version // implements ActionListener
     // constructor of singelton-pattern
     public static Version getVersion(String themeKey,Object vId)
     {
-	if(!knownVersions.containsKey(themeKey,vId))
+	if(!knownVersions.containsKey(themeKey,vId)){
 	    knownVersions.put(themeKey,vId,new Version(themeKey,vId));
+	    //System.out.println("Put Version "+vId+" in knownVersions!");
+	}
 	if(knownVersions.containsKey(themeKey,vId))
 	    return (Version)knownVersions.get(themeKey,vId);
 	else
 	    return null;
     }
+    
+    
     
     public String getThemeKey()
     {

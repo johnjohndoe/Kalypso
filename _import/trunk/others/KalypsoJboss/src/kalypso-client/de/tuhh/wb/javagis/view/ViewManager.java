@@ -2,8 +2,6 @@ package de.tuhh.wb.javagis.view;
 
 import java.util.Vector;
 
-
-
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.InternalFrameListener;
@@ -36,17 +34,22 @@ import java.awt.event.*;
 import java.lang.ClassLoader;
 import de.tuhh.wb.javagis.view.ConfigurationView;
 
-
-public class ViewManager extends JFrame implements WindowListener,ActionListener, ListSelectionListener, MouseListener,MouseMotionListener
-{
-    //  public Version version;
-    VersionAccess versionAccess;
-    int selectedVersion;
+public class ViewManager
+	extends JFrame
+	implements
+		WindowListener,
+		ActionListener,
+		ListSelectionListener,
+		MouseListener,
+		MouseMotionListener {
+	//  public Version version;
+	VersionAccess versionAccess;
+	int selectedVersion;
 	ClassLoader cl = this.getClass().getClassLoader();
-	
-    //ToolBars:
-	
-    // Buttons
+
+	//ToolBars:
+
+	// Buttons
 	private JMenuBar menubar = new JMenuBar();
 	private JMenu jMenu_ProjectManager = new JMenu();
 	private JMenu jMenu_Preprocessing = new JMenu();
@@ -83,51 +86,46 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 	private JButton xmlEDataButton = new JButton();
 	private JButton xmlIButton = new JButton();
 	private JButton calibrationButton = new JButton();
-	
+
 	public static JDesktopPane desktop = new JDesktopPane();
-    //    KalypsoInterface kalypsoInterface;
-	
+	//    KalypsoInterface kalypsoInterface;
+
 	public static ConfigurationView confView;
-    
-    public static void addToDesktop(JInternalFrame frame)
-    {
+
+	public static void addToDesktop(JInternalFrame frame) {
 		desktop.add(frame);
-    }
-	
-    
-    public ViewManager()
-    {
+	}
+
+	public ViewManager() {
 		JOptionPane.setRootFrame(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
 		desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
-		
-		desktop.setPreferredSize(new Dimension(600,500));
-		getContentPane().add(desktop,BorderLayout.CENTER);
-		
-//	I18n.setLanguage("deu");
+
+		desktop.setPreferredSize(new Dimension(600, 500));
+		getContentPane().add(desktop, BorderLayout.CENTER);
+
+		//	I18n.setLanguage("deu");
 		UIDefaults defaults = UIManager.getDefaults();
-		defaults.put("OptionPane.yesButtonText",I18n.get("Dia_Yes"));
-		defaults.put("OptionPane.noButtonText",I18n.get("Dia_No"));
-		defaults.put("OptionPane.cancelButtonText",I18n.get("Dia_Cancel"));
-		defaults.put("OptionPane.okButtonText",I18n.get("Dia_OK"));
+		defaults.put("OptionPane.yesButtonText", I18n.get("Dia_Yes"));
+		defaults.put("OptionPane.noButtonText", I18n.get("Dia_No"));
+		defaults.put("OptionPane.cancelButtonText", I18n.get("Dia_Cancel"));
+		defaults.put("OptionPane.okButtonText", I18n.get("Dia_OK"));
 		setTitle(I18n.get("windowTitle"));
 		setVisible(true);
-		
-		ProjectView projectView=new ProjectView();
+
+		ProjectView projectView = new ProjectView();
 		projectView.setVisible(true);
-		projectView.setSize(400,300);
+		projectView.setSize(400, 300);
 		//     desktop.add(projectView);
 		//    projectView.moveToFront();
-		
-		try
-		{
+
+		try {
 			Main.connectBCE();
-		}
-		catch(Exception e)
-		{
-			
-			System.out.println("could not connect to time series data base, check configuration");
+		} catch (Exception e) {
+
+			System.out.println(
+				"could not connect to time series data base, check configuration");
 			System.out.println(e.getMessage());
 		}
 		//	this.kalypsoInterface=new KalypsoInterface(desktop);
@@ -136,107 +134,112 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 		//	frame.setVisible(true);
 		//      kalypsoInterface.connectDataBase("localhost","port","user","pass");
 		//	kalypsoInterface.createNewVersion("project","Modell","testing","V1","test...");
-		
+
 		//  System.out.println("testing");
 		this.addWindowListener(this);
 		try {
 			jbInit();
-			
+
 			pack();
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    }
-	
-    public ViewManager(JDesktopPane desktopPane)
-    {
-		this.desktop=desktopPane;
-    }
-	
-	
-    public void showObjectTableView(Version version)
-    {
+	}
+
+	public ViewManager(JDesktopPane desktopPane) {
+		this.desktop = desktopPane;
+	}
+
+	public void showObjectTableView(Version version) {
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		Toolkit.getDefaultToolkit().sync();
 		repaint();
-		
+
 		//GisTableView gisTableView = new GisTableView("TestVersion",version.getGisTableModels(),null,0,null,GisTableView.IS_GISELEMENTLIST);
-		GisTableView gisTableView = new GisTableView(I18n.get("windowTitleTV")+version.getLabel(),version.getGisObjectTableModels());
-		gisTableView.setVisible(true);
-		gisTableView.setSize(670,300);
-		desktop.add(gisTableView);
-		gisTableView.moveToFront();
-		
+		String title = I18n.get("windowTitleTV_Objects") + version.getLabel();
+		boolean open = ProjectView.isViewOpen(title);
+		if (!open) {
+			GisTableView gisTableView =
+				new GisTableView(title, version.getGisObjectTableModels());
+			//System.out.println("Table: "+I18n.get("windowTitleTV")+version.getLabel()+" geöffnet");
+			gisTableView.setVisible(true);
+			gisTableView.setSize(670, 300);
+			desktop.add(gisTableView);
+			gisTableView.moveToFront();
+		}
 		setCursor(Cursor.getDefaultCursor());
 		repaint();
-    }
-	
-    public void showRelationTableView(Version version)
-    {
+	}
+
+	public void showRelationTableView(Version version) {
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		Toolkit.getDefaultToolkit().sync();
 		repaint();
-		
+
 		// 	GisTableView gisTableView = new GisTableView("TestVersion",version.getGisTableModels(),null,0,null,GisTableView.IS_GISELEMENTLIST);
-		GisTableView gisTableView = new GisTableView(I18n.get("windowTitleTV")+version.getLabel(),version.getGisRelationTableModels());
-		gisTableView.setVisible(true);
-		gisTableView.setSize(670,300);
-		desktop.add(gisTableView);
-		gisTableView.moveToFront();
-		
+		String title = I18n.get("windowTitleTV_Relations") + version.getLabel();
+		boolean open = ProjectView.isViewOpen(title);
+		if (!open) {
+			GisTableView gisTableView =
+				new GisTableView(title, version.getGisRelationTableModels());
+			gisTableView.setVisible(true);
+			gisTableView.setSize(670, 300);
+			desktop.add(gisTableView);
+			gisTableView.moveToFront();
+		}
+
 		setCursor(Cursor.getDefaultCursor());
 		repaint();
-    }
-	
-    public void showNetView(Version version)
-    {
+	}
+
+	public void showNetView(Version version) {
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		Toolkit.getDefaultToolkit().sync();
 		repaint();
-		
-		GisNetView gisNetView = new GisNetView(I18n.get("windowTitleNV")+version.getLabel(),version.getGisNetModel());
-		gisNetView.setVisible(true);
-		gisNetView.setSize(400,300);
-		desktop.add(gisNetView);
-		gisNetView.moveToFront();
-		gisNetView.repaint();
-		
-		//	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		//	repaint();
-		
-		gisNetView.gisMap.zoomToFullExtent();
-		
+
+		String title = I18n.get("windowTitleNV") + version.getLabel();
+		boolean open = ProjectView.isViewOpen(title);
+		if (!open) {
+			GisNetView gisNetView =
+				new GisNetView(title, version.getGisNetModel());
+			gisNetView.setVisible(true);
+			gisNetView.setSize(400, 300);
+			desktop.add(gisNetView);
+			gisNetView.moveToFront();
+			gisNetView.repaint();
+
+			//	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			//	repaint();
+
+			gisNetView.gisMap.zoomToFullExtent();
+		}
+
 		setCursor(Cursor.getDefaultCursor());
 		repaint();
-    }
-	
-    public void showProjectView()
-    {
+	}
+
+	public void showProjectView() {
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		repaint();
-		
+
 		ProjectView projectView = new ProjectView();
 		projectView.setVisible(true);
-		projectView.setSize(400,300);
+		projectView.setSize(400, 300);
 		desktop.add(projectView);
-		
+
 		setCursor(Cursor.getDefaultCursor());
 		repaint();
-    }
-	
-    public void xmlImport(String themeKey,Object vId,File file)
-    {
-		versionAccess.xmlImport(themeKey,vId,file);
-    }
-	
-    public void xmlExport(String themeKey,Object vId,File file)
-    {
-		versionAccess.xmlExport(themeKey,vId,file);
-    }
-	
-	
-    /**private void selectionBar(Vector objectClassNames)
+	}
+
+	public void xmlImport(String themeKey, Object vId, File file) {
+		versionAccess.xmlImport(themeKey, vId, file);
+	}
+
+	public void xmlExport(String themeKey, Object vId, File file) {
+		versionAccess.xmlExport(themeKey, vId, file);
+	}
+
+	/**private void selectionBar(Vector objectClassNames)
 	 {
 	 JToolBar selectionBar=new JToolBar("SelectionBar");
 	 selectionBar.setLayout(new GridLayout (objectClassNames.size(),1));
@@ -248,82 +251,69 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 	 selectionBar.setVisible(true);
 	 //	add(selectionBar);
 	 }*/
-	
-    public void mouseClicked(MouseEvent e)
-    {
+
+	public void mouseClicked(MouseEvent e) {
 		Object source = e.getSource();
-    }
-	
-    public void mouseEntered(MouseEvent e)
-    {}
-	
-    public void mouseExited(MouseEvent e)
-    {
-		
-    }
-	
-    public void mousePressed(MouseEvent e)
-    {
-		
-    }
-	
-    public void mouseMoved(MouseEvent e)
-    {
-    }
-	
-    public void mouseDragged(MouseEvent e)
-    {
-    }
-    public void mouseReleased(MouseEvent e)
-    {
-    }
-	
-	
-    // ListSelectionListener
-    public void valueChanged(ListSelectionEvent e)
-    {
-    }
-	
-    // AktionListener:
-    public void actionPerformed(ActionEvent e)
-    {
+	}
+
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	public void mouseExited(MouseEvent e) {
+
+	}
+
+	public void mousePressed(MouseEvent e) {
+
+	}
+
+	public void mouseMoved(MouseEvent e) {
+	}
+
+	public void mouseDragged(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	// ListSelectionListener
+	public void valueChanged(ListSelectionEvent e) {
+	}
+
+	// AktionListener:
+	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
-		if(action.equals("automateCalibration"))
-		{
+		if (action.equals("automateCalibration")) {
 			System.out.println("start AutomateCalibration");
 			SCE_KALYPSO.openSCEView();
 		}
-    }
-	
-    // WindowListener
-    public void windowActivated(WindowEvent e)
-    {}//          Invoked when the Window is set to be the active Window.
-	
-    public void windowClosed(WindowEvent e)
-    {
+	}
+
+	// WindowListener
+	public void windowActivated(WindowEvent e) {
+	} //          Invoked when the Window is set to be the active Window.
+
+	public void windowClosed(WindowEvent e) {
 		System.out.println("bye");
-    }//       Invoked when a window has been closed as the result of calling dispose on the window.
-	
-	
-    public   void windowClosing(WindowEvent e)
-    {
+	} //       Invoked when a window has been closed as the result of calling dispose on the window.
+
+	public void windowClosing(WindowEvent e) {
 		// free resources...
 		VersionClass.freeResources();
 		System.out.println("bye");
-    }//  Invoked when the user attempts to close the window from the window's system menu.
-	
-    public   void windowDeactivated(WindowEvent e)
-    {}//          Invoked when a Window is no longer the active Window.
-	
-    public   void windowDeiconified(WindowEvent e)
-    {}//          Invoked when a window is changed from a minimized to a normal state.
-	
-    public   void windowIconified(WindowEvent e)
-    {}//          Invoked when a window is changed from a normal to a minimized state.
-	
-    public   void windowOpened(WindowEvent e)
-    {}
+	} //  Invoked when the user attempts to close the window from the window's system menu.
+
+	public void windowDeactivated(WindowEvent e) {
+	} //          Invoked when a Window is no longer the active Window.
+
+	public void windowDeiconified(WindowEvent e) {
+	} //          Invoked when a window is changed from a minimized to a normal state.
+
+	public void windowIconified(WindowEvent e) {
+	} //          Invoked when a window is changed from a normal to a minimized state.
+
+	public void windowOpened(WindowEvent e) {
+	}
 	private void jbInit() throws Exception {
 		//jMenu_ProjectManager.setMnemonic('P');
 		jMenu_ProjectManager.setText(I18n.get("jMenu_ProjectManager"));
@@ -336,66 +326,77 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 		jMenuItem_openConfView.setText(I18n.get("jMenuItem_openConfView"));
 		jMenuItem_OpenProject.setActionCommand("getTree");
 		jMenuItem_openConfView.setActionCommand("openConf");
-		jMenuItem_OpenProject.addActionListener(new java.awt.event.ActionListener()
-												{
-					
-					public void actionPerformed(ActionEvent e) {
-						if("getTree".equals(e.getActionCommand()))
-						{
-							showProjectView();
-							jMenuItem_OpenProject.setEnabled(false);
-							jMenuItem_Close.setEnabled(true);
-							jMenuItem_View.setEnabled(true);
-							jMenuItem_Control.setEnabled(true);
-							jMenuItem_SimCas.setEnabled(true);
-							jMenuItem_ViewErr.setEnabled(true);
-							jMenuItem_ViewRes.setEnabled(true);
-							jMenuItem_Run.setEnabled(true);
-							jMenu_ModelD.setEnabled(true);
-						}
-					}
-				});
-		jMenuItem_openConfView.addActionListener(new java.awt.event.ActionListener()
-												 {
-					public void actionPerformed(ActionEvent event){
-						if("openConf".equals(event.getActionCommand()))
-						{
-							confView = new ConfigurationView(I18n.get("CV_Title"),true);
-							confView.show();
-						}
-					}
-				});
+		jMenuItem_OpenProject
+			.addActionListener(new java.awt.event.ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				if ("getTree".equals(e.getActionCommand())) {
+					showProjectView();
+					jMenuItem_OpenProject.setEnabled(false);
+					jMenuItem_Close.setEnabled(true);
+					jMenuItem_View.setEnabled(true);
+					jMenuItem_Control.setEnabled(true);
+					jMenuItem_SimCas.setEnabled(true);
+					jMenuItem_ViewErr.setEnabled(true);
+					jMenuItem_ViewRes.setEnabled(true);
+					jMenuItem_Run.setEnabled(true);
+					jMenu_ModelD.setEnabled(true);
+				}
+			}
+		});
+		jMenuItem_openConfView
+			.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				if ("openConf".equals(event.getActionCommand())) {
+					confView =
+						new ConfigurationView(I18n.get("CV_Title"), true);
+					confView.show();
+				}
+			}
+		});
 		jMenuItem_Close.setText(I18n.get("jMenuItem_Close"));
 		jMenuItem_Close.setEnabled(false);
 		jMenuItem_Exit.setText(I18n.get("jMenuItem_Exit"));
 		//jMenuItem_Exit.setMnemonic('X');
-		
+
 		jMenuItem_Exit.setActionCommand("exit");
 		jMenuItem_Exit.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						int n = 0 ;
-						if("exit".equals(e.getActionCommand()))
+			public void actionPerformed(ActionEvent e) {
+				int n = 0;
+				if ("exit".equals(e.getActionCommand())) {
+					//       n = JOptionPane.showConfirmDialog(frame, "Do You really want to quit the program?");
+					Object[] options =
 						{
-							//       n = JOptionPane.showConfirmDialog(frame, "Do You really want to quit the program?");
-							Object[] options = {I18n.get("Dia_Yes"),I18n.get("Dia_No"),I18n.get("Dia_Cancel")};
-							n = JOptionPane.showOptionDialog(null,I18n.get("ExitDia_Question"),I18n.get("ExitDia_Title"),JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
-							
-							switch (n)
-							{
-								case JOptionPane.NO_OPTION:
-									break;
-								case JOptionPane.YES_OPTION:
-									VersionClass.freeResources();
-									System.exit(0);
-								case JOptionPane.CANCEL_OPTION:
-									break;
-								default:
-									break ;
-									
-							}
-						}
-					}} );
-		
+							I18n.get("Dia_Yes"),
+							I18n.get("Dia_No"),
+							I18n.get("Dia_Cancel")};
+					n =
+						JOptionPane.showOptionDialog(
+							null,
+							I18n.get("ExitDia_Question"),
+							I18n.get("ExitDia_Title"),
+							JOptionPane.YES_NO_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE,
+							null,
+							options,
+							options[1]);
+
+					switch (n) {
+						case JOptionPane.NO_OPTION :
+							break;
+						case JOptionPane.YES_OPTION :
+							VersionClass.freeResources();
+							System.exit(0);
+						case JOptionPane.CANCEL_OPTION :
+							break;
+						default :
+							break;
+
+					}
+				}
+			}
+		});
+
 		jMenuItem_Print.setEnabled(false);
 		jMenuItem_Print.setText(I18n.get("jMenuItem_Print"));
 		//jMenuItem_View.setMnemonic('V');
@@ -415,11 +416,10 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 		jMenuItem_Run.setEnabled(false);
 		jMenuItem_Run.setActionCommand("simulate");
 		jMenuItem_Run.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(ActionEvent e)
-					{
-					}
-				});
-		
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+
 		//jMenu_Post.setMnemonic('S');
 		jMenu_Post.setText(I18n.get("jMenu_Postprocessing"));
 		//jMenuItem_ViewRes.setMnemonic('I');
@@ -429,38 +429,38 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 		jMenuItem_ViewErr.setText(I18n.get("jMenuItem_ViewErr"));
 		jMenuItem_ViewErr.setEnabled(false);
 		jMenuItem_ViewErr.setActionCommand("viewLog");
-		jMenuItem_ViewErr.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						
-						if("viewLog".equals(e.getActionCommand()))
-						{
-							LogView.getInstance().show();
-						}
-					}});
-		
+		jMenuItem_ViewErr
+			.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				if ("viewLog".equals(e.getActionCommand())) {
+					LogView.getInstance().show();
+				}
+			}
+		});
+
 		//jMenuItem_About.setMnemonic('A');
 		jMenuItem_About.setText(I18n.get("jMenuItem_About"));
 		jMenuItem_About.setActionCommand("about");
 		jMenuItem_About.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if("about".equals(e.getActionCommand()))
-							
-							JOptionPane.showMessageDialog(null, "Kalypso 2003");
-					}} );
-		
+			public void actionPerformed(ActionEvent e) {
+				if ("about".equals(e.getActionCommand()))
+					JOptionPane.showMessageDialog(null, "Kalypso 2003");
+			}
+		});
+
 		//jMenuItem_Tutorial.setMnemonic('T');
 		jMenuItem_Tutorial.setText(I18n.get("jMenuItem_Tutorial"));
 		jMenuItem_Tutorial.setActionCommand("viewDocs");
-		jMenuItem_Tutorial.addActionListener(new java.awt.event.ActionListener()
-											 {
-					
-					public void actionPerformed(ActionEvent e) {
-						if("viewDocs".equals(e.getActionCommand()))
-						{
-							Tutorial doc=new Tutorial();
-						}
-					}
-				});
+		jMenuItem_Tutorial
+			.addActionListener(new java.awt.event.ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				if ("viewDocs".equals(e.getActionCommand())) {
+					Tutorial doc = new Tutorial();
+				}
+			}
+		});
 		//jMenu_Help.setMnemonic('H');
 		jMenu_Help.setText(I18n.get("jMenu_Help"));
 		//jMenu_ModelD.setMnemonic('E');
@@ -475,17 +475,19 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 		createVButton.setMaximumSize(new Dimension(35, 309));
 		createVButton.setPreferredSize(new Dimension(35, 35));
 		createVButton.setToolTipText(I18n.get("ButtonCreateTT"));
-		createVButton.setIcon((new ImageIcon( cl.getResource("symbols/CreateV24.gif"))));
+		createVButton.setIcon(
+			(new ImageIcon(cl.getResource("symbols/CreateV24.gif"))));
 		//createVButton.setIcon((new ImageIcon( "symbols/CreateV24.gif")));
 		copyButton.setMaximumSize(new Dimension(35, 309));
 		copyButton.setPreferredSize(new Dimension(35, 35));
 		copyButton.setToolTipText(I18n.get("ButtonCopyTT"));
-		copyButton.setIcon((new ImageIcon(cl.getResource( "symbols/Copy24.gif"))));
+		copyButton.setIcon(
+			(new ImageIcon(cl.getResource("symbols/Copy24.gif"))));
 		tableButton.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						tableButton_actionPerformed(e);
-					}
-				});
+			public void actionPerformed(ActionEvent e) {
+				tableButton_actionPerformed(e);
+			}
+		});
 		tableButton.setMaximumSize(new Dimension(35, 110));
 		tableButton.setPreferredSize(new Dimension(35, 35));
 		tableButton.setToolTipText(I18n.get("ButtonTableTT"));
@@ -497,28 +499,33 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 		renameButton.setMaximumSize(new Dimension(35, 110));
 		renameButton.setPreferredSize(new Dimension(35, 35));
 		renameButton.setToolTipText(I18n.get("ButtonRenameTT"));
-		renameButton.setIcon((new ImageIcon(cl.getResource( "symbols/Rename24.gif"))));
+		renameButton.setIcon(
+			(new ImageIcon(cl.getResource("symbols/Rename24.gif"))));
 		removeButton.setMaximumSize(new Dimension(35, 110));
 		removeButton.setPreferredSize(new Dimension(35, 35));
 		removeButton.setToolTipText(I18n.get("ButtonRemoveTT"));
-		removeButton.setIcon((new ImageIcon(cl.getResource( "symbols/Delete24.gif"))));
+		removeButton.setIcon(
+			(new ImageIcon(cl.getResource("symbols/Delete24.gif"))));
 		removeButton.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						removeButton_actionPerformed(e);
-					}
-				});
+			public void actionPerformed(ActionEvent e) {
+				removeButton_actionPerformed(e);
+			}
+		});
 		xmlEDataButton.setMaximumSize(new Dimension(35, 110));
 		xmlEDataButton.setPreferredSize(new Dimension(35, 35));
 		xmlEDataButton.setToolTipText(I18n.get("ButtonXMLEDataTT"));
-		xmlEDataButton.setIcon((new ImageIcon(cl.getResource( "symbols/Export24.gif"))));
+		xmlEDataButton.setIcon(
+			(new ImageIcon(cl.getResource("symbols/Export24.gif"))));
 		xmlIButton.setMaximumSize(new Dimension(35, 119));
 		xmlIButton.setPreferredSize(new Dimension(35, 35));
 		xmlIButton.setToolTipText(I18n.get("ButtonXMLIDataTT"));
-		xmlIButton.setIcon((new ImageIcon(cl.getResource( "symbols/Import24.gif"))));
+		xmlIButton.setIcon(
+			(new ImageIcon(cl.getResource("symbols/Import24.gif"))));
 		calibrationButton.setMaximumSize(new Dimension(35, 110));
 		calibrationButton.setPreferredSize(new Dimension(35, 35));
 		calibrationButton.setToolTipText(I18n.get("ButtonAutomateCalibration"));
-		calibrationButton.setIcon((new ImageIcon(cl.getResource( "symbols/calibration.gif"))));
+		calibrationButton.setIcon(
+			(new ImageIcon(cl.getResource("symbols/calibration.gif"))));
 		calibrationButton.addActionListener(this);
 		calibrationButton.setActionCommand("automateCalibration");
 		menubar.add(jMenu_ProjectManager);
@@ -555,14 +562,14 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 		toolBar.add(removeButton, null);
 		toolBar.add(xmlEDataButton, null);
 		toolBar.add(xmlIButton, null);
-		toolBar.add(calibrationButton,null);
-		this.getContentPane().add(desktop,  BorderLayout.CENTER);
-		
+		toolBar.add(calibrationButton, null);
+		this.getContentPane().add(desktop, BorderLayout.CENTER);
+
 		this.setJMenuBar(menubar);
-		
+
 	}
-	
-    /*
+
+	/*
 	 //File | Exit action performed
 	 public void jMenuFileExit_actionPerformed(ActionEvent e)
 	 {
@@ -570,13 +577,13 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 	 System.exit(0);
 	 }
 	 */
-	
+
 	void tableButton_actionPerformed(ActionEvent e) {
-		
+
 	}
-	
+
 	void removeButton_actionPerformed(ActionEvent e) {
-		
+
 	}
-	
+
 }

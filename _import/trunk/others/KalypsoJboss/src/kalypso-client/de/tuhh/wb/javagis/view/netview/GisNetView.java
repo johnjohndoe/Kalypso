@@ -13,6 +13,7 @@ import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.view.ViewManager;
 
 import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
+import de.tuhh.wb.javagis.view.projectview.ProjectView;
 
 
 
@@ -45,6 +46,8 @@ import javax.swing.JCheckBoxMenuItem;
 
 
 import javax.swing.JInternalFrame;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.event.InternalFrameEvent;
 
 import java.awt.event.MouseListener;
 
@@ -76,7 +79,7 @@ import java.awt.HeadlessException;
 
 
 
-public class GisNetView extends JInternalFrame implements ComponentListener, MouseListener,MouseMotionListener,ActionListener
+public class GisNetView extends JInternalFrame implements ComponentListener, MouseListener,MouseMotionListener,ActionListener,InternalFrameListener
 	
 {
 	
@@ -167,7 +170,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 		
 		super(title,true,true,true,true);
 		
-		
+		this.addInternalFrameListener(this);
 		
 		this.movingGisObject=null;
 		
@@ -210,6 +213,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 		pack();
 		
 		netModel.setGisMap(gisMap);
+		
 		
     }
 	
@@ -1732,6 +1736,35 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	    }
 		
     }
+    
+//InternalFrameListener
+
+public void internalFrameActivated(InternalFrameEvent e) {
+
+}
+
+public void internalFrameClosed(InternalFrameEvent e) {
+	ProjectView.removeViewFromList(e);
+}
+
+public void internalFrameClosing(InternalFrameEvent e) {
+}
+
+public void internalFrameDeactivated(InternalFrameEvent e) {
+
+}
+
+public void internalFrameDeiconified(InternalFrameEvent e) {
+
+}
+
+public void internalFrameIconified(InternalFrameEvent e) {
+
+}
+
+public void internalFrameOpened(InternalFrameEvent e) {
+	ProjectView.addViewToList(e);
+}
 	
 }
 
