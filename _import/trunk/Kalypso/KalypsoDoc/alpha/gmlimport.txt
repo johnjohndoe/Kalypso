@@ -1,7 +1,7 @@
 Import beliebiger (Geo)Daten in ein bestehendes GML
 ===================================================
 
-Baustein 1: Übertragen von FeatureListen in FeatureListen
+Baustein 1: Übertragen von FeatureListen in FeatureListen (fertig)
 ---------------------------------------------------------
 Überträgt Properties aus einer FeatureListe in eine andere.
 
