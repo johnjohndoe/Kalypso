@@ -9,7 +9,7 @@ import org.kalypso.util.runtime.IVariableArguments;
 /**
  * @author schlienger
  */
-public class TableViewColumn implements ITableViewColumn
+public class DefaultTableViewColumn implements ITableViewColumn
 {
   private String m_name;
 
@@ -25,7 +25,7 @@ public class TableViewColumn implements ITableViewColumn
 
   private IVariableArguments m_args = null;
 
-  public TableViewColumn( final String name, final IObservation obs, final boolean isEditable,
+  public DefaultTableViewColumn( final String name, final IObservation obs, final boolean isEditable,
       final int width, final String sharedAxisName, final String valueAxisName,
       final IVariableArguments args )
   {
@@ -108,5 +108,13 @@ public class TableViewColumn implements ITableViewColumn
   public IVariableArguments getArguments()
   {
     return m_args;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#dispose()
+   */
+  public void dispose( )
+  {
+    // empty
   }
 }

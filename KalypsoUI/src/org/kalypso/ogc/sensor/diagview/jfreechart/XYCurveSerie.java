@@ -40,6 +40,7 @@ class XYCurveSerie extends Series
    *          the IDiagramAxis mapped to xAxis
    * @param yDiagAxis
    *          the IDiagramAxis mapped to yAxis
+   * @throws SensorException
    */
   public XYCurveSerie( final IDiagramCurve curve, final IAxis xAxis, final IAxis yAxis,
       final IDiagramAxis xDiagAxis, final IDiagramAxis yDiagAxis ) throws SensorException

@@ -16,7 +16,7 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.ObservationTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.repository.IRepositoryItem;
@@ -32,7 +32,7 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
 public class TableViewPart extends ViewPart implements
     ISelectionChangedListener, IPartListener
 {
-  protected final DefaultTableViewTemplate m_template = new DefaultTableViewTemplate();
+  protected final ObservationTableViewTemplate m_template = new ObservationTableViewTemplate();
 
   private ObservationTable m_table;
 

@@ -59,6 +59,8 @@ public class ObservationPlot extends XYPlot
 
   /**
    * Adds a curve to the plot
+   * @param curve
+   * @throws SensorException
    */
   public synchronized void addCurve( final IDiagramCurve curve ) throws SensorException
   {

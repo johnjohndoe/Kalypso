@@ -16,6 +16,7 @@ public class ObservationChart extends JFreeChart implements ITemplateEventListen
 {
   /**
    * Creates an ObservationChart
+   * @param template
    * 
    * @throws FactoryException
    */

@@ -1,110 +1,93 @@
 package org.kalypso.ogc.sensor.tableview.impl;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
-import org.kalypso.ogc.sensor.template.ITemplateEventListener;
+import org.kalypso.ogc.sensor.tableview.rules.Rules;
+import org.kalypso.ogc.sensor.template.AbstractTemplateEventProvider;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
-import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * @author schlienger
  */
-public class DefaultTableViewTemplate implements ITableViewTemplate
+public class DefaultTableViewTemplate extends AbstractTemplateEventProvider implements ITableViewTemplate
 {
-  private final TableViewTemplate m_template;
+  private final Rules m_rules = new Rules();
 
-  public DefaultTableViewTemplate(  )
-  {
-    m_template = new TableViewTemplate();
-  }
+  private final List m_columns = new ArrayList();
 
-  public void setObservation( final IObservation obs, final boolean editableColumns, final IVariableArguments args )
-  {
-    m_template.removeAllColumns();
-    
-    final IAxis[] axes = obs.getAxisList();
-
-    // do not even continue if there are no axes
-    if( axes.length == 0 )
-      return;
-    
-    // actually just the first key axis is relevant in our case
-    final IAxis[] keyAxes = ObservationUtilities.findAxisByKey( axes );
-    
-    // do not continue if no key axis
-    if( keyAxes.length != 1 )
-      return;
-    
-    for( int i = 0; i < axes.length; i++ )
-    {
-      // ignore axis if it is a kalypso status axis
-      if( !KalypsoStatusUtils.isStatusAxis( axes[i] ) && !axes[i].equals( keyAxes[0] ) )
-      {
-        final TableViewColumn col = new TableViewColumn( axes[i].getLabel() + " - " + axes[i].getUnit(),
-            obs, editableColumns, 50, keyAxes[0].getLabel(), axes[i].getLabel(), args );
-
-        m_template.addColumn( col );
-      }
-    }
-  }
-  
-  public void addColumn( ITableViewColumn column )
-  {
-    m_template.addColumn( column );
-  }
-
-  public void addTemplateEventListener( ITemplateEventListener l )
-  {
-    m_template.addTemplateEventListener( l );
-  }
-
-  public void fireTemplateChanged( TemplateEvent evt )
-  {
-    m_template.fireTemplateChanged( evt );
-  }
-
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#getColumns()
+   */
   public ITableViewColumn[] getColumns()
   {
-    return m_template.getColumns();
+    return (ITableViewColumn[])m_columns.toArray( new ITableViewColumn[0] );
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#addColumn(org.kalypso.ogc.sensor.tableview.ITableViewColumn)
+   */
+  public void addColumn( ITableViewColumn column )
+  {
+    m_columns.add( column );
+    
+    fireTemplateChanged( new TemplateEvent( this, column, TemplateEvent.TYPE_ADD ) );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#removeColumn(org.kalypso.ogc.sensor.tableview.ITableViewColumn)
+   */
   public void removeColumn( ITableViewColumn column )
   {
-    m_template.removeColumn( column );
+    m_columns.remove( column );
+    
+    fireTemplateChanged( new TemplateEvent( this, column, TemplateEvent.TYPE_REMOVE ) );
   }
 
-  public void removeTemplateEventListener( ITemplateEventListener l )
-  {
-    m_template.removeTemplateEventListener( l );
-  }
-
-  public String toString()
-  {
-    return m_template.toString();
-  }
-
-  public void addRule( RenderingRule rule )
-  {
-    m_template.addRule( rule );
-  }
-
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#findRules(int)
+   */
   public RenderingRule[] findRules( int mask )
   {
-    return m_template.findRules( mask );
+    return m_rules.findRules( mask );
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#addRule(org.kalypso.ogc.sensor.tableview.rules.RenderingRule)
+   */
+  public void addRule( RenderingRule rule )
+  {
+    m_rules.addRule( rule );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#removeRule(org.kalypso.ogc.sensor.tableview.rules.RenderingRule)
+   */
   public void removeRule( RenderingRule rule )
   {
-    m_template.removeRule( rule );
+    m_rules.removeRule( rule );
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#removeAllColumns()
+   */
   public void removeAllColumns()
   {
-    m_template.removeAllColumns();
+    fireTemplateChanged( new TemplateEvent( this, null, TemplateEvent.TYPE_REMOVE_ALL ) );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#dispose()
+   */
+  public void dispose( )
+  {
+    final Iterator it = m_columns.iterator();
+    
+    while( it.hasNext() )
+      ((ITableViewColumn) it.next()).dispose();
   }
 }

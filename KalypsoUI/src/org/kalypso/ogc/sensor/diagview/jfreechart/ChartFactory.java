@@ -39,6 +39,8 @@ public final class ChartFactory
 
   /**
    * Creates and returns an observation chart.
+   * @param template
+   * @return plot
    * 
    * @throws FactoryException
    */
@@ -103,9 +105,10 @@ public final class ChartFactory
   }
 
   /**
-   *  
+   * @param diagAxis
+   * @return location according to axis
    */
-  private static AxisLocation getLocation( IDiagramAxis diagAxis )
+  private static AxisLocation getLocation( final IDiagramAxis diagAxis )
   {
     if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
     {

@@ -8,7 +8,7 @@ import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.impl.DiagramAxis;
-import org.kalypso.ogc.sensor.diagview.impl.DiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
@@ -20,7 +20,7 @@ import org.kalypso.template.obsdiagview.TypeAxis;
  */
 public class LinkedDiagramTemplate implements IDiagramTemplate
 {
-  private final DiagramTemplate m_template;
+  private final DefaultDiagramTemplate m_template;
 
   private final URL m_context;
 
@@ -35,7 +35,7 @@ public class LinkedDiagramTemplate implements IDiagramTemplate
     final String legendTitle = l == null ? "" : l.getTitle();
     final boolean showLegend = l == null ? false : l.isVisible();
 
-    m_template = new DiagramTemplate( title, legendTitle, showLegend );
+    m_template = new DefaultDiagramTemplate( title, legendTitle, showLegend );
 
     for( final Iterator it = obsDiagView.getAxis().iterator(); it.hasNext(); )
     {

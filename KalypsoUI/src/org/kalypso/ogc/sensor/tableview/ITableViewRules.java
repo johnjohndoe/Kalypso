@@ -3,6 +3,8 @@ package org.kalypso.ogc.sensor.tableview;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 
 /**
+ * Container for rendering-rules
+ * 
  * @author schlienger
  */
 public interface ITableViewRules

@@ -10,6 +10,8 @@ public interface IColumnListener
 {
   /**
    * The given column is loaded
+   * 
+   * @param column
    */
   public void columnLoaded( final ITableViewColumn column );
 }
