@@ -11,6 +11,12 @@
 		<xsl:for-each select="//*[name()='curve']">
 			<xsl:value-of select="position()"/>
 			<xsl:text>- </xsl:text>
+			
+			<!-- if href type is relative, make it absolute -->
+			<xsl:if test="substring-before( substring-after( @xlink:href, 'TYPE='), '#LOCATION=') = 'relative'">
+			    <xsl:text>_XXXX_/</xsl:text>
+			</xsl:if>
+			
 			<xsl:value-of select="substring-after(@xlink:href, 'LOCATION=')"/>
 			<xsl:text> J L 1 </xsl:text>
 			<xsl:value-of select="@name"/>
