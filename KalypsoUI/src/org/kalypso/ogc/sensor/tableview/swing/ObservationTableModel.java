@@ -578,7 +578,7 @@ public class ObservationTableModel extends AbstractTableModel
     return row;
   }
 
-  /** Puts items in map obs->items and sets dirty flag to false */
+  /** Puts items in map obs->items */
   private Map mapItems()
   {
     final Map obsmap = new HashMap();
@@ -590,9 +590,8 @@ public class ObservationTableModel extends AbstractTableModel
         obsmap.put( observation, new ArrayList() );
 
       ( (List)obsmap.get( observation ) ).add( column );
-
-      column.setDirty( false );
     }
+    
     return obsmap;
   }
 
