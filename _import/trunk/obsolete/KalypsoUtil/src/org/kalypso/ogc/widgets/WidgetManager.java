@@ -155,7 +155,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
     }
   }
 
-  private IWidget getActualWidget()
+  public IWidget getActualWidget()
   {
     if( temporaryWidget != null )
       return temporaryWidget;
