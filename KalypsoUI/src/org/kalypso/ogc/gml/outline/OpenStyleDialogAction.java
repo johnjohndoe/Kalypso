@@ -35,7 +35,7 @@ public class OpenStyleDialogAction extends AbstractOutlineAction
     try
     {
       part = (StyleEditorViewPart)window.getActivePage().showView(
-          "org.kalypso.editor.mapeditor.views.styleeditor" );
+          "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
 
       if( part != null )
         part.setSelectionChangedProvider( getOutlineviewer() );

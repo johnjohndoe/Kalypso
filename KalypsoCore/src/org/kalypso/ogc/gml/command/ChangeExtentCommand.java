@@ -52,6 +52,6 @@ public class ChangeExtentCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Ausschnitt ?ndern";
+    return "Ausschnitt ändern";
   }
 }

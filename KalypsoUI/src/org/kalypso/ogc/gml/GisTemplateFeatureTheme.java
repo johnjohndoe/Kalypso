@@ -175,6 +175,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     layer.setLinktype( key.getType() );
     layer.setActuate( "onRequest" );
     layer.setType( "simple" );
+    layer.setFeaturePath( m_featurePath );
 
     if( layer instanceof StyledLayerType )
     {
@@ -192,6 +193,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         styleType.setActuate( "onRequest" );
         styleType.setHref( styleKey.getSourceAsString() );
         styleType.setLinktype( styleKey.getType() );
+        styleType.setStyle( m_styleNames[j] );
         styleType.setType( "simple" );
         stylesList.add( styleType );
       }

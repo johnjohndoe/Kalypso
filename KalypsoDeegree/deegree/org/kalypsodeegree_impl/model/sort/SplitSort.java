@@ -25,36 +25,29 @@ public class SplitSort implements FeatureList
   private List m_objects = new ArrayList();
 
   public SplitSort()
-  {
-  }
+  {}
 
   public SplitSort( final GM_Envelope env )
   {
     myRootContainer = new SplitSortContainer( null, env );
   }
-  
+
   public boolean add( final Object object )
   {
     final GM_Envelope env = getEnvelope( object );
-    if( env != null )
-      add( env, object );
+    add( env, object );
 
     return m_objects.add( object );
   }
 
-//  public void add( GM_Position pos, Object object )
-//  {
-//    add( GeometryFactory.createGM_Envelope( pos, pos ), object );
-//  }
-
-  private void add( GM_Envelope env, Object object )
+  private void add( final GM_Envelope env, final Object object )
   {
     if( env == null )
       return;
 
-    if(myRootContainer==null)
-      myRootContainer=new SplitSortContainer(null,env);
-    
+    if( myRootContainer == null )
+      myRootContainer = new SplitSortContainer( null, env );
+
     if( myRootContainer.getEnvelope().contains( env ) )
       myRootContainer.add( env, object );
     else
@@ -65,7 +58,7 @@ public class SplitSort implements FeatureList
       double minY = env.getMin().getY();
 
       GM_Envelope envRoot = myRootContainer.getEnvelope();
-      
+
       double maxXroot = envRoot.getMax().getX();
       double maxYroot = envRoot.getMax().getY();
       double minXroot = envRoot.getMin().getX();
@@ -74,7 +67,6 @@ public class SplitSort implements FeatureList
           minY < minYroot ? minY : minYroot, maxX > maxXroot ? maxX : maxXroot,
           maxY > maxYroot ? maxY : maxYroot );
 
-  
       SplitSortContainer newRootContainer = new SplitSortContainer( null, newEnv );
       myRootContainer.setParent( newRootContainer );
       newRootContainer.createSubContainers( myRootContainer );
@@ -99,7 +91,7 @@ public class SplitSort implements FeatureList
   {
     if( result == null )
       result = new ArrayList();
-    
+
     result.addAll( m_objects );
     return result;
   }
@@ -124,7 +116,6 @@ public class SplitSort implements FeatureList
     return m_objects.remove( object );
   }
 
- 
   protected static GM_Envelope getEnvelope( Object object )
   {
     if( object instanceof DisplayContext )
@@ -165,7 +156,7 @@ public class SplitSort implements FeatureList
   public int rsize()
   {
     if( myRootContainer != null )
-      return myRootContainer.rsize();    
+      return myRootContainer.rsize();
     return 0;
   }
 
@@ -178,20 +169,28 @@ public class SplitSort implements FeatureList
     return null;
   }
 
-  /**
-   * @see org.deegree.model.sort.JMSpatialIndex#resort(org.deegree.model.geometry.GM_Envelope, org.deegree.model.geometry.GM_Envelope, java.lang.Object)
-   */
-  public void resort( GM_Envelope newEnv, GM_Envelope oldEnv, Object object )
+  public void resort()
   {
-    // nicht implementiert  
-  }
+    myRootContainer = null;
 
-  /**
-   * @see org.deegree.model.sort.JMSpatialIndex#resort(org.deegree.model.geometry.GM_Envelope, java.lang.Object)
-   */
-  public void resort( GM_Envelope newEnv, Object object )
-  {
-    // nicht implementiert
+    GM_Envelope bbox = null;
+    for( final Iterator iter = m_objects.iterator(); iter.hasNext(); )
+    {
+      final Feature f = (Feature)iter.next();
+
+      final GM_Envelope envelope = f.getEnvelope();
+      if( bbox == null )
+        bbox = envelope;
+      else
+        bbox = bbox.merge( envelope );
+    }
+    
+    myRootContainer = new SplitSortContainer( null, bbox );
+    for( final Iterator iter = m_objects.iterator(); iter.hasNext(); )
+    {
+      final Object next = iter.next();
+      add( getEnvelope( next ), next );
+    }
   }
 
   /**
@@ -209,7 +208,7 @@ public class SplitSort implements FeatureList
   {
     // TODO: dispose it?
     myRootContainer = null;
-    
+
     m_objects.clear();
   }
 
@@ -300,7 +299,7 @@ public class SplitSort implements FeatureList
    */
   public boolean containsAll( Collection c )
   {
-    return m_objects.containsAll(c);
+    return m_objects.containsAll( c );
   }
 
   /**
@@ -348,7 +347,7 @@ public class SplitSort implements FeatureList
    */
   public ListIterator listIterator( int index )
   {
-    return m_objects.listIterator(index);
+    return m_objects.listIterator( index );
   }
 
   /**
@@ -364,7 +363,7 @@ public class SplitSort implements FeatureList
    */
   public Object[] toArray( Object[] a )
   {
-    return m_objects.toArray(a);
+    return m_objects.toArray( a );
   }
 
   /**

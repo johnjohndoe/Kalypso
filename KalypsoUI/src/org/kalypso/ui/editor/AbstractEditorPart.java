@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
@@ -34,8 +35,6 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-
-import com.sun.xml.bind.StringInputStream;
 
 /**
  * @author bce
@@ -94,11 +93,17 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
 
     if( input != null )
     {
+      m_isSaving = true;
       try
       {
-        m_isSaving = true;
         doSaveInternal( monitor, input );
         m_commandTarget.setDirty( false );
+      }
+      catch( CoreException e )
+      {
+        e.printStackTrace();
+        
+        ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", e.getStatus() );
       }
       finally
       {
@@ -108,7 +113,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
   }
 
   protected abstract void doSaveInternal( final IProgressMonitor monitor,
-      final IFileEditorInput input );
+      final IFileEditorInput input ) throws CoreException;
 
   /**
    * Returns the status line manager of this editor.
@@ -169,22 +174,14 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
 
     dialog.create();
 
-    final IProgressMonitor monitor = getProgressMonitor();
-
     if( dialog.open() == Window.CANCEL )
-    {
-      if( monitor != null )
-        monitor.setCanceled( true );
       return;
-    }
 
     final IPath filePath = dialog.getResult();
     if( filePath == null )
-    {
-      if( monitor != null )
-        monitor.setCanceled( true );
       return;
-    }
+
+    final IProgressMonitor monitor = getProgressMonitor();
 
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IFile file = workspace.getRoot().getFile( filePath );
@@ -192,26 +189,24 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
 
     try
     {
-      monitor.beginTask( "Save file",  3000 );
-      file.create( new StringInputStream( "" ), false, new SubProgressMonitor( monitor, 1000 ) );
-      file.setCharset( original.getCharset(), new SubProgressMonitor( monitor, 1000 ) );
+      monitor.beginTask( "Save file",  1000 );
+//      file.create( new StringInputStream( "" ), false, new SubProgressMonitor( monitor, 1000 ) );
+//      file.setCharset( original.getCharset(), new SubProgressMonitor( monitor, 1000 ) );
       
       doSaveInternal( new SubProgressMonitor( monitor, 1000 ), newInput );
       m_commandTarget.setDirty( false );
-  
-      // TODO siehe FindBugs...
-      if( monitor != null )
-        monitor.setCanceled( false );
-  
-      setInput( newInput );
       
       monitor.done();
     }
     catch( final CoreException ce )
     {
-      // TODO: error handling
       ce.printStackTrace();
+
+      ErrorDialog.openError( shell, "Fehler", "Fehlern beim Speichern der Ansicht", ce.getStatus() );
+      return;
     }
+
+    setInput( newInput );
   }
 
   /**
