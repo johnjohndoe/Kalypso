@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.util.Random;
 
 import org.kalypso.java.io.filter.PrefixSuffixFilter;
 
@@ -72,7 +71,8 @@ public class FileUtilities
     {
       try
       {
-        final File existingFile = fileExistsInDir( prefix, suffix, System.getProperty( "java.io.tmpdir" ) );
+        final File existingFile = fileExistsInDir( prefix, suffix, System
+            .getProperty( "java.io.tmpdir" ) );
         return existingFile;
       }
       catch( final FileNotFoundException ignored )
@@ -86,57 +86,35 @@ public class FileUtilities
     tmp.deleteOnExit();
 
     makeFileFromStream( charMode, tmp, ins );
-    
+
     return tmp;
 
   }
-  
+
   /**
-   * Wie {@link #makeFileFromStream(boolean, String, String, InputStream, boolean)}, benutzt aber
-   * eine vorgegebene Dateiposition 
+   * Wie
+   * {@link #makeFileFromStream(boolean, String, String, InputStream, boolean)},
+   * benutzt aber eine vorgegebene Dateiposition
    */
-  public static void makeFileFromStream( final boolean charMode, final File file, final InputStream ins ) throws IOException
+  public static void makeFileFromStream( final boolean charMode, final File file,
+      final InputStream ins ) throws IOException
   {
     if( charMode )
     {
       final BufferedReader br = new BufferedReader( new InputStreamReader( ins ) );
       final PrintWriter pw = new PrintWriter( new FileOutputStream( file ) );
-      
-      ReaderUtilities.readerCopy(br, pw);
-//      while( br.ready() )
-//      {
-//        final String str = br.readLine();
-//
-//        if( str == null )
-//          break;
-//
-//        pw.println( str );
-//      }
-//
-//      br.close();
-//      pw.close();
+
+      ReaderUtilities.readerCopy( br, pw );
     }
     else
     {
       final BufferedInputStream in = new BufferedInputStream( ins );
       final BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( file ) );
 
-      StreamUtilities.streamCopy(in, out);
-//      int b = in.read();
-//
-//      while( b != -1 )
-//      {
-//        out.write( b );
-//
-//        b = in.read();
-//      }
-//
-//      in.close();
-//      out.close();
+      StreamUtilities.streamCopy( in, out );
     }
 
   }
-  
 
   /**
    * Looks in the given path if a file with the given prefix and suffix exists.
@@ -187,7 +165,7 @@ public class FileUtilities
   {
     if( file == null )
       return;
-    
+
     if( file.isDirectory() )
     {
       final File[] files = file.listFiles();
@@ -207,11 +185,12 @@ public class FileUtilities
   {
     return createNewTempDir( prefix, new File( System.getProperty( "java.io.tmpdir" ) ) );
   }
-  
+
   /**
-   * Creates a temp directory inside the given one. It uses <code>System.currentTimeMillis</code>
-   * for naming the new temp dir. This method can hang a little while in the case the directory it tries
-   * to create already exist.
+   * Creates a temp directory inside the given one. It uses
+   * <code>System.currentTimeMillis</code> for naming the new temp dir. This
+   * method can hang a little while in the case the directory it tries to create
+   * already exist.
    */
   public static File createNewTempDir( final String prefix, final File parentDir )
   {
@@ -222,24 +201,24 @@ public class FileUtilities
         return newDir;
     }
   }
-  
+
   /**
-   * @deprecated use <code>FileUtilities#createNewTempDir(String)</code> instead
+   * Macht aus einer absoluten Dateiangabe eine relative
+   * 
+   * @return Ein File-Object, welches einen relativen Pfad enthält; null, wenn
+   *         <code>basedir</code> kein Parent-Dir von
+   *         <code>absoluteFile</code> ist
    */
-  public static File createRandomTmpDir( final String prefix )
+  public static File getRelativeFileTo( final File basedir, final File absoluteFile )
   {
-    final File tmpDir = new File( System.getProperty( "java.io.tmpdir" ) );
-
-    int count = 0;
-    while( count < 100 )
-    {
-      final File tmpDataDir = new File( tmpDir, prefix + new Random().nextInt() );
-      if( tmpDataDir.mkdir() )
-        return tmpDataDir;
-
-      count++;
-    }
-
-    return null;
+    final String baseAbs = basedir.getAbsolutePath();
+    final String absAbs = absoluteFile.getAbsolutePath();
+    if( !absAbs.startsWith( baseAbs ) )
+      return null;
+    
+    final String rel = absAbs.length() == baseAbs.length() ? "" : absAbs.substring( baseAbs.length() );
+    
+    final File file = new File( "." + rel );
+    return file;
   }
 }
