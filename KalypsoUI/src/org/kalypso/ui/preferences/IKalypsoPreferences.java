@@ -73,4 +73,6 @@ public interface IKalypsoPreferences
   public static final String HTTP_PROXY_PORT = "kalypso.http.proxy.port";
   public static final String HTTP_PROXY_USER = "kalypso.http.proxy.user";
   public static final String HTTP_PROXY_PASS = "kalypso.http.proxy.pass";
+  
+  public static final String GLOBAL_CRS = "kalypso.global.crs";
 }
