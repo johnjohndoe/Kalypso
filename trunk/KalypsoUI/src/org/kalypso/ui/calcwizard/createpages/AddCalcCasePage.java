@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -225,5 +226,21 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
   {
     for( final  Iterator iter = m_choiceListener.iterator(); iter.hasNext(); )
       ((IChoiceListener)iter.next()).onChoiceChanged( newChoice );
+  }
+  
+  /**
+   * @see org.eclipse.jface.wizard.IWizardPage#getPreviousPage()
+   */
+  public IWizardPage getPreviousPage()
+  {
+    return super.getPreviousPage();
+  }
+  
+  /**
+   * @see org.eclipse.jface.wizard.IWizardPage#setPreviousPage(org.eclipse.jface.wizard.IWizardPage)
+   */
+  public void setPreviousPage( IWizardPage page )
+  {
+    super.setPreviousPage(page);
   }
 }

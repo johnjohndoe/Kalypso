@@ -4,6 +4,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ui.calcwizard.modelpages.IModelWizardPage;
@@ -70,15 +71,22 @@ public class CalcWizardDialog extends WizardDialog
     super.updateButtons();
     
     final IWizardPage currentPage = getCurrentPage();
+
+    final IWizardPage previousPage = currentPage.getPreviousPage();
     
-    if( currentPage instanceof IModelWizardPage )
-    {
-      final IWizardPage previousPage = currentPage.getPreviousPage();
-      if( previousPage != null && !( previousPage instanceof IModelWizardPage ) )
-        getButton( IDialogConstants.BACK_ID ).setEnabled( false );
-    }
+    final Button backButton = getButton( IDialogConstants.BACK_ID );
+    final Button newPrognoseButton = getButton(  NEW_PROGNOSE_ID );
+
+    backButton.setEnabled( previousPage != null && previousPage instanceof IModelWizardPage );
     
-    getButton(  NEW_PROGNOSE_ID ).setEnabled( currentPage instanceof IModelWizardPage );
+//    if( currentPage instanceof IModelWizardPage )
+//    {
+//      if( previousPage != null )
+//    }
+//    else
+//      backButton.setEnabled( false );
+    
+    newPrognoseButton.setEnabled( currentPage instanceof IModelWizardPage );
   }
   
 }

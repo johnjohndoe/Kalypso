@@ -370,8 +370,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       chartPanel.setVisible( true );
       m_diagFrame.add( chartPanel );
 
-//      refreshDiagram();
-
       return composite;
     }
     catch( Exception e )
@@ -660,16 +658,19 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected Composite createIgnoreButtonPanel( final Composite parent )
   {
     // properties lesen
-    final String ignoreType1 = m_arguments.getProperty( PROP_IGNORETYPE1, "Q" );
-    final String ignoreType2 = m_arguments.getProperty( PROP_IGNORETYPE2, "W" );
+    final String ignoreType1 = m_arguments.getProperty( PROP_IGNORETYPE1, null );
+    final String ignoreType2 = m_arguments.getProperty( PROP_IGNORETYPE2, null );
 
-    final String ignoreLabel1 = m_arguments.getProperty( PROP_IGNORELABEL1, "Abfluss" );
-    final String ignoreLabel2 = m_arguments.getProperty( PROP_IGNORELABEL2, "Wasserstand" );
+    final String ignoreLabel1 = m_arguments.getProperty( PROP_IGNORELABEL1, ignoreType2 );
+    final String ignoreLabel2 = m_arguments.getProperty( PROP_IGNORELABEL2, ignoreType1 );
 
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout( 3, false ) );
     panel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
+    if( ignoreType1 == null || ignoreType2 == null )
+      return panel;
+    
     final Label label = new Label( panel, SWT.NONE );
     label.setText( "Diagrammanzeige:" );
     final GridData gridData = new GridData();
@@ -857,6 +858,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
           final IStatus status = nature.runCalculation( getCalcFolder(), new SubProgressMonitor(
               monitor, 1000 ), modelspec, doClearResults );
 
+          // alle Modellseiten refreshen
+          for( int i = 0; i < pages.length; i++ )
+          {
+            final IWizardPage page = pages[i];
+            if( page instanceof AbstractCalcWizardPage )
+              ( (AbstractCalcWizardPage)page ).onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
+          }          
+          
           if( status != Status.OK_STATUS )
             throw new CoreException( status );
         }

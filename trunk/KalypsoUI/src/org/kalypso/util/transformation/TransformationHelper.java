@@ -162,7 +162,7 @@ public class TransformationHelper
     final String msg = msgWriter.toString();
     if( msg.length() > 0 )
       return new TransformationResult( msg, logFile );
-    else
-      return TransformationResult.OK_RESULT;
+
+    return TransformationResult.OK_RESULT;
   }
 }
