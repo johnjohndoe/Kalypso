@@ -1,10 +1,10 @@
 package org.kalypso.ogc.sensor.diagview.impl;
 
 import java.net.URL;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.TreeMap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IObservation;
@@ -29,7 +29,7 @@ public class LinkedDiagramTemplate extends DefaultDiagramTemplate implements IPo
 {
   private static ObjectFactory m_objectFactory;
   private final ResourcePool m_pool;
-  private final Hashtable m_keys;
+  private final TreeMap m_keys;
 
   /**
    * Constructor
@@ -46,7 +46,7 @@ public class LinkedDiagramTemplate extends DefaultDiagramTemplate implements IPo
             .isVisible() );
 
     m_pool = KalypsoGisPlugin.getDefault().getPool( );
-    m_keys = new Hashtable();
+    m_keys = new TreeMap( m_pool.getKeyComparator() );
 
     final List list = obsDiagView.getObservation();
     for( final Iterator it = list.iterator(); it.hasNext(); )
@@ -55,8 +55,8 @@ public class LinkedDiagramTemplate extends DefaultDiagramTemplate implements IPo
 
       final PoolableObjectType key = new PoolableObjectType( tobs.getLinktype(), tobs
           .getHref(), context );
-      m_pool.addPoolListener( this, key );
       m_keys.put( key, tobs );
+      m_pool.addPoolListener( this, key );
     }
     
     for( final Iterator it = obsDiagView.getAxis().iterator(); it.hasNext(); )
