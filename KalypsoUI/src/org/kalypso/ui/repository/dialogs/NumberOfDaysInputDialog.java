@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class NumberOfDaysInputDialog extends InputDialog
 {
-  private final static String msg = "";
+  private final static String msg = "ZeitreihenBrowser: Anzahl letzte angezeigte Tagen (0 = ganzer Zeitraum):";
   
   protected final static NumberFormat m_nf = NumberFormat.getIntegerInstance();
 
@@ -58,8 +58,8 @@ public class NumberOfDaysInputDialog extends InputDialog
       {
         final Number number = m_nf.parse( newText );
         
-        if( number.intValue() <= 0 )
-          return "Tagesanzahl muss größer als '0' sein.";
+        if( number.intValue() < 0 )
+          return "Tagesanzahl muss größer oder gleich '0' sein.";
         
         return null;
       }

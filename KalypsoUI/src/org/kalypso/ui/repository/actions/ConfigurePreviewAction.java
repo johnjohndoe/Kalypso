@@ -45,15 +45,21 @@ public class ConfigurePreviewAction extends FullAction implements ISelectionChan
     if( rep == null )
       return;
 
-    final NumberOfDaysInputDialog dlg = new NumberOfDaysInputDialog( m_shell, KalypsoGisPlugin
-        .getDefault().getPluginPreferences().getDefaultInt( IKalypsoPreferences.NUMBER_OF_DAYS ) );
+    final int days1;
+    final String defValue = rep.getProperty( IKalypsoPreferences.NUMBER_OF_DAYS );
+    if( defValue != null )
+      days1 = Integer.valueOf( defValue ).intValue();
+    else
+      days1 = KalypsoGisPlugin.getDefault().getPluginPreferences().getInt(
+          IKalypsoPreferences.NUMBER_OF_DAYS );
+
+    final NumberOfDaysInputDialog dlg = new NumberOfDaysInputDialog( m_shell, days1 );
 
     if( dlg.open() == Window.OK )
     {
       final int days = dlg.getDays();
-      
-      // TODO
-      System.out.println( days );
+
+      rep.setProperty( IKalypsoPreferences.NUMBER_OF_DAYS, String.valueOf( days ) );
     }
   }
 

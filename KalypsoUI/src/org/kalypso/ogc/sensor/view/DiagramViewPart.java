@@ -1,9 +1,8 @@
 package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
-import java.util.Calendar;
-import java.util.Date;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -17,8 +16,9 @@ import org.jfree.chart.ChartPanel;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
-import org.kalypso.util.adapter.IAdaptable;
 import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 
@@ -52,8 +52,10 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     }
     catch( FactoryException e )
     {
-      e.printStackTrace();
+      MessageDialog.openError( parent.getShell(), "", e.getLocalizedMessage() );
+      return;
     }
+    
     m_template.addTemplateEventListener( m_chart );
 
     ChartPanel chartPanel = new ChartPanel( m_chart );
@@ -92,35 +94,28 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
-  public void selectionChanged( SelectionChangedEvent event )
+  public void selectionChanged( final SelectionChangedEvent event )
   {
     //m_tsCol.removeAllSeries();
 
     m_template.removeAllCurves();
     
-    StructuredSelection selection = (StructuredSelection)event.getSelection();
+    final StructuredSelection selection = (StructuredSelection)event.getSelection();
 
-    if( !( selection.getFirstElement() instanceof IAdaptable ) )
+    if( !( selection.getFirstElement() instanceof IRepositoryItem ) )
       return;
 
-    IObservation obs = (IObservation)( (IAdaptable)selection.getFirstElement() )
-        .getAdapter( IObservation.class );
+    final IRepositoryItem item = (IRepositoryItem)selection.getFirstElement();
+    
+    final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
     if( obs == null )
       return;
 
-    Calendar c = Calendar.getInstance();
-
-    Date to = c.getTime();
-    c.add( Calendar.DAY_OF_YEAR, -31 );
-    Date from = c.getTime();
-
+    final int days = Integer.valueOf( item.getRepository().getProperty( IKalypsoPreferences.NUMBER_OF_DAYS ) ).intValue();
+    
     synchronized( obs )
     {
-      System.out.println( "DiagView enter " + obs );
-      
-      m_template.setObservation( obs, new DateRangeArgument( from, to ) );
-      
-      System.out.println( "DiagView exit " + obs );
+      m_template.setObservation( obs, DateRangeArgument.createFromPastDays( days ) );
     }
 
     //new ShowObservationJob( obs ).schedule();

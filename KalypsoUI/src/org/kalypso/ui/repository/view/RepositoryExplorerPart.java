@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetEntry;
@@ -220,5 +221,15 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
   {
     if( m_propsPage != null && !m_propsPage.getControl().isDisposed() )
       m_propsPage.selectionChanged( this, event.getSelection() );
+  }
+  
+  /**
+   * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
+   */
+  public void saveState( IMemento memento )
+  {
+    super.saveState( memento );
+    
+    // TODO: save gui state (See ResourceNavigator)
   }
 }

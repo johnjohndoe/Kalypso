@@ -7,17 +7,18 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.eclipse.jface.action.FullAction;
+import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryContainer;
 import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.RepositorySpecification;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
 
 /**
  * Ein Repository hinzufügen.
  * 
  * @author schlienger
- *  
  */
 public class AddRepositoryAction extends FullAction
 {
@@ -50,10 +51,18 @@ public class AddRepositoryAction extends FullAction
 
     try
     {
-      final IRepositoryFactory f = spec.createFactory();
+      final IRepositoryFactory f = spec.createFactory( getClass().getClassLoader() );
 
       if( f.configureRepository( ) )
-        m_cp.addRepository( f.createRepository() );
+      {
+        final IRepository rep = f.createRepository();
+
+        // set all known properties for repository
+        final String value = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.NUMBER_OF_DAYS );
+        rep.setProperty( IKalypsoPreferences.NUMBER_OF_DAYS, value );
+
+        m_cp.addRepository( rep );
+      }
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
