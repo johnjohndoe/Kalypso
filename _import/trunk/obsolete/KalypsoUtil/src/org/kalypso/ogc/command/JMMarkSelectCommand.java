@@ -1,110 +1,109 @@
-/** TODO: license definieren
-*/
+/**
+ * TODO: license definieren
+ */
 
 package org.kalypso.ogc.command;
 
 import java.util.List;
 
-import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Position;
-import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeature;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
-
 
 /**
  * DOCUMENT ME!
- *
+ * 
  * @author doemming
  */
 public class JMMarkSelectCommand implements ICommand
 {
-    private GM_Envelope mySelectEnv = null;
-    private GM_Position mySelectPos = null;
-    private List myListFe = null; // list of display elements
-    private IKalypsoTheme myTheme = null;
-    private boolean mySelectWithinStatus = true;
-    private final double myRadius;
-    private int mySelectionMode = -1;
-    private int mySelectionId;
-  
-    public JMMarkSelectCommand( final IKalypsoTheme theme, GM_Envelope selectEnv, boolean selectWithinStatus,double gisSelectionRadius, int selectionId ,int selectionMode)
-    { 
-        mySelectEnv = selectEnv;
-        myRadius = gisSelectionRadius;
-        mySelectWithinStatus = selectWithinStatus;
-        init(theme,selectionId,selectionMode);
-    }
 
-    public JMMarkSelectCommand( final IKalypsoTheme theme, GM_Position selectPos,double gisSelectionRadius,int selectionId, int selectionMode )
-    {
-        mySelectPos = selectPos;
-        myRadius = gisSelectionRadius;
-        init(theme,selectionId,selectionMode  );
-    }
+  private final List myListFe[];
 
-    private void init( final IKalypsoTheme theme,int selectionId,int selectionMode  )
-    {
-      // TODO: warum ist das kein Konstruktor?
-        mySelectionMode=selectionMode;
-        myTheme = theme;
-        mySelectionId=selectionId;
-    }
-    
-    public boolean isUndoable(  )
-    {
-        return true;
-    }
+  private final int mySelectionId;
 
-    public void process(  ) throws Exception
-    {
-        JMSelector selector = new JMSelector(mySelectionMode);
-    
-        if( mySelectEnv != null )
-            myListFe = selector.select( mySelectEnv, myTheme, mySelectWithinStatus,mySelectionId );
-        else if( mySelectPos != null && myRadius >= 0d )
-            myListFe = selector.select( mySelectPos, myRadius, myTheme, false,mySelectionId );
-        else 
-            myListFe = selector.select( mySelectPos, myTheme,mySelectionId );
-   
-        myTheme.getLayer().fireModellEvent(null);        
-    }
+  private final int mySelectionMode;
 
-    public void redo(  ) throws Exception
+  private final KalypsoFeatureLayer[] m_layers;
+
+  public JMMarkSelectCommand( final List[] featureLists, int selectionId, int selectionModus,
+      KalypsoFeatureLayer[] layers )
+  {
+    myListFe = featureLists;
+    mySelectionId = selectionId;
+    mySelectionMode = selectionModus;
+    m_layers = layers;
+  }
+
+  public boolean isUndoable()
+  {
+    return true;
+  }
+
+  public void process() throws Exception
+  {
+    redo();
+  }
+
+  public void redo() throws Exception
+  {
+    for( int n = 0; n < myListFe.length; n++ )
     {
-      JMSelector selector = new JMSelector(mySelectionMode);
-      selector.setSelectionMode( mySelectionMode );
-      selector.perform( myListFe,mySelectionId );
-      myTheme.getLayer().fireModellEvent(null);        
+      List listFe = myListFe[n];
+      for( int i = 0; i < listFe.size(); i++ )
+      {
+        KalypsoFeature fe = (KalypsoFeature)listFe.get( i );
+        switch( mySelectionMode )
+        {
+        case JMSelector.MODE_SELECT:
+          fe.select( mySelectionId );
+          break;
+        case JMSelector.MODE_UNSELECT:
+          fe.unselect( mySelectionId );
+          break;
+        case JMSelector.MODE_TOGGLE:
+          fe.toggle( mySelectionId );
+          break;
+        default:
+          break;
         }
-
-    public void undo(  ) throws Exception
-    {
-
-            JMSelector selector = new JMSelector(mySelectionMode);
-            switch(mySelectionMode)
-            {
-              case JMSelector.MODE_SELECT:
-                selector.setSelectionMode( JMSelector.MODE_UNSELECT );
-              break;
-              case JMSelector.MODE_UNSELECT:
-                selector.setSelectionMode( JMSelector.MODE_SELECT );
-              break;
-              default:
-              selector.setSelectionMode( mySelectionMode );
-              break;
-            }
-              selector.perform( myListFe, mySelectionId );
-            
-      myTheme.getLayer().fireModellEvent(null);        
-      
+      }
+      m_layers[n].fireModellEvent( null );
     }
+  }
 
-
-    /**
-     * @see org.kalypso.util.command.ICommand#getDescription()
-     */
-    public String getDescription()
+  public void undo() throws Exception
+  {
+    for( int n = 0; n < myListFe.length; n++ )
     {
-      return "selectiert features";
+      List listFe = myListFe[n];
+      for( int i = 0; i < listFe.size(); i++ )
+      {
+        KalypsoFeature fe = (KalypsoFeature)listFe.get( i );
+        switch( mySelectionMode )
+        {
+        case JMSelector.MODE_SELECT:
+          fe.unselect( mySelectionId );
+          break;
+        case JMSelector.MODE_UNSELECT:
+          fe.select( mySelectionId );
+          break;
+        case JMSelector.MODE_TOGGLE:
+          fe.toggle( mySelectionId );
+          break;
+        default:
+          break;
+        }
+      }
+      m_layers[n].fireModellEvent( null );
     }
+  }
+
+  /**
+   * @see org.kalypso.util.command.ICommand#getDescription()
+   */
+  public String getDescription()
+  {
+    return "selectiert features";
+  }
 }

@@ -8,4 +8,12 @@ public class ToggleSelectWidget extends AbstractSelectWidget
   {
     return JMSelector.MODE_TOGGLE;
   }
+
+  /**
+   * @see org.kalypso.ogc.widgets.AbstractSelectWidget#allowOnlyOneSelectedFeature()
+   */
+  boolean allowOnlyOneSelectedFeature()
+  {
+    return false;
+  }
 }

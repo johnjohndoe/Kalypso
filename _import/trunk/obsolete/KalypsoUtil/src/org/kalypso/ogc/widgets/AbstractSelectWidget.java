@@ -2,73 +2,74 @@ package org.kalypso.ogc.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.geometry.GM_Envelope;
+import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.command.JMMarkSelectCommand;
+import org.kalypso.ogc.command.JMSelector;
+import org.kalypso.ogc.command.SingleSelectCommand;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
+import org.kalypso.ogc.gml.KalypsoFeature;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
 
 public abstract class AbstractSelectWidget extends AbstractWidget
 {
-  private Point cursorPoint = null;
+  private Point myEndPoint = null;
 
-  private Point endPoint = null;
-
-  private Point startPoint = null;
+  private Point myStartPoint = null;
 
   private int myRadius = 20;
 
-  private boolean mySnapEnabled = true;
-  
   abstract int getSelectionMode();
-    
+
+  abstract boolean allowOnlyOneSelectedFeature();
+
   public void dragged( Point p )
   {
-    if( startPoint == null )
-      startPoint=p;
-      endPoint = p;
+    if( myStartPoint == null )
+    {
+      myStartPoint = p;
+      myEndPoint = null;
+    }
+    else
+      myEndPoint = p;
   }
 
   public void leftPressed( Point p )
   {
-    startPoint = p;
-    endPoint = null;
+    myStartPoint = p;
+    myEndPoint = null;
   }
 
   public void leftReleased( Point p )
   {
-    if( endPoint != null ) // last update of endPoint
+    if( myEndPoint != null ) // last update of endPoint
 
-      endPoint = p;
+      myEndPoint = p;
 
     select();
   }
 
-  public void moved( Point p )
-  {
-    cursorPoint = p;
-  }
-
   public void paint( Graphics g )
   {
-    if( startPoint != null && endPoint != null )
+    if( myStartPoint != null && myEndPoint != null )
     {
-      int px = (int)( startPoint.getX() < endPoint.getX() ? startPoint.getX() : endPoint.getX() );
-      int py = (int)( startPoint.getY() < endPoint.getY() ? startPoint.getY() : endPoint.getY() );
-      int dx = (int)Math.abs( endPoint.getX() - startPoint.getX() );
-      int dy = (int)Math.abs( endPoint.getY() - startPoint.getY() );
+      int px = (int)( myStartPoint.getX() < myEndPoint.getX() ? myStartPoint.getX() : myEndPoint
+          .getX() );
+      int py = (int)( myStartPoint.getY() < myEndPoint.getY() ? myStartPoint.getY() : myEndPoint
+          .getY() );
+      int dx = (int)Math.abs( myEndPoint.getX() - myStartPoint.getX() );
+      int dy = (int)Math.abs( myEndPoint.getY() - myStartPoint.getY() );
 
       if( dx != 0 && dy != 0 )
         g.drawRect( px, py, dx, dy );
-    }
-    else if( mySnapEnabled && cursorPoint != null )
-    {
-      g.drawRect( (int)cursorPoint.getX() - myRadius, (int)cursorPoint.getY() - myRadius,
-          2 * myRadius, 2 * myRadius );
     }
   }
 
@@ -80,34 +81,50 @@ public abstract class AbstractSelectWidget extends AbstractWidget
   private void select()
   {
     // TODO: sollte diese ganze umrechnerei nicht einfach die view machen???
-    
+
     final MapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
     GeoTransform transform = mapPanel.getProjection();
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-    if(activeTheme==null || activeTheme instanceof KalypsoFeatureTheme)
-        return;
-        if( startPoint != null )
-    {
-      double g1x = transform.getSourceX( startPoint.getX() );
-      double g1y = transform.getSourceY( startPoint.getY() );
-      double gisRadius=transform.getSourceX( startPoint.getX()+myRadius )-g1x;
-   
-      if( endPoint == null ) // not dragged
-      {
-        final ICommand command = new JMMarkSelectCommand( activeTheme , GeometryFactory
-            .createGM_Position( g1x, g1y ), gisRadius, mapPanel.getSelectionID(),getSelectionMode() );
+    KalypsoFeatureLayer activeLayer;
+    if( activeTheme == null || !( activeTheme.getLayer() instanceof KalypsoFeatureLayer ) )
+      return;
 
-        postCommand( command, null );
+    activeLayer = (KalypsoFeatureLayer)activeTheme.getLayer();
+    if( myStartPoint != null )
+    {
+      double g1x = transform.getSourceX( myStartPoint.getX() );
+      double g1y = transform.getSourceY( myStartPoint.getY() );
+
+      if( myEndPoint == null ) // not dragged
+      {
+        // TODO depend on featuretype
+        // line and point with radius
+        // polygon with without radius
+        double gisRadius = transform.getSourceX( myStartPoint.getX() + myRadius ) - g1x;
+        JMSelector selector = new JMSelector( getSelectionMode() );
+        GM_Position pointSelect = GeometryFactory.createGM_Position( g1x, g1y );
+
+        KalypsoFeature fe = selector.selectNearest( pointSelect, gisRadius, activeTheme, false,
+            mapPanel.getSelectionID() );
+        List listFe = new ArrayList();
+        if( fe != null )
+          listFe.add( fe );
+        //List listFe = selector.select( pointSelect, activeTheme,
+        // mapPanel.getSelectionID() );
+        if( !listFe.isEmpty() )
+        {
+          fireCommand( listFe, activeLayer, mapPanel.getSelectionID() );
+        }
       }
       else
       // dragged
       {
-        double g2x = transform.getSourceX( endPoint.getX() );
-        double g2y = transform.getSourceY( endPoint.getY() );
+        double g2x = transform.getSourceX( myEndPoint.getX() );
+        double g2y = transform.getSourceY( myEndPoint.getY() );
         boolean withinStatus = false;
 
-        if( endPoint.getX() > startPoint.getX() && endPoint.getY() > startPoint.getY() )
+        if( myEndPoint.getX() > myStartPoint.getX() && myEndPoint.getY() > myStartPoint.getY() )
           withinStatus = true;
 
         double minX = g1x < g2x ? g1x : g2x;
@@ -117,15 +134,45 @@ public abstract class AbstractSelectWidget extends AbstractWidget
 
         if( minX != maxX && minY != maxY )
         {
-          final ICommand command = new JMMarkSelectCommand( activeTheme, GeometryFactory
-              .createGM_Envelope( minX, minY, maxX, maxY ), withinStatus, gisRadius, mapPanel.getSelectionID(),getSelectionMode() );
-
-          postCommand( command, null );
+          JMSelector selector = new JMSelector( getSelectionMode() );
+          GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
+          List listFe = selector.select( envSelect, activeTheme, withinStatus, mapPanel
+              .getSelectionID() );
+          if( !listFe.isEmpty() )
+            fireCommand( listFe, activeLayer, mapPanel.getSelectionID() );
         }
       }
     }
+    myStartPoint = null;
+    myEndPoint = null;
+  }
 
-    startPoint = null;
-    endPoint = null;
+  private void fireCommand( List listFe, KalypsoFeatureLayer activeLayer, int selectionId )
+  {
+    ICommand command = null;
+    if( allowOnlyOneSelectedFeature() )
+    {
+      KalypsoFeature fe = (KalypsoFeature)listFe.get( 0 );
+      command = new SingleSelectCommand( fe, selectionId, activeLayer, getAllKalypsoFeatureLayers() );
+    }
+    else
+    {
+      List[] feLists = new List[]
+      { listFe };
+      KalypsoFeatureLayer[] feLayers = new KalypsoFeatureLayer[]
+      { activeLayer };
+      command = new JMMarkSelectCommand( feLists, selectionId, getSelectionMode(), feLayers );
+    }
+    postCommand( command, null );
+  }
+
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#finish()
+   */
+  public void finish()
+  {
+    myStartPoint = null;
+    myEndPoint = null;
+    super.finish();
   }
 }

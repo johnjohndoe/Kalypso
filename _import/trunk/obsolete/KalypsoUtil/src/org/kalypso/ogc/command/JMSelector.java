@@ -21,37 +21,37 @@ import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 public class JMSelector //implements JMThemeListener
 {
   //selectionMode:
-  public  final static String[] SELECTION_MODE_TEXT =
+  public final static String[] SELECTION_MODE_TEXT =
   { "toggle", "select", "unselect" };
 
-  public final static int MODE_TOGGLE = 0;
+  public final static int MODE_TOGGLE = 1;
 
-  public  final  static  int MODE_SELECT = 1;
+  public final static int MODE_SELECT = 2;
 
-  public  final static  int MODE_UNSELECT = 2;
+  public final static int MODE_UNSELECT = 3;
 
-  public  final static  int MODE_COLLECT = 3;
+  public final static int MODE_COLLECT = 4;
 
   private int mySelectionMode = MODE_TOGGLE;
 
   public JMSelector()
   {
-    //
+  //
   }
-  
-  public JMSelector(int selectionMode)
+
+  public JMSelector( int selectionMode )
   {
     mySelectionMode = selectionMode;
   }
- 
+
   public void setSelectionMode( int selectionMode )
   {
     this.mySelectionMode = selectionMode;
   }
-   
+
   public List perform( List listFe, int selectionId )
   {
-    List result=new ArrayList(); // alle veraenderten fe
+    List result = new ArrayList(); // alle veraenderten fe
     Iterator iterator = listFe.iterator();
     while( iterator.hasNext() )
     {
@@ -60,16 +60,15 @@ public class JMSelector //implements JMThemeListener
       switch( mySelectionMode )
       {
       case MODE_TOGGLE:
-        if(fe.toggle( selectionId ))
-          result.add(fe); 
-break;
+        result.add( fe );
+        break;
       case MODE_SELECT:
-        if(fe.select( selectionId ))
-        result.add(fe); 
+        if( !fe.isSelected( selectionId ) )
+          result.add( fe );
         break;
       case MODE_UNSELECT:
-        if(fe.unselect( selectionId ))
-        result.add(fe); 
+        if( fe.isSelected( selectionId ) )
+          result.add( fe );
         break;
       case MODE_COLLECT:
         return listFe;
@@ -82,7 +81,6 @@ break;
 
   }
 
- 
   /*
    * // selects all features (display elements) that are located within the
    * submitted bounding box. // GMLGeometry
@@ -92,18 +90,18 @@ break;
    * SpatialOperation(OperationDefines.WITHIN,myPropertyName,gmlGeometry);
    * //Filter filter=new ComplexFilter(operation);
    */
-  public List select( GM_Envelope env, final IKalypsoTheme theme, boolean selectWithinBoxStatus,int selectionId )
+  public List select( GM_Envelope env, final IKalypsoTheme theme, boolean selectWithinBoxStatus,
+      int selectionId )
   {
     List resultList = new ArrayList();
-      IKalypsoLayer layer = theme.getLayer();
-      if(! (layer instanceof KalypsoFeatureLayer))
-        return resultList;   
+    IKalypsoLayer layer = theme.getLayer();
+    if( !( layer instanceof KalypsoFeatureLayer ) )
+      return resultList;
     try
     {
       List testFE = new ArrayList();
-      GM_Surface bbox = GeometryFactory.createGM_Surface( env, layer
-          .getCoordinatesSystem() );
-      List features = ((KalypsoFeatureLayer)layer).getSort().query( env, new ArrayList() );
+      GM_Surface bbox = GeometryFactory.createGM_Surface( env, layer.getCoordinatesSystem() );
+      List features = ( (KalypsoFeatureLayer)layer ).getSort().query( env, new ArrayList() );
       Iterator containerIterator = features.iterator();
 
       while( containerIterator.hasNext() )
@@ -115,7 +113,7 @@ break;
           testFE.add( fe );
       }
 
-      resultList = perform( testFE,selectionId );
+      resultList = perform( testFE, selectionId );
     }
     catch( Exception e )
     {
@@ -125,16 +123,16 @@ break;
     return resultList;
   }
 
-  //           selects all features (display elements) that intersects the submitted
+  // selects all features that intersects the submitted
   // point.
-  public List select( GM_Position position, final IKalypsoTheme theme,int selectionId )
+  public List select( GM_Position position, final IKalypsoTheme theme, int selectionId )
   {
     List resultList = new ArrayList();
-      IKalypsoLayer layer = theme.getLayer();
-      if(! (layer instanceof KalypsoFeatureLayer))
-        return resultList;   
+    IKalypsoLayer layer = theme.getLayer();
+    if( !( layer instanceof KalypsoFeatureLayer ) )
+      return resultList;
     List testFe = new ArrayList();
-    List features = ((KalypsoFeatureLayer)layer).getSort().query( position, new ArrayList() );
+    List features = ( (KalypsoFeatureLayer)layer ).getSort().query( position, new ArrayList() );
 
     Iterator containerIterator = features.iterator();
 
@@ -152,25 +150,40 @@ break;
         System.out.println( err.getMessage() );
         System.out.println( "...using workaround \"box selection\"" );
         System.out.println( "set view dependent radius" );
-        resultList.addAll( select( position, 0.0001d, theme, false,selectionId ) );
+        resultList.addAll( select( position, 0.0001d, theme, false, selectionId ) );
       }
     }
 
-    resultList.addAll( perform( testFe,selectionId ) );
+    resultList.addAll( perform( testFe, selectionId ) );
 
     return resultList;
   }
 
   //           selects all features (display elements) that are located within the circle
   // described by the position and the radius.
-  public List select( GM_Position pos, double r, final IKalypsoTheme theme, boolean withinStatus,int selectionId )
+  public List select( GM_Position pos, double r, final IKalypsoTheme theme, boolean withinStatus,
+      int selectionId )
   {
     List resultDE = select( GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos
         .getX()
-        + r, pos.getY() + r ), theme, withinStatus,selectionId );
+        + r, pos.getY() + r ), theme, withinStatus, selectionId );
 
     return resultDE;
   }
 
-  
+  public KalypsoFeature selectNearest( GM_Position pos, double r, final IKalypsoTheme theme,
+      boolean withinStatus, int selectionId )
+  {
+    KalypsoFeature result = null;
+    double dist = 0;
+    List listFE = select( pos, r, theme, withinStatus, selectionId );
+    for( int i = 0; i < listFE.size(); i++ )
+    {
+      KalypsoFeature fe = (KalypsoFeature)listFE.get( i );
+      if( result == null
+          || result.getDefaultGeometryProperty().distance( fe.getDefaultGeometryProperty() ) < dist )
+        result = fe;
+    }
+    return result;
+  }
 }

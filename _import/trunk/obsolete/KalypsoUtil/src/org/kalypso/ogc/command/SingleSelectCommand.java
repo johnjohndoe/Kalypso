@@ -1,0 +1,75 @@
+/**
+ * TODO: license definieren
+ */
+
+package org.kalypso.ogc.command;
+
+import org.kalypso.ogc.event.ModellEventProvider;
+import org.kalypso.ogc.gml.KalypsoFeature;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.util.command.ICommand;
+
+/**
+ * DOCUMENT ME!
+ * 
+ * @author doemming
+ */
+public class SingleSelectCommand implements ICommand
+{
+
+  private final KalypsoFeature m_feature;
+
+  private final int mySelectionId;
+
+  private final ModellEventProvider m_modellEventProvider;
+
+  private final ICommand m_unselectAllCommand;
+
+  public SingleSelectCommand( final KalypsoFeature feature, int selectionId,
+      ModellEventProvider eventProvider, KalypsoFeatureLayer[] layers )
+  {
+    m_feature = feature;
+    mySelectionId = selectionId;
+
+    m_modellEventProvider = eventProvider;
+    m_unselectAllCommand = new UnselectAllCommand( layers, selectionId );
+  }
+
+  public boolean isUndoable()
+  {
+    return true;
+  }
+
+  public void process() throws Exception
+  {
+    m_unselectAllCommand.process();
+    redo();
+  }
+
+  public void redo() throws Exception
+  {
+    m_unselectAllCommand.redo();
+
+    m_feature.select( mySelectionId );
+
+    m_modellEventProvider.fireModellEvent( null );
+  }
+
+  public void undo() throws Exception
+  {
+
+    m_feature.unselect( mySelectionId );
+
+    m_modellEventProvider.fireModellEvent( null );
+    
+    m_unselectAllCommand.undo();
+  }
+
+  /**
+   * @see org.kalypso.util.command.ICommand#getDescription()
+   */
+  public String getDescription()
+  {
+    return "selectiert features";
+  }
+}

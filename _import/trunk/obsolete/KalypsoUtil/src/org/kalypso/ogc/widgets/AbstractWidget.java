@@ -2,6 +2,8 @@ package org.kalypso.ogc.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.feature.FeatureType;
@@ -13,6 +15,7 @@ import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.gml.IKalypsoLayer;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
@@ -268,5 +271,18 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
       // not a featurelayer e.g. a wms-layer
       return null;
     }
+  }
+  
+  public KalypsoFeatureLayer[] getAllKalypsoFeatureLayers()
+  {
+    List result=new ArrayList();
+    IKalypsoTheme[] themes=m_mapPanel.getMapModell().getAllThemes(); 
+    for( int i = 0; i < themes.length; i++ )
+    {
+      IKalypsoLayer layer=themes[i].getLayer();
+      if(layer!=null && layer instanceof KalypsoFeatureLayer)
+        result.add(layer);
+    }
+    return (KalypsoFeatureLayer[])result.toArray(new KalypsoFeatureLayer[result.size()]);
   }
 }
