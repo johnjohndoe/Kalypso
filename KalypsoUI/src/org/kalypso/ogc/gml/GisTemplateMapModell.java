@@ -21,6 +21,7 @@ import org.kalypso.template.types.StyledLayerType.StyleType;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.opengis.cs.CS_CoordinateSystem;
+
 /**
  * 
  * @author Belger
@@ -33,10 +34,10 @@ public class GisTemplateMapModell implements IMapModell
       final CS_CoordinateSystem crs )
   {
     m_modell = new MapModell( crs );
-    
-    IKalypsoTheme legenTheme=new KalypsoLegendTheme(this);
-    addTheme(legenTheme);
-    enableTheme(legenTheme,false);
+
+    IKalypsoTheme legenTheme = new KalypsoLegendTheme( this );
+    addTheme( legenTheme );
+    enableTheme( legenTheme, false );
 
     final LayersType layerListType = gisview.getLayers();
     final List layerList = layerListType.getLayer();
@@ -45,84 +46,90 @@ public class GisTemplateMapModell implements IMapModell
     {
       final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList
           .get( i );
-      
+
       final IKalypsoTheme theme = loadTheme( layerType, project );
-      
       if( theme != null )
       {
         addTheme( theme );
         enableTheme( theme, layerType.isVisible() );
+        String id = layerType.getId();
+        if( id != null && id.startsWith( "active_" ) )
+          activateTheme( theme );
+
       }
     }
-    
+
   }
 
   private IKalypsoTheme loadTheme( final Layer layerType, final IProject project )
   {
 
-
     return new PoolableKalypsoFeatureTheme( layerType, project );
   }
 
   // Helper
-  public Gismapview createGismapTemplate(GM_Envelope bbox) throws JAXBException 
+  public Gismapview createGismapTemplate( GM_Envelope bbox ) throws JAXBException
   {
-   
+
     final org.kalypso.template.gismapview.ObjectFactory maptemplateFactory = new org.kalypso.template.gismapview.ObjectFactory();
-    final org.kalypso.template.types.ObjectFactory extentFac=new org.kalypso.template.types.ObjectFactory();
-    final Gismapview gismapview=maptemplateFactory.createGismapview();
+    final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+    final Gismapview gismapview = maptemplateFactory.createGismapview();
     final LayersType layersType = maptemplateFactory.createGismapviewTypeLayersType();
-    if(bbox!=null)
+    if( bbox != null )
     {
-    final ExtentType extentType = extentFac.createExtentType();
-   
-    extentType.setTop(bbox.getMax().getY());
-    extentType.setBottom(bbox.getMin().getY());
-    extentType.setLeft(bbox.getMin().getX());
-    extentType.setRight(bbox.getMax().getX());
-  
-    gismapview.setExtent(extentType);      
-  
+      final ExtentType extentType = extentFac.createExtentType();
+
+      extentType.setTop( bbox.getMax().getY() );
+      extentType.setBottom( bbox.getMin().getY() );
+      extentType.setLeft( bbox.getMin().getX() );
+      extentType.setRight( bbox.getMax().getX() );
+
+      gismapview.setExtent( extentType );
+
     }
-    
+
     List layerList = layersType.getLayer();
-   
-    gismapview.setLayers(layersType);
+
+    gismapview.setLayers( layersType );
     IKalypsoTheme[] themes = m_modell.getAllThemes();
     for( int i = 0; i < themes.length; i++ )
     {
-      if(themes[i]instanceof PoolableKalypsoFeatureTheme)
+      if( themes[i] instanceof PoolableKalypsoFeatureTheme )
       {
         final Layer layer = maptemplateFactory.createGismapviewTypeLayersTypeLayer();
-        final PoolableKalypsoFeatureTheme theme=(PoolableKalypsoFeatureTheme)themes[i]; 
+        final PoolableKalypsoFeatureTheme theme = (PoolableKalypsoFeatureTheme)themes[i];
         final PoolableObjectType key = theme.getLayerKey();
-        layer.setId(Integer.toString(i));
+        String id = Integer.toString( i );
+        if( m_modell.isThemeActivated( theme ) )
+          layer.setId( "active_" + id );
+        else
+          layer.setId( id );
         layer.setHref( key.getSourceAsString() );
         layer.setLinktype( key.getType() );
         layer.setActuate( "onRequest" );
         layer.setType( "simple" );
-        layer.setName(theme.getName());
-        layer.setVisible(m_modell.isThemeEnabled(theme));
+        layer.setName( theme.getName() );
+        layer.setVisible( m_modell.isThemeEnabled( theme ) );
         layer.getDepends();
-        layerList.add(layer);  
-        
-        List stylesList=layer.getStyle();
-        IPoolableObjectType[] styleKeys=theme.getPoolableStyles();
+        layerList.add( layer );
+
+        List stylesList = layer.getStyle();
+        IPoolableObjectType[] styleKeys = theme.getPoolableStyles();
         for( int j = 0; j < styleKeys.length; j++ )
         {
-          StyleType styleType=extentFac.createStyledLayerTypeStyleType();
+          StyleType styleType = extentFac.createStyledLayerTypeStyleType();
           IPoolableObjectType styleKey = styleKeys[j];
-          styleType.setActuate("onRequest" );
-          styleType.setHref(styleKey.getSourceAsString());
-          styleType.setLinktype(styleKey.getType());
+          styleType.setActuate( "onRequest" );
+          styleType.setHref( styleKey.getSourceAsString() );
+          styleType.setLinktype( styleKey.getType() );
           styleType.setType( "simple" );
-          stylesList.add(styleType);
+          stylesList.add( styleType );
         }
-      }      
+      }
     }
     return gismapview;
   }
-  
+
   public void activateTheme( IKalypsoTheme theme )
   {
     m_modell.activateTheme( theme );

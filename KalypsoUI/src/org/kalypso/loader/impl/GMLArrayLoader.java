@@ -113,6 +113,7 @@ public final class GMLArrayLoader extends AbstractLoader
             }
             catch( IOException e1 )
             {
+              System.out.println("error in resource"+file.getLocation().toString());
               e1.printStackTrace();
             }
           }

@@ -30,6 +30,7 @@ import org.kalypso.ogc.gml.mapactions.ToggleSingleSelectWidgetAction;
 import org.kalypso.ogc.gml.mapactions.ZoomOutMapAction;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.ogc.widgets.ToggleSelectWidget;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.template.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
@@ -87,6 +88,8 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
 
   private IMapModell m_mapModell;
 
+  private MapPanel m_mapPanel; 
+  
   public CommitResultsWizardPage()
   {
     super( "<CommitResultsWizardPage>" );
@@ -131,6 +134,8 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
       { rightWeight0,rightWeight0+rightWeight1, 100 - rightWeight0-rightWeight1 } );
 
       setControl( sashForm );
+ 
+
     }
     catch( final Exception e )
     {
@@ -140,13 +145,13 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
 
   private void createCommitButton( final Composite parent )
   {
-    //final Composite composite = new Composite( parent, SWT.RIGHT );
+    final Composite composite = new Composite( parent, SWT.RIGHT );
 
-    final Button button = new Button( parent, SWT.PUSH );
+    final Button button = new Button(composite,SWT.NONE | SWT.PUSH );
     button.setText( "ausgewählte Pegel in Ergebnisablage speichern" );
     button.addSelectionListener( new CommitResults() );
     button.setVisible( true );
-    //composite.setVisible(true);
+    composite.setVisible(true);
     //button.setEnabled(true);
   }
   
@@ -165,7 +170,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
     {
       final String templateFileName = getArguments().getProperty( PROP_TABLETEMPLATE );
       final IFile templateFile = (IFile)getProject().findMember( templateFileName );
-      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile );
+      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,   getReplaceProperties()  );
 
       m_viewer = new LayerTableViewer( parent, getProject(), KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), SELECTION_ID );
@@ -189,7 +194,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile );
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile,   getReplaceProperties()  );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
     m_mapModell = new GisTemplateMapModell( gisview, getProject(), crs );
     m_mapModell.addModellListener( this );
@@ -197,16 +202,16 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
     //////////////
     // MapPanel //
     //////////////
-    final MapPanel mapPanel = new MapPanel( this, crs, SELECTION_ID );
+    m_mapPanel = new MapPanel( this, crs, SELECTION_ID );
     final Composite mapComposite = new Composite( mapView, SWT.RIGHT | SWT.EMBEDDED );
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
 
     virtualFrame.setVisible( true );
-    mapPanel.setVisible( true );
-    virtualFrame.add( mapPanel );
+    m_mapPanel.setVisible( true );
+    virtualFrame.add( m_mapPanel );
 
-    mapPanel.setMapModell( m_mapModell );
-    mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
+    m_mapPanel.setMapModell( m_mapModell );
+    m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
     /////////////
     // Toolbar //
@@ -215,12 +220,12 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
 
     tbm.add( new GroupMarker( "radio_group" ) );
 
-    tbm.appendToGroup( "radio_group", new ToggleSingleSelectWidgetAction( mapPanel ) );
+    tbm.appendToGroup( "radio_group", new ToggleSingleSelectWidgetAction( m_mapPanel ) );
 
     tbm.add( new Separator() );
 
-    tbm.add( new FullExtentMapAction( this, mapPanel ) );
-    tbm.add( new ZoomOutMapAction( this, mapPanel ) );
+    tbm.add( new FullExtentMapAction( this, m_mapPanel ) );
+    tbm.add( new ZoomOutMapAction( this, m_mapPanel ) );
 
     final ToolBar toolBar = tbm.createControl( mapView );
 
@@ -233,6 +238,8 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
     mapView.setContent( mapComposite );
     mapView.setTopCenter( toolBar );
     mapView.setTopLeft( outlineViewer.getControl() );
+    m_mapPanel.changeWidget( new ToggleSelectWidget() );
+
   }
 
   /**
@@ -262,7 +269,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
      */
     public void widgetSelected( SelectionEvent e )
     {
-      System.out.println( "GraficToolStarter.widgetSelected() start GrafikTool" );
+      System.out.println( "export Grafics" );
       final String propNames = getArguments().getProperty( PROP_TIMEPROPNAME, "" );
       final String[] timeNames = propNames.split( "#" );
 
