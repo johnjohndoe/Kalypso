@@ -45,6 +45,13 @@
             name="Kalypso GisTableEditor"
             id="org.kalypso.editor.tableeditor.GisTableEditor"
             extensions="gtt"/>
+      <editor
+            class="org.kalypso.ogc.sensor.editor.ObservationDiagramEditor"
+            icon="icons/sample.gif"
+            default="true"
+            name="Kalypso Observation DiagramEditor"
+            id="org.kalypso.ogc.sensor.editor.ObservationDiagramEditor"
+            extensions="zml"/>
    </extension>
    <extension
          point="org.eclipse.ui.views">

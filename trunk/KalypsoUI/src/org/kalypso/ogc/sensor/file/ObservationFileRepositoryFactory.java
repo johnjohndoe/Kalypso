@@ -6,13 +6,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.java.io.MultipleWildCardFileFilter;
-import org.kalypso.ogc.sensor.zml.ZmlFileRepository;
+import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
 import org.kalypso.util.repository.IRepository;
 import org.kalypso.util.repository.IRepositoryFactory;
 
 /**
  * @author schlienger
- *
  */
 public class ObservationFileRepositoryFactory implements IRepositoryFactory
 {
@@ -48,6 +47,6 @@ public class ObservationFileRepositoryFactory implements IRepositoryFactory
     String[] ZML_FILES = {"*.zml"};
     FileFilter filter = new MultipleWildCardFileFilter( ZML_FILES, false, true, false );
     
-    return new ZmlFileRepository( m_location, filter );
+    return new ZmlObservationRepository( m_location, filter );
   }
 }
