@@ -20,15 +20,19 @@
 					<BodenfeuchteMax>70.0</BodenfeuchteMax>
 					<Ausdehnung/>
 					<Niederschlag_eingabeEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/niederschlag/PG_SCHIRG.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/PG_SCHIRG.zml"/>
 					</Niederschlag_eingabeEingang>
-					<Niederschlag_eingabe/>
+					<Niederschlag_eingabe>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/PG_SCHIRG.zml"/>
+					</Niederschlag_eingabe>
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/pegel/W_SCHIRG.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_SCHIRG.zml"/>
 					</Wasserstand_gemessenEingang>
-					<Wasserstand_gemessen/>
+					<Wasserstand_gemessen>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_SCHIRG.zml"/>
+					</Wasserstand_gemessen>
 					<Wasserstand_gerechnet>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_SCHIRG.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./ergebnisse/zeitreihen/WV_SCHIRG.zml"/>
 					</Wasserstand_gerechnet>
 				</Einzugsgebiet>
 			</EZMember>
@@ -44,16 +48,22 @@
 					<Bodenfeuchte>0.0</Bodenfeuchte>
 					<BodenfeuchteMax>130.0</BodenfeuchteMax>
 					<Ausdehnung/>
+					
 					<Niederschlag_eingabeEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/niederschlag/PG_BAUTZWB.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/PG_BAUTZWB.zml"/>
 					</Niederschlag_eingabeEingang>
-					<Niederschlag_eingabe/>
+					<Niederschlag_eingabe>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/PG_BAUTZWB.zml"/>
+					</Niederschlag_eingabe>
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/pegel/W_BAUTZWB.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_BAUTZWB.zml"/>
 					</Wasserstand_gemessenEingang>
-					<Wasserstand_gemessen/>
+					<Wasserstand_gemessen>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_BAUTZWB.zml"/>
+					</Wasserstand_gemessen>
+					<Wasserstand_gerechnet/>
 					<Wasserstand_gerechnet>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_BAUTZWB.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./ergebnisse/zeitreihen/WV_BAUTZWB.zml"/>
 					</Wasserstand_gerechnet>
 				</Einzugsgebiet>
 			</EZMember>
@@ -69,16 +79,21 @@
 					<Bodenfeuchte>0.0</Bodenfeuchte>
 					<BodenfeuchteMax>70.0</BodenfeuchteMax>
 					<Ausdehnung/>
+					
 					<Niederschlag_eingabeEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/niederschlag/PG_GROEDI.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/PG_GROEDI.zml"/>
 					</Niederschlag_eingabeEingang>
-					<Niederschlag_eingabe/>
+					<Niederschlag_eingabe>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/PG_GROEDI.zml"/>
+					</Niederschlag_eingabe>
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/pegel/W_GROEDI.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_GROEDI.zml"/>
 					</Wasserstand_gemessenEingang>
-					<Wasserstand_gemessen/>
+					<Wasserstand_gemessen>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_GROEDI.zml"/>
+					</Wasserstand_gemessen>
 					<Wasserstand_gerechnet>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_GROEDI.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./ergebnisse/zeitreihen//WV_GROEDI.zml"/>
 					</Wasserstand_gerechnet>
 				</Einzugsgebiet>
 			</EZMember>
@@ -94,16 +109,21 @@
 					<Bodenfeuchte>0.0</Bodenfeuchte>
 					<BodenfeuchteMax>200.0</BodenfeuchteMax>
 					<Ausdehnung/>
+
 					<Niederschlag_eingabeEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/niederschlag/PG_JAENKD.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/PG_JAENKD.zml"/>
 					</Niederschlag_eingabeEingang>
-					<Niederschlag_eingabe/>
+					<Niederschlag_eingabe>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/PG_JAENKD.zml"/>
+					</Niederschlag_eingabe>
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/pegel/W_JAENKD.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_JAENKD.zml"/>
 					</Wasserstand_gemessenEingang>
-					<Wasserstand_gemessen/>
+					<Wasserstand_gemessen>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_JAENKD.zml"/>
+					</Wasserstand_gemessen>
 					<Wasserstand_gerechnet>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_JAENKD.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./ergebnisse/zeitreihen//WV_JAENKD.zml"/>
 					</Wasserstand_gerechnet>
 				</Einzugsgebiet>
 			</EZMember>
@@ -119,21 +139,27 @@
 					<Bodenfeuchte>0.0</Bodenfeuchte>
 					<BodenfeuchteMax>310.0</BodenfeuchteMax>
 					<Ausdehnung/>
+					
 					<Niederschlag_eingabeEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/niederschlag/PG_SAERI.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/PG_SAERI.zml"/>
 					</Niederschlag_eingabeEingang>
-					<Niederschlag_eingabe/>
+					<Niederschlag_eingabe>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/PG_SAERI.zml"/>
+					</Niederschlag_eingabe>
 					<Wasserstand_gemessenEingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/pegel/W_SAERI.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_SAERI.zml"/>
 					</Wasserstand_gemessenEingang>
-					<Wasserstand_gemessen/>
+					<Wasserstand_gemessen>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_SAERI.zml"/>
+					</Wasserstand_gemessen>
 					<Wasserstand_gerechnet>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_SAERI.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./ergebnisse/zeitreihen//WV_SAERI.zml"/>
 					</Wasserstand_gerechnet>
 				</Einzugsgebiet>
 			</EZMember>
 		</EZCollection>
 	</EZCollectionAssociation>
+	
 	<FlusslaufModellCollectionAssociation>
 		<FlusslaufModellCollection>
 			<FlusslaufModellMember>
@@ -148,13 +174,19 @@
 					<Korrektur_Niveau>0.0</Korrektur_Niveau>
 					<Korrektur_Laufzeit>0.0</Korrektur_Laufzeit>
 					<KorrekturEmpfehlungLaufzeit>0.0</KorrekturEmpfehlungLaufzeit>
-					<Wasserstand_gemessenEingang/>
-					<Wasserstand_gemessen/>
+
+					<Wasserstand_gemessenEingang>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_LIESKE.zml"/>
+					</Wasserstand_gemessenEingang>
+					<Wasserstand_gemessen>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_LIESKE.zml"/>
+					</Wasserstand_gemessen>
 					<Wasserstand_gerechnet>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_LIESKE.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./ergebnisse/zeitreihen//WV_LIESKE.zml"/>
 					</Wasserstand_gerechnet>
 				</FlusslaufModell>
 			</FlusslaufModellMember>
+			
 			<FlusslaufModellMember>
 				<FlusslaufModell>
 					<Name>Boxberg</Name>
@@ -167,10 +199,15 @@
 					<Korrektur_Niveau>0.0</Korrektur_Niveau>
 					<Korrektur_Laufzeit>0.0</Korrektur_Laufzeit>
 					<KorrekturEmpfehlungLaufzeit>-1.0</KorrekturEmpfehlungLaufzeit>
-					<Wasserstand_gemessenEingang/>
-					<Wasserstand_gemessen/>
+
+					<Wasserstand_gemessenEingang>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_BOXBRG.zml"/>
+					</Wasserstand_gemessenEingang>
+					<Wasserstand_gemessen>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_BOXBRG.zml"/>
+					</Wasserstand_gemessen>
 					<Wasserstand_gerechnet>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_BOXBRG.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./ergebnisse/zeitreihen//WV_BOXBRG.zml"/>
 					</Wasserstand_gerechnet>
 				</FlusslaufModell>
 			</FlusslaufModellMember>
@@ -186,10 +223,15 @@
 					<Korrektur_Niveau>0.0</Korrektur_Niveau>
 					<Korrektur_Laufzeit>0.0</Korrektur_Laufzeit>
 					<KorrekturEmpfehlungLaufzeit>0.0</KorrekturEmpfehlungLaufzeit>
-					<Wasserstand_gemessenEingang/>
-					<Wasserstand_gemessen/>
+
+					<Wasserstand_gemessenEingang>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_SPREY.zml"/>
+					</Wasserstand_gemessenEingang>
+					<Wasserstand_gemessen>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_SPREY.zml"/>
+					</Wasserstand_gemessen>
 					<Wasserstand_gerechnet>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_SPREY.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./ergebnisse/zeitreihen//WV_SPREY.zml"/>
 					</Wasserstand_gerechnet>
 				</FlusslaufModell>
 			</FlusslaufModellMember>
@@ -205,10 +247,15 @@
 					<Korrektur_Niveau>0.0</Korrektur_Niveau>
 					<Korrektur_Laufzeit>0.0</Korrektur_Laufzeit>
 					<KorrekturEmpfehlungLaufzeit>0.0</KorrekturEmpfehlungLaufzeit>
-					<Wasserstand_gemessenEingang/>
-					<Wasserstand_gemessen/>
+
+					<Wasserstand_gemessenEingang>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_SPWITZ.zml"/>
+					</Wasserstand_gemessenEingang>
+					<Wasserstand_gemessen>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_SPWITZ.zml"/>
+					</Wasserstand_gemessen>
 					<Wasserstand_gerechnet>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_SPWITZ.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./ergebnisse/zeitreihen//WV_SPWITZ.zml"/>
 					</Wasserstand_gerechnet>
 				</FlusslaufModell>
 			</FlusslaufModellMember>
@@ -220,15 +267,21 @@
 					<Korrektur_Niveau>0.0</Korrektur_Niveau>
 					<Korrektur_Laufzeit>0.0</Korrektur_Laufzeit>
 					<KorrekturEmpfehlungLaufzeit>0.0</KorrekturEmpfehlungLaufzeit>
-					<Wasserstand_gemessenEingang/>
-					<Wasserstand_gemessen/>
+
+					<Wasserstand_gemessenEingang>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/W_SPREMB.zml"/>
+					</Wasserstand_gemessenEingang>
+					<Wasserstand_gemessen>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/W_SPREMB.zml"/>
+					</Wasserstand_gemessen>
 					<Wasserstand_gerechnet>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_SPREMB.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./ergebnisse/zeitreihen//WV_SPREMB.zml"/>
 					</Wasserstand_gerechnet>
 				</FlusslaufModell>
 			</FlusslaufModellMember>
 		</FlusslaufModellCollection>
 	</FlusslaufModellCollectionAssociation>
+	
 	<TalsperreCollectionAssociation>
 		<TalsperreCollection>
 			<TalsperreMember>
@@ -242,11 +295,13 @@
 						</gml:Point>
 					</Ort>
 					<Abgabe_eingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/talsperren_abgaben/QV_TSQUITZ.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/QV_TSQUITZ.zml"/>
 					</Abgabe_eingang>
-					<Abgabe/>
+					<Abgabe>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/QV_TSQUITZ.zml"/>
+					</Abgabe>
 					<Stauinhalt>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/V_TSQUITZ.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/V_TSQUITZ.zml"/>
 					</Stauinhalt>
 				</Talsperre>
 			</TalsperreMember>
@@ -260,11 +315,13 @@
 						</gml:Point>
 					</Ort>
 					<Abgabe_eingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/talsperren_abgaben/QV_TSBAUTZ.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/QV_TSBAUTZ.zml"/>
 					</Abgabe_eingang>
-					<Abgabe/>
+					<Abgabe>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/QV_TSBAUTZ.zml"/>
+					</Abgabe>
 					<Stauinhalt>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/V_TSBAUTZ.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/V_TSBAUTZ.zml"/>
 					</Stauinhalt>
 				</Talsperre>
 			</TalsperreMember>
@@ -277,9 +334,11 @@
 					<Name>Überleitung Restlochkette</Name>
 					<Ort/>
 					<Abgabe_eingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/flutungen/QV_RLKETTE.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/QV_RLKETTE.zml"/>
 					</Abgabe_eingang>
-					<Abgabe/>
+					<Abgabe>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/QV_RLKETTE.zml"/>
+					</Abgabe>
 				</Flutung>
 			</FlutungMember>
 			<FlutungMember>
@@ -287,9 +346,11 @@
 					<Name>Zuleiter Restloch Lohsa II</Name>
 					<Ort/>
 					<Abgabe_eingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/flutungen/QV_LOHSA.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/QV_LOHSA.zml"/>
 					</Abgabe_eingang>
-					<Abgabe/>
+					<Abgabe>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/QV_LOHSA.zml"/>
+					</Abgabe>
 				</Flutung>
 			</FlutungMember>
 			<FlutungMember>
@@ -297,9 +358,11 @@
 					<Name>Zuleiter Restloch Bärwalde</Name>
 					<Ort/>
 					<Abgabe_eingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/flutungen/QV_BWALDE.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/QV_BWALDE.zml"/>
 					</Abgabe_eingang>
-					<Abgabe/>
+					<Abgabe>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/QV_BWALDE.zml"/>
+					</Abgabe>
 				</Flutung>
 			</FlutungMember>
 			<FlutungMember>
@@ -307,9 +370,11 @@
 					<Name>Abzweig Kleine Spree</Name>
 					<Ort/>
 					<Abgabe_eingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/flutungen/QV_SPWIESE.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/QV_SPWIESE.zml"/>
 					</Abgabe_eingang>
-					<Abgabe/>
+					<Abgabe>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/QV_SPWIESE.zml"/>
+					</Abgabe>
 				</Flutung>
 			</FlutungMember>
 		</FlutungCollection>
@@ -325,9 +390,11 @@
 						</gml:Point>
 					</Ort>
 					<Zugabe_eingang>
-						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=Grunddaten/Zeitreihen/zuflüsse/QP_BURGNEU.zml"/>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href=":project:/.tmp/zml-040427/QP_BURGNEU.zml"/>
 					</Zugabe_eingang>
-					<Zugabe/>
+					<Zugabe>
+						<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./zeitreihen/QP_BURGNEU.zml"/>
+					</Zugabe>
 				</Zufluss>
 			</ZuflussMember>
 		</ZuflussCollection>

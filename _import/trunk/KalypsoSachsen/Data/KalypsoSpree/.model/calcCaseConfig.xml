@@ -23,7 +23,7 @@
 			<argument name="feature" value="Einzugsgebiet"/>
 			<argument name="sourceObservation" value="Niederschlag_eingabeEingang"/>
 			<argument name="targetObservation" value="Niederschlag_eingabe"/>
-			<argument name="targetFolder" value=":calcdir:zeitreihen"/>
+			<argument name="targetFolder" value=":calcdir:"/>
 		</transformation>
 	
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
@@ -32,7 +32,7 @@
 			<argument name="feature" value="Einzugsgebiet"/>
 			<argument name="sourceObservation" value="Wasserstand_gemessenEingang"/>
 			<argument name="targetObservation" value="Wasserstand_gemessen"/>
-			<argument name="targetFolder" value=":calcdir:zeitreihen"/>
+			<argument name="targetFolder" value=":calcdir:"/>
 		</transformation>
 	
 	<!-- Flusslaufmodelle -->
@@ -42,7 +42,7 @@
 			<argument name="feature" value="FlusslaufModell"/>
 			<argument name="sourceObservation" value="Wasserstand_gemessenEingang"/>
 			<argument name="targetObservation" value="Wasserstand_gemessen"/>
-			<argument name="targetFolder" value=":calcdir:zeitreihen"/>
+			<argument name="targetFolder" value=":calcdir:"/>
 		</transformation>
 	
 	<!-- Talsperre -->
@@ -52,7 +52,7 @@
 			<argument name="feature" value="Talsperre"/>
 			<argument name="sourceObservation" value="Abgabe_eingang"/>
 			<argument name="targetObservation" value="Abgabe"/>
-			<argument name="targetFolder" value=":calcdir:zeitreihen"/>
+			<argument name="targetFolder" value=":calcdir:"/>
 		</transformation>
 	
 	<!-- Flutung -->
@@ -62,7 +62,7 @@
 			<argument name="feature" value="Flutung"/>
 			<argument name="sourceObservation" value="Abgabe_eingang"/>
 			<argument name="targetObservation" value="Abgabe"/>
-			<argument name="targetFolder" value=":calcdir:zeitreihen"/>
+			<argument name="targetFolder" value=":calcdir:"/>
 		</transformation>
 	
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
@@ -71,7 +71,7 @@
 			<argument name="feature" value="Zufluss"/>
 			<argument name="sourceObservation" value="Zugabe_eingang"/>
 			<argument name="targetObservation" value="Zugabe"/>
-			<argument name="targetFolder" value=":calcdir:zeitreihen"/>
+			<argument name="targetFolder" value=":calcdir:"/>
 		</transformation>
 	
 <!--	
