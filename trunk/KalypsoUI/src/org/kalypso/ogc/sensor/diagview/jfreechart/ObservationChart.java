@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 
@@ -127,6 +128,15 @@ public class ObservationChart extends JFreeChart implements
       protected void runIntern( ) throws Throwable
       {
         final ObservationPlot obsPlot = getObservationPlot();
+
+        // ADD A THEME
+        if( evt.isType( TemplateEvent.TYPE_ADD )
+            && evt.getObject() instanceof DiagViewTheme )
+        {
+          final List curves = ((DiagViewTheme) evt.getObject()).getCurves();
+          for( Iterator it = curves.iterator(); it.hasNext(); )
+            obsPlot.addCurve( (DiagViewCurve) it.next() );
+        }
         
         // ADD A CURVE
         if( evt.isType( TemplateEvent.TYPE_ADD )
@@ -134,6 +144,15 @@ public class ObservationChart extends JFreeChart implements
         {
           obsPlot.addCurve( (DiagViewCurve) evt
               .getObject() );
+        }
+
+        // REMOVE A THEME
+        if( evt.isType( TemplateEvent.TYPE_REMOVE )
+            && evt.getObject() instanceof DiagViewTheme )
+        {
+          final List curves = ((DiagViewTheme) evt.getObject()).getCurves();
+          for( Iterator it = curves.iterator(); it.hasNext(); )
+            obsPlot.removeCurve( (DiagViewCurve) it.next() );
         }
 
         // REMOVE A CURVE

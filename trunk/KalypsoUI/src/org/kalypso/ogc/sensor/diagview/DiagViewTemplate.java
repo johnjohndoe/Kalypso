@@ -217,7 +217,7 @@ public class DiagViewTemplate extends AbstractViewTemplate
     theme.setIgnoreType( getIgnoreType() );
 
     addTheme( theme );
-
+    
     theme.setObservation( obs );
   }
 
