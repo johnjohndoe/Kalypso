@@ -279,7 +279,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    //copy all the resources to the workspace into the new create project
+    //copy all the resources to the workspace into the new created project
     copyResourcesToProject( workspacePath.append( projectHandel.getFullPath() ) );
 
     //open modell.gml file to write imported feature
@@ -373,12 +373,10 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private void addLayer( File sourceFile ) throws Exception
   {
-    String path = workspacePath.append( projectHandel.getFullPath() + "/Modell_Karten/Karte.gmt" )
+    String path = workspacePath.append( projectHandel.getFullPath() + "/BasisKarten/Hydrotope.gmt" )
         .toFile().toString();
-    File mapfile = workspacePath.append( projectHandel.getFullPath() + "/Modell_Karten/Karte.gmt" )
+    File mapfile = workspacePath.append( projectHandel.getFullPath() + "/BasisKarten/Hydrotope.gmt" )
         .toFile();
-    //    InputStream inputStream = getClass().getResourceAsStream(
-    // "resources/Modell_Karten/Karte.gmt" );
     InputStream inputStream = new FileInputStream( mapfile );
 
     ObjectFactory typeOF = new ObjectFactory();
@@ -418,7 +416,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     // create new layer:
     //		IPath projectPath = createProjectPage.getLocationPath();
     Marshaller marshaller = mapTemplateOF.createMarshaller();
-    //		IPath mapViewFile = projectPath.append("/Modell_Karten/Karte.gmt");
+    //		IPath mapViewFile = projectPath.append("/BasisKarten/Hydrotope.gmt");
     FileWriter fw = new FileWriter( path );
     marshaller.marshal( gismapview, fw );
   }
