@@ -18,7 +18,7 @@
 				<bodepegel:WasserlaufModell fid="WLM_Staßfurt">
 					<bodepegel:Name>Staßfurt</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4471760</gml:X>
 								<gml:Y>5746740</gml:Y>
@@ -46,7 +46,7 @@
 				<bodepegel:WasserlaufModell fid="WLM_Wegeleben">
 					<bodepegel:Name>Wegeleben</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4444290</gml:X>
 								<gml:Y>5750710</gml:Y>
@@ -74,7 +74,7 @@
 				<bodepegel:WasserlaufModell fid="WLM_Ditfurt">
 					<bodepegel:Name>Ditfurt</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4445490</gml:X>
 								<gml:Y>5744630</gml:Y>
@@ -102,7 +102,7 @@
 				<bodepegel:WasserlaufModell fid="WLM_Niendorf">
 					<bodepegel:Name>Niendorf</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4442300</gml:X>
 								<gml:Y>5756780</gml:Y>
@@ -130,7 +130,7 @@
 				<bodepegel:WasserlaufModell fid="WLM_Neugattersleben">
 					<bodepegel:Name>Neugattersleben</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4479810</gml:X>
 								<gml:Y>5745820</gml:Y>
@@ -158,7 +158,7 @@
 				<bodepegel:WasserlaufModell fid="WLM_Hadmersleben">
 					<bodepegel:Name>Hadmersleben</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4453380</gml:X>
 								<gml:Y>5763720</gml:Y>
@@ -186,7 +186,7 @@
 				<bodepegel:WasserlaufModell fid="WLM_Hausneindorf">
 					<bodepegel:Name>Hausneindorf</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4449660</gml:X>
 								<gml:Y>5745250</gml:Y>
@@ -214,7 +214,7 @@
 				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Meisdorf">
 					<bodepegel:Name>Meisdorf</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4450580</gml:X>
 								<gml:Y>5728800</gml:Y>
@@ -235,7 +235,7 @@
 				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Elend">
 					<bodepegel:Name>Elend</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4409180</gml:X>
 								<gml:Y>5735160</gml:Y>
@@ -254,9 +254,9 @@
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
 				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Hasselfelde">
-					<bodepegel:Name>hass</bodepegel:Name>
+					<bodepegel:Name>Hasselfelde</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4421200</gml:X>
 								<gml:Y>5729300</gml:Y>
@@ -277,7 +277,7 @@
 				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Mahndorf">
 					<bodepegel:Name>Mahndorf</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4428700</gml:X>
 								<gml:Y>5750600</gml:Y>
@@ -298,7 +298,7 @@
 				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Silberhütte">
 					<bodepegel:Name>Silberhütte</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4437590</gml:X>
 								<gml:Y>5722320</gml:Y>
@@ -319,7 +319,7 @@
 				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Königshütte">
 					<bodepegel:Name>Königshütte</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4414850</gml:X>
 								<gml:Y>5734500</gml:Y>
@@ -340,7 +340,7 @@
 				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Steinerne_Renne">
 					<bodepegel:Name>Steinerne Renne</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4412480</gml:X>
 								<gml:Y>5743420</gml:Y>
@@ -361,7 +361,7 @@
 				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Oschersleben">
 					<bodepegel:Name>Oschersleben</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4446920</gml:X>
 								<gml:Y>5765820</gml:Y>
@@ -382,7 +382,7 @@
 				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Trautenstein">
 					<bodepegel:Name>Trautenstein</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4416480</gml:X>
 								<gml:Y>5729450</gml:Y>
@@ -403,7 +403,7 @@
 				<bodepegel:Pegel fid="Pegel_Thale">
 					<bodepegel:Name>Thale</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4432640</gml:X>
 								<gml:Y>5734180</gml:Y>
@@ -420,7 +420,7 @@
 				<bodepegel:Pegel fid="Pegel_Wendefurth">
 					<bodepegel:Name>Wendefurth</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4425440</gml:X>
 								<gml:Y>5734720</gml:Y>
@@ -450,10 +450,10 @@
 				</gml:Box>
 			</gml:boundedBy>
 			<bodeombrometer:OmbrometerMember>
-				<bodeombrometer:Ombrometer fid="Weferlingen">
+				<bodeombrometer:Ombrometer fid="Ombro_Weferlingen">
 					<bodeombrometer:Name>Weferlingen</bodeombrometer:Name>
 					<bodeombrometer:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4435574</gml:X>
 								<gml:Y>5798320</gml:Y>
@@ -465,10 +465,10 @@
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
 			<bodeombrometer:OmbrometerMember>
-				<bodeombrometer:Ombrometer fid="Ditfurt">
+				<bodeombrometer:Ombrometer fid="Ombro_Ditfurt">
 					<bodeombrometer:Name>Ditfurt</bodeombrometer:Name>
 					<bodeombrometer:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4445490</gml:X>
 								<gml:Y>5744630</gml:Y>
@@ -480,13 +480,13 @@
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
 			<bodeombrometer:OmbrometerMember>
-				<bodeombrometer:Ombrometer fid="Elend">
+				<bodeombrometer:Ombrometer fid="Ombro_Elend">
 					<bodeombrometer:Name>Elend</bodeombrometer:Name>
 					<bodeombrometer:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
-								<gml:X>4435574</gml:X>
-								<gml:Y>5798320</gml:Y>
+								<gml:X>4409180</gml:X>
+								<gml:Y>5735160</gml:Y>
 							</gml:coord>
 						</gml:Point>
 					</bodeombrometer:Ort>
@@ -495,10 +495,10 @@
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
 			<bodeombrometer:OmbrometerMember>
-				<bodeombrometer:Ombrometer fid="Hasselfelde">
+				<bodeombrometer:Ombrometer fid="Ombro_Hasselfelde">
 					<bodeombrometer:Name>Hasselfelde</bodeombrometer:Name>
 					<bodeombrometer:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4421200</gml:X>
 								<gml:Y>5729300</gml:Y>
@@ -510,10 +510,10 @@
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
 			<bodeombrometer:OmbrometerMember>
-				<bodeombrometer:Ombrometer fid="Silberhütte">
+				<bodeombrometer:Ombrometer fid="Ombro_Silberhütte">
 					<bodeombrometer:Name>Silberhütte</bodeombrometer:Name>
 					<bodeombrometer:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4437590</gml:X>
 								<gml:Y>5722320</gml:Y>
@@ -525,10 +525,10 @@
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
 			<bodeombrometer:OmbrometerMember>
-				<bodeombrometer:Ombrometer fid="Mahndorf">
+				<bodeombrometer:Ombrometer fid="Ombro_Mahndorf">
 					<bodeombrometer:Name>Mahndorf</bodeombrometer:Name>
 					<bodeombrometer:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4428700</gml:X>
 								<gml:Y>5750600</gml:Y>
@@ -556,9 +556,18 @@
 				</gml:Box>
 			</gml:boundedBy>
 			<bodespeicher:SpeicherMember>
-				<bodespeicher:Speicher fid="Speicher0">
-					<bodespeicher:Name/>
-					<bodespeicher:Ort/>
+				<bodespeicher:Speicher fid="Speicher_KalteBode">
+					<bodespeicher:Name>HWR Kalte Bode</bodespeicher:Name>
+					<bodespeicher:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4413200</gml:X>
+								<gml:Y>5735640</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodespeicher:Ort>
+					<bodespeicher:WISKI_Name>579320</bodespeicher:WISKI_Name>
+					<bodespeicher:Kurz_Name>kabo</bodespeicher:Kurz_Name>
 					<bodespeicher:Abgabe_Eingang/>
 					<bodespeicher:Abgabe/>
 					<bodespeicher:Ganglinie_gemessenEingang/>
@@ -566,90 +575,90 @@
 					<bodespeicher:Ganglinie_gerechnet/>
 					<bodespeicher:Ganglinie_prognoseAblage/>
 					<bodespeicher:StauraumParameter>
-						<bodespeicher:Stauraum fid="f1">
+						<bodespeicher:Stauraum fid="Stauraum_kabo">
 							<bodespeicher:Totraum>0.0</bodespeicher:Totraum>
 							<bodespeicher:Reserveraum>0.0</bodespeicher:Reserveraum>
 							<bodespeicher:Betriebsraum>
-								<bodecommon:MonatCollection fid="f2">
+								<bodecommon:MonatCollection fid="Stauraum_kabo_Jahr">
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="aha">
+										<bodecommon:Monat fid="Stauraum_kabo_Jan">
 											<bodecommon:Name>Januar</bodecommon:Name>
 											<bodecommon:Nummer>1</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f4">
+										<bodecommon:Monat fid="Stauraum_kabo_Feb">
 											<bodecommon:Name>Februar</bodecommon:Name>
 											<bodecommon:Nummer>2</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f5">
+										<bodecommon:Monat fid="Stauraum_kabo_Mrz">
 											<bodecommon:Name>März</bodecommon:Name>
 											<bodecommon:Nummer>3</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f6">
+										<bodecommon:Monat fid="Stauraum_kabo_Apr">
 											<bodecommon:Name>April</bodecommon:Name>
 											<bodecommon:Nummer>4</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f7">
+										<bodecommon:Monat fid="Stauraum_kabo_Mai">
 											<bodecommon:Name>Mai</bodecommon:Name>
 											<bodecommon:Nummer>5</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f8">
+										<bodecommon:Monat fid="Stauraum_kabo_Jun">
 											<bodecommon:Name>Juni</bodecommon:Name>
 											<bodecommon:Nummer>6</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f9">
+										<bodecommon:Monat fid="Stauraum_kabo_Jul">
 											<bodecommon:Name>Juli</bodecommon:Name>
 											<bodecommon:Nummer>7</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f10">
+										<bodecommon:Monat fid="Stauraum_kabo_Aug">
 											<bodecommon:Name>August</bodecommon:Name>
 											<bodecommon:Nummer>8</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f11">
+										<bodecommon:Monat fid="Stauraum_kabo_Sep">
 											<bodecommon:Name>September</bodecommon:Name>
 											<bodecommon:Nummer>9</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f12">
+										<bodecommon:Monat fid="Stauraum_kabo_Okt">
 											<bodecommon:Name>Oktober</bodecommon:Name>
 											<bodecommon:Nummer>10</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f13">
+										<bodecommon:Monat fid="Stauraum_kabo_Nov">
 											<bodecommon:Name>November</bodecommon:Name>
 											<bodecommon:Nummer>11</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f14">
+										<bodecommon:Monat fid="Stauraum_kabo_Dez">
 											<bodecommon:Name>Dezember</bodecommon:Name>
 											<bodecommon:Nummer>12</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
@@ -661,88 +670,88 @@
 						</bodespeicher:Stauraum>
 					</bodespeicher:StauraumParameter>
 					<bodespeicher:MindestabgabeParameter>
-						<bodespeicher:Mindestabgabe fid="f15">
+						<bodespeicher:Mindestabgabe fid="MinAbgabe_kabo">
 							<bodespeicher:Mindestabgabe>
-								<bodecommon:MonatCollection fid="f16">
+								<bodecommon:MonatCollection fid="MinAbgabe_kabo_Jahr">
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f17">
+										<bodecommon:Monat fid="MinAbgabe_kabo_Jan">
 											<bodecommon:Name>Januar</bodecommon:Name>
 											<bodecommon:Nummer>1</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f18">
+										<bodecommon:Monat fid="MinAbgabe_kabo_Feb">
 											<bodecommon:Name>Februar</bodecommon:Name>
 											<bodecommon:Nummer>2</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f19">
+										<bodecommon:Monat fid="MinAbgabe_kabo_Mrz">
 											<bodecommon:Name>März</bodecommon:Name>
 											<bodecommon:Nummer>3</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f20">
+										<bodecommon:Monat fid="MinAbgabe_kabo_Apr">
 											<bodecommon:Name>April</bodecommon:Name>
 											<bodecommon:Nummer>4</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f21">
+										<bodecommon:Monat fid="MinAbgabe_kabo_Mai">
 											<bodecommon:Name>Mai</bodecommon:Name>
 											<bodecommon:Nummer>5</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f22">
+										<bodecommon:Monat fid="MinAbgabe_kabo_Jun">
 											<bodecommon:Name>Juni</bodecommon:Name>
 											<bodecommon:Nummer>6</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f23">
+										<bodecommon:Monat fid="MinAbgabe_kabo_Jul">
 											<bodecommon:Name>Juli</bodecommon:Name>
 											<bodecommon:Nummer>7</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f24">
+										<bodecommon:Monat fid="MinAbgabe_kabo_Aug">
 											<bodecommon:Name>August</bodecommon:Name>
 											<bodecommon:Nummer>8</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f25">
+										<bodecommon:Monat fid="MinAbgabe_kabo_Sep">
 											<bodecommon:Name>September</bodecommon:Name>
 											<bodecommon:Nummer>9</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f26">
+										<bodecommon:Monat fid="MinAbgabe_kabo_Okt">
 											<bodecommon:Name>Oktober</bodecommon:Name>
 											<bodecommon:Nummer>10</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f27">
+										<bodecommon:Monat fid="MinAbgabe_kabo_Nov">
 											<bodecommon:Name>November</bodecommon:Name>
 											<bodecommon:Nummer>11</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f28">
+										<bodecommon:Monat fid="MinAbgabe_kabo_Dez">
 											<bodecommon:Name>Dezember</bodecommon:Name>
 											<bodecommon:Nummer>12</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
@@ -753,88 +762,88 @@
 						</bodespeicher:Mindestabgabe>
 					</bodespeicher:MindestabgabeParameter>
 					<bodespeicher:MaximalabgabeParameter>
-						<bodespeicher:Maximalabgabe fid="f29">
+						<bodespeicher:Maximalabgabe fid="MaxAbgabe_kabo">
 							<bodespeicher:Maximalabgabe>
-								<bodecommon:MonatCollection fid="f30">
+								<bodecommon:MonatCollection fid="MaxAbgabe_kabo_Jahr">
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f31">
+										<bodecommon:Monat fid="MaxAbgabe_kabo_Jan">
 											<bodecommon:Name>Januar</bodecommon:Name>
 											<bodecommon:Nummer>1</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f32">
+										<bodecommon:Monat fid="MaxAbgabe_kabo_Feb">
 											<bodecommon:Name>Februar</bodecommon:Name>
 											<bodecommon:Nummer>2</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f33">
+										<bodecommon:Monat fid="MaxAbgabe_kabo_Mrz">
 											<bodecommon:Name>März</bodecommon:Name>
 											<bodecommon:Nummer>3</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f34">
+										<bodecommon:Monat fid="MaxAbgabe_kabo_Apr">
 											<bodecommon:Name>April</bodecommon:Name>
 											<bodecommon:Nummer>4</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f35">
+										<bodecommon:Monat fid="MaxAbgabe_kabo_Mai">
 											<bodecommon:Name>Mai</bodecommon:Name>
 											<bodecommon:Nummer>5</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f36">
+										<bodecommon:Monat fid="MaxAbgabe_kabo_Jun">
 											<bodecommon:Name>Juni</bodecommon:Name>
 											<bodecommon:Nummer>6</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f37">
+										<bodecommon:Monat fid="MaxAbgabe_kabo_Jul">
 											<bodecommon:Name>Juli</bodecommon:Name>
 											<bodecommon:Nummer>7</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f38">
+										<bodecommon:Monat fid="MaxAbgabe_kabo_Aug">
 											<bodecommon:Name>August</bodecommon:Name>
 											<bodecommon:Nummer>8</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f39">
+										<bodecommon:Monat fid="MaxAbgabe_kabo_Sep">
 											<bodecommon:Name>September</bodecommon:Name>
 											<bodecommon:Nummer>9</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f40">
+										<bodecommon:Monat fid="MaxAbgabe_kabo_Okt">
 											<bodecommon:Name>Oktober</bodecommon:Name>
 											<bodecommon:Nummer>10</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f41">
+										<bodecommon:Monat fid="MaxAbgabe_kabo_Nov">
 											<bodecommon:Name>November</bodecommon:Name>
 											<bodecommon:Nummer>11</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f42">
+										<bodecommon:Monat fid="MaxAbgabe_kabo_Dez">
 											<bodecommon:Name>Dezember</bodecommon:Name>
 											<bodecommon:Nummer>12</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
@@ -845,88 +854,88 @@
 						</bodespeicher:Maximalabgabe>
 					</bodespeicher:MaximalabgabeParameter>
 					<bodespeicher:TrinkwasserParameter>
-						<bodespeicher:Trinkwasser fid="f43">
+						<bodespeicher:Trinkwasser fid="Trinkwasser_kabo">
 							<bodespeicher:Trinkwasser>
-								<bodecommon:MonatCollection fid="f44">
+								<bodecommon:MonatCollection fid="Trinkwasser_kabo_Jahr">
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f45">
+										<bodecommon:Monat fid="Trinkwasser_kabo_Jan">
 											<bodecommon:Name>Januar</bodecommon:Name>
 											<bodecommon:Nummer>1</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f46">
+										<bodecommon:Monat fid="Trinkwasser_kabo_Feb">
 											<bodecommon:Name>Februar</bodecommon:Name>
 											<bodecommon:Nummer>2</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f47">
+										<bodecommon:Monat fid="Trinkwasser_kabo_Mrz">
 											<bodecommon:Name>März</bodecommon:Name>
 											<bodecommon:Nummer>3</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f48">
+										<bodecommon:Monat fid="Trinkwasser_kabo_Apr">
 											<bodecommon:Name>April</bodecommon:Name>
 											<bodecommon:Nummer>4</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f49">
+										<bodecommon:Monat fid="Trinkwasser_kabo_Mai">
 											<bodecommon:Name>Mai</bodecommon:Name>
 											<bodecommon:Nummer>5</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f50">
+										<bodecommon:Monat fid="Trinkwasser_kabo_Jun">
 											<bodecommon:Name>Juni</bodecommon:Name>
 											<bodecommon:Nummer>6</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f51">
+										<bodecommon:Monat fid="Trinkwasser_kabo_Jul">
 											<bodecommon:Name>Juli</bodecommon:Name>
 											<bodecommon:Nummer>7</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f52">
+										<bodecommon:Monat fid="Trinkwasser_kabo_Aug">
 											<bodecommon:Name>August</bodecommon:Name>
 											<bodecommon:Nummer>8</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f53">
+										<bodecommon:Monat fid="Trinkwasser_kabo_Sep">
 											<bodecommon:Name>September</bodecommon:Name>
 											<bodecommon:Nummer>9</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f54">
+										<bodecommon:Monat fid="Trinkwasser_kabo_Okt">
 											<bodecommon:Name>Oktober</bodecommon:Name>
 											<bodecommon:Nummer>10</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f55">
+										<bodecommon:Monat fid="Trinkwasser_kabo_Nov">
 											<bodecommon:Name>November</bodecommon:Name>
 											<bodecommon:Nummer>11</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
 										</bodecommon:Monat>
 									</bodecommon:MonatMember>
 									<bodecommon:MonatMember>
-										<bodecommon:Monat fid="f56">
+										<bodecommon:Monat fid="Trinkwasser_kabo_Dez">
 											<bodecommon:Name>Dezember</bodecommon:Name>
 											<bodecommon:Nummer>12</bodecommon:Nummer>
 											<bodecommon:Wert>0.0</bodecommon:Wert>
@@ -937,7 +946,7 @@
 						</bodespeicher:Trinkwasser>
 					</bodespeicher:TrinkwasserParameter>
 					<bodespeicher:EACollectionAssociation>
-						<bodespeicher:EACollection fid="EACollection0">
+						<bodespeicher:EACollection fid="EACollection_kabo">
 							<gml:boundedBy>
 								<gml:Box>
 									<gml:coord>
@@ -951,7 +960,7 @@
 								</gml:Box>
 							</gml:boundedBy>
 							<bodespeicher:EAMember>
-								<bodespeicher:EA fid="EA0">
+								<bodespeicher:EA fid="EA_kabo_0">
 									<bodespeicher:Höhe>0.0</bodespeicher:Höhe>
 									<bodespeicher:Inhalt>0.0</bodespeicher:Inhalt>
 									<bodespeicher:Grundablass>0.0</bodespeicher:Grundablass>
@@ -964,9 +973,852 @@
 				</bodespeicher:Speicher>
 			</bodespeicher:SpeicherMember>
 			<bodespeicher:SpeicherMember>
-				<bodespeicher:Überleitung fid="Überleitung0">
-					<bodespeicher:Name/>
-					<bodespeicher:Ort/>
+				<bodespeicher:Speicher fid="Speicher_Rappbode">
+					<bodespeicher:Name>TS Rappbode</bodespeicher:Name>
+					<bodespeicher:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4423680</gml:X>
+								<gml:Y>5736600</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodespeicher:Ort>
+					<bodespeicher:WISKI_Name>579430</bodespeicher:WISKI_Name>
+					<bodespeicher:Kurz_Name>rapp</bodespeicher:Kurz_Name>
+					<bodespeicher:Abgabe_Eingang/>
+					<bodespeicher:Abgabe/>
+					<bodespeicher:Ganglinie_gemessenEingang/>
+					<bodespeicher:Ganglinie_gemessen/>
+					<bodespeicher:Ganglinie_gerechnet/>
+					<bodespeicher:Ganglinie_prognoseAblage/>
+					<bodespeicher:StauraumParameter>
+						<bodespeicher:Stauraum fid="Stauraum_rapp">
+							<bodespeicher:Totraum>0.0</bodespeicher:Totraum>
+							<bodespeicher:Reserveraum>0.0</bodespeicher:Reserveraum>
+							<bodespeicher:Betriebsraum>
+								<bodecommon:MonatCollection fid="Stauraum_rapp_Jahr">
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_rapp_Jan">
+											<bodecommon:Name>Januar</bodecommon:Name>
+											<bodecommon:Nummer>1</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_rapp_Feb">
+											<bodecommon:Name>Februar</bodecommon:Name>
+											<bodecommon:Nummer>2</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_rapp_Mrz">
+											<bodecommon:Name>März</bodecommon:Name>
+											<bodecommon:Nummer>3</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_rapp_Apr">
+											<bodecommon:Name>April</bodecommon:Name>
+											<bodecommon:Nummer>4</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_rapp_Mai">
+											<bodecommon:Name>Mai</bodecommon:Name>
+											<bodecommon:Nummer>5</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_rapp_Jun">
+											<bodecommon:Name>Juni</bodecommon:Name>
+											<bodecommon:Nummer>6</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_rapp_Jul">
+											<bodecommon:Name>Juli</bodecommon:Name>
+											<bodecommon:Nummer>7</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_rapp_Aug">
+											<bodecommon:Name>August</bodecommon:Name>
+											<bodecommon:Nummer>8</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_rapp_Sep">
+											<bodecommon:Name>September</bodecommon:Name>
+											<bodecommon:Nummer>9</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_rapp_Okt">
+											<bodecommon:Name>Oktober</bodecommon:Name>
+											<bodecommon:Nummer>10</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_rapp_Nov">
+											<bodecommon:Name>November</bodecommon:Name>
+											<bodecommon:Nummer>11</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_rapp_Dez">
+											<bodecommon:Name>Dezember</bodecommon:Name>
+											<bodecommon:Nummer>12</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+								</bodecommon:MonatCollection>
+							</bodespeicher:Betriebsraum>
+							<bodespeicher:Stauraum>0.0</bodespeicher:Stauraum>
+						</bodespeicher:Stauraum>
+					</bodespeicher:StauraumParameter>
+					<bodespeicher:MindestabgabeParameter>
+						<bodespeicher:Mindestabgabe fid="MinAbgabe_rapp">
+							<bodespeicher:Mindestabgabe>
+								<bodecommon:MonatCollection fid="MinAbgabe_rapp_Jahr">
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_rapp_Jan">
+											<bodecommon:Name>Januar</bodecommon:Name>
+											<bodecommon:Nummer>1</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_rapp_Feb">
+											<bodecommon:Name>Februar</bodecommon:Name>
+											<bodecommon:Nummer>2</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_rapp_Mrz">
+											<bodecommon:Name>März</bodecommon:Name>
+											<bodecommon:Nummer>3</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_rapp_Apr">
+											<bodecommon:Name>April</bodecommon:Name>
+											<bodecommon:Nummer>4</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_rapp_Mai">
+											<bodecommon:Name>Mai</bodecommon:Name>
+											<bodecommon:Nummer>5</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_rapp_Jun">
+											<bodecommon:Name>Juni</bodecommon:Name>
+											<bodecommon:Nummer>6</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_rapp_Jul">
+											<bodecommon:Name>Juli</bodecommon:Name>
+											<bodecommon:Nummer>7</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_rapp_Aug">
+											<bodecommon:Name>August</bodecommon:Name>
+											<bodecommon:Nummer>8</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_rapp_Sep">
+											<bodecommon:Name>September</bodecommon:Name>
+											<bodecommon:Nummer>9</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_rapp_Okt">
+											<bodecommon:Name>Oktober</bodecommon:Name>
+											<bodecommon:Nummer>10</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_rapp_Nov">
+											<bodecommon:Name>November</bodecommon:Name>
+											<bodecommon:Nummer>11</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_rapp_Dez">
+											<bodecommon:Name>Dezember</bodecommon:Name>
+											<bodecommon:Nummer>12</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+								</bodecommon:MonatCollection>
+							</bodespeicher:Mindestabgabe>
+						</bodespeicher:Mindestabgabe>
+					</bodespeicher:MindestabgabeParameter>
+					<bodespeicher:MaximalabgabeParameter>
+						<bodespeicher:Maximalabgabe fid="MaxAbgabe_rapp">
+							<bodespeicher:Maximalabgabe>
+								<bodecommon:MonatCollection fid="MaxAbgabe_rapp_Jahr">
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_rapp_Jan">
+											<bodecommon:Name>Januar</bodecommon:Name>
+											<bodecommon:Nummer>1</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_rapp_Feb">
+											<bodecommon:Name>Februar</bodecommon:Name>
+											<bodecommon:Nummer>2</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_rapp_Mrz">
+											<bodecommon:Name>März</bodecommon:Name>
+											<bodecommon:Nummer>3</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_rapp_Apr">
+											<bodecommon:Name>April</bodecommon:Name>
+											<bodecommon:Nummer>4</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_rapp_Mai">
+											<bodecommon:Name>Mai</bodecommon:Name>
+											<bodecommon:Nummer>5</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_rapp_Jun">
+											<bodecommon:Name>Juni</bodecommon:Name>
+											<bodecommon:Nummer>6</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_rapp_Jul">
+											<bodecommon:Name>Juli</bodecommon:Name>
+											<bodecommon:Nummer>7</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_rapp_Aug">
+											<bodecommon:Name>August</bodecommon:Name>
+											<bodecommon:Nummer>8</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_rapp_Sep">
+											<bodecommon:Name>September</bodecommon:Name>
+											<bodecommon:Nummer>9</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_rapp_Okt">
+											<bodecommon:Name>Oktober</bodecommon:Name>
+											<bodecommon:Nummer>10</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_rapp_Nov">
+											<bodecommon:Name>November</bodecommon:Name>
+											<bodecommon:Nummer>11</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_rapp_Dez">
+											<bodecommon:Name>Dezember</bodecommon:Name>
+											<bodecommon:Nummer>12</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+								</bodecommon:MonatCollection>
+							</bodespeicher:Maximalabgabe>
+						</bodespeicher:Maximalabgabe>
+					</bodespeicher:MaximalabgabeParameter>
+					<bodespeicher:TrinkwasserParameter>
+						<bodespeicher:Trinkwasser fid="Trinkwasser_rapp">
+							<bodespeicher:Trinkwasser>
+								<bodecommon:MonatCollection fid="Trinkwasser_rapp_Jahr">
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_rapp_Jan">
+											<bodecommon:Name>Januar</bodecommon:Name>
+											<bodecommon:Nummer>1</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_rapp_Feb">
+											<bodecommon:Name>Februar</bodecommon:Name>
+											<bodecommon:Nummer>2</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_rapp_Mrz">
+											<bodecommon:Name>März</bodecommon:Name>
+											<bodecommon:Nummer>3</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_rapp_Apr">
+											<bodecommon:Name>April</bodecommon:Name>
+											<bodecommon:Nummer>4</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_rapp_Mai">
+											<bodecommon:Name>Mai</bodecommon:Name>
+											<bodecommon:Nummer>5</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_rapp_Jun">
+											<bodecommon:Name>Juni</bodecommon:Name>
+											<bodecommon:Nummer>6</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_rapp_Jul">
+											<bodecommon:Name>Juli</bodecommon:Name>
+											<bodecommon:Nummer>7</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_rapp_Aug">
+											<bodecommon:Name>August</bodecommon:Name>
+											<bodecommon:Nummer>8</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_rapp_Sep">
+											<bodecommon:Name>September</bodecommon:Name>
+											<bodecommon:Nummer>9</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_rapp_Okt">
+											<bodecommon:Name>Oktober</bodecommon:Name>
+											<bodecommon:Nummer>10</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_rapp_Nov">
+											<bodecommon:Name>November</bodecommon:Name>
+											<bodecommon:Nummer>11</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_rapp_Dez">
+											<bodecommon:Name>Dezember</bodecommon:Name>
+											<bodecommon:Nummer>12</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+								</bodecommon:MonatCollection>
+							</bodespeicher:Trinkwasser>
+						</bodespeicher:Trinkwasser>
+					</bodespeicher:TrinkwasserParameter>
+					<bodespeicher:EACollectionAssociation>
+						<bodespeicher:EACollection fid="EACollection_rapp">
+							<gml:boundedBy>
+								<gml:Box>
+									<gml:coord>
+										<gml:X>0.0</gml:X>
+										<gml:Y>0.0</gml:Y>
+									</gml:coord>
+									<gml:coord>
+										<gml:X>0.0</gml:X>
+										<gml:Y>0.0</gml:Y>
+									</gml:coord>
+								</gml:Box>
+							</gml:boundedBy>
+							<bodespeicher:EAMember>
+								<bodespeicher:EA fid="EA_rapp_0">
+									<bodespeicher:Höhe>0.0</bodespeicher:Höhe>
+									<bodespeicher:Inhalt>0.0</bodespeicher:Inhalt>
+									<bodespeicher:Grundablass>0.0</bodespeicher:Grundablass>
+									<bodespeicher:Überlauf>0.0</bodespeicher:Überlauf>
+									<bodespeicher:Bemerkung/>
+								</bodespeicher:EA>
+							</bodespeicher:EAMember>
+						</bodespeicher:EACollection>
+					</bodespeicher:EACollectionAssociation>
+				</bodespeicher:Speicher>
+			</bodespeicher:SpeicherMember>
+			<bodespeicher:SpeicherMember>
+				<bodespeicher:Speicher fid="Speicher_Wendefurth">
+					<bodespeicher:Name>TS Wendefurth</bodespeicher:Name>
+					<bodespeicher:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4425400</gml:X>
+								<gml:Y>5734830</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodespeicher:Ort>
+					<bodespeicher:WISKI_Name>579005</bodespeicher:WISKI_Name>
+					<bodespeicher:Kurz_Name>wend</bodespeicher:Kurz_Name>
+					<bodespeicher:Abgabe_Eingang/>
+					<bodespeicher:Abgabe/>
+					<bodespeicher:Ganglinie_gemessenEingang/>
+					<bodespeicher:Ganglinie_gemessen/>
+					<bodespeicher:Ganglinie_gerechnet/>
+					<bodespeicher:Ganglinie_prognoseAblage/>
+					<bodespeicher:StauraumParameter>
+						<bodespeicher:Stauraum fid="Stauraum_wend">
+							<bodespeicher:Totraum>0.0</bodespeicher:Totraum>
+							<bodespeicher:Reserveraum>0.0</bodespeicher:Reserveraum>
+							<bodespeicher:Betriebsraum>
+								<bodecommon:MonatCollection fid="Stauraum_wend_Jahr">
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_wend_Jan">
+											<bodecommon:Name>Januar</bodecommon:Name>
+											<bodecommon:Nummer>1</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_wend_Feb">
+											<bodecommon:Name>Februar</bodecommon:Name>
+											<bodecommon:Nummer>2</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_wend_Mrz">
+											<bodecommon:Name>März</bodecommon:Name>
+											<bodecommon:Nummer>3</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_wend_Apr">
+											<bodecommon:Name>April</bodecommon:Name>
+											<bodecommon:Nummer>4</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_wend_Mai">
+											<bodecommon:Name>Mai</bodecommon:Name>
+											<bodecommon:Nummer>5</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_wend_Jun">
+											<bodecommon:Name>Juni</bodecommon:Name>
+											<bodecommon:Nummer>6</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_wend_Jul">
+											<bodecommon:Name>Juli</bodecommon:Name>
+											<bodecommon:Nummer>7</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_wend_Aug">
+											<bodecommon:Name>August</bodecommon:Name>
+											<bodecommon:Nummer>8</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_wend_Sep">
+											<bodecommon:Name>September</bodecommon:Name>
+											<bodecommon:Nummer>9</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_wend_Okt">
+											<bodecommon:Name>Oktober</bodecommon:Name>
+											<bodecommon:Nummer>10</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_wend_Nov">
+											<bodecommon:Name>November</bodecommon:Name>
+											<bodecommon:Nummer>11</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Stauraum_wend_Dez">
+											<bodecommon:Name>Dezember</bodecommon:Name>
+											<bodecommon:Nummer>12</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+								</bodecommon:MonatCollection>
+							</bodespeicher:Betriebsraum>
+							<bodespeicher:Stauraum>0.0</bodespeicher:Stauraum>
+						</bodespeicher:Stauraum>
+					</bodespeicher:StauraumParameter>
+					<bodespeicher:MindestabgabeParameter>
+						<bodespeicher:Mindestabgabe fid="MinAbgabe_wend">
+							<bodespeicher:Mindestabgabe>
+								<bodecommon:MonatCollection fid="MinAbgabe_wend_Jahr">
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_wend_Jan">
+											<bodecommon:Name>Januar</bodecommon:Name>
+											<bodecommon:Nummer>1</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_wend_Feb">
+											<bodecommon:Name>Februar</bodecommon:Name>
+											<bodecommon:Nummer>2</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_wend_Mrz">
+											<bodecommon:Name>März</bodecommon:Name>
+											<bodecommon:Nummer>3</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_wend_Apr">
+											<bodecommon:Name>April</bodecommon:Name>
+											<bodecommon:Nummer>4</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_wend_Mai">
+											<bodecommon:Name>Mai</bodecommon:Name>
+											<bodecommon:Nummer>5</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_wend_Jun">
+											<bodecommon:Name>Juni</bodecommon:Name>
+											<bodecommon:Nummer>6</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_wend_Jul">
+											<bodecommon:Name>Juli</bodecommon:Name>
+											<bodecommon:Nummer>7</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_wend_Aug">
+											<bodecommon:Name>August</bodecommon:Name>
+											<bodecommon:Nummer>8</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_wend_Sep">
+											<bodecommon:Name>September</bodecommon:Name>
+											<bodecommon:Nummer>9</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_wend_Okt">
+											<bodecommon:Name>Oktober</bodecommon:Name>
+											<bodecommon:Nummer>10</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_wend_Nov">
+											<bodecommon:Name>November</bodecommon:Name>
+											<bodecommon:Nummer>11</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MinAbgabe_wend_Dez">
+											<bodecommon:Name>Dezember</bodecommon:Name>
+											<bodecommon:Nummer>12</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+								</bodecommon:MonatCollection>
+							</bodespeicher:Mindestabgabe>
+						</bodespeicher:Mindestabgabe>
+					</bodespeicher:MindestabgabeParameter>
+					<bodespeicher:MaximalabgabeParameter>
+						<bodespeicher:Maximalabgabe fid="MaxAbgabe_wend">
+							<bodespeicher:Maximalabgabe>
+								<bodecommon:MonatCollection fid="MaxAbgabe_wend_Jahr">
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_wend_Jan">
+											<bodecommon:Name>Januar</bodecommon:Name>
+											<bodecommon:Nummer>1</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_wend_Feb">
+											<bodecommon:Name>Februar</bodecommon:Name>
+											<bodecommon:Nummer>2</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_wend_Mrz">
+											<bodecommon:Name>März</bodecommon:Name>
+											<bodecommon:Nummer>3</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_wend_Apr">
+											<bodecommon:Name>April</bodecommon:Name>
+											<bodecommon:Nummer>4</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_wend_Mai">
+											<bodecommon:Name>Mai</bodecommon:Name>
+											<bodecommon:Nummer>5</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_wend_Jun">
+											<bodecommon:Name>Juni</bodecommon:Name>
+											<bodecommon:Nummer>6</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_wend_Jul">
+											<bodecommon:Name>Juli</bodecommon:Name>
+											<bodecommon:Nummer>7</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_wend_Aug">
+											<bodecommon:Name>August</bodecommon:Name>
+											<bodecommon:Nummer>8</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_wend_Sep">
+											<bodecommon:Name>September</bodecommon:Name>
+											<bodecommon:Nummer>9</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_wend_Okt">
+											<bodecommon:Name>Oktober</bodecommon:Name>
+											<bodecommon:Nummer>10</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_wend_Nov">
+											<bodecommon:Name>November</bodecommon:Name>
+											<bodecommon:Nummer>11</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="MaxAbgabe_wend_Dez">
+											<bodecommon:Name>Dezember</bodecommon:Name>
+											<bodecommon:Nummer>12</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+								</bodecommon:MonatCollection>
+							</bodespeicher:Maximalabgabe>
+						</bodespeicher:Maximalabgabe>
+					</bodespeicher:MaximalabgabeParameter>
+					<bodespeicher:TrinkwasserParameter>
+						<bodespeicher:Trinkwasser fid="Trinkwasser_wend">
+							<bodespeicher:Trinkwasser>
+								<bodecommon:MonatCollection fid="Trinkwasser_wend_Jahr">
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_wend_Jan">
+											<bodecommon:Name>Januar</bodecommon:Name>
+											<bodecommon:Nummer>1</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_wend_Feb">
+											<bodecommon:Name>Februar</bodecommon:Name>
+											<bodecommon:Nummer>2</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_wend_Mrz">
+											<bodecommon:Name>März</bodecommon:Name>
+											<bodecommon:Nummer>3</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_wend_Apr">
+											<bodecommon:Name>April</bodecommon:Name>
+											<bodecommon:Nummer>4</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_wend_Mai">
+											<bodecommon:Name>Mai</bodecommon:Name>
+											<bodecommon:Nummer>5</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_wend_Jun">
+											<bodecommon:Name>Juni</bodecommon:Name>
+											<bodecommon:Nummer>6</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_wend_Jul">
+											<bodecommon:Name>Juli</bodecommon:Name>
+											<bodecommon:Nummer>7</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_wend_Aug">
+											<bodecommon:Name>August</bodecommon:Name>
+											<bodecommon:Nummer>8</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_wend_Sep">
+											<bodecommon:Name>September</bodecommon:Name>
+											<bodecommon:Nummer>9</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_wend_Okt">
+											<bodecommon:Name>Oktober</bodecommon:Name>
+											<bodecommon:Nummer>10</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_wend_Nov">
+											<bodecommon:Name>November</bodecommon:Name>
+											<bodecommon:Nummer>11</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+									<bodecommon:MonatMember>
+										<bodecommon:Monat fid="Trinkwasser_wend_Dez">
+											<bodecommon:Name>Dezember</bodecommon:Name>
+											<bodecommon:Nummer>12</bodecommon:Nummer>
+											<bodecommon:Wert>0.0</bodecommon:Wert>
+										</bodecommon:Monat>
+									</bodecommon:MonatMember>
+								</bodecommon:MonatCollection>
+							</bodespeicher:Trinkwasser>
+						</bodespeicher:Trinkwasser>
+					</bodespeicher:TrinkwasserParameter>
+					<bodespeicher:EACollectionAssociation>
+						<bodespeicher:EACollection fid="EACollection_wend">
+							<gml:boundedBy>
+								<gml:Box>
+									<gml:coord>
+										<gml:X>0.0</gml:X>
+										<gml:Y>0.0</gml:Y>
+									</gml:coord>
+									<gml:coord>
+										<gml:X>0.0</gml:X>
+										<gml:Y>0.0</gml:Y>
+									</gml:coord>
+								</gml:Box>
+							</gml:boundedBy>
+							<bodespeicher:EAMember>
+								<bodespeicher:EA fid="EA_wend_0">
+									<bodespeicher:Höhe>0.0</bodespeicher:Höhe>
+									<bodespeicher:Inhalt>0.0</bodespeicher:Inhalt>
+									<bodespeicher:Grundablass>0.0</bodespeicher:Grundablass>
+									<bodespeicher:Überlauf>0.0</bodespeicher:Überlauf>
+									<bodespeicher:Bemerkung/>
+								</bodespeicher:EA>
+							</bodespeicher:EAMember>
+						</bodespeicher:EACollection>
+					</bodespeicher:EACollectionAssociation>
+				</bodespeicher:Speicher>
+			</bodespeicher:SpeicherMember>
+			<bodespeicher:SpeicherMember>
+				<bodespeicher:Überleitung fid="Überleitung_Rappbode">
+					<bodespeicher:Name>Überleitung Rappbode</bodespeicher:Name>
+					<bodespeicher:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4417540</gml:X>
+								<gml:Y>5734200</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodespeicher:Ort>
+					<bodespeicher:WISKI_Name>579000</bodespeicher:WISKI_Name>
+					<bodespeicher:Kurz_Name>???</bodespeicher:Kurz_Name>
 					<bodespeicher:Abgabe_Eingang/>
 					<bodespeicher:Abgabe/>
 				</bodespeicher:Überleitung>

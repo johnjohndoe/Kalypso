@@ -3,7 +3,6 @@
 	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="gml/bce/obslink.xsd"/>
 	<import namespace="org.kalypso.bode.common" schemaLocation="common.xsd"/>
-
 	<element name="SpeicherCollectionAssociation" type="bodespeicher:SpeicherCollectionAssociationType"/>
 	<complexType name="SpeicherCollectionAssociationType">
 		<complexContent>
@@ -42,7 +41,9 @@
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="WISKI_Name" type="string" minOccurs="0"/>
+					<!-- WISKI_Name ist auch gleichzeitig die offizielle Messstellennummer-->
+					<element name="WISKI_Name" type="string" minOccurs="1"/>
+					<element name="Kurz_Name" type="string" minOccurs="1"/>
 					<!-- Server-Daten-->
 					<element name="Abgabe_Eingang" type="bodecommon:TimeseriesLinkType"/>
 					<!-- lokal,  *.vsa, *.psa-->
@@ -111,7 +112,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
 	<!-- Mindestabgabe-Parameter, *.qmi -->
 	<complexType name="MindestabgabeAssociationType">
 		<complexContent>
@@ -132,7 +132,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
 	<!-- Maximalabgabe-Parameter, *.qma -->
 	<complexType name="MaximalabgabeAssociationType">
 		<complexContent>
@@ -153,7 +152,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
 	<!-- Trinkwasser-Parameter, *.twa -->
 	<complexType name="TrinkwasserAssociationType">
 		<complexContent>
@@ -174,7 +172,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
 	<!-- EA = Entlastungsanlagen, *.lea -->
 	<complexType name="EACollectionAssociationType">
 		<complexContent>

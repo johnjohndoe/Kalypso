@@ -18,7 +18,7 @@
 				<bodepegel:WasserlaufModell fid="WLM_Staßfurt">
 					<bodepegel:Name>Staßfurt</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4471760</gml:X>
 								<gml:Y>5746740</gml:Y>
@@ -46,7 +46,7 @@
 				<bodepegel:WasserlaufModell fid="WLM_Wegeleben">
 					<bodepegel:Name>Wegeleben</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4444290</gml:X>
 								<gml:Y>5750710</gml:Y>
@@ -74,7 +74,7 @@
 				<bodepegel:WasserlaufModell fid="WLM_Ditfurt">
 					<bodepegel:Name>Ditfurt</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4445490</gml:X>
 								<gml:Y>5744630</gml:Y>
@@ -102,7 +102,7 @@
 				<bodepegel:WasserlaufModell fid="WLM_Niendorf">
 					<bodepegel:Name>Niendorf</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4442300</gml:X>
 								<gml:Y>5756780</gml:Y>
@@ -130,7 +130,7 @@
 				<bodepegel:WasserlaufModell fid="WLM_Neugattersleben">
 					<bodepegel:Name>Neugattersleben</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4479810</gml:X>
 								<gml:Y>5745820</gml:Y>
@@ -158,7 +158,7 @@
 				<bodepegel:WasserlaufModell fid="WLM_Hadmersleben">
 					<bodepegel:Name>Hadmersleben</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4453380</gml:X>
 								<gml:Y>5763720</gml:Y>
@@ -186,7 +186,7 @@
 				<bodepegel:WasserlaufModell fid="WLM_Hausneindorf">
 					<bodepegel:Name>Hausneindorf</bodepegel:Name>
 					<bodepegel:Ort>
-						<gml:Point>
+						<gml:Point srsName="EPSG:31468">
 							<gml:coord>
 								<gml:X>4449660</gml:X>
 								<gml:Y>5745250</gml:Y>
@@ -211,13 +211,20 @@
 				</bodepegel:WasserlaufModell>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
-				<bodepegel:Niederschlagsgebiet fid="Niederschlagsgebiet1">
-					<bodepegel:Name>Test</bodepegel:Name>
-					<bodepegel:Ort/>
-					<bodepegel:WISKI_Name>stas</bodepegel:WISKI_Name>
-					<bodepegel:Kurz_Name>stas</bodepegel:Kurz_Name>
-					<bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
-					<bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
+				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Meisdorf">
+					<bodepegel:Name>Meisdorf</bodepegel:Name>
+					<bodepegel:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4450580</gml:X>
+								<gml:Y>5728800</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodepegel:Ort>
+					<bodepegel:WISKI_Name>579610</bodepegel:WISKI_Name>
+					<bodepegel:Kurz_Name>meis</bodepegel:Kurz_Name>
+					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
+					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Gebiet/>
 					<bodepegel:Niederschlag_gemessenEingang/>
 					<bodepegel:Niederschlag_prognoseEingang/>
@@ -225,28 +232,206 @@
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
-				<bodepegel:Pegel fid="Pegel0">
-					<bodepegel:Name>t2</bodepegel:Name>
-					<bodepegel:Ort/>
-					<bodepegel:WISKI_Name>stas</bodepegel:WISKI_Name>
-					<bodepegel:Kurz_Name>stas</bodepegel:Kurz_Name>
-					<bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
-					<bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
+				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Elend">
+					<bodepegel:Name>Elend</bodepegel:Name>
+					<bodepegel:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4409180</gml:X>
+								<gml:Y>5735160</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodepegel:Ort>
+					<bodepegel:WISKI_Name>579305</bodepegel:WISKI_Name>
+					<bodepegel:Kurz_Name>elen</bodepegel:Kurz_Name>
+					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
+					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
+					<bodepegel:Gebiet/>
+					<bodepegel:Niederschlag_gemessenEingang/>
+					<bodepegel:Niederschlag_prognoseEingang/>
+					<bodepegel:Niederschlag_gesamt/>
+				</bodepegel:Niederschlagsgebiet>
+			</bodepegel:PegelMember>
+			<bodepegel:PegelMember>
+				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Hasselfelde">
+					<bodepegel:Name>Hasselfelde</bodepegel:Name>
+					<bodepegel:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4421200</gml:X>
+								<gml:Y>5729300</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodepegel:Ort>
+					<bodepegel:WISKI_Name>4421200</bodepegel:WISKI_Name>
+					<bodepegel:Kurz_Name>hass</bodepegel:Kurz_Name>
+					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
+					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
+					<bodepegel:Gebiet/>
+					<bodepegel:Niederschlag_gemessenEingang/>
+					<bodepegel:Niederschlag_prognoseEingang/>
+					<bodepegel:Niederschlag_gesamt/>
+				</bodepegel:Niederschlagsgebiet>
+			</bodepegel:PegelMember>
+			<bodepegel:PegelMember>
+				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Mahndorf">
+					<bodepegel:Name>Mahndorf</bodepegel:Name>
+					<bodepegel:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4428700</gml:X>
+								<gml:Y>5750600</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodepegel:Ort>
+					<bodepegel:WISKI_Name>579712</bodepegel:WISKI_Name>
+					<bodepegel:Kurz_Name>mahn</bodepegel:Kurz_Name>
+					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
+					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
+					<bodepegel:Gebiet/>
+					<bodepegel:Niederschlag_gemessenEingang/>
+					<bodepegel:Niederschlag_prognoseEingang/>
+					<bodepegel:Niederschlag_gesamt/>
+				</bodepegel:Niederschlagsgebiet>
+			</bodepegel:PegelMember>
+			<bodepegel:PegelMember>
+				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Silberhütte">
+					<bodepegel:Name>Silberhütte</bodepegel:Name>
+					<bodepegel:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4437590</gml:X>
+								<gml:Y>5722320</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodepegel:Ort>
+					<bodepegel:WISKI_Name>579605</bodepegel:WISKI_Name>
+					<bodepegel:Kurz_Name>silb</bodepegel:Kurz_Name>
+					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
+					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
+					<bodepegel:Gebiet/>
+					<bodepegel:Niederschlag_gemessenEingang/>
+					<bodepegel:Niederschlag_prognoseEingang/>
+					<bodepegel:Niederschlag_gesamt/>
+				</bodepegel:Niederschlagsgebiet>
+			</bodepegel:PegelMember>
+			<bodepegel:PegelMember>
+				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Königshütte">
+					<bodepegel:Name>Königshütte</bodepegel:Name>
+					<bodepegel:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4414850</gml:X>
+								<gml:Y>5734500</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodepegel:Ort>
+					<bodepegel:WISKI_Name>579209</bodepegel:WISKI_Name>
+					<bodepegel:Kurz_Name>koen</bodepegel:Kurz_Name>
+					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
+					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
+					<bodepegel:Gebiet/>
+					<bodepegel:Niederschlag_gemessenEingang/>
+					<bodepegel:Niederschlag_prognoseEingang/>
+					<bodepegel:Niederschlag_gesamt/>
+				</bodepegel:Niederschlagsgebiet>
+			</bodepegel:PegelMember>
+			<bodepegel:PegelMember>
+				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Steinerne_Renne">
+					<bodepegel:Name>Steinerne Renne</bodepegel:Name>
+					<bodepegel:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4412480</gml:X>
+								<gml:Y>5743420</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodepegel:Ort>
+					<bodepegel:WISKI_Name>579705</bodepegel:WISKI_Name>
+					<bodepegel:Kurz_Name>stei</bodepegel:Kurz_Name>
+					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
+					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
+					<bodepegel:Gebiet/>
+					<bodepegel:Niederschlag_gemessenEingang/>
+					<bodepegel:Niederschlag_prognoseEingang/>
+					<bodepegel:Niederschlag_gesamt/>
+				</bodepegel:Niederschlagsgebiet>
+			</bodepegel:PegelMember>
+			<bodepegel:PegelMember>
+				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Oschersleben">
+					<bodepegel:Name>Oschersleben</bodepegel:Name>
+					<bodepegel:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4446920</gml:X>
+								<gml:Y>5765820</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodepegel:Ort>
+					<bodepegel:WISKI_Name>579810</bodepegel:WISKI_Name>
+					<bodepegel:Kurz_Name>osch</bodepegel:Kurz_Name>
+					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
+					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
+					<bodepegel:Gebiet/>
+					<bodepegel:Niederschlag_gemessenEingang/>
+					<bodepegel:Niederschlag_prognoseEingang/>
+					<bodepegel:Niederschlag_gesamt/>
+				</bodepegel:Niederschlagsgebiet>
+			</bodepegel:PegelMember>
+			<bodepegel:PegelMember>
+				<bodepegel:Niederschlagsgebiet fid="NSGebiet_Trautenstein">
+					<bodepegel:Name>Trautenstein</bodepegel:Name>
+					<bodepegel:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4416480</gml:X>
+								<gml:Y>5729450</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodepegel:Ort>
+					<bodepegel:WISKI_Name>579405</bodepegel:WISKI_Name>
+					<bodepegel:Kurz_Name>trau</bodepegel:Kurz_Name>
+					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
+					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
+					<bodepegel:Gebiet/>
+					<bodepegel:Niederschlag_gemessenEingang/>
+					<bodepegel:Niederschlag_prognoseEingang/>
+					<bodepegel:Niederschlag_gesamt/>
+				</bodepegel:Niederschlagsgebiet>
+			</bodepegel:PegelMember>
+			<bodepegel:PegelMember>
+				<bodepegel:Pegel fid="Pegel_Thale">
+					<bodepegel:Name>Thale</bodepegel:Name>
+					<bodepegel:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4432640</gml:X>
+								<gml:Y>5734180</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodepegel:Ort>
+					<bodepegel:WISKI_Name>579020</bodepegel:WISKI_Name>
+					<bodepegel:Kurz_Name>thal</bodepegel:Kurz_Name>
+					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
+					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 				</bodepegel:Pegel>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
-				<bodepegel:Niederschlagsgebiet fid="Niederschlagsgebiet0">
-					<bodepegel:Name>t4</bodepegel:Name>
-					<bodepegel:Ort/>
-					<bodepegel:WISKI_Name>stas</bodepegel:WISKI_Name>
-					<bodepegel:Kurz_Name>stas</bodepegel:Kurz_Name>
-					<bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
+				<bodepegel:Pegel fid="Pegel_Wendefurth">
+					<bodepegel:Name>Wendefurth</bodepegel:Name>
+					<bodepegel:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4425440</gml:X>
+								<gml:Y>5734720</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodepegel:Ort>
+					<bodepegel:WISKI_Name>579006</bodepegel:WISKI_Name>
+					<bodepegel:Kurz_Name>wend</bodepegel:Kurz_Name>
+					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
-					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gemessenEingang/>
-					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt/>
-				</bodepegel:Niederschlagsgebiet>
+				</bodepegel:Pegel>
 			</bodepegel:PegelMember>
 		</bodepegel:PegelCollection>
 	</bodepegel:PegelCollectionAssociation>
@@ -265,9 +450,93 @@
 				</gml:Box>
 			</gml:boundedBy>
 			<bodeombrometer:OmbrometerMember>
-				<bodeombrometer:Ombrometer fid="Ombrometer0">
-					<bodeombrometer:Name/>
-					<bodeombrometer:Ort/>
+				<bodeombrometer:Ombrometer fid="Ombro_Weferlingen">
+					<bodeombrometer:Name>Weferlingen</bodeombrometer:Name>
+					<bodeombrometer:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4435574</gml:X>
+								<gml:Y>5798320</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodeombrometer:Ort>
+					<bodeombrometer:WISKI_Name>440010</bodeombrometer:WISKI_Name>
+					<bodeombrometer:Kurz_Name>wefe</bodeombrometer:Kurz_Name>
+				</bodeombrometer:Ombrometer>
+			</bodeombrometer:OmbrometerMember>
+			<bodeombrometer:OmbrometerMember>
+				<bodeombrometer:Ombrometer fid="Ombro_Ditfurt">
+					<bodeombrometer:Name>Ditfurt</bodeombrometer:Name>
+					<bodeombrometer:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4445490</gml:X>
+								<gml:Y>5744630</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodeombrometer:Ort>
+					<bodeombrometer:WISKI_Name>579040</bodeombrometer:WISKI_Name>
+					<bodeombrometer:Kurz_Name>ditf</bodeombrometer:Kurz_Name>
+				</bodeombrometer:Ombrometer>
+			</bodeombrometer:OmbrometerMember>
+			<bodeombrometer:OmbrometerMember>
+				<bodeombrometer:Ombrometer fid="Ombro_Elend">
+					<bodeombrometer:Name>Elend</bodeombrometer:Name>
+					<bodeombrometer:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4409180</gml:X>
+								<gml:Y>5735160</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodeombrometer:Ort>
+					<bodeombrometer:WISKI_Name>579305</bodeombrometer:WISKI_Name>
+					<bodeombrometer:Kurz_Name>elen</bodeombrometer:Kurz_Name>
+				</bodeombrometer:Ombrometer>
+			</bodeombrometer:OmbrometerMember>
+			<bodeombrometer:OmbrometerMember>
+				<bodeombrometer:Ombrometer fid="Ombro_Hasselfelde">
+					<bodeombrometer:Name>Hasselfelde</bodeombrometer:Name>
+					<bodeombrometer:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4421200</gml:X>
+								<gml:Y>5729300</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodeombrometer:Ort>
+					<bodeombrometer:WISKI_Name>579504</bodeombrometer:WISKI_Name>
+					<bodeombrometer:Kurz_Name>hass</bodeombrometer:Kurz_Name>
+				</bodeombrometer:Ombrometer>
+			</bodeombrometer:OmbrometerMember>
+			<bodeombrometer:OmbrometerMember>
+				<bodeombrometer:Ombrometer fid="Ombro_Silberhütte">
+					<bodeombrometer:Name>Silberhütte</bodeombrometer:Name>
+					<bodeombrometer:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4437590</gml:X>
+								<gml:Y>5722320</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodeombrometer:Ort>
+					<bodeombrometer:WISKI_Name>579605</bodeombrometer:WISKI_Name>
+					<bodeombrometer:Kurz_Name>silb</bodeombrometer:Kurz_Name>
+				</bodeombrometer:Ombrometer>
+			</bodeombrometer:OmbrometerMember>
+			<bodeombrometer:OmbrometerMember>
+				<bodeombrometer:Ombrometer fid="Ombro_Mahndorf">
+					<bodeombrometer:Name>Mahndorf</bodeombrometer:Name>
+					<bodeombrometer:Ort>
+						<gml:Point srsName="EPSG:31468">
+							<gml:coord>
+								<gml:X>4428700</gml:X>
+								<gml:Y>5750600</gml:Y>
+							</gml:coord>
+						</gml:Point>
+					</bodeombrometer:Ort>
+					<bodeombrometer:WISKI_Name>579712</bodeombrometer:WISKI_Name>
+					<bodeombrometer:Kurz_Name>mahn</bodeombrometer:Kurz_Name>
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
 		</bodeombrometer:OmbrometerCollection>
