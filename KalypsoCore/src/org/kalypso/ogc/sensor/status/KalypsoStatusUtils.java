@@ -145,7 +145,6 @@ public class KalypsoStatusUtils
    * 
    * @param axis
    * @param statusCandidate
-   * @return
    */
   public static boolean isStatusAxisFor( final IAxis axis, final IAxis statusCandidate )
   {
