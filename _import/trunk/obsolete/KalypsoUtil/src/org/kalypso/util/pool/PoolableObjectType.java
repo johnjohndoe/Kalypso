@@ -1,6 +1,8 @@
 package org.kalypso.util.pool;
 
-import java.util.HashMap;
+import java.util.Properties;
+
+import org.kalypso.util.properties.PropertiesHelper;
 
 /**
  * @author vdoemming
@@ -9,21 +11,20 @@ public class PoolableObjectType implements IPoolableObjectType
 {
   private final String myType;
 
-  private final HashMap mySource;
+  private final Properties mySource;
   
-  public PoolableObjectType( final String type, final String source )
+  private final Object myHelper;
+
+  public PoolableObjectType( final String type, final String source, final Object helper )
+  {
+    this( type, PropertiesHelper.parseFromString( source, '#' ), helper );
+  }
+
+  public PoolableObjectType( final String type, final Properties source, final Object helper )
   {
     myType = type;
-    
-    mySource = new HashMap();
-     final String[] strings = source.split("&");
-     for(int i=0;i<strings.length;i++)
-     {
-       int pos=strings[i].indexOf("=");
-       if(pos>0)
-         mySource.put(strings[i].substring(0,pos),strings[i].substring(pos+1));
-      
-     }
+    mySource = source;
+    myHelper = helper;
   }
 
   /**
@@ -37,7 +38,7 @@ public class PoolableObjectType implements IPoolableObjectType
   /**
    * @see org.kalypso.util.pool.IPoolableObjectType#getSource()
    */
-  public HashMap getSource()
+  public Properties getSource()
   {
     return mySource;
   }
@@ -47,7 +48,7 @@ public class PoolableObjectType implements IPoolableObjectType
    */
   public Object getHelper()
   {
-    return null;
+    return myHelper;
   }
 
   public boolean equals( Object obj )
@@ -59,6 +60,9 @@ public class PoolableObjectType implements IPoolableObjectType
       return false;
     if( !getSource().equals( other.getSource() ) )
       return false;
+    if( !getHelper().equals( other.getHelper() ) )
+      return false;
+
     return true;
   }
 
@@ -69,6 +73,6 @@ public class PoolableObjectType implements IPoolableObjectType
 
   public String toString()
   {
-    return getClass().getName()+": source="+getSource()+" type="+getType();
+    return getClass().getName() + ": source=" + getSource() + " type=" + getType();
   }
 }

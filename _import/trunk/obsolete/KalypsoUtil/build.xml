@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="KalypsoCore" default="javadoc">
+
+  <!-- Source properties -->
+  <property name="lib.dir" value="./libs" />
+  <property name="etc.dir" value="./libs" />
+
+  <!-- Build properties -->
+  <property name="build.dir" value="./build" />
+  <property name="source.dir" value="./src" />
+  <property name="javadoc.dir" value="./build/javadoc" />
+
+  <path id="build.cp">
+    <fileset dir="${lib.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+  
+  <target name="init">
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${javadoc.dir}" />
+  </target>
+
+  <target name="cleanup"
+          description="cleans generated stuff except deployed stuff"
+  >
+    <delete>
+      <fileset dir="${javadoc.dir}" includes="*/**" />
+      <fileset dir="${build.dir}" includes="*/**" />
+    </delete>
+  </target>
+  
+  <target name="javadoc" description="generates javadoc for project" >
+   	<echo message="gerating javadoc..."/>
+   	
+   	<javadoc destdir="${javadoc.dir}" sourcepath="${source.dir}" packagenames="*" private="true" use="true" >
+   	
+   	</javadoc>
+  </target>
+
+</project>

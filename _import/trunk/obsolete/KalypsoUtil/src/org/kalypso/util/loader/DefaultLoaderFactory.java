@@ -6,8 +6,10 @@ import org.kalypso.util.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.util.factory.FactoryException;
 
 /**
- * @author schlienger
- *  
+ * Die Standardimplementation der {@link ILoaderFactory}
+ *
+ * @author Schlienger
+ *
  */
 public class DefaultLoaderFactory extends ConfigurableCachableObjectFactory implements ILoaderFactory
 {

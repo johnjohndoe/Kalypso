@@ -14,32 +14,32 @@
 	<classpathentry exported="true" kind="lib" path="lib/relaxngDatatype.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xsdlib.jar"/>
-	<classpathentry exported="true" kind="lib" path="/backupdeegree/lib/jai/jai_codec.jar"/>
-	<classpathentry exported="true" kind="lib" path="/backupdeegree/lib/jai/jai_core.jar"/>
-	<classpathentry exported="true" kind="lib" path="/backupdeegree/lib/jai/mlibwrapper_jai.jar"/>
-	<classpathentry sourcepath="/backupdeegree/deegree" kind="lib" path="lib/kalypsodeegree.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/acme/acme.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/batik/lib/batik-awt-util.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/batik/lib/batik-css.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/batik/lib/batik-dom.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/batik/lib/batik-svg-dom.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/batik/lib/batik-svggen.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/batik/lib/batik-util.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/batik/lib/batik-xml.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/ecw/ermapper.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/ecw/ermapperdoc.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/esri/jsde82_sdk.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/java3d/j3dcore.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/java3d/j3dutils.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/java3d/vecmath.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/jts/jts.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/mail/mail.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/mysql/mysql-connector-java-3.0.8-stable-bin.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/oracle/ojdbc14.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/oracle/sdoapi.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/postgis/pg73jdbc3.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/postgis/postgis.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/servlet/jsdk2.3.jar"/>
-	<classpathentry kind="lib" path="/backupdeegree/lib/servlet/servlet.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/kalypsodeegree.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/acme/acme.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/batik/lib/batik-awt-util.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/batik/lib/batik-css.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/batik/lib/batik-dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/batik/lib/batik-svg-dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/batik/lib/batik-svggen.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/batik/lib/batik-util.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/batik/lib/batik-xml.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/ecw/ermapper.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/ecw/ermapperdoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/esri/jsde82_sdk.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/jai/jai_codec.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/jai/jai_core.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/jai/mlibwrapper_jai.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/java3d/j3dcore.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/java3d/j3dutils.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/java3d/vecmath.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/jts/jts.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/mail/mail.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/mysql/mysql-connector-java-3.0.8-stable-bin.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/oracle/ojdbc14.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/oracle/sdoapi.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/postgis/pg73jdbc3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/postgis/postgis.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/servlet/jsdk2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree/servlet/servlet.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileFilter;
 
 /**
- * Ein FileFilter dass alle Dateien erlaubt.
- * 
- * @author schlienger
+ * Ein FileFilter der alle Dateien erlaubt.
+ *
+ * @author Schlienger
  */
 public class AcceptAllFileFilter implements FileFilter
 {

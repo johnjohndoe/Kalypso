@@ -5,6 +5,8 @@ import java.util.Vector;
 import javax.swing.event.EventListenerList;
 
 /**
+ * Standardimplementierung von {@link ICommandManager}.
+
  * @author von Dömming
  */
 public class DefaultCommandManager implements ICommandManager
@@ -17,7 +19,8 @@ public class DefaultCommandManager implements ICommandManager
 
   private boolean undoable = false;
 
-  private int stackPos = -1; // points to last processed command
+  /** points to last processed command */
+  private int stackPos = -1;
 
   public void postCommand( ICommand command )
   {
@@ -138,9 +141,9 @@ public class DefaultCommandManager implements ICommandManager
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandManager#getUndoText()
+   * @see org.kalypso.util.command.ICommandManager#getUndoDescription()
    */
-  public String getUndoText()
+  public String getUndoDescription()
   {
     if( canUndo() )
       return ( (ICommand)stack.elementAt( stackPos ) ).getDescription();
@@ -149,9 +152,9 @@ public class DefaultCommandManager implements ICommandManager
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandManager#getRedoText()
+   * @see org.kalypso.util.command.ICommandManager#getRedoDescription()
    */
-  public String getRedoText()
+  public String getRedoDescription()
   {
     if( canRedo() )
       return ( (ICommand)stack.elementAt( stackPos + 1 ) ).getDescription();

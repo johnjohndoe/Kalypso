@@ -8,8 +8,14 @@ import org.kalypso.util.reflect.ClassUtilities;
 import org.kalypso.util.reflect.ClassUtilities.ClassUtilityException;
 
 /**
- * Eine sehr algemeine Factory von Objekte die durch Properties konfiguriert wird.
- * 
+ * <p>Eine sehr allgemeine Factory, die durch Properties konfiguriert wird.</p>
+ * <p>Die Values der Properties bezeichnen den Klassennamen der zu erzeugenden Objekte,
+ * die Keys dürfen beliebiege String sein.</p>
+ * <p>Die Factory kann so konfiguriert werden, dass jede Objektart nur einmal erzeugt wird, einmal erzeugte Objekte
+ * werden dann gecached und bei nochmaliger Anfrage erneut zurückgegeben.</p>
+ * <p>Beim Erzeugen eines Objects kann zusätzlich angegeben werden, ob dieses von einer bestimmten Klasse ableiten soll.
+ * Erfüllt das Object diese Forderung nicht wird eine Exception geworfen.</p>
+ *
  * @author schlienger
  */
 public class ConfigurableCachableObjectFactory
@@ -25,16 +31,16 @@ public class ConfigurableCachableObjectFactory
    */
   public ConfigurableCachableObjectFactory( final Properties props, final boolean cache )
   {
-    m_props = props;   
+    m_props = props;
     m_cache = cache;
   }
-  
+
   public Object getObjectInstance( final String type, final Class expected, final ClassLoader cl ) throws FactoryException
   {
     String className = m_props.getProperty( type );
 
     Object obj = null;
-    
+
     if( m_cache )
       obj = m_objects.get( type );
 
@@ -55,7 +61,7 @@ public class ConfigurableCachableObjectFactory
 
     return obj;
   }
-  
+
   protected final Properties getProperties()
   {
     return m_props;

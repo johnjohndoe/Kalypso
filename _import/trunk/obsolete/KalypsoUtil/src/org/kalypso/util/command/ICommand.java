@@ -1,6 +1,9 @@
 package org.kalypso.util.command;
 
 /**
+ * <p>Das Interface eines Kommandos.</p>
+ * <p>Die Methoden {@link #process()}, {@link #redo} und {@link #undo} sollten nie direkt,
+ * sondern stets vom {@link ICommandManager} aufgerufen werden.</p>
  *
  * @author von Dömming
  */

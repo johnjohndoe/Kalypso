@@ -1,7 +1,9 @@
 package org.kalypso.util.loader;
 
 /**
- * @author schlienger
+ * Exceptionklasse für Exceptions innerhalb diesesPakets.
+ *
+ * @author Schlienger
  *
  */
 public class LoaderException extends Exception

@@ -1,8 +1,8 @@
 package org.kalypso.util.factory;
 
 /**
- * Eine Exception die innerhalb des Factory package auftauchen kann.
- * 
+ * Exceptionklasse für Exceptions innerhalb des Factory Packages.
+ *
  * @author schlienger
  */
 public class FactoryException extends Exception
