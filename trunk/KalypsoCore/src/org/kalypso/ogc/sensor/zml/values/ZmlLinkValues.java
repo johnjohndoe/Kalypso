@@ -8,7 +8,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.kalypso.java.net.test.UrlUtilities;
+import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.util.io.CSV;
 import org.kalypso.util.io.ITabledValues;

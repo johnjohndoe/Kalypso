@@ -7,6 +7,7 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -24,6 +25,8 @@ import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
@@ -46,7 +49,7 @@ import org.osgi.service.url.URLStreamHandlerService;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class KalypsoGisPlugin extends AbstractUIPlugin
+public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChangeListener
 {
   private static final String BUNDLE_NAME = KalypsoGisPlugin.class.getPackage()
       .getName()
@@ -125,24 +128,34 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
     registerTypeHandler();
   }
-
+  
   /**
-   * Loads the client configuration
+   * Loads the client configuration from the various server that were configured in the
+   * kalypso plugin preferences page.
    * 
-   * @throws IllegalStateException
-   *           if no configuration could be loaded
+   * @param mainConf
    */
-  private void configure( ) throws IllegalStateException
+  private void configure( final Properties mainConf )
   {
     // put system properties
-    m_mainConf.putAll( System.getProperties() );
+    mainConf.putAll( System.getProperties() );
 
+    final String confUrls = getPluginPreferences().getString( IKalypsoPreferences.CLIENT_CONF_URLS );
+    
+    if( confUrls == null )
+    {
+      MessageDialog.openWarning(
+          getWorkbench().getDisplay().getActiveShell(),
+          "Konfiguration für Kalypso", "Keine Serverkonfiguration vorhanden. Funktionalität eingeschränkt." );
+      return;
+    }
+    
     // try to laod conf file
-    final String[] locs = getPluginPreferences().getString(
-        IKalypsoPreferences.CLIENT_CONF_URLS ).split( "," );
+    final String[] locs = confUrls.split( "," );
 
     final Properties conf = new Properties();
-
+    
+    // for each of the locations, fetch configuration and merge them with main conf
     for( int i = 0; i < locs.length; i++ )
     {
       InputStream stream = null;
@@ -153,11 +166,24 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
         stream = url.openStream();
 
+        conf.clear();
         conf.load( stream );
 
-        m_mainConf.putAll( conf );
-
-        return;
+        // merge the conf
+        for( final Iterator it = conf.keySet().iterator(); it.hasNext();)
+        {
+          final String key = (String) it.next();
+          
+          if( m_mainConf.containsKey( key ) )
+          {
+            String prop = m_mainConf.getProperty( key );
+            prop += ',' + conf.getProperty(key);
+            
+            m_mainConf.put( key, prop );
+          }
+          else
+            m_mainConf.put( key, conf.getProperty(key) );
+        }
       }
       catch( Exception e ) // generic exception used to simplify processing
       {
@@ -168,7 +194,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
             + "\n";
 
         if( i == locs.length - 1 )
-          msg += "Kalypso startet ohne Serverkonfiguration! Stelle Sie sicher dass mindestens ein Server zur Verfügung steht.\nOder prüfen Sie die Liste der Server in den Applikationseinstellungen.";
+          msg += "Serverkonfiguration konnte nicht gefunden werden! Stelle Sie sicher dass mindestens ein Server zur Verfügung steht.\nAlterntiv, prüfen Sie die Liste der Server in den Applikationseinstellungen (Kalypso Seite).";
         else
           msg += "Es wird versucht, eine alternative Konfigurationsdatei zu laden.\nNächster Versuch:"
               + locs[i + 1];
@@ -197,15 +223,17 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   /**
    * Sets service proxy factory specific properties and creates the proxy
    * factory object.
+   * 
+   * @param mainConf
    */
-  private void configureServiceProxyFactory( )
+  private void configureServiceProxyFactory( final Properties mainConf )
   {
     // this is the base classname (actually just package name) of all the
     // kalypso service proxies
-    m_mainConf.setProperty( ProxyFactory.KALYPSO_PROXY_BASE,
+    mainConf.setProperty( ProxyFactory.KALYPSO_PROXY_BASE,
         "org.kalypso.services.proxy" );
 
-    m_proxyFactory = new ProxyFactory( m_mainConf );
+    m_proxyFactory = new ProxyFactory( mainConf );
   }
 
   /**
@@ -371,18 +399,21 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
     try
     {
-      configure();
+      m_mainConf.clear();
+      
+      configure( m_mainConf );
       configureProxy();
       configurePool();
       configureRepositorySpecifications();
-      configureServiceProxyFactory();
+      configureServiceProxyFactory( m_mainConf );
       configureURLStreamHandler( context );
+      
+      getPreferenceStore().addPropertyChangeListener( this );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
     }
-
   }
 
   /**
@@ -395,6 +426,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   {
     super.stop( context );
 
+    getPreferenceStore().removePropertyChangeListener( this );
+    
     ObservationCache.clear();
   }
 
@@ -575,5 +608,19 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   public void clearPool( )
   {
     myPools.clear();
+  }
+
+  /**
+   * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+   */
+  public void propertyChange( final PropertyChangeEvent event )
+  {
+    // reconfigure plugin
+    if( event.getProperty().equals( IKalypsoPreferences.CLIENT_CONF_URLS ) )
+    {
+      m_mainConf.clear();
+      configure( m_mainConf );
+      configureServiceProxyFactory( m_mainConf );
+    }
   }
 }

@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.java.net.test.UrlUtilities;
+import org.kalypso.java.net.UrlUtilities;
 
 /**
  * <p>Erzeugt aus einem String eine URL</p>
