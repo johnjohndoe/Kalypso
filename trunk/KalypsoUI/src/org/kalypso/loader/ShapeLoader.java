@@ -72,7 +72,8 @@ public class ShapeLoader implements ILoader
 
       final CS_CoordinateSystem srcCS = org.deegree_impl.model.cs.Adapters.getDefault().export(
           csFac.getCSByName( sourceSrs ) );
-      final int max=  count < 20 ?   count:20;
+//      final int max=  count < 20 ?   count:20;
+      final int max=  count; // < 20 ?   count:20;
       if(max< count) // TODO
         System.out.println("WARNUNG es werden nur "+max+" von "+ count+" Features geladen");
    
