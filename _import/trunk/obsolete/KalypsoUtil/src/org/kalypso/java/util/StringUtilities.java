@@ -8,10 +8,11 @@ import java.util.Properties;
 import java.util.Map.Entry;
 
 /**
+ * Utilities around the String class.
+ * 
  * @author schlienger
- *
  */
-public class StringUtilities
+public final class StringUtilities
 {
   /**
    * Not intended to be instanciated
@@ -35,7 +36,7 @@ public class StringUtilities
    *
    * @throws IllegalArgumentException if s is null
    */
-  public static Color stringToColor( String s ) throws IllegalArgumentException
+  public static final Color stringToColor( String s ) throws IllegalArgumentException
   {
     if( s == null )
       throw new IllegalArgumentException( "Color String is null" );
@@ -60,7 +61,7 @@ public class StringUtilities
    *
    * @throws IllegalArgumentException if color is null
    */
-  public static String colorToString( Color c )
+  public static final String colorToString( Color c )
   {
     if( c == null )
       throw new IllegalArgumentException( "Color is null" );
@@ -85,7 +86,7 @@ public class StringUtilities
    *
    * @throws IllegalArgumentException if s is null
    */
-  public static Font stringToFont( String s )
+  public static final Font stringToFont( String s )
   {
     if( s == null )
       throw new IllegalArgumentException( "Font String is null" );
@@ -109,7 +110,7 @@ public class StringUtilities
    *
    * @throws IllegalArgumentException if f is null
    */
-  public static String fontToString( Font f )
+  public static final String fontToString( Font f )
   {
     if( f == null )
       throw new IllegalArgumentException( "Font is null" );
@@ -122,8 +123,10 @@ public class StringUtilities
     return buf.toString(  );
   }
 
-  /** Replacement per Pattern-Matching */
-  public static String replaceAll( final String sourceValue, final Properties replaceProperties )
+  /** 
+   * Replacement per Pattern-Matching
+   */
+  public static final String replaceAll( final String sourceValue, final Properties replaceProperties )
   {
     String newString = sourceValue;
     

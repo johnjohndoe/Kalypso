@@ -11,12 +11,16 @@ public interface IRepositoryFactory
    * Sets the configuration string for this factory.
    */
   public void setConfiguration( final String conf );
+  
+  public String getConfiguration();
 
   /**
    * Sets the readOnly flag. When true, the repository is forced in read only
    * mode.
    */
   public void setReadOnly( final boolean ro );
+  
+  public boolean isReadOnly();
 
   /**
    * Vorbereitet die Konfiguration für das erzeugen des Repository.

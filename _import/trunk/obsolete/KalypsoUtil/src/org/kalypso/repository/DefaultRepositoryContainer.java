@@ -3,6 +3,8 @@ package org.kalypso.repository;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Properties;
 import java.util.Vector;
 
 
@@ -27,8 +29,15 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
     m_reps.addAll( Arrays.asList( repositories ) );
   }
 
-  public void addRepository( IRepository rep )
+  public void addRepository( final IRepository rep, final Properties props )
   {
+    for( final Iterator it = props.keySet().iterator(); it.hasNext(); )
+    {
+      final String key = (String)it.next();
+      
+      rep.setProperty( key, props.getProperty( key ) );
+    }
+    
     m_reps.add( rep );
 
     fireRepositoryChanged();
@@ -78,5 +87,30 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   public List getRepositories()
   {
     return m_reps;
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryContainer#findItem(java.lang.String)
+   */
+  public IRepositoryItem findItem( final String id ) throws NoSuchElementException
+  {
+    for( final Iterator it = m_reps.iterator(); it.hasNext(); )
+    {
+      final IRepository rep = (IRepository)it.next();
+
+      if( rep.getIdentifier().equals( id ) )
+        return rep;
+      
+      try
+      {
+        return rep.findItem( id );
+      }
+      catch( RepositoryException e )
+      {
+        // ignored, try with next repository
+      }
+    }
+    
+    throw new NoSuchElementException( "Item not found: " + id );
   }
 }

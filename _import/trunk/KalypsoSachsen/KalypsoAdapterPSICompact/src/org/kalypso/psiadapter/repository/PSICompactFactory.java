@@ -76,7 +76,7 @@ public final class PSICompactFactory
     if( m_psiCompactRep == null )
     {
       // PSICompact Repository is always in read/write mode
-      m_psiCompactRep = new PSICompactRepository( false );
+      m_psiCompactRep = new PSICompactRepository( new PSICompactRepositoryFactory(), false );
 
       // TODO siehe Kommentar in VersionChecker Klasse
       // m_threadVersionChecker = new VersionChecker();

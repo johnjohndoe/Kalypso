@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.io.filter.AcceptAllFileFilter;
 import org.kalypso.repository.AbstractRepository;
+import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 
@@ -21,9 +22,9 @@ public class FileRepository extends AbstractRepository
 
   protected final FileFilter m_filter;
 
-  public FileRepository( final String location, final boolean readOnly, final FileFilter filter )
+  public FileRepository( final IRepositoryFactory factory, final String location, final boolean readOnly, final FileFilter filter )
   {
-    super( location, readOnly );
+    super( factory, location, readOnly );
 
     if( filter == null )
       m_filter = new AcceptAllFileFilter();
@@ -35,9 +36,9 @@ public class FileRepository extends AbstractRepository
       throw new IllegalArgumentException( "Location existiert nicht! (Location: " + location + ")" );
   }
 
-  public FileRepository( final String location, final boolean readOnly )
+  public FileRepository( final IRepositoryFactory factory, final String location, final boolean readOnly )
   {
-    this( location, readOnly, null );
+    this( factory, location, readOnly, null );
   }
 
   /**

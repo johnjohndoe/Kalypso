@@ -6,7 +6,6 @@ import org.kalypso.repository.RepositoryException;
 
 /**
  * @author schlienger
- *
  */
 public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 {

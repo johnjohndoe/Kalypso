@@ -47,6 +47,11 @@ public interface IRepository extends IRepositoryItem
   public String getProperty( final String name, final String defaultValue );
 
   /**
+   * Returns the factory that created this repository.
+   */
+  public IRepositoryFactory getFactory();
+  
+  /**
    * Forces the reload of the whole Repository structure.
    */
   public void reload() throws RepositoryException;

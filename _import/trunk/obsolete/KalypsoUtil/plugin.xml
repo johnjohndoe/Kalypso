@@ -18,6 +18,9 @@
       <library name="lib/commons-lang-2.0.jar">
          <export name="*"/>
       </library>
+      <library name="lib/shiftone-cache.jar">
+         <export name="*"/>
+      </library>
    </runtime>
    <requires>
    </requires>

@@ -21,16 +21,27 @@ public abstract class AbstractRepository implements IRepository
 
   private final Properties m_properties;
 
+  private final IRepositoryFactory m_factory;
+
   /**
    * Default constructor, location is empty and readonly is true.
    */
-  public AbstractRepository()
+  public AbstractRepository( final IRepositoryFactory factory )
   {
-    this( "", true );
+    this( factory, "", true );
   }
 
-  public AbstractRepository( final String location, final boolean readOnly )
+  /**
+   * Constructor
+   * 
+   * @param factory the <code>IRepositoryFactory</code> that created this repository
+   * @param location the location of the repository
+   * @param readOnly true if the repository should be in readonly mode
+   */
+  public AbstractRepository( final IRepositoryFactory factory, final String location, final boolean readOnly )
   {
+    m_factory = factory;
+    
     m_location = location;
     m_readOnly = readOnly;
 
@@ -38,6 +49,14 @@ public abstract class AbstractRepository implements IRepository
     m_properties = new Properties();
   }
 
+  /**
+   * @see org.kalypso.repository.IRepository#getFactory()
+   */
+  public IRepositoryFactory getFactory()
+  {
+    return m_factory;
+  }
+  
   /**
    * @see org.kalypso.repository.IRepository#isReadOnly()
    */

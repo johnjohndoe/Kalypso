@@ -10,6 +10,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.wq.WechmannException;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannParams;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannSet;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannSets;
@@ -71,7 +72,14 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
 
     m_psicWQParamSet = PSICompactFactory.getConnection().getWQParams( m_objectInfo.getId() );
 
-    constructMetadata();
+    try
+    {
+      constructMetadata();
+    }
+    catch( WechmannException e )
+    {
+      throw new ECommException( e );
+    }
   }
 
   /**
@@ -87,8 +95,10 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
 
   /**
    * Helper für die Erzeugung der Metadaten
+   * 
+   * @throws WechmannException
    */
-  private final void constructMetadata()
+  private final void constructMetadata() throws WechmannException
   {
     m_metadata = new MetadataList();
 
@@ -269,8 +279,10 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   /**
    * Helper that converts PSICompact WQParamSet objects to a WechmannSets
    * object.
+   * 
+   * @throws WechmannException
    */
-  public static WechmannSets readWQParams( final WQParamSet[] pset )
+  public static WechmannSets readWQParams( final WQParamSet[] pset ) throws WechmannException
   {
     final WechmannSet[] wsets = new WechmannSet[pset.length];
     for( int i = 0; i < pset.length; i++ )

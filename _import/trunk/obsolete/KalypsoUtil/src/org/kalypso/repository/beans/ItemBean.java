@@ -64,4 +64,17 @@ public class ItemBean implements Serializable
   {
     m_repId = repId;
   }
+  
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  public boolean equals( Object obj )
+  {
+    if( obj == null || !(obj instanceof ItemBean) )
+      return false;
+    
+    final ItemBean other = (ItemBean)obj;
+    
+    return m_id.equals( other.getId() );
+  }
 }

@@ -24,7 +24,7 @@ public class FileRepositoryTest extends TestCase
     final String home = System.getProperty( "user.home" );
     m_userHome = new File( home );
     
-    m_rep = new FileRepository( m_userHome.getParent(), true );
+    m_rep = new FileRepository( null, m_userHome.getParent(), true );
   }
 
   public void testFindItem() throws MalformedURLException, RepositoryException

@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import org.kalypso.java.util.Arrays;
 import org.kalypso.psiadapter.util.ObjectInfoLengthComparator;
 import org.kalypso.repository.AbstractRepository;
+import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 
@@ -21,9 +22,9 @@ public class PSICompactRepository extends AbstractRepository
 {
   private PSICompactItem m_psiRoot = null;
 
-  public PSICompactRepository( final boolean readOnly ) throws RepositoryException
+  public PSICompactRepository( final IRepositoryFactory factory, final boolean readOnly ) throws RepositoryException
   {
-    super( "PSICompact", readOnly );
+    super( factory, "PSICompact", readOnly );
 
     reload();
   }

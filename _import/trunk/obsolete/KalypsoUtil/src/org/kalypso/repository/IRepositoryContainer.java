@@ -1,6 +1,8 @@
 package org.kalypso.repository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Properties;
 
 /**
  * Allgemeine Interface für Repositories Container:
@@ -11,9 +13,24 @@ import java.util.List;
  */
 public interface IRepositoryContainer
 {
+  /**
+   * Returns the list of repositories
+   */
   public List getRepositories();
+
+  /**
+   * Tries to find the item within the repository list.
+   * 
+   * @throws NoSuchElementException when item could not be found. 
+   */
+  public IRepositoryItem findItem( final String id ) throws NoSuchElementException;
   
-  public void addRepository( final IRepository rep );
+  /**
+   * Adds a repository.
+   * @param rep the one to add
+   * @param defaultProps some default properties that will be set to the repository [optional, can be null]
+   */
+  public void addRepository( final IRepository rep, final Properties defaultProps );
 
   public void removeRepository( final IRepository rep );
 
