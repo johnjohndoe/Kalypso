@@ -42,9 +42,9 @@ package org.kalypso.ui.editor.diagrameditor;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewCurve;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewTheme;
+import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
+import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.DiagViewTheme;
 
 /**
  * ObsDiagTemplateContentProvider

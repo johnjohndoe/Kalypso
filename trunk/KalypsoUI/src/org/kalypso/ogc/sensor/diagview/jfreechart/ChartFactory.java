@@ -42,7 +42,7 @@ package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import org.jfree.chart.plot.Plot;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
 
 /**
  * @author schlienger

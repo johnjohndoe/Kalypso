@@ -123,8 +123,11 @@ public abstract class AbstractEditorPart extends EditorPart implements
     if( !(getEditorInput() instanceof FileEditorInput) )
     {
       // given user a chance to use save-as
-      MessageDialog.openInformation( getSite().getShell(), "Speichern", "Der Inhalt kann nicht direkt gespeichert werden.\n" +
-      		"Bitte benutzen Sie das 'Speichern als' Kommando." );
+      MessageDialog.openInformation( getSite().getShell(), "Speichern", 
+        "Der Inhalt kann nicht direkt gespeichert werden weil noch\n" +
+      	"keine grundliegende Vorlagedatei vorhanden ist. Es handelt\n" +
+      	"sich möglicherweise um eine 'virtuelle' Vorlage\n" +
+      	"Bitte benutzen Sie das 'Speichern als' Kommando." );
 
       return;
     }

@@ -42,9 +42,9 @@ package org.kalypso.ui.editor.obstableeditor;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewTheme;
+import org.kalypso.ogc.sensor.tableview.TableViewColumn;
+import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.TableViewTheme;
 
 /**
  * ObsDiagTemplateContentProvider

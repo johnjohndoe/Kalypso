@@ -48,7 +48,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import org.kalypso.ogc.sensor.tableview.ITableViewRules;
 
 /**
  * Holds a list of rules.
@@ -115,10 +114,26 @@ public class Rules implements ITableViewRules
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewRules#isEmpty()
+   * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#isEmpty()
    */
   public boolean isEmpty( )
   {
     return m_rules.size() == 0;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#getRules()
+   */
+  public List getRules( )
+  {
+    return m_rules;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#removeAllRules()
+   */
+  public void removeAllRules( )
+  {
+    m_rules.clear();
   }
 }

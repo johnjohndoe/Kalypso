@@ -103,11 +103,11 @@ import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.util.GisTemplateLoadedThread;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewTheme;
+import org.kalypso.ogc.sensor.tableview.TableViewColumn;
+import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.TableViewTheme;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
@@ -228,20 +228,15 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_mapModell.dispose();
     }
 
-    if( m_diagTemplate != null )
-    {
-      m_diagTemplate.removeTemplateEventListener( m_obsChart );
-      m_diagTemplate.dispose();
-    }
-
     if( m_table != null )
       m_table.dispose();
-    
     if( m_tableTemplate != null )
-    {
-      m_tableTemplate.removeTemplateEventListener( m_table );
       m_tableTemplate.dispose();
-    }
+    
+    if( m_obsChart != null )
+      m_obsChart.dispose();
+    if( m_diagTemplate != null )
+      m_diagTemplate.dispose();
   }
 
   public Properties getArguments()
@@ -403,7 +398,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_diagFrame.setVisible( true );
 
       m_obsChart = new ObservationChart( m_diagTemplate );
-      m_diagTemplate.addTemplateEventListener( m_obsChart );
 
       // chart panel without any popup menu
       final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false, false, false, false );

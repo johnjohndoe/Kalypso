@@ -51,9 +51,9 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardLegend;
 import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewCurve;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewTheme;
+import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
+import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.DiagViewTheme;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 
@@ -63,6 +63,8 @@ import org.kalypso.ogc.sensor.template.TemplateEvent;
 public class ObservationChart extends JFreeChart implements
     ITemplateEventListener
 {
+  private final DiagViewTemplate m_template;
+
   /**
    * Creates an ObservationChart
    * 
@@ -74,7 +76,12 @@ public class ObservationChart extends JFreeChart implements
   {
     super( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, ChartFactory
         .createObservationPlot( template ), template.isShowLegend() );
-
+    
+    m_template = template;
+    
+    // removed in this.dispose()
+    m_template.addTemplateEventListener( this );
+    
     if( template.isShowLegend() )
     {
       final StandardLegend leg = new StandardLegend();
@@ -89,6 +96,8 @@ public class ObservationChart extends JFreeChart implements
    */
   public void dispose( )
   {
+    m_template.removeTemplateEventListener( this );
+    
     clearChart();
   }
 

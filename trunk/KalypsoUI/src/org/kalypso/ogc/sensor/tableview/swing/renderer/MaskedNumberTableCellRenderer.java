@@ -63,12 +63,13 @@ import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
  */
 public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
 {
-  private final NumberFormat m_nf;
+  private final ObservationTableModel m_model;
 
-  public MaskedNumberTableCellRenderer( final NumberFormat nf )
+  public MaskedNumberTableCellRenderer( final ObservationTableModel model )
   {
+    m_model = model;
+
     setHorizontalAlignment( SwingConstants.RIGHT );
-    m_nf = nf;
   }
   
   /**
@@ -85,8 +86,7 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
     if( n == null )
       return label;
 
-    final RenderingRule[] r = ((ObservationTableModel) table.getModel())
-        .findRules( row, column );
+    final RenderingRule[] r = m_model.findRules( row, column );
 
     // reset visual settings
     label.setToolTipText( null );
@@ -132,7 +132,12 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
 
     label.setToolTipText( ttext );
     
-    label.setText( m_nf.format( n.doubleValue() ) );
+    // type dependent format
+    final NumberFormat nf = m_model.getNumberFormat( column );
+    final String text = nf.format( n.doubleValue() );
+    
+    label.setText( text );
+    
     return label;
   }
 }

@@ -44,7 +44,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.eclipse.jface.action.FullAction;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewTheme;
+import org.kalypso.ogc.sensor.tableview.TableViewTheme;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.obstableeditor.ObsTableOutlinePage;
 

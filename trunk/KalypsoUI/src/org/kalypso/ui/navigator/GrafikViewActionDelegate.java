@@ -56,7 +56,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.DiagramTemplateUtils;
+import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -103,7 +103,7 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
         try
         {
           if( currentFile.getFileExtension().equalsIgnoreCase(
-              DiagramTemplateUtils.ODT_FILE_EXTENSION ) )
+              DiagViewUtils.ODT_FILE_EXTENSION ) )
           {
             final IContainer parent = currentFile.getParent();
 

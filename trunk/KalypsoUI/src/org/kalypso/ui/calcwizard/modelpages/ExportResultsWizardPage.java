@@ -105,7 +105,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.DiagramTemplateUtils;
+import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -218,7 +218,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       final IFile diagFile = (IFile)getProject().findMember( diagFileName );
       try
       {
-        m_obsdiagviewType = DiagramTemplateUtils.loadDiagramTemplateXML( diagFile.getContents() );
+        m_obsdiagviewType = DiagViewUtils.loadDiagramTemplateXML( diagFile.getContents() );
       }
       catch( final Exception e )
       {
@@ -612,7 +612,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     final ObsdiagviewType xml;
     try
     {
-      xml = DiagramTemplateUtils.buildDiagramTemplateXML( m_diagTemplate );
+      xml = DiagViewUtils.buildDiagramTemplateXML( m_diagTemplate );
     }
     catch( JAXBException e2 )
     {
@@ -637,7 +637,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
           {
             protected void write( Writer writer ) throws Throwable
             {
-              DiagramTemplateUtils.saveDiagramTemplateXML( xml, writer );
+              DiagViewUtils.saveDiagramTemplateXML( xml, writer );
             }
           };
 

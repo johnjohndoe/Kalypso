@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.diagview.impl;
+package org.kalypso.ogc.sensor.diagview;
 
 import java.awt.Color;
 
