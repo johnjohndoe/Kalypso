@@ -1,0 +1,33 @@
+/*
+ * Generated file - Do not edit!
+ */
+package de.tuhh.wb.javagis.model;
+
+import java.lang.*;
+import javax.ejb.CreateException;
+import javax.ejb.EntityBean;
+import javax.ejb.EntityContext;
+import javax.ejb.FinderException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Vector;
+
+/**
+ * Home interface for ThemeManager. Lookup using {1}
+ * @xdoclet-generated at Nov 10, 2002 1:50:23 PM
+ */
+public interface ThemeManagerHome
+   extends javax.ejb.EJBHome
+{
+   public static final String COMP_NAME="java:comp/env/ejb/ThemeManager";
+   public static final String JNDI_NAME="ejb/ThemeManager";
+
+   public de.tuhh.wb.javagis.model.ThemeManager create(java.lang.String themeKey,java.lang.Class versionSessionHome,java.lang.String jndiName) throws java.rmi.RemoteException,javax.ejb.CreateException;
+
+   public de.tuhh.wb.javagis.model.ThemeManager findByPrimaryKey(java.lang.String pk)
+      throws java.rmi.RemoteException,javax.ejb.FinderException;
+   public java.util.Collection findAll()
+      throws java.rmi.RemoteException,javax.ejb.FinderException;
+
+}

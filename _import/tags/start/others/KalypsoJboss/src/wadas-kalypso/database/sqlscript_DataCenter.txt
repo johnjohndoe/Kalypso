@@ -1,0 +1,24 @@
+drop table dc_containerobject\g
+drop table dc_treelevel\g
+
+
+
+create table dc_treelevel(
+lvlid 			integer not null primary key,
+levelname 		varchar(64) not null,
+leveldescription 	varchar(256),
+parentlevel 		integer not null
+)\g
+
+modify dc_treelevel to btree unique on lvlid, parentlevel, levelname\g
+
+
+create table dc_containerobject(
+coid 			integer not null primary key,
+lvlid 			integer not null references dc_treelevel (lvlid),
+objname 		varchar(64) not null,
+objdescription 		varchar(256),
+objtype			integer not null
+)\g
+
+modify dc_containerobject to btree unique on coid, lvlid, objname\g

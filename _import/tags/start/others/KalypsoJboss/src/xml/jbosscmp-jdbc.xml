@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jbosscmp-jdbc>
+  <relationships>
+    <ejb-relation>
+      <ejb-relation-name>Versioning-of-Channel</ejb-relation-name>
+      <ejb-relationship-role>
+	<ejb-relationship-role-name>Version-has-Channel</ejb-relationship-role-name>
+	<fk-constraint>true</fk-constraint>
+	<key-fields></key-fields>
+	<read-ahead><strategy>on-load</strategy></read-ahead>
+      </ejb-relationship-role>
+      <ejb-relationship-role>
+	<ejb-relationship-role-name>Channel-has-Version</ejb-relationship-role-name>
+	<fk-constraint>true</fk-constraint>
+	<key-fields></key-fields>
+	<read-ahead><strategy>on-load</strategy></read-ahead>
+      </ejb-relationship-role>
+    </ejb-relation>
+  </relationships>
+</jbosscmp-jdbc>

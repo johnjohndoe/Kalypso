@@ -1,0 +1,54 @@
+<html>
+<title> Kalypso-Tutorial </title>
+<body  >
+<h2>
+Initial Conditions-Parameters
+</h2>
+<img src=blueline.gif align="center" >
+<br><br>
+Initial conditions define hydrological conditions at the starting date of simulation. When running a longterm simulation Kalypso RRM can generate initial conditions for starting date of following shortterm simulation.<br>
+For this project initial conditions need to be estimated for the hydrological condition dependent on exiting climate (precipitation and temperature) and hydrological data.
+Main initial conditions for upper river basin Tisza are: <br>
+<ul>
+<li> Soil moisture<br>
+<li> Snow height<br>
+</ul>
+The other explained parameters can be fixed in model because of less influence.<br>
+The initial conditions are defined for a catchment. <br>
+User can define special state for initial conditions to save their validated modelversions for next simulations of flood events with same former conditions.
+<br><br><b> Soil Moisture</b><br>
+Usable soil moisture = (maximum pore volume - point of withered) * soil thickness
+To estimate the percentage of maximum soil moisture for initial soil moisture both soil characteristics and climate need to be known: <br>
+Both factors influence the water absorption capacity of soil.
+Table 1 fits to calculate maximal possible soil moisture capacity which increases by falling rain cannot stored temporal in soillayer.<br>
+Therefore interflow and overland discharge rise at present.
+Climate situation defines the percentage of soil moisture at starting date of simu-lation. Extremely heavy rain follows up excessive soil moisture up to 100
+<br><br>
+
+<img src=ScreenShot005.gif align="center" >
+
+<br><br>
+Percentage of soil moisture depends on climate conditions equal for all soil layers in elevation zone:<br>
+<u>Wet climate conditions</u> <br>
+Alpine and foothills: 	0.5 to 0.8<br>
+Lowland: 0.7 to 0.9<br>
+<u>Winter with frozen soil</u><br>
+Kalypso RRM is not able to consider process of frozen soil regime. Special hydrological knowledge of climate situation is necessary.<br>
+Either frozen soil can be simulated by low infiltration rate or by changes of soil moisture which considers the frozen water in soillayer.
+<br><br>
+<b>Snow height and water content</b> <br>
+Snow height [mm]<br>
+Water content standard: 10 %<br><br>
+
+<b>Interception storage </b><br>
+Dry: 0 mm<br>
+Wet: 1 mm<br>
+<br>
+<b>Groundwater height </b><br>
+Standard: middle of upper and lower groundwater stage<br>
+Not important for shortterm simulation because of slow groundwater discharge in contrast to surface runoff. Therefore no estimation is necessary and parameters can be fixed.
+
+<br><br>
+<hr>
+FLOMATIS Forecast System, User Manual<i> Kalypso</i> RRM 2/2003 and <i>Kalypso</i> Forecast 2/2003
+</html>

@@ -1,0 +1,65 @@
+<html>
+
+<title> Kalypso Manual </title>
+<head> <h2> Model Data </h2></head>
+<br>
+
+<body>
+
+<img src=ScreenShot012.gif align="center" >
+<br><br>
+
+
+<img src=ScreenShot013.gif align="center" >
+
+<br><br>
+
+<b>NetView</b><br><br>
+NetView points at DB objects and relations in drainage network. A legend explains the displayed symbols.<br>
+Automatically the numbers to define each catchment, strand and node for RRM are visible. Relations show by arrows direction of flow.
+For case study whole upper river Tisza basin is simulated with 106 stands and 122 catchments.<br>
+Therefore user needs functionalities to handle NetView.<br>
+The Menu bar offers tools to<br>
+- Pan,<br>
+- Zoom,<br>
+- Extend,<br>
+- Proportional scaling of symbols and numbers.<br>
+The active function is displayed in menu bar.<br>
+The user can move all objects and relations in order to best direction for him (Pointing mouse courser and shift). For pilot system geography of natural drainage network was basis for symbol locations.
+
+<b>TableView</b><br><br>
+TableView of ModelData version is structured like a register. <br>
+Clicking on register card specific table appears.<br>
+To show all hydrological information tables offer for objects vector sets (a table in table: e.g. For each catchment two soil layers with a set of parameter are fixed).
+<br><br>
+<img src=ScreenShot014.gif align="center" >
+<br><br>
+<img src=ScreenShot015.gif align="center" >
+<br><br>
+The DetailedView is also part of context menu in the TableView and shows parameters of selected relation or object in TableView.<br>
+Editing parameters in Detailed View is still not implemented.<br>
+
+Via buttons at the end of the DetailedView a move through the drainage network is managed:<br>
+
+
+- Up- and downstream node<br>
+- Receiving discharge from catchment (no groundwater: special network used in longterm simulation)<br>
+- Watercorse is an index to identify the river which is modelled by strand.<br>
+<br><br>
+<img src=ScreenShot016.gif align="center" >
+<br><br>
+
+In order to both numerous hydrological parameters and the number of objects or relations an effective tool for selection and edit of properties is implemented.<br>
+These filter module automatically appearing at the end of each table can select objects by specific attributes: e.g. Each catchment can be selected by an average height:<br>
+For selected objects parameter can be changed general. Parameters of vector sets are also able to select or edit by filter. Operators are implemented to select objects by attributes.<br>
+Only one operation at time is possible. Table is reduced to results and next operation can take place.
+Via context menu SET changed parameter in actual row can be set to filter selection.
+Filter is also used to sort object up/ downscaling to number used in drainage net, because data is load to table randomly.
+
+User can save special profile for layout of TableView. In context menu function hide enables to hide selected column. The created view can be saved and stored by menu bar command save or load profile.
+
+
+</body>
+
+
+</HTML>

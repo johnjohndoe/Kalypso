@@ -1,0 +1,12 @@
+/Bodenparameter NAM TISZA
+/
+/Typ       Tiefe[dm]
+TT         2     Tschernosem
+su3_3_h415.0 1.0
+su3_3_h315.0 1.0
+BB         2     Braunerde
+st3_3_h3 5.0 1.0
+st3_3   10.0 1.0
+PP         2     Podsol
+st3_3_h3 6.0 1.0
+st3_3    9.0 1.0
