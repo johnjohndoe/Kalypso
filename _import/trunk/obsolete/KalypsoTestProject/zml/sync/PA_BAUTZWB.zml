@@ -7,10 +7,10 @@
         <metadata name="Vorhersage" value="27.04.2004 10:00:00;29.04.2004 10:00:00"/>
     </metadataList>
     <axis datatype="TYPE=double" key="false" name="Niederschlag" type="N" unit="mm">
-        <valueArray separator=";">7;7;7;7;7;7</valueArray>
+        <valueArray separator=";">1;1;1;1;1;1;1;1</valueArray>
     </axis>
     <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
-        <valueArray separator=";">2004-04-26T22:00:00;2004-04-27T01:00:00;2004-04-27T04:00:00;2004-04-27T07:00:00;2004-04-27T10:00:00;2004-04-27T11:00:00</valueArray>
+        <valueArray separator=";">2004-04-26T22:00:00;2004-04-27T01:00:00;2004-04-27T04:00:00;2004-04-27T07:00:00;2004-04-27T10:00:00;2004-04-27T11:00:00;2004-04-27T00:30:00;2004-04-27T04:30:00</valueArray>
     </axis>
 </observation>
 
