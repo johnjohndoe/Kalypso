@@ -58,12 +58,13 @@ public class LayerTableContentProvider implements IStructuredContentProvider
    */
   public Object[] getElements( final Object inputElement )
   {
-    if( inputElement == null || !(inputElement instanceof IKalypsoFeatureTheme ) )
+    final FeatureList featureList;
+    if( inputElement instanceof IKalypsoFeatureTheme )
+      featureList = ((IKalypsoFeatureTheme)inputElement).getFeatureList();
+    else if( inputElement instanceof FeatureList )
+      featureList = (FeatureList)inputElement;
+    else
       return new Object[] {};
-
-    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)inputElement;
-    
-    final FeatureList featureList = kft.getFeatureList();
     
     return featureList == null ? new Object[] {} : featureList.toFeatures();
   }

@@ -7,25 +7,32 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
+import org.kalypso.ogc.gml.featureview.FeatureviewHelper;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.template.featureview.FeatureviewType;
+import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommandTarget;
+import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
  * @author belger
  */
 public class FeatureDialog implements IFeatureDialog
 {
-  private final ModellEventProvider m_mep;
-  private final ICommandTarget m_target;
   private final Feature m_feature;
   private final Collection m_changes = new ArrayList();
+  private final FeatureTypeProperty m_ftp;
+  private ICommandTarget m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
-  public FeatureDialog( final ModellEventProvider mep, final ICommandTarget target, final Feature feature )
+  public FeatureDialog( final Feature feature, final FeatureTypeProperty ftp )
   {
-    m_mep = mep;
-    m_target = target;
     m_feature = feature;
+    m_ftp = ftp;
   }
 
   /**
@@ -33,10 +40,13 @@ public class FeatureDialog implements IFeatureDialog
    */
   public int open( final Shell shell )
   {
-    final FeatureComposite composite = new FeatureComposite( m_mep, m_target, m_feature );
-
-    final FeatureviewDialog dialog = new FeatureviewDialog( shell, m_mep, composite,
-        m_target );
+    final FeatureviewType fvType = FeatureviewHelper.createFeatureviewFromFeatureTypeProperty( m_feature.getFeatureType(), m_ftp );
+    final FeatureComposite composite = new FeatureComposite( m_feature, new FeatureviewType[] { fvType } );
+    
+    final GMLWorkspace workspace = new GMLWorkspace_Impl( new FeatureType[] { m_feature.getFeatureType() }, m_feature, null, null, null, m_feature.getFeatureType().getAnnotationMap() );
+    final CommandableWorkspace commwork = new CommandableWorkspace( workspace );
+    
+    final FeatureviewDialog dialog = new FeatureviewDialog( commwork, m_target, shell, composite );
     final int result = dialog.open();
     
     if( result == Window.OK )

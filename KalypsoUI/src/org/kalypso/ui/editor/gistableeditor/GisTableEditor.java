@@ -60,6 +60,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -183,7 +184,7 @@ public class GisTableEditor extends AbstractEditorPart implements
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     final IFeatureModifierFactory factory = plugin
         .createFeatureTypeCellEditorFactory();
-    m_layerTable = new LayerTableViewer( parent, this, factory, plugin
+    m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory, plugin
         .getDefaultMapSelectionID(), false );
 
     final MenuManager menuMgr = createSpaltenMenu( "spalten" );

@@ -83,7 +83,7 @@ public class SteuerparameterWizardPage extends WizardPage
 {
   private final IProjectProvider m_projectProvider;
 
-  private final FeatureComposite m_featureComposite = new FeatureComposite( null, null, null, new URL[] {} );
+  private final FeatureComposite m_featureComposite = new FeatureComposite( null, new URL[] {} );
 
   private boolean m_overrideCanFlipToNextPage;
 

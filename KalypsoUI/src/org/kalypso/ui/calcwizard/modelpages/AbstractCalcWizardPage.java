@@ -536,7 +536,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,
           getReplaceProperties() );
 
-      m_gisTableViewer = new LayerTableViewer( parent, this, KalypsoGisPlugin.getDefault()
+      m_gisTableViewer = new LayerTableViewer( parent, SWT.BORDER, this, KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), getSelectionID(), false );
       m_gisTableViewer.applyTableTemplate( template, getContext() );
 

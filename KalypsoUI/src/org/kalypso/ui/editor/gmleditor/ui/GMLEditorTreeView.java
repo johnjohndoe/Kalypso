@@ -409,12 +409,13 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
   {
     m_root = event.getGmlDocument();
     if( m_workspace != null )
-    {
       m_workspace.removeModellListener( this );
-    }
     m_workspace = event.getWorkspace();
     m_workspace.addModellListener( this );
 
+    if( m_composite == null || m_composite.isDisposed() )
+      return;
+    
     m_composite.getDisplay().asyncExec( new Runnable()
     {
       public void run()

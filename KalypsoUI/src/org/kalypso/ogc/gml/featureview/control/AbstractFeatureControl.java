@@ -93,7 +93,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     return m_feature;
   }
   
-  public final void setFeature( final Feature feature )
+  public void setFeature( final Feature feature )
   {
     m_feature = feature;
   }

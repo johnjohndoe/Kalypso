@@ -206,11 +206,11 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
    *          falls true, wird immer die unter dem Cursor liegende Zeile
    *          selektiert
    */
-  public LayerTableViewer( final Composite parent, final ICommandTarget templateTarget,
+  public LayerTableViewer( final Composite parent, final int style, final ICommandTarget templateTarget,
       final IFeatureModifierFactory featureControlFactory, final int selectionID,
       final boolean bCursorSelects )
   {
-    super( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
+    super( parent, style | SWT.MULTI | SWT.FULL_SELECTION );
 
     m_featureControlFactory = featureControlFactory;
     m_selectionID = selectionID;
@@ -788,8 +788,11 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
       final ICommand command = new ChangeFeaturesCommand( theme.getWorkspace(), new FeatureChange[]
       { fc } );
-      theme.postCommand( command, null );
-
+      theme.postCommand( command, new Runnable() {
+        public void run()
+        {
+          refresh();
+        }} );
     }
   }
 
