@@ -56,8 +56,7 @@ public class NaModelCalcJob extends AbstractCalcJob
   public void run( final File basedir, final CalcJobDataBean[] input )
       throws CalcJobServiceException
   {
-    // davon kannst Du ausgehen! TODO: gernot statt basedir erstmal ein
-    // nativedir machen
+    // sollte schon da sein
     //    if( !basedir.exists() )
     //      basedir.mkdirs();
     // erstmal ein Verzeichnis für die generierten Daten erzeugen
