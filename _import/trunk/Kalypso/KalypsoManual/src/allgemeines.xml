@@ -22,7 +22,7 @@
     <para id="para1">Das Programm-System KALYPSO Enterprise ist eine Open
     Source Entwicklung von Björnsen Beratende Ingenieure GmbH (BCE) in
     Kooperation mit dem Arbeitsbereich Wasserbau der Technischen Universität
-    Hamburg-Harburg. KALYPSO erlaubt die Integration und Verwaltung von
+    Hamburg-Harburg (TUHH). KALYPSO erlaubt die Integration und Verwaltung von
     numerischen Modellen - hydraulischer und hydrologischer Art - innerhalb
     einer einheitlichen Benutzeroberfläche. Somit stellt KALYPSO eine
     Abstraktionsschicht dar mit folgenden Eigenschaften:</para>
@@ -258,8 +258,9 @@
 
     <para>Das Speichern des Modells (einschließlich Modellspezifikation,
     Modelldatei, Vorlagen, gemessene und berechnete Zeitreihen sowie
-    Rechenfälle) auf dem Server und ähnliche Funktionen werden mittels eines
-    speziellen Menüs <guilabel>Modell</guilabel> (siehe <xref
+    Rechenfälle) auf dem Server und ähnliche Funktionen werden mittels der
+    speziellen Menüs <guilabel>Modell</guilabel> und
+    <guimenu>Rechenvariante</guimenu> (siehe <xref
     linkend="grundfunktionen" />) im Hauptmenü von KALYPSO angesteuert.</para>
 
     <para>Dieses Datenmanagement-Prinzip ist insbesondere transparent im
@@ -268,9 +269,9 @@
     kann.</para>
 
     <para>Für den Anwender im Hochwasserbetrieb bleibt das Datenmanagement
-    verborgen, da er automatisch und durch den jeweiligen Vorhersage-Wizard
-    geführt die für die Prognose freigeschalteten Modelle vom Server abruft
-    und die Ergebnisse der Hochwasservorhersage-Berechnung in einer
+    verborgen, da er automatisch durch den jeweiligen Vorhersage-Wizard
+    geführt wird, die für die Prognose freigeschalteten Modelle vom Server
+    abruft und die Ergebnisse der Hochwasservorhersage-Berechnung in einer
     vorgegebenen Struktur wieder auf dem Server ablegt.</para>
   </section>
 </chapter>

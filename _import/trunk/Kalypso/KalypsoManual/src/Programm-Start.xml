@@ -16,9 +16,8 @@
   Die Benutzerrechte werden dabei innerhalb des Programmsystems PSICompact
   verwaltet und lediglich als Information an KALYPSO weitergereicht.</para>
 
-  <para>Der Programm-Start von KALYPSO erfolgt entweder über das Windows
-  <guimenu>Start-Menü -&gt; Programme -&gt; KALYPSO</guimenu> oder über
-  Doppelklick des Desktop-Icons KALYPSO.</para>
+  <para>Der Programm-Start von KALYPSO erfolgt entweder durch Doppelklick auf
+  das Desktop-Symbol KALYPSO.</para>
 
   <section id="kalypso_startseite">
     <sectioninfo>
@@ -52,7 +51,7 @@
 
     <para>Die in <xref linkend="pic_kalypso_startseite" /> dargestellte
     Startseite identifiziert den Benutzer als Experten, indem oberhalb des
-    Ansichtsfensters zwei Buttons zur Ansichtsauswahl zur Verfügung
+    Ansichtsfensters drei Buttons zur Ansichtsauswahl zur Verfügung
     stehen:</para>
 
     <itemizedlist>

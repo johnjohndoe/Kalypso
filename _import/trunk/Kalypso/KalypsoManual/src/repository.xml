@@ -7,14 +7,13 @@
 
     <para>Zur Verwaltung von Zeitreihen ist in der KALYPSO-Oberfläche eine
     spezielle Perspektive vorgesehen: Die Zeitreihen-Ablage (Kalypso
-    Observation Repositories). Die Zeitreihen-Ablage ist ein Funktionalität,
-    die mit dem Expertenmodus verbunden ist und somit dem einfachen Anwender
-    nicht zugänglich ist. Sie erscheint standardmäßig in der
-    KALYPSO-Oberfläche des Experten gleichgeordnet mit den Perspektiven
-    KALYPSO Modeler und Hochwasser Vorhersage. Die Perspektive kann, sofern
-    sie geschlossen wurde, über das Menü <guimenu>Fenster</guimenu>
-    hinzugefügt werden (siehe auch <xref
-    linkend="arbeiten_mit_ansichten" />).</para>
+    Zeitreihenbrowser). Die Zeitreihen-Ablage ist eine Funktionalität, die mit
+    dem Expertenmodus verbunden und somit dem einfachen Anwender nicht
+    zugänglich ist. Sie erscheint standardmäßig in der KALYPSO-Oberfläche des
+    Experten, gleichgeordnet mit den Perspektiven KALYPSO Modeler und
+    Hochwasser Vorhersage. Die Perspektive kann, sofern sie geschlossen wurde,
+    über das Menü <guimenu>Fenster</guimenu> hinzugefügt werden (siehe auch
+    <xref linkend="arbeiten_mit_ansichten" />).</para>
 
     <para></para>
 
@@ -28,11 +27,11 @@
 
     <para></para>
 
-    <para>Mit der Zeitreihen-Ablage besteht zu dem die Möglichkeit, weitere
+    <para>Mit der Zeitreihen-Ablage besteht zudem die Möglichkeit, weitere
     Zeitreihen Repositories hinzuzufügen. Dabei kann es sich z.B. um
     Fremddaten oder historische Daten aus einer lokalen Datenquelle handeln.
     Voraussetzung ist allerdings, dass die in der Datenquelle enthaltenen
-    Zeitreihen im zml-Format vorliegen. Eine detaillierte Formatbeschreibung,
+    Zeitreihen im zml-Format vorliegen. Eine detaillierte Formatbeschreibung
     ist in der Technischen Dokumentation nachzuschlagen.</para>
 
     <para></para>
@@ -51,12 +50,14 @@
     <para></para>
 
     <para>Eine weitere Funktionalität der Zeitreihen-Ablage besteht im
-    Datenexport. Somit können z.B. Zeitreihen aus PSI-Compact gelesen und an
-    eine beliebige Stelle ins Netzwerk oder lokal gespeichert werden. Beim
-    Export werden die Zeitreihen im zml-Format abgelegt.</para>
+    Datenexport. Somit können z.B. Zeitreihen aus PSI-Compact heruntergeladen
+    und in ein beliebiges Verzeichnis im Netzwerk oder lokal gespeichert
+    werden. Beim Export werden die Zeitreihen im zml-Format abgelegt. Der
+    Export von Zeitriehen ist in <xref
+    linkend="repository_zeitreihenverwaltung" /> beschrieben.</para>
   </section>
 
-  <section>
+  <section id="repository_ansichten">
     <title>Ablagen-Ansicht</title>
 
     <para>Bei Anwahl der Perspektive über die entsprechende Schaltfläche
@@ -92,13 +93,13 @@
     <para></para>
 
     <para>Alle Fenster innerhalb der Ablagen-Ansicht können generell über das
-    Menü <guimenu>Fenster</guimenu> geöffnet werden.Die einzelnen Fenster
+    Menü <guimenu>Fenster</guimenu> geöffnet werden. Die einzelnen Fenster
     können vom Benutzer beliebig angeordnet und/oder verschoben werden. Es
-    gelten die gleichen Voraussetzungen wie im Expertenmodus (siehe auch <xref
+    gelten die gleichen Optionen wie im Expertenmodus (siehe auch <xref
     linkend="arbeiten_mit_ansichten" />).</para>
   </section>
 
-  <section>
+  <section id="repository_zeitreihenverwaltung">
     <title>Zeitreihenverwaltung</title>
 
     <para>Die Verwaltung der Zeitreihen-Ablagen erfolgt über Funktionen, die
@@ -209,5 +210,45 @@
 
     <para>Die Verzeichnisstruktur der Zeitreihen-Ablage wird vollständig
     angezeigt (´Aufklappen´).</para>
+
+    <para><emphasis role="bold">Datei in ein lokales Verzeichnis
+    herunterladen</emphasis></para>
+
+    <para>Durch Klick auf die Schaltfläche im Zeitreihenfenster (<xref
+    linkend="repository_export" />) kann die aktuell markierte Zeitreihe als
+    Datei in ein beliebiges Verzeichnis gespeichert werden. </para>
+
+    <figure id="repository_export">
+      <title>Exportieren von Zeitreihen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/repository_export_zeitreihen.png" scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Es folgt eine Eingabe-Maske, in der der Zeitraum der zu
+    exportierenden Zeitreihe angebenen wird. Vom Programm vorgebenen wird ein
+    Zeitraum von 30 Tagen (vor der aktuellen Systemzeit). Optional kann vom
+    Benutzer auch ein fest definierter Zeitraum vorgegeben werden (<xref
+    linkend="repository_zeitraum" />).</para>
+
+    <figure id="repository_zeitraum">
+      <title>Definition des Zeitraums beim Export von Zeitreihen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/repository_export_zeitreihen2.png"
+                     scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Durch Klick auf Weiter öffnet sich die Eingabemaske zur Vorgabe des
+    Pfades und des Dateinamens, unter der die Zeitreihe abgespeichert werden
+    soll. Mit Bestätigung durch Klick auf Fertigstellen wird die Zeitreihe im
+    vorgegebenen Verzeichnis gespeichert. Der Export erfolgt - unabhängig von
+    der angegebenen Datei-Endung - immer im zml-Format.</para>
   </section>
 </chapter>

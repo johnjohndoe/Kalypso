@@ -6,9 +6,9 @@
     <title id="dummy1">Vorhersagemodell Weiße Elster</title>
 
     <para>Zur Berechnung von HW-Vorhersagen für das Einzugsgebiet der Weißen
-    Elster ist in der Kalypso-Oberfläche ein Wizard implementiert. In
-    Abhängigkeit der zugeordneten Rechte wird der Benutzer entweder direkt
-    beim Programmstart in den Vorhersagemodus geführt (<xref
+    Elster ist in der Kalypso-Oberfläche ein Wizard implementiert. Unabhängig
+    von den ihm zugeordneten Rechten wird der Benutzer direkt beim
+    Programmstart in den Vorhersagemodus geführt (<xref
     linkend="we_startseite" />). Für Benutzer mit erweiterten Rechten ist es
     jederzeit möglich, aus dem Expertenmodus in den Vorhersagemodus zu
     wechseln (Menü <guimenu>Modell</guimenu> -&gt; <guimenu>Vorhersage
@@ -213,7 +213,7 @@
       angezeigt. Durch Markieren eines Symbols wird die dazugehörige Zeitreihe
       dargestellt. Eine Mehrfachauswahl ist möglich. Bei Bedarf können die
       Tabellenwerte vom Benutzer geändert werden. Die Änderungen werden durch
-      Bestätigung mit <guibutton>weiter</guibutton> für die Berechnungen
+      Bestätigung mit <guibutton>Weiter</guibutton> für die Berechnungen
       übernommen.</para>
     </section>
 
@@ -306,7 +306,7 @@
       automatisch in Abhängigkeit der Zeitreihe (Anpassung der
       Skalierung).</para>
 
-      <para>Zum Starten einer Prognoserechnung dient die Schlatfläche
+      <para>Zum Starten einer Prognoserechnung dient die Schaltfläche
       <guibutton>Berechnung durchführen</guibutton>. Während einer Berechnung
       wird der Fortschritt durch einen Balken im unteren Teil der Maske
       angezeigt. Nach einem erfolgreich durchgeführten Rechenlauf wird die
@@ -322,7 +322,7 @@
       für das darunter liegende Pegeleinzugsgebiet. Es ist allerdings möglich,
       Berechnungen für einen Pegel durchzuführen, ohne dass Ergebnisse für
       oberhalb gelegene Pegel vorliegen. Praktisch bedeutet dies, dass der
-      Anwender sich bis zu einem beliebigen Pegel "klicken" und an diesem
+      Anwender sich bis zu einem beliebigen Pegel 'klicken' und an diesem
       Berechnungen durchführen kann.</para>
 
       <para>Die Reihenfolge für die Abarbeitung der Pegel für das
@@ -412,11 +412,11 @@
       dem Server abgelegt.</para>
 
       <para>Die berechneten Ergebniszeitreihen können über die Schaltfläche
-      <guimenu>Export Prognosen</guimenu> auf dem Server (PSICompact)
-      gespeichert werden. Es erscheint ein Auswahlfenster, in dem diejenigen
-      Ausgabequerschnitte gewählt werden können, für die Zeitreihen
-      herausgeschrieben werden. Die Ablage der Zeitreihen erfolgt nur für den
-      Vorhersage-Zeitraum.</para>
+      <guimenu>Export Prognosen</guimenu> in das
+      Informations-Management-System (PSICompact) gespeichert werden. Es
+      erscheint ein Auswahlfenster, in dem diejenigen Ausgabequerschnitte
+      gewählt werden können, für die Zeitreihen herausgeschrieben werden. Die
+      Ablage der Zeitreihen erfolgt nur für den Vorhersage-Zeitraum.</para>
     </section>
   </section>
 
@@ -424,12 +424,12 @@
     <title>Vorhersagemodell Spree</title>
 
     <para>Zur Berechnung von HW-Vorhersagen für das Einzugsgebiet der Spree
-    ist in der KALYPSO-Oberfläche ein Wizard implementiert. In Abhängigkeit
-    der zugeordneten Rechte wird der Benutzer entweder direkt bei dem
-    Programmstart in den Vorhersagemodus geführt (<xref
-    linkend="spree_startbildschirm" />). Für Benutzer mit erweiterten Rechten
-    ist es jederzeit möglich, aus dem Expertenmodus in den Vorhersagemodus zu
-    wechseln (Menü <guimenu>Modell</guimenu> <guimenu>-&gt; Vorhersage
+    ist in der KALYPSO-Oberfläche ein Wizard implementiert. Unabhängig von den
+    ihm zugeordneten Rechte wird der Benutzer direkt bei dem Programmstart in
+    den Vorhersagemodus geführt (<xref linkend="spree_startbildschirm" />).
+    Für Benutzer mit erweiterten Rechten ist es jederzeit möglich, aus dem
+    Expertenmodus in den Vorhersagemodus zu wechseln (Menü
+    <guimenu>Modell</guimenu> <guimenu>-&gt; Vorhersage
     durchführen</guimenu>).</para>
 
     <figure id="spree_startbildschirm">
@@ -449,7 +449,7 @@
     durchzuführen:</para>
 
     <section id="spree_1">
-      <title>Neues Hochwasser anlegen</title>
+      <title>Neue Hochwasservorhersage anlegen</title>
 
       <para>Mit der Option <guibutton>einen neuen Rechenfall
       erzeugen</guibutton> wird ein neues Hochwasser angelegt. Die Bezeichnung
@@ -615,12 +615,11 @@
 
       <para>Die Anzeige der Zeitreihen erfolgt grafisch und tabellarisch. In
       jeder Eingabemaske wird ein Lageplan mit den zu ändernden Standorten
-      angezeigt. In der Tabelle werden immer alle Pegelzeitreihen gelichzeitig
+      angezeigt. In der Tabelle werden immer alle Pegelzeitreihen gleichzeitig
       aufgeführt. Durch Markieren eines Pegels wird die dazugehörige Zeitreihe
-      auch grafisch dargestellt. Eine Mehrfachauswahl ist möglich. Bei Bedarf
-      können die Tabellenwerte vom Benutzer geändert werden. Die Änderungen
-      werden durch Bestätigung mit <guibutton>weiter</guibutton> für die
-      Berechnungen übernommen.</para>
+      auch grafisch dargestellt. Bei Bedarf können die Tabellenwerte vom
+      Benutzer geändert werden. Die Änderungen werden durch Bestätigung mit
+      <guibutton>weiter</guibutton> für die Berechnungen übernommen.</para>
     </section>
 
     <section>
@@ -672,7 +671,10 @@
           linkend="spree_berechnung" />)</para>
 
           <para>In der Tabelle einzugeben ist die Anfangsbodenfeuchte (in den
-          vom Programm vorgegebenen festen Grenzen)</para>
+          vom Programm vorgegebenen festen Grenzen). Wird für die Bodenfeuchte
+          ein Wert von 0.0 vorgegeben (Standard), wird vom Programm eine
+          optimale Bodenfeuchte berechnet und nach erfolgter Berechnung in die
+          Tabelle eingetragen.</para>
         </listitem>
 
         <listitem>

@@ -77,16 +77,17 @@
       und zeigt die lokal verfügbaren Modelle an.</para>
 
       <para>Die Ansichten für Karten, Tabellen und Diagramme werden geöffnet,
-      indem die jeweilige Datei - d.h. Karte (*.gmt), Tabelle (*.gtt) oder
-      Zeitreihe (*.zml) - im Navigator ausgewählt wird. Wenn dabei die rechte
-      Maustaste gedrückt wird, kann über <guimenuitem>Öffnen mit</guimenuitem>
-      ein für den Dateityp speziell konfigurierter Editor gewählt werden. Z.B.
-      ist dies im Falle der Karten-Ansicht der KALYPSO GisViewEditor (siehe
-      <xref linkend="gis_view_editor" />) und bei Tabellen der KALYPSO
-      GisTableEditor.</para>
+      indem die jeweilige Datei - d.h. Kartenvorlage (*.gmt), GIS-Tabelle
+      (*.gtt), Diagramm (*.odt) oder Zeitreihentabelle (*.ott) - im Navigator
+      ausgewählt wird. Wenn dabei die rechte Maustaste gedrückt wird, kann
+      über <guimenuitem>Öffnen mit</guimenuitem> ein für den Dateityp speziell
+      konfigurierter Editor gewählt werden. Z.B. ist dies im Falle der
+      Karten-Ansicht der KALYPSO Karten-Editor (siehe <xref
+      linkend="gis_view_editor" />) und bei Tabellen der KALYPSO
+      Tabelen-Editor.</para>
 
       <figure id="gis_view_editor">
-        <title>Öffnen einer Karte anhand des GisViewEditor</title>
+        <title>Öffnen einer Karte anhand des Karten-Editors</title>
 
         <mediaobject>
           <imageobject>
@@ -101,9 +102,9 @@
 
       <para>Bei Doppelklick mit linker Maustaste auf die zu öffnende Datei
       wird derjenige Editor zum Öffnen benutzt, mit dem die Datei zuletzt
-      aufgerufen wurde. Bei bestimmten Dateitypen (z.B. Zeitreihen) wird bei
-      Doppelklick auf die Datei ein Vorlagenauswahl-Fenster geöffnet. Hier
-      besteht die Möglichkeit, die Datei unterschiedlich zu visualisieren
+      aufgerufen wurde. Bei bestimmten Dateitypen (z.B. Zeitreihen (*.zml))
+      wird bei Doppelklick auf die Datei ein Vorlagenauswahl-Fenster geöffnet.
+      Hier besteht die Möglichkeit, die Datei unterschiedlich zu visualisieren
       (Tabelle, Diagramm).</para>
 
       <para>Eine Datei kann nur einmal geöffnet werden und folglich nicht
@@ -137,8 +138,8 @@
 
       <itemizedlist>
         <listitem>
-          <para>Karte und Tabelle nacheinander mit KALYPSO GisViewEditor und
-          GisTableEditor öffnen. Karte und Tabelle werden sich danach
+          <para>Karte und Tabelle nacheinander mit KALYPSO Karten-Editor und
+          Tabellen-Editor öffnen. Karte und Tabelle werden sich danach
           überlagern. Zwischen den Ansichten kann durch Mausklick auf den
           Karten- oder Tabellennamen in der oberen Leiste des Ansichtsfensters
           gewechselt werden.</para>
@@ -157,8 +158,8 @@
 
       <para>Geöffnete Ansichten werden durch Mausklick in das jeweilige
       Ansichtsfenster aktiviert. Die aktive Ansicht wird durch farbliche
-      Hervorhebung des Ansichtsnamens in der oberen Ansichtsleiste
-      markiert.</para>
+      Hervorhebung des Ansichtsnamens (und des -rahmens) in der oberen
+      Ansichtsleiste markiert.</para>
 
       <para>Die geöffneten Ansichten können geschlossen werden, indem z.B. mit
       der Maus auf das Kreuz neben dem Ansichtsnamen in der oberen
@@ -208,10 +209,47 @@
     Bearbeitung hydrologischer / hydraulischer Modelle zielenden Ansichten und
     ihre Anpassungsmöglichkeiten werden nachfolgend erläutert.</para>
 
+    <section>
+      <title>Ansichts-Vorlagen</title>
+
+      <para>Das Arbeiten mit unterschiedlichen Ansichten setzt Kenntnisse über
+      das Arbeiten mit Ansichts-Vorlagen voraus. Prinzipiell ist in KALYPSO
+      vorgesehen, nicht die Originaldaten selbst, sondern mit Vorlagen zu
+      arbeiten, die Informationen über die Darstellungsweise bestimmter
+      Modell-Dateien enthalten. In KALYPSO sind Vorlagen definiert, die das
+      Visualisieren von Modelldaten in Form von Karten, Diagrammen und
+      Tabellen ermöglichen. Im Einzelnen existieren folgende Vorlagen:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Kartenvorlage (*.gmt)</para>
+
+          <para>Diese Vorlage dient zum Visualisieren von Modelldaten in einer
+          Kartendarstellung</para>
+        </listitem>
+
+        <listitem>
+          <para>Tabellenvorlage (*.gtt)</para>
+
+          <para></para>
+        </listitem>
+
+        <listitem>
+          <para>Zeitreihendiagramm (*.odt)</para>
+
+          <para></para>
+        </listitem>
+
+        <listitem>
+          <para>Zeitreihentabelle (*.ott)</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
     <section id="menu_karte">
       <title>Karten-Ansicht</title>
 
-      <para>Sobald eine Kartenvorlage (*.gmt) mit dem GisViewEditor geöffnet
+      <para>Sobald eine Kartenvorlage (*.gmt) mit dem Karten-Editor geöffnet
       wird, erscheint im Hauptmenü zwischen den Menüpunkten
       <guimenu>Modell</guimenu> und <guimenu>Fenster</guimenu> ein
       zusätzlicher Menüpunkt <guimenu>Karte</guimenu> (siehe <xref
@@ -224,12 +262,12 @@
       oder verkleinert (Zoom), der Bildausschnitt maximiert und verschoben
       (Pan) werden.</para>
 
-      <para>Im Menü <guimenu>Karte</guimenu> kann die Editierfunktion (Edit
-      Feature) aktiviert werden. Um Elemente in der Karte zu selektieren und
-      ggf. Attribute zu verändern, muss zuvor das gewünschte Thema in der
-      Gliederung-Ansicht ausgewählt und aktiviert werden. Die
-      Aktivierungsfunktion befindet sich im Submenü in der Ansichtsleiste
-      Gliederung.</para>
+      <para>Im Menü <guimenu>Karte</guimenu> kann die Editierfunktion
+      (<guimenuitem>Objekt Editieren</guimenuitem>) aktiviert werden. Um
+      Elemente in der Karte zu selektieren und ggf. Attribute zu verändern,
+      muss zuvor das gewünschte Thema in der Gliederung-Ansicht ausgewählt und
+      aktiviert werden. Die Aktivierungsfunktion befindet sich im Submenü in
+      der Ansichtsleiste Gliederung.</para>
 
       <para>Die Gliederung-Ansicht öffnet sich i.d.R. zusammen mit der
       Karten-Ansicht, sofern dies bei der letzten Arbeitssitzung so
@@ -256,17 +294,18 @@
       <para>Das Layout der Karten-Ansicht bzw. der Kartenvorlage wird anhand
       des Style-Editors angepasst (siehe <xref linkend="style_editor" />).
       Dazu wird in der Gliederung-Ansicht ein Thema ausgewählt, für welches
-      die Styles verändert werden sollen. Beim Klicken auf das Plus-Symbol vor
-      dem Themennamen erscheint eine Untergliederung unter dem Themennamen.
-      I.d.R. gibt es unter dem Themennamen nur eine Untergliederung mit einer
-      identischen Bezeichnung wie der Themenname. Sofern die Untergliederung
-      mit Mausklick aktiviert wird, erscheint in der Ansichtsleiste Gliederung
-      die Funktion <guimenu>Style ändern</guimenu>. Nur diese ist jetzt in der
-      Ansichtsleiste verfügbar - alle anderen sind Grau hinterlegt. Alternativ
-      zur Ansichtsleiste kann anhand Rechtsklick mit der Maus (Untergliederung
-      des Themas muss aktiv sein) ein Submenü geöffnet werden, wo
-      <guimenu>Style verändern</guimenu> ausgewählt werden kann, sodass sich
-      die Style-Editor-Ansicht öffnet. Mit dem Style-Editor können
+      die Darstellung verändert werden soll. Beim Klicken auf das Plus-Symbol
+      vor dem Themennamen erscheint eine Untergliederung unter dem
+      Themennamen. I.d.R. gibt es unter dem Themennamen nur eine
+      Untergliederung mit einer identischen Bezeichnung wie der Themenname.
+      Sofern die Untergliederung mit Mausklick aktiviert wird, erscheint in
+      der Ansichtsleiste Gliederung die Funktion <guimenu>Style
+      ändern</guimenu>. Nur diese ist jetzt in der Ansichtsleiste verfügbar -
+      alle anderen sind Grau hinterlegt. Alternativ zur Ansichtsleiste kann
+      anhand Rechtsklick mit der Maus (Untergliederung des Themas muss aktiv
+      sein) ein Untermenü geöffnet werden, wo <guimenu>Style
+      verändern</guimenu> ausgewählt werden kann, sodass sich die
+      Style-Editor-Ansicht öffnet. Mit dem Style-Editor können
       Symboldarstellungen, Farben, Fonts, etc. interaktiv verändert werden.
       Damit die Veränderungen für die Kartenvorlage wirksam werden, sind die
       Styles entsprechend zu speichern.</para>
@@ -291,7 +330,7 @@
     <section id="menu_tabelle">
       <title>Tabellen-Ansicht (Modellparameter)</title>
 
-      <para>Sobald eine Tabellenvorlage (*.gtt) mit dem GisTableEditor
+      <para>Sobald eine Tabellenvorlage (*.gtt) mit dem Tabellen-Editor
       geöffnet wird, erscheint im Hauptmenü zwischen den Menüpunkten
       <guimenu>Modell</guimenu> und <guimenu>Fenster</guimenu> ein
       zusätzlicher Menüpunkt <guimenu>Tabelle</guimenu> (siehe <xref
@@ -346,14 +385,14 @@
     </section>
 
     <section>
-      <title>Diagramm-Ansicht (zml-Dateien)</title>
+      <title>Tabellen-Ansicht (Zeitreihen)</title>
 
       <para>Zeitreihen im zml-Format (*.zml) können in der KALYPSO-Oberfläche
       als Tabelle oder Diagramm geöffnet werden (<xref
       linkend="navigation_ansichtsauswahl" />). Durch Doppelklick auf eine
-      Zeitreihe und Auswahl von <guimenu>&lt;Standard Diagramm
-      Editor&gt;</guimenu> wird die Zeitreihe in der Diagramm-Ansicht
-      dargestellt (<xref linkend="navigation_diagramm_ansicht" />).</para>
+      Zeitreihe und Auswahl von <guimenu>&lt;Standard Tabellen
+      Editor&gt;</guimenu> wird die Zeitreihe in der Tabellen-Ansicht
+      dargestellt (<xref linkend="navigation_tabelle_zml" />).</para>
 
       <figure id="navigation_ansichtsauswahl">
         <title>Ansichtsauswahl beim Öffnen einer Zeitreihe</title>
@@ -365,17 +404,63 @@
         </mediaobject>
       </figure>
 
+      <figure id="navigation_tabelle_zml">
+        <title>Navigation in der Tabellen-Ansicht (Zeitreihen)</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/tabellen-ansicht_zml.png" scale="30" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>In der Tabellen-Ansicht können die Werte einer Zeitreihe editiert
+      werden (Doppelklick in eine Zelle). Über das Plus- bzw. Minus-Symbol in
+      der Werkzeugleiste können der Tabelle Zeilen hinzugefügt bzw. wieder
+      entfernt werden.</para>
+
+      <para>Wenn bereits eine Zeitreihe in der Tabellen-Ansicht geöffnet ist,
+      können über Drag and Drop (linke Maustaste) aus dem Navigator in die
+      Gliederung-Ansicht mehrere Zeitreihen dargestellt werden. Dies ist auch
+      möglich, wenn es sich um Zeitreihen mit unterschiedlichen Einheiten
+      handelt (Niederschlag, Abfluss, Wasserstand). Zusätzlich ist es in der
+      Gliederungsansicht möglich, einzelne Datensätze einer Zeitreihe (z.B.
+      Wasserstands- und Abflusswerte eines Pegels) individuell darstellen zu
+      lassen oder in der Ansicht auszuschalten (Aktivieren bzw. Deaktivieren
+      des Häkchens).</para>
+
+      <para>Zum Speichern von geänderten Daten innerhalb einer Tabelle muss
+      der Menüpunkt <guimenu>Tabelle --&gt; Daten speichern</guimenu> gewählt
+      werden. Alternativ kann auch die entsprechende Schaltfläche in der
+      Menü-Leiste benutzt werden (siehe <xref
+      linkend="pic_tabelle_button" />). Alle Änderungen in den Zeitreihen
+      betreffen die lokal gespeicherte zml-Datei.</para>
+    </section>
+
+    <section>
+      <title>Diagramm-Ansicht (Zeitreihen)</title>
+
+      <para>Durch Doppelklick auf eine Zeitreihe (*.zml) und Auswahl von
+      <guimenu>&lt;Standard Diagramm Editor&gt;</guimenu> wird die Zeitreihe
+      in der Diagramm-Ansicht dargestellt (siehe <xref
+      linkend="navigation_diagramm_ansicht" />).</para>
+
       <para>Die Diagramm-Ansicht dient ausschließlich der schnellen Übersicht
       und Darstellung von Zeitreihen. Die Möglichkeit der
       Zeitreihenbearbeitung ist mit dem Werkzeug nicht vorgesehen. Zur
-      komplexen Zeitreihenbearbeitung steht das Grafikprogramm (siehe <xref
+      komplexen Zeitreihenbearbeitung mittels Zeitreihen-Vorlagen (*.odt)
+      steht das Grafikprogramm (siehe <xref
       linkend="zeitreihen_bearbeiten" />) zur Verfügung.</para>
 
       <para>Wenn bereits eine Zeitreihe in der Diagramm-Ansicht dargestellt
       ist, dann können über Drag and Drop (linke Maustaste) aus dem Navigator
       in die Gliederung-Ansicht mehrere Zeitreihen dargestellt werden.
       Voraussetzung ist allerdings, dass die Zeitreihen die gleiche Einheit
-      auf der Ordinaten-Achse vorweisen.</para>
+      auf der Ordinaten-Achse vorweisen. Zusätzlich ist es in der
+      Gliederungsansicht möglich, einzelne Datensätze einer Zeitreihe (z.B.
+      Wasserstands- und Abflusswerte eines Pegels) individuell darstellen zu
+      lassen oder in der Ansicht auszuschalten (Aktivieren bzw. Deaktivieren
+      des Häkchens).</para>
 
       <para>Zum Entfernen einer Zeitreihe aus der Diagramm-Ansicht dient das
       rote Kreuz oben rechts im Gliederung-Fenster.</para>
@@ -392,50 +477,10 @@
 
       <para>Innerhalb der Diagramm-Ansicht steht eine Zoom-Funktion zur
       Verfügung. Um einen Abschnitt der Zeitreihe vergrößert darzustellen, ist
-      der entsprechende Abschnitt durch Aufspannen eines Zaunes mit der linken
-      Maus zu markieren. Nach Setzen des ersten Zaun-Eckpunktes (obere linke
-      Ecke) wird die linke Maustaste beim Aufspannen des Zaunes gedrückt
-      gehalten. Weitere Zoomfunktionen stehen durch Klick mit der rechten
-      Maustaste in die Diagramm-Ansicht zur Verfügung.</para>
-    </section>
-
-    <section>
-      <title>Tabellen-Ansicht (zml-Dateien)</title>
-
-      <para>Durch Doppelklick auf eine Zeitreihe und Auswahl von
-      <guimenu>&lt;Standard Table Editor&gt;</guimenu> wird die Zeitreihe in
-      der Tabellen-Ansicht dargestellt. In der Tabelle wird eine Spalte für
-      Datum/Uhrzeit und eine zweite Spalte für die Werte der Zeitreihe
-      angezeigt (siehe <xref linkend="navigation_tabelle_zml" />). </para>
-
-      <figure id="navigation_tabelle_zml">
-        <title>Navigation in der Tabellen-Ansicht (Zeitreihen)</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/tabellen-ansicht_zml.png" scale="30" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <para>In der Tabellen-Ansicht können die Werte einer Zeitreihe editiert
-      werden (Doppelklick in eine Zelle). Über das Plus- bzw. Minus-Symbol in
-      der Werkzeugleiste können der Tabelle Zeilen hinzugefügt bzw. wieder
-      entfernt werden. </para>
-
-      <para>Wenn bereits eine Zeitreihe in der Tabellen-Ansicht geöffnet ist,
-      können über Drag and Drop (linke Maustaste) aus dem Navigator in die
-      Gliederung-Ansicht mehrere Zeitreihen dargestellt werden. Dies ist auch
-      möglich, wenn es sich um Zeitreihen mit unterschiedlichen Einheiten
-      handelt (Niederschlag, Abfluss, Wasserstand). </para>
-
-      <para>Zum Speichern von geänderten Daten innerhalb einer Tabelle muss
-      der Menüpunkt <guimenu>Tabelle --&gt; Daten speichern</guimenu> gewählt
-      werden. Alternativ kann auch die entsprechende Schaltfläche in der
-      Menü-Leiste benutzt werden (siehe <xref
-      linkend="pic_tabelle_button" />). Alle Änderungen in den Zeitreihen
-      betreffen die lokal gespeicherte zml-Datei. Ein Zurückspeichern von
-      Zeitreihen nach PSICompact ist nicht möglich. </para>
+      der entsprechende Abschnitt durch Aufspannen eines Rechteckes mit der
+      linken Maustaste zu markieren. Nach Setzen des ersten Zaun-Eckpunktes
+      (obere linke Ecke) wird die linke Maustaste beim Aufspannen des Zaunes
+      gedrückt gehalten.</para>
     </section>
 
     <section id="zeitreihen_bearbeiten">
@@ -491,7 +536,7 @@
 
       <para>Der Austausch von Modelldateien zwischen dem lokal geöffneten
       Modell und auf dem Server gespeicherten Modellen erfolgt in der
-      KALYPSO-Oberfläche. Über das Menü <guimenu>Modell </guimenu>in der
+      KALYPSO-Oberfläche. Über das Menü <guimenu>Modell</guimenu> in der
       Hauptmenüleiste können auf dem Server gespeicherte Modelle importiert
       bzw. editierte Modelldateien auf den Server zurückgeschrieben werden. Im
       Einzelnen bestehen folgende Möglichkeiten (siehe <xref
@@ -536,11 +581,11 @@
         <title>Modell zurückspeichern</title>
 
         <para>Mit diesem Menüpunkt werden alle lokal bearbeiteten
-        Modelldateien auf dem Server gespeichert. Dies betrifft sowohl
-        geänderte Modellparameter als auch Zeitreihen (Berechnungsergebnisse).
-        Neu angelegte Varianten werden als solche zu dem Modell auf dem Server
-        hinzugefügt. Bei bestehenden Varianten werden die bestehenden Dateien
-        überschrieben. Diese Option steht nur Benutzern mit
+        Modelldateien auf dem Server gespeichert. Dies betrifft allerdings nur
+        evtl. geänderte Modellparameter. Bei bestehenden Modellvarianten
+        werden die bestehenden Dateien überschrieben. Neu angelegte Varianten
+        werden unter der im lokalen Arbeitsverzeichnis verwendeten Bezeichnung
+        auf dem Server abgelegt. Diese Option steht nur Benutzern mit
         Administratoren-Rechten zur Verfügung und ist mit Vorsicht anzuwenden,
         da auf dem Server gespeicherte Änderungen nicht rückgängig gemacht
         werden können. Bei Benutzern, die Expertenrechte besitzen, werden nur
@@ -587,7 +632,7 @@
         <para><guimenu>Inhalt nicht löschen</guimenu>: Es wird lediglich der
         Projekteintrag aus der Programmoberfläche entfernt. Die lokal
         gespeicherten Projektdateien bleiben erhalten, so dass das Projekt
-        jederzeit wieder geöffnet werden kann.</para>
+        jederzeit wieder importiert werden kann.</para>
       </section>
 
       <section>
@@ -717,8 +762,8 @@
         geänderte Wert in die Modelldaten im lokalen Arbeitsverzeichnis
         übernommen. Diese Vorgehensweise kann auf alle Modelldaten angewendet
         werden. Beim Erstellen einer neuen Rechenvariante werden die
-        geänderten Modelldaten mit in das jeweilige Verzeichnis übernommen.
-        </para>
+        geänderten Modelldaten mit in das jeweilige Verzeichnis
+        übernommen.</para>
       </section>
     </section>
 
@@ -763,14 +808,14 @@
       <section id="rechenvariante_laden">
         <title>Vom Server laden...</title>
 
-        <para>Mit dieser Option können bereits auf dem Server abgelegte
+        <para>Mit dieser Option können auf dem Server abgelegte
         Rechenvarianten in das aktuelle Modell geladen werden. Es erscheint
         eine Auswahl der auf dem Server archivierten Rechenvarianten. Nach
         Bestätigung durch Fertigstellen werden die Varianten unter gleichem
-        Namen in den ausgewählten Ordner kopiert. Die Zeitreihen einer
-        Rechenvariante werden bei diesem Schritt nicht aktualisiert. Dies muss
-        bei Bedarf mit dem Menüpunkt <guimenu>Zeitreihen
-        aktualisieren</guimenu> vorgenommen werden.</para>
+        Namen in den gleichen Unterordner kopiert, der in der Serverstruktur
+        angezeigt wird. Die Zeitreihen einer Rechenvariante werden bei diesem
+        Schritt nicht aktualisiert. Dies muss bei Bedarf mit dem Menüpunkt
+        <guimenu>Zeitreihen aktualisieren</guimenu> vorgenommen werden.</para>
       </section>
 
       <section id="rechenvariante_kopieren">
@@ -788,18 +833,19 @@
       <section id="rechenvariante_berechnung">
         <title>Berechnung durchführen</title>
 
-        <para>Nach Auswahl des Modells im Navigator-Fenster können
-        Modellberechnungen über diesen Menüpunkt durchgeführt werden. Es
-        erscheint ein Auswahlfenster, in dem alle im Modell definierten
-        Berechnungsvarianten aufgelistet werden. Durch das Häkchen vor dem
-        Namen kann die jeweilige Rechenvariante aktiviert bzw. deaktiviert
-        werden. Dabei können in einem Rechenlauf beliebig viele Varianten
-        berechnet werden. Der aktuelle Fortschritt der Berechnung(en) wird mit
-        Hilfe eines Balkens dargestellt. Nach erfolgreich durchgeführter
-        Berechnung werden die Ergebnisse in Form von Zeitreihen in den
-        Rechenlauf-Ordner gespeichert. Die Speicherung erfolgt im lokalen
-        Arbeitsverzeichnis. Ggfs. müssen die berechneten Ergebnisse per Hand
-        auf den Server übertragen werden (siehe <xref
+        <para>Nach Auswahl eines Modells bzw. einer oder mehrerer
+        Rechenvarianten im Navigator-Fenster können Modellberechnungen über
+        diesen Menüpunkt durchgeführt werden. Es erscheint ein Auswahlfenster,
+        in dem alle im Modell definierten Berechnungsvarianten aufgelistet
+        werden. Durch das Häkchen vor dem Namen kann die jeweilige
+        Rechenvariante aktiviert bzw. deaktiviert werden. Dabei können in
+        einem Rechenlauf beliebig viele Varianten berechnet werden. Der
+        aktuelle Fortschritt der Berechnung(en) wird mit Hilfe eines Balkens
+        dargestellt. Nach erfolgreich durchgeführter Berechnung werden die
+        Ergebnisse in Form von Zeitreihen in den Rechenlauf-Ordner
+        gespeichert. Die Speicherung erfolgt im lokalen Arbeitsverzeichnis.
+        Ggfs. müssen die berechneten Ergebnisse vom Benutzer auf den Server
+        übertragen werden (siehe <xref
         linkend="rechenvariante_archivieren" />).</para>
       </section>
 
