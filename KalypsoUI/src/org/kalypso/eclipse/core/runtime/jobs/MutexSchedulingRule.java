@@ -55,7 +55,10 @@ public class MutexSchedulingRule implements ISchedulingRule
    */
   public boolean contains( final ISchedulingRule rule )
   {
-    return this == rule;
+    if( rule instanceof MutexSchedulingRule )
+      return this == rule;
+    
+    return true;
   }
 
   /**
