@@ -1,10 +1,12 @@
 package org.kalypso.ui.view.prognose;
 
+import java.io.File;
 import java.net.URL;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -20,6 +22,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.CalcWizard;
 import org.kalypso.ui.calcwizard.CalcWizardDialog;
+import org.kalypso.util.synchronize.ModelSynchronizer;
 
 /**
  * @author belger
@@ -90,9 +93,39 @@ public class PrognoseView extends ViewPart
   protected void startModel( final String projectName )
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    final IProject project = root.getProject( projectName );
     
-    // TODO: Projekt aktualisieren, bzw. runterladen
+    // Projekt updaten
+    final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
+
+    if( serverRoot == null )
+    {
+      // TODO: error handling
+      return;
+    }
+
+    // TODO: progress monitor
+    // am besten busyCursorWhile
+
+    final IProject project;
+    try
+    {
+      project = root.getProject( projectName );
+      final File serverProject = new File( serverRoot, projectName );
+      
+      if( !serverProject.exists() )
+      // TODO: error message
+        return;
+      
+      final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
+      synchronizer.updateLocal();
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      // TODO: error handling
+      
+      return;
+    }
     
     final CalcWizard wizard = new CalcWizard( project );
 
