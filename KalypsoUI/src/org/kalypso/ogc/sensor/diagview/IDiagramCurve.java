@@ -2,6 +2,7 @@ package org.kalypso.ogc.sensor.diagview;
 
 import java.awt.Paint;
 
+import org.kalypso.eclipse.ui.IViewable;
 
 
 /**
@@ -9,7 +10,7 @@ import java.awt.Paint;
  * 
  * @author schlienger
  */
-public interface IDiagramCurve
+public interface IDiagramCurve extends IViewable
 {
   /**
    * @return name of the curve as displayed in the diagram
@@ -26,13 +27,12 @@ public interface IDiagramCurve
    */
   public IDiagramTemplateTheme getTheme();
 
-  /**
-   * @param string
-   */
   public void setName( String string );
   
   /**
    * @return paint
    */
   public Paint getPaint();
+
+  public void setShown( boolean shown); 
 }

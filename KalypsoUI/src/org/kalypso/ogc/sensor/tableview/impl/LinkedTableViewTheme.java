@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
 import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
 
@@ -16,14 +17,17 @@ import org.kalypso.template.obstableview.TypeObservation;
 public class LinkedTableViewTheme extends DefaultTableViewTheme
 {
   private TypeObservation m_tobs;
+  private final ITableViewTemplate m_template;
 
   /**
-   * Constructor. Columns are created once the observation is set.
+   * Constructor. Columns are created once the observation is set
    * 
+   * @param template
    * @param tobs
    */
-  public LinkedTableViewTheme( final TypeObservation tobs )
+  public LinkedTableViewTheme( final ITableViewTemplate template, final TypeObservation tobs )
   {
+    m_template = template;
     m_tobs = tobs;
   }
 
@@ -42,7 +46,7 @@ public class LinkedTableViewTheme extends DefaultTableViewTheme
 
       final IAxis valueAxis = ObservationUtilities.findAxisByName( obs.getAxisList(), tcol.getAxis() );
       
-      DefaultTableViewColumn column = new DefaultTableViewColumn( tcol.getAxis(), tcol.isEditable(), tcol.getWidth(), keyAxis, valueAxis, this );
+      DefaultTableViewColumn column = new DefaultTableViewColumn( tcol.getAxis(), tcol.isEditable(), tcol.getWidth(), keyAxis, valueAxis, this, m_template );
       
       addColumn( column );
     }

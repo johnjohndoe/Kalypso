@@ -10,8 +10,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-import org.jfree.chart.LegendItem;
-import org.jfree.chart.LegendItemCollection;
 import org.jfree.chart.annotations.XYTextAnnotation;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.NumberAxis;
@@ -452,23 +450,6 @@ public class ObservationPlot extends XYPlot
       drawHorizontalLine( g2d, rec, vac.value, g2d.getStroke(), vac.color );
     }
   }
-
-  /**
-   * @see org.jfree.chart.plot.XYPlot#getLegendItems()
-   */
-  public LegendItemCollection getLegendItems()
-  {
-    final LegendItemCollection legendItemCollection = super.getLegendItems();
-    
-    for( final Iterator iter = legendItemCollection.iterator(); iter.hasNext(); )
-    {
-      final LegendItem li = (LegendItem)iter.next();
-      System.out.println( li.getLabel() );
-    }
-    
-    return legendItemCollection;
-  }
-
 
   /**
    * Helper that creates a marker

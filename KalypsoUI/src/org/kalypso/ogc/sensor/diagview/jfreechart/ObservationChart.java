@@ -95,6 +95,18 @@ public class ObservationChart extends JFreeChart implements
               .getObject() );
         }
 
+        // SHOW/HIDE A CURVE
+        if( evt.isType( TemplateEvent.TYPE_SHOW_STATE )
+            && evt.getObject() instanceof IDiagramCurve )
+        {
+          final IDiagramCurve curve = (IDiagramCurve) evt.getObject();
+          
+          if( curve.isShown() )
+            obsPlot.addCurve( curve );
+          else
+            obsPlot.removeCurve( curve );
+        }
+        
         // REFRESH LIST OF THEMES
         if( evt.getType() == TemplateEvent.TYPE_REFRESH
             && evt.getObject() instanceof Collection )

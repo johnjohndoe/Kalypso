@@ -1,6 +1,7 @@
 package org.kalypso.ui.editor.obstableeditor;
 
 import java.net.URL;
+import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -11,18 +12,24 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
+import org.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer2;
+import org.kalypso.eclipse.ui.views.contentouline.ContentOutlinePage2;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
@@ -37,30 +44,43 @@ import org.kalypso.ui.editor.obstableeditor.actions.RemoveThemeAction;
  * 
  * @author schlienger
  */
-public class ObsTableOutlinePage extends ContentOutlinePage implements
-    ITemplateEventListener
+public class ObsTableOutlinePage extends ContentOutlinePage2 implements
+    ITemplateEventListener, ICheckStateListener
 {
   protected LinkedTableViewTemplate m_template;
 
   private RemoveThemeAction m_removeThemeAction;
 
   /**
-   * @see org.eclipse.ui.views.contentoutline.ContentOutlinePage#createControl(org.eclipse.swt.widgets.Composite)
+   * @see org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     super.createControl( parent );
 
+    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer) getTreeViewer();
+    
     // drop support for files
     Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
-    getTreeViewer().addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers,
-        new DropAdapter( getTreeViewer() ) );
+    tv.addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers,
+        new DropAdapter( tv ) );
 
-    getTreeViewer().setLabelProvider( new ObsTableTemplateLabelProvider() );
-    getTreeViewer().setContentProvider( new ObsTableTemplateContentProvider() );
-    getTreeViewer().setInput( m_template );
+    tv.setLabelProvider( new ObsTableTemplateLabelProvider() );
+    tv.setContentProvider( new ObsTableTemplateContentProvider() );
+    tv.setInput( m_template );
+    
+    tv.addCheckStateListener( this );
 
     m_removeThemeAction = new RemoveThemeAction( this );
+  }
+
+  /**
+   * @see org.kalypso.eclipse.ui.views.contentouline.ContentOutlinePage2#createTreeViewer(org.eclipse.swt.widgets.Composite)
+   */
+  protected TreeViewer createTreeViewer( final Composite parent )
+  {
+    return new ContainerCheckedTreeViewer2( parent, SWT.MULTI | SWT.H_SCROLL
+        | SWT.V_SCROLL );
   }
 
   /**
@@ -82,6 +102,23 @@ public class ObsTableOutlinePage extends ContentOutlinePage implements
     }
 
     return null;
+  }
+  
+  /**
+   * @return true if a theme is selected
+   */
+  public boolean isThemeSelected()
+  {
+    final ISelection sel = getSelection();
+
+    if( sel instanceof IStructuredSelection )
+    {
+      final Object element = ((IStructuredSelection) sel).getFirstElement();
+
+      return element instanceof ITableViewTheme;
+    }
+    
+    return false;
   }
 
   /**
@@ -166,12 +203,43 @@ public class ObsTableOutlinePage extends ContentOutlinePage implements
    */
   public void dispose( )
   {
+    if( m_removeThemeAction != null )
+      m_removeThemeAction.dispose();
+    
     if( m_template != null )
       m_template.removeTemplateEventListener( this );
+
+    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer) getTreeViewer();
+    if( tv != null )
+      tv.removeCheckStateListener( this );
 
     m_template = null;
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.ICheckStateListener#checkStateChanged(org.eclipse.jface.viewers.CheckStateChangedEvent)
+   */
+  public void checkStateChanged( final CheckStateChangedEvent event )
+  {
+    final Object element = event.getElement();
+
+    if( element instanceof ITableViewColumn )
+    {
+      final ITableViewColumn col = (ITableViewColumn) element;
+      col.setShown( event.getChecked() );
+    }
+    else if( element instanceof ITableViewTheme )
+    {
+      final ITableViewTheme theme = (ITableViewTheme) element;
+
+      for( final Iterator it = theme.getColumns().iterator(); it.hasNext(); )
+      {
+        final ITableViewColumn col = (ITableViewColumn) it.next();
+        col.setShown( event.getChecked() );
+      }
+    }
+  }
+  
   /**
    * DropAdapter
    * 
