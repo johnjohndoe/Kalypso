@@ -155,7 +155,24 @@
                 style="radio"
                 menubarPath="/karte"
                 id="org.kalypso.editor.mapeditor.action.SelectAction"/>
-            </editorContribution>
+ <action
+                toolbarPath="karte"
+                label="Elemente deselektieren"
+                class="org.kalypso.ogc.widgets.UnSelectWidget"
+                icon="icons/full/elcl16/kde_contents.gif"
+                tooltip="deselektiert dinge"
+                style="radio"
+                menubarPath="/karte"
+                id="org.kalypso.editor.mapeditor.action.UnSelectAction"/>
+ <action
+                toolbarPath="karte"
+                label="Selektion umschalten"
+                class="org.kalypso.ogc.widgets.ToggleSelectWidget"
+                icon="icons/full/elcl16/kde_options.gif"
+                tooltip="umschalten"
+                style="radio"
+                menubarPath="/karte"
+                id="org.kalypso.editor.mapeditor.action.ToggleSelectAction"/>            </editorContribution>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
