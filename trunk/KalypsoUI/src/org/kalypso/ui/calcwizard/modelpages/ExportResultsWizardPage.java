@@ -662,7 +662,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
         final IStatus status = performPrognoseExport( resultTss, prognoseTss,
             selectedCalcCase, monitor );
 
-        if( status != Status.OK_STATUS )
+        if( !status.isOK() )
           throw new CoreException( status );
       }
     };
@@ -703,47 +703,46 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     if( resultTss.length != prognoseTss.length )
       throw new IllegalArgumentException( "Timeseries links not same length" );
 
+    final Logger LOG = Logger.getLogger( getClass().getName() );
+
+    monitor.beginTask( "Prognosen zurück speichern", prognoseTss.length );
+
+    final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING,
+        KalypsoGisPlugin.getId(), 0,
+        "Fehler sind während der Export aufgetaucht." );
+
     try
     {
-      monitor.beginTask( "Prognosen zurück speichern", prognoseTss.length );
+      final URL context = ResourceUtilities.createURL( calcCase );
 
-      final Logger LOG = Logger.getLogger( getClass().getName() );
+      final UrlResolver resolver = new UrlResolver();
 
-      final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING,
-          KalypsoGisPlugin.getId(), 0,
-          "Nicht alle Zeitreihen konnten zurück gespeichert werden." );
-
-      try
+      for( int i = 0; i < prognoseTss.length; i++ )
       {
-        final URL context = ResourceUtilities.createURL( calcCase );
+        if( monitor.isCanceled() )
+          return Status.CANCEL_STATUS;
 
-        final UrlResolver resolver = new UrlResolver();
+        final TSLinkWithName lnkRS = resultTss[i];
+        final TSLinkWithName lnkPG = prognoseTss[i];
 
-        for( int i = 0; i < prognoseTss.length; i++ )
+        try
         {
-          if( monitor.isCanceled() )
-            return Status.CANCEL_STATUS;
-
-          final TSLinkWithName lnkRS = resultTss[i];
-          final TSLinkWithName lnkPG = prognoseTss[i];
-
           final URL urlRS = resolver.resolveURL( context, lnkRS.href );
           final IObservation source = ZmlFactory.parseXML( urlRS, lnkRS.href );
 
           final String destRef = ZmlURL.insertDateRange( lnkPG.href,
               new DateRangeArgument( new Date(), new Date() ) );
           final URL urlPG = resolver.resolveURL( context, destRef );
-
           final IObservation dest = ZmlFactory.parseXML( urlPG, destRef );
 
           ITuppleModel values = null;
-          // copy values from source into dest, expecting full compatibility
           try
           {
+            // copy values from source into dest, expecting full compatibility
             values = ObservationUtilities.optimisticValuesCopy( source, dest,
                 null, true );
           }
-          catch( IllegalStateException e )
+          catch( IllegalArgumentException e )
           {
             // not all axes could be associated between source and dest
             LOG.warning( "Observations are not compatible: " + e + "\n"
@@ -769,23 +768,38 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
             else
               LOG.warning( "! Observation not server side: " + lnkPG.href );
           }
+        }
+        catch( SensorException e )
+        {
+          LOG.warning( e.getLocalizedMessage() );
 
-          monitor.worked( 1 );
+          multiStatus.addMessage( "Fehler mit folgenden Zeitreihen: "
+              + lnkRS.href + " und " + lnkPG.href, e );
         }
 
-        return multiStatus;
+        monitor.worked( 1 );
       }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
 
-        // TODO: bessere Fehlermeldung (z.B. die Datei existiert nicht)
-        // taucht sonst in WQObservationFilter.initFilter() als
-        // NoSuchElementException: No axis found with type: Q
-        //
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-            "Export Prognose Zeitreihen", e ) );
-      }
+      return multiStatus;
+      //      }
+      //      catch( final Exception e )
+      //      {
+      //        e.printStackTrace();
+      //
+      //        // TODO: bessere Fehlermeldung (z.B. die Datei existiert nicht)
+      //        // taucht sonst in WQObservationFilter.initFilter() als
+      //        // NoSuchElementException: No axis found with type: Q
+      //        //
+      //        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+      //            "Export Prognose Zeitreihen", e ) );
+      //      }
+    }
+    catch( MalformedURLException e )
+    {
+      LOG.warning( e.getLocalizedMessage() );
+
+      return KalypsoGisPlugin.createErrorStatus( "Fehler in der Konfiguration",
+          e );
     }
     finally
     {
