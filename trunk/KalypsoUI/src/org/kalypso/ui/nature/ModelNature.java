@@ -268,6 +268,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     // Protokolle ersetzen
     try
     {
+      FolderUtilities.mkdirs( folder );
+      
       final CalcCaseConfigType trans = readCalcCaseConfig( folder );
 
       monitor.worked( 1000 );
@@ -486,20 +488,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Fehler beim Laden der Modell-Spezifikation", e ) );
     }
-  }
-
-  public IFolder createNewPrognose( final IProgressMonitor monitor ) throws CoreException
-  {
-    // ein noch nicht benutztes Unterverzeichnis im Prognoseverzeichnis finden
-    final IFolder prognoseFolder = getPrognoseFolder();
-    FolderUtilities.mkdirs( prognoseFolder );
-    final IFolder calcCaseFolder = FolderUtilities.createUnusedFolder( prognoseFolder, "prognose" );
-
-    monitor.beginTask( "neuen Rechenfall erzeugen", 2000 );
-    calcCaseFolder.create( false, true, new SubProgressMonitor( monitor, 1000 ) );
-    createCalculationCaseInFolder( calcCaseFolder, new SubProgressMonitor( monitor, 1000 ) );
-
-    return calcCaseFolder;
   }
 
   private void retrieveOutput( final File serveroutputdir, final IFolder targetfolder,

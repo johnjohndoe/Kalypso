@@ -14,7 +14,7 @@ public class CalcWizardDialog extends WizardDialog
     super( parentShell, newWizard );
     
     final Point size = parentShell.getSize();
-    setMinimumPageSize( (int)( size.x * 1.0 ), (int)( size.y *  0.66 ) );
+    setMinimumPageSize( (int)( size.x * 0.8 ), (int)( size.y *  0.66 ) );
   }
   
   protected void backPressed()

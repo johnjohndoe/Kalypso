@@ -34,6 +34,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.createpages.AddCalcCasePage;
 import org.kalypso.ui.calcwizard.createpages.AddNewCalcCaseChoice;
 import org.kalypso.ui.calcwizard.createpages.ContinueOldCalcCaseChoice;
+import org.kalypso.ui.calcwizard.createpages.CopyCalcCaseChoice;
 import org.kalypso.ui.calcwizard.modelpages.IModelWizardPage;
 import org.kalypso.ui.nature.ModelNature;
 import org.kalypso.ui.wizard.calccase.SteuerparameterWizardPage;
@@ -67,10 +68,8 @@ public class CalcWizard implements IWizard, IProjectProvider
     m_controlPage = new SteuerparameterWizardPage( this, true );
     
     m_addCalcCasePage.addChoice( new AddNewCalcCaseChoice( "einen neuen Rechenfall erzeugen", m_project, m_addCalcCasePage ) );
-    m_addCalcCasePage.addChoice( new ContinueOldCalcCaseChoice( "einen bereits vorhandenen Rechenfall wieder aufnehmen", m_project, m_addCalcCasePage ) );
-    
-    //        private final String m_updateChoice = "vorhandenen Rechenfall
-    // duplizieren und aktualisieren";
+    m_addCalcCasePage.addChoice( new ContinueOldCalcCaseChoice( "einen bereits vorhandenen Rechenfall fortführen", m_project, m_addCalcCasePage ) );
+    m_addCalcCasePage.addChoice( new CopyCalcCaseChoice( "einen bereits vorhandenen Rechenfall kopieren", m_project, m_addCalcCasePage ) );
 
     addPage( m_addCalcCasePage );
     addPage( m_controlPage );
@@ -251,15 +250,18 @@ public class CalcWizard implements IWizard, IProjectProvider
       public void execute( final IProgressMonitor monitor ) throws CoreException
       {
         if( page == m_addCalcCasePage )
+        {
+          // vielleicht sollte das hier auch erst nach den Steuerparametern passieren?
           m_addCalcCasePage.doNext( monitor );
+          m_controlPage.setUpdate( m_addCalcCasePage.shouldUpdate() );
+        }
         else if( page == m_controlPage )
         {
           monitor.beginTask( "aktualisiere Zeitreihen", 3000 );
-          
+
           final IFolder currentCalcCase = m_addCalcCasePage.getCurrentCalcCase();
           m_controlPage.saveChanges( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
-
-          if( m_addCalcCasePage.isUpdateCalcCase() )
+          if( m_controlPage.isUpdate() )
             ModelNature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
           else
             monitor.worked( 1000 );

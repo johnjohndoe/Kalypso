@@ -12,18 +12,23 @@ import org.eclipse.swt.widgets.Control;
 public interface IAddCalcCaseChoice
 {
   public void createControl( final Composite parent );
-  
+
   public Control getControl();
-  
-  /** Erzeugt oder wählt einen Rechenfall und gibt dessen Basisverzeichnis zurück  */
+
+  /** Erzeugt oder wählt einen Rechenfall und gibt dessen Basisverzeichnis zurück */
   public IFolder perform( final IProgressMonitor monitor ) throws CoreException;
-  
+
   /**
    * @see java.lang.Object#toString()
    */
   public String toString();
 
-  public void update( final IProgressMonitor monitor ) throws CoreException;
-  
-  public boolean isUpdateCalcCase();
+  /**
+   * Die View refreshen, mittlerweile können Sich die benutzten und vorhandenen
+   * Rechenfälle geändert haben
+   */
+  public void refresh( final IProgressMonitor monitor ) throws CoreException;
+
+  /** Ob bei dieser Wahl der Rechenfall nach Eingabe der Steuerparameter aktualisiert werden sollte */
+  public boolean shouldUpdate();
 }

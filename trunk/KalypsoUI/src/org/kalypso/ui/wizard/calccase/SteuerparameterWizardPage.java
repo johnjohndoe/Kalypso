@@ -18,7 +18,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.kalypso.eclipse.core.resources.IProjectProvider;
 import org.kalypso.eclipse.util.SetContentThread;
 import org.kalypso.java.lang.CatchRunnable;
@@ -42,7 +48,12 @@ public class SteuerparameterWizardPage extends WizardPage
 
   private boolean m_overrideCanFlipToNextPage;
 
-  public SteuerparameterWizardPage( final IProjectProvider pp, final boolean overrideCanFlipToNextPage )
+  private boolean m_update;
+
+  private Button m_checkUpdate;
+
+  public SteuerparameterWizardPage( final IProjectProvider pp,
+      final boolean overrideCanFlipToNextPage )
   {
     super( "EditCalcCaseControlPage", "Steurparameter", null );
 
@@ -61,13 +72,43 @@ public class SteuerparameterWizardPage extends WizardPage
       final ModelNature nature = (ModelNature)m_projectProvider.getProject().getNature(
           ModelNature.ID );
       final GMLWorkspace workspace = nature.loadDefaultControl();
-      
+
       // Vorlage auslesen
       final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/"
           + ModelNature.CONTROL_VIEW_PATH );
       m_featureComposite = new FeatureComposite( workspace.getRootFeature(), new URL[]
       { viewURL } );
-      setControl( m_featureComposite.createControl( parent, SWT.NONE ) );
+
+      final Composite panel = new Composite( parent, SWT.NONE );
+      panel.setLayout( new GridLayout() );
+      panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+      final Control featureControl = m_featureComposite.createControl( panel, SWT.NONE );
+      featureControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+      final Button checkUpdate = new Button( panel, SWT.CHECK );
+      checkUpdate.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+      checkUpdate.setText( "Zeitreihen aktualisieren" );
+      checkUpdate
+          .setToolTipText( "falls aktiv, werden die Zeitreihen im nächsten Schritt aktualisiert" );
+      checkUpdate.setSelection( m_update );
+      m_checkUpdate = checkUpdate;
+
+      checkUpdate.addSelectionListener( new SelectionAdapter()
+      {
+        /**
+         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+         */
+        public void widgetSelected( final SelectionEvent e )
+        {
+          if( e.detail == SWT.CHECK )
+          {
+            setUpdate( checkUpdate.getSelection() );
+          }
+        }
+      } );
+
+      setControl( panel );
     }
     catch( final MalformedURLException e )
     {
@@ -91,10 +132,11 @@ public class SteuerparameterWizardPage extends WizardPage
     m_featureComposite.updateControl();
   }
 
-  public void saveChanges( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
+  public void saveChanges( final IFolder folder, final IProgressMonitor monitor )
+      throws CoreException
   {
-    monitor.beginTask( "Steuerparameter speichern" ,  2000 );
-    
+    monitor.beginTask( "Steuerparameter speichern", 2000 );
+
     // COMMITTEN
     final Collection changes = new ArrayList();
 
@@ -111,15 +153,16 @@ public class SteuerparameterWizardPage extends WizardPage
             .toArray( new FeatureChange[changes.size()] ) ).process();
       }
     } );
-    
+
     monitor.worked( 1000 );
 
     // SPEICHERN
     final Feature rootFeature = m_featureComposite.getFeature();
 
     final IFile controlFile = folder.getFile( ModelNature.CONTROL_NAME );
-    
-    final SetContentThread thread = new SetContentThread( controlFile, !controlFile.exists(), false, false, new NullProgressMonitor() )
+
+    final SetContentThread thread = new SetContentThread( controlFile, !controlFile.exists(),
+        false, false, new NullProgressMonitor() )
     {
       public void write( final Writer w ) throws Throwable
       {
@@ -139,16 +182,17 @@ public class SteuerparameterWizardPage extends WizardPage
     {
       monitor.done();
     }
-    
+
     final CoreException fileException = thread.getFileException();
     if( fileException != null )
       throw fileException;
-    
+
     final Throwable throwable = thread.getThrown();
     if( throwable != null )
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Speichern der Steuerdaten.\n" + throwable.getLocalizedMessage(), throwable ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+          "Fehler beim Speichern der Steuerdaten.\n" + throwable.getLocalizedMessage(), throwable ) );
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
    */
@@ -156,8 +200,31 @@ public class SteuerparameterWizardPage extends WizardPage
   {
     if( m_overrideCanFlipToNextPage )
       return isPageComplete();
-    
+
     return super.canFlipToNextPage();
   }
-  
+
+  public boolean isUpdate()
+  {
+    return m_update;
+  }
+
+  public void setUpdate( final boolean update )
+  {
+    if( m_update != update )
+    {
+      m_update = update;
+
+      final Button checkUpdate = m_checkUpdate;
+      if( checkUpdate != null && !checkUpdate.isDisposed() )
+        checkUpdate.getDisplay().asyncExec( new Runnable()
+        {
+          public void run()
+          {
+            checkUpdate.setSelection( update );
+          }
+        } );
+    }
+
+  }
 }
