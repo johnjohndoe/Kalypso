@@ -8,14 +8,14 @@ import org.eclipse.ui.IWorkbench;
 /**
  * @author belger
  */
-public class NewMapWizard extends Wizard implements INewWizard
+public class NewGttWizard extends Wizard implements INewWizard
 {
 
   /**
    *
    */
 
-  public NewMapWizard()
+  public NewGttWizard()
   {
     super();
 

@@ -27,11 +27,11 @@
       <import plugin="org.eclipse.compare" export="true"/>
       <import plugin="org.eclipse.core.runtime" export="true"/>
       <import plugin="org.eclipse.debug.core" export="true"/>
-      <import plugin="org.eclipse.debug.ui" export="true"/>
       <import plugin="org.kalypso.util" export="true"/>
       <import plugin="org.kalypso.deegree" export="true"/>
       <import plugin="org.kalypso.core" export="true"/>
       <import plugin="org.eclipse.ui.forms" export="true"/>
+      <import plugin="org.eclipse.debug.ui"/>
    </requires>
    <extension
          point="org.eclipse.ui.editors">
@@ -276,6 +276,24 @@
             category="org.kalypso.ui.wizardCategory"
             name="Karte"
             id="org.kalypso.wizard.newMap"/>
+      <wizard
+            icon="icons/kalypso_gtt.gif"
+            class="org.kalypso.ui.wizard.NewGttWizard"
+            category="org.kalypso.ui.wizardCategory"
+            name="Tabelle (GIS)"
+            id="org.kalypso.wizard.newGtt"/>
+      <wizard
+            icon="icons/kalypso_odt.gif"
+            class="org.kalypso.ui.wizard.NewOdtWizard"
+            category="org.kalypso.ui.wizardCategory"
+            name="Diagramm"
+            id="org.kalypso.wizard.newOdt"/>
+      <wizard
+            icon="icons/kalypso_ott.gif"
+            class="org.kalypso.ui.wizard.NewOttWizard"
+            category="org.kalypso.ui.wizardCategory"
+            name="Tabelle (Zeitreihen)"
+            id="org.kalypso.wizard.newOtt"/>
    </extension>
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
@@ -396,64 +414,47 @@
             label="Kalypso Modell"
             description="Kalypso Modell Kommandos"
             visible="true"
-            id="org.kalypso.model">
-             <action
-               label="löschen"
-               tooltip="löscht die selektierte Modellvariante"
-               menubarPath="model/modelStart"
-               id="org.kalypso.action.model.delete"/>
+            id="org.kalypso.actionSet.model">
+         <menu
+               label="Modell"
+               path="additions"
+               id="org.kalypso.menu.model">
+            <groupMarker name="modelStart"/>
+            <separator name="modelSep"/>
+            <groupMarker name="calcCaseStart"/>
+         </menu>
+         <action
+               label="Berechnung durchführen"
+               tooltip="führt die Berechnung der selektierten Rechenvariante aus, bereits vorhandene Ergebnisdaten werden überschrieben"
+               menubarPath="org.kalypso.menu.model/calcCaseStart"
+               id="org.kalypso.action.model.runCalcCase"/>
+         <action
+               label="Rechenvariante anlegen"
+               tooltip="legt eine Variante vom selektierten Rechenfall an"
+               menubarPath="org.kalypso.menu.model/calcCaseStart"
+               id="org.kalypso.action.model.copyCalcCase"/>
          <action
                retarget="false"
-               label="Variante anlegen"
+               label="Modellvariante anlegen"
                tooltip="legt eine Variante vom aktuelle gewählten Modell an"
-               menubarPath="model/modelStart"
-               id="org.kalypso.action.model.copy"/>
+               menubarPath="org.kalypso.menu.model/modelStart"
+               id="org.kalypso.action.model.copyModel"/>
 
          <action
-               label="zurückspeichern"
+               label="Modell zurückspeichern"
                tooltip="Speichert die Änderungen am Modell auf den Server zurück"
-               menubarPath="model/modelStart"
-               id="org.kalypso.action.model.commit"/>
+               menubarPath="org.kalypso.menu.model/modelStart"
+               id="org.kalypso.action.model.commitModel"/>
          <action
-               label="aktualisieren"
+               label="Modell aktualisieren"
                tooltip="aktualisiert ein bereits vorhandenes Modell mit Daten vom Server"
-               menubarPath="model/modelStart"
-               id="org.kalypso.action.model.update"/>
-
+               menubarPath="org.kalypso.menu.model/modelStart"
+               id="org.kalypso.action.model.updateModel"/>
          <action
-               label="vom Server laden"
+               label="Modell vom Server laden"
                tooltip="lädt ein Modell vom Sever, falls es nicht bereits vorhanden ist"
-               menubarPath="model/modelStart"
-               id="org.kalypso.action.model.checkout"/>
-
-      </actionSet>
-      <actionSet
-            label="Kalypso Rechenfall"
-            description="Kalypso Rechenfall Kommandos"
-            visible="true"
-            id="org.kalypso.actionSet.model">
-         <action
-               label="berechnen"
-               tooltip="führt die Berechnung der selektierten Rechenvariante aus, bereits vorhandene Ergebnisdaten werden überschrieben"
-               menubarPath="calcCase/calcCaseStart"
-               id="org.kalypso.action.calcCase.run"/>
-         <action
-               label="löschen"
-               tooltip="löscht die selektierte Rechenvariante"
-               menubarPath="calcCase/calcCaseStart"
-               id="org.kalypso.action.calcCase.delete"/>
-         <action
-               label="Variante erstellen"
-               tooltip="legt eine Variante vom selektierten Rechenfall an"
-               menubarPath="calcCase/calcCaseStart"
-               id="org.kalypso.action.calcCase.copy"/>
-
-         <action
-               label="neu"
-               tooltip="legt einen neuen Rechenfall an"
-               menubarPath="calcCase/calcCaseStart"
-               id="org.kalypso.action.calcCase.new"/>
-
+               menubarPath="org.kalypso.menu.model/modelStart"
+               id="org.kalypso.action.model.checkoutModel"/>
       </actionSet>
    </extension>
 

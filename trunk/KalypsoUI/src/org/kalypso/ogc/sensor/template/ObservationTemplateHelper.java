@@ -120,7 +120,7 @@ public class ObservationTemplateHelper
   {
     // TODO: bessere konfigurierbarkeit von der Transformation?
     final InputStream xsl = ObservationTemplateHelper.class
-        .getResourceAsStream( "/org/kalypso/plugin/resources/xsl/grafik-vorlage.xsl" );
+        .getResourceAsStream( "/org/kalypso/ui/resources/xsl/grafik-vorlage.xsl" );
 
     FileWriter fw = null;
     InputStream ins = null;
@@ -129,7 +129,7 @@ public class ObservationTemplateHelper
     {
       final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe",
           GrafikViewActionDelegate.class
-              .getResourceAsStream( "/org/kalypso/plugin/resources/exe/grafik.exe_" ), true );
+              .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ), true );
 
       // get the file where project resides in order to complete the relative
       // path
@@ -161,7 +161,8 @@ public class ObservationTemplateHelper
     {
       try
       {
-        xsl.close();
+        if( xsl != null )
+          xsl.close();
 
         if( fw != null )
           fw.close();
