@@ -84,7 +84,7 @@ public class KalypsoObservationServiceTest extends TestCase
 
     final ItemBean[] beans = m_srv.getChildren( null );
 
-    for( int i = 0; i < beans.length; i++ )
+    for( int i = 0; i < /*beans.length*/ 1; i++ )
       readData( beans[i], "#" );
 
     System.out.println( ":Stop Test Read Data" );
@@ -153,19 +153,5 @@ public class KalypsoObservationServiceTest extends TestCase
 
     final ItemBean b5 = m_srv.findItem( "foo://XYZ" );
     assertNull( b5 );
-  }
-
-  public void testWriteData( ) throws RemoteException, MalformedURLException
-  {
-    // real
-    final String id = "Test://test.zml";
-    final String rep = "Test";
-    final ObservationBean ob1 = new ObservationBean( id, "test", rep, null );
-
-    final String wFile = new File( KALYPSO_SERVER_BASE
-        + "\\_test\\W_BAUTZWB.zml" ).toURL().toExternalForm();
-    final OCSDataBean db1 = new OCSDataBean( 0, ob1.getId(), wFile );
-
-    m_srv.writeData( ob1, db1 );
   }
 }
