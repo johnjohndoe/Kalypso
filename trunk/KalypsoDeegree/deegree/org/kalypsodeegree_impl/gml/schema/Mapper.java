@@ -105,7 +105,11 @@ public class Mapper
       return integer;
     }
     if( "java.lang.Boolean".equals( type ) )
-      return new Boolean( value );
+    {
+      if( "true".equals( value ) || "1".equals( value ) )
+        return new Boolean( true );
+      return new Boolean( false );
+    }
     if( "java.util.Date".equals( type ) )
       return XML_DATE_FORMAT.parseObject( value );
     throw new Exception( "unknown XML type :" + type + "  for value: " + value );

@@ -1,3 +1,4 @@
+
 --+http://www.tuhh.de/kalypsoNA:CatchmentCollection FeatureType 
     substitutiongrup:http://www.opengis.net/gml:_Feature
   |-+props:
@@ -26,6 +27,7 @@
   | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
   | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
   | +http://www.tuhh.de/kalypsoNA:num                  java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:generateResult       java.lang.Boolean [1..1]
   | +http://www.tuhh.de/kalypsoNA:downStreamChannelMembFeatureAssociationType
   |                                                     -->http://www.tuhh.de/kalypsoNA:VirtualChannel
   |                                                     -->http://www.tuhh.de/kalypsoNA:KMChannel
@@ -61,6 +63,7 @@
   | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
   | +http://www.tuhh.de/kalypsoNA:Ort                  org.deegree.model.geometry.GM_Polygon [1..1]
   | +http://www.tuhh.de/kalypsoNA:inum                 java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoNA:generateResult       java.lang.Boolean [1..1]
   | +http://www.tuhh.de/kalypsoNA:ispk                 java.lang.String [1..1]
   | +http://www.tuhh.de/kalypsoNA:text                 java.lang.String [1..1]
   | +http://www.tuhh.de/kalypsoNA:flaech               java.lang.String [1..1]
