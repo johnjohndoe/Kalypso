@@ -25,10 +25,6 @@ public class ObservationDiagramEditor extends AbstractEditorPart
 
   protected final TimeSeriesCollection m_tsCol = new TimeSeriesCollection();
 
-//  public ObservationDiagramEditor()
-//  {
-//  }
-
   /**
    * @see org.kalypso.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -62,15 +58,13 @@ public class ObservationDiagramEditor extends AbstractEditorPart
   /**
    * @see org.kalypso.editor.AbstractEditorPart#load()
    */
-  protected void load()
+  protected void loadInternal()
   {
     final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
     try
     {
       ZmlObservation obs = new ZmlObservation( input.getName(), input.getStorage().getContents() );
-
-      setDirty( false );
 
       setContentDescription( input.getFile().getName() );
       setPartName( input.getFile().getName() );

@@ -9,8 +9,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -25,55 +25,49 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
-import org.kalypso.util.command.DefaultCommandManager;
-import org.kalypso.util.command.ICommandManager;
-import org.kalypso.util.command.ICommandManagerListener;
-import org.kalypso.util.command.UndoRedoAction;
+import org.kalypso.util.command.ICommand;
+import org.kalypso.util.command.ICommandTarget;
+import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
  * @author bce
  */
-public abstract class AbstractEditorPart extends EditorPart implements IResourceChangeListener, ICommandManagerListener
+public abstract class AbstractEditorPart extends EditorPart implements IResourceChangeListener,
+    ICommandTarget
 {
-  private boolean m_dirty = false;
-
-  private final ICommandManager m_commandManager = new DefaultCommandManager();
-  
-  public final UndoRedoAction m_undoAction = new UndoRedoAction( m_commandManager, getSchedulingRule(), true );
-  public final UndoRedoAction m_redoAction = new UndoRedoAction( m_commandManager, getSchedulingRule(), false );
-  
   private final Runnable m_dirtyRunnable = new Runnable()
   {
     public void run()
     {
-      fireDirty();
+      getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
+      {
+        public void run()
+        {
+          fireDirty();
+        }
+      } );
     }
   };
 
-  /** Jeder Editor hat sein eigenes Mutex, so dass Jobs sch?n hintereinander ausgef?hrt werden */
-  private Mutex myMutexRule = new Mutex();
-
   private boolean m_isSaving = false;
-  
+
+  private JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget(
+      m_dirtyRunnable );
+
   public AbstractEditorPart()
   {
     ResourcesPlugin.getWorkspace().addResourceChangeListener( this );
-    
-    m_commandManager.addCommandManagerListener( this );
   }
-  
+
   public void dispose()
   {
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( this );
 
-    m_undoAction.dispose();
-    m_redoAction.dispose();
-    
-    m_commandManager.removeCommandManagerListener( this );
+    m_commandTarget.dispose();
 
     super.dispose();
   }
-  
+
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
@@ -83,7 +77,6 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
     return null;
   }
 
-  
   /**
    * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
    */
@@ -97,6 +90,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
       {
         m_isSaving = true;
         doSaveInternal( monitor, input );
+        m_commandTarget.setDirty( false );
       }
       finally
       {
@@ -104,8 +98,9 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
       }
     }
   }
-  
-  protected abstract void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input );
+
+  protected abstract void doSaveInternal( final IProgressMonitor monitor,
+      final IFileEditorInput input );
 
   /**
    * Returns the status line manager of this editor.
@@ -126,6 +121,14 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
   }
 
   /**
+   * @see org.eclipse.ui.part.EditorPart#isDirty()
+   */
+  public boolean isDirty()
+  {
+    return m_commandTarget.isDirty();
+  }
+
+  /**
    * Returns the progress monitor related to this editor.
    * 
    * @return the progress monitor related to this editor
@@ -140,7 +143,6 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
 
     return pm != null ? pm : new NullProgressMonitor();
   }
-
 
   /**
    * @see org.eclipse.ui.part.EditorPart#doSaveAs()
@@ -181,6 +183,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
     final IFileEditorInput newInput = new FileEditorInput( file );
 
     doSaveInternal( progressMonitor, newInput );
+    m_commandTarget.setDirty( false );
 
     if( progressMonitor != null )
       progressMonitor.setCanceled( false );
@@ -203,28 +206,13 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
   }
 
   /**
-   * @see org.eclipse.ui.part.EditorPart#isDirty()
-   */
-  public boolean isDirty()
-  {
-    return m_dirty;
-  }
-  
-  public void setDirty( final boolean dirty )
-  {
-    m_dirty = dirty;
-
-    getEditorSite().getShell().getDisplay().asyncExec( m_dirtyRunnable );
-  }
-
-  /**
    * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
    */
   public boolean isSaveAsAllowed()
   {
     return true;
   }
-  
+
   /**
    * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
    */
@@ -234,8 +222,15 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
 
     load();
   }
-  
-  protected abstract void load();
+
+  protected final void load()
+  {
+    loadInternal();
+    
+    m_commandTarget.setDirty( false );
+  }
+
+  protected abstract void loadInternal();
 
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
@@ -249,52 +244,32 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
       final IResourceDelta delta = event.getDelta().findMember( input.getFile().getFullPath() );
       if( delta != null && delta.getKind() == IResourceDelta.CHANGED )
       {
-        if( !m_isSaving )
+        // TODO: ask user?
+        if( !m_isSaving && MessageDialog.openQuestion( getSite().getShell(), "GisTableEditor",
+            "Die Vorlagendatei hat sich geändert. Neu laden?" ) )
           load();
       }
     }
   }
 
- /**
+  /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   public void createPartControl( final Composite parent )
   {
     final IActionBars actionBars = getEditorSite().getActionBars();
-    actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_undoAction );
-    actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_redoAction );
+    actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
+    actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
 
     actionBars.updateActionBars();
   }
+
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
   public void setFocus()
   {
-    // nix
-  }
-  
-  public ICommandManager getCommandManager()
-  {
-    return m_commandManager;
-  }
-
-  public ISchedulingRule getSchedulingRule()
-  {
-    return myMutexRule;
-  }
-  
-  class Mutex implements ISchedulingRule
-  {
-    public boolean isConflicting( ISchedulingRule rule )
-    {
-      return rule == this;
-    }
-
-    public boolean contains( ISchedulingRule rule )
-    {
-      return rule == this;
-    }
+  // nix
   }
 
   public void fireDirty()
@@ -303,11 +278,16 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandManagerListener#onCommandManagerChanged(org.kalypso.util.command.ICommandManager)
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand,
+   *      java.lang.Runnable)
    */
-  public void onCommandManagerChanged( final ICommandManager source )
+  public void postCommand( final ICommand command, final Runnable runnable )
   {
-    if( source == m_commandManager )
-      setDirty( true );
+    m_commandTarget.postCommand( command, runnable );
+  }
+
+  public JobExclusiveCommandTarget getCommandTarget()
+  {
+    return m_commandTarget;
   }
 }

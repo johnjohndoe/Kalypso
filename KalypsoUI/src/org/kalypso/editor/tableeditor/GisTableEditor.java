@@ -10,16 +10,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -29,19 +26,17 @@ import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
 import org.kalypso.editor.AbstractEditorPart;
 import org.kalypso.editor.tableeditor.layerTable.LayerTable;
 import org.kalypso.editor.tableeditor.layerTable.LayerTableModel;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.event.ModellEvent;
+import org.kalypso.ogc.event.ModellEventListener;
+import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
 import org.kalypso.plugin.KalypsoGisPlugin;
+import org.kalypso.template.GisTemplateHelper;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.ColumnType;
-import org.kalypso.util.command.DefaultCommandManager;
-import org.kalypso.util.command.ICommandManager;
-import org.kalypso.util.factory.FactoryException;
-import org.kalypso.util.pool.BorrowObjectJob;
-import org.kalypso.util.pool.IPoolListener;
+import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypso.util.pool.ResourcePool;
 
 /**
  * <p>
@@ -59,38 +54,24 @@ import org.kalypso.util.pool.ResourcePool;
  * zus?tzlich eine Aktualisierung der View bei jeder Aktion durchgef?hrt
  * </p>
  * 
- * TODO: release keys after use!
+ * TODO: release keys after use! TODO: resource listener?
  * 
  * @author belger
  */
-public class GisTableEditor extends AbstractEditorPart implements ISelectionProvider, IPoolListener
+public class GisTableEditor extends AbstractEditorPart implements ISelectionProvider,
+    ModellEventListener, ICommandTarget
 {
-  private static final Object DUMMY_OBJECT = new Object();
-  
-  protected final ResourcePool m_layerPool = KalypsoGisPlugin.getDefault().getPool(
-      KalypsoFeatureLayer.class );
-
   private final ObjectFactory m_gistableviewFactory = new ObjectFactory();
 
   private final Unmarshaller m_unmarshaller;
 
   private final Marshaller m_marshaller;
 
-  protected LayerTable m_layerTable = null;
-
-  private String m_source;
-
-  private String m_type;
-
-  private PoolableObjectType m_key = null;
+  private LayerTable m_layerTable = null;
 
   private Gistableview m_tableview = null;
 
-  private boolean m_isEditing = false;
-  
-  private boolean m_isLayerDirty = false;
-  
-  private ICommandManager m_layerCommandManager = new DefaultCommandManager();
+  private PoolableKalypsoFeatureTheme m_theme;
 
   public GisTableEditor()
   {
@@ -106,9 +87,6 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
       throw new RuntimeException( e );
     }
-
-    m_layerPool.addPoolListener( this );
-    m_layerCommandManager.addCommandManagerListener( this );
   }
 
   /**
@@ -116,9 +94,12 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
    */
   public void dispose()
   {
-    m_layerPool.removePoolListener( this );
-    m_layerCommandManager.removeCommandManagerListener( this );
-    
+    if( m_theme != null )
+    {
+      m_theme.removeModellListener( this );
+      m_theme = null;
+    }
+
     super.dispose();
   }
 
@@ -131,9 +112,11 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     {
       final Gistableview gistableview = m_gistableviewFactory.createGistableview();
       final LayerType layer = m_gistableviewFactory.createGistableviewTypeLayerType();
+
+      final PoolableObjectType key = m_theme.getKey();
       layer.setId( "1" );
-      layer.setHref( m_source );
-      layer.setLinktype( m_type );
+      layer.setHref( key.getSourceAsString() );
+      layer.setLinktype( key.getType() );
       layer.setActuate( "onRequest" );
       layer.setType( "simple" );
 
@@ -173,8 +156,6 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
         file.create( bis, false, monitor );
 
       bis.close();
-
-      setDirty( false );
     }
     catch( JAXBException e )
     {
@@ -199,12 +180,12 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
     final ICellEditorFactory factory = KalypsoGisPlugin.getDefault()
         .getFeatureTypeCellEditorFactory();
-    m_layerTable = new LayerTable( parent, this, factory );
+    m_layerTable = new LayerTable( parent, this, m_theme, factory );
 
     load();
   }
 
-  protected void load()
+  protected final void loadInternal()
   {
     if( m_layerTable == null )
       return;
@@ -228,24 +209,20 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       e.printStackTrace();
     }
 
-    final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
+    if( m_theme != null )
+    {
+      m_theme.removeModellListener( this );
+      m_theme.dispose();
+    }
+    m_theme = null;
 
     m_layerTable.setModel( null );
-    m_source = null;
-    m_type = null;
     if( m_tableview == null )
       return;
 
-    final LayerType layerType = m_tableview.getLayer();
-
-    m_source = layerType.getHref();
-    m_type = layerType.getLinktype();
-    m_key = new PoolableObjectType( m_type, m_source, project );
-
-    final Job job = new BorrowObjectJob( "Tabelle laden", m_layerPool, this, m_key, DUMMY_OBJECT );
-    job.schedule();
-
-    setDirty( false );
+    final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
+    m_theme = GisTemplateHelper.createThemeFromTemplate( m_tableview.getLayer(), project );
+    m_theme.addModellListener( this );
 
     setContentDescription( input.getFile().getName() );
     setPartName( input.getFile().getName() );
@@ -254,6 +231,11 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   public LayerTable getLayerTable()
   {
     return m_layerTable;
+  }
+
+  public PoolableKalypsoFeatureTheme getTheme()
+  {
+    return m_theme;
   }
 
   /**
@@ -289,17 +271,13 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   }
 
   /**
-   * @throws Exception
-   * @see org.kalypso.util.pool.IPoolListener#onObjectInvalid(java.lang.Object,
-   *      boolean)
+   * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
    */
-  public void onObjectInvalid( final Object oldValue, final boolean bCannotReload )
-      throws Exception
+  public void onModellChange( final ModellEvent modellEvent )
   {
-    if( oldValue == DUMMY_OBJECT || m_layerTable.getModel().getLayer() == oldValue )
+    if( modellEvent.getEventSource() == m_theme && modellEvent.getType() == ModellEvent.FULL_CHANGE )
     {
-      final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)m_layerPool.getObject( m_key,
-          new NullProgressMonitor() );
+      final FeatureType featureType = m_theme.getLayer().getFeatureType();
 
       final LayerType layerType = m_tableview.getLayer();
       final List columnList = layerType.getColumn();
@@ -308,78 +286,20 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       for( final Iterator iter = columnList.iterator(); iter.hasNext(); )
       {
         final ColumnType ct = (ColumnType)iter.next();
-        final FeatureTypeProperty ftp = layer.getFeatureType().getProperty( ct.getName() );
-        columns[count++] = new LayerTableModel.Column( ftp, ct.getWidth(), ct.isEditable() );
+        final FeatureTypeProperty ftp = featureType.getProperty( ct.getName() );
+        if( ftp != null )
+          columns[count++] = new LayerTableModel.Column( ftp, ct.getWidth(), ct.isEditable() );
       }
 
       getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
       {
         public void run()
         {
-          if( !m_layerTable.isDisposed() )
-            m_layerTable.setModel( new LayerTableModel( layer, columns ) );
+          final LayerTable layerTable = getLayerTable();
+          if( !layerTable.isDisposed() )
+            layerTable.setModel( new LayerTableModel( getTheme().getLayer(), columns ) );
         }
       } );
-
     }
-  }
-
-  public void saveData()
-  {
-    final Job saveJob = new Job( "Daten speichern" )
-    {
-      protected IStatus run( final IProgressMonitor monitor )
-      {
-        try
-        {
-          m_layerPool.saveObject( m_layerTable.getModel().getLayer(), monitor );
-        }
-        catch( final FactoryException e )
-        {
-          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Speichern der Daten", e );
-        }
-        
-        return Status.OK_STATUS;
-      }
-    };
-    
-    saveJob.setPriority( Job.LONG );
-    saveJob.schedule();
-  }
-
-  public void setEditing( final boolean isEditing )
-  {
-    m_isEditing = isEditing;
-  }
-  
-  public boolean isEditing( )
-  {
-    return m_isEditing;
-  }
-  
-  public boolean isLayerDirty()
-  {
-    return m_isLayerDirty;
-  }
-  
-  public void setLayerDirty( final boolean isDirty )
-  {
-    m_isLayerDirty = isDirty;
-  }
-
-  public ICommandManager getLayerCommandManager()
-  {
-    return m_layerCommandManager;
-  }
-  
-  /**
-   * @see org.kalypso.editor.AbstractEditorPart#onCommandManagerChanged(org.kalypso.util.command.ICommandManager)
-   */
-  public void onCommandManagerChanged( final ICommandManager source )
-  {
-    super.onCommandManagerChanged( source );
-    
-    if( source == m_layerCommandManager )
-      setLayerDirty( true );
   }
 }

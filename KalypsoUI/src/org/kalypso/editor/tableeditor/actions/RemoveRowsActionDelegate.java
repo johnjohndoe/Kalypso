@@ -8,7 +8,6 @@ import org.kalypso.editor.tableeditor.layerTable.LayerTable;
 import org.kalypso.editor.tableeditor.layerTable.command.RemoveRowsCommand;
 import org.kalypso.java.util.Arrays;
 import org.kalypso.ogc.gml.KalypsoFeature;
-import org.kalypso.util.command.CommandJob;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -26,7 +25,7 @@ public class RemoveRowsActionDelegate extends GisTableAbstractActionDelagate
         new KalypsoFeature[selection.size()] );
 
     final ICommand command = new RemoveRowsCommand( layerTable.getModel(), features );
-    new CommandJob( command, editor.getLayerCommandManager(), editor.getSchedulingRule(), null, CommandJob.POST ); 
+    editor.getTheme().postCommand( command, null );
   }
 
   /**
@@ -34,7 +33,7 @@ public class RemoveRowsActionDelegate extends GisTableAbstractActionDelagate
    */
   protected boolean isEnabled( final ISelection selection )
   {
-    return !selection.isEmpty();
+    return getEditor().getTheme() != null && !selection.isEmpty();
   }
 
   /**

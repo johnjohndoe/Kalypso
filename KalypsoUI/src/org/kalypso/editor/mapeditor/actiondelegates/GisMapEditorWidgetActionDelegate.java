@@ -10,19 +10,19 @@ import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.widgets.AbstractWidget;
 import org.kalypso.ogc.widgets.IWidget;
 import org.kalypso.ogc.widgets.WidgetManager;
-import org.kalypso.util.command.CommandJob;
 import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandPoster;
+import org.kalypso.util.command.ICommandTarget;
 
 /**
  * 
  * 
  * @author bce
  */
-public abstract class GisMapEditorWidgetActionDelegate implements IEditorActionDelegate, ICommandPoster
+public abstract class GisMapEditorWidgetActionDelegate implements IEditorActionDelegate,
+    ICommandTarget
 {
   private IWidget m_widget;
-  
+
   private GisMapEditor m_editor;
 
   private WidgetManager m_widgetManager;
@@ -32,16 +32,15 @@ public abstract class GisMapEditorWidgetActionDelegate implements IEditorActionD
   public GisMapEditorWidgetActionDelegate( final AbstractWidget widget )
   {
     m_widget = widget;
-    
+
     widget.setCommandPoster( this );
   }
-  
+
   public IWidget getWidget()
   {
     return m_widget;
   }
 
-  
   /**
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
@@ -56,7 +55,7 @@ public abstract class GisMapEditorWidgetActionDelegate implements IEditorActionD
     // alte view WIDGET_CHANGE senden: TODO: WARUM????
     if( myActualMapPanel != null )
       myActualMapPanel.getMapModell()
-          .fireModellEvent( new ModellEvent( ModellEvent.WIDGET_CHANGE ) );
+          .fireModellEvent( new ModellEvent( null, ModellEvent.WIDGET_CHANGE ) );
 
     if( targetEditor != null )
     {
@@ -82,18 +81,20 @@ public abstract class GisMapEditorWidgetActionDelegate implements IEditorActionD
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    // nix tun?
+  // nix tun?
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandPoster#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand,
+   *      java.lang.Runnable)
    */
-  public void postCommand( final ICommand command, final Runnable runnable )
+  public final void postCommand( final ICommand command, final Runnable runnable )
   {
-    new CommandJob( command, m_editor.getCommandManager(), m_editor.getSchedulingRule(), runnable, CommandJob.POST );
+    m_editor.postCommand( command, runnable );
   }
 }

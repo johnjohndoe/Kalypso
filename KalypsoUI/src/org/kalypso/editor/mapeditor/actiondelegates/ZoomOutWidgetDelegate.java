@@ -8,7 +8,6 @@ import org.eclipse.ui.IEditorPart;
 import org.kalypso.editor.mapeditor.GisMapEditor;
 import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.widgets.ChangeExtentCommand;
-import org.kalypso.util.command.CommandJob;
 
 /**
  * @author belger
@@ -18,7 +17,8 @@ public class ZoomOutWidgetDelegate implements IEditorActionDelegate
   private GisMapEditor m_editor;
 
   /**
-   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction, org.eclipse.ui.IEditorPart)
+   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
+   *      org.eclipse.ui.IEditorPart)
    */
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
@@ -32,20 +32,21 @@ public class ZoomOutWidgetDelegate implements IEditorActionDelegate
   {
     if( m_editor == null )
       return;
-    
+
     final MapModell modell = m_editor.getMapModell();
     if( modell == null )
       return;
 
     final GM_Envelope zoomBox = modell.getZoomOutBoundingBox();
-    new CommandJob( new ChangeExtentCommand( modell, zoomBox ), m_editor.getCommandManager(), m_editor.getSchedulingRule(), null, CommandJob.POST );
+    m_editor.postCommand( new ChangeExtentCommand( modell, zoomBox ), null );
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    // nix tun
+  // nix tun
   }
 }

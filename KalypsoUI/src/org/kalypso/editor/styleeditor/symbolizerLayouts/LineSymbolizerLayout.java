@@ -61,7 +61,7 @@ public class LineSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				Color color = ((ColorChooserPanel) event.getSource()).getColor();			
 				stroke.setStroke(new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue()));
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
 			}
 		});
 		
@@ -71,7 +71,7 @@ public class LineSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				double width = ((SliderPanel)event.getSource()).getSelection();
 				stroke.setWidth(width);
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));				
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));				
 			}
 		});
 		
@@ -81,7 +81,7 @@ public class LineSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				double opacity = ((SliderPanel)event.getSource()).getSelection();
 				stroke.setOpacity(opacity);			
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});	
 		
@@ -92,7 +92,7 @@ public class LineSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				int lineJoin = ((StrokeLinejoinComboPanel)event.getSource()).getSelection();
 				stroke.setLineJoin(lineJoin);											
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});
 
@@ -103,7 +103,7 @@ public class LineSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				int lineCap = ((StrokeLinecapComboPanel)event.getSource()).getSelection();
 				stroke.setLineCap(lineCap);				
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});
 		
@@ -113,7 +113,7 @@ public class LineSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				float dashOffset = ((StrokeDashoffsetPanel)event.getSource()).getValue();
 				stroke.setDashOffset(dashOffset);
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});
 		
@@ -123,7 +123,7 @@ public class LineSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				float dashArray[] = ((StrokeDasharrayPanel)event.getSource()).getValue();
 				stroke.setDashArray(dashArray);
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});					
 	}

@@ -111,7 +111,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   {
     if( IContentOutlinePage.class.equals( adapter ) )
     {
-      m_outlinePage = new GisMapOutlinePage( this );
+      m_outlinePage = new GisMapOutlinePage( getCommandTarget() );
 
       m_outlinePage.setMapModell( m_mapModell );
 
@@ -180,7 +180,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     virtualFrame.add( myMapPanel );
   }
 
-  protected void load()
+  protected final void loadInternal()
   {
     final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
@@ -215,8 +215,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     if( m_outlinePage != null )
       m_outlinePage.setMapModell( m_mapModell );
-
-    setDirty( false );
 
     setContentDescription( input.getFile().getName() );
     setPartName( input.getFile().getName() );

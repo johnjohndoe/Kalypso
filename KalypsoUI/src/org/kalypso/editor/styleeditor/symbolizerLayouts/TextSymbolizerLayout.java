@@ -113,7 +113,7 @@ public class TextSymbolizerLayout extends SymbolizerLayout{
 				Expression exp[] = {propName};
 				textSymbolizer.setLabel(StyleFactory.createParameterValueType(exp));				
 				labelTextInput.reset();
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});	
 		labelTextInput.addPanelListener(new PanelListener() {
@@ -121,7 +121,7 @@ public class TextSymbolizerLayout extends SymbolizerLayout{
 				String labelText = ((TextInputPanel)event.getSource()).getLabelText();
 				textSymbolizer.setLabel(StyleFactory.createParameterValueType(labelText));
 				textLabelComboPanel.reset();
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});
 		
@@ -132,7 +132,7 @@ public class TextSymbolizerLayout extends SymbolizerLayout{
 				FontChooserPanel source = (FontChooserPanel)event.getSource();
 				Font font = source.getFont();				
 				textSymbolizer.setFont(font);								
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));				
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));				
 			}
 		});
 			
@@ -162,7 +162,7 @@ public class TextSymbolizerLayout extends SymbolizerLayout{
 				halo.getFill().setFill(new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue()));
 				if(textSymbolizer.getHalo() == null)
 					textSymbolizer.setHalo(halo);
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});				
 		
@@ -175,7 +175,7 @@ public class TextSymbolizerLayout extends SymbolizerLayout{
 				halo.getFill().setOpacity(opacity);
 				if(textSymbolizer.getHalo() == null)
 					textSymbolizer.setHalo(halo);				
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});	
 		
@@ -188,7 +188,7 @@ public class TextSymbolizerLayout extends SymbolizerLayout{
 				halo.getStroke().setOpacity(opacity);
 				if(textSymbolizer.getHalo() == null)
 					textSymbolizer.setHalo(halo);				
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});			
 		
@@ -205,7 +205,7 @@ public class TextSymbolizerLayout extends SymbolizerLayout{
 					labelPlacement.getLinePlacement().setPlacementType(type);
 					if(textSymbolizer.getLabelPlacement() == null)
 						textSymbolizer.setLabelPlacement(labelPlacement);					
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 				}
 			});	
 			
@@ -216,7 +216,7 @@ public class TextSymbolizerLayout extends SymbolizerLayout{
 					labelPlacement.getLinePlacement().setGap((int)gap);
 					if(textSymbolizer.getLabelPlacement() == null)
 						textSymbolizer.setLabelPlacement(labelPlacement);				
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));					
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));					
 				}
 			});	
 			
@@ -234,7 +234,7 @@ public class TextSymbolizerLayout extends SymbolizerLayout{
 					labelPlacement.getPointPlacement().setDisplacement(disp);
 					if(textSymbolizer.getLabelPlacement() == null)
 						textSymbolizer.setLabelPlacement(labelPlacement);
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));					
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));					
 				}
 			});
 			
@@ -246,7 +246,7 @@ public class TextSymbolizerLayout extends SymbolizerLayout{
 					labelPlacement.getPointPlacement().setRotation(rotation);
 					if(textSymbolizer.getLabelPlacement() == null)
 						textSymbolizer.setLabelPlacement(labelPlacement);				
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));					
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));					
 				}
 			});	
 		}

@@ -41,9 +41,8 @@ import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.plugin.ImageProvider;
-import org.kalypso.util.command.CommandJob;
 import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.UndoRedoAction;
+import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.list.IListManipulator;
 
 /**
@@ -70,13 +69,13 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
   private final MapModellLabelProvider m_labelProvider = new MapModellLabelProvider();
 
+  private final JobExclusiveCommandTarget m_commandTarget;
+
   private MapModell m_mapModell;
 
-  private final GisMapEditor m_editor;
-
-  public GisMapOutlinePage( final GisMapEditor editor )
+  public GisMapOutlinePage( final JobExclusiveCommandTarget commandTarget )
   {
-    m_editor = editor;
+    m_commandTarget = commandTarget;
   }
 
   /**
@@ -154,10 +153,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void setActionBars( final IActionBars actionBars )
   {
-    actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), new UndoRedoAction( m_editor
-        .getCommandManager(), m_editor.getSchedulingRule(), true ) );
-    actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), new UndoRedoAction( m_editor
-        .getCommandManager(), m_editor.getSchedulingRule(), false ) );
+    actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
+    actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
 
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
     toolBarManager.add( m_addAction );
@@ -314,7 +311,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
       {
         final ICommand command = new EnableThemeCommand( m_mapModell, (IKalypsoTheme)data, ti
             .getChecked() );
-        postCommand( command, null );
+        m_commandTarget.postCommand( command, null );
       }
     }
   }
@@ -335,13 +332,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   {
     final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( m_mapModell,
         (IKalypsoTheme)element );
-    postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme)element ) );
-  }
-
-  private void postCommand( final ICommand command, final Runnable runner )
-  {
-    new CommandJob( command, m_editor.getCommandManager(), m_editor.getSchedulingRule(), runner,
-        CommandJob.POST );
+    m_commandTarget.postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme)element ) );
   }
 
   /**
@@ -349,7 +340,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void moveElementUp( final Object element )
   {
-    postCommand( new MoveThemeDownCommand( m_mapModell, (IKalypsoTheme)element ),
+    m_commandTarget.postCommand( new MoveThemeDownCommand( m_mapModell, (IKalypsoTheme)element ),
         new SelectThemeRunner( (IKalypsoTheme)element ) );
   }
 
@@ -358,7 +349,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void removeElement( final Object element )
   {
-    postCommand( new RemoveThemeCommand( m_mapModell, (IKalypsoTheme)element ),
+    m_commandTarget.postCommand( new RemoveThemeCommand( m_mapModell, (IKalypsoTheme)element ),
         new SelectThemeRunner( (IKalypsoTheme)element ) );
   }
 
