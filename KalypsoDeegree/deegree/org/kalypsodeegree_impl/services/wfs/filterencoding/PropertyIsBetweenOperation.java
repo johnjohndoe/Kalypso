@@ -82,7 +82,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
    * structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *                   if the structure of the DOM-fragment is invalid
    */
   public static Operation buildFromDOM( Element element ) throws FilterConstructionException
   {
@@ -108,7 +108,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
    * buildFromDOM () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *                   if the structure of the DOM-fragment is invalid
    */
   private static Expression buildLowerBoundaryFromDOM( Element element )
       throws FilterConstructionException
@@ -119,9 +119,13 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
       throw new FilterConstructionException( "Name of element does not equal 'LowerBoundary'!" );
 
     ElementList children = XMLTools.getChildElements( element );
-    if( children.getLength() != 1 )
-      throw new FilterConstructionException( "'LowerBoundary' requires exactly 1 element!" );
 
+    if( children.getLength() != 1 )
+    {
+      if( element.getChildNodes().getLength() == 1 )
+        return new BoundaryExpression( XMLTools.getStringValue( element ) );
+      throw new FilterConstructionException( "'LowerBoundary' requires exactly 1 element!" );
+    }
     return Expression_Impl.buildFromDOM( children.item( 0 ) );
   }
 
@@ -131,7 +135,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
    * buildFromDOM () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *                   if the structure of the DOM-fragment is invalid
    */
   private static Expression buildUpperBoundaryFromDOM( Element element )
       throws FilterConstructionException
@@ -143,8 +147,11 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
 
     ElementList children = XMLTools.getChildElements( element );
     if( children.getLength() != 1 )
+    {
+      if( element.getChildNodes().getLength() == 1 )
+        return new BoundaryExpression( XMLTools.getStringValue( element ) );
       throw new FilterConstructionException( "'UpperBoundary' requires exactly 1 element!" );
-
+    }
     return Expression_Impl.buildFromDOM( children.item( 0 ) );
   }
 
@@ -176,7 +183,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
   public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 500 );
-    sb.append( "<ogc:" ).append( getOperatorName() );
+    sb.append( "<ogc:" ).append( getOperatorName() ).append( ">" );
     sb.append( propertyName.toXML() );
     sb.append( "<ogc:LowerBoundary>" );
     sb.append( lowerBoundary.toXML() );
@@ -186,7 +193,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
     sb.append( "</ogc:UpperBoundary>" );
     sb.append( "</ogc:" ).append( getOperatorName() ).append( ">" );
     return sb;
-  }
+  }  
 
   /**
    * Calculates the <tt>PropertyIsBetween</tt> -Operation's logical value
@@ -194,10 +201,10 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
    * TODO: Improve datatype handling.
    * 
    * @param feature
-   *          that determines the property values
+   *                   that determines the property values
    * @return true, if the <tt>Operation</tt> evaluates to true, else false
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *                   if the evaluation fails
    */
   public boolean evaluate( Feature feature ) throws FilterEvaluationException
   {
@@ -206,13 +213,13 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
     Object upperValue = upperBoundary.evaluate( feature );
     Object thisValue = propertyName.evaluate( feature );
 
-    if( !( lowerValue instanceof Double && upperValue instanceof Double && thisValue instanceof Double ) )
+    if( !( lowerValue instanceof Number && upperValue instanceof Number && thisValue instanceof Number ) )
       throw new FilterEvaluationException(
           "PropertyIsBetweenOperation can only be applied to numerical " + "expressions!" );
 
-    double d1 = ( (Double)lowerValue ).doubleValue();
-    double d2 = ( (Double)upperValue ).doubleValue();
-    double d3 = ( (Double)thisValue ).doubleValue();
+    double d1 = ( (Number)lowerValue ).doubleValue();
+    double d2 = ( (Number)upperValue ).doubleValue();
+    double d3 = ( (Number)thisValue ).doubleValue();
     return d1 <= d3 && d3 <= d2;
 
   }

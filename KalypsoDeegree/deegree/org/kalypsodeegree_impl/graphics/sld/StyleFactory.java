@@ -1248,9 +1248,9 @@ public class StyleFactory
    */
   public static PointSymbolizer createPointSymbolizer( Graphic graphic, String geometryPropertyName )
   {
-    // TODO evaluate geometry from geometryPropertyName
-    return createPointSymbolizer( graphic, null, 0, Double.MAX_VALUE );
-  }
+    // TODO evaluate geometry from geometryPropertyName  
+    return createPointSymbolizer( graphic, geometryPropertyName, 0, Double.MAX_VALUE );
+  }  
 
   /**
    * create a point symbolizer
