@@ -41,7 +41,8 @@ public class RemoveRowCommand implements ICommand
    */
   public void process( ) throws Exception
   {
-    m_row = m_model.removeRow( m_index );
+    if( m_index < m_model.getRowCount() )
+      m_row = m_model.removeRow( m_index );
   }
 
   /**

@@ -47,8 +47,13 @@ public class ObservationDiagramTemplate extends DefaultDiagramTemplate
     setTitle( obs.getName() );
     
     final IAxis[] valueAxis = ObservationUtilities.findAxisByClass( obs.getAxisList(), Number.class );
-    final IAxis dateAxis = ObservationUtilities.findAxisByKey( obs.getAxisList() )[0];
+    final IAxis[] keyAxes = ObservationUtilities.findAxisByKey( obs.getAxisList() );
 
+    if( keyAxes.length == 0 )
+      return;
+    
+    final IAxis dateAxis = keyAxes[0];
+    
     for( int i = 0; i < valueAxis.length; i++ )
     {
       if( !KalypsoStatusUtils.isStatusAxis( valueAxis[i] ) )

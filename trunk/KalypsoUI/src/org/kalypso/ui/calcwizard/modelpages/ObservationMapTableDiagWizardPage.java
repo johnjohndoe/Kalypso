@@ -232,6 +232,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     }
     catch( Exception e )
     {
+      // TODO error handling
       e.printStackTrace();
 
       final Text text = new Text( parent, SWT.CENTER );

@@ -27,12 +27,7 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     m_model = model;
 
     setDefaultRenderer( Date.class, new DateTableCellRenderer() );
-    
-    final MaskedNumberTableCellRenderer nr = new MaskedNumberTableCellRenderer();
-    setDefaultRenderer( Number.class, nr );
-    setDefaultRenderer( Double.class, nr );
-    setDefaultRenderer( Integer.class, nr );
-    setDefaultRenderer( Float.class, nr );
+    setDefaultRenderer( Number.class, new MaskedNumberTableCellRenderer() );
     
     setSelectionForeground( getSelectionBackground() );
     setSelectionBackground( Color.YELLOW );
