@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.deegree_impl.io.shpapi;
 
 import java.io.ByteArrayInputStream;
@@ -594,8 +594,8 @@ public class ShapeFile
   /**
    * 
    * 
-   * @return
-   * @throws HasNoDBaseFileException
+   * @return @throws
+   *         HasNoDBaseFileException
    * @throws DBaseException
    */
   public int[] getDataLengths() throws HasNoDBaseFileException, DBaseException
@@ -786,6 +786,10 @@ public class ShapeFile
       {
         fieldDesc[cnt++] = new FieldDescriptor( s, "D", (byte)12, (byte)0 );
       }
+      else if( ftp[i].getType().endsWith( "Long" ) )
+      {
+        fieldDesc[cnt++] = new FieldDescriptor( s, "N", (byte)30, (byte)10 );
+      }
     }
 
     //initialize/create DBaseFile
@@ -838,7 +842,8 @@ public class ShapeFile
             || ( ftp[j].getType().endsWith( "Character" ) )
             || ( ftp[j].getType().endsWith( "Float" ) ) || ( ftp[j].getType().endsWith( "Double" ) )
             || ( ftp[j].getType().endsWith( "Number" ) )
-            || ( ftp[j].getType().endsWith( "String" ) ) || ( ftp[j].getType().endsWith( "Date" ) ) )
+            || ( ftp[j].getType().endsWith( "String" ) )
+            || ( ftp[j].getType().endsWith( "Date" ) || ( ftp[j].getType().endsWith( "Long" ) ) ) )
         {
           vec.add( pairs[j].getValue() );
         }
