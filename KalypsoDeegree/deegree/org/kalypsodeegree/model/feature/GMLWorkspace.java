@@ -1,5 +1,7 @@
 package org.deegree.model.feature;
 
+import java.net.URL;
+
 import org.deegree.model.feature.event.ModellEventProvider;
 import org.deegree_impl.gml.schema.GMLSchema;
 
@@ -34,4 +36,6 @@ public interface GMLWorkspace extends ModellEventProvider
       String linkPropertyName );
 
   public Feature getFeature( FeatureType ft, String id );
+
+  public URL getModelUrl();
 }
