@@ -173,7 +173,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
       final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,   getReplaceProperties()  );
 
       m_viewer = new LayerTableViewer( parent, getProject(), KalypsoGisPlugin.getDefault()
-          .createFeatureTypeCellEditorFactory(), SELECTION_ID );
+          .createFeatureTypeCellEditorFactory(), SELECTION_ID, true );
       m_viewer.applyTableTemplate( template, getProject() );
     }
     catch( final Exception e )
@@ -260,6 +260,11 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
   {
     //
   }
+  
+  public IMapModell getMapModel()
+  {
+    return m_mapModell;
+  }
 
   private class CommitResults extends SelectionAdapter
   {
@@ -272,7 +277,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
       final String propNames = getArguments().getProperty( PROP_TIMEPROPNAME, "" );
       final String[] timeNames = propNames.split( "#" );
 
-      final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
+      final IKalypsoLayer layer = getMapModel().getActiveTheme().getLayer();
       if( !( layer instanceof KalypsoFeatureLayer ) )
         return;
 

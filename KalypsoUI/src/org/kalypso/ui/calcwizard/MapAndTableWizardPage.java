@@ -224,7 +224,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
           getReplaceProperties() );
 
       m_viewer = new LayerTableViewer( parent, getProject(), KalypsoGisPlugin.getDefault()
-          .createFeatureTypeCellEditorFactory(), SELECTION_ID );
+          .createFeatureTypeCellEditorFactory(), SELECTION_ID, false );
       m_viewer.applyTableTemplate( template, getProject() );
     }
     catch( final Exception e )

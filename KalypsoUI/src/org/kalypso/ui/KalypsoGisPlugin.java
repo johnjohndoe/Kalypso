@@ -369,6 +369,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     return m_urlConnectionFactory;
   }
 
+  public int getDefaultMapSelectionID()
+  {
+    return 0x1;
+  }
+
 //  private class URLConnectionFactory implements IURLConnectionFactory
 //  {
 //    private final String m_property;

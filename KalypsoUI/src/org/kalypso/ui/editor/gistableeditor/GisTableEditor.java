@@ -134,9 +134,10 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
     final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
     
-    final ICellEditorFactory factory = KalypsoGisPlugin.getDefault()
+    final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
+    final ICellEditorFactory factory = plugin
         .createFeatureTypeCellEditorFactory();
-    m_layerTable = new LayerTableViewer( parent, project, factory, -1 );
+    m_layerTable = new LayerTableViewer( parent, project, factory, plugin.getDefaultMapSelectionID(), false );
 
     final MenuManager menuMgr = createSpaltenMenu( "spalten" );
     final Control viewerControl = m_layerTable.getControl();

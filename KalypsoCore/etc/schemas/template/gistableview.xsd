@@ -17,6 +17,12 @@
 											<xs:attribute name="width" type="xs:int" use="optional" default="100"/>
 										</xs:complexType>
 									</xs:element>
+									<xs:element name="sort" minOccurs="0" maxOccurs="1">
+										<xs:complexType>
+											<xs:attribute name="propertyName" type="xs:string" use="required"/>
+											<xs:attribute name="inverse" type="xs:boolean" use="optional" default="false"/>
+										</xs:complexType>
+									</xs:element>
 								</xs:sequence>
 							</xs:extension>
 						</xs:complexContent>

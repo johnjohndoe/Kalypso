@@ -54,11 +54,11 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   private IMapModell m_mapModell;
 
-  private static final int SELECTION_ID = 0x01;
-
   public GisMapEditor()
   {
-    myMapPanel = new MapPanel( this, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), SELECTION_ID );
+    final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
+    myMapPanel = new MapPanel( this, plugin.getCoordinatesSystem(),
+        plugin.getDefaultMapSelectionID() );
   }
 
   public void dispose()
@@ -90,49 +90,46 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
-    if(m_mapModell ==null)
+    if( m_mapModell == null )
       return;
-    // TODO
-//    if(true)
-//      return;
-  
-      try
-      {
-        monitor.beginTask( "Kartenvorlage speichern", 2000 );
-        getMapPanel().getBoundingBox();
-        Gismapview modellTemplate = ((GisTemplateMapModell)m_mapModell).createGismapTemplate( getMapPanel().getBoundingBox());
-         
-        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-              
-        GisTemplateHelper.saveGisMapView( modellTemplate,bos );
-        
-        final ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-        bos.close();
-        monitor.worked( 1000 );
 
-        final IFile file = input.getFile();
-        if( file.exists() )
-          file.setContents( bis, false, true, monitor );
-        else
-          file.create( bis, false, monitor );
-  
-        bis.close();
-          monitor.done();
-      }
-      catch( JAXBException e )
-      {
-        e.printStackTrace();
-      }
-      catch( IOException e )
-      {
-        e.printStackTrace();
-      }
-      catch( CoreException e )
-      {
-        e.printStackTrace();
-      }
-      
-      
+    try
+    {
+      monitor.beginTask( "Kartenvorlage speichern", 2000 );
+      getMapPanel().getBoundingBox();
+      Gismapview modellTemplate = ( (GisTemplateMapModell)m_mapModell )
+          .createGismapTemplate( getMapPanel().getBoundingBox() );
+
+      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+      GisTemplateHelper.saveGisMapView( modellTemplate, bos );
+
+      final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+      bos.close();
+      monitor.worked( 1000 );
+
+      final IFile file = input.getFile();
+      if( file.exists() )
+        file.setContents( bis, false, true, monitor );
+      else
+        file.create( bis, false, monitor );
+
+      bis.close();
+      monitor.done();
+    }
+    catch( JAXBException e )
+    {
+      e.printStackTrace();
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
+    catch( CoreException e )
+    {
+      e.printStackTrace();
+    }
+
   }
 
   /**
@@ -167,10 +164,10 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     final IMapModell mapModell = new GisTemplateMapModell( gisview, project, KalypsoGisPlugin
         .getDefault().getCoordinatesSystem() );
     setMapModell( mapModell );
-    
-    GM_Envelope env=GisTemplateHelper.getBoundingBox(gisview);
-    
-    getMapPanel().setBoundingBox(env);
+
+    GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
+
+    getMapPanel().setBoundingBox( env );
     monitor.done();
   }
 

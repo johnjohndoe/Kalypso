@@ -1,5 +1,6 @@
 package org.kalypso.ogc.gml.table;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -11,7 +12,10 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -20,6 +24,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -38,6 +43,7 @@ import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.ColumnType;
+import org.kalypso.template.gistableview.GistableviewType.LayerType.SortType;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -48,7 +54,7 @@ import org.kalypso.util.pool.PoolableObjectType;
  * @author Belger
  */
 public class LayerTableViewer extends TableViewer implements ISelectionProvider,
-    ModellEventListener, ICommandTarget
+    ModellEventListener, ICommandTarget, ISelectionChangedListener
 {
   private static Logger LOGGER = Logger.getLogger( LayerTableViewer.class.getName() );
 
@@ -57,14 +63,6 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   public static final String COLUMN_PROP_EDITABLE = "columnEditable";
 
   private final ObjectFactory m_gistableviewFactory = new ObjectFactory();
-
-  private Runnable m_refreshRunner = new Runnable()
-  {
-    public void run()
-    {
-      refresh( /* row */);
-    }
-  };
 
   private final ICellEditorFactory m_cellEditorFactory;
 
@@ -78,22 +76,76 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   private final IProject m_project;
 
-  private boolean m_bSynchronizeSelect = false;
-
   private final TableCursor m_tableCursor;
 
-  public LayerTableViewer( final Composite parent, final IProject project,
-      final ICellEditorFactory cellEditorFactory, final int selectionID )
+  private final boolean m_bCursorSelects;
+
+  // TODO: fals true, gibts ne endlosschleife -> debuggen!
+  private boolean m_isFeatureSelectionSynchron = false;
+
+  private final LayerTableSorter m_sorter = new LayerTableSorter();
+
+  /**
+   * This class handles selections of the column headers. Selection of the
+   * column header will cause resorting of the shown tasks using that column's
+   * sorter. Repeated selection of the header will toggle sorting order
+   * (ascending versus descending).
+   */
+  private final SelectionListener m_headerListener = new SelectionAdapter()
   {
-    super( parent, SWT.BORDER | SWT.HIDE_SELECTION );
+    /**
+     * Handles the case of user selecting the header area.
+     * <p>
+     * If the column has not been selected previously, it will set the sorter of
+     * that column to be the current tasklist sorter. Repeated presses on the
+     * same column header will toggle sorting order (ascending/descending).
+     */
+    public void widgetSelected( SelectionEvent e )
+    {
+      // column selected - need to sort
+      final TableColumn tableColumn = (TableColumn)e.widget;
+      final int column = getTable().indexOf( tableColumn );
+      final String propertyName = getPropertyName( column );
+      
+      final LayerTableSorter sorter = (LayerTableSorter)getSorter();
+      
+      final String oldPropertyName = sorter.getPropertyName();
+      if( oldPropertyName != null && oldPropertyName.equals( propertyName ) )
+        sorter.setInverse( !sorter.isInverse() );
+      else
+      {
+        sorter.setPropertyName( propertyName );
+        sorter.setInverse( false );
+      }
+
+      final TableColumn[] columns = getTable().getColumns();
+      for( int i = 0; i < columns.length; i++ )
+        setColumnText( columns[i] );
+
+      refresh();
+    }
+  };
+
+  /**
+   * @param bCursorSelects
+   *          falls true, wird immer die unter dem Cursor liegende Zeile
+   *          selektiert
+   */
+  public LayerTableViewer( final Composite parent, final IProject project,
+      final ICellEditorFactory cellEditorFactory, final int selectionID,
+      final boolean bCursorSelects )
+  {
+    super( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
 
     m_cellEditorFactory = cellEditorFactory;
     m_selectionID = selectionID;
     m_project = project;
+    m_bCursorSelects = bCursorSelects;
 
     setContentProvider( new LayerTableContentProvider() );
     setLabelProvider( new LayerTableLabelProvider( this ) );
     setCellModifier( new LayerTableCellModifier( this ) );
+    setSorter( m_sorter );
 
     // init table
     final Table table = getTable();
@@ -102,16 +154,38 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
     final TableCursor tc = new ExcelLikeTableCursor( this, SWT.NONE );
     m_tableCursor = tc;
-    m_tableCursor.addSelectionListener( new SelectionAdapter()
-    {
-      public void widgetSelected( final SelectionEvent e )
-      {
-        selectFeature( (KalypsoFeature)tc.getRow().getData() );
-      }
-    } );
 
     m_unselectColor = table.getBackground();
     m_selectColor = table.getDisplay().getSystemColor( SWT.COLOR_YELLOW );
+
+    addSelectionChangedListener( this );
+  }
+
+  public void assignSelectionToFeatures()
+  {
+    // clear selection
+    final KalypsoFeatureLayer kalypsoFeatureLayer = (KalypsoFeatureLayer)getTheme().getLayer();
+    final KalypsoFeature[] allFeatures = kalypsoFeatureLayer.getAllFeatures();
+    for( int i = 0; i < allFeatures.length; i++ )
+    {
+      final KalypsoFeature feature = allFeatures[i];
+      feature.unselect( m_selectionID );
+    }
+
+    final IStructuredSelection sel = (IStructuredSelection)getSelection();
+    for( final Iterator selIt = sel.iterator(); selIt.hasNext(); )
+    {
+      final KalypsoFeature kf = (KalypsoFeature)selIt.next();
+      kf.select( m_selectionID );
+    }
+
+    kalypsoFeatureLayer.fireModellEvent( new ModellEvent( kalypsoFeatureLayer,
+        ModellEvent.SELECTION_CHANGED ) );
+  }
+  
+  public boolean isCursorSelects()
+  {
+    return m_bCursorSelects;
   }
 
   public void dispose()
@@ -142,20 +216,6 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     super.handleDispose( event );
   }
 
-  /**
-   * Falls true, wird die Selektion in der Tabelle (=Cursor-Position) auf die
-   * selektion im Gis-Modell übertragen
-   */
-  public void setSynchronizeSelect( final boolean synchronize )
-  {
-    m_bSynchronizeSelect = synchronize;
-  }
-
-  public boolean isSelectSynchronized()
-  {
-    return m_bSynchronizeSelect;
-  }
-
   public void applyTableTemplate( final Gistableview tableView, final IProject project )
   {
     clearColumns();
@@ -167,6 +227,15 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final LayerType layer = tableView.getLayer();
     setTheme( new PoolableKalypsoFeatureTheme( layer, project ) );
 
+    final SortType sort = layer.getSort();
+    if( sort != null )
+    {
+      m_sorter.setPropertyName( sort.getPropertyName() );
+      m_sorter.setInverse( sort.isInverse() );
+      
+      refresh();
+    }
+    
     final List columnList = layer.getColumn();
     for( final Iterator iter = columnList.iterator(); iter.hasNext(); )
     {
@@ -216,9 +285,24 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     tc.setWidth( width );
     tc.setData( COLUMN_PROP_NAME, propertyName );
     tc.setData( COLUMN_PROP_EDITABLE, Boolean.valueOf( isEditable ) );
-    tc.setText( propertyName );
+    
+    setColumnText( tc );
+    
+    tc.addSelectionListener( m_headerListener );
 
     refresh();
+  }
+
+  protected void setColumnText( final TableColumn tc )
+  {
+    final String propertyName = (String)tc.getData( COLUMN_PROP_NAME );
+    final String sortPropertyName = m_sorter.getPropertyName();
+    
+    String text = propertyName;
+    if( propertyName.equals(sortPropertyName) )
+      text += " " + ( m_sorter.isInverse() ? "\u00ab" : "\u00bb" );
+    
+    tc.setText( text );
   }
 
   public void removeColumn( final String name )
@@ -244,7 +328,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
     super.refresh();
 
-    // und die tableitems einfärben??
+    // und die tableitems einfärben
     final TableItem[] items = getTable().getItems();
     for( int i = 0; i < items.length; i++ )
     {
@@ -333,18 +417,6 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     return properties;
   }
 
-  public void selectFeature( final KalypsoFeature feature )
-  {
-    final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)getTheme().getLayer();
-    final KalypsoFeature[] features = layer.getAllFeatures();
-    for( int i = 0; i < features.length; i++ )
-      features[i].unselect( m_selectionID );
-
-    feature.select( m_selectionID );
-
-    layer.fireModellEvent( null );
-  }
-
   public void selectRow( final KalypsoFeature feature )
   {
     getControl().getDisplay().asyncExec( new Runnable()
@@ -361,8 +433,40 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
+    final List selFeatures = new ArrayList();
+    if( m_isFeatureSelectionSynchron )
+    {
+      // Feature-Selection auf Selection übertragen
+      final KalypsoFeature[] allFeatures = ( (KalypsoFeatureLayer)getTheme().getLayer() )
+          .getAllFeatures();
+      for( int i = 0; i < allFeatures.length; i++ )
+      {
+        final KalypsoFeature feature = allFeatures[i];
+        if( feature.isSelected( m_selectionID ) )
+          selFeatures.add( feature );
+      }
+    }
+
     if( !isDisposed() )
-      getControl().getDisplay().asyncExec( m_refreshRunner );
+      getControl().getDisplay().asyncExec( new Runnable()
+      {
+        public void run()
+        {
+          handleModelChanged( selFeatures );
+        }
+      } );
+  }
+
+  /** muss im SWT-Event-Thread ausgeführt werden */
+  protected void handleModelChanged( final List newSelection )
+  {
+    refresh();
+
+    if( m_isFeatureSelectionSynchron )
+    {
+      // super, damits keinen loop gibt
+      setSelection( new StructuredSelection( newSelection ), false );
+    }
   }
 
   public boolean isDisposed()
@@ -454,12 +558,31 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
       columns.add( columnType );
     }
-
+    
+    final LayerTableSorter sorter = (LayerTableSorter)getSorter();
+    final String propertyName = sorter.getPropertyName();
+    if( propertyName != null )
+    {
+      final SortType sort = m_gistableviewFactory.createGistableviewTypeLayerTypeSortType();
+      sort.setPropertyName( propertyName );
+      sort.setInverse( sorter.isInverse() );
+      layer.setSort( sort );
+    }
+    
     return tableTemplate;
   }
 
   public void saveData()
   {
     getTheme().saveFeatures();
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   */
+  public void selectionChanged( final SelectionChangedEvent event )
+  {
+    if( m_isFeatureSelectionSynchron )
+      assignSelectionToFeatures();
   }
 }
