@@ -44,7 +44,7 @@
 
     <para>Die zuerst eingelesene Datenreihe bestimmt den Anfangszeitpunkt der
     Datendarstellung und die x-Achsenbeschriftung. Die x-Achsenbeschriftung
-    kann in vielfältiger Art durch den Anwender eingestellt werden.</para>
+    kann durch den Anwender geändert werden.</para>
 
     <para>Das Grafikmodul besitzt die wichtigsten Grundfunktionen zur
     Seitenansicht, Druckereinstellung und zum Ausdrucken der Ganglinien. Über
@@ -125,7 +125,7 @@
     </figure>
 
     <para>Über den Menüpunkt <guimenu>Datei</guimenu> sind alle wichtigen
-    Funktionen zum Laden, Sichern, Drucken und Seiten- und
+    Funktionen zum Laden, Sichern, Drucken sowie Seiten- und
     Druckereinstellungen enthalten. Die folgende Tabelle enthält die
     Erläuterung der einzelnen Menüpunkte.</para>
 
@@ -141,17 +141,18 @@
           <row>
             <entry>Daten laden:</entry>
 
-            <entry>Neue Datenreihe einladen</entry>
+            <entry>Einladen einer neuen Datenreihe</entry>
           </row>
 
           <row>
             <entry>Nochmals laden:</entry>
 
-            <entry>Letzte Datenreihe wird nochmals eingeladen. Voraussetzung
-            ist, dass bereits eine Datenreihe über den Menüpunkt Daten laden
-            eingeladen wurde. Bei einigen Formaten, in denen die Auswahl von
-            Blocknummern oder Spaltennummern notwendig ist, wird diese Auswahl
-            erneut angeboten.</entry>
+            <entry>Die letzte Datenreihe wird nochmals eingeladen.
+            Voraussetzung ist, dass bereits eine Datenreihe über den Menüpunkt
+            <guimenu>Daten laden</guimenu> eingeladen wurde. Bei einigen
+            Formaten, in denen die Auswahl von Blocknummern oder
+            Spaltennummern notwendig ist, wird diese Auswahl erneut
+            angeboten.</entry>
           </row>
 
           <row>
@@ -159,7 +160,7 @@
 
             <entry>Eine vorher als Vorlage gesicherte Einstellung wird
             geladen. Es kann gewählt werden, ob die bisher geladenen
-            Datenreihen im Diagramm enthalten bleiben sollen oder
+            Datenreihen im Diagramm erhalten bleiben sollen oder
             nicht.</entry>
           </row>
 
@@ -167,20 +168,21 @@
             <entry>Vorlage sichern:</entry>
 
             <entry>Alle aktuellen Einstellungen werden unter einem Namen als
-            Vorlage (Template) gesichert und können als Vorlage verwendet
+            Vorlage-Datei (Template) gesichert und können wieder aufgerufen
             werden. Gesichert werden unter anderem: Name der Datenreihe,
-            Anzeige, Diagrammart, y-Achse, Maßstab, Beschriftung u.s.w..
-            Hinweis: Es werden nicht die Datenwerte selbst gesichert.</entry>
+            Anzeige, Diagrammart, y-Achse, Maßstab, Beschriftung u.s.w.
+            (Hinweis: Es werden nicht die Datenwerte selbst
+            gesichert.)</entry>
           </row>
 
           <row>
             <entry>Grafik exportieren:</entry>
 
             <entry>Für eine weitere Verwendung als Bitmap kann die aktuelle
-            Darstellung als BMP-Datei abgelegt werden. Hinweis: Analog kann
-            über Bearbeiten - Grafik in die Zwischenablage die Übergabe der
-            Darstellung in ein externes Bildbearbeitungsprogramm
-            erfolgen.</entry>
+            Darstellung als Grafik-Datei (*.bmp) abgelegt werden. (Hinweis:
+            Analog kann über Bearbeiten - Grafik in die Zwischenablage die
+            Übergabe der Darstellung in ein externes Bildbearbeitungsprogramm
+            erfolgen.)</entry>
           </row>
 
           <row>
@@ -214,9 +216,10 @@
   <section id="grafik_menu_bearbeiten">
     <title>Menü: Bearbeiten</title>
 
-    <para>Das Menü Bearbeiten enthält Funktionen zur Bearbeitung von
-    Datenreihen, Kopieren eines Diagramms in die Zwischenablage und zum
-    Entfernen aller angezeigter Kurven aus dem Diagramm.</para>
+    <para>Das Menü <guimenu>Bearbeiten</guimenu> enthält Funktionen zur
+    Bearbeitung von Datenreihen, Kopieren eines Diagramms in die
+    Zwischenablage und zum Entfernen aller angezeigter Kurven aus dem
+    Diagramm.</para>
 
     <figure>
       <title>Menü Bearbeiten</title>
@@ -230,7 +233,7 @@
 
     <para>Im Einzelnen stehen die folgenden Funktionen zur Verfügung:</para>
 
-    <section id="menu_bearbeiten">
+    <section id="menu_bearbeiten_korrekturmodus">
       <sectioninfo>
         <date><indexterm>
             <primary>KALYPSO - Interaktive Gangliniengrafik</primary>
@@ -239,15 +242,13 @@
 
       <title>Korrekturmodus</title>
 
-      <para>Die Werte der Datenreihen können in verschiedener Art und Weise
-      korrigiert werden. Voraussetzung dazu ist die zusätzliche Aktivierung
-      des Korrekturmodus.</para>
-
-      <para>Nach Einschalten des Korrekturmodus erscheint eine zusätzliche
+      <para>Im Korrektutmodus können die Werte der Datenreihen editiert
+      werden. Voraussetzung dazu ist die Aktivierung des Modus (Häkchen im
+      Menü). Nach Einschalten des Korrekturmodus erscheint eine zusätzliche
       Werkzeugleiste mit folgenden Funktionen:</para>
 
       <figure>
-        <title>Schaltflächenleiste im Korrekturmodus</title>
+        <title>Werkzeugleiste im Korrekturmodus</title>
 
         <mediaobject>
           <imageobject>
@@ -255,6 +256,8 @@
           </imageobject>
         </mediaobject>
       </figure>
+
+      <para>Die Schaltflächen bedeuten von links nach rechts:</para>
 
       <itemizedlist>
         <listitem>
@@ -306,11 +309,11 @@
         </listitem>
 
         <listitem>
-          <para>geänderte Datenreihe sichern</para>
+          <para>Geänderte Datenreihe sichern</para>
         </listitem>
 
         <listitem>
-          <para>letzte Änderung rückgängig machen</para>
+          <para>Letzte Änderung rückgängig machen</para>
         </listitem>
       </itemizedlist>
 
@@ -319,10 +322,11 @@
       erste sichtbare Datenreihe gewählt.</para>
 
       <para>Der zu korrigierende Bereich wird durch einen Cursorstrich, der
-      über die Maus oder die Cursortasten bewegt werden kann, eingestellt. Ein
-      Doppelklick mit der linken Maustaste oder die &lt;enter&gt;-Taste
-      setzten den Strich. Anschließend erscheint je nach gewähltem Werkzeug
-      ein entsprechendes Eingabemenü.</para>
+      über die Maus oder die Cursortasten bewegt werden kann, eingestellt.
+      Durch einen Doppelklick mit der linken Maustaste oder die
+      &lt;Enter&gt;-Taste wird die linke Begrenzung festgelegt. Ein zweiter
+      Doppelklick markiert die rechte Begrenzung. Anschließend erscheint je
+      nach gewähltem Werkzeug ein entsprechendes Eingabemenü.</para>
 
       <informaltable>
         <tgroup cols="2">
@@ -341,11 +345,11 @@
               <entry>Für den gewählten Abschnitt werden alle Messwerte
               gelöscht und anschließend die im gleichen Zeitraum befindlichen
               Messwerte einer anderen Messreihe übernommen. Die zu
-              übernehmende Messreihe wird aus den in der Grafik eingeladenen
-              Datenreihen ausgewählt. Bei der Übernahme der Werte kann noch
-              ein Faktor und eine Verschiebung (Offset) eingestellt werden.
-              Die Messwertübernahme kann auf Messwertausfälle beschränkt
-              werden. (siehe auch <xref
+              übernehmende Messreihe muss aus den in der Grafik eingeladenen
+              Datenreihen ausgewählt werden. Bei der Übernahme der Werte kann
+              noch ein Faktor und eine Verschiebung (Offset) eingestellt
+              werden. Die Messwertübernahme kann auf Messwertausfälle
+              beschränkt werden. (siehe auch <xref
               linkend="grafik_messwertausfall" />)</entry>
             </row>
 
@@ -423,7 +427,7 @@
               <entry>Abflussbeiwert:</entry>
 
               <entry>Bestimmung des Abflussbeiwertes. Nähere Erläuterungen
-              sind im Abschnitt zum Abflussbeiwert (<xref
+              sind im Abschnitt zum Abflussbeiwert (siehe <xref
               linkend="grafik_abflussbeiwert" />) vorhanden.</entry>
             </row>
 
@@ -477,19 +481,20 @@
 
       <para>TAn YAn TBn YBn TCn YCn ...</para>
 
-      <para>T = Zeitachsenwert, Y = Datenwert, A,B,C,... einzelnen
+      <para>T = Zeitachsenwert; Y = Datenwert; A,B,C,... einzelne
       Datenreihen</para>
 
       <para>Alle Spalten sind durch Tabulatoren getrennt. Dezimalpunkte werden
       durch Komma dargestellt. Allerdings kann das Dezimalpunktzeichen über
-      das Menü Extras-Optionen auch beliebig gewählt werden.</para>
+      das Menü <guimenu>Extras-Optionen</guimenu> auch beliebig gewählt
+      werden.</para>
     </section>
 
     <section>
       <title>Kopieren</title>
 
       <para>Die Gangliniengrafik wird als "Foto" in die Zwischenablage kopiert
-      und kann nun in externen Programmen (z.B. Office-Komponenten) als Bild
+      und kann nun in externe Programme (z.B. Office-Komponenten) als Bild
       eingefügt werden.</para>
     </section>
 
@@ -498,10 +503,11 @@
 
       <para>Alle Datenreihen werden aus der Darstellung entfernt. Dabei werden
       eine Reihe von Einstellungen, wie zum Beispiel der Anfangszeitpunkt
-      rückgesetzt. Für eine Gangliniendarstellung müssen wieder neue
+      zurückgesetzt. Für eine Gangliniendarstellung müssen wieder neue
       Messreihen eingelesen werden. Diese Aktion ist dem einzelnen Löschen
-      aller Datenreihen unter <guimenu>Anzeige - aktuelle Kurven - Entferne
-      Nr.:</guimenu> gleichzusetzen.</para>
+      aller Datenreihen unter <guimenu>Anzeige -&gt; aktuelle Kurven -&gt;
+      Entferne Nr.:</guimenu> (vgl. <xref
+      linkend="grafik_menu_aktuelle-kurven" />) gleichzusetzen.</para>
     </section>
   </section>
 
@@ -509,9 +515,9 @@
     <title>Menü: Anzeige</title>
 
     <para>Einstellungen zur Anzeige der Datenreihen können über das Menü
-    Anzeige verändert werden. Einige der Menüpunkte können auch direkt über
-    Schaltflächen aufgerufen werden. Die entsprechenden Schaltflächen sind im
-    Folgenden mit dargestellt.</para>
+    <guimenu>Anzeige</guimenu> verändert werden. Einige der Menüpunkte können
+    auch direkt über Schaltflächen aufgerufen werden. Die entsprechenden
+    Schaltflächen sind im Folgenden mit dargestellt.</para>
 
     <figure>
       <title>Menü Anzeige</title>
@@ -523,7 +529,7 @@
       </mediaobject>
     </figure>
 
-    <section id="menu_anzeige">
+    <section id="grafik_menu_aktuelle-kurven">
       <sectioninfo>
         <date><indexterm>
             <primary>KALYPSO - Interaktive Gangliniengrafik</primary>
@@ -626,7 +632,7 @@
       x-Bereich (Zeitachse) verändert. Die Einstellung der y-Werte bleiben
       unverändert.</para>
 
-      <para><emphasis role="bold">dx,dY beim Zoom autom.
+      <para><emphasis role="bold">dx, dY beim Zoom autom.
       anpassen</emphasis></para>
 
       <para>Beim Zoomen mit der Maus (Rechteck aufziehen) werden die
@@ -638,7 +644,7 @@
 
       <para>Die Einstellungen für die rechte y-Achse werden nur dann
       verfügbar, wenn dieser Achse mindestens eine Datenreihe zugeordnet
-      wurde. Die Zuordnung erfolgt über den Menüpunkt <guimenu>Anzeige -
+      wurde. Die Zuordnung erfolgt über den Menüpunkt <guimenu>Anzeige -&gt;
       Aktuelle Kurven</guimenu>.</para>
     </section>
 
@@ -683,9 +689,11 @@
     <section>
       <title>Legende</title>
 
-      <para>Die Legende kann ein- bzw. ausgeblendet werden. Soll die Position
-      der Legende verschoben werden, so muss nach Anwahl dieses Menüpunktes
-      mit der Maus eine neue linke obere Ecke angewählt werden.</para>
+      <para>Die Legende kann ein- bzw. ausgeblendet werden (<guimenu>Legende
+      ein/aus</guimenu>). Soll die Position der Legende verschoben werden
+      (<guimenu>Legendenposition</guimenu>), so muss nach Anwahl dieses
+      Menüpunktes mit der Maus eine neue linke obere Ecke angewählt
+      werden.</para>
     </section>
 
     <section>
@@ -710,8 +718,8 @@
       <title>Weitere Ansichtseinstellungen</title>
 
       <para>Weitere zusätzliche Einstellungen zur Ansichtssteuerung des
-      Diagramms sind in der Zeile der Schaltflächen zu finden. Es sollen hier
-      nur diejenigen erläutert werden, die im Funktionsumfang die bereits
+      Diagramms sind in Form von Schaltflächen vorhanden. Es sollen hier nur
+      diejenigen erläutert werden, die im Funktionsumfang die bereits
       beschriebenen Menüpunkte erweitern.</para>
 
       <figure>
@@ -741,7 +749,9 @@
       <para>Um die Zeitachse nach Zwischenwerten hinsichtlich Datum und
       Uhrzeit abzufragen, kann der Cursormodus verwendet werden. Dieser Modus
       ist auch automatisch bei der numerischen Anzeige der Datenreihen
-      aktiviert.</para>
+      aktiviert. Es erscheint eine senkrechte Linie im Darstellungsbereich,
+      die mit der Maus verschoben werden kann. Zur Position der Linie
+      erscheint auf der x-Achse die Information über Datum/Uhrzeit.</para>
 
       <figure>
         <title>Schaltfläche Freitext</title>
@@ -754,9 +764,9 @@
       </figure>
 
       <para>Über das Werkzeug zur Textbeschriftung<emphasis role="bold"> TXT
-      </emphasis>können bis zu 100 Texte beliebig im Diagrammbereich gesetzt
-      werden. Zu Beginn der Eingabe muss immer die Schaltfläche gedrückt
-      werden.</para>
+      </emphasis>können bis zu 100 Textfelder beliebig im Diagrammbereich
+      gesetzt werden. Zu Beginn der Eingabe muss immer die Schaltfläche
+      aktiviert sein.</para>
 
       <informaltable>
         <tgroup cols="2">
@@ -781,7 +791,7 @@
 
               <entry>Es wird auf eine alte Textposition geklickt. Bei gedrückt
               gehaltener linker Maustaste wird der alte Textinhalt
-              „mitgenommen“ und beim Loslassen mit der neuen Position im
+              `mitgenommen` und beim Loslassen mit der neuen Position im
               Texteingabedialog zu einer eventuellen Änderung
               angeboten.</entry>
             </row>
@@ -828,8 +838,9 @@
 
     <para>Die oben gezeigten Menüpunkte und auch weitere stehen nur bei
     Installation der Zusatzmodule zur Verfügung. Ein weiterführende
-    Erläuterung gibt es im Abschnitt <emphasis
-    role="bold">Zusatzmodule.</emphasis></para>
+    Erläuterung gibt es in den Abschnitten <xref
+    linkend="grafik_abflussbeiwert" /> und <xref
+    linkend="grafik_messwertausfall" />.</para>
 
     <para>Zur Auswertung der Datenreihen werden folgende Möglichkeiten
     angeboten:</para>
@@ -848,8 +859,9 @@
       wahlweise entschieden werden auf welche Datenreihen die Berechnung
       angewendet werden soll und ob die Originalreihen dabei aus der Grafik
       entfernt werden sollen. Ein Abspeichern der so erzeugten Datenreihen ist
-      nur über die zusätzlichen Funktionen des Korrekturmodus oder im externen
-      Datenformat (Daten sichern) möglich.</para>
+      nur über die zusätzlichen Funktionen des Korrekturmodus (siehe <xref
+      linkend="menu_bearbeiten_korrekturmodus" />) oder im externen
+      Datenformat (Datenexport) möglich.</para>
     </section>
 
     <section>
@@ -858,16 +870,16 @@
       <para>Ausgehend von der Zeitachsenbeschriftung werden die Werte aller
       Datenreihen zu einem Monatsmittel zusammengefasst und dargestellt. Die
       Originalwerte innerhalb des Diagramms werden dabei überschrieben. Alle
-      bisherigen Funktionen innerhalb des Grafikmoduls (z. B. Statistik,
-      Sichern, Mumerische Anzeige, ...) werden auf die neuen Zahlenwerte
+      bisherigen Funktionen innerhalb des Grafikprogramms (z. B. Statistik,
+      Sichern, Numerische Anzeige, ...) werden auf die neuen Zahlenwerte
       angewendet. Sollen wieder Tageswerte angezeigt werden, müssen diese neu
       eingelesen werden. Das Aggregieren der Daten erfolgt dabei über folgende
       Regel: Test der Datumsangabe in der 1. Spalte, falls ab 4. Position
       identisch, dann Übernahme !</para>
 
-      <para>01.02.98 14:30 oder 01.02.1998 14:30</para>
-
       <para>Bsp.</para>
+
+      <para>01.02.98 14:30 oder 01.02.1998 14:30</para>
 
       <para>02.02.98 15:15 oder 02.02.1998 15:15</para>
 
@@ -886,8 +898,8 @@
 
       <para>Alle Werte einer Datenreihe werden aufsummiert. Es ist zu
       beachten, dass ein Aufsummieren nur für zeitgleiche Zeitschritte
-      sinnvoll erscheint. Eine Anwendung des Aufsummierens ist die Darstellung
-      als Dauerlinien.</para>
+      sinnvoll erscheint. Eine Anwendung der Funktion Aufsummieren ist die
+      Darstellung der Zeitreihen als Dauerlinien.</para>
     </section>
 
     <section>
@@ -896,14 +908,15 @@
       <para>Auf Basis eines eingestellten Zeitrasters wird ermittelt, ob
       mindestens ein Messwert vorliegt. Ist dies nicht der Fall, wird ein
       Kennwert für Messwertausfall eingetragen. Die Kennung ist auch unter
-      Extras - Optionen - Daten laden einstellbar.</para>
+      <guimenu>Extras -&gt; Optionen -&gt; Daten laden</guimenu>
+      einstellbar.</para>
     </section>
 
     <section>
       <title>Änderungen Rückgängig</title>
 
-      <para>Die Berechnung kann soweit kein Abspeichern auf der Festplatte
-      vorgenommen wurde verworfen werden. Die Originaldatenreihen werden
+      <para>Die Berechnung kann - soweit kein Abspeichern der Zeitreihen
+      vorgenommen wurde - verworfen werden. Die Originaldatenreihen werden
       wieder eingelesen.</para>
     </section>
 
@@ -924,8 +937,8 @@
       Mittelwert, das Maximum, die Anzahl der Werte, die Summe, der
       Korrelationskoeffizient und das Verhältnis (Faktor) zur 1. Datenreihe
       berechnet. Zusätzlich wird im aktuellen Pfad eine Datei STAT.TXT mit den
-      gezeigten und noch weiteren (Faktor zu 1, Restquadratsumme zu 1)
-      Ergebnissen angelegt.</para>
+      gezeigten und noch weiteren Ergebnissen (Faktor zu 1, Restquadratsumme
+      zu 1) angelegt.</para>
     </section>
   </section>
 
@@ -996,83 +1009,118 @@
       vor, so wird automatisch die laufende Position angezeigt. Folgende
       Datenformate sind für jeweils beide Zeilen einstellbar:</para>
 
-      <para>TT.MM.JJJJ hh:mm:ss</para>
+      <itemizedlist>
+        <listitem>
+          <para>TT.MM.JJJJ hh:mm:ss</para>
+        </listitem>
 
-      <para>TT.MM.JJJJ hh:mm</para>
+        <listitem>
+          <para>TT.MM.JJJJ hh:mm</para>
+        </listitem>
 
-      <para>TT.MM.JJJJ</para>
+        <listitem>
+          <para>TT.MM.JJJJ</para>
+        </listitem>
 
-      <para>TT.MM.</para>
+        <listitem>
+          <para>TT.MM.</para>
+        </listitem>
 
-      <para>MM/JJJJ</para>
+        <listitem>
+          <para>MM/JJJJ</para>
+        </listitem>
 
-      <para>TT</para>
+        <listitem>
+          <para>TT</para>
+        </listitem>
 
-      <para>MM</para>
+        <listitem>
+          <para>MM</para>
+        </listitem>
 
-      <para>JJJJ</para>
+        <listitem>
+          <para>JJJJ</para>
+        </listitem>
 
-      <para>hh:mm</para>
+        <listitem>
+          <para>hh:mm</para>
+        </listitem>
 
-      <para>hh</para>
+        <listitem>
+          <para>hh</para>
+        </listitem>
 
-      <para>dT in min</para>
+        <listitem>
+          <para>dT in min</para>
+        </listitem>
 
-      <para>lfd. Position</para>
+        <listitem>
+          <para>lfd. Position</para>
+        </listitem>
 
-      <para>automatisch wählen:</para>
+        <listitem>
+          <para>automatisch wählen:</para>
 
-      <para>Soweit es die Datengrundlage erlaubt, werden die Formate nach
-      folgendem Schema eingestellt: Zeithorizont 1. Zeile 2. Zeile</para>
+          <para>Soweit es die Datengrundlage erlaubt, werden die Formate nach
+          folgendem Schema eingestellt:</para>
 
-      <para>0 ... 5 Tage hh:mm TT.MM.JJJJ</para>
+          <para>0 ... 5 Tage hh:mm TT.MM.JJJJ</para>
 
-      <para>5 ... 90 Tage (ca. 3 Monate) TT MM/JJJJ</para>
+          <para>5 ... 90 Tage (ca. 3 Monate) TT MM/JJJJ</para>
 
-      <para>90 ... 1800 Tage (ca. 3 Jahre) MM JJJJ</para>
+          <para>90 ... 1800 Tage (ca. 3 Jahre) MM JJJJ</para>
 
-      <para>1800 Tage ... JJJJ -</para>
+          <para>1800 Tage ... JJJJ</para>
+        </listitem>
 
-      <para>keine doppelten Beschriftungen:</para>
+        <listitem>
+          <para>keine doppelten Beschriftungen:</para>
 
-      <para>Datumsangaben, die mehrfach auftreten werden nur zum ersten
-      Zeitpunkt angezeigt.</para>
+          <para>Datumsangaben, die mehrfach auftreten werden nur zum ersten
+          Zeitpunkt angezeigt.</para>
 
-      <para>Bsp:</para>
+          <para>Bsp:</para>
 
-      <para>14:00 18:00 00:00 04:00 08:00</para>
+          <para>14:00 18:00 00:00 04:00 08:00</para>
 
-      <para>01.03.99 02.03.99</para>
+          <para>01.03.99 01.03.99 02.03.99 02.03.99</para>
 
-      <para>14:00 18:00 00:00 04:00 08:00</para>
+          <para>14:00 18:00 00:00 04:00 08:00</para>
 
-      <para>01.03.99 02.03.99</para>
+          <para>01.03.99 02.03.99</para>
+        </listitem>
 
-      <para>gleiche Zeitbestände:</para>
+        <listitem>
+          <para>gleiche Zeitabstände:</para>
 
-      <para>Bei Messreihen mit zeitlich unterschiedlichen Messwerten
-      (nichtäquidistante Zeitschritte) wird die x-Achse nur bei den
-      vorhandenen Zeitwerten beschriftet. Dies ergibt oftmals ein
-      unerwünschtes Erscheinungsbild mit sehr unterschiedlichen Zeitabständen.
-      Über diese Möglichkeit kann ein zeitgleicher Abstand in der Beschriftung
-      der x-Achse eingestellt werden. Der Anfangszeitpunkt der
-      x-Achsenbeschriftung ist ebenfalls frei wählbar. Bei einer automatisch
-      Beschriftung (automatisch wählen) wird die Einstellung auf gleiche
-      Zeitabstände gesetzt und der Zeitabstand entsprechend des
-      darzustellenden Zeitraumes automatisch berechnet.</para>
+          <para>Bei Messreihen mit zeitlich unterschiedlichen Messwerten
+          (nichtäquidistante Zeitschritte) wird die x-Achse nur bei den
+          vorhandenen Zeitwerten beschriftet. Dies ergibt oftmals ein
+          unerwünschtes Erscheinungsbild mit sehr unterschiedlichen
+          Zeitabständen. Über diese Möglichkeit kann ein zeitgleicher Abstand
+          in der Beschriftung der x-Achse eingestellt werden. Der
+          Anfangszeitpunkt der x-Achsenbeschriftung ist ebenfalls frei
+          wählbar. Bei einer automatisch Beschriftung (automatisch wählen)
+          wird die Einstellung auf gleiche Zeitabstände gesetzt und der
+          Zeitabstand entsprechend des darzustellenden Zeitraumes automatisch
+          berechnet.</para>
 
-      <para>Sollen Datenreihen aus unterschiedlichen Zeiträume verglichen
-      werden, so kann über Anfangszeitpunkte gleichsetzen eingestellt werden,
-      dass die Datenreihen zum gleichen Zeitpunkt beginnend dargestellt
-      werden.</para>
+          <para>Sollen Datenreihen aus unterschiedlichen Zeiträume verglichen
+          werden, so kann über Anfangszeitpunkte gleichsetzen eingestellt
+          werden, dass die Datenreihen zum gleichen Zeitpunkt beginnend
+          dargestellt werden.</para>
+        </listitem>
 
-      <para>x-Achse abfallend sortieren</para>
+        <listitem>
+          <para>x-Achse abfallend sortieren</para>
 
-      <para>Standardmäßig werden zeitliche Werte und fortlaufende Position
-      immer aufsteigend dargestellt. Soll diese Einstellung (abfallende
-      Zahlenwerte) geändert werden, muss dieses Kontrollkästchen aktiviert
-      werden. Bei Datenreihen mit zeitlichen Bezug (Datumswerte in der
-      x-Achse) wird diese Einstellung ignoriert und zurückgesetzt.</para>
+          <para>Standardmäßig werden zeitliche Werte und fortlaufende Position
+          immer aufsteigend dargestellt. Soll diese Einstellung (abfallende
+          Zahlenwerte) geändert werden, muss dieses Kontrollkästchen aktiviert
+          werden. Bei Datenreihen mit zeitlichen Bezug (Datumswerte in der
+          x-Achse) wird diese Einstellung ignoriert und zurückgesetzt.</para>
+        </listitem>
+      </itemizedlist>
 
       <para><emphasis role="bold">Ansicht</emphasis></para>
 
@@ -1108,7 +1156,7 @@
       Formaterkennung eingestellt. Kurzzeitig kann hier ausdrücklich ein
       gewünschtes Format voreingestellt werden. Soll die Datei nur zur
       Identifikation der einzulesenden Daten genutzt werden, so muss diese
-      Einstellung gewählt werden. Die "Einstiegsdatei" muss dann im folgenden
+      Einstellung gewählt werden. Die Einstiegsdatei muss dann im folgenden
       Format aufgebaut worden:</para>
 
       <informaltable>
@@ -1213,10 +1261,10 @@
         </tgroup>
       </informaltable>
 
-      <para><emphasis role="bold">Daten speichern</emphasis></para>
+      <para><emphasis role="bold">Daten sichern</emphasis></para>
 
       <para>Für den Export von Daten kann der Dezimalpunkt gesondert
-      festgelegt werde n.</para>
+      festgelegt werden.</para>
 
       <para><emphasis role="bold">Schriften einstellen</emphasis></para>
 
@@ -1241,9 +1289,10 @@
 
     <title>Auswertung: Messwertausfall</title>
 
-    <para>Die Behandlung von Datenausfällen kann über Extras – Optionen -
-    Daten laden – Kennzeichnung von Messwertausfällen eingestellt werden. Alle
-    Datenwerte, die mit dieser Kennung übereinstimmen werden:</para>
+    <para>Die Behandlung von Datenausfällen kann über <guimenu>Extras Optionen
+    Daten laden Kennzeichnung von Messwertausfällen</guimenu> eingestellt
+    werden. Alle Datenwerte, die mit dieser Kennung übereinstimmen
+    werden:</para>
 
     <itemizedlist>
       <listitem>
@@ -1270,8 +1319,8 @@
     </itemizedlist>
 
     <para>Datenausfälle werden zusätzlich noch mit einem kleinen Kreis auf der
-    x-Achse markiert. Dabei ist bei dieser Darstellung nicht unterscheidbar,
-    in welcher Datenreihe dieser Ausfall vorliegt.</para>
+    x-Achse markiert. Dabei ist nicht unterscheidbar, in welcher Datenreihe
+    dieser Ausfall vorliegt.</para>
   </section>
 
   <section id="grafik_abflussbeiwert">
@@ -1301,7 +1350,7 @@
       </listitem>
 
       <listitem>
-        <para>Interaktive Möglichkeit zum Abzug des Basisabflusse vom
+        <para>Interaktive Möglichkeit zum Abzug des Basisabflusses vom
         Hochwasserereignis</para>
       </listitem>
 
@@ -1314,12 +1363,10 @@
       </listitem>
     </orderedlist>
 
-    <para>Der Ablauf soll nachfolgend näher erläutert werden:</para>
+    <para>Der Ablauf wird nachfolgend näher erläutert:</para>
 
     <para><emphasis role="bold">Einlesen und Darstellen der Abflussganglinie
-    und des zugehörigen Effektivniederschlages</emphasis></para>
-
-    <para>und</para>
+    und des zugehörigen Effektivniederschlages </emphasis>und</para>
 
     <para><emphasis role="bold">Auswahl des Hochwasserereignisses aus diesen
     Zeitreihen.</emphasis></para>
@@ -1338,7 +1385,7 @@
       </mediaobject>
     </figure>
 
-    <para>Das gewünschte Hochwasserereignis wird über die Zoomeinstellung
+    <para>Das gewünschte Hochwasserereignis wird über die Zoom-Einstellung
     ausgewählt.</para>
 
     <figure>
@@ -1351,14 +1398,15 @@
       </mediaobject>
     </figure>
 
-    <para>Über das Werkzeug zur Bestimmung des Abflussbeiwerte werden die
+    <para>Über die Schaltfläche zur Bestimmung des Abflussbeiwertes werden die
     nachfolgenden Schritte angeboten. Dieses Werkzeug ist in der
-    Werkzeugleiste zur Korrektur von Datenreihen enthalten.</para>
+    Werkzeugleiste zur Korrektur von Datenreihen (<guimenu>bearbeiten -&gt;
+    Korrekturmodus</guimenu>) enthalten.</para>
 
     <para><emphasis role="bold">Interaktive Möglichkeit zum Abzug des
     Basisabflusse vom Hochwasserereignis</emphasis> Der Bereich des
     tatsächlichen Hochwasserabflusses wird über Cursorstriche ausgewählt. Im
-    Ergebnis wird die Scheitelkurve für den ausgewählten Zeitraum ohne dem
+    Ergebnis wird die Scheitelkurve für den ausgewählten Zeitraum ohne den
     Basisabfluss ermittelt.</para>
 
     <figure>
@@ -1366,7 +1414,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/ganglinien_bild22.png" />
+          <imagedata fileref="img/ganglinien_bild22.png" scale="100" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -1380,14 +1428,12 @@
     <para>Auf Basis dieser beiden Datenreihen wird im Anschluss der
     Abflussbeiwert wie folgt berechnet:</para>
 
-    <para><emphasis role="bold">Abflussbeiwert = (Summe Abfluss je Zeitschritt
-    am Pegel) / (Summe NS je Zeitschritt im Einzugsgebiet) </emphasis></para>
-
-    <para>NS in [mm], Q in [m³/s], AE in [m²]</para>
+    <para>Abflussbeiwert = (Summe Abfluss je Zeitschritt am Pegel) / (Summe NS
+    je Zeitschritt im Einzugsgebiet)</para>
 
     <para>Die Einzugsgebietsfläche wird im Dialog abgefragt, wenn nicht eine
     Datei grafik.abw mit folgendem Inhalt existiert: &lt;Kurvenname&gt;
-    &lt;Einzugsgebietsgröße in m²&gt; Die Datei muss sich im beim
+    &lt;Einzugsgebietsgröße in [qm]&gt;. Die Datei muss sich im beim
     Programmaufruf aktuellem Arbeitsverzeichnis befinden.</para>
 
     <para>Das Ergebnis wird angezeigt und gleichzeitig im Protokoll Grafik.pro
@@ -1407,11 +1453,13 @@
 
     <para>Über eine Liste, in der die Namen von mehreren vorher erstellten
     Vorlagen enthalten sind, kann eine Art Dia-Show aufgerufen werden. Der
-    Name dieser Datei endet mit "*.lst"</para>
+    Name dieser Datei endet mit "*.lst".</para>
 
     <para>Bsp.:</para>
 
-    <para>dia1.lst: anfpkt.tpl</para>
+    <para>dia1.lst:</para>
+
+    <para>anfpkt.tpl</para>
 
     <para>zeitpkt1.tpl</para>
 
@@ -1419,7 +1467,7 @@
 
     <para>endpkt.tpl</para>
 
-    <para>Dabei werden die Vorlagen *.tpl der Reihe nach geladen und
+    <para>Dabei werden die Vorlagen (*.tpl) der Reihe nach geladen und
     dargestellt.</para>
 
     <para>Es besteht die Wahl eines automatischen und eines
