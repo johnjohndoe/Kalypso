@@ -148,7 +148,7 @@ public class ProxyFactory
         }
         else
           throw new ServiceException( "Service " + key
-              + " not available. Could not find an servicing server.", e );
+              + " not available. Could not find a servicing server.", e );
       }
     }
 

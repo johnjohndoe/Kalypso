@@ -29,6 +29,8 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_COLLAPSE = id("icons/observation_repository_collapse.gif");
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_EXPAND = id("icons/observation_repository_expand.gif");
   
+  public static final ImageDescriptor IMAGE_OBSERVATION_LINK = id("icons/observation_link.gif");
+  
   public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMOUT = id( "icons/full/elcl16/kde_viewmag-.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_PAN = id( "icons/full/elcl16/kde_move.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_FULLEXTENT = id( "icons/full/elcl16/kde_window_fullscreen.gif" );
