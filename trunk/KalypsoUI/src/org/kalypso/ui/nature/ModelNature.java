@@ -91,7 +91,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   private IProject m_project;
 
-  private static final String PROGNOSE_FOLDER = ".prognose";
+  public static final String PROGNOSE_FOLDER = ".prognose";
 
   public static final String CONTROL_TEMPLATE_GML_PATH = MODELLTYP_FOLDER + "/"
       + CONTROL_TEMPLATE_NAME;
@@ -104,6 +104,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public void configure()
   {
   // nix tun
+  }
+  
+  public final IFolder getPrognoseFolder()
+  {
+    return m_project.getFolder( PROGNOSE_FOLDER );
   }
 
   private IFile getMetadataFile()
@@ -484,10 +489,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public IFolder createNewPrognose( final IProgressMonitor monitor ) throws CoreException
   {
-    final IProject project = getProject();
-
     // ein noch nicht benutztes Unterverzeichnis im Prognoseverzeichnis finden
-    final IFolder prognoseFolder = project.getFolder( PROGNOSE_FOLDER );
+    final IFolder prognoseFolder = getPrognoseFolder();
     FolderUtilities.mkdirs( prognoseFolder );
     final IFolder calcCaseFolder = FolderUtilities.createUnusedFolder( prognoseFolder, "prognose" );
 

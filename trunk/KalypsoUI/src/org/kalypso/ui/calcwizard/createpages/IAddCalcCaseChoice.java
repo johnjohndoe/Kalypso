@@ -22,4 +22,8 @@ public interface IAddCalcCaseChoice
    * @see java.lang.Object#toString()
    */
   public String toString();
+
+  public void update( final IProgressMonitor monitor ) throws CoreException;
+  
+  public boolean isUpdateCalcCase();
 }

@@ -11,5 +11,7 @@ public interface ICalcWizardPage extends IWizardPage
 {
   public void doNext( final IProgressMonitor monitor ) throws CoreException;
   
+  public void update( final IProgressMonitor monitor ) throws CoreException;
+  
   public void clean( final IProgressMonitor monitor ) throws CoreException;
 }
