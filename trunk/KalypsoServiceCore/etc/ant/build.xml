@@ -2,17 +2,23 @@
 
 <project name="KalypsoCoreServices" default="build" basedir="../..">
 
-	<!-- Projekt abhängig (benutzt das aktive Projekt) -->
-	<property file="${workspace}${project}/etc/ant/service.properties" />
-
-	<property file="etc/ant/tomcat.properties" />
+	<!-- Project full path -->
+	<property name="project.path" value="${workspace}${project}" />
+	
+	<!-- 1. Projekt abhängig (benutzt das aktive Projekt) -->
+	<property file="${project.path}/etc/ant/service.properties" />
+	
+	<!-- 2. dann allgemeine eigenschaften -->
 	<property file="etc/ant/build.properties" />
+	<property file="etc/ant/tomcat.properties" />
 
 	<path id="generate.classpath">
 		<fileset dir="./lib/" includes="*.jar" />
 		<pathelement location="${build.proxy}" />
 		<pathelement location="${build}" />
+		<pathelement location="${workspace}/KalypsoCore/build/bin" />
 		<pathelement location="${workspace}/KalypsoCoreServices/build/bin" />
+		<pathelement location="${workspace}/KalypsoUtil/build/bin" />
 	</path>
 
 	<path id="ant.classpath">
@@ -23,10 +29,6 @@
 		<path refid="generate.classpath"/>
 		<!--schon in build.properties pathelement location="${project.path}/build/bin" /-->
 		<!-- schon in generate.classpath pathelement location="${workspace}/KalypsoCoreServices/build/bin" /-->
-	</path>
-
-    <path id="run.classpath">
-		<path refid="compile.classpath"/>
 	</path>
 
 	<fileset id="compile.jars" dir="./lib/" includes="*.jar" />
@@ -168,6 +170,19 @@
 			<fileset dir="${workspace}/${package_lib}" includes="**/*.jar" />
 		</copy>
 	</target>
+	
+	<target name="package-a-project"
+		depends="prepare"
+		description="Packt ein Java-Project in ein Jar und kopiert die libs
+			Arguments: aproject_jar, aproject_bin, aproject_lib">
+		<echo message="packaging ${aproject_jar}..." />
+		<jar destfile="${build.web.lib}/${aproject_jar}"
+			basedir="${workspace}/${aproject_bin}"
+			includes="**/*"/>
+		<copy todir="${build.web.lib}">
+			<fileset dir="${workspace}/${aproject_lib}" includes="**/*.jar" />
+		</copy>
+	</target>
 
 	<target name="compile-services"
 	        depends="prepare"
@@ -191,10 +206,16 @@
 		</antcall>
 		<antcall target="package-a-plugin">
 			<param name="package_jar" value="KalypsoPSICompactAdapter.jar" />
-			<param name="package_bin"
-			       value="KalypsoPSICompactAdapter/build/bin" />
+			<param name="package_bin" value="KalypsoPSICompactAdapter/build/bin" />
 			<param name="package_lib" value="KalypsoPSICompactAdapter/lib" />
 		</antcall>
+	
+		<antcall target="package-a-project">
+			<param name="aproject_jar" value="KalypsoCoreServices.jar" />
+			<param name="aproject_bin" value="KalypsoCoreServices/build/bin" />
+			<param name="aproject_lib" value="KalypsoCoreServices/lib" />
+		</antcall>
+
 		<!--		
 		    <javac srcdir="${src}" destdir="${build}" includes="**/*.java" debug="true">
 		      <classpath>
@@ -234,7 +255,7 @@
 		<jar jarfile="${dist}/${client.jar}">
 			<fileset dir="${build}" includes="**/*" />
 			<fileset dir="${build.proxy}" includes="**/*" />
-
+<!--
 			<manifest>
 				<attribute name="Main-Class" value="${main.class}" />
 				<attribute name="Class-Path" value="${clientjar_cp}" />
@@ -252,6 +273,7 @@
 					           value="Björnsen Beratende Ingenieure GmbH" />
 				</section>
 			</manifest>
+			-->
 		</jar>
 
 		<copy todir="${dist}/libs">
@@ -274,6 +296,7 @@
 		           config="${java.io.tmpdir}/${config.wsdl.file}">
 			<classpath refid="compile.classpath" />
 		</wscompile>
+
 	</target>
 
 	<target name="javadoc-client"
