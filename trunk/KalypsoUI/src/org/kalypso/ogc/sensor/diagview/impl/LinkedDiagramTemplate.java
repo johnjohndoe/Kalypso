@@ -178,7 +178,6 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
     {
       final DefaultDiagramTemplateTheme theme = (DefaultDiagramTemplateTheme)m_key2themes.get( key );
 
-
       if( theme != null )
       {
         final IObservation obs = (IObservation)newValue;
@@ -199,6 +198,11 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
    */
   public void objectInvalid( IPoolableObjectType key, Object oldValue )
   {
-  // TODO Auto-generated method stub
+    final DefaultDiagramTemplateTheme theme = (DefaultDiagramTemplateTheme)m_key2themes.get( key );
+
+    if( theme == null )
+      return;
+    
+    removeTheme( theme );
   }
 }

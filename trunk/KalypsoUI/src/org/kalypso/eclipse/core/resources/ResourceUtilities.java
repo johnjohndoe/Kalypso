@@ -78,7 +78,11 @@ public class ResourceUtilities
     
     if( urlpath != null && urlpath.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
     {
-      final String path = urlpath.substring( PlatformURLResourceConnection.RESOURCE_URL_STRING.length() - 1 );
+      String path = urlpath.substring( PlatformURLResourceConnection.RESOURCE_URL_STRING.length() - 1 );
+      
+      // blöder HACK weil sonst werden die Resourcen nicht richtig verglichen
+      if( path.indexOf( "//" ) != -1 )
+        path = path.replaceAll("//", "/");
       
       final Path path2 = new Path( path );
       return path2;
