@@ -20,7 +20,7 @@ public class KalypsoPreferenceInitializer extends AbstractPreferenceInitializer
     // number of days
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.NUMBER_OF_DAYS, 30 );
     
-    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CLIENT_CONF_URLS, "http://server_name:8080/KalypsoConf/kalypso-client.ini");
+    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CLIENT_CONF_URLS, "http://pc242:8080/KalypsoConf/kalypso-client.ini");
     
     //KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault(key, value);
   }
