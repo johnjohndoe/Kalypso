@@ -199,11 +199,10 @@ public class GisTransferManager implements KalypsoXmlImportListener
 				GisTransferObject gisDeepRel = getObjectsFromRel( "rb2deepAquif", gto.getIdentifier(), "d" );
 				if( gisDeepRel != null )
 				{
-					rb.setAquifInflowDeepAquifVal( Double.parseDouble( gisDeepRel.getSimpleProperty( "m_aquifInflowDeepAquifVal" )));
-					//is not clear if it has to be a strand or a node  !! very important if deep aquifernet is used
-					Strand sDeep = strands.getStrand(
-						Integer.parseInt( getObjectsFromMap( gisRel.getRelationDestTable(), gisRel.getRelationDestIdentifier()).getSimpleProperty( "m_strandNr")));
-					rb.setAquifTargetStrandDeepAquif( sDeep );
+				    rb.setAquifInflowDeepAquifVal( Double.parseDouble( gisDeepRel.getSimpleProperty( "m_aquifInflowDeepAquifVal" )));
+				    //is not clear if it has to be a strand or a node  !! very important if deep aquifernet is used
+				    Strand sDeep = strands.getStrand(Integer.parseInt( getObjectsFromMap( gisRel.getRelationDestTable(), gisRel.getRelationDestIdentifier()).getSimpleProperty( "m_strandNr")));
+				    rb.setAquifTargetStrandDeepAquif( sDeep );
 				}
 				ribs.add( rb );
 			}// while

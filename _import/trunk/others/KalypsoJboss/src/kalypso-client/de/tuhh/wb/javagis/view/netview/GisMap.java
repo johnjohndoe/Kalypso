@@ -107,6 +107,7 @@ public class GisMap extends JPanel
 	this.mapBox = new GisBox(1,1,ratioWtoH*200,200);
 	this.trafo=new Transformation(screenBox,mapBox,Transformation._UseGK);
 	repaint();
+	//	updateImage();
     }
     
     public void zoomOut()
@@ -118,7 +119,6 @@ public class GisMap extends JPanel
 				    new GisPoint(mapBox.p2.x+(f*w-w)/2.0, mapBox.p2.y+(f*h-h)/2.0));
 	this.trafo=new Transformation(screenBox,mapBox,Transformation._UseGK);
 	updateImage();
-	repaint();
     }
     
     public void panTo(GisPoint m)
@@ -129,7 +129,6 @@ public class GisMap extends JPanel
 	this.mapBox    = new GisBox(new GisPoint(m.x-w/2.0,m.y-h/2.0),new GisPoint(m.x+w/2.0,m.y+h/2.0));
 	this.trafo=new Transformation(screenBox,mapBox,Transformation._UseGK);
 	updateImage();
-	repaint();
     }
     
     public void zoomTo(GisBox gisBox)
@@ -137,7 +136,6 @@ public class GisMap extends JPanel
 	this.mapBox    = gisBox;
 	this.trafo=new Transformation(screenBox,mapBox,Transformation._UseGK);
 	updateImage();
-	repaint();
     }
 	
     public void zoomToFullExtent()
@@ -200,7 +198,6 @@ public class GisMap extends JPanel
 	this.mapBox = new GisBox(gp2neu,gp1neu);
 	this.trafo=new Transformation(screenBox,mapBox,Transformation._UseGK);
 	updateImage();
-	repaint();
     }
 	
 	

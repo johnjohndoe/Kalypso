@@ -1090,8 +1090,12 @@
             <xsl:with-param name="word" select="@key"/>
           </xsl:call-template>
         </xsl:variable>          
+
         <xsl:if test="type='java.lang.Boolean'">
           set<xsl:value-of select="$propName"/>(new java.lang.Boolean(false));
+        </xsl:if>
+        <xsl:if test="default">
+          set<xsl:value-of select="$propName"/>(new <xsl:value-of select="type"/>(<xsl:value-of select="default"/>));
         </xsl:if>
       </xsl:for-each>
 
@@ -1128,13 +1132,58 @@
     </xsl:if>
     
     <xsl:if test="local-name()='relationClass'">
+      <xsl:variable name="relationClass">
+        <xsl:call-template name="toUpperCase">
+          <xsl:with-param name="word" select="@ID"/>
+        </xsl:call-template>
+      </xsl:variable>
       /**
       * @ejb:create-method
       */
       public Integer ejbCreate(Integer objectId, VersionLocal version,Object src,Object dest,boolean withEvent) throws CreateException
       {
         if(objectId == null)
-        throw new CreateException("objectId is null :-o");
+         throw new CreateException("objectId is null :-o");
+
+      //Check for cardinality
+        <xsl:variable name="srcCard"  select="fromCardinalityMax"/>
+        <xsl:variable name="destCard" select="toCardinalityMax"/>
+        Collection col=null;
+
+
+
+        <xsl:if test="$srcCard != 'unbound'">
+          <xsl:for-each select="toObjectClass">
+            <xsl:variable name="destClass">
+              <xsl:call-template name="toUpperCase">
+                <xsl:with-param name="word" select="@ref"/>
+              </xsl:call-template>
+            </xsl:variable>
+            if(dest instanceof <xsl:value-of select="$destClass"/>Local)
+            {
+             col=((<xsl:value-of select="$destClass"/>Local)dest).getRelFrom<xsl:value-of select="$relationClass"/>();        
+             if(col.size() <![CDATA[ >= ]]> <xsl:value-of select="$srcCard"/>)
+               throw new CreateException("max Cardinality is allready reached");
+            }
+          </xsl:for-each>
+        </xsl:if>
+
+        <xsl:if test="$destCard != 'unbound'">
+          <xsl:for-each select="fromObjectClass">
+            <xsl:variable name="srcClass">
+              <xsl:call-template name="toUpperCase">
+                <xsl:with-param name="word" select="@ref"/>
+              </xsl:call-template>
+            </xsl:variable>
+            if(src instanceof <xsl:value-of select="$srcClass"/>Local)
+            {
+             col=((<xsl:value-of select="$srcClass"/>Local)src).getRelTo<xsl:value-of select="$relationClass"/>();        
+             if(col.size() <![CDATA[ >= ]]> <xsl:value-of select="$destCard"/>)
+              throw new CreateException("max Cardinality is allready reached");
+            }
+          </xsl:for-each>
+        </xsl:if>
+
         this.setId(objectId);
         return null;
       }
@@ -1177,7 +1226,7 @@
           {
             this.setVersion(version);
             this.setSrc<xsl:value-of select="$srcClass"/>((<xsl:value-of select="$srcClass"/>Local)src);
-            this.setDest<xsl:value-of select="$destClass"/>((<xsl:value-of select="$destClass"/>Local)dest);          
+            this.setDest<xsl:value-of select="$destClass"/>((<xsl:value-of select="$destClass"/>Local)dest);
           }                    
         </xsl:for-each>
       </xsl:for-each>

@@ -295,6 +295,8 @@
   <objectClass ID="wc">
     <name>Water Course </name>
     <description>Water course name is used to index rivers</description>
+    <geometry>Point</geometry>
+    <symbol>wc</symbol>
     <simpleProperty key="m_wcIndex">
       <name>Water Course Index</name>
       <description>Index to identify rivers</description>
@@ -652,8 +654,8 @@
     <toObjectClass ref="node"/>
     <forwardLabel>downstream</forwardLabel>
     <backwardLabel>upstream</backwardLabel>
-    <fromCardinalityMax>1</fromCardinalityMax>
-    <toCardinalityMax>unbound</toCardinalityMax>
+    <fromCardinalityMax>unbound</fromCardinalityMax>
+    <toCardinalityMax>1</toCardinalityMax>
   </relationClass>
   <relationClass ID="node2strand">
     <name>NodeToStrand</name>
@@ -665,8 +667,8 @@
     <!--    <toObjectClass ref="rht"/> -->
     <forwardLabel>downstream</forwardLabel>
     <backwardLabel>upstream</backwardLabel>
-    <fromCardinalityMax>unbound</fromCardinalityMax>
-    <toCardinalityMax>1</toCardinalityMax>
+    <fromCardinalityMax>1</fromCardinalityMax>
+    <toCardinalityMax>unbound</toCardinalityMax>
   </relationClass>
   <relationClass ID="rb2rb"> 
     <name>Riverbasin2Riverbasin</name>

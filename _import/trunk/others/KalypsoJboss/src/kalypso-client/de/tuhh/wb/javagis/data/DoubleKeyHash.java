@@ -15,6 +15,7 @@ public class DoubleKeyHash
     {
 	return myHash.keys();
     }
+
     public Enumeration getSubKeys(Object key1)
     {
 	if(myHash.containsKey(key1))

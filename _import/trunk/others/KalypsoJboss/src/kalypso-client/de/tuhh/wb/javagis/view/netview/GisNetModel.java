@@ -28,6 +28,7 @@ public class GisNetModel implements ActionListener,ElementClassListener
 {
     private final static int MAX_CACHE_ROWS=2000;
     private final static int CACHE_PAGE_SIZE=1000;
+    private boolean showVerbose=false;
 
     public Vector myGisObjectClasses;
     public Vector myObjectIdListVector;
@@ -36,6 +37,8 @@ public class GisNetModel implements ActionListener,ElementClassListener
     private Vector myRelationIdListVector;
     
     private HashSet hiddenElements=new HashSet();
+    private HashSet showProperty=new HashSet();
+
     // all GisObjectClasses should have symbol-mode
     private GisMap myGisMap=null;
 
@@ -44,10 +47,24 @@ public class GisNetModel implements ActionListener,ElementClassListener
 	this.myGisMap=gisMap;
     }
 
+    public boolean beVerbose()
+    {
+	return showVerbose;
+    }
+
+    //String action="show_"+key+"_"+propKey;
+    public boolean isVisibleProp(String action)
+    {
+	if(showProperty.contains(action))
+	    return true;
+	else
+	    return false;
+    }
+    
     public GisNetModel(Vector gisObjectClasses, Vector gisRelationClasses)
     {
-	this.hiddenElements.add("wc2objects");
-	this.hiddenElements.add("wc2nodes");
+	//	this.hiddenElements.add("wc2objects");
+	//	this.hiddenElements.add("wc2nodes");
 
 	this.myGisObjectClasses=gisObjectClasses;
 	this.myObjectIdListVector=new Vector();
@@ -186,13 +203,16 @@ public class GisNetModel implements ActionListener,ElementClassListener
 	    {
 		GisRelationClass gisRelationClass=(GisRelationClass)myGisRelationClasses.elementAt(i);
 
-		// ToDo: !!!!
-
-		   /*!"wc2nodes".equals(gisRelationClass.getKey()) &&
-		   !"wc2objects".equals(gisRelationClass.getKey()))
-		   */
-		    // &&
-		    //		   !"rb2rb".equals(gisRelationClass.getKey()))
+		String key=gisRelationClass.getKey();
+		Vector propIdsToShow=new Vector();
+		if(showProperty.contains("show_"+key+"_ID"))
+		    propIdsToShow.add(new Integer(-1));
+		for(int sp=0;sp<gisRelationClass.getSimplePropertySize();sp++)
+		    {
+			String propKey=gisRelationClass.getSimplePropertyKey(sp);
+			if(showProperty.contains("show_"+key+"_"+propKey))
+			    propIdsToShow.add(new Integer(sp));
+		    }
 		if(!hiddenElements.contains(gisRelationClass.getKey()))
 		    {
 			Image symbol=gisRelationClass.getSymbol();
@@ -233,7 +253,36 @@ public class GisNetModel implements ActionListener,ElementClassListener
 					g2.drawImage(symbol,(int)-xOffset,(int)-yOffset,null);
 					g2.setTransform(trans_org);
 					g.setColor(Color.magenta);
-					g.drawString("#"+rId.toString(),(int)cx,(int)cy-yOffset);
+
+
+
+					
+					for(int spr=0;spr<propIdsToShow.size();spr++)
+					    {
+						int propPos=((Integer)propIdsToShow.elementAt(spr)).intValue();
+						String text;
+						String propName;
+						if(propPos==-1)//ID
+						    {
+							propName="ID:";
+							text="#"+rId.toString();
+						    }
+						else
+						    {
+							propName=gisRelationClass.getSimplePropertyName(propPos)+":";
+							Object value=gisRelationClass.getSimplePropertyValue(rId,propPos);
+							if(value!=null)
+							    text=value.toString();
+							else
+							    text="";
+						    }
+						int yPos=(int)cy-yOffset-(propIdsToShow.size()-1-spr)*g.getFont().getSize();
+						if(showVerbose)
+						    g.drawString(propName+text,(int)cx,yPos);
+						else
+						    g.drawString(text,(int)cx,yPos);
+					    }					
+					//					g.drawString("#"+rId.toString(),(int)cx,(int)cy-yOffset);
 					g.setColor(Color.black);
 				    }
 				catch(ObjectNotFoundException e)
@@ -244,9 +293,22 @@ public class GisNetModel implements ActionListener,ElementClassListener
 		    }
 	    }
 	// Objects:
+
+	//String action="show_"+key+"_"+propKey;
+
 	for(int i=0;i<myGisObjectClasses.size();i++)
 	    {
 		GisObjectClass gisObjectClass=(GisObjectClass)myGisObjectClasses.elementAt(i);
+		String key=gisObjectClass.getKey();
+		Vector propIdsToShow=new Vector();
+		if(showProperty.contains("show_"+key+"_ID"))
+		    propIdsToShow.add(new Integer(-1));
+		for(int sp=0;sp<gisObjectClass.getSimplePropertySize();sp++)
+		    {
+			String propKey=gisObjectClass.getSimplePropertyKey(sp);
+			if(showProperty.contains("show_"+key+"_"+propKey))
+			    propIdsToShow.add(new Integer(sp));
+		    }
 		if(!hiddenElements.contains(gisObjectClass.getKey()))
 		    {
 			Image symbol=gisObjectClass.getSymbol();
@@ -281,17 +343,32 @@ public class GisNetModel implements ActionListener,ElementClassListener
 					g2.drawImage(symbol,(int)-xOffset,(int)-yOffset,null);
 					g2.setTransform(trans_org);
 					g.setColor(Color.blue);
-					
-					String text;
-					if(gisObjectClass.getSimplePropertySize()>0)			    
-					    if(gisObjectClass.getSimplePropertyValue(oId,0)!=null)
-					text="No:"+gisObjectClass.getSimplePropertyValue(oId,0).toString();
-					    else
-						text="ID:"+oId.toString();				
-					else
-					    text="ID:"+oId.toString();
-					g.drawString(text,(int)sp.getX(),(int)sp.getY()-yOffset);
-					
+
+					for(int spr=0;spr<propIdsToShow.size();spr++)
+					    {
+						int propPos=((Integer)propIdsToShow.elementAt(spr)).intValue();
+						String text;
+						String propName;
+						if(propPos==-1)//ID
+						    {
+							propName="ID:";
+							text="#"+oId.toString();
+						    }
+						else
+						    {
+							propName=gisObjectClass.getSimplePropertyName(propPos)+"=";
+							Object value=gisObjectClass.getSimplePropertyValue(oId,propPos);
+							if(value!=null)
+							    text=value.toString();
+							else
+							    text="";
+						    }
+						int yPos=(int)sp.getY()-yOffset-(propIdsToShow.size()-1-spr)*g.getFont().getSize();
+						if(showVerbose)
+						    g.drawString(propName+text,(int)sp.getX(),yPos);
+						else
+						    g.drawString(text,(int)sp.getX(),yPos);
+					    }					
 					g.setColor(Color.black);
 				    }
 				catch(ObjectNotFoundException e)
@@ -368,16 +445,39 @@ public class GisNetModel implements ActionListener,ElementClassListener
     public void actionPerformed(ActionEvent e)
     {
 	String action = e.getActionCommand();
-	System.out.println(action);
+	System.out.println("action: "+action);
 	Object source=e.getSource();
 	if(source instanceof JCheckBoxMenuItem)
 	    {
 		JCheckBoxMenuItem cb=(JCheckBoxMenuItem)source;
-		if(cb.getState()) //true : show
-		    hiddenElements.remove(action);
+		if(action.startsWith("show_"))
+		    {
+			if(cb.getState())//true
+			    {
+				System.out.println("on: "+action);
+				showProperty.add(action);
+			    }	
+			else
+			    {
+				System.out.println("off: "+action);
+				showProperty.remove(action);
+			    }	
+		    }
+		else if("verboseView".equals(action))
+		    {
+			this.showVerbose=cb.getState();
+		    }
 		else
-		    hiddenElements.add(action);
+		    {
+			if(cb.getState()) //true : show
+			    hiddenElements.remove(action);
+			else
+			    hiddenElements.add(action);
+		    }
 	    }
+
+	//String action="show_"+key+"_"+propKey;
+
 	if(action.startsWith("createObject_"))
 	    {
 		GisPoint gp=myGisMap.getLastClick();
@@ -394,6 +494,7 @@ public class GisNetModel implements ActionListener,ElementClassListener
 			    }
 		    }	
 	    }
+	myGisMap.updateImage();
     }
     
     

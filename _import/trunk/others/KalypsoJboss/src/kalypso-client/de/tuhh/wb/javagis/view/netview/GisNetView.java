@@ -487,64 +487,104 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	JMenu edit = new JMenu ("Edit");
  	JMenu view = new JMenu ("View");
 
- 	JMenu menuObjects = new JMenu ("Objects");
- 	JMenu menuRelations = new JMenu ("Relations");
+	JMenu menuObjectProps = new JMenu ("ObjectProperties");
+	JMenu menuRelationProps = new JMenu ("RelationProperties");
+	JMenu subMenu=null;
+
+
+	JCheckBoxMenuItem cb;
 
 	for(int i=0;i<gisObjectClasses.size();i++)
 	    {
-		JCheckBoxMenuItem cb;
 		GisObjectClass gisObjectClass=(GisObjectClass)gisObjectClasses.elementAt(i);
+
+		String key=gisObjectClass.getKey();
+		String name=gisObjectClass.getName();
 		Image symbol=gisObjectClass.getSymbol();
-		String Name=gisObjectClass.getName();
-		cb = new JCheckBoxMenuItem(gisObjectClass.getName(),new ImageIcon(symbol),true);
+
+		subMenu=new JMenu(name);
+		subMenu.setIcon(new ImageIcon(gisObjectClass.getSymbol()));
+		menuObjectProps.add(subMenu);
+
+		cb = new JCheckBoxMenuItem(name,new ImageIcon(symbol),true);
 		cb.setHorizontalTextPosition(SwingConstants.RIGHT);
 		cb.addActionListener(netModel);
 		cb.setActionCommand(gisObjectClass.getKey());
-		menuObjects.add(cb);
+		subMenu.add(cb);
+				
+		// ID
+		String action="show_"+key+"_ID";
+		cb = new JCheckBoxMenuItem("ID",netModel.isVisibleProp(action));
+		cb.setHorizontalTextPosition(SwingConstants.RIGHT);
+		cb.addActionListener(netModel);
+		cb.setActionCommand(action);
+		subMenu.add(cb);
+
+		for(int n=0;n<gisObjectClass.getSimplePropertySize();n++)
+		    {
+			String propKey=gisObjectClass.getSimplePropertyKey(n);
+			String propName=gisObjectClass.getSimplePropertyName(n);	       
+			action="show_"+key+"_"+propKey;
+			cb = new JCheckBoxMenuItem(propName,netModel.isVisibleProp(action));
+			cb.setHorizontalTextPosition(SwingConstants.RIGHT);
+			cb.addActionListener(netModel);
+			cb.setActionCommand(action);
+			subMenu.add(cb);
+		    }	
 	    }
 
+	subMenu.addSeparator();
+	//
 	for(int i=0;i<gisRelationClasses.size();i++)
 	    {
-		JCheckBoxMenuItem cb;
 		GisRelationClass gisRelationClass=(GisRelationClass)gisRelationClasses.elementAt(i);
+		
+		String key=gisRelationClass.getKey();
+		String name=gisRelationClass.getName();
 		Image symbol=gisRelationClass.getSymbol();
-		String Name=gisRelationClass.getName();
-		System.out.println("Relation:Key="+gisRelationClass.getKey());
-		if("wc2objects".equals(gisRelationClass.getKey()) ||
-		   "wc2nodes".equals(gisRelationClass.getKey()))
-		    {
-			cb = new JCheckBoxMenuItem(gisRelationClass.getName(),new ImageIcon(symbol),false);
-			cb.setEnabled(false);
-		    }
-		else
-		    {
-			cb = new JCheckBoxMenuItem(gisRelationClass.getName(),new ImageIcon(symbol),true);
-		    }
+
+		subMenu=new JMenu(name);
+		subMenu.setIcon(new ImageIcon(gisRelationClass.getSymbol()));
+		menuObjectProps.add(subMenu);
+
+		cb = new JCheckBoxMenuItem(name,new ImageIcon(symbol),true);
 		cb.setHorizontalTextPosition(SwingConstants.RIGHT);
 		cb.addActionListener(netModel);
 		cb.setActionCommand(gisRelationClass.getKey());
-		menuRelations.add(cb);
+		subMenu.add(cb);
+		
+		// ID
+		String action="show_"+key+"_ID";
+		cb = new JCheckBoxMenuItem("ID",netModel.isVisibleProp(action));
+		cb.setHorizontalTextPosition(SwingConstants.RIGHT);
+		cb.addActionListener(netModel);
+		cb.setActionCommand(action);
+		subMenu.add(cb);
+		
+		for(int n=0;n<gisRelationClass.getSimplePropertySize();n++)
+		    {
+			String propKey=gisRelationClass.getSimplePropertyKey(n);
+			String propName=gisRelationClass.getSimplePropertyName(n);
+			
+			action="show_"+key+"_"+propKey;
+			cb = new JCheckBoxMenuItem(propName,netModel.isVisibleProp(action));
+			cb.setHorizontalTextPosition(SwingConstants.RIGHT);
+			cb.addActionListener(netModel);
+			cb.setActionCommand(action);
+			subMenu.add(cb);
+		    }	
+
 	    }
+	subMenu.addSeparator();
+
+	cb = new JCheckBoxMenuItem(I18n.get("netViewShowVerbose"),netModel.beVerbose());
+	cb.setHorizontalTextPosition(SwingConstants.RIGHT);
+	cb.addActionListener(netModel);
+	cb.setActionCommand("verboseView");
+	menuObjectProps.add(cb);
 	
 
-
-	//JMenu legend = new JMenu("Legend");
-	
 	JMenuItem mi;
-	
-	/*
-	  for(int i=0;i<gisObjectClasses.size();i++)
-	  {
-	  GisObjectClass gisObjectClass=(GisObjectClass)gisObjectClasses.elementAt(i);
-	  Image symbol=gisObjectClass.getSymbol();
-	  mi = new JMenuItem(gisObjectClass.getName(),new ImageIcon(symbol));
-	  mi.setHorizontalTextPosition(JMenuItem.RIGHT);
-	  mi.addActionListener(this);
-	  mi.setActionCommand(gisObjectClass.getName()+"legend");
-	  legend.add(mi);
-	  }
-	*/
-	
 	mi = new JMenuItem("new relation");
 	mi.setActionCommand("createRelation");
 	mi.addActionListener(this);
@@ -605,8 +645,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	JMenuBar menubar= new JMenuBar();
 	menubar.add(edit);
 	menubar.add(view);
-	menubar.add(menuObjects);
-	menubar.add(menuRelations);
+	menubar.add(menuObjectProps);
 	menubar.add(plus);
 	menubar.add(minus);
 	menubar.add(fullExtent);
@@ -784,10 +823,13 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 
     public void showPopupMenu(MouseEvent e)
     {
-	gisMap.setLastClick(gisMap.trafo.convert(e));
-        if (e.isPopupTrigger())
+	GisPoint gisPoint=gisMap.trafo.convert(e);
+	gisMap.setLastClick(gisPoint);
+	if (e.isPopupTrigger())
 	    {
+		GisObject snapedGisObject=netModel.snap(gisPoint);
 		JPopupMenu popup = new JPopupMenu();
+
 		JMenu subMenu=new JMenu(I18n.get("netViewCreateObject"));
 		popup.add(subMenu);
 		for(int i=0;i<gisObjectClasses.size();i++)
@@ -799,6 +841,29 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 			menuItem.addActionListener(netModel);
 			subMenu.add(menuItem);
 		    }
+		/*
+		if(snapedGisObject!=null)
+		{
+		GisElementClass gisElementClass=snapedGisObject.getGisElementClass();
+		subMenu=new JMenu(I18n.get("netViewShowElement"));
+		subMenu.setIcon(new ImageIcon(gisElementClass.getSymbol()));
+		popup.add(subMenu);
+			String key=gisElementClass.getKey();
+			String name=gisElementClass.getName();
+			JCheckBoxMenuItem cb; 
+			for(int i=0;i<gisElementClass.getSimplePropertySize();i++)
+			    {
+				String propKey=gisElementClass.getSimplePropertyKey(i);
+				String propName=gisElementClass.getSimplePropertyName(i);
+				cb = new JCheckBoxMenuItem(propName,true);
+				cb.setHorizontalTextPosition(SwingConstants.RIGHT);
+				cb.addActionListener(netModel);
+				//cb.setActionCommand(key);
+				subMenu.add(cb);
+			    }			
+		    }
+		*/
+
 		popup.show(e.getComponent(),
 			   e.getX(), e.getY());
 	    }
