@@ -7,3 +7,4 @@ ZmlFilterImpl=org.kalypso.ogc.sensor.filter.creators.ZmlFilterCreator
 
 WqFilterImpl=org.kalypso.ogc.sensor.timeseries.wq.WQFilterCreator
 ForecastFilterImpl=org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilterCreator
+InterpolationFilterImpl=org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilterCreator

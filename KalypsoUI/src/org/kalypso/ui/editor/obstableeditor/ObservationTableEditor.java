@@ -16,6 +16,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IStorageEditorInput;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.ogc.sensor.IObservation;
@@ -96,6 +97,8 @@ public class ObservationTableEditor extends AbstractEditorPart
   }
 
   /**
+   * Speichert z.Z. nur die Daten.
+   * 
    * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
@@ -107,34 +110,32 @@ public class ObservationTableEditor extends AbstractEditorPart
     for( final Iterator it = themes.iterator(); it.hasNext(); )
     {
       final ITableViewTheme theme = (ITableViewTheme) it.next();
-      
+
       boolean dirty = false;
-      
+
       for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
       {
-        dirty = ((ITableViewColumn)itcol.next()).isDirty();
-        
+        dirty = ((ITableViewColumn) itcol.next()).isDirty();
+
         // at least one col dirty?
         if( dirty )
           break;
       }
 
       final IObservation obs = theme.getObservation();
-      
+
       if( dirty && obs instanceof ZmlObservation )
       {
-        final String msg = "Sie haben Änderungen in "
-            + obs.getName()
-            + " vorgenommen. Wollen \n"
-            + "Sie die Änderungen übernehmen?";
-        
+        final String msg = "Sie haben Änderungen in " + obs.getName()
+            + " vorgenommen. Wollen \n" + "Sie die Änderungen übernehmen?";
+
         final boolean b = MessageDialog.openQuestion( getSite().getShell(),
             "Änderungen speichern", msg );
 
         if( b )
         {
           for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
-            ((ITableViewColumn)itcol.next()).setDirty( false );
+            ((ITableViewColumn) itcol.next()).setDirty( false );
 
           final ITuppleModel values = m_model.getValues( theme.getColumns() );
 
@@ -147,7 +148,8 @@ public class ObservationTableEditor extends AbstractEditorPart
           catch( Exception e )
           {
             e.printStackTrace();
-            throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "ZML speichern", e ) );
+            throw new CoreException( new Status( IStatus.ERROR,
+                KalypsoGisPlugin.getId(), 0, "ZML speichern", e ) );
           }
         }
       }
@@ -159,22 +161,28 @@ public class ObservationTableEditor extends AbstractEditorPart
    *      org.eclipse.ui.IFileEditorInput)
    */
   protected void loadInternal( final IProgressMonitor monitor,
-      final IFileEditorInput input )
+      final IStorageEditorInput input )
   {
+    if( !(input instanceof IFileEditorInput) )
+      throw new IllegalArgumentException( "Kann nur Dateien laden" );
+
+    final IFileEditorInput fileInput = (IFileEditorInput) input;
+
     monitor.beginTask( "Laden", IProgressMonitor.UNKNOWN );
 
     final CatchRunnable runnable = new CatchRunnable()
     {
       public void runIntern( ) throws Throwable
       {
-        final ObstableviewType baseTemplate = ObservationTableTemplateFactory.loadTableTemplateXML( input
-            .getFile().getContents() );
-        
+        final ObstableviewType baseTemplate = ObservationTableTemplateFactory
+            .loadTableTemplateXML( fileInput.getFile().getContents() );
+
         m_template = new LinkedTableViewTemplate();
         m_template.addTemplateEventListener( m_table );
-        
-        m_template.setBaseTemplate( baseTemplate, ResourceUtilities.createURL( input.getFile() ) );
-        
+
+        m_template.setBaseTemplate( baseTemplate, ResourceUtilities
+            .createURL( fileInput.getFile() ) );
+
         m_model.setRules( m_template );
       }
     };

@@ -2,8 +2,7 @@ package org.kalypso.ui.editorLauncher;
 
 import java.io.StringWriter;
 
-import javax.xml.bind.Marshaller;
-
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.IEditorDescriptor;
@@ -11,12 +10,12 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.core.resources.StringStorage;
 import org.kalypso.eclipse.ui.editorinput.StorageEditorInput;
-import org.kalypso.template.obsdiagview.ObjectFactory;
+import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
+import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
-import org.kalypso.template.obsdiagview.TypeAxis;
-import org.kalypso.template.obsdiagview.ObsdiagviewType.LegendType;
 
 /**
  * DefaultObservationTemplateLauncher
@@ -50,38 +49,20 @@ public class DefaultObsDiagTemplateLauncher implements
    */
   public IEditorInput createInput( IFile file )
   {
+    StringWriter writer = null;
     try
     {
       final IPath projectRelativePath = file.getProjectRelativePath();
 
-      final ObjectFactory of = new ObjectFactory();
+      final LinkedDiagramTemplate template = new LinkedDiagramTemplate();
+      template.addObservation( file.getName(), ResourceUtilities.createURL( file), "project:/" + projectRelativePath, "zml", null );
 
-      final ObsdiagviewType template = of.createObsdiagviewType();
-      template.setTitle( file.getName() );
+      final ObsdiagviewType tType = ObservationTemplateHelper.buildDiagramTemplateXML( template );
       
-      final LegendType legend = of.createObsdiagviewTypeLegendType();
-      legend.setTitle( "Legende" );
-      legend.setVisible( true );
-      template.setLegend( legend );
-      
-      // TODO ...
-//      TypeAxis axis = of.createTypeAxis();
-//      axis.s
-//      template.getAxis();
-      
-      template.getObservation();
-      
-//      layer.setHref( "project:/" + projectRelativePath );
+      writer = new StringWriter();
+      ObservationTemplateHelper.saveDiagramTemplateXML( tType, writer );
 
-      
-      final Marshaller marshaller = of.createMarshaller();
-      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-
-      final StringWriter w = new StringWriter();
-      marshaller.marshal( template, w );
-      w.close();
-
-      final String string = w.toString();
+      final String string = writer.toString();
 
       // als StorageInput zurückgeben
       final StorageEditorInput input = new StorageEditorInput(
@@ -93,6 +74,10 @@ public class DefaultObsDiagTemplateLauncher implements
     {
       e.printStackTrace();
       return null;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
     }
   }
 }

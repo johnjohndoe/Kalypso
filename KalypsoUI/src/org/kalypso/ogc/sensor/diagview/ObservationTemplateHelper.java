@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.deegree_impl.gml.schema.XMLHelper;
@@ -62,9 +63,11 @@ public class ObservationTemplateHelper
   public static void saveDiagramTemplateXML( final ObsdiagviewType tpl,
       final OutputStream out ) throws JAXBException
   {
-    OF.createMarshaller().marshal( tpl, out );
+    final Marshaller m = OF.createMarshaller();
+    m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    m.marshal( tpl, out );
   }
-
+  
   /**
    * Saves the given template (binding).
    * 
@@ -75,7 +78,9 @@ public class ObservationTemplateHelper
   public static void saveDiagramTemplateXML( final ObsdiagviewType tpl,
       final Writer writer ) throws JAXBException
   {
-    OF.createMarshaller().marshal( tpl, writer );
+    final Marshaller m = OF.createMarshaller();
+    m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    m.marshal( tpl, writer );
   }
 
   /**
