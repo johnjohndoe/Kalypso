@@ -2,7 +2,6 @@ package org.kalypso.ogc.sensor.tableview.swing.renderer;
 
 import java.awt.Component;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -18,7 +17,7 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
 {
   // TODO: Wenn die Daten keine Zeit-Information haben, dann wird die aktuelle Systemzeit
   // im TableView angezeit!!!
-  private final static DateFormat df = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
+  private final static DateFormat df = DateFormat.getDateTimeInstance();//new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
 
   /**
    * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,

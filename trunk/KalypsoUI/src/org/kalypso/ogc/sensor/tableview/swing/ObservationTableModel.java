@@ -1,10 +1,9 @@
 package org.kalypso.ogc.sensor.tableview.swing;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.List;
 import java.util.TreeSet;
 import java.util.Vector;
 
@@ -12,10 +11,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.DefaultAxis;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewRules;
@@ -29,145 +26,219 @@ import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
  */
 public class ObservationTableModel extends AbstractTableModel
 {
-  private final static ITableViewColumn[] EMPTY_COLS = new ITableViewColumn[0];
+  //  private final static ITableViewColumn[] EMPTY_COLS = new
+  // ITableViewColumn[0];
+  //
+  //  // columns used in this model
+  //  private ITableViewColumn[] m_columns = EMPTY_COLS;
 
-  // columns used in this model
-  private ITableViewColumn[] m_columns = EMPTY_COLS;
-
-  // value axes of the observations in the columns
-  private IAxis[] m_valueAxes = null;
-
-  // shared axes of the observations in the columns
-  private IAxis[] m_sharedAxes = null;
-
-  /** common column */
-  private Set m_commonColumn = null;
-
-  /** common fake axis */
-  private DefaultAxis m_ccAxis = null;
+  //  // value axes of the observations in the columns
+  //  private IAxis[] m_valueAxes = null;
+  //
+  //  // shared axes of the observations in the columns
+  //  private IAxis[] m_sharedAxes = null;
+  //
+  //  /** common column */
+  //  private Set m_commonColumn = null;
+  //
+  //  /** common fake axis */
+  //  private DefaultAxis m_ccAxis = null;
 
   private ITableViewRules m_rules = null;
 
-  private DefaultTableModel m_valuesModel = null;
+  private final DefaultTableModel m_valuesModel = new DefaultTableModel();
+
+  private final TreeSet m_sharedModel = new TreeSet();
+
+  private final List m_columns = new ArrayList();
+
+  private IAxis m_sharedAxis = null;
+
+  //  /**
+  //   * Adds a column.
+  //   *
+  //   * @param column
+  //   *
+  //   * @throws SensorException
+  //   */
+  //  public void addColumn( final ITableViewColumn column ) throws
+  // SensorException
+  //  {
+  //    synchronized( m_columns )
+  //    {
+  //      if( m_columns != EMPTY_COLS )
+  //      {
+  //        final Set cols = new HashSet( Arrays.asList( m_columns ) );
+  //        cols.add( column );
+  //        setColumns( (ITableViewColumn[]) cols.toArray( new ITableViewColumn[0] ) );
+  //      }
+  //      else
+  //        setColumns( new ITableViewColumn[] { column } );
+  //    }
+  //  }
+
+  //  /**
+  //   * Sets the columns.
+  //   *
+  //   * @param columns
+  //   * can be null. In that case the table model is empty.
+  //   * @throws SensorException
+  //   */
+  //  private void setColumns( final ITableViewColumn[] columns )
+  //      throws SensorException
+  //  {
+  //    synchronized( m_columns )
+  //    {
+  //      if( columns == null )
+  //        throw new IllegalArgumentException(
+  //            "columns null not allowed. (If you want to clear the table: use
+  // clearColumns() instead)" );
+  //
+  //      m_columns = columns;
+  //
+  //      // reset
+  //      m_commonColumn = null;
+  //      m_ccAxis = null;
+  //      m_sharedAxes = null;
+  //      m_valueAxes = null;
+  //      m_valuesModel = null;
+  //
+  //      if( m_columns != EMPTY_COLS )
+  //      {
+  //        // the common column, merges all the values from the common axes
+  //        m_commonColumn = new TreeSet();
+  //
+  //        final SimpleTuppleModel[] tupModels = new
+  // SimpleTuppleModel[m_columns.length];
+  //
+  //        m_valueAxes = new IAxis[m_columns.length];
+  //        m_sharedAxes = new IAxis[m_columns.length];
+  //        
+  //        for( int col = 0; col < m_columns.length; col++ )
+  //        {
+  //          final IAxis[] axes = m_columns[col].getObservation().getAxisList();
+  //          final IAxis[] keys = ObservationUtilities.findAxisByKey( axes );
+  //
+  //          // no key axis, do nothing
+  //          if( keys.length == 0 )
+  //            continue;
+  //
+  //          // shared axis is the first key axis that was found
+  //          m_sharedAxes[col] = keys[0];
+  //
+  //          // value axis is given by its name according to column model
+  //          m_valueAxes[col] = ObservationUtilities.findAxisByName( axes,
+  // m_columns[col].getAxisName() );
+  //
+  //          // create common axis (fake)
+  //          if( m_ccAxis == null )
+  //            m_ccAxis = new DefaultAxis( m_sharedAxes[col] );
+  //
+  //          // verify compatibility of the axes
+  //          if( m_ccAxis.getDataClass() != m_sharedAxes[col].getDataClass()
+  //              || !m_ccAxis.getUnit().equals( m_sharedAxes[col].getUnit() )
+  //              || !m_ccAxis.getType().equals( m_sharedAxes[col].getType() ) )
+  //            throw new SensorException( m_ccAxis + " ist nicht mit "
+  //                + m_sharedAxes[col] + " kompatibel." );
+  //
+  //          tupModels[col] = new SimpleTuppleModel( m_columns[col]
+  //              .getObservation().getValues( null ) );
+  //
+  //          for( int row = 0; row < tupModels[col].getCount(); row++ )
+  //            m_commonColumn.add( tupModels[col].getElement( row,
+  //                m_sharedAxes[col] ) );
+  //        }
+  //
+  //        // the common model, merges all values from all models for the value
+  //        // axes
+  //        m_valuesModel = new DefaultTableModel( m_commonColumn.size(),
+  //            m_columns.length );
+  //
+  //        int row = 0;
+  //
+  //        for( final Iterator it = m_commonColumn.iterator(); it.hasNext(); )
+  //        {
+  //          final Object sharedElement = it.next();
+  //
+  //          for( int col = 0; col < m_columns.length; col++ )
+  //          {
+  //            final int index = tupModels[col].indexOf( sharedElement,
+  //                m_sharedAxes[col] );
+  //
+  //            if( index != -1 )
+  //              m_valuesModel.setValueAt( tupModels[col].getElement( index,
+  //                  m_sharedAxes[col] ), row, col );
+  //          }
+  //
+  //          row++;
+  //        }
+  //      }
+  //
+  //      fireTableStructureChanged();
+  //    }
+  //  }
 
   /**
-   * Adds a column.
+   * Adds a column to this tablemodel.
    * 
-   * @param column
-   * 
+   * @param col
    * @throws SensorException
    */
-  public void addColumn( final ITableViewColumn column ) throws SensorException
-  {
-    synchronized( m_columns )
-    {
-      if( m_columns != EMPTY_COLS )
-      {
-        final Set cols = new HashSet( Arrays.asList( m_columns ) );
-        cols.add( column );
-        setColumns( (ITableViewColumn[]) cols.toArray( new ITableViewColumn[0] ) );
-      }
-      else
-        setColumns( new ITableViewColumn[] { column } );
-    }
-  }
-
-  /**
-   * Sets the columns.
-   * 
-   * @param columns
-   *          can be null. In that case the table model is empty.
-   * @throws SensorException
-   */
-  private void setColumns( final ITableViewColumn[] columns )
+  public void addTableViewColumn( final ITableViewColumn col )
       throws SensorException
   {
-    synchronized( m_columns )
+    if( col == null )
+      return;
+
+    m_columns.add( col );
+
+    final IAxis keyAxis = col.getKeyAxis();
+
+    if( m_sharedAxis == null )
+      m_sharedAxis = keyAxis;
+    else
     {
-      if( columns == null )
-        throw new IllegalArgumentException(
-            "columns null not allowed. (If you want to clear the table: use clearColumns() instead)" );
-
-      m_columns = columns;
-
-      // reset
-      m_commonColumn = null;
-      m_ccAxis = null;
-      m_sharedAxes = null;
-      m_valueAxes = null;
-      m_valuesModel = null;
-
-      if( m_columns != EMPTY_COLS )
+      // verify compatibility of the axes
+      if( m_sharedAxis.getDataClass() != keyAxis.getDataClass()
+          || !m_sharedAxis.getUnit().equals( keyAxis.getUnit() )
+          || !m_sharedAxis.getType().equals( keyAxis.getType() ) )
       {
-        // the common column, merges all the values from the common axes
-        m_commonColumn = new TreeSet();
+        throw new SensorException( m_sharedAxis + " ist nicht mit " + keyAxis
+            + " kompatibel." );
+      }
+    }
 
-        final SimpleTuppleModel[] tupModels = new SimpleTuppleModel[m_columns.length];
+    // values of observation of the column
+    final ITuppleModel tupModel = col.getObservation().getValues( null );
 
-        m_valueAxes = new IAxis[m_columns.length];
-        m_sharedAxes = new IAxis[m_columns.length];
-        
-        for( int col = 0; col < m_columns.length; col++ )
-        {
-          final IAxis[] axes = m_columns[col].getObservation().getAxisList();
-          final IAxis[] keys = ObservationUtilities.findAxisByKey( axes );
+    // fill shared column values
+    for( int r = 0; r < tupModel.getCount(); r++ )
+      m_sharedModel.add( tupModel.getElement( r, keyAxis ) );
 
-          // no key axis, do nothing
-          if( keys.length == 0 )
-            continue;
+    // add tablecolumn to tablemodel
+    m_valuesModel.addColumn( col.getName() );
+    final int colIndex = m_valuesModel.findColumn( col.getName() );
 
-          // shared axis is the first key axis that was found
-          m_sharedAxes[col] = keys[0];
+    if( m_sharedModel.size() > m_valuesModel.getRowCount() )
+      m_valuesModel.setRowCount( m_sharedModel.size() );
+    
+    // fill valued column values
+    int r = 0;
+    for( final Iterator it = m_sharedModel.iterator(); it.hasNext(); )
+    {
+      final Object sharedElement = it.next();
 
-          // value axis is given by its name according to column model
-          m_valueAxes[col] = ObservationUtilities.findAxisByName( axes, m_columns[col].getAxisName() );
-
-          // create common axis (fake)
-          if( m_ccAxis == null )
-            m_ccAxis = new DefaultAxis( m_sharedAxes[col] );
-
-          // verify compatibility of the axes
-          if( m_ccAxis.getDataClass() != m_sharedAxes[col].getDataClass()
-              || !m_ccAxis.getUnit().equals( m_sharedAxes[col].getUnit() )
-              || !m_ccAxis.getType().equals( m_sharedAxes[col].getType() ) )
-            throw new SensorException( m_ccAxis + " ist nicht mit "
-                + m_sharedAxes[col] + " kompatibel." );
-
-          tupModels[col] = new SimpleTuppleModel( m_columns[col]
-              .getObservation().getValues( null ) );
-
-          for( int row = 0; row < tupModels[col].getCount(); row++ )
-            m_commonColumn.add( tupModels[col].getElement( row,
-                m_sharedAxes[col] ) );
-        }
-
-        // the common model, merges all values from all models for the value
-        // axes
-        m_valuesModel = new DefaultTableModel( m_commonColumn.size(),
-            m_columns.length );
-
-        int row = 0;
-
-        for( final Iterator it = m_commonColumn.iterator(); it.hasNext(); )
-        {
-          final Object sharedElement = it.next();
-
-          for( int col = 0; col < m_columns.length; col++ )
-          {
-            final int index = tupModels[col].indexOf( sharedElement,
-                m_sharedAxes[col] );
-
-            if( index != -1 )
-              m_valuesModel.setValueAt( tupModels[col].getElement( index,
-                  m_sharedAxes[col] ), row, col );
-          }
-
-          row++;
-        }
+      final int index = tupModel.indexOf( sharedElement, keyAxis );
+      if( index != -1 )
+      {
+        m_valuesModel.setValueAt( tupModel.getElement( index, col.getAxis() ), r,
+            colIndex );
       }
 
-      fireTableStructureChanged();
+      r++;
     }
+    
+    fireTableStructureChanged();
   }
 
   /**
@@ -178,23 +249,24 @@ public class ObservationTableModel extends AbstractTableModel
     synchronized( m_columns )
     {
       if( columnIndex == 0 )
-        return m_ccAxis.getDataClass();
+        return m_sharedAxis.getDataClass();
 
-      return m_valueAxes[columnIndex - 1].getDataClass();
+      return ((ITableViewColumn) m_columns.get( columnIndex - 1 ))
+          .getColumnClass();
     }
   }
 
   /**
    * @see javax.swing.table.AbstractTableModel#getColumnName(int)
    */
-  public String getColumnName( int column )
+  public String getColumnName( int columnIndex )
   {
     synchronized( m_columns )
     {
-      if( column == 0 )
-        return m_ccAxis.getName();
+      if( columnIndex == 0 )
+        return m_sharedAxis.getName();
 
-      return m_columns[column - 1].getName();
+      return m_valuesModel.getColumnName( columnIndex - 1 );
     }
   }
 
@@ -205,10 +277,10 @@ public class ObservationTableModel extends AbstractTableModel
   {
     synchronized( m_columns )
     {
-      if( m_columns == EMPTY_COLS || m_columns.length == 0 )
+      if( m_columns.size() == 0 )
         return 0;
 
-      return m_columns.length + 1;
+      return m_columns.size() + 1;
     }
   }
 
@@ -219,10 +291,10 @@ public class ObservationTableModel extends AbstractTableModel
   {
     synchronized( m_columns )
     {
-      if( m_commonColumn == null )
+      if( m_columns.size() == 0 )
         return 0;
 
-      return m_commonColumn.size();
+      return m_sharedModel.size();
     }
   }
 
@@ -234,7 +306,7 @@ public class ObservationTableModel extends AbstractTableModel
     synchronized( m_columns )
     {
       if( columnIndex == 0 )
-        return m_commonColumn.toArray()[rowIndex];
+        return m_sharedModel.toArray()[rowIndex];
 
       return m_valuesModel.getValueAt( rowIndex, columnIndex - 1 );
     }
@@ -250,7 +322,7 @@ public class ObservationTableModel extends AbstractTableModel
       if( columnIndex == 0 )
         return false;
 
-      return m_columns[columnIndex - 1].isEditable();
+      return ((ITableViewColumn) m_columns.get( columnIndex - 1 )).isEditable();
     }
   }
 
@@ -264,7 +336,7 @@ public class ObservationTableModel extends AbstractTableModel
     {
       m_valuesModel.setValueAt( aValue, rowIndex, columnIndex - 1 );
 
-      m_columns[columnIndex - 1].setDirty( true );
+      ((ITableViewColumn) m_columns.get( columnIndex - 1 )).setDirty( true );
     }
   }
 
@@ -280,18 +352,21 @@ public class ObservationTableModel extends AbstractTableModel
   }
 
   /**
+   * Finds the renderingrules for the given element.
+   * 
    * @param row
    * @param column
-   * @return rendering rules
-   * @throws NoSuchElementException
+   * @return rendering rules or empty array if no rules found.
    */
   public RenderingRule[] findRules( int row, int column )
-      throws NoSuchElementException
   {
     final String kStatusCol = KalypsoStatusUtils
-        .getStatusAxisLabelFor( m_valueAxes[column - 1] );
+        .getStatusAxisLabelFor( ((ITableViewColumn) m_columns.get( column - 1 ))
+            .getAxis() );
 
     final IAxis valueAxis = findValueAxis( kStatusCol );
+    if( valueAxis == null )
+      return new RenderingRule[0];
 
     return m_rules.findRules( ((Integer) getValueAt( row, valueAxis
         .getPosition() + 1 )).intValue() );
@@ -301,21 +376,19 @@ public class ObservationTableModel extends AbstractTableModel
    * Finds a value axis with the given name.
    * 
    * @param name
-   * @return value axis
-   * 
-   * @throws NoSuchElementException
-   *           when axis could not be found
+   * @return value axis or null if not found.
    */
   private IAxis findValueAxis( final String name )
-      throws NoSuchElementException
   {
-    for( int i = 0; i < m_valueAxes.length; i++ )
+    for( final Iterator it = m_columns.iterator(); it.hasNext(); )
     {
-      if( m_sharedAxes[i].getName().equals( name ) )
-        return m_valueAxes[i];
+      final ITableViewColumn col = (ITableViewColumn) it.next();
+
+      if( col.getAxis().getName().equals( name ) )
+        return col.getAxis();
     }
 
-    throw new NoSuchElementException();
+    return null;
   }
 
   /**
@@ -323,7 +396,9 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public void clearColumns( )
   {
-    m_columns = EMPTY_COLS;
+    m_columns.clear();
+    m_sharedModel.clear();
+    m_valuesModel.setColumnCount( 0 );
 
     fireTableStructureChanged();
   }
@@ -331,19 +406,20 @@ public class ObservationTableModel extends AbstractTableModel
   /**
    * Adds a row that contains only the value for the shared column.
    * 
-   * @param object
+   * @param sharedElement
    *          the object for the value of the common column
    * @return the index at which row was added
    */
-  public int addRow( final Object object )
+  public int addRow( final Object sharedElement )
   {
     synchronized( m_columns )
     {
-      m_commonColumn.add( object );
+      m_sharedModel.add( sharedElement );
 
-      final int index = Arrays.binarySearch( m_commonColumn.toArray(), object );
+      final int index = Arrays.binarySearch( m_sharedModel.toArray(),
+          sharedElement );
 
-      m_valuesModel.insertRow( index, new Object[m_columns.length] );
+      m_valuesModel.insertRow( index, new Object[m_columns.size()] );
 
       fireTableDataChanged();
 
@@ -358,17 +434,16 @@ public class ObservationTableModel extends AbstractTableModel
    *          common column should be at position 0 in the vector
    * @return index where row was added
    */
-  public int addRow( final Vector row )
+  public int addRow( final List row )
   {
     synchronized( m_columns )
     {
+      // first insert shared element (first in the row)
       final int index = addRow( row.get( 0 ) );
 
+      // insert values
       for( int i = 1; i < row.size(); i++ )
-      {
-        m_columns[i - 1].setDirty( true );
-        m_valuesModel.setValueAt( row.get( i ), index, i - 1 );
-      }
+        setValueAt( row.get( i ), index, i - 1 );
 
       return index;
     }
@@ -380,22 +455,27 @@ public class ObservationTableModel extends AbstractTableModel
    * @param index
    * @return the removed row
    */
-  public Vector removeRow( int index )
+  public List removeRow( int index )
   {
     synchronized( m_columns )
     {
-      final Vector row = new Vector( m_columns.length );
+      final ArrayList row = new ArrayList( m_columns.size() + 1 );
 
-      row.add( m_commonColumn.toArray()[index] );
+      row.add( m_sharedModel.toArray()[index] );
 
-      for( int col = 0; col < m_columns.length; col++ )
+      int colIndex = 0;
+      for( final Iterator it = m_columns.iterator(); it.hasNext(); )
       {
-        row.add( m_valuesModel.getValueAt( index, col ) );
-        m_columns[col].setDirty( true );
+        final ITableViewColumn col = (ITableViewColumn) it.next();
+
+        row.add( m_valuesModel.getValueAt( index, colIndex ) );
+        col.setDirty( true );
+        
+        colIndex++;
       }
 
       m_valuesModel.removeRow( index );
-      m_commonColumn.remove( row.get( 0 ) );
+      m_sharedModel.remove( row.get( 0 ) );
 
       fireTableDataChanged();
 
