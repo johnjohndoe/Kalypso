@@ -1,5 +1,7 @@
 package org.kalypso.ogc.sensor.filter.creators;
 
+import java.util.List;
+
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
@@ -43,5 +45,23 @@ public final class FilterCreatorHelper
     
     // no subfilter
     return baseObs;
+  }
+  
+  /**
+   * Same as <code>FilterCreatorHelper.resolveFilter</code> but for n filters.
+   * 
+   * @param afts
+   * @param baseObs
+   * @return array of filtered observations
+   * @throws SensorException
+   */
+  public static IObservation[] resolveFilters( final List afts, final IObservation baseObs ) throws SensorException
+  {
+    final IObservation[] obs = new IObservation[ afts.size()];
+    
+    for( int i = 0; i < obs.length; i++ )
+      obs[i] = resolveFilter( (AbstractFilterType) afts.get( i ), baseObs );
+    
+    return obs;
   }
 }

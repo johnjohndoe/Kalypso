@@ -64,8 +64,8 @@
 	</complexType>
 	<element name="nOperationFilter" type="filters:nOperationFilterType" substitutionGroup="filters:filter"/>
 
-	<!-- Filter: merge -->	
-	<complexType name="mergeFilterType">
+	<!-- Filter: forecast (merges the tupples on the date axis in ascending order) -->	
+	<complexType name="forecastFilterType">
 		<complexContent>
 			<extension base="filters:abstractFilterType">
 				<sequence>
@@ -74,7 +74,7 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<element name="mergeFilter" type="filters:mergeFilterType" substitutionGroup="filters:filter" />
+	<element name="forecastFilter" type="filters:forecastFilterType" substitutionGroup="filters:filter" />
 	
 	<!-- Filter: ZML-Link -->
 	<complexType name="zmlFilterType">
