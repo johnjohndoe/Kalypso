@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>582080</name>
+    <metadataList>
+        <metadata name="Pegelnullpunkt" value="0.0"/>
+        <metadata name="Fluss" value=""/>
+        <metadata name="Beschreibung" value="Sprey"/>
+        <metadata name="Vorhersage" value="27.04.2004 10:00:00;29.04.2004 10:00:00"/>
+        <metadata name="Flussgebiet" value=""/>
+        <metadata name="Name" value="582080"/>
+        <metadata name="WQ-Parameter" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt; &lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot;&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;0001-01-01T00:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;-0.34&lt;/w1&gt;             &lt;lnk1&gt;-6.91481&lt;/lnk1&gt;             &lt;k2&gt;1.9843&lt;/k2&gt;             &lt;wgr&gt;200.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-44.13&lt;/w1&gt;             &lt;lnk1&gt;-7.52208&lt;/lnk1&gt;             &lt;k2&gt;2.02363&lt;/k2&gt;             &lt;wgr&gt;309.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-100.12&lt;/w1&gt;             &lt;lnk1&gt;-20.07808&lt;/lnk1&gt;             &lt;k2&gt;4.06162&lt;/k2&gt;             &lt;wgr&gt;-1.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt; &lt;/wechmann&gt;  "/>
+        <metadata name="Alarmstufe 4" value="0.0"/>
+        <metadata name="Alarmstufe 3" value="0.0"/>
+        <metadata name="Messtischblattnummer" value="0"/>
+        <metadata name="Alarmstufe 2" value="0.0"/>
+        <metadata name="Hochwert" value="0"/>
+        <metadata name="Alarmstufe 1" value="200.0"/>
+        <metadata name="Rechtswert" value="0"/>
+        <metadata name="Höhenangabeart" value=""/>
+    </metadataList>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2004-04-26T22:00:00;2004-04-27T01:00:00;2004-04-27T04:00:00;2004-04-27T07:00:00;2004-04-27T10:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_Wasserstand 582080" type="kalypso-status" unit="">
+        <valueArray separator=";">8;8;8;8;8</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Wasserstand 582080" type="W" unit="cm">
+        <valueArray separator=";">110;110;110;110;110</valueArray>
+    </axis>
+</observation>
+

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>QV_JAENKD</name>
+    <metadataList>
+        <metadata name="Pegelnullpunkt" value="0.0"/>
+        <metadata name="Fluss" value=""/>
+        <metadata name="Beschreibung" value="Jänkendorf"/>
+        <metadata name="Vorhersage" value="27.04.2004 10:00:00;29.04.2004 10:00:00"/>
+        <metadata name="Flussgebiet" value=""/>
+        <metadata name="Name" value="583250"/>
+        <metadata name="WQ-Parameter" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt; &lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot;&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;0001-01-01T00:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;-0.01&lt;/w1&gt;             &lt;lnk1&gt;-15.81449&lt;/lnk1&gt;             &lt;k2&gt;4.27921&lt;/k2&gt;             &lt;wgr&gt;40.9&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-1.01&lt;/w1&gt;             &lt;lnk1&gt;-6.31607&lt;/lnk1&gt;             &lt;k2&gt;1.70765&lt;/k2&gt;             &lt;wgr&gt;-1.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt; &lt;/wechmann&gt;  "/>
+        <metadata name="Alarmstufe 4" value="200.0"/>
+        <metadata name="Messtischblattnummer" value="0"/>
+        <metadata name="Alarmstufe 3" value="170.0"/>
+        <metadata name="Hochwert" value="0"/>
+        <metadata name="Alarmstufe 2" value="140.0"/>
+        <metadata name="Alarmstufe 1" value="110.00000000000001"/>
+        <metadata name="Rechtswert" value="0"/>
+        <metadata name="Höhenangabeart" value=""/>
+    </metadataList>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2004-04-27T10:00:00;2004-04-27T13:00:00;2004-04-27T16:00:00;2004-04-27T19:00:00;2004-04-27T22:00:00;2004-04-28T01:00:00;2004-04-28T04:00:00;2004-04-28T07:00:00;2004-04-28T10:00:00;2004-04-28T13:00:00;2004-04-28T16:00:00;2004-04-28T19:00:00;2004-04-28T22:00:00;2004-04-29T01:00:00;2004-04-29T04:00:00;2004-04-29T07:00:00;2004-04-29T10:00:00;2004-04-29T13:00:00;2004-04-29T16:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Abfluss" type="Q" unit="m³/s">
+        <valueArray separator=";">0.550000011920929;0.7300000190734863;0.9700000286102295;1.590000033378601;2.75;4.559999942779541;6.760000228881836;8.34000015258789;8.760000228881836;8.239999771118164;7.289999961853027;6.300000190734863;5.449999809265137;4.800000190734863;4.369999885559082;4.099999904632568;3.9800000190734863;3.9600000381469727;4.019999980926514</valueArray>
+    </axis>
+</observation>
+

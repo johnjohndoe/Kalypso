@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>QP_LIESKE</name>
+    <metadataList>
+        <metadata name="Pegelnullpunkt" value="0.0"/>
+        <metadata name="Fluss" value=""/>
+        <metadata name="Beschreibung" value="Lieske"/>
+        <metadata name="Vorhersage" value="27.04.2004 10:00:00;29.04.2004 10:00:00"/>
+        <metadata name="Flussgebiet" value=""/>
+        <metadata name="Name" value="582060"/>
+        <metadata name="WQ-Parameter" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt; &lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot;&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;0001-01-01T00:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;79.99&lt;/w1&gt;             &lt;lnk1&gt;-8.49524&lt;/lnk1&gt;             &lt;k2&gt;2.33671&lt;/k2&gt;             &lt;wgr&gt;160.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;99.99&lt;/w1&gt;             &lt;lnk1&gt;-1.66334&lt;/lnk1&gt;             &lt;k2&gt;0.83002&lt;/k2&gt;             &lt;wgr&gt;200.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;39.99&lt;/w1&gt;             &lt;lnk1&gt;-8.63776&lt;/lnk1&gt;             &lt;k2&gt;2.1258&lt;/k2&gt;             &lt;wgr&gt;-1.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt; &lt;/wechmann&gt;  "/>
+        <metadata name="Alarmstufe 4" value="570.0"/>
+        <metadata name="Messtischblattnummer" value="0"/>
+        <metadata name="Alarmstufe 3" value="520.0"/>
+        <metadata name="Hochwert" value="0"/>
+        <metadata name="Alarmstufe 2" value="415.00000000000006"/>
+        <metadata name="Alarmstufe 1" value="300.0"/>
+        <metadata name="Rechtswert" value="0"/>
+        <metadata name="Höhenangabeart" value=""/>
+    </metadataList>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2004-04-27T07:00:00;2004-04-27T10:00:00;2004-04-27T13:00:00;2004-04-27T16:00:00;2004-04-27T19:00:00;2004-04-27T22:00:00;2004-04-28T01:00:00;2004-04-28T04:00:00;2004-04-28T07:00:00;2004-04-28T10:00:00;2004-04-28T13:00:00;2004-04-28T16:00:00;2004-04-28T19:00:00;2004-04-28T22:00:00;2004-04-29T01:00:00;2004-04-29T04:00:00;2004-04-29T07:00:00;2004-04-29T10:00:00;2004-04-29T13:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Abfluss" type="Q" unit="m³/s">
+        <valueArray separator=";">2.648;2.96;3.678;4.309;5.059;6.885;10.34;16.047;23.857;32.281;38.952;42.063;41.67;38.796;35.134;31.626;26.093;22.191;22.023</valueArray>
+    </axis>
+</observation>
+

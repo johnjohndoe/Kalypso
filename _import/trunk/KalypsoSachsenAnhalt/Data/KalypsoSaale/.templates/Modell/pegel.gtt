@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gistableview xmlns="gistableview.template.kalypso.org">
-    <layer featurePath="PegelCollectionAssociation/PegelMember" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/bodemodell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column editable="true" name="Name" width="100"/>
-        <column editable="true" name="WISKI_Name" width="100"/>
-    </layer>
-</gistableview>
-

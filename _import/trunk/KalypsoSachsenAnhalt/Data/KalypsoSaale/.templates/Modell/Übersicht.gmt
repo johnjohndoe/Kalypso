@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-	<extent bottom="5721767.238838751" left="5196050.364086669" right="5272854.967313059" top="5785214.519764898"/>
-	<layers active="ID_1">
-		<layer name="Pegel" visible="true" featurePath="PegelCollectionAssociation/PegelMember" id="ID_neu" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/bodemodell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+    <extent bottom="5651820.935545029" left="5216426.908626928" right="5364699.69008875" top="5764439.139261266"/>
+    <layers active="ID_1">
+        <layer name="Pegel" visible="true" featurePath="featureMember" id="ID_1" linktype="shape" ns1:actuate="onRequest" ns1:href="project:/.shape/aktivpeg#EPSG:31468" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+            <ns2:style linktype="sld" style="Eingabepegel" ns1:actuate="onRequest" ns1:href="project:/.styles/eingabepegel.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
         </layer>
-		<layer name="Gewässerflächen" visible="true" featurePath="featureMember" id="ID_1" linktype="shape" ns1:actuate="onRequest" ns1:href="project:/.shape/Gewässerflächen#EPSG:31468" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-			<ns2:style linktype="sld" style="seen" ns1:actuate="onRequest" ns1:href="project:/.styles/seen.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
-		</layer>
-		<layer name="Gewässer" visible="true" featurePath="featureMember" id="ID_2" linktype="shape" ns3:actuate="onRequest" ns3:href="project:/.shape/Gewässer#EPSG:31468" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
-			<ns4:style linktype="sld" style="sachsenrivers" ns3:actuate="onRequest" ns3:href="project:/.styles/styles.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
-		</layer>
-	</layers>
+        <layer name="Gewässerflächen" visible="true" featurePath="featureMember" id="ID_2" linktype="shape" ns3:actuate="onRequest" ns3:href="project:/.shape/Gewässerflächen#EPSG:31468" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+            <ns4:style linktype="sld" style="seen" ns3:actuate="onRequest" ns3:href="project:/.styles/seen.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Gewässer" visible="true" featurePath="featureMember" id="ID_3" linktype="shape" ns5:actuate="onRequest" ns5:href="project:/.shape/Gewässer#EPSG:31468" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
+            <ns6:style linktype="sld" style="sachsenrivers" ns5:actuate="onRequest" ns5:href="project:/.styles/styles.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Einzugsgebiet" visible="true" featurePath="featureMember" id="ID_4" linktype="shape" ns7:actuate="onRequest" ns7:href="project:/.shape/saalegeshvmz#EPSG:31468" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
+            <ns8:style linktype="sld" style="niederschlagsgebiete_poly" ns7:actuate="onRequest" ns7:href="project:/.styles/niederschlagsgebiete_poly.sld" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
+        </layer>
+    </layers>
 </gismapview>
+
