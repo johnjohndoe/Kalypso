@@ -8,32 +8,37 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
+import org.kalypso.repository.AbstractRepositoryFactory;
 import org.kalypso.repository.IRepository;
-import org.kalypso.repository.IRepositoryFactory;
 
 /**
  * @author schlienger
  */
-public class ObservationFileRepositoryFactory implements IRepositoryFactory
+public class ObservationFileRepositoryFactory extends AbstractRepositoryFactory
 {
-  private String m_location = null;
+  public ObservationFileRepositoryFactory( final String conf )
+  {
+    super( conf );
+  }
   
   /**
-   * @see org.kalypso.repository.IRepositoryFactory#configureRepository(org.kalypso.ui.repository.IRepository)
+   * @see org.kalypso.repository.IRepositoryFactory#configureRepository(org.kalypso.repository.IRepository)
    */
-  public boolean configureRepository( IRepository rep )
+  public boolean configureRepository( final IRepository rep )
   {
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
     final DirectoryDialog fileDlg = new DirectoryDialog( shell, SWT.OPEN );
 
     if( rep != null )
        fileDlg.setFilterPath( rep.getLocation() );
+    else if( m_configuration != null )
+      fileDlg.setFilterPath( m_configuration );
     
-    String path = fileDlg.open();
+    final String path = fileDlg.open();
 
     if( path != null )
     {
-      m_location = path;
+      m_configuration = path;
       
       return true;
     }
@@ -46,9 +51,9 @@ public class ObservationFileRepositoryFactory implements IRepositoryFactory
    */
   public IRepository createRepository()
   {
-    String[] ZML_FILES = {"*.zml"};
-    FileFilter filter = new MultipleWildCardFileFilter( ZML_FILES, false, true, false );
+    final String[] ZML_FILES = {"*.zml"};
+    final FileFilter filter = new MultipleWildCardFileFilter( ZML_FILES, false, true, false );
     
-    return new ZmlObservationRepository( m_location, filter );
+    return new ZmlObservationRepository( m_configuration, filter );
   }
 }
