@@ -27,10 +27,13 @@ public class MapModellLabelProvider implements ILabelProvider
     if( element instanceof Theme )
       return ((Theme)element).getName();
     
+    if( element instanceof ThemeStyleTreeObject )
+        return element.toString();
+    
     if( element instanceof UserStyle )
       return ((UserStyle)element).getName();
     
-    return null;
+    return element.toString();
   }
 
   /**

@@ -21,6 +21,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.editor.mapeditor.actions.AddThemeAction;
 import org.kalypso.editor.mapeditor.actions.MoveThemeDownAction;
 import org.kalypso.editor.mapeditor.actions.MoveThemeUpAction;
+import org.kalypso.editor.mapeditor.actions.OpenStyleDialogAction;
 import org.kalypso.editor.mapeditor.actions.RemoveThemeAction;
 import org.kalypso.ogc.IMapModellView;
 import org.kalypso.ogc.MapModell;
@@ -51,6 +52,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
   private AddThemeAction m_addAction = null;
 
+  private OpenStyleDialogAction m_openStyleDialogAction=null;
+  
   private TableTreeViewer m_viewer;
 
   private final MapModellTreeContentProvider m_contentProvider = new MapModellTreeContentProvider();
@@ -95,6 +98,9 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     m_addAction = new AddThemeAction( "Thema hinzufügen", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD,
         "Thema hinzufügen", m_viewer, this );
     
+    m_openStyleDialogAction = new OpenStyleDialogAction( "Style verändern", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD,
+            "Style ändern", m_viewer, this );
+        
     onModellChange(null);
   }
 
@@ -149,7 +155,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     toolBarManager.add( m_moveOneUpAction );
     toolBarManager.add( m_moveOneDownAction );
     toolBarManager.add( m_removeAction );
-
+    toolBarManager.add( m_openStyleDialogAction );
     actionBars.updateActionBars();
   }
 

@@ -30,7 +30,7 @@ public class StyleLoader implements ILoader
     {
       final String name = source.getProperty( "STYLE", "" );
 
-      // erst mal gml laden
+     
       final StyledLayerDescriptor sld = (StyledLayerDescriptor)KalypsoGisPlugin.getDefault()
           .getPool( StyledLayerDescriptor.class ).borrowObject( new PoolableObjectType( "sld", source, helper ) );
       // TODO: move to StyleLoader
