@@ -14,6 +14,15 @@ public interface ITuppleModel
   public IAxis[] getAxisList();
   
   /**
+   * Returns the position of the axis in this tupple model
+   * 
+   * @param axis
+   * @return the position of the axis in this tupple model
+   * @throws SensorException when axis not part of this model
+   */
+  public int getPositionFor( final IAxis axis ) throws SensorException;
+  
+  /**
    * @return amount of items in this observation's model
    * @throws SensorException
    */

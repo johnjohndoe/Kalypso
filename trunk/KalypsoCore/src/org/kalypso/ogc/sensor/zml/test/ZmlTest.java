@@ -3,7 +3,6 @@ package org.kalypso.ogc.sensor.zml.test;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import junit.framework.TestCase;
 
@@ -78,30 +77,6 @@ public class ZmlTest extends TestCase
     assertNotNull( axes );
 
     assertTrue( axes.length == 3 );
-
-    int i = 2;
-    assertTrue( axes[i].getName().equals( "Datum" ) );
-    assertTrue( axes[i].getType().equals( "datum" ) );
-    assertTrue( axes[i].getUnit().equals( "" ) );
-    assertTrue( axes[i].getDataClass() == Date.class );
-    assertTrue( axes[i].getPosition() == 0 );
-    assertTrue( axes[i].isKey() );
-
-    i = 1;
-    assertTrue( axes[i].getName().equals( "Pegel1" ) );
-    assertTrue( axes[i].getType().equals( "pegel" ) );
-    assertTrue( axes[i].getUnit().equals( "m" ) );
-    assertTrue( axes[i].getDataClass() == Double.class );
-    assertTrue( axes[i].getPosition() == 1 );
-    assertFalse( axes[i].isKey() );
-
-    i = 0;
-    assertTrue( axes[i].getName().equals( "Pegel2" ) );
-    assertTrue( axes[i].getType().equals( "pegel" ) );
-    assertTrue( axes[i].getUnit().equals( "m" ) );
-    assertTrue( axes[i].getDataClass() == Double.class );
-    assertTrue( axes[i].getPosition() == 2 );
-    assertFalse( axes[i].isKey() );
   }
 
   public void testGetValues() throws SensorException, ParseException
@@ -147,21 +122,21 @@ public class ZmlTest extends TestCase
     final SimpleTuppleModel m = new SimpleTuppleModel( m_obs.getAxisList() );
     
     final Object[] t1 = new Object[3];
-    t1[ dateAxis.getPosition() ] = df.parse( "20.01.2004" );
-    t1[ vAxis1.getPosition() ] = new Double(44);
-    t1[ vAxis2.getPosition() ] = new Double(11);
+    t1[ m.getPositionFor(dateAxis) ] = df.parse( "20.01.2004" );
+    t1[ m.getPositionFor(vAxis1) ] = new Double(44);
+    t1[ m.getPositionFor(vAxis2) ] = new Double(11);
     m.addTupple( t1 );
     
     final Object[] t2 = new Object[3];
-    t2[ dateAxis.getPosition() ] = df.parse( "21.01.2004" );
-    t2[ vAxis1.getPosition() ] = new Double(55);
-    t2[ vAxis2.getPosition() ] = new Double(22);
+    t2[ m.getPositionFor(dateAxis) ] = df.parse( "21.01.2004" );
+    t2[ m.getPositionFor(vAxis1) ] = new Double(55);
+    t2[ m.getPositionFor(vAxis2) ] = new Double(22);
     m.addTupple( t2 );
 
     final Object[] t3 = new Object[3];
-    t3[ dateAxis.getPosition() ] = df.parse( "22.01.2004" );
-    t3[ vAxis1.getPosition() ] = new Double(66);
-    t3[ vAxis2.getPosition() ] = new Double(33);
+    t3[ m.getPositionFor(dateAxis) ] = df.parse( "22.01.2004" );
+    t3[ m.getPositionFor(vAxis1) ] = new Double(66);
+    t3[ m.getPositionFor(vAxis2) ] = new Double(33);
     m.addTupple( t3 );
 
     m_obs.setValues( m );

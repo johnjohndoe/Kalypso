@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <repconf xmlns="conf.repository.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-	<rep className="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory" confString="F:/kalypso/data/mirrored/Spree#Spree#*.zml" readOnly="false" />
-	<rep className="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory" confString="F:/kalypso/data/mirrored/Weiße Elster#WeißeElster#*.zml" readOnly="false" />
-	<rep className="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory" confString="F:/kalypso/data/mirrored/KalypsoNA#WeisseElster#*.zml" readOnly="false" />
-
-	<rep className="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory" confString="F:/kalypso/data/mirrored/Test-Nicht-Dargestellt#Test#*.zml" readOnly="false" />
-
-	<rep className="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory" confString="" readOnly="false" />
-
-	<rep className="org.kalypso.repository.virtual.HeadlessVirtualRepositoryFactory" confString="F:/kalypso/data/mirrored/VirtualRepository/virtual-zml-repository.xml#VirtualRepository" readOnly="true" />
+	<rep className="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory" confString="E:/kalypso/data/mirrored/Spree#Spree#*.zml" readOnly="false" /> 
+	<rep className="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory" confString="E:/kalypso/data/mirrored/KalypsoNA#WeisseElster" readOnly="false" /> 
+	<rep className="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory" confString="E:/kalypso/data/mirrored/WeisseElsterFlussPegel#FlussPegel#*.zml" readOnly="false" /> 
+	<rep className="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory" confString="E:/kalypso/data/mirrored/WeisseElsterVorhersage#Vorhersage#*.zml" readOnly="true" /> 
+	<rep className="org.kalypso.repository.virtual.HeadlessVirtualRepositoryFactory" confString="E:/kalypso/data/mirrored/Gebietsniederschlag/gebietsNiederschlagRep.xml#GebietsNiederschlaege" readOnly="true" /> 
+	<rep className="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory" confString="" readOnly="false" /> 
 
 </repconf>

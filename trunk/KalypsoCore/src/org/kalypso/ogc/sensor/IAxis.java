@@ -3,7 +3,16 @@ package org.kalypso.ogc.sensor;
 
 
 /**
- * Ein Achsen beinhaltet Werte und wird mit eine Einheit und eine Beschriftung beschrieben.
+ * An axis is used to describe a 'column' of values within
+ * a Tupple Model.
+ * <p>
+ * Two axes are said to be equal when:
+ * <ol>
+ * <li>the dataclass of their elements is the same</li>
+ * <li>their types are identical</li>
+ * <li>they have the same unit</li>
+ * <li>the value of the key-property is identical</li>
+ * </ol>
  * 
  * @author schlienger
  */
@@ -28,11 +37,6 @@ public interface IAxis
    * @return the name of this axis
    */
   public String getName();
-  
-  /** 
-   * @return the position of this axis in the tupple
-   */
-  public int getPosition();
   
   /**
    * Returns true when this axis is part of the key of the TuppleModel. Key can be used 

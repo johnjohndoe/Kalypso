@@ -409,8 +409,9 @@ public class ObservationTableModel extends AbstractTableModel
    * 
    * @param theme
    * @return new model
+   * @throws SensorException
    */
-  public ITuppleModel getValues( final ITableViewTheme theme )
+  public ITuppleModel getValues( final ITableViewTheme theme ) throws SensorException
   {
     return getValues( theme.getColumns(), null );
   }
@@ -420,8 +421,9 @@ public class ObservationTableModel extends AbstractTableModel
    * 
    * @param rows
    * @return new model
+   * @throws SensorException
    */
-  public ITuppleModel getValues( final int[] rows )
+  public ITuppleModel getValues( final int[] rows ) throws SensorException
   {
     return getValues( m_columns, rows );
   }
@@ -435,8 +437,9 @@ public class ObservationTableModel extends AbstractTableModel
    *          indices of rows to export
    * 
    * @return new model
+   * @throws SensorException
    */
-  protected ITuppleModel getValues( final List cols, final int[] rows )
+  protected ITuppleModel getValues( final List cols, final int[] rows ) throws SensorException
   {
     final List allAxes = new ArrayList();
     final Map statusAxes = new HashMap();
@@ -478,15 +481,15 @@ public class ObservationTableModel extends AbstractTableModel
           // the col index is the same for the value model and the status model
           final int colIndex = m_valuesModel.findColumn( col.getName() );
 
-          tupple[ col.getAxis().getPosition() ] = m_valuesModel.getValueAt( rowIndex, colIndex );
+          tupple[ model.getPositionFor( col.getAxis() ) ] = m_valuesModel.getValueAt( rowIndex, colIndex );
           
           final IAxis statusAxis = (IAxis) statusAxes.get( col );
           if( statusAxis != null )
-            tupple[ statusAxis.getPosition() ] = m_statusModel.getValueAt( rowIndex, colIndex );
+            tupple[ model.getPositionFor( statusAxis ) ] = m_statusModel.getValueAt( rowIndex, colIndex );
           
           // and the key value
           if( !ita.hasNext() )
-            tupple[ col.getKeyAxis().getPosition() ] = keyObj;
+            tupple[ model.getPositionFor( col.getKeyAxis() ) ] = keyObj;
         }
 
         model.addTupple( tupple );

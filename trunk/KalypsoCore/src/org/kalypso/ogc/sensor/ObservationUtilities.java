@@ -359,9 +359,9 @@ public class ObservationUtilities
         final IAxis srcAxis = (IAxis) map.get( destAxes[j] );
 
         if( srcAxis != null )
-          tupple[destAxes[j].getPosition()] = values.getElement( i, srcAxis );
+          tupple[ model.getPositionFor( destAxes[j] ) ] = values.getElement( i, srcAxis );
         else if( KalypsoStatusUtils.isStatusAxis( destAxes[j] ) )
-          tupple[destAxes[j].getPosition()] = new Integer(
+          tupple[ model.getPositionFor( destAxes[j] ) ] = new Integer(
               KalypsoStati.BIT_OK );
       }
 

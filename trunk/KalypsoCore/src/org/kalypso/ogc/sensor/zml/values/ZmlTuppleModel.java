@@ -23,6 +23,10 @@ public class ZmlTuppleModel extends AbstractTuppleModel
   public ZmlTuppleModel( final Map valuesMap )
   {
     m_valuesMap = valuesMap;
+    
+    final IAxis[] axes = getAxisList();
+    for( int j = 0; j < axes.length; j++ )
+      mapAxisToPos( axes[j], j );
   }
 
   /**

@@ -35,8 +35,8 @@ public class InterpolationFilterTest extends TestCase
     super.setUp();
     
     IAxis[] axes = new IAxis[2];
-    axes[0] = new DefaultAxis("date", "date", "", Date.class, 0, true );
-    axes[1] = new DefaultAxis("value", "W", "cm", Double.class, 1, false );
+    axes[0] = new DefaultAxis("date", "date", "", Date.class, true );
+    axes[1] = new DefaultAxis("value", "W", "cm", Double.class, false );
     
     m_from = CAL.getTime();
     

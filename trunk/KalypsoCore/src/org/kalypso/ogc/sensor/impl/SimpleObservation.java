@@ -209,15 +209,16 @@ public class SimpleObservation implements IObservation
 
         final Object[] tupple = new Object[ kset.size() ];
         
+        final SimpleTuppleModel stm = prepareForAdding();
+        
         for( final Iterator it = kset.iterator(); it.hasNext(); )
         {
           final IAxis myA = (IAxis)it.next();
 
           final Object obj = values.getElement( i, (IAxis)map.get( myA ) );
-          tupple[ myA.getPosition() ] = obj;
+          tupple[ stm.getPositionFor( myA ) ] = obj;
         }
         
-        final SimpleTuppleModel stm = prepareForAdding();
         stm.addTupple( tupple );
       }
     }
