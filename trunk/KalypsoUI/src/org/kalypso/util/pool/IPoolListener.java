@@ -1,9 +1,13 @@
 package org.kalypso.util.pool;
 
+import org.eclipse.core.runtime.IStatus;
+
 /**
  * @author belger
  */
 public interface IPoolListener
 {
-  public void onObjectInvalid( final ResourcePool source, final IPoolableObjectType key, final Object oldObject, final boolean bCannotReload ) throws Exception;
+  public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status );
+
+  public void objectInvalid( final IPoolableObjectType key, final Object oldValue );
 }
