@@ -18,10 +18,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.adapter.NativeObservationAdapter;
-import org.kalypso.ogc.sensor.timeseries.wq.WQFilterUtilities;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -220,21 +218,6 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   public IObservation getTargetObservation( URL url, boolean guessWQ ) throws SensorException
   {
     final IObservation observation = ZmlFactory.parseXML( url, "targetFile" );
-    final MetadataList metadataList = observation.getMetadataList();
-    if( guessWQ && metadataList.getProperty( "WQ-Parameter" ) != null )
-    {
-      // lets guess we have a w/q timeseries
-      try
-      {
-        final IAxis[] axis = observation.getAxisList();
-        return getTargetObservation( new URL( url.toExternalForm() + "?"
-            + WQFilterUtilities.createGuessedWQFilterInline( axis ) ), false );
-      }
-      catch( Exception e )
-      {
-        // proceed without w/q-filter
-      }
-    }
     return observation;
   }
 

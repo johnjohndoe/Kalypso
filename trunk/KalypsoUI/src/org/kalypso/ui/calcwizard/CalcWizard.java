@@ -166,7 +166,7 @@ public class CalcWizard implements IWizard, IProjectProvider
       {
         final CalcwizardType.PageType page = (CalcwizardType.PageType)pIt.next();
 
-        final Arguments arguments = buildArguments( page );
+        final Arguments arguments = buildArguments(page);
 
         final String className = page.getClassName();
         final String pageTitle = page.getPageTitle();

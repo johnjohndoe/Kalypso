@@ -295,10 +295,8 @@ public class FeatureTypeBuilder
 
   public FeatureType toFeatureType()
   {
-    //    if( m_isFeatureAssociation )
-    //      System.out.println( "stop" );
-    List featureTypeList = new ArrayList();
-    List featureTypePropertyList = new ArrayList();
+    final List featureTypeList = new ArrayList();
+    final List featureTypePropertyList = new ArrayList();
 
     for( int i = 0; i < m_featureProtoTypes.size(); i++ )
     {
@@ -320,21 +318,19 @@ public class FeatureTypeBuilder
     }
     FeatureTypeProperty[] ftProperties = (FeatureTypeProperty[])featureTypePropertyList
         .toArray( new FeatureTypeProperty[featureTypePropertyList.size()] );
-    FeatureType[] ftChilds = (FeatureType[])featureTypeList
-        .toArray( new FeatureType[featureTypeList.size()] );
+    
     int[] minOccurs = new int[ftProperties.length];
     int[] maxOccurs = new int[ftProperties.length];
     for( int i = 0; i < ftProperties.length; i++ )
     {
       String key = ftProperties[i].getNamespace() + ":" + ftProperties[i].getName();
-      //      System.out.println("KEY:"+key);
       final String min = (String)m_minOccurs.get( key );
       // TODO: Andreas? warum war das bisher kein Problem??
       if( min == null )
         minOccurs[i] = 1;
       else
         minOccurs[i] = Integer.parseInt( min );
-      
+
       final String max = (String)m_maxOccurs.get( key );
       if( "unbounded".equals( max ) )
         maxOccurs[i] = FeatureType.UNBOUND_OCCURENCY;

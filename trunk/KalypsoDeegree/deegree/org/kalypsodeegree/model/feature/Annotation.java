@@ -14,12 +14,12 @@ public class Annotation
 
   private final String m_lang;
 
-  public Annotation( String lang,String label,String tooltip,String description )
+  public Annotation( String lang, String label, String tooltip, String description )
   {
-    m_lang=lang;
+    m_lang = lang;
     m_label = label;
-    m_tooltip=tooltip;
-    m_description=description;    
+    m_tooltip = tooltip;
+    m_description = description;
   }
 
   public String getDescription()
@@ -27,12 +27,11 @@ public class Annotation
     return m_description;
   }
 
-    public String getLabel()
+  public String getLabel()
   {
     return m_label;
   }
 
-  
   public String getTooltip()
   {
     return m_tooltip;
@@ -41,5 +40,10 @@ public class Annotation
   public String getLang()
   {
     return m_lang;
+  }
+
+  public String toString()
+  {
+    return "label:" + m_label + " tooltip:" + m_tooltip + " description:" + m_description;
   }
 }

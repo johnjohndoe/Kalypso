@@ -36,15 +36,21 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree_impl.model.feature.FeatureFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -63,7 +69,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
@@ -77,7 +83,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
 
   /** Position des rechten Sash: Integer von 0 bis 100 */
   private final static String PROP_RIGHTSASH = "rightSash";
-  
+
   /** Pfad auf Vorlage für die Feature-View (.gft Datei) */
   private final static String PROP_FEATURETEMPLATE = "featureTemplate";
 
@@ -87,11 +93,12 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
-  protected final FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( new JobExclusiveCommandTarget( null, null ) );
-  
+  protected final FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer(
+      new JobExclusiveCommandTarget( null, null ) );
+
   public MapAndFeatureWizardPage()
   {
-    super( "<MapAndFeatureWizardPage>" );
+    super( "<MapAndFeatureWizardPage>", SELECT_FROM_FEATUREVIEW );
   }
 
   public void dispose()
@@ -113,6 +120,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
       setControl( sashForm );
 
       postCreateControl();
+      refreshDiagram();
     }
     catch( final Exception e )
     {
@@ -165,26 +173,26 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
     final GridData ignoreData = new GridData( GridData.FILL_HORIZONTAL );
     ignoreData.horizontalAlignment = GridData.BEGINNING;
     createIgnoreButtonPanel( panel ).setLayoutData( ignoreData );
-    
+
     final Button button = new Button( panel, SWT.NONE | SWT.PUSH );
     button.setText( "Berechnung durchführen" );
 
     button.addSelectionListener( new SelectionAdapter()
-        {
-          public void widgetSelected( SelectionEvent e )
-          {
-            runCalculation();
-          }
-        } );
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        runCalculation();
+      }
+    } );
   }
-  
+
   /**
    * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#saveData(org.eclipse.core.runtime.IProgressMonitor)
    */
   public void saveData( final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Daten speichern", 2 );
-    
+
     super.saveData( new SubProgressMonitor( monitor, 1 ) );
 
     final IStatus status = m_templateviewer.saveGML( new SubProgressMonitor( monitor, 1 ) );
@@ -199,9 +207,11 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
 
   private void createFeaturePanel( final Composite parent )
   {
-    final String templateFileName = getArguments().getProperty( PROP_FEATURETEMPLATE, null );
-    final String errorMsg = "Fehler beim Laden des FeatureTemplate: " + templateFileName;
-    
+    final String featureTemplateArgument = getArguments().getProperty( PROP_FEATURETEMPLATE, null );
+    final Properties featureTemplateProps = PropertiesHelper.parseFromString(
+        featureTemplateArgument, '#' );
+    final String errorMsg = "Fehler beim Laden des FeatureTemplate: " + featureTemplateArgument;
+    final String templateFileName = featureTemplateArgument.replaceAll( "#.*", "" );
     final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
     {
       public void run( final IProgressMonitor monitor ) throws InvocationTargetException
@@ -211,9 +221,10 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
           final IFile templateFile = (IFile)getProject().findMember( templateFileName );
           if( templateFile != null && templateFile.exists() )
           {
-            final Reader reader = new InputStreamReader( templateFile.getContents(), templateFile.getCharset() );
-            m_templateviewer.loadInput( reader, getContext(), monitor );
-            
+            final Reader reader = new InputStreamReader( templateFile.getContents(), templateFile
+                .getCharset() );
+            m_templateviewer.loadInput( reader, getContext(), monitor, featureTemplateProps );
+
             m_templateviewer.createControls( parent, SWT.BORDER );
           }
         }
@@ -223,7 +234,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
 
           final Label label = new Label( parent, SWT.NONE );
           label.setText( "Vorlage konnte nicht geladen werden: " + templateFileName );
-          
+
           throw new InvocationTargetException( e, errorMsg );
         }
       }
@@ -238,7 +249,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
     mapPanel.setLayout( new GridLayout() );
 
     // TODO: anderes select übergeben
-    final Control mapControl = initMap( mapPanel, MapPanel.WIDGET_SINGLE_SELECT );
+    final Control mapControl = initMap( mapPanel, "null" );
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
@@ -249,45 +260,31 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
   {
     // TODO: not needed?
     // TODO: return Feature from FeatureView
-    return getObservationsFromMap( true, onlySelected );
+    return getObservations( false );
   }
-  
-  // TODO: center m_wishBoundingBox on feature with fid
-//  /**
-//   * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#postCreateControl()
-//   */
-//  protected void postCreateControl()
-//  {
-//    new GisTemplateLoadedThread( getMapModell(), new Runnable()
-//    {
-//      public void run()
-//      {
-////        // erstes feature des aktiven themas selektieren
-////        final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
-////        if( activeTheme instanceof IKalypsoFeatureTheme )
-////        {
-////          final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
-////          final GMLWorkspace workspace = kft.getWorkspace();
-////
-////          final FeatureList featureList = kft.getFeatureList();
-////          if( featureList != null && featureList.size() != 0 )
-////          {
-////            featureList.accept( new UnselectFeatureVisitor( getSelectionID() ) );
-////
-////            final String fid = getArguments().getProperty( PROP_FEATURE_TO_SELECT_ID, null );
-////
-////            final Feature feature = fid == null ? (Feature)featureList.get( 0 ) : workspace.getFeature(fid); 
-////            if( feature != null )
-////              feature.select( getSelectionID() );
-////          }
-////        }
-//        
-//        // TODO: das eine Feature in der Tabelle selektieren und im diagramm anzeigen!
-//
-//        refreshDiagram();
-//        refreshZMLTable();
-//      }
-//    } ).start();
-//  }
+
+  /**
+   * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#getSelectedFeatures()
+   */
+  protected List getSelectedFeatures()
+  {
+    List result = new ArrayList( 1 );
+    Feature feature = m_templateviewer.getFeature();
+    if( feature != null )
+      result.add( feature );
+    return result;
+  }
+
+  /**
+   * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#getFeatures()
+   */
+  protected FeatureList getFeatures()
+  {
+    FeatureList result = FeatureFactory.createFeatureList();
+    Feature feature = m_templateviewer.getFeature();
+    if( feature != null )
+      result.add( feature );
+    return result;
+  }
 
 }

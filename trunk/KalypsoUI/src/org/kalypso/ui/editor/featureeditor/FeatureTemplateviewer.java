@@ -36,14 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.featureeditor;
 
 import java.io.Reader;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -117,12 +118,12 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget )
   {
     m_commandtarget = commandtarget;
-    
+
     try
     {
       m_marshaller = m_templateFactory.createMarshaller();
       m_marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      
+
       m_unmarshaller = m_templateFactory.createUnmarshaller();
     }
     catch( final JAXBException e )
@@ -155,22 +156,21 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     catch( final Exception e )
     {
       e.printStackTrace();
-      
-      return KalypsoGisPlugin.createErrorStatus( "Fehler beim Speichern" , e );
+
+      return KalypsoGisPlugin.createErrorStatus( "Fehler beim Speichern", e );
     }
-    
+
     return Status.OK_STATUS;
   }
 
-  public final void loadInput( final Reader reader, final URL context, final IProgressMonitor monitor )
-      throws CoreException
+  public final void loadInput( final Reader reader, final URL context,
+      final IProgressMonitor monitor, Properties props ) throws CoreException
   {
     monitor.beginTask( "Ansicht laden", 1000 );
-
     try
     {
       final InputSource is = new InputSource( reader );
-      
+
       final Featuretemplate m_template = (Featuretemplate)m_unmarshaller.unmarshal( is );
 
       final List views = m_template.getView();
@@ -178,12 +178,20 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         m_featureComposite.addView( (FeatureviewType)iter.next() );
 
       final LayerType layer = m_template.getLayer();
-
-      m_featurePath = layer.getFeaturePath();
-
-      final String href = layer.getHref();
-      final String linktype = layer.getLinktype();
-      
+      final String href;
+      final String linktype;
+      if( layer != null )
+      {
+        m_featurePath = layer.getFeaturePath();
+        href = layer.getHref();
+        linktype = layer.getLinktype();
+      }
+      else
+      {
+        m_featurePath = props.getProperty( "featurepath", "/" );
+        href = props.getProperty( "href", "" );
+        linktype = props.getProperty( "linktype", "gml" );
+      }
       m_key = new PoolableObjectType( linktype, href, context );
       m_pool.addPoolListener( this, m_key );
     }
@@ -191,7 +199,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Lesen der Vorlage", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Lesen der Vorlage",
+          e ) );
     }
     finally
     {
@@ -218,7 +227,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       public void run()
       {
-        updateControls( );
+        updateControls();
       }
     } );
   }
@@ -244,22 +253,23 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     if( m_pool.equalsKeys( key, m_key ) )
       setWorkspace( null );
   }
-  
+
   public void createControls( final Composite parent, final int style )
   {
-    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL | style );
-//    scrolledComposite.setLayout( new GridLayout( ) );
-//    final Composite composite = m_templateviewer.createControls( scrolledComposite );
-//    composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    
+    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL
+        | SWT.V_SCROLL | style );
+    //    scrolledComposite.setLayout( new GridLayout( ) );
+    //    final Composite composite = m_templateviewer.createControls(
+    // scrolledComposite );
+    //    composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
     m_panel = new Composite( scrolledComposite, SWT.NONE );
     m_panel.setLayout( new GridLayout() );
-    
-    updateControls();
 
+    updateControls();
     scrolledComposite.setContent( m_panel );
   }
-  
+
   protected void updateControls()
   {
     try
@@ -308,7 +318,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     }
     finally
     {
-        m_panel.setSize( m_panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+      m_panel.setSize( m_panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
     }
   }
 
@@ -334,5 +344,10 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         }
       } );
     }
+  }
+  
+  public Feature getFeature()
+  {
+    return m_featureComposite.getFeature();
   }
 }

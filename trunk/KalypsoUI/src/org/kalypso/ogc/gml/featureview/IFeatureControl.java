@@ -54,9 +54,9 @@ public interface IFeatureControl
 {
   public Control createControl( final Composite parent, final int style );
 
-  public void dispose( );
+  public void dispose();
 
-  public Feature getFeature( );
+  public Feature getFeature();
 
   public void setFeature( final Feature feature );
 
@@ -65,10 +65,10 @@ public interface IFeatureControl
    * 
    * @return string
    */
-  public String toString( );
+  public String toString();
 
   /** Update Control from Feature */
-  public void updateControl( );
+  public void updateControl();
 
   /**
    * Adds {@link FeatureChange}objects to a collection, representing changes to
@@ -78,7 +78,7 @@ public interface IFeatureControl
    */
   public void collectChanges( final Collection c );
 
-  public boolean isValid( );
+  public boolean isValid();
 
   public void addModifyListener( final ModifyListener l );
 

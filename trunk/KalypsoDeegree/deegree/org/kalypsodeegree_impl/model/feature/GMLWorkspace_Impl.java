@@ -34,7 +34,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   private final String m_schemaNamespace;
 
   /** id -> feature */
-  private final Map m_indexMap = new HashMap();
+  final Map m_indexMap = new HashMap();
 
   private final FeatureType[] m_featureTypes;
 
@@ -43,8 +43,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   /**
    * 
-   * @see org.deegree.model.feature.GMLWorkspace#getFeature(org.deegree.model.feature.FeatureType,
-   *      java.lang.String)
+   * @see org.deegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
    */
   public Feature getFeature( final String id )
   {
@@ -241,7 +240,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#getModelUrl()
+   * 
+   * @see org.deegree.model.feature.GMLWorkspace#getContext()
    */
   public URL getContext()
   {
@@ -418,8 +418,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
           return newList;
         }
-        else
-          return null;
+        return null;
       }
     }
 
@@ -541,7 +540,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     Object prop = parent.getProperty( propName );
     if( prop instanceof List )
     {
-      ( (List)prop ).add( pos, newFeature.getId()) ;      
+      ( (List)prop ).add( pos, newFeature.getId() );
       return;
     }
     else if( prop == null ) // element not set
@@ -549,14 +548,14 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       int propPos = parent.getFeatureType().getPropertyPosition( propName );
       if( propPos != -1 )
       {
-        parent.getProperties()[propPos] = newFeature.getId();        
+        parent.getProperties()[propPos] = newFeature.getId();
       }
       return;
     }
     // TODO eigene exception entwerfen
     throw new Exception( "New Feature violates maxOccurs" );
   }
-  
+
   /**
    * @see org.deegree.model.feature.GMLWorkspace#getNamespaceMap()
    */

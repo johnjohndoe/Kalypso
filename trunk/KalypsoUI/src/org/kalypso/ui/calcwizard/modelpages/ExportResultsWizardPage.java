@@ -179,7 +179,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
   public ExportResultsWizardPage( )
   {
-    super( "<ViewResultsWizardPage>" );
+    super( "<ViewResultsWizardPage>",SELECT_FROM_MAPVIEW );
   }
 
   /**
@@ -354,9 +354,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       return;
     }
 
-    final FeatureList features = getFeatures( false );
+    final FeatureList features = getFeatures( );
     final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
-    final List selectedFeatures = getSelectedFeatures( false );
+    final List selectedFeatures = getSelectedFeatures( );
 
     MultiDocumentServiceWrapper metadocService = null;
 
@@ -465,8 +465,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
   private List chooseSelectedFeatures( final IFolder calcCase )
   {
     // Timeserie-Links holen
-    List features = getFeatures( false );
-    List selectedFeatures = getSelectedFeatures( false );
+    List features = getFeatures(  );
+    List selectedFeatures = getSelectedFeatures( );
 
     final String resultProperty = getArguments().getProperty(
         PROP_RESULT_TS_NAME );
@@ -819,7 +819,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
    */
   protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
   {
-    return getObservationsFromMap( false, onlySelected );
+    return getObservations(onlySelected);
   }
 
   public void setCalcCaseFolder( final Collection folders )

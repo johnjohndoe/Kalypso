@@ -48,8 +48,6 @@ import javax.xml.bind.Validator;
 
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.CheckboxType;
 import org.kalypso.template.featureview.ControlType;
@@ -96,11 +94,11 @@ public class FeatureviewHelper
         .indexOf( typename ) != -1 )
     {
       final TextType editor = FACTORY.createText();
-      editor.setStyle( SWT.BORDER );
+      editor.setStyle( "SWT.BORDER" );
       editor.setEditable( true );
       editor.setProperty( ftp.getName() );
 
-      griddata.setHorizontalAlignment( GridData.BEGINNING );
+      griddata.setHorizontalAlignment( "GridData.BEGINNING" );
       griddata.setWidthHint( 100 );
       editor.setLayoutData( griddata );
 
@@ -109,11 +107,11 @@ public class FeatureviewHelper
     else if( "java.lang.Boolean".equals( typename ) )
     {
       final CheckboxType checkbox = FACTORY.createCheckbox();
-      checkbox.setStyle( SWT.NONE );
+      checkbox.setStyle( "SWT.NONE" );
       checkbox.setEditable( true );
       checkbox.setProperty( ftp.getName() );
 
-      griddata.setHorizontalAlignment( GridData.BEGINNING );
+      griddata.setHorizontalAlignment( "GridData.BEGINNING");
       griddata.setWidthHint( 100 );
       checkbox.setLayoutData( griddata );
 
@@ -121,10 +119,10 @@ public class FeatureviewHelper
     }
 
     final ButtonType button = FACTORY.createButton();
-    button.setStyle( SWT.PUSH );
+    button.setStyle( "SWT.PUSH" );
     button.setProperty( ftp.getName() );
 
-    griddata.setHorizontalAlignment( GridData.CENTER );
+    griddata.setHorizontalAlignment( "GridData.CENTER" );
     griddata.setWidthHint( 100 );
     button.setLayoutData( griddata );
 
@@ -144,14 +142,14 @@ public class FeatureviewHelper
     {
       final Featureview featureview = FACTORY.createFeatureview();
       featureview.setTypename( type.getName() );
-      featureview.setStyle( SWT.NONE );
+      featureview.setStyle( "SWT.NONE" );
 
       final GridLayoutType gridLayout = FACTORY.createGridLayout();
       gridLayout.setNumColumns( 2 );
       featureview.setLayout( gridLayout );
       final GridDataType griddata = FACTORY.createGridData();
       griddata.setGrabExcessHorizontalSpace( true );
-      griddata.setHorizontalAlignment( GridData.FILL );
+      griddata.setHorizontalAlignment( "GridData.FILL" );
       featureview.setLayoutData( griddata );
 
       final List controlList = featureview.getControl();
@@ -162,13 +160,13 @@ public class FeatureviewHelper
         final FeatureTypeProperty ftp = properties[i];
 
         final LabelType label = FACTORY.createLabel();
-        label.setStyle( SWT.NONE );
+        label.setStyle( "SWT.NONE" );
         label.setText( ftp.getName() );
         label.setVisible( true );
 
         final GridDataType labelGridData = FACTORY.createGridData();
         labelGridData.setGrabExcessHorizontalSpace( false );
-        labelGridData.setHorizontalAlignment( GridData.BEGINNING );
+        labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
         label.setLayoutData( labelGridData );
 
         controlList.add( label );

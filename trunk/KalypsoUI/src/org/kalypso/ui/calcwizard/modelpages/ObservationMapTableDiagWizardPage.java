@@ -78,7 +78,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
 
   public ObservationMapTableDiagWizardPage( )
   {
-    super( "<ObservationMapTableDiagWizardPage>" );
+    super( "<ObservationMapTableDiagWizardPage>",SELECT_FROM_MAPVIEW );
   }
 
   /**
@@ -170,6 +170,6 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
    */
   protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
   {
-    return getObservationsFromMap( false, onlySelected );
+    return getObservations( onlySelected );
   }
 }

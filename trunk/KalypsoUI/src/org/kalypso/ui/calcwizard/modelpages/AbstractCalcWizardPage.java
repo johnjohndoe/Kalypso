@@ -60,6 +60,8 @@ import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree.model.geometry.GM_Envelope;
+import org.deegree.model.geometry.GM_Object;
+import org.deegree.model.geometry.GM_Point;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.visitors.GetSelectionVisitor;
 import org.deegree_impl.model.feature.visitors.UnselectFeatureVisitor;
@@ -129,11 +131,17 @@ import org.opengis.cs.CS_CoordinateSystem;
 public abstract class AbstractCalcWizardPage extends WizardPage implements IModelWizardPage,
     ICommandTarget, ModellEventListener
 {
+  public static final int SELECT_FROM_MAPVIEW = 0;
+
+  public static final int SELECT_FROM_TABLEVIEW = 1;
+
+  public static final int SELECT_FROM_FEATUREVIEW = 2;
+
   private int m_selectionID = 0x1;
 
   /** name der modelspec datei, die verwendet wird */
   public final static String PROP_MODELSPEC = "modelspec";
-  
+
   /** Ergebnisordner vor Berechnung loeschen ? ["true"|"false"] */
   public final static String PROP_CLEAR_RESULTS = "clearResultFolder";
 
@@ -166,10 +174,17 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * geladen wurde. Ansonsten das erste Feature
    */
   private static final String PROP_FEATURE_TO_SELECT_ID = "selectFeatureID";
-  
-  /** Falls true, wird die Karte auf den FullExtent maximiert, sonst wird
-   * {@link #m_wishBoundingBox} angesetzt */
+
+  /**
+   * Falls true, wird die Karte auf den FullExtent maximiert, sonst wird
+   * {@link #m_wishBoundingBox}angesetzt
+   */
   private static final String PROP_MAXIMIZEMAP = "maximizeMap";
+
+  /**
+   * feature with this id will be in the center of the map
+   */
+  private static final String PROP_PAN_TO_FEATURE_ID = "pantoFeatureId";
 
   private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget(
       new DefaultCommandManager(), null );
@@ -215,9 +230,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private boolean m_showZmlTableOnlySelected = true;
 
-  public AbstractCalcWizardPage( final String name )
+  private final int m_selectSource;
+
+  public AbstractCalcWizardPage( final String name, final int selectSource )
   {
     super( name );
+    m_selectSource = selectSource;
   }
 
   /**
@@ -358,12 +376,27 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     MapPanelHelper.createWidgetsForMapPanel( parent.getShell(), m_mapPanel );
 
     m_wishBoundingBox = GisTemplateHelper.getBoundingBox( gisview );
+    final String panToFid = getArguments().getProperty( PROP_PAN_TO_FEATURE_ID, null );
+    if( panToFid != null )
+    {
+      final IMapModell mapModell = getMapModell();
+      IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+      final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
+      final GMLWorkspace workspace = kft.getWorkspace();
+      final Feature feature = workspace.getFeature( panToFid );
+      if( feature != null )
+      {
+        GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
+        GM_Point centroid = defaultGeometryProperty.getCentroid();
+        m_wishBoundingBox = m_wishBoundingBox.getPaned( centroid );
+      }
+    }
     if( "true".equals( getArguments().getProperty( PROP_MAXIMIZEMAP, "false" ) ) )
-        m_wishBoundingBox = null;
+      m_wishBoundingBox = null;
 
     final Composite mapComposite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
-    
+
     virtualFrame.setVisible( true );
     m_mapPanel.setVisible( true );
     virtualFrame.add( m_mapPanel );
@@ -388,10 +421,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     if( m_wishBoundingBox == null )
     {
-      final GM_Envelope fullExtentBoundingBox = m_mapPanel.getMapModell().getFullExtentBoundingBox();
+      final GM_Envelope fullExtentBoundingBox = m_mapPanel.getMapModell()
+          .getFullExtentBoundingBox();
       if( fullExtentBoundingBox != null )
       {
-        final double buffer = Math.max( fullExtentBoundingBox.getWidth(), fullExtentBoundingBox.getHeight() ) * 0.025;
+        final double buffer = Math.max( fullExtentBoundingBox.getWidth(), fullExtentBoundingBox
+            .getHeight() ) * 0.025;
         m_mapPanel.setBoundingBox( fullExtentBoundingBox.getBuffer( buffer ) );
       }
     }
@@ -510,7 +545,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       text.setText( "Fehler beim Laden des TableTemplate" );
     }
   }
-  
+
   protected Control initZmlTable( final Composite parent )
   {
     try
@@ -546,34 +581,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     }
   }
 
-  protected List getSelectedFeatures( boolean useTable )
+  public TSLinkWithName[] getObservations( boolean onlySelected )
   {
-    final IMapModell mapModell = getMapModell();
-    if( mapModell == null )
-      return new ArrayList();
-
-    final IKalypsoTheme activeTheme;
-    if( useTable && m_gisTableViewer != null )
-      activeTheme = m_gisTableViewer.getTheme();
-    else
-      activeTheme = mapModell.getActiveTheme();
-
-    if( activeTheme == null )
-      return new ArrayList();
-
-    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
-    final FeatureList featureList = kft.getFeatureList();
-
-    if( featureList == null )
-      return new ArrayList();
-
-    return GetSelectionVisitor.getSelectedFeatures( featureList, m_selectionID );
-  }
-
-  public TSLinkWithName[] getObservationsFromMap( final boolean useTable, boolean onlySelected )
-  {
-    final List selectedFeatures = onlySelected ? getSelectedFeatures( useTable )
-        : getFeatures( useTable );
+    final List selectedFeatures = onlySelected ? getSelectedFeatures() : getFeatures();
 
     final Collection foundObservations = new ArrayList( selectedFeatures.size() );
 
@@ -584,19 +594,19 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       for( int i = 0; i < m_tsProps.length; i++ )
       {
         final TimeserieFeatureProps tsprop = m_tsProps[i];
-        
+
         final String nameColumn = tsprop.getNameColumn();
         String name = tsprop.getNameString();
         if( nameColumn != null )
         {
-          final String fname = (String)kf.getProperty( tsprop.getNameColumn() );
-          name = name.replaceAll( "%featureprop%", fname );
+          final Object fname = kf.getProperty( tsprop.getNameColumn() );
+          if( fname != null )
+            name = name.replaceAll( "%featureprop%", fname.toString() );
         }
         else
           name = tsprop.getNameString();
-        
-        final TimeseriesLink obsLink = (TimeseriesLink)kf
-            .getProperty( tsprop.getLinkColumn() );
+
+        final TimeseriesLink obsLink = (TimeseriesLink)kf.getProperty( tsprop.getLinkColumn() );
         if( obsLink != null )
         {
           final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink.getLinktype(),
@@ -667,26 +677,67 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return m_tsProps;
   }
 
-  protected FeatureList getFeatures( boolean useTable )
+  protected List getSelectedFeatures()
   {
-    final IMapModell mapModell = getMapModell();
-    if( mapModell == null )
-      return FeatureFactory.createFeatureList();
+    return getFeatures( true );
+    //    final IMapModell mapModell = getMapModell();
+    //    if( mapModell == null )
+    //      return new ArrayList();
+    //
+    //    final IKalypsoTheme activeTheme;
+    //    if( useTable && m_gisTableViewer != null )
+    //      activeTheme = m_gisTableViewer.getTheme();
+    //    else
+    //      activeTheme = mapModell.getActiveTheme();
+    //
+    //    if( activeTheme == null )
+    //      return new ArrayList();
+    //
+    //    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
+    //    final FeatureList featureList = kft.getFeatureList();
+    //
+    //    if( featureList == null )
+    //      return new ArrayList();
+    //
+    //    return GetSelectionVisitor.getSelectedFeatures( featureList,
+    // m_selectionID );
+  }
 
+  protected FeatureList getFeatures()
+  {
+    return getFeatures( false );
+  }
+
+  private FeatureList getFeatures( boolean selected )
+  {
     final IKalypsoTheme activeTheme;
-    if( useTable )
-      activeTheme = m_gisTableViewer.getTheme();
-    else
+    switch( m_selectSource )
+    {
+    case SELECT_FROM_MAPVIEW:
+      final IMapModell mapModell = getMapModell();
+      if( mapModell == null )
+        return FeatureFactory.createFeatureList();
       activeTheme = mapModell.getActiveTheme();
-
+      break;
+    case SELECT_FROM_TABLEVIEW:
+      activeTheme = m_gisTableViewer.getTheme();
+      break;
+    case SELECT_FROM_FEATUREVIEW:
+      // TODO
+      activeTheme = null;
+      break;
+    default:
+      activeTheme = null;
+    }
     if( activeTheme == null )
       return FeatureFactory.createFeatureList();
-
     final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
     final FeatureList featureList = kft.getFeatureList();
     if( featureList == null )
       return FeatureFactory.createFeatureList();
-
+    if( selected )
+      return FeatureFactory.createFeatureList( GetSelectionVisitor.getSelectedFeatures(
+          featureList, m_selectionID ) );
     return featureList;
   }
 
@@ -715,7 +766,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout( 3, false ) );
-    
+
     // properties lesen
     final String ignoreType1 = m_arguments.getProperty( PROP_IGNORETYPE1, null );
     final String ignoreType2 = m_arguments.getProperty( PROP_IGNORETYPE2, null );
@@ -764,7 +815,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     } );
 
     radioQ.setSelection( true );
-    
+
     return panel;
   }
 
