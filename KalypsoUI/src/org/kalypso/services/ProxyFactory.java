@@ -174,7 +174,6 @@ public class ProxyFactory
     
     final Calendar to = Calendar.getInstance();
     to.setTime( dra.getTo() );
-    
-    return new DateRangeBean( from , to );
+    return new DateRangeBean( from.getTimeInMillis() , to.getTimeInMillis() );
   }
 }
