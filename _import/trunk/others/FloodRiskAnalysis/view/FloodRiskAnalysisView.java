@@ -47,6 +47,8 @@ public class FloodRiskAnalysisView extends JFrame
   public JMenuItem menuItem_rasterView = null;
 
   public JMenuItem menuItem_statisticView = null;
+  
+  public JMenuItem menuItem_substractGrids = null;
 
   /**
    * constructs a FloodRiskAnalysisView
@@ -141,6 +143,14 @@ public class FloodRiskAnalysisView extends JFrame
     menuItem_statisticView.setActionCommand( "open statisticView" );
     menuItem_statisticView.setEnabled( false );
     menuBar.add( menu_open );
+    
+    //Tools
+    JMenu menu_tools = new JMenu("Tools");
+    menuItem_substractGrids = menu_tools.add("Substract Grids");
+    menuItem_substractGrids.addActionListener(menuHandler);
+    menuItem_substractGrids.setActionCommand("substractGrids");
+    menuItem_substractGrids.setEnabled(true);
+    menuBar.add(menu_tools);
 
     // add menu bar to the frame
     setJMenuBar( menuBar );

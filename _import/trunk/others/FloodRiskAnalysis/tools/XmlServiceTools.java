@@ -1,8 +1,6 @@
 package tools;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;

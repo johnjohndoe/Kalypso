@@ -77,6 +77,8 @@ public class MenuHandler implements ActionListener
   private GridRasterView rasterView = null;
 
   private StatisticView statisticView = null;
+  
+  private SubstractGridsView substractGridsView = null;
 
   //private ResultContext resultContext = null;
 
@@ -294,6 +296,12 @@ public class MenuHandler implements ActionListener
       statisticView = new StatisticView( this );
       floodRiskFrame.desktop.add( statisticView );
       statisticView.moveToFront();
+    }
+    
+    if(ac.equals("substractGrids")){
+      substractGridsView = new SubstractGridsView();
+      floodRiskFrame.desktop.add(substractGridsView);
+      substractGridsView.moveToFront();
     }
 
   }
