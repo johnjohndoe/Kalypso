@@ -18,12 +18,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.ogc.gml.GMLHelper;
 import org.kalypso.ogc.gml.JMSchema;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.loader.ILoader;
 import org.kalypso.util.loader.LoaderException;
 import org.kalypso.util.xml.XMLTools;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author schlienger
@@ -62,11 +64,13 @@ public class GMLArrayLoader implements ILoader
 
       final HashMap layerMap = new HashMap();
       final FeatureType[] types = schema.getFeatureTypes();
+      final CS_CoordinateSystem layerCrs = KalypsoGisPlugin
+      .getDefault().getCoordinatesSystem();
+      
       for( int i = 0; i < types.length; i++ )
       {
         FeatureType type = types[i];
-        layerMap.put( type, new KalypsoFeatureLayer( type.getName(), type, KalypsoGisPlugin
-            .getDefault().getCoordinatesSystem() ) );
+        layerMap.put( type, new KalypsoFeatureLayer( type.getName(), type, layerCrs) );
       }
 
       final InputStreamReader reader = new InputStreamReader( file.getContents(), file.getCharset() );
@@ -75,8 +79,10 @@ public class GMLArrayLoader implements ILoader
 
       GMLFeatureCollection gmlFC = gml.getRoot();
       GMLFeature[] gmlFeatures = gmlFC.getFeatures();
-
-      for( int i = 0; i < gmlFeatures.length; i++ )
+      final int max= gmlFeatures.length < 20 ?  gmlFeatures.length:20;
+      if(max<gmlFeatures.length) // TODO
+        System.out.println("WARNUNG es werden nur "+max+" von "+gmlFeatures.length+" Features geladen");
+      for( int i = 0; i < max;i++)
       {
         if( i % 10 == 0 )
         {
@@ -85,6 +91,8 @@ public class GMLArrayLoader implements ILoader
         }
 
         final Feature feature = FeatureFactory.createFeature( gmlFeatures[i], types );
+        GMLHelper.checkCrs(feature,layerCrs);
+        
         final FeatureLayer fl = (FeatureLayer)layerMap.get( feature.getFeatureType() );
         fl.addFeature( feature );
       }

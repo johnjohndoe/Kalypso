@@ -5,15 +5,13 @@ import java.util.Properties;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.geometry.GM_Object;
 import org.deegree_impl.io.shpapi.ShapeFile;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.deegree_impl.model.geometry.GM_Object_Impl;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.ogc.gml.GMLHelper;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.loader.ILoader;
@@ -74,11 +72,14 @@ public class ShapeLoader implements ILoader
 
       final CS_CoordinateSystem srcCS = org.deegree_impl.model.cs.Adapters.getDefault().export(
           csFac.getCSByName( sourceSrs ) );
-
-      for( int i = 0; i < count;i++)// TODO undo:count; i++ )
+      final int max=  count < 20 ?   count:20;
+      if(max< count) // TODO
+        System.out.println("WARNUNG es werden nur "+max+" von "+ count+" Features geladen");
+   
+      for( int i = 0; i < max;i++)
       {
           final Feature fe = sf.getFeatureByRecNo( i + 1 );       
-          setCrs( fe, srcCS);
+          GMLHelper.setCrs( fe, srcCS);
           layer.addFeature( fe );
       }
 
@@ -94,20 +95,20 @@ public class ShapeLoader implements ILoader
     }
   }
 
-  private void setCrs( Feature fe, CS_CoordinateSystem srcCS)
-  {
-    final FeatureTypeProperty ftp[] = fe.getFeatureType().getProperties();
-    for( int i = 0; i < ftp.length; i++ )
-    {
-      Object prop = fe.getProperty( ftp[i].getName() );
-      if( prop != null && prop instanceof Feature )
-        setCrs( (Feature)prop, srcCS);
-      else if( prop != null && prop instanceof GM_Object )
-      {
-        ( (GM_Object_Impl)prop ).setCoordinateSystem( srcCS );
-      }
-    }
-  }
+//  private void setCrs( Feature fe, CS_CoordinateSystem srcCS)
+//  {
+//    final FeatureTypeProperty ftp[] = fe.getFeatureType().getProperties();
+//    for( int i = 0; i < ftp.length; i++ )
+//    {
+//      Object prop = fe.getProperty( ftp[i].getName() );
+//      if( prop != null && prop instanceof Feature )
+//        setCrs( (Feature)prop, srcCS);
+//      else if( prop != null && prop instanceof GM_Object )
+//      {
+//        ( (GM_Object_Impl)prop ).setCoordinateSystem( srcCS );
+//      }
+//    }
+//  }
 
   /**
    * 
