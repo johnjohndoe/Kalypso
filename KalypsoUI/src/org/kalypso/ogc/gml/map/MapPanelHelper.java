@@ -5,6 +5,7 @@ import org.kalypso.ogc.gml.map.widgets.EditFeatureWidget;
 import org.kalypso.ogc.gml.widgets.CreateGeometryFeatureWidget;
 import org.kalypso.ogc.gml.widgets.PanToWidget;
 import org.kalypso.ogc.gml.widgets.SelectWidget;
+import org.kalypso.ogc.gml.widgets.SingleElementSelectWidget;
 import org.kalypso.ogc.gml.widgets.ToggleSelectWidget;
 import org.kalypso.ogc.gml.widgets.UnSelectWidget;
 import org.kalypso.ogc.gml.widgets.ZoomInByRectWidget;
@@ -30,6 +31,7 @@ public class MapPanelHelper
     panel.setWidget( MapPanel.WIDGET_SELECT, new SelectWidget() );
     panel.setWidget( MapPanel.WIDGET_UNSELECT, new UnSelectWidget() );
     panel.setWidget( MapPanel.WIDGET_TOGGLE_SELECT, new ToggleSelectWidget() );
+    panel.setWidget( MapPanel.WIDGET_SINGLE_SELECT, new SingleElementSelectWidget() );
   }
 
 }

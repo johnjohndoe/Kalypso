@@ -142,9 +142,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return m_featureTypes;
   }
 
+  /** Findet alle Features eines Typs. Der Typ muss genau stimmen, substitution gilt nicht */
   public Feature[] getFeatures( final FeatureType ft )
   {
-    final FeatureTypeVisitor visitor = new FeatureTypeVisitor( ft );
+    final FeatureTypeVisitor visitor = new FeatureTypeVisitor( ft, false );
     try
     {
       accept( visitor, getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
@@ -387,7 +388,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
           // falls ein typ angegeben wurde, nur die Elemente
           // dieses Typs raussuchen
-          final FeatureTypeVisitor visitor = new FeatureTypeVisitor( typename );
+          // auch, wenn es sich um substituierende handelt!
+          final FeatureTypeVisitor visitor = new FeatureTypeVisitor( typename, true );
 
           final FeatureList fl = (FeatureList)value;
           fl.accept( visitor );
