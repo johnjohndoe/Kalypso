@@ -202,7 +202,7 @@ public class UpdateModell
           "Zeitz",
           "Node1110",
           "q_zeitz.zml",
-          null, // TODO keine PSI-ID
+          "576610", // TODO evt nicht in PSI-fake vorhanden
           "-P" },
       //12
       new String[]
@@ -234,7 +234,7 @@ public class UpdateModell
           "Oberthau",
           "Node1001",
           "q_oberthau.zml",
-          null, // keine PSI-ID
+          "576900", // evt nicht in PSI-fake enthalten
           "-P" },
       //16
       new String[]
