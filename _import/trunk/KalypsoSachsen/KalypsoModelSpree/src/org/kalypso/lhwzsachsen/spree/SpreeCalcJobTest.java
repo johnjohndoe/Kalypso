@@ -40,7 +40,7 @@ public class SpreeCalcJobTest extends TestCase
 
     cj.run( basedir, input );
 
-    // TODO: check output
+    // todo: check output
     final CalcJobDataBean[] output = cj.getResults();
     for( int i = 0; i < output.length; i++ )
     {

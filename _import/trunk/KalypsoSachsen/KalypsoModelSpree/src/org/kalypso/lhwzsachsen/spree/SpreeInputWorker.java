@@ -103,7 +103,7 @@ public class SpreeInputWorker
 
       logwriter.println( "Erzeuge Zeitreihen-Datei: " + tsFilename );
       readZML( tmpdir, inputMap, tsmap );
-      createTimeseriesFile( tsFilename, tsmap, logwriter );
+      createTimeseriesFile( tsFilename, tsmap );
 
       return nativedir;
     }
@@ -269,8 +269,7 @@ public class SpreeInputWorker
   //      }
   //    }
 
-  public static void createTimeseriesFile( final String tsFilename, final TSMap valuesMap,
-      final PrintWriter logwriter ) throws CalcJobServiceException
+  public static void createTimeseriesFile( final String tsFilename, final TSMap valuesMap ) throws CalcJobServiceException
   {
     try
     {
@@ -362,10 +361,6 @@ public class SpreeInputWorker
 
           record.add( outVal );
         }
-
-        for( int j = 0; j < record.size(); j++ )
-          logwriter.print( record.get( j ) + "\t" );
-        logwriter.println();
 
         dbf.setRecord( record );
       }
