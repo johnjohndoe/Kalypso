@@ -359,6 +359,12 @@ public class SpreeInputWorker
               outVal = value;
           }
 
+          // Besonderheit des Modells, der Niederschlag darf im ersten Zeitschritt
+          // keinen Wert besitzen sonst gibts Schrott
+          // TODO test it!
+          if( id.startsWith( "PA_" ) && ( i == 0 || i == 1 ) )
+            outVal = new Double( -99.9 );
+          
           record.add( outVal );
         }
 
