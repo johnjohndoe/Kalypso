@@ -64,6 +64,15 @@
 					<element name="Ganglinie_gerechnet" type="bodecommon:TimeseriesLinkType"/>
 					<!-- Server-Daten-->
 					<element name="Ganglinie_prognoseAblage" type="bodecommon:TimeseriesLinkType"/>
+					<!-- Stauraum-Parameter, *.sra -->
+					<element name="StauraumParameter" type="bodespeicher:StauraumAssociationType"/>
+					<!-- Mindestabgabe-Parameter, *.qmi -->
+					<element name="MindestabgabeParameter" type="bodespeicher:MindestabgabeAssociationType"/>
+					<!-- Maximalabgabe-Parameter, *.qma-->
+					<element name="MaximalabgabeParameter" type="bodespeicher:MaximalabgabeAssociationType"/>
+					<!-- Trinkwasser-Parameter, *.twa -->
+					<element name="TrinkwasserParameter" type="bodespeicher:TrinkwasserAssociationType"/>
+					<!-- Entlastungsanlagen-Parameter, *.lea -->
 					<element name="EACollectionAssociation" type="bodespeicher:EACollectionAssociationType"/>
 				</sequence>
 			</extension>
@@ -74,13 +83,55 @@
 		<complexContent>
 			<extension base="bodespeicher:AbstractSpeicherType">
 				<sequence>
-				<!-- das wüsste ich auch gerne... -->
+					<!-- das wüsste ich auch gerne... -->
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-
-	<!-- EA = Entlastungsanlagen -->
+	<!-- Stauraum-Parameter, *.sra -->
+	<complexType name="StauraumAssociationType">
+		<complexContent>
+			<extension base="gml:FeatureAssociationType">
+				<sequence>
+					<element name="Totraum" type="double"/>
+					<element name="Reserveraum" type="double"/>
+					<element name="Betriebsraum" type="bodecommon:MonatCollectionAssociationType"/>
+					<element name="Stauraum" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- Mindestabgabe-Parameter, *.qmi -->
+	<complexType name="MindestabgabeAssociationType">
+		<complexContent>
+			<extension base="gml:FeatureAssociationType">
+				<sequence>
+					<element name="Mindestabgabe" type="bodecommon:MonatCollectionAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- Maximalabgabe-Parameter, *.qma -->
+	<complexType name="MaximalabgabeAssociationType">
+		<complexContent>
+			<extension base="gml:FeatureAssociationType">
+				<sequence>
+					<element name="Maximalabgabe" type="bodecommon:MonatCollectionAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- Trinkwasser-Parameter, *.twa -->
+	<complexType name="TrinkwasserAssociationType">
+		<complexContent>
+			<extension base="gml:FeatureAssociationType">
+				<sequence>
+					<element name="Trinkwasser" type="bodecommon:MonatCollectionAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- EA = Entlastungsanlagen, *.lea -->
 	<complexType name="EACollectionAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
@@ -155,5 +206,4 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
 </schema>

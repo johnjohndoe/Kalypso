@@ -1,18 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.bode.common" version="0.1"  xmlns:bodecommon="org.kalypso.bode.common" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+<schema targetNamespace="org.kalypso.bode.common" version="0.1" xmlns:bodecommon="org.kalypso.bode.common" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="gml/bce/obslink.xsd"/>
-	
 	<complexType name="TimeseriesLinkType">
 		<sequence>
 			<element name="TimeseriesLink" type="obslink:TimeseriesLinkType" minOccurs="0"/>
 		</sequence>
 	</complexType>
-
 	<complexType name="EmptyFeatureBaseType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureType"/>
 		</complexContent>
 	</complexType>
-
+	<element name="MonatCollectionAssociation" type="bodecommon:MonatCollectionAssociationType"/>
+	<complexType name="MonatCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="bodecommon:MonatCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="MonatCollection" type="bodecommon:MonatCollectionType" substitutionGroup="gml:_FeatureCollection"/>
+	<complexType name="MonatCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element ref="gml:boundedBy"/>
+					<element ref="bodecommon:MonatMember" minOccurs="12" maxOccurs="12"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="MonatMember" type="bodecommon:MonatAssociationType" substitutionGroup="gml:featureMember"/>
+	<complexType name="MonatAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="bodecommon:Monat"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Monat" abstract="false" type="bodecommon:MonatType" substitutionGroup="gml:_Feature"/>
+	<complexType name="MonatType">
+		<complexContent>
+			<extension base="bodecommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="Name" type="string"/>
+					<element name="Nummer" type="bodecommon:monatnummer"/>
+					<element name="Wert" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="monatnummer">
+		<restriction base="integer">
+			<minInclusive value="1"/>
+			<maxInclusive value="12"/>
+		</restriction>
+	</simpleType>
 </schema>
