@@ -34,4 +34,20 @@ Version ...
 	
 - GIS Darstellung:
 	Koordinatensystem aller Karten ist jetzt Gauss-Krüger 5
-	Die fehlenden Gewässer der Spree wurden in der Überishctskarte ergänzt
+	Die fehlenden Gewässer der Spree wurden in der Überischtskarte ergänzt
+	
+- DWD Niederschlag-Vorhersage:
+    automatisches Uebernehmen der DWD-Rasterdatei (Vorhersage)
+    in das Observationrepository
+
+- Weisse Elster Ombrometer:
+  ombrometer.gml und ombrometer-Kartenvorlage 
+  sind jetzt im WeisseElster-Datenprojekt.
+  zusätzlich eine Wizzard-Page zur Kontrolle der Ombrometerdaten
+
+- Weisse Elster Expertenmodus:
+  Es wird nun kein Rootnode zur Berechnung mehr angegeben.
+  Zur Berechnung wird die "generateResult"-Spalte der Knotentabelle 
+  ausgewertet.
+  (Im Vorhersagemodus ist weiterhin der RootNode fuer jede WizzardPage
+   im .naControl.gml festgelegt)
