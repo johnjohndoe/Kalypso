@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<repconf xmlns="conf.repository.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="conf.repository.kalypso.org
-.\repconf.xsd">
+<repconf xmlns="conf.repository.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-	<rep className="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory" confString="//Pc242/KalypsoServer/data/mirrored/SomeObservations#*.zml" readOnly="false" />
-	<rep className="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory" confString="" />
+	<rep className="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory" confString="F:/kalypso/data/mirrored/Spree#Spree#*.zml" readOnly="false" />
+	<rep className="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory" confString="F:/kalypso/data/mirrored/Weiße Elster#WeißeElster#*.zml" readOnly="false" />
+	<rep className="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory" confString="F:/kalypso/data/mirrored/KalypsoNA#WeisseElster#*.zml" readOnly="false" />
+
+	<rep className="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory" confString="F:/kalypso/data/mirrored/Test-Nicht-Dargestellt#Test#*.zml" readOnly="false" />
+
+	<rep className="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory" confString="" readOnly="false" />
+
+	<rep className="org.kalypso.repository.virtual.HeadlessVirtualRepositoryFactory" confString="F:/kalypso/data/mirrored/VirtualRepository/virtual-zml-repository.xml#VirtualRepository" readOnly="true" />
 
 </repconf>

@@ -88,10 +88,9 @@ public class KalypsoObservationServiceTest extends TestCase
   
   private void readData( final ItemBean bean, final String space ) throws RemoteException, MalformedURLException
   {
-    if( bean instanceof ObservationBean )
+    final ObservationBean ob = m_srv.adaptItem( bean );
+    if( ob != null )
     {
-      final ObservationBean ob = (ObservationBean)bean;
-      
       final Map map = ob.getMetadataList();
      
       System.out.println( space + "Bean is observation: " + ob.getId() );
@@ -114,7 +113,7 @@ public class KalypsoObservationServiceTest extends TestCase
     }
     else
     {
-      System.out.println( space + "Bean not an observation: " + bean.getName() + " ID=" + bean.getId() );
+      System.out.println( space + "Bean not adaptable: " + bean.getName() + " ID=" + bean.getId() );
     }
     
     if( m_srv.hasChildren( bean ) )
@@ -128,73 +127,35 @@ public class KalypsoObservationServiceTest extends TestCase
   
   public void testFindItem() throws RemoteException, MalformedURLException
   {
-    final ItemBean b1 = m_srv.findItem( new File( KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations\\NEU\\PA_GROEDI.zml" ).toURL().toExternalForm() );
-    
+    final ItemBean b1 = m_srv.findItem( "Spree://2004/PA_GROEDI.zml" );
     assertNotNull( b1 );
-    
     assertFalse( m_srv.hasChildren( b1 ) );
+
+    final ItemBean b2 = m_srv.findItem( "psicompact://PSI-ROOT.LEVEL_1.SUBLEVEL_1.PEGEL_111.m" );
+    assertNotNull( b2 );
+    assertFalse( m_srv.hasChildren( b2 ) );
     
-    assertTrue( b1 instanceof ObservationBean );
-    
-    
-    final ItemBean b3 = m_srv.findItem( new File( KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations").toURL().toExternalForm() );
-    
+    final ItemBean b3 = m_srv.findItem( "Spree://2004" );
     assertNotNull( b3 );
-    
     assertTrue( m_srv.hasChildren( b3 ) );
     
-    assertFalse( b3 instanceof ObservationBean );
-    
-    try
-    {
-      m_srv.findItem( "inexistent-id" );
+    final ItemBean b4 = m_srv.findItem( "inexistent-id" );
+    assertNull( b4 );
       
-      throw new IllegalStateException("Precedent call should throw exception");
-    }
-    catch( RemoteException e )
-    {
-      // ok if exception is thrown
-    }
-
-    try
-    {
-      m_srv.findItem( KALYPSO_SERVER_BASE + "\\XYZ" );
-      
-      throw new IllegalStateException("Precedent call should throw exception");
-    }
-    catch( RemoteException e )
-    {
-      // ok if exception is thrown
-    }
+    final ItemBean b5 = m_srv.findItem( "foo://XYZ" );
+    assertNull( b5 );
   }
 
   public void testWriteData() throws RemoteException, MalformedURLException
   {
     // real
-    final String strFile = new File( KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations\\test\\test.zml").toURL().toExternalForm();
-    final String strRep = new File( KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations").toURL().toExternalForm();
-    final ObservationBean ob1 = new ObservationBean( strFile, "test", strRep, null );
+    final String id = "Test://test.zml";
+    final String rep = "Test";
+    final ObservationBean ob1 = new ObservationBean( id, "test", rep, null );
     
-    final String wFile = new File( KALYPSO_SERVER_BASE + "\\data\\tmp\\test\\example.zml").toURL().toExternalForm();
+    final String wFile = new File( KALYPSO_SERVER_BASE + "\\data\\tmp\\_test\\W_BAUTZWB.zml").toURL().toExternalForm();
     final OCSDataBean db1 = new OCSDataBean( 0, ob1.getId(), wFile );
     
     m_srv.writeData( ob1, db1 );
-
-    // fake
-    final String fakeFile = new File( KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations\\fake-fake-fake").toURL().toExternalForm();
-    final ObservationBean ob2 = new ObservationBean( fakeFile, "test", strRep, null );
-    final String fFile = new File( KALYPSO_SERVER_BASE + "\\data\\tmp\\test\\example.zml" ).toURL().toExternalForm();
-    final OCSDataBean db2 = new OCSDataBean( 1, ob2.getId(), fFile );
-    
-    try
-    {
-      m_srv.writeData( ob2, db2 );
-      
-      throw new IllegalStateException( "Precedent call should throw exception" );
-    }
-    catch( RemoteException e )
-    {
-      // ok, should throw exception
-    }
   }
 }

@@ -47,6 +47,10 @@ public class ObservationCache
       {
         obs = (IObservation)adapt.getAdapter( IObservation.class );
 
+        // still null, then this item is not adaptable
+        if( obs == null )
+          return null;
+        
         getCache().addObject( adapt, obs );
       }
 
