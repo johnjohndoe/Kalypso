@@ -104,12 +104,12 @@ public class PSICompactObservationItem implements IObservation
 
     // Wert (Einheit abfragen)
     final int psiUnit = psiMD.getUnit();
-    final String unit = PSICompactRepositoryFactory.toKalypsoUnit( psiUnit );
+    final String type = measureTypeToString();
+    final String unit = TimeserieUtils.getUnit( type );
     
-    final String type = TimeserieUtils.getTypeForUnit( unit );
-    final String label = TimeserieUtils.getName( type );
+    final String label = TimeserieUtils.getName( type ) + " " + getName();
     
-    axes[1] = new DefaultAxis( label, measureTypeToString(), unit,
+    axes[1] = new DefaultAxis( label, type, unit,
         Double.class, 1, false );
     
     m_vc = PSICompactRepositoryFactory.getConverter( psiUnit, unit );

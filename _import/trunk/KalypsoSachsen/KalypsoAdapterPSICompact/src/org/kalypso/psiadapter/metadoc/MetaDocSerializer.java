@@ -47,10 +47,10 @@ public class MetaDocSerializer
 
   /** date format for the date elements of the xml file */
   private final static DateFormat DFDATE = new SimpleDateFormat(
-      "yyyy-MM-dd'T'HH:mm:ss" );
+      "yyyy-MM-dd" );
 
   private final static DateFormat DFDATETIME = new SimpleDateFormat(
-      "yyyy-MM-dd" );
+  "yyyy-MM-dd'T'HH:mm:ss" );
 
   /**
    * Prepares the properties with some default value
@@ -128,6 +128,8 @@ public class MetaDocSerializer
           + valueOfProperty( serviceProps.getProperty( TAG_VERSENDEN, "0" ) )
           + "</" + TAG_VERSENDEN + ">" );
 
+      writer.write( "<LHWZ-intern>1</LHWZ-intern>" );
+      
       writer.write( "<" + TAG_APPFILES + ">" + fileName + "</" + TAG_APPFILES
           + ">" );
 

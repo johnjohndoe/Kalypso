@@ -111,7 +111,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
    * @param mask
    * @return PSICompact-Status
    */
-  public final static int maskToPsiStatus( int mask )
+  public final static int maskToPsiStatus( final int mask )
   {
 //    if( KalypsoStatusUtils.checkMask( mask,
 //        KalypsoStati.BIT_USER_MODIFIED ) )
@@ -146,7 +146,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
         return props.getProperty( "UNKNOWN" );
     }
   }
-
+  
   /**
    * Helper that returns the appropriate archive type depending on the 
    * measure type.
@@ -216,20 +216,6 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
       default:
         return props.getProperty( "UNKNOWN" );
     }
-  }
-  
-  /**
-   * Converts the psi unit to the kalypso one
-   * 
-   * @param psiUnit
-   * @return kalypso unit string
-   */
-  public final static String toKalypsoUnit( final int psiUnit )
-  {
-    final String strPsiUnit = unitToString( psiUnit );
-    
-    // the properties contain the unit string preceded by 'UNIT_'
-    return PSICompactFactory.getProperties().getProperty( "UNIT_" + strPsiUnit );
   }
   
   /**

@@ -14,7 +14,6 @@ import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.java.io.filter.PrefixSuffixFilter;
-import org.kalypso.java.util.StringUtilities;
 
 /**
  * Utility class for io and files
