@@ -75,12 +75,10 @@ public class ServiceRepositoryObservation implements IObservation
   private IObservation loadFromServer( final IVariableArguments args )
       throws SensorException
   {
-    final DateRangeBean drb;
+    DateRangeBean drb = null;
 
     if( args instanceof DateRangeArgument )
       drb = ProxyFactory.createDateRangeBean( (DateRangeArgument) args );
-    else
-      drb = new DateRangeBean();
 
     try
     {
