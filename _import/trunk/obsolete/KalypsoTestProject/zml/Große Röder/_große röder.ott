@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obstableview xmlns="obstableview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="obstableview.template.kalypso.org
+.\obstableview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<columnpair id="c1" sharedAxis="Datum" valueAxis="Pegel-Nauwalde" linktype="zml" editable="true" width="50" xlink:type="simple" xlink:href="TYPE=relative#LOCATION=zml/Große Röder/nauwalde.zml" xlink:actuate="onRequest"/>
+	<columnpair id="c2" sharedAxis="Datum" valueAxis="Pegel-Grossenhain" linktype="zml" editable="true" width="50" xlink:type="simple" xlink:href="TYPE=relative#LOCATION=zml/Große Röder/grossenhain.zml" xlink:actuate="onRequest"/>
+
+	<!-- wie die Darstellung erfolgt -->
+	<rules>
+		<renderingrule mask="01">
+			<foregroundcolor>0;0;0</foregroundcolor>
+			<backgroundcolor>0;153;0</backgroundcolor>
+			<tooltip>ok</tooltip>
+		</renderingrule>
+
+		<renderingrule mask="02">
+			<foregroundcolor>0;0;0</foregroundcolor>
+			<backgroundcolor>255;128;0</backgroundcolor>
+			<tooltip>eventuell nicht geeignet</tooltip>
+		</renderingrule>
+
+		<renderingrule mask="04">
+			<foregroundcolor>0;0;0</foregroundcolor>
+			<backgroundcolor>255;0;0</backgroundcolor>
+			<tooltip>nicht geeignet</tooltip>
+		</renderingrule>
+
+	</rules>
+</obstableview>

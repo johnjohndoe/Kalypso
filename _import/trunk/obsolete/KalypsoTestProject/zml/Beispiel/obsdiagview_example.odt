@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="xsl/grafik-vorlage.xsl"?>
+<obsdiagview xmlns="obsdiagview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="obsdiagview.template.kalypso.org
+.\obsdiagview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<title>Mein Diagramm</title>
+	<legend title="Legend" visible="true"/>
+
+	<axis id="d" label="Datum" unit="" direction="horizontal" position="bottom" />
+	<axis id="w" label="Wert" unit="m" direction="vertical" position="left" />
+
+   	<curve id="C1" name="Pegel1" linktype="zml" xlink:type="simple" xlink:href="TYPE=absolute#LOCATION=c:/programme/eclipse-3.0/runtime-workspace/KalypsoTestProject/zml/Beispiel/beispiel.zml" xlink:actuate="onRequest">
+	   	<mapping observation-axis="Datum" diagram-axis="d" />
+	   	<mapping observation-axis="Pegel1" diagram-axis="w" />
+   	</curve>
+	   	
+	<curve id="C2" name="Pegel2" linktype="zml" xlink:type="simple" xlink:href="TYPE=relative#LOCATION=zml/Beispiel/beispiel.zml" xlink:actuate="onRequest">
+		<mapping observation-axis="Datum" diagram-axis="d" />
+		<mapping observation-axis="Pegel2" diagram-axis="w" />
+   	</curve>
+   	
+</obsdiagview>
