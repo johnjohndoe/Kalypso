@@ -66,9 +66,6 @@ import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.Mapper;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -108,6 +105,11 @@ import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.transformation.TransformationHelper;
 import org.kalypso.util.url.UrlResolver;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.schema.Mapper;
+import org.kalypsodeegree_impl.model.feature.visitors.FindPropertyByNameVisitor;
 import org.xml.sax.InputSource;
 
 /**
@@ -468,35 +470,46 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     if( workspace != null )
     {
       final Feature rootFeature = workspace.getRootFeature();
-      final Date startSim = (Date) rootFeature.getProperty( "startsimulation" );
-      final String startSimString = Mapper.mapJavaValueToXml( startSim,
-          "dateTime" );
-      final Token startSimToken = new ReplaceTokens.Token();
-      startSimToken.setKey( "startsim" );
-      startSimToken.setValue( startSimString );
-      replaceTokens.addConfiguredToken( startSimToken );
 
-      final Date startForecast = (Date) rootFeature
-          .getProperty( "startforecast" );
-      final String startForecastString = Mapper.mapJavaValueToXml(
-          startForecast, "dateTime" );
-      final Token startForecastToken = new ReplaceTokens.Token();
-      startForecastToken.setKey( "startforecast" );
-      startForecastToken.setValue( startForecastString );
-      replaceTokens.addConfiguredToken( startForecastToken );
+      final FindPropertyByNameVisitor startsimFinder = new FindPropertyByNameVisitor( "startsimulation" );
+      workspace.accept( startsimFinder, rootFeature, FeatureVisitor.DEPTH_INFINITE );
+      
+      final Object startSim = startsimFinder.getResult();
+      if( startSim instanceof Date )
+      {
+        final String startSimString = Mapper.mapJavaValueToXml( startSim,
+        "dateTime" );
+        final Token startSimToken = new ReplaceTokens.Token();
+        startSimToken.setKey( "startsim" );
+        startSimToken.setValue( startSimString );
+        replaceTokens.addConfiguredToken( startSimToken );
+      }
+      
+      final FindPropertyByNameVisitor startforecastFinder = new FindPropertyByNameVisitor( "startforecast" );
+      workspace.accept( startforecastFinder, rootFeature, FeatureVisitor.DEPTH_INFINITE );
+      final Object startForecast = startforecastFinder.getResult();
+      if( startForecast instanceof Date )
+      {
+        final String startForecastString = Mapper.mapJavaValueToXml(
+            startForecast, "dateTime" );
+        final Token startForecastToken = new ReplaceTokens.Token();
+        startForecastToken.setKey( "startforecast" );
+        startForecastToken.setValue( startForecastString );
+        replaceTokens.addConfiguredToken( startForecastToken );
 
-      // TODO: ziemlicher hack für den Endzeitpunkt: er ist immer fix
-      // 48 Stunden nach dem startzeitpunkt
-      final Calendar cal = Calendar.getInstance();
-      cal.setTime( startForecast );
-      cal.add( Calendar.HOUR_OF_DAY, 48 );
+        // TODO: ziemlicher hack für den Endzeitpunkt: er ist immer fix
+        // 48 Stunden nach dem startzeitpunkt
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime( (Date)startForecast );
+        cal.add( Calendar.HOUR_OF_DAY, 48 );
 
-      final Date endSim = cal.getTime();
-      final String endSimString = Mapper.mapJavaValueToXml( endSim, "dateTime" );
-      final Token endSimToken = new ReplaceTokens.Token();
-      endSimToken.setKey( "endsim" );
-      endSimToken.setValue( endSimString );
-      replaceTokens.addConfiguredToken( endSimToken );
+        final Date endSim = cal.getTime();
+        final String endSimString = Mapper.mapJavaValueToXml( endSim, "dateTime" );
+        final Token endSimToken = new ReplaceTokens.Token();
+        endSimToken.setKey( "endsim" );
+        endSimToken.setValue( endSimString );
+        replaceTokens.addConfiguredToken( endSimToken );
+      }
     }
   }
 

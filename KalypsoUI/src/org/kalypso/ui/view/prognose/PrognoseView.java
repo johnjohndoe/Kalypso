@@ -141,7 +141,7 @@ public class PrognoseView extends ViewPart
       panelControl.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
       panelControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-      m_button = toolkit.createButton( form.getBody(), "Hochwasser Vorhersage starten", SWT.PUSH );
+      m_button = toolkit.createButton( form.getBody(), "Hochwasser-Vorhersage starten", SWT.PUSH );
 
       final PrognosePanel panel = m_panel;
       m_button.addSelectionListener( new SelectionAdapter()
