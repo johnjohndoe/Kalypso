@@ -96,12 +96,30 @@ public class ObservationUtilities
   }
 
   /**
+   * Returns the axes that are compatible with the desired Dataclass, including the status axis.
+   * 
    * @param axes
    * @param desired
-   * @return an axis which is compatible with specified Class of data
-   * @throws NoSuchElementException
+   * @return all axes which are compatible with desired Classtype (including status axes)
    */
   public static IAxis[] findAxisByClass( final IAxis[] axes, final Class desired )
+  {
+    return findAxisByClass( axes, desired, false );
+  }
+  
+  /**
+   * Returns the axes that are compatible with the desired Dataclass. You can specify
+   * if you want to exclude the status axes from the result list or not.
+   * <p>
+   * Please note that currently the status axis is of a Number type.
+   * 
+   * @param axes
+   * @param desired
+   * @param excludeStatusAxes if true, status axes will not be included in the returned array
+   * @return axes which are compatible with specified Class of data
+   * @throws NoSuchElementException
+   */
+  public static IAxis[] findAxisByClass( final IAxis[] axes, final Class desired, final boolean excludeStatusAxes )
       throws NoSuchElementException
   {
     final ArrayList list = new ArrayList( axes.length );
@@ -109,7 +127,10 @@ public class ObservationUtilities
     for( int i = 0; i < axes.length; i++ )
     {
       if( desired.isAssignableFrom( axes[i].getDataClass() ) )
-        list.add( axes[i] );
+      {
+        if( !excludeStatusAxes || excludeStatusAxes && !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
+	        list.add( axes[i] );
+      }
     }
 
     if( list.size() == 0 )

@@ -16,7 +16,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -24,7 +23,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.eclipse.util.SetContentThread;
+import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -186,7 +185,6 @@ public class ObservationResolver extends AbstractTransformation
    * 
    * @throws TransformationException
    * @throws SensorException
-   * @throws SensorException
    * @throws MalformedURLException
    */
   private void resolveTimeseries( final URL baseURL, final Feature[] features,
@@ -235,11 +233,11 @@ public class ObservationResolver extends AbstractTransformation
       try
       {
         final IObservation obs;
-        
+
         if( obs2 == null )
         {
           // No need for a ForecastFilter since obs2 is null
-          
+
           obs = obs1;
         }
         else
@@ -252,19 +250,18 @@ public class ObservationResolver extends AbstractTransformation
           fc.initFilter( new IObservation[] { obs1, obs2 }, obs1 );
           obs = fc;
         }
-        
+
         // set forecast metadata, might be used in diagram for instance
         // to mark the forecast range
         TimeserieUtils.setForecast( obs, from2, to2 );
 
         // remove query part if present, href is also used as file name here!
         final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
-        
+
         final IFile targetfile = targetFolder.getFile( new Path( href ) );
         FolderUtilities.mkdirs( targetfile.getParent() );
 
-        final SetContentThread thread = new SetContentThread( targetfile,
-            !targetfile.exists(), false, true, new NullProgressMonitor() )
+        final SetContentHelper thread = new SetContentHelper()
         {
           protected void write( final Writer w ) throws Throwable
           {
@@ -272,24 +269,15 @@ public class ObservationResolver extends AbstractTransformation
             ZmlFactory.getMarshaller().marshal( type, w );
           }
         };
-        thread.start();
-        thread.join();
-
-        final Throwable thrown = thread.getThrown();
-        if( thrown != null )
-          thrown.printStackTrace();
-
-        final CoreException fileException = thread.getFileException();
-        if( fileException != null )
-          fileException.printStackTrace();
-        // todo: handle errors?
+        thread.setFileContents( targetfile, false, true,
+            new NullProgressMonitor() );
 
         monitor.worked( 1 );
       }
       catch( final Exception e )
       {
         e.printStackTrace();
-        // todo: report to user!
+        // TODO report to user!
       }
     }
   }
@@ -332,7 +320,7 @@ public class ObservationResolver extends AbstractTransformation
     final TimeseriesLink sourcelink = (TimeseriesLink) feature
         .getProperty( sourceProperty );
     if( sourcelink == null ) // keine Zeitreihe verlink, z.B. kein Pegel am
-                             // Knoten in KalypsoNA
+      // Knoten in KalypsoNA
       return null;
     final String sourceref = ZmlURL.insertDateRange( sourcelink.getHref(),
         new DateRangeArgument( from, to ) );

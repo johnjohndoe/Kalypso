@@ -26,10 +26,19 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
+ * A JTable that can display observations.
+ * 
  * @author schlienger
  */
 public class ObservationTable extends JTable implements ITemplateEventListener
 {
+  private final static NumberFormat NF = NumberFormat.getInstance();
+  static
+  {
+    //NF.setMaximumFractionDigits( 3 );
+    NF.setMinimumFractionDigits( 3 );
+  }
+  
   protected final ObservationTableModel m_model;
   protected final DateTableCellRenderer m_dateRenderer;
   private MaskedNumberTableCellRenderer m_nbRenderer;
@@ -42,9 +51,10 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     m_model = model;
 
     m_dateRenderer = new DateTableCellRenderer();
-    setDefaultRenderer( Date.class, m_dateRenderer );
     
-    m_nbRenderer = new MaskedNumberTableCellRenderer();
+    m_nbRenderer = new MaskedNumberTableCellRenderer( NF );
+    
+    setDefaultRenderer( Date.class, m_dateRenderer );
     setDefaultRenderer( Number.class, m_nbRenderer );
     setDefaultRenderer( Double.class, m_nbRenderer );
     setDefaultRenderer( Float.class, m_nbRenderer );

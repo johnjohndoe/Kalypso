@@ -41,23 +41,26 @@ public class SimpleObservation implements IObservation
 
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
 
+  private String m_href;
+
   /**
    * Default constructor
    */
   public SimpleObservation()
   {
-    this( "", "", false, null, new MetadataList(), new IAxis[0] );
+    this( "", "", "", false, null, new MetadataList(), new IAxis[0] );
   }
 
-  public SimpleObservation( final String identifier, final String name, final boolean editable,
+  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable,
       final IXlink target, final MetadataList metadata, final IAxis[] axes )
   {
-    this( identifier, name, editable, target, metadata, axes, new SimpleTuppleModel( axes ) );
+    this( href, identifier, name, editable, target, metadata, axes, new SimpleTuppleModel( axes ) );
   }
   
-  public SimpleObservation( final String identifier, final String name, final boolean editable,
+  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable,
       final IXlink target, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
   {
+    m_href = href;
     m_identifier = identifier;
     m_name = name;
     m_editable = editable;
@@ -140,8 +143,12 @@ public class SimpleObservation implements IObservation
     
     final IAxis[] otherAxes = values.getAxisList();
 
-//    if( m_axes.length != otherAxes.length )
-//      throw new SensorException( "Not same amount of Axes" );
+    // TODO: commented this test out because the gui might add the status axis when not
+    // already available, thus leading to one more axis.
+    // even if this is the case, this additional axis won't be added to this observation
+    // since we only take the axes that are already present in this observation.
+    //    if( m_axes.length != otherAxes.length )
+    // throw new SensorException( "Not same amount of Axes" );
 
     final Map map = new HashMap( m_axes.length );
 
@@ -258,5 +265,23 @@ public class SimpleObservation implements IObservation
   public void removeListener( IObservationListener listener )
   {
     m_evtPrv.removeListener( listener );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getHref()
+   */
+  public String getHref( )
+  {
+    return m_href;
+  }
+  
+  /**
+   * Sets the href
+   * 
+   * @param href localisation of the observation when it comes from a zml file for instance.
+   */
+  public void setHref( final String href )
+  {
+    m_href = href;
   }
 }

@@ -32,7 +32,7 @@ public class InterpolationFilterCreator implements IFilterCreator
     final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft
         .getFilter(), baseObs );
 
-    final InterpolationFilter filter = new InterpolationFilter( CalendarUtilities.getCalendarField( ft.getCalendarField() ), ft.getAmount(), ft.isForceFill(), ft.getDefaultValue() );
+    final InterpolationFilter filter = new InterpolationFilter( CalendarUtilities.getCalendarField( ft.getCalendarField() ), ft.getAmount(), ft.isForceFill(), ft.getDefaultValue(), ft.getDefaultStatus() );
     filter.initFilter( null, filteredObs );
 
     return filter;

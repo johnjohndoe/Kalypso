@@ -127,7 +127,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
       final DateRangeArgument dra ) throws SensorException
   {
     final IAxis[] dateAxes = ObservationUtilities.findAxisByClass( m_axes,
-        Date.class );
+        Date.class, false );
     if( dra == null || dateAxes.length == 0 )
     {
       setFrom( copyTupples );

@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
-import org.kalypso.eclipse.util.SetContentThread;
+import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.model.xml.CalcCaseConfigType;
@@ -77,8 +77,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 {
   public static final String MODELLTYP_FOLDER = ".model";
 
-  public static final String MODELLTYP_CALCCASECONFIG_XML = MODELLTYP_FOLDER + "/"
-      + "calcCaseConfig.xml";
+  public static final String MODELLTYP_CALCCASECONFIG_XML = MODELLTYP_FOLDER
+      + "/" + "calcCaseConfig.xml";
 
   public static final String MODELLTYP_MODELSPEC_XML = "modelspec.xml";
 
@@ -90,9 +90,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public static final String CONTROL_TEMPLATE_NAME = ".calculation.template";
 
-  public static final String CONTROL_VIEW_PATH = MODELLTYP_FOLDER + "/.calculation.view";
+  public static final String CONTROL_VIEW_PATH = MODELLTYP_FOLDER
+      + "/.calculation.view";
 
-  public static final String MODELLTYP_CALCWIZARD_XML = MODELLTYP_FOLDER + "/" + "calcWizard.xml";
+  public static final String MODELLTYP_CALCWIZARD_XML = MODELLTYP_FOLDER + "/"
+      + "calcWizard.xml";
 
   private final Properties m_metadata = new Properties();
 
@@ -117,17 +119,17 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
    */
-  public void configure()
+  public void configure( )
   {
-  // nix tun
+    // nix tun
   }
 
-  public final IFolder getPrognoseFolder()
+  public final IFolder getPrognoseFolder( )
   {
     return m_project.getFolder( PROGNOSE_FOLDER );
   }
 
-  private IFile getMetadataFile()
+  private IFile getMetadataFile( )
   {
     return m_project.getFile( new Path( METADATA_FILE ) );
   }
@@ -135,7 +137,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * @see org.eclipse.core.resources.IProjectNature#deconfigure()
    */
-  public void deconfigure() throws CoreException
+  public void deconfigure( ) throws CoreException
   {
     // todo: wird nie aufgerufen!
     try
@@ -146,7 +148,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       m_metadata.store( bos, "Modell-Projekt Metadata Information" );
       bos.close();
 
-      final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+      final ByteArrayInputStream bis = new ByteArrayInputStream( bos
+          .toByteArray() );
 
       if( file.exists() )
         file.setContents( bis, false, true, new NullProgressMonitor() );
@@ -164,7 +167,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * @see org.eclipse.core.resources.IProjectNature#getProject()
    */
-  public IProject getProject()
+  public IProject getProject( )
   {
     return m_project;
   }
@@ -195,14 +198,15 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   }
 
-  public void dispose()
+  public void dispose( )
   {
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( this );
   }
 
   public static String checkCanCreateCalculationCase( final IPath path )
   {
-    final IWorkspaceRoot resourceRoot = ResourcesPlugin.getWorkspace().getRoot();
+    final IWorkspaceRoot resourceRoot = ResourcesPlugin.getWorkspace()
+        .getRoot();
     final IResource resource = resourceRoot.findMember( path );
 
     if( resource == null || resource == resourceRoot )
@@ -210,7 +214,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     if( resource instanceof IFolder )
     {
-      final IFolder folder = (IFolder)resource;
+      final IFolder folder = (IFolder) resource;
       if( isCalcCalseFolder( folder ) )
         return "Rechenfall darf nicht innerhalb eines anderen Rechenfalls angelegt werden";
 
@@ -218,7 +222,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
     else if( resource instanceof IProject )
     {
-      final IProject project = (IProject)resource;
+      final IProject project = (IProject) resource;
       try
       {
         project.isNatureEnabled( ModelNature.ID );
@@ -238,67 +242,87 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public static boolean isCalcCalseFolder( final IFolder folder )
   {
     final IResource calcFile = folder.findMember( CONTROL_NAME );
-    return ( calcFile != null && calcFile.exists() && calcFile instanceof IFile );
+    return (calcFile != null && calcFile.exists() && calcFile instanceof IFile);
   }
 
-  public CalcCaseConfigType readCalcCaseConfig( final IFolder folder ) throws CoreException
+  public CalcCaseConfigType readCalcCaseConfig( final IFolder folder )
+      throws CoreException
   {
     final IProject project = getProject();
 
-    final IFile tranformerConfigFile = project.getFile( ModelNature.MODELLTYP_CALCCASECONFIG_XML );
+    final IFile tranformerConfigFile = project
+        .getFile( ModelNature.MODELLTYP_CALCCASECONFIG_XML );
     try
     {
       // Protokolle ersetzen
-      final ReplaceTokens replaceReader = new ReplaceTokens( new InputStreamReader(
-          tranformerConfigFile.getContents(), tranformerConfigFile.getCharset() ) );
+      final ReplaceTokens replaceReader = new ReplaceTokens(
+          new InputStreamReader( tranformerConfigFile.getContents(),
+              tranformerConfigFile.getCharset() ) );
 
       configureReplaceTokensForCalcCase( folder, replaceReader );
 
-      return (CalcCaseConfigType)new ObjectFactory().createUnmarshaller().unmarshal(
-          new InputSource( replaceReader ) );
+      return (CalcCaseConfigType) new ObjectFactory().createUnmarshaller()
+          .unmarshal( new InputSource( replaceReader ) );
     }
     catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Fehler beim Lesen der Rechenfallkonfiguration: "
-              + tranformerConfigFile.getProjectRelativePath().toString(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin
+          .getId(), 0, "Fehler beim Lesen der Rechenfallkonfiguration: "
+          + tranformerConfigFile.getProjectRelativePath().toString(), e ) );
     }
     catch( final JAXBException e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Fehler beim Lesen der Rechenfallkonfiguration: "
-              + tranformerConfigFile.getProjectRelativePath().toString(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin
+          .getId(), 0, "Fehler beim Lesen der Rechenfallkonfiguration: "
+          + tranformerConfigFile.getProjectRelativePath().toString(), e ) );
     }
   }
 
-  /** Erzeugt einen neuen Rechenfall im angegebenen Ordner */
-  public void createCalculationCaseInFolder( final IFolder folder, final IProgressMonitor monitor )
-      throws CoreException
+  /**
+   * Erzeugt einen neuen Rechenfall im angegebenen Ordner
+   *  
+   * @param folder
+   * @param monitor
+   * @throws CoreException
+   */
+  public void createCalculationCaseInFolder( final IFolder folder,
+      final IProgressMonitor monitor ) throws CoreException
   {
-    doCalcTransformation( "Rechenfall erzeugen", TRANS_TYPE_CREATE, folder, monitor );
+    doCalcTransformation( "Rechenfall erzeugen", TRANS_TYPE_CREATE, folder,
+        monitor );
   }
 
   /**
    * Aktualisiert einen vorhandenen Rechenfall
    * 
+   * @param folder
+   * @param monitor
+   * 
    * @throws CoreException
    */
-  public void updateCalcCase( final IFolder folder, final IProgressMonitor monitor )
-      throws CoreException
+  public void updateCalcCase( final IFolder folder,
+      final IProgressMonitor monitor ) throws CoreException
   {
-    doCalcTransformation( "Rechenfall aktualisieren", TRANS_TYPE_UPDTAE, folder, monitor );
+    doCalcTransformation( "Rechenfall aktualisieren", TRANS_TYPE_UPDTAE,
+        folder, monitor );
   }
 
   /**
    * Führt eine Transformation auf einem Rechenfall durch
    * 
+   * @param taskName
+   * @param type
+   * @param folder
+   * @param monitor
+   * 
    * @throws CoreException
    */
-  private void doCalcTransformation( final String taskName, final int type, final IFolder folder,
-      final IProgressMonitor monitor ) throws CoreException
+  private void doCalcTransformation( final String taskName, final int type,
+      final IFolder folder, final IProgressMonitor monitor )
+      throws CoreException
   {
     monitor.beginTask( taskName, 2000 );
 
@@ -312,27 +336,28 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       TransformationList transList = null;
       switch( type )
       {
-      case TRANS_TYPE_UPDTAE:
-        transList = trans.getUpdateTransformations();
-        break;
+        case TRANS_TYPE_UPDTAE:
+          transList = trans.getUpdateTransformations();
+          break;
 
-      case TRANS_TYPE_CREATE:
-        transList = trans.getCreateTransformations();
-        break;
+        case TRANS_TYPE_CREATE:
+          transList = trans.getCreateTransformations();
+          break;
 
-      case TRANS_TYPE_AFTERCALC:
-        transList = trans.getAfterCalcTransformations();
-        break;
+        case TRANS_TYPE_AFTERCALC:
+          transList = trans.getAfterCalcTransformations();
+          break;
 
-      default:
-        transList = null;
-        break;
+        default:
+          transList = null;
+          break;
       }
-      
+
       if( transList == null )
         return;
 
-      TransformationHelper.doTranformations( transList, new SubProgressMonitor( monitor, 1000 ) );
+      TransformationHelper.doTranformations( transList, new SubProgressMonitor(
+          monitor, 1000 ) );
     }
     catch( final CoreException e )
     {
@@ -344,8 +369,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       e.printStackTrace();
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          taskName + ": " + e.getLocalizedMessage(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin
+          .getId(), 0, taskName + ": " + e.getLocalizedMessage(), e ) );
     }
 
     monitor.done();
@@ -356,6 +381,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * :project: etc Ausserdem werden die Start, Mittel und Endzeit der Simulation
    * aus dem Rechenfall Verzeichnis ausgelesen (.calculation) und als Token
    * hinzugefgügt.
+   * 
+   * @param calcFolder
+   * @param replaceTokens
+   * @throws CoreException
    */
   private void configureReplaceTokensForCalcCase( final IFolder calcFolder,
       final ReplaceTokens replaceTokens ) throws CoreException
@@ -365,8 +394,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     final Token timeToken = new ReplaceTokens.Token();
     timeToken.setKey( "SYSTEM_TIME" );
-    timeToken.setValue( new SimpleDateFormat( "dd.MM.yyyy HH:mm" ).format( new Date( System
-        .currentTimeMillis() ) ) );
+    timeToken.setValue( new SimpleDateFormat( "dd.MM.yyyy HH:mm" )
+        .format( new Date( System.currentTimeMillis() ) ) );
 
     replaceTokens.addConfiguredToken( timeToken );
 
@@ -378,7 +407,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     final Token projectToken = new ReplaceTokens.Token();
     projectToken.setKey( "project" );
-    projectToken.setValue( calcFolder.getProject().getFullPath().toString() + "/" );
+    projectToken.setValue( calcFolder.getProject().getFullPath().toString()
+        + "/" );
 
     replaceTokens.addConfiguredToken( projectToken );
 
@@ -390,15 +420,18 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     if( workspace != null )
     {
       final Feature rootFeature = workspace.getRootFeature();
-      final Date startSim = (Date)rootFeature.getProperty( "startsimulation" );
-      final String startSimString = Mapper.mapJavaValueToXml( startSim, "dateTime" );
+      final Date startSim = (Date) rootFeature.getProperty( "startsimulation" );
+      final String startSimString = Mapper.mapJavaValueToXml( startSim,
+          "dateTime" );
       final Token startSimToken = new ReplaceTokens.Token();
       startSimToken.setKey( "startsim" );
       startSimToken.setValue( startSimString );
       replaceTokens.addConfiguredToken( startSimToken );
 
-      final Date startForecast = (Date)rootFeature.getProperty( "startforecast" );
-      final String startForecastString = Mapper.mapJavaValueToXml( startForecast, "dateTime" );
+      final Date startForecast = (Date) rootFeature
+          .getProperty( "startforecast" );
+      final String startForecastString = Mapper.mapJavaValueToXml(
+          startForecast, "dateTime" );
       final Token startForecastToken = new ReplaceTokens.Token();
       startForecastToken.setKey( "startforecast" );
       startForecastToken.setValue( startForecastString );
@@ -419,7 +452,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  public String getCalcType() throws CoreException
+  public String getCalcType( ) throws CoreException
   {
     final Modelspec modelspec = getModelspec( MODELLTYP_MODELSPEC_XML );
 
@@ -435,32 +468,33 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     final IFile metadataFile = getMetadataFile();
     if( delta == null || metadataFile == null )
       return;
-    
-    final IResourceDelta metadataDelta = delta.findMember( metadataFile.getFullPath() );
+
+    final IResourceDelta metadataDelta = delta.findMember( metadataFile
+        .getFullPath() );
     if( metadataDelta == null )
       return;
 
     switch( metadataDelta.getKind() )
     {
-    case IResourceDelta.ADDED:
-    case IResourceDelta.REMOVED:
-    case IResourceDelta.CHANGED:
-    {
-      try
+      case IResourceDelta.ADDED:
+      case IResourceDelta.REMOVED:
+      case IResourceDelta.CHANGED:
       {
-        reloadMetadata();
+        try
+        {
+          reloadMetadata();
+        }
+        catch( final CoreException e )
+        {
+          // todo: error handling? -->> als job absetzen?
+          e.printStackTrace();
+        }
+        break;
       }
-      catch( final CoreException e )
-      {
-        // todo: error handling? -->> als job absetzen?
-        e.printStackTrace();
-      }
-      break;
-    }
     }
   }
 
-  private void reloadMetadata() throws CoreException
+  private void reloadMetadata( ) throws CoreException
   {
     try
     {
@@ -471,8 +505,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
     catch( final IOException e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Error loading Metadata", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin
+          .getId(), 0, "Error loading Metadata", e ) );
     }
   }
 
@@ -486,11 +520,20 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * Dateien nicht relativ zum Calc-Verzeichnis werden nach
    * <targetdir>/input/base geschrieben
    * </p>
+   * 
+   * @param modelspec
+   * @param folder
+   * @param targetdir
+   * @param monitor
+   * @return beans
+   * @throws CoreException
    */
-  private CalcJobDataBean[] prepareCalcCaseInput( final Modelspec modelspec, final IFolder folder,
-      final File targetdir, final IProgressMonitor monitor ) throws CoreException
+  private CalcJobDataBean[] prepareCalcCaseInput( final Modelspec modelspec,
+      final IFolder folder, final File targetdir, final IProgressMonitor monitor )
+      throws CoreException
   {
-    final File serverInputDir = new File( targetdir, ICalcServiceConstants.INPUT_DIR_NAME );
+    final File serverInputDir = new File( targetdir,
+        ICalcServiceConstants.INPUT_DIR_NAME );
     final File serverCalcDir = new File( serverInputDir, "calc" );
     final File serverBaseDir = new File( serverInputDir, "base" );
 
@@ -498,30 +541,35 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     final List inputList = modelspec.getInput();
 
-    monitor.beginTask( "Kopieren der Daten zum Berechnungsdienst", inputList.size() );
+    monitor.beginTask( "Kopieren der Daten zum Berechnungsdienst", inputList
+        .size() );
 
     final List inputBeanList = new ArrayList();
     for( final Iterator iter = inputList.iterator(); iter.hasNext(); )
     {
-      final ModelspecType.InputType input = (InputType)iter.next();
+      final ModelspecType.InputType input = (InputType) iter.next();
       final String inputPath = input.getPath();
 
-      final IContainer baseresource = input.isRelativeToCalcCase() ? (IContainer)folder
-          : (IContainer)project;
+      final IContainer baseresource = input.isRelativeToCalcCase() ? (IContainer) folder
+          : (IContainer) project;
       final IResource inputResource = baseresource.findMember( inputPath );
       if( inputResource == null )
         throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-            "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Datei "
-                + MODELLTYP_FOLDER + "/" + MODELLTYP_MODELSPEC_XML, null ) );
+            "Konnte Input-Resource nicht finden: " + inputPath
+                + "\nÜberprüfen Sie die Datei " + MODELLTYP_FOLDER + "/"
+                + MODELLTYP_MODELSPEC_XML, null ) );
 
-      final File basedir = input.isRelativeToCalcCase() ? serverCalcDir : serverBaseDir;
-      final String reldir = ( input.isRelativeToCalcCase() ? "calc" : "base" ) + "/" + inputPath;
+      final File basedir = input.isRelativeToCalcCase() ? serverCalcDir
+          : serverBaseDir;
+      final String reldir = (input.isRelativeToCalcCase() ? "calc" : "base")
+          + "/" + inputPath;
 
-      final IResourceVisitor copyVisitor = new CopyResourceToFileVisitor( baseresource, basedir );
+      final IResourceVisitor copyVisitor = new CopyResourceToFileVisitor(
+          baseresource, basedir );
       inputResource.accept( copyVisitor );
 
-      final CalcJobDataBean calcJobDataBean = new CalcJobDataBean( input.getId(), input
-          .getDescription(), reldir );
+      final CalcJobDataBean calcJobDataBean = new CalcJobDataBean( input
+          .getId(), input.getDescription(), reldir );
       inputBeanList.add( calcJobDataBean );
 
       monitor.worked( 1 );
@@ -529,7 +577,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     monitor.done();
 
-    final CalcJobDataBean[] input = (CalcJobDataBean[])inputBeanList
+    final CalcJobDataBean[] input = (CalcJobDataBean[]) inputBeanList
         .toArray( new CalcJobDataBean[inputBeanList.size()] );
     return input;
 
@@ -543,7 +591,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       final ObjectFactory faktory = new ObjectFactory();
       final Unmarshaller unmarshaller = faktory.createUnmarshaller();
-      return (Modelspec)unmarshaller.unmarshal( file.getContents() );
+      return (Modelspec) unmarshaller.unmarshal( file.getContents() );
     }
     catch( final JAXBException e )
     {
@@ -554,8 +602,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  private void retrieveOutput( final File serveroutputdir, final IFolder targetfolder,
-      final CalcJobDataBean[] results, final IProgressMonitor monitor ) throws CoreException
+  private void retrieveOutput( final File serveroutputdir,
+      final IFolder targetfolder, final CalcJobDataBean[] results,
+      final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Berechnungsergebniss abrufen", results.length );
 
@@ -580,18 +629,17 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         catch( Exception e )
         {
           // TODO hier tritt manchmal eine exception auf, testen...
-          System.out.println( "could not delete File: " + targetfile.getFullPath() );
+          System.out.println( "could not delete File: "
+              + targetfile.getFullPath() );
           e.printStackTrace();
           continue;
         }
       }
       System.out.println( "Write: " + serverfile.getAbsolutePath() );
-      final SetContentThread thread = new SetContentThread( targetfile, true, false, false,
-          new NullProgressMonitor() )
+      final SetContentHelper thread = new SetContentHelper()
       {
         protected void write( final Writer w ) throws Throwable
         {
-          
           InputStreamReader reader = null;
           try
           {
@@ -606,43 +654,27 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           }
         }
       };
-      thread.start();
-      try
-      {
-        thread.join();
-
-        System.out.println( "Wrote: " + serverfile.getAbsolutePath() );
-      }
-      catch( final InterruptedException e )
-      {
-        e.printStackTrace();
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-            "Fehler beim Zurückladen der Ergebnisdateien", e ) );
-      }
-      final Throwable thrown = thread.getThrown();
-      if( thrown != null )
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-            "Fehler beim Zurückladen der Ergebnisdateien", thrown ) );
-      final CoreException fileException = thread.getFileException();
-      if( fileException != null )
-        throw fileException;
+      thread.setFileContents( targetfile, false, false,
+          new NullProgressMonitor() );
+      System.out.println( "Wrote: " + serverfile.getAbsolutePath() );
 
       monitor.worked( 1 );
 
       if( monitor.isCanceled() )
-        throw new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), 0,
-            "Vorgang vom Benutzer abgebrochen", null ) );
+        throw new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin
+            .getId(), 0, "Vorgang vom Benutzer abgebrochen", null ) );
     }
 
     monitor.done();
   }
 
-  public GMLWorkspace loadDefaultControl() throws CoreException
+  public GMLWorkspace loadDefaultControl( ) throws CoreException
   {
     return loadOrCreateControl( null );
   }
 
-  public GMLWorkspace loadOrCreateControl( final IFolder folder ) throws CoreException
+  public GMLWorkspace loadOrCreateControl( final IFolder folder )
+      throws CoreException
   {
     try
     {
@@ -666,22 +698,24 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       e.printStackTrace();
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin
+          .getId(), 0, "Konnte Standard-Steuerparameter nicht laden:"
+          + e.getLocalizedMessage(), e ) );
     }
   }
 
-  public IUrlResolver configureTokensForcontrol() throws CoreException
+  public IUrlResolver configureTokensForcontrol( ) throws CoreException
   {
     final IUrlResolver urlResolver = new UrlResolver();
 
-    final String user = System
-        .getProperty( "user.name", "<Benutzer konnte nicht ermittelt werden>" );
+    final String user = System.getProperty( "user.name",
+        "<Benutzer konnte nicht ermittelt werden>" );
     urlResolver.addReplaceToken( "user", user );
 
     final Date now = new Date();
 
-    urlResolver.addReplaceToken( "time", Mapper.mapJavaValueToXml( now, "dateTime" ) );
+    urlResolver.addReplaceToken( "time", Mapper.mapJavaValueToXml( now,
+        "dateTime" ) );
 
     // auf x stunden vorher runden! hängt von der Modellspec ab
     final Calendar cal = Calendar.getInstance();
@@ -706,15 +740,16 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
 
     final Date forecastTime = cal.getTime();
-    urlResolver.addReplaceToken( "startforecast", Mapper.mapJavaValueToXml( forecastTime,
-        "dateTime" ) );
+    urlResolver.addReplaceToken( "startforecast", Mapper.mapJavaValueToXml(
+        forecastTime, "dateTime" ) );
 
     // standardzeit abziehen
-    final int simDiff = new Integer( m_metadata.getProperty( META_PROP_DEFAULT_SIMHOURS, "120" ) )
-        .intValue();
+    final int simDiff = new Integer( m_metadata.getProperty(
+        META_PROP_DEFAULT_SIMHOURS, "120" ) ).intValue();
     cal.add( Calendar.HOUR_OF_DAY, -simDiff );
     final Date simTime = cal.getTime();
-    urlResolver.addReplaceToken( "startsim", Mapper.mapJavaValueToXml( simTime, "dateTime" ) );
+    urlResolver.addReplaceToken( "startsim", Mapper.mapJavaValueToXml( simTime,
+        "dateTime" ) );
 
     return urlResolver;
   }
@@ -722,27 +757,33 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * stellt fest, ob es sich um einen gültigen Zeitpunkt für den Start der
    * Prognose handelt
+   * 
+   * @param cal
+   * @return true when time is valid
    */
   private boolean validateTime( final Calendar cal )
   {
     // todo: wäre schöner, wenn das besser parametrisiert werden könnte
     // z.B. ein Groovy-Skript aus der Modelspec o.ä.
-    final String validHours = m_metadata.getProperty( META_PROP_VALID_HOURS,
-        "VALID_FORECAST_HOURS=0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23" );
+    final String validHours = m_metadata
+        .getProperty(
+            META_PROP_VALID_HOURS,
+            "VALID_FORECAST_HOURS=0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23" );
 
     final int hour = cal.get( Calendar.HOUR_OF_DAY );
 
-    return ( " " + validHours + " " ).indexOf( " " + hour + " " ) != -1;
+    return (" " + validHours + " ").indexOf( " " + hour + " " ) != -1;
   }
 
-  public void runCalculation( final IFolder folder, final IProgressMonitor monitor )
-      throws CoreException
+  public void runCalculation( final IFolder folder,
+      final IProgressMonitor monitor ) throws CoreException
   {
     runCalculation( folder, monitor, MODELLTYP_MODELSPEC_XML, true );
   }
 
-  public void runCalculation( final IFolder folder, final IProgressMonitor monitor,
-      final String modelSpec, boolean clearResults ) throws CoreException
+  public void runCalculation( final IFolder folder,
+      final IProgressMonitor monitor, final String modelSpec,
+      boolean clearResults ) throws CoreException
   {
     if( modelSpec == null )
     {
@@ -751,26 +792,29 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
     monitor.beginTask( "Modellrechnung wird durchgeführt", 5000 );
 
-    final CoreException cancelException = new CoreException( new Status( IStatus.CANCEL,
-        KalypsoGisPlugin.getId(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) );
+    final CoreException cancelException = new CoreException( new Status(
+        IStatus.CANCEL, KalypsoGisPlugin.getId(), 0,
+        "Berechnung wurde vom Benutzer abgebrochen", null ) );
 
     if( !isCalcCalseFolder( folder ) )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Verzeichnis ist kein Rechenfall :" + folder.getName(), null ) );
 
-    final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault().getServiceProxyFactory();
+    final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault()
+        .getServiceProxyFactory();
 
     final Modelspec modelspec = getModelspec( modelSpec );
 
-    final SubProgressMonitor subMonitor1 = new SubProgressMonitor( monitor, 1000 );
+    final SubProgressMonitor subMonitor1 = new SubProgressMonitor( monitor,
+        1000 );
     subMonitor1.beginTask( "Rechendienst wird initialisiert", 1000 );
 
     final CalcJobBean job;
     final ICalculationService calcService;
     try
     {
-      calcService = (ICalculationService)serviceProxyFactory
-          .getProxy( "Kalypso_CalculationService", ClassUtilities
+      calcService = (ICalculationService) serviceProxyFactory.getProxy(
+          "Kalypso_CalculationService", ClassUtilities
               .getOnlyClassName( ICalculationService.class ) );
 
       job = calcService.prepareJob( modelspec.getTypeID(), "" );
@@ -806,14 +850,15 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
             "Ungültiges temporäres Verzeichnis auf Server", null ) );
 
       // Daten zum Service schieben
-      final CalcJobDataBean[] inputBeans = prepareCalcCaseInput( modelspec, folder, targetdir,
-          new SubProgressMonitor( monitor, 1000 ) );
+      final CalcJobDataBean[] inputBeans = prepareCalcCaseInput( modelspec,
+          folder, targetdir, new SubProgressMonitor( monitor, 1000 ) );
       calcService.startJob( jobID, inputBeans );
 
       if( monitor.isCanceled() )
         throw cancelException;
 
-      final SubProgressMonitor calcMonitor = new SubProgressMonitor( monitor, 1000 );
+      final SubProgressMonitor calcMonitor = new SubProgressMonitor( monitor,
+          1000 );
       calcMonitor.beginTask( "Berechnung wird durchgeführt", 100 );
       int oldProgess = 0;
       while( true )
@@ -823,14 +868,14 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         boolean bStop = false;
         switch( bean.getState() )
         {
-        case ICalcServiceConstants.FINISHED:
-        case ICalcServiceConstants.ERROR:
-        case ICalcServiceConstants.CANCELED:
-          bStop = true;
-          break;
+          case ICalcServiceConstants.FINISHED:
+          case ICalcServiceConstants.ERROR:
+          case ICalcServiceConstants.CANCELED:
+            bStop = true;
+            break;
 
-        default:
-          break;
+          default:
+            break;
         }
 
         if( bStop )
@@ -844,7 +889,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         {
           e1.printStackTrace();
 
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Kritischer Fehler", e1 ) );
+          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+              "Kritischer Fehler", e1 ) );
         }
 
         int progress = bean.getProgress();
@@ -864,33 +910,35 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // Abhängig von den Ergebnissen was machen
       switch( jobBean.getState() )
       {
-      case ICalcServiceConstants.FINISHED:
-        // Ergebniss abholen
-        final CalcJobDataBean[] results = jobBean.getResults();
-        final IFolder outputfolder = folder.getFolder( "Ergebnisse" );
-        if( clearResults && outputfolder.exists() )
-          outputfolder.delete( false, false, new NullProgressMonitor() );
+        case ICalcServiceConstants.FINISHED:
+          // Ergebniss abholen
+          final CalcJobDataBean[] results = jobBean.getResults();
+          final IFolder outputfolder = folder.getFolder( "Ergebnisse" );
+          if( clearResults && outputfolder.exists() )
+            outputfolder.delete( false, false, new NullProgressMonitor() );
 
-        final File serveroutputdir = new File( jobBean.getBasedir(),
-            ICalcServiceConstants.OUTPUT_DIR_NAME );
-        retrieveOutput( serveroutputdir, outputfolder, results, new SubProgressMonitor( monitor,
-            1000 ) );
+          final File serveroutputdir = new File( jobBean.getBasedir(),
+              ICalcServiceConstants.OUTPUT_DIR_NAME );
+          retrieveOutput( serveroutputdir, outputfolder, results,
+              new SubProgressMonitor( monitor, 1000 ) );
 
-        doCalcTransformation( "Rechenfall aktualisieren", TRANS_TYPE_AFTERCALC, folder, new SubProgressMonitor( monitor, 1000 ) );
+          doCalcTransformation( "Rechenfall aktualisieren",
+              TRANS_TYPE_AFTERCALC, folder, new SubProgressMonitor( monitor,
+                  1000 ) );
 
-        return;
+          return;
 
-      case ICalcServiceConstants.CANCELED:
-        throw cancelException;
+        case ICalcServiceConstants.CANCELED:
+          throw cancelException;
 
-      case ICalcServiceConstants.ERROR:
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechenvorgang fehlerhaft:\n"
-            + jobBean.getMessage(), null ) );
+        case ICalcServiceConstants.ERROR:
+          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+              "Rechenvorgang fehlerhaft:\n" + jobBean.getMessage(), null ) );
 
-      default:
-        // darf eigentlich nie vorkommen
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechenvorgang fehlerhaft:\n"
-            + jobBean.getMessage(), null ) );
+        default:
+          // darf eigentlich nie vorkommen
+          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+              "Rechenvorgang fehlerhaft:\n" + jobBean.getMessage(), null ) );
       }
     }
     catch( final RemoteException e )

@@ -215,6 +215,9 @@ public class ObservationPlot extends XYPlot
     
     m_yConsts.clear();
     m_markers.clear();
+    
+    clearDomainAxes();
+    clearRangeAxes();
   }
 
   /**

@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.eclipse.util.SetContentThread;
+import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -65,7 +65,8 @@ public class GrafikLauncher
   }
 
   /**
-   * Opens the grafik tool using an observation template file.
+   * Opens the grafik tool using an observation template file. Note: this method
+   * should be called using a WorkspaceModifyOperation.
    * 
    * @param odtFile
    * @param dest
@@ -89,8 +90,7 @@ public class GrafikLauncher
 
       // use the windows encoding for the vorlage because of the grafik tool
       // which uses it when reading...
-      SetContentThread thread = new SetContentThread( tplFile, !tplFile
-          .exists(), false, false, new NullProgressMonitor(), "Cp1252" )
+      final SetContentHelper sch = new SetContentHelper()
       {
         protected void write( final Writer writer ) throws Throwable
         {
@@ -98,14 +98,8 @@ public class GrafikLauncher
         }
       };
 
-      thread.start();
-      thread.join();
-
-      if( thread.getFileException() != null )
-        throw thread.getFileException();
-
-      if( thread.getThrown() != null )
-        throw thread.getThrown();
+      sch.setFileContents( tplFile, false, false, new NullProgressMonitor(),
+          "Cp1252" );
 
       startGrafikTPL( tplFile );
 
@@ -193,7 +187,7 @@ public class GrafikLauncher
    * @param monitor
    * @throws SensorException
    */
-  public static void odt2tpl( final IFile odtFile, final IFolder dest,
+  private static void odt2tpl( final IFile odtFile, final IFolder dest,
       final Writer writer, final IProgressMonitor monitor )
       throws SensorException
   {
@@ -212,7 +206,7 @@ public class GrafikLauncher
 
       final List xLines = new ArrayList();
       final Map yLines = new HashMap();
-      
+
       int ixObs = 1;
 
       final List tobsList = odt.getObservation();
@@ -223,7 +217,9 @@ public class GrafikLauncher
 
         final TypeObservation tobs = (TypeObservation) ito.next();
 
-        // maps obs axis to diag axis
+        // maps obs axis to diag axis. Can be empty if there are no 
+        // curves specified in the xml. In that case, all axes are
+        // taken ( see zml2dat() )
         final Map axisNames = new HashMap();
 
         final List tcurveList = tobs.getCurve();
@@ -261,9 +257,9 @@ public class GrafikLauncher
         // find out which axes to use
         final IAxis[] axes = obs.getAxisList();
         final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes,
-            Date.class )[0];
+            Date.class, true )[0];
         final IAxis[] numberAxes = ObservationUtilities.findAxisByClass( axes,
-            Number.class );
+            Number.class, true );
 
         // remove date axis from names list, we always take it
         dateAxisLabel = dateAxis.getName();
@@ -289,19 +285,20 @@ public class GrafikLauncher
 
         writer.write( ixObs++ + "- " + datFile.getName() + " J " + grafikType
             + " " + grafikAxis + " " + title + "\n" );
-        
+
         // is this obs a forecast?
         final DateRangeArgument fr = TimeserieUtils.isForecast( obs );
         if( fr != null )
           xLines.add( GRAFIK_DF.format( fr.getFrom() ) );
-        
+
         // does is have Alarmstufen?
         final MetadataList mdl = obs.getMetadataList();
         final String[] mds = TimeserieUtils.findOutMDAlarmLevel( obs );
         for( int i = 0; i < mds.length; i++ )
         {
           final Double value = new Double( mdl.getProperty( mds[i] ) );
-          yLines.put( value, new ValueAndColor( mds[i] + " (" + mdl.getProperty( mds[i] ) + ")", value.doubleValue(), null ) );
+          yLines.put( value, new ValueAndColor( mds[i] + " ("
+              + mdl.getProperty( mds[i] ) + ")", value.doubleValue(), null ) );
         }
       }
 
@@ -310,14 +307,14 @@ public class GrafikLauncher
       writer.write( "xTitel:\t" + dateAxisLabel + "\n" );
       writer.write( "yTitel1:\t" + yAchsen.getLabelAt( 1 ) + "\n" );
       writer.write( "yTitel2:\t" + yAchsen.getLabelAt( 2 ) + "\n" );
-      
+
       // constant vertical lines...
       for( Iterator it = xLines.iterator(); it.hasNext(); )
       {
         final String strDate = it.next().toString();
         writer.write( "Senkrechte: " + strDate + '\n' );
       }
-      
+
       // constant horizontal lines...
       for( final Iterator it = yLines.keySet().iterator(); it.hasNext(); )
       {
@@ -345,63 +342,48 @@ public class GrafikLauncher
    * @param numberAxes
    * @param axisNames
    * @param monitor
-   * @throws SensorException
+   * @throws CoreException
    */
   private static void zml2dat( final IObservation obs, final IFile datFile,
       final IAxis dateAxis, final IAxis[] numberAxes, final Map axisNames,
-      final IProgressMonitor monitor ) throws SensorException
+      final IProgressMonitor monitor ) throws CoreException
   {
-    try
+    final SetContentHelper sch = new SetContentHelper()
     {
-      final SetContentThread thread = new SetContentThread( datFile, !datFile
-          .exists(), false, false, new NullProgressMonitor() )
+      protected void write( final Writer writer ) throws Throwable
       {
-        protected void write( final Writer writer ) throws Throwable
+        final ITuppleModel values = obs.getValues( null );
+        for( int i = 0; i < values.getCount(); i++ )
         {
-          final ITuppleModel values = obs.getValues( null );
-          for( int i = 0; i < values.getCount(); i++ )
+          if( monitor.isCanceled() )
+            return;
+
+          final Object elt = values.getElement( i, dateAxis );
+          final String text = GRAFIK_DF.format( elt );
+          writer.write( text );
+          writer.write( '\t' );
+
+          for( int j = 0; j < numberAxes.length; j++ )
           {
-            if( monitor.isCanceled() )
-              return;
+            final IAxis axis = numberAxes[j];
 
-            final Object elt = values.getElement( i, dateAxis );
-            final String text = GRAFIK_DF.format( elt );
-            writer.write( text );
-            writer.write( '\t' );
-
-            for( int j = 0; j < numberAxes.length; j++ )
+            // either there are no names or the names are specified and the current one is
+            // one of them
+            if( axisNames.size() == 0 || axisNames.containsKey( axis.getName() ) )
             {
-              final IAxis axis = numberAxes[j];
-
-              if( axisNames.containsKey( axis.getName() ) )
-              {
-                writer.write( values.getElement( i, axis ).toString() );
-                writer.write( '\t' );
-              }
+              writer.write( values.getElement( i, axis ).toString() );
+              writer.write( '\t' );
             }
-
-            writer.write( '\n' );
           }
+
+          writer.write( '\n' );
         }
-      };
+      }
+    };
 
-      thread.start();
-      thread.join();
-
-      final CoreException fileException = thread.getFileException();
-      if( fileException != null )
-        throw fileException;
-
-      final Throwable thrown = thread.getThrown();
-      if( thrown != null )
-        throw thrown;
-    }
-    catch( Throwable e )
-    {
-      throw new SensorException( e );
-    }
+    sch.setFileContents( datFile, false, false, monitor );
   }
-  
+
   /**
    * mini helper class for storing a value and a color
    * 

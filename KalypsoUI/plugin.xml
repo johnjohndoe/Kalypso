@@ -372,6 +372,14 @@
             id="org.kalypso.ui.editor.diagrameditor.EditorContribution">
          <action
                toolbarPath="diagram"
+               label="Im Grafikprogramm öffnen"
+               tooltip="Öffnet das aktuelle Diagramm im Grafikprogramm"
+               icon="icons/observation/grafik-icon.gif"
+               class="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction"
+               style="push"
+               id="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction"/>
+         <action
+               toolbarPath="diagram"
                label="Diagramm exportieren"
                class="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate"
                icon="icons/gistable/export_wiz.gif"

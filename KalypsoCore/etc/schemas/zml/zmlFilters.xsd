@@ -79,10 +79,32 @@
 				<attribute type="boolean" name="forceFill"/>
 				<!-- default value to use when filling absent values -->
 				<attribute type="double" name="defaultValue"/>
+				<!-- value of the default status when no base status -->
+				<attribute type="int" name="defaultStatus"/>
 			</extension>
 		</complexContent>
 	</complexType>
 	<element name="interpolationFilter" type="filters:interpolationFilterType" substitutionGroup="filters:filter" />
+
+	<!-- Filter: datahole (detects hole in the data and sets the status accordingly) -->
+	<complexType name="dataholeFilterType">
+		<complexContent>
+			<extension base="filters:abstractFilterType">
+				<sequence>
+					<element ref="filters:filter" minOccurs="0"/>
+				</sequence>
+				<!-- invalid value that must be checked (for instance -999) -->
+				<attribute name="value" type="double"/>
+				<!-- value of the status to generate if an invalid value is found -->
+				<attribute name="status" type="int"/>
+				<!-- if true, the value of replaceWith will be used instead of the original value -->
+				<attribute name="replace" type="boolean" use="optional" default="false" />
+				<!-- the value will be replaced by this one -->
+				<attribute name="replaceWith" type="double" use="optional"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="dataholeFilter" type="filters:dataholeFilterType" substitutionGroup="filters:filter"/>
 
 	<!-- Filter: forecast (merges the tupples on the date axis in ascending order) -->	
 	<complexType name="forecastFilterType">

@@ -1,7 +1,3 @@
-/**
- * TODO: license definieren
- */
-
 package org.kalypso.ogc.gml.command;
 
 import org.deegree.model.geometry.GM_Envelope;

@@ -1,10 +1,12 @@
 package org.kalypso.ogc.sensor.diagview.impl;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.java.awt.ColorUtilities;
+import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -16,8 +18,6 @@ import org.kalypso.template.obsdiagview.TypeObservation;
 
 /**
  * LinkedDiagramTemplateTheme
- * 
- * TODO: binding erweitern damit man die Farbe der Kurve spezifizieren kann
  * 
  * @author schlienger
  */
@@ -66,9 +66,26 @@ public class LinkedDiagramTemplateTheme extends DefaultDiagramTemplateTheme
         mappings.add( new AxisMapping( obsAxis, diagAxis ) );
       }
 
+      final String strc = tcurve.getColor();
+      Color color;
+      if( strc != null )
+      {
+        try
+        {
+          color = StringUtilities.stringToColor( strc );
+        }
+        catch( IllegalArgumentException e )
+        {
+          e.printStackTrace();
+          color = ColorUtilities.random();
+        }
+      }
+      else
+        color = ColorUtilities.random();
+      
       // create curve and add it to theme
       final DiagramCurve curve = new DiagramCurve( tcurve.getName(),
-          ColorUtilities.random(), this, (IAxisMapping[]) mappings
+          color, this, (IAxisMapping[]) mappings
               .toArray( new IAxisMapping[0] ), m_template );
 
       addCurve( curve );

@@ -74,4 +74,11 @@ public interface IObservation extends IObservationEventProvider
    * @throws SensorException
    */
   public void setValues( ITuppleModel values ) throws SensorException;
+
+  /**
+   * Returns the localisation of the base file behind this observation
+   * 
+   * @return href
+   */
+  public String getHref( );
 }

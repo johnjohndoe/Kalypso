@@ -1,7 +1,3 @@
-/**
- * TODO: license definieren
- */
-
 package org.kalypso.ogc.gml.command;
 
 import java.util.Iterator;

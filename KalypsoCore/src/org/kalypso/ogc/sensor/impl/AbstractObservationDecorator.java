@@ -98,4 +98,9 @@ public class AbstractObservationDecorator implements IObservation
   {
     return m_obs.toString();
   }
+
+  public String getHref( )
+  {
+    return m_obs.getHref();
+  }
 }

@@ -15,7 +15,6 @@ import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.zml.ZmlObservation;
 
 /**
  * SetValuesForDirtyColumns

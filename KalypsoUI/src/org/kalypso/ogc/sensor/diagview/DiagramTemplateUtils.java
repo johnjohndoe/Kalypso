@@ -3,7 +3,6 @@ package org.kalypso.ogc.sensor.diagview;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.impl.DiagramAxis;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.zml.ZmlObservation;
 import org.kalypso.template.obsdiagview.ObjectFactory;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxis;
@@ -24,7 +22,6 @@ import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.template.obsdiagview.ObsdiagviewType.LegendType;
-import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
  * Observation template handling made easy.
@@ -158,14 +155,11 @@ public class DiagramTemplateUtils
       final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) itThemes
           .next();
 
-      // can only deal with ZML observations
       final IObservation obs = theme.getObservation();
-      if( !(obs instanceof ZmlObservation) )
-        continue;
 
       final TypeObservation bdgTheme = ODT_OF.createTypeObservation();
       bdgTheme.setLinktype( "zml" );
-      bdgTheme.setHref( ((ZmlObservation) obs).getHref() );
+      bdgTheme.setHref( obs.getHref() );
 
       final List bdgCurves = bdgTheme.getCurve();
 
@@ -201,48 +195,6 @@ public class DiagramTemplateUtils
     return bdgTemplate;
   }
 
-  /**
-   * TODO: doc
-   * 
-   * @param tpl
-   * @param lnk
-   * @param name
-   * @param diagDateAxis
-   * @param diagValueAxis
-   * @throws JAXBException
-   */
-  public static void addTimeseriesLink( final ObsdiagviewType tpl,
-      final TimeseriesLink lnk, final String name, final String diagDateAxis,
-      final String diagValueAxis ) throws JAXBException
-  {
-    final TypeObservation tobs = ODT_OF.createTypeObservation();
-    tobs.setHref( lnk.getHref() );
-    tobs.setLinktype( lnk.getLinktype() );
-
-    final TypeCurve c = ODT_OF.createTypeCurve();
-    c.setId( String.valueOf( new Date().getTime() ) );
-    c.setName( name );
-
-    final List mapping = c.getMapping();
-
-    final TypeAxisMapping mpDate = ODT_OF.createTypeAxisMapping();
-    mpDate.setDiagramAxis( diagDateAxis );
-    mpDate.setObservationAxis( lnk.getTimeaxis() );
-
-    final TypeAxisMapping mpValue = ODT_OF.createTypeAxisMapping();
-    mpValue.setDiagramAxis( diagValueAxis );
-    mpValue.setObservationAxis( lnk.getValueaxis() );
-
-    mapping.add( mpDate );
-    mapping.add( mpValue );
-
-    final List curves = tobs.getCurve();
-    curves.add( c );
-
-    final List list = tpl.getObservation();
-    list.add( tobs );
-  }
-  
   /**
    * Creates a diagram axis according to the given IObservation axis
    * 

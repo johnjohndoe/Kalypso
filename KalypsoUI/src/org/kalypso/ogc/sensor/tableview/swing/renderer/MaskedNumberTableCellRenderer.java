@@ -15,16 +15,20 @@ import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 
 /**
+ * Handles the rendering with the given NumberFormat and for each
+ * value asks the ObservationTableModel for possible RenderingRules
+ * that will be used to modify the layout: icon, tooltip, color, etc.
+ * 
  * @author schlienger
- *  
  */
 public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
 {
-  private final static NumberFormat nf = NumberFormat.getInstance();
+  private final NumberFormat m_nf;
 
-  public MaskedNumberTableCellRenderer()
+  public MaskedNumberTableCellRenderer( final NumberFormat nf )
   {
     setHorizontalAlignment( SwingConstants.RIGHT );
+    m_nf = nf;
   }
   
   /**
@@ -61,11 +65,11 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
     }
     
     // apply rendering rule
-    String ttext = "";
+    String ttext = table.getColumnName( column );
     for( int i = 0; i < r.length; i++ )
     {
       // TOOLTIP
-      ttext += r[i].getTooltipText() + " ";
+      ttext += "; " + r[i].getTooltipText();
 
       // FONT
       final Font f = r[i].getFont();
@@ -88,7 +92,7 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
 
     label.setToolTipText( ttext );
     
-    label.setText( nf.format( n.doubleValue() ) );
+    label.setText( m_nf.format( n.doubleValue() ) );
     return label;
   }
 }
