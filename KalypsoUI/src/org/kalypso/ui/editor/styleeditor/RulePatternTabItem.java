@@ -335,6 +335,7 @@ public class RulePatternTabItem
           setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
           editSymbolizerPanel.update( ruleCollection.get( 0 ).getSymbolizers().length );
           drawSymbolizerTabItems( ruleCollection.get( 0 ), symbolizerTabFolder, ruleCollection );
+          symbolizerTabFolder.setSelection(ruleCollection.get( 0 ).getSymbolizers().length-1);
         }
       }
     } );
@@ -457,6 +458,7 @@ public class RulePatternTabItem
                 new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
           }
           drawSymbolizerTabItems( ruleCollection.get( 0 ), symbolizerTabFolder, ruleCollection );
+          symbolizerTabFolder.setSelection(index1-1);
         }
         else if( action == EditSymbolizerPanel.FOR_SYMB )
         {
@@ -485,6 +487,7 @@ public class RulePatternTabItem
             getUserStyle().fireModellEvent(
                 new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
             drawSymbolizerTabItems( ruleCollection.get( 0 ), symbolizerTabFolder, ruleCollection );
+            symbolizerTabFolder.setSelection(index1+1);
           }
         }
         else if( action == EditSymbolizerPanel.BAK_SYMB )
@@ -512,6 +515,7 @@ public class RulePatternTabItem
             getUserStyle().fireModellEvent(
                 new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
             drawSymbolizerTabItems( ruleCollection.get( 0 ), symbolizerTabFolder, ruleCollection );
+            symbolizerTabFolder.setSelection(index1-1);
           }
         }
       }
