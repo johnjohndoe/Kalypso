@@ -74,14 +74,10 @@ public class BlockTimeSeries {
 									* 1000l
 									* 3600l;
 								if (sStep.equals("0.083")) {
-									int sTimeStep_int = (1/12);
-									Integer sTimeStep_Int = new Integer(sTimeStep_int);
-									float sTimeStep_float = Float.parseFloat("0.083");
-									System.out.println("TimeStep_float: "+sTimeStep_float);
 									/*timeStep =
 										((long) (sTimeStep_float * 1000f)) * 3600l;*/
-										timeStep = 300000l;
-								System.out.println("TimeStep: "+timeStep);
+									timeStep = 300000l;
+									System.out.println("TimeStep: " + timeStep);
 								} else {
 									timeStep =
 										((long) (Float.parseFloat(sStep)
@@ -130,14 +126,14 @@ public class BlockTimeSeries {
 											startDate
 												+ (valueIndex + valueOffset)
 													* timeStep);
-									System.out.println(
+									/*System.out.println(
 										valueIndex
 											+ " ("
 											+ valuesToGo
 											+ "): "
 											+ valueDate.toString()
 											+ " "
-											+ value);
+											+ value);*/
 									timeSeries.put(valueDate, value);
 									valueIndex += 1;
 									if (valueIndex >= valuesToGo)
@@ -186,19 +182,24 @@ public class BlockTimeSeries {
 		}
 	}
 
-	public Vector getDischarge(String key, Date startDate, Date endDate) {
+	public TreeMap getSimulatedDischarge(String key) {
+		TreeMap resultData = (TreeMap) blocks.get(key);
+		return resultData;
+	}
 
+	/*public Vector getDischarge(String key, Date startDate, Date endDate) {
+	
 		System.out.println("Startdate: " + startDate);
 		System.out.println("Enddate: " + endDate);
-
+	
 		Vector resultData = new Vector();
-
+	
 		SortedMap map_all = (TreeMap) blocks.get(key);
 		SortedMap map_result = null;
-
+	
 		Date start_dateKey = null;
 		Date end_dateKey = null;
-
+	
 		Iterator it_all = map_all.keySet().iterator();
 		while (it_all.hasNext()) {
 			Object dateKey = it_all.next();
@@ -207,7 +208,7 @@ public class BlockTimeSeries {
 			DateFormat dateformat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 			dateformat.setTimeZone(TimeZone.getTimeZone("GMT+1:00"));
 			/*System.out.println(
-				"Actual Date: " + dateformat.format(actualDate) + "   Value: " + value);*/
+				"Actual Date: " + dateformat.format(actualDate) + "   Value: " + value);
 			int start = actualDate.compareTo(startDate);
 			int end = actualDate.compareTo(endDate);
 			if (start == 0) {
@@ -219,7 +220,7 @@ public class BlockTimeSeries {
 				System.out.println("##EndKey: " + end_dateKey);
 			}
 		}
-
+	
 		map_result = map_all.subMap(start_dateKey, end_dateKey);
 		Iterator it_result = map_result.keySet().iterator();
 		while (it_result.hasNext()) {
@@ -228,9 +229,9 @@ public class BlockTimeSeries {
 			resultData.add(value);
 		}
 		resultData.add(map_all.get(end_dateKey));
-
+	
 		return resultData;
-	}
+	}*/
 
 	public void writeln(FileWriter writer, String line) throws IOException {
 		line = line + System.getProperty("line.separator");

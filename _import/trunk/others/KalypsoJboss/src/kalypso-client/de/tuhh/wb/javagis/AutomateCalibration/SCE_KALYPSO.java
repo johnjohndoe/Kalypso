@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.Vector;
+import java.util.TreeMap;
+import java.util.Iterator;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -42,14 +44,14 @@ import de.tuhh.wb.javagis.Main;
 import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.tools.xml.ServiceTools;
 import de.tuhh.wb.javagis.view.ViewManager;
-//import de.tuhh.wb.javagis.simulation.BlockTimeSeries;
+import de.tuhh.wb.javagis.simulation.BlockTimeSeries;
 
 public class SCE_KALYPSO
 	extends JInternalFrame
 	implements InternalFrameListener, ActionListener {
 
 	//Modeldata,Controldata,SimulationCaseData
-	//private File xmlDir = new File("C://Kalypso//xml_temp");
+	//private File xmlDir = new File("C://Kalypso//temp");
 	private File modelFile = null; //new File(xmlDir, "model.xml");
 	private File controlFile = null; //new File(xmlDir, "control.xml");
 	//private File simCaseFile = new File(xmlDir, "simulationCase.xml");
@@ -71,6 +73,8 @@ public class SCE_KALYPSO
 
 	private StartKalypso startKalypso;
 
+	private ObjectiveFunction oFunction;
+
 	//Parameter
 	//private double[] paramUpperBounds;
 	//private double[] paramLowerBounds;
@@ -84,10 +88,17 @@ public class SCE_KALYPSO
 	private int anzKalypso = 1;
 	private int rootNode = 0;
 	private double timeStep = 0;
-	private Date startDate_pegel;
-	private Date endDate_pegel;
+	private Date startDate_calibration;
+	private Date endDate_calibration;
 	private String gaugeFile = null;
 	private boolean syntetic = true;
+
+	private TreeMap observedDischarge;
+	private boolean equalWeights = true;
+	private boolean[] objectiveFunctions = new boolean[4];
+	private double[] trafoConstants = new double[4];
+	private double peakFlowLevel = 0;
+	private double lowFlowLevel = 0;
 
 	private static SCE_KALYPSO instance = null;
 
@@ -425,7 +436,7 @@ public class SCE_KALYPSO
 		boolean saveAll) {
 		//write new parameter in xml-files (Kalypso)
 		makeModelxml(valueParam, saveAll);
-		Vector resultData = new Vector();
+		/*Vector resultData = new Vector();
 		//run Kalypso.exe, store discharge results in Vector resultData
 		resultData =
 			startKalypso.runSimulation(
@@ -435,14 +446,14 @@ public class SCE_KALYPSO
 				endDate_pegel);
 		//number of data
 		int nData = resultData.size();
-		System.out.println("Anzahl Abfluesse: " + nData);
+		System.out.println("Anzahl Abflüsse: " + nData);
 		Double[] valueRunoff = new Double[nData];
 		//read values of data
 		for (int i = 0; i < nData; i++) {
 			valueRunoff[i] = new Double((String) (resultData.elementAt(i)));
 			//System.out.println(valueRunoff[i].toString());
 		}
-
+		
 		//write Kalypso output to SCE
 		PrintWriter to_SCE = new PrintWriter(streamOut_SCE, false);
 		to_SCE.println(nData);
@@ -452,7 +463,22 @@ public class SCE_KALYPSO
 			//System.out.println(index + "=" + valueRunoff[index]);
 		}
 		to_SCE.flush();
+		System.out.println("to_SCE flushed");*/
+
+		TreeMap resultData_sim = new TreeMap();
+		//run Kalypso.exe, store discharge results in TreeMap resultData
+		resultData_sim = startKalypso.runSimulation(saveAll, rootNode);
+		double oFunctionValue = 0;
+		//calculate objective function value
+		oFunctionValue = oFunction.getObjectiveFunctionValue(resultData_sim);
+		System.out.println("Objective function Value: " + oFunctionValue + "!");
+
+		//write value of objective function to SCE
+		PrintWriter to_SCE = new PrintWriter(streamOut_SCE, false);
+		to_SCE.println(oFunctionValue);
+		to_SCE.flush();
 		System.out.println("to_SCE flushed");
+
 		//count number of "Kalypsos"
 		System.out.println("Anzahl Kalypsos: " + anzKalypso);
 		anzKalypso = anzKalypso + 1;
@@ -494,7 +520,8 @@ public class SCE_KALYPSO
 		return sce;
 	}
 
-	//method prepares the files kalypsoInp.dat und scein.dat
+	//method prepares the file und scein.dat and 
+	//sets the TreeMap for observed Data
 	private void makeinputFiles() {
 		//copy sce-tool to targetDir
 		try {
@@ -524,15 +551,86 @@ public class SCE_KALYPSO
 					+ "\"");
 			err.printStackTrace();
 		}
-		//prepare kalypsoInp.dat
+
+		//Set TreeMap for observed data
 		if (syntetic) {
+			//calculate discharge with true parameter values and set as observed Discharge
+			Double[] valueParam_syntetic = new Double[calContexts.length];
+			for (int i = 0; i < calContexts.length; i++) {
+				valueParam_syntetic[i] =
+					new Double(calContexts[i].getSynteticValue());
+			}
+			makeModelxml(valueParam_syntetic, false);
+			TreeMap resultData_sim = new TreeMap();
+			//run Kalypso.exe, store discharge results in TreeMap resultData
+			resultData_sim = startKalypso.runSimulation(false, rootNode);
+			observedDischarge = resultData_sim;
+			/*Iterator it_all = observedDischarge.keySet().iterator();
+			while (it_all.hasNext()) {
+				Object dateKey = it_all.next();
+				Date actualDate = (Date) dateKey;
+				Object value = (String) observedDischarge.get(dateKey);
+				DateFormat dateformat =
+					new SimpleDateFormat("dd.MM.yyyy HH:mm");
+				dateformat.setTimeZone(TimeZone.getTimeZone("GMT+1:00"));
+				System.out.println(
+					"Actual Date: "
+						+ dateformat.format(actualDate)
+						+ "   Value: "
+						+ value);
+			}*/
+		} else {
+			GageTimeSeries gts = new GageTimeSeries();
+			File gFile = new File(gaugeFile);
+			gts.importPegelDat(gFile);
+			observedDischarge = gts.getObservedData();
+		}
+
+		//Objective Function
+		//boolean[] functions = { true, true, false, false };
+		//double[] trafoConstants = { 0, 0, 0, 0 };
+		if (equalWeights) {
+			Double[] valueParam_initial = new Double[calContexts.length];
+			for (int i = 0; i < calContexts.length; i++) {
+				valueParam_initial[i] =
+					new Double(calContexts[i].getInitialValue());
+			}
+			makeModelxml(valueParam_initial, false);
+			TreeMap qSim_Initial = new TreeMap();
+			//run Kalypso.exe, store discharge results in TreeMap resultData
+			qSim_Initial = startKalypso.runSimulation(false, rootNode);
+			oFunction =
+				new ObjectiveFunction(
+					observedDischarge,
+					objectiveFunctions,
+					peakFlowLevel,
+					lowFlowLevel,
+					startDate_calibration,
+					endDate_calibration,
+					timeStep,
+					qSim_Initial);
+		} else {
+			oFunction =
+				new ObjectiveFunction(
+					observedDischarge,
+					objectiveFunctions,
+					trafoConstants,
+					peakFlowLevel,
+					lowFlowLevel,
+					startDate_calibration,
+					endDate_calibration,
+					timeStep);
+		}
+
+		//prepare kalypsoInp.dat
+		/*if (syntetic) {
 			try {
 				File outputFile = new File(myWorkingDir_SCE, "Kalypsoinp.dat");
 				writeSynteticDataToFile(outputFile);
 			} catch (Exception e) {
 				System.out.println("Could not write KalypsoInp-File");
 			}
-
+		
 		} else {
 			GageTimeSeries gts = new GageTimeSeries();
 			File gFile = new File(gaugeFile);
@@ -540,14 +638,14 @@ public class SCE_KALYPSO
 			Vector result = gts.getData(startDate_pegel, endDate_pegel);
 			/*for (int i = 0; i < result.size(); i++) {
 				System.out.println(i + "= " + result.get(i));
-			}*/
+			}
 			try {
 				File outputFile = new File(myWorkingDir_SCE, "Kalypsoinp.dat");
 				gts.writeDataToFile(outputFile, result);
 			} catch (Exception e) {
 				System.out.println("Could not write KalypsoInp-File");
 			}
-		}
+		}*/
 	}
 
 	public void readSCEOutput(int numParam) {
@@ -588,7 +686,7 @@ public class SCE_KALYPSO
 
 			int numHeader0 = 0;
 			// If data is syntetic
-			String test = (String) data.firstElement();
+			/*String test = (String) data.firstElement();
 			if (test.equals("TRUE")) {
 				numHeader0 = 3 + numParam;
 				ps.println("True parameter values: ");
@@ -602,11 +700,24 @@ public class SCE_KALYPSO
 					ps.println("Parameter " + n + ": " + realVal[n].toString());
 				}
 				makeModelxml(realVal, true);
-				startKalypso.runSimulation(
-					true,
-					rootNode,
-					startDate_pegel,
-					endDate_pegel);
+				startKalypso.runSimulation(true, rootNode);
+			}*/
+
+			//If data is syntetic
+			if (syntetic == true) {
+				ps.println("True parameter values: ");
+				for (int i = 0; i < numParam; i++) {
+					valueParam[i] =
+						new Double(calContexts[i].getSynteticValue());
+					System.out.println(
+						i + ": " + calContexts[i].getSynteticValue());
+				}
+				for (int n = 0; n < numParam; n++) {
+					ps.println(
+						"Parameter " + n + ": " + valueParam[n].toString());
+				}
+				makeModelxml(valueParam, true);
+				startKalypso.runSimulation(true, rootNode);
 			}
 
 			int numHeader1 = 10;
@@ -628,11 +739,7 @@ public class SCE_KALYPSO
 				ps.println("Parameter " + n + ": " + realVal[n].toString());
 			}
 			makeModelxml(realVal, true);
-			startKalypso.runSimulation(
-				true,
-				rootNode,
-				startDate_pegel,
-				endDate_pegel);
+			startKalypso.runSimulation(true, rootNode);
 
 			int startLoops =
 				numHeader0 + numHeader1 + 1 + numParam + numHeader2;
@@ -657,11 +764,7 @@ public class SCE_KALYPSO
 					ps.println("Parameter " + n + ": " + realVal[n].toString());
 				}
 				makeModelxml(realVal, true);
-				startKalypso.runSimulation(
-					true,
-					rootNode,
-					startDate_pegel,
-					endDate_pegel);
+				startKalypso.runSimulation(true, rootNode);
 
 			}
 			modelFile = startKalypso.modelxml;
@@ -758,7 +861,12 @@ public class SCE_KALYPSO
 			node =
 				xmlServiceTools.getXPath_singleNode(queryTimeStep, docControl);
 			System.out.println(node.getNodeValue());
+			/*if (node.getNodeValue().equals("0.083")) {
+				timeStep = 1.0 / 12.0;
+				System.out.println("TimeStep: " + timeStep);
+			} else {*/
 			timeStep = Double.parseDouble(node.getNodeValue());
+			//}
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -775,7 +883,7 @@ public class SCE_KALYPSO
 			Node sd = xmlServiceTools.getXPath_singleNode(querystartDate, doc);
 			Node sdValue = sd.getFirstChild();
 			String startValue = sdValue.getNodeValue();
-			startDate_pegel = dateformat.parse(startValue);
+			startDate_calibration = dateformat.parse(startValue);
 			/*System.out.println(
 				"Tag: "
 					+ startDate_pegel.getDate()
@@ -798,7 +906,7 @@ public class SCE_KALYPSO
 			Node ed = xmlServiceTools.getXPath_singleNode(queryendDate, doc);
 			Node edValue = ed.getFirstChild();
 			String endValue = edValue.getNodeValue();
-			endDate_pegel = dateformat.parse(endValue);
+			endDate_calibration = dateformat.parse(endValue);
 			System.out.println(endValue);
 
 			//Gauging station
@@ -832,6 +940,135 @@ public class SCE_KALYPSO
 				}*/
 			//}
 
+			//Objectivefunction values
+			String queryTrafoConstants =
+				"/autoCalibration/optParameter/objectiveFunction/transformationConstants";
+			Node tConstants =
+				xmlServiceTools.getXPath_singleNode(queryTrafoConstants, doc);
+			Node trafoValue = tConstants.getFirstChild();
+			String trafoConstantsValue = trafoValue.getNodeValue();
+			if (trafoConstantsValue.equals("equal")) {
+				equalWeights = true;
+			}
+			if (trafoConstantsValue.equals("userdefined")) {
+				equalWeights = false;
+			}
+
+			//Volume Error
+			String queryVolumeError_mode =
+				"/autoCalibration/optParameter/objectiveFunction/volumeError/@mode";
+			Node mode =
+				xmlServiceTools.getXPath_singleNode(queryVolumeError_mode, doc);
+			Node mValue = mode.getFirstChild();
+			String modeValue = mValue.getNodeValue();
+			objectiveFunctions[0] = (new Boolean(modeValue)).booleanValue();
+			if (!equalWeights && objectiveFunctions[0]) {
+				String queryTrafoConstant =
+					"/autoCalibration/optParameter/objectiveFunction/volumeError/transformationConstant";
+				Node trafoConstant =
+					xmlServiceTools.getXPath_singleNode(
+						queryTrafoConstant,
+						doc);
+				Node trafoConstValue = trafoConstant.getFirstChild();
+				String trafoConstantValue = trafoConstValue.getNodeValue();
+				trafoConstants[0] = Double.parseDouble(trafoConstantValue);
+			} else {
+				trafoConstants[0] = 0;
+			}
+
+			//Overall RMSE
+			String queryRMSE_mode =
+				"/autoCalibration/optParameter/objectiveFunction/rootMeanSquareError/@mode";
+			mode = xmlServiceTools.getXPath_singleNode(queryRMSE_mode, doc);
+			mValue = mode.getFirstChild();
+			modeValue = mValue.getNodeValue();
+			objectiveFunctions[1] = (new Boolean(modeValue)).booleanValue();
+			if (!equalWeights && objectiveFunctions[1]) {
+				String queryTrafoConstant =
+					"/autoCalibration/optParameter/objectiveFunction/rootMeanSquareError/transformationConstant";
+				Node trafoConstant =
+					xmlServiceTools.getXPath_singleNode(
+						queryTrafoConstant,
+						doc);
+				Node trafoConstValue = trafoConstant.getFirstChild();
+				String trafoConstantValue = trafoConstValue.getNodeValue();
+				trafoConstants[1] = Double.parseDouble(trafoConstantValue);
+			} else {
+				trafoConstants[1] = 0;
+			}
+
+			//Average RMSE peakFlows
+			String queryRMSEpeak_mode =
+				"/autoCalibration/optParameter/objectiveFunction/rootMeanSquareError_PeakFlows/@mode";
+			mode = xmlServiceTools.getXPath_singleNode(queryRMSEpeak_mode, doc);
+			mValue = mode.getFirstChild();
+			modeValue = mValue.getNodeValue();
+			objectiveFunctions[2] = (new Boolean(modeValue)).booleanValue();
+			if (objectiveFunctions[2]) {
+				String queryPeakFlowLevel =
+					"/autoCalibration/optParameter/objectiveFunction/rootMeanSquareError_PeakFlows/peakFlowLevel";
+				Node flowLevel =
+					xmlServiceTools.getXPath_singleNode(
+						queryPeakFlowLevel,
+						doc);
+				Node flValue = flowLevel.getFirstChild();
+				String flowLevelValue = flValue.getNodeValue();
+				peakFlowLevel = Double.parseDouble(flowLevelValue);
+			}
+			if (!equalWeights && objectiveFunctions[2]) {
+				String queryTrafoConstant =
+					"/autoCalibration/optParameter/objectiveFunction/rootMeanSquareError_PeakFlows/transformationConstant";
+				Node trafoConstant =
+					xmlServiceTools.getXPath_singleNode(
+						queryTrafoConstant,
+						doc);
+				Node trafoConstValue = trafoConstant.getFirstChild();
+				String trafoConstantValue = trafoConstValue.getNodeValue();
+				trafoConstants[2] = Double.parseDouble(trafoConstantValue);
+			} else {
+				trafoConstants[2] = 0;
+			}
+
+			//Average RMSE lowFlows
+			String queryRMSElow_mode =
+				"/autoCalibration/optParameter/objectiveFunction/rootMeanSquareError_LowFlows/@mode";
+			mode = xmlServiceTools.getXPath_singleNode(queryRMSElow_mode, doc);
+			mValue = mode.getFirstChild();
+			modeValue = mValue.getNodeValue();
+			objectiveFunctions[3] = (new Boolean(modeValue)).booleanValue();
+			if (objectiveFunctions[3]) {
+				String queryLowFlowLevel =
+					"/autoCalibration/optParameter/objectiveFunction/rootMeanSquareError_LowFlows/lowFlowLevel";
+				Node flowLevel =
+					xmlServiceTools.getXPath_singleNode(queryLowFlowLevel, doc);
+				Node flValue = flowLevel.getFirstChild();
+				String flowLevelValue = flValue.getNodeValue();
+				lowFlowLevel = Double.parseDouble(flowLevelValue);
+			}
+			if (!equalWeights && objectiveFunctions[3]) {
+				String queryTrafoConstant =
+					"/autoCalibration/optParameter/objectiveFunction/rootMeanSquareError_LowFlows/transformationConstant";
+				Node trafoConstant =
+					xmlServiceTools.getXPath_singleNode(
+						queryTrafoConstant,
+						doc);
+				Node trafoConstValue = trafoConstant.getFirstChild();
+				String trafoConstantValue = trafoConstValue.getNodeValue();
+				trafoConstants[3] = Double.parseDouble(trafoConstantValue);
+			} else {
+				trafoConstants[3] = 0;
+			}
+
+			System.out.println("Objective function values: ");
+			System.out.println("EqualWeights=" + equalWeights);
+			for (int i = 0; i < objectiveFunctions.length; i++) {
+				System.out.print(
+					"Funktion " + i + ": " + objectiveFunctions[i] + ", ");
+				System.out.println("A=" + trafoConstants[i]);
+			}
+			System.out.println("PeakFlowLevel=" + peakFlowLevel);
+			System.out.println("LowFlowLevel=" + lowFlowLevel);
+
 			//xPath, ParamUpperBound, ParamLowerBound
 			String queryID = "/autoCalibration/parameterlist/parameter/@ID";
 			/*String queryXPath =
@@ -842,6 +1079,8 @@ public class SCE_KALYPSO
 				"/autoCalibration/parameterlist/parameter/lowerBound";
 			String querySynValues =
 				"/autoCalibration/parameterlist/parameter/synteticValue";
+			String queryInitialValues =
+				"/autoCalibration/parameterlist/parameter/initialValue";
 			String queryFactor =
 				"/autoCalibration/parameterlist/parameter/@mode";
 
@@ -850,6 +1089,8 @@ public class SCE_KALYPSO
 			NodeList nlUpBound = xmlServiceTools.getXPath(queryUpBound, doc);
 			NodeList nlLoBound = xmlServiceTools.getXPath(queryLoBound, doc);
 			NodeList nlSynVal = xmlServiceTools.getXPath(querySynValues, doc);
+			NodeList nlIniVal =
+				xmlServiceTools.getXPath(queryInitialValues, doc);
 			NodeList nlMode = xmlServiceTools.getXPath(queryFactor, doc);
 
 			int anzParam = nlID.getLength();
@@ -879,6 +1120,9 @@ public class SCE_KALYPSO
 				n = (nlLoBound.item(i)).getFirstChild();
 				value = Double.parseDouble(n.getNodeValue());
 				calContext.setLowerbound(value);
+				n = (nlIniVal.item(i)).getFirstChild();
+				value = Double.parseDouble(n.getNodeValue());
+				calContext.setInitialValue(value);
 				if (syntetic) {
 					n = (nlSynVal.item(i)).getFirstChild();
 					value = Double.parseDouble(n.getNodeValue());
@@ -911,6 +1155,8 @@ public class SCE_KALYPSO
 						+ calContexts[n].getLowerBound()
 						+ ", Syntetic Value="
 						+ calContexts[n].getSynteticValue()
+						+ ", Initial Value="
+						+ calContexts[n].getInitialValue()
 						+ ", Mode="
 						+ calContexts[n].getMode());
 				String[] xPaths = calContexts[n].getxPaths();
@@ -984,11 +1230,11 @@ public class SCE_KALYPSO
 
 	}
 
-	private void writeSynteticDataToFile(File kalypsoInp) throws IOException {
-
+	/*private void writeSynteticDataToFile(File kalypsoInp) throws IOException {
+	
 		DecimalFormat decimalFormat1 = new DecimalFormat("000.000000");
 		DecimalFormat decimalFormat2 = new DecimalFormat("00000");
-
+	
 		FileWriter writer = new FileWriter(kalypsoInp);
 		String line1 = "# DATA, OBJ FUNC, DATA TYPE";
 		writeln(writer, line1);
@@ -1033,8 +1279,8 @@ public class SCE_KALYPSO
 		}
 		writeln(writer, line);
 		writer.close();
-
-	}
+	
+	}*/
 
 	private void writeln(FileWriter writer, String line) throws IOException {
 		line = line + System.getProperty("line.separator");
@@ -1042,7 +1288,7 @@ public class SCE_KALYPSO
 	}
 
 	private Date getStartDate() {
-		Date startDate = (Date) startDate_pegel.clone();
+		Date startDate = (Date) startDate_calibration.clone();
 		return startDate;
 	}
 
@@ -1235,9 +1481,75 @@ public class SCE_KALYPSO
 	}
 
 	public static void main(String[] args) {
-		openSCEView();
-		instance.inputFile =
-			new File("C://Kalypso//Test_Meike//input_Meike.xml");
+		BlockTimeSeries blockSerie = new BlockTimeSeries();
+		int rootNode = 103;
+		File outFile =
+			new File("C://Kalypso//temp//Test_Bewertung//discharge.dat");
+		Vector allowedKeys = new Vector();
+		allowedKeys.addElement(String.valueOf(rootNode));
+		blockSerie.importBlockFile(outFile, allowedKeys);
+		TreeMap resultData_sim =
+			blockSerie.getSimulatedDischarge(String.valueOf(rootNode));
+		Iterator it_all = resultData_sim.keySet().iterator();
+		/*while (it_all.hasNext()) {
+			Object dateKey = it_all.next();
+			Date actualDate = (Date) dateKey;
+			Object value = (String) resultData_sim.get(dateKey);
+			DateFormat dateformat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+			dateformat.setTimeZone(TimeZone.getTimeZone("GMT+1:00"));
+			System.out.println(
+				"Actual Date: "
+					+ dateformat.format(actualDate)
+					+ "   Value: "
+					+ value);
+		}*/
+		GageTimeSeries gageSerie = new GageTimeSeries();
+		outFile = new File("C://Kalypso//temp//Test_Bewertung//pegel.dat");
+		gageSerie.importPegelDat(outFile);
+		TreeMap resultData_obs = gageSerie.getObservedData();
+		/*Iterator it_all = resultData_obs.keySet().iterator();
+		while (it_all.hasNext()) {
+			Object dateKey = it_all.next();
+			Date actualDate = (Date) dateKey;
+			Object value = (String) resultData_obs.get(dateKey);
+			DateFormat dateformat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+			dateformat.setTimeZone(TimeZone.getTimeZone("GMT+1:00"));
+			System.out.println(
+				"Actual Date: "
+					+ dateformat.format(actualDate)
+					+ "   Value: "
+					+ value);
+		}*/
+		boolean[] functions = { false, false, true, true };
+		double[] trafoConstants = { 0.0, 0.0, 0, 2.0};
+		DateFormat dateformat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		dateformat.setTimeZone(TimeZone.getTimeZone("GMT+1:00"));
+		Date startDate = new Date();
+		Date endDate = new Date();
+		try {
+			startDate = dateformat.parse("01.11.2001 00:00");
+			endDate = dateformat.parse("01.04.2002 00:00");
+		} catch (Exception e) {
+			System.out.println("Cannot parse start- or endDate.");
+		}
+		double timeStep = 24;
+		double peakFlowLevel = 0.1;
+		double lowFlowLevel = 0.02;
+		ObjectiveFunction oFunction =
+			new ObjectiveFunction(
+				resultData_obs,
+				functions,
+				trafoConstants,
+				peakFlowLevel,
+				lowFlowLevel,
+				startDate,
+				endDate,
+				timeStep);
+		//double erg = oFunction.getObjectiveFunctionValue(resultData_sim);
+		//System.out.println("Objective function Value: " + erg + "!");
+		//openSCEView();
+		//instance.inputFile =
+		//	new File("C://Kalypso//Test_Meike//input_Meike.xml");
 		//inputFile = new File("C://Kalypso//TestMode//input_neu2.xml");
 		/*instance.controlFile = new File("C://Kalypso//TestMode//control.xml");
 		instance.modelFile = new File("C://Kalypso//TestMode//model.xml");
@@ -1250,7 +1562,7 @@ public class SCE_KALYPSO
 		Vector allowedKeys = new Vector();
 		allowedKeys.addElement(String.valueOf(rootNode));
 		blockSerie.importBlockFile(outFile, allowedKeys);
-	    Vector resultData = new Vector();
+		Vector resultData = new Vector();
 		resultData =
 			blockSerie.getDischarge(
 				String.valueOf(rootNode),
@@ -1268,6 +1580,6 @@ public class SCE_KALYPSO
 				new Double(50.0),
 				new Double(60.0)};
 		instance.makeModelxml(param, true);*/
-		instance.testInputFile();
+		//instance.testInputFile();
 	}
 }
