@@ -22,6 +22,7 @@ public class ImageProvider
   
   public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMIN = id( "icons/full/elcl16/kde_viewmag+.gif" );
   
+  public static final ImageDescriptor IMAGE_ZML_FILE = id("icons/zml-icon.gif");
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ADD = id("icons/observation_repository_add.gif");
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_REMOVE = id("icons/observation_repository_rem.gif");
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_CONF = id("icons/observation_repository_conf.gif");
