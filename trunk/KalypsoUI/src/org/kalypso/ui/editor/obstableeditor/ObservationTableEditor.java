@@ -1,9 +1,8 @@
 package org.kalypso.ui.editor.obstableeditor;
 
 import java.awt.Frame;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -17,13 +16,18 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
+import org.kalypso.ogc.sensor.tableview.ObservationTableTemplateFactory;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ogc.sensor.zml.ZmlObservation;
+import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 
@@ -98,43 +102,41 @@ public class ObservationTableEditor extends AbstractEditorPart
   protected void doSaveInternal( IProgressMonitor monitor,
       IFileEditorInput input ) throws CoreException
   {
-    final List columns = m_template.getColumns();
+    final Collection themes = m_template.getThemes();
 
-    for( final Iterator it = columns.iterator(); it.hasNext(); )
+    for( final Iterator it = themes.iterator(); it.hasNext(); )
     {
-      final ITableViewColumn column = (ITableViewColumn) it.next();
+      final ITableViewTheme theme = (ITableViewTheme) it.next();
+      
+      boolean dirty = false;
+      
+      for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
+      {
+        dirty = ((ITableViewColumn)itcol.next()).isDirty();
+        
+        // at least one col dirty?
+        if( dirty )
+          break;
+      }
 
-      if( column.isDirty() )
+      final IObservation obs = theme.getObservation();
+      
+      if( dirty && obs instanceof ZmlObservation )
       {
         final String msg = "Sie haben Änderungen in "
-            + column.getName()
+            + obs.getName()
             + " vorgenommen. Wollen \n"
-            + "Sie die Änderungen übernehmen und die grundliegende Datei speichern?";
+            + "Sie die Änderungen übernehmen?";
+        
         final boolean b = MessageDialog.openQuestion( getSite().getShell(),
             "Änderungen speichern", msg );
 
         if( b )
         {
-          final IObservation obs = column.getObservation();
+          for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
+            ((ITableViewColumn)itcol.next()).setDirty( false );
 
-          column.setDirty( false );
-
-          final List cols2save = new ArrayList();
-          cols2save.add( column );
-
-          // reset dirty flag for other columns that have the same observation
-          for( final Iterator itTmp = columns.iterator(); itTmp.hasNext(); )
-          {
-            final ITableViewColumn col = (ITableViewColumn) itTmp.next();
-
-            if( col.getObservation().equals( obs ) && col.isDirty() )
-            {
-              col.setDirty( false );
-              cols2save.add( col );
-            }
-          }
-
-          final ITuppleModel values = m_model.getValues( cols2save );
+          final ITuppleModel values = m_model.getValues( theme.getColumns() );
 
           try
           {
@@ -165,9 +167,14 @@ public class ObservationTableEditor extends AbstractEditorPart
     {
       public void runIntern( ) throws Throwable
       {
-        m_template = LinkedTableViewTemplate.loadTableViewTemplate( input
-            .getFile() );
+        final ObstableviewType baseTemplate = ObservationTableTemplateFactory.loadTableTemplateXML( input
+            .getFile().getContents() );
+        
+        m_template = new LinkedTableViewTemplate();
         m_template.addTemplateEventListener( m_table );
+        
+        m_template.setBaseTemplate( baseTemplate, ResourceUtilities.createURL( input.getFile() ) );
+        
         m_model.setRules( m_template );
       }
     };
