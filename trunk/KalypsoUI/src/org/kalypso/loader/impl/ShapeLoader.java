@@ -62,6 +62,9 @@ public class ShapeLoader extends AbstractLoader
 
       final CS_CoordinateSystem sourceCrs = org.deegree_impl.model.cs.Adapters.getDefault().export(
           csFac.getCSByName( sourceSrs ) );
+      
+      if( sourceCrs == null )
+        throw new LoaderException( "Kein Koordinaten-System für Shape gefunden: " + sourceSrs );
 
       final KalypsoFeatureLayer layer = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), new UtilProgressMonitor( monitor ) );
       
