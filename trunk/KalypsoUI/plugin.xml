@@ -27,6 +27,8 @@
       <import plugin="org.kalypso.util"/>
       <import plugin="org.kalypso.deegree"/>
       <import plugin="org.kalypso.psiadapter"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.debug.ui"/>
    </requires>
    <extension
          point="org.eclipse.ui.editors">
@@ -231,6 +233,38 @@
             name="Rechenfall"
             id="org.kalypso.wizard.newCalcCase">
       </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="org.kalypso.ui.launcher.CalcCaseLaunchConfigurationDelegate"
+            public="true"
+            name="Modellrechnung"
+            modes="run"
+            id="org.kalypso.ui.launch.CalcCaseType"/>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchShortcuts">
+      <shortcut
+            label="Modellrechnung"
+            class="org.kalypso.ui.launcher.CalcCaseLaunchShortcut"
+            modes="run"
+            id="org.kalypso.ui.launch.CalcCaseLaunchShortcut">
+         <perspective id="org.eclipse.ui.resourcePerspective"/>
+         <contextualLaunch>
+            <contextLabel
+                  label="Modellrechnung"
+                  mode="run"/>
+            <enablement>
+               <with variable="selection">
+                  <count value="1"/>
+                  <iterate >
+                     <instanceof value="org.eclipse.core.resources.IFolder"/>
+                  </iterate>
+               </with>
+            </enablement>
+         </contextualLaunch>
+      </shortcut>
    </extension>
 
 </plugin>
