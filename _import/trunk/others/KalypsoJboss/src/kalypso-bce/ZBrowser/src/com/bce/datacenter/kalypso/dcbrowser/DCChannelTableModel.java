@@ -7,6 +7,7 @@ import com.bce.datacenter.kalypso.Timeserie;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
+import de.tuhh.wb.javagis.tools.I18n;
 
 /**
  * Table Model for displaying Level's contents
@@ -15,7 +16,11 @@ import javax.swing.table.DefaultTableModel;
  */
 public class DCChannelTableModel extends DefaultTableModel {
 	private final static String[] COLUMN_NAMES =
-		{ "Name", "Beginn", "Ende", "Key" };
+		{
+			I18n.get("Zeitreihen-Browser_Column_Name"),
+			I18n.get("Zeitreihen-Browser_Column_Beginn"),
+			I18n.get("Zeitreihen-Browser_Column_Ende"),
+			I18n.get("Zeitreihen-Browser_Column_Key")};
 	private final static Class[] COLUMN_CLASSES =
 		{ String.class, String.class, String.class, String.class };
 	private Channel m_currentChannel = null;

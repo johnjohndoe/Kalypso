@@ -215,7 +215,7 @@ public class DCBrowser extends JFrame {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		setSize(500, 400);
-		setTitle("Zeitreihen-Browser");
+		setTitle(I18n.get("Title_Zeitreihen-Browser"));
 	}
 
 	public static void main(String[] args) {
