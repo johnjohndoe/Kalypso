@@ -416,67 +416,83 @@
       <editorContribution
             targetID="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
             id="org.kalypso.ui.editor.obstableeditor.EditorContribution">
+         <menu
+               label="Tabelle"
+               path="additions"
+               id="org.kalypso.ui.editor.obstableeditor.menu">
+            <separator name="separator1"/>
+            <groupMarker name="edit"/>
+            <separator name="separator2"/>
+            <groupMarker name="tools"/>
+         </menu>
          <action
-               toolbarPath="table"
+               toolbarPath="tabelle/edit"
                label="Zeile hinzufügen"
                class="org.kalypso.ui.editor.obstableeditor.actions.AddRowAction"
                tooltip="Fügt eine Zeile hinzu. Öffnet Eingabedialog."
                icon="icons/obstable/add_row.gif"
                style="push"
-               menubarPath="zml-table/edit"
+               menubarPath="org.kalypso.ui.editor.obstableeditor.menu/edit"
                id="org.kalypso.ui.editor.obstableeditor.actions.AddRowAction">
          </action>
          <action
-               toolbarPath="table"
+               toolbarPath="tabelle/edit"
                label="Zeile entfernen"
                class="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction"
                tooltip="Entfernt die ausgewählte Zeile"
                icon="icons/obstable/rem_row.gif"
                style="push"
-               menubarPath="zml-table/edit"
+               menubarPath="org.kalypso.ui.editor.obstableeditor.menu/edit"
                id="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction">
          </action>
          <action
-               toolbarPath="table"
+               toolbarPath="tabelle/edit"
                label="Daten speichern"
                class="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction"
                tooltip="Speichert die grundliegende Daten"
                icon="icons/gistable/save_edit.gif"
                style="push"
-               menubarPath="zml-table/edit"
+               menubarPath="org.kalypso.ui.editor.obstableeditor.menu/edit"
                id="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction">
          </action>
          <action
-               toolbarPath="table_export"
+               toolbarPath="tabelle/tools"
                label="Tabelle exportieren"
                tooltip="Exportiert die Tabelle in das Berichtswesen"
                class="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate"
                icon="icons/util/bericht.gif"
                style="push"
-               menubarPath="zml-table/tools"
+               menubarPath="org.kalypso.ui.editor.obstableeditor.menu/tools"
                id="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate">
          </action>
       </editorContribution>
       <editorContribution
             targetID="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"
             id="org.kalypso.ui.editor.diagrameditor.EditorContribution">
+         <menu
+               label="Diagramm"
+               path="additions"
+               id="org.kalypso.ui.editor.obsdiageditor.menu">
+            <separator name="separator1"/>
+            <groupMarker name="tools"/>
+         </menu>
          <action
-               toolbarPath="diagram"
+               toolbarPath="diagramm"
                label="Im Grafikprogramm öffnen"
                class="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction"
                tooltip="Öffnet das aktuelle Diagramm im Grafikprogramm"
                icon="icons/observation/grafik-icon.gif"
-               menubarPath="zml-diag/tools"
+               menubarPath="org.kalypso.ui.editor.obsdiageditor.menu/tools"
                id="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction">
          </action>
          <action
-               toolbarPath="diagram"
+               toolbarPath="diagramm"
                label="Diagramm exportieren"
                tooltip="Exportiert das Diagramm in das Berichtswesen."
                class="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate"
                icon="icons/util/bericht.gif"
                style="push"
-               menubarPath="zml-diag/tools"
+               menubarPath="org.kalypso.ui.editor.obsdiageditor.menu/tools"
                id="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate">
          </action>
       </editorContribution>
