@@ -1,4 +1,4 @@
-package org.kalypso.services.ocs.wizard.idtable;
+package org.kalypso.ui.wizard.ocs.idtable;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;

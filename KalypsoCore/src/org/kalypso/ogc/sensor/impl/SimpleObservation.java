@@ -137,7 +137,7 @@ public class SimpleObservation implements IObservation
     final IAxis[] otherAxes = values.getAxisList();
 
     if( m_axes.length != otherAxes.length )
-      throw new SensorException( "Axes do not have same length" );
+      throw new SensorException( "Not same amount of Axes" );
 
     final Map map = new HashMap( m_axes.length );
 

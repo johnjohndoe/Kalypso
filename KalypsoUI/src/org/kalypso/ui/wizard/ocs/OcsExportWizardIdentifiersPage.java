@@ -1,10 +1,12 @@
-package org.kalypso.services.ocs.wizard;
+package org.kalypso.ui.wizard.ocs;
+
+import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.services.ocs.wizard.idtable.IdTableViewer;
+import org.kalypso.ui.wizard.ocs.idtable.IdTableViewer;
 
 /**
  * OcsExportWizardRepositoryPage
@@ -35,6 +37,14 @@ public class OcsExportWizardIdentifiersPage extends WizardPage
     
     setControl( m_tableViewer.getControl() );
     
-    m_tableViewer.setInput( m_selection );
+    //m_tableViewer.setInput( m_selection );
+  }
+
+  /**
+   * @param selectedResources
+   */
+  public void setResourcesToExport( List selectedResources )
+  {
+    m_tableViewer.setInput( selectedResources );
   }
 }

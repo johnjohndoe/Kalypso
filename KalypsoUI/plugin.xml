@@ -556,8 +556,8 @@
          point="org.eclipse.ui.exportWizards">
       <wizard
             icon="icons/observation_repository.gif"
-            class="org.kalypso.services.ocs.wizard.OcsExportWizard"
+            class="org.kalypso.ui.wizard.ocs.OcsExportWizard"
             name="Export über Kalypso Zeitreihendienst"
-            id="org.kalypso.services.ocs.wizard.OcsExportWizard"/>
+            id="org.kalypso.ui.wizard.ocs.OcsExportWizard"/>
    </extension>
 </plugin>

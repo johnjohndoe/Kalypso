@@ -1,10 +1,11 @@
-package org.kalypso.services.ocs.wizard;
+package org.kalypso.ui.wizard.ocs;
 
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -71,5 +72,16 @@ public class OcsExportWizard extends Wizard implements IExportWizard
 	
 	setWindowTitle( "Zeitreihenexport Wizard" );
 	setNeedsProgressMonitor( true );
+  }
+  
+  /**
+   * @see org.eclipse.jface.wizard.IWizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
+   */
+  public IWizardPage getNextPage( IWizardPage page )
+  {
+    if( page == m_resPage )
+      m_idPage.setResourcesToExport( m_resPage.getSelectedResources() );
+    
+    return super.getNextPage( page );
   }
 }

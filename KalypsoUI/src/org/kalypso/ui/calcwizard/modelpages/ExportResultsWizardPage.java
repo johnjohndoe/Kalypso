@@ -49,6 +49,7 @@ import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.util.FeatureLabelProvider;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
@@ -406,7 +407,12 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
           final IObservation dest = ZmlFactory.parseXML( urlPG, destRef );
 
           // let's hope that it works
-          dest.setValues( source.getValues( null ) );
+          //dest.setValues( source.getValues( null ) );
+          final boolean b = ObservationUtilities.optimisticValuesCopy( source, dest, null );
+          
+          // TODO: maybe inform when nothing happened during copy
+          if( !b )
+            System.out.println( "Nohting to copy for " + source.getName() );
         }
         catch( MalformedURLException e )
         {
