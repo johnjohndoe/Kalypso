@@ -132,7 +132,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     int h = g.getClipBounds().height;
     if( m_Image == null )
       updateLegend();
-    if( selectionId < 0 && m_Image != null )
+    if( selectionId == 0 && m_Image != null )
     {
       g.setPaintMode();
       g.drawImage( m_Image, w - m_imageWidth, h - m_imageHeight, m_imageWidth, m_imageHeight, null );
