@@ -39,4 +39,24 @@ public interface IParser
    * @throws ParserException
    */
   public Object parse( String text ) throws ParserException;
+  
+  /**
+   * Compares the values
+   * 
+   * @param value1
+   * @param value2
+   * @return -1, 0 or 1
+   * @throws ParserException
+   */
+  public int compare( String value1, String value2 ) throws ParserException;
+  
+  /**
+   * Compares the values
+   * 
+   * @param value1
+   * @param value2
+   * @return -1, 0, 1
+   * @throws ParserException
+   */
+  public int compare( Object value1, Object value2 ) throws ParserException;
 }

@@ -80,4 +80,16 @@ public class DateParser extends AbstractParser
   {
     return m_df.format( obj );
   }
+
+  /**
+   * @see org.kalypso.util.parser.IParser#compare(java.lang.Object,
+   *      java.lang.Object)
+   */
+  public int compare( Object value1, Object value2 ) throws ParserException
+  {
+    Date d1 = (Date) value1;
+    Date d2 = (Date) value2;
+
+    return d1.compareTo( d2 );
+  }
 }

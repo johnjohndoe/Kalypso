@@ -69,4 +69,16 @@ public class DoubleParser extends AbstractParser
   {
     return obj.toString();
   }
+  
+  /**
+   * @see org.kalypso.util.parser.IParser#compare(java.lang.Object,
+   *      java.lang.Object)
+   */
+  public int compare( Object value1, Object value2 ) throws ParserException
+  {
+    double n1 = ((Number) value1).doubleValue();
+    double n2 = ((Number) value2).doubleValue();
+
+    return Double.compare( n1, n2 );
+  }
 }

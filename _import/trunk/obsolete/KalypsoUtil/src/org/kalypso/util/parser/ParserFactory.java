@@ -1,9 +1,14 @@
 package org.kalypso.util.parser;
 
+import java.util.Date;
 import java.util.Properties;
 
 import org.kalypso.util.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.util.factory.FactoryException;
+import org.kalypso.util.parser.impl.DateParser;
+import org.kalypso.util.parser.impl.DoubleParser;
+import org.kalypso.util.parser.impl.IntegerParser;
+import org.kalypso.util.parser.impl.StringParser;
 
 
 /**
@@ -45,5 +50,23 @@ public class ParserFactory
     }
       
     return (IParser)m_objFactory.getObjectInstance( type, IParser.class, args );
+  }
+ 
+  /**
+   * @param dataClass
+   * @return adequate parser for the given dataclass
+   */
+  public static IParser createParser( final Class dataClass )
+  {
+    if( Date.class.isAssignableFrom( dataClass ) )
+      return new DateParser();
+
+    if( Integer.class.isAssignableFrom( dataClass ) )
+      return new IntegerParser();
+    
+    if( Double.class.isAssignableFrom( dataClass ) )
+      return new DoubleParser();
+    
+    return new StringParser();
   }
 }

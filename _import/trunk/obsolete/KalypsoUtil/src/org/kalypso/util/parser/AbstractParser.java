@@ -31,6 +31,18 @@ public abstract class AbstractParser implements IParser
   /**
    * Diese Methode wird von toString( Object ) aufgerufen damit Unterklassen der
    * toString Business tatsächlich implementieren können.
+   * 
+   * @param obj
+   * @return string
    */
   public abstract String toStringInternal( Object obj );
+  
+  /**
+   * @see org.kalypso.util.parser.IParser#compare(java.lang.String,
+   *      java.lang.String)
+   */
+  public int compare( String value1, String value2 ) throws ParserException
+  {
+    return compare( parse( value1 ), parse( value2 ) );
+  }
 }
