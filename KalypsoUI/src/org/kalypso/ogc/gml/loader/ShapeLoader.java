@@ -4,14 +4,16 @@ import java.io.File;
 import java.net.URL;
 import java.util.Properties;
 
+import org.deegree.model.feature.FeatureVisitor;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.deegree_impl.model.feature.visitors.TransformVisitor;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.progress.EclipseProgressMonitor;
@@ -83,18 +85,27 @@ public class ShapeLoader extends AbstractLoader
       if( sourceCrs == null )
         throw new LoaderException( "Kein Koordinaten-System für Shape gefunden: " + sourceSrs );
 
-      final KalypsoFeatureLayer layer = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(),
-          sourceCrs, KalypsoGisPlugin.getDefault().getCoordinatesSystem(),
-          new EclipseProgressMonitor( monitor ) );
+      final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+      final GMLWorkspace workspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(),
+          sourceCrs, new EclipseProgressMonitor( monitor ) );
 
+      try
+      {
+        workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+      }
+      catch( final Throwable e1 )
+      {
+        e1.printStackTrace();
+      }
+      
       if( shpResource != null )
-        addResource( shpResource, layer );
+        addResource( shpResource, workspace );
       if( dbfResource != null )
-        addResource( dbfResource, layer );
+        addResource( dbfResource, workspace );
       if( shxResource != null )
-        addResource( shxResource, layer );
+        addResource( shxResource, workspace );
 
-      return layer;
+      return workspace;
     }
     catch( final Exception e )
     {

@@ -19,9 +19,7 @@ import org.kalypso.template.gismapview.GismapviewType;
 import org.kalypso.template.gismapview.GismapviewType.LayersType;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.template.types.ExtentType;
-import org.kalypso.template.types.StyledLayerType.StyleType;
-import org.kalypso.util.pool.IPoolableObjectType;
-import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -46,7 +44,7 @@ public class GisTemplateMapModell implements IMapModell
 
     // layer -> theme
     final Map layerMap = new HashMap();
-    
+
     for( int i = 0; i < layerList.size(); i++ )
     {
       final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList
@@ -60,7 +58,7 @@ public class GisTemplateMapModell implements IMapModell
         layerMap.put( layerType, theme );
       }
     }
-    
+
     final Layer activeLayer = (Layer)layerListType.getActive();
     if( activeLayer != null )
     {
@@ -74,6 +72,9 @@ public class GisTemplateMapModell implements IMapModell
 
   private IKalypsoTheme loadTheme( final Layer layerType, final URL context )
   {
+    if( "wms".equals( layerType.getLinktype() ) )
+      return new KalypsoWMSTheme( layerType.getName(), layerType.getHref(), KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
+
     return new PoolableKalypsoFeatureTheme( layerType, context );
   }
 
@@ -81,6 +82,7 @@ public class GisTemplateMapModell implements IMapModell
   public Gismapview createGismapTemplate( GM_Envelope bbox ) throws JAXBException
   {
     final org.kalypso.template.gismapview.ObjectFactory maptemplateFactory = new org.kalypso.template.gismapview.ObjectFactory();
+
     final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
     final Gismapview gismapview = maptemplateFactory.createGismapview();
     final LayersType layersType = maptemplateFactory.createGismapviewTypeLayersType();
@@ -102,42 +104,24 @@ public class GisTemplateMapModell implements IMapModell
     IKalypsoTheme[] themes = m_modell.getAllThemes();
     for( int i = 0; i < themes.length; i++ )
     {
-      if( themes[i] instanceof PoolableKalypsoFeatureTheme )
+      final IKalypsoTheme kalypsoTheme = themes[i];
+      if( kalypsoTheme instanceof PoolableKalypsoFeatureTheme )
       {
-        final Layer layer = maptemplateFactory.createGismapviewTypeLayersTypeLayer();
-        final PoolableKalypsoFeatureTheme theme = (PoolableKalypsoFeatureTheme)themes[i];
-        final PoolableObjectType key = theme.getLayerKey();
-        
-        final String id = Integer.toString( i );
-        
-        layer.setId( id );
-        layer.setHref( key.getSourceAsString() );
-        layer.setLinktype( key.getType() );
-        layer.setActuate( "onRequest" );
-        layer.setType( "simple" );
-        layer.setName( theme.getName() );
-        layer.setVisible( m_modell.isThemeEnabled( theme ) );
-        layer.getDepends();
+       final Layer layer = maptemplateFactory.createGismapviewTypeLayersTypeLayer();
+
+        ( (PoolableKalypsoFeatureTheme)kalypsoTheme ).fillLayerType( layer, Integer
+            .toString( i ), m_modell.isThemeEnabled( kalypsoTheme ) );
         layerList.add( layer );
 
-        final List stylesList = layer.getStyle();
-        IPoolableObjectType[] styleKeys = theme.getPoolableStyles();
-        for( int j = 0; j < styleKeys.length; j++ )
-        {
-          StyleType styleType = extentFac.createStyledLayerTypeStyleType();
-          IPoolableObjectType styleKey = styleKeys[j];
-          styleType.setActuate( "onRequest" );
-          styleType.setHref( styleKey.getSourceAsString() );
-          styleType.setLinktype( styleKey.getType() );
-          styleType.setType( "simple" );
-          stylesList.add( styleType );
-        }
-        
-        if( m_modell.isThemeActivated( theme ) )
+        if( m_modell.isThemeActivated( kalypsoTheme ) )
           layersType.setActive( layer );
       }
+      else if( kalypsoTheme instanceof KalypsoWMSTheme )
+      {
+        // TODO: serialize it!
+      }
     }
-    
+
     return gismapview;
   }
 

@@ -9,11 +9,7 @@ import org.deegree.model.geometry.GM_Position;
 
 public interface JMSpatialIndex
 {
-  public void add( Object object );
-
-  public void add( GM_Envelope env, Object object );
-
-  public void add( GM_Position pos, Object object );
+  public boolean add( Object object );
 
   public List query( GM_Envelope env, List result );
 
@@ -21,9 +17,7 @@ public interface JMSpatialIndex
 
   public List queryAll( List result );
 
-  public void remove( GM_Envelope env, Object object );
-
-  public void remove( Object object );
+  public boolean remove( Object object );
 
   public void resort( GM_Envelope newEnv, GM_Envelope oldEnv, Object object );
 

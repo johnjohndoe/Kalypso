@@ -27,6 +27,12 @@ public class FeatureAssociationTypeProperty_Impl extends FeatureTypeProperty_Imp
   private final FeatureType m_associatedFT; // without substituion
 
   public FeatureAssociationTypeProperty_Impl( String name, String namespace, String type,
+      boolean nullable, FeatureType associationFeatureType, Map annotation )
+  {
+    this( name, namespace, type, nullable, null, associationFeatureType, annotation );
+  }
+  
+  public FeatureAssociationTypeProperty_Impl( String name, String namespace, String type,
       boolean nullable, GMLSchema schema, FeatureType associationFeatureType ,Map annotation)
   {
     super( name, namespace, type, nullable,annotation );
@@ -55,15 +61,11 @@ public class FeatureAssociationTypeProperty_Impl extends FeatureTypeProperty_Imp
     {
       FeatureType associationFeatureType = null;
       if( m_associatedNode != null )
-      {
         associationFeatureType = (FeatureType)m_schema.getMappedType( m_associatedNode );
-      }
       else if( m_associatedFT != null )
-      {
         associationFeatureType = m_associatedFT;
-      }
 
-      FeatureType[] subStitutionFE = m_schema.getResolveSubstitutionGroup( associationFeatureType );
+      FeatureType[] subStitutionFE = GMLHelper.getResolveSubstitutionGroup( associationFeatureType, m_schema.getFeatureTypes() );
       List list = new ArrayList();
       list.addAll( Arrays.asList( subStitutionFE ) );
       // test if some featuretypes are abstract and do not add them
@@ -72,6 +74,14 @@ public class FeatureAssociationTypeProperty_Impl extends FeatureTypeProperty_Imp
 
     }
     return m_associationFeatureTypes;
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureAssociationTypeProperty#getAcsociationFeatureType()
+   */
+  public FeatureType getAssociationFeatureType()
+  {
+    return m_associatedFT;
   }
 
 }

@@ -52,15 +52,18 @@ import org.deegree.gml.GMLProperty;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureAssociationTypeProperty;
 import org.deegree.model.feature.FeatureCollection;
+import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.extension.ITypeHandler;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.gml.schema.Mapper;
 import org.deegree_impl.model.feature.xlink.XLinkArc;
 import org.deegree_impl.model.feature.xlink.XLinkResource;
 import org.deegree_impl.model.geometry.GMLAdapter;
+import org.deegree_impl.model.sort.SplitSort;
 import org.deegree_impl.tools.Debug;
 
 /**
@@ -556,5 +559,16 @@ public class FeatureFactory
     Debug.debugMethodEnd();
     return fc;
   }
+  
+  public static FeatureList createFeatureList()
+  {
+    return new SplitSort();
+  }
+  
+  public static FeatureList createFeatureList( final GM_Envelope env )
+  {
+    return new SplitSort( env );
+  }
+
 
 }

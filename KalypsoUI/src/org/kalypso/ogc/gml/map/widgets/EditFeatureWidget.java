@@ -4,13 +4,14 @@ import java.awt.Point;
 
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.geometry.GM_Position;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.ogc.gml.IKalypsoLayer;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.JMSelector;
-import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
+import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.util.command.ICommand;
 
@@ -42,11 +43,11 @@ public class EditFeatureWidget extends AbstractWidget
     if( m_point != null )
     {
       final GM_Position position = getPosition( m_point );
-      final IKalypsoLayer activeLayer = getActiveLayer();
-      if( activeLayer instanceof KalypsoFeatureLayer )
+      final IKalypsoTheme activeTheme = getActiveTheme();
+      if( activeTheme instanceof KalypsoFeatureTheme )
       {
-        final KalypsoFeatureLayer featureLayer = (KalypsoFeatureLayer)activeLayer;
-        featureLayer.getSort().query( position, null );
+        final KalypsoFeatureTheme featureTheme = (KalypsoFeatureTheme)activeTheme;
+        featureTheme.getFeatureList().query( position, null );
 
         // todo: Sollte so etwas nicht eine Zentrale Stelle machen?
         final GeoTransform transform = getMapPanel().getProjection();
@@ -54,16 +55,16 @@ public class EditFeatureWidget extends AbstractWidget
 
         final JMSelector selector = new JMSelector( JMSelector.MODE_COLLECT );
 
-        final Feature fe = selector.selectNearest( position, gisRadius, featureLayer, false,
+        final Feature fe = selector.selectNearest( position, gisRadius, featureTheme.getFeatureList(), false,
             -1 );
 
-        editFeature( featureLayer, fe );
+        editFeature( featureTheme.getWorkspace(), fe );
       }
     }
     return null;
   }
 
-  private void editFeature( final KalypsoFeatureLayer layer, final Feature feature )
+  private void editFeature( final GMLWorkspace workspace, final Feature feature )
   {
     if( m_shell != null && feature != null )
     {
@@ -74,7 +75,7 @@ public class EditFeatureWidget extends AbstractWidget
       {
         public void run()
         {
-          final FeatureviewDialog dialog = new FeatureviewDialog( shell, layer, helper, getCommandTarget() );
+          final FeatureviewDialog dialog = new FeatureviewDialog( shell, workspace, helper, getCommandTarget() );
           dialog.open();
         }
       } );

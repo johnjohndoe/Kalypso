@@ -39,8 +39,7 @@ import org.kalypso.editor.styleeditor.RuleCollection;
 import org.kalypso.editor.styleeditor.RuleFilterCollection;
 import org.kalypso.editor.styleeditor.panels.ColorPalettePanel;
 import org.kalypso.editor.styleeditor.panels.RulePatternInputPanel;
-import org.kalypso.ogc.gml.IKalypsoLayer;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog;
@@ -61,13 +60,10 @@ import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
  */
 public class RuleTabItemBuilder {
 	
-	private Composite parent = null;
 	private Composite globalComposite = null;
 	private Composite tabFolderComposite = null;	
 	private int counter = 0;
 		
-	private TabItem tabItem = null;
-//	private Rule[] rules = null;
 	private TabFolder ruleTabFolder = null;
 	
 	private KalypsoUserStyle userStyle = null;
@@ -77,12 +73,11 @@ public class RuleTabItemBuilder {
 	private int focusedSymbolizerItem = -1;
 	private RuleFilterCollection rulePatternCollection = null;
 	
-	public RuleTabItemBuilder(Composite composite, RuleFilterCollection rulePatternCollection, KalypsoUserStyle userStyle, IKalypsoLayer layer)
+	public RuleTabItemBuilder(Composite composite, RuleFilterCollection rulePatternCollection, KalypsoUserStyle userStyle, KalypsoFeatureTheme theme)
 	{	
-		this.parent = composite; 
 		this.userStyle = userStyle;		
-		if(layer != null)
-			this.featureType = ((KalypsoFeatureLayer)layer).getFeatureType(); 			
+		if(theme!= null)
+			this.featureType = theme.getFeatureType(); 			
 		this.rulePatternCollection = rulePatternCollection;
 		globalComposite = new Composite(composite,SWT.NULL);		
 	}	
@@ -131,8 +126,8 @@ public class RuleTabItemBuilder {
 	{
 		if(ruleTabFolder != null)
 			return ruleTabFolder.getSelectionIndex();
-		else 
-			return -1;
+
+    return -1;
 	}
 	
 	public void setSelectedRule(int index)

@@ -36,8 +36,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.editor.styleeditor.RuleCollection;
 import org.kalypso.editor.styleeditor.RuleFilterCollection;
-import org.kalypso.ogc.gml.IKalypsoLayer;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.outline.SaveStyleAction;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterencoding.BoundaryExpression;
@@ -66,12 +65,12 @@ public class SLDEditorGuiBuilder {
 		buildSWTGui(null,null);		
 	}
 	
-	public void buildSWTGui(final KalypsoUserStyle userStyle, IKalypsoLayer layer)
+	public void buildSWTGui( final KalypsoUserStyle userStyle, KalypsoFeatureTheme theme )
 	{
-		buildSWTGui(userStyle, layer, -1);
+		buildSWTGui(userStyle, theme, -1);
 	}
 	
-	public void buildSWTGui(final KalypsoUserStyle userStyle, final IKalypsoLayer layer,final int index)
+	public void buildSWTGui(final KalypsoUserStyle userStyle, final KalypsoFeatureTheme theme, final int index)
 	{	
 		if(index != -1)
 			focusedRuleItem = index;
@@ -79,8 +78,8 @@ public class SLDEditorGuiBuilder {
 			scrollComposite.dispose();
 		
 		// get FeatureType from layer
-		if(layer != null)
-			featureType = ((KalypsoFeatureLayer)layer).getFeatureType(); 		 
+		if(theme != null)
+			featureType = theme.getFeatureType(); 		 
 	       	         			
 		scrollComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);				
 		Composite mainComposite = new Composite(scrollComposite, SWT.NONE);		
@@ -115,7 +114,7 @@ public class SLDEditorGuiBuilder {
 		
 		ControlRulePanel controlRulePanel = new ControlRulePanel(mainComposite,"Rule:",rulePatternCollection.size());
 		
-		final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder(mainComposite,rulePatternCollection,userStyle,layer);		
+		final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder(mainComposite,rulePatternCollection,userStyle,theme);		
 		
 		controlRulePanel.addPanelListener(new PanelListener() {
 			public void valueChanged(PanelEvent event) {
@@ -127,7 +126,7 @@ public class SLDEditorGuiBuilder {
 						Rule rule = StyleFactory.createRule(symbolizers);
 						addRule(rule, userStyle);
 						focusedRuleItem = rulePatternCollection.size();					
-						buildSWTGui(userStyle, layer);						
+						buildSWTGui(userStyle, theme);						
 						userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));					
 						break;
 					}					
@@ -150,7 +149,7 @@ public class SLDEditorGuiBuilder {
 							
 							if(index >=0)
 								focusedRuleItem = --index;
-							buildSWTGui(userStyle, layer);
+							buildSWTGui(userStyle, theme);
 							userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));							
 						}
 						break;
@@ -172,7 +171,7 @@ public class SLDEditorGuiBuilder {
 							}
 							setRules(newOrdered,userStyle);
 							focusedRuleItem = index-1;
-							buildSWTGui(userStyle, layer);						
+							buildSWTGui(userStyle, theme);						
 							userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));							
 						}
 						break;
@@ -195,7 +194,7 @@ public class SLDEditorGuiBuilder {
 							}
 							setRules(newOrdered,userStyle);
 							focusedRuleItem = index+1;	
-							buildSWTGui(userStyle, layer);
+							buildSWTGui(userStyle, theme);
 							userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));							
 						}
 					}					
@@ -257,9 +256,7 @@ public class SLDEditorGuiBuilder {
 					PropertyName propertyName = new PropertyName(prop.getName());
 					PropertyIsBetweenOperation operation = null;
 					
-					if(layer instanceof KalypsoFeatureLayer)
-					{
-						Feature[] fts = ((KalypsoFeatureLayer)layer).getAllFeatures();
+          final Feature[] fts = theme.getWorkspace().getFeatures( theme.getFeatureType() );
 						double minValue = -1;
 						double maxValue = -1;
 						double value;
@@ -282,7 +279,6 @@ public class SLDEditorGuiBuilder {
 				        }
 				        if(hasFeatures)
 				        	System.out.println("Min: "+ minValue + "  Max: "+ maxValue );
-					}									
 					
 					String[] geometryObjects = AddSymbolizerPanel.getGeometries(featureType);
 					if(geometryObjects.length>0)
@@ -313,7 +309,7 @@ public class SLDEditorGuiBuilder {
 			    		}			    	
 			    		userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			    		//System.out.println(userStyle.exportAsXML());
-			    		buildSWTGui(userStyle, layer);
+			    		buildSWTGui(userStyle, theme);
 					}
 		    	}
 				

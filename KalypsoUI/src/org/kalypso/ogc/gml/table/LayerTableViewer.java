@@ -1,26 +1,19 @@
 package org.kalypso.ogc.gml.table;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
 import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -42,7 +35,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.eclipse.swt.custom.ExcelLikeTableCursor;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.table.celleditors.ICellEditorFactory;
 import org.kalypso.ogc.gml.table.command.ChangeSortingCommand;
@@ -56,7 +48,6 @@ import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.InvisibleCommand;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.factory.FactoryException;
-import org.kalypso.util.pool.PoolableObjectType;
 
 /**
  * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ?ndert
@@ -187,24 +178,24 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   public void assignSelectionToFeatures()
   {
-    // clear selection
-    final KalypsoFeatureLayer kalypsoFeatureLayer = (KalypsoFeatureLayer)getTheme().getLayer();
-    final Feature[] allFeatures = kalypsoFeatureLayer.getAllFeatures();
-    for( int i = 0; i < allFeatures.length; i++ )
-    {
-      final Feature feature = allFeatures[i];
-      feature.unselect( m_selectionID );
-    }
-
-    final IStructuredSelection sel = (IStructuredSelection)getSelection();
-    for( final Iterator selIt = sel.iterator(); selIt.hasNext(); )
-    {
-      final Feature kf = (Feature)selIt.next();
-      kf.select( m_selectionID );
-    }
-
-    kalypsoFeatureLayer.fireModellEvent( new ModellEvent( kalypsoFeatureLayer,
-        ModellEvent.SELECTION_CHANGED ) );
+    // TODO reanable
+//    // clear selection
+//    final Feature[] allFeatures = kalypsoFeatureLayer.getAllFeatures();
+//    for( int i = 0; i < allFeatures.length; i++ )
+//    {
+//      final Feature feature = allFeatures[i];
+//      feature.unselect( m_selectionID );
+//    }
+//
+//    final IStructuredSelection sel = (IStructuredSelection)getSelection();
+//    for( final Iterator selIt = sel.iterator(); selIt.hasNext(); )
+//    {
+//      final Feature kf = (Feature)selIt.next();
+//      kf.select( m_selectionID );
+//    }
+//
+//    kalypsoFeatureLayer.fireModellEvent( new ModellEvent( kalypsoFeatureLayer,
+//        ModellEvent.SELECTION_CHANGED ) );
   }
   
   public boolean isCursorSelects()
@@ -279,6 +270,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   private void setTheme( final PoolableKalypsoFeatureTheme theme )
   {
+    // TODO: change to GMLWorkspace!
     final IKalypsoTheme oldTheme = (IKalypsoTheme)getInput();
 
     if( oldTheme != null )
@@ -405,39 +397,39 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final CellEditor[] editors = new CellEditor[columns.length];
 
     final IKalypsoTheme theme = (IKalypsoTheme)getInput();
-    if( theme == null || theme.getLayer() == null )
+    if( theme == null )
     {
       setCellEditors( editors );
       return;
     }
 
-    final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)theme.getLayer();
-    final FeatureType featureType = layer.getFeatureType();
-    for( int i = 0; i < editors.length; i++ )
-    {
-      final String propName = columns[i].getData( COLUMN_PROP_NAME ).toString();
-      final FeatureTypeProperty ftp = featureType.getProperty( propName );
-      if( ftp != null )
-      {
-        if( m_cellEditorFactory.isCellEditorKnown( ftp ) )
-        {
-          try
-          {
-            editors[i] = m_cellEditorFactory.createEditor( ftp, m_project, table, SWT.NONE );
-          }
-          catch( final FactoryException e )
-          {
-            LOGGER.log( Level.SEVERE, "Could not create cellEditor for type: " + ftp.getType(), e );
-          }
-        }
-
-        if( editors[i] == null )
-          LOGGER.warning( "No cellEditor found for type: " + ftp.getType() );
-
-      }
-    }
-
-    setCellEditors( editors );
+    
+//    final FeatureType featureType = layer.getFeatureType();
+//    for( int i = 0; i < editors.length; i++ )
+//    {
+//      final String propName = columns[i].getData( COLUMN_PROP_NAME ).toString();
+//      final FeatureTypeProperty ftp = featureType.getProperty( propName );
+//      if( ftp != null )
+//      {
+//        if( m_cellEditorFactory.isCellEditorKnown( ftp ) )
+//        {
+//          try
+//          {
+//            editors[i] = m_cellEditorFactory.createEditor( ftp, m_project, table, SWT.NONE );
+//          }
+//          catch( final FactoryException e )
+//          {
+//            LOGGER.log( Level.SEVERE, "Could not create cellEditor for type: " + ftp.getType(), e );
+//          }
+//        }
+//
+//        if( editors[i] == null )
+//          LOGGER.warning( "No cellEditor found for type: " + ftp.getType() );
+//
+//      }
+//    }
+//
+//    setCellEditors( editors );
   }
 
   /**
@@ -471,28 +463,28 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    final List selFeatures = new ArrayList();
-    if( m_isFeatureSelectionSynchron )
-    {
-      // Feature-Selection auf Selection ?bertragen
-      final Feature[] allFeatures = ( (KalypsoFeatureLayer)getTheme().getLayer() )
-          .getAllFeatures();
-      for( int i = 0; i < allFeatures.length; i++ )
-      {
-        final Feature feature = allFeatures[i];
-        if( feature.isSelected( m_selectionID ) )
-          selFeatures.add( feature );
-      }
-    }
-
-    if( !isDisposed() )
-      getControl().getDisplay().asyncExec( new Runnable()
-      {
-        public void run()
-        {
-          handleModelChanged( selFeatures );
-        }
-      } );
+//    final List selFeatures = new ArrayList();
+//    if( m_isFeatureSelectionSynchron )
+//    {
+//      // Feature-Selection auf Selection ?bertragen
+//      final Feature[] allFeatures = ( (KalypsoFeatureLayer)getTheme().getLayer() )
+//          .getAllFeatures();
+//      for( int i = 0; i < allFeatures.length; i++ )
+//      {
+//        final Feature feature = allFeatures[i];
+//        if( feature.isSelected( m_selectionID ) )
+//          selFeatures.add( feature );
+//      }
+//    }
+//
+//    if( !isDisposed() )
+//      getControl().getDisplay().asyncExec( new Runnable()
+//      {
+//        public void run()
+//        {
+//          handleModelChanged( selFeatures );
+//        }
+//      } );
   }
 
   /** muss im SWT-Event-Thread ausgef?hrt werden */
@@ -571,12 +563,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final Gistableview tableTemplate = m_gistableviewFactory.createGistableview();
     final LayerType layer = m_gistableviewFactory.createGistableviewTypeLayerType();
 
-    final PoolableObjectType key = getTheme().getLayerKey();
-    layer.setId( "1" );
-    layer.setHref( key.getSourceAsString() );
-    layer.setLinktype( key.getType() );
-    layer.setActuate( "onRequest" );
-    layer.setType( "simple" );
+    getTheme().fillLayerType( layer, "id", true );
 
     tableTemplate.setLayer( layer );
 
@@ -633,38 +620,39 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   public String[][] exportTable( final boolean onlySelected )
   {
-    Object[] features;
+//    Object[] features;
+//    
+//    if( onlySelected )
+//    {
+//      final IStructuredSelection sel = (IStructuredSelection)getSelection();
+//      features = sel.toArray(  );
+//    }
+//    else
+//      features = ((KalypsoFeatureLayer)getTheme().getLayer()).getAllFeatures();
+//
+//    final Collection lines = new ArrayList(); 
+//
+//    final ITableLabelProvider labelProvider = (ITableLabelProvider)getLabelProvider();
+//    
+//    final Table table = getTable();
+//    final TableColumn[] columns = table.getColumns();
+//    
+//    final String[] firstLine = new String[columns.length];
+//    for( int j = 0; j < columns.length; j++ )
+//      firstLine[j] = (String)columns[j].getData( COLUMN_PROP_NAME );
+//    lines.add( firstLine );
+//    
+//    for( int i = 0; i < features.length; i++ )
+//    {
+//      final String[] line = new String[columns.length];
+//      
+//      for( int j = 0; j < columns.length; j++ )
+//        line[j] = labelProvider.getColumnText( features[i], j );
+//
+//      lines.add( line );
+//    }
     
-    if( onlySelected )
-    {
-      final IStructuredSelection sel = (IStructuredSelection)getSelection();
-      features = sel.toArray(  );
-    }
-    else
-      features = ((KalypsoFeatureLayer)getTheme().getLayer()).getAllFeatures();
-
-    final Collection lines = new ArrayList(); 
-
-    final ITableLabelProvider labelProvider = (ITableLabelProvider)getLabelProvider();
-    
-    final Table table = getTable();
-    final TableColumn[] columns = table.getColumns();
-    
-    final String[] firstLine = new String[columns.length];
-    for( int j = 0; j < columns.length; j++ )
-      firstLine[j] = (String)columns[j].getData( COLUMN_PROP_NAME );
-    lines.add( firstLine );
-    
-    for( int i = 0; i < features.length; i++ )
-    {
-      final String[] line = new String[columns.length];
-      
-      for( int j = 0; j < columns.length; j++ )
-        line[j] = labelProvider.getColumnText( features[i], j );
-
-      lines.add( line );
-    }
-    
-    return (String[][])lines.toArray( new String[features.length][] );
+//    return (String[][])lines.toArray( new String[features.length][] );
+    return null;
   }
 }

@@ -1,15 +1,14 @@
 package org.kalypso.ui.calcwizard.modelpages;
 
 import java.awt.Frame;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
-import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree_impl.model.feature.visitors.GetSelectionVisitor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -25,9 +24,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.jfree.chart.ChartPanel;
-import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.ToggleSelectWidget;
 import org.kalypso.ogc.sensor.SensorException;
@@ -43,8 +41,8 @@ import org.kalypso.ui.KalypsoGisPlugin;
 /**
  * @author schlienger
  */
-public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
-    implements ModellEventListener
+public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage implements
+    ModellEventListener
 {
   /** Der Titel der Seite */
   public static final String PROP_MAPTITLE = "mapTitle";
@@ -85,7 +83,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
 
   private ObservationTable m_table;
 
-  public ObservationMapTableDiagWizardPage( )
+  public ObservationMapTableDiagWizardPage()
   {
     super( "<ObservationMapTableDiagWizardPage>" );
   }
@@ -93,7 +91,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     if( m_diagTemplate != null )
       m_diagTemplate.removeTemplateEventListener( m_obsChart );
@@ -115,13 +113,10 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
       createTablePanel( rightSash );
       createDiagramPanel( rightSash );
 
-      final int mainWeight = Integer.parseInt( getArguments().getProperty(
-          PROP_MAINSASH, "50" ) );
-      final int rightWeight = Integer.parseInt( getArguments().getProperty(
-          PROP_RIGHTSASH, "50" ) );
+      final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
+      final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
-      m_tsProps = KalypsoWizardHelper
-          .parseTimeserieFeatureProps( getArguments() );
+      m_tsProps = KalypsoWizardHelper.parseTimeserieFeatureProps( getArguments() );
 
       final ControlAdapter controlAdapter = new ControlAdapter()
       {
@@ -134,15 +129,21 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
       rightSash.addControlListener( controlAdapter );
       m_sashForm.addControlListener( controlAdapter );
 
-      m_sashForm.setWeights( new int[] { mainWeight, 100 - mainWeight } );
+      m_sashForm.setWeights( new int[]
+      {
+          mainWeight,
+          100 - mainWeight } );
 
-      rightSash.setWeights( new int[] { rightWeight, 100 - rightWeight } );
+      rightSash.setWeights( new int[]
+      {
+          rightWeight,
+          100 - rightWeight } );
 
       setControl( m_sashForm );
 
       parent.getDisplay().asyncExec( new Runnable()
       {
-        public void run( )
+        public void run()
         {
           maximizeMap();
         }
@@ -154,28 +155,25 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
 
       IStatus status;
       if( e instanceof CoreException )
-        status = ((CoreException) e).getStatus();
+        status = ( (CoreException)e ).getStatus();
       else
-        status = KalypsoGisPlugin
-            .createErrorStatus( e.getLocalizedMessage(), e );
+        status = KalypsoGisPlugin.createErrorStatus( e.getLocalizedMessage(), e );
 
-      ErrorDialog.openError( null, "Fehler",
-          "Fehler beim Erzeugen der Wizard-Seite", status );
+      ErrorDialog.openError( null, "Fehler", "Fehler beim Erzeugen der Wizard-Seite", status );
     }
   }
 
   private void createDiagramPanel( final Composite parent )
   {
     final String diagFileName = getArguments().getProperty( PROP_DIAGTEMPLATE );
-    final IFile diagFile = (IFile) getProject().findMember( diagFileName );
+    final IFile diagFile = (IFile)getProject().findMember( diagFileName );
 
     try
     {
       // actually creates the template
       m_diagTemplate = ObservationTemplateHelper.loadDiagramTemplate( diagFile );
 
-      final Composite composite = new Composite( parent, SWT.RIGHT
-          | SWT.EMBEDDED );
+      final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
       m_diagFrame = SWT_AWT.new_Frame( composite );
       m_diagFrame.setVisible( true );
 
@@ -202,20 +200,16 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
   {
     try
     {
-      final String templateFileName = getArguments().getProperty(
-          PROP_TABLETEMPLATE );
-      final IFile templateFile = (IFile) getProject().findMember(
-          templateFileName );
+      final String templateFileName = getArguments().getProperty( PROP_TABLETEMPLATE );
+      final IFile templateFile = (IFile)getProject().findMember( templateFileName );
 
       m_table = new ObservationTable( m_tableModel );
 
-      m_tableTemplate = ObservationTemplateHelper
-          .loadTableViewTemplate( templateFile );
+      m_tableTemplate = ObservationTemplateHelper.loadTableViewTemplate( templateFile );
       m_tableModel.setRules( m_tableTemplate );
       m_tableTemplate.addTemplateEventListener( m_table );
 
-      final Composite composite = new Composite( parent, SWT.RIGHT
-          | SWT.EMBEDDED );
+      final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
       m_tableFrame = SWT_AWT.new_Frame( composite );
 
       m_table.setVisible( true );
@@ -235,8 +229,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
     }
   }
 
-  private void createMapPanel( final Composite parent ) throws Exception,
-      CoreException
+  private void createMapPanel( final Composite parent ) throws Exception, CoreException
   {
     final Composite mapPanel = new Composite( parent, SWT.NONE );
     mapPanel.setLayout( new GridLayout() );
@@ -248,7 +241,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
   /**
    * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#performFinish()
    */
-  public boolean performFinish( )
+  public boolean performFinish()
   {
     return true;
   }
@@ -269,50 +262,48 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
     if( activeTheme == null )
       return;
 
-    final IKalypsoLayer layer = activeTheme.getLayer();
-    if( !(layer instanceof KalypsoFeatureLayer) )
-      return;
+    final KalypsoFeatureTheme kft = (KalypsoFeatureTheme)activeTheme;
+    final List selectedFeatures = GetSelectionVisitor.getSelectedFeatures( kft.getWorkspace(), kft
+        .getFeatureType(), SELECTION_ID );
 
-    final List selectedFeatures = new ArrayList();
+    m_diagTemplate.removeAllCurves();
+    m_tableTemplate.removeAllColumns();
 
-    final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer) layer;
-    final Feature[] allFeatures = kfl.getAllFeatures();
-    for( int i = 0; i < allFeatures.length; i++ )
-      if( allFeatures[i].isSelected( SELECTION_ID ) )
-        selectedFeatures.add( allFeatures[i] );
-
-    final Runnable runnable = new Runnable()
+    if( selectedFeatures.size() > 0 )
     {
-      public void run( )
+      final Runnable runnable = new Runnable()
       {
-        m_diagTemplate.removeAllCurves();
-        m_tableTemplate.removeAllColumns();
-
-        if( selectedFeatures.size() > 0 )
+        public void run()
         {
-          try
+          m_diagTemplate.removeAllCurves();
+          m_tableTemplate.removeAllColumns();
+
+          if( selectedFeatures.size() > 0 )
           {
-            KalypsoWizardHelper.updateDiagramTemplate( m_tsProps,
-                selectedFeatures, m_diagTemplate, getContext() );
-            KalypsoWizardHelper.updateTableTemplate( m_tsProps,
-                selectedFeatures, m_tableTemplate, getContext() );
-          }
-          catch( final SensorException e )
-          {
-            e.printStackTrace();
+            try
+            {
+              KalypsoWizardHelper.updateDiagramTemplate( m_tsProps, selectedFeatures,
+                  m_diagTemplate, getContext() );
+              KalypsoWizardHelper.updateTableTemplate( m_tsProps, selectedFeatures,
+                  m_tableTemplate, getContext() );
+            }
+            catch( final SensorException e )
+            {
+              e.printStackTrace();
+            }
           }
         }
-      }
-    };
+      };
 
-    try
-    {
-      SwingUtilities.invokeAndWait( runnable );
-    }
-    catch( Exception e ) // generic exception caught for simplicity
-    {
-      // TODO error handling
-      e.printStackTrace();
+      try
+      {
+        SwingUtilities.invokeAndWait( runnable );
+      }
+      catch( Exception e ) // generic exception caught for simplicity
+      {
+        // TODO error handling
+        e.printStackTrace();
+      }
     }
   }
 }

@@ -6,8 +6,7 @@ import java.net.URL;
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -43,21 +42,21 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListener
 {
-  private final static Object DUMMY_OBJECT = new Object();
-
-  private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool( IObservation.class );
+  //  private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool(
+  // IObservation.class );
 
   private IPoolableObjectType m_key;
 
   private final TimeseriesLink m_timeserie;
 
   private final ObservationDiagramTemplate m_diagTemplate = new ObservationDiagramTemplate();
+
   private ObservationChart m_chart;
-  
+
   private final ObservationTableViewTemplate m_tableTemplate = new ObservationTableViewTemplate();
+
   private ObservationTable m_table;
-  
-  
+
   public ObservationLinkDialog( final Shell parentShell, final TimeseriesLink obslink,
       final URL context )
   {
@@ -77,7 +76,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
     m_diagTemplate.removeTemplateEventListener( m_chart );
     m_tableTemplate.removeTemplateEventListener( m_table );
   }
-  
+
   /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#getInitialSize()
    */
@@ -90,7 +89,35 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
   {
     if( m_key != null )
     {
-      final Job job = new BorrowObjectJob( "Zeitreihe laden", m_pool, this, m_key, DUMMY_OBJECT );
+      final BorrowObjectJob job = new BorrowObjectJob( "Zeitreihe laden", IObservation.class, m_key )
+      {
+        public void onDone( final IJobChangeEvent event )
+        {
+          if( event.getResult().isOK() )
+          {
+            try
+            {
+              final IObservation obs = (IObservation)getBorrowedObject();
+
+              final int days = KalypsoGisPlugin.getDefault().getPluginPreferences().getInt(
+                  IKalypsoPreferences.NUMBER_OF_DAYS );
+
+              //m_diagTemplate.removeAllCurves();
+              m_diagTemplate.setObservation( obs, DateRangeArgument.createFromPastDays( days ) );
+
+              //m_tableTemplate.removeAllColumns();
+              m_tableTemplate.setObservation( obs, false, DateRangeArgument
+                  .createFromPastDays( days ) );
+            }
+            catch( Exception e )
+            {
+              e.printStackTrace();
+            }
+
+          }
+        }
+      };
+
       job.schedule();
     }
   }
@@ -107,30 +134,15 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
   public void onObjectInvalid( final ResourcePool source, final IPoolableObjectType key,
       final Object oldObject, final boolean bCannotReload ) throws Exception
   {
-    if( oldObject == DUMMY_OBJECT )
+    if( m_key.equals( key ) )
     {
-      final IObservation obs = (IObservation)m_pool.getObject( key, new NullProgressMonitor() );
-      
-      final int days = KalypsoGisPlugin.getDefault().getPluginPreferences().getInt( IKalypsoPreferences.NUMBER_OF_DAYS );
-      
-      //m_diagTemplate.removeAllCurves();
-      m_diagTemplate.setObservation( obs, DateRangeArgument.createFromPastDays( days ) );
-      
-      //m_tableTemplate.removeAllColumns();
-      m_tableTemplate.setObservation( obs, false, DateRangeArgument.createFromPastDays( days ) );
-    }
-    else
-    {
-      if( m_key.equals( key ) )
+      if( bCannotReload )
       {
-        if( bCannotReload )
-        {
-          m_diagTemplate.removeAllCurves();
-          m_tableTemplate.removeAllColumns();
-        }
-        else
-          startLoadTimeserie();
+        m_diagTemplate.removeAllCurves();
+        m_tableTemplate.removeAllColumns();
       }
+      else
+        startLoadTimeserie();
     }
   }
 
@@ -156,12 +168,12 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
 
     final SashForm sashForm = new SashForm( parent, SWT.HORIZONTAL );
     sashForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    
+
     createDiagram( sashForm );
     createTable( sashForm );
 
     setMessage( "Zeitreihenansicht" );
-    
+
     return control;
   }
 
@@ -176,7 +188,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
       MessageDialog.openError( parent.getShell(), "", e.getLocalizedMessage() );
       return;
     }
-    
+
     m_diagTemplate.addTemplateEventListener( m_chart );
 
     ChartPanel chartPanel = new ChartPanel( m_chart );
@@ -193,7 +205,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
   {
     m_table = new ObservationTable( new ObservationTableModel() );
     m_tableTemplate.addTemplateEventListener( m_table );
-    
+
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 
     vFrame.setVisible( true );

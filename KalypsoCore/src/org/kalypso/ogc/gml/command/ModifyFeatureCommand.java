@@ -7,8 +7,8 @@ import java.util.Map.Entry;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.feature.FeatureFactory;
-import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -16,15 +16,15 @@ import org.kalypso.util.command.ICommand;
  */
 public class ModifyFeatureCommand implements ICommand
 {
-  private final IKalypsoLayer m_layer;
   private final Feature m_feature;
   private final Map m_newMap;
   private final Map m_oldMap = new HashMap();
+  private final GMLWorkspace m_workspace;
   
 
-  public ModifyFeatureCommand( final IKalypsoLayer layer, final Feature feature, final Map map )
+  public ModifyFeatureCommand( final GMLWorkspace workspace, final Feature feature, final Map map )
   {
-    m_layer = layer;
+    m_workspace = workspace;
     m_feature = feature;
     m_newMap = map;
     
@@ -85,6 +85,6 @@ public class ModifyFeatureCommand implements ICommand
       m_feature.setProperty( property );
     }
 
-    m_layer.fireModellEvent( null );
+    m_workspace.fireModellEvent( null );
   }
 }

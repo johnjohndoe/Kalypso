@@ -3,14 +3,13 @@ package org.kalypso.ogc.sensor.diagview.template;
 import java.net.URL;
 import java.util.Properties;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.impl.DiagramCurve;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.BorrowObjectJob;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
@@ -24,8 +23,6 @@ import org.kalypso.util.xml.xlink.IXlink;
  */
 public class LinkedDiagramCurve implements IDiagramCurve, IPoolListener
 {
-  private final static Object DUMMY_OBJECT = new Object();
-  
   private final String m_name;
 
   private final IDiagramTemplate m_template;
@@ -36,8 +33,6 @@ public class LinkedDiagramCurve implements IDiagramCurve, IPoolListener
 
   private IVariableArguments m_args = null;
 
-  private final ResourcePool m_pool;
-
   public LinkedDiagramCurve( final String linkType, final IXlink xlink, final String name,
       final Properties mappings, final IDiagramTemplate template, final URL context )
   {
@@ -46,10 +41,37 @@ public class LinkedDiagramCurve implements IDiagramCurve, IPoolListener
     m_template = template;
     
     final PoolableObjectType key = new PoolableObjectType( linkType, xlink.getHRef(), context );
-    m_pool = KalypsoGisPlugin.getDefault().getPool( IObservation.class );
+    startLoading( key );
+  }
+  
+  private void startLoading( final IPoolableObjectType key )
+  {
+    final BorrowObjectJob job = new BorrowObjectJob( "Link auslösen für Observation", IObservation.class, key );
     
-    final Job job = new BorrowObjectJob( "Link auslösen für Observation", m_pool, this, key, DUMMY_OBJECT );
+    job.addJobChangeListener( new JobChangeAdapter() 
+    {
+      /**
+       * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+       */
+      public void done( final IJobChangeEvent event )
+      {
+        if( event.getResult().isOK() )
+        {
+          setObservation( (IObservation)job.getBorrowedObject() );
+        }
+      }
+    } );
+    
     job.schedule();
+  }
+
+  protected void setObservation( final IObservation obs )
+  {
+    m_curve = new DiagramCurve( m_name, obs, m_mappings, m_template, m_args );
+    
+    // TODO: or here?
+    // oder nur einmal im Konstruktor?
+    m_template.addCurve( LinkedDiagramCurve.this );
   }
 
   public boolean equals( Object obj )
@@ -90,13 +112,11 @@ public class LinkedDiagramCurve implements IDiagramCurve, IPoolListener
    */
   public void onObjectInvalid( ResourcePool source, IPoolableObjectType key, Object oldObject, boolean bCannotReload ) throws Exception
   {
-    if( oldObject == DUMMY_OBJECT || m_curve.getObservation() == oldObject )
+    if( m_curve.getObservation() == oldObject )
     {
-      IObservation obs = (IObservation) m_pool.getObject( key, new NullProgressMonitor() );      
+      // TODO: remove old curve
       
-      m_curve = new DiagramCurve( m_name, obs, m_mappings, m_template, m_args );
-      
-      m_template.addCurve( this );
+      startLoading( key );
     }
   }
 }

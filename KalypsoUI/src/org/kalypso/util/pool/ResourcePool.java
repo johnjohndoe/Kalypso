@@ -38,8 +38,8 @@ public class ResourcePool implements ILoaderListener
    */
   private final ISchedulingRule m_schedulingRule = new MutexSchedulingRule();
 
-  /** key -> List(IPoolListener) */
-  private Map m_keys = new HashMap();
+  /** key -> Set(IPoolListener) */
+  private Map m_listeners = new HashMap();
 
   /** key -> object */
   private Map m_objects = new HashMap();
@@ -54,7 +54,7 @@ public class ResourcePool implements ILoaderListener
 
   public void dispose()
   {
-    for( final Iterator iter = m_keys.entrySet().iterator(); iter.hasNext(); )
+    for( final Iterator iter = m_listeners.entrySet().iterator(); iter.hasNext(); )
     {
       final Map.Entry entry = (Entry)iter.next();
       ( (Set)entry.getValue() ).clear();
@@ -74,13 +74,13 @@ public class ResourcePool implements ILoaderListener
    */
   public void addPoolListener( final IPoolListener l, final IPoolableObjectType key )
   {
-    Set listeners = (Set)m_keys.get( key );
+    Set listeners = (Set)m_listeners.get( key );
 
     // falls noch keine Listener da waren eine neue Liste anlegen
     if( listeners == null )
     {
       listeners = new TreeSet();
-      m_keys.put( key, l );
+      m_listeners.put( key, listeners );
     }
 
     listeners.add( l );
@@ -93,7 +93,7 @@ public class ResourcePool implements ILoaderListener
   public void removePoolListener( final IPoolListener l )
   {
     // von allen keys den Listener löschen
-    for( final Iterator iter = m_keys.entrySet().iterator(); iter.hasNext(); )
+    for( final Iterator iter = m_listeners.entrySet().iterator(); iter.hasNext(); )
     {
       final Map.Entry entry = (Entry)iter.next();
 
@@ -140,13 +140,13 @@ public class ResourcePool implements ILoaderListener
     job.schedule();
   }
   
-  private void onObjectLoaded( final IPoolableObjectType key, final Object object, final IStatus status )
+  protected void onObjectLoaded( final IPoolableObjectType key, final Object object, final IStatus status )
   {
     // das Objekt eintragen
     m_objects.put( key, object );
     
     // alle Listener informieren
-    final Set listeners = (Set)m_keys.get( key );
+    final Set listeners = (Set)m_listeners.get( key );
     for( final Iterator iter = listeners.iterator(); iter.hasNext(); )
     {
       final IPoolListener l = (IPoolListener)iter.next();
@@ -169,7 +169,7 @@ public class ResourcePool implements ILoaderListener
     {
       m_objects.remove( key );
       
-      final Set listeners = (Set)m_keys.get( key );
+      final Set listeners = (Set)m_listeners.get( key );
       for( Iterator iter = listeners.iterator(); iter.hasNext(); )
       {
         final IPoolListener l = (IPoolListener)iter.next();
@@ -195,7 +195,7 @@ public class ResourcePool implements ILoaderListener
   /**
    * Erzeugt ein Objekt anhand seines Typs. Benutzt den entsprechenden ILoader.
    */
-  private Object makeObject( final IPoolableObjectType key, final IProgressMonitor monitor )
+  protected Object makeObject( final IPoolableObjectType key, final IProgressMonitor monitor )
       throws Exception
   {
     final String type = key.getType();
@@ -230,12 +230,12 @@ public class ResourcePool implements ILoaderListener
     
     m_jobs.remove( key );
     
-    final Set listeners = (Set)m_keys.get( key );
+    final Set listeners = (Set)m_listeners.get( key );
     if( listeners != null )
       listeners.clear();
-    m_keys.remove( key );
+    m_listeners.remove( key );
     
-    final Object object = m_objects.get( m_keys );
+    final Object object = m_objects.get( key );
     if( object != null )
     {
       try
@@ -281,7 +281,7 @@ public class ResourcePool implements ILoaderListener
   {
     private final IPoolableObjectType m_key;
     
-    private Object m_object = null;
+    protected Object m_object = null;
     
     public BorrowObjectJob( final IPoolableObjectType key )
     {

@@ -5,7 +5,7 @@ import java.util.Map;
 import org.deegree.model.feature.Feature;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
-import org.kalypso.ogc.gml.IKalypsoLayer;
+import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.ModifyFeatureCommand;
 import org.kalypso.util.command.ICommand;
 
@@ -50,9 +50,9 @@ public class LayerTableCellModifier implements ICellModifier
   {
     final TableItem tableItem = (TableItem)element;
     final Feature  feature = (Feature)tableItem.getData();
-    final IKalypsoLayer layer = m_viewer.getTheme().getLayer();
+    final PoolableKalypsoFeatureTheme theme = m_viewer.getTheme();
     
-    final ICommand command = new ModifyFeatureCommand( layer, feature, (Map)map );
+    final ICommand command = new ModifyFeatureCommand( theme.getFeatureTheme().getWorkspace(), feature, (Map)map );
     m_viewer.postCommand( command, null );
    }
 }

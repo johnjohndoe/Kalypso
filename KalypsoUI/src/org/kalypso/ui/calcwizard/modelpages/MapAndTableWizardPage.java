@@ -2,12 +2,11 @@ package org.kalypso.ui.calcwizard.modelpages;
 
 import java.awt.Frame;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree_impl.model.feature.visitors.GetSelectionVisitor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -29,8 +28,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.ogc.gml.GisTemplateHelper;
-import org.kalypso.ogc.gml.IKalypsoLayer;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.widgets.SingleElementSelectWidget;
 import org.kalypso.ogc.sensor.SensorException;
@@ -245,17 +244,12 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     if( m_diagFrame == null || !isCurrentPage() )
       return;
 
-    final IKalypsoLayer layer = getMapModell().getActiveTheme().getLayer();
-    if( !( layer instanceof KalypsoFeatureLayer ) )
+    final IKalypsoTheme theme = getMapModell().getActiveTheme();
+    if( !( theme instanceof KalypsoFeatureTheme ) )
       return;
 
-    final List selectedFeatures = new ArrayList();
-
-    final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
-    final Feature[] allFeatures = kfl.getAllFeatures();
-    for( int i = 0; i < allFeatures.length; i++ )
-      if( allFeatures[i].isSelected( SELECTION_ID ) )
-        selectedFeatures.add( allFeatures[i] );
+    final KalypsoFeatureTheme kft = (KalypsoFeatureTheme)theme;
+    final List selectedFeatures = GetSelectionVisitor.getSelectedFeatures( kft.getWorkspace(), kft.getFeatureType(), SELECTION_ID );
 
     m_diagTemplate.removeAllCurves();
 

@@ -3,6 +3,8 @@ package org.kalypso.ui.calcwizard.modelpages;
 import java.awt.Frame;
 
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureVisitor;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.resources.IFile;
@@ -22,8 +24,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.IKalypsoLayer;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.actions.FullExtentMapAction;
 import org.kalypso.ogc.gml.map.actions.ToggleSingleSelectWidgetAction;
 import org.kalypso.ogc.gml.map.actions.ZoomOutMapAction;
@@ -54,13 +56,14 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
   // value="Wasserstand#Wasserstand_gerechnet"/>
   //        <arg name="mainSash" value="50"/>
   //        <arg name="rightSash" value="40"/>
-  //        <arg name="CommitTextTemplate" value="Vorhersageergebnis Spreemodell berechnet mit Kalypso"/>
+  //        <arg name="CommitTextTemplate" value="Vorhersageergebnis Spreemodell
+  // berechnet mit Kalypso"/>
   //    </page>
   //  
 
   /** initialer Text f?r die Ergebnisablage */
-  public final static String PROP_COMMITTEXTTEMPLATE="CommitTextTemplate";
-  
+  public final static String PROP_COMMITTEXTTEMPLATE = "CommitTextTemplate";
+
   /** Der Titel der Seite */
   public static final String PROP_MAPTITLE = "mapTitle";
 
@@ -83,8 +86,8 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
 
   private IMapModell m_mapModell;
 
-  private MapPanel m_mapPanel; 
-  
+  private MapPanel m_mapPanel;
+
   public CommitResultsWizardPage()
   {
     super( "<CommitResultsWizardPage>" );
@@ -114,19 +117,26 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
       createMapPanel( sashForm );
       final SashForm rightSash = new SashForm( sashForm, SWT.VERTICAL );
       createTablePanel( rightSash );
-      createCommitTextPanel(rightSash);
+      createCommitTextPanel( rightSash );
       createCommitButton( rightSash );
 
       final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
-      final int rightWeight0 = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH+"0", "50" ) );
-      final int rightWeight1 = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH+"1", "20" ) );
+      final int rightWeight0 = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH + "0",
+          "50" ) );
+      final int rightWeight1 = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH + "1",
+          "20" ) );
 
       // TODO: konfigure
       sashForm.setWeights( new int[]
-      { mainWeight, 100 - mainWeight } );
+      {
+          mainWeight,
+          100 - mainWeight } );
 
       rightSash.setWeights( new int[]
-      { rightWeight0,rightWeight0+rightWeight1, 100 - rightWeight0-rightWeight1 } );
+      {
+          rightWeight0,
+          rightWeight0 + rightWeight1,
+          100 - rightWeight0 - rightWeight1 } );
 
       setControl( sashForm );
     }
@@ -140,21 +150,21 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
   {
     final Composite composite = new Composite( parent, SWT.RIGHT );
 
-    final Button button = new Button(composite,SWT.NONE | SWT.PUSH );
+    final Button button = new Button( composite, SWT.NONE | SWT.PUSH );
     button.setText( "ausgew?hlte Pegel in Ergebnisablage speichern" );
     button.addSelectionListener( new CommitResults() );
     button.setVisible( true );
-    composite.setVisible(true);
+    composite.setVisible( true );
     //button.setEnabled(true);
   }
-  
+
   private void createCommitTextPanel( final Composite parent )
   {
-   
-    final Text text= new Text(parent,SWT.MULTI);
-    text.setVisible(true);
-    text.setText( getArguments().getProperty( PROP_COMMITTEXTTEMPLATE));
-  
+
+    final Text text = new Text( parent, SWT.MULTI );
+    text.setVisible( true );
+    text.setText( getArguments().getProperty( PROP_COMMITTEXTTEMPLATE ) );
+
   }
 
   private void createTablePanel( final Composite parent )
@@ -163,7 +173,8 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
     {
       final String templateFileName = getArguments().getProperty( PROP_TABLETEMPLATE );
       final IFile templateFile = (IFile)getProject().findMember( templateFileName );
-      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile, getReplaceProperties()  );
+      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,
+          getReplaceProperties() );
 
       m_viewer = new LayerTableViewer( parent, this, getProject(), KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), SELECTION_ID, true );
@@ -187,7 +198,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties()  );
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
     m_mapModell = new GisTemplateMapModell( gisview, getContext(), crs );
     m_mapModell.addModellListener( this );
@@ -251,9 +262,9 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    //
+  //
   }
-  
+
   public IMapModell getMapModel()
   {
     return m_mapModell;
@@ -270,27 +281,40 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
       final String propNames = getArguments().getProperty( PROP_TIMEPROPNAME, "" );
       final String[] timeNames = propNames.split( "#" );
 
-      final IKalypsoLayer layer = getMapModel().getActiveTheme().getLayer();
-      if( !( layer instanceof KalypsoFeatureLayer ) )
+      final IKalypsoTheme theme = getMapModel().getActiveTheme();
+      if( !( theme instanceof KalypsoFeatureTheme ) )
         return;
 
-      final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
-      final Feature[] allFeatures = kfl.getAllFeatures();
-      for( int i = 0; i < allFeatures.length; i++ )
+      final KalypsoFeatureTheme featureTheme = (KalypsoFeatureTheme)theme;
+      final GMLWorkspace workspace = featureTheme.getWorkspace();
+
+      try
       {
-        if( allFeatures[i].isSelected( SELECTION_ID ) )
+        workspace.accept( new FeatureVisitor()
         {
-         
-          for( int j = 0; j < timeNames.length; j++ )
+          public boolean visit( final Feature f ) throws Throwable
           {
-            Object observation = allFeatures[i].getProperty( timeNames[j] );
-            if( observation == null )
-              System.out.println( "observation is null" );
-            else
-              System.out.println( "observation is type:" + observation.getClass().toString() );
+            if( f.isSelected( SELECTION_ID ) )
+            {
+              for( int j = 0; j < timeNames.length; j++ )
+              {
+                Object observation = f.getProperty( timeNames[j] );
+                if( observation == null )
+                  System.out.println( "observation is null" );
+                else
+                  System.out.println( "observation is type:" + observation.getClass().toString() );
+              }
+            }
+            
+            return true;
           }
-        }
+        }, featureTheme.getFeatureType(), FeatureVisitor.DEPTH_ZERO );
       }
+      catch( final Throwable e1 )
+      {
+        e1.printStackTrace();
+      }
+
     }
   }
 }

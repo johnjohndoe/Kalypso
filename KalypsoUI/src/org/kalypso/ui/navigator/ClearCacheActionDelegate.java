@@ -26,7 +26,8 @@ public class ClearCacheActionDelegate implements IViewActionDelegate
    */
   public void run( IAction action )
   {
-    KalypsoGisPlugin.getDefault().clearPool();
+    // TODO: wird das noch benötigt?
+    //KalypsoGisPlugin.getDefault().getPool().clear();
   }
 
   /**

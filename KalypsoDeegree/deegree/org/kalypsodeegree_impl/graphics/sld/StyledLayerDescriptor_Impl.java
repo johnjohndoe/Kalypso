@@ -46,8 +46,10 @@ import java.util.ArrayList;
 
 import org.deegree.graphics.sld.Layer;
 import org.deegree.graphics.sld.NamedLayer;
+import org.deegree.graphics.sld.Style;
 import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.deegree.graphics.sld.UserLayer;
+import org.deegree.graphics.sld.UserStyle;
 import org.deegree.xml.Marshallable;
 import org.deegree_impl.tools.Debug;
 
@@ -300,6 +302,38 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
     Debug.debugMethodEnd();
     return sb.toString();
+  }
+
+  /**
+   * @see org.deegree.graphics.sld.StyledLayerDescriptor#findUserStyle(java.lang.String)
+   */
+  public UserStyle findUserStyle( final String name )
+  {
+    final NamedLayer[] namedLayers = getNamedLayers();
+    for( int i = 0; i < namedLayers.length; i++ )
+    {
+      final Style[] styles = namedLayers[i].getStyles();
+      for( int n = 0; n < styles.length; n++ )
+      {
+        final Style style = styles[n];
+        if( style instanceof UserStyle && name.equals( style.getName() ) )
+          return (UserStyle)style;
+      }
+    }
+
+    final UserLayer[] userLayers = getUserLayers();
+    for( int i = 0; i < userLayers.length; i++ )
+    {
+      final Style[] styles = userLayers[i].getStyles();
+      for( int n = 0; n < styles.length; n++ )
+      {
+        final Style style = styles[n];
+        if( style instanceof UserStyle && name.equals( style.getName() ) )
+          return (UserStyle)style;
+      }
+    }
+
+    return null;
   }
 
 }

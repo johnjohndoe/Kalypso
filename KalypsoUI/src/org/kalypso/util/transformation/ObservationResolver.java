@@ -86,7 +86,7 @@ public class ObservationResolver extends AbstractTransformation
 
       // todo: read via replaceToken?
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, schemaURL );
-      final FeatureType ft = workspace.getSchema().getFeatureType( featureName );
+      final FeatureType ft = workspace.getFeatureType( featureName );
       if( ft == null )
         throw new TransformationException( "Featurename unbekannt: " + featureName );
 

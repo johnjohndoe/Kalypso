@@ -1,7 +1,7 @@
 package org.kalypso.ogc.gml.command;
 
 import org.deegree.model.feature.Feature;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.deegree.model.feature.GMLWorkspace;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -10,11 +10,11 @@ import org.kalypso.util.command.ICommand;
 public class AddFeatureCommand implements ICommand
 {
   private final org.deegree.model.feature.Feature m_feature;
-  private final KalypsoFeatureLayer m_layer;
+  private final GMLWorkspace m_workspace;
 
-  public AddFeatureCommand( final KalypsoFeatureLayer layer, final Feature fe )
+  public AddFeatureCommand( final GMLWorkspace workspace, final Feature fe )
   {
-    m_layer = layer;
+    m_workspace = workspace;
     m_feature = fe;
   }
 
@@ -31,7 +31,7 @@ public class AddFeatureCommand implements ICommand
    */
   public void process() throws Exception
   {
-    m_layer.addFeature( m_feature );
+//    m_layer.addFeature( m_feature );
   }
 
   /**
@@ -39,7 +39,7 @@ public class AddFeatureCommand implements ICommand
    */
   public void redo() throws Exception
   {
-    m_layer.addFeature( m_feature );  
+//    m_layer.addFeature( m_feature );  
   }
 
   /**
@@ -47,7 +47,7 @@ public class AddFeatureCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    m_layer.removeFeature(m_feature);
+//    m_layer.removeFeature(m_feature);
   }
 
   /**
@@ -55,6 +55,6 @@ public class AddFeatureCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Element hinzuf?gen";
+    return "Element hinzufügen";
   }
 }

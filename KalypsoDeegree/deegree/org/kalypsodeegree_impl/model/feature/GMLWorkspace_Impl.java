@@ -6,48 +6,57 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureAssociationTypeProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.FeatureVisitor;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
-import org.deegree_impl.gml.schema.GMLSchema;
+import org.deegree_impl.model.feature.visitors.FeatureTypeVisitor;
 
 /**
  * @author doemming
  */
 public class GMLWorkspace_Impl implements GMLWorkspace
 {
-  private final GMLSchema m_schema;
-
   private final Feature m_rootFeature;
-  private final URL m_modelURL;
 
-  // final UndoManager ??
+  private final URL m_context;
 
-  /**
-   * HashMap(featuretype,List(feature)) TODO:
-   * HashMap(featuretype,HashMap(id,feature))
-   */
-  private final HashMap m_featureMap = new HashMap();
+  /** id -> feature */
+  private final Map m_indexMap = new HashMap();
+
+  private final FeatureType[] m_featureTypes;
 
   /**
    * 
-   * @see org.deegree.model.feature.GMLWorkspace#getFeature(org.deegree.model.feature.FeatureType, java.lang.String)
+   * @see org.deegree.model.feature.GMLWorkspace#getFeature(org.deegree.model.feature.FeatureType,
+   *      java.lang.String)
    */
-  public Feature getFeature( FeatureType ft, String id )
+  public Feature getFeature( final String id )
   {
-    List list = (List)m_featureMap.get( ft );
-    for( Iterator iter = list.iterator(); iter.hasNext(); )
+    return (Feature)m_indexMap.get( id );
+  }
+
+  public GMLWorkspace_Impl( final FeatureType[] featureTypes, final Feature feature, final URL context )
+  {
+    m_featureTypes = featureTypes;
+    m_context = context;
+
+    m_rootFeature = feature;
+
+    try
     {
-      Feature feature = (Feature)iter.next();
-      if( id.equals( feature.getId() ) )
-        return feature;
+      accept( new RegisterVisitor(), m_rootFeature, FeatureVisitor.DEPTH_INFINITE );
     }
-    return null;
+    catch( final Throwable e )
+    {
+      e.printStackTrace();
+    }
   }
 
   public Feature resolveLink( Feature srcFeature, String linkPropertyName )
@@ -118,79 +127,35 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return (Feature[])result.toArray( new Feature[result.size()] );
   }
 
-  public GMLWorkspace_Impl( GMLSchema schema, Feature feature,URL gmlURL )
-  {
-    m_schema = schema;
-    m_modelURL=gmlURL;
-    FeatureType[] featureTypes = m_schema.getFeatureTypes();
-    for( int i = 0; i < featureTypes.length; i++ )
-    {
-      m_featureMap.put( featureTypes[i], new ArrayList() );
-    }
-    m_rootFeature = feature;
-    registerFeature( feature );
-  }
-
-  private void addFeature( Feature feature )
-  {
-    List list = (List)m_featureMap.get( feature.getFeatureType() );
-    list.add( feature );
-  }
-
-  private void registerFeature( Feature feature )
-  {
-    if( feature == null )
-      return;
-    addFeature( feature );
-    FeatureType featureType = feature.getFeatureType();
-    FeatureTypeProperty[] ftps = featureType.getProperties();
-    for( int i = 0; i < ftps.length; i++ )
-    {
-      if( ftps[i] instanceof FeatureAssociationTypeProperty )
-      {
-        Object value = feature.getProperty( ftps[i].getName() );
-        if( value instanceof Feature )
-          registerFeature( (Feature)value );
-        if( value instanceof List )
-          registerFeature( (List)value );
-      }
-    }
-  }
-
-  private void registerFeature( List list )
-  {
-    if( list == null )
-      return;
-    for( Iterator iter = list.iterator(); iter.hasNext(); )
-    {
-      Object value = iter.next();
-      if( value instanceof Feature )
-        registerFeature( (Feature)value );
-    }
-  }
-
   public Feature getRootFeature()
   {
     return m_rootFeature;
   }
 
-  public GMLSchema getSchema()
-  {
-    return m_schema;
-  }
-
   public FeatureType[] getFeatureTypes()
   {
-    return m_schema.getFeatureTypes();
+    return m_featureTypes;
   }
 
-  public Feature[] getFeatures( FeatureType ft )
+  public Feature[] getFeatures( final FeatureType ft )
   {
-    List list = (List)m_featureMap.get( ft );
-    return (Feature[])list.toArray( new Feature[list.size()] );
+    final FeatureTypeVisitor visitor = new FeatureTypeVisitor( ft );
+    try
+    {
+      accept( visitor, getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+    }
+    catch( Throwable e )
+    {
+      e.printStackTrace();
+    }
+      
+    final Collection results = visitor.getResults();
+    return (Feature[])results.toArray( new Feature[results.size()] );
   }
 
   private final Collection m_listener = new ArrayList();
+
+  private boolean m_editing;
 
   /**
    * 
@@ -241,7 +206,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         result.add( features[i] );
     }
 
-    FeatureType[] substiFTs = m_schema.getResolveSubstitutionGroup( linkSrcFeatureType );
+    FeatureType[] substiFTs = GMLHelper.getResolveSubstitutionGroup( linkSrcFeatureType, getFeatureTypes() );
     for( int _ft = 0; _ft < substiFTs.length; _ft++ )
     {
       final Feature[] substiFeatures = getFeatures( substiFTs[_ft] );
@@ -258,13 +223,192 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
     return (Feature[])result.toArray( new Feature[result.size()] );
   }
+  
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#setEditing(boolean)
+   */
+  public void setEditing( boolean edit )
+  {
+    m_editing = edit;
+
+    fireModellEvent( new ModellEvent( this, ModellEvent.EDITING_CHANGED ) );
+  }
+
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#isEditing()
+   */
+  public boolean isEditing()
+  {
+    return m_editing;
+  }
 
   /**
    * @see org.deegree.model.feature.GMLWorkspace#getModelUrl()
    */
-  public URL getModelUrl()
+  public URL getContext()
   {
-    return m_modelURL;
+    return m_context;
+  }
+
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#accept(org.deegree.model.feature.FeatureVisitor,
+   *      org.deegree.model.feature.FeatureType, int)
+   */
+  public void accept( final FeatureVisitor fv, final FeatureType ft, final int depth )
+      throws Throwable
+  {
+    final Feature[] features = getFeatures( ft );
+
+    for( int i = 0; i < features.length; i++ )
+    {
+      final Feature feature = features[i];
+      accept( fv, feature, depth );
+    }
+  }
+
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#accept(org.deegree.model.feature.FeatureVisitor,
+   *      org.deegree.model.feature.Feature, int)
+   */
+  public void accept( final FeatureVisitor fv, final Feature feature, final int depth )
+      throws Throwable
+  {
+    final FeatureType ft = feature.getFeatureType();
+    final FeatureTypeProperty[] ftps = ft.getProperties();
+
+    final boolean recurse = fv.visit( feature );
+
+    if( recurse && depth != FeatureVisitor.DEPTH_ZERO )
+    {
+      for( int j = 0; j < ftps.length; j++ )
+      {
+        if( ftps[j] instanceof FeatureAssociationTypeProperty )
+        {
+          Object value = feature.getProperty( ftps[j].getName() );
+          if( value == null )
+            continue;
+
+          if( value instanceof Feature )
+          {
+            final Feature f = (Feature)value;
+            accept( fv, f, depth );
+          }
+          else if( value instanceof List )
+            accept( fv, (List)value, depth );
+          else if( value instanceof String && depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
+          {
+            final Feature f = getFeature( (String)value );
+            accept( fv, f, depth );
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#accept(org.deegree.model.feature.FeatureVisitor,
+   *      java.util.List, int)
+   */
+  public void accept( final FeatureVisitor fv, final List features, final int depth )
+      throws Throwable
+  {
+    for( Iterator iter = features.iterator(); iter.hasNext(); )
+    {
+      final Object next = iter.next();
+
+      if( next instanceof String )
+      {
+        // ACHTUNG LINK!
+        if( depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
+        {
+          final Feature f = getFeature( (String)next );
+          accept( fv, f, depth );
+        }
+      }
+      else if( next instanceof Feature )
+        accept( fv, (Feature)next, depth );
+    }
+  }
+  
+  private final class RegisterVisitor implements FeatureVisitor
+  {
+    /**
+     * @see org.deegree.model.feature.FeatureVisitor#visit(org.deegree.model.feature.Feature)
+     */
+    public boolean visit( final Feature f ) throws Throwable
+    {
+      final FeatureType featureType = f.getFeatureType();
+
+      final String id = f.getId();
+      if( m_indexMap.containsKey( id ) )
+        System.out.println( "Workspace already contains a feature with id: " + id );
+      m_indexMap.put( id, f );
+      
+      return true;
+    }
+  }
+
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#getFeatureType(java.lang.String)
+   */
+  public FeatureType getFeatureType( final String featureName )
+  {
+    for( int i = 0; i < m_featureTypes.length; i++ )
+    {
+      final FeatureType ft = m_featureTypes[i];
+      if( ft.getName().equals(  featureName ) )
+        return ft;
+    }
+    
+    return null;
+  }
+
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#getFeatureFromPath(java.lang.String)
+   */
+  public Object getFeatureFromPath( final String featurePath )
+  {
+    final String[] segments = featurePath.split( "/" );
+    
+    Feature aktuFeature = getRootFeature();
+    for( int i = 0; i < segments.length; i++ )
+    {
+      final Object value = aktuFeature.getProperty( segments[i] );
+      if( value instanceof Feature )
+      {
+        aktuFeature = (Feature)value;
+        continue;
+      }
+      else if( value instanceof String )
+      {
+        aktuFeature = getFeature( (String)value );
+        continue;
+      }
+      else if( value instanceof List )
+      {
+        // TODO: check if i == segemnt.length - 1
+        return value;
+      }
+    }
+
+    return aktuFeature;
+  }
+
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#getFeatureTypeFromPath(java.lang.String)
+   */
+  public FeatureType getFeatureTypeFromPath( final String featurePath )
+  {
+    final String[] segments = featurePath.split( "/" );
+    
+    FeatureType aktuType = getRootFeature().getFeatureType();
+    for( int i = 0; i < segments.length; i++ )
+    {
+      final FeatureAssociationTypeProperty property = (FeatureAssociationTypeProperty)aktuType.getProperty( segments[i] );
+      aktuType = property.getAssociationFeatureType();
+    }
+    
+    return aktuType;
   }
 
 }

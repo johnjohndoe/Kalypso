@@ -6,9 +6,8 @@ import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
@@ -26,9 +25,9 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
    */
   public Object[] getChildren( final Object parentElement )
   {
-    if( parentElement instanceof IKalypsoTheme )
+    if( parentElement instanceof KalypsoFeatureTheme )
     {
-      final IKalypsoTheme theme = (IKalypsoTheme)parentElement;
+      final KalypsoFeatureTheme theme = (KalypsoFeatureTheme)parentElement;
       final UserStyle[] styles = theme.getStyles();
       if( styles != null )
       {
@@ -40,16 +39,17 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
     }
     else if( parentElement instanceof ThemeStyleTreeObject )
     {
-      ThemeStyleTreeObject obj = (ThemeStyleTreeObject)parentElement;
-      IKalypsoLayer layer = obj.getTheme().getLayer();
-      if( !( layer instanceof KalypsoFeatureLayer ) )
+      final ThemeStyleTreeObject obj = (ThemeStyleTreeObject)parentElement;
+      
+      final IKalypsoTheme theme = obj.getTheme();
+      if( !( theme instanceof KalypsoFeatureTheme ) )
         return null;
       
       final KalypsoUserStyle userStyle = obj.getStyle();
       final Rule[] rules = userStyle.getFeatureTypeStyles()[0].getRules();
       final RuleTreeObject[] result = new RuleTreeObject[rules.length];
       for( int i = 0; i < result.length; i++ )
-        result[i] = new RuleTreeObject( rules[i], userStyle, layer );
+        result[i] = new RuleTreeObject( rules[i], userStyle, (KalypsoFeatureTheme)theme );
       return result;
     }
     return null;

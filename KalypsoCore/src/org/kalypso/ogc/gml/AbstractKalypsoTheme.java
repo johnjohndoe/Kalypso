@@ -2,7 +2,9 @@ package org.kalypso.ogc.gml;
 
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree.model.feature.event.ModellEventProvider;
 import org.deegree.model.feature.event.ModellEventProviderAdapter;
+
 
 /**
  * <p>Abstract implementation of IKalypsoTheme</p>
@@ -12,9 +14,8 @@ import org.deegree.model.feature.event.ModellEventProviderAdapter;
  */
 public abstract class AbstractKalypsoTheme implements IKalypsoTheme
 {
-  private final ModellEventProviderAdapter m_eventProvider = new ModellEventProviderAdapter();
-
   private String m_name;
+  private ModellEventProvider m_eventProvider = new ModellEventProviderAdapter();
   
   public AbstractKalypsoTheme( final String name )
   {
@@ -32,8 +33,7 @@ public abstract class AbstractKalypsoTheme implements IKalypsoTheme
   public final void setName( final String name )
   {
     m_name = name;
-    
-    fireModellEvent( null );
+//    fireModellEvent( null );
   }
 
   /**

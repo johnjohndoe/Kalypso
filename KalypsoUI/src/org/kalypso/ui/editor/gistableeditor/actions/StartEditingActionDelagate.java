@@ -13,12 +13,13 @@ public class StartEditingActionDelagate extends GisTableAbstractActionDelagate
    */
   public void run( final IAction action )
   {
-    getEditor().getLayerTable().getTheme().setEditing( action.isChecked() );
+//    getEditor().getLayerTable().getTheme().setEditing( action.isChecked() );
   }
   
   protected boolean isChecked()
   {
-    return getEditor().getLayerTable().getTheme() != null && getEditor().getLayerTable().getTheme().isEditing();
+    return false;
+//    return getEditor().getLayerTable().getTheme() != null && getEditor().getLayerTable().getTheme().isEditing();
   }
 
   /**

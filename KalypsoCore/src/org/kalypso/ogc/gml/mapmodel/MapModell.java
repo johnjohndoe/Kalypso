@@ -11,7 +11,6 @@ import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree.model.feature.event.ModellEventProvider;
 import org.deegree.model.feature.event.ModellEventProviderAdapter;
 import org.deegree.model.geometry.GM_Envelope;
-import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -57,10 +56,6 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
       myActiveTheme = theme;
 
     myThemes.add( theme );
-
-    final IKalypsoLayer layer = theme.getLayer();
-    if( layer != null )
-      layer.setCoordinatesSystem( myCoordinatesSystem );
 
     myEnabledThemeStatus.put( theme, THEME_ENABLED );
 
@@ -243,17 +238,16 @@ public GM_Envelope getFullExtentBoundingBox()
     
     for( int i = 0; i < themes.length; i++ )
     {
-      if( isThemeEnabled( themes[i] ) && themes[i].getLayer() != null )
+      if( isThemeEnabled( themes[i] ) )
       {
         try
         {
-  //        final GeoTransformer gt = new GeoTransformer( getCoordinatesSystem() );
-          final GM_Envelope boundingBox = themes[i].getLayer().getBoundingBox();
+          final GM_Envelope boundingBox = themes[i].getBoundingBox();
 
           if( result == null )
             result=boundingBox;         
           else        
-            result=result.merge(boundingBox);  
+            result=result.merge( boundingBox );  
         }
         catch( final Exception e )
         {
@@ -264,75 +258,6 @@ public GM_Envelope getFullExtentBoundingBox()
     }
     return result;
   }
-    //  public GM_Envelope getFullExtentBoundingBox()
-  //  {
-  //    IKalypsoTheme[] themes = getAllThemes();
-  //    boolean found = false;
-  //    double resultMinX = 0;
-  //    double resultMaxX = 0;
-  //
-  //    double resultMinY = 0;
-  //    double resultMaxY = 0;
-  //
-  //    for( int i = 0; i < themes.length; i++ )
-  //    {
-  //      if( isThemeEnabled( themes[i] ) && themes[i].getLayer() != null )
-  //      {
-  //        try
-  //        {
-  //          final GeoTransformer gt = new GeoTransformer( getCoordinatesSystem() );
-  //          final GM_Envelope boundingBox = themes[i].getLayer().getBoundingBox();
-  //
-  //          if( boundingBox != null )
-  //          {
-  //            final GM_Envelope env = gt.transformEnvelope( boundingBox,
-  // themes[i].getLayer()
-  //                .getCoordinatesSystem() );
-  //            double minX = env.getMin().getX();
-  //            double minY = env.getMin().getY();
-  //
-  //            double maxX = env.getMax().getX();
-  //            double maxY = env.getMax().getY();
-  //
-  //            if( !found )
-  //            {
-  //              resultMinX = minX;
-  //              resultMinY = minY;
-  //              resultMaxX = maxX;
-  //              resultMaxY = maxY;
-  //              found = true;
-  //            }
-  //            else
-  //            {
-  //              if( minX < resultMinX )
-  //                resultMinX = minX;
-  //
-  //              if( minY < resultMinY )
-  //                resultMinY = minY;
-  //
-  //              if( maxX > resultMaxX )
-  //                resultMaxX = maxX;
-  //
-  //              if( maxY > resultMaxY )
-  //                resultMaxY = maxY;
-  //            }
-  //          }
-  //        }
-  //        catch( final Exception e )
-  //        {
-  //          // TODO: das sollte nicht sein, exception einfach weiterwerfen
-  //          e.printStackTrace();
-  //        }
-  //      }
-  //    }
-  //
-  //    if( found )
-  //    {
-  //      return GeometryFactory.createGM_Envelope( resultMinX, resultMinY,
-  // resultMaxX, resultMaxY );
-  //    }
-  //    return null;
-  //  }
 
   public void addModellListener( ModellEventListener listener )
   {
