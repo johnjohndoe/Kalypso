@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <calcCaseConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.model.kalypso.org calcCaseConfig.xsd">
 	<!-- Rechenfall anlegen, ohne Zeitreihen -->
-	<createTransformations logFile="calcCase.log">
+	<createTransformations logFile="createCalcCase.log">
 		<!-- Bodemodell.gml  und *.gmv-->
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.templates/Modell/bodemodell.gml"/>
@@ -28,7 +28,7 @@
 
 	
 	<!-- Zeitreihen laden (hier Fake als Kopie) -->
-	<updateTransformations logFile="calcCase.log">
+	<updateTransformations logFile="updateCalcCase.log">
 		<transformation className="org.kalypso.util.transformation.CopyOrMoveDirTransformation">
 			<argument name="input" value=":project:.templates/Zeitreihen"/>
 			<argument name="output" value=":calcdir:/Zeitreihen"/>
