@@ -146,8 +146,6 @@ public class ReaderUtilities
    * </ul>
    * <p>
    * A token example: %1% (begin and end token are the same i.e. %, the name is 1)
-   * 
-   * @return
    */
   public static Reader createTokenReplaceReader( Reader reader,
       Properties token2value, char beginToken, char endToken )
