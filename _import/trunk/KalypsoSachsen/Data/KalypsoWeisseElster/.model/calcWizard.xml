@@ -382,24 +382,20 @@
 		<arg name="timeserie1" 
 			value="nameColumn=Name#linkColumn=qberechnetZR#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
 		<arg name="timeserie2" 
-			value="nameColumn=Name#linkColumn=pegelZR#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
-
+			value="nameColumn=Name#linkColumn=pegelZR#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;"/>
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="256"/>
-
 		<arg name="ignoreType1" value="W"/>
-        <arg name="ignoreType2" value="Q"/>
-        <arg name="ignoreLabel1" value="Abfluss"/>
-        <arg name="ignoreLabel2" value="Wasserstand"/>
-		
-		<arg name="pegelNameProperty" value="Name"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="pegelNameProperty" value="name"/>
 		<arg name="resultProperty" value="qberechnetZR"/>
 		<arg name="prognoseProperty" value="pegelBerechnetZRAblage"/>
-		
 		<arg name="exporter1" value="class=org.kalypso.ui.calcwizard.bericht.MapExporter;name=Karte"/>
-	   	<arg name="exporter2" value="class=org.kalypso.ui.calcwizard.bericht.ZmlTableExporter;name=Tabelle"/>
-	   	<arg name="exporter3" value="class=org.kalypso.ui.calcwizard.bericht.DiagrammExporter;name=Abflussgrafik"/>
-	   	<arg name="exporter4" value="class=org.kalypso.ui.calcwizard.bericht.DiagrammExporter;name=Wasserstandgrafik;"/>
+		<arg name="exporter2" value="class=org.kalypso.ui.calcwizard.bericht.ZmlTableExporter;name=Tabelle"/>
+		<arg name="exporter3" value="class=org.kalypso.ui.calcwizard.bericht.DiagrammExporter;name=Abflussgrafik"/>
+		<arg name="exporter4" value="class=org.kalypso.ui.calcwizard.bericht.DiagrammExporter;name=Wasserstandgrafik;"/>
 	</page>
 </calcwizard>
