@@ -38,20 +38,11 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.diagrameditor.actions;
+package org.kalypso.ui.editor.abstractobseditor.actions;
 
-import java.util.Vector;
-
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.window.Window;
-import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.eclipse.jface.action.FullAction;
-import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
-import org.kalypso.ogc.sensor.diagview.DiagramAxis;
-import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.editor.diagrameditor.ObsDiagOutlinePage;
+import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
 
 /**
  * SwitchAxisTypePulldownActionDelegate
@@ -64,9 +55,9 @@ public class FilterAxesAction extends FullAction
 
   private final static String MSG = "Wählen Sie der Achsentyp welche nicht dargestellt werden soll";
 
-  private ObsDiagOutlinePage m_page;
+  private ObservationEditorOutlinePage m_page;
 
-  public FilterAxesAction( ObsDiagOutlinePage page )
+  public FilterAxesAction( ObservationEditorOutlinePage page )
   {
     super( "Achsen filtern", ImageProvider.IMAGE_UTIL_FILTER,
         "Erlaubt die Deaktivierung einer Achsentyp" );
@@ -79,29 +70,30 @@ public class FilterAxesAction extends FullAction
    */
   public void run( )
   {
-    final DiagViewTemplate tpl = m_page.getTemplate();
+    // TODO: refactor this code with the axis from the observation
 
-    final Vector elts = new Vector( tpl.getDiagramAxes() );
-    elts.add( 0, "(Keiner)" );
-
-    final ListDialog dlg = new ListDialog( m_page.getSite().getShell() );
-
-    dlg.setInput( elts.toArray() );
-    dlg.setContentProvider( new ArrayContentProvider() );
-    dlg.setLabelProvider( new LabelProvider() );
-    dlg.setMessage( MSG );
-    dlg.setTitle( TITLE );
-
-    if( dlg.open() == Window.OK )
-    {
-      final Object[] res = dlg.getResult();
-
-      if( res.length == 1 && res[0] instanceof DiagramAxis )
-        tpl.setIgnoreType( ((DiagramAxis) res[0]).getLabel() );
-      else
-        tpl.setIgnoreType( null );
-      
-      tpl.fireTemplateChanged( new TemplateEvent( tpl.getThemes(), TemplateEvent.TYPE_REFRESH ) );
-    }
+//    final AbstractViewTemplate tpl = m_page.getTemplate();
+//    final Vector elts = new Vector( tpl.getDiagramAxes() );
+//    elts.add( 0, "(Keiner)" );
+//
+//    final ListDialog dlg = new ListDialog( m_page.getSite().getShell() );
+//
+//    dlg.setInput( elts.toArray() );
+//    dlg.setContentProvider( new ArrayContentProvider() );
+//    dlg.setLabelProvider( new LabelProvider() );
+//    dlg.setMessage( MSG );
+//    dlg.setTitle( TITLE );
+//
+//    if( dlg.open() == Window.OK )
+//    {
+//      final Object[] res = dlg.getResult();
+//
+//      if( res.length == 1 && res[0] instanceof DiagramAxis )
+//        tpl.setIgnoreType( ((DiagramAxis) res[0]).getLabel() );
+//      else
+//        tpl.setIgnoreType( null );
+//      
+//      tpl.fireTemplateChanged( new TemplateEvent( tpl.getThemes(), TemplateEvent.TYPE_REFRESH ) );
+//    }
   }
 }

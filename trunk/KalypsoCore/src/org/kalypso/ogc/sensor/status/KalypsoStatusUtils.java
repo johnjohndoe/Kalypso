@@ -235,6 +235,7 @@ public class KalypsoStatusUtils
    * <li>"warning": the Warning Icon
    * <li>"write": the Write Icon
    * <li>any URL: an URL that will be used for finding the image (see ImageIcon.ImageIcon( URL ) )
+   * <li>null: returns null
    * </ol>
    * 
    * @param iconDescription
@@ -246,6 +247,9 @@ public class KalypsoStatusUtils
    */
   public static ImageIcon getIconFor( final String iconDescription )
   {
+    if( iconDescription == null )
+      return null;
+    
     if( "question".equalsIgnoreCase( iconDescription ) )
       return ICON_QUESTION;
     if( "warning".equalsIgnoreCase( iconDescription ) )

@@ -65,7 +65,7 @@
 	<!-- DEPLOY -->
 	<target name="deploy" depends="jar">
 
-		<copy todir="../KalypsoUI/lib">
+		<copy todir="../KalypsoObsService/lib">
 			<fileset dir="${deploy.dir}" includes="*.jar" />
 		</copy>
 	</target>

@@ -75,7 +75,7 @@ public class SaveDataAction extends AbstractEditorActionDelegate
     boolean atLeastOneDirtySave = false;
     
     final ObservationTableEditor editor = (ObservationTableEditor) getEditor();
-    final TableViewTemplate template = editor.getTemplate();
+    final TableViewTemplate template = (TableViewTemplate) editor.getTemplate();
     final ObservationTableModel model = editor.getModel();
 
     final Collection themes = template.getThemes();

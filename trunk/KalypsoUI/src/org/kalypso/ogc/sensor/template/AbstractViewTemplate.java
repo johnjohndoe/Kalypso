@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.template;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -133,6 +134,23 @@ public abstract class AbstractViewTemplate extends
    * @param args
    */
   public abstract void addObservation( final IObservation obs,
+      final IVariableArguments args );
+
+  /**
+   * Convenienve method for adding an observation to this template.
+   * 
+   * @param themeName
+   *          used as part of the col name if not null
+   * @param context
+   * @param href
+   * @param linktype
+   * @param ignoreExceptions
+   * @param args
+   * @return theme just being added
+   */
+  public abstract AbstractObservationTheme addObservation(
+      final String themeName, final URL context, final String href,
+      final String linktype, final boolean ignoreExceptions,
       final IVariableArguments args );
 
   /**
