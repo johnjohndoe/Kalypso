@@ -21,11 +21,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
+import org.kalypso.editor.tableeditor.GisTableEditor;
 import org.kalypso.editor.tableeditor.actions.ColumnAction;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.gml.KalypsoFeature;
-import org.kalypso.util.command.ICommandManager;
 import org.kalypso.util.factory.FactoryException;
 
 /**
@@ -40,7 +40,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
 
   private LayerTableModel m_model = null;
 
-  private final ICommandManager m_commandManager;
+  private final GisTableEditor m_editor;
 
   private IMenuManager m_menu;
 
@@ -58,10 +58,10 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
 
   private IMenuManager m_spaltenMenu;
 
-  public LayerTable( final Composite parent, final ICommandManager commandManager,
+  public LayerTable( final Composite parent, final GisTableEditor editor,
       final ICellEditorFactory cellEditorFactory )
   {
-    m_commandManager = commandManager;
+    m_editor = editor;
     m_cellEditorFactory = cellEditorFactory;
 
     m_viewer = new TableViewer( parent, SWT.MULTI /* | SWT.FULL_SELECTION */);
@@ -122,6 +122,8 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
 
   private IAction[] createActions()
   {
+    // TODO: hier entseht die abhängigkeit zu GisTableEditor!
+    // -> alles nach GisTableEditor verschieben
     if( m_model != null )
     {
       final FeatureTypeProperty[] ftps = m_model.getFeatureType().getProperties();
@@ -129,7 +131,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
       final IAction[] actions = new IAction[ftps.length];
 
       for( int i = 0; i < ftps.length; i++ )
-        actions[i] = new ColumnAction( m_commandManager, this, ftps[i], m_model
+        actions[i] = new ColumnAction( m_editor, this, ftps[i], m_model
             .getInitialWidth( ftps[i] ) != 0 );
 
       return actions;
@@ -206,7 +208,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     m_viewer.setColumnProperties( colProperties );
     m_viewer.setCellEditors( cellEditors );
     m_viewer.setInput( m_model );
-    m_viewer.setCellModifier( new LayerTableCellModifier( m_commandManager, m_model, featureType ) );
+    m_viewer.setCellModifier( new LayerTableCellModifier( m_editor.getLayerCommandManager(), m_model, featureType ) );
   }
 
   /**

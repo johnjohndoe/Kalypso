@@ -19,12 +19,20 @@ public class SaveDataActionDelagate extends GisTableAbstractActionDelagate
     
     getEditor().saveData();
   }
-
+  
   /**
    * @see org.kalypso.editor.tableeditor.actions.GisTableAbstractActionDelagate#isEnabled(org.eclipse.jface.viewers.ISelection)
    */
   protected boolean isEnabled( final ISelection selection )
   {
     return true;
+  }
+
+  /**
+   * @see org.kalypso.editor.tableeditor.actions.GisTableAbstractActionDelagate#isChecked()
+   */
+  protected boolean isChecked()
+  {
+    return false;
   }
 }

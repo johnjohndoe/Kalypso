@@ -10,7 +10,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
@@ -27,24 +26,21 @@ import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.util.command.DefaultCommandManager;
-import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandManager;
 import org.kalypso.util.command.ICommandManagerListener;
-import org.kalypso.util.command.RedoAction;
-import org.kalypso.util.command.UndoAction;
+import org.kalypso.util.command.UndoRedoAction;
 
 /**
  * @author bce
  */
-public abstract class AbstractEditorPart extends EditorPart implements ICommandManager, IResourceChangeListener
+public abstract class AbstractEditorPart extends EditorPart implements IResourceChangeListener, ICommandManagerListener
 {
   private boolean m_dirty = false;
 
   private final ICommandManager m_commandManager = new DefaultCommandManager();
   
-  public final UndoAction m_undoAction = new UndoAction( this );
-
-  public final RedoAction m_redoAction = new RedoAction( this );
+  public final UndoRedoAction m_undoAction = new UndoRedoAction( m_commandManager, getSchedulingRule(), true );
+  public final UndoRedoAction m_redoAction = new UndoRedoAction( m_commandManager, getSchedulingRule(), false );
   
   private final Runnable m_dirtyRunnable = new Runnable()
   {
@@ -62,6 +58,8 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
   public AbstractEditorPart()
   {
     ResourcesPlugin.getWorkspace().addResourceChangeListener( this );
+    
+    m_commandManager.addCommandManagerListener( this );
   }
   
   public void dispose()
@@ -70,8 +68,19 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
 
     m_undoAction.dispose();
     m_redoAction.dispose();
+    
+    m_commandManager.removeCommandManagerListener( this );
 
     super.dispose();
+  }
+  
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( Class adapter )
+  {
+    System.out.println( adapter.getName() );
+    return null;
   }
 
   
@@ -264,87 +273,12 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
   {
     // nix
   }
-
-  /**
-   * @see org.kalypso.util.command.ICommandManager#postCommand(org.kalypso.util.command.ICommand, Runnable)
-   */
-  public void postCommand( final ICommand c, final Runnable runnable )
-  {
-    final Job job = new EditorPartJob( this, c, m_commandManager, runnable, EditorPartJob.POST );
-    job.schedule();
-  }
-
-  /**
-   * @see org.kalypso.util.command.ICommandManager#redo()
-   */
-  public void redo()
-  {
-    final Job job = new EditorPartJob( this, null, m_commandManager, null, EditorPartJob.REDO );
-    job.schedule();
-  }
-
-  /**
-   * @see org.kalypso.util.command.ICommandManager#undo()
-   */
-  public void undo()
-  {
-    final Job job = new EditorPartJob( this, null, m_commandManager, null, EditorPartJob.UNDO );
-    job.schedule();
-    // TODO. geht das?
-    //    if( m_commandManager.canUndo() )
-    //      setDirty( false );
-  }
-
-  /**
-   * @see org.kalypso.util.command.ICommandManager#canUndo()
-   */
-  public boolean canUndo()
-  {
-    return m_commandManager.canUndo();
-  }
-
-  /**
-   * @see org.kalypso.util.command.ICommandManager#canRedo()
-   */
-  public boolean canRedo()
-  {
-    return m_commandManager.canRedo();
-  }
-
-  /**
-   * 
-   * @see org.kalypso.util.command.ICommandManager#getUndoDescription()
-   */
-  public String getUndoDescription()
-  {
-    return m_commandManager.getUndoDescription();
-  }
-
-  /**
-   * 
-   * @see org.kalypso.util.command.ICommandManager#getRedoDescription()
-   */
-  public String getRedoDescription()
-  {
-    return m_commandManager.getRedoDescription();
-  }
-
-  /**
-   * @see org.kalypso.util.command.ICommandManager#addCommandManagerListener(org.kalypso.util.command.ICommandManagerListener)
-   */
-  public void addCommandManagerListener( ICommandManagerListener l )
-  {
-    m_commandManager.addCommandManagerListener( l );
-  }
-
-  /**
-   * @see org.kalypso.util.command.ICommandManager#removeCommandManagerListener(org.kalypso.util.command.ICommandManagerListener)
-   */
-  public void removeCommandManagerListener( ICommandManagerListener l )
-  {
-    m_commandManager.removeCommandManagerListener( l );
-  }
   
+  public ICommandManager getCommandManager()
+  {
+    return m_commandManager;
+  }
+
   public ISchedulingRule getSchedulingRule()
   {
     return myMutexRule;
@@ -366,5 +300,14 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
   public void fireDirty()
   {
     firePropertyChange( PROP_DIRTY );
+  }
+
+  /**
+   * @see org.kalypso.util.command.ICommandManagerListener#onCommandManagerChanged(org.kalypso.util.command.ICommandManager)
+   */
+  public void onCommandManagerChanged( final ICommandManager source )
+  {
+    if( source == m_commandManager )
+      setDirty( true );
   }
 }

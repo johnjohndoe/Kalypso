@@ -19,7 +19,7 @@ public abstract class GisTableAbstractActionDelagate implements IActionDelegate2
   private GisTableEditor m_editor;
 
   private IAction m_action;
-
+  
   /**
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
@@ -37,6 +37,9 @@ public abstract class GisTableAbstractActionDelagate implements IActionDelegate2
 
     final boolean bEnabled = m_editor == null ? false : isEnabled( m_editor.getSelection() );
     action.setEnabled( bEnabled );
+    
+    final boolean bChecked = m_editor == null ? false : isChecked();
+    action.setChecked(bChecked);
   }
 
   /**
@@ -88,4 +91,5 @@ public abstract class GisTableAbstractActionDelagate implements IActionDelegate2
   }
 
   protected abstract boolean isEnabled( final ISelection selection );
+  protected abstract boolean isChecked();
 }

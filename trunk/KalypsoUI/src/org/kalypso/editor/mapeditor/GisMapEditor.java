@@ -273,6 +273,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     return m_mapModell;
   }
 
+  /**
+   * @see org.kalypso.ogc.IMapPanelProvider#getMapPanel()
+   */
   public MapPanel getMapPanel()
   {
     return myMapPanel;
