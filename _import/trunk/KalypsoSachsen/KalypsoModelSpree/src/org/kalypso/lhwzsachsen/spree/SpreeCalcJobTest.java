@@ -35,6 +35,7 @@ public class SpreeCalcJobTest extends TestCase
     final ICalcJob cj = new SpreeCalcJob();
 
     final File basedir = FileUtilities.createNewTempDir( "Spree-CalcJob-Test" );
+    
     final CalcJobDataBean[] input = createInput( basedir );
 
     cj.run( basedir, input );
@@ -50,6 +51,7 @@ public class SpreeCalcJobTest extends TestCase
     cj.disposeJob();
 
 //    FileUtilities.deleteRecursive( basedir );
+//    FileUtilities.deleteRecursive( tmpdir );
   }
 
   private CalcJobDataBean[] createInput( final File basedir) throws IOException, TypeRegistryException, JAXBException

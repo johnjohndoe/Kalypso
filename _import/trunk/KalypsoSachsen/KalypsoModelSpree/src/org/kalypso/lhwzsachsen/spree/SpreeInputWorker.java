@@ -41,7 +41,6 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.opengis.cs.CS_CoordinateSystem;
-import org.xml.sax.InputSource;
 
 /**
  * Diese Klasse sammelt alles, was mit dem Erzeugen der Nativen Daten aus den
@@ -88,7 +87,6 @@ public class SpreeInputWorker
       final String napFilename = (String)props.get( SpreeCalcJob.DATA_NAPFILENAME );
       final String tsFilename = (String)props.get( SpreeCalcJob.DATA_TSFILENAME );
 
-      // TODO: vielleicht brauchen wird die _vhs Datei gar nicht zu schreiben
       StreamUtilities.streamCopy( SpreeInputWorker.class.getResourceAsStream( "resources/"
           + SpreeCalcJob.VHS_FILE ), new FileOutputStream( vhsFile ) );
 
@@ -309,10 +307,7 @@ public class SpreeInputWorker
       final File xsdFile = checkInput( "XSD", map, inputdir );
       final File gmlFile = checkInput( "GML", map, inputdir );
 
-      final InputSource schemaSource = new InputSource( new FileInputStream( xsdFile ) );
-      final InputSource gmlSource = new InputSource( new FileInputStream( gmlFile ) );
-
-      return GmlSerializer.deserialize( schemaSource, gmlSource, crs, null );
+      return GmlSerializer.deserialize( xsdFile.toURL(), gmlFile.toURL(), crs, null );
     }
     catch( final Exception ioe )
     {

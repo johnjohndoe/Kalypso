@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -220,9 +218,22 @@ public class SpreeCalcJob extends AbstractCalcJob
       new TSDesc( "QV_SPREMB" ),
       new TSDesc( "QP_SPREMB" ) };
 
+  private static final String EXE_FILE = "spree.exe";
+
+  private static final String[] OTHER_FILES = new String[]
+  {
+      "Flusspar.dbf",
+      "Flutung.dbf",
+      "Hw_wq.dbf",
+      "Na_para.dbf",
+      "Ts_bautz.dbf",
+      "Ts_para.dbf",
+      "Ts_quitz.dbf",
+      "Zwipar.dbf",
+      "xHWKERNEL.DLL" };
+
   /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.service.CalcJobDataBean[])
+   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File, org.kalypso.services.calculation.service.CalcJobDataBean[])
    */
   public void run( final File basedir, final CalcJobDataBean[] input )
       throws CalcJobServiceException
@@ -232,6 +243,7 @@ public class SpreeCalcJob extends AbstractCalcJob
 
     final File inputdir = new File( basedir, "input" );
     final File nativedir = new File( basedir, "native" );
+    final File exedir = new File( basedir, "exe" );
 
     final Map props = SpreeInputWorker.createNativeInput( inputdir, nativedir, input );
 
@@ -239,7 +251,8 @@ public class SpreeCalcJob extends AbstractCalcJob
     if( isCanceled() )
       return;
 
-    startCalculation( nativedir, props );
+    prepareExe( exedir );
+    startCalculation( exedir, props );
 
     progress( 33 );
 
@@ -267,9 +280,12 @@ public class SpreeCalcJob extends AbstractCalcJob
 
       writeResultsToFolder( tsFilename, basedir, outputdir, props );
 
-      addResult( new CalcJobDataBean( "", "", FileUtilities.getRelativeFileTo( basedir, napFile ).getPath() ) );
-      addResult( new CalcJobDataBean( "", "", FileUtilities.getRelativeFileTo( basedir, vhsFile ).getPath() ) );
-      addResult( new CalcJobDataBean( "", "", FileUtilities.getRelativeFileTo( basedir, flpFile ).getPath() ) );
+      addResult( new CalcJobDataBean( "", "", FileUtilities.getRelativeFileTo( basedir, napFile )
+          .getPath() ) );
+      addResult( new CalcJobDataBean( "", "", FileUtilities.getRelativeFileTo( basedir, vhsFile )
+          .getPath() ) );
+      addResult( new CalcJobDataBean( "", "", FileUtilities.getRelativeFileTo( basedir, flpFile )
+          .getPath() ) );
     }
     catch( final Exception e )
     {
@@ -278,34 +294,26 @@ public class SpreeCalcJob extends AbstractCalcJob
     }
   }
 
-  private void startCalculation( final File nativedir, final Map m_data ) throws CalcJobServiceException
+  private void startCalculation( final File exedir, final Map m_data )
+      throws CalcJobServiceException
   {
-    prepareExe();
-    
     InputStreamReader inStream = null;
     InputStreamReader errStream = null;
 
     try
     {
-      final File batFile = new File( "D:\\VSpree\\Debug\\trick.bat" );
-      batFile.delete();
-      final File tsFile = (File)m_data.get( DATA_TSFILE );
-      final String commandString = "D:/VSpree/Debug/hw.exe" + " " + tsFile.getAbsolutePath();
       final Date startTime = (Date)m_data.get( DATA_STARTDATE );
-      final Date time = new Date();
+      final String timeString = new SimpleDateFormat( "yyyy,MM,dd,HH,mm,ss" ).format( startTime );
 
+      final File tsFile = (File)m_data.get( DATA_TSFILE );
+      
+      final File exefile = new File( exedir, EXE_FILE );
+      
+      final String commandString = exefile.getAbsolutePath() + " " + timeString + " " + tsFile.getAbsolutePath();
+      
       // create crackfile
-      final PrintWriter crackWriter = new PrintWriter( new OutputStreamWriter(
-          new FileOutputStream( batFile ) ) );
-      crackWriter.println( "date " + new SimpleDateFormat( "dd-MM-yyyy" ).format( startTime ) );
-      crackWriter.println( "time " + new SimpleDateFormat( "HH:mm" ).format( startTime ) );
-      crackWriter.println( commandString );
-      crackWriter.println( "date " + new SimpleDateFormat( "dd-MM-yyyy" ).format( time ) );
-      crackWriter.println( "time " + new SimpleDateFormat( "HH:mm" ).format( time ) );
-      crackWriter.close();
-
-      final Process process = Runtime.getRuntime().exec( "cmd.exe /C " + batFile.getAbsolutePath(),
-          null, nativedir );
+      final Process process = Runtime.getRuntime().exec( commandString,
+          null, exedir );
 
       inStream = new InputStreamReader( process.getInputStream() );
       errStream = new InputStreamReader( process.getErrorStream() );
@@ -338,7 +346,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       e.printStackTrace();
       throw new CalcJobServiceException( "Fehler beim Ausführen der hw.exe", e );
     }
-    catch( InterruptedException e )
+    catch( final InterruptedException e )
     {
       e.printStackTrace();
       throw new CalcJobServiceException( "Fehler beim Ausführen der hw.exe", e );
@@ -360,22 +368,47 @@ public class SpreeCalcJob extends AbstractCalcJob
     }
   }
 
-  private void prepareExe()
+  /**
+   * schreibt die exe aus den resourcne in ein temproäres Verzeichnis
+   * 
+   * @throws CalcJobServiceException
+   */
+  private void prepareExe( final File exedir ) throws CalcJobServiceException
   {
     try
     {
-      final URL resource = getClass().getResource( "resources/exe/spree.exe" );
-      final URLConnection connection = resource.openConnection();
+      // das exe-dir resetten
+      FileUtilities.deleteRecursive( exedir );
+      exedir.mkdirs();
       
-      System.out.println( connection.getDate() ); 
+      copyFileToTmp( exedir, EXE_FILE );
+
+      for( int i = 0; i < OTHER_FILES.length; i++ )
+        copyFileToTmp( exedir, OTHER_FILES[i] );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
+
+      throw new CalcJobServiceException( "Ausführbares Programm konnte nicht gestartet werden", e );
     }
+  }
+
+  /**
+   * Kopiert die entsrpechende Dateien aus den resourcen in das tmp-dir, aber
+   * nur, wenn sie neuer ist als die bereits vorhandene
+   */
+  private void copyFileToTmp( final File exedir, final String filename ) throws IOException
+  {
+    final File file = new File( exedir, filename );
+
+    final URL resource = getClass().getResource( "resources/exe/" + filename );
+    final URLConnection connection = resource.openConnection();
+
     
-  
-  
+    FileUtilities.makeFileFromStream( false, file, connection.getInputStream() );
+    // die Zeit auf 1.1.1970 setzen, weil sonst der Rechenkern meckert
+    file.setLastModified( 0 );
   }
 
   /**
@@ -497,11 +530,12 @@ public class SpreeCalcJob extends AbstractCalcJob
         final SimpleTuppleModel model = new SimpleTuppleModel( achsen, tupleArray );
 
         final MetadataList metadata = new MetadataList();
-        //metadata.setProperty( "Berechnung", (String)dataMap.get( DATA_LABEL ) );
+        //metadata.setProperty( "Berechnung", (String)dataMap.get( DATA_LABEL )
+        // );
         metadata.setProperty( "StartZeit", (String)dataMap.get( DATA_STARTDATESTRING ) );
 
-        final IObservation observation = new SimpleObservation( column, column, false, null, metadata,
-            achsen );
+        final IObservation observation = new SimpleObservation( column, column, false, null,
+            metadata, achsen );
         observation.setValues( model );
 
         final ObservationType observationType = ZmlFactory.createXML( observation, null );
