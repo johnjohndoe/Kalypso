@@ -29,6 +29,9 @@ import org.kalypso.zml.ObservationType;
  */
 public class ServiceRepositoryObservation implements IObservation
 {
+  /** Metadata name for the id of the OCS Service Observation */
+  public final static String MD_OCS_ID = "KZ Zeitreihendienst";
+  
   private final IObservationService m_srv;
 
   private final ObservationBean m_ob;
@@ -154,6 +157,9 @@ public class ServiceRepositoryObservation implements IObservation
   {
     final MetadataList ml = new MetadataList();
     ml.putAll( m_ob.getMetadataList() );
+    
+    // also put the id of this observation in the metadata list
+    ml.put( MD_OCS_ID, getIdentifier() );
 
     return ml;
   }
