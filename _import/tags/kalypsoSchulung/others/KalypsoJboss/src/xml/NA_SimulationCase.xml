@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by Anoby (have no company :-() -->
+<theme xsi:noNamespaceSchemaLocation="MetaDataModel.xsd" ID="SimulationCase" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <name>SimulationCase</name>
+  <description>bind here Modeldata to Controldata for simulation</description>
+  <package>de.tuhh.wb.javagis.model.simcase</package>
+  <objectClass ID="simCase">
+    <name>SimulationCase</name>
+    <description>bind here Modeldata to Controldata for simulation</description>
+    <simpleProperty key="m_modelVersion">
+      <name>Version of ModelData</name>
+      <description>Modeldata's version-ID, to use for simulation</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+    <simpleProperty key="m_controlVersion">
+      <name>Version of ControlData</name>
+      <description>Controldata's version-ID, to use for simulation</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+  </objectClass>
+</theme>

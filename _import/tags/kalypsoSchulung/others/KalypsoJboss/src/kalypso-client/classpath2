@@ -1,0 +1,1 @@
+/opt/jboss/jboss/client/jbosssx-client.jar:/opt/jboss/jboss/client/jboss-client.jar:/opt/jboss/jboss/client/jboss-common-client.jar:/opt/jboss/jboss/client/jboss-j2ee.jar:/opt/jboss/jboss/client/jnp-client.jar:/opt/jboss/jboss/client/log4j.jar:.:../../deploys/themeManager-ejb.jar:../kalypso-src

@@ -1,0 +1,7 @@
+#! /bin/bash
+#cd ../build
+#jar -cf deploy/ejb-andreas.jar META-INF/*xml -C classes de
+#su jboss -c cp deploy/ejb-andreas.jar /opt/jboss/jboss/server/default/deploy/ 
+#cd ../bin
+cp ../build/ejb/generic-ejb/javaGis-ejb.jar ../deploys/javaGis2-ejb.jar
+su jboss -c cp ../build/ejb/generic-ejb/javaGis-ejb.jar /opt/jboss/jboss/server/default/deploy/javaGis2-ejb.jar

@@ -1,0 +1,117 @@
+<html>
+
+<title> Kalypso Manual </title>
+<head> <h2> Control Data/Simulation Case </h2></head>
+<img src=blueline.gif align="center" >
+<br>
+
+<body>
+
+<b> <h3>Control Data </h3></b><br>
+Table view offers same context menu like for modeldata but only TableView can be chosen.
+<br><br>
+START DATE [d.M.y H:m]<br>
+Start date of simulation<br><br>
+
+END DATE OF SIMULATION [d.M.y H:m]<br>
+End date of simulation<br><br>
+
+TIMESTEP [h]<br>
+Timestep for simulation<br><br>
+
+ROOT NODE<br>
+Downstream node in model network to define part of simulation, node number given in model data<br><br>
+
+OUTPUT TEMPERATURE [°C]<br>
+Time-series of temperature, catchment <br>
+
+OUTPUT PRECIPITATION [mm/h]<br>
+Time-series of precipitation, catchment<br><br>
+
+OUTPUT SNOW HEIGHT [mm]<br>
+Simulated time-series of snow height, catchment<br><br>
+
+OUTPUT SOIL MOISTURE [mm]<br>
+Simulated time-series of soil moisture for each soil layer. Only for first hydrotope in catchment output is generated therefore it should not be used.<br><br>
+
+OUTPUT SOIL MOISTURE REGIME<br>
+Balance of soil moisture regime for each hydrotope of catchment<br><br>
+
+OUTPUT DISCHARGE FOR NODES [m³/s]<br>
+Simulated time-series of total discharge<br><br>
+
+OUTPUT DISCHARGE FOR CATCHMENTS [m³/s]<br>
+Simulated time-series of total discharge<br><br>
+
+OUTPUT SURFACE FLOW, NATURAL [m³/s]<br>
+Simulated time-series of surface flow over natural areas, catchment<br><br>
+
+OUTPUT SURFACE FLOW, SEALED [m³/s]<br>
+Simulated time-series of surface flow over sealed areas, catchment<br><br>
+
+OUTPUT INTERFLOW [m³/s]<br>
+Simulated time-series of interflow, catchment<br>
+OUTPUT BASEFLOW [m³/s]<br>
+Simulated time-series of baseflow, catchment<br><br>
+
+OUTPUT CLEFT 1<br>
+not used<br><br>
+
+OUTPUT CLEFT 2<br>
+not used<br><br>
+
+OUTPUT GROUNDWATER DISCHARGE [m³/s]<br>
+Simulated time-series groundwater discharge, catchment<br><br>
+
+OUTPUT GROUNDWATER HEIGHT [m]<br>
+Simulated time-series of shallow aquifer height, catchment<br><br>
+
+OUTPUT PERCOLATION<br>
+not used<br><br>
+
+OUTPUT EVAPOTRANSPIRATION [mm]<br>
+Simulated time-series evapotranspiration, catchment<br><br>
+
+BALANCE HYDROTOPE<br>
+not used<br><br>
+
+BALANCE DISCHARGE<br>
+not used<br><br>
+
+STATISTICAL DISCHARGE<br>
+not used<br><br>
+
+STORAGE VOLUME [hm³]<br>
+Simulated time-series of storage volume<br><br>
+
+OUTPUT STORAGE [m³/s]<br>
+Simulated time-series of storage output<br><br>
+
+HEIGHT OF WATERTABLE [m]<br>
+Simulated time-series of watertable height of storage<br><br>
+
+<u>Generate Results for Catchments, implemented in datamodel by vector set:</u><br>
+CATCHMENT NUMBER<br><br>
+
+<u>Generate Results for Nodes, implemented in datamodel by vector set:</u><br>
+NODE NUMBER<br><br>
+
+<u>shorttime-simulation-startdates, implemented in datamodel by vector set:</u><br>
+Generate results (initial-values) for shorttime-simulation, only when longterm-simulation is running<br><br>
+
+<b><h3>SimulationCase </h3></b><br>
+
+SimulationCase theme combines spatial and temporal data.<br>
+For SimulationCase context menu of rows offers command for RUN SIMULATION.<br>
+For the selected combination RRM starts Processing dialog.<br>
+To choose model and control version the id (visualised in Project Tree for each structure element) is used to identify versions for simulation.
+
+<br><br>
+<hr>
+
+FLOMATIS Forecast System, User Manual<i> Kalypso</i> RRM 2/2003 and <i>Kalypso</i> Forecast 2/2003
+
+
+
+
+</HTML>
