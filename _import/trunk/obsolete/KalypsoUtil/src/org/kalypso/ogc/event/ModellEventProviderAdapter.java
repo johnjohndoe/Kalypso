@@ -12,7 +12,8 @@ public class ModellEventProviderAdapter implements ModellEventProvider
   private final Collection myListeners = new ArrayList();
 
   /**
-   * @see org.kalypso.ogc.event.ModellEventProvider#addModellListener(org.kalypso.gis.graphics.ModellEventListener)
+   * 
+   * @see org.kalypso.ogc.event.ModellEventProvider#addModellListener(org.kalypso.ogc.event.ModellEventListener)
    */
   public void addModellListener( ModellEventListener listener )
   {
@@ -20,7 +21,8 @@ public class ModellEventProviderAdapter implements ModellEventProvider
   }
 
   /**
-   * @see org.kalypso.ogc.event.ModellEventProvider#removeModellListener(org.kalypso.gis.graphics.ModellEventListener)
+   * 
+   * @see org.kalypso.ogc.event.ModellEventProvider#removeModellListener(org.kalypso.ogc.event.ModellEventListener)
    */
   public void removeModellListener( ModellEventListener listener )
   {
@@ -28,7 +30,8 @@ public class ModellEventProviderAdapter implements ModellEventProvider
   }
 
   /**
-   * @see org.kalypso.ogc.event.ModellEventProvider#fireModellEvent(org.kalypso.gis.graphics.ModellEvent)
+   * 
+   * @see org.kalypso.ogc.event.ModellEventProvider#fireModellEvent(org.kalypso.ogc.event.ModellEvent)
    */
   public void fireModellEvent( ModellEvent event )
   {

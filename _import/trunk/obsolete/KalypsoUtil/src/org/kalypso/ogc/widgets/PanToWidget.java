@@ -51,7 +51,7 @@ public class PanToWidget extends GisMapEditorWidgetActionDelegate
   
     /**
      * 
-     * @see org.kalypso.ogc.widgets.Widget#performIntern()
+     * @see org.kalypso.ogc.widgets.GisMapEditorWidgetActionDelegate#performIntern()
      */
     public ICommand performIntern(  )
     {
