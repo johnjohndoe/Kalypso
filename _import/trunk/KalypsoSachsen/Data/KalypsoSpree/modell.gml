@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Andersen (no) -->
 <SpreeModell
-		   xmlns="http://www.tuhh.de/kalypsoSpree" 
-	xmlns:na="http://www.tuhh.de/kalypsoSpree"
+   xmlns="http://www.tuhh.de/kalypsoSpree" 
+   xmlns:na="http://www.tuhh.de/kalypsoSpree"
    xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" 
-
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tuhh.de/kalypsoSpree modell.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tuhh.de/kalypsoSpree .modellTyp/modellSchema/modell.xsd">
 	<EZCollectionAssociation>
 		<EZCollection>
 			<EZMember>

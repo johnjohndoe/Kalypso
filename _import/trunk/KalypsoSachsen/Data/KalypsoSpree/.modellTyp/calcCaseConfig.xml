@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<transformationConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<transformation className="org.kalypso.util.transformation.CalculationTransformation">
-		<arg name="output" value="calcdir:.calculation"/>
-		<arg name="entry0" value="startTime=#SYSTEM_TIME#"/>
-	</transformation>
-
-	<transformation className="org.kalypso.util.transformation.CopyTransformation">
-		<arg name="input" value="project:modell.gml"/>
-		<arg name="output" value="calcdir:calcCase.gml"/>
-	</transformation>
-
+<calcCaseConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<createTransformations>
+		<transformation className="org.kalypso.util.transformation.CalculationTransformation">
+			<arg name="output" value="calcdir:.calculation"/>
+			<arg name="entry0" value="startTime=#SYSTEM_TIME#"/>
+		</transformation>
+	
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<arg name="input" value="project:modell.gml"/>
+			<arg name="output" value="calcdir:calcCase.gml"/>
+		</transformation>
+	</createTransformations>
+	
+	<!-- TODO: Results.xml erzeugen/kopieren? -->
+	
 <!-- Einzugsgebiete -->
+	<updateTransformations>
 	<transformation className="org.kalypso.util.transformation.ObservationResolver">
 		<arg name="project" value="project:"/>
 		<arg name="type" value="gml"/>
@@ -50,7 +55,6 @@
 	</transformation>
 
 <!-- Flutung -->
-
 	<transformation className="org.kalypso.util.transformation.ObservationResolver">
 		<arg name="project" value="project:"/>
 		<arg name="type" value="gml"/>
@@ -79,5 +83,5 @@
 		<arg name="protocol1" value="localcalc=localcalc:"/>
 		<arg name="file0" value="calcdir:calcCase.gml"/>
 	</transformation>
-
-</transformationConfig>
+	</updateTransformations>
+</calcCaseConfig>

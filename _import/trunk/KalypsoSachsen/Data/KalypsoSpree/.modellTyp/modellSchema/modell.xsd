@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Andreas (TU) -->
-<schema targetNamespace="http://www.tuhh.de/kalypsoSpree" version="0.9" 
-	xmlns:na="http://www.tuhh.de/kalypsoSpree" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+<schema targetNamespace="org.kalypso.spree.modell" version="0.1" 
+	xmlns:spree="org.kalypso.spree.modell" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlinks.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
@@ -10,16 +9,16 @@
 			<element name="TimeseriesLink" type="obslink:TimeseriesLink" minOccurs="0"/>
 		</sequence>
 	</complexType>
-	<element name="SpreeModell" type="na:_SpreeModellType"/>
+	<element name="SpreeModell" type="spree:_SpreeModellType"/>
 	<complexType name="_SpreeModellType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="EZCollectionAssociation" type="na:EZCollectionAssociationType"/>
-					<element name="FlusslaufModellCollectionAssociation" type="na:FlusslaufModellCollectionAssociationType"/>
-					<element name="TalsperreCollectionAssociation" type="na:TalsperreCollectionAssociationType"/>
-					<element name="FlutungCollectionAssociation" type="na:FlutungCollectionAssociationType"/>
-					<element name="ZuflussCollectionAssociation" type="na:ZuflussCollectionAssociationType"/>
+					<element name="EZCollectionAssociation" type="spree:EZCollectionAssociationType"/>
+					<element name="FlusslaufModellCollectionAssociation" type="spree:FlusslaufModellCollectionAssociationType"/>
+					<element name="TalsperreCollectionAssociation" type="spree:TalsperreCollectionAssociationType"/>
+					<element name="FlutungCollectionAssociation" type="spree:FlutungCollectionAssociationType"/>
+					<element name="ZuflussCollectionAssociation" type="spree:ZuflussCollectionAssociationType"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -28,17 +27,17 @@
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:EZCollection"/>
+					<element ref="spree:EZCollection"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="EZCollection" type="na:EZCollectionType"/>
+	<element name="EZCollection" type="spree:EZCollectionType"/>
 	<complexType name="EZCollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="EZMember" type="na:EZAssociationType" minOccurs="5" maxOccurs="5"/>
+					<element name="EZMember" type="spree:EZAssociationType" minOccurs="5" maxOccurs="5"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -47,12 +46,12 @@
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:Einzugsgebiet"/>
+					<element ref="spree:Einzugsgebiet"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="Einzugsgebiet" type="na:_EinzugsgebietType"/>
+	<element name="Einzugsgebiet" type="spree:_EinzugsgebietType"/>
 	<complexType name="_EinzugsgebietType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
@@ -64,10 +63,10 @@
 					<element name="BodenfeuchteMax" type="double"/>
 					<element name="Ausdehnung" type="double"/>
 					<element name="Niederschlag_eingabeEingang" type="obslink:TimeseriesLink"/>
-					<element name="Niederschlag_eingabe" type="na:TimeseriesLinkType"/>
-					<element name="Wasserstand_gemessenEingang" type="na:TimeseriesLinkType"/>
-					<element name="Wasserstand_gemessen" type="na:TimeseriesLinkType"/>
-					<element name="Wasserstand_gerechnet" type="na:TimeseriesLinkType"/>
+					<element name="Niederschlag_eingabe" type="spree:TimeseriesLinkType"/>
+					<element name="Wasserstand_gemessenEingang" type="spree:TimeseriesLinkType"/>
+					<element name="Wasserstand_gemessen" type="spree:TimeseriesLinkType"/>
+					<element name="Wasserstand_gerechnet" type="spree:TimeseriesLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -76,17 +75,17 @@
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:FlusslaufModellCollection"/>
+					<element ref="spree:FlusslaufModellCollection"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="FlusslaufModellCollection" type="na:FlusslaufModellCollectionType"/>
+	<element name="FlusslaufModellCollection" type="spree:FlusslaufModellCollectionType"/>
 	<complexType name="FlusslaufModellCollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="FlusslaufModellMember" type="na:FlusslaufModellAssociationType" minOccurs="5" maxOccurs="5"/>
+					<element name="FlusslaufModellMember" type="spree:FlusslaufModellAssociationType" minOccurs="5" maxOccurs="5"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -95,12 +94,12 @@
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:FlusslaufModell"/>
+					<element ref="spree:FlusslaufModell"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="FlusslaufModell" type="na:_FlusslaufModellType"/>
+	<element name="FlusslaufModell" type="spree:_FlusslaufModellType"/>
 	<complexType name="_FlusslaufModellType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
@@ -111,9 +110,9 @@
 					<element name="Korrektur_Niveau" type="double"/>
 					<element name="Korrektur_Laufzeit" type="double"/>
 					<element name="KorrekturEmpfehlungLaufzeit" type="double"/>
-					<element name="Wasserstand_gemessenEingang" type="na:TimeseriesLinkType"/>
-					<element name="Wasserstand_gemessen" type="na:TimeseriesLinkType"/>
-					<element name="Wasserstand_gerechnet" type="na:TimeseriesLinkType"/>
+					<element name="Wasserstand_gemessenEingang" type="spree:TimeseriesLinkType"/>
+					<element name="Wasserstand_gemessen" type="spree:TimeseriesLinkType"/>
+					<element name="Wasserstand_gerechnet" type="spree:TimeseriesLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -122,17 +121,17 @@
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:TalsperreCollection"/>
+					<element ref="spree:TalsperreCollection"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="TalsperreCollection" type="na:TalsperreCollectionType"/>
+	<element name="TalsperreCollection" type="spree:TalsperreCollectionType"/>
 	<complexType name="TalsperreCollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="TalsperreMember" type="na:TalsperreAssociationType" minOccurs="2" maxOccurs="2"/>
+					<element name="TalsperreMember" type="spree:TalsperreAssociationType" minOccurs="2" maxOccurs="2"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -141,12 +140,12 @@
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:Talsperre"/>
+					<element ref="spree:Talsperre"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="Talsperre" type="na:_TalsperrenType" substitutionGroup="gml:_Feature"/>
+	<element name="Talsperre" type="spree:_TalsperrenType" substitutionGroup="gml:_Feature"/>
 	<complexType name="_TalsperrenType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
@@ -154,9 +153,9 @@
 					<element name="Name" type="string"/>
 					<element name="Anfangsstauvolumen" type="double"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Abgabe_eingang" type="na:TimeseriesLinkType"/>
-					<element name="Abgabe" type="na:TimeseriesLinkType"/>
-					<element name="Stauinhalt" type="na:TimeseriesLinkType"/>
+					<element name="Abgabe_eingang" type="spree:TimeseriesLinkType"/>
+					<element name="Abgabe" type="spree:TimeseriesLinkType"/>
+					<element name="Stauinhalt" type="spree:TimeseriesLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -165,17 +164,17 @@
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:FlutungCollection"/>
+					<element ref="spree:FlutungCollection"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="FlutungCollection" type="na:FlutungCollectionType"/>
+	<element name="FlutungCollection" type="spree:FlutungCollectionType"/>
 	<complexType name="FlutungCollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="FlutungMember" type="na:FlutungAssociationType" minOccurs="4" maxOccurs="4"/>
+					<element name="FlutungMember" type="spree:FlutungAssociationType" minOccurs="4" maxOccurs="4"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -184,20 +183,20 @@
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:Flutung"/>
+					<element ref="spree:Flutung"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="Flutung" type="na:_FlutungType" substitutionGroup="gml:_Feature"/>
+	<element name="Flutung" type="spree:_FlutungType" substitutionGroup="gml:_Feature"/>
 	<complexType name="_FlutungType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Abgabe_eingang" type="na:TimeseriesLinkType"/>
-					<element name="Abgabe" type="na:TimeseriesLinkType"/>
+					<element name="Abgabe_eingang" type="spree:TimeseriesLinkType"/>
+					<element name="Abgabe" type="spree:TimeseriesLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -206,17 +205,17 @@
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:ZuflussCollection"/>
+					<element ref="spree:ZuflussCollection"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="ZuflussCollection" type="na:ZuflussCollectionType"/>
+	<element name="ZuflussCollection" type="spree:ZuflussCollectionType"/>
 	<complexType name="ZuflussCollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="ZuflussMember" type="na:ZuflussAssociationType" minOccurs="1" maxOccurs="1"/>
+					<element name="ZuflussMember" type="spree:ZuflussAssociationType" minOccurs="1" maxOccurs="1"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -225,20 +224,20 @@
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:Zufluss"/>
+					<element ref="spree:Zufluss"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="Zufluss" type="na:_ZuflussType" substitutionGroup="gml:_Feature"/>
+	<element name="Zufluss" type="spree:_ZuflussType" substitutionGroup="gml:_Feature"/>
 	<complexType name="_ZuflussType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Zugabe_eingang" type="na:TimeseriesLinkType"/>
-					<element name="Zugabe" type="na:TimeseriesLinkType"/>
+					<element name="Zugabe_eingang" type="spree:TimeseriesLinkType"/>
+					<element name="Zugabe" type="spree:TimeseriesLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
