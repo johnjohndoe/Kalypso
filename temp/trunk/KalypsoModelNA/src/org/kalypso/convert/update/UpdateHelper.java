@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.filters.InterpolationFilter;
 import org.kalypso.zml.filters.ObjectFactory;
 
@@ -13,11 +14,12 @@ import org.kalypso.zml.filters.ObjectFactory;
  */
 public class UpdateHelper
 {
-//  private final static String baseInterpolation = "?<filter><interpolationFilter xmlns=\"filters.zml.kalypso.org\" "
-//      + "calendarField=\"HOUR_OF_DAY\" "
-//      + "amount=\"3\" "
-//      + "forceFill=\"true\" "
-//      + "defaultValue=\"0.0\"/></filter>";
+  //  private final static String baseInterpolation =
+  // "?<filter><interpolationFilter xmlns=\"filters.zml.kalypso.org\" "
+  //      + "calendarField=\"HOUR_OF_DAY\" "
+  //      + "amount=\"3\" "
+  //      + "forceFill=\"true\" "
+  //      + "defaultValue=\"0.0\"/></filter>";
 
   public static String createInterpolationFilter( int amountHours, double defaultValue,
       boolean forceFill ) throws JAXBException
@@ -26,25 +28,25 @@ public class UpdateHelper
     InterpolationFilter interpolationFilter = of.createInterpolationFilter();
     interpolationFilter.setAmount( amountHours );
     interpolationFilter.setCalendarField( "HOUR_OF_DAY" );
-    interpolationFilter.setDefaultValue(defaultValue);
-    //    filter.setDefaultStatus();
+    interpolationFilter.setDefaultValue( defaultValue );
+    interpolationFilter.setDefaultStatus( KalypsoStati.BIT_CHECK );
     interpolationFilter.setForceFill( forceFill );
     Marshaller marshaller = of.createMarshaller();
     StringWriter writer = new StringWriter( 0 );
     marshaller.marshal( interpolationFilter, writer );
     String result = writer.toString();
-    // StringWriter must close
-    return prepareInLineFilter(result);
+    return prepareInLineFilter( result );
   }
 
-  private static String prepareInLineFilter(String xmlString)
+  private static String prepareInLineFilter( String xmlString )
   {
-    String result=xmlString.replaceAll("\n","");
-    result=removeXMLHeader(result);
-    return "<filter>"+result+"</filter>";
+    String result = xmlString.replaceAll( "\n", "" );
+    result = removeXMLHeader( result );
+    return "<filter>" + result + "</filter>";
   }
-  private static String removeXMLHeader(String xmlString)
+
+  private static String removeXMLHeader( String xmlString )
   {
-    return xmlString.replaceFirst("<\\?.+?\\?>", "");
+    return xmlString.replaceFirst( "<\\?.+?\\?>", "" );
   }
 }

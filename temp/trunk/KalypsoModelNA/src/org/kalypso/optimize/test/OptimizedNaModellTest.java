@@ -1,6 +1,7 @@
-package org.kalypso.convert.namodel.test;
+package org.kalypso.optimize.test;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
@@ -10,44 +11,30 @@ import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.services.calculation.common.ICalcServiceConstants;
+import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 
 /**
  * @author doemming
  *  
  */
-public class NaModelCalcJobTest extends TestCase
+public class OptimizedNaModellTest extends TestCase
 {
+  private final static Logger LOGGER = Logger.getLogger( OptimizedNaModellTest.class.getName() );
 
   public void testRun() throws Exception
   {
     final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
     registry.registerTypeHandler( new ObservationLinkHandler() );
 
-    //    File baseDir = new File( "C:\\simulation\\test" );
     final File baseDir = new File( "C:\\Programme\\KalypsoServer\\data\\tmp\\TEST" );
-    final File simDir = new File( baseDir, "sim" );
-    final File ergDir = new File( baseDir, "output" );
+    final File simDir = new File( baseDir, ICalcServiceConstants.CALC_DIR_NAME );
+    final File ergDir = new File( baseDir, ICalcServiceConstants.OUTPUT_DIR_NAME );
     if( simDir.exists() )
       FileUtils.cleanDirectory( simDir );
     if( ergDir.exists() )
       FileUtils.cleanDirectory( ergDir );
-
-    //    File baseDir = FileUtilities.createNewTempDir( "NA_Simulation" );
-    //    baseDir.mkdirs();
-
-    //    final File inputdir = new File( baseDir,
-    // ICalcServiceConstants.INPUT_DIR_NAME );
-    //    inputdir.mkdirs();
-    //    final File modellGML = new File( inputdir, "calcCase.gml" );
-    //    final File controlGML = new File( inputdir, "nacontrol.gml" );
-    //
-    //    StreamUtilities.streamCopy( getClass().getResourceAsStream(
-    // modellGMLResource ),
-    //        new FileOutputStream( modellGML ) );
-    //    StreamUtilities.streamCopy( getClass().getResourceAsStream(
-    // controlGMLResource ),
-    //        new FileOutputStream( controlGML ) );
 
     final CalcJobDataBean[] beans = new CalcJobDataBean[]
     {
@@ -56,11 +43,20 @@ public class NaModelCalcJobTest extends TestCase
         new CalcJobDataBean( NaModelConstants.META_ID, "MetaSteuerdaten", "calc/.calculation" ),
         new CalcJobDataBean( "NiederschlagDir", "niederschlag", "calc/Niederschlag/" ),
         new CalcJobDataBean( "ZuflussDir", "zufluesse", "calc/Zufluss/" ),
-        new CalcJobDataBean( "PegelDir", "pegel", "calc/Pegel/" ), };
+        new CalcJobDataBean( "PegelDir", "pegel", "calc/Pegel/" ),
+        new CalcJobDataBean( NaModelConstants.OPTIMIZECONF_ID, "optimizeConf", "calc/.sce.xml" ) };
     try
     {
-      final NaModelCalcJob job = new NaModelCalcJob();
+      ICalcJob job = new NaModelCalcJob();
+      //      final IOpmizingJob optimizeJob = new NAOptimizingJob( baseDir, beans );
+      //      final ICalcJob job = new OptimizerCalJob( LOGGER, optimizeJob );
       job.run( baseDir, beans );
+      CalcJobDataBean[] results = job.getResults();
+      for( int i = 0; i < results.length; i++ )
+      {
+        CalcJobDataBean bean = results[i];
+        LOGGER.info( bean.toString() );
+      }
     }
     catch( Exception e )
     {

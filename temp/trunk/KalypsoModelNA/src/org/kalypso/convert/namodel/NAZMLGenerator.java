@@ -27,7 +27,8 @@ public class NAZMLGenerator
 {
   private static boolean DEBUG = false;
 
-  // debug = true skips converting ascii timeseries to zml timeseries while importing ascii
+  // debug = true skips converting ascii timeseries to zml timeseries while
+  // importing ascii
 
   final static SimpleDateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
 
@@ -37,12 +38,13 @@ public class NAZMLGenerator
 
   public static final int NA_ABFLUSS_BERECHNET = 3;
 
-  public static final int NA_LINK_WQ = 4;
-  
+  public static final int NA_LINK_Q = 4;
+
+  public static final int NA_LINK_W = 5;
+
   final static NAZMLGenerator m_singelton = new NAZMLGenerator();
 
   private static final UrlUtilities urlUtilities = new UrlUtilities();
-
 
   public NAZMLGenerator()
   {
@@ -95,19 +97,6 @@ public class NAZMLGenerator
    */
   public static TimeseriesLink generateobsLink( String location, int type ) throws Exception
   {
-    // @deprecated old example:
-    //    <obslink:TimeseriesLink xmlns:xlink="http://www.w3.org/1999/xlink"
-    // linktype="zml" timeaxis="Datum" valueaxis="We
-    //      rt" xlink:type="simple" xlink:actuate="onRequest"
-    // xlink:href="TYPE=relative#LOCATION=zeitreihen/flutungen/QV_SPWIESE.zml
-    //      "/>
-
-    // new example:
-    //    <obslink:TimeseriesLink xmlns:xlink="http://www.w3.org/1999/xlink"
-    // linktype="zml" timeaxis="Datum" valueaxis="We
-    //      rt" xlink:type="simple" xlink:actuate="onRequest"
-    // xlink:href="zeitreihen/flutungen/QV_SPWIESE.zml
-    //      "/>
 
     final ObjectFactory factory = new ObjectFactory();
 
@@ -116,13 +105,11 @@ public class NAZMLGenerator
     link.setTimeaxis( getAxisName( 1, type ) );
     link.setValueaxis( getAxisName( 2, type ) );
     link.setType( "simple" );
-    //    link.setActuate( "onRequest" );
     link.setHref( location );
-    //    link.setActuate( "onDemand" );
     return link;
   }
 
-  public static void convert( URL sourceURL, int sourceType, File targetZmlFile ) throws Exception
+  private static void convert( URL sourceURL, int sourceType, File targetZmlFile ) throws Exception
   {
     StringBuffer buffer = new StringBuffer();
     generateTmpZml( buffer, sourceType, sourceURL );
@@ -211,9 +198,11 @@ public class NAZMLGenerator
     case NA_ZUFLUSS_EINGABE:
       return col == 1 ? "Datum" : TimeserieConstants.TYPE_RUNOFF;//"Abfluss";
     case NA_ABFLUSS_BERECHNET:
-        return col == 1 ? "Datum" : TimeserieConstants.TYPE_RUNOFF;//"Abfluss";
-    case NA_LINK_WQ:
-        return col == 1 ? "Datum" : TimeserieConstants.TYPE_RUNOFF;//"Abfluss";
+      return col == 1 ? "Datum" : TimeserieConstants.TYPE_RUNOFF;//"Abfluss";
+    case NA_LINK_Q:
+      return col == 1 ? "Datum" : TimeserieConstants.TYPE_RUNOFF;//"Abfluss";
+    case NA_LINK_W:
+      return col == 1 ? "Datum" : TimeserieConstants.TYPE_WATERLEVEL;//"Wasserstand";
     default:
       break;
     }
@@ -237,7 +226,7 @@ public class NAZMLGenerator
   private static void createGRAPFile( Writer writer, int type, IObservation observation )
       throws Exception
   {
-    SimpleDateFormat sd=new SimpleDateFormat("yyMMddHH");
+    SimpleDateFormat sd = new SimpleDateFormat( "yyMMddHH" );
     // write standard header
 
     // write data
@@ -249,13 +238,13 @@ public class NAZMLGenerator
     {
       Date date = (Date)values.getElement( i, dateAxis );
       Object value = values.getElement( i, valueAxis );
-      if(i==0)
+      if( i == 0 )
       {
-    writer.write( "\n" );
-    writer.write( "    "+sd.format(date)+"000  0\n" );
-//    writer.write( "    95090100000  0\n" );
-    writer.write( "grap\n" );
-        
+        writer.write( "\n" );
+        writer.write( "    " + sd.format( date ) + "000  0\n" );
+        //    writer.write( " 95090100000 0\n" );
+        writer.write( "grap\n" );
+
       }
       writer.write( m_grapDateFormat.format( date ) + " " + value.toString() + "\n" );
     }

@@ -12,8 +12,6 @@ import org.deegree_impl.model.feature.FeatureHelper;
 
 public class NAControlConverter
 {
-  //  private static final String NL = System.getProperty( "line.separator" );
-
   // graphicTool: types
   public static final int LINE = 0;
 
@@ -30,7 +28,7 @@ public class NAControlConverter
 
   public static final int RIGHT = 1;
 
-  public static void featureToASCII(NAConfiguration conf, File projectPath,Feature metaFE, GMLWorkspace controlWorkspace,
+  public static void featureToASCII(NAConfiguration conf, File projectPath, GMLWorkspace controlWorkspace,
       GMLWorkspace modellWorkspace ) throws IOException
   {
     final Feature controlFE = controlWorkspace.getRootFeature();
@@ -42,7 +40,7 @@ public class NAControlConverter
 
     // write FalStart
     final StringBuffer b1 = new StringBuffer();
-    writeFalstart( conf,metaFE,startFile, b1 );
+    writeFalstart( conf,startFile, b1 );
     //write it
     final FileWriter writer1 = new FileWriter( falStartFile );
     writer1.write( b1.toString() );
@@ -146,7 +144,7 @@ public class NAControlConverter
     b.append( "99999\n" );
   }
 
-  private static void writeFalstart(NAConfiguration conf, Feature metaFE,File startFile,
+  private static void writeFalstart(NAConfiguration conf, File startFile,
       StringBuffer b )
   {
 
@@ -155,21 +153,7 @@ public class NAControlConverter
     SimpleDateFormat format = new SimpleDateFormat("yyyy MM dd HH");
 
     String startDate=format.format(conf.getSimulationStart());
-//    String startDate = FeatureHelper.getFormatedDate( metaFE, "startsimulation",
-//        "yyyy MM dd HH", "notset" );
-//    String endDate = FeatureHelper.getFormatedDate( metaFE, "startforecast", "yyyy MM dd HH",
-//        "notset" );
-//   Date dateForecast = (Date)metaFE.getProperty("startforecast");
-////   , "yyyy MM dd HH",
-////        "notset" );
-//    Calendar c=Calendar.getInstance();
-//    c.setTime(dateForecast);
-//    c.add(Calendar.DATE,2);
-//    Date endDateDate= c.getTime();
     String endDate=format.format(conf.getSimulationEnd());
-    // TODO set endsimulation, see also NaModellConverter
-    //    String endDate = FeatureHelper.getFormatedDate( metaFE, "endsimulation", "yyyy MM dd HH",
-    //        "notset" );
 
     b.append( "xxx\n" );
     b.append( "x einzugsgebiet\n" );
@@ -187,26 +171,4 @@ public class NAControlConverter
       return "j";
     return "n";
   }
-
-  //    public static void renameOutputFiles(File outDir)
-  //    {
-  //        System.out.println("rename result files in " + outDir.toString());
-  //        FileSystemUtils.move(outDir, "tmp.dat", "temperature.dat");
-  //        FileSystemUtils.move(outDir, "pre.dat", "precipitation.dat");
-  //        FileSystemUtils.move(outDir, "sch.dat", "snow.dat");
-  //        FileSystemUtils.move(outDir, "bof.dat", "soil_moisture.dat");
-  //        FileSystemUtils.move(outDir, "bsp.dat", "soil_moisture_balance.dat");
-  //        FileSystemUtils.move(outDir, "qws.dat", "ground_water_heigth.dat");
-  //        FileSystemUtils.move(outDir, "qgs.dat", "node_discharge.dat");
-  //        FileSystemUtils.move(outDir, "qgg.dat", "discharge_catchment.dat");
-  //        FileSystemUtils.move(outDir, "qna.dat", "surface_flow_natural.dat");
-  //        FileSystemUtils.move(outDir, "qvs.dat", "surface_flow_sealed.dat");
-  //        FileSystemUtils.move(outDir, "qif.dat", "interflow.dat");
-  //        FileSystemUtils.move(outDir, "qbs.dat", "baseflow.dat");
-  //        FileSystemUtils.move(outDir, "qgw.dat", "ground_water_discharge.dat");
-  //        FileSystemUtils.move(outDir, "spi.dat", "storage_volume.dat");
-  //        FileSystemUtils.move(outDir, "sub.dat", "storage_output.dat");
-  //        FileSystemUtils.move(outDir, "sph.dat", "storage_water_table.dat");
-  //    }
-
 }

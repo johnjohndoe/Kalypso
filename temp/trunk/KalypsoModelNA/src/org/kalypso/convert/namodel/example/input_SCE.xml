@@ -36,7 +36,6 @@
 		</parameter>
 		<parameter ID="5" mode="default">
 			<xpath><![CDATA[/theme/table[@key="rb"]/o/sp[@m_rbNumber <= 1000]/@m_retAquifNeighbour]]></xpath>
-			
 			<synteticValue>2500</synteticValue>
 			<initialValue>2500</initialValue>
 			<upperBound>5000</upperBound>
@@ -69,7 +68,6 @@
 		
 		<objectiveFunction>
 			<transformationConstants>equal</transformationConstants> <!-- 2 possibilities: userdefined/equal -->
-			
 			<volumeError ID="1" mode="true"> <!--Overall volume error (water balance error)-->
 				<transformationConstant>0.0</transformationConstant>
 			</volumeError>

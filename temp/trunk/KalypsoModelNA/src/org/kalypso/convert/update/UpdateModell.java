@@ -27,7 +27,7 @@ import org.kalypso.zml.obslink.TimeseriesLink;
 public class UpdateModell
 {
   private final URL m_modellURL;
-
+  public final static String PSI_PROGNOSE_SUFFIX=".P1_MW";
   public static void main( String[] args )
   {
     try
@@ -44,6 +44,7 @@ public class UpdateModell
       e.printStackTrace();
     }
   }
+
   public UpdateModell( URL modellURL ) throws Exception
   {
     m_modellURL = modellURL;
@@ -72,8 +73,6 @@ public class UpdateModell
     writer.close();
     System.out.println( " updated model is written to " + file.getCanonicalPath() );
   }
-
- 
 
   private static void updateCatchments( Feature[] features ) throws Exception
   {
@@ -317,14 +316,15 @@ public class UpdateModell
         if( available )
         {
           TimeseriesLink zuflussRep = NAZMLGenerator.generateobsLink(
-              WeisseElsterConstants.PREFIX_LINK_WQ_Zufluss_Rep + psiID+interpolationFilter, NAZMLGenerator.NA_LINK_WQ );
+              WeisseElsterConstants.PREFIX_LINK_WQ_Zufluss_Rep + psiID + interpolationFilter,
+              NAZMLGenerator.NA_LINK_Q );
           setTSLink( fe, "zuflussZRRepository", zuflussRep );
         }
         else
         {
           TimeseriesLink zuflussRep = NAZMLGenerator.generateobsLink(
-              WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Zufluss_Rep + fId+interpolationFilter,
-              NAZMLGenerator.NA_LINK_WQ );
+              WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Zufluss_Rep + fId
+                  + interpolationFilter, NAZMLGenerator.NA_LINK_Q );
           setTSLink( fe, "zuflussZRRepository", zuflussRep );
         }
       }
@@ -336,20 +336,20 @@ public class UpdateModell
         {
           TimeseriesLink zuflussRepVorhersage = NAZMLGenerator.generateobsLink(
               WeisseElsterConstants.PREFIX_LINK_WQ_Zufluss_Rep_Vorhersage + psiID
-                  + interpolationFilter, NAZMLGenerator.NA_LINK_WQ );
+                  + interpolationFilter, NAZMLGenerator.NA_LINK_Q );
           setTSLink( fe, "zuflussZRRepositoryVorhersage", zuflussRepVorhersage );
         }
         else
         {
           TimeseriesLink zuflussRepVorhersage = NAZMLGenerator.generateobsLink(
               WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Zufluss_Rep + fId
-                  + interpolationFilter, NAZMLGenerator.NA_LINK_WQ );
+                  + interpolationFilter, NAZMLGenerator.NA_LINK_Q );
           setTSLink( fe, "zuflussZRRepositoryVorhersage", zuflussRepVorhersage );
         }
         // zufluss lokal
         TimeseriesLink linkZufluss = NAZMLGenerator.generateobsLink(
             WeisseElsterConstants.PREFIX_LINK_WQ_ZUFLUSS_LOKAL + fe.getId() + ".zml",
-            NAZMLGenerator.NA_LINK_WQ );
+            NAZMLGenerator.NA_LINK_Q );
         setTSLink( fe, "zuflussZR", linkZufluss );
       }
       //pegelRep
@@ -359,16 +359,22 @@ public class UpdateModell
         if( available )
         {
           TimeseriesLink pegelRep = NAZMLGenerator.generateobsLink(
-              WeisseElsterConstants.PREFIX_LINK_WQ_Pegel_Rep + psiID+interpolationFilter, NAZMLGenerator.NA_LINK_WQ );
+              WeisseElsterConstants.PREFIX_LINK_WQ_Pegel_Rep + psiID + interpolationFilter,
+              NAZMLGenerator.NA_LINK_Q );
           setTSLink( fe, "pegelZRRepository", pegelRep );
         }
         else if( zml != null )
         {
-          TimeseriesLink pegelRep = NAZMLGenerator.generateobsLink(
-              WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Pegel_Rep + zml+interpolationFilter,
-              NAZMLGenerator.NA_LINK_WQ );
+          TimeseriesLink pegelRep = NAZMLGenerator
+              .generateobsLink( WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Pegel_Rep + zml
+                  + interpolationFilter, NAZMLGenerator.NA_LINK_Q );
           setTSLink( fe, "pegelZRRepository", pegelRep );
         }
+        //        pegelBerechnetZRRepository
+        TimeseriesLink pegelBerechnetRep = NAZMLGenerator.generateobsLink(
+            WeisseElsterConstants.PREFIX_LINK_WQ_Pegel_Rep + psiID + PSI_PROGNOSE_SUFFIX,
+            NAZMLGenerator.NA_LINK_W );
+        setTSLink( fe, "pegelBerechnetZRAblage", pegelBerechnetRep );
       }
     }
   }
@@ -382,20 +388,20 @@ public class UpdateModell
       // pegel lokal
       TimeseriesLink linkPegel = NAZMLGenerator.generateobsLink(
           WeisseElsterConstants.PREFIX_LINK_WQ_PEGEL_LOKAL + fe.getId() + ".zml",
-          NAZMLGenerator.NA_LINK_WQ );
+          NAZMLGenerator.NA_LINK_Q );
       setTSLink( fe, "pegelZR", linkPegel );
       // berechnet
       TimeseriesLink linkBerechnet = NAZMLGenerator.generateobsLink(
           WeisseElsterConstants.PREFIX_LINK_WQ_BERECHNET_LOKAL + fe.getId() + ".zml",
-          NAZMLGenerator.NA_LINK_WQ );
+          NAZMLGenerator.NA_LINK_Q );
       setTSLink( fe, "qberechnetZR", linkBerechnet );
-
+      setTSLink( fe, "pegelBerechnetZRRepository", null );
       setTSLink( fe, "zuflussZR", null );
       setTSLink( fe, "pegelZRRepository", null );
       setTSLink( fe, "zuflussZRRepository", null );
       setTSLink( fe, "zuflussZRRepositoryVorhersage", null );
       FeatureProperty nameProp = FeatureFactory.createFeatureProperty( "name", null );
-      fe.setProperty( nameProp );  
+      fe.setProperty( nameProp );
     }
   }
 
