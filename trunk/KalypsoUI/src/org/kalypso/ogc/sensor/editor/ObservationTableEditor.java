@@ -17,7 +17,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.editor.AbstractEditorPart;
 import org.kalypso.ogc.sensor.IObservationProvider;
 import org.kalypso.ogc.sensor.renderer.DateTableCellRenderer;
-import org.kalypso.ogc.sensor.renderer.NumberTableCellRenderer;
+import org.kalypso.ogc.sensor.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.template.ColumnPair;
 import org.kalypso.ogc.sensor.template.TableViewTemplate;
@@ -83,7 +83,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
 
     JTable table = new JTable( m_model );
     table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
-    table.setDefaultRenderer( Number.class, new NumberTableCellRenderer() );
+    table.setDefaultRenderer( Number.class, new MaskedNumberTableCellRenderer( null ) );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
