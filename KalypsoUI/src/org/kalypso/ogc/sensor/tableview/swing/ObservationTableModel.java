@@ -50,24 +50,6 @@ public class ObservationTableModel extends AbstractTableModel
 
   private DefaultTableModel m_valuesModel = null;
 
-  public ObservationTableModel( )
-  {
-    // nix
-  }
-
-  /**
-   * Constructor with columns. Calls setColumns( ITableViewColumn[] ).
-   * 
-   * @param columns
-   * 
-   * @throws SensorException
-   */
-  public ObservationTableModel( ITableViewColumn[] columns )
-      throws SensorException
-  {
-    setColumns( columns );
-  }
-
   /**
    * Adds a column.
    * 
@@ -111,6 +93,8 @@ public class ObservationTableModel extends AbstractTableModel
       // reset
       m_commonColumn = null;
       m_ccAxis = null;
+      m_sharedAxes = null;
+      m_valueAxes = null;
       m_valuesModel = null;
 
       if( m_columns != EMPTY_COLS )
@@ -120,15 +104,23 @@ public class ObservationTableModel extends AbstractTableModel
 
         final SimpleTuppleModel[] tupModels = new SimpleTuppleModel[m_columns.length];
 
+        m_valueAxes = new IAxis[m_columns.length];
+        m_sharedAxes = new IAxis[m_columns.length];
+        
         for( int col = 0; col < m_columns.length; col++ )
         {
           final IAxis[] axes = m_columns[col].getObservation().getAxisList();
           final IAxis[] keys = ObservationUtilities.findAxisByKey( axes );
 
+          // no key axis, do nothing
           if( keys.length == 0 )
             continue;
 
+          // shared axis is the first key axis that was found
           m_sharedAxes[col] = keys[0];
+
+          // value axis is given by its name according to column model
+          m_valueAxes[col] = ObservationUtilities.findAxisByName( axes, m_columns[col].getAxisName() );
 
           // create common axis (fake)
           if( m_ccAxis == null )
@@ -200,7 +192,7 @@ public class ObservationTableModel extends AbstractTableModel
     synchronized( m_columns )
     {
       if( column == 0 )
-        return m_ccAxis.getLabel();
+        return m_ccAxis.getName();
 
       return m_columns[column - 1].getName();
     }
@@ -319,7 +311,7 @@ public class ObservationTableModel extends AbstractTableModel
   {
     for( int i = 0; i < m_valueAxes.length; i++ )
     {
-      if( m_sharedAxes[i].getLabel().equals( name ) )
+      if( m_sharedAxes[i].getName().equals( name ) )
         return m_valueAxes[i];
     }
 

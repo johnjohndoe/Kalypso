@@ -80,7 +80,7 @@ public class ZmlTest extends TestCase
     assertTrue( axes.length == 3 );
 
     int i = 2;
-    assertTrue( axes[i].getLabel().equals( "Datum" ) );
+    assertTrue( axes[i].getName().equals( "Datum" ) );
     assertTrue( axes[i].getType().equals( "datum" ) );
     assertTrue( axes[i].getUnit().equals( "" ) );
     assertTrue( axes[i].getDataClass() == Date.class );
@@ -88,7 +88,7 @@ public class ZmlTest extends TestCase
     assertTrue( axes[i].isKey() );
 
     i = 1;
-    assertTrue( axes[i].getLabel().equals( "Pegel1" ) );
+    assertTrue( axes[i].getName().equals( "Pegel1" ) );
     assertTrue( axes[i].getType().equals( "pegel" ) );
     assertTrue( axes[i].getUnit().equals( "m" ) );
     assertTrue( axes[i].getDataClass() == Double.class );
@@ -96,7 +96,7 @@ public class ZmlTest extends TestCase
     assertFalse( axes[i].isKey() );
 
     i = 0;
-    assertTrue( axes[i].getLabel().equals( "Pegel2" ) );
+    assertTrue( axes[i].getName().equals( "Pegel2" ) );
     assertTrue( axes[i].getType().equals( "pegel" ) );
     assertTrue( axes[i].getUnit().equals( "m" ) );
     assertTrue( axes[i].getDataClass() == Double.class );

@@ -347,7 +347,7 @@ public class ZmlFactory
         final String xsdType = getXSDTypeFor( axes[i].getDataClass().getName() );
 
         axisType.setDatatype( xsdType );
-        axisType.setName( axes[i].getLabel() );
+        axisType.setName( axes[i].getName() );
         axisType.setUnit( axes[i].getUnit() );
         axisType.setType( axes[i].getType() );
         axisType.setKey( axes[i].isKey() );

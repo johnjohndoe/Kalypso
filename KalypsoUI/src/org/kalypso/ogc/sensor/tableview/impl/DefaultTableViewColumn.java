@@ -20,12 +20,15 @@ public class DefaultTableViewColumn implements ITableViewColumn
 
   private IObservation m_obs;
 
+  private String m_axisName;
+
   public DefaultTableViewColumn( final String name, final boolean isEditable,
-      final int width, final IObservation obs )
+      final int width, final String axisName, final IObservation obs )
   {
     m_name = name;
     m_isEditable = isEditable;
     m_width = width;
+    m_axisName = axisName;
     m_obs = obs;
   }
 
@@ -91,5 +94,13 @@ public class DefaultTableViewColumn implements ITableViewColumn
   public void setObservation( final IObservation observation )
   {
     m_obs = observation;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getAxisName()
+   */
+  public String getAxisName( )
+  {
+    return m_axisName;
   }
 }

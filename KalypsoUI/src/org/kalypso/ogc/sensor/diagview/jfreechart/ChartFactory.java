@@ -51,7 +51,7 @@ public final class ChartFactory
   static Plot createObservationPlot( final IDiagramTemplate template )
       throws FactoryException
   {
-    synchronized( OF )
+    synchronized( template )
     {
       final List diagAxes = template.getDiagramAxes();
 

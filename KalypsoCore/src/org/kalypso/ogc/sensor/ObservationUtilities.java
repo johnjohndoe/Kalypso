@@ -27,7 +27,7 @@ public class ObservationUtilities
   {
     for( int i = 0; i < axes.length; i++ )
     {
-      if( axes[i].getLabel().equalsIgnoreCase( axisName ) )
+      if( axes[i].getName().equalsIgnoreCase( axisName ) )
         return axes[i];
     }
     

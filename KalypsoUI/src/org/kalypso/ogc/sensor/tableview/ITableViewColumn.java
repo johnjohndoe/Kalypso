@@ -17,6 +17,11 @@ public interface ITableViewColumn
   public int getWidth( );
 
   /**
+   * @return the name of the observation axis on which this column is based
+   */
+  public String getAxisName();
+  
+  /**
    * @return the observation on which this column is based
    */
   public IObservation getObservation();

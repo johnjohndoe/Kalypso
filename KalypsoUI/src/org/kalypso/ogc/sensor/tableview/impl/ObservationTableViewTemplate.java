@@ -49,8 +49,8 @@ public class ObservationTableViewTemplate extends DefaultTableViewTemplate
           && !axes[i].equals( keyAxes[0] ) )
       {
         final DefaultTableViewColumn col = new DefaultTableViewColumn( axes[i]
-            .getLabel()
-            + " - " + axes[i].getUnit(), editableColumns, 50, obs );
+            .getName()
+            + " - " + axes[i].getUnit(), editableColumns, 50, axes[i].getName(), obs );
 
         addColumn( col );
       }

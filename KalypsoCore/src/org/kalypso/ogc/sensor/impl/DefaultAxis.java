@@ -51,7 +51,7 @@ public class DefaultAxis implements IAxis
    */
   public DefaultAxis( final IAxis axis )
   {
-    this( axis.getLabel(), axis.getType(), axis.getUnit(), axis.getDataClass(), axis.getPosition(), axis.isKey() );
+    this( axis.getName(), axis.getType(), axis.getUnit(), axis.getDataClass(), axis.getPosition(), axis.isKey() );
   }
 
   /**
@@ -63,9 +63,9 @@ public class DefaultAxis implements IAxis
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IAxis#getLabel()
+   * @see org.kalypso.ogc.sensor.IAxis#getName()
    */
-  public String getLabel()
+  public String getName()
   {
     return m_label;
   }
@@ -89,9 +89,9 @@ public class DefaultAxis implements IAxis
   public String toString()
   {
     if( getUnit().length() == 0 )
-      return getLabel();
+      return getName();
 
-    return getLabel() + " - " + getUnit();
+    return getName() + " - " + getUnit();
   }
 
   /**

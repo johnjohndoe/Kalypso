@@ -71,7 +71,7 @@ public class KalypsoStatusUtils
     if( isStatusAxis( axis ) )
       throw new IllegalArgumentException( "Axis " + axis + " is already a status axis!" );
 
-    return STATUS_AXIS_LABEL + axis.getLabel();
+    return STATUS_AXIS_LABEL + axis.getName();
   }
 
   /**
@@ -82,7 +82,7 @@ public class KalypsoStatusUtils
    */
   public static boolean isStatusAxis( final IAxis axis )
   {
-    return axis.getLabel().startsWith( STATUS_AXIS_LABEL );
+    return axis.getName().startsWith( STATUS_AXIS_LABEL );
   }
 
   /**
