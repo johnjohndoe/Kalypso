@@ -518,5 +518,38 @@
 				</Rule>
 			</FeatureTypeStyle>
 		</UserStyle>
+
+		<UserStyle>
+			<Name>SpreePegel</Name>
+			<Title>Eingabepegel</Title>
+			<IsDefault>1</IsDefault>
+			<FeatureTypeStyle>
+				<Name>SpreePegel</Name>
+				<Rule>
+					<Name>SpreePegel</Name>
+					<PointSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>Ort</ogc:PropertyName>
+						</Geometry>
+						<Graphic>
+							<Mark>
+								<WellKnownName>square</WellKnownName>
+								<Fill>
+									<CssParameter name="fill">#000000</CssParameter>
+								</Fill>
+								<Stroke>
+									<CssParameter name="stroke">#111111</CssParameter>
+									<CssParameter name="stroke-width">1.0</CssParameter>
+								</Stroke>
+								
+							</Mark>
+							<Size>3</Size>
+						</Graphic>
+					</PointSymbolizer>
+				</Rule>
+			</FeatureTypeStyle>
+		</UserStyle>
+
+
 	</NamedLayer>
 </StyledLayerDescriptor>
