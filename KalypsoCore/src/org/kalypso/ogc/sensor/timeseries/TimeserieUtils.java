@@ -71,9 +71,9 @@ public class TimeserieUtils
 
   private static NumberFormat m_defaultFormat = null;
 
-  private TimeserieUtils( )
+  private TimeserieUtils()
   {
-    // no instanciation
+  // no instanciation
   }
 
   /**
@@ -86,8 +86,7 @@ public class TimeserieUtils
    * @param mdPrefix
    * @return list of metadata keys or empty array if nothing found
    */
-  public final static String[] findOutMDBeginningWith( final IObservation obs,
-      final String mdPrefix )
+  public final static String[] findOutMDBeginningWith( final IObservation obs, final String mdPrefix )
   {
     final MetadataList mdl = obs.getMetadataList();
 
@@ -102,7 +101,7 @@ public class TimeserieUtils
         mds.add( md );
     }
 
-    return (String[]) mds.toArray( new String[mds.size()] );
+    return (String[])mds.toArray( new String[mds.size()] );
   }
 
   /**
@@ -136,14 +135,13 @@ public class TimeserieUtils
    * 
    * @return config of the timeseries package
    */
-  private static Properties getProperties( )
+  private static Properties getProperties()
   {
     if( m_config == null )
     {
       m_config = new Properties();
 
-      InputStream ins = TimeserieUtils.class
-          .getResourceAsStream( "resource/config.properties" );
+      InputStream ins = TimeserieUtils.class.getResourceAsStream( "resource/config.properties" );
 
       try
       {
@@ -169,8 +167,7 @@ public class TimeserieUtils
    * @param from
    * @param to
    */
-  public final static void setForecast( final IObservation obs,
-      final Date from, final Date to )
+  public final static void setForecast( final IObservation obs, final Date from, final Date to )
   {
     obs.getMetadataList().setProperty(
         TimeserieConstants.MD_VORHERSAGE,
@@ -287,9 +284,9 @@ public class TimeserieUtils
   }
 
   /**
-   * Returns a NumberFormat instance according to the given timeserie type. If 
-   * there is no specific instance for the given type, then a default number format
-   * is returned.
+   * Returns a NumberFormat instance according to the given timeserie type. If
+   * there is no specific instance for the given type, then a default number
+   * format is returned.
    * 
    * @param type
    * @return instance of NumberFormat that can be used to display the values to
@@ -297,14 +294,14 @@ public class TimeserieUtils
    */
   public static NumberFormat getNumberFormatFor( final String type )
   {
-    final NumberFormat nf = (NumberFormat) getFormatMap().get( type );
+    final NumberFormat nf = (NumberFormat)getFormatMap().get( type );
     if( nf != null )
       return nf;
 
     return getDefaultFormat();
   }
 
-  private static Map getFormatMap( )
+  private static Map getFormatMap()
   {
     if( m_formatMap == null )
     {
@@ -324,7 +321,7 @@ public class TimeserieUtils
     return m_formatMap;
   }
 
-  private static NumberFormat getDefaultFormat( )
+  private static NumberFormat getDefaultFormat()
   {
     if( m_defaultFormat == null )
     {
@@ -333,5 +330,17 @@ public class TimeserieUtils
     }
 
     return m_defaultFormat;
+  }
+
+  public static Class getDataClass( String type )
+  {
+    try
+    {
+      return Class.forName( getProperties().getProperty( "AXISCLASS_" + type, "" ) );
+    }
+    catch( ClassNotFoundException e )
+    {
+      return null;
+    }
   }
 }

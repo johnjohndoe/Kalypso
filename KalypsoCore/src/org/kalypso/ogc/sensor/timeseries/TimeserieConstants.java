@@ -36,11 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries;
 
 import java.text.DateFormat;
+import java.util.Arrays;
 
 import org.kalypso.ogc.sensor.ObservationConstants;
 
@@ -53,30 +54,50 @@ public abstract class TimeserieConstants implements ObservationConstants
 {
   /** default date format used within some of the timeseries dependent properties */
   public final static DateFormat DEFAULT_DF = DateFormat.getDateTimeInstance();
-  
+
   /** Niederschlag */
   public final static String TYPE_RAINFALL = "N";
-  
+
   /** Abfluss */
   public final static String TYPE_RUNOFF = "Q";
-  
+
   /** Wasserstand */
   public final static String TYPE_WATERLEVEL = "W";
-  
+
   /** Temperatur */
   public final static String TYPE_TEMPERATURE = "T";
-  
+
   /** Datum */
   public final static String TYPE_DATE = "date";
-  
+
   /** Füllung (VOLUMEN) */
   public static final String TYPE_VOLUME = "V";
-  
+
   /** Evaporation */
   public static final String TYPE_EVAPORATION = "E";
 
+  public static final String[] TYPES_ALL;
+
+  /**
+   * to enable seaching in types the array must be sorted
+   */
+  static
+  {
+    String[] types = new String[]
+    {
+        TYPE_DATE,
+        TYPE_EVAPORATION,
+        TYPE_RAINFALL,
+        TYPE_RUNOFF,
+        TYPE_TEMPERATURE,
+        TYPE_VOLUME,
+        TYPE_WATERLEVEL };
+    Arrays.sort( types );
+    TYPES_ALL = types;
+  }
+
   // METADATEN
-  
+
   public final static String MD_WQ = "WQ-Parameter";
 
   public final static String MD_GKR = "Rechtswert";
@@ -96,9 +117,9 @@ public abstract class TimeserieConstants implements ObservationConstants
   public final static String MD_HOEHENANGABEART = "Höhenangabeart";
 
   public final static String MD_MESSTISCHBLATT = "Messtischblattnummer";
-  
+
   public final static String MD_FLUSSGEBIET = "Flussgebiet";
-  
+
   public final static String MD_FLUSS = "Fluss";
 
   /**
@@ -106,7 +127,9 @@ public abstract class TimeserieConstants implements ObservationConstants
    * handelt es sich um eine Vorhersage Zeitreihe.
    */
   public final static String MD_VORHERSAGE = "Vorhersage";
-  
+
   public final static String MD_DATE_BEGIN = "Datum-Von";
+
   public final static String MD_DATE_END = "Datum-Bis";
+
 }
