@@ -233,7 +233,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         }
 
         m_theme = new KalypsoFeatureTheme( (CommandableWorkspace)newValue, m_featurePath, getName() );
-
+        
         m_theme.addModellListener( this );
 
         m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
@@ -367,4 +367,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     return m_commandTarget.getSchedulingRule();
   }
+
+  
 }

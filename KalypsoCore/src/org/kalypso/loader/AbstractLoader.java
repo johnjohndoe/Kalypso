@@ -78,8 +78,15 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   public final void fireLoaderObjectInvalid( final Object oldObject, final boolean bCannotReload )
       throws Exception
   {
+    beforeObjectInvalid();
+    
     for( final Iterator iter = m_listener.iterator(); iter.hasNext(); )
       ( (ILoaderListener)iter.next() ).onLoaderObjectInvalid( oldObject, bCannotReload );
+  }
+
+  protected void beforeObjectInvalid() 
+  {
+    // overwrite it
   }
 
   /**

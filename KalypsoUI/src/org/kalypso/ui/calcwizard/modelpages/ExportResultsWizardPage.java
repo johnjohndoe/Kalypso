@@ -198,42 +198,44 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
         .setToolTipText( "Öffnet die im Diagram dargestellten Zeitreihen zur Bearbeitung" );
     button.addSelectionListener( new GraficToolStarter() );
 
-    final Label label = new Label( buttonPanel, SWT.NONE );
-    label.setText( "Diagrammanzeige:" );
-    final GridData gridData = new GridData();
-    gridData.grabExcessHorizontalSpace = true;
-    gridData.horizontalAlignment = GridData.END;
-    label.setLayoutData( gridData );
-
-    final Button radioQ = new Button( buttonPanel, SWT.RADIO );
-    radioQ.setText( "Abfluss" );
-    radioQ.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      public void widgetSelected( SelectionEvent e )
-      {
-        setObsIgnoreType( TimeserieConstants.TYPE_WATERLEVEL );
-      }
-    } );
-
-    final Button radioW = new Button( buttonPanel, SWT.RADIO );
-    radioW.setText( "Wasserstand" );
-
-    radioW.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      public void widgetSelected( SelectionEvent e )
-      {
-        setObsIgnoreType( TimeserieConstants.TYPE_RUNOFF );
-      }
-    } );
-
-    setObsIgnoreType( TimeserieConstants.TYPE_WATERLEVEL );
-    radioW.setSelection( true );
+    createIgnoreButtonPanel( buttonPanel );
+    
+//    final Label label = new Label( buttonPanel, SWT.NONE );
+//    label.setText( "Diagrammanzeige:" );
+//    final GridData gridData = new GridData();
+//    gridData.grabExcessHorizontalSpace = true;
+//    gridData.horizontalAlignment = GridData.END;
+//    label.setLayoutData( gridData );
+//
+//    final Button radioQ = new Button( buttonPanel, SWT.RADIO );
+//    radioQ.setText( "Abfluss" );
+//    radioQ.addSelectionListener( new SelectionAdapter()
+//    {
+//      /**
+//       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+//       */
+//      public void widgetSelected( SelectionEvent e )
+//      {
+//        setObsIgnoreType( TimeserieConstants.TYPE_WATERLEVEL );
+//      }
+//    } );
+//
+//    final Button radioW = new Button( buttonPanel, SWT.RADIO );
+//    radioW.setText( "Wasserstand" );
+//
+//    radioW.addSelectionListener( new SelectionAdapter()
+//    {
+//      /**
+//       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+//       */
+//      public void widgetSelected( SelectionEvent e )
+//      {
+//        setObsIgnoreType( TimeserieConstants.TYPE_RUNOFF );
+//      }
+//    } );
+//
+//    setObsIgnoreType( TimeserieConstants.TYPE_WATERLEVEL );
+//    radioW.setSelection( true );
   }
 
   private void createExportPanel( final Composite parent )

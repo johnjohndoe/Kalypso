@@ -582,7 +582,13 @@ public class CalcWizard implements IWizard, IProjectProvider
 
   public void restart()
   {
-    getContainer().showPage( getStartingPage() );
+    final IWizardPage startingPage = getStartingPage();
+    final IWizardPage previousPage = startingPage.getPreviousPage();
+    
+    getContainer().showPage( startingPage );
+    
+    // workaround: showPage setzt die prevoisPage der startingPage auf die currentPage (was soll das!!!)
+    startingPage.setPreviousPage( previousPage );
 
     // delete current modelpages
     for( final Iterator iter = m_pages.iterator(); iter.hasNext(); )
@@ -595,6 +601,8 @@ public class CalcWizard implements IWizard, IProjectProvider
         modelpage.dispose();
       }
     }
+    
+    getContainer().updateButtons();
     
     return;
   }

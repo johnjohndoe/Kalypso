@@ -347,4 +347,20 @@ public class Feature_Impl implements Feature
   {
     return selectID == ( mySelection & selectID );
   }
+
+  /**
+   * @see org.deegree.model.feature.Feature#getSelection()
+   */
+  public int getSelection()
+  {
+    return mySelection;
+  }
+
+  /**
+   * @see org.deegree.model.feature.Feature#setSelection(int)
+   */
+  public void setSelection( final int selection )
+  {
+    mySelection = selection;
+  }
 }
