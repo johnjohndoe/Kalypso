@@ -43,6 +43,7 @@ public class NAConfiguration
 
     m_netFormatURL = getClass().getResource( "formats/netzdatei.txt" );
     // ASCII
+    (new File(filePrefix,"inp.dat")).mkdirs();
     m_catchmentFile = new File( filePrefix, "inp.dat/we_nat.geb" );
     m_channelFile = new File( filePrefix, "inp.dat/we_nat.ger" );
     m_netFile = new File( filePrefix, "inp.dat/we_nat.ntz" );

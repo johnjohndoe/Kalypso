@@ -146,7 +146,7 @@ public class NAModellConverter
 
     public void write(GMLWorkspace workspace) throws Exception
     {
-
+        
         Writer writer = new FileWriter(m_conf.getCatchmentFile());
         m_catchmentManager.writeFile(writer, workspace);
         writer.close();

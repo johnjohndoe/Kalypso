@@ -348,14 +348,32 @@ public class NetFileManager extends AbstractManager
         downStreamElement.addUpStream( upStreamElement );
       }
     }
-    final Feature rootNodeFE = workspace.getFeature( m_nodeFT, "Node1000" );
+    final Feature rootNodeFE = workspace.getFeature( m_nodeFT, "Node10000" );
     // select netelement from root element
     Feature rootChannel = workspace.resolveLink( rootNodeFE, "downStreamChannelMember" );
-    NetElement rootElement = (NetElement)netElements.get( rootChannel.getId() );
+    List rootNetElements = new ArrayList();
+    if( rootChannel != null )
+      rootNetElements.add( netElements.get( rootChannel.getId() ) );
+    else
+    {
+      // hat keinen downstream channel
+      // finde alle channel die direkt oberhalb sind.
+      for( int i = 0; i < channelFEs.length; i++ )
+      {
+        final Feature channel = channelFEs[i];
+        final Feature downStreamNodeFE = workspace.resolveLink( channel, "downStreamNodeMember" );
+        if( downStreamNodeFE == rootNodeFE )
+          rootNetElements.add( netElements.get( channel.getId() ) );
+      }
+    }
     //    netElements
     StringBuffer buffer = new StringBuffer();
-    rootElement.berechne( workspace, buffer );
-    System.out.println( buffer.toString() );
+    for( Iterator iter = rootNetElements.iterator(); iter.hasNext(); )
+    {
+      NetElement rootElement = (NetElement)iter.next();
+      rootElement.berechne( workspace, buffer );
+    }
+    writer.write( buffer.toString() );
   }
 
   public class NetElement
@@ -372,6 +390,8 @@ public class NetFileManager extends AbstractManager
 
     private static final String ANFANGSKNOTEN = "    9001";
 
+    private int m_status = UNCALCULATED;
+
     public NetElement( Feature channelFE )
     {
       m_channelFE = channelFE;
@@ -384,6 +404,9 @@ public class NetFileManager extends AbstractManager
 
     public void berechne( GMLWorkspace workspace, StringBuffer buffer )
     {
+      if( m_status == CALCULATED )
+        return;
+      // berechne oberlauf
       for( Iterator iter = m_upStreamDepends.iterator(); iter.hasNext(); )
       {
         NetElement element = (NetElement)iter.next();
@@ -391,6 +414,7 @@ public class NetFileManager extends AbstractManager
       }
       // berechne mich
       write( workspace, buffer );
+      m_status = CALCULATED;
     }
 
     private void addDownStream( NetElement downStreamElement )
@@ -408,7 +432,7 @@ public class NetFileManager extends AbstractManager
 
     public void write( GMLWorkspace workspace, StringBuffer buffer )
     {
-      System.out.println( "calculate: " + m_channelFE.getId() );
+      //      System.out.println( "calculate: " + m_channelFE.getId() );
       // obererknoten:
       Feature[] features = workspace.getFeatures( m_nodeFT );
       Feature knotO = null;
