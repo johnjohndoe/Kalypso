@@ -37,9 +37,9 @@ public class Main
     {
         try {
 //            Configuration conf = new Configuration(new File("test"));
-            Configuration conf = new Configuration(new File("/tmp/weisseElster"));
+            Configuration conf = new Configuration(new File("/home/doemming/weisseElster"));
             Feature fe = asciiToFeature(conf);
-//            insertGeometries(fe);
+            insertGeometries(fe,"/home/doemming/weisseElster/shapes");
 
             File gmlFile = File.createTempFile("namodell_test", ".gml");
             GmlSerializer.serializeFeature(new FileWriter(gmlFile), fe, null);
@@ -54,18 +54,18 @@ public class Main
         }
     }
 
-    private static void insertGeometries(Feature modelFeature)
+    private static void insertGeometries(Feature modelFeature,String shapeDir)
             throws GmlSerializeException
     {
         // load ShapeFile
         ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
         CS_CoordinateSystem cSystem = org.deegree_impl.model.cs.Adapters
-                .getDefault().export(csFac.getCSByName("EPSG:4326"));
-        // TODO richtiges EPSG waehlen
-        KalypsoFeatureLayer layer = ShapeSerializer.deserialize(
-                "data/shapes/ezg_agg2", cSystem, cSystem, null);
+                .getDefault().export(csFac.getCSByName("EPSG:31468"));
+//        CS_CoordinateSystem cSystem = org.deegree_impl.model.cs.Adapters
+//                .getDefault().export(csFac.getCSByName("EPSG:4326"));
+        KalypsoFeatureLayer layer = ShapeSerializer.deserialize(shapeDir+"/ezg_agg2", cSystem, cSystem, null);
         Feature[] orgFEs = layer.getAllFeatures();// insertGeometries
-
+        
         Feature fe2 = (Feature) modelFeature
                 .getProperty("CatchmentCollectionMember");
         List list = (List) fe2.getProperty("catchmentMember");

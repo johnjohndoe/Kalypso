@@ -239,7 +239,7 @@ public abstract class AbstractManager
             return "(TODO:" + s[0] + ")";
         if ("IGNORE".equals(s[0]))
             return "";
-        System.out.println(s[0]);
+//        System.out.println(s[0]);
         Object property = feature.getProperty(s[0]);
         if (property == null)
             return "(" + s[0] + "==NULL ?)";
