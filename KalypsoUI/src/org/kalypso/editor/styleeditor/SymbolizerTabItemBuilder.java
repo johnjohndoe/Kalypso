@@ -40,7 +40,12 @@ public class SymbolizerTabItemBuilder {
 		tabItem.setControl(composite);
 		
 		SymbolizerLayout symbolizerLayout = null;
-		if(symbolizer instanceof PolygonSymbolizer)
+		
+		if(symbolizer == null)
+		{			
+			symbolizerLayout = new SymbolizerLayout(composite);
+		}		
+		else if(symbolizer instanceof PolygonSymbolizer)
 		{
 			tabItem.setText("Polygon");
 			symbolizerLayout = new PolygonSymbolizerLayout(composite, symbolizer,userStyle);

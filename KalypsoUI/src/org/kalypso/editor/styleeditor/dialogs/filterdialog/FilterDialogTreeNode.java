@@ -2,7 +2,7 @@
  * Created on 04.08.2004
  *
  */
-package org.kalypso.editor.styleeditor.dialogs;
+package org.kalypso.editor.styleeditor.dialogs.filterdialog;
 
 import java.util.ArrayList;
 

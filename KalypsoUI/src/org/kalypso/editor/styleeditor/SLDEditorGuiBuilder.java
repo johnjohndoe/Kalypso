@@ -58,16 +58,15 @@ public class SLDEditorGuiBuilder {
 		scrollComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);				
 		Composite mainComposite = new Composite(scrollComposite, SWT.NONE);		
 		mainComposite.setLayout(new GridLayout());		
-		mainComposite.layout();					
-		scrollComposite.setContent(mainComposite);
-		scrollComposite.setSize(253,659);
-		
+		mainComposite.layout();			
+		scrollComposite.setContent(mainComposite);		
+		scrollComposite.setSize(parent.getSize());		
 		Label nameLabel = null;
 		if(userStyle == null)
 		{
 			nameLabel = new Label(mainComposite, 0);
 			nameLabel.setText("No style found to show in editor");
-			scrollComposite.pack(true);			
+			mainComposite.pack(true);		
 			return;
 		}
 		else
@@ -158,12 +157,12 @@ public class SLDEditorGuiBuilder {
 					default: break;
 				}
 			}
-		});	
+		});			
 		
 		ruleTabItemBuilder.draw();
 		if(focusedRuleItem>-1)
 			ruleTabItemBuilder.setSelectedRule(focusedRuleItem);
-		mainComposite.pack(true);			
+		mainComposite.pack(true);		
 	}
 	
 	private Rule[] getRules(UserStyle style){

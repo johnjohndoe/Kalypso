@@ -11,14 +11,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 
 /**
  * @author Administrator
  *
  */
-public abstract class SymbolizerLayout {
+public class SymbolizerLayout {
 	
 	protected Composite composite = null;
 	protected Symbolizer symbolizer = null;
@@ -31,6 +30,11 @@ public abstract class SymbolizerLayout {
 		this.userStyle = userStyle;
 	}
 	
+	public SymbolizerLayout(Composite parent)
+	{
+		this.composite = parent;
+	}
+	
 	public void draw() throws FilterEvaluationException
 	{			
 		GridLayout compositeLayout = new GridLayout();		
@@ -39,12 +43,10 @@ public abstract class SymbolizerLayout {
 		// ***** Label Group
 		Group labelGroup = new Group(composite,SWT.NULL);		
 		GridData labelGroupData = new GridData();
-		labelGroupData.widthHint = 210;			
+		labelGroupData.widthHint = 210;
+		labelGroupData.heightHint = 298;	
 		labelGroup.setLayoutData(labelGroupData);			
 		labelGroup.setLayout(compositeLayout);
-		labelGroup.layout();
-		
-		Label label = new Label(labelGroup,SWT.NULL);
-		label.setText("Not implemented yet");
+		labelGroup.layout();		
 	}
 }

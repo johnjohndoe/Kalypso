@@ -6,13 +6,11 @@ package org.kalypso.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+import org.kalypso.editor.styleeditor.dialogs.errordialog.StyleEditorErrorDialog;
 
 /**
  * @author Administrator
@@ -80,8 +78,8 @@ public class StrokeDashoffsetPanel {
 				}
 				catch(NumberFormatException nfe){
 					//TODO
-					IStatus status = new Status(IStatus.ERROR,"org.kalypso.editor.mapeditor.views.styleeditor",0,"InputError-Stroke-Offset", nfe);					
-					ErrorDialog.openError(composite.getShell(), "Input-Error","Input needs to be of type float",status);					
+					StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog(composite.getShell(),"Input needs to be of type float","InputError-Stroke-Offset");
+					errorDialog.showError();				
 					offsetInput.setText("" +value);
 				}
 			}

@@ -13,16 +13,21 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.internal.Workbench;
+import org.kalypso.editor.mapeditor.GisMapEditor;
+import org.kalypso.editor.styleeditor.dialogs.errordialog.StyleEditorErrorDialog;
 
 /**
  * @author Administrator
  *
  */
-public class TextInputPanel {
+public class DenominatorInputPanel {
 	
 	private Composite parent = null;
 	private Composite composite = null;
-	private String labelText = null;
+	private double denominator = 0.0;
 	private Text text = null;
 	 
 	private EventListenerList listenerList = new EventListenerList();
@@ -30,15 +35,15 @@ public class TextInputPanel {
 	private String label = null;	
 	
 	
-	public TextInputPanel(Composite parent, String label, String text){
+	public DenominatorInputPanel(Composite parent, String label, double denominator){
 		this.parent = parent; 
 		this.label = label;		
-		this.labelText = text;
+		this.denominator = denominator;
 		
 		composite = new Composite(parent, SWT.NULL);			
 		FormLayout compositeLayout = new FormLayout();
 		GridData compositeData = new GridData();
-		compositeData.widthHint = 195;
+		compositeData.widthHint = 225;
 		composite.setLayoutData(compositeData);
 		composite.setLayout(compositeLayout);	
 		compositeLayout.marginWidth = 0;
@@ -61,32 +66,72 @@ public class TextInputPanel {
 		FormData textData = new FormData();
 		textData.height = 10;
 		textData.width = 90;	
-		textData.left =  new FormAttachment(340, 1000, 0);		
+		textData.left =  new FormAttachment(295, 1000, 0);		
 		textData.top =  new FormAttachment(10, 1000, 0);
-		text.setLayoutData(textData);
-		if(labelText != null)
-			text.setText(labelText);				
+		text.setLayoutData(textData);		
+		text.setText(""+denominator);
 		
 		Button okButton = new Button(composite,SWT.PUSH);			
 		FormData okButtonData = new FormData();
 		okButtonData.height = 15;
 		okButtonData.width = 22;
-		okButtonData.left =  new FormAttachment(890, 1000, 0);		
+		okButtonData.left =  new FormAttachment(900, 1000, 0);		
 		okButtonData.top =  new FormAttachment(100, 1000, 0);
 		okButton.setLayoutData(okButtonData);		
-		okButton.setText("OK");
-		
-
+		okButton.setText("Ok");				
 		okButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) 
+			{	
+				try
+				{
+					denominator = Double.parseDouble(text.getText());
+					if(denominator<0)
+					{
+						StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog(composite.getShell(),"Input value invalid","needs to be positive");
+						errorDialog.showError();
+					}
+					else
+						fire();	
+				}
+				catch (NumberFormatException nfe) {
+					StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog(composite.getShell(),"Input needs to be of type double","needs to be double");
+					errorDialog.showError();
+					text.setText(""+denominator);
+				}																					
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+		});		
+		
+		Button getCurrentScaleButton = new Button(composite,SWT.PUSH);			
+		FormData getCurrentScaleButtonData = new FormData();
+		getCurrentScaleButtonData.height = 15;
+		getCurrentScaleButtonData.width = 22;
+		getCurrentScaleButtonData.left =  new FormAttachment(770, 1000, 0);		
+		getCurrentScaleButtonData.top =  new FormAttachment(100, 1000, 0);
+		getCurrentScaleButton.setLayoutData(getCurrentScaleButtonData);		
+		getCurrentScaleButton.setText("->");
+		getCurrentScaleButton.setToolTipText("aktuellen Maﬂstab");
+		
+		getCurrentScaleButton.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) 
 			{
-				labelText = text.getText();
+				 IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();    
+				 IEditorPart editor = window.getActivePage().getActiveEditor();
+				 if(editor instanceof GisMapEditor)
+				 {
+				 	GisMapEditor gisMapEditor = (GisMapEditor) editor;
+				 	denominator = gisMapEditor.getMapPanel().getCurrentScale();				 	
+				 }
+				text.setText(""+denominator);
 				fire();										
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
 			}
-		});					
+		});	
+		
 		Label urlLabel = new Label(composite,SWT.NULL);					
 		FormData urlLabelData = new FormData();
 		urlLabelData.height = 15;
@@ -97,21 +142,22 @@ public class TextInputPanel {
 		urlLabel.setText(label);
 	}
 	
-	public String getLabelText()
+	public double getDenominator()
 	{
-		return labelText;
-	}
-	
-	public void setInputText(String textInput)
-	{
-		labelText = textInput;
-		text.setText(textInput);
+		return denominator;
 	}
 	
 	// sets the inputField to a default state
 	public void reset()
 	{
 		text.setText("");
+	}
+	
+	public void setDenominator(double denom)
+	{
+		this.denominator = denom;
+		if(text != null && !text.isDisposed())
+			text.setText(""+denominator);
 	}
 	
     protected void fire() {

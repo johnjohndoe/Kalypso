@@ -2,7 +2,7 @@
  * Created on 03.08.2004
  *  
  */
-package org.kalypso.editor.styleeditor.dialogs;
+package org.kalypso.editor.styleeditor.dialogs.filterdialog;
 
 
 import java.util.ArrayList;
@@ -57,8 +57,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.editor.styleeditor.dialogs.filterencoding.BoundaryExpression;
-import org.kalypso.editor.styleeditor.dialogs.filterencoding.ElseFilter;
+import org.kalypso.editor.styleeditor.dialogs.filterdialog.filterencoding.BoundaryExpression;
+import org.kalypso.editor.styleeditor.dialogs.filterdialog.filterencoding.ElseFilter;
 import org.kalypso.editor.styleeditor.panels.ComparisonFilterComboPanel;
 import org.kalypso.editor.styleeditor.panels.LogicalFilterComboPanel;
 
