@@ -61,11 +61,18 @@ public class ZmlLoader extends AbstractLoader
       }
     }
 
-    ZmlObservation obs = new ZmlObservation( location, url );
+    try
+    {
+      ZmlObservation obs = new ZmlObservation( url );
 
-    monitor.worked( 1 );
+      monitor.worked( 1 );
 
-    return obs;
+      return obs;
+    }
+    catch( Exception e )
+    {
+      throw new LoaderException( e );
+    }
   }
 
   /**

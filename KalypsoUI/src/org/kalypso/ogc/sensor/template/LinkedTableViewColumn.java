@@ -3,7 +3,7 @@ package org.kalypso.ogc.sensor.template;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
-import org.kalypso.ogc.sensor.tableview.TableViewColumn;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
 import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.util.link.ObjectLink;
 import org.kalypso.util.xml.xlink.IXlink;
@@ -88,11 +88,6 @@ public class LinkedTableViewColumn extends ObjectLink implements ITableViewColum
     return m_column.getWidth();
   }
 
-  public int hashCode()
-  {
-    return m_column.hashCode();
-  }
-
   public boolean isEditable()
   {
     return m_column.isEditable();
@@ -101,10 +96,5 @@ public class LinkedTableViewColumn extends ObjectLink implements ITableViewColum
   public void setWidth( int width )
   {
     m_column.setWidth( width );
-  }
-
-  public String toString()
-  {
-    return m_column.toString();
   }
 }

@@ -21,16 +21,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.ogc.sensor.DateRangeArgument;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.tableview.DefaultTableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.adapter.IAdaptable;
 import org.kalypso.util.repository.view.RepositoryExplorerPart;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * Table QuickView.

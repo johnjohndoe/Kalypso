@@ -15,7 +15,7 @@ public class PoolableObjectType implements IPoolableObjectType
 
   private final Properties mySource;
   
-  private IProject myProject;
+  private final IProject myProject;
 
   public PoolableObjectType( final String type, final String source, final IProject project )
   {

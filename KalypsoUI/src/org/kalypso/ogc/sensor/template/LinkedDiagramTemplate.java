@@ -7,11 +7,11 @@ import java.util.NoSuchElementException;
 
 import org.eclipse.core.resources.IProject;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.diagview.DiagramAxis;
-import org.kalypso.ogc.sensor.diagview.DiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagramAxis;
+import org.kalypso.ogc.sensor.diagview.impl.DiagramTemplate;
 import org.kalypso.template.ObservationTemplateHelper;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxis;
@@ -24,7 +24,6 @@ import org.kalypso.util.link.LinkResolver;
  */
 public class LinkedDiagramTemplate implements IDiagramTemplate, ILinkResolverListener
 {
-  //private final LinkResolver m_resolver;
   private final DiagramTemplate m_template;
 
   private final IProject m_project;
