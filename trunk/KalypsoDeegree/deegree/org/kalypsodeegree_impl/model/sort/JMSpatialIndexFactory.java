@@ -1,5 +1,6 @@
-package org.deegree_ext.model.sort;
+package org.deegree_impl.model.sort;
 import org.deegree.model.geometry.GM_Envelope;
+import org.deegree.model.sort.JMSpatialIndex;
 
 public class JMSpatialIndexFactory
 {

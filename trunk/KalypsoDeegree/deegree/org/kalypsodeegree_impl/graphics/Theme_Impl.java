@@ -60,15 +60,15 @@ import org.deegree.graphics.displayelements.DisplayElement;
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.model.feature.Feature;
 import org.deegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.deegree_impl.model.sort.DisplayContext;
+import org.deegree_impl.model.sort.JMSpatialIndexFactory;
 import org.deegree_impl.tools.Debug;
 
-import org.deegree_ext.model.sort.DisplayContext;
-import org.deegree_ext.model.sort.JMSpatialIndex;
-import org.deegree_ext.model.sort.JMSpatialIndexFactory;
 //import de.tuhh.wb.jm.view.JMMapView;
 
 import java.util.Iterator;
 import org.deegree.model.geometry.GM_Envelope;
+import org.deegree.model.sort.JMSpatialIndex;
 
 /**
  * A Theme is for usual a homogenious collection of Features coupled with

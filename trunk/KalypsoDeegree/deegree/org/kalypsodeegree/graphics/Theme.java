@@ -46,7 +46,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 import org.deegree.graphics.sld.UserStyle;
-import org.deegree_ext.model.sort.JMSpatialIndex;
+import org.deegree.model.sort.JMSpatialIndex;
 
 /**
  *
