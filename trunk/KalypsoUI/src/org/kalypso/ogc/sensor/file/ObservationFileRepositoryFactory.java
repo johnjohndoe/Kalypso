@@ -8,8 +8,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
-import org.kalypso.util.repository.IRepository;
-import org.kalypso.util.repository.IRepositoryFactory;
+import org.kalypso.repository.IRepository;
+import org.kalypso.repository.IRepositoryFactory;
 
 /**
  * @author schlienger
@@ -19,7 +19,7 @@ public class ObservationFileRepositoryFactory implements IRepositoryFactory
   private String m_location = null;
   
   /**
-   * @see org.kalypso.util.repository.IRepositoryFactory#configureRepository(org.kalypso.util.repository.IRepository)
+   * @see org.kalypso.repository.IRepositoryFactory#configureRepository(org.kalypso.ui.repository.IRepository)
    */
   public boolean configureRepository( IRepository rep )
   {
@@ -42,7 +42,7 @@ public class ObservationFileRepositoryFactory implements IRepositoryFactory
   }
 
   /**
-   * @see org.kalypso.util.repository.IRepositoryFactory#createRepository()
+   * @see org.kalypso.repository.IRepositoryFactory#createRepository()
    */
   public IRepository createRepository()
   {

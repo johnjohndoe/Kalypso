@@ -1,8 +1,8 @@
 package org.kalypso.ogc.gml.mapactions;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.kalypso.ogc.MapPanel;
-import org.kalypso.ogc.widgets.IWidget;
+import org.kalypso.ogc.gml.mapmodel.MapPanel;
+import org.kalypso.ogc.gml.widgets.IWidget;
 
 
 /**

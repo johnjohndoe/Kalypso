@@ -7,7 +7,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.plugin.KalypsoGisPlugin;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandManager;
 

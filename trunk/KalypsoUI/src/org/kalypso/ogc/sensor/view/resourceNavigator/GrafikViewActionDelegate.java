@@ -6,7 +6,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.kalypso.template.ObservationTemplateHelper;
+import org.kalypso.ogc.sensor.template.ObservationTemplateHelper;
 
 /**
  * @author schlienger

@@ -5,64 +5,63 @@
    name="KalypsoUI"
    version="0.0.1"
    provider-name="org.kalypso"
-   class="org.kalypso.plugin.KalypsoGisPlugin">
+   class="org.kalypso.ui.KalypsoGisPlugin">
    <runtime>
-      <library name="kalypsoUi.jar">
+      <library name="KalypsoUi.jar">
          <export name="*"/>
       </library>
-      <library name="lib/junit.jar">
+      <library name="lib/jcommon-0.9.5.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jfreechart-0.9.20.jar">
          <export name="*"/>
       </library>
    </runtime>
    <requires>
-      <import plugin="org.eclipse.ui.editors" export="true"/>
       <import plugin="org.eclipse.ui.workbench" export="true"/>
       <import plugin="org.eclipse.jface" export="true"/>
-      <import plugin="org.eclipse.jface.text" export="true"/>
       <import plugin="org.eclipse.core.resources" export="true"/>
       <import plugin="org.eclipse.ui.ide" export="true"/>
       <import plugin="org.eclipse.ui.views" export="true"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor" export="true"/>
       <import plugin="org.eclipse.ui" export="true"/>
       <import plugin="org.eclipse.compare" export="true"/>
       <import plugin="org.eclipse.core.runtime" export="true"/>
-      <import plugin="org.kalypso.util" export="true"/>
-      <import plugin="org.kalypso.deegree" export="true"/>
-      <import plugin="org.kalypso.psiadapter" export="true"/>
       <import plugin="org.eclipse.debug.core" export="true"/>
       <import plugin="org.eclipse.debug.ui" export="true"/>
-      <import plugin="org.kalypso.services" export="true"/>
+      <import plugin="org.kalypso.util" export="true"/>
+      <import plugin="org.kalypso.deegree" export="true"/>
+      <import plugin="org.kalypso.core" export="true"/>
    </requires>
    <extension
          point="org.eclipse.ui.editors">
       <editor
             icon="icons/kalypso_gmt.gif"
-            class="org.kalypso.editor.mapeditor.GisMapEditor"
+            class="org.kalypso.ui.editor.mapeditor.GisMapEditor"
             default="true"
             name="Kalypso Gisview Editor"
-            id="org.kalypso.editor.mapeditor.GisMapEditor"
+            id="org.kalypso.ui.editor.mapeditor.GisMapEditor"
             extensions="gmt"/>
       <editor
-            class="org.kalypso.editor.tableeditor.GisTableEditor"
+            class="org.kalypso.ui.editor.gistableeditor.GisTableEditor"
             icon="icons/kalypso_gtt.gif"
             default="true"
-            contributorClass="org.kalypso.editor.tableeditor.GisTableEditorActionBarContributor"
+            contributorClass="org.kalypso.ui.editor.gistableeditor.GisTableEditorActionBarContributor"
             name="Kalypso GisTableEditor"
-            id="org.kalypso.editor.tableeditor.GisTableEditor"
+            id="org.kalypso.ui.editor.gistableeditor.GisTableEditor"
             extensions="gtt"/>
       <editor
-            class="org.kalypso.ogc.sensor.editor.ObservationDiagramEditor"
+            class="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"
             icon="icons/kalypso_odt.gif"
             default="true"
             name="Kalypso Observation DiagramEditor"
-            id="org.kalypso.ogc.sensor.editor.ObservationDiagramEditor"
+            id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"
             extensions="odt"/>
       <editor
-            class="org.kalypso.ogc.sensor.editor.ObservationTableEditor"
+            class="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
             icon="icons/kalypso_ott.gif"
             default="true"
             name="Kalypso Observation TableEditor"
-            id="org.kalypso.ogc.sensor.editor.ObservationTableEditor"
+            id="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
             extensions="ott"/>
    </extension>
    <extension
@@ -71,11 +70,11 @@
             name="Kalypso"
             id="Kalypso"/>
       <view
-            class="org.kalypso.util.repository.view.RepositoryExplorerPart"
+            class="org.kalypso.ui.repository.view.RepositoryExplorerPart"
             icon="icons/observation_repository.gif"
             category="Kalypso"
             name="Zeitreihen Repository"
-            id="org.kalypso.util.repository.view.RepositoryExplorerPart"/>
+            id="org.kalypso.ui.repository.view.RepositoryExplorerPart"/>
       <view
             icon="icons/kalypso_odt.gif"
             class="org.kalypso.ogc.sensor.view.DiagramViewPart"
@@ -87,26 +86,23 @@
             class="org.kalypso.ogc.sensor.view.TableViewPart"
             category="Kalypso"
             name="Table QuickView"
-            id="org.kalypso.ogc.sensor.view.TableViewPart"/>
-      <category
-            name="Kalypso"
-            id="Kalypso"/>            
+            id="org.kalypso.ogc.sensor.view.TableViewPart"/>          
       <view
             icon="icons/full/elcl16/kde_filter.gif"
-            class="org.kalypso.editor.mapeditor.views.StyleEditorViewPart"
+            class="org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart"
             category="Kalypso"
             name="Style Editor"
-            id="org.kalypso.editor.mapeditor.views.styleeditor"/>
+            id="org.kalypso.ui.editor.mapeditor.views.styleeditor"/>
    </extension>
    <extension
          point="org.eclipse.ui.editorActions">
       <editorContribution
-            targetID="org.kalypso.editor.tableeditor.GisTableEditor"
-            id="org.kalypso.editor.tableeditor.GisTableActionDelegate">
+            targetID="org.kalypso.ui.editor.gistableeditor.GisTableEditor"
+            id="org.kalypso.ui.editor.gistableeditor.GisTableActionDelegate">
          <menu
                label="Tabelle"
                path="additions"
-               id="org.kalypso.editors.tableeditor.menu">
+               id="org.kalypso.ui.editors.tableeditor.menu">
             <separator name="tabelle"/>
             <separator name="spalten"/>
          </menu>
@@ -114,27 +110,27 @@
                toolbarPath="tabelle"
                label="Zeile hinzufügen"
                tooltip="Fügt eine Zeile am Ende der Tabelle ein"
-               class="org.kalypso.editor.tableeditor.actions.AddRowActionDelagate"
+               class="org.kalypso.ui.editor.gistableeditor.actions.AddRowActionDelagate"
                style="push"
-               menubarPath="org.kalypso.editors.tableeditor.menu/tabelle"
-               id="org.kalypso.editors.tableeditor.AddRowAction"/>
+               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
+               id="org.kalypso.ui.editors.tableeditor.AddRowAction"/>
          <action
                toolbarPath="tabelle"
                label="Zeile(n) löschen"
                tooltip="Löscht die selektierte(n) Zeile(n)"
-               class="org.kalypso.editor.tableeditor.actions.RemoveRowsActionDelegate"
+               class="org.kalypso.ui.editor.gistableeditor.actions.RemoveRowsActionDelegate"
                style="push"
-               menubarPath="org.kalypso.editors.tableeditor.menu/tabelle"
-               id="org.kalypso.editors.tableeditor.RemoveRowsAction">
+               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
+               id="org.kalypso.ui.editors.tableeditor.RemoveRowsAction">
          </action>
          <action
                toolbarPath="tabelle"
                label="Daten speichern"
-               class="org.kalypso.editor.tableeditor.actions.SaveDataActionDelagate"
+               class="org.kalypso.ui.editor.gistableeditor.actions.SaveDataActionDelagate"
                tooltip="Speichert die Daten der Tabelle"
                style="push"
-               menubarPath="org.kalypso.editors.tableeditor.menu/tabelle"
-               id="org.kalypso.editor.tableeditor.SaveDataAction">
+               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
+               id="org.kalypso.ui.editor.gistableeditor.SaveDataAction">
             <enablement>
                <objectState
                      value="true"
@@ -145,106 +141,104 @@
                toolbarPath="tabelle"
                label="Toggle Editing"
                tooltip="Sartet oder stopt das Editieren der Tabellendaten"
-               class="org.kalypso.editor.tableeditor.actions.StartEditingActionDelagate"
+               class="org.kalypso.ui.editor.gistableeditor.actions.StartEditingActionDelagate"
                style="toggle"
                state="true"
-               menubarPath="org.kalypso.editors.tableeditor.menu/tabelle"
-               id="org.kalypso.editor.tableeditor.StartEditingAction">
+               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
+               id="org.kalypso.ui.editor.gistableeditor.StartEditingAction">
          </action>
          <menu
                label="Spalten"
-               path="org.kalypso.editors.tableeditor.menu/spalten"
-               id="org.kalypso.editors.tableeditor.columnmenu">
+               path="org.kalypso.ui.editors.tableeditor.menu/spalten"
+               id="org.kalypso.ui.editors.tableeditor.columnmenu">
             <separator name="spaltenMenu"/>
          </menu>
       </editorContribution>
       <editorContribution
-            targetID="org.kalypso.editor.mapeditor.GisMapEditor"
+            targetID="org.kalypso.ui.editor.mapeditor.GisMapEditor"
             id="org.kalypso.ogc.widgets.GisMapEditorActionDelegate">
          <action
                toolbarPath="karte"
                label="volle Ausdehnung"
-               class="org.kalypso.editor.mapeditor.actiondelegates.FullExtentWidgetDelegate"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentWidgetDelegate"
                icon="icons/full/elcl16/kde_window_fullscreen.gif"
                tooltip="Zoom to fullextent"
                style="push"
-               id="org.kalypso.editor.mapeditor.action.FullExtentAction"/>
+               id="org.kalypso.ui.editor.mapeditor.action.FullExtentAction"/>
          <action
                toolbarPath="karte"
                label="Ausschnitt verkleinern"
                tooltip="vergrößert den Kartenausschnitt"
                icon="icons/full/elcl16/kde_viewmag-.gif"
-               class="org.kalypso.editor.mapeditor.actiondelegates.ZoomOutWidgetDelegate"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutWidgetDelegate"
                style="push"
-               id="org.kalypso.editor.mapeditor.action.ZoomOutAction"/>
+               id="org.kalypso.ui.editor.mapeditor.action.ZoomOutAction"/>
          <action
                disabledIcon="icons/full/elcl16/kde_14_rectangle.gif"
                toolbarPath="karte"
                label="Ausschnitt vergrößern"
-               class="org.kalypso.editor.mapeditor.actiondelegates.ZoomInWidgetDelegate"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInWidgetDelegate"
                tooltip="vergrößert den Kartenausschnitt"
                icon="icons/full/elcl16/kde_viewmag+.gif"
                style="radio"
-               id="org.kalypso.editor.mapeditor.action.ZoomInAction"/>
+               id="org.kalypso.ui.editor.mapeditor.action.ZoomInAction"/>
           <!-- zoomInByRect with start and endpoint bounds -->     
-         <!-- EOF -->      
          <action
                toolbarPath="karte"
                label="Kartenausschnitt verschieben"
-               class="org.kalypso.editor.mapeditor.actiondelegates.PanToWidgetDelegate"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate"
                icon="icons/full/elcl16/kde_move.gif"
                tooltip="verschiebt den Kartenausschnitt"
                style="radio"
-               id="org.kalypso.editor.mapeditor.action.PanAction"/>
+               id="org.kalypso.ui.editor.mapeditor.action.PanAction"/>
 
          <action
                toolbarPath="karte"
                label="Create Geometry Feature"
-               class="org.kalypso.editor.mapeditor.actiondelegates.CreateGeometryFeatureWidgetDelegate"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreateGeometryFeatureWidgetDelegate"
                icon="icons/full/elcl16/kde_contexthelp.gif"
                tooltip="erzeugt features mit geometrie"
                style="radio"
-               id="org.kalypso.editor.mapeditor.action.PanAction"/>
-
+               id="org.kalypso.ui.editor.mapeditor.action.PanAction"/>
 
           <action
                 toolbarPath="karte"
                 label="Elemente selektieren"
-                class="org.kalypso.editor.mapeditor.actiondelegates.SelectWidgetDelegate"
+                class="org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate"
                 tooltip="selektiert dinge"
                 icon="icons/full/elcl16/kde_14_polyline.gif"
                 style="radio"
-                id="org.kalypso.editor.mapeditor.action.SelectAction"/>
+                id="org.kalypso.ui.editor.mapeditor.action.SelectAction"/>
  	<action
         toolbarPath="karte"
         label="Elemente deselektieren"
-        class="org.kalypso.editor.mapeditor.actiondelegates.UnSelectWidgetDelegate"
+        class="org.kalypso.ui.editor.mapeditor.actiondelegates.UnSelectWidgetDelegate"
         tooltip="deselektiert dinge"
         icon="icons/full/elcl16/kde_contents.gif"
         style="radio"
-        id="org.kalypso.editor.mapeditor.action.UnSelectAction"/>
+        id="org.kalypso.ui.editor.mapeditor.action.UnSelectAction"/>
 	 <action
         toolbarPath="karte"
         label="Selektion umkehren"
-        class="org.kalypso.editor.mapeditor.actiondelegates.ToggleSelectWidgetDelegate"
+        class="org.kalypso.ui.editor.mapeditor.actiondelegates.ToggleSelectWidgetDelegate"
         tooltip="umschalten"
         icon="icons/full/elcl16/kde_options.gif"
         style="radio"
-        id="org.kalypso.editor.mapeditor.action.ToggleSelectAction"/>
+        id="org.kalypso.ui.editor.mapeditor.action.ToggleSelectAction"/>
 	  </editorContribution>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
       <viewerContribution
-            targetID="org.kalypso.editors.tableeditor.contextMenu"
-            id="org.kalypso.editors.tableeditor.popupMenu">
+            targetID="org.kalypso.ui.editors.tableeditor.contextMenu"
+            id="org.kalypso.ui.editors.tableeditor.popupMenu">
          <menu
                label="Menu"
-               path="org.kalypso.editors.tableeditor.popMenu"
-               id="org.kalypso.editors.tableeditor.popMenu.menu"/>
+               path="org.kalypso.ui.editors.tableeditor.popMenu"
+               id="org.kalypso.ui.editors.tableeditor.popMenu.menu"/>
          <action
                label="AddRow"
-               class="org.kalypso.editor.tableeditor.actions.AddRowActionDelagate"
+               class="org.kalypso.ui.editor.gistableeditor.actions.AddRowActionDelagate"
                id="org.kalypso.tableeditor.AddRowAction"/>
         </viewerContribution>
    </extension>
@@ -337,7 +331,7 @@
       <perspective
             icon="icons/observation_repository.gif"
             class="org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"
-            name="Observation Repository"
+            name="Kalypso Observation Repositories"
             id="org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"/>
       <perspective
             icon="icons/admin.gif"

@@ -17,24 +17,24 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
-import org.kalypso.ogc.IMapModell;
-import org.kalypso.ogc.MapPanel;
-import org.kalypso.ogc.event.ModellEvent;
-import org.kalypso.ogc.event.ModellEventListener;
+import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.event.ModellEvent;
+import org.kalypso.ogc.gml.event.ModellEventListener;
 import org.kalypso.ogc.gml.mapactions.FullExtentMapAction;
 import org.kalypso.ogc.gml.mapactions.ToggleSingleSelectWidgetAction;
 import org.kalypso.ogc.gml.mapactions.ZoomOutMapAction;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.MapPanel;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
-import org.kalypso.ogc.widgets.ToggleSelectWidget;
-import org.kalypso.plugin.KalypsoGisPlugin;
-import org.kalypso.template.GisTemplateHelper;
+import org.kalypso.ogc.gml.widgets.ToggleSelectWidget;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -254,7 +254,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
   }
 
   /**
-   * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
+   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {

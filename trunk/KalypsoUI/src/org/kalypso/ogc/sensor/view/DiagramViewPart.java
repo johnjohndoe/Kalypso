@@ -17,9 +17,9 @@ import org.jfree.chart.ChartPanel;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 import org.kalypso.util.adapter.IAdaptable;
 import org.kalypso.util.factory.FactoryException;
-import org.kalypso.util.repository.view.RepositoryExplorerPart;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**

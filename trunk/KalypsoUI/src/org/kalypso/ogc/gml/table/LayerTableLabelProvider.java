@@ -3,8 +3,8 @@ package org.kalypso.ogc.gml.table;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.eclipse.jface.viewers.AbstractFeatureCellEditor;
 import org.kalypso.ogc.gml.KalypsoFeature;
+import org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor;
 
 /**
  * @author Belger

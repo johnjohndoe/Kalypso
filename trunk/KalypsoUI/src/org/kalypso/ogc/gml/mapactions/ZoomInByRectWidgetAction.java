@@ -1,8 +1,8 @@
 package org.kalypso.ogc.gml.mapactions;
 
-import org.kalypso.ogc.MapPanel;
-import org.kalypso.ogc.widgets.ZoomInByRectWidget;
-import org.kalypso.plugin.ImageProvider;
+import org.kalypso.ogc.gml.mapmodel.MapPanel;
+import org.kalypso.ogc.gml.widgets.ZoomInByRectWidget;
+import org.kalypso.ui.ImageProvider;
 
 /**
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp</a>

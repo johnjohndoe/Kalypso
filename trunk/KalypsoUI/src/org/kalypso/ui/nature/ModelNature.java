@@ -49,10 +49,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
 import org.kalypso.java.io.ReaderUtilities;
 import org.kalypso.java.io.StreamUtilities;
-import org.kalypso.java.reflect.ClassUtilities;
-import org.kalypso.model.transformation.ICalculationCaseTransformation;
-import org.kalypso.model.transformation.TransformationException;
-import org.kalypso.model.transformation.TransformationFactory;
+import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.model.xml.Calcwizard;
 import org.kalypso.model.xml.CalcwizardType;
 import org.kalypso.model.xml.Modelspec;
@@ -61,14 +58,17 @@ import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.TransformationConfig;
 import org.kalypso.model.xml.TransformationType;
 import org.kalypso.model.xml.CalcwizardType.PageType.ArgType;
-import org.kalypso.plugin.ImageProvider;
-import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.services.calcjob.CalcJobDescription;
 import org.kalypso.services.calcjob.CalcJobService;
 import org.kalypso.services.calcjob.CalcJobServiceException;
 import org.kalypso.services.calcjob.CalcJobStatus;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.CalcWizard;
 import org.kalypso.ui.calcwizard.ICalcWizardPage;
+import org.kalypso.util.transformation.ITransformation;
+import org.kalypso.util.transformation.TransformationException;
+import org.kalypso.util.transformation.TransformationFactory;
 import org.xml.sax.InputSource;
 
 /**
@@ -270,7 +270,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     for( Iterator iter = transList.iterator(); iter.hasNext(); )
     {
       final TransformationType element = (TransformationType)iter.next();
-      final ICalculationCaseTransformation ccTrans = TransformationFactory
+      final ITransformation ccTrans = TransformationFactory
           .createTransformation( element );
 
       ccTrans.transform( new SubProgressMonitor( monitor, 1 ) );

@@ -25,14 +25,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
 import org.kalypso.eclipse.swt.custom.ExcelLikeTableCursor;
-import org.kalypso.ogc.event.ModellEvent;
-import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.event.ModellEvent;
+import org.kalypso.ogc.gml.event.ModellEventListener;
+import org.kalypso.ogc.gml.table.celleditors.ICellEditorFactory;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
@@ -350,7 +350,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   }
 
   /**
-   * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
+   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {

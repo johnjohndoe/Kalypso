@@ -4,9 +4,9 @@ import java.util.Map;
 
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
-import org.kalypso.ogc.command.ModifyFeatureCommand;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.IKalypsoLayer;
+import org.kalypso.ogc.gml.command.ModifyFeatureCommand;
 import org.kalypso.util.command.ICommand;
 
 /**

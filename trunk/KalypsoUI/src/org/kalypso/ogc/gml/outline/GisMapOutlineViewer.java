@@ -14,11 +14,11 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.ogc.IMapModell;
-import org.kalypso.ogc.IMapModellView;
-import org.kalypso.ogc.command.EnableThemeCommand;
-import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.command.EnableThemeCommand;
+import org.kalypso.ogc.gml.event.ModellEvent;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 
@@ -77,7 +77,7 @@ public class GisMapOutlineViewer implements ISelectionProvider,
   }
 
   /**
-   * @see org.kalypso.ogc.IMapModellView#getMapModell()
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
    */
   public IMapModell getMapModell()
   {
@@ -85,7 +85,7 @@ public class GisMapOutlineViewer implements ISelectionProvider,
   }
 
   /**
-   * @see org.kalypso.ogc.IMapModellView#setMapModell(org.kalypso.ogc.IMapModell)
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.IMapModell)
    */
   public void setMapModell( final IMapModell modell )
   {
@@ -112,7 +112,7 @@ public class GisMapOutlineViewer implements ISelectionProvider,
   }
 
   /**
-   * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
+   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {

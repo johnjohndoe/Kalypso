@@ -13,11 +13,11 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.ogc.event.ModellEvent;
-import org.kalypso.plugin.KalypsoGisPlugin;
+import org.kalypso.ogc.gml.event.ModellEvent;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.template.types.StyledLayerType.StyleType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -260,7 +260,7 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
   public UserStyle[] getStyles()
   {
     if( m_theme == null )
-      return null;
+      return NO_STYLE;
 
     return m_theme.getStyles();
   }
