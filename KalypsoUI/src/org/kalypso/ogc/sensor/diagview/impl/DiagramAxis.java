@@ -97,7 +97,7 @@ public class DiagramAxis implements IDiagramAxis
   {
     if( m_unit.length() > 0 )
       return m_label + " [" + m_unit + "]";
-    else
-      return m_label;
+
+    return m_label;
   }
 }

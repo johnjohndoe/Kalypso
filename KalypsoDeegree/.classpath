@@ -29,6 +29,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/postgis/postgis.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/servlet/jsdk2.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/servlet/servlet.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib_junit/junit.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit/junit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

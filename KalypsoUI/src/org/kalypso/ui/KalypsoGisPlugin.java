@@ -1,8 +1,6 @@
 package org.kalypso.ui;
 
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.MissingResourceException;
 import java.util.Properties;
@@ -26,10 +24,7 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultCellEditorFactory;
 import org.kalypso.ogc.gml.table.celleditors.ICellEditorFactory;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.repository.DefaultRepositoryContainer;
-import org.kalypso.services.calcjob.CalcJobService;
-import org.kalypso.services.factory.SimpleServiceFactory;
 import org.kalypso.ui.repository.RepositorySpecification;
-import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.ResourcePool;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
@@ -76,8 +71,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   private RepositorySpecification[] m_repositoriesSpecification = null;
 
   private final SelectionIdProvider mySelectionIdProvider = new SelectionIdProvider();
-
-  private CalcJobService m_calcJobService;
 
   private IURLConnectionFactory m_urlConnectionFactory;
 
@@ -321,22 +314,22 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     return mySelectionIdProvider;
   }
 
-  public CalcJobService getCalcService()
-  {
-    if( m_calcJobService == null )
-    {
-      try
-      {
-        m_calcJobService = (CalcJobService)SimpleServiceFactory.createService( "CalcJob.Default", CalcJobService.class );
-      }
-      catch( FactoryException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    return m_calcJobService;
-  }
+//  public CalcJobService getCalcService()
+//  {
+//    if( m_calcJobService == null )
+//    {
+//      try
+//      {
+//        m_calcJobService = (CalcJobService)SimpleServiceFactory.createService( "CalcJob.Default", CalcJobService.class );
+//      }
+//      catch( FactoryException e )
+//      {
+//        e.printStackTrace();
+//      }
+//    }
+//
+//    return m_calcJobService;
+//  }
 
   private void registerTypeHandler()
   {
@@ -376,34 +369,34 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     return m_urlConnectionFactory;
   }
 
-  private class URLConnectionFactory implements IURLConnectionFactory
-  {
-    private final String m_property;
-
-    private final String m_value;
-
-    private URLConnectionFactory( String property, String value )
-    {
-      m_property = property;
-      m_value = value;
-    }
-
-    private URLConnectionFactory()
-    {
-      m_property = null;
-      m_value = null;
-    }
-
-    /**
-     * @see org.deegree.tools.IURLConnectionFactory#createURLConnection(java.net.URL)
-     */
-    public URLConnection createURLConnection( URL url ) throws IOException
-    {
-      if( m_property == null )
-        return url.openConnection();
-      URLConnection connection = url.openConnection();
-      connection.setRequestProperty( m_property, m_value );
-      return connection;
-    }
-  }
+//  private class URLConnectionFactory implements IURLConnectionFactory
+//  {
+//    private final String m_property;
+//
+//    private final String m_value;
+//
+//    private URLConnectionFactory( String property, String value )
+//    {
+//      m_property = property;
+//      m_value = value;
+//    }
+//
+//    private URLConnectionFactory()
+//    {
+//      m_property = null;
+//      m_value = null;
+//    }
+//
+//    /**
+//     * @see org.deegree.tools.IURLConnectionFactory#createURLConnection(java.net.URL)
+//     */
+//    public URLConnection createURLConnection( URL url ) throws IOException
+//    {
+//      if( m_property == null )
+//        return url.openConnection();
+//      URLConnection connection = url.openConnection();
+//      connection.setRequestProperty( m_property, m_value );
+//      return connection;
+//    }
+//  }
 }

@@ -55,7 +55,7 @@ public class ModelChooserIntro extends IntroPart
   {
     try
     {
-      final URL url = BundleUtility.find( "org.kalypso.enterprise", "etc/modellist.xml" );
+      final URL url = BundleUtility.find( "org.kalypso.ui", "etc/modellist.xml" );
       final InputSource inputSource = new InputSource( url.openStream() );
       m_modellist = (Modellist)new ObjectFactory().createUnmarshaller().unmarshal(
           inputSource );
@@ -68,7 +68,6 @@ public class ModelChooserIntro extends IntroPart
     {
       e.printStackTrace();
     }
-
   }
 
   public void dispose()

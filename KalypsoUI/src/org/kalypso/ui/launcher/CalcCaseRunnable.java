@@ -9,8 +9,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.kalypso.eclipse.jface.operation.IProgressRunnable;
-import org.kalypso.services.calcjob.CalcJobDescription;
-import org.kalypso.services.calcjob.CalcJobStatus;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.ModelNature;
 
@@ -64,45 +62,45 @@ public class CalcCaseRunnable implements IProgressRunnable
       int lastProgress = 0;
       while( true )
       {
-        final CalcJobDescription jobDescription = nature.checkCalculation( jobID ); 
-
-        monitor.setTaskName( jobDescription.getDescription() );
-        final int progress = jobDescription.getProgress();
-
-        final int amount = progress - lastProgress;
-
-        monitor.worked( amount );
-
-        lastProgress = progress;
-
-        switch( jobDescription.getState() )
-        {
-        case CalcJobStatus.RUNNING:
-        case CalcJobStatus.UNKNOWN:
-          break;
-
-        case CalcJobStatus.CANCELED:
-          return Status.CANCEL_STATUS;
-
-        case CalcJobStatus.ERROR:
-          final String message = jobDescription.getMessage();
-          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, message == null ? ""
-              : message, null );
-
-        case CalcJobStatus.FINISHED:
-        {
-          nature.retrieveCalculation( jobID );
-          return Status.OK_STATUS;
-        }
-        }
-
-        Thread.sleep( 100 );
-
-        if( monitor.isCanceled() )
-        {
-          nature.stopCalculation( jobID );
-          return Status.CANCEL_STATUS;
-        }
+//        final CalcJobDescription jobDescription = nature.checkCalculation( jobID ); 
+//
+//        monitor.setTaskName( jobDescription.getDescription() );
+//        final int progress = jobDescription.getProgress();
+//
+//        final int amount = progress - lastProgress;
+//
+//        monitor.worked( amount );
+//
+//        lastProgress = progress;
+//
+//        switch( jobDescription.getState() )
+//        {
+//        case CalcJobStatus.RUNNING:
+//        case CalcJobStatus.UNKNOWN:
+//          break;
+//
+//        case CalcJobStatus.CANCELED:
+//          return Status.CANCEL_STATUS;
+//
+//        case CalcJobStatus.ERROR:
+//          final String message = jobDescription.getMessage();
+//          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, message == null ? ""
+//              : message, null );
+//
+//        case CalcJobStatus.FINISHED:
+//        {
+//          nature.retrieveCalculation( jobID );
+//          return Status.OK_STATUS;
+//        }
+//        }
+//
+//        Thread.sleep( 100 );
+//
+//        if( monitor.isCanceled() )
+//        {
+//          nature.stopCalculation( jobID );
+//          return Status.CANCEL_STATUS;
+//        }
       }
     }
     catch( final Exception e )

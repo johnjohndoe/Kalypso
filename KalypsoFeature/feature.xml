@@ -2,8 +2,10 @@
 <feature
       id="org.kalypso.enterprise"
       label="Kalypso Enterprise"
-      version="1.0.0"
+      version="0.0.1"
       provider-name="kalypso.org"
+      plugin="org.kalypso.ui"
+      image="splash.bmp"
       primary="true"
       application="org.eclipse.ui.ide.workbench">
 
@@ -26,25 +28,36 @@
    </url>
 
    <requires>
-      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="org.eclipse.jface"/>
-      <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.compare"/>
-      <import plugin="org.junit"/>
-      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.eclipse.ui.forms"/>
    </requires>
+
+   <plugin
+         id="org.kalypso.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
 
    <plugin
          id="org.kalypso.deegree"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.psiadapter"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
 
    <plugin
          id="org.kalypso.ui"
@@ -56,18 +69,6 @@
          id="org.kalypso.util"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.enterprise"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.psiadapter"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
+         version="0.0.1"/>
 
 </feature>
