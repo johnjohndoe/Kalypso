@@ -41,6 +41,8 @@ public class KalypsoApplication implements IPlatformRunnable
     }
     
     rights = chooseRight( rights, username );
+    if( rights == null )
+      return null;
     
     return startWorkbench( new KalypsoWorkbenchAdvisor( rights ) );
   }
@@ -80,7 +82,7 @@ public class KalypsoApplication implements IPlatformRunnable
           "Es konnten keine Benutzerrechte für Benutzer '" + username
               + "' ermittelt werden. Bitte wenden Sie sich an den System-Administrator" );
     }
-    else if( rights.length == 1 )
+    else /* if( rights.length == 1 ) */
     {
 //      choosenRights = rights[0];
 //    }
