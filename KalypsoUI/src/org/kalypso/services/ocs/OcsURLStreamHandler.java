@@ -59,20 +59,20 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
         /*
          * Ask user for a date range if a gui is available
          */
-        final IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
-        if( window != null )
-        {
-          final DateFormat df = DateFormat.getDateTimeInstance();
-          final DateRangeInputDialog dlg = new DateRangeInputDialog( window.getShell(), false, null, null, 15, df, KalypsoGisPlugin.getDefault() );
-          
-          if( dlg.open() == Window.OK )
-          {
-            if( dlg.isUseRange() )
-              dra = new DateRangeArgument( dlg.getDateFrom(), dlg.getDateTo() );
-            else
-              dra = DateRangeArgument.createFromPastDays( dlg.getNumberOfDays() );
-          }
-        }
+//        final IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
+//        if( window != null )
+//        {
+//          final DateFormat df = DateFormat.getDateTimeInstance();
+//          final DateRangeInputDialog dlg = new DateRangeInputDialog( window.getShell(), false, null, null, 15, df, KalypsoGisPlugin.getDefault() );
+//          
+//          if( dlg.open() == Window.OK )
+//          {
+//            if( dlg.isUseRange() )
+//              dra = new DateRangeArgument( dlg.getDateFrom(), dlg.getDateTo() );
+//            else
+//              dra = DateRangeArgument.createFromPastDays( dlg.getNumberOfDays() );
+//          }
+//        }
       }
 
       final String obsId = ZmlURL.getIdentifierPart( u ).replaceFirst( SCHEME_OCS + ":", "" );

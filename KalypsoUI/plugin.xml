@@ -571,4 +571,12 @@
                id="org.kalypso.action.model.checkoutModel"/>
       </actionSet>
    </extension>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <wizard
+            icon="icons/observation_repository.gif"
+            class="org.kalypso.services.ocs.wizard.OcsExportWizard"
+            name="Export über Kalypso Zeitreihendienst"
+            id="org.kalypso.services.ocs.wizard.OcsExportWizard"/>
+   </extension>
 </plugin>
