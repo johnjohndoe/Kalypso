@@ -3,8 +3,6 @@ package org.kalypso.util.pool;
 import java.net.URL;
 import java.util.Properties;
 
-import org.eclipse.core.resources.IProject;
-
 /**
  * TODO: doc!
  * 
@@ -28,9 +26,4 @@ public interface IPoolableObjectType
    * Returns the context from which the source is accessed
    */
   public URL getContext();
-  
-  /**
-   * @deprecated use getContext() instead
-   */
-  public IProject getProject();
 }

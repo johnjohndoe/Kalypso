@@ -1,6 +1,5 @@
 package org.kalypso.ui.repository.actions;
 
-import org.eclipse.jface.viewers.TreeViewer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 
@@ -19,6 +18,6 @@ public class CollapseAllAction extends AbstractRepositoryExplorerAction
    */
   public void run()
   {
-    ( (TreeViewer)getExplorer().getViewer() ).collapseAll();
+    getExplorer().getViewer().collapseAll();
   }
 }
