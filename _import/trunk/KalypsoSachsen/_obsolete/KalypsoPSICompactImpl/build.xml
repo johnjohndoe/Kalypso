@@ -3,9 +3,9 @@
 
   <property name="src.dir" value="${basedir}/src"/>
   
-  <property name="build.dir" value="${basedir}/build"/>
-  <property name="javadoc.dir" value="${basedir}/javadoc"/>
-  <property name="deploy.dir" value="${basedir}/deploy"/>
+  <property name="build.dir" value="${basedir}/build/bin"/>
+  <property name="javadoc.dir" value="${basedir}/build/javadoc"/>
+  <property name="deploy.dir" value="${basedir}/build/deploy"/>
 
   <property name="jarname" value="PSICompact.jar"/>
     
