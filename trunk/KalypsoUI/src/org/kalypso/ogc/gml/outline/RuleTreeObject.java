@@ -1,20 +1,20 @@
 package org.kalypso.ogc.gml.outline;
 
 import org.deegree.graphics.sld.Rule;
-import org.deegree.model.feature.FeatureType;
+import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 
 public class RuleTreeObject
 {
   private Rule m_rule = null;
   private KalypsoUserStyle m_userStyle = null;
-  private FeatureType m_ft = null;
+  private IKalypsoLayer layer = null;
 
-  public RuleTreeObject( final Rule rule, final KalypsoUserStyle style, final FeatureType ft )
+  public RuleTreeObject( final Rule rule, final KalypsoUserStyle style, final IKalypsoLayer layer )
   {
     this.m_rule = rule;
     this.m_userStyle = style;
-    this.m_ft	= ft;
+    this.layer	= layer;
   }
   
   public KalypsoUserStyle getStyle()
@@ -22,16 +22,16 @@ public class RuleTreeObject
   	return m_userStyle;
   }
   
-  public FeatureType getFeatureType()
-  {
-  	return m_ft;
-  }
  
   public Rule getRule() 
   {
 	return m_rule;
   }
   
+  public IKalypsoLayer getLayer() 
+  {
+	return layer;
+  }
   public String toString()
   {
     if( m_rule == null )

@@ -42,7 +42,7 @@ public class RemoveRuleAction extends AbstractOutlineAction
 			if( part != null )
 			{
 	    	 	part.setSelectionChangedProvider( getOutlineviewer() );
-	    	 	part.initStyleEditor(userStyle, obj.getFeatureType());	    	 		    	 
+	    	 	part.initStyleEditor(userStyle, obj.getLayer());	    	 		    	 
 			}
 		} catch (PartInitException e) {			
 			e.printStackTrace();
