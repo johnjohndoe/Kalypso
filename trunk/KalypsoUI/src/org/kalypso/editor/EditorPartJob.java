@@ -36,6 +36,7 @@ final class EditorPartJob extends Job
     //setUser( true );
     
     setPriority( Job.SHORT );
+    setRule( editor.getSchedulingRule() );
 
     myCommand = command;
     myEditor = editor;
