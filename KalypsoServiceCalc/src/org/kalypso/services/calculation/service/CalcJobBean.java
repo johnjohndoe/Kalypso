@@ -2,8 +2,6 @@ package org.kalypso.services.calculation.service;
 
 import java.io.Serializable;
 
-import org.kalypso.services.calculation.common.ICalcJobInfo;
-
 /**
  * <p>
  * Enthält die aktuellen Daten eines {@link org.kalypso.services.calculation.job.ICalcJob}
@@ -14,91 +12,71 @@ import org.kalypso.services.calculation.common.ICalcJobInfo;
  * 
  * @author Belger
  */
-public class CalcJobBean implements Serializable, ICalcJobInfo
+public class CalcJobBean implements Serializable
 {
-  /** ID des beschriebenen Jobs*/
-  private String m_id;
-
-  /** Typ des Jobs */
-  private String m_type;
+  /** ID des beschriebenen Jobs */
+  private String m_id = null;
 
   /** Textuelle Beschreibung des Jobs, beim Erzeugen des Jobs an den Service übergeben */
-  private String m_description;
+  private String m_description = null;
+  
+  /** Der Berechnungstyp des Jobs */
+  private String m_type = null;
 
   /** Status des Jobs */
-  private int m_state;
+  private int m_state = ICalculationService.UNKNOWN;
 
   /** Fortschritt des Jobs, ziwschen 0 und 100, -1 bedeutet: unbekannt */
-  private int m_progress;
+  private int m_progress = -1;
 
   /** Beschreibung des Job-Zustandes, falls Status der Fehlerstatus: die Fehlermeldung */
-  private String m_message = "";
+  private String m_message = null;
 
   /** Die vom Client übergebenen/erwarteten Input-Dateien */
-  private CalcJobDataBean[] m_inputData;
+  private CalcJobDataBean[] m_inputData = null;
   
   /** aktuelle Ergebnisse */
-  private CalcJobDataBean[] m_results;
+  private CalcJobDataBean[] m_results = null;
+  
+  /** Die Basis-URL, an welcher die temporären Daten stehen */
+  private String m_baseURL = null;
   
   public CalcJobBean()
   {
-    this( "-1", "UNKNOWN", "", UNKNOWN, 0, null );
+  // empty 
   }
   
-  public CalcJobBean( final String idParm, final String descriptionParm,
-      final String typeParm, final int stateParm, final int progressParm, final CalcJobDataBean[] results )
+  public CalcJobBean( final String id, final String description, final String type, final int state, final int progress, final String baseURL, final CalcJobDataBean[] results )
   {
-    this.m_id = idParm;
-    this.m_description = descriptionParm;
-    this.m_type = typeParm;
-    this.m_state = stateParm;
-    this.m_progress = progressParm;
-    this.m_results = results;
+    m_id = id;
+    m_description = description;
+    m_state = state;
+    m_progress = progress;
+    m_results = results;
+    m_type = type;
+    m_baseURL = baseURL;
   }
   
-  /**
-   * @see org.kalypso.services.calculation.common.ICalcJobInfo#getDescription()
-   */
   public String getDescription()
   {
     return m_description;
   }
 
-  /**
-   * @see org.kalypso.services.calculation.common.ICalcJobInfo#getId()
-   */
   public String getId()
   {
     return m_id;
   }
 
-  /**
-   * @see org.kalypso.services.calculation.common.ICalcJobInfo#getProgress()
-   */
   public int getProgress()
   {
     return m_progress;
   }
 
-  /**
-   * @see org.kalypso.services.calculation.common.ICalcJobInfo#getState()
-   */
   public int getState()
   {
     return m_state;
   }
 
-  /**
-   * @see org.kalypso.services.calculation.common.ICalcJobInfo#getType()
-   */
-  public String getType()
-  {
-    return m_type;
-  }
-  
-  /**
-   * @see org.kalypso.services.calculation.common.ICalcJobInfo#getMessage()
-   */
   public String getMessage()
   {
     return m_message;
@@ -124,19 +102,11 @@ public class CalcJobBean implements Serializable, ICalcJobInfo
     m_state = i;
   }
 
-  public void setType( String string )
-  {
-    m_type = string;
-  }
-
   public void setMessage( final String message )
   {
     m_message = message;
   }
 
-  /**
-   * @see org.kalypso.services.calculation.common.ICalcJobInfo#getResults()
-   */
   public final CalcJobDataBean[] getResults()
   {
     return m_results;
@@ -155,5 +125,22 @@ public class CalcJobBean implements Serializable, ICalcJobInfo
   public final void setInputData( final CalcJobDataBean[] inputData )
   {
     m_inputData = inputData;
+  }
+  
+  public final String getType()
+  {
+    return m_type;
+  }
+  public final void setType( String type )
+  {
+    m_type = type;
+  }
+  public final String getBaseURL()
+  {
+    return m_baseURL;
+  }
+  public final void setBaseURL( String baseURL )
+  {
+    m_baseURL = baseURL;
   }
 }

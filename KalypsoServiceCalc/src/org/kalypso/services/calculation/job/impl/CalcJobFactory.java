@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.service.CalcJobDataBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
@@ -33,17 +32,13 @@ public class CalcJobFactory
     return (String[])m_jobTypes.keySet().toArray( new String[0] );
   }
 
-  public ICalcJob createJob( final String id, final String typeID, final String description, final CalcJobDataBean[] input ) throws CalcJobServiceException
+  public ICalcJob createJob( final String typeID ) throws CalcJobServiceException
   {
     try
     {
       final String className = m_jobTypes.getProperty( typeID );
 
-      final ICalcJob job = (ICalcJob)Class.forName( className ).newInstance();
-
-      job.init( id, typeID, description, input );
-
-      return job;
+      return (ICalcJob)Class.forName( className ).newInstance();
     }
     catch( final Exception e )
     {

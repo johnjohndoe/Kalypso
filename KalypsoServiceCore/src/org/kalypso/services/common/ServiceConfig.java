@@ -30,4 +30,15 @@ public class ServiceConfig
     return new File( System.getProperty( "kalypso.server.datadir" ) );
   }
 
+  public static File createNewTempDir( final String prefix )
+  {
+    final File tempDir = getTempDir();
+    
+    while( true )
+    {
+      final File newDir = new File( tempDir, prefix + System.currentTimeMillis() );
+      if( !newDir.exists() )
+        return newDir;
+    }
+  }
 }

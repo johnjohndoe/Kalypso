@@ -9,9 +9,9 @@ import org.kalypso.services.calculation.service.CalcJobDataBean;
 public class CopyCalcJob extends AbstractCalcJob
 {
   /**
-   * @see org.kalypso.services.calculation.job.impl.AbstractCalcJob#runIntern(org.kalypso.services.calculation.service.CalcJobDataBean[])
+   * @see org.kalypso.services.calculation.job.ICalcJob#run(org.kalypso.services.calculation.service.CalcJobDataBean[])
    */
-  protected void runIntern( final CalcJobDataBean[] arguments ) 
+  public void run( final CalcJobDataBean[] arguments ) 
   {
     for( int i = 0; i < arguments.length; i++ )
     {

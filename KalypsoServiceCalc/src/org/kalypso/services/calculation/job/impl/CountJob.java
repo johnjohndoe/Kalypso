@@ -9,11 +9,11 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
 public final class CountJob extends AbstractCalcJob
 {
   /**
-   * @see org.kalypso.services.calculation.job.impl.AbstractCalcJob#runIntern(org.kalypso.services.calculation.service.CalcJobDataBean[])
+   * @see org.kalypso.services.calculation.job.ICalcJob#run(org.kalypso.services.calculation.service.CalcJobDataBean[])
    */
-  protected void runIntern( final CalcJobDataBean[] arguments ) throws CalcJobServiceException
+  public void run( final CalcJobDataBean[] arguments ) throws CalcJobServiceException
   {
-    while( getState() == RUNNING )
+    while( !isCanceled() )
     {
       try
       {
@@ -24,14 +24,11 @@ public final class CountJob extends AbstractCalcJob
         throw new CalcJobServiceException( "Thread interrupted", e );
       }
 
-      if( isCanceled() )
-        return;
-      
       final int progress = getProgress();
       if( progress == 100 )
         return;
 
-      progress( 100 );
+      progress( 1 );
     }
   }
 }

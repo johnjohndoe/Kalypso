@@ -2,16 +2,12 @@ package org.kalypso.services.calculation.service.impl;
 
 import java.io.File;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import org.kalypso.java.lang.reflect.ClassUtilities;
-import org.kalypso.services.calculation.common.CalcJobHelper;
-import org.kalypso.services.calculation.common.ICalcJobInfo;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.impl.CalcJobFactory;
 import org.kalypso.services.calculation.service.CalcJobBean;
@@ -27,17 +23,15 @@ public class CalcJobService_impl_Queued implements ICalculationService
 {
   private static final int MAX_THREADS = 3;
 
-  /** job -> thread */
-  private final Map m_threads = new HashMap();
-
-  private final ArrayList m_jobs = new ArrayList();
+  private final Vector m_threads = new Vector();
 
   private final CalcJobFactory m_calcJobFactory;
 
   private final Timer m_timer = new Timer();
 
-  /** Der Timer ruft die schedule Methode regelmässig auf, damit
-   * wartende Jobs gestarted werden, falls noch nicht genug laufen 
+  /**
+   * Der Timer ruft die schedule Methode regelmässig auf, damit wartende Jobs
+   * gestarted werden, falls noch nicht genug laufen
    */
   private final TimerTask m_timerTaks = new TimerTask()
   {
@@ -51,17 +45,18 @@ public class CalcJobService_impl_Queued implements ICalculationService
   {
     // die root aus dem Kalypso-Server-Properties lesen
     final File confDir = ServiceConfig.getConfDir();
-    final File myConfDir = new File( confDir, ClassUtilities.getOnlyClassName( ICalculationService.class ) );
+    final File myConfDir = new File( confDir, ClassUtilities
+        .getOnlyClassName( ICalculationService.class ) );
     final File typeFile = new File( myConfDir, "modelltypen.properties" );
     if( !typeFile.exists() )
       throw new RemoteException( "Can't find configuration file: " + typeFile.getAbsolutePath() );
-    
+
     m_calcJobFactory = new CalcJobFactory( typeFile );
 
     // einmal in der Sekunde checken, ob wartende Jobs gestartet werden können
     m_timer.schedule( m_timerTaks, 1000, 1000 );
   }
-  
+
   public synchronized final String[] getJobTypes()
   {
     return m_calcJobFactory.getSupportedTypes();
@@ -69,45 +64,55 @@ public class CalcJobService_impl_Queued implements ICalculationService
 
   public synchronized CalcJobBean[] getJobs()
   {
-    final CalcJobBean[] jobBeans = new CalcJobBean[m_jobs.size()];
+    final CalcJobBean[] jobBeans = new CalcJobBean[m_threads.size()];
     int count = 0;
 
-    for( final Iterator jIt = m_jobs.iterator(); jIt.hasNext(); count++ )
-      jobBeans[count] = CalcJobHelper.createCalcJobBean( (ICalcJob)jIt.next() );
+    for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); count++ )
+    {
+      final CalcJobThread cjt = (CalcJobThread)jIt.next();
+      jobBeans[count] = cjt.getJobBean();
+    }
 
     return jobBeans;
   }
 
-  public final CalcJobBean createJob( final String typeID, final String description, final CalcJobDataBean[] input ) throws CalcJobServiceException
+  public final CalcJobBean createJob( final String typeID, final String description,
+      final CalcJobDataBean[] input ) throws CalcJobServiceException
   {
     // eine unbenutzte ID finden
     int id = -1;
-  
-    synchronized( m_jobs )
+
+    synchronized( m_threads )
     {
-      for( int i = 0; i < m_jobs.size(); i++ )
+      // eine neue, eindeutige id erzeugen
+      for( int i = 0; i < m_threads.size(); i++ )
       {
-        if( m_jobs.get( i ) == null )
+        if( m_threads.get( i ) == null )
         {
           id = i;
           break;
         }
       }
-      
+
       if( id == -1 )
-        id = m_jobs.size();
+        id = m_threads.size();
 
-      final ICalcJob job = m_calcJobFactory.createJob( "" + id, typeID, description, input );
+      final ICalcJob job = m_calcJobFactory.createJob( typeID );
 
-      if( id == m_jobs.size() )
-        m_jobs.add( job );
+      final String baseURL = ServiceConfig.createNewTempDir( "calcJob-" ).getAbsolutePath();
+
+      final CalcJobBean jobBean = new CalcJobBean( "" + id, description, typeID, WAITING_FOR_DATA,
+          -1, baseURL, null );
+      final CalcJobThread cjt = new CalcJobThread( job, jobBean );
+
+      if( id == m_threads.size() )
+        m_threads.add( job );
       else
-        m_jobs.set( id, job );
-      
-      return CalcJobHelper.createCalcJobBean( job );
+        m_threads.set( id, cjt );
+
+      return cjt.getJobBean();
     }
   }
-
 
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#cancelJob(java.lang.String)
@@ -122,29 +127,32 @@ public class CalcJobService_impl_Queued implements ICalculationService
    */
   public void disposeJob( final String jobID ) throws CalcJobServiceException
   {
-    // todo: check threading issues
-    // - maybe the job has already beeen canceled, but its thread has not yet returned
-    final ICalcJob job = getJob( jobID );
-    
-    if( job.getState() == ICalcJobInfo.RUNNING )
+    final CalcJobThread cjt = getJobThread( jobID );
+
+    if( cjt.isAlive() )
       throw new CalcJobServiceException( "Cannot dispose a running job! Cancel it first.", null );
-    
-    job.disposeJob();
-    
-    synchronized( m_jobs )
+
+    cjt.job.disposeJob();
+
+    synchronized( m_threads )
     {
-      m_jobs.remove( job );
+      m_threads.remove( cjt );
     }
   }
 
   private ICalcJob getJob( final String jobID ) throws CalcJobServiceException
   {
-    for( final Iterator jIt = m_jobs.iterator(); jIt.hasNext(); )
-    {
-      final ICalcJob job = (ICalcJob)jIt.next();
+    return getJobThread( jobID ).job;
+  }
 
-      if( job.getId().equals( jobID ) )
-        return job;
+  private CalcJobThread getJobThread( final String jobID ) throws CalcJobServiceException
+  {
+    for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
+    {
+      final CalcJobThread cjt = (CalcJobThread)jIt.next();
+
+      if( cjt.getJobBean().getId().equals( jobID ) )
+        return cjt;
     }
 
     throw new CalcJobServiceException( "Job not found: " + jobID, null );
@@ -152,37 +160,86 @@ public class CalcJobService_impl_Queued implements ICalculationService
 
   public final void readyJob( final String jobID ) throws CalcJobServiceException
   {
-    getJob( jobID ).setReady();
+    final CalcJobBean jobBean = getJobThread( jobID ).getJobBean();
+    if( jobBean.getState() == WAITING_FOR_DATA )
+      jobBean.setState( WAITING );
+
+    throw new CalcJobServiceException( "Cannot ready job. State is: " + jobBean.getState(), null );
   }
 
-  public synchronized void scheduleJobs() 
+  public synchronized void scheduleJobs()
   {
     // count running thread
     int runningCount = 0;
-    for( final Iterator jIt = m_jobs.iterator(); jIt.hasNext(); )
+    for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
     {
-      final ICalcJob job = (ICalcJob)jIt.next();
-      if( job.getState() == ICalcJobInfo.RUNNING )
+      final CalcJobThread cjt = (CalcJobThread)jIt.next();
+      if( cjt.isAlive() )
         runningCount++;
     }
 
     // start not running threads, till maximum is reached
-    for( final Iterator jIt = m_jobs.iterator(); jIt.hasNext(); )
+    for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
     {
       if( runningCount >= MAX_THREADS )
         break;
 
-      final ICalcJob job = (ICalcJob)jIt.next();
+      final CalcJobThread cjt = (CalcJobThread)jIt.next();
 
-      if( job.getState() == ICalcJobInfo.WAITING )
+      if( cjt.getJobBean().getState() == WAITING )
       {
-          final Thread thread = new Thread( job, "CalcJobThread - " + job.getDescription() );
+        cjt.start();
 
-          m_threads.put( job, thread );
-          thread.start();
-
-          runningCount++;
+        runningCount++;
       }
     }
+  }
+
+  private final static class CalcJobThread extends Thread
+  {
+    public final ICalcJob job;
+
+    private final CalcJobBean jobBean;
+
+    public CalcJobThread( final ICalcJob job, final CalcJobBean jobBean )
+    {
+      this.job = job;
+      this.jobBean = jobBean;
+    }
+
+    public CalcJobBean getJobBean()
+    {
+      jobBean.setMessage( job.getMessage() );
+      jobBean.setResults( job.getResults() );
+      jobBean.setProgress( job.getProgress() );
+
+      return jobBean;
+    }
+
+    /**
+     * @see java.lang.Thread#run()
+     */
+    public void run()
+    {
+      jobBean.setState( RUNNING );
+
+      try
+      {
+        job.run( jobBean.getInputData() );
+
+        if( job.isCanceled() )
+          jobBean.setState( CANCELED );
+        else
+          jobBean.setState( FINISHED );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+
+        jobBean.setMessage( e.getLocalizedMessage() );
+        jobBean.setState( ERROR );
+      }
+    }
+
   }
 }
