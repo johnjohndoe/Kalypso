@@ -281,6 +281,8 @@ public class ResourcePool implements ILoaderListener
   {
     synchronized( this )
     {
+      m_logger.info( "Releasing key: " + key );
+      
       final BorrowObjectJob job = (BorrowObjectJob)m_jobs.get( key );
       if( job != null )
         job.cancel();
@@ -291,9 +293,6 @@ public class ResourcePool implements ILoaderListener
       if( listeners != null )
         listeners.clear();
       
-      // TODO: falls noch immer die comodifikation exception kommt, dies löschen
-//      m_listeners.remove( key );
-
       final Object object = m_objects.get( key );
       if( object != null )
       {

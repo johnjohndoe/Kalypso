@@ -121,7 +121,7 @@ public abstract class SetContentThread extends CatchThread
 
       // TODO: ugly! better to switch contents of this method and 'runIntern' of
       // inner thread
-      // tod be shure, that file is written when this thread exits
+      // to be shure, that file is written when this thread exits
       m_thread.join();
     }
   }

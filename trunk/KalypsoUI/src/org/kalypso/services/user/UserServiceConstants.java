@@ -7,8 +7,8 @@ import java.util.Arrays;
  */
 public class UserServiceConstants
 {
-  public static final String RIGHT_PROGNOSE = "Hochwasser Vorhersage";
-  public static final String RIGHT_EXPERT = "Modellpflege";
+  public static final String RIGHT_PROGNOSE = "Vorhersage";
+  public static final String RIGHT_EXPERT = "Experte";
   public static final String RIGHT_ADMIN = "Administration";
   
   // full list of rights

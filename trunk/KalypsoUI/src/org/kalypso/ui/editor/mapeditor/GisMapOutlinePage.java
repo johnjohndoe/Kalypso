@@ -294,7 +294,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void addElement( final Object elementBefore )
   {
-  // TODO
+  // todo
   }
 
   private final class SelectThemeRunner implements Runnable
@@ -334,8 +334,6 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-  // TODO: setactivetheme
-    
-    
+  // 
   }
 }

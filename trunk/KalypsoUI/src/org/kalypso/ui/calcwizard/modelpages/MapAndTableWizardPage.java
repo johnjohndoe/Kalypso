@@ -136,10 +136,10 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
   }
 
   /**
-   * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#getObservationsToShow()
+   * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#getObservationsToShow(boolean)
    */
-  protected TSLinkWithName[] getObservationsToShow()
+  protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
   {
-    return getObservationsFromMap( false );
+    return getObservationsFromMap( false, onlySelected );
   }
 }

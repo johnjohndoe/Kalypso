@@ -2,11 +2,9 @@ package org.kalypso.ogc.sensor.loaders;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.PipedInputStream;
 import java.io.Writer;
 import java.net.URL;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;

@@ -14,26 +14,26 @@ Version ...
 - Rechenfall neu: 
 	- 'Weiter' Knopf ist automatisch selektiert
 	- Bugfix: Fehler, falls im Navigator nichts selektiert war
-- Modeler Perspective: Standards für Menüs 'Neu' und 'Sicht anzeigen' überarbeitet
+- Modeler Perspective: Standardeinstellungen für Menüs 'Neu' und 'Sicht anzeigen' überarbeitet
 
-- ZmlObservation: wenn eine Zml vom Server geholt wird, wird sein ID als Metadata-Eintrag
+- ZmlObservation: wenn eine Zml vom Server geholt wird, wird ihre ID als Metadata-Eintrag
 	gespeichert.
 
 - PSICompactAdapter:
 	* Jetzt werden auch die Einheiten berücksichtigt und 
 	zwischen Kalypso und PSICompact konvertiert.
 	* Der ArchivTyp wird abhängig vom Datentyp genutzt. Z.B. Niederschläge
-	sollen Werte aus der Stundenarchiv lesen.
+	übernehmen Werte aus dem Stundenarchiv lesen.
 
 - InterpolationFilter: wenn die grundliegende Observation keine Werte liefert aber
-	fill ist gesetzt, dann werden lauter 'default' Werte im angegebenen Datumbereich
+	fill ist gesetzt, dann werden lauter 'default' Werte im angegebenen Datumsbereich
 	erzeugt.
 
 - PSICompactImpl: unsere Fake Implementation basiert jetzt auf ZMLs die in der Jar
 	über die PSICompact ID-Liste verknüpft sind.
 	
 - Diagramm und Grafik-Tool:
-	* N wird als durchsichtige Balke dargestellt
+	* N wird transparent dargestellt
 	* Alarmstufen, Prognosestart werden dargestellt
 	
 - Zeitreihen Repository Browser:
@@ -41,7 +41,7 @@ Version ...
 
 - GIS Darstellung:
 	Koordinatensystem aller Karten ist jetzt Gauss-Krüger 5
-	Die fehlenden Gewässer der Spree wurden in der Überischtskarte ergänzt
+	Die fehlenden Gewässer der Spree wurden in der Übersichtskarte ergänzt
 	
 - DWD Niederschlag-Vorhersage:
     automatisches Uebernehmen der DWD-Rasterdatei (Vorhersage)
@@ -66,4 +66,8 @@ Version ...
   Vielleicht koennen wir da spaeter eine bessere Loesung liefern, z.B. initial alle
   Pegel berechnen, verbunden mit einer optimierung, die bisher auch noch fehlt.
   Dann wuerden für alle WizzardSeiten zu Beginn (optimierte)Ergebnisse vorliegen.
+ 
+ - Spree-Modell:
+ 	- die Zeitreihen einer Art werden jetzt im Wizard jeweils gemeinsam in einer Tabelle dargestellt
+ 	
  
