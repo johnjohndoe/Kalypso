@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Generated-from: 1095333182000;type=2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.update.scheduler; singleton=true
+Bundle-Version: 3.0.0
+Bundle-ClassPath: scheduler.jar
+Bundle-Activator: org.eclipse.update.internal.scheduler.UpdateScheduler
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Provide-Package: org.eclipse.update.internal.scheduler,
+ org.eclipse.update.internal.scheduler.preferences
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui.ide;optional=true,
+ org.eclipse.ui.views;optional=true,
+ org.eclipse.jface.text;optional=true,
+ org.eclipse.ui.workbench.texteditor;optional=true,
+ org.eclipse.ui.editors;optional=true,
+ org.eclipse.update.core,
+ org.eclipse.update.ui,
+ org.eclipse.ui
+Eclipse-AutoStart: true

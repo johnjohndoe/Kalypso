@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Generated-from: 1092667444000;type=4
+Bundle-Name: Core Boot NL Support
+Bundle-SymbolicName: org.eclipse.core.boot.nl1
+Bundle-Version: 3.0.0
+Fragment-Host: org.eclipse.core.boot;bundle-version="[3.0.0,4.0.0)"
+Bundle-Localization: plugin

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>W_SCHIRG</name>
+    <metadataList>
+        <metadata name="Name" value="W_SCHIRG"/>
+        <metadata name="WQ-Parameter" value="&lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot; &gt;&lt;set&gt;&lt;params&gt;&lt;w1&gt;99.96&lt;/w1&gt;&lt;lnk1&gt;-8.43382&lt;/lnk1&gt;&lt;k2&gt;2.25920&lt;/k2&gt;&lt;wgr&gt;230.0&lt;/wgr&gt;&lt;/params&gt;&lt;params&gt;&lt;w1&gt;89.99&lt;/w1&gt;&lt;lnk1&gt;-7.49066&lt;/lnk1&gt;&lt;k2&gt;2.03671&lt;/k2&gt;&lt;/params&gt;&lt;/set&gt;&lt;/wechmann&gt;"/>
+        <metadata name="Alarmstufe 1" value="250"/>
+        <metadata name="Alarmstufe 2" value="310"/>
+        <metadata name="Alarmstufe 3" value="430"/>
+        <metadata name="Alarmstufe 4" value="460"/>
+    </metadataList>
+    <axis datatype="TYPE=double" key="false" name="Wasserstand" type="W" unit="m">
+        <valueArray separator=";">1.70;1.70;1.70;1.82</valueArray>
+    </axis>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2004-04-27T01:00:00;2004-04-27T04:00:00;2004-04-27T07:00:00;2004-04-27T10:00:00</valueArray>
+    </axis>
+</observation>
+

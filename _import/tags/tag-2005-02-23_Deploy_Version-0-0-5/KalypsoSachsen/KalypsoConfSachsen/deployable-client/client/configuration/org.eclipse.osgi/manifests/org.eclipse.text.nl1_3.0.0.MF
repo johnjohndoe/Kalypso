@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Generated-from: 1092667482000;type=4
+Bundle-Name: Text NL Support
+Bundle-SymbolicName: org.eclipse.text.nl1
+Bundle-Version: 3.0.0
+Bundle-ClassPath: nl1.jar
+Fragment-Host: org.eclipse.text;bundle-version="[3.0.0,4.0.0)"
+Bundle-Localization: plugin

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org">
+    <extent bottom="5649475.530085669" left="5435992.405524718" right="5510043.933591098" top="5717425.15197364"/>
+    <layers active="ID_1">
+        <layer name="Vorhersagepegel (N-A Modell)" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+            <ns2:style linktype="sld" style="NA-Modelle" ns1:actuate="onRequest" ns1:href="project:/.styles/namodelle.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Eingabepegel (Talsperren)" visible="true" featurePath="TalsperreCollectionAssociation/TalsperreMember" id="ID_2" linktype="gml" ns3:actuate="onRequest" ns3:href="project:/modell.gml" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+            <ns4:style linktype="sld" style="Talsperren" ns3:actuate="onRequest" ns3:href="project:/.styles/talsperren.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Vorhersagepegel (Flußlaufmodell)" visible="true" featurePath="PegelCollectionAssociation/PegelMember[FlusslaufModell]" id="ID_3" linktype="gml" ns5:actuate="onRequest" ns5:href="project:/modell.gml" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
+            <ns6:style linktype="sld" style="Flusslaufmodelle" ns5:actuate="onRequest" ns5:href="project:/.styles/flusslaufmodelle.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Flutungen (Abzweige)" visible="true" featurePath="VorgabeCollectionAssociation/VorgabeMember[Flutung]" id="ID_4" linktype="gml" ns7:actuate="onRequest" ns7:href="project:/modell.gml" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
+            <ns8:style linktype="sld" style="Flutungen" ns7:actuate="onRequest" ns7:href="project:/.styles/flutungen.sld" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Eingabepegel (Zuflusse)" visible="true" featurePath="VorgabeCollectionAssociation/VorgabeMember[Zufluss]" id="ID_5" linktype="gml" ns9:actuate="onRequest" ns9:href="project:/modell.gml" ns9:type="simple" xmlns:ns9="http://www.w3.org/1999/xlink">
+            <ns10:style linktype="sld" style="Zufluesse" ns9:actuate="onRequest" ns9:href="project:/.styles/zufluesse.sld" ns9:type="simple" xmlns:ns10="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Gewässerverlauf" visible="true" featurePath="featureMember" id="ID_6" linktype="shape" ns11:actuate="onRequest" ns11:href="project:/Grunddaten/Shapes/gewässer#EPSG:31469" ns11:type="simple" xmlns:ns11="http://www.w3.org/1999/xlink">
+            <ns12:style linktype="sld" style="sachsenrivers" ns11:actuate="onRequest" ns11:href="project:/.styles/styles.sld" ns11:type="simple" xmlns:ns12="types.template.kalypso.org"/>
+        </layer>
+    </layers>
+</gismapview>
+

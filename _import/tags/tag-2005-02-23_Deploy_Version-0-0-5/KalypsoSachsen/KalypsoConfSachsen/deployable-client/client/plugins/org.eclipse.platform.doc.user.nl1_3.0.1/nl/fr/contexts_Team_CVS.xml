@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+   
+	<!-- ********************************** -->
+ 	<!-- TagSelectionDialog 				-->
+ 	<!-- ********************************** -->
+	
+	<context id="replace_tag_selection_dialog_context">
+   		<description>Vous avez choisi de remplacer les ressources sélectionnées par une balise de version ou de branche. Cette boîte de dialogue permet de sélectionner la balise à utiliser pour cette opération. Les ressources sélectionnées seront remplacées par les ressources balisées avec la balise sélectionnée. Si la balise recherchée n'apparaît pas dans la liste des versions ou des branches, cliquez sur"Régénérer à partir du référentiel" ou "Configurer les balises" pour rechercher automatiquement ou manuellement les balises existantes dans le référentiel. En désactivant la case à cocher "Reproduire dans les sous-dossiers", vous limitez l'opération aux dossiers sélectionnés ainsi qu'à leurs enfants directs et aux fichiers sélectionnés.</description>
+   		<topic label="Remplacement de ressources dans le plan de travail" href="tasks/tasks-103.htm" />
+   	</context>
+   	
+   	<context id="compare_tag_selection_dialog_context">
+   		<description>Vous avez choisi de comparer les ressources sélectionnées à une balise de version ou de branche. Cette boîte de dialogue permet de sélectionner la balise à utiliser pour cette opération. Les ressources sélectionnées seront comparées aux ressources balisées avec la balise sélectionnée. Si la balise recherchée n'apparaît pas dans la liste des versions ou des branches, cliquez sur"Régénérer à partir du référentiel" ou "Configurer les balises" pour rechercher automatiquement ou manuellement les balises existantes dans le référentiel.</description>
+        <topic label="Comparaison des ressources avec les versions du référentiel" href="tasks/tasks-101.htm" />
+   	</context>
+   	
+   	<context id="tag_remote_with_existing_dialog_context">
+   		<description>Vous avez choisi de baliser les ressources sélectionnées avec une balise de version ou de branche existante. Cette boîte de dialogue permet à l'utilisateur de sélectionner la balise à utiliser pour cette opération. Si la balise existe déjà dans une autre version d'une autre ressource sélectionnée, elle est déplacée dans la version de la sélection en cours. Si la balise recherchée n'apparaît pas dans la liste des versions ou des branches, cliquez sur"Régénérer à partir du référentiel" ou "Configurer les balises" pour rechercher automatiquement ou manuellement les balises existantes dans le référentiel. En désactivant la case à cocher "Reproduire dans les sous-dossiers", vous limitez l'opération aux dossiers sélectionnés ainsi qu'à leurs enfants directs et aux fichiers sélectionnés.</description>
+        <topic label="Déplacement des balises de version" href="tasks/tasks-105c.htm" />
+   	</context>
+   	
+   	<!-- ********************************** -->
+ 	<!-- TagAsVersionDialog 				-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="tag_as_version_dialog_context">
+   		<description>Entrez le nom de la version à utiliser pour baliser les ressources sélectionnées.</description>
+   		<topic label="Création d'une version de projet" href="tasks/tasks-100.htm" />
+   	</context>
+   	
+   	<!-- ********************************** -->
+ 	<!-- WizardPages 						-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="sharing_autoconnect_page_context">
+   		<description>Le projet local contient des informations CVS mais n'est pas enregistré comme projet CVS. Cette page affiche les informations CVS associées au projet local. Cliquez sur Fin pour enregistrer ce projet en tant que projet CVS et activer l'utilisation des options du menu CVS. Si l'option "Validation de la connexion à la fin" est activée, une tentative de connexion au serveur aura lieu.</description>
+		<topic label="Projet réservé à l'aide d'un autre outil CVS" href="tasks/tasks-117a.htm" />
+   	</context>
+   	
+   	<context id="sharing_select_repository_page_context">
+   		<description>Sélectionnez le référentiel de votre choix dans la liste des référentiels existants ou indiquez qu'un nouvel emplacement de référentiel sera créé.</description>
+ 		<topic label="Partage d'un nouveau projet à l'aide de CVS" href="tasks/tasks-117.htm" />
+   	</context>
+
+ 	<context id="sharing_new_repository_page_context">
+   		<description>Entrez les informations identifiant le référentiel auquel connecter le projet ainsi que les informations de connexion requises pour accéder à ce référentiel.</description>
+   		<topic label="Assistant Nouvel emplacement de référentiel" href="reference/ref-40.htm"/>
+		<topic label="Référentiels CVS" href="concepts/concepts-27c.htm"/>
+		<topic label="Création d'un emplacement de référentiel CVS" href="tasks/tasks-92.htm"/>
+	   	<topic label="Annulation d'un emplacement de référentiel CVS" href="tasks/tasks-94.htm"/>
+   	</context>
+
+ 	<context id="sharing_module_page_context">
+   		<description>Spécifiez le module distant avec lequel le projet local est partagé. Vous pouvez attribuer le nom du projet au module distant, indiquer un chemin de module personnalisé ou sélectionner un module existant. Dans les deux premiers cas, le nom est relatif au répertoire racine du référentiel et, s'il n'existe pas, le module distant est créé.</description>
+		<topic label="Partage d'un nouveau projet à l'aide de CVS" href="tasks/tasks-117.htm" />
+   	</context>
+
+ 	<context id="sharing_tag_selection_page_context">
+   		<description>Le projet partagé existe déjà sur la machine distante. Cette page permet de sélectionner la branche avec laquelle le projet sera partagé. Si la branche recherchée n'est pas HEAD et n'apparaît pas dans la liste des branches, cliquez sur "Régénérer à partir du référentiel" ou "Configurer les balises" pour rechercher automatiquement ou manuellement les balises qui existent dans le référentiel.</description>
+		<topic label="Partage d'un nouveau projet à l'aide de CVS" href="tasks/tasks-117.htm" />
+   	</context>
+   	
+ 	<context id="sharing_sync_page_context">
+   		<description>Inspectez les ressources à partager et déterminez les ressources qui doivent être partagées et celles qui doivent être ignorées. Si vous cliquez sur "Fin", une option vous permet de valider toutes les modifications (sortantes). </description>
+		<topic label="Partage d'un nouveau projet à l'aide de CVS" href="tasks/tasks-117.htm" />
+   	</context>
+
+ 	<context id="patch_selection_page_context">
+   		<description>Indiquez l'emplacement de sauvegarde de la sortie du correctif.</description>
+ 		<topic label="Utilisation de correctifs" href="tasks/tasks-68c.htm" />
+   	</context>
+
+ 	<context id="patch_options_page_context">
+   		<description>Indiquez plusieurs options utilisées pour générer le correctif.</description>
+   		<topic label="Utilisation de correctifs" href="tasks/tasks-68c.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_selection_page_context">
+   		<description>Sélectionne le mode à appliquer aux fichiers sélectionnés. L'option automatique permet de choisir entre le mode binaire et le mode ASCII par défaut spécifié dans les préférences CVS en fonction du type de fichier comme précisé à l'aide du registre des types de fichier d'équipe.</description>
+		<topic label="Définition du mode de substitution de mot clé CVS" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_summary_page_context">
+   		<description>Les fichiers dont le mode requiert une modification en fonction de l'entrée de l'assistant sont répertoriés. Eventuellement, les fichiers dont le mode ne requiert pas de modification peuvent être inclus dans la liste. Vous pouvez modifier le mode associé à un fichier de la liste en cliquant sur le mode du fichier et en sélectionnant un mode dans la liste.</description>
+		<topic label="Définition du mode de substitution de mot clé CVS" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_shared_page_context">
+   		<description>Indiquez si les fichiers déjà partagés avec le référentiel doivent être pris en compte pour d'éventuels changements. Si l'option d'inclusion des fichiers partagés est désactivée, seuls les nouveaux fichiers qui ont déjà été ajoutés au contrôle CVS seront pris en compte.</description>
+		<topic label="Définition du mode de substitution de mot clé CVS" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_changed_page_context">
+   		<description>Indiquez si les fichiers contenant des modifications sortantes doivent être pris en compte pour un éventuel changement de mode.</description>
+ 		<topic label="Définition du mode de substitution de mot clé CVS" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+   	
+    <context id="keyword_substituton_commit_comment_page_context">
+   		<description>Toutes les modifications de fin de ligne, issues de la conversion des fichiers du format binaire en ASCII seront validées par cette opération. Entrez un commentaire décrivant le contenu de cette validation.</description>
+		<topic label="Définition du mode de substitution de mot clé CVS" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+  
+ 	<context id="merge_start_page_context">
+   		<description>Dans la liste, sélectionnez une version du projet qui constituera le point de départ (base)
+de l'opération de fusion. Si la balise n'est pas disponible, essayez une régénération à partir du référentiel ou configurez les balises.</description>
+		<topic label="Fusion à partir d'une branche" href="tasks/tasks-100b.htm" />
+   		<topic label="Assistant de fusion" href="reference/ref-41a.htm"/> 
+   	</context>
+   	
+ 	<context id="merge_end_page_context">
+   		<description>Dans la liste, sélectionnez une version ou une branche qui servira de point final de la fusion.</description>
+		<topic label="Fusion à partir d'une branche" href="tasks/tasks-100b.htm" />
+   		<topic label="Assistant de fusion" href="reference/ref-41a.htm"/> 
+   	</context>
+   	
+   	<context id="checkout_module_selection_context">
+   		<description>Indiquez un ou plusieurs modules distants à réserver. Vous pouvez entrer le chemin du module ou choisir un ou plusieurs modules existants à réserver. Les modules existants ne sont pas extraits tant que l'option permettant de sélectionner un module existant n'est pas activée. </description>
+		<topic label="Réservation d'un projet à partir d'un référentiel CVS" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="checkout_configuration_context">
+   		<description>Indiquez la façon dont les modules sélectionnés doivent être réservés. Pour un ou plusieurs modules sélectionnés, vous avez la possibilité de les réserver sous forme de projets ou de dossiers dans un projet ou dossier déjà existant. Pour une sélection unique ne comportant pas de fichier .project dans le module distant, vous avez également la possibilité de configurer le projet à l'aide de l'assistant Nouveau projet. </description>
+		<topic label="Réservation d'un projet à partir d'un référentiel CVS" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="checkout_location_selection_context">
+   		<description>Indiquez l'emplacement du projet dans le système de fichiers local. Pour un projet unique, il s'agit de l'emplacement du répertoire de projet. Pour plusieurs projets, il s'agit de l'emplacement du répertoire parent des projets. </description>
+		<topic label="Réservation d'un projet à partir d'un référentiel CVS" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="checkout_tag_selection_page_context">
+   		<description>Indiquez la balise à utiliser pour les modules qui sont en cours de réservation. </description>
+   		<topic label="Réservation d'un projet à partir d'un référentiel CVS" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="update_tag_selection_page_context">
+   		<description>Indiquez la balise à utiliser pour cette mise à jour. </description>
+   		<topic label="Remplacement de ressources dans le plan de travail" href="tasks/tasks-103.htm" />
+   	</context>
+   	
+   	<context id="checkout_into_resource_selection_page_context">
+   		<description>Sélectionnez le dossier parent dans lequel les modules sélectionnés doivent être créer. Lors de la réservation d'un module unique, vous pouvez également indiquer le nom du dossier à créer. </description>
+   		<topic label="Réservation d'un dossier dans un projet existant" href="tasks/tasks-96b.htm"/> 
+   	</context>
+   	
+   	<context id="restore_from_repository_file_selection_page_context">
+   		<description>Parcourez les fichiers supprimés du référentiel et vérifiez la version de chaque fichier à restaurer dans l'espace de travail local.</description>
+		<topic label="Restauration des fichiers supprimés du référentiel" href="tasks/tasks-105a.htm" />
+   	</context>
+   	
+   	<context id="working_set_folder_selection_page_context">
+        <description>Sélectionnez les dossiers à ajouter au jeu de documents en tant que projets.</description>
+        <topic label="Exploration de balises de version et de branche" href="tasks/tasks-110.htm" />
+    </context>
+    
+   	<!-- ********************************** -->
+ 	<!-- TeamMenuActions 					-->
+ 	<!-- ********************************** -->
+	
+	<context  id="manage_action_context" >
+      <description>Ces options permettent d'effectuer des opérations de gestion de la version et de la configuration.</description>
+	</context>
+  
+	<context id="team_synchronize_action_context">
+   		<description>Affichage des différences entre l'état local et distant des ressources sélectionnées dans la vue Synchronisation.</description>
+   		<topic label="Partage d'un nouveau projet à l'aide de CVS" href="tasks/tasks-117.htm"/>
+ 		<topic label="Synchronisation avec le référentiel" href="tasks/tasks-115.htm"/>
+	 	<topic label="Mise à jour" href="tasks/tasks-113.htm"/>
+	 	<topic label="Validation" href="tasks/tasks-114.htm"/>
+   	</context>
+   	
+   	<context id="team_synchronize_outgoing_action_context">
+  		<description>Affichage des différences entre l'état local et l'état distant des ressources sélectionnées comportant des modifications sortantes dans la vue Synchronisation.</description>
+		<topic label="Synchronisation avec le référentiel" href="tasks/tasks-115.htm"/>
+	 	<topic label="Validation" href="tasks/tasks-114.htm"/>
+   	</context>
+
+ 	<context id="team_commit_action_context">
+    		<description>Validation des modifications sortantes des ressources sélectionnées vers le serveur.</description>
+   		<topic label="Validation" href="tasks/tasks-114.htm"/>
+   	</context>
+
+ 	<context id="team_update_action_context">
+   		<description>Mise à jour des ressources sélectionnées avec les modifications distantes.</description>
+   		<topic label="Mise à jour" href="tasks/tasks-113.htm"/>
+   	</context>
+
+ 	<context id="team_create_patch_action_context">
+   		<description>Création d'un correctif qui, lorsqu'il est appliqué à la base des ressources locales, double les ressources sélectionnées.</description>
+   		<topic label="Utilisation de correctifs" href="tasks/tasks-68c.htm"/>
+   	</context>
+
+ 	<context id="team_tag_as_version_action_context">
+   		<description>Balisage des ressources sélectionnées dans le référentiel avec un nom de version fourni par l'utilisateur.</description>
+   		<topic label="Création d'une version de projet" href="tasks/tasks-100.htm"/>
+   		<topic label="Versionnage des projets dans le référentiel" href="tasks/tasks-118.htm"/>
+   	</context>
+
+ 	<context id="team_branch_action_context">
+   		<description>Création d'une branche utilisant les ressources sélectionnées comme base et mise à jour facultative des ressources locales qui vont figurer sur la nouvelle branche.</description>
+   		<topic label="CVS" href="reference/ref-47.htm"/>
+ 		<topic label="Division en branches" href="tasks/tasks-100a.htm"/>
+   	</context>
+
+ 	<context id="team_merge_action_context">
+   		<description>Fusion des modifications d'une branche dans une autre.</description>
+   		<topic label="CVS" href="reference/ref-47.htm"/>
+   	</context>
+
+ 	<context id="team_set_keyword_mode_action_context">
+   		<description>Définition du mode de substitution de mot clé des ressources sélectionnées.</description>
+   		<topic label="Définition du type de contenu d'une extension de fichier" href="tasks/tasks-team-1.htm"/>
+   	</context>
+
+ 	<context id="team_disconnect_action_context">
+   		<description>Déconnexion du projet du contrôle CVS et suppression facultative des dossiers CVS.</description>
+		<topic label="Annulation d'un emplacement de référentiel CVS" href="tasks/tasks-94.htm"/>
+   	</context>
+
+ 	<context id="team_add_action_context">
+   		<description>Ajout des ressources sélectionnées au contrôle CVS en vue de leur validation et de leur partage.</description>
+   	</context>
+
+ 	<context id="team_ignore_action_context">
+   		<description>Ignorer les ressources sélectionnées de sorte qu'elles ne soient pas prises en compte lors du contrôle des versions.</description>
+   	</context>
+
+   	<context id="team_restore_from_repository_action_context">
+   		<description>chargement du contenu des fichiers ayant été supprimés du référentiel, afin qu'ils puissent être restaurés.</description>
+   	</context>
+   		
+   	<!-- ********************************** -->
+ 	<!-- Other Menu Actions 				-->
+ 	<!-- ********************************** -->
+	
+	<context id="compare_with_tag_action_context">
+   		<description>Comparaison des ressources sélectionnées aux ressources distantes correspondantes balisées avec une balise de branche ou de version spécifiée par l'utilisateur.</description>
+   		<topic label="Comparaison des ressources" href="tasks/tasks-68.htm"/>
+	 	<topic label="Comparaison des ressources avec les versions du référentiel" href="tasks/tasks-101.htm"/>
+   	</context>
+   	
+   	<context id="compare_with_latest_action_context">
+   		<description>Comparaison des ressources sélectionnées aux ressources distantes correspondantes associées à la même balise ou figurant sur la même branche.</description>
+   	</context>
+
+   	<context id="compare_with_revision_action_context">
+   		<description>Comparaison du fichier sélectionné à une révision du fichier spécifiée par l'utilisateur.</description>
+   		<topic label="Comparaison des ressources" href="tasks/tasks-68.htm"/>
+	 	<topic label="Comparaison des ressources avec les versions du référentiel" href="tasks/tasks-101.htm"/>
+   	</context>
+   	
+ 	<context id="replace_with_tag_action_context">
+   		<description>Remplacement des ressources sélectionnées par les ressources distantes correspondantes balisées avec une balise de branche ou de version spécifiée par l'utilisateur.</description>
+	 	<topic label="Remplacement de ressources dans le plan de travail" href="tasks/tasks-103.htm"/>
+   	</context>
+   	
+   	 <context id="replace_with_latest_action_context">
+   		<description>Remplacement des ressources sélectionnées par les ressources distantes correspondantes comportant la même balise ou figurant sur la même branche.</description>
+   	</context>
+    
+   	<context id="replace_with_revision_action_context">
+   		<description>Remplacement du fichier sélectionné par une révision du fichier spécifiée par l'utilisateur.</description>
+   		<topic label="Vue Navigateur" href="reference/ref-27.htm"/>
+	 	<topic label="Remplacement de ressources dans le plan de travail" href="tasks/tasks-103.htm"/>
+   	</context>
+   	
+   	<context id="checkout_into_action_context">
+   		<description>Réservation du dossier sélectionné dans un projet existant.</description>
+   		<topic label="Réservation d'un dossier dans un projet existant" href="tasks/tasks-96b.htm"/>
+   	</context>
+   	
+   	<context id="checkout_as_action_context">
+   		<description>Réservation du dossier sélectionné dans un projet configuré par l'utilisateur. Ce nouveau projet peut porter un nom différent du nom par défaut.</description>
+   	</context>
+   	
+   	<context id="checkout_as_project_action_context">
+   		<description>Réservation des dossiers sélectionnés dans des projets qui correspondent au nom de chaque dossier distant.</description>
+   		<topic label="Réservation d'un projet à partir d'un référentiel CVS" href="tasks/tasks-96.htm"/>
+   	</context>
+
+   	<context id="checkout_module_action_context">
+   		<description>Réservation des modules sélectionnés dans l'espace de travail local.</description>
+   	</context>
+   	   	
+   	<context id="open_remote_file_action_context">
+   		<description>Ouverture du contenu du fichier distant sélectionné dans un éditeur.</description>
+   	</context>
+
+ 	<context id="show_in_history_action_context">
+   		<description>Affichage de l'historique de la révision du fichier distant ou local sélectionné dans la vue Historique.</description>
+   		<topic label="Affichage de l'historique de révision d'un fichier" href="tasks/tasks-119.htm"/>
+   	</context>
+
+    <context id="confirm_merge_action_context">
+   		<description>Marquage des ressources sélectionnées comme fusionnées. Ceci modifie la base de la ressource locale afin de correspondre à celle de la modification entrante en conflit, de telle sorte que les modifications de la ressource locale soient validées. N'effectuez cette opération qu'après avoir manuellement accepté toutes les modifications entrantes devant être conservées.</description>
+   		<topic label="Mise à jour" href="tasks/tasks-113.htm"/>
+   	</context>
+   	
+    <context id="select_new_action_context">
+   		<description>Sélection de toutes les ressources, nouvelles ou n'ayant pas encore été ajoutées au contrôle CVS.</description>
+   	</context>
+   	
+ 	<context id="compare_remote_resources_action_context">
+   		<description>Comparaison des deux ressources distantes sélectionnées.</description>
+   		<topic label="Comparaison des ressources" href="tasks/tasks-68.htm"/>
+	 	<topic label="Comparaison des ressources avec les versions du référentiel" href="tasks/tasks-101.htm"/>
+   	</context>
+   	
+   	<context id="compare_remote_with_tag_action_context">
+   		<description>Compare la ressource sélectionnée à une autre branche ou version de la même ressource.</description>
+   	</context>
+   	
+   	<context id="copy_repository_name_action_context">
+   		<description>Copie du nom de l'emplacement du référentiel sélectionné dans le presse-papiers.</description>
+   	</context>
+   	
+   	<context id="remove_root_action_context">
+   		<description>Suppression des emplacements de référentiel sélectionnés dans la vue Référentiels.</description>
+   	</context>
+   	
+   	<context id="add_to_branch_context">
+   		<description>Ajoute le projet sélectionné à la liste de branches dans cette vue. Cette opération n'ajoute le projet qu'à la branche de la vue et n'a pas d'incidence sur le référentiel lui-même.</description>
+   	</context>
+   	
+   	<context id="move_remote_tag_action_context">
+   		<description>Balisage des ressources sélectionnées avec une balise spécifiée par l'utilisateur, en déplaçant la balise si nécessaire.</description>
+   	</context>
+   	
+   	<context id="tag_remote_action_context">
+   		<description>Balisage des ressources sélectionnées avec une balise spécifiée par l'utilisateur.</description>
+   	</context>
+
+   	<context id="show_comment_in_history_action_context">
+   		<description>Affiche le commentaire multiligne complet de l'entrée sélectionnée d'une sous-fenêtre de texte distincte.</description>
+   		<topic label="Vue Historique des ressources CVS " href="reference/ref-32a.htm"/>
+   	</context>
+   	
+   	<context id="show_tag_in_history_action_context">
+   		<description>Affiche la liste complète des balises pour l'entrée sélectionnée d'une sous-fenêtre de liste distincte.</description>
+   		<topic label="Vue Historique des ressources CVS " href="reference/ref-32a.htm"/>
+   	</context>
+   	
+   	<context id="tag_with_existing_action_context">
+   		<description>Balisage des ressources sélectionnées avec une balise spécifiée par l'utilisateur, en déplaçant la balise si nécessaire.</description>
+   	</context>
+   	
+   	<context id="select_working_set_action_context">
+   		<description>Ce filtre supprime tous les dossiers racine de la vue dont le nom ne correspond pas à un projet du jeu de documents sélectionné.</description>
+   	</context>
+   	
+   	<context id="deselect_working_set_action_context">
+   		<description>Cette action permet de supprimer le filtre de jeux de documents installé.</description>
+   	</context>
+   	
+    <context id="edit_working_set_action_context">
+   		<description>Cette action permet d'éditer le filtre de jeux de documents actuellement installé.</description>
+   	</context>
+   	
+ 	<!-- ********************************** -->
+ 	<!-- TagConfiguration 					-->
+ 	<!-- ********************************** -->
+	
+	<context id="refresh_tags_action_context">
+   		<description>Régénération des balises de branche et de version affichées dans la vue en contactant le serveur</description>
+   		<topic label="Exploration de balises de version et de branche" href="tasks/tasks-110.htm"/>
+   	</context>
+   	
+	<context id="refresh_remote_project_selection_page_context">
+   		<description>Régénération des balises de branche et de version pour les dossiers sélectionnés en contactant le serveur</description>
+   		<topic label="Exploration de balises de version et de branche" href="tasks/tasks-110.htm"/>
+   	</context>
+   	
+	<context  id="tag_configuration_overview" >
+   		<description>Configure les balises de branche et de version figurant dans le plan de travail. En parcourant les fichiers CVS éloignés pour rechercher des balises, vous pouvez choisir de façon sélective, dans la liste des balises de chaque fichier, celles devant être reconnues et les autres. Vous pouvez également sélectionner les fichiers qui seront automatiquement parcourus pour rechercher des balises.</description>
+   		<topic label="Exploration de balises de version et de branche" href="tasks/tasks-110.htm"/>
+   	</context>
+   
+    <context  id="tag_configuration_refreshlist" >
+      <description>Répertorie les fichiers qui seront automatiquement parcourus pour rechercher des balises. Le fichier .project est examiné par défaut. Cependant, dans certains cas, il se peut que d'autres fichiers contiennent un historique de balises plus complet et qu'il vaille mieux les parcourir à la place du fichier .project.</description>
+      <topic label="Exploration de balises de version et de branche" href="tasks/tasks-110.htm"/>
+   	</context>
+   
+   	<context  id="tag_configuration_refreshaction" >
+      <description>Fait correspondre les balises de branche et de version à partir des fichiers configurés pour être automatiquement parcourus pour rechercher des balises. Si les balises attendues n'apparaissent pas, essayez de modifier la liste des fichiers à examiner à l'aide de la boîte de dialogue de configuration des balises.</description>
+      <topic label="Exploration de balises de version et de branche" href="tasks/tasks-110.htm"/>
+   	</context>
+
+ 	<!-- ********************************** -->
+ 	<!-- Watch/Edit							-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="team_edit_action_context" >
+      <description>Notifie le serveur que vous souhaitez éditer ce fichier.</description>
+   	</context>
+   	
+   	<context  id="team_unedit_action_context" >
+      <description>Notifie le serveur que vous n'éditez plus le fichier et rétablit le contenu de la révision de base duquel il est dérivé.</description>
+   	</context>
+   	
+   	<context  id="team_show_editors_action_context" >
+      <description>Affiche tous les éditeurs de la ressource sélectionnée et ses enfants dans la vue Editeurs CVS.</description>
+   	</context>
+   	
+   	<context  id="cvs_editors_view_context" >
+      <description>Cette vue présente tous les éditeurs enregistrés d'un ou plusieurs fichiers.</description>
+   	</context>
+   	
+   	<context  id="editors_dialog_context" >
+      <description>Cette boîte de dialogue présente tous les éditeurs enregistrés du fichier que vous souhaitez éditer.</description>
+   	</context>
+   	
+   	<context  id="watch_edit_preference_page_context" >
+      <description>Cette page supporte la configuration de Contrôle/Edition CVS. En permettant l'utilisation de Contrôle/Edition, tous les fichiers sont extraits du serveur et réservés en lecture seulement. L'édition d'un fichier le rend accessible en écriture et envoie une notification d'édition au serveur.</description>
+   	</context>
+   	
+ 	<!-- ********************************** -->
+ 	<!-- Dialogs					        -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="release_comment_dialog_context">
+       <description>Entrez un commentaire décrivant le contenu de cette validation.</description>
+    </context>
+   	<context id="user_validation_dialog_context">
+      <description>Dans cette boîte de dialogue, entrez les informations appropriées pour la connexion au référentiel.</description> 
+    </context>
+    <context id="tag_local_as_version_dialog_context">
+      <description>Entrez le nom de la balise de version à appliquer aux révisions qui existent en local.</description>
+    </context>
+    <context id="branch_dialog_context">
+		<description>Cette boîte de dialogue permet d'indiquer le nom de la branche que vous souhaitez créer et, le cas échéant, de commencer à travailler dans la branche en mettant à jour la balise des ressources locales pour qu'elles correspondent à la balise de banche nouvellement créée.</description>
+    </context>
+    <context id="add_to_cvsignore_context">
+    	<description>Cette boîte de dialogue permet de choisir la méthode d'ajout des ressources sélectionnées aux fichiers .cvsignore. Pour chaque ressource à ignorer, un fichier .cvsignore est créé dans son répertoire parent et contient le masque spécifié dans la boîte de dialogue. Ces paramètres n'affectent pas les ressources déjà soumises au contrôle de version.</description>
+    </context>
+    <context id="add_to_version_control_dialog_context">
+    	<description>Sélectionnez les nouvelles ressources à ajouter au contrôle de version avant validation. Toutes les ressources énoncées dans cette boîte de dialogue qui ne sont pas préalablement ajoutées ne seront pas validées sur le serveur.</description>
+    </context>
+    <context id="disconnect_action_context">
+    	<description>Cette boîte de dialogue permet de déconnecter le projet du contrôle CVS. La conservation des méta-informations CVS permet au projet d'être aisément partagé ou utilisé avec d'autres outils CVS.</description>
+    </context>
+    <context id="history_filter_dialog_context">
+        <description>Cette boîte de dialogue permet de spécifier les filtres qui réduisent le nombre d'entrées affichées dans la vue Historique. </description>
+    </context>
+    <context id="date_tag_dialog_context">
+        <description>Cette boîte de dialogue permet d'indiquer une balise de date servant à extraire les ressources qui figuraient dans le référentiel à ce moment-là. </description>
+    </context>
+    <context id="keyboard_interactive_dialog_context">
+        <description>Cette boîte de dialogue permet d'effectuer une authentification interactive par le clavier pour une connexion CVS. </description>
+    </context>
+    
+ 	<!-- ********************************** -->
+ 	<!-- Preference Pages 					-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="prune_empty_directories_pref" >
+      <description>Permet d'éliminer les répertoires vides dans les vues de mise à jour et de synchronisation. Bien que les répertoires éliminés ne s'affichent pas dans le plan de travail, un répertoire vide figure quand même dans le référentiel.</description>
+   	</context>
+   	
+   	<context  id="quietness_level_pref" >
+      <description>Définit le nombre d'impression CVS d'informations de statut pour une option. En mode semi-silencieux, l'impression de messages d'information non importants est supprimée. Le concept d'importance dépend de chaque option. En mode totalement silencieux, toutes les sorties sauf les informations absolument nécessaires à l'exécution de la commande sont supprimées. En mode totalement silencieux, certains serveur CVS peuvent ne pas communiquer d'importantes informations sur des erreurs ayant eu lieu. Envisagez plutôt le mode semi-silencieux.</description>
+   	</context>
+   	
+  	<context  id="compression_level_pref" >
+      <description>Définit le niveau de compression des communications avec le serveur s'il est pris en charge par le serveur. Le niveau 1 correspond au niveau minimal de compression (communication plus lente mais moins d'UC nécessaire) et le niveau 9 au niveau maximal de compression (communication plus rapide mais plus d'UC nécessaire).</description>
+   	</context>
+
+	<context  id="default_keywordmode_pref" >
+      <description>Définit le mode de substitution du mot clé par défaut à utiliser pour les fichiers ASCII.</description>
+      <topic label="Définition du mode de substitution de mot clé CVS" href="tasks/tasks-cvs-11.htm"/>
+   	</context>
+   	
+	<context  id="comms_timeout_pref" >
+      <description>Définit la délai d'expiration en secondes d'une connexion au serveur CVS.</description>
+   	</context>
+   	
+   	<context  id="consider_content_pref" >
+      <description>Définit la méthode de comparaison par défaut pour la comparaison et la synchronisation des ressources CVS. Par défaut, les horodatages sont utilisés pour comparer les fichiers CVS. Il s'agit de la méthode la plus rapide. Toutefois, dans certains cas, vous pouvez procéder à une comparaison plus précise en comparant le contenu des fichiers. Ce paramètre peut être modifié à partir d'un éditeur de comparaison ou dans la vue Synchronisation.</description>
+   	</context>
+   	
+	<context  id="replace_deletion_of_unmanaged_pref" >
+      <description>Permet de supprimer des ressources qui n'ont pas été soumises au contrôle CVS lors de leur remplacement par d'autres ressources dans le référentiel.</description>
+   	</context>
+   	
+    <context  id="save_dirty_editors_pref" >
+      <description>Configure ce qui s'est produit lorsque des éditeurs ouverts contiennent des modifications non sauvegardées au cours de l'exécution d'une opération CVS.</description>
+   	</context>
+   	
+   	<context  id="treat_new_files_as_binary_pref" >
+      <description>Détermine si tous les nouveaux fichiers doivent être traités sous forme de fichiers binaires. Si cette option est désactivée, les préférences de type de contenu des fichiers d'équipe sont utilisées pour détermine le type de fichier.</description>
+      <topic label="Définition du type de contenu d'une extension de fichier" href="tasks/tasks-team-1.htm"/>
+   	</context>
+   	
+   	<context  id="determine_server_version" >
+      <description>Définit si la version du serveur doit être demandée lors de la première connexion afin de déterminer la compatibilité.</description>
+   	</context>
+
+   	<context  id="confirm_move_tag" >
+      <description>Indique si l'utilisateur doit confirmer l'opération lorsqu'il lance une procédure nécessitant le déplacement d'une balise existante. </description>
+   	</context>
+   	
+   	<context  id="line_end_pref" >
+      <description>Indique si les terminaisons de ligne des fichiers texte doivent être converties en terminaisons de ligne de plateforme ou conservées en l'état lorsque des fichiers sont téléchargés à partir du serveur. </description>
+   	</context>
+
+   	<context  id="console_preference_page_context" >
+      <description>Cette page prend en charge la configuration de la console CVS. Les propriétés qui peuvent être définies sont les couleurs de sortie et la police du texte. La console peut également être configurée de sorte qu'elle s'ouvre automatiquement lorsqu'il existe une sortie.</description>
+   	</context>
+
+   	<context  id="ext_preference_page_context" >
+      <description>Cette page prend en charge la configuration des paramètres de connexion EXT.</description>
+      <topic label="CVS" href="reference/ref-47.htm"/>
+      <topic label="CVS" href="reference/ref-19cvs.htm"></topic>
+   	</context>
+   	
+   	<context id="ext_preference_rsh_context">
+		<description>Ce programme est appelé pour la connexion au serveur CVS distant. La commande RSH est invoquée à l'aide du schéma d'appel suivant : &lt;CVS_RSH&gt; &lt;Parameters&gt; &lt;CVS_SERVER&gt;</description> 
+	</context>
+	
+	<context id="ext_preference_param_context">
+		<description>Le schéma de paramètre par défaut est {host} -l {user}. Il peut être personnalisé à l'aide de {host}, {user}, {password} et {port}.</description>
+	</context>
+	
+	<context id="ext_preference_server_context">
+		<description>Nom du programme du serveur CVS éloigné. Ne modifiez ce paramètre que si le nom du serveur CVS éloigné est différent de celui par défaut.</description>
+	</context>
+
+   	<context  id="decorators_preference_page_context" >
+      <description>Cette page prend en charge la configuration des décorations d'icônes et d'intitulés CVS.</description>
+      <topic label="CVS" href="reference/ref-19cvs.htm"></topic>
+      <topic label="Activation des décorations de ressources CVS" href="tasks/tasks-107b.htm"/>
+   	</context>
+   	
+   	<context  id="password_management_preference_page_context" >
+      <description>Cette page permet de déterminer les emplacements de référentiel dans lesquels des informations d'authentification sont mises en cache et de purger ces informations. </description>
+		<topic label="CVS" href="reference/ref-19cvs.htm"></topic>
+   	</context>
+   	   	   	   	
+   	<!-- ********************************** -->
+ 	<!-- Views					            -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="console_view_context" >
+      <description>Cette vue affiche la sortie des opérations CVS.</description>
+      <topic label="Programmation en équipe avec CVS" href="concepts/concepts-26.htm"/>
+   	</context>
+   	<context  id="repositories_view_context" >
+      <description>Cette vue permet de parcourir le contenu des référentiels CVS connus et de réserver des modules dans l'espace de travail local sous la forme de projets.</description>
+		<topic label="Vue Référentiels CVS " href="reference/ref-32.htm"/>
+		<topic label="Régénération de la vue Référentiels CVS" href="tasks/tasks-93.htm"/>
+   	</context>
+   	<context  id="resource_history_view_context" >
+      <description>Cette vue affiche l'historique de révision d'un fichier soumis au contrôle CVS.</description>
+      <topic label="Vue Historique des ressources CVS " href="reference/ref-32a.htm"/>
+      <topic label="Affichage de l'historique de révision d'un fichier" href="tasks/tasks-119.htm"/>
+   	</context>
+   	<context  id="catchup_release_viewer_context" >
+      <description>Cette vue affiche les modifications entrante, sortantes et en conflit.</description>
+      <topic label="Vue Synchronisation CVS" href="reference/ref-33.htm"/>
+		<topic label="Synchronisation avec le référentiel" href="tasks/tasks-115.htm"/>
+   	</context>
+   	<context  id="compare_revision_view_context" >
+      <description>Cette vue permet de comparer la copie locale d'un fichier avec les révisions figurant dans le référentiel. Les opérations disponibles pour une révision sont "Obtenir le contenu" et "Obtenir la révision". Bien que les deux options remplacent le fichier local avec le contenu de la révision distante, "Obtenir la révision" rend le fichier local "fixe". Cela signifie que les modifications apportées au fichier ne peuvent pas être validées dans le référentiel.</description>
+   	</context>
+    <context  id="annotate_view_context" >
+      <description>Cette vue affiche les annotations des utilisateurs et des révisions définies pour un fichier dans le référentiel CVS. </description>
+   	</context>
+   	
+   	
+   	<!-- ********************************** -->
+ 	<!-- Actions					        -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="get_file_revision_action_context" >
+      <description>Permet de charger la révision du fichier dans l'espace de travail. Le fichier sera "fixe" et l'utilisateur ne pourra pas valider les modifications dans le référentiel.</description>
+   	</context>
+ 	<context  id="get_file_contents_action_context" >
+      <description>Permet de charger le contenu du fichier dans l'espace de travail. La révision de base du fichier local ne changera pas et le fichier sera modifié. Effectuez cette action si vous souhaitez rétablir le contenu d'une version antérieure du fichier.</description>
+   	</context>
+   	<context  id="get_annotate_action_context" >
+      <description>Exécute l'option d'annotation CVS sur la ressource sélectionnée. Cette option permet d'afficher la ressource avec le fournisseur et la révision indiqués pour chaque ligne. </description>
+   	</context>
+   	<context  id="new_repository_location_action_context" >
+      <description>Permet de créer un emplacement de référentiel CVS et de l'ajouter dans la vue Référentiels CVS.</description>
+      <topic label="Création d'un emplacement de référentiel" href="tasks/tasks-92.htm"/>
+   	</context>
+   	<context  id="new_dev_eclipse repository_location_action_context" >
+      <description>Permet de créer un emplacement de référentiel CVS pour dev.eclipse.org et de l'ajouter dans la vue Référentiels CVS.</description>
+      <topic label="Création d'un emplacement de référentiel" href="tasks/tasks-92.htm"/>
+   	</context>
+   	<context  id="show_remote_folders_action_context" >
+      <description>Modifie la vue Référentiels CVS de sorte qu'elle affiche des dossiers.</description>
+      <topic label="Vue Référentiels CVS " href="reference/ref-32.htm"/>
+   	</context>
+   	<context  id="show_remote_modules_action_context" >
+      <description>Modifie la vue Référentiels CVS de sorte qu'elle affiche les modules définis dans le fichier CVSROOT/modules.</description>
+      <topic label="Vue Référentiels CVS " href="reference/ref-32.htm"/>
+   	</context>
+   		
+   	<!-- ********************************** -->
+ 	<!-- Sync Actions					    -->
+ 	<!-- ********************************** -->
+ 	
+   	<context id="sync_commit_action_context" >
+      <description>Permet de valider les modifications sortantes sélectionnées apportées au référentiel CVS. Les modifications en conflit ne sont pas validées ; pour les valider, vous devez utiliser l'opération de remplacement et de validation.</description>
+   	</context>
+   	
+   	<context id="sync_forced_commit_action_context">
+      <description>Permet de valider les modifications en conflit et entrantes apportées au référentiel CVS. Les modifications sortantes qui ne sont pas en conflit ne sont pas validées ; pour les valider, vous devez utiliser l'opération de validation.</description>
+   	</context>
+	
+	<context id="sync_update_action_context">
+      <description>Permet d'obtenir les modifications entrantes sélectionnées à partir du référentiel CVS. Les modifications en conflit ne sont pas mises à jour ; pour les mettre à jour, vous devez utiliser l'opération de remplacement et de mise à jour.</description>
+   	</context>
+	
+	<context id="sync_forced_update_action_context">
+      <description>Permet d'obtenir les modifications sortantes et en conflit sélectionnées à partir du référentiel CVS. Les modifications entrantes qui ne sont pas en conflit ne sont pas mises à jour ; pour les mettre à jour, vous devez utiliser l'opération de mise à jour. Si certaines des ressources sélectionnées peuvent être fusionnées automatiquement (si elles ne sont pas en conflit à la base), vous pouvez effectuer une fusion automatique ou remplacer leur contenu par le contenu distant.</description>
+   	</context>
+	
+	<context id="sync_add_action_context">
+      <description>Ajout des ressources sélectionnées au contrôle CVS.</description>
+   	</context>
+	
+	<context id="sync_ignore_action_context">
+      <description>Ajout des ressources sélectionnées au fichier .cvsignore approprié. Ces ressources ne seront plus prises en compte pour les opérations de référentiel.</description>
+   	</context>
+	
+	<context id="merge_update_action_context">
+      <description>Permet d'obtenir les modifications entrantes sélectionnées à partir du référentiel CVS. Les modifications en conflit ne sont pas mises à jour ; pour les mettre à jour, vous devez utiliser l'opération de remplacement et de mise à jour.</description>
+   	</context>
+	
+	<context id="merge_forced_update_action_context">
+      <description>Permet d'obtenir les modifications en conflit sélectionnées à partir du référentiel CVS. Les modifications entrantes qui ne sont pas en conflit ne sont pas mises à jour ; pour les mettre à jour, vous devez utiliser l'opération de mise à jour. Si certaines des ressources sélectionnées peuvent être fusionnées automatiquement (si elles ne sont pas en conflit à la base), vous pouvez effectuer une fusion automatique ou remplacer leur contenu par le contenu distant.</description>
+   	</context>
+	
+	<context id="merge_update_with_joinaction_context">
+      <description>Permet d'obtenir les modifications en conflit sélectionnées à partir du référentiel CVS. Les modifications entrantes qui ne sont pas en conflit ne sont pas mises à jour ; pour les mettre à jour, vous devez utiliser l'opération de mise à jour. Lors de la fusion, il est difficile de détecter si les conflits peuvent être fusionnés automatiquement (s'ils n'ont pas de conflits de base). Si vous pensez que le fichier peut être fusionné automatiquement, utilisez cette opération. Vous pourrez ensuite procéder à une fusion automatique ou remplacer le contenu par le contenu distant.</description>
+   	</context>
+
+   	<!-- ********************************** -->
+ 	<!-- Properties pages				    -->
+ 	<!-- ********************************** -->
+ 	
+   	<context id="repository_location_property_page_context" >
+      <description>Cette page affiche les propriétés d'un emplacement de référentiel et permet la modification de la méthode de connexion, du nom d'utilisateur et du mot de passe. Si des propriétés sont modifiées dans cette page, les modifications s'appliquent à tous les projets partagés avec cet emplacement.</description>
+      <topic label="Modification des propriétés d'un emplacement de référentiel CVS" href="tasks/tasks-95.htm"/>
+   	</context>
+   	
+   	<context id="repository_encoding_property_page_context" >
+      <description>Cette page permet de définir le codage de système de fichiers utilisé par le serveur qui héberge le référentiel. Définissez ce paramètre correctement pour vous assurer que les noms de fichier et les messages de validation sont convertis de façon appropriée. Ce paramètre n'a aucune incidence sur le contenu des fichiers. </description>
+   	</context>
+
+   	<context id="project_property_page_context" >
+      <description>Cette page affiche les propriétés CVS du projet. Les informations de partage CVS du projet peuvent être placées dans un autre emplacement de référentiel compatible.</description>
+      <topic label="Modification du partage d'un projet" href="tasks/tasks-117b.htm"/>
+   	</context>
+   	
+   	<context id="folder_property_page_context" >
+      <description>Cette page affiche les propriétés CVS du dossier.</description>
+   	</context>
+   	
+   	<context id="file_property_page_context" >
+      <description>Cette page affiche les propriétés CVS du fichier.</description>
+   	</context>
+   		
+</contexts>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.eclipse.tomcat"
+   name="%pluginName"
+   version="4.1.30"
+   provider-name="%providerName"
+   class="org.eclipse.tomcat.internal.TomcatPlugin">
+
+   <runtime>
+      <library name="tomcatwrapper.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.tomcat"/>
+      </library>
+<!-- these are tomcat jar files -->
+      <library name="catalina.jar">
+         <packages prefixes="org.apache.catalina,org.apache.service"/>
+      </library>
+      <library name="bootstrap.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.catalina,org.apache.naming,org.apache.service"/>
+      </library>
+      <library name="commons-beanutils.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.commons.beanutils"/>
+      </library>
+      <library name="commons-collections.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.commons.collections"/>
+      </library>
+      <library name="commons-digester.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.commons.digester"/>
+      </library>
+      <library name="commons-logging.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.commons.logging"/>
+      </library>
+      <library name="commons-logging-api.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.commons.logging"/>
+      </library>
+      <library name="commons-modeler.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.commons.modeler"/>
+      </library>
+      <library name="jakarta-regexp-1.3.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.regexp"/>
+      </library>
+      <library name="jasper-compiler.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.jasper"/>
+      </library>
+      <library name="jasper-runtime.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.jasper"/>
+      </library>
+      <library name="mx4j-jmx.jar">
+         <export name="*"/>
+         <packages prefixes="javax.management,mx4j"/>
+      </library>
+      <library name="naming-common.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.naming"/>
+      </library>
+      <library name="naming-factory.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.naming.factory"/>
+      </library>
+      <library name="naming-resources.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.naming.resources"/>
+      </library>
+      <library name="servlet.jar">
+         <export name="*"/>
+         <packages prefixes="javax.servlet"/>
+      </library>
+      <library name="servlets-common.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.catalina.servlets"/>
+      </library>
+      <library name="servlets-default.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.catalina.servlets"/>
+      </library>
+      <library name="servlets-invoker.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.catalina.servlets"/>
+      </library>
+      <library name="servlets-manager.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.catalina.servlets"/>
+      </library>
+      <library name="tomcat-coyote.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.coyote"/>
+      </library>
+      <library name="tomcat-http11.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.coyote.http11"/>
+      </library>
+      <library name="tomcat-util.jar">
+         <export name="*"/>
+         <packages prefixes="org.apache.tomcat.util"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.help.appserver"/>
+      <import plugin="org.apache.ant"/>
+      <import plugin="org.eclipse.core.runtime"/>
+   </requires>
+
+
+   <extension
+         id="appserver"
+         name="%appserver"
+         point="org.eclipse.help.appserver.server">
+      <server
+            default="true"
+            class="org.eclipse.tomcat.internal.TomcatAppServer">
+      </server>
+   </extension>
+
+</plugin>

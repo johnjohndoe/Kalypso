@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+  <context id="file_selection_dialog_context">
+    <description>Cette boîte de dialogue permet de sélectionner un fichier dans l'espace de travail.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="message_with_toggle_dialog_context">
+    <description>Cette boîte de dialogue permet d'afficher ou de masquer la boîte de dialogue générée par une action spécifique. </description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="preference_page_context">
+    <description>Sur cette page, vous pouvez configurez les préférences des outils externes.</description>
+   	<topic label="Préférences - Outils externes" href="reference/ref-exttoolsprefs.htm"/>    
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="builder_property_page_context">
+    <description>Sur cette page, vous pouvez configurer les compilateurs des outils externes qui sont exécutés lorsque ce projet est compilé.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="builders_tab_context">
+    <description>Cet onglet vous permet de configurer quand cette compilation de projet sera exécutée.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="program_main_tab_context">
+    <description>Cet onglet vous permet de configurer l'emplacement du programme ainsi que d'autres attributs de cette configuration de lancement.</description>
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+</contexts>

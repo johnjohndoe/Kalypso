@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<calcwizard xmlns="xml.model.kalypso.org" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+<!-- KONTROLLE DER ZEITREIHEN -->
+
+	<!-- Kontrolle N -->
+    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
+
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="1"/>
+        <arg name="zmlTableShow" value="all"/>
+
+        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Niederschlag_rechnung"/>
+        
+       	<arg name="maximizeMap" value="true"/>
+    </page>
+
+	<!-- Kontrolle Talsperrenabgaben -->
+    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Talsperrenabgaben" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>
+
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="4"/>
+        <arg name="zmlTableShow" value="all"/>
+        
+        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - Abgabe#linkColumn=Abgabe"/>
+        
+       	<arg name="maximizeMap" value="true"/>
+    </page>
+
+	<!-- Kontrolle W-Eingabepegel -->
+    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
+
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="2"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="ignoreType1" value="Q"/>
+
+        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beobachtung#linkColumn=Wasserstand_gemessen"/>
+        
+       	<arg name="maximizeMap" value="true"/>
+    </page>
+
+	<!-- Kontrolle W-Eingabepegel -->
+    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/flusslauf.gmt"/>
+
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="2"/>
+        <arg name="zmlTableShow" value="all"/>
+		<arg name="ignoreType1" value="Q"/>
+		
+        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beobachtung#linkColumn=Wasserstand_gemessen"/>
+        
+       	<arg name="maximizeMap" value="true"/>
+    </page>
+
+	<!-- Kontrolle Flutungen und Zuflüsse -->
+    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Flutungen und Zuflüsse" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/vorgabepegel.gmt"/>
+
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="16"/>
+        <arg name="zmlTableShow" value="all"/>
+        
+        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Abfluss"/>
+        
+       	<arg name="maximizeMap" value="true"/>
+    </page>
+
+<!-- KALIBRIERUNG -->
+
+	<!-- Eingabe NA-Modelle -->
+    <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe NA-Modelle" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
+        <arg name="tableTemplate" value=".templates/calcCase/ezg.gtt"/>
+        <arg name="diagTemplate" value=".templates/calcCase/ezg.odt"/>
+
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="30"/>
+        <arg name="selectionID" value="32"/>
+        
+        <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
+
+        <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
+        <arg name="timeserie2" value="nameString=%axisname% - Beobachtung#linkColumn=Wasserstand_gemessen"/>
+        <arg name="timeserie3" value="nameString=%axisname% - Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
+        <arg name="timeserie4" value="nameString=%axisname% - Vorhersage#linkColumn=Wasserstand_vorhersage"/>
+        
+       	<arg name="maximizeMap" value="true"/>
+    </page>
+
+	<!-- Eingabe Talsperren -->
+    <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Talsperren" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>
+        <arg name="tableTemplate" value=".templates/calcCase/talsperren.gtt"/>
+        <arg name="diagTemplate" value=".templates/calcCase/talsperren.odt"/>
+
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="30"/>
+        <arg name="selectionID" value="64"/>
+
+        <arg name="ignoreType1" value="V"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Volumen"/>
+
+        <arg name="timeserie1" value="nameString=%axisname% - Eingabe#linkColumn=Abgabe"/>
+        <arg name="timeserie2" value="nameString=%axisname% - Plausibilisierung#linkColumn=Abgabe_plausibilisiert#color=0xff0000"/>
+        <arg name="timeserie3" value="nameString=%axisname% - Zufluss Berechnung#linkColumn=Zufluss_berechnet#color=0x00ff00"/>
+        <arg name="timeserie4" value="nameString=%axisname% - Stauinhalt#linkColumn=Stauinhalt"/>
+        
+       	<arg name="maximizeMap" value="true"/>
+    </page>
+
+	<!-- Eingabe Flusslaufmodelle -->
+    <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Flusslaufmodelle" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/flusslauf.gmt"/>
+        <arg name="tableTemplate" value=".templates/calcCase/flusslauf.gtt"/>
+        <arg name="diagTemplate" value=".templates/calcCase/flusslauf.odt"/>
+
+        <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
+
+        <arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Wasserstand_gemessen"/>
+        <arg name="timeserie2" value="nameString=%axisname% - Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
+        <arg name="timeserie3" value="nameString=%axisname% - Vorhersage#linkColumn=Wasserstand_vorhersage"/>
+
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="30"/>
+        <arg name="selectionID" value="128"/>
+        
+       	<arg name="maximizeMap" value="true"/>
+    </page>
+
+	<!-- Ergebnisablage -->
+	<page className="org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage"
+	   pageTitle="Ergebnisbearbeitung und Veröffentlichung"
+	   imageLocation="icons/calcwizard/kalypso32.gif" >
+	   	<arg name="mapTemplate" value="project:.templates/calcCase/pegel.gmt"/>
+	
+	        <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
+	        <arg name="timeserie2" value="nameString=%axisname% - Beobachtung#linkColumn=Wasserstand_gemessen"/>
+	        <arg name="timeserie3" value="nameString=%axisname% - Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
+	        <arg name="timeserie4" value="nameString=%axisname% - Vorhersage#linkColumn=Wasserstand_vorhersage"/>
+		
+		<arg name="ignoreType1" value="W"/>
+	        <arg name="ignoreType2" value="Q"/>
+	        <arg name="ignoreLabel1" value="Abfluss"/>
+	        <arg name="ignoreLabel2" value="Wasserstand"/>
+		
+		<arg name="pegelNameProperty" value="Name"/>
+		<arg name="resultProperty" value="Wasserstand_vorhersage"/>
+		<arg name="prognoseProperty" value="Wasserstand_vorhersageAblage"/>
+
+	   	<arg name="mainSash" value="40"/>
+	   	<arg name="rightSash" value="25"/>
+	   	<arg name="selectionID" value="256"/>
+
+	   	<arg name="exporter2">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.ZmlTableExporter"/>
+	   		<arg name="name" value="Tabelle"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtTabelle.ott"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Wasserstand_vorhersage"/>
+			</arg>
+	   	</arg>
+	   	<arg name="exporter3">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
+	   		<arg name="name" value="Abflussgrafik"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
+	   		<arg name="width" value="1024"/>
+	   		<arg name="height" value ="768"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Wasserstand_gemessen"/>
+    			<arg name="href2" value="Wasserstand_gerechnet"/>
+				<arg name="href3" value="Wasserstand_vorhersage"/>
+    			<arg name="href4" value="Niederschlag_rechnung"/>
+			</arg>
+	   	</arg>
+	   	
+	   	<arg name="exporter4">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
+	   		<arg name="name" value="Wasserstandgrafik"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagW.odt"/>
+	   		<arg name="width" value="1024"/>
+	   		<arg name="height" value ="768"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Wasserstand_gemessen"/>
+    			<arg name="href2" value="Wasserstand_gerechnet"/>
+				<arg name="href3" value="Wasserstand_vorhersage"/>
+    			<arg name="href4" value="Niederschlag_rechnung"/>
+			</arg>
+	   	</arg>
+        
+   		<arg name="maximizeMap" value="true"/>
+	</page>
+	
+</calcwizard>

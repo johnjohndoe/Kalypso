@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Generated-from: 1092667482000;type=4
+Bundle-Name: CVS Team Provider UI NL Support
+Bundle-SymbolicName: org.eclipse.team.cvs.ui.nl1
+Bundle-Version: 3.0.1
+Bundle-ClassPath: nl1.jar
+Fragment-Host: org.eclipse.team.cvs.ui;bundle-version="[3.0.1,4.0.0)"
+Bundle-Localization: plugin

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>W_SAERI</name>
+    <metadataList>
+        <metadata name="Name" value="W_SAERI"/>
+        <metadata name="WQ-Parameter" value="&lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot; &gt;&lt;set&gt;&lt;params&gt;&lt;w1&gt;-2.01&lt;/w1&gt;&lt;lnk1&gt;-9.78589&lt;/lnk1&gt;&lt;k2&gt;2.27723&lt;/k2&gt;&lt;wgr&gt;90.0&lt;/wgr&gt;&lt;/params&gt;&lt;params&gt;&lt;w1&gt;-70.01&lt;/w1&gt;&lt;lnk1&gt;-21.65598&lt;/lnk1&gt;&lt;k2&gt;4.36827&lt;/k2&gt;&lt;wgr&gt;160.0&lt;/wgr&gt;&lt;/params&gt;&lt;params&gt;&lt;w1&gt;-90.01&lt;/w1&gt;&lt;lnk1&gt;-18.21971&lt;/lnk1&gt;&lt;k2&gt;3.68171&lt;/k2&gt;&lt;/params&gt;&lt;/set&gt;&lt;/wechmann&gt;"/>
+        <metadata name="Alarmstufe 1" value="180"/>
+        <metadata name="Alarmstufe 2" value="200"/>
+        <metadata name="Alarmstufe 3" value="220"/>
+        <metadata name="Alarmstufe 4" value="240"/>
+    </metadataList>
+    <axis datatype="TYPE=double" key="false" name="Wasserstand" type="W" unit="cm">
+        <valueArray separator=";">55.0;55.0;55.0;55.0</valueArray>
+    </axis>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2004-04-27T01:00:00;2004-04-27T04:00:00;2004-04-27T07:00:00;2004-04-27T10:00:00</valueArray>
+    </axis>
+</observation>
+

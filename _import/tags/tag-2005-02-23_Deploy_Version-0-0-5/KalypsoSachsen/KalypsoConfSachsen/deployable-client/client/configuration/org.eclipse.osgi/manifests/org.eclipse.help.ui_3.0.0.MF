@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Generated-from: 1095333188000;type=2
+Bundle-Name: %help_system_plugin_name
+Bundle-SymbolicName: org.eclipse.help.ui; singleton=true
+Bundle-Version: 3.0.0
+Bundle-ClassPath: helpui.jar
+Bundle-Activator: org.eclipse.help.ui.internal.HelpUIPlugin
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Provide-Package: org.eclipse.help.ui.internal.browser.embedded,
+ org.eclipse.help.ui.internal.util,
+ org.eclipse.help.ui.browser,
+ org.eclipse.help.ui.internal,
+ org.eclipse.help.ui.internal.browser
+Require-Bundle: org.eclipse.help.base,
+ org.eclipse.help.appserver,
+ org.eclipse.ui,
+ org.eclipse.core.runtime
+Eclipse-AutoStart: true

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Generated-from: 1092667446000;type=4
+Bundle-Name: Help System Base NL Support
+Bundle-SymbolicName: org.eclipse.help.base.nl1
+Bundle-Version: 3.0.1
+Bundle-ClassPath: nl1.jar,
+ $nl$/
+Fragment-Host: org.eclipse.help.base;bundle-version="[3.0.1,4.0.0)"
+Bundle-Localization: plugin

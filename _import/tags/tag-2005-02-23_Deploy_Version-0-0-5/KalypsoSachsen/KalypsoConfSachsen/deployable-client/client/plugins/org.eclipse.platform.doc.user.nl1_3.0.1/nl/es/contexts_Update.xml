@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+
+<contexts>
+   
+   <!-- Context IDs added in the  code, ID is class name, where context ID is set -->
+   
+   <context  id="ConfigurationView" >
+      <description>Este diálogo permite trabajar con las
+características instaladas. Por omisión, solo muestra las
+características habilitadas en este momento. Para poder ver también
+las características inhabilitadas, active el filtro "Mostrar
+características inhabilitadas", en la barra de herramientas del
+diálogo. </description>
+      <topic label="Inspeccionar la configuración" href="tasks/tasks-33.htm"/>
+      <topic label="Habilitar, inhabilitar, desinstalar una característica" href="tasks/tasks-35.htm"/>
+   </context>
+     
+   <context  id="ReviewPage" >
+      <description>En esta página se muestran los resultados de las
+búsquedas de características. Seleccione las características que desea instalar. </description>
+   </context>
+   
+   
+   <context  id="CofigurationView_showUnconfFeaturesAction" >
+      <description>Muestra las características inhabilitadas.</description>
+   </context>
+   
+   <context  id="CofigurationView_revertAction" >
+      <description>Restaura la configuración para que coincida con el historial seleccionado.</description>
+   </context>
+   
+   <context  id="CofigurationView_showStatusAction" >
+      <description>Muestra el estado actual de la configuración de la característica seleccionada.</description>
+   </context>
+   
+   <context  id="CofigurationView_preserveAction" >
+      <description>Guarda la configuración seleccionada en la carpeta <b>Configuraciones guardadas</b>.</description>
+   </context>
+   
+   <context  id="CofigurationView_removePreservedAction" >
+      <description>Suprime la configuración seleccionada de la carpeta <b>Configuraciones guardadas</b>.</description>
+   </context>
+   
+   <context  id="CofigurationView_unlinkAction" >
+      <description>Desenlaza el sitio seleccionado de la configuración.</description>
+   </context>
+   
+   <context  id="CofigurationView_propertiesAction" >
+      <description>Visualiza las propiedades de la selección.</description>
+   </context>
+   
+   <context  id="UpdatesView_newAction" >
+      <description>Crea un nuevo sitio favorito.</description>
+   </context>
+   
+   <context  id="UpdatesView_newFolderAction" >
+      <description>Crea una carpeta nueva en la vista Actualizaciones de características. Las carpetas se pueden utilizar para organizar los favoritos de sitios y las consultas de búsqueda.</description>
+   </context>
+   
+   <context  id="UpdatesView_newSearchAction" >
+      <description>Crea una consulta de búsqueda nueva.</description>
+   </context>
+   
+   <context  id="UpdatesView_newLocalAction" >
+      <description>Crea un sitio favorito para el sitio local seleccionado.</description>
+   </context>
+   
+   <context  id="UpdatesView_deleteAction" >
+      <description>Suprime el elemento seleccionado.</description>
+   </context>
+   
+   <context  id="UpdatesView_refreshAction" >
+      <description>Renueva el elemento seleccionado.</description>
+   </context>
+   
+   <context  id="UpdatesView_fileFilterAction" >
+      <description>Seleccione esta opción para mostrar los archivos individuales de <b>Mi PC</b>. Deseleccione esta opción para mostrar sitios y directorios solamente.</description>
+   </context>
+   
+   <context  id="UpdatesView_filterEnvironmentAction" >
+      <description>Seleccione esta opción para mostrar solo las características que coincidan con el entorno actual. Deseleccione esta opción para mostrar todas las características disponibles (las características que no coinciden con el entorno
+actual no se pueden instalar).</description>
+   </context>
+   
+   <context  id="UpdatesView_showCategoriesAction" >
+      <description>Seleccione esta opción para ver las características organizadas en categorías de sitios. Deseleccione esta opción para ver todas las características en una lista.</description>
+   </context>
+   
+   <context  id="UpdatesView_linkExtensionAction" >
+      <description>Enlaza el sitio seleccionado en la configuración.</description>
+   </context>
+   
+   <context  id="DetailsView_homeAction" >
+      <description>Visualiza la página de bienvenida del Gestor de actualizaciones.</description>
+   </context>
+   
+   <context  id="DetailsView_backAction" >
+      <description>Regresa a la página de detalles anterior.</description>
+   </context>
+   
+   <context  id="DetailsView_forwardAction" >
+      <description>Avanza a la siguiente página de detalles.</description>
+   </context>
+   
+   <context  id="MainPreferencePage" >
+      <description>Permite establecer las preferencias del gestor de
+actualizaciones: <b>número de historiales</b> que deben mantenerse
+antes de suprimir; establecer el ámbito de la búsqueda de
+<b>actualizaciones nuevas</b> solo para las actualizaciones de
+servicio; <b>política de actualización</b> para alternar los sitios
+de actualizaciones; valores de <b>proxy</b></description>
+      <topic label="Control de la política de actualización"  href="tasks/tasks-37.htm"/>
+   </context>
+
+      
+   <context  id="LicensePage2" >
+      <description>Debe leer los acuerdos de licencia que se presentan y aceptarlos o rechazarlos.</description>
+   </context>
+   
+   <context  id="ModeSelectionPage" >
+      <description>Seleccione si desea buscar las actualizaciones
+disponibles de las características instaladas o bien buscar las
+características que haya en los sitios de actualizaciones
+seleccionados</description>   
+      <topic label="Instalar características con el gestor de actualizaciones" href="tasks/tasks-34.htm"/>
+      <topic label="Actualizar características con el gestor de actualizaciones" href="tasks/tasks-36.htm"/>   
+   </context>
+   
+   <context  id="SitePage" >
+      <description>Añadir, eliminar o editar una marca de favorito de
+un sitio de actualizaciones. Seleccione el sitio o los sitios en los
+que hay que buscar características y parches.
+<b>Sitio remoto</b>: URL de un sitio Web que contenga características
+<b>Sitio local</b>: sitio que esté en la máquina actual
+<b>Tamaño de archivador</b>: sitio local empaquetado como archivo ZIP o JAR
+
+Puede activar o desactivar la búsqueda de características que no se
+correspondan con el entorno (OS, entono local, etcétera)	</description>
+   </context>
+   
+   <context  id="NewUpdatesWizardPage" >
+      <description>Seleccione una o varias actualizaciones disponibles que deben instalarse.</description>
+   </context>
+   
+   <context  id="MultiTargetPage2" >
+      <description>Para cada característica que deba instalarse,
+seleccione una ubicación de instalación entre las opciones que se
+ofrecen o bien añada una nueva. Debido a las restricciones de
+co-ubicación, es posible que no pueda definir una ubicación nueva
+para algunas características. </description>
+   </context>
+   
+   <context id="OptionalFeaturesPage">
+   	  <description>Elija qué características opcionales que se incluyen en la característica principal se instalarán.</description>
+   </context>
+   
+   <context id="MultiOptionalFeaturesPage2">
+   	  <description>Elija qué características opcionales que se incluyen en las características principales se instalarán.</description>
+   </context>
+   
+   <context  id="JarVerificationPage" >
+      <description>Debe aceptar o rechazar el certificado del archivo JAR</description>
+   </context>
+   
+   <context  id="UserValidationDialog" >
+      <description>Especifique la información de usuario.</description>
+   </context>
+   
+   <context id="MultiReviewPage2">
+      <description>Seleccione las características que desea instalar. Si hay errores,
+pulse <b>Detalles de los errores</b> e intente arreglarlos, seleccionando o deseleccionando
+las características pertinentes. </description>
+     <topic label="Instalar características con el gestor de actualizaciones" href="tasks/tasks-34.htm"/>
+   </context>
+
+   
+   <context  id="InstallableSiteForm" >
+      <description>Visualiza los detalles acerca del sitio local que forma parte de la configuración.</description>          
+   </context>
+   
+   
+   <context  id="SiteForm" >
+      <description>Visualiza los detalles de la configuración de instalación. </description> 
+      <topic label="Inspeccionar la configuración" href="tasks/tasks-33.htm"/>
+      <topic label="Habilitar, inhabilitar, desinstalar una característica" href="tasks/tasks-35.htm"/>       
+   </context>
+   
+   <context  id="UnknownObjectForm" >
+      <description>Visualiza cuando se ha seleccionado un objeto desconocido o ningún objeto en la parte activa.</description>
+   </context>
+   
+   
+   <context id ="SiteBookmarkPropertyPage">
+      <description>Cambie propiedades del objeto favorito.</description>
+   </context>
+   
+   <context id ="NamedObjectPropertyPage">
+      <description>Cambie el nombre del objeto seleccionado.</description>
+   </context>
+   
+   <context id ="ConfigurationPropertyPage">
+      <description>Cambie el nombre de la configuración seleccionada.</description>
+   </context>
+   
+</contexts>

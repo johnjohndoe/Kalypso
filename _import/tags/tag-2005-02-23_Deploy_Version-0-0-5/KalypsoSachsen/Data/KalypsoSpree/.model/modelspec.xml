@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="spree">
+    <input id="CONTROL_GML" path=".calculation" relativeToCalcCase="true"/>
+    <input id="CONTROL_XSD" path=".model/schema/control.xsd" relativeToCalcCase="false"/>
+    <input id="FEATURE_XSD" path=".model/schema/feature.xsd" relativeToCalcCase="false"/>
+    <input id="GEOMETRY_XSD" path=".model/schema/geometry.xsd" relativeToCalcCase="false"/>
+    <input id="MODELL_XSD" path=".model/schema/modell.xsd" relativeToCalcCase="false"/>
+    <input id="OBSLINK_XSD" path=".model/schema/obslink.xsd" relativeToCalcCase="false"/>
+    <input id="XLINKS_XSD" path=".model/schema/xlinks.xsd" relativeToCalcCase="false"/>
+    <input id="XLINKSEXT_XSD" path=".model/schema/xlinksext.xsd" relativeToCalcCase="false"/>
+    <input id="GML" path="calcCase.gml" relativeToCalcCase="true"/>
+    
+    <input id="PA_BAUTZWB" path="Zeitreihen/PA_BAUTZWB.zml" relativeToCalcCase="true"/>
+    <input id="PA_GROEDI" path="Zeitreihen/PA_GROEDI.zml" relativeToCalcCase="true"/>
+    <input id="PA_JAENKD" path="Zeitreihen/PA_JAENKD.zml" relativeToCalcCase="true"/>
+    <input id="PA_SAERI" path="Zeitreihen/PA_SAERI.zml" relativeToCalcCase="true"/>
+    <input id="PA_SCHIRG" path="Zeitreihen/PA_SCHIRG.zml" relativeToCalcCase="true"/>
+
+    <input id="QP_BURGNEU" path="Zeitreihen/QP_BURGNEU.zml" relativeToCalcCase="true"/>
+
+    <input id="QV_BWALDE" path="Zeitreihen/QV_BWALDE.zml" relativeToCalcCase="true"/>
+    <input id="QV_LOHSA" path="Zeitreihen/QV_LOHSA.zml" relativeToCalcCase="true"/>
+    <input id="QV_RLKETTE" path="Zeitreihen/QV_RLKETTE.zml" relativeToCalcCase="true"/>
+    <input id="QV_SPWIESE" path="Zeitreihen/QV_SPWIESE.zml" relativeToCalcCase="true"/>
+    <input id="QV_TSBAUTZ" path="Zeitreihen/QV_TSBAUTZ.zml" relativeToCalcCase="true"/>
+    <input id="QV_TSQUITZ" path="Zeitreihen/QV_TSQUITZ.zml" relativeToCalcCase="true"/>
+
+    <input id="W_BAUTZWB" path="Zeitreihen/W_BAUTZWB.zml" relativeToCalcCase="true"/>
+    <input id="W_GROEDI" path="Zeitreihen/W_GROEDI.zml" relativeToCalcCase="true"/>
+    <input id="W_JAENKD" path="Zeitreihen/W_JAENKD.zml" relativeToCalcCase="true"/>
+    <input id="W_SAERI" path="Zeitreihen/W_SAERI.zml" relativeToCalcCase="true"/>
+    <input id="W_SCHIRG" path="Zeitreihen/W_SCHIRG.zml" relativeToCalcCase="true"/>
+
+    <input id="W_BOXBRG" path="Zeitreihen/W_BOXBRG.zml" relativeToCalcCase="true"/>
+    <input id="W_LIESKE" path="Zeitreihen/W_LIESKE.zml" relativeToCalcCase="true"/>
+    <input id="W_SPREMB" path="Zeitreihen/W_SPREMB.zml" relativeToCalcCase="true"/>
+    <input id="W_SPREY" path="Zeitreihen/W_SPREY.zml" relativeToCalcCase="true"/>
+    <input id="W_SPWITZ" path="Zeitreihen/W_SPWITZ.zml" relativeToCalcCase="true"/>
+
+<!--
+    <input id="PA_BAUTZWB" path="Zeitreihen/PA_BAUTZWB.zml" relativeToCalcCase="true"/>
+    <input id="PA_GROEDI" path="Zeitreihen/PA_GROEDI.zml" relativeToCalcCase="true"/>
+    <input id="PA_JAENKD" path="Zeitreihen/PA_JAENKD.zml" relativeToCalcCase="true"/>
+    <input id="PA_SAERI" path="Zeitreihen/PA_SAERI.zml" relativeToCalcCase="true"/>
+    <input id="PA_SCHIRG" path="Zeitreihen/PA_SCHIRG.zml" relativeToCalcCase="true"/>
+    <input id="PP_BAUTZWB" path="Zeitreihen/PP_BAUTZWB.zml" relativeToCalcCase="true"/>
+    <input id="PP_GROEDI" path="Zeitreihen/PP_GROEDI.zml" relativeToCalcCase="true"/>
+    <input id="PP_JAENKD" path="Zeitreihen/PP_JAENKD.zml" relativeToCalcCase="true"/>
+    <input id="PP_SAERI" path="Zeitreihen/PP_SAERI.zml" relativeToCalcCase="true"/>
+    <input id="PP_SCHIRG" path="Zeitreihen/PP_SCHIRG.zml" relativeToCalcCase="true"/>
+    <input id="QP_BAUTZWB" path="Zeitreihen/QP_BAUTZWB.zml" relativeToCalcCase="true"/>
+    <input id="QP_BOXBRG" path="Zeitreihen/QP_BOXBRG.zml" relativeToCalcCase="true"/>
+    <input id="QP_BWALDE" path="Zeitreihen/QP_BWALDE.zml" relativeToCalcCase="true"/>
+    <input id="QP_GROEDI" path="Zeitreihen/QP_GROEDI.zml" relativeToCalcCase="true"/>
+    <input id="QP_JAENKD" path="Zeitreihen/QP_JAENKD.zml" relativeToCalcCase="true"/>
+    <input id="QP_LIESKE" path="Zeitreihen/QP_LIESKE.zml" relativeToCalcCase="true"/>
+    <input id="QP_LOHSA" path="Zeitreihen/QP_LOHSA.zml" relativeToCalcCase="true"/>
+    <input id="QP_RLKETTE" path="Zeitreihen/QP_RLKETTE.zml" relativeToCalcCase="true"/>
+    <input id="QP_SAERI" path="Zeitreihen/QP_SAERI.zml" relativeToCalcCase="true"/>
+    <input id="QP_SCHIRG" path="Zeitreihen/QP_SCHIRG.zml" relativeToCalcCase="true"/>
+    <input id="QP_SPREMB" path="Zeitreihen/QP_SPREMB.zml" relativeToCalcCase="true"/>
+    <input id="QP_SPREY" path="Zeitreihen/QP_SPREY.zml" relativeToCalcCase="true"/>
+    <input id="QP_SPWIESE" path="Zeitreihen/QP_SPWIESE.zml" relativeToCalcCase="true"/>
+    <input id="QP_SPWITZ" path="Zeitreihen/QP_SPWITZ.zml" relativeToCalcCase="true"/>
+    <input id="QP_TSBAUTZ" path="Zeitreihen/QP_TSBAUTZ.zml" relativeToCalcCase="true"/>
+    <input id="QP_TSQUITZ" path="Zeitreihen/QP_TSQUITZ.zml" relativeToCalcCase="true"/>
+    <input id="QV_BAUTZWB" path="Zeitreihen/QV_BAUTZWB.zml" relativeToCalcCase="true"/>
+    <input id="QV_BOXBRG" path="Zeitreihen/QV_BOXBRG.zml" relativeToCalcCase="true"/>
+
+    <input id="QV_GROEDI" path="Zeitreihen/QV_GROEDI.zml" relativeToCalcCase="true"/>
+    <input id="QV_JAENKD" path="Zeitreihen/QV_JAENKD.zml" relativeToCalcCase="true"/>
+    <input id="QV_LIESKE" path="Zeitreihen/QV_LIESKE.zml" relativeToCalcCase="true"/>
+    <input id="QV_SAERI" path="Zeitreihen/QV_SAERI.zml" relativeToCalcCase="true"/>
+    <input id="QV_SCHIRG" path="Zeitreihen/QV_SCHIRG.zml" relativeToCalcCase="true"/>
+    <input id="QV_SPREMB" path="Zeitreihen/QV_SPREMB.zml" relativeToCalcCase="true"/>
+    <input id="QV_SPREY" path="Zeitreihen/QV_SPREY.zml" relativeToCalcCase="true"/>
+    <input id="QV_SPWITZ" path="Zeitreihen/QV_SPWITZ.zml" relativeToCalcCase="true"/>
+    <input id="QX_BAUTZWB" path="Zeitreihen/QX_BAUTZWB.zml" relativeToCalcCase="true"/>
+    <input id="QX_BOXBRG" path="Zeitreihen/QX_BOXBRG.zml" relativeToCalcCase="true"/>
+    <input id="QX_GROEDI" path="Zeitreihen/QX_GROEDI.zml" relativeToCalcCase="true"/>
+    <input id="QX_JAENKD" path="Zeitreihen/QX_JAENKD.zml" relativeToCalcCase="true"/>
+    <input id="QX_LIESKE" path="Zeitreihen/QX_LIESKE.zml" relativeToCalcCase="true"/>
+    <input id="QX_SAERI" path="Zeitreihen/QX_SAERI.zml" relativeToCalcCase="true"/>
+    <input id="QX_SCHIRG" path="Zeitreihen/QX_SCHIRG.zml" relativeToCalcCase="true"/>
+    <input id="QX_SPREMB" path="Zeitreihen/QX_SPREMB.zml" relativeToCalcCase="true"/>
+    <input id="QX_SPREY" path="Zeitreihen/QX_SPREY.zml" relativeToCalcCase="true"/>
+    <input id="QX_SPWITZ" path="Zeitreihen/QX_SPWITZ.zml" relativeToCalcCase="true"/>
+    <input id="Q_BAUTZWB" path="Zeitreihen/Q_BAUTZWB.zml" relativeToCalcCase="true"/>
+    <input id="Q_BOXBRG" path="Zeitreihen/Q_BOXBRG.zml" relativeToCalcCase="true"/>
+    <input id="Q_GROEDI" path="Zeitreihen/Q_GROEDI.zml" relativeToCalcCase="true"/>
+    <input id="Q_JAENKD" path="Zeitreihen/Q_JAENKD.zml" relativeToCalcCase="true"/>
+    <input id="Q_LIESKE" path="Zeitreihen/Q_LIESKE.zml" relativeToCalcCase="true"/>
+    <input id="Q_SAERI" path="Zeitreihen/Q_SAERI.zml" relativeToCalcCase="true"/>
+    <input id="Q_SCHIRG" path="Zeitreihen/Q_SCHIRG.zml" relativeToCalcCase="true"/>
+    <input id="Q_SPREMB" path="Zeitreihen/Q_SPREMB.zml" relativeToCalcCase="true"/>
+    <input id="Q_SPREY" path="Zeitreihen/Q_SPREY.zml" relativeToCalcCase="true"/>
+    <input id="Q_SPWITZ" path="Zeitreihen/Q_SPWITZ.zml" relativeToCalcCase="true"/>
+    <input id="Q_TSBAUTZ" path="Zeitreihen/Q_TSBAUTZ.zml" relativeToCalcCase="true"/>
+    <input id="Q_TSQUITZ" path="Zeitreihen/Q_TSQUITZ.zml" relativeToCalcCase="true"/>
+    <input id="S_BAUTZWB" path="Zeitreihen/S_BAUTZWB.zml" relativeToCalcCase="true"/>
+    <input id="S_BOXBRG" path="Zeitreihen/S_BOXBRG.zml" relativeToCalcCase="true"/>
+    <input id="S_BURGNEU" path="Zeitreihen/S_BURGNEU.zml" relativeToCalcCase="true"/>
+    <input id="S_BWALDE" path="Zeitreihen/S_BWALDE.zml" relativeToCalcCase="true"/>
+    <input id="S_GROEDI" path="Zeitreihen/S_GROEDI.zml" relativeToCalcCase="true"/>
+    <input id="S_JAENKD" path="Zeitreihen/S_JAENKD.zml" relativeToCalcCase="true"/>
+    <input id="S_LIESKE" path="Zeitreihen/S_LIESKE.zml" relativeToCalcCase="true"/>
+    <input id="S_LOHSA" path="Zeitreihen/S_LOHSA.zml" relativeToCalcCase="true"/>
+    <input id="S_RLKETTE" path="Zeitreihen/S_RLKETTE.zml" relativeToCalcCase="true"/>
+    <input id="S_SAERI" path="Zeitreihen/S_SAERI.zml" relativeToCalcCase="true"/>
+    <input id="S_SCHIRG" path="Zeitreihen/S_SCHIRG.zml" relativeToCalcCase="true"/>
+    <input id="S_SPREMB" path="Zeitreihen/S_SPREMB.zml" relativeToCalcCase="true"/>
+    <input id="S_SPREY" path="Zeitreihen/S_SPREY.zml" relativeToCalcCase="true"/>
+    <input id="S_SPWIESE" path="Zeitreihen/S_SPWIESE.zml" relativeToCalcCase="true"/>
+    <input id="S_SPWITZ" path="Zeitreihen/S_SPWITZ.zml" relativeToCalcCase="true"/>
+    <input id="S_TSBAUTZ" path="Zeitreihen/S_TSBAUTZ.zml" relativeToCalcCase="true"/>
+    <input id="S_TSQUITZ" path="Zeitreihen/S_TSQUITZ.zml" relativeToCalcCase="true"/>
+    <input id="V_TSBAUTZ" path="Zeitreihen/V_TSBAUTZ.zml" relativeToCalcCase="true"/>
+    <input id="V_TSQUITZ" path="Zeitreihen/V_TSQUITZ.zml" relativeToCalcCase="true"/>
+    <input id="WV_BAUTZWB" path="Zeitreihen/WV_BAUTZWB.zml" relativeToCalcCase="true"/>
+    <input id="WV_BOXBRG" path="Zeitreihen/WV_BOXBRG.zml" relativeToCalcCase="true"/>
+    <input id="WV_GROEDI" path="Zeitreihen/WV_GROEDI.zml" relativeToCalcCase="true"/>
+    <input id="WV_JAENKD" path="Zeitreihen/WV_JAENKD.zml" relativeToCalcCase="true"/>
+    <input id="WV_LIESKE" path="Zeitreihen/WV_LIESKE.zml" relativeToCalcCase="true"/>
+    <input id="WV_SAERI" path="Zeitreihen/WV_SAERI.zml" relativeToCalcCase="true"/>
+    <input id="WV_SCHIRG" path="Zeitreihen/WV_SCHIRG.zml" relativeToCalcCase="true"/>
+    <input id="WV_SPREMB" path="Zeitreihen/WV_SPREMB.zml" relativeToCalcCase="true"/>
+    <input id="WV_SPREY" path="Zeitreihen/WV_SPREY.zml" relativeToCalcCase="true"/>
+    <input id="WV_SPWITZ" path="Zeitreihen/WV_SPWITZ.zml" relativeToCalcCase="true"/>
+    <input id="ZG_GROEDI" path="Zeitreihen/ZG_GROEDI.zml" relativeToCalcCase="true"/>
+    <input id="ZG_SAERI" path="Zeitreihen/ZG_SAERI.zml" relativeToCalcCase="true"/>
+-->    
+</modelspec>

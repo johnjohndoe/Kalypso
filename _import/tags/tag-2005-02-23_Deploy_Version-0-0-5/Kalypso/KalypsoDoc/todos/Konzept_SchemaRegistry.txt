@@ -1,0 +1,58 @@
+/**
+ *  v.doemming@tuhh.de 		15. Feb. 2005
+ *
+ **/
+ 
+Eine SchemaRegistry verwaltet die Modellschemata
+sowie zusätzliche GMLFeatureType-bezogene Informationen.
+
+von der SchemaRegistry bekommt man die entsprechende SchemaURL oder 
+direkt eine Instanz vom GMLSchema-Objekt (vielleicht als weak-reference um schema nicht jedesmal neu zu laden).
+
+zusätzlich speichert die SchemaRegistry zu jedem GMLFeatureType folgende Dinge:
+ styles
+ filter
+ gtt
+ GML-JAVA-TypeHandler
+ spezial-Visualisierungen (Zeitreihen in Karte, Alarmstufen, Strömungsrichtung als Vektoren...)
+ ...
+
+Ausserdem werden den gespeicherten Dingen Rollen zugeordnet. Eine "default"-Rolle 
+sollte auch existieren.
+
+Eine Schemaregistry kann für definierte Rollen auch editierbar sein.
+
+
+Ich stelle mir das so vor:
+
+1.
+Eine globale SchemaRegistry befindet sich zentral via "webdav" erreichbar.
+Nur für die administratorrolle ist sie editierbar. Hier die Dinge 
+gespeichert die wir bei der Modellaufstellung erstellen.
+2.
+Eine zweite lokale SchemaRegistry ist auf dem Clientrechnet installiert. 
+Diese ist für den Anwender editierbar. 
+
+Wenn der Benutzer einen Style speichert, dann mus er einen Namen Vergeben und
+der style wird unterhalb des entsprechenden GMLFeatureType registriert.
+
+Möchte der Benutzer zu einer geladenen Karte einen neuen Style hinzuladen, 
+dann bekommt er automatisch die zum GMLFeatureType und zu seiner Rolle
+passenden styles zur Auswahl.
+
+
+
+// offene Punkte:
+* dieses Typ-bezogene Konzept kollidiert mit dem featurePath in der *.gtt und *.gmt.
+  Mein Vorschlag ist statt dessen einen FeatureType und einen Filter zu verwenden.
+  pro/con: + filter sind sehr flexibel.
+            - man müsste evt. einen path-Filter noch einbauen.
+* wo liegt die lokale SchemaRegistry ?
+  - soll nicht in jedem Projekt liegen.
+  - trotzdem sollte es in den von eclipse verwalteten resourcen sein, wegen pool,cvs,encoding und überhaupt
+
+(* abgesehen von der *gmt könnte man theoretisch auch alles über eine klick auf die *.gml oder *.shp erreichen)
+
+  
+  to be continued...
+  
