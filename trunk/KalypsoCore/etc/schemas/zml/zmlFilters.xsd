@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="filters.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlinkext="http://www.w3.org/1999/xlinkext" xmlns:filters="filters.zml.kalypso.org">
+	<import namespace="http://www.w3.org/1999/xlinkext" schemaLocation="../xlink/xlinksext.xsd"/>
+	<complexType name="abstractFilterType" abstract="true"/>
+	<element name="filter" type="filters:abstractFilterType"/>
+	<element name="operationFilter" type="filters:operationFilterType" substitutionGroup="filters:filter"/>
+	<complexType name="operationFilterType">
+		<complexContent>
+			<extension base="filters:abstractFilterType">
+				<sequence>
+					<element ref="filters:filter"/>
+				</sequence>
+				<attribute name="operator" type="string"/>
+				<attribute name="operand" type="string"/>
+			</extension>
+			<!-- +,-,/,*-->
+			<!-- e.g. 5 -->
+		</complexContent>
+	</complexType>
+	<element name="nOperationFilter" type="filters:nOperationFilterType" substitutionGroup="filters:filter"/>
+	<complexType name="nOperationFilterType">
+		<complexContent>
+			<extension base="filters:abstractFilterType">
+				<sequence>
+					<element ref="filters:filter" maxOccurs="unbounded"/>
+				</sequence>
+				<attribute name="operator" type="string"/>
+			</extension>
+			<!-- +, -, *, / oder min, max, avg ... -->
+		</complexContent>
+	</complexType>
+	<element name="zmlFilter" type="filters:zmlFilterType" substitutionGroup="filters:filter"/>
+	<complexType name="zmlFilterType">
+		<complexContent>
+			<extension base="filters:abstractFilterType">
+				<sequence>
+					<element name="link" type="xlinkext:SimpleLinkType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
