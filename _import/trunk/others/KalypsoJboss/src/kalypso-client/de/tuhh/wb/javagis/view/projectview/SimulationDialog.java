@@ -1,18 +1,11 @@
 package de.tuhh.wb.javagis.view.projectview;
 
-import java.util.Vector;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import javax.swing.JInternalFrame;
 import javax.swing.*;
-import javax.swing.tree.*;
 import java.util.Date;
 import java.io.File;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
 
 import javax.swing.event.InternalFrameListener;
 import javax.swing.event.InternalFrameEvent;
@@ -31,14 +24,9 @@ import de.tuhh.wb.javagis.xml.KalypsoXmlImportListener;
 import de.tuhh.wb.javagis.xml.XmlImport;
 import de.tuhh.wb.javagis.xml.GisTransferObject;
 import de.tuhh.wb.javagis.data.VersionAccess;
-import de.tuhh.wb.javagis.data.VersionAccessImpl;
 import de.tuhh.wb.javagis.view.ViewManager;
-import de.tuhh.wb.javagis.data.event.VersionListener;
-import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
 import ejb.event.EJBEvent;
 import java.util.HashSet;
-import java.util.Collection;
-import java.util.Iterator;
 import de.tuhh.wb.javagis.SystemExecute;
 import de.tuhh.wb.javagis.tools.I18n;
 

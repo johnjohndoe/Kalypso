@@ -44,6 +44,12 @@ public class I18n
 		actualLangKey=langKey;
     }
     
+    public static I18n sce_getInstance(String langKey){
+    	instance = new I18n(langKey);
+    	System.out.println("Instance: "+instance.actualLangKey);
+    	return instance;
+    }
+    
     private static I18n getInstance()
     {
 		if(instance==null)
