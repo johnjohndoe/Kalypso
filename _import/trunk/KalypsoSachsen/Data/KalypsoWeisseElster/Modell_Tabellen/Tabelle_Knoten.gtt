@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org"><layer id="1" linktype="gml" ns1:actuate="onRequest" ns1:href="PATH=../modell.gml#LAYER=Node#SERVICE=RESOURCE#XSD=../.model/schema/namodell.xsd#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"><column editable="false" name="num" width="100"/></layer></gistableview>
+

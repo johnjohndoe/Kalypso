@@ -25,6 +25,7 @@
 						type="na:ChannelCollectionAssociationType"/>
 					<element name="NodeCollectionMember" 
 						type="na:NodeCollectionAssociationType"/>
+					<!--<element name="" -->
 				</sequence>
 			</extension>
 		</complexContent>
@@ -67,20 +68,20 @@
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
                     <element name="Ort" type="gml:PointPropertyType"/>            
-        			<element name="num" type="integer"></element>
+        			<element name="num" type="string"></element>
 					<element name="generateResult" type="boolean"/>
         			<element name="downStreamChannelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="1"/>
 					<!-- ZR Zufluss falls zufluss vorhanden --> 
 		            <element name="zuflussZRRepository" type="obslink:TimeseriesLink"/>
 		            <element name="zuflussZR" type="obslink:TimeseriesLink"/>
-          			<element name="nzufPfad" type="string"/> <!-- TODO loeschen -->
+          			<element name="nzufPfad" type="string"/>
         			<!-- ZR Pegel falls Pegel vorhanden-->
 		            <element name="pegelZRRepository" type="obslink:TimeseriesLink"/>
 		            <element name="pegelZR" type="obslink:TimeseriesLink"/>
 					<!-- ZR berechnet hier wird das ergebnis gespeichert-->
 		            <element name="qberechnetZR" type="obslink:TimeseriesLink"/>
                     <!-- verzweigung -->
-					<element name="zproz" type="double"/>
+					<element name="zproz" type="string"/>
 					<element name="verzweigungNodeMember" type="na:NodeAssociationType"/>
 				</sequence>
 			</extension>
@@ -137,34 +138,34 @@
 (snowtype,a15)(ftem,*)_(fver,*)
     -->
                     <element name="Ort" type="gml:PolygonPropertyType"/>
-                    <element name="inum" type="integer"/>
+                    <element name="inum" type="string"/>
                     <element name="generateResult" type="boolean"/>
-                    <element name="ispk" type="integer"/>
-                    <element name="text" type="string"/> <!-- TODO benoetigt ? -->
-                    <element name="flaech" type="long"/>
-                    <element name="pns" type="string"/> <!-- TODO loeschen, standardwert rausschreiben -->
-                    <element name="kurzzeit" type="string"/> <!-- TODO loeschen, da jetzt Teilgebietsmodell -->
-                    <element name="langzeit" type="string"/> <!-- TODO loeschen, da jetzt Teilgebietsmodell -->               
-                    <element name="namfn" type="string"/> <!-- TODO loeschen, da standard-name -->
-                    <element name="faktn" type="double"/>
-                    <element name="namft" type="string"/> <!-- TODO loeschen, da standard-name -->
-                    <element name="namept" type="string"/> <!-- TODO loeschen, da standard-name -->
-                    <element name="namfzf" type="string"/> <!-- TODO zeitflaechenfunktion lesen -->
-                    <element name="namhydro" type="string"/> <!-- TODO hydrotope uebernehmen -->
-                    <element name="snowtype" type="string"/> <!-- TODO standard oder snowdatei uebernehmen -->
-                    <element name="ftem" type="double"/> 
-                    <element name="fver" type="double"/>
+                    <element name="ispk" type="string"/>
+                    <element name="text" type="string"/>
+                    <element name="flaech" type="string"/>
+                    <element name="pns" type="string"/>
+                    <element name="kurzzeit" type="string"/>
+                    <element name="langzeit" type="string"/>                
+                    <element name="namfn" type="string"/>
+                    <element name="faktn" type="string"/>
+                    <element name="namft" type="string"/>
+                    <element name="namept" type="string"/>
+                    <element name="namfzf" type="string"/>
+                    <element name="namhydro" type="string"/>
+                    <element name="snowtype" type="string"/>
+                    <element name="ftem" type="string"/>
+                    <element name="fver" type="string"/>
                     <!--
 (vsg,f5.3)(anzlayy,i5)_____(bimax,f5.1)_____(bianf,f5.1)(izkn_vers,f5.1)_____(tint,f5.1)_____(rintmx,f5.1)
 -->
-                    <element name="vsg" type="double"/>
-                    <element name="anzlayy" type="integer"/> <!-- TODO loeschen sollte aus listtenanzahl hervorgehen-->
-                    <element name="bimax" type="double"/>
-                    <element name="bianf" type="double"/>
-                    <element name="faktorBianf" type="double"/> <!-- TODO loeschen, bianf ist schon der faktor -->                     
-                    <element name="izkn_vers" type="integer"/> <!-- TODO loeschen, geht aus relation hervor -->
-                    <element name="tint" type="double"/> 
-                    <element name="rintmx" type="double"/>
+                    <element name="vsg" type="string"/>
+                    <element name="anzlayy" type="string"/>
+                    <element name="bimax" type="string"/>
+                    <element name="bianf" type="string"/>
+                    <element name="faktorBianf" type="string"/>                    
+                    <element name="izkn_vers" type="string"/>
+                    <element name="tint" type="string"/>
+                    <element name="rintmx" type="string"/>
                     <!-- 
  (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)_(evalay,*)
 siehe bodenkorrekturmember...
@@ -175,20 +176,20 @@ siehe bodenkorrekturmember...
 (retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*)
 (igwzu,*)
 -->
-                    <element name="f_eva" type="double"/>
-                    <element name="aint" type="double"/>
-                    <element name="aigw" type="double"/>
-                    <element name="faktorAigw" type="double"/>
-                    <element name="fint" type="double"/>
-                    <element name="ftra" type="double"/>
-                    <element name="retvs" type="double"/>
-                    <element name="retob" type="double"/>
-                    <element name="retint" type="double"/>
-                    <element name="faktorRetobRetint" type="double"/>                
-                    <element name="retbas" type="double"/>
-                    <element name="retgw" type="double"/>
-                    <element name="retklu" type="double"/>
-                    <element name="igwzu" type="integer"/> <!-- TODO loeschen, sollte aus listenanzahl hervorgehen -->
+                    <element name="f_eva" type="string"/>
+                    <element name="aint" type="string"/>
+                    <element name="aigw" type="string"/>
+                    <element name="faktorAigw" type="string"/>
+                    <element name="fint" type="string"/>
+                    <element name="ftra" type="string"/>
+                    <element name="retvs" type="string"/>
+                    <element name="retob" type="string"/>
+                    <element name="retint" type="string"/>
+                    <element name="faktorRetobRetint" type="string"/>                
+                    <element name="retbas" type="string"/>
+                    <element name="retgw" type="string"/>
+                    <element name="retklu" type="string"/>
+                    <element name="igwzu" type="string"/>
                     <!--
  (ngwzu,*)_...
  (gwwi,*)_...
@@ -203,13 +204,13 @@ siehe bodenkorrekturmember...
 (hgru,*)(hgro,*)(rtr,*)(pors,*)(gwsent,*)(klupor,*)(izkn,*)
 
 -->
-                    <element name="hgru" type="double"/>
-                    <element name="hgro" type="double"/>
-                    <element name="rtr" type="double"/>
-                    <element name="pors" type="double"/>
-                    <element name="gwsent" type="double"/>
-                    <element name="klupor" type="double"/>
-                    <element name="izkn" type="integer"/> <!-- TODO loeschen, sollte aus relation hervorgehen -->
+                    <element name="hgru" type="string"/>
+                    <element name="hgro" type="string"/>
+                    <element name="rtr" type="string"/>
+                    <element name="pors" type="string"/>
+                    <element name="gwsent" type="string"/>
+                    <element name="klupor" type="string"/>
+                    <element name="izkn" type="string"/>
     
 					<!-- ZR niederschlag -->
    					<element name="niederschlagZRRepository" type="obslink:TimeseriesLink"/>
@@ -264,7 +265,7 @@ siehe bodenkorrekturmember...
 				<extension base="gml:AbstractFeatureType">
 					<sequence>
          				<element name="Ort" type="gml:LineStringPropertyType"/>            
-            			<element name="inum" type="integer"/>
+            			<element name="inum" type="string"/>
                 		<element name="downStreamNodeMember" type="na:NodeAssociationType" minOccurs="0" maxOccurs="1"/>		
         			</sequence>		
 				</extension>
@@ -293,10 +294,10 @@ siehe bodenkorrekturmember...
 		<complexContent>
 			<extension base="na:AbstractChannelType">
 				<sequence>
-					<element name="qfmax" type="double"/>
-					<element name="c" type="double"/>
-					<element name="faktorRkf" type="double"/>
-					<element name="faktorRnf" type="double"/>
+					<element name="qfmax" type="string"/>
+					<element name="c" type="string"/>
+					<element name="faktorRkf" type="string"/>
+					<element name="faktorRnf" type="string"/>
 					<element name="KMParameterMember" 
 						type="na:KMParameterAssociationType" minOccurs="5" 
 						maxOccurs="5"/>
@@ -318,11 +319,11 @@ siehe bodenkorrekturmember...
 		<complexContent>
 			<extension base="na:NonGeometricAbstractFeatureType">
 				<sequence>
-					<element name="qrk" type="double"/>
-					<element name="rkf" type="double"/>
-					<element name="rnf" type="double"/>
-					<element name="rkv" type="double"/>
-					<element name="rnv" type="double"/>
+					<element name="qrk" type="string"/>
+					<element name="rkf" type="string"/>
+					<element name="rnf" type="string"/>
+					<element name="rkv" type="string"/>
+					<element name="rnv" type="string"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -351,14 +352,14 @@ siehe bodenkorrekturmember...
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="cinh" type="double"/>
-					<element name="cind" type="double"/>
-					<element name="cex" type="double"/>
-					<element name="bmax" type="double"/>
-					<element name="banf" type="double"/>
-					<element name="fko" type="double"/>
-					<element name="retlay" type="double"/>
-					<element name="evalay" type="double"/> <!-- TODO loeschen und standard schreiben, da vom NA-modell nicht benutzt -->
+					<element name="cinh" type="string"/>
+					<element name="cind" type="string"/>
+					<element name="cex" type="string"/>
+					<element name="bmax" type="string"/>
+					<element name="banf" type="string"/>
+					<element name="fko" type="string"/>
+					<element name="retlay" type="string"/>
+					<element name="evalay" type="string"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -379,7 +380,7 @@ siehe bodenkorrekturmember...
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="ngwzu" type="na:CatchmentLinkType"/>
-					<element name="gwwi" type="double"/>
+					<element name="gwwi" type="string"/>
 				</sequence>
 			</extension>
 		</complexContent>
