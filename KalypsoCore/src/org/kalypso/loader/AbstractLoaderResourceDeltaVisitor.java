@@ -21,8 +21,7 @@ import org.kalypso.core.IKalypsoCoreConstants;
  * 
  * @author belger
  */
-public class AbstractLoaderResourceDeltaVisitor implements
-    IResourceDeltaVisitor
+public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
 {
   /** resource -> object */
   private Map m_resourceMap = new HashMap();
@@ -67,7 +66,7 @@ public class AbstractLoaderResourceDeltaVisitor implements
   {
     while( m_objectMap.containsKey( o ) )
     {
-      final IResource resource = (IResource) m_objectMap.get( o );
+      final IResource resource = (IResource)m_objectMap.get( o );
 
       m_resourceMap.remove( pathFor( resource ) );
       m_objectMap.remove( o );
@@ -79,32 +78,31 @@ public class AbstractLoaderResourceDeltaVisitor implements
    */
   public boolean visit( IResourceDelta delta ) throws CoreException
   {
-    switch( delta.getKind() )
+    final IResource resource = delta.getResource();
+    final Object oldValue = m_resourceMap.get( pathFor( resource ) );
+    if( oldValue != null )
     {
-      case IResourceDelta.ADDED:
-        // ist mir egal! und alles was drunter ist auch!
-        return false;
-
+      switch( delta.getKind() )
+      {
       case IResourceDelta.REMOVED:
+        break;
+        
+      case IResourceDelta.ADDED:
       case IResourceDelta.CHANGED:
       {
         try
         {
-          final IResource resource = delta.getResource();
-          final Object oldValue = m_resourceMap.get( pathFor( resource ) );
-          if( oldValue != null )
-            m_loader.fireLoaderObjectInvalid( oldValue,
-                delta.getKind() == IResourceDelta.REMOVED );
+            m_loader.fireLoaderObjectInvalid( oldValue, delta.getKind() == IResourceDelta.REMOVED );
         }
         catch( final Exception e )
         {
-          throw new CoreException( new Status( IStatus.ERROR,
-              IKalypsoCoreConstants.PLUGIN_ID, 0,
+          throw new CoreException( new Status( IStatus.ERROR, IKalypsoCoreConstants.PLUGIN_ID, 0,
               "Fehler beim Wiederherstellen einer Resource", e ) );
         }
 
         // handle changed resource
         return true;
+      }
       }
     }
 
