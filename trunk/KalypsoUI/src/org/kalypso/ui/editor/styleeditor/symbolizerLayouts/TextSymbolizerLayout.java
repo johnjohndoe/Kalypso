@@ -260,7 +260,9 @@ public class TextSymbolizerLayout extends SymbolizerLayout{
     	ArrayList geometryItems = new ArrayList();
     	FeatureTypeProperty[] ftp = featureType.getProperties();
     	for(int i=0; i<ftp.length; i++)    	
-    		if(ftp[i].getType().startsWith("org.deegree.model.geometry."))
+    		if(ftp[i].getType().startsWith("org.deegree.model.geometry.")
+    		        &&  !ftp[i].getType().endsWith("Envelope"))
+    		
     			geometryItems.add(ftp[i].getType()); 
     	String geometries[] = new String[geometryItems.size()];
     	for(int j=0; j<geometries.length; j++)

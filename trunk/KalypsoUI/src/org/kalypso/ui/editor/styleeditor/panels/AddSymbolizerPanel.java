@@ -191,10 +191,14 @@ public class AddSymbolizerPanel {
     {
     	ArrayList geometryItems = new ArrayList();
     	FeatureTypeProperty[] ftp = featureType.getProperties();
-    	for(int i=0; i<ftp.length; i++)    	
-    		if(ftp[i].getType().startsWith("org.deegree.model.geometry."))
+    	for(int i=0; i<ftp.length; i++)    
+    	{
+    	    String type=ftp[i].getType();
+    		if(type.startsWith("org.deegree.model.geometry.")
+    		        && !type.endsWith("GM_Envelope"))
     			geometryItems.add(ftp[i].getName()); 
-    	String returnItems[] = new String[geometryItems.size()];
+    	}
+    		String returnItems[] = new String[geometryItems.size()];
     	for(int j=0; j<returnItems.length; j++)
     		returnItems[j] = (String)geometryItems.get(j);
     	return returnItems;
