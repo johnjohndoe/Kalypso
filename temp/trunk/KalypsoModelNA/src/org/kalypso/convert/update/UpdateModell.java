@@ -96,7 +96,7 @@ public class UpdateModell
 
   public UpdateModell() throws Exception
   {
-    m_modellURL = getClass().getResource( "resources/modell.gml" );
+    m_modellURL = getClass().getResource( "resources/WE_modell.gml" );
   }
 
   public void updateIt() throws Exception
@@ -342,16 +342,15 @@ public class UpdateModell
           "q_boehlen.zml",
           "577571", // TODO nicht in PSI enthalten
           "Z" },
-      //Z5 ist auch 16 Koberbach
-      // TODO darf nicht gleichzeitig zufluss und pegel sein
+      //Z5
       new String[]
       {
-          "Neukirchen",
-          "Node7300",
-          "q_neukirchen.zml",
-          "577501",
+          "Koberbach",
+          "Node7310",
+          "q_koberbach.zml",
+          "", 
           "Z" }, };
-
+  
   private static void updatePegel( GMLWorkspace workspace ) throws Exception
   {
     for( int i = 0; i < m_pegel.length; i++ )
