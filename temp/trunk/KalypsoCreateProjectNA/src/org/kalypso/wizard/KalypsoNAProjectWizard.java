@@ -46,6 +46,7 @@
 package org.kalypso.wizard;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.Writer;
@@ -59,9 +60,13 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.internal.resources.ProjectDescription;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -76,6 +81,7 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.java.io.FileUtilities;
+import org.kalypso.java.util.zip.ZipUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.template.gismapview.Gismapview;
@@ -113,6 +119,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   static final String RIVER_PAGE = "page_type:river";
 
   static final String PROJECT_PAGE = "page_type:createNewProject";
+
+  private final String m_resourceBase = "resources/.projecttemplate.zip";
 
   static final FeatureType dummyFeatureType = FeatureFactory.createFeatureType( "Gewässer",
       "wizard.kalypso.na", new FeatureTypeProperty[]
@@ -160,6 +168,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   ISelection selection;
 
+  IWorkspace workspace;
+
   //	IStructuredSelection structSelection;
 
   /**
@@ -170,6 +180,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     super();
     try
     {
+      //      TODO: jh, schemata an zentrale speichern und von dort aufrufen, damit
+      // hier nicht ständig aktualisiert werden muss.
       m_modelSchema = GMLSchemaCache.getSchema( m_modelSchemaURL );
       setNeedsProgressMonitor( true );
     }
@@ -202,8 +214,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     }
 
     createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE,
-        "Teilgebiete einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG,
-        getFeatureType( "Catchment" ) );
+        "Teilgebiete einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Catchment" ) );
 
     addPage( createMappingCatchmentPage );
 
@@ -250,9 +261,15 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   {
     workspacePath = createProjectPage.getLocationPath();
     projectHandel = createProjectPage.getProjectHandle();
+
     try
     {
-      projectHandel.create( null );
+      IProjectDescription description = new ProjectDescription();
+      String[] nanature =
+      { "org.kalypso.ui.ModelNature" };
+      description.setNatureIds( nanature );
+      projectHandel.create( description, null );
+      //      projectHandel.create( null );
       projectHandel.open( null );
       //set charSet for the new project to the UTF-8 standard
       projectHandel.setDefaultCharset( "UTF-8", null );
@@ -356,10 +373,13 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private void addLayer( File sourceFile ) throws Exception
   {
-    String path = workspacePath.append( projectHandel.getFullPath() + "/Modell_Karten/Karten.gmt" )
+    String path = workspacePath.append( projectHandel.getFullPath() + "/Modell_Karten/Karte.gmt" )
         .toFile().toString();
-    InputStream inputStream = getClass().getResourceAsStream( "resources/Modell_Karten/Karte.gmt" );
-    //        "../../../resources/Modell_Karten/Karte.gmt" );
+    File mapfile = workspacePath.append( projectHandel.getFullPath() + "/Modell_Karten/Karte.gmt" )
+        .toFile();
+    //    InputStream inputStream = getClass().getResourceAsStream(
+    // "resources/Modell_Karten/Karte.gmt" );
+    InputStream inputStream = new FileInputStream( mapfile );
 
     ObjectFactory typeOF = new ObjectFactory();
     org.kalypso.template.gismapview.ObjectFactory mapTemplateOF = new org.kalypso.template.gismapview.ObjectFactory();
@@ -405,207 +425,219 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private void copyResourcesToProject( IPath path )
   {
-    //get path for all resources
-    IPath root = path;
-
-    IPath schemaDir = path.append( "/.model/schema" );
-    schemaDir.toFile().mkdirs();
-
-    IPath modelDir = path.append( "/.model" );
-
-    IPath stylesDir = path.append( "/.styles" );
-    stylesDir.toFile().mkdirs();
-
-    IPath templatesCalcCaseDir = path.append( "/.templates/calcCase" );
-    templatesCalcCaseDir.toFile().mkdirs();
-
-    IPath templatesDir = path.append( "/.templates" );
-
-    IPath modelMapDir = path.append( "/Modell_Karten" );
-    modelMapDir.toFile().mkdirs();
-
-    IPath modelTableDir = path.append( "/Modell_Tabellen" );
-    modelTableDir.toFile().mkdirs();
-
-    IPath modelTreeDir = path.append( "/Modell_Baumansicht" );
-    modelTreeDir.toFile().mkdirs();
-
-    IPath sourceDir = path.append( "/Shapes" );
-    sourceDir.toFile().mkdirs();
-
-    //get resouces as input stream
-    final InputStream is1 = getClass().getResourceAsStream( "resources/.model/schema/control.xsd" );
-    final InputStream is2 = getClass().getResourceAsStream( "resources/.model/schema/feature.xsd" );
-    final InputStream is3 = getClass().getResourceAsStream( "resources/.model/schema/geometry.xsd" );
-    final InputStream is4 = getClass()
-        .getResourceAsStream( "resources/.model/schema/nacontrol.xsd" );
-    final InputStream is5 = getClass().getResourceAsStream( "resources/.model/schema/namodell.xsd" );
-    final InputStream is6 = getClass().getResourceAsStream( "resources/.model/schema/obslink.xsd" );
-    //		final InputStream is7 = getClass().getResourceAsStream(
-    //				"../../../resources/.model/schema/ombrometer.xsd");
-    final InputStream is8 = getClass().getResourceAsStream( "resources/.model/schema/xlink.xsd" );
-    final InputStream is10 = getClass().getResourceAsStream( "resources/.model/schema/xlinks.xsd" );
-    final InputStream is11 = getClass().getResourceAsStream(
-        "resources/.model/schema/xlinksext.xsd" );
-
-    final InputStream is12 = getClass().getResourceAsStream(
-        "resources/.model/.calculation.template" );
-    final InputStream is13 = getClass().getResourceAsStream( "resources/.model/.calculation.view" );
-    //		final InputStream is14 = getClass().getResourceAsStream(
-    //				"../../../resources/.model/info.txt");
-    final InputStream is15 = getClass().getResourceAsStream( "resources/.model/calcCaseConfig.xml" );
-    final InputStream is16 = getClass().getResourceAsStream( "resources/.model/calcWizard.xml" );
-    final InputStream is17 = getClass().getResourceAsStream( "resources/.model/modelspec.xml" );
-
-    final InputStream is18 = getClass().getResourceAsStream( "resources/.styles/RHBChannel.sld" );
-    final InputStream is19 = getClass().getResourceAsStream(
-        "resources/.styles/expertCatchment.sld" );
-    final InputStream is20 = getClass().getResourceAsStream(
-        "resources/.styles/expertKMChannel.sld" );
-    final InputStream is21 = getClass().getResourceAsStream( "resources/.styles/expertNode.sld" );
-    final InputStream is22 = getClass()
-        .getResourceAsStream( "resources/.styles/expertVChannel.sld" );
-    final InputStream is23 = getClass().getResourceAsStream( "resources/.styles/exportNode.sld" );
-    final InputStream is24 = getClass().getResourceAsStream( "resources/.styles/KMChannel.sld" );
-    final InputStream is25 = getClass().getResourceAsStream( "resources/.styles/Node.sld" );
-    //		final InputStream is26 = getClass().getResourceAsStream(
-    //				"../../../resources/.styles/Pegel.sld");
-    final InputStream is27 = getClass().getResourceAsStream(
-        "resources/.styles/Subcatchments.sld" );
-    final InputStream is28 = getClass().getResourceAsStream(
-        "resources/.styles/hydrotop.sld" );
-    final InputStream is29 = getClass().getResourceAsStream(
-        "resources/.styles/VChannel.sld" );
-    //		final InputStream is30 = getClass().getResourceAsStream(
-    //				"../../../resources/.styles/Zufluss.sld");
-
-    final InputStream is31 = getClass().getResourceAsStream(
-        "resources/.templates/steuerparameter.gft" );
-
-    final InputStream is32 = getClass().getResourceAsStream(
-        "resources/.templates/calcCase/calcCase.gml" );
-    final InputStream is33 = getClass().getResourceAsStream(
-        "resources/.templates/calcCase/control.gmt" );
-    final InputStream is34 = getClass().getResourceAsStream(
-        "resources/.templates/calcCase/control.odt" );
-    final InputStream is35 = getClass().getResourceAsStream(
-        "resources/.templates/calcCase/expertControl.gml" );
-    final InputStream is36 = getClass().getResourceAsStream(
-        "resources/.templates/calcCase/expertControl.gtt" );
-    final InputStream is37 = getClass().getResourceAsStream(
-        "resources/.templates/calcCase/expertKarte.gmt" );
-    final InputStream is38 = getClass().getResourceAsStream(
-        "resources/.templates/calcCase/expertTabelleGewaesser.gtt" );
-    final InputStream is39 = getClass().getResourceAsStream(
-        "resources/.templates/calcCase/expertTabelleKnoten.gtt" );
-    final InputStream is40 = getClass().getResourceAsStream(
-        "resources/.templates/calcCase/expertTabelleTeilgebiete.gtt" );
-    final InputStream is41 = getClass().getResourceAsStream(
-        "resources/.templates/calcCase/sce.xml" );
-
-    final InputStream is42 = getClass().getResourceAsStream(
-        "resources/Modell_Baumansicht/modell.gmv" );
-
-    final InputStream is43 = getClass().getResourceAsStream(
-        "resources/Modell_Tabellen/Tabelle_KMGewaesser.gtt" );
-    final InputStream is44 = getClass().getResourceAsStream(
-        "resources/Modell_Tabellen/Tabelle_Knoten.gtt" );
-    final InputStream is45 = getClass().getResourceAsStream(
-        "resources/Modell_Tabellen/Tabelle_Teilgebiete.gtt" );
-
-    final InputStream is46 = getClass().getResourceAsStream( "resources/modell.gml" );
-    final InputStream is47 = getClass().getResourceAsStream( "resources/.metadata" );
-    //copy files to workspace
+    final String resource = m_resourceBase;
+    System.out.print( "resource: " + resource + "\n" );
+    InputStream resourceAsStream = getClass().getResourceAsStream( resource );
     try
     {
-
-      FileUtilities.makeFileFromStream( false, schemaDir.append( "/control.xsd" ).toFile(), is1 );
-      FileUtilities.makeFileFromStream( false, schemaDir.append( "/feature.xsd" ).toFile(), is2 );
-      FileUtilities.makeFileFromStream( false, schemaDir.append( "/geometry.xsd" ).toFile(), is3 );
-      FileUtilities.makeFileFromStream( false, schemaDir.append( "/nacontrol.xsd" ).toFile(), is4 );
-      FileUtilities.makeFileFromStream( false, schemaDir.append( "/namodell.xsd" ).toFile(), is5 );
-      FileUtilities.makeFileFromStream( false, schemaDir.append( "/obslink.xsd" ).toFile(), is6 );
-      //			FileUtilities.makeFileFromStream(false, schemaDir.append(
-      //					"/ombrometer.xsd").toFile(), is7);
-      FileUtilities.makeFileFromStream( false, schemaDir.append( "/xlink.xsd" ).toFile(), is8 );
-      FileUtilities.makeFileFromStream( false, schemaDir.append( "/xlinks.xsd" ).toFile(), is10 );
-      FileUtilities.makeFileFromStream( false, schemaDir.append( "/xlinksext.xsd" ).toFile(), is11 );
-
-      FileUtilities.makeFileFromStream( false,
-          modelDir.append( "/.calculation.template" ).toFile(), is12 );
-      FileUtilities.makeFileFromStream( false, modelDir.append( "/.calculation.view" ).toFile(),
-          is13 );
-      //			FileUtilities.makeFileFromStream(false, modelDir
-      //					.append("/info.txt").toFile(), is14);
-      FileUtilities.makeFileFromStream( false, modelDir.append( "/calcCaseConfig.xml" ).toFile(),
-          is15 );
-      FileUtilities.makeFileFromStream( false, modelDir.append( "/calcWizard.xml" ).toFile(), is16 );
-      FileUtilities.makeFileFromStream( false, modelDir.append( "/modelspec.xml" ).toFile(), is17 );
-
-      FileUtilities
-          .makeFileFromStream( false, stylesDir.append( "/RHBChannel.sld" ).toFile(), is18 );
-      FileUtilities.makeFileFromStream( false, stylesDir.append( "/expertCatchment.sld" ).toFile(),
-          is19 );
-      FileUtilities.makeFileFromStream( false, stylesDir.append( "/expertKMChannel.sld" ).toFile(),
-          is20 );
-      FileUtilities
-          .makeFileFromStream( false, stylesDir.append( "/expertNode.sld" ).toFile(), is21 );
-      FileUtilities.makeFileFromStream( false, stylesDir.append( "/expertVChannel.sld" ).toFile(),
-          is22 );
-      FileUtilities
-          .makeFileFromStream( false, stylesDir.append( "/exportNode.sld" ).toFile(), is23 );
-      FileUtilities.makeFileFromStream( false, stylesDir.append( "/KMChannel.sld" ).toFile(), is24 );
-      FileUtilities.makeFileFromStream( false, stylesDir.append( "/Node.sld" ).toFile(), is25 );
-      //			FileUtilities.makeFileFromStream(false, stylesDir.append(
-      //					"/Pegel.sld").toFile(), is26);
-      FileUtilities.makeFileFromStream( false, stylesDir.append( "/Subcatchments.sld" ).toFile(),
-          is27 );
-      FileUtilities.makeFileFromStream( false, stylesDir.append( "/hydrotop.sld" ).toFile(), is28 );
-      FileUtilities.makeFileFromStream( false, stylesDir.append( "/VChannel.sld" ).toFile(), is29 );
-      //			FileUtilities.makeFileFromStream(false, stylesDir.append(
-      //					"/Zufluss.sld").toFile(), is30);
-
-      FileUtilities.makeFileFromStream( false, templatesDir.append( "/steuerparameter.gft" )
-          .toFile(), is31 );
-
-      FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append( "/calcCase.gml" )
-          .toFile(), is32 );
-      FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append( "/control.gmt" )
-          .toFile(), is33 );
-      FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append( "/control.odt" )
-          .toFile(), is34 );
-      FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append( "/expertControl.gml" )
-          .toFile(), is35 );
-      FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append( "/expertControl.gtt" )
-          .toFile(), is36 );
-      FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append( "/expertKarte.gmt" )
-          .toFile(), is37 );
-      FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append(
-          "/expertTabelleGewaesser.gtt" ).toFile(), is38 );
-      FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append(
-          "/expertTabelleKnoten.gtt" ).toFile(), is39 );
-      FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append(
-          "/expertTabelleTeilgebiete.gtt" ).toFile(), is40 );
-      FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append( "/sce.xml" ).toFile(),
-          is41 );
-
-      FileUtilities.makeFileFromStream( false, modelTreeDir.append( "/modell.gmv" ).toFile(), is42 );
-      FileUtilities.makeFileFromStream( false, modelTableDir.append( "/Tabelle_KMGewaesser.gtt" )
-          .toFile(), is43 );
-      FileUtilities.makeFileFromStream( false, modelTableDir.append( "/Tabelle_Knoten.gtt" )
-          .toFile(), is44 );
-      FileUtilities.makeFileFromStream( false, modelTableDir.append( "/Tabelle_Teilgebiete.gtt" )
-          .toFile(), is45 );
-
-      FileUtilities.makeFileFromStream( false, root.append( "/modell.gml" ).toFile(), is46 );
-      FileUtilities.makeFileFromStream( false, root.append( "/.metadata" ).toFile(), is47 );
+      ZipUtilities.unzip( resourceAsStream, path.toFile() );
     }
     catch( Exception e )
     {
       e.printStackTrace();
     }
-  }//copyResourcesToProject
+    finally
+    {
+      IOUtils.closeQuietly( resourceAsStream );
 
+    }
+  }
+
+  /*
+   * private void copyResourcesToProject( IPath path ) { //get path for all
+   * resources IPath root = path;
+   * 
+   * IPath schemaDir = path.append( "/.model/schema" );
+   * schemaDir.toFile().mkdirs();
+   * 
+   * IPath modelDir = path.append( "/.model" );
+   * 
+   * IPath stylesDir = path.append( "/.styles" ); stylesDir.toFile().mkdirs();
+   * 
+   * IPath templatesCalcCaseDir = path.append( "/.templates/calcCase" );
+   * templatesCalcCaseDir.toFile().mkdirs();
+   * 
+   * IPath templatesDir = path.append( "/.templates" );
+   * 
+   * IPath modelMapDir = path.append( "/Modell_Karten" );
+   * modelMapDir.toFile().mkdirs();
+   * 
+   * IPath modelTableDir = path.append( "/Modell_Tabellen" );
+   * modelTableDir.toFile().mkdirs();
+   * 
+   * IPath modelTreeDir = path.append( "/Modell_Baumansicht" );
+   * modelTreeDir.toFile().mkdirs();
+   * 
+   * IPath sourceDir = path.append( "/Shapes" ); sourceDir.toFile().mkdirs();
+   * 
+   * //get resouces as input stream final InputStream is1 =
+   * getClass().getResourceAsStream( "resources/.model/schema/control.xsd" );
+   * final InputStream is2 = getClass().getResourceAsStream(
+   * "resources/.model/schema/feature.xsd" ); final InputStream is3 =
+   * getClass().getResourceAsStream( "resources/.model/schema/geometry.xsd" );
+   * final InputStream is4 = getClass() .getResourceAsStream(
+   * "resources/.model/schema/nacontrol.xsd" ); final InputStream is5 =
+   * getClass().getResourceAsStream( "resources/.model/schema/namodell.xsd" );
+   * final InputStream is6 = getClass().getResourceAsStream(
+   * "resources/.model/schema/obslink.xsd" ); // final InputStream is7 =
+   * getClass().getResourceAsStream( //
+   * "../../../resources/.model/schema/ombrometer.xsd"); final InputStream is8 =
+   * getClass().getResourceAsStream( "resources/.model/schema/xlink.xsd" );
+   * final InputStream is10 = getClass().getResourceAsStream(
+   * "resources/.model/schema/xlinks.xsd" ); final InputStream is11 =
+   * getClass().getResourceAsStream( "resources/.model/schema/xlinksext.xsd" );
+   * 
+   * final InputStream is12 = getClass().getResourceAsStream(
+   * "resources/.model/.calculation.template" ); final InputStream is13 =
+   * getClass().getResourceAsStream( "resources/.model/.calculation.view" ); //
+   * final InputStream is14 = getClass().getResourceAsStream( //
+   * "../../../resources/.model/info.txt"); final InputStream is15 =
+   * getClass().getResourceAsStream( "resources/.model/calcCaseConfig.xml" );
+   * final InputStream is16 = getClass().getResourceAsStream(
+   * "resources/.model/calcWizard.xml" ); final InputStream is17 =
+   * getClass().getResourceAsStream( "resources/.model/modelspec.xml" );
+   * 
+   * final InputStream is18 = getClass().getResourceAsStream(
+   * "resources/.styles/RHBChannel.sld" ); final InputStream is19 =
+   * getClass().getResourceAsStream( "resources/.styles/expertCatchment.sld" );
+   * final InputStream is20 = getClass().getResourceAsStream(
+   * "resources/.styles/expertKMChannel.sld" ); final InputStream is21 =
+   * getClass().getResourceAsStream( "resources/.styles/expertNode.sld" ); final
+   * InputStream is22 = getClass() .getResourceAsStream(
+   * "resources/.styles/expertVChannel.sld" ); final InputStream is23 =
+   * getClass().getResourceAsStream( "resources/.styles/exportNode.sld" ); final
+   * InputStream is24 = getClass().getResourceAsStream(
+   * "resources/.styles/KMChannel.sld" ); final InputStream is25 =
+   * getClass().getResourceAsStream( "resources/.styles/Node.sld" ); // final
+   * InputStream is26 = getClass().getResourceAsStream( //
+   * "../../../resources/.styles/Pegel.sld"); final InputStream is27 =
+   * getClass().getResourceAsStream( "resources/.styles/Subcatchments.sld" );
+   * final InputStream is28 = getClass().getResourceAsStream(
+   * "resources/.styles/hydrotop.sld" ); final InputStream is29 =
+   * getClass().getResourceAsStream( "resources/.styles/VChannel.sld" ); //
+   * final InputStream is30 = getClass().getResourceAsStream( //
+   * "../../../resources/.styles/Zufluss.sld");
+   * 
+   * final InputStream is31 = getClass().getResourceAsStream(
+   * "resources/.templates/steuerparameter.gft" );
+   * 
+   * final InputStream is32 = getClass().getResourceAsStream(
+   * "resources/.templates/calcCase/calcCase.gml" ); final InputStream is33 =
+   * getClass().getResourceAsStream( "resources/.templates/calcCase/control.gmt" );
+   * final InputStream is34 = getClass().getResourceAsStream(
+   * "resources/.templates/calcCase/control.odt" ); final InputStream is35 =
+   * getClass().getResourceAsStream(
+   * "resources/.templates/calcCase/expertControl.gml" ); final InputStream is36 =
+   * getClass().getResourceAsStream(
+   * "resources/.templates/calcCase/expertControl.gtt" ); final InputStream is37 =
+   * getClass().getResourceAsStream(
+   * "resources/.templates/calcCase/expertKarte.gmt" ); final InputStream is38 =
+   * getClass().getResourceAsStream(
+   * "resources/.templates/calcCase/expertTabelleGewaesser.gtt" ); final
+   * InputStream is39 = getClass().getResourceAsStream(
+   * "resources/.templates/calcCase/expertTabelleKnoten.gtt" ); final
+   * InputStream is40 = getClass().getResourceAsStream(
+   * "resources/.templates/calcCase/expertTabelleTeilgebiete.gtt" ); final
+   * InputStream is41 = getClass().getResourceAsStream(
+   * "resources/.templates/calcCase/sce.xml" );
+   * 
+   * final InputStream is42 = getClass().getResourceAsStream(
+   * "resources/Modell_Baumansicht/modell.gmv" );
+   * 
+   * final InputStream is43 = getClass().getResourceAsStream(
+   * "resources/Modell_Tabellen/Tabelle_KMGewaesser.gtt" ); final InputStream
+   * is44 = getClass().getResourceAsStream(
+   * "resources/Modell_Tabellen/Tabelle_Knoten.gtt" ); final InputStream is45 =
+   * getClass().getResourceAsStream(
+   * "resources/Modell_Tabellen/Tabelle_Teilgebiete.gtt" );
+   * 
+   * final InputStream is46 = getClass().getResourceAsStream(
+   * "resources/modell.gml" ); final InputStream is47 =
+   * getClass().getResourceAsStream( "resources/.metadata" ); //copy files to
+   * workspace try {
+   * 
+   * FileUtilities.makeFileFromStream( false, schemaDir.append( "/control.xsd"
+   * ).toFile(), is1 ); FileUtilities.makeFileFromStream( false,
+   * schemaDir.append( "/feature.xsd" ).toFile(), is2 );
+   * FileUtilities.makeFileFromStream( false, schemaDir.append( "/geometry.xsd"
+   * ).toFile(), is3 ); FileUtilities.makeFileFromStream( false,
+   * schemaDir.append( "/nacontrol.xsd" ).toFile(), is4 );
+   * FileUtilities.makeFileFromStream( false, schemaDir.append( "/namodell.xsd"
+   * ).toFile(), is5 ); FileUtilities.makeFileFromStream( false,
+   * schemaDir.append( "/obslink.xsd" ).toFile(), is6 ); //
+   * FileUtilities.makeFileFromStream(false, schemaDir.append( //
+   * "/ombrometer.xsd").toFile(), is7); FileUtilities.makeFileFromStream( false,
+   * schemaDir.append( "/xlink.xsd" ).toFile(), is8 );
+   * FileUtilities.makeFileFromStream( false, schemaDir.append( "/xlinks.xsd"
+   * ).toFile(), is10 ); FileUtilities.makeFileFromStream( false,
+   * schemaDir.append( "/xlinksext.xsd" ).toFile(), is11 );
+   * 
+   * FileUtilities.makeFileFromStream( false, modelDir.append(
+   * "/.calculation.template" ).toFile(), is12 );
+   * FileUtilities.makeFileFromStream( false, modelDir.append(
+   * "/.calculation.view" ).toFile(), is13 ); //
+   * FileUtilities.makeFileFromStream(false, modelDir //
+   * .append("/info.txt").toFile(), is14); FileUtilities.makeFileFromStream(
+   * false, modelDir.append( "/calcCaseConfig.xml" ).toFile(), is15 );
+   * FileUtilities.makeFileFromStream( false, modelDir.append( "/calcWizard.xml"
+   * ).toFile(), is16 ); FileUtilities.makeFileFromStream( false,
+   * modelDir.append( "/modelspec.xml" ).toFile(), is17 );
+   * 
+   * FileUtilities .makeFileFromStream( false, stylesDir.append(
+   * "/RHBChannel.sld" ).toFile(), is18 ); FileUtilities.makeFileFromStream(
+   * false, stylesDir.append( "/expertCatchment.sld" ).toFile(), is19 );
+   * FileUtilities.makeFileFromStream( false, stylesDir.append(
+   * "/expertKMChannel.sld" ).toFile(), is20 ); FileUtilities
+   * .makeFileFromStream( false, stylesDir.append( "/expertNode.sld" ).toFile(),
+   * is21 ); FileUtilities.makeFileFromStream( false, stylesDir.append(
+   * "/expertVChannel.sld" ).toFile(), is22 ); FileUtilities
+   * .makeFileFromStream( false, stylesDir.append( "/exportNode.sld" ).toFile(),
+   * is23 ); FileUtilities.makeFileFromStream( false, stylesDir.append(
+   * "/KMChannel.sld" ).toFile(), is24 ); FileUtilities.makeFileFromStream(
+   * false, stylesDir.append( "/Node.sld" ).toFile(), is25 ); //
+   * FileUtilities.makeFileFromStream(false, stylesDir.append( //
+   * "/Pegel.sld").toFile(), is26); FileUtilities.makeFileFromStream( false,
+   * stylesDir.append( "/Subcatchments.sld" ).toFile(), is27 );
+   * FileUtilities.makeFileFromStream( false, stylesDir.append( "/hydrotop.sld"
+   * ).toFile(), is28 ); FileUtilities.makeFileFromStream( false,
+   * stylesDir.append( "/VChannel.sld" ).toFile(), is29 ); //
+   * FileUtilities.makeFileFromStream(false, stylesDir.append( //
+   * "/Zufluss.sld").toFile(), is30);
+   * 
+   * FileUtilities.makeFileFromStream( false, templatesDir.append(
+   * "/steuerparameter.gft" ) .toFile(), is31 );
+   * 
+   * FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append(
+   * "/calcCase.gml" ) .toFile(), is32 ); FileUtilities.makeFileFromStream(
+   * false, templatesCalcCaseDir.append( "/control.gmt" ) .toFile(), is33 );
+   * FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append(
+   * "/control.odt" ) .toFile(), is34 ); FileUtilities.makeFileFromStream(
+   * false, templatesCalcCaseDir.append( "/expertControl.gml" ) .toFile(), is35 );
+   * FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append(
+   * "/expertControl.gtt" ) .toFile(), is36 ); FileUtilities.makeFileFromStream(
+   * false, templatesCalcCaseDir.append( "/expertKarte.gmt" ) .toFile(), is37 );
+   * FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append(
+   * "/expertTabelleGewaesser.gtt" ).toFile(), is38 );
+   * FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append(
+   * "/expertTabelleKnoten.gtt" ).toFile(), is39 );
+   * FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append(
+   * "/expertTabelleTeilgebiete.gtt" ).toFile(), is40 );
+   * FileUtilities.makeFileFromStream( false, templatesCalcCaseDir.append(
+   * "/sce.xml" ).toFile(), is41 );
+   * 
+   * FileUtilities.makeFileFromStream( false, modelTreeDir.append( "/modell.gmv"
+   * ).toFile(), is42 ); FileUtilities.makeFileFromStream( false,
+   * modelTableDir.append( "/Tabelle_KMGewaesser.gtt" ) .toFile(), is43 );
+   * FileUtilities.makeFileFromStream( false, modelTableDir.append(
+   * "/Tabelle_Knoten.gtt" ) .toFile(), is44 );
+   * FileUtilities.makeFileFromStream( false, modelTableDir.append(
+   * "/Tabelle_Teilgebiete.gtt" ) .toFile(), is45 );
+   * 
+   * FileUtilities.makeFileFromStream( false, root.append( "/modell.gml"
+   * ).toFile(), is46 ); FileUtilities.makeFileFromStream( false, root.append(
+   * "/.metadata" ).toFile(), is47 ); } catch( Exception e ) {
+   * e.printStackTrace(); } }//copyResourcesToProject
+   */
   public void mapCatchment( List sourceFeatureList, HashMap mapping )
   {
 
