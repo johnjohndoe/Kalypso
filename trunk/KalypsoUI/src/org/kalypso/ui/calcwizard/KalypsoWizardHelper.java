@@ -104,7 +104,7 @@ public class KalypsoWizardHelper
               final IObservation obs = (IObservation)loader.load( loaderProps, project,
                   new NullProgressMonitor() );
 
-              final DiagramCurve curve = new DiagramCurve( name + '(' + obsLink.getValueaxis() + ')', obs, mappings, template, null );
+              final DiagramCurve curve = new DiagramCurve( name + " (" + props[i]._linkColumn + ')', obs, mappings, template, null );
 
               template.addCurve( curve );
             }
@@ -117,7 +117,7 @@ public class KalypsoWizardHelper
           else
           {
             final LinkedDiagramCurve curve = new LinkedDiagramCurve( obsLink.getLinktype(),
-                new JAXBXLink( obsLink ), name + '(' + obsLink.getValueaxis() + ')', mappings, template );
+                new JAXBXLink( obsLink ), name + " (" + props[i]._linkColumn + ')', mappings, template );
             
             template.addCurve( curve );
           }
@@ -155,7 +155,7 @@ public class KalypsoWizardHelper
               final IObservation obs = (IObservation)loader.load( loaderProps, project,
                   new NullProgressMonitor() );
 
-              final TableViewColumn col = new TableViewColumn( name + '(' + obsLink.getValueaxis() + ')', obs, true, 50, obsLink.getTimeaxis(), obsLink
+              final TableViewColumn col = new TableViewColumn( name + " (" + props[i]._linkColumn + ')', obs, true, 50, obsLink.getTimeaxis(), obsLink
                   .getValueaxis(), null );
 
               template.addColumn( col );
@@ -168,7 +168,7 @@ public class KalypsoWizardHelper
           }
           else
           {
-            final LinkedTableViewColumn col = new LinkedTableViewColumn( name + '(' + obsLink.getValueaxis() + ')', obsLink
+            final LinkedTableViewColumn col = new LinkedTableViewColumn( name + " (" + props[i]._linkColumn + ')', obsLink
                 .getLinktype(), new JAXBXLink( obsLink ), true, 50, obsLink.getTimeaxis(), obsLink
                 .getValueaxis() );
             

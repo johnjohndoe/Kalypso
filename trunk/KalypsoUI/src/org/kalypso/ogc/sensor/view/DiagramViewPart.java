@@ -116,7 +116,11 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
 
     synchronized( obs )
     {
+      System.out.println( "DiagView enter " + obs );
+      
       m_template.setObservation( obs, new DateRangeArgument( from, to ) );
+      
+      System.out.println( "DiagView exit " + obs );
     }
 
     //new ShowObservationJob( obs ).schedule();

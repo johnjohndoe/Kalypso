@@ -29,6 +29,8 @@ public class ObservationTableEditor extends AbstractEditorPart
 
   private LinkedTableViewTemplate m_template = null;
 
+  private ObservationTable m_table;
+
   /**
    * @see org.kalypso.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -36,15 +38,15 @@ public class ObservationTableEditor extends AbstractEditorPart
   {
     super.createPartControl( parent );
 
-    final ObservationTable table = new ObservationTable( m_model );
+    m_table = new ObservationTable( m_model );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 
     vFrame.setVisible( true );
-    table.setVisible( true );
+    m_table.setVisible( true );
 
-    final JScrollPane pane = new JScrollPane( table );
+    final JScrollPane pane = new JScrollPane( m_table );
     //pane.setBorder( BorderFactory.createEmptyBorder() );
     vFrame.add( pane );
   }
@@ -57,7 +59,7 @@ public class ObservationTableEditor extends AbstractEditorPart
     super.dispose();
     
     if( m_template != null )
-      m_template.removeTemplateEventListener( m_model );
+      m_template.removeTemplateEventListener( m_table );
   }
   
   /**
@@ -79,7 +81,7 @@ public class ObservationTableEditor extends AbstractEditorPart
       monitor.beginTask( "Laden", 1 );
       
       m_template = ObservationTemplateHelper.loadTableViewTemplate( input.getFile() );
-      m_template.addTemplateEventListener( m_model );
+      m_template.addTemplateEventListener( m_table );
       m_model.setRules( m_template );
       
       monitor.worked(1);

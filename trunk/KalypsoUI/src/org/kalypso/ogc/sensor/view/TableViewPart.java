@@ -35,21 +35,23 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
 
   private final DefaultTableViewTemplate m_template = new DefaultTableViewTemplate();
 
+  private ObservationTable m_table;
+
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   public void createPartControl( final Composite parent )
   {
-    final ObservationTable table = new ObservationTable( m_model );
-    m_template.addTemplateEventListener( m_model );
+    m_table = new ObservationTable( m_model );
+    m_template.addTemplateEventListener( m_table );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 
     vFrame.setVisible( true );
-    table.setVisible( true );
+    m_table.setVisible( true );
 
-    final JScrollPane pane = new JScrollPane( table );
+    final JScrollPane pane = new JScrollPane( m_table );
     pane.setBorder( BorderFactory.createEmptyBorder() );
     vFrame.add( pane );
 
@@ -63,7 +65,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   {
     getSite().getPage().removePartListener( this );
 
-    m_template.removeTemplateEventListener( m_model );
+    m_template.removeTemplateEventListener( m_table );
     
     super.dispose();
   }
@@ -100,7 +102,11 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
 
     synchronized( obs )
     {
+      System.out.println( "TableView enter " + obs );
+      
       m_template.setObservation( obs, false, new DateRangeArgument( from, to ) );
+      
+      System.out.println( "TableView exit " + obs );
     }
 
     //    Job job = new ShowObservationJob( obs );
