@@ -35,7 +35,7 @@ public class RasterTest extends TestCase
             final InputStreamReader inputStreamReader = new InputStreamReader(
                     resourceAsStream);
             reader = new KrigingReader(inputStreamReader);
-            FileWriter gmlWriter = new FileWriter(new File("/tmp/model.conf"));
+//            FileWriter gmlWriter = new FileWriter(new File("/tmp/model.conf"));
             URL gmlURL = getClass().getResource(
                     "../../namodel/modell/modell.gml");
             URL schemaURL = getClass().getResource(
