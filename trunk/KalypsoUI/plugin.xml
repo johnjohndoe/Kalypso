@@ -3,9 +3,10 @@
 <plugin
    id="org.kalypso.ui"
    name="KalypsoUI"
-   version="0.0.1"
+   version="0.0.2"
    provider-name="org.kalypso"
    class="org.kalypso.ui.KalypsoGisPlugin">
+
    <runtime>
       <library name="KalypsoUi.jar">
          <export name="*"/>
@@ -62,6 +63,7 @@
          <export name="*"/>
       </library>
    </runtime>
+
    <requires>
       <import plugin="org.eclipse.ui.workbench" export="true"/>
       <import plugin="org.eclipse.jface" export="true"/>
@@ -77,105 +79,122 @@
       <import plugin="org.eclipse.debug.ui" export="true"/>
       <import plugin="org.apache.ant" export="true"/>
       <import plugin="org.kalypso.deegree" export="true"/>
-      <import plugin="org.kalypso.core" export="false"/>
+      <import plugin="org.kalypso.core"/>
    </requires>
-   <extension point="org.eclipse.core.runtime.preferences">
-	    <initializer class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer"/>
+
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer">
+      </initializer>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="org.kalypso.ui.preferences.KalypsoPreferencePage"
             name="Kalypso"
-            id="org.kalypso.ui.preferences.KalypsoPreferencePage"/>
+            class="org.kalypso.ui.preferences.KalypsoPreferencePage"
+            id="org.kalypso.ui.preferences.KalypsoPreferencePage">
+      </page>
    </extension>
-   
    <extension
          point="org.eclipse.ui.editors">
       <editor
+            name="Kalypso Gisview Editor"
+            default="true"
+            extensions="gmt"
             icon="icons/kalypso_gmt.gif"
             class="org.kalypso.ui.editor.mapeditor.GisMapEditor"
-            default="true"
-            name="Kalypso Gisview Editor"
-            id="org.kalypso.ui.editor.mapeditor.GisMapEditor"
-            extensions="gmt"/>
+            id="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+      </editor>
       <editor
-            class="org.kalypso.ui.editor.gistableeditor.GisTableEditor"
-            icon="icons/kalypso_gtt.gif"
-            default="true"
-            contributorClass="org.kalypso.ui.editor.gistableeditor.GisTableEditorActionBarContributor"
             name="Kalypso GisTableEditor"
-            id="org.kalypso.ui.editor.gistableeditor.GisTableEditor"
-            extensions="gtt"/>
-      <editor
-            class="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"
-            icon="icons/kalypso_odt.gif"
             default="true"
+            extensions="gtt"
+            icon="icons/kalypso_gtt.gif"
+            contributorClass="org.kalypso.ui.editor.gistableeditor.GisTableEditorActionBarContributor"
+            class="org.kalypso.ui.editor.gistableeditor.GisTableEditor"
+            id="org.kalypso.ui.editor.gistableeditor.GisTableEditor">
+      </editor>
+      <editor
             name="Kalypso Observation DiagramEditor"
-            id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"
-            extensions="odt"/>
-      <editor
-            class="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
-            icon="icons/kalypso_ott.gif"
             default="true"
+            extensions="odt"
+            icon="icons/kalypso_odt.gif"
+            class="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"
+            id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor">
+      </editor>
+      <editor
             name="Kalypso Observation TableEditor"
-            id="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
-            extensions="ott"/>
-      <editor
-            launcher="org.kalypso.ui.editorLauncher.GisTemplateLauncher"
             default="true"
+            extensions="ott"
+            icon="icons/kalypso_ott.gif"
+            class="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
+            id="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor">
+      </editor>
+      <editor
             name="Gis Vorlagenauswahl"
+            default="true"
+            extensions="gml,shp"
             id="org.kalypso.ui.editor.GisEditor"
-            extensions="gml,shp"/>
+            launcher="org.kalypso.ui.editorLauncher.GisTemplateLauncher">
+      </editor>
       <editor
-            launcher="org.kalypso.ui.editorLauncher.ObsTemplateLauncher"
-            default="false"
             name="Zeitreihen Vorlagenauswahl"
+            default="false"
+            extensions="zml"
             id="org.kalypso.ui.editor.ObsEditor"
-            extensions="zml"/>
+            launcher="org.kalypso.ui.editorLauncher.ObsTemplateLauncher">
+      </editor>
       <editor
+            name="Feature Editor"
+            default="true"
+            extensions="gft"
             icon="icons/kalypso_gtt.gif"
             class="org.kalypso.ui.editor.featureeditor.FeatureEditor"
-            default="true"
-            name="Feature Editor"
-            id="org.kalypso.ui.editor.FeatureEditor"
-            extensions="gft"/>
+            id="org.kalypso.ui.editor.FeatureEditor">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.views">
       <category
             name="Kalypso"
-            id="Kalypso"/>
+            id="Kalypso">
+      </category>
       <view
-            class="org.kalypso.ui.repository.view.RepositoryExplorerPart"
+            name="Zeitreihen Repository"
             icon="icons/repository/repository.gif"
             category="Kalypso"
-            name="Zeitreihen Repository"
-            id="org.kalypso.ui.repository.view.RepositoryExplorerPart"/>
+            class="org.kalypso.ui.repository.view.RepositoryExplorerPart"
+            id="org.kalypso.ui.repository.view.RepositoryExplorerPart">
+      </view>
       <view
-            icon="icons/kalypso_odt.gif"
-            class="org.kalypso.ogc.sensor.view.DiagramViewPart"
-            category="Kalypso"
             name="Diagram QuickView"
-            id="org.kalypso.ogc.sensor.view.DiagramViewPart"/>
-      <view
-            icon="icons/kalypso_ott.gif"
-            class="org.kalypso.ogc.sensor.view.TableViewPart"
+            icon="icons/kalypso_odt.gif"
             category="Kalypso"
+            class="org.kalypso.ogc.sensor.view.DiagramViewPart"
+            id="org.kalypso.ogc.sensor.view.DiagramViewPart">
+      </view>
+      <view
             name="Table QuickView"
-            id="org.kalypso.ogc.sensor.view.TableViewPart"/>          
-      <view
-            icon="icons/full/elcl16/kde_filter.gif"
-            class="org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart"
+            icon="icons/kalypso_ott.gif"
             category="Kalypso"
+            class="org.kalypso.ogc.sensor.view.TableViewPart"
+            id="org.kalypso.ogc.sensor.view.TableViewPart">
+      </view>
+      <view
             name="Style Editor"
-            id="org.kalypso.ui.editor.mapeditor.views.styleeditor"/>
-      <view
-            icon="etc/kalypso16.gif"
-            class="org.kalypso.ui.view.prognose.PrognoseView"
+            icon="icons/full/elcl16/kde_filter.gif"
             category="Kalypso"
+            class="org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart"
+            id="org.kalypso.ui.editor.mapeditor.views.styleeditor">
+      </view>
+      <view
             name="Hochwasser Vorhersage"
-            id="org.kalypso.view.prognose"/>
+            icon="etc/kalypso16.gif"
+            category="Kalypso"
+            class="org.kalypso.ui.view.prognose.PrognoseView"
+            id="org.kalypso.view.prognose">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.editorActions">
@@ -186,63 +205,75 @@
                label="Tabelle"
                path="additions"
                id="org.kalypso.ui.editors.tableeditor.menu">
-            <groupMarker name="tabelle"/>
-            <separator name="spalten"/>
-            <separator name="edit"/>
+            <groupMarker
+                  name="tabelle">
+            </groupMarker>
+            <separator
+                  name="spalten">
+            </separator>
+            <separator
+                  name="edit">
+            </separator>
          </menu>
-		 <menu
+         <menu
                label="Spalten"
                path="org.kalypso.ui.editors.tableeditor.menu/spalten"
                id="org.kalypso.ui.editors.tableeditor.columnmenu">
-            <separator name="spaltenMenu"/>
+            <separator
+                  name="spaltenMenu">
+            </separator>
          </menu>
          <action
-               toolbarPath="tabelle"
                label="Berichtsablage..."
+               style="push"
                icon="icons/gistable/export_wiz.gif"
-               tooltip="Die Tabelle in das Berichtswesen exportieren..."
                class="org.kalypso.ui.editor.gistableeditor.actions.ExportBerichtActionDelegate"
-               style="push"
+               tooltip="Die Tabelle in das Berichtswesen exportieren..."
                menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
-               id="org.kalypso.ui.editor.gistableeditor.ExportAction"/>
-          <action
-                toolbarPath="tabelle"
-                label="Exportieren..."
-                icon="icons/gistable/export_wiz.gif"
-                tooltip="Die Tabelle exportieren"
-                class="org.kalypso.ui.editor.gistableeditor.actions.ExportActionDelegate"
-                style="push"
-                menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
-                id="org.kalypso.ui.editor.gistableeditor.ExportAction"/>
-         <action
-               enablesFor="+"
-               toolbarPath="edit"
-               label="Daten speichern"
-               class="org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate"
-               tooltip="Speichert die Daten der Tabelle"
-               icon="icons/gistable/save_edit.gif"
-               style="push"
-               menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
-               id="org.kalypso.ui.editor.gistableeditor.SaveDataAction">
+               toolbarPath="tabelle"
+               id="org.kalypso.ui.editor.gistableeditor.ExportAction">
          </action>
          <action
+               label="Exportieren..."
+               style="push"
+               icon="icons/gistable/export_wiz.gif"
+               class="org.kalypso.ui.editor.gistableeditor.actions.ExportActionDelegate"
+               tooltip="Die Tabelle exportieren"
+               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
+               toolbarPath="tabelle"
+               id="org.kalypso.ui.editor.gistableeditor.ExportAction">
+         </action>
+         <action
+               style="push"
+               id="org.kalypso.ui.editor.gistableeditor.SaveDataAction"
                toolbarPath="edit"
+               class="org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate"
+               enablesFor="+"
+               icon="icons/gistable/save_edit.gif"
+               label="Daten speichern"
+               menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
+               tooltip="Speichert die Daten der Tabelle">
+         </action>
+         <action
                label="Rückgängig"
-               tooltip="Die letzte Änderung der Daten Rückgängig machen"
+               style="push"
                icon="icons/gistable/undo_edit.gif"
                class="org.kalypso.ui.editor.gistableeditor.actions.UndoDelegate"
-               style="push"
+               tooltip="Die letzte Änderung der Daten Rückgängig machen"
                menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
-               id="org.kalypso.ui.editor.gistableeditor.UndoActionDelegate"/>
-         <action
                toolbarPath="edit"
+               id="org.kalypso.ui.editor.gistableeditor.UndoActionDelegate">
+         </action>
+         <action
                label="Wiederherstellen"
-               tooltip="Die letzte Korrektur wiederherstellen"
+               style="push"
                icon="icons/gistable/redo_edit.gif"
                class="org.kalypso.ui.editor.gistableeditor.actions.RedoDelegate"
-               style="push"
+               tooltip="Die letzte Korrektur wiederherstellen"
                menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
-               id="org.kalypso.ui.editor.gistableeditor.RedoActionDelegate"/>
+               toolbarPath="edit"
+               id="org.kalypso.ui.editor.gistableeditor.RedoActionDelegate">
+         </action>
       </editorContribution>
       <editorContribution
             targetID="org.kalypso.ui.editor.mapeditor.GisMapEditor"
@@ -251,141 +282,165 @@
                label="Karte"
                path="additions"
                id="org.kalypso.ui.editors.mapeditor.menu">
-            <groupMarker name="tools"/>
-            <separator name="sep"/>
-            <groupMarker name="actions"/>
-            <separator name="sep"/>
-            <groupMarker name="edit"/>
+            <groupMarker
+                  name="tools">
+            </groupMarker>
+            <separator
+                  name="sep">
+            </separator>
+            <groupMarker
+                  name="actions">
+            </groupMarker>
+            <separator
+                  name="sep">
+            </separator>
+            <groupMarker
+                  name="edit">
+            </groupMarker>
          </menu>
          <action
-               toolbarPath="karte/actions"
                label="Ausschnitt maximieren"
-               tooltip="maximiert den angezeigten Ausschnitt"
+               style="push"
                icon="icons/full/elcl16/kde_window_fullscreen.gif"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate"
-               style="push"
+               tooltip="maximiert den angezeigten Ausschnitt"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/actions"
-               id="org.kalypso.ui.editor.mapeditor.action.FullExtentAction"/>
-         <action
-               toolbarPath="karte/tools"
-               label="Ausschnitt vergrößern"
-               icon="icons/map/zoomin.gif"
-               tooltip="vergrößert den Kartenausschnitt"
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
-               style="radio"
-               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-               id="org.kalypso.ui.editor.mapeditor.action.ZoomInAction"/>
-         <action
                toolbarPath="karte/actions"
+               id="org.kalypso.ui.editor.mapeditor.action.FullExtentAction">
+         </action>
+         <action
+               label="Ausschnitt vergrößern"
+               style="radio"
+               icon="icons/map/zoomin.gif"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
+               tooltip="vergrößert den Kartenausschnitt"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+               toolbarPath="karte/tools"
+               id="org.kalypso.ui.editor.mapeditor.action.ZoomInAction">
+         </action>
+         <action
                label="Ausschnitt verkleinern"
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate"
+               style="push"
                icon="icons/map/zoomout.gif"
                tooltip="verkleinert den Kartenausschnitt"
-          	   style="push"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/actions"
-               id="org.kalypso.ui.editor.mapeditor.action.ZoomOutAction"/>
+               toolbarPath="karte/actions"
+               id="org.kalypso.ui.editor.mapeditor.action.ZoomOutAction">
+         </action>
          <action
+               state="true"
+               style="radio"
+               id="org.kalypso.ui.editor.mapeditor.action.PanAction"
                toolbarPath="karte/tools"
-               label="Kartenausschnitt verschieben"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate"
                icon="icons/map/pan.gif"
-               tooltip="verschiebt den Kartenausschnitt"
-               style="radio"
-               state="true"
+               label="Kartenausschnitt verschieben"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-               id="org.kalypso.ui.editor.mapeditor.action.PanAction"/>
+               tooltip="verschiebt den Kartenausschnitt">
+         </action>
          <action
-               toolbarPath="karte/tools"
                label="Edit Feature"
-               tooltip="die Daten eines Objekts anzeigen"
+               style="radio"
                icon="icons/full/elcl16/kde_contexthelp.gif"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureWidgetDelegate"
-               style="radio"
+               tooltip="die Daten eines Objekts anzeigen"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-               id="org.kalypso.ui.editor.mapeditor.action.EditFeatureAction"/>
+               toolbarPath="karte/tools"
+               id="org.kalypso.ui.editor.mapeditor.action.EditFeatureAction">
+         </action>
          <action
-               disabledIcon="icons/map/save_edit_disabled.gif"
-               toolbarPath="karte/edit"
-               label="Thema speichern"
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate"
-               icon="icons/map/save_edit.gif"
-               tooltip="Speichert die Daten des aktiven Themas"
                style="push"
-               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-               id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction"/>
-         <action
+               id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction"
                toolbarPath="karte/edit"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate"
+               disabledIcon="icons/map/save_edit_disabled.gif"
+               icon="icons/map/save_edit.gif"
+               label="Thema speichern"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
+               tooltip="Speichert die Daten des aktiven Themas">
+         </action>
+         <action
                label="Rückgängig"
-               tooltip="letzte Änderung rückgängig machen"
+               style="push"
                icon="icons/map/undo_edit.gif"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate"
-               style="push"
+               tooltip="letzte Änderung rückgängig machen"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-               id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction"/>
-         <action
                toolbarPath="karte/edit"
+               id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction">
+         </action>
+         <action
                label="Wiederherstellen"
+               style="push"
                icon="icons/map/redo_edit.gif"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate"
-               style="push"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-               id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction"/>
-	  </editorContribution>
+               toolbarPath="karte/edit"
+               id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction">
+         </action>
+      </editorContribution>
       <editorContribution
             targetID="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
             id="org.kalypso.ui.editor.obstableeditor.EditorContribution">
          <action
-               toolbarPath="table"
                label="Zeile hinzufügen"
-               tooltip="Fügt eine Zeile hinzu. Öffnet Eingabedialog."
+               style="push"
                icon="icons/obstable/add_row.gif"
                class="org.kalypso.ui.editor.obstableeditor.actions.AddRowAction"
-               style="push"
-               id="org.kalypso.ui.editor.obstableeditor.actions.AddRowAction"/>
-         <action
+               tooltip="Fügt eine Zeile hinzu. Öffnet Eingabedialog."
                toolbarPath="table"
+               id="org.kalypso.ui.editor.obstableeditor.actions.AddRowAction">
+         </action>
+         <action
                label="Zeile entfernen"
-               tooltip="Entfernt die ausgewählte Zeile"
+               style="push"
                icon="icons/obstable/rem_row.gif"
                class="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction"
-               style="push"
-               id="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction"/>
-         <action
+               tooltip="Entfernt die ausgewählte Zeile"
                toolbarPath="table"
+               id="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction">
+         </action>
+         <action
                label="Daten speichern"
-               tooltip="Speichert die grundliegende Daten"
+               style="push"
                icon="icons/gistable/save_edit.gif"
                class="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction"
-               style="push"
-               id="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction"/>
+               tooltip="Speichert die grundliegende Daten"
+               toolbarPath="table"
+               id="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction">
+         </action>
          <action
-               toolbarPath="table_export"
                label="Tabelle exportieren"
-               class="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate"
+               style="push"
                icon="icons/gistable/export_wiz.gif"
                tooltip="Exportiert die Tabelle als CSV-Datei"
-               style="push"
-               id="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate"/>
+               class="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate"
+               toolbarPath="table_export"
+               id="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate">
+         </action>
       </editorContribution>
       <editorContribution
             targetID="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"
             id="org.kalypso.ui.editor.diagrameditor.EditorContribution">
          <action
-               toolbarPath="diagram"
                label="Im Grafikprogramm öffnen"
-               tooltip="Öffnet das aktuelle Diagramm im Grafikprogramm"
+               style="push"
                icon="icons/observation/grafik-icon.gif"
                class="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction"
-               style="push"
-               id="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction"/>
-         <action
+               tooltip="Öffnet das aktuelle Diagramm im Grafikprogramm"
                toolbarPath="diagram"
+               id="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction">
+         </action>
+         <action
                label="Diagramm exportieren"
-               class="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate"
+               style="push"
                icon="icons/gistable/export_wiz.gif"
                tooltip="Exportiert der aktuelle Diagramm als Bild"
-               style="push"
-               id="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate"/>
+               class="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate"
+               toolbarPath="diagram"
+               id="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate">
+         </action>
       </editorContribution>
    </extension>
    <extension
@@ -396,23 +451,29 @@
          <menu
                label="Menu"
                path="org.kalypso.ui.editors.tableeditor.popMenu"
-               id="org.kalypso.ui.editors.tableeditor.popMenu.menu"/>
-        </viewerContribution>
+               id="org.kalypso.ui.editors.tableeditor.popMenu.menu">
+         </menu>
+      </viewerContribution>
    </extension>
    <extension
          point="org.eclipse.ui.ide.resourceFilters">
       <filter
             selected="false"
-            pattern="*.gml"/>
+            pattern="*.gml">
+      </filter>
    </extension>
    <extension
          id="ModelNature"
          name="ModelNature"
          point="org.eclipse.core.resources.natures">
       <runtime>
-         <run class="org.kalypso.ui.nature.ModelNature"/>
+         <run
+               class="org.kalypso.ui.nature.ModelNature">
+         </run>
       </runtime>
-      <options allowLinking="true"/>
+      <options
+            allowLinking="true">
+      </options>
    </extension>
    <extension
          point="org.eclipse.ui.viewActions">
@@ -421,70 +482,80 @@
             id="org.kalypso.ui.resource.vc1">
          <action
                label="Grafik starten (mit Vorlage)"
-               id="org.kalypso.ui.navigator.GrafikViewActionDelegate"
+               icon="icons/observation/grafik-icon.gif"
+               class="org.kalypso.ui.navigator.GrafikViewActionDelegate"
+               tooltip="Grafik-Tool anhand einer Vorlage starten"
                menubarPath="additions"
-	           toolbarPath="additions" 
-               icon="icons/observation/grafik-icon.gif" 
-               tooltip="Grafik-Tool anhand einer Vorlage starten" 
-               class="org.kalypso.ui.navigator.GrafikViewActionDelegate" 
-               enablesFor="1"> 
-			<selection class="org.eclipse.core.resources.IFile" name="*.odt"/>
-   <selection
-         class="org.eclipse.core.resources.IFile"
-         name="*.tpl"/> 
-	   	</action>
-
-               
+               enablesFor="1"
+               toolbarPath="additions"
+               id="org.kalypso.ui.navigator.GrafikViewActionDelegate">
+            <selection
+                  name="*.odt"
+                  class="org.eclipse.core.resources.IFile">
+            </selection>
+            <selection
+                  name="*.tpl"
+                  class="org.eclipse.core.resources.IFile">
+            </selection>
+         </action>
       </viewContribution>
-
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
+            name="Kalypso Zeitreihenbrowser"
             icon="icons/perspective/zml_browser.gif"
             class="org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"
-            name="Kalypso Zeitreihenbrowser"
-            id="org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"/>
+            id="org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory">
+      </perspective>
       <perspective
-            class="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"
+            name="Kalypso Modeler"
             icon="icons/perspective/expert.gif"
             fixed="false"
-            name="Kalypso Modeler"
-            id="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"/>
+            class="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"
+            id="org.kalypso.ui.perspectives.ModelerPerspectiveFactory">
+      </perspective>
       <perspective
-            icon="etc/kalypso16.gif"
-            class="org.kalypso.ui.perspectives.PrognosePerspective"
-            fixed="true"
             name="Hochwasser Vorhersage"
-            id="org.kalypso.ui.perspectives.PrognosePerspective"/>
+            icon="etc/kalypso16.gif"
+            fixed="true"
+            class="org.kalypso.ui.perspectives.PrognosePerspective"
+            id="org.kalypso.ui.perspectives.PrognosePerspective">
+      </perspective>
    </extension>
    <extension
          id="product"
          name="Kalypso Enterprise"
          point="org.eclipse.core.runtime.products">
       <product
-            description="Kalypso Enterprise Modelling Machine"
+            application="org.kalypso.ui.application"
             name="Kalypso Enterprise"
-            application="org.kalypso.ui.application">
+            description="Kalypso Enterprise Modelling Machine">
          <property
-               value="Kalypso Enterprise Copyright 2004 by BCE Koblenz and TUHH"
-               name="aboutText"/>
+               name="aboutText"
+               value="Kalypso Enterprise Copyright 2004 by BCE Koblenz and TUHH">
+         </property>
          <property
-               value="etc/kalypso32.gif"
-               name="aboutImage"/>
+               name="aboutImage"
+               value="etc/kalypso32.gif">
+         </property>
          <property
-               value="etc/kalypso32.gif"
-               name="featureImage"/>
+               name="featureImage"
+               value="etc/kalypso32.gif">
+         </property>
          <property
-               value="etc/kalypso16.gif"
-               name="windowImage"/>
+               name="windowImage"
+               value="etc/kalypso16.gif">
+         </property>
       </product>
    </extension>
    <extension
          id="application"
          point="org.eclipse.core.runtime.applications">
       <application>
-         <run class="org.kalypso.ui.application.KalypsoApplication"/>
+         <run
+               class="org.kalypso.ui.application.KalypsoApplication">
+         </run>
       </application>
    </extension>
    <extension
@@ -498,103 +569,123 @@
                label="Modell"
                path="additions"
                id="org.kalypso.menu.model">
-            <groupMarker name="modelStart"/>
-            <separator name="modelSep"/>
-            <groupMarker name="prognoseStart"/>
+            <groupMarker
+                  name="modelStart">
+            </groupMarker>
+            <separator
+                  name="modelSep">
+            </separator>
+            <groupMarker
+                  name="prognoseStart">
+            </groupMarker>
          </menu>
-		 <action
-	         label="Vorhersage durchführen"
-	         icon="etc/kalypso16.gif"
-	         class="org.kalypso.ui.action.StartCalcWizardAction"
-	         menubarPath="org.kalypso.menu.model/prognoseStart"
-	         id="org.kalypso.action.model.checkoutModel"/>
+         <action
+               label="Vorhersage durchführen"
+               icon="etc/kalypso16.gif"
+               class="org.kalypso.ui.action.StartCalcWizardAction"
+               menubarPath="org.kalypso.menu.model/prognoseStart"
+               id="org.kalypso.action.model.checkoutModel">
+         </action>
          <action
                label="Berechnung durchführen"
-               class="org.kalypso.ui.action.StartCalculationActionDelegate"
                icon="icons/rechne.gif"
                tooltip="führt die Berechnung der selektierten Rechenvariante aus, bereits vorhandene Ergebnisdaten werden überschrieben"
+               class="org.kalypso.ui.action.StartCalculationActionDelegate"
                menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
-               id="org.kalypso.action.model.runCalcCase"/>
+               id="org.kalypso.action.model.runCalcCase">
+         </action>
          <action
                label="Zurückspeichern"
                icon="icons/util/copy_r_co.gif"
-               class="org.kalypso.ui.action.CommitModelDelegate"
                tooltip="Speichert die Änderungen am Modell auf den Server zurück"
+               class="org.kalypso.ui.action.CommitModelDelegate"
                menubarPath="org.kalypso.menu.model/modelStart"
-               id="org.kalypso.action.model.commitModel"/>
+               id="org.kalypso.action.model.commitModel">
+         </action>
          <action
                label="Modell aktualisieren"
                icon="icons/util/copy_l_co.gif"
-               class="org.kalypso.ui.action.UpdateModelDelegate"
                tooltip="aktualisiert ein bereits vorhandenes Modell mit Daten vom Server"
+               class="org.kalypso.ui.action.UpdateModelDelegate"
                menubarPath="org.kalypso.menu.model/modelStart"
-               id="org.kalypso.action.model.updateModel"/>
+               id="org.kalypso.action.model.updateModel">
+         </action>
          <action
-               helpContextId="org.kalypso.manual.menu_modell"
                label="Vom Server laden..."
-               tooltip="lädt ein Modell vom Sever, falls es nicht bereits vorhanden ist"
-               class="org.kalypso.ui.action.LoadServerModelDelegate"
                icon="icons/util/copy_l_co.gif"
+               helpContextId="org.kalypso.manual.menu_modell"
+               class="org.kalypso.ui.action.LoadServerModelDelegate"
+               tooltip="lädt ein Modell vom Sever, falls es nicht bereits vorhanden ist"
                menubarPath="org.kalypso.menu.model/modelStart"
-               id="org.kalypso.action.model.checkoutModel"/>               
+               id="org.kalypso.action.model.checkoutModel">
+         </action>
          <action
-               retarget="false"
                label="Kopieren..."
                icon="icons/util/copy_edit.gif"
-               class="org.kalypso.ui.action.CopyModelDelegate"
                tooltip="legt eine Variante vom aktuelle gewählten Modell an"
+               class="org.kalypso.ui.action.CopyModelDelegate"
                menubarPath="org.kalypso.menu.model/modelStart"
-               id="org.kalypso.action.model.copyModel"/>
+               retarget="false"
+               id="org.kalypso.action.model.copyModel">
+         </action>
          <menu
                label="Rechenvariante"
                path="org.kalypso.menu.model"
                id="org.kalypso.menu.calcCase">
-            <groupMarker name="calcCaseStart"/>
+            <groupMarker
+                  name="calcCaseStart">
+            </groupMarker>
          </menu>
-
          <action
                label="Archivieren"
-               class="org.kalypso.ui.action.CommitCalcCaseDelegate"
                icon="icons/util/copy_r_co.gif"
                tooltip="legt eine Rechenvariante auf dem Server ab"
+               class="org.kalypso.ui.action.CommitCalcCaseDelegate"
                menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
-               id="org.kalypso.action.model.commitCalcCase"/>
+               id="org.kalypso.action.model.commitCalcCase">
+         </action>
          <action
                label="Vom Server laden..."
-               class="org.kalypso.ui.action.GetCalcCaseDelegate"
                icon="icons/util/copy_l_co.gif"
                tooltip="lädt eine vorhandene Rechenvariante vom Server"
+               class="org.kalypso.ui.action.GetCalcCaseDelegate"
                menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
-               id="org.kalypso.action.model.getCalcCase"/>
+               id="org.kalypso.action.model.getCalcCase">
+         </action>
          <action
                label="Zeitreihen aktualisieren"
                icon="icons/util/update.gif"
-               tooltip="aktualisiert die Zeitreihen anhand der in den Steuerparametern definierten Zeiträume"
                class="org.kalypso.ui.action.UpdateCalcCaseTimeseries"
+               tooltip="aktualisiert die Zeitreihen anhand der in den Steuerparametern definierten Zeiträume"
                menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
-               id="org.kalypso.action.model.updateCalcCaseTimeseries"/>
+               id="org.kalypso.action.model.updateCalcCaseTimeseries">
+         </action>
          <action
                label="Kopieren..."
-               class="org.kalypso.ui.action.CopyCalcCase"
-               tooltip="legt eine Variante vom selektierten Rechenfall an"
                icon="icons/util/copy_edit.gif"
+               tooltip="legt eine Variante vom selektierten Rechenfall an"
+               class="org.kalypso.ui.action.CopyCalcCase"
                menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
-               id="org.kalypso.action.model.copyCalcCase"/>
+               id="org.kalypso.action.model.copyCalcCase">
+         </action>
          <action
                label="Neu..."
                icon="icons/util/new_wiz.gif"
-               tooltip="Erzeugt einen neuen Rechenfall"
                class="org.kalypso.ui.action.NewCalcCaseAction"
+               tooltip="Erzeugt einen neuen Rechenfall"
                menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
-               id="org.kalypso.action.model.newCalcCase"/>
+               id="org.kalypso.action.model.newCalcCase">
+         </action>
       </actionSet>
    </extension>
    <extension
          point="org.eclipse.ui.exportWizards">
       <wizard
+            name="Export über Kalypso Zeitreihendienst"
             icon="icons/repository/zml_upload.gif"
             class="org.kalypso.ui.wizard.ocs.OcsExportWizard"
-            name="Export über Kalypso Zeitreihendienst"
-            id="org.kalypso.ui.wizard.ocs.OcsExportWizard"/>
+            id="org.kalypso.ui.wizard.ocs.OcsExportWizard">
+      </wizard>
    </extension>
+
 </plugin>

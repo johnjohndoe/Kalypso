@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.enterprise"
       label="Kalypso Enterprise"
-      version="0.0.1"
+      version="0.0.2"
       provider-name="kalypso.org"
       plugin="org.kalypso.ui"
       image="splash.bmp"
