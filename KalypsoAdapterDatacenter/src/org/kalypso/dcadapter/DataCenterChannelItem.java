@@ -29,6 +29,11 @@ public class DataCenterChannelItem implements IRepositoryItem
     m_channel = channel;
   }
 
+  public Channel getChannel( )
+  {
+    return m_channel;
+  }
+  
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */

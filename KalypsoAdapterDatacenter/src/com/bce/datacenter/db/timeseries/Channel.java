@@ -28,8 +28,13 @@ public class Channel extends DataObject
 
   private List m_tables = null;
 
+  private String m_strUnit = null;
+
+  private String m_strType = null;
+
   /**
    * Constructor for existing object to build from database
+   * 
    * @param con
    * @param id
    *          internal object id
@@ -51,8 +56,8 @@ public class Channel extends DataObject
    * @param typeRef
    * @param unitRef
    */
-  public Channel( final Connection con, int id, String name, String desc, String identifier,
-      int ownerRef, int typeRef, int unitRef )
+  public Channel( final Connection con, int id, String name, String desc,
+      String identifier, int ownerRef, int typeRef, int unitRef )
   {
     super( con, id, name, desc );
 
@@ -60,6 +65,42 @@ public class Channel extends DataObject
     m_ownerRef = ownerRef;
     m_typeRef = typeRef;
     m_unitRef = unitRef;
+  }
+
+  public String getUnit( ) throws SQLException
+  {
+    if( m_strUnit == null )
+    {
+      final String sql = "SELECT UNITSTR FROM G_UNITS WHERE UNITID = "
+          + m_unitRef;
+      final ResultSet rs = m_con.createStatement().executeQuery( sql );
+      rs.next();
+
+      m_strUnit = rs.getString( 1 );
+
+      rs.close();
+      m_con.commit();
+    }
+
+    return m_strUnit;
+  }
+
+  public String getType( ) throws SQLException
+  {
+    if( m_strType == null )
+    {
+      final String sql = "SELECT NAME FROM TS_CHANNELTYPE WHERE ID = "
+          + m_typeRef;
+      final ResultSet rs = m_con.createStatement().executeQuery( sql );
+      rs.next();
+
+      m_strType = rs.getString( 1 );
+
+      rs.close();
+      m_con.commit();
+    }
+
+    return m_strType;
   }
 
   /**
@@ -74,8 +115,7 @@ public class Channel extends DataObject
     {
       String sql = "SELECT dataTableName FROM TS_TIMESERIES WHERE is_Recipient = 1 and channel_ref = "
           + m_ID;
-      ResultSet rs = m_con.createStatement().executeQuery(
-          sql );
+      ResultSet rs = m_con.createStatement().executeQuery( sql );
 
       m_tables = new Vector();
 
@@ -115,8 +155,8 @@ public class Channel extends DataObject
    * @return channel
    * @throws SQLException
    */
-  public static Channel findChannel( final Connection con, final String identifier )
-      throws SQLException
+  public static Channel findChannel( final Connection con,
+      final String identifier ) throws SQLException
   {
     String sql = "SELECT ID FROM TS_CHANNEL WHERE IDENTIFIER = ?";
 
@@ -149,8 +189,8 @@ public class Channel extends DataObject
   {
     try
     {
-      PreparedStatement stmt = m_con.prepareStatement(
-              "SELECT NAME, DESCRIPTION, IDENTIFIER, OWNER_REF, TYPE_REF, UNIT_REF FROM TS_CHANNEL WHERE ID = ?" );
+      PreparedStatement stmt = m_con
+          .prepareStatement( "SELECT NAME, DESCRIPTION, IDENTIFIER, OWNER_REF, TYPE_REF, UNIT_REF FROM TS_CHANNEL WHERE ID = ?" );
 
       stmt.setInt( 1, m_ID );
 
