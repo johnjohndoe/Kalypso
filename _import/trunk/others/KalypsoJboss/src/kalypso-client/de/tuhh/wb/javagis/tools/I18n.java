@@ -74,7 +74,7 @@ public class I18n
 		StringBuffer stBuff = new StringBuffer(prop);
 		stBuff.deleteCharAt(0);
 		stBuff.deleteCharAt((stBuff.length()-1));
-		return stBuff.toString();
+		return stBuff.toString()+" ["+key+"]";
 	    }
     }
     

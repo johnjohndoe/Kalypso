@@ -231,38 +231,13 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 			break;
 		    }
 		break;
-		
 	    case MouseEvent.BUTTON3_MASK:  // right
-		showPopupMenu(e);
-		//switch(mode)
-		//{
-		//case MOVE_MODE:
-		//select Object
-
-		/*		if(mode==PAN_MODE || mode==MOVE_MODE)
-		    {
-			System.out.println("singleObjectView...");
-			GisObject singleObject=netModel.snap(gisPoint);
-			GisSingleObjectView.load("selected Element",singleObject);
-		    }
-		if (mode!=PAN_MODE&&mode!=CREATE_MODE&&mode!=REMOVE_OBJECT)
-		    {
-			setMode(DEFAULT_MODE);
-		    }
-		*/
-		//break;
-		//case RELATION_MODE:
-		//select Object
-		//this.mode= MOVE_MODE;
-		//System.out.println("toggleMode: MoveMode");
-		//break;
-		//default:
-		//break;
-		//}
 		break;
 	    default:
 		break;
 	    }
+	if(e.isPopupTrigger())
+	    showPopupMenu(e);
 	repaint();
     }
     
@@ -370,6 +345,8 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	    default:
 		break;
 	    }
+	if(e.isPopupTrigger())
+	    showPopupMenu(e);
 	//	repaint();
     }
     
@@ -589,10 +566,12 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	mi.setActionCommand("createRelation");
 	mi.addActionListener(this);
 	edit.add(mi);
+	/*
 	mi = new JMenuItem("new object");
 	mi.setActionCommand("createObject");
 	mi.addActionListener(this);
 	edit.add(mi);
+	*/
 	mi = new JMenuItem("remove relation");
 	mi.setActionCommand("removeRelation");
 	mi.addActionListener(this);

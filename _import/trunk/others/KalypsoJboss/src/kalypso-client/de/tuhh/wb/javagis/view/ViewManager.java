@@ -9,6 +9,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.event.InternalFrameEvent;
 
+import java.io.File;
 import java.util.Vector;
 import java.lang.Math;
 
@@ -83,6 +84,7 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 
     public ViewManager()
     {
+	JOptionPane.setRootFrame(this);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
         desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
@@ -133,46 +135,83 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 
     public void showObjectTableView(Version version)
     {
+	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+	Toolkit.getDefaultToolkit().sync();
+	repaint();
+
       //GisTableView gisTableView = new GisTableView("TestVersion",version.getGisTableModels(),null,0,null,GisTableView.IS_GISELEMENTLIST);
         GisTableView gisTableView = new GisTableView(I18n.get("windowTitleTV")+version.getLabel(),version.getGisObjectTableModels());
         gisTableView.setVisible(true);
         gisTableView.setSize(670,300);
         desktop.add(gisTableView);
         gisTableView.moveToFront();
+
+	setCursor(Cursor.getDefaultCursor());
+	repaint();
     }
 
     public void showRelationTableView(Version version)
     {
+	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+	Toolkit.getDefaultToolkit().sync();
+	repaint();
+
         // 	GisTableView gisTableView = new GisTableView("TestVersion",version.getGisTableModels(),null,0,null,GisTableView.IS_GISELEMENTLIST);
         GisTableView gisTableView = new GisTableView(I18n.get("windowTitleTV")+version.getLabel(),version.getGisRelationTableModels());
         gisTableView.setVisible(true);
         gisTableView.setSize(670,300);
         desktop.add(gisTableView);
         gisTableView.moveToFront();
+
+	setCursor(Cursor.getDefaultCursor());
+	repaint();
     }
 
     public void showNetView(Version version)
     {
+	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+	Toolkit.getDefaultToolkit().sync();
+	repaint();
+
         GisNetView gisNetView = new GisNetView(version.getGisNetModel());
         gisNetView.setVisible(true);
         gisNetView.setSize(400,300);
         desktop.add(gisNetView);
         gisNetView.moveToFront();
-        gisNetView.repaint();
+	gisNetView.repaint();
 
+	//	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+	//	repaint();
+
+	gisNetView.gisMap.zoomToFullExtent();
+
+	setCursor(Cursor.getDefaultCursor());
+	repaint();
     }
 
     public void showProjectView()
     {
+	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+	repaint();
+
         ProjectView projectView = new ProjectView();
         projectView.setVisible(true);
         projectView.setSize(400,300);
         desktop.add(projectView);
 
+	setCursor(Cursor.getDefaultCursor());
+	repaint();
     }
 
+    public void xmlImport(String themeKey,Object vId,File file)
+    {
+	versionAccess.xmlImport(themeKey,vId,file);
+    }
 
-
+    public void xmlExport(String themeKey,Object vId,File file)
+    {
+	versionAccess.xmlExport(themeKey,vId,file);
+    }
 
 
     /**private void selectionBar(Vector objectClassNames)
@@ -491,12 +530,5 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
   void removeButton_actionPerformed(ActionEvent e) {
 
   }
+
 }
-
-/*
-;*/
-
-
-
-
-
