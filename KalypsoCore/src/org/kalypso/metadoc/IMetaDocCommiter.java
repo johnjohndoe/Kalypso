@@ -28,7 +28,8 @@ public interface IMetaDocCommiter
       final DocBean docBean ) throws MetaDocException;
 
   /**
-   * Commits the document described by the given bean.
+   * <p>Commits the document described by the given bean.</p>
+   * <p>Should delete document after commit operation</p>
    * 
    * @param serviceProps
    *          Properties of the MetaDoc service. Can be used to get additional

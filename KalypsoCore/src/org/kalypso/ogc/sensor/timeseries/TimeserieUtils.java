@@ -220,4 +220,15 @@ public class TimeserieUtils
     // no color found? so return random one
     return ColorUtilities.random();
   }
+
+  /**
+   * <p>Transforms physical units to TYPE-Constant used in Axis (best guess)</p>
+   * <p>Uses UNIT_TO_TYPE_ Keys in config.properties</p>
+   * 
+   * @param unit
+   */
+  public static String getTypeForUnit( final String unit )
+  {
+    return getProperties().getProperty( "UNIT_TO_TYPE_" + unit, "" );
+  }
 }

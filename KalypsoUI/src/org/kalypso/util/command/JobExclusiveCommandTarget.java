@@ -57,7 +57,8 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
   
   public void resetDirty()
   {
-    m_commandManager.resetDirty();
+    if( m_commandManager != null )
+      m_commandManager.resetDirty();
   }
 
   /**

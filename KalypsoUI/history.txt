@@ -137,3 +137,8 @@ Version ...
 	- Gewässergrunddaten überarbeitet zwecks besserer Darstellung
 	
 - Beim Start eines Vorhersagemodells aus dem Startbildschirm wird jetzt eine Sanduhr angezeigt
+
+- MetadatenExport: 
+	- Datum jetzt über Datumseditor editierbar
+	- Autor wird mit username vorbelegt
+	- UI im Wizard fertig

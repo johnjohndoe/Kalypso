@@ -141,12 +141,6 @@ public class KalypsoMetaDocService implements IMetaDocService
     try
     {
       m_commiter.commitDocument( m_props, mdb );
-      
-      // delete temp file
-      // todo: es wird nur das doc gelöscht, das .xml bleibt im tmp Verzeichnis
-      // sollten nicht beide oder keines gelöscht werden?
-      final File docFile = new File( mdb.getLocation() );
-      docFile.delete();
     }
     catch( Exception e ) // generic exception caught for simplicity
     {

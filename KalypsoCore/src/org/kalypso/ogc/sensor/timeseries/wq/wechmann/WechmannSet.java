@@ -101,6 +101,9 @@ public class WechmannSet
     if( i < 0 )
       i = -i - 1;
 
+    if( i >= ds.length )
+      i = ds.length - 1;
+    
     return (WechmannParams) m_mapQ.get( ds[i] );
   }
 }
