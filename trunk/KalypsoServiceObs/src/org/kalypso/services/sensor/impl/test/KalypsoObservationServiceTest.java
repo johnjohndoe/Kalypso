@@ -74,17 +74,17 @@ public class KalypsoObservationServiceTest extends TestCase
     }
   }
   
-//  public void testReadData() throws RemoteException, MalformedURLException
-//  {
-//    System.out.println( "Start Test Read Data:" );
-//    
-//    final ItemBean[] beans = m_srv.getChildren( null );
-//
-//    for( int i = 0; i < beans.length; i++ )
-//      readData( beans[i], "#" );
-//    
-//    System.out.println( ":Stop Test Read Data" );
-//  }
+  public void testReadData() throws RemoteException, MalformedURLException
+  {
+    System.out.println( "Start Test Read Data:" );
+    
+    final ItemBean[] beans = m_srv.getChildren( null );
+
+    for( int i = 0; i < beans.length; i++ )
+      readData( beans[i], "#" );
+    
+    System.out.println( ":Stop Test Read Data" );
+  }
   
   private void readData( final ItemBean bean, final String space ) throws RemoteException, MalformedURLException
   {
@@ -163,11 +163,12 @@ public class KalypsoObservationServiceTest extends TestCase
   {
     final String id = "VirtualRepository://I2.1";
     
-    ItemBean bean = m_srv.findItem( id );
+    final ItemBean bean = m_srv.findItem( id );
     
-    ObservationBean ob = m_srv.adaptItem( bean );
+    final ObservationBean ob = m_srv.adaptItem( bean );
     
-    OCSDataBean db = m_srv.readData( ob, null );
+    final DateRangeArgument dra = DateRangeArgument.createFromPastDays( 30 );
+    final OCSDataBean db = m_srv.readData( ob, new DateRangeBean( dra.getFrom(), dra.getTo() ) );
     
     m_srv.clearTempData( db );
   }

@@ -97,6 +97,7 @@ public class ZmlURL
     bf.append( TAG_TO1 ).append( XmlTypes.PDATE.toString( dra.getTo() ) )
         .append( TAG_TO2 );
 
+    // TODO prüfen ob in Ordnung dass die < und > Zeichen mit Entities ersetzt werden...
     return bf.toString().replaceAll( "<", "&lt;" ).replaceAll( ">", "&gt;" );
   }
 
