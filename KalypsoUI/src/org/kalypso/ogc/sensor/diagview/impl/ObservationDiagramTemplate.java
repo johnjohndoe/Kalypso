@@ -19,8 +19,8 @@ import org.kalypso.util.runtime.IVariableArguments;
 public class ObservationDiagramTemplate extends DefaultDiagramTemplate
 {
   /**
-   * If set, the Method addObservation ignores all axises with the given type
-   * Must be one of TimeseriesConstants.TYPE_...
+   * If set, the Method addObservation ignores all axes with the given type
+   * Must be one of TimeserieConstants.TYPE_...
    */
   private String m_ignoreType;
 

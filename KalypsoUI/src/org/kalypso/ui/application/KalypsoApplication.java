@@ -31,7 +31,7 @@ public class KalypsoApplication implements IPlatformRunnable
     final String[] userRights = KalypsoGisPlugin.getDefault()
         .getUserRights();
 
-    final StringBuffer userMsg = new StringBuffer( "Rights got from Server:" );
+    final StringBuffer userMsg = new StringBuffer( "Rights from server:" );
     if( userRights != null )
     {
       for( int i = 0; i < userRights.length; i++ )
@@ -44,7 +44,7 @@ public class KalypsoApplication implements IPlatformRunnable
     if( rights == null )
       return null;
 
-    final StringBuffer chooseMsg = new StringBuffer( "Choosen rights:" );
+    final StringBuffer chooseMsg = new StringBuffer( "Chosen rights:" );
     for( int i = 0; i < rights.length; i++ )
       chooseMsg.append( "\n'" + rights[i] + "'" );
     m_logger.info( chooseMsg.toString() );

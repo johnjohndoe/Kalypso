@@ -49,6 +49,12 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
 
   /**
    * This method should be overriden by clients extending this class.
+   * 
+   * @param source
+   * @param context
+   * @param monitor
+   * @return loaded object
+   * @throws LoaderException
    */
   protected abstract Object loadIntern( final String source, final URL context,
       final IProgressMonitor monitor ) throws LoaderException;

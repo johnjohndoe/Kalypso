@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.Window;
+import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.repository.IRepository;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -78,6 +79,9 @@ public class ConfigurePreviewAction extends AbstractRepositoryExplorerAction
         rep.setProperty( IKalypsoPreferences.NUMBER_OF_DAYS, String
             .valueOf( days ) );
       }
+
+      // clear cache in order to refetch values from server in case date range changed
+      ObservationCache.clearCache();
     }
   }
 

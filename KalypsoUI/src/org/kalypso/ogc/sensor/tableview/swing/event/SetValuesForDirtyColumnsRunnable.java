@@ -78,7 +78,7 @@ public class SetValuesForDirtyColumnsRunnable implements IRunnableWithProgress
 
         final IObservation obs = theme.getObservation();
 
-        if( dirty && obs instanceof ZmlObservation )
+        if( dirty /*&& obs instanceof ZmlObservation*/ )
         {
           for( final Iterator itcol = theme.getColumns().iterator(); itcol
               .hasNext(); )
