@@ -2,8 +2,6 @@ package org.kalypso.ui.editor.gistableeditor.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorActionDelegate;
@@ -14,7 +12,7 @@ import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
  * @author belger
  */
 public abstract class GisTableAbstractActionDelagate implements IActionDelegate2,
-    IEditorActionDelegate, ISelectionChangedListener
+    IEditorActionDelegate
 {
   private GisTableEditor m_editor;
 
@@ -26,20 +24,20 @@ public abstract class GisTableAbstractActionDelagate implements IActionDelegate2
    */
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
-    if( m_editor != null )
-      m_editor.removeSelectionChangedListener( this );
+//    if( m_editor != null )
+//      m_editor.removeSelectionChangedListener( this );
 
     m_editor = (GisTableEditor)targetEditor;
     m_action = action;
 
-    if( m_editor != null )
-      m_editor.addSelectionChangedListener( this );
+//    if( m_editor != null )
+//      m_editor.addSelectionChangedListener( this );
 
-    final boolean bEnabled = m_editor == null ? false : isEnabled( m_editor.getSelection() );
-    action.setEnabled( bEnabled );
+//    final boolean bEnabled = m_editor == null ? false : isEnabled( m_editor.getSelection() );
+//    action.setEnabled( bEnabled );
     
-    final boolean bChecked = m_editor == null ? false : isChecked();
-    action.setChecked(bChecked);
+//    final boolean bChecked = m_editor == null ? false : isChecked();
+//    action.setChecked(bChecked);
   }
 
   /**
@@ -48,6 +46,7 @@ public abstract class GisTableAbstractActionDelagate implements IActionDelegate2
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
+    action.getClass();
   // nichts tun
   }
 
@@ -61,8 +60,8 @@ public abstract class GisTableAbstractActionDelagate implements IActionDelegate2
    */
   public void dispose()
   {
-    if( m_editor != null )
-      m_editor.removeSelectionChangedListener( this );
+//    if( m_editor != null )
+//      m_editor.removeSelectionChangedListener( this );
   }
   
   /**
@@ -71,12 +70,6 @@ public abstract class GisTableAbstractActionDelagate implements IActionDelegate2
   public void init( final IAction action )
   {
     // nichts zu tun  
-  }
-
-  public void selectionChanged( final SelectionChangedEvent event )
-  {
-    final boolean bEnabled = m_editor == null ? false : isEnabled( m_editor.getSelection() );
-    m_action.setEnabled( bEnabled );
   }
 
   /**

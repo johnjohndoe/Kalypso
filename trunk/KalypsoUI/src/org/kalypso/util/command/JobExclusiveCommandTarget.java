@@ -73,7 +73,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
    */
   public void onCommandManagerChanged( final ICommandManager source )
   {
-    if( source == m_commandManager && source.isDirty() )
+    if( source == m_commandManager && source.isDirty() && m_dirtyRunnable != null )
       m_dirtyRunnable.run();
   }
   
