@@ -12,9 +12,7 @@ public interface IWidget
    * Called from {@link WidgetManager} when Wdiget is activated
    */
   public void activate();
-  
-  public String getName();
-
+ 
   public void clickPopup( Point p );
 
   public void dragged( Point p );
@@ -41,7 +39,7 @@ public interface IWidget
   public void paint( Graphics g );
 
   /**
-   * führt die aktion aus
+   * fuehrt die aktion aus
    */
   public void perform();
 

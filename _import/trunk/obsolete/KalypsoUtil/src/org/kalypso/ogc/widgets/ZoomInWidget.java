@@ -7,29 +7,29 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import org.deegree.model.geometry.GM_Envelope;
-import org.kalypso.ogc.MapPanel;
+import org.kalypso.ogc.MapModell;
 import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandManager;
 
 
 /**
  *
  * @author von Dömming
  */
-public class ZoomInWidget extends Widget implements TemporaryActionWidget //, ActionListener
+public class ZoomInWidget extends GisMapEditorWidgetActionDelegate
+//Widget implements TemporaryActionWidget //, ActionListener
 {
     private Point endPoint = null;
     private Point startPoint = null;
 
-    public ZoomInWidget( final MapPanel mapPanel, final ICommandManager commandManager  )
-    {
-      super( mapPanel, commandManager );
-    }
+//    public ZoomInWidget( final MapPanel mapPanel, final ICommandManager commandManager  )
+//    {
+//      super( mapPanel, commandManager );
+//    }
 
-    public String getName(  )
-    {
-        return "ZoomIn";
-    }
+//    public String getName(  )
+//    {
+//        return "ZoomIn";
+//    }
 
     public void dragged( Point p )
     {
@@ -95,14 +95,20 @@ public class ZoomInWidget extends Widget implements TemporaryActionWidget //, Ac
             GM_Envelope zoomBox = getDragbox( (int)startPoint.getX(  ),
                     (int)startPoint.getY(  ), (int)dx );
 
-            myMapPanel.getMapModell().setBoundingBox(zoomBox);
+            MapModell modell=myEditor.getMapPanel().getMapModell();
+          //  mapModell.setBoundingBox(zoomBox);
 
             startPoint = null;
             endPoint = null;
         
-            return new ChangeExtentCommand(myMapPanel.getMapModell(), zoomBox ) ;
+            return new ChangeExtentCommand(modell, zoomBox ) ;
          }
         
         return null;
     }
+
+
+  
+
+   
 }

@@ -8,26 +8,15 @@ import java.awt.Point;
 import org.deegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandManager;
 
 
 /**
  * @author vDoemming
  */
-public class PanToWidget extends Widget implements TemporaryActionWidget
+public class PanToWidget extends GisMapEditorWidgetActionDelegate
 {
     private Point endPoint = null;
     private Point startPoint = null;
-
-    public PanToWidget( final MapPanel mapPanel, final ICommandManager commandManager )
-    {
-      super( mapPanel, commandManager );
-    }
-
-    public String getName(  )
-    {
-        return "PanTo";
-    }
 
     public void dragged( Point p )
     {
@@ -37,20 +26,20 @@ public class PanToWidget extends Widget implements TemporaryActionWidget
 
             int dx = (int)( endPoint.getX(  ) - startPoint.getX(  ) );
             int dy = (int)( endPoint.getY(  ) - startPoint.getY(  ) );
-            myMapPanel.setOffset( dx, dy );
+            myEditor.getMapPanel().setOffset( dx, dy );
         }
     }
 
     public void finish(  )
     {
-        myMapPanel.clearOffset(  );
+      myEditor.getMapPanel().clearOffset(  );
     }
 
     public void leftPressed( Point p )
     {
         startPoint = p;
         endPoint = null;
-        myMapPanel.clearOffset(  );
+        myEditor.getMapPanel().clearOffset(  );
     }
 
     public void leftReleased( Point p )
@@ -66,18 +55,19 @@ public class PanToWidget extends Widget implements TemporaryActionWidget
      */
     public ICommand performIntern(  )
     {
+      MapPanel mapPanel = myEditor.getMapPanel();
         if( startPoint != null && endPoint != null )
         {
-            final double mx = myMapPanel.getWidth(  ) / 2d - ( endPoint.getX(  ) - startPoint.getX(  ) );
-            final double my = myMapPanel.getHeight(  ) / 2d - ( endPoint.getY(  ) - startPoint.getY(  ) );
+            final double mx = mapPanel.getWidth(  ) / 2d - ( endPoint.getX(  ) - startPoint.getX(  ) );
+            final double my = mapPanel.getHeight(  ) / 2d - ( endPoint.getY(  ) - startPoint.getY(  ) );
 
-            final GM_Envelope panBox = myMapPanel.getPanToPixelBoundingBox( mx, my );
+            final GM_Envelope panBox = mapPanel.getPanToPixelBoundingBox( mx, my );
 
             startPoint = null;
             endPoint = null;
 
             if( panBox != null )
-                return new ChangeExtentCommand( myMapPanel.getMapModell(), panBox );
+                return new ChangeExtentCommand( mapPanel.getMapModell(), panBox );
         }
         return null;
     }
