@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.Vector;
 
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -37,6 +37,26 @@ public class ObservationTableModel extends AbstractTableModel
 
   private IAxis m_sharedAxis = null;
 
+  /**
+   * @see javax.swing.table.AbstractTableModel#addTableModelListener(javax.swing.event.TableModelListener)
+   */
+  public void addTableModelListener( TableModelListener l )
+  {
+    m_valuesModel.addTableModelListener( l );
+    
+    super.addTableModelListener( l );
+  }
+  
+  /**
+   * @see javax.swing.table.AbstractTableModel#removeTableModelListener(javax.swing.event.TableModelListener)
+   */
+  public void removeTableModelListener( TableModelListener l )
+  {
+    m_valuesModel.removeTableModelListener( l );
+    
+    super.removeTableModelListener( l );
+  }
+  
   /**
    * Adds a column to this tablemodel.
    * 

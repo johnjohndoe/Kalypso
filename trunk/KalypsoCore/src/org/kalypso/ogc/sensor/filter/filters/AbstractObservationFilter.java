@@ -2,6 +2,7 @@ package org.kalypso.ogc.sensor.filter.filters;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
@@ -115,5 +116,22 @@ public abstract class AbstractObservationFilter implements IObservationFilter
       throw new IllegalStateException( "Internal observation is null" );
     
     return m_obs.toString();
+  }
+  
+  
+  public void addListener( IObservationListener listener )
+  {
+    if( m_obs == null )
+      throw new IllegalStateException( "Internal observation is null" );
+    
+    m_obs.addListener( listener );
+  }
+  
+  public void removeListener( IObservationListener listener )
+  {
+    if( m_obs == null )
+      throw new IllegalStateException( "Internal observation is null" );
+    
+    m_obs.removeListener( listener );
   }
 }

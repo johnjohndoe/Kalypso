@@ -52,7 +52,8 @@ import org.osgi.service.url.URLStreamHandlerService;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChangeListener
+public class KalypsoGisPlugin extends AbstractUIPlugin implements
+    IPropertyChangeListener
 {
   private static final String BUNDLE_NAME = KalypsoGisPlugin.class.getPackage()
       .getName()
@@ -100,7 +101,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private String[] m_userRights;
 
-//  private static final String DEFAULT_CRS = "EPSG:4326";
+  //  private static final String DEFAULT_CRS = "EPSG:4326";
   private static final String DEFAULT_CRS = "EPSG:31469";
 
   /**
@@ -136,10 +137,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     registerTypeHandler();
   }
-  
+
   /**
-   * Loads the client configuration from the various server that were configured in the
-   * kalypso plugin preferences page.
+   * Loads the client configuration from the various server that were configured
+   * in the kalypso plugin preferences page.
    * 
    * @param mainConf
    */
@@ -148,22 +149,24 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     // put system properties
     mainConf.putAll( System.getProperties() );
 
-    final String confUrls = getPluginPreferences().getString( IKalypsoPreferences.CLIENT_CONF_URLS );
-    
+    final String confUrls = getPluginPreferences().getString(
+        IKalypsoPreferences.CLIENT_CONF_URLS );
+
     if( confUrls == null )
     {
-      MessageDialog.openWarning(
-          getWorkbench().getDisplay().getActiveShell(),
-          "Konfiguration für Kalypso", "Keine Serverkonfiguration vorhanden. Funktionalität eingeschränkt." );
+      MessageDialog.openWarning( getWorkbench().getDisplay().getActiveShell(),
+          "Konfiguration für Kalypso",
+          "Keine Serverkonfiguration vorhanden. Funktionalität eingeschränkt." );
       return;
     }
-    
+
     // try to laod conf file
     final String[] locs = confUrls.split( "," );
 
     final Properties conf = new Properties();
-    
-    // for each of the locations, fetch configuration and merge them with main conf
+
+    // for each of the locations, fetch configuration and merge them with main
+    // conf
     for( int i = 0; i < locs.length; i++ )
     {
       InputStream stream = null;
@@ -178,19 +181,19 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         conf.load( stream );
 
         // merge the conf
-        for( final Iterator it = conf.keySet().iterator(); it.hasNext();)
+        for( final Iterator it = conf.keySet().iterator(); it.hasNext(); )
         {
           final String key = (String) it.next();
-          
+
           if( m_mainConf.containsKey( key ) )
           {
             String prop = m_mainConf.getProperty( key );
-            prop += ',' + conf.getProperty(key);
-            
+            prop += ',' + conf.getProperty( key );
+
             m_mainConf.put( key, prop );
           }
           else
-            m_mainConf.put( key, conf.getProperty(key) );
+            m_mainConf.put( key, conf.getProperty( key ) );
         }
       }
       catch( Exception e ) // generic exception used to simplify processing
@@ -207,10 +210,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
           msg += "Es wird versucht, eine alternative Konfigurationsdatei zu laden.\nNächster Versuch:"
               + locs[i + 1];
 
-        System.out.println(msg);
-//        MessageDialog.openWarning(
-//            getWorkbench().getDisplay().getActiveShell(),
-//            "Konfiguration für Kalypso", msg );
+        System.out.println( msg );
+        //        MessageDialog.openWarning(
+        //            getWorkbench().getDisplay().getActiveShell(),
+        //            "Konfiguration für Kalypso", msg );
       }
       finally
       {
@@ -221,6 +224,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * Loads the pool configuration
+   * 
    * @throws IOException
    */
   private void configurePool( ) throws IOException
@@ -347,10 +351,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         "Kalypso_ObservationService", "IObservationService" );
   }
 
-  public ILoaderFactory getLoaderFactory(  )
+  public ILoaderFactory getLoaderFactory( )
   {
     if( m_loaderFactory == null )
-      m_loaderFactory = new DefaultLoaderFactory( m_poolproperties, getClass().getClassLoader() );
+      m_loaderFactory = new DefaultLoaderFactory( m_poolproperties, getClass()
+          .getClassLoader() );
 
     return m_loaderFactory;
   }
@@ -376,14 +381,14 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     try
     {
       m_mainConf.clear();
-      
+
       configure( m_mainConf );
       configureProxy();
       configurePool();
       configureRepositorySpecifications();
       configureServiceProxyFactory( m_mainConf );
       configureURLStreamHandler( context );
-      
+
       getPreferenceStore().addPropertyChangeListener( this );
     }
     catch( final IOException e )
@@ -403,7 +408,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     super.stop( context );
 
     getPreferenceStore().removePropertyChangeListener( this );
-    
+
     // clear the observation cache
     ObservationCache.clearCache();
   }
@@ -561,22 +566,22 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     }
   }
 
-  public IFeatureModifierFactory createFeatureTypeCellEditorFactory()
+  public IFeatureModifierFactory createFeatureTypeCellEditorFactory( )
   {
     if( m_defaultFeatureControlFactory == null )
       m_defaultFeatureControlFactory = new DefaultFeatureModifierFactory();
     return m_defaultFeatureControlFactory;
   }
-  
-  
-  public URL getModellistLocation()
+
+  public URL getModellistLocation( )
   {
     try
     {
-      final String location = m_mainConf.getProperty( "PROGNOSE_MODELLIST", null );
+      final String location = m_mainConf.getProperty( "PROGNOSE_MODELLIST",
+          null );
       if( location == null )
         return null;
-      
+
       final String[] locations = location.split( "," );
       if( locations.length == 0 )
         return null;
@@ -586,17 +591,17 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     catch( final Exception e )
     {
       e.printStackTrace();
-      
+
       return null;
     }
   }
 
-  public File getServerModelRoot()
+  public File getServerModelRoot( )
   {
     final String location = m_mainConf.getProperty( "MODELL_REPOSITORY", null );
     if( location == null )
       return null;
-    
+
     final String[] locations = location.split( "," );
     if( locations.length == 0 )
       return null;
@@ -607,33 +612,36 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   public boolean checkUserRight( final String right )
   {
     final String[] userRights = getUserRights();
-    
+
     if( userRights == null )
       return false;
-    
+
     for( int i = 0; i < userRights.length; i++ )
     {
-      if( right.equals(userRights[i]) )
+      if( right.equals( userRights[i] ) )
         return true;
     }
-    
+
     return false;
   }
 
-  public String[] getUserRights()
+  public String[] getUserRights( )
   {
     if( m_userRights != null )
       return m_userRights;
-    
+
     try
     {
-        final String username = System.getProperty( "user.name" ).toLowerCase();
-        final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault()
-            .getServiceProxyFactory();
-        final  IUserService service = (IUserService)serviceProxyFactory.getProxy( "Kalypso_UserService", ClassUtilities
-            .getOnlyClassName( IUserService.class ) );
+      final String username = System.getProperty( "user.name" ).toLowerCase();
+      final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault()
+          .getServiceProxyFactory();
+      final IUserService service = (IUserService) serviceProxyFactory.getProxy(
+          "Kalypso_UserService", ClassUtilities
+              .getOnlyClassName( IUserService.class ) );
 
-         m_userRights = service == null ? null : service.getRights( username ); // todo avoid nullpointerexception
+      m_userRights = service == null ? null : service.getRights( username ); // todo
+                                                                             // avoid
+                                                                             // nullpointerexception
     }
     catch( final Throwable e1 )
     {

@@ -132,9 +132,11 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
     {
       public void widgetSelected( final SelectionEvent e )
       {
-        saveTimeseriesPressed();
+        saveTimeseriesPressed( true );
       }
     } );
+    
+    registerObservationTableModelChangeListener();
   }
 
   private void createMapPanel( final Composite parent ) throws Exception,
