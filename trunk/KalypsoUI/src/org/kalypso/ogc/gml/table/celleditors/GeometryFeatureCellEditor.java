@@ -20,7 +20,7 @@ public class GeometryFeatureCellEditor extends AbstractFeatureCellEditor
   }
 
   /**
-   * @see org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor#doSetFeature(org.kalypso.ogc.gml.Feature)
+   * @see org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor#doSetFeature(org.deegree.model.feature.Feature)
    */
   protected void doSetFeature( Feature feature )
   {
@@ -29,7 +29,7 @@ public class GeometryFeatureCellEditor extends AbstractFeatureCellEditor
   }
 
   /**
-   * @see org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor#renderLabel(org.kalypso.ogc.gml.Feature)
+   * @see org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor#renderLabel(org.deegree.model.feature.Feature)
    */
   public String renderLabel( final Feature feature )
   {

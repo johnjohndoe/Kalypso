@@ -62,9 +62,10 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
   {
     super.createButtonsForButtonBar( parent );
 
-    createButton( parent, APPLY_ID, "Übernehmen", false ).setEnabled( false );
-    createButton( parent, RESET_ID, "Zurücksetzen", false ).setEnabled( false );
-    getButton( IDialogConstants.OK_ID ).setEnabled( false );
+    createButton( parent, APPLY_ID, "Übernehmen", false );
+    createButton( parent, RESET_ID, "Zurücksetzen", false );
+    
+    updateButtons( false );
   }
 
   /**
@@ -94,6 +95,8 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
     m_featureComposite.collectChanges( changes );
     
     m_commandTarget.postCommand( new ChangeFeaturesCommand( m_eventprovider, (FeatureChange[])changes.toArray( new FeatureChange[changes.size()] ) ), null );
+    
+    updateButtons( false );
   }
 
   private void resetPressed()
@@ -124,24 +127,23 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
   }
   
   
-  private void updateButtons()
+  private void updateButtons( final boolean bEnable )
   {
-    final Collection changes = new ArrayList();
-    m_featureComposite.collectChanges( changes );
-    
-    final boolean bDirty = changes.size() != 0;
-    getButton( IDialogConstants.OK_ID ).setEnabled( bDirty );
-    getButton( APPLY_ID ).setEnabled( bDirty );
-    getButton( RESET_ID ).setEnabled( bDirty );
+    getButton( IDialogConstants.OK_ID ).setEnabled( bEnable );
+    getButton( APPLY_ID ).setEnabled( bEnable );
+    getButton( RESET_ID ).setEnabled( bEnable );
   }
-
-
 
   /**
    * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
    */
   public void modifyText( ModifyEvent e )
   {
-    updateButtons();
+    final Collection changes = new ArrayList();
+    m_featureComposite.collectChanges( changes );
+    
+    final boolean bDirty = changes.size() != 0;
+
+    updateButtons( bDirty );
   }
 }

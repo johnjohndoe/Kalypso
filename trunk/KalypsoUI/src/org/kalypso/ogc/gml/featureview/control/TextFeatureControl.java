@@ -16,20 +16,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
-import org.kalypso.ogc.gml.featureview.IFeatureControl;
 
 /**
  * @author belger
  */
-public class TextFeatureControl implements IFeatureControl, ModellEventListener
+public class TextFeatureControl extends AbstractFeatureControl implements ModellEventListener
 {
   private static final DateFormat DATE_FORMATTER = new SimpleDateFormat();
 
   private final Color m_errorColor = Display.getCurrent().getSystemColor( SWT.COLOR_RED );
-
-  private final Feature m_feature;
-
-  private final String m_propertyName;
 
   private Text m_text = null;
 
@@ -37,9 +32,7 @@ public class TextFeatureControl implements IFeatureControl, ModellEventListener
 
   public TextFeatureControl( final Feature feature, final String propertyName )
   {
-    m_feature = feature;
-
-    m_propertyName = propertyName;
+    super( feature, propertyName );
   }
 
   /**
@@ -51,14 +44,6 @@ public class TextFeatureControl implements IFeatureControl, ModellEventListener
       m_text.dispose();
 
     m_text.dispose();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getFeature()
-   */
-  public final Feature getFeature()
-  {
-    return m_feature;
   }
 
   /**
@@ -115,7 +100,7 @@ public class TextFeatureControl implements IFeatureControl, ModellEventListener
 
     final Feature feature = getFeature();
 
-    if( feature == null || m_propertyName == null )
+    if( feature == null || getPropertyName() == null )
       m_text.setText( "<no data>" );
     else
     {
@@ -132,8 +117,8 @@ public class TextFeatureControl implements IFeatureControl, ModellEventListener
   private String getTextFromFeature()
   {
     final Feature feature = getFeature();
-    final String type = feature.getFeatureType().getProperty( m_propertyName ).getType();
-    final Object data = feature.getProperty( m_propertyName );
+    final String type = feature.getFeatureType().getProperty( getPropertyName() ).getType();
+    final Object data = feature.getProperty( getPropertyName() );
 
     if( data == null )
       return "";
@@ -167,16 +152,16 @@ public class TextFeatureControl implements IFeatureControl, ModellEventListener
       nfe.printStackTrace();
     }
 
-    final Object oldData = feature.getProperty( m_propertyName );
+    final Object oldData = feature.getProperty( getPropertyName() );
 
     // nur ändern, wenn sich wirklich was geändert hat
     if( ( newData == null && oldData != null ) || ( newData != null && !newData.equals( oldData ) ) )
-      c.add( new FeatureChange( feature, m_propertyName, newData ) );
+      c.add( new FeatureChange( feature, getPropertyName(), newData ) );
   }
 
   private Object parseData( final String text ) throws Exception
   {
-    final String typeName = getFeature().getFeatureType().getProperty( m_propertyName ).getType();
+    final String typeName = getFeature().getFeatureType().getProperty( getPropertyName() ).getType();
     if( typeName.equals( "java.lang.Double" ) )
       return new Double( text );
     if( typeName.equals( "java.lang.Integer" ) )
@@ -215,7 +200,7 @@ public class TextFeatureControl implements IFeatureControl, ModellEventListener
   {
     updateControl();
   }
-
+  
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
    */

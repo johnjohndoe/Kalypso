@@ -1,32 +1,21 @@
 package org.kalypso.ui.wizard.calccase;
 
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.GMLWorkspace;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
-import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.kalypso.eclipse.core.resources.IProjectProvider;
-import org.kalypso.eclipse.util.SetContentThread;
+import org.kalypso.java.lang.CatchRunnable;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
@@ -39,6 +28,8 @@ public class SteuerparameterWizardPage extends WizardPage
   private final IProjectProvider m_projectProvider;
 
   private GMLWorkspace m_controlGML = null;
+
+  private FeatureComposite m_featureComposite;
 
   public SteuerparameterWizardPage( final String pageName, final IProjectProvider pp )
   {
@@ -61,9 +52,9 @@ public class SteuerparameterWizardPage extends WizardPage
       // Vorlage auslesen
       final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/"
           + ModelNature.CONTROL_VIEW_FILE );
-      final Control control = new FeatureComposite( m_controlGML.getRootFeature(), new URL[]
-      { viewURL } ).createControl( parent, SWT.NONE );
-      setControl( control );
+      m_featureComposite = new FeatureComposite( m_controlGML.getRootFeature(), new URL[]
+      { viewURL } );
+      setControl( m_featureComposite.createControl( parent, SWT.NONE ) );
     }
     catch( final CoreException e )
     {
@@ -77,91 +68,26 @@ public class SteuerparameterWizardPage extends WizardPage
     }
   }
 
-  public boolean saveControl( final IFolder folder )
+  public GMLWorkspace getGML() throws Exception
   {
-    final IFile file = folder.getFile( ModelNature.CALCULATION_FILE );
-    final Feature rootFeature = m_controlGML.getRootFeature();
+    final Collection changes = new ArrayList();
 
-    WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
+    final FeatureComposite fc = m_featureComposite;
+    final GMLWorkspace workspace = m_controlGML;
+    
+    getControl().getDisplay().syncExec( new CatchRunnable( )
     {
-      public void execute( final IProgressMonitor monitor ) throws CoreException
+      public void runIntern() throws Exception
       {
-        try
-        {
-          monitor.beginTask( "Steuerparameter speichern", 3000 ); //$NON-NLS-1$
+        fc.collectChanges( changes );
 
-          new SetContentThread( file, false, true, monitor )
-          {
-            public void writeStream() throws Throwable
-            {
-              final Writer controlWriter = new OutputStreamWriter( getOutputStream() );
-              GmlSerializer.serializeFeature( controlWriter, rootFeature, monitor );
-            }
-          };
-        }
-        finally
-        {
-          monitor.done();
-        }
+        // Änderungen committen
+        new ChangeFeaturesCommand( workspace, (FeatureChange[])changes
+            .toArray( new FeatureChange[changes.size()] ) ).process();
+        
       }
-    };
-
-    try
-    {
-      getContainer().run( true, true, op );
-    }
-    catch( final InterruptedException e )
-    {
-      if( file.exists() )
-        try
-        {
-          file.delete( true, false, null );
-        }
-        catch( CoreException e1 )
-        {
-          e1.printStackTrace();
-        }
-
-      return false;
-    }
-    catch( final InvocationTargetException e )
-    {
-      if( e.getTargetException() instanceof CoreException )
-      {
-        ErrorDialog.openError( getContainer().getShell(), // Was
-            // Utilities.getFocusShell()
-            IDEWorkbenchMessages.getString( "WizardNewFolderCreationPage.errorTitle" ), //$NON-NLS-1$
-            null, // no special message
-            ( (CoreException)e.getTargetException() ).getStatus() );
-      }
-      else
-      {
-        // CoreExceptions are handled above, but unexpected runtime exceptions
-        // and errors may still occur.
-
-        IDEWorkbenchPlugin
-            .log( MessageFormat
-                .format(
-                    "Exception in {0}.getNewFolder(): {1}", new Object[] { getClass().getName(), e.getTargetException() } ) );//$NON-NLS-1$
-        MessageDialog
-            .openError(
-                getContainer().getShell(),
-                IDEWorkbenchMessages.getString( "WizardNewFolderCreationPage.internalErrorTitle" ), IDEWorkbenchMessages.format( "WizardNewFolder.internalError", new Object[] { e.getTargetException().getMessage() } ) ); //$NON-NLS-2$ //$NON-NLS-1$
-      }
-
-      if( file.exists() )
-        try
-        {
-          file.delete( true, false, null );
-        }
-        catch( final CoreException e1 )
-        {
-          e1.printStackTrace();
-        }
-
-      return false;
-    }
-
-    return true;
+    } );
+    
+    return workspace;
   }
 }

@@ -283,6 +283,7 @@ public class FeatureFactory
     // every gmlProp must fit to a featurePropertyType
     for( int p = 0; p < gmlProps.length; p++ )
     {
+      // TODO: compare properties by namespace 
       GMLProperty gmlProp = gmlProps[p];
       final String propName = gmlProp.getName();
       int propertyPosition = featureType.getPropertyPosition( propName );
