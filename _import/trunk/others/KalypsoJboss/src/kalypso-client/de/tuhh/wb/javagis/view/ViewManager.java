@@ -638,7 +638,7 @@ public class ViewManager
 		toolBar.add(xmlIButton, null);
 		String autoCal = Main.props.getProperty("automatedCalibration");
 		System.out.println("Automated Calibration: "+autoCal);
-		if(autoCal.equals("enabled")){
+		if(autoCal!=null && autoCal.equals("enabled")){
 		toolBar.add(calibrationButton, null);
 		}
 		this.getContentPane().add(desktop, BorderLayout.CENTER);
