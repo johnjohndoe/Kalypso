@@ -4,7 +4,6 @@ import java.awt.Frame;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
@@ -26,15 +25,11 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.editor.AbstractEditorPart;
-import org.kalypso.editor.mapeditor.actions.FullExtentAction;
-import org.kalypso.editor.mapeditor.actions.ZoomOutAction;
+import org.kalypso.ogc.IMapModellProvider;
+import org.kalypso.ogc.IMapPanelProvider;
 import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.MapPanel;
-import org.kalypso.ogc.widgets.PanToWidget;
-import org.kalypso.ogc.widgets.ZoomInWidget;
-import org.kalypso.plugin.ImageProvider;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.xml.gisview.Gisview;
 import org.kalypso.xml.gisview.ObjectFactory;
@@ -59,7 +54,7 @@ import org.kalypso.xml.types.LayerType;
  * 
  * @author belger
  */
-public class GisMapEditor extends AbstractEditorPart
+public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvider, IMapModellProvider
 {
   private final ObjectFactory m_gisviewObjectFactory = new ObjectFactory();
 
@@ -95,28 +90,6 @@ public class GisMapEditor extends AbstractEditorPart
     }
   }
 
- protected FullAction[] createFullActions()
-   {
-     final List list = new ArrayList();
-/*
-     list.add(new ZoomOutAction("Zoom out",ImageProvider.IMAGE_MAPVIEW_ZOOMOUT,"Kartenausschnitt verkleinern",myMapPanel,this));
-     list.add(new FullExtentAction("full Extent",ImageProvider.IMAGE_MAPVIEW_FULLEXTENT,"vollen Kartenausschnitt anzeigen",myMapPanel,this));
-*/
-     return (FullAction[])list.toArray(new FullAction[list.size()]);
-   }
-
-  protected WidgetAction[] createWidgetActions()
-  {
-    final List list = new ArrayList();
-
-    list.add( new WidgetAction( new ZoomInWidget( myMapPanel, this ),
-        myMapPanel.getWidgetManager(), "ZoomIn", ImageProvider.IMAGE_MAPVIEW_ZOOMIN,
-        "Kartenausschnitt vergr?ssern" ) );
-    list.add( new WidgetAction( new PanToWidget( myMapPanel, this ), myMapPanel.getWidgetManager(),
-        "PanTo", ImageProvider.IMAGE_MAPVIEW_PAN, "Kartenausschnitt verschieben" ) );
-
-    return (WidgetAction[])list.toArray( new WidgetAction[list.size()] );
-  }
 
   public void dispose()
   {
@@ -291,5 +264,9 @@ public class GisMapEditor extends AbstractEditorPart
   public MapModell getMapModell()
   {
     return m_mapModell;
+  }
+  public MapPanel getMapPanel()
+  {
+      return myMapPanel;
   }
 }

@@ -23,9 +23,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
-import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.editor.AbstractEditorPart;
-import org.kalypso.editor.mapeditor.WidgetAction;
 import org.kalypso.editor.tableeditor.layerTable.LayerTable;
 import org.kalypso.editor.tableeditor.layerTable.LayerTableModel;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
@@ -86,19 +84,8 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     }
   }
   
-  /**
-   * @see org.kalypso.editor.AbstractEditorPart#createFullActions()
-   */
-  protected FullAction[] createFullActions()
-  {
-    return new FullAction[] {};
-  }
 
-  protected WidgetAction[] createWidgetActions()
-  {
-    final List list = new ArrayList();
-    return (WidgetAction[])list.toArray( new WidgetAction[list.size()] );
-  }
+
 
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
