@@ -49,11 +49,15 @@ public class NOperationTupplemodel implements ITuppleModel
     if( dataClass.equals( Double.class ) )
     {
       IAxis a = ObservationUtilities.findAxisByName( m_baseModels[0].getAxisList(), axisName );
+      if(index>=m_baseModels[0].getCount())
+          return null;
       double value = ((Number) m_baseModels[0].getElement( index, a ))
           .doubleValue();
       for( int i = 1; i < m_baseModels.length; i++ )
       {
         ITuppleModel model = m_baseModels[i];
+        if(index>=model.getCount())
+          continue;
         IAxis a2 = ObservationUtilities.findAxisByName( m_baseModels[i].getAxisList(), axisName );
         double nextValue = ((Number) model.getElement( index, a2 ))
             .doubleValue();

@@ -30,34 +30,41 @@ import org.xml.sax.InputSource;
  */
 public class GisTemplateHelper
 {
-  // TODO: das sollte alles nicht statisch sein, da es hier zu threading problemen kommt
-  private static Unmarshaller GMT_UNMARSHALLER;
+  // TODO: das sollte alles nicht statisch sein, da es hier zu threading
+  // problemen kommt
+  //  private static Unmarshaller GMT_UNMARSHALLER;
 
-  private static Marshaller GMT_MARSHALLER;
+  //  private static Marshaller GMT_MARSHALLER;
 
-  private static Unmarshaller GTT_UNMARSHALLER;
+  //  private static Unmarshaller GTT_UNMARSHALLER;
 
-  private static Unmarshaller GFT_UNMARSHALLER;
+  //  private static Unmarshaller GFT_UNMARSHALLER;
 
+  //  static
+  //  {
+  //    try
+  //    {
+  //      final ObjectFactory objectFactory = new ObjectFactory();
+  //      GMT_UNMARSHALLER = objectFactory.createUnmarshaller();
+  //      GMT_MARSHALLER.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE
+  // );
+  //      GMT_MARSHALLER = objectFactory.createMarshaller();
 
-  static
-  {
-    try
-    {
-      final ObjectFactory objectFactory = new ObjectFactory();
-      GMT_UNMARSHALLER = objectFactory.createUnmarshaller();
-      GMT_MARSHALLER = objectFactory.createMarshaller();
-      GMT_MARSHALLER.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+  //      GTT_UNMARSHALLER = new
+  // org.kalypso.template.gistableview.ObjectFactory().createUnmarshaller();
+  //      GMT_MARSHALLER.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE
+  // );
 
-      GTT_UNMARSHALLER = new org.kalypso.template.gistableview.ObjectFactory().createUnmarshaller();
-
-      GFT_UNMARSHALLER = new org.kalypso.template.featureview.ObjectFactory().createUnmarshaller();
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-    }
-  }
+  //      GFT_UNMARSHALLER = new
+  // org.kalypso.template.featureview.ObjectFactory().createUnmarshaller();
+  //      GMT_MARSHALLER.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE
+  // );
+  //    }
+  //    catch( final JAXBException e )
+  //    {
+  //      e.printStackTrace();
+  //    }
+  //  }
 
   private GisTemplateHelper()
   {
@@ -78,7 +85,9 @@ public class GisTemplateHelper
   public static final Featuretemplate loadGisFeatureTemplate( final InputSource is )
       throws JAXBException
   {
-    return (Featuretemplate)GFT_UNMARSHALLER.unmarshal( is );
+    Unmarshaller unmarshaller = new org.kalypso.template.featureview.ObjectFactory()
+        .createUnmarshaller();
+    return (Featuretemplate)unmarshaller.unmarshal( is );
   }
 
   public static final Gismapview loadGisMapView( final IFile file, final Properties replaceProps )
@@ -103,7 +112,10 @@ public class GisTemplateHelper
 
   public static final Gismapview loadGisMapView( final InputSource is ) throws JAXBException
   {
-    return (Gismapview)GMT_UNMARSHALLER.unmarshal( is );
+    final ObjectFactory objectFactory = new ObjectFactory();
+    Unmarshaller unmarshaller = objectFactory.createUnmarshaller();
+
+    return (Gismapview)unmarshaller.unmarshal( is );
   }
 
   /**
@@ -137,13 +149,19 @@ public class GisTemplateHelper
 
   public static Gistableview loadGisTableview( final InputSource is ) throws JAXBException
   {
-    return (Gistableview)GTT_UNMARSHALLER.unmarshal( is );
+    Unmarshaller unmarshaller = new org.kalypso.template.gistableview.ObjectFactory()
+        .createUnmarshaller();
+
+    return (Gistableview)unmarshaller.unmarshal( is );
   }
 
   public static void saveGisMapView( final Gismapview modellTemplate, final OutputStream outStream )
       throws JAXBException
   {
-    GMT_MARSHALLER.marshal( modellTemplate, outStream );
+    final ObjectFactory objectFactory = new ObjectFactory();
+    final Marshaller marshaller = objectFactory.createMarshaller();
+    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    marshaller.marshal( modellTemplate, outStream );
   }
 
   public static GM_Envelope getBoundingBox( Gismapview gisview )
