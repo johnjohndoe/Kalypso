@@ -131,12 +131,13 @@ public class WFSNative_Impl implements WFSNative
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:56  doemming
+ * Revision 1.3  2004/10/07 14:09:12  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:25 doemming
- * backup of local modified deegree sources
- * 
- * Revision 1.4 2004/03/12 15:56:49 poth no message
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:53:32 doemming ***
+ * empty log message *** Revision 1.4 2004/03/12 15:56:49 poth no message
  * 
  * Revision 1.3 2004/01/15 08:22:35 poth no message
  * 

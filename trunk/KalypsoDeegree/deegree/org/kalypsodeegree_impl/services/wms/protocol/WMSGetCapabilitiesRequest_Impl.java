@@ -70,14 +70,13 @@ public class WMSGetCapabilitiesRequest_Impl extends OGCWebServiceRequest_Impl im
    * 
    * @param updateSequence
    * @param version
-   * @param request
    * @param id
    * @param vendorSpecificParameter
    */
   WMSGetCapabilitiesRequest_Impl( String version, String id, String updateSequence,
       HashMap vendorSpecificParameter )
   {
-    super( "GetCapabilitiesRequest", "WMS", version, id, vendorSpecificParameter );
+    super( "GetCapabilities", "WMS", version, id, vendorSpecificParameter );
     setUpdateSequence( updateSequence );
   }
 

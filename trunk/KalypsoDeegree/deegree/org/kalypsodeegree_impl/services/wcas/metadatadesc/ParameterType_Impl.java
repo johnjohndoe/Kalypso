@@ -71,7 +71,7 @@ public class ParameterType_Impl implements org.deegree.services.wcas.metadatades
   }
 
   /**
-   * @see getType
+   * @see #getType()
    */
   public void setType( String type )
   {

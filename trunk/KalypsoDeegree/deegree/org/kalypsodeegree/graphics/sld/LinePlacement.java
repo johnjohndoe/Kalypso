@@ -94,7 +94,7 @@ public interface LinePlacement
   double getPerpendicularOffset( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see getPerpendicularOffset
+   * @see #getPerpendicularOffset(Feature)
    *      <p>
    * @param perpendicularOffset
    */

@@ -47,13 +47,13 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.deegree.gml.GMLDocument;
+import org.deegree.gml.GMLFeature;
 import org.deegree.gml.GMLFeatureCollection;
 import org.deegree.gml.GMLNameSpace;
 import org.deegree.xml.DOMPrinter;
@@ -80,14 +80,13 @@ public class GMLDocument_Impl implements GMLDocument
 {
   private org.w3c.dom.Document document = null;
 
-  private List myNS = new ArrayList();
-
   /**
    * Creates a new GMLDocument_Impl object.
    */
   public GMLDocument_Impl()
   {
     Debug.debugMethodBegin( this, "GMLDocument_Impl()" );
+
     DocumentBuilder parser = null;
 
     try
@@ -100,7 +99,6 @@ public class GMLDocument_Impl implements GMLDocument
     }
 
     document = parser.newDocument();
-
     Debug.debugMethodEnd();
   }
 
@@ -176,38 +174,24 @@ public class GMLDocument_Impl implements GMLDocument
   {
     Debug.debugMethodBegin( this, "getNameSpace" );
 
-    ArrayList list = new ArrayList();
     Element root = document.getDocumentElement();
-    if( root != null )
-    {
-      NamedNodeMap nnm = root.getAttributes();
+    NamedNodeMap nnm = root.getAttributes();
 
-      for( int i = 0; i < nnm.getLength(); i++ )
+    ArrayList list = new ArrayList();
+
+    for( int i = 0; i < nnm.getLength(); i++ )
+    {
+      if( nnm.item( i ).getNodeValue().indexOf( "xmlns" ) >= 0 )
       {
-        if( nnm.item( i ).getNodeValue().indexOf( "xmlns" ) >= 0 )
-        {
-          GMLNameSpace gns = new GMLNameSpace_Impl( nnm.item( i ).getNodeName() + "="
-              + nnm.item( i ).getNodeValue() );
-          list.add( gns );
-        }
+        GMLNameSpace gns = new GMLNameSpace_Impl( nnm.item( i ).getNodeName() + "="
+            + nnm.item( i ).getNodeValue() );
+        list.add( gns );
       }
     }
+
     Debug.debugMethodEnd();
 
     return (GMLNameSpace[])list.toArray( new GMLNameSpace[list.size()] );
-  }
-
-  /**
-   * helper method to get namespace key from qualified namespace example: ns=
-   * xmlns:test="www.test.org" "test" = getNameSpaceKey("www.test.org")
-   */
-  public String getNameSpaceKey( String qualifiedNS )
-  {
-    GMLNameSpace[] nss = getNameSpaces();
-    for( int i = 0; i < nss.length; i++ )
-      if( qualifiedNS.equals( nss[i].getNameSpaceName() ) )
-        return nss[i].getNameSpaceValue();
-    return null;
   }
 
   /**
@@ -216,8 +200,7 @@ public class GMLDocument_Impl implements GMLDocument
   public void addNameSpace( GMLNameSpace nameSpace )
   {
     Debug.debugMethodBegin();
-    if( !myNS.contains( nameSpace ) )
-      myNS.add( nameSpace );
+
     Element root = document.getDocumentElement();
 
     if( nameSpace.getSubSpaceName() != null )
@@ -240,6 +223,11 @@ public class GMLDocument_Impl implements GMLDocument
   {
     return new GMLFeatureCollection_Impl( document.getDocumentElement() );
   }
+  
+  public GMLFeature getRootFeature()
+  {
+    return new GMLFeature_Impl( document.getDocumentElement() );
+  }
 
   /**
    * @see org.deegree_impl.gml.GMLDocument_Impl#getRoot()
@@ -257,8 +245,24 @@ public class GMLDocument_Impl implements GMLDocument
     }
 
     XMLTools.insertNodeInto( ( (GMLFeatureCollection_Impl)root ).getAsElement(), document );
-    for( int i = 0; i < myNS.size(); i++ )
-      addNameSpace( (GMLNameSpace)myNS.get( i ) );
+
+    Debug.debugMethodEnd();
+  }
+
+  public void setRoot( GMLFeature rootFeature )
+  {
+    Debug.debugMethodBegin();
+
+    Node node = document.getDocumentElement();
+
+    // remove root node if it already exists
+    if( node != null )
+    {
+      document.removeChild( node );
+    }
+
+    XMLTools.insertNodeInto( rootFeature.getAsElement(), document );
+
     Debug.debugMethodEnd();
   }
 
@@ -287,13 +291,13 @@ public class GMLDocument_Impl implements GMLDocument
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.3  2004/08/30 00:36:58  doemming
+ * Revision 1.4  2004/10/07 14:09:14  doemming
  * *** empty log message ***
- * Revision 1.2 2004/08/11 11:20:16 doemming ***
- * empty log message *** Revision 1.1.1.1 2004/05/11 16:43:24 doemming backup of
- * local modified deegree sources
- * 
- * Revision 1.7 2004/03/02 07:38:14 poth no message
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 13:03:31 doemming ***
+ * empty log message *** Revision 1.7 2004/03/02 07:38:14 poth no message
  * 
  * Revision 1.6 2004/02/19 10:08:56 poth no message
  * 

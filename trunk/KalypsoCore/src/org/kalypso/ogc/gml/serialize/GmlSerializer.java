@@ -1,9 +1,8 @@
 package org.kalypso.ogc.gml.serialize;
 
-import java.io.StringReader;
 import java.io.Writer;
+import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -16,20 +15,21 @@ import org.deegree.gml.GMLFeatureCollection;
 import org.deegree.gml.GMLNameSpace;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.gml.GMLDocument_Impl;
 import org.deegree_impl.gml.GMLFactory;
 import org.deegree_impl.gml.GMLNameSpace_Impl;
 import org.deegree_impl.gml.schema.GMLSchema;
+import org.deegree_impl.gml.schema.XMLHelper;
 import org.deegree_impl.model.feature.FeatureFactory;
+import org.deegree_impl.model.feature.GMLWorkspace_Impl;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.ogc.gml.GMLHelper;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.util.xml.XMLTools;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
 /**
  * Helper - Klasse, um Gml zu lesen und zu schreiben
@@ -40,11 +40,11 @@ public final class GmlSerializer
 {
   private GmlSerializer()
   {
-  // do not instantiatie this class
+  // do not instantiate this class
   }
 
-  public final static KalypsoFeatureLayer[] deserialize( final InputSource schemaSource,
-      final InputSource gmlSource, final CS_CoordinateSystem targetCrs,
+  public final static KalypsoFeatureLayer[] deserialize( final URL schemaURL,
+      final URL gmlURL, final CS_CoordinateSystem targetCrs,
       final IProgressMonitor monitor ) throws GmlSerializeException
   {
     if(monitor!=null)
@@ -52,52 +52,55 @@ public final class GmlSerializer
 
     try
     {
-      // load gml
-      final GMLDocument gml = new GMLDocument_Impl( XMLTools.getAsDOM( gmlSource ) );
-      if(monitor!=null)
-          monitor.worked( 1000 );
+    	final GMLWorkspace workspace = createGMLWorkspace( gmlURL, schemaURL );
+ 
+    	// create layers
+    	final FeatureType[] fts = workspace.getFeatureTypes();
+    	final KalypsoFeatureLayer[] featureLayer=new KalypsoFeatureLayer[fts.length];
+    	
+    	for( int i = 0; i < featureLayer.length; i++ )
+    	{
+    		final FeatureType ft = fts[i];
+    		featureLayer[i]= new KalypsoFeatureLayer( ft.getName(), ft, targetCrs );
+    		Feature[] features =workspace.getFeatures(ft);
+    		for (int j = 0; j < features.length; j++) 
+    		{
+				Feature feature = features[j];
+				GMLHelper.checkCrs( feature, targetCrs );
+				featureLayer[i].addFeature(new KalypsoFeature( feature ));
+				featureLayer[i].optimize();
+    		}
+    	}
+    
+    	if(monitor!=null)
+    		monitor.worked( 1000 );
+    	return featureLayer;
+    	
+    	//      // collect features
+//     	 final GMLFeatureCollection gmlFC = gml.getRoot();
+//      final GMLFeature[] gmlFeatures = gmlFC.getFeatures();
+//    	for( int i = 0; i < gmlFeatures.length; i++ )
+//      {
+//        final Feature feature = FeatureFactory.createFeature( gmlFeatures[i], types );
+//
+//        final KalypsoFeatureLayer fl = (KalypsoFeatureLayer)layerMap.get( feature.getFeatureType() );
+      
+//      }
+//      if(monitor!=null)
+//             monitor.worked( 1000 );
+//
+//      // optimize layers
+//      for( final Iterator iter = layerMap.values().iterator(); iter.hasNext(); )
+//      {
+//        final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)iter.next();
+//        layer.optimize();
+//      }
+//      if(monitor!=null)
+//              monitor.worked( 1000 );
 
-      // load schema
-      final GMLSchema schema = new GMLSchema( XMLTools.getAsDOM( schemaSource ) );
-      if(monitor!=null)
-            monitor.worked( 1000 );
-
-      // create layers
-      final HashMap layerMap = new HashMap();
-      final FeatureType[] types = schema.getFeatureTypes();
-      for( int i = 0; i < types.length; i++ )
-      {
-        final FeatureType type = types[i];
-        layerMap.put( type, new KalypsoFeatureLayer( type.getName(), type, targetCrs ) );
-      }
-      if(monitor!=null)
-           monitor.worked( 1000 );
-
-      // collect features
-      final GMLFeatureCollection gmlFC = gml.getRoot();
-      final GMLFeature[] gmlFeatures = gmlFC.getFeatures();
-      for( int i = 0; i < gmlFeatures.length; i++ )
-      {
-        final Feature feature = FeatureFactory.createFeature( gmlFeatures[i], types );
-        GMLHelper.checkCrs( feature, targetCrs );
-
-        final KalypsoFeatureLayer fl = (KalypsoFeatureLayer)layerMap.get( feature.getFeatureType() );
-        fl.addFeature( new KalypsoFeature( feature ) );
-      }
-      if(monitor!=null)
-             monitor.worked( 1000 );
-
-      // optimize layers
-      for( final Iterator iter = layerMap.values().iterator(); iter.hasNext(); )
-      {
-        final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)iter.next();
-        layer.optimize();
-      }
-      if(monitor!=null)
-              monitor.worked( 1000 );
-
-      return (KalypsoFeatureLayer[])layerMap.values().toArray(
-          new KalypsoFeatureLayer[layerMap.size()] );
+//      return (KalypsoFeatureLayer[])layerMap.values().toArray(
+//          new KalypsoFeatureLayer[layerMap.size()] );
+//    	return null;
     }
     catch( final Exception e )
     {
@@ -107,12 +110,12 @@ public final class GmlSerializer
     }
   }
 
-  public static KalypsoFeatureLayer[] deserialize( final StringReader schemaReader,
-      final StringReader gmlReader, final CS_CoordinateSystem crs, final IProgressMonitor monitor )
-      throws GmlSerializeException
-  {
-    return deserialize( new InputSource( schemaReader ), new InputSource( gmlReader ), crs, monitor );
-  }
+//  public static KalypsoFeatureLayer[] deserialize( final StringReader schemaReader,
+//      final StringReader gmlReader, final CS_CoordinateSystem crs, final IProgressMonitor monitor )
+//      throws GmlSerializeException
+//  {
+//    return deserialize( new InputSource( schemaReader ), new InputSource( gmlReader ), crs, monitor );
+//  }
 
   public static void serialize( final Writer writer, final KalypsoFeatureLayer[] layers,
       final IProgressMonitor monitor ) throws GmlSerializeException
@@ -181,6 +184,39 @@ public final class GmlSerializer
 
   }
   
+  public static void serializeFeature( final Writer writer, final Feature feature,
+      final IProgressMonitor monitor ) throws GmlSerializeException
+  {
+    if( monitor != null )
+      monitor.beginTask( "GML wird geschrieben", 2000 );
+    try
+    {
+      final GMLDocument gmlDoc = new GMLDocument_Impl();
+      GMLFeature gmlFeature = GMLFactory.createGMLFeature( gmlDoc.getDocument(), feature );
+      gmlDoc.setRoot( gmlFeature );
+      
+      GMLNameSpace gmlNameSpace = new GMLNameSpace_Impl( "xmlns:gml=http://www.opengis.net/gml" );
+      GMLNameSpace xlinkNameSpace = new GMLNameSpace_Impl( "xmlns:xlink=http://www.w3.org/1999/xlink" );
+    gmlDoc.addNameSpace( gmlNameSpace );
+    gmlDoc.addNameSpace( xlinkNameSpace );
+      
+      if( monitor != null )
+        monitor.worked( 1000 );
+
+      // DOM als GML schreiben
+      final Document xmlDOM = gmlDoc.getDocument();
+      final Transformer t = TransformerFactory.newInstance().newTransformer();
+      t.transform( new DOMSource( xmlDOM ), new StreamResult( writer ) );
+    }
+    catch( final Exception e )
+    {
+      throw new GmlSerializeException( "Fehler beim Schreiben des GML Stream", e );
+    }
+
+  }
+  
+  
+  
  private static GMLDocument getGmlDocument(GMLFeatureCollection col)
   {
     GMLDocument result=new GMLDocument_Impl();
@@ -190,6 +226,74 @@ public final class GmlSerializer
     result.addNameSpace(gmlNameSpace);
     result.addNameSpace(xlinkNameSpace);   
     return result;
+  }
+
+ 
+ public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final URL schemaURL ) throws Exception
+ {
+ 	// load schema
+ 	final GMLSchema schema = new GMLSchema( schemaURL );
+   // load gml
+   final GMLDocument_Impl gml = new GMLDocument_Impl( XMLHelper.getAsDOM( gmlURL ) );
+   final GMLFeature gmlFeature = gml.getRootFeature();
+   final FeatureType[] types = schema.getFeatureTypes();
+   final Feature feature = FeatureFactory.createFeature( gmlFeature, types );
+   
+   return new GMLWorkspace_Impl(schema,feature);
+   //    GMLHelper.checkCrs( feature, targetCrs );
+
+   // optimize layers
+   //      for( final Iterator iter = layerMap.values().iterator(); iter.hasNext();
+   // )
+   //      {
+   //        final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)iter.next();
+   //        layer.optimize();
+   //      }
+   //      if( monitor != null )
+   //        monitor.worked( 1000 );
+   //
+   //      return (KalypsoFeatureLayer[])layerMap.values().toArray(
+   //          new KalypsoFeatureLayer[layerMap.size()] );
+   //    }
+   //    catch( final Exception e )
+   //    {
+   //      e.printStackTrace();
+   //
+   //      throw new GmlSerializeException( "Fehler beim laden von GML", e );
+
+ }
+
+  public static Feature deserializeFeature( final URL gmlURL, final URL schemaURL ) throws Exception
+  {
+  	// load schema
+  	final GMLSchema schema = new GMLSchema( schemaURL );
+    // load gml
+    final GMLDocument_Impl gml = new GMLDocument_Impl( XMLHelper.getAsDOM( gmlURL ) );
+    final GMLFeature gmlFeature = gml.getRootFeature();
+    final FeatureType[] types = schema.getFeatureTypes();
+    final Feature feature = FeatureFactory.createFeature( gmlFeature, types );
+    return feature;
+    //    GMLHelper.checkCrs( feature, targetCrs );
+
+    // optimize layers
+    //      for( final Iterator iter = layerMap.values().iterator(); iter.hasNext();
+    // )
+    //      {
+    //        final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)iter.next();
+    //        layer.optimize();
+    //      }
+    //      if( monitor != null )
+    //        monitor.worked( 1000 );
+    //
+    //      return (KalypsoFeatureLayer[])layerMap.values().toArray(
+    //          new KalypsoFeatureLayer[layerMap.size()] );
+    //    }
+    //    catch( final Exception e )
+    //    {
+    //      e.printStackTrace();
+    //
+    //      throw new GmlSerializeException( "Fehler beim laden von GML", e );
+
   }
 
 }

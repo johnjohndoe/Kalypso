@@ -42,6 +42,8 @@
  ---------------------------------------------------------------------------*/
 package org.deegree.gml;
 
+import org.w3c.dom.Element;
+
 /**
  * 
  * 
@@ -70,7 +72,7 @@ public interface GMLFeature
   public String getId();
 
   /**
-   * @see #getId
+   * @see #getId()
    */
   public void setId( String id );
 
@@ -80,7 +82,7 @@ public interface GMLFeature
   public String getDescription();
 
   /**
-   * @see #getDescription
+   * @see #getDescription()
    */
   public void setDescription( String describtion );
 
@@ -90,7 +92,7 @@ public interface GMLFeature
   public String getName();
 
   /**
-   * @see #getName
+   * @see #getName()
    */
   public void setName( String name );
 
@@ -129,15 +131,19 @@ public interface GMLFeature
    */
   public void addProperty( GMLProperty property ) throws GMLException;
 
+  public Element getAsElement();
 }
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:41  doemming
+ * Revision 1.3  2004/10/07 14:09:01  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:22 doemming
- * backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:51  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:45:01 doemming *** empty
+ * log message *** Revision 1.3 2004/04/27 15:40:15 poth no message
  * 
  * Revision 1.2 2003/07/21 07:50:47 poth no message
  * 

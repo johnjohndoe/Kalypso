@@ -53,6 +53,7 @@ import org.deegree.gml.GMLMultiPoint;
 import org.deegree.gml.GMLMultiPolygon;
 import org.deegree.gml.GMLPoint;
 import org.deegree.gml.GMLPolygon;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.DOMPrinter;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.tools.Debug;
@@ -98,25 +99,25 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
     switch( geoType )
     {
     case POINT:
-      elem = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:pointProperty" );
+      elem = doc.createElementNS( CommonNamespaces.GMLNS, "gml:pointProperty" );
       break;
     case LINESTRING:
-      elem = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:lineStringProperty" );
+      elem = doc.createElementNS( CommonNamespaces.GMLNS, "gml:lineStringProperty" );
       break;
     case POLYGON:
-      elem = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:polygonProperty" );
+      elem = doc.createElementNS( CommonNamespaces.GMLNS, "gml:polygonProperty" );
       break;
     case MULTIPOINT:
-      elem = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:multiPointProperty" );
+      elem = doc.createElementNS( CommonNamespaces.GMLNS, "gml:multiPointProperty" );
       break;
     case MULTILINESTRING:
-      elem = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:multiLineStringProperty" );
+      elem = doc.createElementNS( CommonNamespaces.GMLNS, "gml:multiLineStringProperty" );
       break;
     case MULTIPOLYGON:
-      elem = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:multiPolygonProperty" );
+      elem = doc.createElementNS( CommonNamespaces.GMLNS, "gml:multiPolygonProperty" );
       break;
     case MULTIGEOMETRY:
-      elem = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:multiGeometryProperty" );
+      elem = doc.createElementNS( CommonNamespaces.GMLNS, "gml:multiGeometryProperty" );
       break;
     default:
       throw new GMLException( geoType + ": isn't a valid identifier for a geometry property!" );
@@ -383,10 +384,13 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:59  doemming
+ * Revision 1.3  2004/10/07 14:09:14  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:24
- * doemming backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 13:03:30 doemming
+ * *** empty log message *** Revision 1.7 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.6 2004/03/02 07:38:14 poth no message
  * 

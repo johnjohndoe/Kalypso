@@ -30,7 +30,7 @@ public interface GP_GridAnalysis extends GC_GridCoverage
    * 
    * @param sampleDimension
    *          Index of sample dimension to be histogrammed.
-   * @param miniumEntryValue
+   * @param minimumEntryValue
    *          Minimum value stored in the first histogram entry.
    * @param maximumEntryValue
    *          Maximum value stored in the last histogram entry.

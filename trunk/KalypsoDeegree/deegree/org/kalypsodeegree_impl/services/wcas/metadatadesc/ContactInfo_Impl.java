@@ -83,7 +83,7 @@ public class ContactInfo_Impl implements ContactInfo
   }
 
   /**
-   * @see getAddress
+   * @see ContactInfo_Impl#getAddress()
    */
   public void setAddress( Address address )
   {
@@ -100,7 +100,7 @@ public class ContactInfo_Impl implements ContactInfo
   }
 
   /**
-   * @see getContactInstructions
+   * @see ContactInfo_Impl#getContactInstructions()
    */
   public void setContactInstructions( String contactinstructions )
   {
@@ -117,7 +117,7 @@ public class ContactInfo_Impl implements ContactInfo
   }
 
   /**
-   * @see getHoursOfService
+   * @see ContactInfo_Impl#getHoursOfService()
    */
   public void setHoursOfService( String hoursofservice )
   {
@@ -134,7 +134,7 @@ public class ContactInfo_Impl implements ContactInfo
   }
 
   /**
-   * @see getOnLineResource
+   * @see ContactInfo_Impl#getOnLineResource()
    */
   public void setOnLineResource( OnLineResource onlineresource )
   {
@@ -151,7 +151,7 @@ public class ContactInfo_Impl implements ContactInfo
   }
 
   /**
-   * @see getPhone
+   * @see ContactInfo_Impl#getPhone()
    */
   public void setPhone( Phone phone )
   {

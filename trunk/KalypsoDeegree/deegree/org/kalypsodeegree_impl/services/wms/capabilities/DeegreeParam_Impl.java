@@ -58,7 +58,7 @@ import org.deegree_impl.tools.NetWorker;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$
  */
-class DeegreeParam_Impl implements DeegreeParam, Marshallable
+public class DeegreeParam_Impl implements DeegreeParam, Marshallable
 {
   private String rootDirectory = null;
 

@@ -80,7 +80,7 @@ public class Keywords_Impl implements Keywords
   }
 
   /**
-   * @see getKeywords
+   * @see #getKeywords()
    */
   public void addKeyword( String keyword )
   {
@@ -88,7 +88,7 @@ public class Keywords_Impl implements Keywords
   }
 
   /**
-   * @see getKeywords
+   * @see #getKeywords()
    */
   public void setKeywords( String[] keywords )
   {
@@ -109,7 +109,7 @@ public class Keywords_Impl implements Keywords
   }
 
   /**
-   * @see getThesaurusName
+   * @see #getThesaurusName()
    */
   public void setThesaurusName( String thesaurusname )
   {
@@ -126,7 +126,7 @@ public class Keywords_Impl implements Keywords
   }
 
   /**
-   * @see getTypeCode
+   * @see #getTypeCode()
    */
   public void setTypeCode( TypeCode typecode )
   {

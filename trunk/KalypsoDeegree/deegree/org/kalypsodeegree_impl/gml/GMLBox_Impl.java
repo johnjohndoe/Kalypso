@@ -46,6 +46,7 @@ import org.deegree.gml.GMLBox;
 import org.deegree.gml.GMLCoord;
 import org.deegree.gml.GMLCoordinates;
 import org.deegree.model.geometry.GM_Position;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.tools.Debug;
 import org.w3c.dom.Document;
@@ -83,7 +84,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
   {
     Debug.debugMethodBegin();
 
-    Element elem = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:Box" );
+    Element elem = doc.createElementNS( CommonNamespaces.GMLNS, "gml:Box" );
 
     GMLBox box = new GMLBox_Impl( elem );
 
@@ -113,7 +114,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
 
     if( element != null )
     {
-      NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "coord" );
+      NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coord" );
 
       if( ( nl != null ) && ( nl.getLength() > 0 ) )
       {
@@ -141,7 +142,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
           y_2 = dum;
         }
 
-        Element elem = element.getOwnerDocument().createElementNS( GMLGeometricMapping.GMLNS,
+        Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
             "gml:coord" );
 
         coord = new GMLCoord_Impl( elem );
@@ -165,7 +166,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
           ymin = pos1[1].getY();
         }
 
-        Element elem = element.getOwnerDocument().createElementNS( GMLGeometricMapping.GMLNS,
+        Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
             "gml:coord" );
 
         coord = new GMLCoord_Impl( elem );
@@ -184,10 +185,9 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
   {
     Debug.debugMethodBegin();
 
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "coord" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coord" );
 
-    Element elem = element.getOwnerDocument().createElementNS( GMLGeometricMapping.GMLNS,
-        "gml:coord" );
+    Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS, "gml:coord" );
 
     XMLTools.copyNode( ( (GMLCoord_Impl)min ).getAsElement(), elem );
 
@@ -199,7 +199,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
     } // else append the submitted coord
     else
     {
-      nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "coordinates" );
+      nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coordinates" );
 
       if( ( nl != null ) && ( nl.getLength() > 0 ) )
       {
@@ -225,7 +225,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
 
     if( element != null )
     {
-      NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "coord" );
+      NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coord" );
 
       if( ( nl != null ) && ( nl.getLength() > 0 ) )
       {
@@ -253,7 +253,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
           y_2 = dum;
         }
 
-        Element elem = element.getOwnerDocument().createElementNS( GMLGeometricMapping.GMLNS,
+        Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
             "gml:coord" );
 
         coord = new GMLCoord_Impl( elem );
@@ -277,7 +277,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
           ymax = pos1[1].getY();
         }
 
-        Element elem = element.getOwnerDocument().createElementNS( GMLGeometricMapping.GMLNS,
+        Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
             "gml:coord" );
 
         coord = new GMLCoord_Impl( elem );
@@ -298,8 +298,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
 
     NodeList nl = element.getElementsByTagName( "gml:coord" );
 
-    Element elem = element.getOwnerDocument().createElementNS( GMLGeometricMapping.GMLNS,
-        "gml:coord" );
+    Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS, "gml:coord" );
     XMLTools.copyNode( ( (GMLCoord_Impl)max ).getAsElement(), elem );
 
     // if already exists within the box replace the
@@ -310,7 +309,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
     } // else append the submitted coord
     else
     {
-      nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "coordinates" );
+      nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coordinates" );
 
       if( ( nl != null ) && ( nl.getLength() > 0 ) )
       {
@@ -336,7 +335,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
 
     if( element != null )
     {
-      NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "coordinates" );
+      NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coordinates" );
 
       if( ( nl != null ) && ( nl.getLength() > 0 ) )
       {
@@ -358,9 +357,9 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
   {
     Debug.debugMethodBegin( this, "setCoordinates" );
 
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "coordinates" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coordinates" );
 
-    Element elem = element.getOwnerDocument().createElementNS( GMLGeometricMapping.GMLNS,
+    Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
         "gml:coordinates" );
 
     XMLTools.copyNode( ( (GMLCoordinates_Impl)coordinates ).getAsElement(), elem );
@@ -373,7 +372,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
     } // else append the submitted coord
     else
     {
-      nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "coord" );
+      nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coord" );
 
       if( ( nl != null ) && ( nl.getLength() > 0 ) )
       {
@@ -393,10 +392,13 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:58  doemming
+ * Revision 1.3  2004/10/07 14:09:14  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:24 doemming
- * backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 13:02:26 doemming ***
+ * empty log message *** Revision 1.10 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.9 2004/03/01 07:45:47 poth no message
  * 

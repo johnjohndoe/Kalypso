@@ -76,10 +76,10 @@ public abstract class ObjectPool extends TimerTask
   private int maxInstances = 50;
 
   // min * sec * millisec. example: 5*60*1000 = 5 minutes
-  private int maxLifeTime = 15 * 60 * 1000;
+  private int maxLifeTime = 30 * 60 * 1000;
 
   // min * sec * millisec. example: 5*60*1000 = 5 minutes
-  private int maxUsageTime = 5 * 60 * 1000;
+  private int maxUsageTime = 20 * 60 * 1000;
 
   // milliseconds
   private int updateInterval = 15000;

@@ -712,4 +712,20 @@ public abstract class AbstractSQLBuilder
       return null;
     }
   }
+
+  //    private String getTableName(String prop)
+  //    {
+  //        String tab = ft.getMasterTable().getName();
+  //        
+  //        String[] tmp = StringExtend.toArray( prop, "@", false );
+  //        int pos = tmp[0].lastIndexOf('.');
+  //        if ( pos > 0 ) {
+  //            tab = prop.substring(0,pos);
+  //        }
+  //        if ( tmp.length > 1 ) {
+  //            tab = tab +"@" + tmp[1];
+  //        }
+  //        
+  //        return tab;
+  //    }
 }

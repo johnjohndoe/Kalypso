@@ -50,6 +50,7 @@ import org.deegree.enterprise.control.FormEvent;
 import org.deegree.enterprise.control.RPCParameter;
 import org.deegree.enterprise.control.RPCStruct;
 import org.deegree.model.geometry.GM_Envelope;
+import org.deegree_impl.clients.wcasclient.CatalogClientException;
 import org.deegree_impl.clients.wcasclient.Constants;
 import org.deegree_impl.clients.wcasclient.model.Selection;
 import org.deegree_impl.clients.wcasclient.model.SelectionEntry;
@@ -73,13 +74,23 @@ public class AddToShoppingCartListener extends AbstractListener
   /**
    * 
    * 
-   * @param e
+   * @param ev
    */
-  public void actionPerformed( FormEvent e )
+  public void actionPerformed( FormEvent ev )
   {
     Debug.debugMethodBegin();
 
-    SelectionEntry selE = createSelectionEntry( (RPCWebEvent)e );
+    SelectionEntry selE = null;
+    try
+    {
+      selE = createSelectionEntry( (RPCWebEvent)ev );
+    }
+    catch( Exception e )
+    {
+      gotoErrorPage( e.toString() );
+      Debug.debugMethodEnd();
+      return;
+    }
 
     // get/create the Session
     HttpSession session = ( (HttpServletRequest)this.getRequest() ).getSession( true );
@@ -111,7 +122,7 @@ public class AddToShoppingCartListener extends AbstractListener
    * 
    * @return SelectionEntry
    */
-  private SelectionEntry createSelectionEntry( RPCWebEvent we )
+  private SelectionEntry createSelectionEntry( RPCWebEvent we ) throws CatalogClientException
   {
     Debug.debugMethodBegin();
 
@@ -135,11 +146,17 @@ public class AddToShoppingCartListener extends AbstractListener
     {
       if( tmp[i].trim().equals( "WMS" ) )
       {
-        availabilitiy[i] = SelectionEntry.VIEW;
+        if( isAuthorizied( id, SelectionEntry.VIEW ) == null )
+        {
+          availabilitiy[i] = SelectionEntry.VIEW;
+        }
       }
       else if( tmp[i].trim().equals( "WFS" ) )
       {
-        availabilitiy[i] = SelectionEntry.DOWNLOAD;
+        if( isAuthorizied( id, SelectionEntry.DOWNLOAD ) == null )
+        {
+          availabilitiy[i] = SelectionEntry.DOWNLOAD;
+        }
       }
       else
       {
@@ -151,5 +168,17 @@ public class AddToShoppingCartListener extends AbstractListener
 
     Debug.debugMethodEnd();
     return sel;
+  }
+
+  /**
+   * validates if the current user iss allowed to display the selected datasets
+   * with a WMS
+   * 
+   * @return
+   */
+  protected String isAuthorizied( String id, int access ) throws CatalogClientException
+  {
+    // returning <tt>null</tt> indicates that an authorization exists
+    return null;
   }
 }

@@ -147,6 +147,9 @@ public class DataService implements Marshallable
     this.geometryType = geometryType;
   }
 
+  /**
+   * @see org.deegree.xml.Marshallable#exportAsXML()
+   */
   public String exportAsXML()
   {
     return null;

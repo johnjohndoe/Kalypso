@@ -191,13 +191,13 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
     {
       sb.append( ( (Marshallable)geometry ).exportAsXML() );
     }
-    if( stroke != null )
-    {
-      sb.append( ( (Marshallable)stroke ).exportAsXML() );
-    }
     if( fill != null )
     {
       sb.append( ( (Marshallable)fill ).exportAsXML() );
+    }
+    if( stroke != null )
+    {
+      sb.append( ( (Marshallable)stroke ).exportAsXML() );
     }
     sb.append( "</PolygonSymbolizer>" );
 

@@ -178,7 +178,8 @@ public class CVDescriptorDirFactory
     String name = XMLTools.getAttrValue( node, "name" );
     String value = XMLTools.getAttrValue( node, "value" );
 
-    Node levelNode = XMLTools.getNamedChild( node, NSCV, "Level" );
+    Node levelNode = XMLTools.getNamedChild( node, null, "Level" );
+
     Level level = createLevel( levelNode );
     System.out.println( "Level_DIR_:: " + level.toString() ); // ETJ ext level
 
@@ -211,7 +212,6 @@ public class CVDescriptorDirFactory
     ParameterList properties = new ParameterList_Impl();
 
     NodeList dirs = node.getChildNodes();
-
     if( dirs != null )
     {
       directories = createDirectories( dirs );

@@ -42,18 +42,12 @@
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.model.geometry;
 
-import oracle.sdoapi.geom.CoordPoint;
-import oracle.sdoapi.geom.CurveString;
-import oracle.sdoapi.geom.Geometry;
-import oracle.sdoapi.geom.LineString;
-import oracle.sdoapi.geom.MultiLineString;
-import oracle.sdoapi.geom.MultiPoint;
-import oracle.sdoapi.geom.MultiPolygon;
-import oracle.sdoapi.geom.Point;
-import oracle.sdoapi.geom.Polygon;
+import java.util.ArrayList;
+import java.util.List;
+
+import oracle.spatial.geometry.JGeometry;
 
 import org.deegree.model.geometry.GM_Curve;
-import org.deegree.model.geometry.GM_CurveSegment;
 import org.deegree.model.geometry.GM_Exception;
 import org.deegree.model.geometry.GM_MultiCurve;
 import org.deegree.model.geometry.GM_MultiPoint;
@@ -62,7 +56,6 @@ import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Point;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.geometry.GM_Surface;
-import org.deegree.model.geometry.GM_SurfaceInterpolation;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -74,7 +67,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class OracleAdapter
 {
 
-  public static Geometry export( GM_Object geom )
+  public static JGeometry export( GM_Object geom )
   {
     throw new NoSuchMethodError();
   }
@@ -82,35 +75,45 @@ public class OracleAdapter
   /**
    * creates a deegree geometry object from an oracle sdo geometry
    */
-  public static GM_Object wrap( Geometry geometry, CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Object wrap( JGeometry geometry ) throws GM_Exception
+  {
+
+    int srid = geometry.getSRID();
+    // TODO create CRS from Oracle SRID
+    CS_CoordinateSystem crs = null;
+
+    return wrap( geometry, crs );
+  }
+
+  /**
+   * creates a deegree geometry object from an oracle sdo geometry
+   */
+  public static GM_Object wrap( JGeometry geometry, CS_CoordinateSystem crs ) throws GM_Exception
   {
     GM_Object geo = null;
 
-    if( geometry instanceof Point )
+    switch( geometry.getType() )
     {
-      geo = wrapPoint( (Point)geometry, crs );
-    }
-    else if( geometry instanceof LineString )
-    {
-      geo = wrapCurve( (LineString)geometry, crs );
-    }
-    else if( geometry instanceof Polygon )
-    {
-      GM_SurfaceInterpolation si = new GM_SurfaceInterpolation_Impl();
-      geo = wrapSurface( (Polygon)geometry, crs, si );
-    }
-    else if( geometry instanceof MultiPoint )
-    {
-      geo = wrapMultiPoint( (MultiPoint)geometry, crs );
-    }
-    else if( geometry instanceof MultiLineString )
-    {
-      geo = wrapMultiCurve( (MultiLineString)geometry, crs );
-    }
-    else if( geometry instanceof MultiPolygon )
-    {
-      GM_SurfaceInterpolation si = new GM_SurfaceInterpolation_Impl();
-      geo = wrapMultiSurface( (MultiPolygon)geometry, crs, si );
+    case JGeometry.GTYPE_POINT:
+      geo = wrapPoint( geometry, crs );
+      break;
+    case JGeometry.GTYPE_CURVE:
+      geo = wrapCurve( geometry, crs );
+      break;
+    case JGeometry.GTYPE_POLYGON:
+      geo = wrapSurface( geometry, crs );
+      break;
+    case JGeometry.GTYPE_MULTIPOINT:
+      geo = wrapMultiPoint( geometry, crs );
+      break;
+    case JGeometry.GTYPE_MULTICURVE:
+      geo = wrapMultiCurve( geometry, crs );
+      break;
+    case JGeometry.GTYPE_MULTIPOLYGON:
+      geo = wrapMultiSurface( geometry, crs );
+      break;
+    case JGeometry.GTYPE_COLLECTION:
+      throw new GM_Exception( "no supported geometry type: collection" );
     }
 
     return geo;
@@ -118,69 +121,39 @@ public class OracleAdapter
 
   /**
    * creates a GM_Point from a oracle sdo point.
+   * 
+   * @param geometry
+   *          oracle geometry containing a point
+   * @param crs
+   *          desired CRS
+   * @return deegree point
+   * @throws GM_Exception
    */
-  public static GM_Point wrapPoint( Point point, CS_CoordinateSystem srs ) throws GM_Exception
+  public static GM_Point wrapPoint( JGeometry geometry, CS_CoordinateSystem crs )
+      throws GM_Exception
   {
-    GM_Point p = null;
-    int dim = point.getCoordinateDimension();
-
-    if( dim == 2 )
-    {
-      p = GeometryFactory.createGM_Point( point.getX(), point.getY(), srs );
-    }
-    else
-    {
-      double[] d = new double[]
-      { point.getX(), point.getY(), point.getZ() };
-      GM_Position pos = GeometryFactory.createGM_Position( d );
-      p = GeometryFactory.createGM_Point( pos, srs );
-    }
-
-    return p;
+    double[] ord = geometry.getPoint();
+    GM_Position pos = GeometryFactory.createGM_Position( ord );
+    return GeometryFactory.createGM_Point( pos, crs );
   }
 
   /**
-   * creates a GM_Curve from an oracle sdo <tt>LineString</tt>
+   * creates a GM_Curve from an oracle sdo curve
    * 
-   * @param lineString
-   *          oracle sdo <tt>LineString</tt>
+   * @param geometry
+   *          oracle geometry containing a curve
    * @param crs
-   *          coordinate reference system of the curve
+   *          desired CRS
+   * @return deegree curve
+   * @throws GM_Exception
    */
-  public static GM_Curve wrapCurve( LineString lineString, CS_CoordinateSystem crs )
+  public static GM_Curve wrapCurve( JGeometry geometry, CS_CoordinateSystem crs )
       throws GM_Exception
   {
-    GM_Position[] positions = null;
-    double[] arr = lineString.getCoordArray();
-    int dim = lineString.getDimensionality();
-
-    if( dim == 2 )
-    {
-      positions = new GM_Position[arr.length / 2];
-
-      int k = 0;
-
-      for( int i = 0; i < ( positions.length / 2 ); i++ )
-      {
-        positions[i] = GeometryFactory.createGM_Position( arr[k++], arr[k++] );
-      }
-    }
-    else
-    {
-      positions = new GM_Position[arr.length / 3];
-
-      int k = 0;
-
-      for( int i = 0; i < ( positions.length / 3 ); i++ )
-      {
-        double[] d = new double[]
-        { arr[k++], arr[k++], arr[k++] };
-        positions[i] = GeometryFactory.createGM_Position( d );
-      }
-    }
-
-    GM_CurveSegment seg = GeometryFactory.createGM_CurveSegment( positions, crs );
-    return GeometryFactory.createGM_Curve( seg );
+    Object[] ooe = geometry.getOrdinatesOfElements();
+    double[] ord = (double[])ooe[0];
+    int dim = geometry.getDimensions();
+    return GeometryFactory.createGM_Curve( ord, dim, crs );
   }
 
   /**
@@ -193,139 +166,127 @@ public class OracleAdapter
    * @param si
    *          GM_SurfaceInterpolation
    */
-  public static GM_Surface wrapSurface( Polygon polygon, CS_CoordinateSystem crs,
-      GM_SurfaceInterpolation si ) throws GM_Exception
+  public static GM_Surface wrapSurface( JGeometry geometry, CS_CoordinateSystem crs )
+      throws GM_Exception
   {
-    GM_Position[] exteriorRing = null;
-    GM_Position[][] interiorRings = null;
-    int dim = polygon.getDimensionality();
-    CurveString ex = polygon.getExteriorRing();
-    CurveString[] in = polygon.getInteriorRingArray();
-
-    if( dim == 2 )
+    Object[] ooe = geometry.getOrdinatesOfElements();
+    int dim = geometry.getDimensions();
+    double[] ext = (double[])ooe[0];
+    double[][] in = null;
+    if( ooe.length > 1 )
     {
-      CoordPoint[] cp = ex.getPointArray();
-
-      exteriorRing = new GM_Position[cp.length];
-      for( int i = 0; i < cp.length; i++ )
+      for( int i = 0; i < ooe.length - 1; i++ )
       {
-        exteriorRing[i] = GeometryFactory.createGM_Position( cp[i].getX(), cp[i].getY() );
-      }
-
-      if( polygon.getNumRings() > 1 )
-      {
-        interiorRings = new GM_Position[in.length][];
-
-        for( int i = 0; i < in.length; i++ )
-        {
-          cp = in[i].getPointArray();
-          interiorRings[i] = new GM_Position[cp.length];
-
-          for( int j = 0; j < cp.length; j++ )
-          {
-            interiorRings[i][j] = GeometryFactory.createGM_Position( cp[j].getX(), cp[j].getY() );
-          }
-        }
+        in[i] = (double[])ooe[i + 1];
       }
     }
-    else
-    {
-      CoordPoint[] cp = ex.getPointArray();
-
-      for( int i = 0; i < cp.length; i++ )
-      {
-        double[] d = new double[]
-        { cp[i].getX(), cp[i].getY(), cp[i].getZ() };
-        exteriorRing[i] = GeometryFactory.createGM_Position( d );
-      }
-
-      if( polygon.getNumRings() > 1 )
-      {
-        interiorRings = new GM_Position[in.length][];
-
-        for( int i = 0; i < in.length; i++ )
-        {
-          cp = in[i].getPointArray();
-          interiorRings[i] = new GM_Position[cp.length];
-
-          for( int j = 0; j < cp.length; j++ )
-          {
-            double[] d = new double[]
-            { cp[j].getX(), cp[j].getY(), cp[j].getZ() };
-            interiorRings[i][j] = GeometryFactory.createGM_Position( d );
-          }
-        }
-      }
-    }
-
-    return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, si, crs );
+    return GeometryFactory.createGM_Surface( ext, in, dim, crs );
   }
 
   /**
-   * creates a GM_MultiPoint from an oracle sdo <tt>MultiPoint</tt>.
+   * creates a GM_MultiPoint from an oracle sdo multi point
    * 
-   * @param multiPoint
-   *          oracle sdo <tt>MultiPoint</tt>
+   * @param geometry
+   *          oracle SDO geometry
    * @param crs
    *          spatial reference system of the curve
+   * @return deegree geometry
+   * @throws GM_Exception
    *  
    */
-  public static GM_MultiPoint wrapMultiPoint( MultiPoint multiPoint, CS_CoordinateSystem crs )
+  public static GM_MultiPoint wrapMultiPoint( JGeometry geometry, CS_CoordinateSystem crs )
       throws GM_Exception
   {
-    Geometry[] geom = multiPoint.getGeometryArray();
-    GM_Point[] points = new GM_Point[geom.length];
+    Object[] ooe = geometry.getOrdinatesOfElements();
+    GM_Point[] points = new GM_Point[ooe.length];
 
-    for( int i = 0; i < geom.length; i++ )
+    for( int i = 0; i < ooe.length; i++ )
     {
-      points[i] = wrapPoint( (Point)geom[i], crs );
+      double[] ord = (double[])ooe[i];
+      GM_Position pos = GeometryFactory.createGM_Position( ord );
+      points[i] = GeometryFactory.createGM_Point( pos, crs );
     }
 
     return GeometryFactory.createGM_MultiPoint( points );
   }
 
   /**
-   * creates a GM_MultiCurve from an oracle sdo <tt>MultiPoint</tt>.
+   * creates a GM_MultiCurve from an oracle sdo multi curve
    * 
-   * @param multiLineString
-   *          oracle sdo <tt>MultiLineString</tt>
    * @param crs
    *          spatial reference system of the multi curve
-   *  
+   * @param geometry
+   *          oracle SDO geometry
+   * @return deegree geometry
+   * @throws GM_Exception
    */
-  public static GM_MultiCurve wrapMultiCurve( MultiLineString multiLineString,
-      CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_MultiCurve wrapMultiCurve( JGeometry geometry, CS_CoordinateSystem crs )
+      throws GM_Exception
   {
-    Geometry[] geom = multiLineString.getGeometryArray();
-    GM_Curve[] curves = new GM_Curve[geom.length];
+    Object[] ooe = geometry.getOrdinatesOfElements();
+    int dim = geometry.getDimensions();
+    GM_Curve[] curves = new GM_Curve[ooe.length];
 
-    for( int i = 0; i < geom.length; i++ )
+    for( int i = 0; i < ooe.length; i++ )
     {
-      curves[i] = wrapCurve( (LineString)geom[i], crs );
+      curves[i] = GeometryFactory.createGM_Curve( (double[])ooe[i], dim, crs );
     }
 
     return GeometryFactory.createGM_MultiCurve( curves );
   }
 
   /**
-   * creates a GM_MultiSurface from an oracle sdo <tt>MultiPolygon</tt>.
+   * creates a GM_MultiSurface from an oracle sdo multi polygon
    * 
-   * @param multiPolygon
-   *          oracle sdo <tt>MultiPolygon</tt>
    * @param crs
-   *          spatial reference system of the multi surface
+   *          spatial reference system of the multi polygon
+   * @param geometry
+   *          oracle SDO geometry
+   * @return deegree geometry
+   * @throws GM_Exception
    *  
    */
-  public static GM_MultiSurface wrapMultiSurface( MultiPolygon multiPolygon,
-      CS_CoordinateSystem crs, GM_SurfaceInterpolation si ) throws GM_Exception
+  public static GM_MultiSurface wrapMultiSurface( JGeometry geometry, CS_CoordinateSystem crs )
+      throws GM_Exception
   {
-    Geometry[] geom = multiPolygon.getGeometryArray();
-    GM_Surface[] polys = new GM_Surface[geom.length];
+    Object[] ooe = geometry.getOrdinatesOfElements();
+    int dim = geometry.getDimensions();
+    List list = new ArrayList( 100 );
 
-    for( int i = 0; i < geom.length; i++ )
+    int i = 0;
+    while( i < ooe.length )
     {
-      polys[i] = wrapSurface( (Polygon)geom[i], crs, si );
+      double[] ext = (double[])ooe[i++];
+      GM_Surface surf = GeometryFactory.createGM_Surface( ext, null, dim, crs );
+      boolean within = false;
+      List temp = new ArrayList( 100 );
+      if( i < ooe.length - 1 )
+      {
+        do
+        {
+          double[] ord = (double[])ooe[i++];
+          double[] pnt = new double[dim];
+          for( int j = 0; j < pnt.length; j++ )
+          {
+            pnt[j] = ord[j];
+          }
+          GM_Position pos = GeometryFactory.createGM_Position( pnt );
+          within = surf.contains( pos );
+          if( within )
+          {
+            temp.add( ord );
+          }
+        }
+        while( within && i < ooe.length );
+        i--;
+      }
+      double[][] in = new double[temp.size()][];
+      in = (double[][])temp.toArray( in );
+      list.add( GeometryFactory.createGM_Surface( ext, in, dim, crs ) );
     }
+
+    GM_Surface[] polys = new GM_Surface[list.size()];
+    polys = (GM_Surface[])list.toArray( polys );
 
     return GeometryFactory.createGM_MultiSurface( polys );
   }

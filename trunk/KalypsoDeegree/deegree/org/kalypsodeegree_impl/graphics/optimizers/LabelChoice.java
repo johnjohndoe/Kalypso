@@ -222,15 +222,15 @@ public class LabelChoice
     return false;
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   public String toString()
   {
     if( candidates.length > 0 )
     {
       return candidates[0].toString();
     }
-    else
-    {
-      return "empty";
-    }
+    return "empty";
   }
 }

@@ -1,6 +1,6 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/services/wcas/capabilities/TaxonomyType_Impl.java,v
-// 1.1.1.1 2004/05/11 16:43:26 doemming Exp $
+// /cvsroot/deegree/deegree/org/deegree_impl/services/wcas/capabilities/TaxonomyType_Impl.java,v
+// 1.2 2004/03/17 07:58:29 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.

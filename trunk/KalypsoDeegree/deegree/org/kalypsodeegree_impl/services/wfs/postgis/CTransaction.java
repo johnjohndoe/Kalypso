@@ -176,10 +176,8 @@ class CTransaction extends WFSMainLoop
         }
       }
 
-      String status = null;
       boolean succ = true;
       boolean failed = true;
-
       for( int i = 0; i < oI.length; i++ )
       {
         if( oI[i] != 0 )
@@ -192,6 +190,7 @@ class CTransaction extends WFSMainLoop
         }
       }
 
+      String status = null;
       if( succ )
       {
         status = "SUCCESS";
@@ -451,8 +450,7 @@ class CTransaction extends WFSMainLoop
 
       Debug.debugSimpleMessage( select.toString() );
 
-      Table result = null;
-      osa.performTableQuery( select.toString(), 0, 1 );
+      Table result = osa.performTableQuery( select.toString(), 0, 1 );
 
       if( ( result != null ) && ( result.getRowCount() > 0 ) )
       {
@@ -772,7 +770,6 @@ class CTransaction extends WFSMainLoop
     while( !tables.isEmpty() )
     {
       Set tableNames = tables.keySet();
-
       Iterator it = tableNames.iterator();
 
       // check for a non-referenced table (that can be deleted safely)
@@ -925,7 +922,7 @@ class CTransaction extends WFSMainLoop
       try
       {
         // a valid postgis crs is an integer
-        Integer.parseInt( crs );
+        icrs = Integer.parseInt( crs );
       }
       catch( Exception e )
       {

@@ -74,7 +74,7 @@ public class RoleCode_Impl implements RoleCode
   }
 
   /**
-   * @see getValue
+   * @see #getValue()
    */
   public void setValue( String value )
   {

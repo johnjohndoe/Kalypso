@@ -44,6 +44,7 @@ package org.deegree_impl.gml;
 
 import org.deegree.gml.GMLCoord;
 import org.deegree.gml.GMLException;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.DOMPrinter;
 import org.deegree_impl.tools.Debug;
 import org.w3c.dom.Document;
@@ -84,7 +85,7 @@ public class GMLCoord_Impl implements GMLCoord
   {
     Debug.debugMethodBegin( "", "createGMLCoord" );
 
-    Element elem = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:coord" );
+    Element elem = doc.createElementNS( CommonNamespaces.GMLNS, "gml:coord" );
     GMLCoord coord = new GMLCoord_Impl( elem );
 
     coord.setCoord( -9E99 );
@@ -111,7 +112,7 @@ public class GMLCoord_Impl implements GMLCoord
   {
     Debug.debugMethodBegin( this, "getX" );
 
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "X" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "X" );
 
     String x = nl.item( 0 ).getFirstChild().getNodeValue();
 
@@ -151,7 +152,7 @@ public class GMLCoord_Impl implements GMLCoord
     Debug.debugMethodBegin( this, "getZ" );
 
     double d = -9E99;
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "Z" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "Z" );
 
     if( ( nl != null ) && ( nl.getLength() > 0 ) )
     {
@@ -225,7 +226,7 @@ public class GMLCoord_Impl implements GMLCoord
   {
     Debug.debugMethodBegin( this, "setCoord(double)" );
 
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "X" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "X" );
 
     // if a x-tag already exsists overwrite its value
     if( ( nl != null ) && ( nl.getLength() > 0 ) )
@@ -234,8 +235,7 @@ public class GMLCoord_Impl implements GMLCoord
     } // else create a new x-tag
     else
     {
-      Element elem = element.getOwnerDocument()
-          .createElementNS( GMLGeometricMapping.GMLNS, "gml:X" );
+      Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS, "gml:X" );
       element.appendChild( elem );
 
       Text text = element.getOwnerDocument().createTextNode( "" + x );
@@ -254,7 +254,7 @@ public class GMLCoord_Impl implements GMLCoord
 
     setCoord( x );
 
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "Y" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "Y" );
 
     // if a y-tag already exsists overwrite its value
     if( ( nl != null ) && ( nl.getLength() > 0 ) )
@@ -263,8 +263,7 @@ public class GMLCoord_Impl implements GMLCoord
     } // else create a new y-tag
     else
     {
-      Element elem = element.getOwnerDocument()
-          .createElementNS( GMLGeometricMapping.GMLNS, "gml:Y" );
+      Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS, "gml:Y" );
       element.appendChild( elem );
 
       Text text = element.getOwnerDocument().createTextNode( "" + y );
@@ -283,7 +282,7 @@ public class GMLCoord_Impl implements GMLCoord
 
     setCoord( x, y );
 
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "Z" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "Z" );
 
     // if a z-tag already exsists overwrite its value
     if( ( nl != null ) && ( nl.getLength() > 0 ) )
@@ -292,8 +291,7 @@ public class GMLCoord_Impl implements GMLCoord
     } // else create a new z-tag
     else
     {
-      Element elem = element.getOwnerDocument()
-          .createElementNS( GMLGeometricMapping.GMLNS, "gml:Z" );
+      Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS, "gml:Z" );
       element.appendChild( elem );
 
       Text text = element.getOwnerDocument().createTextNode( "" + z );
@@ -314,14 +312,14 @@ public class GMLCoord_Impl implements GMLCoord
 
     // if a Y (and a Z) tag exists increase the dimension of
     // the coord
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "Y" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "Y" );
 
     if( ( nl != null ) && ( nl.getLength() > 0 ) )
     {
       dim++;
     }
 
-    nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "Z" );
+    nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "Z" );
 
     if( ( nl != null ) && ( nl.getLength() > 0 ) )
     {
@@ -347,10 +345,13 @@ public class GMLCoord_Impl implements GMLCoord
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:58  doemming
+ * Revision 1.3  2004/10/07 14:09:14  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:24 doemming
- * backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 13:03:30 doemming ***
+ * empty log message *** Revision 1.4 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.3 2003/05/15 09:37:40 poth no message
  * 

@@ -249,9 +249,7 @@ public class Style implements Marshallable
     this.current = current;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.deegree.xml.Marshallable#exportAsXML()
    */
   public String exportAsXML()

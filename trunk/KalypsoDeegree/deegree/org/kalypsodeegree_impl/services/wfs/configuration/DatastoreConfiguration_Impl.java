@@ -108,7 +108,7 @@ public class DatastoreConfiguration_Impl implements DatastoreConfiguration
   }
 
   /**
-   * @see getName
+   * @see DatastoreConfiguration_Impl#getName()
    */
   public void setName( String name )
   {
@@ -130,7 +130,7 @@ public class DatastoreConfiguration_Impl implements DatastoreConfiguration
   }
 
   /**
-   * @see getType
+   * @see DatastoreConfiguration_Impl#getType()
    */
   public void setType( int type )
   {
@@ -147,7 +147,7 @@ public class DatastoreConfiguration_Impl implements DatastoreConfiguration
   }
 
   /**
-   * @see getConnection
+   * @see DatastoreConfiguration_Impl#getConnection()
    */
   public void setConnection( Connection connection )
   {
@@ -186,7 +186,7 @@ public class DatastoreConfiguration_Impl implements DatastoreConfiguration
   }
 
   /**
-   * @see getFeatureTypes
+   * @see DatastoreConfiguration_Impl#getFeatureTypes()
    */
   public void setFeatureTypes( FeatureType[] featureTypes )
   {
@@ -202,7 +202,7 @@ public class DatastoreConfiguration_Impl implements DatastoreConfiguration
   }
 
   /**
-   * @see getFeatureTypes
+   * @see DatastoreConfiguration_Impl#getFeatureTypes()
    */
   public void addFeatureType( FeatureType featureType )
   {
@@ -232,6 +232,18 @@ public class DatastoreConfiguration_Impl implements DatastoreConfiguration
     case DatastoreConfiguration.SHAPEFILES:
       sb.append( "SHAPEFILES\">" );
       break;
+    case DatastoreConfiguration.BNA:
+      sb.append( "BNA\">" );
+      break;
+    case DatastoreConfiguration.MYSQL:
+      sb.append( "MYSQL\">" );
+      break;
+    case DatastoreConfiguration.POSTGIS:
+      sb.append( "POSTGIS\">" );
+      break;
+    case DatastoreConfiguration.SDE:
+      sb.append( "SDE\">" );
+      break;
     }
 
     if( getType() != DatastoreConfiguration.SHAPEFILES )
@@ -241,12 +253,6 @@ public class DatastoreConfiguration_Impl implements DatastoreConfiguration
       sb.append( "<logon>" + con.getLogon() + "</logon>" );
       sb.append( "<user>" + con.getUser() + "</user>" );
       sb.append( "<password>" + con.getPassword() + "</password>" );
-
-      if( getType() == DatastoreConfiguration.ORACLESPATIAL )
-      {
-        sb.append( "<spatialversion>" + con.getSpatialVersion() + "</spatialversion>" );
-      }
-
       sb.append( "</Connection>" );
     }
 
@@ -401,8 +407,7 @@ public class DatastoreConfiguration_Impl implements DatastoreConfiguration
     }
     catch( Exception e )
     {
-      System.out.println( this.getClass().getName() + ":" );
-      System.out.println( e );
+      e.printStackTrace();
     }
 
     return doc;

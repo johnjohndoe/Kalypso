@@ -42,7 +42,6 @@
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.services.wfs.oracle;
 
-import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -50,8 +49,6 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureCollection;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.geometry.ByteUtils;
-import org.deegree.model.geometry.GM_Exception;
 import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.table.Table;
 import org.deegree.services.wfs.DataStoreOutputFormat;
@@ -64,8 +61,7 @@ import org.deegree_impl.model.cs.Adapters;
 import org.deegree_impl.model.cs.ConvenienceCSFactory;
 import org.deegree_impl.model.cs.CoordinateSystem;
 import org.deegree_impl.model.feature.FeatureFactory;
-import org.deegree_impl.model.geometry.GM_SurfaceInterpolation_Impl;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.deegree_impl.model.geometry.GM_Object_Impl;
 import org.deegree_impl.tools.Debug;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -201,41 +197,23 @@ public class DataStoreOutputFC implements DataStoreOutputFormat
         if( columnNames[i].equalsIgnoreCase( idProp ) )
           id = row[i].toString();
 
-        if( !( row[i] instanceof ByteArrayOutputStream ) )
+        if( row[i] instanceof Table )
         {
-          if( row[i] instanceof Table )
-          {
-            // create and add complex property to the feature
-            TableDescription td_ = ft.getTableByName( ( (Table)row[i] ).getTableName() );
-            FeatureCollection fc_ = FeatureFactory.createFeatureCollection( td_.getTargetName(),
-                1000 );
-            fc_ = tableToFC( (Table)row[i], pl, fc_ );
-            fp[k++] = FeatureFactory.createFeatureProperty( pn, fc_ );
-          }
-          else
-          {
-            // create and add none-geometry property to the feature
-            fp[k++] = FeatureFactory.createFeatureProperty( pn, row[i] );
-          }
+          // create and add complex property to the feature
+          TableDescription td_ = ft.getTableByName( ( (Table)row[i] ).getTableName() );
+          FeatureCollection fc_ = FeatureFactory
+              .createFeatureCollection( td_.getTargetName(), 1000 );
+          fc_ = tableToFC( (Table)row[i], pl, fc_ );
+          fp[k++] = FeatureFactory.createFeatureProperty( pn, fc_ );
         }
         else
         {
-          GM_Object geo = null;
-          if( row[i] != null )
+          if( row[i] != null && row[i] instanceof GM_Object )
           {
-            // create and add geometry property to the feature
-            try
-            {
-              ByteArrayOutputStream bos = (ByteArrayOutputStream)row[i];
-              geo = createGeometry( bos, cs );
-            }
-            catch( Exception e )
-            {
-              throw new Exception( "couldn't create geo property \n" + e );
-            }
+            ( (GM_Object_Impl)row[i] ).setCoordinateSystem( cs );
           }
-          fp[k++] = FeatureFactory.createFeatureProperty( pn, geo );
-
+          // create and add none-geometry property to the feature
+          fp[k++] = FeatureFactory.createFeatureProperty( pn, row[i] );
         }
       }
 
@@ -307,72 +285,11 @@ public class DataStoreOutputFC implements DataStoreOutputFormat
       {
         // create a FeatureTypeProperty with geometry type
         ftp[k++] = FeatureFactory.createFeatureTypeProperty( pn,
-            "org.deegree.model.geometry.GM_Object", true );
+            "org.deegree.model.spatialschema.Geometry", true );
       }
     }
 
     return FeatureFactory.createFeatureType( null, null, td.getTargetName(), ftp );
-  }
-
-  /**
-   * creates FeatureCollections from OGC WKBs
-   * 
-   * @param bos
-   *          wkb datastructure
-   * @param srs
-   *          spatial reference system used for each feature within the feature
-   *          collection.
-   */
-  private GM_Object createGeometry( ByteArrayOutputStream bos, CS_CoordinateSystem srs )
-      throws Exception
-  {
-    Debug.debugMethodBegin( this, "createGeometry" );
-
-    GM_Object geo = null;
-
-    byte[] wkb = bos.toByteArray();
-    bos.close();
-
-    // create geometries from the wkb considering the geomerty typ
-    switch( getGeometryType( wkb ) )
-    {
-    case 1:
-      geo = GeometryFactory.createGM_Point( wkb, srs );
-      break;
-    case 2:
-      geo = GeometryFactory.createGM_Curve( wkb, srs );
-      break;
-    case 3:
-      geo = GeometryFactory.createGM_Surface( wkb, srs, new GM_SurfaceInterpolation_Impl( 1 ) );
-      break;
-    case 4:
-      geo = GeometryFactory.createGM_MultiPoint( wkb, srs );
-      break;
-    case 5:
-      geo = GeometryFactory.createGM_MultiCurve( wkb, srs );
-      break;
-    case 6:
-      geo = GeometryFactory.createGM_MultiSurface( wkb, srs, new GM_SurfaceInterpolation_Impl( 1 ) );
-      break;
-    default:
-      geo = null;
-    }
-
-    Debug.debugMethodEnd();
-    return geo;
-  }
-
-  private int getGeometryType( byte[] wkb ) throws GM_Exception
-  {
-    int wkbType = 0;
-    byte byteorder = wkb[0];
-
-    if( byteorder == 0 )
-      wkbType = ByteUtils.readBEInt( wkb, 1 );
-    else
-      wkbType = ByteUtils.readLEInt( wkb, 1 );
-
-    return wkbType;
   }
 
 }

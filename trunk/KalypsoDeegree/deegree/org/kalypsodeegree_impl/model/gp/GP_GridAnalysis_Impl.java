@@ -58,7 +58,7 @@ import org.opengis.pt.PT_Matrix;
 class GP_GridAnalysis_Impl extends GC_GridCoverage_Impl implements GP_GridAnalysis, Serializable
 {
 
-  GP_GridAnalysis_Impl() throws java.rmi.RemoteException
+  GP_GridAnalysis_Impl() throws java.rmi.RemoteException, Exception
   {
     super( null, false );
   }

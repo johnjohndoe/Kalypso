@@ -54,6 +54,8 @@ import javax.media.jai.ParameterListImpl;
 import javax.media.jai.util.Range;
 import javax.units.Unit;
 
+import org.opengis.cs.CS_CoordinateSystem;
+
 /**
  * 
  * 
@@ -106,6 +108,24 @@ public class ConvenienceCSFactory
   {
     systems.put( cs.getName( Locale.getDefault() ), cs );
     names.add( cs.getName( Locale.getDefault() ) );
+  }
+
+  public CS_CoordinateSystem getOGCCSByName( String crsName )
+  {
+
+    CS_CoordinateSystem crs = null;
+
+    try
+    {
+      CoordinateSystem cs = getCSByName( crsName );
+      crs = Adapters.getDefault().export( cs );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    return crs;
   }
 
   /**
@@ -611,6 +631,41 @@ public class ConvenienceCSFactory
     else if( name.equalsIgnoreCase( "EPSG:31300" ) )
     {
       addEPSG31300();
+
+    }
+    else if( name.equalsIgnoreCase( "EPSG:27561" ) )
+    {
+      addEPSG27561();
+    }
+    else if( name.equalsIgnoreCase( "EPSG:27562" ) )
+    {
+      addEPSG27562();
+    }
+    else if( name.equalsIgnoreCase( "EPSG:27563" ) )
+    {
+      addEPSG27563();
+    }
+    else if( name.equalsIgnoreCase( "EPSG:27564" ) )
+    {
+      addEPSG27564();
+
+    }
+    else if( name.equalsIgnoreCase( "EPSG:27571" ) )
+    {
+      addEPSG27571();
+    }
+    else if( name.equalsIgnoreCase( "EPSG:27572" ) )
+    {
+      addEPSG27572();
+    }
+    else if( name.equalsIgnoreCase( "EPSG:27573" ) )
+    {
+      addEPSG27573();
+    }
+    else if( name.equalsIgnoreCase( "EPSG:27574" ) )
+    {
+      addEPSG27574();
+
     }
     else if( name.equalsIgnoreCase( "EPSG:27581" ) )
     {
@@ -627,10 +682,24 @@ public class ConvenienceCSFactory
     else if( name.equalsIgnoreCase( "EPSG:27584" ) )
     {
       addEPSG27584();
+
     }
-    else if( name.equalsIgnoreCase( "EPSG:27585" ) )
+    else if( name.equalsIgnoreCase( "EPSG:27591" ) )
     {
-      addEPSG27585();
+      addEPSG27591();
+    }
+    else if( name.equalsIgnoreCase( "EPSG:27592" ) )
+    {
+      addEPSG27592();
+    }
+    else if( name.equalsIgnoreCase( "EPSG:27593" ) )
+    {
+      addEPSG27593();
+    }
+    else if( name.equalsIgnoreCase( "EPSG:27594" ) )
+    {
+      addEPSG27594();
+
     }
     else if( name.equalsIgnoreCase( "EPSG:27291" ) )
     {
@@ -1533,7 +1602,8 @@ public class ConvenienceCSFactory
     HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC,
         ellipsoid, convInfo );
 
-    PrimeMeridian pm = csFactory.createPrimeMeridian( "Paris", Unit.DEGREE, 2.5969213 );
+    PrimeMeridian pm = csFactory.createPrimeMeridian( "Paris", Unit.DEGREE, 2.337229166666667 ); // 2.5969213
+    // );
 
     GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4807",
         Unit.DEGREE, horDatum, pm, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
@@ -2888,8 +2958,272 @@ public class ConvenienceCSFactory
     save( cs );
   }
 
+  /*****************************************************************************
+   * NTF (Paris) / Lambert Nord France
+   */
+  private void addEPSG27561()
+  {
+    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem)getCSByName( "EPSG:4807" );
+
+    if( geoCS == null )
+    {
+      return;
+    }
+
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
+    ParameterList param = new ParameterListImpl( pld );
+    param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
+    param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
+    param.setParameter( "false_easting", 600000.0 );
+    param.setParameter( "false_northing", 200000.0 );
+    param.setParameter( "central_meridian", 2.33722916666667 );
+    param.setParameter( "latitude_of_origin", 49.5 );
+    param.setParameter( "standard_parallel1", 48.59852277777780 );
+    param.setParameter( "standard_parallel2", 50.39591166666670 );
+    param.setParameter( "scale_factor", 0.999877341 );
+
+    Projection projection = csFactory.createProjection( "My projection",
+        "Lambert_Conformal_Conic_2SP", param );
+
+    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27561", geoCS,
+        projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    save( cs );
+  }
+
   /**
-   * NTF (Paris) / France I standard paralles taken from MapInfo
+   * NTF (Paris) / Lambert Centre France
+   */
+  private void addEPSG27562()
+  {
+    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem)getCSByName( "EPSG:4807" );
+
+    if( geoCS == null )
+    {
+      return;
+    }
+
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
+    ParameterList param = new ParameterListImpl( pld );
+    param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
+    param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
+    param.setParameter( "false_easting", 600000.0 );
+    param.setParameter( "false_northing", 200000.0 );
+    param.setParameter( "central_meridian", 2.33722916666667 );
+    param.setParameter( "latitude_of_origin", 46.80 );
+    param.setParameter( "standard_parallel1", 45.8989188888889 );
+    param.setParameter( "standard_parallel2", 47.6960144444444 );
+    param.setParameter( "scale_factor", 0.99987742 );
+
+    Projection projection = csFactory.createProjection( "My projection",
+        "Lambert_Conformal_Conic_2SP", param );
+
+    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27562", geoCS,
+        projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    save( cs );
+  }
+
+  /**
+   * NTF (Paris) / Lambert Sud France
+   */
+  private void addEPSG27563()
+  {
+    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem)getCSByName( "EPSG:4807" );
+
+    if( geoCS == null )
+    {
+      return;
+    }
+
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
+    ParameterList param = new ParameterListImpl( pld );
+    param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
+    param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
+    param.setParameter( "false_easting", 600000.0 );
+    param.setParameter( "false_northing", 200000.0 );
+    param.setParameter( "central_meridian", 2.33722916666667 );
+    param.setParameter( "latitude_of_origin", 44.1 );
+    param.setParameter( "standard_parallel1", 43.1992913888888889 );
+    param.setParameter( "standard_parallel2", 44.9960938888888889 );
+    param.setParameter( "scale_factor", 0.999877499 );
+
+    Projection projection = csFactory.createProjection( "My projection",
+        "Lambert_Conformal_Conic_2SP", param );
+
+    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27563", geoCS,
+        projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    save( cs );
+  }
+
+  /**
+   * NTF (Paris) / Lambert Corse
+   */
+  private void addEPSG27564()
+  {
+    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem)getCSByName( "EPSG:4807" );
+
+    if( geoCS == null )
+    {
+      return;
+    }
+
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
+    ParameterList param = new ParameterListImpl( pld );
+    param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
+    param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
+    param.setParameter( "false_easting", 234.358 );
+    param.setParameter( "false_northing", 185861.369 );
+    param.setParameter( "central_meridian", 2.33722916666667 );
+    param.setParameter( "latitude_of_origin", 42.165 );
+    param.setParameter( "standard_parallel1", 41.56038777777778 );
+    param.setParameter( "standard_parallel2", 42.76766333333333 );
+    param.setParameter( "scale_factor", 0.99994471 );
+
+    Projection projection = csFactory.createProjection( "My projection",
+        "Lambert_Conformal_Conic_2SP", param );
+
+    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27564", geoCS,
+        projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    save( cs );
+  }
+
+  /**
+   * NTF (Paris) / Lambert zone I
+   */
+  private void addEPSG27571()
+  {
+    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem)getCSByName( "EPSG:4807" );
+
+    if( geoCS == null )
+    {
+      return;
+    }
+
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
+    ParameterList param = new ParameterListImpl( pld );
+    param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
+    param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
+    param.setParameter( "false_easting", 600000.0 );
+    param.setParameter( "false_northing", 1200000.0 );
+    param.setParameter( "central_meridian", 2.33722916666667 );
+    param.setParameter( "latitude_of_origin", 49.5 );
+    param.setParameter( "standard_parallel1", 48.59852277777780 );
+    param.setParameter( "standard_parallel2", 50.39591166666670 );
+    param.setParameter( "scale_factor", 0.999877341 );
+
+    Projection projection = csFactory.createProjection( "My projection",
+        "Lambert_Conformal_Conic_2SP", param );
+
+    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27571", geoCS,
+        projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    save( cs );
+  }
+
+  /**
+   * NTF (Paris) / Lambert zone II (France II etendu)
+   */
+  private void addEPSG27572()
+  {
+    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem)getCSByName( "EPSG:4807" );
+
+    if( geoCS == null )
+    {
+      return;
+    }
+
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
+    ParameterList param = new ParameterListImpl( pld );
+    param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
+    param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
+    param.setParameter( "false_easting", 600000.0 );
+    param.setParameter( "false_northing", 2200000.0 );
+    param.setParameter( "central_meridian", 2.33722916666667 );
+    param.setParameter( "latitude_of_origin", 46.8 );
+    param.setParameter( "standard_parallel1", 45.8989188888889 );
+    param.setParameter( "standard_parallel2", 47.6960144444444 );
+    param.setParameter( "scale_factor", 0.99987742 );
+
+    Projection projection = csFactory.createProjection( "My projection",
+        "Lambert_Conformal_Conic_2SP", param );
+
+    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27572", geoCS,
+        projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    save( cs );
+  }
+
+  /**
+   * NTF (Paris) / Lambert zone III
+   */
+  private void addEPSG27573()
+  {
+    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem)getCSByName( "EPSG:4807" );
+
+    if( geoCS == null )
+    {
+      return;
+    }
+
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
+    ParameterList param = new ParameterListImpl( pld );
+    param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
+    param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
+    param.setParameter( "false_easting", 600000.0 );
+    param.setParameter( "false_northing", 3200000.0 );
+    param.setParameter( "central_meridian", 2.33722916666667 );
+    param.setParameter( "latitude_of_origin", 44.1 );
+    param.setParameter( "standard_parallel1", 43.1992913888888889 );
+    param.setParameter( "standard_parallel2", 44.9960938888888889 );
+    param.setParameter( "scale_factor", 0.999877499 );
+
+    Projection projection = csFactory.createProjection( "My projection",
+        "Lambert_Conformal_Conic_2SP", param );
+
+    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27573", geoCS,
+        projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    save( cs );
+  }
+
+  /**
+   * NTF (Paris) / Lambert zone IV
+   */
+  private void addEPSG27574()
+  {
+    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem)getCSByName( "EPSG:4807" );
+
+    if( geoCS == null )
+    {
+      return;
+    }
+
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
+    ParameterList param = new ParameterListImpl( pld );
+    param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
+    param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
+    param.setParameter( "false_easting", 234.358 );
+    param.setParameter( "false_northing", 4185861.369 );
+    param.setParameter( "central_meridian", 2.33722916666667 );
+    param.setParameter( "latitude_of_origin", 42.165 );
+    param.setParameter( "standard_parallel1", 41.56038777777778 );
+    param.setParameter( "standard_parallel2", 42.76766333333333 );
+    param.setParameter( "scale_factor", 0.99994471 );
+
+    Projection projection = csFactory.createProjection( "My projection",
+        "Lambert_Conformal_Conic_2SP", param );
+
+    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27574", geoCS,
+        projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    save( cs );
+  }
+
+  /**
+   * NTF (Paris) / France I (Deprecated for EPSG version 6.5)
    */
   private void addEPSG27581()
   {
@@ -2900,6 +3234,8 @@ public class ConvenienceCSFactory
       return;
     }
 
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
@@ -2907,9 +3243,9 @@ public class ConvenienceCSFactory
     param.setParameter( "false_northing", 1200000.0 );
     param.setParameter( "central_meridian", 2.33722916666667 );
     param.setParameter( "latitude_of_origin", 49.5 );
-    param.setParameter( "standard_parallel1", 48.598522847174 );
-    param.setParameter( "standard_parallel2", 50.395911631678 );
-    param.setParameter( "scale_factor", 0.999877340 );
+    param.setParameter( "standard_parallel1", 48.59852277777780 );
+    param.setParameter( "standard_parallel2", 50.39591166666670 );
+    param.setParameter( "scale_factor", 0.999877341 );
 
     Projection projection = csFactory.createProjection( "My projection",
         "Lambert_Conformal_Conic_2SP", param );
@@ -2920,7 +3256,8 @@ public class ConvenienceCSFactory
   }
 
   /**
-   * NTF (Paris) / France II standard paralles taken from MapInfo
+   * NTF (Paris) / France II (France II etendu) (Deprecated for EPSG version
+   * 6.5)
    */
   private void addEPSG27582()
   {
@@ -2931,6 +3268,8 @@ public class ConvenienceCSFactory
       return;
     }
 
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
@@ -2938,9 +3277,9 @@ public class ConvenienceCSFactory
     param.setParameter( "false_northing", 2200000.0 );
     param.setParameter( "central_meridian", 2.33722916666667 );
     param.setParameter( "latitude_of_origin", 46.8 );
-    param.setParameter( "standard_parallel1", 45.898918964419 );
-    param.setParameter( "standard_parallel2", 47.696014502038 );
-    param.setParameter( "scale_factor", 0.999877419 );
+    param.setParameter( "standard_parallel1", 45.8989188888889 );
+    param.setParameter( "standard_parallel2", 47.6960144444444 );
+    param.setParameter( "scale_factor", 0.99987742 );
 
     Projection projection = csFactory.createProjection( "My projection",
         "Lambert_Conformal_Conic_2SP", param );
@@ -2951,7 +3290,7 @@ public class ConvenienceCSFactory
   }
 
   /**
-   * NTF (Paris) / France III standard paralles taken from MapInfo
+   * NTF (Paris) / France III (Deprecated for EPSG version 6.5)
    */
   private void addEPSG27583()
   {
@@ -2962,6 +3301,8 @@ public class ConvenienceCSFactory
       return;
     }
 
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
@@ -2969,9 +3310,9 @@ public class ConvenienceCSFactory
     param.setParameter( "false_northing", 3200000.0 );
     param.setParameter( "central_meridian", 2.33722916666667 );
     param.setParameter( "latitude_of_origin", 44.1 );
-    param.setParameter( "standard_parallel1", 43.199291275544 );
-    param.setParameter( "standard_parallel2", 44.996093814511 );
-    param.setParameter( "scale_factor", 0.999877501 );
+    param.setParameter( "standard_parallel1", 43.1992913888888889 );
+    param.setParameter( "standard_parallel2", 44.9960938888888889 );
+    param.setParameter( "scale_factor", 0.999877499 );
 
     Projection projection = csFactory.createProjection( "My projection",
         "Lambert_Conformal_Conic_2SP", param );
@@ -2982,7 +3323,7 @@ public class ConvenienceCSFactory
   }
 
   /**
-   * NTF (Paris) / France IV
+   * NTF (Paris) / France IV (Deprecated for EPSG version 6.5)
    */
   private void addEPSG27584()
   {
@@ -2993,16 +3334,18 @@ public class ConvenienceCSFactory
       return;
     }
 
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
-    param.setParameter( "false_easting", 234358.0 );
-    param.setParameter( "false_northing", 185861.369 );
+    param.setParameter( "false_easting", 234.358 );
+    param.setParameter( "false_northing", 4185861.369 );
     param.setParameter( "central_meridian", 2.33722916666667 );
     param.setParameter( "latitude_of_origin", 42.165 );
     param.setParameter( "standard_parallel1", 41.56038777777778 );
     param.setParameter( "standard_parallel2", 42.76766333333333 );
-    param.setParameter( "scale_factor", 0.999877501 );
+    param.setParameter( "scale_factor", 0.99994471 );
 
     Projection projection = csFactory.createProjection( "My projection",
         "Lambert_Conformal_Conic_2SP", param );
@@ -3013,11 +3356,9 @@ public class ConvenienceCSFactory
   }
 
   /**
-   * NTF (Paris) / France II etendu
-   * 
-   * standard paralles taken from MapInfo
+   * NTF (Paris) / Nord France (Deprecated for EPSG version 6.5)
    */
-  private void addEPSG27585()
+  private void addEPSG27591()
   {
     GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem)getCSByName( "EPSG:4807" );
 
@@ -3026,21 +3367,122 @@ public class ConvenienceCSFactory
       return;
     }
 
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 600000.0 );
-    param.setParameter( "false_northing", 2200000.0 );
+    param.setParameter( "false_northing", 200000.0 );
     param.setParameter( "central_meridian", 2.33722916666667 );
-    param.setParameter( "latitude_of_origin", 46.80 );
-    param.setParameter( "standard_parallel1", 45.898918964419 );
-    param.setParameter( "standard_parallel2", 47.696014502038 );
-    param.setParameter( "scale_factor", 0.999940004 );
+    param.setParameter( "latitude_of_origin", 49.5 );
+    param.setParameter( "standard_parallel1", 48.59852277777780 );
+    param.setParameter( "standard_parallel2", 50.39591166666670 );
+    param.setParameter( "scale_factor", 0.999877341 );
 
     Projection projection = csFactory.createProjection( "My projection",
         "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27585", geoCS,
+    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27591", geoCS,
+        projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    save( cs );
+  }
+
+  /**
+   * NTF (Paris) / Centre France (Deprecated for EPSG version 6.5)
+   */
+  private void addEPSG27592()
+  {
+    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem)getCSByName( "EPSG:4807" );
+
+    if( geoCS == null )
+    {
+      return;
+    }
+
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
+    ParameterList param = new ParameterListImpl( pld );
+    param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
+    param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
+    param.setParameter( "false_easting", 600000.0 );
+    param.setParameter( "false_northing", 200000.0 );
+    param.setParameter( "central_meridian", 2.33722916666667 );
+    param.setParameter( "latitude_of_origin", 46.80 );
+    param.setParameter( "standard_parallel1", 45.8989188888889 );
+    param.setParameter( "standard_parallel2", 47.6960144444444 );
+    param.setParameter( "scale_factor", 0.99987742 );
+
+    Projection projection = csFactory.createProjection( "My projection",
+        "Lambert_Conformal_Conic_2SP", param );
+
+    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27592", geoCS,
+        projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    save( cs );
+  }
+
+  /**
+   * NTF (Paris) / Sud France (Deprecated for EPSG version 6.5)
+   */
+  private void addEPSG27593()
+  {
+    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem)getCSByName( "EPSG:4807" );
+
+    if( geoCS == null )
+    {
+      return;
+    }
+
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
+    ParameterList param = new ParameterListImpl( pld );
+    param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
+    param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
+    param.setParameter( "false_easting", 600000.0 );
+    param.setParameter( "false_northing", 200000.0 );
+    param.setParameter( "central_meridian", 2.33722916666667 );
+    param.setParameter( "latitude_of_origin", 44.1 );
+    param.setParameter( "standard_parallel1", 43.1992913888888889 );
+    param.setParameter( "standard_parallel2", 44.9960938888888889 );
+    param.setParameter( "scale_factor", 0.999877499 );
+
+    Projection projection = csFactory.createProjection( "My projection",
+        "Lambert_Conformal_Conic_2SP", param );
+
+    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27593", geoCS,
+        projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    save( cs );
+  }
+
+  /**
+   * NTF (Paris) / Corse (Deprecated for EPSG version 6.5)
+   */
+  private void addEPSG27594()
+  {
+    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem)getCSByName( "EPSG:4807" );
+
+    if( geoCS == null )
+    {
+      return;
+    }
+
+    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+
+    ParameterList param = new ParameterListImpl( pld );
+    param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
+    param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
+    param.setParameter( "false_easting", 234.358 );
+    param.setParameter( "false_northing", 185861.369 );
+    param.setParameter( "central_meridian", 2.33722916666667 );
+    param.setParameter( "latitude_of_origin", 42.165 );
+    param.setParameter( "standard_parallel1", 41.56038777777778 );
+    param.setParameter( "standard_parallel2", 42.76766333333333 );
+    param.setParameter( "scale_factor", 0.99994471 );
+
+    Projection projection = csFactory.createProjection( "My projection",
+        "Lambert_Conformal_Conic_2SP", param );
+
+    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27594", geoCS,
         projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }

@@ -140,7 +140,7 @@ public final class WFSCapabilitiesFactory
    */
   public static synchronized WFSCapabilities createCapabilities( Document doc ) throws Exception
   {
-    Debug.debugMethodBegin( "WFSCapabilitiesFactory", "createCapabilities" );
+    Debug.debugMethodBegin();
 
     Element root = doc.getDocumentElement();
 
@@ -396,13 +396,11 @@ public final class WFSCapabilitiesFactory
             getOR[i] = new URL( XMLTools.getAttrValue( getL.item( i ), "onlineResource" ) );
           }
         }
-
         NodeList postL = httpElement.getElementsByTagName( "Post" );
         URL[] postOR = null;
         if( postL != null )
         {
           postOR = new URL[postL.getLength()];
-
           for( int i = 0; i < postL.getLength(); i++ )
           {
             postOR[i] = new URL( XMLTools.getAttrValue( postL.item( i ), "onlineResource" ) );

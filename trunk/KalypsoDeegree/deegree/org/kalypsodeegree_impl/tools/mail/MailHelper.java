@@ -80,7 +80,6 @@ public abstract class MailHelper
     try
     {
       java.util.Properties p = System.getProperties();
-
       p.put( "mail.smtp.host", mailHost );
 
       Session session = Session.getDefaultInstance( p, null );
@@ -93,7 +92,6 @@ public abstract class MailHelper
           false ) );
 
       msg.setSubject( eMess.getSubject() );
-
       msg.setContent( eMess.getMessageBody(), eMess.getMimeType() );
 
       msg.setHeader( "X-Mailer", "JavaMailer" );
@@ -102,12 +100,12 @@ public abstract class MailHelper
       // send the mail off
 
       /** @todo using the default transport */
-      Transport transport = session.getTransport( "smtp" );
-      transport.send( msg );
+      //Transport transport = session.getTransport("smtp");
+      Transport.send( msg );
     }
     catch( Exception e )
     {
-      e.printStackTrace( System.out );
+      e.printStackTrace();
       Debug.debugMethodEnd();
       throw new SendMailException();
     }

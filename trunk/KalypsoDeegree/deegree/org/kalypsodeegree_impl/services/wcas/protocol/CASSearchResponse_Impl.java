@@ -98,7 +98,7 @@ final public class CASSearchResponse_Impl implements CASSearchResponse
   }
 
   /**
-   * @see isSuccessful
+   * @see #isSuccessful()
    */
   public void setSuccess( boolean success )
   {
@@ -115,7 +115,7 @@ final public class CASSearchResponse_Impl implements CASSearchResponse
   }
 
   /**
-   * @see getNumberOfRecords
+   * @see #getNumberOfRecords()
    */
   public void setNumberOfRecords( int numberOfRecords )
   {
@@ -131,7 +131,7 @@ final public class CASSearchResponse_Impl implements CASSearchResponse
   }
 
   /**
-   * @see getTimeStamp
+   * @see #getTimeStamp()
    */
   public void setTimeStamp( Timestamp timestamp )
   {
@@ -148,7 +148,7 @@ final public class CASSearchResponse_Impl implements CASSearchResponse
   }
 
   /**
-   * @see getSearchResults
+   * @see #getSearchResults()
    */
   public void setSearchResults( CASSearchResult[] searchResults )
   {
@@ -164,7 +164,7 @@ final public class CASSearchResponse_Impl implements CASSearchResponse
   }
 
   /**
-   * @see getSearchResults
+   * @see #getSearchResults()
    */
   public void addSearchResult( CASSearchResult searchResult )
   {
@@ -191,10 +191,14 @@ final public class CASSearchResponse_Impl implements CASSearchResponse
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:48  doemming
+ * Revision 1.3  2004/10/07 14:09:04  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:26
- * doemming backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:52  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:53:32
+ * doemming *** empty log message *** Revision 1.5 2004/05/10 08:40:58 poth no
+ * message
  * 
  * Revision 1.4 2004/02/09 08:00:03 poth no message
  * 

@@ -44,7 +44,6 @@ package org.deegree_impl.graphics.legend;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -95,7 +94,7 @@ public class LegendElement_Impl implements LegendElement
 
   protected String label = "";
 
-  protected double orientation = Double.NEGATIVE_INFINITY;
+  protected double orientation = 0;
 
   protected int labelPosition = -1;
 
@@ -107,6 +106,8 @@ public class LegendElement_Impl implements LegendElement
 
   protected int bufferBetweenLegendAndLabel = 10;
 
+  protected BufferedImage bi = null;
+
   /**
    * empty constructor
    *  
@@ -114,6 +115,16 @@ public class LegendElement_Impl implements LegendElement
   LegendElement_Impl()
   {
     this.ruleslist = new ArrayList();
+  }
+
+  /**
+   * 
+   *  
+   */
+  LegendElement_Impl( BufferedImage legendImage )
+  {
+    this();
+    bi = legendImage;
   }
 
   /**
@@ -137,7 +148,7 @@ public class LegendElement_Impl implements LegendElement
   LegendElement_Impl( Rule[] rules, String label, double orientation, int labelPosition,
       boolean active, int width, int height )
   {
-    this.ruleslist = new ArrayList();
+    this();
     setRules( rules );
     setLabel( label );
     setLabelOrientation( orientation );
@@ -155,9 +166,11 @@ public class LegendElement_Impl implements LegendElement
   public Rule[] getRules()
   {
     if( ruleslist != null && ruleslist.size() > 0 )
+    {
       return (Rule[])ruleslist.toArray( new Rule[ruleslist.size()] );
-    else
-      return null;
+    }
+
+    return null;
   }
 
   /**
@@ -338,7 +351,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public int getHeight()
   {
-    return this.height;
+    return this.width;
   }
 
   /**
@@ -376,7 +389,7 @@ public class LegendElement_Impl implements LegendElement
    * @throws LegendException
    *           is thrown, if the parsing of the sld failes.
    */
-  public void drawPointLegend( Graphics g, PointSymbolizer c, int width, int height )
+  protected void drawPointLegend( Graphics g, PointSymbolizer c, int width, int height )
       throws LegendException
   {
     Debug.debugMethodBegin( "LegendElement_Impl", "drawPointLegend()" );
@@ -398,31 +411,6 @@ public class LegendElement_Impl implements LegendElement
     Debug.debugMethodEnd();
   }
 
-  public void drawTextLegend( Graphics g, TextSymbolizer c, int width, int height )
-      throws LegendException
-  {
-    Debug.debugMethodBegin( "LegendElement_Impl", "drawTexttLegend()" );
-    org.deegree.graphics.sld.Font font = c.getFont();
-    java.awt.Font awtFont = null;
-    Color color = null;
-    try
-    {
-      int style = font.getStyle( null );
-      int weight = font.getWeight( null );
-      color = font.getColor( null );
-      awtFont = new Font( font.getFamily( null ), font.getStyle( null ), font.getSize( null ) );
-    }
-    catch( FilterEvaluationException e )
-    {
-      e.printStackTrace();
-    }
-    g.setColor( color );
-    g.setFont( awtFont );
-    g.drawString( "abc", ( width / 8 ), height - ( height / 8 ) );
-
-    Debug.debugMethodEnd();
-  }
-
   /**
    * draws a legendsymbol, if the SLD defines a line
    * 
@@ -437,10 +425,10 @@ public class LegendElement_Impl implements LegendElement
    * @throws LegendException
    *           is thrown, if the parsing of the sld failes.
    */
-  public void drawLineStringLegend( Graphics2D g, LineSymbolizer ls, int width, int height )
+  protected void drawLineStringLegend( Graphics2D g, LineSymbolizer ls, int width, int height )
       throws LegendException
   {
-    Debug.debugMethodBegin( "LegendElement_Impl", "drawLineStringLegend()" );
+    Debug.debugMethodBegin();
 
     org.deegree.graphics.sld.Stroke sldstroke = ls.getStroke();
     try
@@ -484,10 +472,10 @@ public class LegendElement_Impl implements LegendElement
    * @throws LegendException
    *           if the parsing of the sld failes.
    */
-  public void drawPolygonLegend( Graphics2D g, PolygonSymbolizer ps, int width, int height )
+  protected void drawPolygonLegend( Graphics2D g, PolygonSymbolizer ps, int width, int height )
       throws LegendException
   {
-    Debug.debugMethodBegin( "LegendElement_Impl", "drawPolygonLegend()" );
+    Debug.debugMethodBegin();
 
     GM_Position p1 = GeometryFactory.createGM_Position( 0, 0 );
     GM_Position p2 = GeometryFactory.createGM_Position( 0, height - 1 );
@@ -542,7 +530,7 @@ public class LegendElement_Impl implements LegendElement
    */
   private Graphics2D setColor( Graphics2D g2, Color color, double opacity )
   {
-    Debug.debugMethodBegin( "LegendElement_Impl", "setColor" );
+    Debug.debugMethodBegin();
     if( opacity < 0.999 )
     {
       final int alpha = (int)Math.round( opacity * 255 );
@@ -568,7 +556,7 @@ public class LegendElement_Impl implements LegendElement
   private BasicStroke getBasicStroke( org.deegree.graphics.sld.Stroke sldstroke )
       throws LegendException
   {
-    Debug.debugMethodBegin( "LegendElement_Impl", "getBasicStroke" );
+    Debug.debugMethodBegin();
     BasicStroke bs = null;
     try
     {
@@ -608,7 +596,6 @@ public class LegendElement_Impl implements LegendElement
   protected int[] calculateFontMetrics( String label )
   {
     Debug.debugMethodBegin( "LegendElement_Impl", "calculateFontMetrics" );
-
     int[] fontmetrics = new int[3];
 
     BufferedImage bi = new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB );
@@ -644,15 +631,15 @@ public class LegendElement_Impl implements LegendElement
   private BufferedImage calculateImage( int labelposition, int labelwidth, int ascent, int descent,
       int legendwidth, int legendheight, int buffer )
   {
-    Debug.debugMethodBegin( "LegendElement_Impl", "calculateImage" );
+    Debug.debugMethodBegin();
     // TODO labelposition
     switch( labelposition )
     {
     // LP_TOPCENTER
     case 0:
     {
-      System.out
-          .println( "The text-position LP_TOPCENTER in the legend is not implemented yet.\n We put the text on the right side (EAST) of the legendsymbol." );
+      System.out.println( "The text-position LP_TOPCENTER in the legend is not implemented yet.\n "
+          + "We put the text on the right side (EAST) of the legendsymbol." );
       BufferedImage bi = new BufferedImage( ( legendwidth + buffer + labelwidth ), legendheight,
           BufferedImage.TYPE_INT_ARGB );
       Graphics g = bi.getGraphics();
@@ -664,8 +651,8 @@ public class LegendElement_Impl implements LegendElement
     // LP_TOPLEFT
     case 1:
     {
-      System.out
-          .println( "The text-position LP_TOPLEFT in the legend is not implemented yet.\n We put the text on the right side (EAST) of the legendsymbol." );
+      System.out.println( "The text-position LP_TOPLEFT in the legend is not implemented yet.\n"
+          + "We put the text on the right side (EAST) of the legendsymbol." );
       BufferedImage bi = new BufferedImage( ( legendwidth + buffer + labelwidth ), legendheight,
           BufferedImage.TYPE_INT_ARGB );
       Graphics g = bi.getGraphics();
@@ -711,9 +698,6 @@ public class LegendElement_Impl implements LegendElement
       g.drawString( getLabel(), width + 10, height / 2 + ( ( ascent - descent ) / 2 ) );
       Debug.debugMethodEnd();
       return bi;
-      // return new BufferedImage((legendwidth + buffer + labelwidth),
-      // legendheight, BufferedImage.TYPE_INT_ARGB);
-
     }
     // LP_BOTTOMCENTER
     case 5:
@@ -771,60 +755,73 @@ public class LegendElement_Impl implements LegendElement
   public BufferedImage exportAsImage() throws LegendException
   {
     Debug.debugMethodBegin( "LegendElement_Impl", "exportAsImage" );
-    int[] fontmetrics;
-    BufferedImage bi = null;
-    Graphics g = null;
-
-    // calculates the fontmetrics and creates the bufferedimage
-    // if getLabel() is null is checked in calculateFontMetrics!
-    fontmetrics = calculateFontMetrics( getLabel() );
-
-    bi = calculateImage( getLabelPlacement(), fontmetrics[0], fontmetrics[1], fontmetrics[2],
-        getWidth(), getHeight(), getBufferBetweenLegendAndLabel() );
-    g = bi.getGraphics();
-    g.setColor( Color.WHITE );
-
-    Rule[] myrules = getRules();
-    Symbolizer[] symbolizer = null;
-
-    // determines the legendsymbol and paints it
-    for( int a = 0; a < myrules.length; a++ )
+    if( bi == null )
     {
-      symbolizer = myrules[a].getSymbolizers();
+      int[] fontmetrics;
 
-      for( int b = 0; b < symbolizer.length; b++ )
+      Graphics g = null;
+
+      // calculates the fontmetrics and creates the bufferedimage
+      // if getLabel() is null is checked in calculateFontMetrics!
+      fontmetrics = calculateFontMetrics( getLabel() );
+      bi = calculateImage( getLabelPlacement(), fontmetrics[0], fontmetrics[1], fontmetrics[2],
+          getWidth(), getHeight(), getBufferBetweenLegendAndLabel() );
+      g = bi.getGraphics();
+      g.setColor( Color.WHITE );
+      Rule[] myrules = getRules();
+      Symbolizer[] symbolizer = null;
+
+      // determines the legendsymbol and paints it
+      for( int a = 0; a < myrules.length; a++ )
       {
-        if( symbolizer[b] instanceof PointSymbolizer )
+        symbolizer = myrules[a].getSymbolizers();
+
+        for( int b = 0; b < symbolizer.length; b++ )
         {
-          drawPointLegend( g, (PointSymbolizer)symbolizer[b], getWidth(), getHeight() );
+          if( symbolizer[b] instanceof PointSymbolizer )
+          {
+            drawPointLegend( g, (PointSymbolizer)symbolizer[b], getWidth(), getHeight() );
+          }
+          if( symbolizer[b] instanceof LineSymbolizer )
+          {
+            drawLineStringLegend( (Graphics2D)g, (LineSymbolizer)symbolizer[b], width, height );
+          }
+          if( symbolizer[b] instanceof PolygonSymbolizer )
+          {
+            drawPolygonLegend( (Graphics2D)g, (PolygonSymbolizer)symbolizer[b], width, height );
+          }
+          if( symbolizer[b] instanceof RasterSymbolizer )
+          {
+            // throw new LegendException("RasterSymbolizer is not implemented
+            // yet!");
+          }
+          if( symbolizer[b] instanceof TextSymbolizer )
+          {
+            // throw new LegendException("TextSymbolizer is not implemented
+            // yet!");
+          }
         }
-        if( symbolizer[b] instanceof LineSymbolizer )
-        {
-          drawLineStringLegend( (Graphics2D)g, (LineSymbolizer)symbolizer[b], width, height );
-        }
-        if( symbolizer[b] instanceof PolygonSymbolizer )
-        {
-          drawPolygonLegend( (Graphics2D)g, (PolygonSymbolizer)symbolizer[b], width, height );
-        }
-        if( symbolizer[b] instanceof RasterSymbolizer )
-        {
-          // throw new LegendException("RasterSymbolizer is not implemented
-          // yet!");
-        }
-        if( symbolizer[b] instanceof TextSymbolizer )
-        {
-          drawTextLegend( (Graphics2D)g, (TextSymbolizer)symbolizer[b], width, height );
-          // throw new LegendException("TextSymbolizer is not implemented
-          // yet!");
-        }
+
+        // g.setColor(Color.black);
+        // g.drawString(getLabel(), width + 10, height / 2 + ((fontmetrics[1] -
+        // fontmetrics[2]) / 2));
+
       }
-
-      // g.setColor(Color.black);
-      // g.drawString(getLabel(), width + 10, height / 2 + ((fontmetrics[1] -
-      // fontmetrics[2]) / 2));
-
     }
     Debug.debugMethodEnd();
     return bi;
   }
 }
+
+/*******************************************************************************
+ * ****************************************************************************
+ * Changes to this class. What the people have been up to: $Log:
+ * LegendElement_Impl.java,v $ Revision 1.12 2004/07/09 07:17:19 poth no message
+ * 
+ * Revision 1.11 2004/06/01 15:55:05 poth no message
+ * 
+ * Revision 1.10 2004/04/07 10:58:46 axel_schaefer bugfix
+ * 
+ * 
+ *  
+ ******************************************************************************/

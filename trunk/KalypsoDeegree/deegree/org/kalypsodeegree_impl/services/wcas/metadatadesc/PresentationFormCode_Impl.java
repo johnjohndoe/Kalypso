@@ -72,7 +72,7 @@ public class PresentationFormCode_Impl implements PresentationFormCode
   }
 
   /**
-   * @see getValue
+   * @see #getValue()
    */
   public void setValue( String value )
   {

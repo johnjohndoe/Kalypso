@@ -79,7 +79,7 @@ class CGetFeature extends DBGetFeature
 
   protected OGCWebServiceResponse[] performRequest( OGCWebServiceRequest request )
   {
-    Debug.debugMethodBegin( this, "performRequest" );
+    Debug.debugMethodBegin();
 
     WFSQuery[] queries = null;
     String[] affectedFeatureTypes = null;
@@ -95,7 +95,7 @@ class CGetFeature extends DBGetFeature
       // get jdbc connection and access object for oracle spatial
       con = pool.acuireConnection( connect.getDriver(), connect.getLogon(), connect.getUser(),
           connect.getPassword() );
-      OracleSpatialAccess osa = new OracleSpatialAccess( con, connect.getSpatialVersion() );
+      OracleSpatialAccess osa = new OracleSpatialAccess( con );
       queries = req.getQuery();
       affectedFeatureTypes = getAffectedFeatureTypes( queries );
       int startPosition = req.getStartPosition();
@@ -151,6 +151,7 @@ class CGetFeature extends DBGetFeature
     }
     catch( Exception e )
     {
+      e.printStackTrace();
       Debug.debugException( e, null );
       try
       {

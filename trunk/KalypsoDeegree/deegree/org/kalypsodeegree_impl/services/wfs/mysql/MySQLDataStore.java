@@ -104,7 +104,7 @@ public final class MySQLDataStore extends AbstractDataStore
    * same as <tt>describeFeatureType(..)</tt> but locking the feature during
    * processing.
    * 
-   * @see #describeFeatureType
+   * @see #describeFeatureType(WFSDescribeFeatureTypeRequest)
    * 
    * @param request
    *          containing the request for zero, one or more features. The

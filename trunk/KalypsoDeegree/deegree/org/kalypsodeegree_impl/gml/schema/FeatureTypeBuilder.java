@@ -1,22 +1,23 @@
 package org.deegree_impl.gml.schema;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.extension.ITypeHandler;
 import org.deegree_impl.extension.TypeRegistrySingleton;
+import org.deegree_impl.model.feature.FeatureAssociationTypeProperty_Impl;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.XLinkFeatureTypeProperty;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Helper class to build featuretype. It collects informations
- * from schema-definition and builds FeatureType objects.
+ * Helper class to build featuretype. It collects informations from
+ * schema-definition and builds FeatureType objects.
  * 
  * @author doemming
  */
@@ -24,34 +25,76 @@ public class FeatureTypeBuilder
 {
   private GMLSchema m_schema;
 
-  private List m_enumeration = new ArrayList();
+  private final List m_enumeration = new ArrayList();
 
-  private List m_featureProtoTypes = new ArrayList();
+  private final List m_featureProtoTypes = new ArrayList();
 
-  private String m_name = null;
+  private final String m_name;
+
+  private final String m_namespace;
 
   private String m_typeName = null;
 
   private XLinkFeatureTypeProperty m_XLinkProp = null;
 
-  
+  private final HashMap m_minOccurs;
+
+  private final HashMap m_maxOccurs;
+
+  private boolean m_isFeatureAssociation = false;
+
+private boolean m_isCutoumType = false;
+
   public FeatureTypeBuilder( GMLSchema schema, Node node ) throws Exception
   {
 
+    m_minOccurs = new HashMap();
+    m_maxOccurs = new HashMap();
     m_schema = schema;
     m_typeName = null;
-
+    m_namespace = schema.getTargetNS();
     Element element = (Element)node;
 
     if( !element.hasAttribute( "name" ) || !element.hasAttribute( "type" ) )
       throw new Exception( "no valid elementnode: " + XMLHelper.toString( node ) );
 
-    SchemaAttribute nameAttribute = new SchemaAttribute( m_schema, XMLHelper.getAttributeNode( node, "name" ) );
+    // set Name
+    SchemaAttribute nameAttribute = new SchemaAttribute( m_schema, XMLHelper.getAttributeNode(
+        node, "name" ) );
     m_name = nameAttribute.getValue();
-
-    SchemaAttribute typeAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode( node, "type" ) );
-
+    // set Type
+    SchemaAttribute typeAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode( node,
+        "type" ) );
     setTypeName( typeAttribute );
+    //   setOccurency(node);
+    // set cardinality
+    // min:
+    //    System.out.println( "------------------------------------------" );
+    //    System.out.println( "created feature type: " + m_name + " : " +
+    // m_typeName );
+    //    System.out.println( "------------------------------------------" );
+  }
+
+  public void setOccurency( String name, String namespace, Node node )
+  {
+    Node minNode = XMLHelper.getAttributeNode( node, "minOccurs" );
+    String minOccurs = "1";
+    String maxOccurs = "1";
+    if( minNode != null )
+    {
+      SchemaAttribute minOccursAttribute = new SchemaAttribute( m_schema, minNode );
+      minOccurs = minOccursAttribute.getValue();
+    }
+    // set cardinality
+    // max:
+    Node maxNode = XMLHelper.getAttributeNode( node, "maxOccurs" );
+    if( maxNode != null )
+    {
+      SchemaAttribute maxOccursAttribute = new SchemaAttribute( m_schema, maxNode );
+      maxOccurs = maxOccursAttribute.getValue();
+    }
+    m_minOccurs.put( namespace + ":" + name, minOccurs );
+    m_maxOccurs.put( namespace + ":" + name, maxOccurs );
   }
 
   public void setTypeName( SchemaAttribute typeAttribute ) throws Exception
@@ -59,50 +102,90 @@ public class FeatureTypeBuilder
     final String typeName = typeAttribute.getValue();
     final String valueNS = typeAttribute.getValueNS();
 
-    if( "http://www.w3.org/2001/XMLSchema".equals( valueNS ) )
-      m_typeName = Mapper.mapXMLSchemaType2JavaType( typeName );
-    else if( "http://www.opengis.net/gml".equals( valueNS ) )
-      m_typeName = Mapper.mapGMLSchemaType2JavaType( typeName );
-    else if( m_schema.getTargetNS().equals( valueNS ) )
+    // is registred type ?
+    final String typename = valueNS + ":" + typeName;
+    final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
+        .getTypeHandlerForTypeName( typename );
+    if( typeHandler != null )
     {
-      final Node cNode = getContentNode( typeName );
-      if( ( (Element)cNode ).getLocalName().equals( "complexType" ) )
-      {
-        m_typeName = "org.deegree.model.Feature";
-        GMLSchemaFactory.map( m_schema, cNode, this );
- 
-      }
-      else if( ( (Element)cNode ).getLocalName().equals( "simpleType" ) )
-      {
-        m_typeName = "org.deegree.model.FeatureProperty";
-        GMLSchemaFactory.map( m_schema, cNode, this );
+      m_typeName = typeHandler.getClassName();
+//      if(m_typeName==null)
+//      	System.out.println("debug");
+      m_isCutoumType=true;
+      return;
+    }
+    // type is XML SCHEMA TYPE // TODO let typeHandler do this
+    if( XMLHelper.XMLSCHEMA_NS.equals( valueNS ) )
+    {
+      m_typeName = Mapper.mapXMLSchemaType2JavaType( typeName );
+      return;
+    }
+    // type is GML SCHEMA TYPE
+    else if( XMLHelper.GMLSCHEMA_NS.equals( valueNS ) )
+    {
+      String gmlTypeName = Mapper.mapGMLSchemaType2JavaType( typeName );
+      if( gmlTypeName != null )
+        m_typeName = gmlTypeName;
+      return;
+    }
+
+    //    //
+    // else if( m_schema.getTargetNS().equals( valueNS ) ||
+    // m_schema.isImportedNS( valueNS ) )
+    // must be an local or imported type
+
+    GMLSchema schema = m_schema.getGMLSchema( valueNS );
+    final Node cNode = schema.getContentNode( typeName );
+    if( ( (Element)cNode ).getLocalName().equals( "complexType" ) )
+    {
+      String baseType = XMLHelper.getGMLBaseType( schema, cNode );
+      if(baseType!=null)
+      { // a GMLBaseType
+      	m_typeName=baseType;
+        //        m_typeName = "org.deegree.model.Feature";
+        GMLSchemaFactory.map( schema, cNode, this );
+        return;
       }
       else
-        throw new Exception( "content of element not found in Schema " + typeAttribute.toString() );
+      {
+      	NodeList custoumElement = ((Element)cNode).getElementsByTagNameNS(XMLHelper.XMLSCHEMA_NS,"element");
+///////////     
+      	Node custoumNode=custoumElement.item(0);
+    
+      	SchemaAttribute innerTypeAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode( custoumNode,
+        "type" ) );
+      	setTypeName(innerTypeAttribute);
+      	return;
+//      	custoumNode.getAttributes();xx
+//      	final String typeName = typeAttribute.getValue();
+//        final String valueNS = typeAttribute.getValueNS();
+//
+//        // is registred type ?
+//        final String typename = valueNS + ":" + typeName;
+//
+//      	final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
+//	        .getTypeHandlerForTypeName( typename );
+//	    if( typeHandler != null )
+//	    {
+//	      m_typeName = typeHandler.getClassName();
+//	      if(m_typeName==null)
+//	      	System.out.println("debug");
+//	      m_isCutoumType=true;
+//	      return;
+//	    }
+//      	custoum
+      	// a custoum base type ?
+      	///////////
+      }
+    }
+    else if( ( (Element)cNode ).getLocalName().equals( "simpleType" ) )
+    {
+      m_typeName = "org.deegree.model.FeatureProperty";
+      GMLSchemaFactory.map( schema, cNode, this );
+      return;
     }
     else
-    {
-      final String typename = valueNS + ":" + typeName;
-      final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( typename );
-      if( typeHandler == null )
-        throw new Exception( "undefined type in schema: " + typename );
-      m_typeName = typeHandler.getClassName();
-    }
-  }
-
-  private Node getContentNode( String type )
-  {
-    NodeList nl = m_schema.getSchema().getElementsByTagNameNS( "http://www.w3.org/2001/XMLSchema",
-        "complexType" );
-    nl = XMLHelper.reduceByAttribute( nl, "name", type );
-    if( nl.getLength() > 0 ) // complexType ?
-      return nl.item( 0 );
-    nl = m_schema.getSchema().getElementsByTagNameNS( "http://www.w3.org/2001/XMLSchema",
-        "simpleType" );
-    nl = XMLHelper.reduceByAttribute( nl, "name", type );
-    if( nl.getLength() > 0 ) // simpleType ?
-      return nl.item( 0 );
-    return null;
+      throw new Exception( "content of element not found in Schema " + typeAttribute.toString() );
   }
 
   public String getName()
@@ -110,9 +193,28 @@ public class FeatureTypeBuilder
     return m_name;
   }
 
-  public void add( FeatureTypeProperty featureTypeProperty )
+  public String getNamespace()
   {
-    m_featureProtoTypes.add( featureTypeProperty );
+    return m_namespace;
+  }
+
+  //  public void add( FeatureTypeProperty featureTypeProperty )
+  //  {
+  //    m_featureProtoTypes.add( featureTypeProperty );
+  //  }
+  public void add( FeatureTypeProperty ftp )
+  {
+    m_featureProtoTypes.add( ftp );
+  }
+
+  public void add( FeatureType ft )
+  {
+    m_featureProtoTypes.add( ft );
+  }
+
+  public void add( Node recursiveElementNode )
+  {
+    m_featureProtoTypes.add( recursiveElementNode );
   }
 
   public void add( FeatureTypeBuilder featureProtoType )
@@ -121,61 +223,118 @@ public class FeatureTypeBuilder
 
   }
 
-  public void addEnumerationObject( Object object )
+  public void addEnumerationObject( String allowedContent )
   {
-    m_enumeration.add( object );
+    m_enumeration.add( allowedContent );
+  }
+
+  /**
+   * removes contents, but not restrictions, attributes or enumerations
+   */
+  public void removeContents()
+  {
+
+    m_featureProtoTypes.clear();
+
   }
 
   public FeatureTypeProperty toFeatureTypeProperty()
   {
+    if( "FeatureAssociationType".equals( m_typeName ) )
+    {
+      Object associateableFeatureType = m_featureProtoTypes.get( 0 );
+      FeatureType ftp = null;
+      if( associateableFeatureType instanceof FeatureType )
+      {
+        ftp = (FeatureType)associateableFeatureType;
+        return new FeatureAssociationTypeProperty_Impl( m_name, m_namespace, m_typeName, true, ftp );
+      }
+      if( associateableFeatureType instanceof FeatureTypeBuilder )
+      {
+        ftp = ( (FeatureTypeBuilder)associateableFeatureType ).toFeatureType();
+        return new FeatureAssociationTypeProperty_Impl( m_name, m_namespace, m_typeName, true, ftp );
+      }
+      if( associateableFeatureType instanceof Node )
+      { 
+        return new FeatureAssociationTypeProperty_Impl( m_name, m_namespace, m_typeName, true,
+            m_schema,(Node)associateableFeatureType );
+        //Object o=m_schema.getMappedType((Node)associateableFeatureType);
+        //  x ftp=(FeatureType)o;
+      }
+      throw new UnsupportedOperationException();
+    }
     if( m_enumeration.size() > 0 )
-      return new EnumerationFeatureTypeProperty( m_name, m_typeName, true, m_enumeration.toArray() );
+      return new EnumerationFeatureTypeProperty( m_name, m_namespace, m_typeName, true,
+          m_enumeration.toArray() );
 
     if( isXLink() )
     {
       return m_XLinkProp;
     }
-
-    return FeatureFactory.createFeatureTypeProperty( m_name, m_typeName, true );
+    if(m_typeName==null)
+    	System.out.println("debug");
+    
+    if(m_isCutoumType)
+    	return new CustoumFeatureTypeProperty(m_name, m_namespace, m_typeName, true );
+    return FeatureFactory.createFeatureTypeProperty( m_name, m_namespace, m_typeName, true );
   }
 
   public FeatureType toFeatureType()
   {
+    //    if( m_isFeatureAssociation )
+    //      System.out.println( "stop" );
     List featureTypeList = new ArrayList();
     List featureTypePropertyList = new ArrayList();
 
     for( int i = 0; i < m_featureProtoTypes.size(); i++ )
     {
-      FeatureTypeBuilder builder = (FeatureTypeBuilder)m_featureProtoTypes.get( i );
+      Object o = m_featureProtoTypes.get( i );
+      if( o instanceof FeatureTypeBuilder )
+      {
+        FeatureTypeBuilder builder = (FeatureTypeBuilder)o;
+        if( builder.isFeatureType() )
+          featureTypeList.add( builder.toFeatureType() );
 
-      if( builder.isFeatureType() )
-        featureTypeList.add( builder.toFeatureType() );
-
-      if( builder.isFeaturePropertyType() )
-        featureTypePropertyList.add( builder.toFeatureTypeProperty() );
+        if( builder.isFeaturePropertyType() )
+          featureTypePropertyList.add( builder.toFeatureTypeProperty() );
+      }
+      else if( o instanceof FeatureType )
+        featureTypeList.add( o );
+      else if( o instanceof FeatureTypeProperty )
+        featureTypePropertyList.add( o );
 
     }
     FeatureTypeProperty[] ftProperties = (FeatureTypeProperty[])featureTypePropertyList
         .toArray( new FeatureTypeProperty[featureTypePropertyList.size()] );
     FeatureType[] ftChilds = (FeatureType[])featureTypeList
         .toArray( new FeatureType[featureTypeList.size()] );
-
-    return FeatureFactory.createFeatureType( new FeatureType[]
-    { null },
-    // parents
-        ftChilds, // children
-        m_name, ftProperties );
+    int[] minOccurs = new int[ftProperties.length];
+    int[] maxOccurs = new int[ftProperties.length];
+    for( int i = 0; i < ftProperties.length; i++ )
+    {
+      String key = ftProperties[i].getNamespace() + ":" + ftProperties[i].getName();
+      minOccurs[i] = Integer.parseInt( (String)m_minOccurs.get( key ) );
+      String max = (String)m_maxOccurs.get( key );
+      if( "unbounded".equals( max ) )
+        maxOccurs[i] = FeatureType.UNBOUND_OCCURENCY;
+      else
+        maxOccurs[i] = Integer.parseInt( max );
+    }
+    return FeatureFactory.createFeatureType( m_name, m_namespace, ftProperties, minOccurs,
+        maxOccurs );
   }
 
-  private boolean isFeaturePropertyType()
+  public boolean isFeaturePropertyType()
   {
-    return m_featureProtoTypes.size() == 0;
-    // TODO
+    return !isFeatureType();
   }
 
-  private boolean isFeatureType()
+  public boolean isFeatureType()
   {
-    return m_featureProtoTypes.size() > 0;
+    if( "AbstractFeatureType".equals( m_typeName ) )
+      return true;
+    return false;
+    //    return m_featureProtoTypes.size() > 0;
   }
 
   private boolean isXLink()
@@ -191,8 +350,8 @@ public class FeatureTypeBuilder
     {
       //        <attributeGroup name="simpleLink">
       //        <attribute name="type" type="string" fixed="simple" form="qualified"/>
-      m_XLinkProp = new XLinkFeatureTypeProperty( m_name, XLinkFeatureTypeProperty.XLINK_SIMPLE,
-          true );
+      m_XLinkProp = new XLinkFeatureTypeProperty( m_name, m_namespace,
+          XLinkFeatureTypeProperty.XLINK_SIMPLE, true );
 
       //        <attribute ref="xlink:href" use="optional"/>
       //        <attribute ref="xlink:role" use="optional"/>
@@ -206,4 +365,18 @@ public class FeatureTypeBuilder
       break;
     }
   }
+
+  public void setFeatureAssociation()
+  {
+    m_isFeatureAssociation = true;
+  }
+
+/**
+ * @return
+ */
+public boolean isCustoumType() 
+{
+	return m_isCutoumType;
+}
+
 }

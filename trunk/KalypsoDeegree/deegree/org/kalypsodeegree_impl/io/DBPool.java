@@ -134,28 +134,24 @@ public class DBPool extends ObjectPool
       return o;
 
     }
-    else
     // else instatiate a new object
-    {
-      // create a new class instance
-      DriverManager.registerDriver( (Driver)Class.forName( driver ).newInstance() );
+    // create a new class instance
+    DriverManager.registerDriver( (Driver)Class.forName( driver ).newInstance() );
 
-      Properties prop = (Properties)properties.clone();
-      Object o = DriverManager.getConnection( database, prop );
+    Properties prop = (Properties)properties.clone();
+    Object o = DriverManager.getConnection( database, prop );
 
-      existingInstances++;
+    existingInstances++;
 
-      // add it to 'in use' container
-      in_use.add( o );
-      // set the start of its life time
-      startLifeTime.put( o, new Long( System.currentTimeMillis() ) );
-      // set the start of its usage
-      startUsageTime.put( o, new Long( System.currentTimeMillis() ) );
+    // add it to 'in use' container
+    in_use.add( o );
+    // set the start of its life time
+    startLifeTime.put( o, new Long( System.currentTimeMillis() ) );
+    // set the start of its usage
+    startUsageTime.put( o, new Long( System.currentTimeMillis() ) );
 
-      // return the object
-      return o;
-
-    }
+    // return the object
+    return o;
   }
 
   /**

@@ -148,7 +148,7 @@ public class IndexFile
 
     // delet file if it exists
     File file = new File( url + _shx );
-    if( file.exists() )
+    if( rwflag.indexOf( 'w' ) > -1 && file.exists() )
       file.delete();
     file = null;
 
@@ -283,7 +283,7 @@ public class IndexFile
   public int getRecordOffset( int RecNo )
   {
 
-    if( RecNo >= 0 && RecNo < indexArray.length )
+    if( RecNo >= 0 )
     {
       return indexArray[RecNo].offset;
     }
@@ -301,7 +301,7 @@ public class IndexFile
   public int getRecordLength( int RecNo )
   {
 
-    if( RecNo >= 0 && RecNo < indexArray.length )
+    if( RecNo >= 0 )
     {
       return indexArray[RecNo].length;
     }

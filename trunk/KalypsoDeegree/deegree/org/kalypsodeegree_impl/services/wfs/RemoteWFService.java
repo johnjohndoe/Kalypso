@@ -115,12 +115,17 @@ public class RemoteWFService extends OGCWebService_Impl
 
     // get GetFeature address
     dcp = request.getGetFeature().getDCPType();
-    get = ( (HTTP)dcp[0].getProtocol() ).getPostOnlineResources();
-    if( get != null && get.length > 0 )
+    boolean po = false;
+    for( int i = 0; i < dcp.length; i++ )
     {
-      addresses.put( GETFEATURE, get[0] );
+      get = ( (HTTP)dcp[i].getProtocol() ).getPostOnlineResources();
+      if( get != null && get.length > 0 )
+      {
+        addresses.put( GETFEATURE, get[0] );
+        po = true;
+      }
     }
-    else
+    if( !po )
     {
       String s = "WFS: " + capabilities.getService().getName() + " doesn't "
           + "support HTTP POST for GetFeature requests";
@@ -137,12 +142,17 @@ public class RemoteWFService extends OGCWebService_Impl
     {
       // get GetFeatureWithLock address
       dcp = request.getGetFeatureWithLock().getDCPType();
-      get = ( (HTTP)dcp[0].getProtocol() ).getPostOnlineResources();
-      if( get != null && get.length > 0 )
+      po = false;
+      for( int i = 0; i < dcp.length; i++ )
       {
-        addresses.put( GETFEATUREWITHLOCK, get[0] );
+        get = ( (HTTP)dcp[i].getProtocol() ).getPostOnlineResources();
+        if( get != null && get.length > 0 )
+        {
+          addresses.put( GETFEATUREWITHLOCK, get[0] );
+          po = true;
+        }
       }
-      else
+      if( !po )
       {
         String s = "WFS: " + capabilities.getService().getName() + " doesn't "
             + "support HTTP POST for GetFeatureWithLock requests";
@@ -155,12 +165,17 @@ public class RemoteWFService extends OGCWebService_Impl
     {
       // get Transaction address
       dcp = request.getTransaction().getDCPType();
-      get = ( (HTTP)dcp[0].getProtocol() ).getPostOnlineResources();
-      if( get != null && get.length > 0 )
+      po = false;
+      for( int i = 0; i < dcp.length; i++ )
       {
-        addresses.put( TRANSACTION, get[0] );
+        get = ( (HTTP)dcp[i].getProtocol() ).getPostOnlineResources();
+        if( get != null && get.length > 0 )
+        {
+          addresses.put( TRANSACTION, get[0] );
+          po = true;
+        }
       }
-      else
+      if( !po )
       {
         String s = "WFS: " + capabilities.getService().getName() + " doesn't "
             + "support HTTP POST for Transaction requests";
@@ -242,11 +257,7 @@ public class RemoteWFService extends OGCWebService_Impl
     Debug.debugMethodBegin( this, "handleGetFeature" );
 
     URL url = (URL)addresses.get( GETFEATURE );
-
     String param = ( (Marshallable)request ).exportAsXML();
-
-    //	System.out.println(" GetFeatureURL:"+url);
-    //	System.out.println("RemoteWFService.handleGetRequest() :"+param);
 
     // create new Thread and start it
     new RemoteWFSHandler( request, client, url, param )
@@ -254,36 +265,30 @@ public class RemoteWFService extends OGCWebService_Impl
 
       public void run()
       {
-        //		System.out.println("RemoteWFSHandler.run()");
+
         OGCWebServiceException exce = null;
         GMLFeatureCollection result = null;
         try
         {
-          //		    System.out.println("try1");
           // get map from the remote service
           NetWorker nw = new NetWorker( "UTF-8", laddress, lparam );
           String contentType = nw.getContentType();
           if( contentType == null || MimeTypeMapper.isKnownMimeType( contentType ) )
           {
-
-            //			System.out.println("if1");
             Document doc = null;
             try
             {
-              //			    System.out.println("try2");
               InputStreamReader isr = new InputStreamReader( nw.getInputStream(), "UTF-8" );
               doc = XMLTools.parse( isr );
               result = new GMLFeatureCollection_Impl( doc.getDocumentElement() );
             }
             catch( Exception e )
             {
-              e.printStackTrace();
               throw new WebServiceException( e.toString() );
             }
           }
           else
           {
-            //			System.out.println("else1");
             exce = new OGCWebServiceException_Impl( "RemoteWFS:handleGetFeature",
                 "Response of the remote " + "WFS contains unknown content " + "type: "
                     + contentType + ";request: " + lparam );
@@ -339,7 +344,6 @@ public class RemoteWFService extends OGCWebService_Impl
         {
           String remoteAddress = NetWorker.url2String( laddress );
           String us = remoteAddress + "?" + lparam;
-          System.out.println( "WFS-URL:" + lparam );
           URL ur = new URL( us );
           // get map from the remote service
           NetWorker nw = new NetWorker( "UTF-8", ur );

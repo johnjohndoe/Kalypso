@@ -54,7 +54,7 @@ import org.deegree.services.wms.capabilities.LegendGraphicService;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version 2002-03-01
  */
-class LegendGraphicService_Impl extends ServiceClass_Impl implements LegendGraphicService
+public class LegendGraphicService_Impl extends ServiceClass_Impl implements LegendGraphicService
 {
   /**
    * Creates a new LegendGraphicService_Impl object.

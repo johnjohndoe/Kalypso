@@ -117,13 +117,20 @@ public class CV_Coverage_Impl implements CV_Coverage, Serializable
    * @param descriptor
    *          containing a description of the coverage
    */
-  public CV_Coverage_Impl( CVDescriptor descriptor )
+  public CV_Coverage_Impl( CVDescriptor descriptor ) throws Exception
   {
-    this.descriptor = descriptor;
-    CoverageLayer cvl = descriptor.getCoverageLayer();
-    String crsName = cvl.getCRS()[0];
-    CoordinateSystem crs_ = ConvenienceCSFactory.getInstance().getCSByName( crsName );
-    crs = Adapters.getDefault().export( crs_ );
+    if( descriptor != null )
+    {
+      this.descriptor = descriptor;
+      CoverageLayer cvl = descriptor.getCoverageLayer();
+      String crsName = cvl.getCRS()[0];
+      CoordinateSystem crs_ = ConvenienceCSFactory.getInstance().getCSByName( crsName );
+      crs = Adapters.getDefault().export( crs_ );
+    }
+    else
+    {
+      throw new Exception( "layer not found" );
+    }
   }
 
   /**

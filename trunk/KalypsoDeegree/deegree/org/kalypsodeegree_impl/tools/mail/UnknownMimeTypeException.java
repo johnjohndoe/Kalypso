@@ -41,8 +41,7 @@
  
  ---------------------------------------------------------------------------*/
 
-// $Id: UnknownMimeTypeException.java,v 1.1.1.1 2004/05/11 16:43:25 doemming Exp
-// $
+// $Id$
 package org.deegree_impl.tools.mail;
 
 /**

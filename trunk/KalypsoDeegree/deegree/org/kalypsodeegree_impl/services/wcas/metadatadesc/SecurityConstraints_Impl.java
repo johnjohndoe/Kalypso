@@ -79,7 +79,7 @@ public class SecurityConstraints_Impl implements SecurityConstraints
   }
 
   /**
-   * @see getClassificationCode
+   * @see #getClassificationCode()
    */
   public void setClassificationCode( ClassificationCode classificationcode )
   {
@@ -96,7 +96,7 @@ public class SecurityConstraints_Impl implements SecurityConstraints
   }
 
   /**
-   * @see getClassificationSystem
+   * @see #getClassificationSystem()
    */
   public void setClassificationSystem( String classificationsystem )
   {
@@ -113,7 +113,7 @@ public class SecurityConstraints_Impl implements SecurityConstraints
   }
 
   /**
-   * @see getHandlingDescription
+   * @see #getHandlingDescription()
    */
   public void setHandlingDescription( String handlingdescription )
   {
@@ -130,7 +130,7 @@ public class SecurityConstraints_Impl implements SecurityConstraints
   }
 
   /**
-   * @see getUseLimitation
+   * @see #getUseLimitation()
    */
   public void addUseLimitation( String uselimitation )
   {
@@ -138,7 +138,7 @@ public class SecurityConstraints_Impl implements SecurityConstraints
   }
 
   /**
-   * @see getUseLimitation
+   * @see #getUseLimitation()
    */
   public void setUseLimitation( String[] uselimitation )
   {
@@ -159,7 +159,7 @@ public class SecurityConstraints_Impl implements SecurityConstraints
   }
 
   /**
-   * @see getUserNote
+   * @see #getUserNote()
    */
   public void setUserNote( String usernote )
   {

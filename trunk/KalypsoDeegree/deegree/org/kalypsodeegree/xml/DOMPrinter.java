@@ -54,7 +54,7 @@ public class DOMPrinter
     {
       String trimmed = node.getNodeValue().trim();
       if( !trimmed.equals( "" ) )
-        out.print( trimmed );
+        out.print( XMLTools.validateCDATA( trimmed ) );
       break;
     }
     case Node.PROCESSING_INSTRUCTION_NODE:
@@ -115,7 +115,7 @@ public class DOMPrinter
     {
       String trimmed = node.getNodeValue().trim();
       if( !trimmed.equals( "" ) )
-        System.out.println( indent + trimmed );
+        System.out.println( indent + "<![CDATA[" + trimmed + "]]>" );
       break;
     }
     case Node.PROCESSING_INSTRUCTION_NODE:
@@ -184,7 +184,9 @@ public class DOMPrinter
     {
       String trimmed = node.getNodeValue().trim();
       if( !trimmed.equals( "" ) )
-        sb.append( trimmed );
+      {
+        sb.append( XMLTools.validateCDATA( trimmed ) );
+      }
       break;
     }
     case Node.PROCESSING_INSTRUCTION_NODE:

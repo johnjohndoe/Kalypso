@@ -69,7 +69,7 @@ public class StatusCode_Impl implements StatusCode
   }
 
   /**
-   * @see getProgressCode
+   * @see #getProgressCode()
    */
   public void setProgressCode( String progresscode )
   {

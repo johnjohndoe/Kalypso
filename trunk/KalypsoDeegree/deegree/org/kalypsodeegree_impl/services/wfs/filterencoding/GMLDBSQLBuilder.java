@@ -87,7 +87,8 @@ public class GMLDBSQLBuilder extends AbstractSQLBuilder
     case OperationDefines.BEYOND:
     {
       sb.append( "Spatial operator" ).append(
-          OperationDefines.getNameById( operation.getOperatorId() ) ).append( " not implemented!" );
+          OperationDefines.getNameById( operation.getOperatorId() ) ).append(
+          " not implemented for GMLDBDatastore !" );
       break;
     }
     case OperationDefines.BBOX:
@@ -145,7 +146,7 @@ public class GMLDBSQLBuilder extends AbstractSQLBuilder
       String maxy_c = "maxY";
       //                
       sb.append( q );
-      if( q == "" )
+      if( "".equals( q ) )
       {
         sb.append( "( " );
       }

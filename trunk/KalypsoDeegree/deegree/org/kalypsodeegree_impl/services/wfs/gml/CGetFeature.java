@@ -209,7 +209,6 @@ class CGetFeature extends DBGetFeature
 
     // add properties (columns) to select
     StringBuffer query_s = new StringBuffer( "SELECT " );
-
     query_s.append( getAffectedFields( ft.getMasterTable().getName(), ft, query ) );
 
     // transform the query conditions coded as Filters

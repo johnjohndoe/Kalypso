@@ -59,7 +59,6 @@ class WMSPutStylesRequest_Impl extends OGCWebServiceRequest_Impl implements WMSP
    * Creates a new WMSPutStyleRequest_Impl object.
    * 
    * @param version
-   * @param request
    * @param id
    * @param vendorSpecificParameter
    */

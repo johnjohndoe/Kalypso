@@ -49,7 +49,7 @@ import org.deegree.enterprise.control.RPCException;
 import org.deegree.enterprise.control.RPCMethodCall;
 import org.deegree.enterprise.control.RPCParameter;
 import org.deegree_impl.clients.wcasclient.configuration.CSWClientConfiguration;
-import org.deegree_impl.enterprise.control.AbstractSecuredListener;
+import org.deegree_impl.enterprise.control.AbstractListener;
 import org.deegree_impl.enterprise.control.RPCWebEvent;
 import org.deegree_impl.tools.Debug;
 
@@ -59,7 +59,7 @@ import org.deegree_impl.tools.Debug;
  * 
  * @author <a href="mschneider@lat-lon.de">Markus Schneider </a>
  */
-public class RegisterServiceListener extends AbstractSecuredListener
+public class RegisterServiceListener extends AbstractListener
 {
 
   protected String serviceURL = null;
@@ -68,7 +68,10 @@ public class RegisterServiceListener extends AbstractSecuredListener
 
   protected URL catalogURL = null;
 
-  public void performPrivilegedOperation( FormEvent event )
+  /**
+   * @see org.deegree.enterprise.control.WebListener#actionPerformed(org.deegree.enterprise.control.FormEvent)
+   */
+  public void actionPerformed( FormEvent event )
   {
     Debug.debugMethodBegin();
 
@@ -101,23 +104,41 @@ public class RegisterServiceListener extends AbstractSecuredListener
       }
       else
       {
-        throw new Exception( "Es wurde kein gültiger RPC-event empfangen." );
+        throw new Exception( "No valid RPC event received." );
       }
+
+      // check access constraints
+      if( !performAccessCheck( event ) )
+      {
+        return;
+      }
+
       getRequest().setAttribute(
           "MESSAGE",
-          "Der Service mit der URL <tt>http://" + serviceURL + "<tt>"
-              + "</tt> wurde dem Catalog erfolgreich hinzugefügt." );
+          "Service with URL <tt>http://" + serviceURL + "<tt>"
+              + "</tt> has been successfully added to the catalog." );
     }
     catch( Exception e )
     {
       getRequest().setAttribute( "SOURCE", this.getClass().getName() );
       getRequest().setAttribute(
           "MESSAGE",
-          "Der Service konnte nicht hinzugefügt werden, " + "da ein Fehler augetreten ist.<br><br>"
-              + "Die Fehlermeldung lautet: <code>" + e.getMessage() + "</code>" );
+          "Service registration could not be performed.<br><br>" + "The error message is: <code>"
+              + e.getMessage() + "</code>" );
       setNextPage( "admin_error.jsp" );
     }
 
     Debug.debugMethodEnd();
+  }
+
+  /**
+   * Dummy access check. Can be overwritten by a specialized implementation.
+   * <p>
+   * 
+   * @return
+   */
+  protected boolean performAccessCheck( FormEvent event )
+  {
+    return true;
   }
 }

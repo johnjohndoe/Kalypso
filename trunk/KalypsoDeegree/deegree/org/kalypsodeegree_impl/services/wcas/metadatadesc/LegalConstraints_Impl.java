@@ -79,8 +79,6 @@ public class LegalConstraints_Impl implements LegalConstraints
 
   /**
    * minOccurs="0" maxOccurs="unbounded"
-   * 
-   * @param
    *  
    */
   public String[] getOtherConstraints()
@@ -89,7 +87,7 @@ public class LegalConstraints_Impl implements LegalConstraints
   }
 
   /**
-   * @see getOtherConstraints
+   * @see #getOtherConstraints()
    */
   public void addOtherConstraints( String otherconstraints )
   {
@@ -97,7 +95,7 @@ public class LegalConstraints_Impl implements LegalConstraints
   }
 
   /**
-   * @see getOtherConstraints
+   * @see #getOtherConstraints()
    */
   public void setOtherConstraints( String[] otherconstraints )
   {
@@ -110,8 +108,6 @@ public class LegalConstraints_Impl implements LegalConstraints
 
   /**
    * minOccurs="0" maxOccurs="unbounded"
-   * 
-   * @param
    *  
    */
   public PropertyRightsCode[] getPropertyRightsCode()
@@ -121,7 +117,7 @@ public class LegalConstraints_Impl implements LegalConstraints
   }
 
   /**
-   * @see getPropertyRightsCode
+   * @see #getPropertyRightsCode()
    */
   public void addPropertyRightsCode( PropertyRightsCode propertyrightscode )
   {
@@ -129,7 +125,7 @@ public class LegalConstraints_Impl implements LegalConstraints
   }
 
   /**
-   * @see getPropertyRightsCode
+   * @see #getPropertyRightsCode()
    */
   public void setPropertyRightsCode( PropertyRightsCode[] propertyrightscode )
   {
@@ -142,8 +138,6 @@ public class LegalConstraints_Impl implements LegalConstraints
 
   /**
    * minOccurs="0" maxOccurs="unbounded"
-   * 
-   * @param
    *  
    */
   public UseConstraintsCode[] getUseConstraintsCode()
@@ -153,7 +147,7 @@ public class LegalConstraints_Impl implements LegalConstraints
   }
 
   /**
-   * @see getUseConstraintsCode
+   * @see #getUseConstraintsCode()
    */
   public void addUseConstraintsCode( UseConstraintsCode useconstraintscode )
   {
@@ -161,7 +155,7 @@ public class LegalConstraints_Impl implements LegalConstraints
   }
 
   /**
-   * @see getUseConstraintsCode
+   * @see #getUseConstraintsCode()
    */
   public void setUseConstraintsCode( UseConstraintsCode[] useconstraintscode )
   {
@@ -174,8 +168,6 @@ public class LegalConstraints_Impl implements LegalConstraints
 
   /**
    * minOccurs="0" maxOccurs="unbounded"
-   * 
-   * @param Stringarray
    *  
    */
   public String[] getUseLimitation()
@@ -184,7 +176,7 @@ public class LegalConstraints_Impl implements LegalConstraints
   }
 
   /**
-   * @see getUseLimitation
+   * @see #getUseLimitation()
    */
   public void addUseLimitation( String uselimitation )
   {
@@ -192,7 +184,7 @@ public class LegalConstraints_Impl implements LegalConstraints
   }
 
   /**
-   * @see getUseLimitation
+   * @see #getUseLimitation()
    */
   public void setUseLimitation( String[] uselimitation )
   {

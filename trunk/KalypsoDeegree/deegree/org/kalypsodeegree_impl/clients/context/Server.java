@@ -189,6 +189,9 @@ public class Server implements Marshallable
     this.onlineResource = onlineResource;
   }
 
+  /**
+   * @see org.deegree.xml.Marshallable#exportAsXML()
+   */
   public String exportAsXML()
   {
 

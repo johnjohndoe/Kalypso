@@ -67,7 +67,7 @@ public class Value_Impl implements Value
   }
 
   /**
-   * @see getType
+   * @see #getType()
    */
   public void setType( String type )
   {

@@ -90,7 +90,7 @@ public class Reference_Impl implements Reference
   }
 
   /**
-   * @see getTableField
+   * @see #getTableField()
    */
   public void setTableField( String tableField )
   {
@@ -107,7 +107,7 @@ public class Reference_Impl implements Reference
   }
 
   /**
-   * @see isReplaceable
+   * @see #isReplaceable()
    */
   public void setReplaceable( boolean replaceable )
   {
@@ -124,7 +124,7 @@ public class Reference_Impl implements Reference
   }
 
   /**
-   * @see getTargetTable
+   * @see #getTargetTable()
    */
   public void setTargetTable( String targetTable )
   {

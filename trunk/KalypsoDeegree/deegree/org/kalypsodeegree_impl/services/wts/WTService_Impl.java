@@ -653,16 +653,11 @@ public class WTService_Impl extends OGCWebService_Impl implements OGCWebServiceC
                 textureTiles[0][i][j] = new BufferedImage( 2, 2, BufferedImage.TYPE_INT_ARGB );
               }
             }
-
+            System.out.println( textureTiles[0][i][j].getClass().getName() );
             Appearance app = createAppearance( (BufferedImage)textureTiles[0][i][j] );
             ( (Shape3D)demTiles[i][j] ).setAppearance( app );
             list.add( demTiles[i][j] );
             demTiles[i][j] = null;
-
-            for( int k = 0; k < textureTiles.length; k++ )
-            {
-              //textureTiles[k][i][j] = null;
-            }
           }
         }
       }

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="obslink.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org">
-	<import namespace="zml.kalypso.org" schemaLocation="observation.xsd"/>
-	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="../xlink/xlink.xsd"/>
-	<element name="TimeseriesLink">
-		<complexType>
-			<complexContent>
-				<extension base="xlink:SimpleLinkType">
-					<attribute name="linktype" type="string"/>
-					<attribute name="timeaxis" type="string"/>
-					<attribute name="valueaxis" type="string"/>
-				</extension>
-			</complexContent>
-		</complexType>
-	</element>
+<schema targetNamespace="obslink.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlinkext="http://www.w3.org/1999/xlinkext" xmlns:obslink="obslink.zml.kalypso.org">
+	<import namespace="http://www.w3.org/1999/xlinkext" 
+		schemaLocation="../xlink/xlinksext.xsd"/>
+	<element name="TimeseriesLink" type="obslink:TimeseriesLinkType"/>	
+	
+	<complexType name="TimeseriesLinkType">
+		<complexContent>
+			<extension base="xlinkext:SimpleLinkType">
+				<attribute name="linktype" type="string"/>
+				<attribute name="timeaxis" type="string"/>
+				<attribute name="valueaxis" type="string"/>
+			</extension>
+		</complexContent>
+	</complexType>
 </schema>

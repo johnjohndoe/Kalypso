@@ -311,9 +311,6 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    */
   public boolean equals( Object other )
   {
-    if( other == this )
-      return true;
-
     if( !super.equals( other ) )
     {
       return false;
@@ -342,7 +339,6 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     }
     catch( Exception e )
     {
-      e.printStackTrace();
       return false;
     }
 

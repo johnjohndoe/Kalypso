@@ -164,7 +164,11 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements
     {
       imagearray[i] = le[i].exportAsImage();
       maxheight += ( imagearray[i].getHeight() + buffer );
-      maxwidth += imagearray[i].getWidth();
+      // maxwidth += imagearray[i].getWidth();
+      if( maxwidth < imagearray[i].getWidth() )
+      {
+        maxwidth = imagearray[i].getWidth();
+      }
     }
 
     // printing the title (or not)
@@ -174,6 +178,12 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements
       titleFontMetrics = calculateFontMetrics( getTitle() );
       titleheight = titleFontMetrics[1] + titleFontMetrics[2];
       maxheight += titleheight;
+
+      // is title wider than the maxwidth?
+      if( maxwidth <= titleFontMetrics[0] )
+      {
+        maxwidth = titleFontMetrics[0];
+      }
 
       bi = new BufferedImage( maxwidth, maxheight, BufferedImage.TYPE_INT_ARGB );
       g = bi.getGraphics();
@@ -197,5 +207,16 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements
     Debug.debugMethodEnd();
     return bi;
   }
-
 }
+
+/*******************************************************************************
+ * ****************************************************************************
+ * Changes to this class. What the people have been up to: $Log:
+ * LegendElementCollection_Impl.java,v $ Revision 1.7 2004/06/01 15:55:05 poth
+ * no message
+ * 
+ * Revision 1.6 2004/04/07 10:58:46 axel_schaefer bugfix
+ * 
+ * 
+ *  
+ ******************************************************************************/

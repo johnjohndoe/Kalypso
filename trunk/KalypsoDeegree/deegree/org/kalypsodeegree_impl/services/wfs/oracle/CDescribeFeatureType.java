@@ -89,7 +89,7 @@ class CDescribeFeatureType extends AbstractDescribeFeatureType
     {
       con = pool.acuireConnection( connect.getDriver(), connect.getLogon(), connect.getUser(),
           connect.getPassword() );
-      OracleSpatialAccess osa = new OracleSpatialAccess( con, connect.getSpatialVersion() );
+      OracleSpatialAccess osa = new OracleSpatialAccess( con );
 
       // get describtions for the submitted feature type
       String query = "select column_name, data_type, nullable from "
@@ -185,7 +185,7 @@ class CDescribeFeatureType extends AbstractDescribeFeatureType
     }
     else if( oType.equalsIgnoreCase( "SDO_Geometry" ) )
     {
-      return "org.deegree.model.geometry.GM_Object";
+      return "org.deegree.model.spatialschema.GM_Object";
     }
 
     return "java.lang.Object";

@@ -1,6 +1,6 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/model/gc/GC_GridCoverage_Impl.java,v
-// 1.1.1.1 2004/05/11 16:43:24 doemming Exp $
+// /cvsroot/deegree/deegree/org/deegree_impl/model/gc/GC_GridCoverage_Impl.java,v
+// 1.35 2004/08/10 10:31:27 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.
@@ -51,15 +51,11 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.media.jai.JAI;
-import javax.media.jai.RenderedOp;
 
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.coverage.CVDescriptor;
@@ -81,6 +77,7 @@ import org.deegree_impl.model.geometry.GeometryFactory;
 import org.deegree_impl.services.RangeParam;
 import org.deegree_impl.tools.Cache_Impl;
 import org.deegree_impl.tools.Debug;
+import org.deegree_impl.tools.ImageUtils;
 import org.deegree_impl.tools.StringExtend;
 import org.opengis.cv.CV_PaletteInterpretation;
 import org.opengis.cv.CV_SampleDimensionType;
@@ -90,9 +87,6 @@ import org.opengis.gc.GC_GridPacking;
 import org.opengis.gc.GC_GridRange;
 import org.opengis.pt.PT_CoordinatePoint;
 import org.opengis.pt.PT_Envelope;
-
-import com.sun.media.jai.codec.FileSeekableStream;
-import com.sun.media.jai.codec.SeekableStream;
 
 /**
  * Represent the basic implementation which provides access to grid coverage
@@ -130,13 +124,19 @@ public class GC_GridCoverage_Impl extends CV_Coverage_Impl implements GC_GridCov
    * @param isEditable
    *          indicates if the grid coverages data can be edited
    */
-  public GC_GridCoverage_Impl( CVDescriptor descriptor, boolean isEditable ) throws RemoteException
+  public GC_GridCoverage_Impl( CVDescriptor descriptor, boolean isEditable )
+      throws RemoteException, Exception
   {
     super( descriptor );
 
+    if( descriptor == null )
+    {
+      throw new RemoteException( "layer not found.\n" );
+    }
+
     if( cache == null )
     {
-      cache = new Cache_Impl( 10000 );
+      cache = new Cache_Impl( 1000 );
     }
 
     this.isEditable = isEditable;
@@ -687,13 +687,11 @@ public class GC_GridCoverage_Impl extends CV_Coverage_Impl implements GC_GridCov
     Level level = filterRange( rangeParams, collector );
 
     Tile[] tiles = getTiles( level, env, getScale( env, width, height ) );
-
     Object o = new float[0][0];
 
     if( ( tiles != null ) && ( tiles.length > 0 ) )
     {
       String s = tiles[0].getResourceURL().getFile().toLowerCase();
-
       if( s.endsWith( ".img" ) )
       {
         GridExtentDescription ged = (GridExtentDescription)descriptor.getCoverageLayer()
@@ -768,13 +766,11 @@ public class GC_GridCoverage_Impl extends CV_Coverage_Impl implements GC_GridCov
       RangeParam rp = (RangeParam)rangeParams.getParameter( erange.getName() );
 
       if( rp == null ) // there are no params selecting this range
-
       {
         continue;
       }
 
       if( !erange.match( rp ) ) // given param doesn't match this range
-
       {
         continue;
       }
@@ -815,7 +811,6 @@ public class GC_GridCoverage_Impl extends CV_Coverage_Impl implements GC_GridCov
       // get URL of the current Tile
       URL url0 = tiles[i].getResourceURL();
       String surl = url0.toExternalForm();
-
       if( url0.getProtocol().equals( "file" ) )
       {
         surl = StringExtend.replace( surl, "file://", "file:///", false ); // FIXME
@@ -879,7 +874,7 @@ public class GC_GridCoverage_Impl extends CV_Coverage_Impl implements GC_GridCov
           // if the image isn't contained within the cache load it
           if( img == null )
           {
-            img = getBufferedImage( url );
+            img = ImageUtils.loadImage( url );
             cache.push( url, img );
           }
 
@@ -917,20 +912,6 @@ public class GC_GridCoverage_Impl extends CV_Coverage_Impl implements GC_GridCov
     g.dispose();
 
     return bi;
-  }
-
-  /**
-   * reads a <tt>BufferedImage</tt> from a <tt>URL</tt>
-   */
-  private BufferedImage getBufferedImage( URL url ) throws IOException
-  {
-    //InputStream is = url.openStream();
-    SeekableStream fss = new FileSeekableStream( new RandomAccessFile( url.getFile(), "r" ) );
-    RenderedOp ro = JAI.create( "stream", fss );
-    BufferedImage img = ro.getAsBufferedImage();
-    fss.close();
-    //is.close();
-    return img;
   }
 
   /**
@@ -981,8 +962,14 @@ public class GC_GridCoverage_Impl extends CV_Coverage_Impl implements GC_GridCov
 }
 /*******************************************************************************
  * Changes to this class. What the people have been up to: $Log:
- * GC_GridCoverage_Impl.java,v $ Revision 1.1.1.1 2004/05/11 16:43:24 doemming
- * backup of local modified deegree sources
+ * GC_GridCoverage_Impl.java,v $ Revision 1.35 2004/08/10 10:31:27 poth no
+ * message
+ * 
+ * Revision 1.34 2004/07/14 11:34:18 poth no message
+ * 
+ * Revision 1.33 2004/04/27 06:40:43 poth no message
+ * 
+ * Revision 1.32 2004/04/02 06:41:41 poth no message
  * 
  * Revision 1.31 2004/03/26 11:19:29 poth no message
  * 

@@ -180,7 +180,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       }
       catch( Exception e ) // generic exception used to simplify processing
       {
-        // do nothing, try with next location
+        // do nothing, try with next location TODO: message for user?
+      	e.printStackTrace();
       }
       finally
       {
@@ -196,7 +197,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       }
     }
     
-    throw new IllegalStateException( "Could not load client configuration from server!" );
+    // TODO: Marc: cient sollte auch one config file laufen!?
+    //throw new IllegalStateException( "Could not load client configuration from server!" );
   }
 
   /**
@@ -421,7 +423,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   }
 
   /**
-   * Erzeugt jedesmal eine neue Factory. Nötig, weil die Factory die
+   * Erzeugt jedesmal eine neue Factory. N?tig, weil die Factory die
    * CellEditoren cached, diese aber mit schliessen der Tabelle disposed werden.
    */
   public ICellEditorFactory createFeatureTypeCellEditorFactory()
@@ -431,7 +433,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   }
 
   /**
-   * Erzeugt jedesmal eine neue Factory. Nötig, weil die Factory die
+   * Erzeugt jedesmal eine neue Factory. N?tig, weil die Factory die
    * CellEditoren cached, diese aber mit schliessen der Tabelle disposed werden.
    */
   public IFeatureControlFactory createFeatureControlFactory()

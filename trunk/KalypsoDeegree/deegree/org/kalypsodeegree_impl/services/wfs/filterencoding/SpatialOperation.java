@@ -66,8 +66,7 @@ import org.w3c.dom.Element;
  * 
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @author <a href="mailto:luigimarinucci@yahoo.com">Luigi Marinucci <a>
- * @version $Id: SpatialOperation.java,v 1.1.1.1 2004/05/11 16:43:25 doemming
- *          Exp $
+ * @version $Id$
  */
 public class SpatialOperation extends AbstractOperation
 {

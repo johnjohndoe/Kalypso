@@ -104,7 +104,7 @@ final public class PointDBDataStore extends AbstractDataStore
    * same as <tt>describeFeatureType(..)</tt> but locking the feature during
    * processing.
    * 
-   * @see #describeFeatureType
+   * @see #getFeature(WFSGetFeatureRequest)
    * 
    * @param request
    *          containing the request for zero, one or more features. The

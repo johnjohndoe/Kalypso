@@ -75,7 +75,7 @@ public class TypeValue_Impl implements TypeValue
   }
 
   /**
-   * @see getDataType
+   * @see #getDataType()
    */
   public void setDataType( DataType datatype )
   {
@@ -91,7 +91,7 @@ public class TypeValue_Impl implements TypeValue
   }
 
   /**
-   * @see getEnumValues
+   * @see #getEnumValues()
    */
   public void setEnumValues( EnumValues enumvalues )
   {
@@ -107,7 +107,7 @@ public class TypeValue_Impl implements TypeValue
   }
 
   /**
-   * @see getInstanceValue
+   * @see #getInstanceValue()
    */
   public void setInstanceValue( InstanceValue instancevalue )
   {
@@ -123,7 +123,7 @@ public class TypeValue_Impl implements TypeValue
   }
 
   /**
-   * @see getRange
+   * @see #getRange()
    */
   public void setRange( Range range )
   {

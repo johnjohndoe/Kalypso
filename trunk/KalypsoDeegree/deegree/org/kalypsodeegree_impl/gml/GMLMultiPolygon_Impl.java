@@ -45,6 +45,7 @@ package org.deegree_impl.gml;
 import org.deegree.gml.GMLGeometry;
 import org.deegree.gml.GMLMultiPolygon;
 import org.deegree.gml.GMLPolygon;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree_impl.tools.Debug;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -80,7 +81,7 @@ public class GMLMultiPolygon_Impl extends GMLGeometryCollection_Impl implements 
   {
     Debug.debugMethodBegin( "", "createGMLMultiPolygon" );
 
-    Element elem = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:MultiPolygon" );
+    Element elem = doc.createElementNS( CommonNamespaces.GMLNS, "gml:MultiPolygon" );
     GMLMultiPolygon ls = new GMLMultiPolygon_Impl( elem );
 
     Debug.debugMethodEnd();
@@ -120,10 +121,13 @@ public class GMLMultiPolygon_Impl extends GMLGeometryCollection_Impl implements 
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:58  doemming
+ * Revision 1.3  2004/10/07 14:09:13  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:24
- * doemming backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 13:03:31 doemming
+ * *** empty log message *** Revision 1.6 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.5 2004/03/02 07:38:14 poth no message
  * 

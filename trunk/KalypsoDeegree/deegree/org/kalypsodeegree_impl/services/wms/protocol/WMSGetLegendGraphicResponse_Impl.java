@@ -48,13 +48,14 @@ import org.deegree_impl.services.OGCWebServiceResponse_Impl;
 import org.w3c.dom.Document;
 
 /**
- * 
+ * The class encapsulates the response to a GetLegendGraphic request.
  * 
  * <p>
  * --------------------------------------------------------
  * </p>
  * 
- * @author Katharina Lupp <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
+ * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
+ * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
 public class WMSGetLegendGraphicResponse_Impl extends OGCWebServiceResponse_Impl implements
@@ -63,13 +64,20 @@ public class WMSGetLegendGraphicResponse_Impl extends OGCWebServiceResponse_Impl
   private Object legendGraphic = null;
 
   /**
-   * constructor initializing the class with the <WMSGetLegendGraphicResponse>
+   * constructor initializing the class
    */
-  WMSGetLegendGraphicResponse_Impl( Object legendGraphic, OGCWebServiceRequest request,
-      Document exception )
+  WMSGetLegendGraphicResponse_Impl( OGCWebServiceRequest request, Object legendGraphic )
+  {
+    super( request, null );
+    setLegendGraphic( legendGraphic );
+  }
+
+  /**
+   * constructor initializing the class
+   */
+  WMSGetLegendGraphicResponse_Impl( OGCWebServiceRequest request, Document exception )
   {
     super( request, exception );
-    setLegendGraphic( legendGraphic );
   }
 
   /**

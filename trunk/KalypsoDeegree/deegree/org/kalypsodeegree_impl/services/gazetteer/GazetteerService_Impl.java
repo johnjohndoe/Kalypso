@@ -703,6 +703,14 @@ public class GazetteerService_Impl extends OGCWebService_Impl implements OGCWebS
       fp = FeatureFactory.createFeatureProperty( "geographicIdentifier", o );
       fpList.add( fp );
     }
+    if( ts.size() == 0 || ts.contains( "identifier" ) )
+    {
+      ftp = FeatureFactory.createFeatureTypeProperty( "identifier", "java.lang.String", false );
+      ftpList.add( ftp );
+      o = feature.getProperty( "identifier" );
+      fp = FeatureFactory.createFeatureProperty( "identifier", o );
+      fpList.add( fp );
+    }
     if( ts.size() == 0 || ts.contains( "geographicExtent" ) )
     {
       ftp = FeatureFactory.createFeatureTypeProperty( "geographicExtent",

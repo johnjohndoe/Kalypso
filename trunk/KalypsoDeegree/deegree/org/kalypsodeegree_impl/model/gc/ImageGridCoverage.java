@@ -156,6 +156,9 @@ public class ImageGridCoverage extends CV_Coverage_Impl implements GC_GridCovera
     return pi;
   }
 
+  /**
+   * @return
+   */
   public CV_SampleDimensionType getSampleDimensionType()
   {
     return new CV_SampleDimensionType( CV_SampleDimensionType.CV_8BIT_U );
@@ -471,10 +474,7 @@ public class ImageGridCoverage extends CV_Coverage_Impl implements GC_GridCovera
     {
       return overviews.length;
     }
-    else
-    {
-      return 0;
-    }
+    return 0;
   }
 
   /**

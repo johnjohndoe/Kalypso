@@ -165,10 +165,7 @@ public class RequestDispatcher extends HttpServlet
 
 /*
  * Changes to this class. What the people haven been up to: $Log:
- * RequestDispatcher.java,v $ Revision 1.1.1.1 2004/05/11 16:43:24 doemming
- * backup of local modified deegree sources
- * 
- * Revision 1.2 2004/01/03 13:46:45 poth no message
+ * RequestDispatcher.java,v $ Revision 1.2 2004/01/03 13:46:45 poth no message
  * 
  * Revision 1.1 2003/07/11 12:47:10 poth no message
  * 

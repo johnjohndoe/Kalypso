@@ -38,12 +38,13 @@
  Germany
  E-Mail: jens.fitzke@uni-bonn.de
 
- 
+
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.services.wfs;
 
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.XMLTools;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -82,8 +83,10 @@ public class FeatureTypeToSchema
     for( int i = 0; i < types.length; i++ )
     {
       docs[i] = XMLTools.create();
-      Element rootNode = docs[i].createElement( "xsd:schema" );
-      Element schema = createXSDSchema( rootNode );
+      doc = docs[i];
+
+      Element schema = createXSDSchema( docs[i] );
+
       createXSDGlobalElement( schema, types[i].getName(), "wfs:" + types[i].getName() + "_Type",
           "gml:_Feature" );
       // <xsd:complexType>
@@ -260,10 +263,10 @@ public class FeatureTypeToSchema
   {
     Element element = doc.createElement( "xsd:schema" );
     parent.appendChild( element );
-    element.setAttribute( "targetNamespace", "http://www.cubewerx.com/wfs" );
+    element.setAttribute( "targetNamespace", CommonNamespaces.WFSNS );
     element.setAttribute( "xmlns:xsd", "http://www.w3.org/2000/10/XMLSchema" );
-    element.setAttribute( "xmlns:wfs", "http://www.cubewerx.com/wfs" );
-    element.setAttribute( "xmlns:gml", "http://www.opengis.net/gml" );
+    element.setAttribute( "xmlns:wfs", CommonNamespaces.WFSNS );
+    element.setAttribute( "xmlns:gml", CommonNamespaces.GMLNS );
     element.setAttribute( "elementFormDefault", "qualified" );
     element.setAttribute( "version", "0.1" );
     return element;

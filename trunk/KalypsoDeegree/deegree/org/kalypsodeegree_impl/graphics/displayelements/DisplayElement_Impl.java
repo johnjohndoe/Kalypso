@@ -48,7 +48,6 @@ import java.io.Serializable;
 import org.deegree.graphics.displayelements.DisplayElement;
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_Envelope;
 
 /**
  * Basic interface of all display elements. A <tt>DisplayElement</tt> is
@@ -60,10 +59,8 @@ import org.deegree.model.geometry.GM_Envelope;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-public abstract class DisplayElement_Impl implements DisplayElement, Serializable
+abstract class DisplayElement_Impl implements DisplayElement, Serializable
 {
-
-  public static boolean DEBUG_PaintEnv = false;
 
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 1226236249388451855L;
@@ -151,21 +148,4 @@ public abstract class DisplayElement_Impl implements DisplayElement, Serializabl
   {
     return true;
   }
-
-  public static void paint( Graphics g, GM_Envelope env, GeoTransform geoTransform )
-  {
-    // GeoTransform geoTransform=JMMapView.getInstance().getProjection();
-    double g1x = geoTransform.getDestX( env.getMin().getX() );
-    double g1y = geoTransform.getDestY( env.getMin().getY() );
-    double g2x = geoTransform.getDestX( env.getMax().getX() );
-    double g2y = geoTransform.getDestY( env.getMax().getY() );
-    /*
-     * Debug.println("env:"+ env.getMin().getX()+"/"+ env.getMin().getY()+" "+
-     * env.getMax().getX()+"/"+ env.getMax().getY());
-     * Debug.println("pixel:"+g1x+"/"+g1y+" "+g2x+"/"+g2y);
-     */
-    g.drawRect( (int)( g1x < g2x ? g1x : g2x ), (int)( g1y < g2y ? g1y : g2y ), (int)Math
-        .abs( ( g2x - g1x ) ), (int)Math.abs( ( g2y - g1y ) ) );
-  }
-
 }

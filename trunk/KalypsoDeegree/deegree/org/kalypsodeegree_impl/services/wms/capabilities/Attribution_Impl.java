@@ -69,7 +69,7 @@ import org.deegree_impl.tools.NetWorker;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$
  */
-class Attribution_Impl implements Attribution, Marshallable
+public class Attribution_Impl implements Attribution, Marshallable
 {
   private LogoURL logoURL = null;
 

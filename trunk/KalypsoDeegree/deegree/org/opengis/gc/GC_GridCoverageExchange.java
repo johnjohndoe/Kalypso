@@ -163,7 +163,7 @@ public interface GC_GridCoverageExchange extends Remote
    * @param fileName
    *          File name to store grid coverage. This file name can be any valid
    *          file name within the underlying operating system of the server.
-   * @param createOptions
+   * @param creationOptions
    *          Options to use for creating the file. These options are
    *          implementation specific are the valid options is determined from
    *          the {@link GC_Format}interface.

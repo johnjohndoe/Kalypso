@@ -42,11 +42,14 @@
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.model.feature;
 
+import java.util.List;
+
 import org.deegree.gml.GMLFeature;
 import org.deegree.gml.GMLFeatureCollection;
 import org.deegree.gml.GMLGeometry;
 import org.deegree.gml.GMLProperty;
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureAssociationTypeProperty;
 import org.deegree.model.feature.FeatureCollection;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
@@ -73,6 +76,8 @@ import org.deegree_impl.tools.Debug;
 public class FeatureFactory
 {
 
+  private static final String DEFAULTNAMESPACE = "www.generic";
+
   /**
    * creates an instance of a FeatureTypeProperty from its name and the data
    * type it describes
@@ -89,7 +94,14 @@ public class FeatureFactory
   public static FeatureTypeProperty createFeatureTypeProperty( String name, String type,
       boolean nullable )
   {
-    return new FeatureTypeProperty_Impl( name, type, nullable );
+    return createFeatureTypeProperty( name, DEFAULTNAMESPACE, type, nullable );
+    // return new FeatureTypeProperty_Impl( name, type, nullable );
+  }
+
+  public static FeatureTypeProperty createFeatureTypeProperty( String name, String namespace,
+      String type, boolean nullable )
+  {
+    return new FeatureTypeProperty_Impl( name, namespace, type, nullable );
   }
 
   /**
@@ -109,7 +121,16 @@ public class FeatureFactory
   public static FeatureType createFeatureType( FeatureType[] parents, FeatureType[] children,
       String name, FeatureTypeProperty[] properties )
   {
-    return new FeatureType_Impl( parents, children, name, properties );
+    final int[] defaultOccurs = new int[properties.length];
+    for( int i = 0; i < defaultOccurs.length; i++ )
+      defaultOccurs[i] = 1;
+    return createFeatureType( name, DEFAULTNAMESPACE, properties, defaultOccurs, defaultOccurs );
+  }
+
+  public static FeatureType createFeatureType( String name, String namespace,
+      FeatureTypeProperty[] properties, int[] minOccurs, int[] maxOccurs )
+  {
+    return new FeatureType_Impl( name, namespace, properties, minOccurs, maxOccurs );
   }
 
   /**
@@ -143,9 +164,13 @@ public class FeatureFactory
    */
   public static Feature createFeature( String id, FeatureType featureType, Object[] properties )
   {
-    return new Feature_Impl( id, featureType, properties );
+    return new Feature_Impl( featureType,id, properties );
   }
 
+  public static Feature createFeature( String id, FeatureType featureType)
+  {
+    return new Feature_Impl( featureType,id );
+  }
   /**
    * creates an instance of a Feature from its FeatureType and an array of
    * Objects that represents it properties. It is assumed that the order of the
@@ -163,8 +188,7 @@ public class FeatureFactory
   public static Feature createFeature( String id, FeatureType featureType,
       FeatureProperty[] properties )
   {
-    Debug.debugMethodBegin();//this, "createFeature(String , FeatureType ,
-    // FeatureProperty[])" );
+    //    return new Feature_Impl( id, featureType, properties );
 
     Object[] o = new Object[properties.length];
     FeatureTypeProperty[] ftp = featureType.getProperties();
@@ -232,143 +256,167 @@ public class FeatureFactory
     return feature;
   }
 
-  // TODO: suggest to deegree-mailinglist
   public static Feature createFeature( GMLFeature gmlFeature, FeatureType featureTypes[] )
       throws Exception
   {
     Debug.debugMethodBegin();
     FeatureType featureType = null;
 
-    /*
-     * Feature testFeature=createFeature(gmlFeature); FeatureType
-     * testFT=testFeature.getFeatureType(); FeatureTypeProperty
-     * testFTP[]=testFT.getProperties(); for(int i=0;i <testFTP.length;i++) {
-     * System.out.println(" "+i+".Property: "+testFTP[i].getName()+"
-     * ("+testFTP[i].getType()+")"); }
-     */
     String featureName = gmlFeature.getName();
-    //	System.out.println("FeatureName:"+featureName);
-    //	System.out.println("featureTypes.length:"+featureTypes.length);
+
     int ft_i = 0;
     while( ft_i < featureTypes.length && !featureName.equals( featureTypes[ft_i].getName() ) )
       ft_i++;
 
     if( ft_i < featureTypes.length )
-    {
       featureType = featureTypes[ft_i];
-      //		System.out.println("select featureType: "+featureType.getName());
-    }
     else
       throw new Exception( "could not find named feature " + featureName + " in schema" );
 
     GMLProperty[] gmlProps = gmlFeature.getProperties();
 
-    FeatureProperty[] fp = new FeatureProperty[gmlProps.length];
+    String id = gmlFeature.getId();
+    Feature feature = new Feature_Impl( featureType, id );
+
     // every gmlProp must fit to a featurePropertyType
     for( int p = 0; p < gmlProps.length; p++ )
     {
       GMLProperty gmlProp = gmlProps[p];
+      final String propName = gmlProp.getName();
+      int propertyPosition = featureType.getPropertyPosition( propName );
 
-      FeatureTypeProperty ftp = featureType.getProperty( gmlProp.getName() );
+      FeatureTypeProperty ftp = featureType.getProperty( propName );
       if( ftp == null )
-        throw new Exception( "property '" + gmlProp.getName() + "' not defined in schema" );
+        throw new Exception( "property '" + propName + "' not defined in schema" );
 
       Object o = wrap( ftp, gmlProp );
 
-      fp[p] = createFeatureProperty( gmlProp.getName(), o );
+      int maxOccurs = featureType.getMaxOccurs( propertyPosition );
+      if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+        ( (List)feature.getProperty( propertyPosition ) ).add( o );
+      else
+        feature.setProperty( createFeatureProperty( propName, o ) );
     }
-    String id = gmlFeature.getId();
-    Feature feature = createFeature( id, featureType, fp );
+
+    //    Feature feature = createFeature( id, featureType, fp );
+
     Debug.debugMethodEnd();
     return feature;
   }
 
   private static Object wrap( FeatureTypeProperty ftp, GMLProperty gmlProperty ) throws Exception
   {
-    if( ftp instanceof XLinkFeatureTypeProperty )
-      return wrapXLink( (XLinkFeatureTypeProperty)ftp, gmlProperty );
+    if( ftp instanceof XLinkFeatureTypeProperty || ftp instanceof FeatureAssociationTypeProperty )
+      return wrapXLink( ftp, gmlProperty );
     return wrapNOXLink( ftp, gmlProperty );
   }
 
-  private static Object wrapXLink( XLinkFeatureTypeProperty propType, GMLProperty gmlProperty )
+  private static Object wrapXLink( FeatureTypeProperty ftp, GMLProperty gmlProperty )
   {
-    Object value = null;
+    final Object value = gmlProperty.getPropertyValue();
+    Object result = null;
+    //      Object value = null;
     // TODO support xlink:actuate=onLoad
-    switch( propType.getXLinkType() )
+    if( ftp instanceof XLinkFeatureTypeProperty )
     {
-    case XLinkFeatureTypeProperty.XLINK_SIMPLE:
-    case XLinkFeatureTypeProperty.XLINK_LOCATOR:
-      //
-      value = gmlProperty.getAttributeValue( "http://www.w3.org/1999/xlink", "href" );
-      break;
-    case XLinkFeatureTypeProperty.XLINK_EXTENDED:
-      //TODO
-      break;
-    case XLinkFeatureTypeProperty.XLINK_RESOURCE:
-      value = new XLinkResource();
-      //TODO
-      break;
-    case XLinkFeatureTypeProperty.XLINK_ARC:
-      value = new XLinkArc( propType.getLabelFrom(), propType.getLabelTo() );
-      break;
-    default:
-      break;
+      XLinkFeatureTypeProperty xlinkFTP = (XLinkFeatureTypeProperty)ftp;
+      switch( xlinkFTP.getXLinkType() )
+      {
+      case XLinkFeatureTypeProperty.XLINK_SIMPLE:
+      case XLinkFeatureTypeProperty.XLINK_LOCATOR:
+        //
+        result = gmlProperty.getAttributeValue( "http://www.w3.org/1999/xlink", "href" );
+        break;
+      case XLinkFeatureTypeProperty.XLINK_EXTENDED:
+        //TODO
+        break;
+      case XLinkFeatureTypeProperty.XLINK_RESOURCE:
+        result = new XLinkResource();
+        //TODO
+        break;
+      case XLinkFeatureTypeProperty.XLINK_ARC:
+        result = new XLinkArc( xlinkFTP.getLabelFrom(), xlinkFTP.getLabelTo() );
+        break;
+      default:
+        break;
+      }
     }
-
-    return value;
-
+    else if( ftp instanceof FeatureAssociationTypeProperty )
+    {
+      if( value != null && value instanceof GMLFeature )
+      {
+        FeatureType linkFT = ( (FeatureAssociationTypeProperty)ftp ).getAssociationFeatureType();
+        FeatureType[] linkFTs = new FeatureType[]
+        { linkFT };
+        try
+        {
+          result = createFeature( (GMLFeature)value, linkFTs );
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
+      }
+      else
+      {
+        String string = (String)gmlProperty.getAttributeValue( "http://www.w3.org/1999/xlink",
+            "href" );
+        // remove leading "#"
+        if( string.startsWith( "#" ) )
+          result = string.substring( 1 );
+        else
+        result = string;
+      }
+    }
+    return result;
   }
 
   private static Object wrapNOXLink( FeatureTypeProperty ftp, GMLProperty gmlProperty )
       throws Exception
   {
+  	
     final String type = ftp.getType();
+    if(type==null)
+    	System.out.println("no Type");
     final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
         .getTypeHandlerForClassName( type );
-
     if( typeHandler != null )
       return typeHandler.unmarshall( gmlProperty.getElement() );
-
+    //FeatureAssociationType
     final Object o = gmlProperty.getPropertyValue();
     if( o == null )
     {
       if( ftp.isNullable() )
         return null;
-      else
-        throw new Exception( "Property " + ftp.getName() + " is not nullable, but value is" );
+      throw new Exception( "Property " + ftp.getName() + " is not nullable, but value is" );
     }
 
-    try
+    //		System.out.println("Object"+o.getClass().toString());
+    if( o instanceof String )
     {
-      //		System.out.println("Object"+o.getClass().toString());
-      if( o instanceof String )
+      String string = (String)o;
+      if( "java.lang.String".equals( type ) )
+        return string;
+      if( "java.lang.Float".equals( type ) )
+        return new Float( string );
+      if( "java.lang.Double".equals( type ) )
+        return new Double( string );
+      if( "java.lang.Integer".equals( type ) )
       {
-        String string = (String)o;
-        if( "java.lang.String".equals( type ) )
-          return string;
-        if( "java.lang.Float".equals( type ) )
-          return new Float( string );
-        if( "java.lang.Double".equals( type ) )
-          return new Double( string );
-        if( "java.lang.Integer".equals( type ) )
-        {
-          double value = Double.parseDouble( string );
-          Integer integer = new Integer( (int)value );
-          if( integer.intValue() != value )
-            throw new Exception();
-          return integer;
-        }
-        if( "java.lang.Boolean".equals( type ) )
-          return new Boolean( string );
+        double value = Double.parseDouble( string );
+        Integer integer = new Integer( (int)value );
+        if( integer.intValue() != value )
+          throw new Exception();
+        return integer;
       }
-      if( o instanceof GMLGeometry && type.startsWith( "org.deegree.model.geometry." ) )
-        return GMLAdapter.wrap( (GMLGeometry)o );
-      throw new Exception();
+      if( "java.lang.Boolean".equals( type ) )
+        return new Boolean( string );
     }
-    catch( Exception e )
-    {
-      throw new Exception( "could not convert property (" + o.toString() + ") to " + type );
-    }
+    if( o instanceof GMLGeometry && type.startsWith( "org.deegree.model.geometry." ) )
+      return GMLAdapter.wrap( (GMLGeometry)o );
+    if( o instanceof GMLGeometry)
+    System.out.println(o.getClass().toString());
+    throw new Exception( "could not convert property (" + o.toString() + ") to " + type );
   }
 
   /**
@@ -409,6 +457,7 @@ public class FeatureFactory
       type = "org.deegree.model.geometry.GM_MultiPoint";
       break;
     case GMLProperty.MULTIPOLYGON:
+      // TODO
       type = "org.deegree.model.geometry.GM_Object";
       break;
     case GMLProperty.FEATURE:
@@ -514,4 +563,5 @@ public class FeatureFactory
     Debug.debugMethodEnd();
     return fc;
   }
+
 }

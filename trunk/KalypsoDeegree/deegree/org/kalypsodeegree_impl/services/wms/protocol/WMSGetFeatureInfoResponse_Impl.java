@@ -43,7 +43,7 @@
 package org.deegree_impl.services.wms.protocol;
 
 import org.deegree.services.OGCWebServiceRequest;
-import org.deegree.services.wms.protocol.WMSFeatureInfoResponse;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoResponse;
 import org.deegree_impl.services.OGCWebServiceResponse_Impl;
 import org.w3c.dom.Document;
 
@@ -57,15 +57,16 @@ import org.w3c.dom.Document;
  * @author Katharina Lupp <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
-public class WMSFeatureInfoResponse_Impl extends OGCWebServiceResponse_Impl implements
-    WMSFeatureInfoResponse
+public class WMSGetFeatureInfoResponse_Impl extends OGCWebServiceResponse_Impl implements
+    WMSGetFeatureInfoResponse
 {
   private String featureInfo;
 
   /**
    * constructor initializing the class with the <WMSFeatureInfoResponse>
    */
-  WMSFeatureInfoResponse_Impl( OGCWebServiceRequest request, Document exception, String featureInfo )
+  WMSGetFeatureInfoResponse_Impl( OGCWebServiceRequest request, Document exception,
+      String featureInfo )
   {
     super( request, exception );
     setFeatureInfo( featureInfo );

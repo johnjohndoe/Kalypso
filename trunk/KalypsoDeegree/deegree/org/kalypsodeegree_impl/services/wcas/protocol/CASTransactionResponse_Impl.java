@@ -111,7 +111,7 @@ final public class CASTransactionResponse_Impl extends OGCWebServiceResponse_Imp
   }
 
   /**
-   * @see getInsertResult
+   * @see #getInsertResult()
    */
   public void addInserResult( CASInsertResult insertResult )
   {
@@ -119,7 +119,7 @@ final public class CASTransactionResponse_Impl extends OGCWebServiceResponse_Imp
   }
 
   /**
-   * @see getInsertResult
+   * @see #getInsertResult()
    */
   public void setInsertResult( CASInsertResult[] insertResults )
   {
@@ -148,7 +148,7 @@ final public class CASTransactionResponse_Impl extends OGCWebServiceResponse_Imp
   }
 
   /**
-   * @see getStatus
+   * @see #getStatus()
    */
   public void setStatus( String status )
   {
@@ -169,7 +169,7 @@ final public class CASTransactionResponse_Impl extends OGCWebServiceResponse_Imp
   }
 
   /**
-   * @see getLocator
+   * @see #getLocator()
    */
   public void setLocator( String locator )
   {
@@ -185,7 +185,7 @@ final public class CASTransactionResponse_Impl extends OGCWebServiceResponse_Imp
   }
 
   /**
-   * @see getMessage
+   * @see #getMessage()
    */
   public void setMessage( String message )
   {
@@ -203,7 +203,7 @@ final public class CASTransactionResponse_Impl extends OGCWebServiceResponse_Imp
   }
 
   /**
-   * @see getHandle
+   * @see #getHandle()
    */
   public void setHandle( String handle )
   {

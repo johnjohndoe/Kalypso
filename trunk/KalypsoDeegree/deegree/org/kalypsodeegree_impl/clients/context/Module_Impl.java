@@ -68,6 +68,16 @@ public class Module_Impl implements Module, Marshallable
 
   private ParameterList parameterList = null;
 
+  private String type = "content";
+
+  private int width = 0;
+
+  private int height = 0;
+
+  private String[] moduleJSList = new String[0];
+
+  private String scrolling = "auto";
+
   /**
    * Creates a new Module_Impl object.
    * 
@@ -82,14 +92,20 @@ public class Module_Impl implements Module, Marshallable
    *          encapsulates the access to the modules configuration (may be
    *          <tt>null</tt>)
    */
-  public Module_Impl( String name, String content, boolean hidden,
-      ModuleConfiguration moduleConfiguration, ParameterList parameterList )
+  public Module_Impl( String name, String content, boolean hidden, String type, int width,
+      int height, String scrolling, String[] moduleJSList, ModuleConfiguration moduleConfiguration,
+      ParameterList parameterList )
   {
     setName( name );
     setContent( content );
     setHidden( hidden );
     setModuleConfiguration( moduleConfiguration );
     setParameter( parameterList );
+    setType( type );
+    setWidth( width );
+    setHeight( height );
+    setModuleJSList( moduleJSList );
+    setScrolling( scrolling );
   }
 
   /**
@@ -230,4 +246,104 @@ public class Module_Impl implements Module, Marshallable
     return null;
   }
 
+  /**
+   * @see org.deegree.clients.context.Module#setType(java.lang.String)
+   */
+  public void setType( String type )
+  {
+    if( type != null )
+    {
+      this.type = type.toLowerCase();
+    }
+  }
+
+  /**
+   * @see org.deegree.clients.context.Module#getType()
+   */
+  public String getType()
+  {
+    return type;
+  }
+
+  /**
+   * returns the width of the module in the GUI. If '0' will be returned the GUI
+   * can set the with like it is best
+   * 
+   * @return
+   */
+  public int getWidth()
+  {
+    return this.width;
+  }
+
+  /**
+   * sets the desired width of the module in the GUI. If '0' ist passed the GUI
+   * can set the with like it is best
+   * 
+   * @param width
+   *          desired width of the module
+   */
+  public void setWidth( int width )
+  {
+    this.width = width;
+  }
+
+  /**
+   * returns the height of the module in the GUI. If '0' will be returned the
+   * GUI can set the with like it is best
+   * 
+   * @return
+   */
+  public int getHeight()
+  {
+    return this.height;
+  }
+
+  /**
+   * sets the desired height of the module in the GUI. If '0' ist passed the GUI
+   * can set the with like it is best
+   * 
+   * @param height
+   *          desired width of the module
+   */
+  public void setHeight( int height )
+  {
+    this.height = height;
+  }
+
+  public String[] getModuleJSList()
+  {
+    return moduleJSList;
+  }
+
+  public void setModuleJSList( String[] list )
+  {
+    this.moduleJSList = list;
+  }
+
+  /**
+   * return true is the module should has scrollbars in the GUI <br>
+   * possible values are
+   * <UL>
+   * <li>no
+   * <li>yes
+   * <li>auto
+   * </UL>
+   * default is auto
+   * 
+   * @return
+   */
+  public String getScrolling()
+  {
+    return scrolling;
+  }
+
+  /**
+   * @see #getScrolling()
+   * @param scroll
+   */
+  public void setScrolling( String scrollable )
+  {
+    this.scrolling = scrollable;
+  }
 }

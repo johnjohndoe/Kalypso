@@ -292,8 +292,7 @@ public class WFSService_Impl extends OGCWebService_Impl implements Handler
         }
         else
         {
-          // get responsible class for handling the defined response
-          // format
+          // get responsible class for handling the defined response format
           String outputFormat = ( (WFSGetFeatureRequest)request ).getOutputFormat();
 
           GetFeature gf = ( (WFSCapabilities)capabilities ).getCapability().getRequest()
@@ -355,8 +354,7 @@ public class WFSService_Impl extends OGCWebService_Impl implements Handler
       }
       else
       {
-        // if the result isn't an instance of a WFS response just
-        // deliever
+        // if the result isn't an instance of a WFS response just deliever
         // it to the client
         OGCWebServiceEvent event_ = new OGCWebServiceEvent_Impl( this, response, "" );
         client.write( event_ );

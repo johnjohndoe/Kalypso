@@ -78,7 +78,7 @@ public interface Handler extends EventListener
   public void registerHandler( Handler handler );
 
   /**
-   * @see registerHandler
+   * @see #registerHandler(Handler)
    */
   public void removeHandler( Handler handler );
 

@@ -93,7 +93,7 @@ public class WFSGetFeatureRequest_Impl extends WFSBasicRequest_Impl implements
       int startPosition, WFSQuery[] query, String[] propertyNames, String[] featureIds,
       String[] typeNames )
   {
-    super( "GetFeature", version, id, vendorSpecificParameter, native_ );
+    super( version, "GetFeature", id, vendorSpecificParameter, native_ );
     this.query = new ArrayList();
     this.propertyNames = new ArrayList();
     this.featureIds = new ArrayList();
@@ -353,7 +353,8 @@ public class WFSGetFeatureRequest_Impl extends WFSBasicRequest_Impl implements
     StringBuffer sb = new StringBuffer( 5000 );
     sb.append( "<wfs:GetFeature xmlns:wfs=\"http://www.opengis.net/wfs\" " );
     sb.append( "service=\"WFS\" version=\"" + getVersion() + "\" " );
-    sb.append( "outputFormat=\"" + getOutputFormat() + "\" >" );
+    sb.append( "outputFormat=\"" + getOutputFormat() + "\" " );
+    sb.append( "maxFeatures=\"" + getMaxFeatures() + "\" >" );
     WFSQuery[] queries = getQuery();
     for( int i = 0; i < queries.length; i++ )
     {
@@ -391,10 +392,16 @@ public class WFSGetFeatureRequest_Impl extends WFSBasicRequest_Impl implements
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:56  doemming
+ * Revision 1.3  2004/10/07 14:09:12  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:25
- * doemming backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:53:32
+ * doemming *** empty log message *** Revision 1.13 2004/06/24 14:23:04 poth no
+ * message
+ * 
+ * Revision 1.12 2004/06/16 09:38:08 poth no message
  * 
  * Revision 1.11 2004/02/23 07:47:51 poth no message
  * 

@@ -128,8 +128,7 @@ public class WMSGetMapRequest_Impl extends OGCWebServiceRequest_Impl implements 
    * @param bGColor
    * @param exceptions
    * @param time
-   * @param sLD_URL
-   * @param wFS_URL
+   * @param sldURL
    * @param sld
    * @param id
    * @param vendorSpecificParameter
@@ -423,8 +422,8 @@ public class WMSGetMapRequest_Impl extends OGCWebServiceRequest_Impl implements 
   /**
    * sets <BGColor>
    * 
-   * @param the
-   *          requested color
+   * @param bGColor
+   *          the requested color
    */
   public void setBGColor( Color bGColor )
   {
@@ -695,7 +694,15 @@ public class WMSGetMapRequest_Impl extends OGCWebServiceRequest_Impl implements 
         try
         {
           l += ( URLEncoder.encode( layers[i].getName(), "ISO-8859-1" ) + "," );
-          s += ( URLEncoder.encode( layers[i].getStyleName(), "ISO-8859-1" ) + "," );
+          if( layers[i].getStyleName().equals( "default" )
+              && getVersion().compareTo( "1.1.1" ) >= 0 )
+          {
+            s += ",";
+          }
+          else
+          {
+            s += ( URLEncoder.encode( layers[i].getStyleName(), "ISO-8859-1" ) + "," );
+          }
         }
         catch( Exception e )
         {
@@ -818,7 +825,7 @@ public class WMSGetMapRequest_Impl extends OGCWebServiceRequest_Impl implements 
         + ".xml#" + suffix + "\">" );
     sb.append( "<gml:coordinates cs=\",\" decimal=\".\" ts=\" \">" );
     sb.append( getBoundingBox().getMin().getX() + "," + getBoundingBox().getMin().getY() );
-    sb.append( " " + getBoundingBox().getMax().getX() + "," + getBoundingBox().getMax().getX() );
+    sb.append( " " + getBoundingBox().getMax().getX() + "," + getBoundingBox().getMax().getY() );
     sb.append( "</gml:coordinates>" );
     sb.append( "</BoundingBox>" );
 

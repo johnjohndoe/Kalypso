@@ -1,6 +1,6 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree/services/gazetteer/GazetteerException.java,v
-// 1.1.1.1 2004/05/11 16:43:23 doemming Exp $
+// /cvsroot/deegree/deegree/org/deegree/services/gazetteer/GazetteerException.java,v
+// 1.4 2004/03/15 16:55:28 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
  
  This file is part of deegree.

@@ -13,9 +13,9 @@ import org.deegree.services.OGCWebServiceEvent;
 import org.deegree.services.OGCWebServiceRequest;
 import org.deegree.services.OGCWebServiceResponse;
 import org.deegree.services.wms.protocol.WMSGetMapResponse;
+import org.deegree_impl.gml.schema.XMLHelper;
 import org.deegree_impl.services.OGCWebServiceEvent_Impl;
 import org.deegree_impl.services.wms.protocol.WMSProtocolFactory;
-import org.kalypso.util.xml.XMLTools;
 import org.w3c.dom.Document;
 
 /**
@@ -189,7 +189,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
         {
           final Document wmsException = ( (WMSGetMapResponse)response ).getException();
           if( wmsException != null )
-            System.out.println( "OGC_WMS_Exception:" + XMLTools.toString( wmsException ) );
+            System.out.println( "OGC_WMS_Exception:" + XMLHelper.toString( wmsException ) );
         }
       }
     }

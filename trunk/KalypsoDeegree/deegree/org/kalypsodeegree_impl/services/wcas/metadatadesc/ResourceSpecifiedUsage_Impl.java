@@ -77,7 +77,7 @@ public class ResourceSpecifiedUsage_Impl implements ResourceSpecifiedUsage
   }
 
   /**
-   * @see getSpecifiedUsage
+   * @see #getSpecifiedUsage()
    */
   public void setSpecifiedUsage( String specifiedusage )
   {
@@ -96,7 +96,7 @@ public class ResourceSpecifiedUsage_Impl implements ResourceSpecifiedUsage
   }
 
   /**
-   * @see getUsageDateTime
+   * @see #getUsageDateTime()
    */
   public void setUsageDateTime( String usagedatetime )
   {
@@ -115,7 +115,7 @@ public class ResourceSpecifiedUsage_Impl implements ResourceSpecifiedUsage
   }
 
   /**
-   * @see getUserContactInfo
+   * @see #getUserContactInfo()
    */
   public void addUserContactInfo( UserContactInfo usercontactinfo )
   {
@@ -123,7 +123,7 @@ public class ResourceSpecifiedUsage_Impl implements ResourceSpecifiedUsage
   }
 
   /**
-   * @see getUserContactInfo
+   * @see #getUserContactInfo()
    */
   public void setUserContactInfo( UserContactInfo[] usercontactinfo )
   {
@@ -146,7 +146,7 @@ public class ResourceSpecifiedUsage_Impl implements ResourceSpecifiedUsage
   }
 
   /**
-   * @see getUserDetirminedLimitations
+   * @see #getUserDetirminedLimitations()
    */
   public void setUserDetirminedLimitations( String userdetirminedlimitations )
   {

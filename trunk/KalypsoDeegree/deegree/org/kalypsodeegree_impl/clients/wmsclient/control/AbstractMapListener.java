@@ -91,7 +91,7 @@ import org.deegree_impl.tools.Debug;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-abstract class AbstractMapListener extends AbstractListener
+public abstract class AbstractMapListener extends AbstractListener
 {
 
   /**

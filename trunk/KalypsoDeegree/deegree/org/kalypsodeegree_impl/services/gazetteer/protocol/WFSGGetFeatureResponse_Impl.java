@@ -1,6 +1,6 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/services/gazetteer/protocol/WFSGGetFeatureResponse_Impl.java,v
-// 1.1.1.1 2004/05/11 16:43:27 doemming Exp $
+// /cvsroot/deegree/deegree/org/deegree_impl/services/gazetteer/protocol/WFSGGetFeatureResponse_Impl.java,v
+// 1.2 2004/03/26 11:19:31 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.
@@ -75,10 +75,8 @@ public class WFSGGetFeatureResponse_Impl extends WFSGetFeatureResponse_Impl impl
 }
 /*******************************************************************************
  * Changes to this class. What the people have been up to: $Log:
- * WFSGGetFeatureResponse_Impl.java,v $ Revision 1.1.1.1 2004/05/11 16:43:27
- * doemming backup of local modified deegree sources
- * 
- * Revision 1.2 2004/03/26 11:19:31 poth no message
+ * WFSGGetFeatureResponse_Impl.java,v $ Revision 1.2 2004/03/26 11:19:31 poth no
+ * message
  * 
  * 
  *  

@@ -10,6 +10,22 @@ public class TypeRegistrySingleton
 {
   private static ITypeRegistry m_typeRegistry = null;
 
+  // load default types
+  static
+  {
+    ITypeRegistry typeRegistry = getTypeRegistry();
+    try
+    {
+      typeRegistry.registerTypeHandler( new GMLBoundingShapeTypeHandler() );
+    //  typeRegistry.registerTypeHandler( new GMLFeatueAssociationTypeHandler() );
+    }
+    catch( TypeRegistryException e )
+    {
+      e.printStackTrace();
+    }
+
+  }
+
   private TypeRegistrySingleton()
   {
   // wird nicht instantiiert

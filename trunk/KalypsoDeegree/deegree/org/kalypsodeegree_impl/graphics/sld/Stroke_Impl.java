@@ -149,17 +149,14 @@ public class Stroke_Impl extends Drawing_Impl implements org.deegree.graphics.sl
           color = null;
           break;
         }
-        else
+        try
         {
-          try
-          {
-            color = Color.decode( (String)o[i] );
-          }
-          catch( NumberFormatException e )
-          {
-            throw new FilterEvaluationException( "Given value ('" + o[i]
-                + "') for CSS-Parameter 'stroke' " + "does not denote a valid color!" );
-          }
+          color = Color.decode( (String)o[i] );
+        }
+        catch( NumberFormatException e )
+        {
+          throw new FilterEvaluationException( "Given value ('" + o[i]
+              + "') for CSS-Parameter 'stroke' " + "does not denote a valid color!" );
         }
       }
     }

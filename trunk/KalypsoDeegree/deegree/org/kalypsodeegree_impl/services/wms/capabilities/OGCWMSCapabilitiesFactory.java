@@ -134,7 +134,7 @@ public class OGCWMSCapabilitiesFactory
    * Creates a <tt>WMSCapabilities</tt> -instance from the given URL.
    * <p>
    * 
-   * @param URL
+   * @param url
    *          location of capabilities document
    * @throws XMLParsingException
    *           if a syntactic or semantic error in the XML document is
@@ -151,7 +151,7 @@ public class OGCWMSCapabilitiesFactory
     catch( IOException e )
     {
       throw new XMLParsingException( "IOException encountered while parsing "
-          + "WMSCapabilities-Document: " + e.getMessage(), e );
+          + "WMSCapabilities-Document: " + e.getMessage() );
     }
 
     return capabilities;
@@ -181,8 +181,6 @@ public class OGCWMSCapabilitiesFactory
       }
       br.close();
       reader.close();
-      //AVD:
-      System.out.println( "WMS_Capabilities:" + sb );
       int k = sb.indexOf( "<WMT_MS_Capabilities" );
       StringReader sr = new StringReader( sb.substring( k, sb.length() ) );
       Document doc = XMLTools.parse( sr );
@@ -556,9 +554,10 @@ public class OGCWMSCapabilitiesFactory
       }
       else if( name.equals( "GetFeatureInfo" ) || name.equals( "DescribeLayer" )
           || name.equals( "GetLegendGraphic" ) || name.equals( "GetStyles" )
-          || name.equals( "PutStyles" )
+          || name.equals( "PutStyles" ) || name.equals( "GetScaleBar" )
           || ( version.equals( "1.0.0" ) && name.equals( "FeatureInfo" ) ) )
       {
+
         operationList.add( createOperation( operationElement ) );
       }
       else
@@ -1740,11 +1739,4 @@ public class OGCWMSCapabilitiesFactory
     return new ScaleHint_Impl( min, max );
   }
 
-  public static void main( String[] args ) throws Exception
-  {
-
-    OGCWMSCapabilitiesFactory fac = new OGCWMSCapabilitiesFactory();
-    fac.createCapabilities( new URL( "file:///c:/temp/MapGuideLiteView_capa.xml" ) );
-
-  }
 }

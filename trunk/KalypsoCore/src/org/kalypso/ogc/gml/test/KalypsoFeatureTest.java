@@ -6,7 +6,6 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.ogc.gml.KalypsoFeature;
-import org.kalypso.util.xml.XMLTools;
 
 /**
  * @author sbad0205
@@ -18,8 +17,7 @@ public class KalypsoFeatureTest extends TestCase
   try
   {
     final GMLSchema schema = new GMLSchema(
-      XMLTools.getAsDOM(
-          KalypsoFeatureTest.class.getResourceAsStream("point.xsd")));
+          KalypsoFeatureTest.class.getResource("point.xsd"));
     final FeatureType featureType = schema.getFeatureTypes()[0];
     
     final Object[] properties = new Object[featureType.getProperties().length];

@@ -64,7 +64,7 @@ public class TypeName_Impl implements TypeName
   }
 
   /**
-   * @see getNameNameSpace
+   * @see #getNameNameSpace()
    */
   public void setNameNameSpace( String namenamespace )
   {
@@ -81,7 +81,7 @@ public class TypeName_Impl implements TypeName
   }
 
   /**
-   * @see getNameValue
+   * @see #getNameValue()
    */
   public void setNameValue( String namevalue )
   {

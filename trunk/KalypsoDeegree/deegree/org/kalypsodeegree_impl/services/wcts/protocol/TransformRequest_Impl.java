@@ -124,7 +124,7 @@ public class TransformRequest_Impl extends OGCWebServiceRequest_Impl implements 
   }
 
   /**
-   * @see getInputFormat
+   * @see #getInputFormat()
    */
   public void setInputFormat( String inputFormat )
   {
@@ -140,7 +140,7 @@ public class TransformRequest_Impl extends OGCWebServiceRequest_Impl implements 
   }
 
   /**
-   * @see getOutputFormat
+   * @see #getOutputFormat()
    */
   public void setOutputFormat( String outputFormat )
   {
@@ -156,7 +156,7 @@ public class TransformRequest_Impl extends OGCWebServiceRequest_Impl implements 
   }
 
   /**
-   * @see getSourceCRS
+   * @see #getSourceCRS()
    */
   public void setSourceCRS( CS_CoordinateSystem sourceCRS )
   {
@@ -173,7 +173,7 @@ public class TransformRequest_Impl extends OGCWebServiceRequest_Impl implements 
   }
 
   /**
-   * @see getDestinationCRS
+   * @see #getDestinationCRS()
    */
   public void setDestinationCRS( CS_CoordinateSystem destinationCRS )
   {
@@ -192,7 +192,7 @@ public class TransformRequest_Impl extends OGCWebServiceRequest_Impl implements 
   }
 
   /**
-   * @see getTransformationSequence
+   * @see #getTransformationSequence()
    */
   public void addTransformationSequence( TransformationSequence transformationSequence )
   {
@@ -200,7 +200,7 @@ public class TransformRequest_Impl extends OGCWebServiceRequest_Impl implements 
   }
 
   /**
-   * @see getTransformationSequence
+   * @see #getTransformationSequence()
    */
   public void setTransformationSequence( TransformationSequence[] transformationSequence )
   {
@@ -224,7 +224,7 @@ public class TransformRequest_Impl extends OGCWebServiceRequest_Impl implements 
   }
 
   /**
-   * @see getData
+   * @see #getGeometries()
    */
   public void addGeometry( GMLGeometry data )
   {
@@ -232,7 +232,7 @@ public class TransformRequest_Impl extends OGCWebServiceRequest_Impl implements 
   }
 
   /**
-   * @see getData
+   * @see #getGeometries()
    */
   public void setGeometry( GMLGeometry[] data )
   {

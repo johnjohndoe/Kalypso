@@ -87,7 +87,7 @@ public class OnLineResource_Impl implements OnLineResource
   }
 
   /**
-   * @see get
+   * @see #getApplicationProfile()
    */
   public void setApplicationProfile( String applicationprofile )
   {
@@ -105,7 +105,7 @@ public class OnLineResource_Impl implements OnLineResource
   }
 
   /**
-   * @see getFunctionCode
+   * @see #getFunctionCode()
    */
   public void setFunctionCode( FunctionCode functioncode )
   {
@@ -121,7 +121,7 @@ public class OnLineResource_Impl implements OnLineResource
   }
 
   /**
-   * @see getLinkage
+   * @see #getLinkage()
    */
   public void setLinkage( Linkage linkage )
   {
@@ -139,7 +139,7 @@ public class OnLineResource_Impl implements OnLineResource
   }
 
   /**
-   * @see getOnlineResourceDescription
+   * @see #getOnlineResourceDescription()
    */
   public void setOnlineResourceDescription( String onlineresourcedescription )
   {
@@ -157,7 +157,7 @@ public class OnLineResource_Impl implements OnLineResource
   }
 
   /**
-   * @see getOnlineResourceName
+   * @see #getOnlineResourceName()
    */
   public void setOnlineResourceName( String onlineresourcename )
   {
@@ -175,7 +175,7 @@ public class OnLineResource_Impl implements OnLineResource
   }
 
   /**
-   * @see getProtocol
+   * @see #getProtocol()
    */
   public void setProtocol( String protocol )
   {

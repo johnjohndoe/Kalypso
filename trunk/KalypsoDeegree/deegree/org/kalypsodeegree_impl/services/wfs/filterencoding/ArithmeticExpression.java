@@ -141,13 +141,13 @@ public class ArithmeticExpression extends Expression_Impl
     Object o1 = expr1.evaluate( feature );
     Object o2 = expr2.evaluate( feature );
 
-    if( !( o1 instanceof Double && o2 instanceof Double ) )
+    if( !( o1 instanceof Number && o2 instanceof Number ) )
     {
       throw new FilterEvaluationException(
           "ADD/SUB/DIV/MUL may only be applied to numerical expressions." );
     }
-    double d1 = ( (Double)o1 ).doubleValue();
-    double d2 = ( (Double)o2 ).doubleValue();
+    double d1 = ( (Number)o1 ).doubleValue();
+    double d2 = ( (Number)o2 ).doubleValue();
     switch( id )
     {
     case ExpressionDefines.ADD:

@@ -212,7 +212,7 @@ public class DownloadListener extends AbstractListener
   /**
    * validates the request to be performed
    */
-  private boolean validateRequest( RPCWebEvent event )
+  protected boolean validateRequest( RPCWebEvent event )
   {
     return event != null;
   }
@@ -221,7 +221,7 @@ public class DownloadListener extends AbstractListener
    * checks if the current user is authorized to to download the ordered
    * datasets
    */
-  private String proofAuthorization( RPCWebEvent event ) throws CatalogClientException
+  protected String proofAuthorization( RPCWebEvent event ) throws CatalogClientException
   {
     Debug.debugMethodBegin();
 
@@ -259,7 +259,7 @@ public class DownloadListener extends AbstractListener
   /**
    * performs the access to the data marked at the shopping card
    */
-  private HashMap getCatalogIdAssociations( RPCWebEvent event ) throws CatalogClientException,
+  protected HashMap getCatalogIdAssociations( RPCWebEvent event ) throws CatalogClientException,
       Exception
   {
     Debug.debugMethodBegin();
@@ -304,7 +304,7 @@ public class DownloadListener extends AbstractListener
    * @param ft
    *          feature template to find the serving WFS
    */
-  private HashMap getWFSGetFeatureCalls( String catalog, FeatureTemplate[] ft )
+  protected HashMap getWFSGetFeatureCalls( String catalog, FeatureTemplate[] ft )
       throws CatalogClientException
   {
     Debug.debugMethodBegin();
@@ -325,6 +325,7 @@ public class DownloadListener extends AbstractListener
         NetWorker nw = new NetWorker( url, casReq );
         Reader reader = new InputStreamReader( nw.getInputStream() );
         Document doc = XMLTools.parse( reader );
+
         NodeList nl = doc.getElementsByTagName( "serviceTypeVersion" );
         // get service version; if not available use 1.1.0 as default
         if( nl.getLength() > 0 )
@@ -391,7 +392,7 @@ public class DownloadListener extends AbstractListener
    * @param ft
    *          FeatureTemplate
    */
-  private WFSGetFeatureRequest createGetFeatureRequest( FeatureTemplate ft, String version )
+  protected WFSGetFeatureRequest createGetFeatureRequest( FeatureTemplate ft, String version )
       throws CatalogClientException
   {
     Debug.debugMethodBegin();
@@ -466,6 +467,9 @@ public class DownloadListener extends AbstractListener
       this.gfr = gfr;
     }
 
+    /**
+     * @see java.lang.Runnable#run()
+     */
     public void run()
     {
       Debug.debugMethodBegin();
@@ -501,9 +505,10 @@ public class DownloadListener extends AbstractListener
           }
           catch( Exception e2 )
           {
+            e2.printStackTrace();
             Debug.debugException( e2, "" );
           }
-          break;
+          return;
         }
         try
         {
@@ -523,9 +528,10 @@ public class DownloadListener extends AbstractListener
           }
           catch( Exception e2 )
           {
+            e2.printStackTrace();
             Debug.debugException( e2, "" );
           }
-          break;
+          return;
         }
       }
 
@@ -610,6 +616,7 @@ public class DownloadListener extends AbstractListener
         sb.append( s );
       }
       s = sb.toString();
+      br.close();
 
       Document doc = null;
 
@@ -617,12 +624,9 @@ public class DownloadListener extends AbstractListener
       {
         throw new Exception( "couldn't get data from WFS:\n" + s );
       }
-      else
-      {
-        StringReader sr = new StringReader( s );
-        doc = XMLTools.parse( sr );
-        sr.close();
-      }
+      StringReader sr = new StringReader( s );
+      doc = XMLTools.parse( sr );
+      sr.close();
 
       Debug.debugMethodEnd();
 
@@ -724,9 +728,6 @@ public class DownloadListener extends AbstractListener
       sb.append( " Stunden für Sie bereit gehalten und anschliessend gelöscht." );
 
       // get the users mailaddress
-      //            Administrator admin = conf.getSecurityAdmin();
-      //            User u = admin.getUser( user );
-      //            String mailAddress = u.getEmail();
       String mailAddress = null;
 
       // send message to the user
@@ -742,7 +743,7 @@ public class DownloadListener extends AbstractListener
   /**
    * little helper class to store association between IDs and bounding boxes
    */
-  private class FeatureTemplate
+  protected class FeatureTemplate
   {
 
     private String id = null;
@@ -758,16 +759,25 @@ public class DownloadListener extends AbstractListener
       this.title = title;
     }
 
+    /**
+     * @return
+     */
     public String getId()
     {
       return id;
     }
 
+    /**
+     * @return
+     */
     public String getTitle()
     {
       return title;
     }
 
+    /**
+     * @return
+     */
     public GM_Envelope getEnvelope()
     {
       return bbox;

@@ -73,7 +73,7 @@ public class ParameterName_Impl implements ParameterName
   }
 
   /**
-   * @see getNameNameSpace
+   * @see #getNameNameSpace()
    */
   public void setNameNameSpace( String namenamespace )
   {
@@ -90,7 +90,7 @@ public class ParameterName_Impl implements ParameterName
   }
 
   /**
-   * @see getNameValue
+   * @see #getNameValue()
    */
   public void setNameValue( String namevalue )
   {

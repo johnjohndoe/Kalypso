@@ -51,6 +51,9 @@ public class ContextException extends java.lang.Exception
     st = StringExtend.stackTraceToString( e.getStackTrace() );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   public String toString()
   {
     return super.toString() + "\n" + st;

@@ -63,8 +63,6 @@ public interface Operation
 
   /**
    * Returns the operator's id.
-   * 
-   * @see <{OperationDefines}>
    */
   int getOperatorId();
 

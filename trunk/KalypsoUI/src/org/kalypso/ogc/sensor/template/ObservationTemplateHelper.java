@@ -12,6 +12,7 @@ import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
+import org.deegree_impl.gml.schema.XMLHelper;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -24,7 +25,6 @@ import org.kalypso.ogc.sensor.view.resourceNavigator.GrafikViewActionDelegate;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obstableview.ObstableviewType;
-import org.kalypso.util.xml.XMLTools;
 import org.kalypso.util.xml.xlink.JAXBXLink;
 
 /**
@@ -136,7 +136,7 @@ public class ObservationTemplateHelper
       final String projectDir = project.getLocation().toString();
 
       ins = new FileInputStream( file );
-      final String str = XMLTools.xslTransform( ins, xsl );
+      final String str = XMLHelper.xslTransform( ins, xsl );
 
       // complete relative path (prepared by the xslt, all relative path are
       // preceded by _XXXX_)
@@ -254,7 +254,7 @@ public class ObservationTemplateHelper
               .getResourceAsStream( "/org/kalypso/plugin/resources/exe/grafik.exe_" ), true );
 
       /*
-       * Blöder Workaround weil das Grafik-Tool nicht mit relativen Pfad
+       * Bl?der Workaround weil das Grafik-Tool nicht mit relativen Pfad
        * arbeiten kann: wir ersetzen _XXXX_ aus der .tpl Datei mit dem aktuellen
        * Projektpfad.
        * 

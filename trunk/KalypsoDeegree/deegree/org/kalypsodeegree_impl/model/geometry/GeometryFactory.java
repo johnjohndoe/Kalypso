@@ -97,6 +97,15 @@ final public class GeometryFactory
   }
 
   /**
+   * creates a GM_Position from two coordinates.
+   */
+  public static GM_Position createGM_Position( double x, double y, double z )
+  {
+    return new GM_Position_Impl( new double[]
+    { x, y, z } );
+  }
+
+  /**
    * creates a GM_Position from an array of double.
    */
   public static GM_Position createGM_Position( double[] p )
@@ -105,17 +114,19 @@ final public class GeometryFactory
   }
 
   /**
-   * creates a GM_Position from an GMLCoord.
-   */
-  //    public static GM_Position createGM_Position( GMLCoord coord ) {
-  //        return new GM_Position_Impl( coord.getX(), coord.getY() );
-  //    }
-  /**
    * creates a GM_Point from two coordinates.
    */
   public static GM_Point createGM_Point( double x, double y, CS_CoordinateSystem crs )
   {
     return new GM_Point_Impl( x, y, crs );
+  }
+
+  /**
+   * creates a GM_Point from three coordinates.
+   */
+  public static GM_Point createGM_Point( double x, double y, double z, CS_CoordinateSystem crs )
+  {
+    return new GM_Point_Impl( x, y, z, crs );
   }
 
   /**
@@ -216,6 +227,30 @@ final public class GeometryFactory
   public static GM_Curve createGM_Curve( GM_CurveSegment[] segments ) throws GM_Exception
   {
     return new GM_Curve_Impl( segments );
+  }
+
+  /**
+   * creates a GM_Curve from an array of ordinates
+   * 
+   * @param segments
+   *          array of GM_CurveSegments
+   */
+  public static GM_Curve createGM_Curve( double[] ord, int dim, CS_CoordinateSystem crs )
+      throws GM_Exception
+  {
+    GM_Position[] pos = new GM_Position[ord.length / dim];
+    int i = 0;
+    int k = 0;
+    while( i < ord.length )
+    {
+      double[] o = new double[dim];
+      for( int j = 0; j < dim; j++ )
+      {
+        o[j] = ord[i++];
+      }
+      pos[k++] = GeometryFactory.createGM_Position( o );
+    }
+    return GeometryFactory.createGM_Curve( pos, crs );
   }
 
   /**
@@ -526,6 +561,62 @@ final public class GeometryFactory
         new GM_Position_Impl( min.getX(), max.getY() ), min };
 
     return createGM_Surface( exteriorRing, null, new GM_SurfaceInterpolation_Impl(), crs );
+  }
+
+  /**
+   * Creates a <tt>GM_Surface</tt> from the ordinates of the exterior ring and
+   * the the interior rings
+   * <p>
+   * 
+   * @param crs
+   *          spatial reference system of the surface
+   * @return corresponding surface
+   * 
+   * @throws GM_Exception
+   */
+  public static GM_Surface createGM_Surface( double[] exterior, double[][] interior, int dim,
+      CS_CoordinateSystem crs ) throws GM_Exception
+  {
+
+    // get exterior ring
+    GM_Position[] ext = new GM_Position[exterior.length / dim];
+    int i = 0;
+    int k = 0;
+    while( i < exterior.length - 1 )
+    {
+      double[] o = new double[dim];
+      for( int j = 0; j < dim; j++ )
+      {
+        o[j] = exterior[i++];
+      }
+      ext[k++] = GeometryFactory.createGM_Position( o );
+    }
+
+    // get interior rings if available
+    GM_Position[][] in = null;
+    if( interior != null && interior.length > 0 )
+    {
+      in = new GM_Position[interior.length][];
+      for( int j = 0; j < in.length; j++ )
+      {
+        in[j] = new GM_Position[interior[j].length / dim];
+        i = 0;
+        k = 0;
+        while( i < interior[j].length )
+        {
+          double[] o = new double[dim];
+          for( int z = 0; z < dim; z++ )
+          {
+            o[z] = interior[j][i++];
+          }
+          in[j][k++] = GeometryFactory.createGM_Position( o );
+        }
+      }
+    }
+
+    // default - linear - interpolation
+    GM_SurfaceInterpolation si = new GM_SurfaceInterpolation_Impl();
+    return GeometryFactory.createGM_Surface( ext, in, si, crs );
   }
 
   /**

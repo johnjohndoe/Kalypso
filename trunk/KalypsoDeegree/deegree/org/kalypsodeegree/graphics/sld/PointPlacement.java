@@ -86,7 +86,7 @@ public interface PointPlacement
   double[] getAnchorPoint( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see getAnchorPoint
+   * @see #getAnchorPoint(Feature)
    *      <p>
    * @param anchorPoint
    *          anchorPoint for the PointPlacement
@@ -115,7 +115,7 @@ public interface PointPlacement
   double[] getDisplacement( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see getDisplacement
+   * @see #getDisplacement(Feature)
    *      <p>
    * @param displacement
    */
@@ -137,7 +137,7 @@ public interface PointPlacement
   double getRotation( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see getRotation
+   * @see #getRotation(Feature)
    * @param rotation
    *          the rotation to be set for the PointPlacement
    */

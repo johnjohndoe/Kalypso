@@ -147,27 +147,23 @@ public class WCASServicePool extends ObjectPool
       return o;
 
     }
-    else
-    // else initialize a new object
-    {
-      // create a new class instance
-      //Object o = new WCASService_Impl( capa, formats );
-      Object o = WCASFactory.createWCASService( wcasCapa, wfsCapa, null );
 
-      existingInstances++;
+    // create a new class instance
+    //Object o = new WCASService_Impl( capa, formats );
+    Object o = WCASFactory.createWCASService( wcasCapa, wfsCapa, null );
 
-      // add it to 'in use' container
-      in_use.add( o );
-      // set the start of its life time
-      startLifeTime.put( o, new Long( System.currentTimeMillis() ) );
-      // set the start of its usage
-      startUsageTime.put( o, new Long( System.currentTimeMillis() ) );
+    existingInstances++;
 
-      Debug.debugMethodEnd();
-      // return the object
-      return o;
+    // add it to 'in use' container
+    in_use.add( o );
+    // set the start of its life time
+    startLifeTime.put( o, new Long( System.currentTimeMillis() ) );
+    // set the start of its usage
+    startUsageTime.put( o, new Long( System.currentTimeMillis() ) );
 
-    }
+    Debug.debugMethodEnd();
+    // return the object
+    return o;
 
   }
 

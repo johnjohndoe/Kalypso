@@ -52,13 +52,13 @@ import java.sql.Types;
 import java.util.Properties;
 
 import oracle.jdbc.driver.OracleResultSet;
-import oracle.sdoapi.OraSpatialManager;
-import oracle.sdoapi.adapter.GeometryAdapter;
+import oracle.spatial.geometry.JGeometry;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import oracle.sql.STRUCT;
 
 import org.deegree.model.table.Table;
+import org.deegree_impl.model.geometry.OracleAdapter;
 import org.deegree_impl.model.table.Table_Impl;
 import org.deegree_impl.tools.Debug;
 import org.deegree_impl.tools.StringExtend;
@@ -78,8 +78,6 @@ import org.deegree_impl.tools.StringExtend;
  */
 public class OracleSpatialAccess extends DBAccess
 {
-  private String sdoVersion = null;
-
   private int[] struct = null;
 
   /**
@@ -90,10 +88,9 @@ public class OracleSpatialAccess extends DBAccess
    * @param sdoVersion
    *          version of the spatial extension
    */
-  public OracleSpatialAccess( Connection con, final String sdoVersion )
+  public OracleSpatialAccess( Connection con )
   {
     super( con );
-    this.sdoVersion = sdoVersion;
   }
 
   /**
@@ -102,11 +99,9 @@ public class OracleSpatialAccess extends DBAccess
    * @param con
    *          connection to a oracle database with spatial extension.
    */
-  public OracleSpatialAccess( Connection con, final boolean autoCommit, final String sdoVersion )
-      throws SQLException
+  public OracleSpatialAccess( Connection con, final boolean autoCommit ) throws SQLException
   {
     super( con, autoCommit );
-    this.sdoVersion = sdoVersion;
   }
 
   /**
@@ -123,10 +118,9 @@ public class OracleSpatialAccess extends DBAccess
    * @throws Exception
    */
   public OracleSpatialAccess( final String driver, final String logon, final String user,
-      final String password, final String sdoVersion ) throws SQLException, Exception
+      final String password ) throws SQLException, Exception
   {
     super( driver, logon, user, password );
-    this.sdoVersion = sdoVersion;
   }
 
   /**
@@ -140,11 +134,10 @@ public class OracleSpatialAccess extends DBAccess
    * @throws SQLException
    * @throws Exception
    */
-  public OracleSpatialAccess( final String driver, final String logon, final Properties properties,
-      final String sdoVersion ) throws SQLException, Exception
+  public OracleSpatialAccess( final String driver, final String logon, final Properties properties )
+      throws SQLException, Exception
   {
     super( driver, logon, properties );
-    this.sdoVersion = sdoVersion;
   }
 
   /**
@@ -162,11 +155,9 @@ public class OracleSpatialAccess extends DBAccess
    * @throws Exception
    */
   public OracleSpatialAccess( final String driver, final String logon, final String user,
-      final String password, final boolean autoCommit, final String sdoVersion )
-      throws SQLException, Exception
+      final String password, final boolean autoCommit ) throws SQLException, Exception
   {
     super( driver, logon, user, password, autoCommit );
-    this.sdoVersion = sdoVersion;
   }
 
   /**
@@ -183,10 +174,9 @@ public class OracleSpatialAccess extends DBAccess
    * @throws Exception
    */
   public OracleSpatialAccess( final String driver, final String logon, final Properties properties,
-      final boolean autoCommit, final String sdoVersion ) throws SQLException, Exception
+      final boolean autoCommit ) throws SQLException, Exception
   {
     super( driver, logon, properties, autoCommit );
-    this.sdoVersion = sdoVersion;
   }
 
   /**
@@ -208,20 +198,12 @@ public class OracleSpatialAccess extends DBAccess
   public Object performQuery( String query, final int startFeature, final int maxFeatures )
       throws SQLException, Exception
   {
-    Debug.debugMethodBegin( this, "performQuery(String, int)" );
+    Debug.debugMethodBegin();
 
     query = escape( query );
 
     Table tm = null;
     ByteArrayOutputStream baos = null;
-
-    // get a adapter object to export the query result to OGC wkb
-    GeometryAdapter wkbAdapter = OraSpatialManager.getGeometryAdapter( "WKB", "1.0", null, null,
-        ByteArrayOutputStream.class );
-
-    // get a adapter object to import the query result
-    GeometryAdapter sdoAdapter = OraSpatialManager.getGeometryAdapter( "SDO", sdoVersion,
-        STRUCT.class, null, null, con );
 
     OracleResultSet ors = null;
 
@@ -231,7 +213,7 @@ public class OracleSpatialAccess extends DBAccess
     Statement stmt = null;
     PreparedStatement ps = null;
 
-    if( start != -1 )
+    if( start != -1 && 1 == 2 )
     { //it's present at least one ordinate array
       ps = reformatStatement( query );
       if( maxFeatures > 0 )
@@ -242,13 +224,11 @@ public class OracleSpatialAccess extends DBAccess
     }
     else
     {
-
       stmt = con.createStatement();
       if( maxFeatures > 0 )
       {
         stmt.setMaxRows( maxFeatures + startFeature );
       }
-
       ors = (OracleResultSet)stmt.executeQuery( query );
     }
 
@@ -307,32 +287,19 @@ public class OracleSpatialAccess extends DBAccess
     while( ors.next() )
     {
       ii++;
-      oracle.sdoapi.geom.Geometry geom = null;
+
       if( ii >= startFeature )
       {
         Object[] o = new Object[cols];
-
         for( int i = 0; i < cols; i++ )
         {
           // read db Geometry from column 1 of the next row
           Object ob = ors.getObject( i + 1 );
-
           // if the column represents a geometry
           if( ob instanceof STRUCT )
           {
-            // perform the conversion
-            geom = sdoAdapter.importGeometry( ob );
-
-            int cnt = ( (STRUCT)ob ).getBytes().length;
-
-            if( cnt == 0 )
-            {
-              cnt = 4096 * 2;
-            }
-
-            baos = new ByteArrayOutputStream( cnt );
-            wkbAdapter.exportGeometry( baos, geom );
-            o[i] = baos;
+            JGeometry jgeom = JGeometry.load( (STRUCT)ob );
+            o[i] = OracleAdapter.wrap( jgeom );
           }
           else
           {
@@ -340,10 +307,8 @@ public class OracleSpatialAccess extends DBAccess
             o[i] = ob;
           }
         }
-
         // add row to the table
         tm.appendRow( o );
-
         // checks if the max amount of features is reached
         if( tm.getRowCount() == maxFeatures )
         {

@@ -7,8 +7,7 @@
  * 
  * **********************************************************************
  * 
- * $Source:
- * /var/lib/cvs/backupdeegree/deegree/org/deegree/model/geometry/ByteUtils.java,v $
+ * $Source$
  * $RCSfile$ $Revision$ $Date$
  * $Author$
  * 

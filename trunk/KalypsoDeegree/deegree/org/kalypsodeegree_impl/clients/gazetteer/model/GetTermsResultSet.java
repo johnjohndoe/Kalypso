@@ -1,6 +1,6 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/clients/gazetteer/model/GetTermsResultSet.java,v
-// 1.1.1.1 2004/05/11 16:43:27 doemming Exp $
+// /cvsroot/deegree/deegree/org/deegree_impl/clients/gazetteer/model/GetTermsResultSet.java,v
+// 1.3 2004/07/08 15:24:15 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.
@@ -45,6 +45,7 @@
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.clients.gazetteer.model;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.deegree.services.gazetteer.SI_LocationInstance;
@@ -144,6 +145,25 @@ public class GetTermsResultSet
   }
 
   /**
+   * @return Returns the terms.
+   */
+  public SI_LocationInstance[] getSortedTerms( String gazetteer, boolean up )
+  {
+    SI_LocationInstance[] li = (SI_LocationInstance[])terms.get( gazetteer );
+    Arrays.sort( li );
+    if( !up )
+    {
+      for( int i = 0; i < li.length / 2; i++ )
+      {
+        SI_LocationInstance tmp = li[li.length - 1 - i];
+        li[li.length - 1 - i] = li[i];
+        li[i] = tmp;
+      }
+    }
+    return li;
+  }
+
+  /**
    * @param terms
    *          The terms to set.
    */
@@ -163,8 +183,7 @@ public class GetTermsResultSet
 }
 /*******************************************************************************
  * Changes to this class. What the people have been up to: $Log:
- * GetTermsResultSet.java,v $ Revision 1.1.1.1 2004/05/11 16:43:27 doemming
- * backup of local modified deegree sources
+ * GetTermsResultSet.java,v $ Revision 1.3 2004/07/08 15:24:15 poth no message
  * 
  * Revision 1.2 2004/03/16 08:07:23 poth no message
  * 

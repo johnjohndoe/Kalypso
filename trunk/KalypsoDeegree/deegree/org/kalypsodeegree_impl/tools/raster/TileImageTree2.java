@@ -48,6 +48,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.Reader;
 import java.io.StringReader;
@@ -60,8 +61,18 @@ import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 
 import org.deegree.graphics.Encoders;
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureCollection;
+import org.deegree.model.feature.FeatureProperty;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.geometry.GM_Envelope;
+import org.deegree.model.geometry.GM_Object;
 import org.deegree.xml.DOMPrinter;
 import org.deegree.xml.XMLTools;
+import org.deegree_impl.io.shpapi.ShapeFile;
+import org.deegree_impl.model.feature.FeatureFactory;
+import org.deegree_impl.model.geometry.GeometryFactory;
 import org.deegree_impl.tools.StringExtend;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -126,6 +137,8 @@ public class TileImageTree2
   private int count = 0;
 
   private boolean geoTiff = false;
+
+  private HashMap featColl = new HashMap();
 
   /** Creates a new instance of TileImageTree */
   public TileImageTree2( String imageSource, String targetDir, String targetFormat,
@@ -220,6 +233,13 @@ public class TileImageTree2
    */
   public void createTileImageTree() throws Exception
   {
+    for( int i = 0; i < targetResolutions.length; i++ )
+    {
+      FeatureCollection fc = FeatureFactory.createFeatureCollection( "fc" + targetResolutions[i],
+          1000 );
+      featColl.put( "fc" + targetResolutions[i], fc );
+    }
+
     Document doc = XMLTools.create();
     Element root = doc.createElement( "CVDescriptor" );
     root.setAttribute( "xmlns", "http://www.deegree.org/gc" );
@@ -231,6 +251,14 @@ public class TileImageTree2
     System.out.println( "creating tiles ..." );
 
     tile( image, xmin, ymin, xmax, ymax, 0, root );
+
+    for( int i = 0; i < targetResolutions.length; i++ )
+    {
+      ShapeFile sh = new ShapeFile( targetDir + "/sh" + targetResolutions[i], "rw" );
+      sh.writeShape( (FeatureCollection)featColl.get( "fc" + targetResolutions[i] ) );
+      sh.close();
+
+    }
     System.out.println( "100%" );
     System.out.println( "finished" );
 
@@ -376,10 +404,90 @@ public class TileImageTree2
       // save tile to the filesystem
       saveTile( targetDir + "/l" + targetResolutions[res], xmin_, ymin_, tmp );
 
-      //createWorldFile(file, xmin_, ymin_, xmax_, ymax_, tilex, tiley);
+      createWorldFile( targetDir + "/l" + targetResolutions[res], xmin_, ymin_, xmax_, ymax_,
+          tilex, tiley );
+
+      storeEnvelope( targetDir + "/l" + targetResolutions[res], targetResolutions[res], xmin_,
+          ymin_, xmax_, ymax_ );
       // recursion !
       tile( im, xmin_, ymin_, xmax_, ymax_, res + 1, dir );
     }
+  }
+
+  private void storeEnvelope( String dir, double res, double xmin, double ymin, double xmax,
+      double ymax )
+  {
+    FeatureTypeProperty[] ftp = new FeatureTypeProperty[3];
+    ftp[0] = FeatureFactory.createFeatureTypeProperty( "GEOM",
+        "org.deegree.model.geometry.GM_Object", false );
+    ftp[1] = FeatureFactory.createFeatureTypeProperty( "FILENAME", "java.lang.String", false );
+    ftp[2] = FeatureFactory.createFeatureTypeProperty( "FOLDER", "java.lang.String", false );
+    FeatureType ftype = FeatureFactory.createFeatureType( null, null, "tiles", ftp );
+
+    try
+    {
+      GM_Envelope env = GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax );
+      GM_Object geom = GeometryFactory.createGM_Surface( env, null );
+      FeatureProperty[] props = new FeatureProperty[3];
+      props[0] = FeatureFactory.createFeatureProperty( "GEOM", geom );
+      DecimalFormat fo = new DecimalFormat( "#.0" );
+      String sx = fo.format( xmin * 1000 );
+      if( xmin == 0 )
+      {
+        sx = "0000.0";
+      }
+      sx = sx.substring( 0, sx.length() - 3 ) + "0";
+
+      String sy = fo.format( ymin * 1000 );
+      if( ymin == 0 )
+      {
+        sy = "0000.0";
+      }
+      sy = sy.substring( 0, sy.length() - 3 ) + "0";
+
+      String file = sx + "_" + sy + targetFormat;
+      props[1] = FeatureFactory.createFeatureProperty( "FILENAME", file );
+      props[2] = FeatureFactory.createFeatureProperty( "FOLDER", dir );
+      Feature feat = FeatureFactory.createFeature( "file", ftype, props );
+      FeatureCollection fc = (FeatureCollection)featColl.get( "fc" + res );
+      fc.appendFeature( feat );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+
+  }
+
+  private void createWorldFile( String dir, double xmin_, double ymin_, double xmax_, double ymax_,
+      double tilex, double tiley ) throws Exception
+  {
+    DecimalFormat fo = new DecimalFormat( "#.0" );
+    String sx = fo.format( xmin_ * 1000 );
+    if( xmin_ == 0 )
+    {
+      sx = "0000.0";
+    }
+    sx = sx.substring( 0, sx.length() - 3 ) + "0";
+
+    String sy = fo.format( ymin_ * 1000 );
+    if( ymin_ == 0 )
+    {
+      sy = "0000.0";
+    }
+    sy = sy.substring( 0, sy.length() - 3 ) + "0";
+
+    String file = dir + "/" + sx + "_" + sy + ".wld";
+    FileWriter fos = new FileWriter( file );
+    double resx = ( xmax_ - xmin_ ) / (double)tilex;
+    double resy = ( ymin_ - ymax_ ) / (double)tiley;
+    fos.write( resx + "\n" );
+    fos.write( "0\n" );
+    fos.write( "0\n" );
+    fos.write( resy + "\n" );
+    fos.write( ( xmin_ + resx / 2d ) + "\n" );
+    fos.write( ( ymax_ - resy / 2d ) + "\n" );
+    fos.close();
   }
 
   /**
@@ -390,9 +498,17 @@ public class TileImageTree2
   {
     DecimalFormat fo = new DecimalFormat( "#.0" );
     String sx = fo.format( x * 1000 );
+    if( x == 0 )
+    {
+      sx = "0000.0";
+    }
     sx = sx.substring( 0, sx.length() - 3 ) + "0";
 
     String sy = fo.format( y * 1000 );
+    if( y == 0 )
+    {
+      sy = "0000.0";
+    }
     sy = sy.substring( 0, sy.length() - 3 ) + "0";
     count++;
 
@@ -544,6 +660,8 @@ public class TileImageTree2
 
       br.close();
 
+      d3 = d3 - d1 / 2d;
+      d4 = d4 + d2 / 2d;
       double d5 = d3 + ( image.getWidth() * d1 );
       double d6 = d4 + ( image.getHeight() * d2 );
 
@@ -557,7 +675,7 @@ public class TileImageTree2
     }
     catch( Exception ex )
     {
-      System.out.println( ex );
+      ex.printStackTrace();
     }
   }
 
@@ -608,13 +726,15 @@ public class TileImageTree2
       // lower/right pixel
       double xRight = xOrigin + rop.getWidth() * resx;
       double yBottom = yOrigin - rop.getHeight() * resy;
-
+      System.out.println( "resx: " + resx );
+      System.out.println( "resy: " + resy );
       xmin = xOrigin;
       ymin = yBottom;
       xmax = xRight;
       ymax = yOrigin;
 
     }
+    System.out.println( xmin + " " + ymin + " " + xmax + " " + ymax );
   }
 
   /**
@@ -749,7 +869,6 @@ public class TileImageTree2
     }
 
     String outDir = ( (String)map.get( "-o" ) ).trim();
-
     if( !outDir.endsWith( "/" ) )
     {
       outDir = outDir + "/";
@@ -772,6 +891,7 @@ public class TileImageTree2
     }
     catch( Exception e )
     {
+      e.printStackTrace();
       System.out.println( "Cant't parse target resolutions!" + e );
       printHelp();
       System.exit( 1 );
@@ -835,7 +955,7 @@ public class TileImageTree2
     }
     catch( Exception e )
     {
-      System.out.println( e );
+      e.printStackTrace();
     }
   }
 
@@ -953,7 +1073,7 @@ public class TileImageTree2
       }
       catch( Exception e )
       {
-        System.out.println( e );
+        e.printStackTrace();
       }
     }
 

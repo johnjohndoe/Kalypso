@@ -49,6 +49,9 @@ public class MissingISO19119EntryException extends CatalogClientException
     st = StringExtend.stackTraceToString( e.getStackTrace() );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   public String toString()
   {
     return super.toString() + "\n" + st;

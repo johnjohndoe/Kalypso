@@ -376,8 +376,8 @@ public class ConvenienceCSFactoryFull
     cs = fac.getCSByName( "LuRef" );
     systems.put( cs.getName( Locale.ENGLISH ), cs );
 
-    // cs = fac.getCSByName( "EPSG:32201 = WGS 72 / UTM zone 1N ...
-    // EPSG32260 = WGS 72 / UTM zone 60N )
+    // cs = fac.getCSByName( "EPSG:32201 = WGS 72 / UTM zone 1N ... EPSG32260 =
+    // WGS 72 / UTM zone 60N )
     for( int i = 1; i < 10; i++ )
     {
       cs = fac.getCSByName( "EPSG:3220" + i );
@@ -389,8 +389,7 @@ public class ConvenienceCSFactoryFull
       systems.put( cs.getName( Locale.ENGLISH ), cs );
     }
 
-    // EPSG32401 = WGS 72BE / UTM zone 1N ...EPSG32460 = WGS 72BE / UTM zone
-    // 60N
+    // EPSG32401 = WGS 72BE / UTM zone 1N ...EPSG32460 = WGS 72BE / UTM zone 60N
     for( int i = 1; i < 10; i++ )
     {
       cs = fac.getCSByName( "EPSG:3240" + i );
@@ -418,8 +417,7 @@ public class ConvenienceCSFactoryFull
     cs = fac.getCSByName( "EPSG:32661" );
     systems.put( cs.getName( Locale.ENGLISH ), cs );
 
-    // EPSG25828 = ETRS89 / UTM zone 28N ...EPSG25838 = ETRS89 / UTM zone
-    // 38N
+    // EPSG25828 = ETRS89 / UTM zone 28N ...EPSG25838 = ETRS89 / UTM zone 38N
     for( int i = 28; i < 38; i++ )
     {
       cs = fac.getCSByName( "EPSG:258" + i );
@@ -443,9 +441,27 @@ public class ConvenienceCSFactoryFull
     cs = fac.getCSByName( "EPSG:31300" );
     systems.put( cs.getName( Locale.ENGLISH ), cs );
 
-    for( int i = 1; i < 6; i++ )
+    for( int i = 1; i < 5; i++ )
     {
-      cs = fac.getCSByName( "EPSG:2758" + 1 );
+      cs = fac.getCSByName( "EPSG:2756" + i );
+      systems.put( cs.getName( Locale.ENGLISH ), cs );
+    }
+
+    for( int i = 1; i < 5; i++ )
+    {
+      cs = fac.getCSByName( "EPSG:2757" + i );
+      systems.put( cs.getName( Locale.ENGLISH ), cs );
+    }
+
+    for( int i = 1; i < 5; i++ )
+    {
+      cs = fac.getCSByName( "EPSG:2758" + i );
+      systems.put( cs.getName( Locale.ENGLISH ), cs );
+    }
+
+    for( int i = 1; i < 5; i++ )
+    {
+      cs = fac.getCSByName( "EPSG:2759" + i );
       systems.put( cs.getName( Locale.ENGLISH ), cs );
     }
 

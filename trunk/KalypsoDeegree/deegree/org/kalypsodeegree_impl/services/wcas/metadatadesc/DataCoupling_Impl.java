@@ -72,7 +72,7 @@ public class DataCoupling_Impl implements DataCoupling
   }
 
   /**
-   * @see getCouplingType
+   * @see #getCouplingType()
    */
   public void setCouplingType( String couplingtype )
   {

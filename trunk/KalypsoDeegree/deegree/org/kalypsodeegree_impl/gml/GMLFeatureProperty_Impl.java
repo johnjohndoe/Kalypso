@@ -45,6 +45,7 @@ package org.deegree_impl.gml;
 import org.deegree.gml.GMLException;
 import org.deegree.gml.GMLFeature;
 import org.deegree.gml.GMLFeatureProperty;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.DOMPrinter;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.tools.Debug;
@@ -88,7 +89,7 @@ public class GMLFeatureProperty_Impl extends GMLProperty_Impl implements GMLFeat
       propName = "gml:" + propName;
     }
 
-    Element elem = doc.createElementNS( GMLGeometricMapping.GMLNS, propName );
+    Element elem = doc.createElementNS( CommonNamespaces.GMLNS, propName );
 
     GMLFeatureProperty ls = new GMLFeatureProperty_Impl( elem );
 

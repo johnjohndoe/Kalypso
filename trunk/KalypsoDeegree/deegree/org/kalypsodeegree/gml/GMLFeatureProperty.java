@@ -65,7 +65,7 @@ public interface GMLFeatureProperty extends GMLProperty
   public GMLFeature getFeaturePropertyValue();
 
   /**
-   * @see #getPropertyValue
+   * @see #getPropertyValue()
    */
   public void setFeaturePropetryValue( GMLFeature value ) throws GMLException;
 

@@ -54,6 +54,7 @@ import org.deegree.model.geometry.GM_Point;
 import org.deegree.services.wms.protocol.WMSGetMapRequest;
 import org.deegree.tools.ParameterList;
 import org.deegree_impl.model.geometry.GeometryFactory;
+import org.deegree_impl.services.wms.protocol.WMSGetMapRequest_Impl;
 import org.deegree_impl.services.wms.protocol.WMSProtocolFactory;
 import org.deegree_impl.tools.NetWorker;
 
@@ -253,7 +254,6 @@ public class JSPCreator
     StringBuffer sb = new StringBuffer( 5000 );
     for( int i = 0; i < commonJS.length; i++ )
     {
-      System.out.println( "commonJS: " + commonJS[i] );
       sb.append( "<SCRIPT LANGUAGE='JavaScript1.2' TYPE='text/javascript' " );
       sb.append( "src='" ).append( commonJS[i] ).append( "'></SCRIPT>" );
     }
@@ -284,7 +284,8 @@ public class JSPCreator
 
     for( int i = 0; i < layers.length; i++ )
     {
-      System.out.println( "i " + layers[i].getName() );
+      System.out.println( "i " + layers[i].getName() + " "
+          + layers[i].getStyleList().getCurrentStyle().getName() );
     }
 
     int i = 0;
@@ -307,7 +308,7 @@ public class JSPCreator
         tmp = url.toString();
       }
 
-      ll.add( (Layer[])list.toArray( new Layer[list.size()] ) );
+      ll.add( list.toArray( new Layer[list.size()] ) );
       key = tmp;
     }
 
@@ -369,7 +370,7 @@ public class JSPCreator
       {
         // create requiered layer, style and format attributes if a
         // convetional KVP without SLD should be used
-        reqLay = new org.deegree.services.wms.protocol.WMSGetMapRequest.Layer[layers.length];
+        reqLay = new WMSGetMapRequest.Layer[layers.length];
 
         for( int k = 0; k < layers.length; k++ )
         {
@@ -377,8 +378,7 @@ public class JSPCreator
           {
             String sName = layers[k].getStyleList().getCurrentStyle().getName();
             String lName = layers[k].getName();
-            reqLay[k] = org.deegree_impl.services.wms.protocol.WMSGetMapRequest_Impl.createLayer(
-                lName, sName );
+            reqLay[k] = WMSGetMapRequest_Impl.createLayer( lName, sName );
             format = layers[k].getFormatList().getCurrentFormat().getName();
           }
         }
@@ -443,10 +443,17 @@ public class JSPCreator
   {
     StringBuffer sb = new StringBuffer( 15000 );
 
+    String title = viewContext.getGeneral().getTitle();
+    try
+    {
+      //title = new String( title.getBytes(), "UTF-8");
+    }
+    catch( Exception e )
+    {}
     sb.append( getLayerAsHTMLTableJS() );
     sb.append( "<table border='0' width='97%'>" );
-    sb
-        .append( "<tr bgcolor='#E2E2EC' ><td colspan='3'><p><b>&nbsp;Grünplan</b></p></td><!--td colspan='2'></td--></tr>\n" );
+    sb.append( "<tr bgcolor='#E2E2EC' ><td colspan='3'><p><b>&nbsp;" );
+    sb.append( title ).append( "</b></p></td><!--td colspan='2'></td--></tr>\n" );
     sb.append( "<tr valign='top'><td colspan='3' valign='top' align='left'>\n" );
     sb.append( "<table id='Tabelle' width='100%' border='0' cellspacing='0' cellpadding='0'>\n" );
     sb.append( "<form id='layerform' name='layerform'>\n" );
@@ -467,7 +474,8 @@ public class JSPCreator
       {
         sb.append( "<tr id='row" ).append( c ).append( "'>" );
         // checkbox section
-        sb.append( "<td id =' r" ).append( c ).append( "c0'/><input type='checkbox' name='check' " );
+        sb.append( "<td id ='r" ).append( c ).append(
+            "c0'/><input type='checkbox' name='check' onclick='checkBoxes(this);'" );
         if( !layers[k].isHidden() )
         {
           sb.append( "checked " );
@@ -475,12 +483,15 @@ public class JSPCreator
         sb.append( "value='" ).append( layers[k].getName() ).append( "|" ).append(
             layers[k].getStyleList().getCurrentStyle().getName() ).append( "'/></td>\n" );
         // title section
-        sb.append( "<td id =' r" ).append( c ).append( "c1' onclick=\"change('row" ).append( c )
-            .append( "');\"/>" );
-        sb.append( layers[k].getTitle() ).append( "</td>\n" );
+        sb.append( "<td id ='r" ).append( c ).append( "c1' onclick=\"change('row" ).append( c )
+            .append( "');\"" ).append( " title='" ).append( layers[k].getTitle() ).append( "' />" );
+        String tmp = layers[k].getTitle();
+        if( tmp.length() > 25 )
+          tmp = tmp.substring( 0, 22 ) + "...";
+        sb.append( tmp ).append( "</td>\n" );
         // radiobutton section
-        sb.append( "<td id =' r" ).append( c ).append(
-            "c2'/><input type='radio' name='radiocheck' " );
+        sb.append( "<td id ='r" ).append( c ).append(
+            "c2'/><input type='radio' name='radiocheck' onclick='radios(this);' " );
         if( layers[k].isQueryable() )
         {
           sb.append( "checked " );
@@ -511,6 +522,14 @@ public class JSPCreator
     StringBuffer sb = new StringBuffer( 10000 );
     sb.append( "<SCRIPT language='JavaScript1.2'> \n" );
     sb.append( "<!-- \n" );
+    sb.append( "function checkBoxes(para) {\n" );
+    sb.append( "var module = controller.getModule( 'LayerList' );\n" );
+    sb.append( "module.clickCheckBoxes(para);\n" );
+    sb.append( "}\n" );
+    sb.append( "function radios(para) {\n" );
+    sb.append( "var module = controller.getModule( 'LayerList' );\n" );
+    sb.append( "module.checkTheRadios(para);\n" );
+    sb.append( "}\n" );
     sb.append( "function change(row) {\n" );
     sb.append( "var module = controller.getModule( 'LayerList' );\n" );
     sb.append( "module.change(row);\n" );
@@ -576,17 +595,4 @@ public class JSPCreator
     return null;
   }
 
-  /**
-   * 
-   * 
-   * @param args
-   * 
-   * @throws Exception
-   */
-  public static void main( String[] args ) throws Exception
-  {
-    ViewContext vc = WebMapContextFactory
-        .createViewContext( "C:/Projekte/UmweltInfo/fachschalen/WEB-INF/xml/mapcontext.xml" );
-    System.out.println( JSPCreator.getLayerAsHTMLTable( vc ) );
-  }
 }

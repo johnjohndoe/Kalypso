@@ -149,7 +149,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getAbstract
+   * @see #getAbstract()
    */
   public void setAbstract( String abstract_ )
   {
@@ -165,7 +165,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getAccessProperties
+   * @see #getAccessProperties()
    */
   public void setAccessProperties( AccessProperties accessproperties )
   {
@@ -181,7 +181,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getCitation
+   * @see #getCitation()
    */
   public void setCitation( Citation citation )
   {
@@ -197,7 +197,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getCredit
+   * @see #getCredit()
    */
   public void setCredit( String credit )
   {
@@ -213,7 +213,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getDataCoupling
+   * @see #getDataCoupling()
    */
   public void setDataCoupling( DataCoupling datacoupling )
   {
@@ -231,7 +231,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getKeywords
+   * @see #getKeywords()
    */
   public void addKeyword( Keywords keyword )
   {
@@ -239,7 +239,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getKeywords
+   * @see #getKeywords()
    */
   public void setKeywords( Keywords[] keywords )
   {
@@ -261,7 +261,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getLatLonBoundingBox
+   * @see #getLatLonBoundingBox()
    */
   public void setLatLonBoundingBox( String latlonboundingbox )
   {
@@ -280,7 +280,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getLegalConstraints
+   * @see #getLegalConstraints()
    */
   public void addLegalConstraints( LegalConstraints legalconstraints )
   {
@@ -288,7 +288,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getLegalConstraints
+   * @see #getLegalConstraints()
    */
   public void setLegalConstraints( LegalConstraints[] legalconstraints )
   {
@@ -310,7 +310,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getMD_Metadata
+   * @see #getMD_Metadata()
    */
   public void addMD_Metadata( ISO19115 md_metadata )
   {
@@ -318,7 +318,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getMD_Metadata
+   * @see #getMD_Metadata()
    */
   public void setMD_Metadata( ISO19115[] md_metadata )
   {
@@ -341,7 +341,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getOperationMetadata
+   * @see #getOperationMetadata()
    */
   public void addOperationMetadata( OperationMetadata operationmetadata )
   {
@@ -349,7 +349,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getOperationMetadata
+   * @see #getOperationMetadata()
    */
   public void setOperationMetadata( OperationMetadata[] operationmetadata )
   {
@@ -371,7 +371,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getPointOfContact
+   * @see #getPointOfContact()
    */
   public void addPointOfContact( PointOfContact pointofcontact )
   {
@@ -379,7 +379,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getPointOfContact
+   * @see #getPointOfContact()
    */
   public void setPointOfContact( PointOfContact[] pointofcontact )
   {
@@ -399,7 +399,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getPurpose
+   * @see #getPurpose()
    */
   public void setPurpose( String purpose )
   {
@@ -417,7 +417,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getQuality
+   * @see #getQuality()
    */
   public void setQuality( Quality quality )
   {
@@ -436,7 +436,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getResourceSpecifiedUsage
+   * @see #getResourceSpecifiedUsage()
    */
   public void addResourceSpecifiedUsage( ResourceSpecifiedUsage resourcespecifiedusage )
   {
@@ -444,7 +444,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getResourceSpecifiedUsage
+   * @see #getResourceSpecifiedUsage()
    */
   public void setResourceSpecifiedUsage( ResourceSpecifiedUsage[] resourcespecifiedusage )
   {
@@ -467,7 +467,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getSecurityConstraints
+   * @see #getSecurityConstraints()
    */
   public void addSecurityConstraints( SecurityConstraints securityconstraints )
   {
@@ -475,7 +475,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getSecurityConstraints
+   * @see #getSecurityConstraints()
    */
   public void setSecurityConstraints( SecurityConstraints[] securityconstraints )
   {
@@ -495,7 +495,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getServiceType
+   * @see #getServiceType()
    */
   public void setServiceType( ServiceType servicetype )
   {
@@ -512,7 +512,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getServiceTypeVersion
+   * @see #getServiceTypeVersion()
    */
   public void setServiceTypeVersion( String servicetypeversion )
   {
@@ -530,7 +530,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getStatusCode
+   * @see #getStatusCode()
    */
   public void addStatusCode( StatusCode statuscode )
   {
@@ -538,7 +538,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getStatusCode
+   * @see #getStatusCode()
    */
   public void setStatusCode( StatusCode[] statuscode )
   {
@@ -560,7 +560,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getTypeProperty
+   * @see #getTypeProperty()
    */
   public void addTypeProperty( TypeProperty typeproperty )
   {
@@ -568,7 +568,7 @@ public class ISO19119_Impl implements ISO19119
   }
 
   /**
-   * @see getTypeProperty
+   * @see #getTypeProperty()
    */
   public void setTypeProperty( TypeProperty[] typeproperty )
   {

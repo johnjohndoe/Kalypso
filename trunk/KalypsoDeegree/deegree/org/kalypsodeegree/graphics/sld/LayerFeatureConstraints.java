@@ -67,7 +67,7 @@ public interface LayerFeatureConstraints
   /**
    * Sets the FeatureTypeConstraint.
    * 
-   * @param featureTypeConstraint
+   * @param featureTypeConstraints
    *          the <FeatureTypeConstraint>
    */
   void setFeatureTypeConstraint( FeatureTypeConstraint[] featureTypeConstraints );

@@ -287,7 +287,7 @@ public class WCASService_Impl extends OGCWebService_Impl implements Handler
 
     StringBuffer sb = new StringBuffer( allSB.length() + 200 );
     String time = TimeTools.getISOFormattedTime();
-    sb.append( "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" );
+    sb.append( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
     sb.append( "<searchResponse success=\"true\" timestamp=\"" + time + "\" " );
     sb.append( "numberOfRecords=\"" + cntAll + "\" " );
     sb.append( "xmlns:gml=\"http://www.opengis.net/gml\">" );

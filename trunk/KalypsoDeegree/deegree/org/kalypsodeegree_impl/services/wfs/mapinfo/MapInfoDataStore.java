@@ -134,7 +134,7 @@ public class MapInfoDataStore extends AbstractDataStore
    * same as <tt>getFeature(..)</tt> but locking the feature during
    * processing.
    * 
-   * @see #getFeature
+   * @see #getFeature(WFSGetFeatureRequest)
    * 
    * @param request
    *          containing the request for zero, one or more features. The

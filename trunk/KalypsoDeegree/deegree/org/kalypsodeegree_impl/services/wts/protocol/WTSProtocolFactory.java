@@ -278,6 +278,8 @@ public class WTSProtocolFactory
     }
 
     double yaw = Double.parseDouble( (String)model.get( "YAW" ) );
+    if( yaw > 89.5 && yaw < 90.5 )
+      yaw = 91;
     yaw = Math.toRadians( yaw );
 
     return createGetViewRequest( version, id, vendorSpecificParameter, format, ls, crs, width,

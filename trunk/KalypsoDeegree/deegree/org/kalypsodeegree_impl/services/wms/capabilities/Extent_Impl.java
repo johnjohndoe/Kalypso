@@ -55,7 +55,7 @@ import org.deegree.xml.Marshallable;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$
  */
-class Extent_Impl implements Extent, Marshallable
+public class Extent_Impl implements Extent, Marshallable
 {
   private String default_ = null;
 

@@ -1,6 +1,6 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/services/wms/protocol/WMSProtocolFactory.java,v
-// 1.2 2004/06/21 13:40:57 doemming Exp $
+// /cvsroot/deegree/deegree/org/deegree_impl/services/wms/protocol/WMSProtocolFactory.java,v
+// 1.61 2004/08/20 08:43:18 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.
@@ -58,6 +58,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.deegree.gml.GMLBox;
 import org.deegree.gml.GMLDocument;
 import org.deegree.gml.GMLFeature;
 import org.deegree.gml.GMLFeatureCollection;
@@ -69,17 +70,19 @@ import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Point;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.geometry.GM_Surface;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.services.InconsistentRequestException;
 import org.deegree.services.OGCWebServiceException;
 import org.deegree.services.OGCWebServiceRequest;
 import org.deegree.services.wms.InvalidFormatException;
 import org.deegree.services.wms.capabilities.GazetteerParam;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
-import org.deegree.services.wms.protocol.WMSFeatureInfoRequest;
-import org.deegree.services.wms.protocol.WMSFeatureInfoResponse;
 import org.deegree.services.wms.protocol.WMSGetCapabilitiesRequest;
 import org.deegree.services.wms.protocol.WMSGetCapabilitiesResponse;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoRequest;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoResponse;
 import org.deegree.services.wms.protocol.WMSGetLegendGraphicRequest;
+import org.deegree.services.wms.protocol.WMSGetLegendGraphicResponse;
 import org.deegree.services.wms.protocol.WMSGetMapRequest;
 import org.deegree.services.wms.protocol.WMSGetMapResponse;
 import org.deegree.services.wms.protocol.WMSGetScaleBarRequest;
@@ -87,6 +90,7 @@ import org.deegree.services.wms.protocol.WMSGetScaleBarResponse;
 import org.deegree.xml.Marshallable;
 import org.deegree.xml.XMLParsingException;
 import org.deegree.xml.XMLTools;
+import org.deegree_impl.gml.GMLBox_Impl;
 import org.deegree_impl.gml.GMLDocument_Impl;
 import org.deegree_impl.graphics.sld.SLDFactory;
 import org.deegree_impl.model.ct.GeoTransformer;
@@ -97,6 +101,7 @@ import org.deegree_impl.tools.MimeTypeMapper;
 import org.deegree_impl.tools.NetWorker;
 import org.deegree_impl.tools.StringExtend;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Factory that builds the different types of WMS-Requests & Responses.
@@ -123,7 +128,7 @@ public class WMSProtocolFactory
   public static OGCWebServiceRequest createRequest( String id, HashMap paramMap )
       throws InconsistentRequestException, XMLParsingException, MalformedURLException
   {
-    Debug.debugMethodBegin( "org.deegree_impl.enterprise.WMSProtocolFactory", "createRequest" );
+    Debug.debugMethodBegin();
 
     OGCWebServiceRequest request = null;
 
@@ -136,7 +141,7 @@ public class WMSProtocolFactory
 
     if( requestStr.equalsIgnoreCase( "getCapabilities" ) )
     {
-      request = createWMSGetCapabilitiesRequest( id, paramMap );
+      request = createGetCapabilitiesRequest( id, paramMap );
     }
     else if( requestStr.equalsIgnoreCase( "GetMap" ) || requestStr.equalsIgnoreCase( "map" ) )
     {
@@ -149,7 +154,11 @@ public class WMSProtocolFactory
     }
     else if( requestStr.equalsIgnoreCase( "getScaleBar" ) )
     {
-      request = createWMSGetScaleBarRequest( id, paramMap );
+      request = createGetScaleBarRequest( id, paramMap );
+    }
+    else if( requestStr.equalsIgnoreCase( "getLegendGraphic" ) )
+    {
+      request = createGetLegendGraphicRequest( id, paramMap );
     }/*
       * else if ( requestStr.equalsIgnoreCase( "getStyles" ) ) { } else if (
       * requestStr.equalsIgnoreCase( "putStyles" ) ) { } else if (
@@ -178,8 +187,8 @@ public class WMSProtocolFactory
    * @throws InconsistentRequestException
    *           if the request is inconsistent
    */
-  public static WMSGetCapabilitiesRequest createWMSGetCapabilitiesRequest( String id,
-      HashMap paramMap ) throws InconsistentRequestException
+  public static WMSGetCapabilitiesRequest createGetCapabilitiesRequest( String id, HashMap paramMap )
+      throws InconsistentRequestException
   {
     String version = (String)paramMap.get( "VERSION" );
 
@@ -216,17 +225,15 @@ public class WMSProtocolFactory
    * 
    * @return <tt>WMSGetCapabilitiesResponse</tt>
    */
-  public static WMSGetCapabilitiesResponse createWMSGetCapabilitiesResponse(
+  public static WMSGetCapabilitiesResponse createGetCapabilitiesResponse(
       OGCWebServiceRequest request, OGCWebServiceException exception, WMSCapabilities capabilities )
   {
     Debug.debugMethodBegin();
 
     Document doc = null;
-
     if( exception != null )
     {
       StringReader reader = new StringReader( ( (Marshallable)exception ).exportAsXML() );
-
       try
       {
         doc = XMLTools.parse( reader );
@@ -237,12 +244,67 @@ public class WMSProtocolFactory
         System.out.println( e );
       }
     }
-
     WMSGetCapabilitiesResponse res = new WMSGetCapabilitiesResponse_Impl( request, doc,
         capabilities );
 
     Debug.debugMethodEnd();
     return res;
+  }
+
+  /**
+   * creates a <tt>WMSGetMapRequest</tt> from its XML representation as
+   * defined in SLD 1.0.0 specification
+   * 
+   * @param id
+   *          an unique id of the request
+   * @param root
+   * @return an instance of <tt>WMSGetMapRequest</tt>
+   */
+  public static WMSGetMapRequest createGetMapRequest( String id, Element root )
+      throws InconsistentRequestException, XMLParsingException, MalformedURLException
+  {
+    Debug.debugMethodBegin();
+
+    String WMSNS = "http://www.opengis.net/ows";
+
+    String version = XMLTools.getRequiredAttrValue( "version", root );
+
+    Element sldElem = XMLTools.getRequiredChildByName( "StyledLayerDescriptor",
+        CommonNamespaces.SLDNS, root );
+    StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( sldElem );
+
+    Element bboxElem = XMLTools.getRequiredChildByName( "BoundingBox", WMSNS, root );
+    GMLBox gbox = new GMLBox_Impl( bboxElem );
+    String crs = XMLTools.getRequiredAttrValue( "srsName", bboxElem );
+    GM_Envelope bbox = null;
+    try
+    {
+      bbox = GMLAdapter.createGM_Envelope( gbox );
+    }
+    catch( Exception e )
+    {
+      throw new XMLParsingException( "could not create bounding box", e );
+    }
+
+    Element elem = XMLTools.getRequiredChildByName( "Output", WMSNS, root );
+    String format = XMLTools.getRequiredStringValue( "Format", WMSNS, elem );
+    String tmp = XMLTools.getStringValue( "Transparent", WMSNS, elem, "FALSE" );
+    boolean transparency = tmp.equalsIgnoreCase( "true" );
+    elem = XMLTools.getRequiredChildByName( "Size", WMSNS, elem );
+    tmp = XMLTools.getRequiredStringValue( "Width", WMSNS, elem );
+    int width = Integer.parseInt( tmp );
+    tmp = XMLTools.getRequiredStringValue( "Height", WMSNS, elem );
+    int height = Integer.parseInt( tmp );
+    String exceptions = XMLTools.getStringValue( "Exceptions", WMSNS, root,
+        "application/vnd.ogc.se_xml" );
+    tmp = XMLTools.getStringValue( "BGColor", WMSNS, root, "#FFFFFF" );
+    Color bgColor = Color.decode( tmp );
+
+    WMSGetMapRequest req = createGetMapRequest( version, id, null, null, null, format, width,
+        height, crs, bbox, transparency, bgColor, exceptions, null, null, sld, null );
+
+    Debug.debugMethodEnd();
+    return req;
   }
 
   /**
@@ -291,13 +353,6 @@ public class WMSProtocolFactory
     // will not be available for the creation of requests against WMS in
     // a cascade, so have to be checked if it's null before it can be used
     WMSCapabilities capabilities = (WMSCapabilities)model.remove( "CAPABILITIES" );
-
-    String service = (String)model.remove( "SERVICE" );
-
-    if( !"WMS".equals( service ) )
-    {
-      throw new XMLParsingException( "Service parameter must be equal to 'WMS' " );
-    }
 
     // Version
     String version = (String)model.remove( "VERSION" );
@@ -451,24 +506,30 @@ public class WMSProtocolFactory
 
     // FORMAT
     String format = (String)model.remove( "FORMAT" );
-
     if( format == null )
     {
       throw new InconsistentRequestException( "FORMAT-value must be set" );
     }
-
     if( !MimeTypeMapper.isKnownImageType( format ) )
     {
       throw new InvalidFormatException( format + " is not a valid image/result format" );
     }
 
-    // WIDTH
-    if( model.get( "WIDTH" ) == null )
+    // width
+    String tmp = (String)model.remove( "WIDTH" );
+    if( tmp == null )
     {
-      throw new InconsistentRequestException( "WIDTH-value must be set" );
+      throw new InconsistentRequestException( "WIDTH must be set" );
     }
-
-    int width = Integer.parseInt( (String)model.remove( "WIDTH" ) );
+    int width = 0;
+    try
+    {
+      width = Integer.parseInt( tmp );
+    }
+    catch( Exception e )
+    {
+      throw new InconsistentRequestException( "WIDTH must be a valid integer number" );
+    }
 
     // exceeds the max allowed map width ?
     if( capabilities != null )
@@ -481,12 +542,21 @@ public class WMSProtocolFactory
       }
     }
 
-    // HEIGHT
-    if( model.get( "HEIGHT" ) == null )
+    // height
+    tmp = (String)model.remove( "HEIGHT" );
+    if( tmp == null )
     {
-      throw new InconsistentRequestException( "HEIGHT-value must be set" );
+      throw new InconsistentRequestException( "HEIGHT must be set" );
     }
-    int height = Integer.parseInt( (String)model.remove( "HEIGHT" ) );
+    int height = 0;
+    try
+    {
+      height = Integer.parseInt( tmp );
+    }
+    catch( Exception e )
+    {
+      throw new InconsistentRequestException( "HEIGHT must be a valid integer number" );
+    }
 
     // exceeds the max allowed map height ?
     if( capabilities != null )
@@ -563,7 +633,7 @@ public class WMSProtocolFactory
 
       if( model.get( "LOCATIONRADIUS" ) != null )
       {
-        String tmp = (String)model.remove( "LOCATIONRADIUS" );
+        tmp = (String)model.remove( "LOCATIONRADIUS" );
         radius = Double.parseDouble( tmp );
       }
       else
@@ -595,7 +665,7 @@ public class WMSProtocolFactory
     }
 
     // BGCOLOR
-    String tmp = (String)model.remove( "BGCOLOR" );
+    tmp = (String)model.remove( "BGCOLOR" );
     Color bgColor = Color.white;
     if( tmp != null )
     {
@@ -787,7 +857,7 @@ public class WMSProtocolFactory
     Debug.debugMethodBegin();
 
     // Adds the content from the LAYERS and STYLES attribute to the SLD
-    if( sld == null )
+    if( sld == null && sldURL == null )
     {
       StringBuffer sb = new StringBuffer( 5000 );
       sb.append( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
@@ -824,7 +894,7 @@ public class WMSProtocolFactory
    * @param response
    *          the response to the request
    */
-  public static WMSGetMapResponse createWMSGetMapResponse( OGCWebServiceRequest request,
+  public static WMSGetMapResponse createGetMapResponse( OGCWebServiceRequest request,
       OGCWebServiceException exception, Object response )
   {
     Debug.debugMethodBegin();
@@ -863,7 +933,7 @@ public class WMSProtocolFactory
    *          <tt>HashMap</tt> containing the request parameters
    * @return an instance of <tt>WMSFeatureInfoRequest</tt>
    */
-  public static WMSFeatureInfoRequest createGetFeatureInfoRequest( String id, HashMap model )
+  public static WMSGetFeatureInfoRequest createGetFeatureInfoRequest( String id, HashMap model )
       throws InconsistentRequestException
   {
     Debug.debugMethodBegin();
@@ -982,7 +1052,7 @@ public class WMSProtocolFactory
    * @return an instance of <tt>WMSFeatureInfoRequest</tt>
    * @param version
    *          VERSION=version (R): Request version.
-   * @param queryL,ayers
+   * @param queryLayers
    *          QUERY_LAYERS=layer_list (R): Comma-separated list of one or more
    *          layers to be queried.
    * @param getMapRequestCopy
@@ -1008,14 +1078,14 @@ public class WMSProtocolFactory
    * @param vendorSpecificParameter
    *          Vendor-specific parameters (O): Optional experimental parameters.
    */
-  public static WMSFeatureInfoRequest createGetFeatureInfoRequest( String version, String id,
+  public static WMSGetFeatureInfoRequest createGetFeatureInfoRequest( String version, String id,
       String[] queryLayers, WMSGetMapRequest getMapRequestCopy, String infoFormat,
       int featureCount, Point clickPoint, String exceptions, StyledLayerDescriptor sld,
       HashMap vendorSpecificParameter )
   {
     Debug.debugMethodBegin();
 
-    WMSFeatureInfoRequest fir = new WMSFeatureInfoRequest_Impl( version, id, queryLayers,
+    WMSGetFeatureInfoRequest fir = new WMSGetFeatureInfoRequest_Impl( version, id, queryLayers,
         getMapRequestCopy, infoFormat, featureCount, clickPoint, exceptions, sld,
         vendorSpecificParameter );
 
@@ -1032,8 +1102,8 @@ public class WMSProtocolFactory
    *          a describtion of an excetion (only if raised)
    * @param featureInfo
    */
-  public static WMSFeatureInfoResponse createWMSFeatureInfoResponse( OGCWebServiceRequest request,
-      OGCWebServiceException exception, String featureInfo )
+  public static WMSGetFeatureInfoResponse createGetFeatureInfoResponse(
+      OGCWebServiceRequest request, OGCWebServiceException exception, String featureInfo )
   {
     Debug.debugMethodBegin();
 
@@ -1054,7 +1124,7 @@ public class WMSProtocolFactory
       }
     }
 
-    WMSFeatureInfoResponse res = new WMSFeatureInfoResponse_Impl( request, doc, featureInfo );
+    WMSGetFeatureInfoResponse res = new WMSGetFeatureInfoResponse_Impl( request, doc, featureInfo );
 
     Debug.debugMethodEnd();
     return res;
@@ -1069,7 +1139,7 @@ public class WMSProtocolFactory
    * @return @throws
    *         InconsistentRequestException
    */
-  public static WMSGetScaleBarRequest createWMSGetScaleBarRequest( String id, HashMap model )
+  public static WMSGetScaleBarRequest createGetScaleBarRequest( String id, HashMap model )
       throws InconsistentRequestException
   {
     //remove all ScaleBarRequest-related Parameter so that
@@ -1083,8 +1153,6 @@ public class WMSProtocolFactory
     {
       version = (String)model.remove( "WMTVER" );
     }
-
-    String service = (String)model.remove( "SERVICE" );
 
     // format
     String format = (String)model.remove( "FORMAT" );
@@ -1104,11 +1172,11 @@ public class WMSProtocolFactory
 
     if( !"meter".equals( units ) )
     {
-      //TODO zus?tliche Ma?einheiten hinzuf?gen
+      //TODO zusätliche Maßeinheiten hinzufügen
       throw new InconsistentRequestException(
           "Parameter 'UNITS' must be one of 'meter', 'additional units "
               + "will be supported in future versions'." );
-      //TODO bei zus?tzlichen Ma?einheiten anpassen
+      //TODO bei zusätzlichen Maßeinheiten anpassen
     }
 
     // top label content
@@ -1130,11 +1198,11 @@ public class WMSProtocolFactory
 
     if( "NONE".equals( tmp ) )
     {
-      topLabel = WMSGetScaleBarRequest.L_NONE;
+      bottomLabel = WMSGetScaleBarRequest.L_NONE;
     }
     else if( "SIZE".equals( tmp ) )
     {
-      topLabel = WMSGetScaleBarRequest.L_SIZE;
+      bottomLabel = WMSGetScaleBarRequest.L_SIZE;
     }
 
     // label color
@@ -1181,7 +1249,7 @@ public class WMSProtocolFactory
 
     java.awt.Font font = java.awt.Font.getFont( labelFont );
 
-    //TODO @Andreas: hier beschwert sich meine Testklasse ?ber nullpointer
+    //TODO @Andreas: hier beschwert sich meine Testklasse über nullpointer
     //font = font.deriveFont( labelFontSize );
     //font = font.deriveFont ((float)10);
     String barStyle = (String)model.remove( "STYLE" );
@@ -1215,7 +1283,7 @@ public class WMSProtocolFactory
     {
       if( tmp != null )
       {
-        color = Color.decode( tmp );
+        bgColor = Color.decode( tmp );
       }
     }
     catch( Exception e )
@@ -1239,12 +1307,6 @@ public class WMSProtocolFactory
     if( version == null )
     {
       throw new InconsistentRequestException( "Parameter 'VERSION' must be set." );
-    }
-
-    // Service = WMS
-    if( !"WMS".equals( service ) )
-    {
-      throw new InconsistentRequestException( "Parameter 'SERVICE' must be 'WMS'." );
     }
 
     // BoundingBox
@@ -1362,7 +1424,8 @@ public class WMSProtocolFactory
         * ( min.getX() - max.getX() ) ) );
 
     double scale = r * Math.acos( cose ) * 1000;
-    int scaleDenominator = (int)( size / ( 0.00028 * scale ) );
+    int scaleDenominator = (int)( scale / 0.00028 );
+    scale = ( scale / Math.sqrt( 2 ) ) * size;
 
     return new WMSGetScaleBarRequest_Impl( version, id, null, units, topLabel, bottomLabel,
         labelColor, font, barStyle, color, bgColor, size, scale, scaleDenominator, format );
@@ -1376,7 +1439,7 @@ public class WMSProtocolFactory
    * 
    * @return
    */
-  public static WMSGetScaleBarResponse createWMSGetScaleBarResponse( WMSGetScaleBarRequest request,
+  public static WMSGetScaleBarResponse createGetScaleBarResponse( WMSGetScaleBarRequest request,
       OGCWebServiceException e )
   {
     return new WMSGetScaleBarResponse_Impl( request, e );
@@ -1390,7 +1453,7 @@ public class WMSProtocolFactory
    * 
    * @return
    */
-  public static WMSGetScaleBarResponse createWMSGetScaleBarResponse( WMSGetScaleBarRequest request,
+  public static WMSGetScaleBarResponse createGetScaleBarResponse( WMSGetScaleBarRequest request,
       Object response )
   {
     return new WMSGetScaleBarResponse_Impl( request, response );
@@ -1398,7 +1461,9 @@ public class WMSProtocolFactory
 
   /**
    * @param id
+   *          ID of the request
    * @param request
+   *          string representation of the request as received from a client
    * @return @throws
    *         InconsistentRequestException
    */
@@ -1417,7 +1482,9 @@ public class WMSProtocolFactory
 
   /**
    * @param id
+   *          ID of the request
    * @param model
+   *          key-value-pair representation of the request
    * @return @throws
    *         InconsistentRequestException
    */
@@ -1433,39 +1500,188 @@ public class WMSProtocolFactory
     {
       throw new InconsistentRequestException( "Parameter VERSION must be set." );
     }
-
-    // request
-    String request = (String)model.remove( "REQUEST" );
-
-    if( !"GetLegendGraphic".equals( request ) )
+    if( version.compareTo( "1.1.1" ) < 0 )
     {
-      throw new InconsistentRequestException( "Parameter REQUEST must be set."
-          + " and must be equal to GetLegendGraphic" );
+      throw new InconsistentRequestException( "Version must be >= 1.1.1." );
     }
 
     // format
     String format = (String)model.remove( "FORMAT" );
-
     if( format == null )
     {
       throw new InconsistentRequestException( "Parameter FORMAT must be set." );
     }
-
     if( !MimeTypeMapper.isKnownImageType( format ) )
     {
       throw new InvalidFormatException( format + " is not a valid image/result format" );
     }
 
-    // request
+    // layer
     String layer = (String)model.remove( "LAYER" );
-
     if( layer == null )
     {
       throw new InconsistentRequestException( "Parameter LAYER must be set." );
     }
 
+    // style
+    String style = (String)model.remove( "STYLE" );
+    if( style == null || style.equals( "" ) || "DEFAULT".equalsIgnoreCase( style ) )
+    {
+      style = "default:" + layer;
+    }
+
+    // featureType
+    String featureType = (String)model.remove( "FEATURETYPE" );
+
+    // rule
+    String rule = (String)model.remove( "RULE" );
+
+    // scale
+    String tmp = (String)model.remove( "SCALE" );
+    if( tmp != null && rule != null )
+    {
+      throw new InconsistentRequestException( "SCALE or RULE can be set in a request but not both" );
+    }
+    double scale = -1;
+    if( tmp != null )
+    {
+      try
+      {
+        scale = Double.parseDouble( tmp );
+      }
+      catch( Exception e )
+      {
+        throw new InconsistentRequestException( "Scale, if set, must be a valid number" );
+      }
+    }
+
+    // SLD
+    tmp = (String)model.remove( "SLD" );
+    URL sld = null;
+    if( tmp != null )
+    {
+      try
+      {
+        sld = new URL( tmp );
+      }
+      catch( Exception e )
+      {
+        throw new InconsistentRequestException( "If SLD parameter is set it must be a valid URL" );
+      }
+    }
+
+    // SLD_BODY
+    String sld_body = (String)model.remove( "SLD_BODY" );
+    if( sld_body != null && sld != null )
+    {
+      throw new InconsistentRequestException(
+          "SLD or SLD_BODY can be set in a request but not both" );
+    }
+
+    // width
+    tmp = (String)model.remove( "WIDTH" );
+    if( tmp == null )
+    {
+      throw new InconsistentRequestException( "WIDTH must be set" );
+    }
+    int width = 0;
+    try
+    {
+      width = Integer.parseInt( tmp );
+    }
+    catch( Exception e )
+    {
+      throw new InconsistentRequestException( "WIDTH must be a valid integer number" );
+    }
+
+    // height
+    tmp = (String)model.remove( "HEIGHT" );
+    if( tmp == null )
+    {
+      throw new InconsistentRequestException( "HEIGHT must be set" );
+    }
+    int height = 0;
+    try
+    {
+      height = Integer.parseInt( tmp );
+    }
+    catch( Exception e )
+    {
+      throw new InconsistentRequestException( "HEIGHT must be a valid integer number" );
+    }
+
+    // exceptions
+    String exceptions = (String)model.remove( "EXCEPTIONS" );
+    if( exceptions == null )
+    {
+      exceptions = "application/vnd.ogc.se_xml";
+    }
+
+    Map vendorSpecificParameter = model;
+
     Debug.debugMethodEnd();
-    return null;
+    return createGetLegendGraphicRequest( id, version, layer, style, featureType, rule, scale, sld,
+        sld_body, format, width, height, exceptions, vendorSpecificParameter );
+  }
+
+  /**
+   * @param id
+   *          unique id of the request
+   * @param version
+   *          version of the target WMS
+   * @param layer
+   *          name of the layer the style is assigned to
+   * @param style
+   *          name of the style (optional; if not present -> 'default')
+   * @param featureType
+   *          name of the feature type a legend element shall be created for -->
+   *          SLD
+   * @param rule
+   *          name of the rule a legend element shall be created for --> SLD
+   * @param scale
+   *          scale for which a rule must be valid --> SLD
+   * @param sld
+   *          refernce to a SLD document
+   * @param sld_body
+   *          SLD document
+   * @param format
+   *          image format of the returned legend element
+   * @param width
+   * @param height
+   * @param exceptions
+   *          format of the excpetion if something went wrong
+   * @param vendorSpecificParameter
+   * @return instance of <tt>WMSGetLegendGraphicRequest</tt>
+   */
+  public static WMSGetLegendGraphicRequest createGetLegendGraphicRequest( String id,
+      String version, String layer, String style, String featureType, String rule, double scale,
+      URL sld, String sld_body, String format, int width, int height, String exceptions,
+      Map vendorSpecificParameter )
+  {
+    return new WMSGetLegendGraphicRequest_Impl( id, version, layer, style, featureType, rule,
+        scale, sld, sld_body, format, width, height, exceptions, (HashMap)vendorSpecificParameter );
+  }
+
+  /**
+   * @param request
+   * @param legendGraphic
+   * @return
+   */
+  public static WMSGetLegendGraphicResponse createGetLegendGraphicResponse(
+      OGCWebServiceRequest request, Object legendGraphic )
+  {
+    return new WMSGetLegendGraphicResponse_Impl( request, legendGraphic );
+  }
+
+  /**
+   * @param request
+   * @param exception
+   * @return
+   */
+  public static WMSGetLegendGraphicResponse createGetLegendGraphicResponse(
+      OGCWebServiceRequest request, Document exception )
+  {
+    return new WMSGetLegendGraphicResponse_Impl( request, exception );
   }
 
   /**
@@ -1496,3 +1712,30 @@ public class WMSProtocolFactory
     return map;
   }
 }
+/*******************************************************************************
+ * Changes to this class. What the people have been up to: $Log:
+ * WMSProtocolFactory.java,v $ Revision 1.61 2004/08/20 08:43:18 poth no message
+ * 
+ * Revision 1.60 2004/06/24 14:23:04 poth no message
+ * 
+ * Revision 1.59 2004/05/06 12:01:27 poth no message
+ * 
+ * Revision 1.58 2004/04/14 09:53:10 poth no message
+ * 
+ * Revision 1.57 2004/04/07 06:43:51 poth no message
+ * 
+ * Revision 1.56 2004/04/02 06:41:56 poth no message
+ * 
+ * Revision 1.55 2004/03/31 15:40:20 poth no message
+ * 
+ * Revision 1.54 2004/03/31 07:12:07 poth no message
+ * 
+ * Revision 1.53 2004/03/30 07:09:33 poth no message
+ * 
+ * Revision 1.52 2004/03/26 11:19:32 poth no message
+ * 
+ * Revision 1.51 2004/03/24 12:36:22 poth no message
+ * 
+ * 
+ *  
+ ******************************************************************************/

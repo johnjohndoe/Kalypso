@@ -62,7 +62,7 @@ import org.deegree.xml.XMLTools;
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version 2002-03-08
  */
-class Operation_Impl implements Operation, Marshallable
+public class Operation_Impl implements Operation, Marshallable
 {
   private ArrayList dCPType = null;
 
@@ -206,7 +206,6 @@ class Operation_Impl implements Operation, Marshallable
   public void setOperationType( int operationType )
   {
     this.operationType = operationType;
-
     switch( operationType )
     {
     case GETCAPABILITIES:
@@ -217,31 +216,36 @@ class Operation_Impl implements Operation, Marshallable
       break;
     case GETMAP:
       operationName = GETMAP_NAME;
-      responsibleClass = "org.deegree_impl.services.wms.GetMapHandler";
+      responsibleClass = "org.deegree_impl.services.wms.GetMapHandler_Impl";
       break;
     case MAP:
       operationName = MAP_NAME;
-      responsibleClass = "org.deegree_impl.services.wms.GetMapHandler";
+      responsibleClass = "org.deegree_impl.services.wms.GetMapHandler_Impl";
       break;
     case GETFEATUREINFO:
       operationName = GETFEATUREINFO_NAME;
-      responsibleClass = "org.deegree_impl.services.wms.GetFeatureInfoHandler";
+      responsibleClass = "org.deegree_impl.services.wms.GetFeatureInfoHandler_Impl";
       break;
     case FEATUREINFO:
       operationName = FEATUREINFO_NAME;
-      responsibleClass = "org.deegree_impl.services.wms.GetFeatureInfoHandler";
+      responsibleClass = "org.deegree_impl.services.wms.GetFeatureInfoHandler_Impl";
       break;
     case DESCRIBELAYER:
       operationName = DESCRIBELAYER_NAME;
       break;
     case GETLEGENDGRAPHIC:
       operationName = GETLEGENDGRAPHIC_NAME;
+      responsibleClass = "org.deegree_impl.services.wms.GetLegendGraphicHandler";
       break;
     case GETSTYLES:
       operationName = GETSTYLES_NAME;
       break;
     case PUTSTYLES:
       operationName = PUTSTYLES_NAME;
+      break;
+    case GETSCALEBAR:
+      operationName = GETSCALEBAR_NAME;
+      responsibleClass = "org.deegree_impl.services.wms.GetScaleBarHandler";
       break;
     default:
       operationName = UNKNOWN_NAME;
@@ -275,22 +279,22 @@ class Operation_Impl implements Operation, Marshallable
     else if( operationName.equals( GETMAP_NAME ) )
     {
       operationType = GETMAP;
-      responsibleClass = "org.deegree_impl.services.wms.GetMapHandler";
+      responsibleClass = "org.deegree_impl.services.wms.GetMapHandler_Impl";
     }
     else if( operationName.equals( MAP_NAME ) )
     {
       operationType = MAP;
-      responsibleClass = "org.deegree_impl.services.wms.GetMapHandler";
+      responsibleClass = "org.deegree_impl.services.wms.GetMapHandler_Impl";
     }
     else if( operationName.equals( GETFEATUREINFO_NAME ) )
     {
       operationType = GETFEATUREINFO;
-      responsibleClass = "org.deegree_impl.services.wms.GetFeatureInfoHandler";
+      responsibleClass = "org.deegree_impl.services.wms.GetFeatureInfoHandler_Impl";
     }
     else if( operationName.equals( FEATUREINFO_NAME ) )
     {
       operationType = FEATUREINFO;
-      responsibleClass = "org.deegree_impl.services.wms.GetFeatureInfoHandler";
+      responsibleClass = "org.deegree_impl.services.wms.GetFeatureInfoHandler_Impl";
     }
     else if( operationName.equals( DESCRIBELAYER_NAME ) )
     {
@@ -299,6 +303,7 @@ class Operation_Impl implements Operation, Marshallable
     else if( operationName.equals( GETLEGENDGRAPHIC_NAME ) )
     {
       operationType = GETLEGENDGRAPHIC;
+      responsibleClass = "org.deegree_impl.services.wms.GetLegendGraphicHandler";
     }
     else if( operationName.equals( GETSTYLES_NAME ) )
     {
@@ -307,6 +312,11 @@ class Operation_Impl implements Operation, Marshallable
     else if( operationName.equals( PUTSTYLES_NAME ) )
     {
       operationType = PUTSTYLES;
+    }
+    else if( operationName.equals( GETSCALEBAR_NAME ) )
+    {
+      operationType = GETSCALEBAR;
+      responsibleClass = "org.deegree_impl.services.wms.GetScaleBarHandler";
     }
     else
     {
@@ -356,6 +366,9 @@ class Operation_Impl implements Operation, Marshallable
       break;
     case PUTSTYLES:
       s = PUTSTYLES_NAME;
+      break;
+    case GETSCALEBAR:
+      s = GETSCALEBAR_NAME;
       break;
     default:
       s = UNKNOWN_NAME;

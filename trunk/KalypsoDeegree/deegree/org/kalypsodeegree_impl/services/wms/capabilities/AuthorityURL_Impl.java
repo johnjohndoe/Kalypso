@@ -60,7 +60,7 @@ import org.deegree_impl.tools.NetWorker;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$
  */
-class AuthorityURL_Impl extends BaseURL_Impl implements AuthorityURL, Marshallable
+public class AuthorityURL_Impl extends BaseURL_Impl implements AuthorityURL, Marshallable
 {
   private String name = null;
 

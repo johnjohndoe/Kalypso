@@ -81,7 +81,7 @@ public class ValueOnLineResource_Impl implements ValueOnLineResource
   }
 
   /**
-   * @see getApplicationProfile
+   * @see #getApplicationProfile()
    */
   public void setApplicationProfile( String applicationprofile )
   {
@@ -99,7 +99,7 @@ public class ValueOnLineResource_Impl implements ValueOnLineResource
   }
 
   /**
-   * @see getFunctionCode
+   * @see #getFunctionCode()
    */
   public void setFunctionCode( FunctionCode functioncode )
   {
@@ -115,7 +115,7 @@ public class ValueOnLineResource_Impl implements ValueOnLineResource
   }
 
   /**
-   * @see getLinkage
+   * @see #getLinkage()
    */
   public void setLinkage( Linkage linkage )
   {
@@ -133,7 +133,7 @@ public class ValueOnLineResource_Impl implements ValueOnLineResource
   }
 
   /**
-   * @see getOnlineResourceDescription
+   * @see #getOnlineResourceDescription()
    */
   public void setOnlineResourceDescription( String onlineresourcedescription )
   {
@@ -151,7 +151,7 @@ public class ValueOnLineResource_Impl implements ValueOnLineResource
   }
 
   /**
-   * @see getOnlineResourceName
+   * @see #getOnlineResourceName()
    */
   public void setOnlineResourceName( String onlineresourcename )
   {
@@ -169,7 +169,7 @@ public class ValueOnLineResource_Impl implements ValueOnLineResource
   }
 
   /**
-   * @see getProtocol
+   * @see #getProtocol()
    */
   public void setProtocol( String protocol )
   {

@@ -220,21 +220,23 @@ public abstract class AbstractListener implements WebListener
     {
       String name = (String)enum.nextElement();
       String[] value = req.getParameterValues( name );
-
       int pos = name.indexOf( '@' ) + 1;
-
       if( pos < 0 )
       {
         pos = 0;
       }
-
       name = name.substring( pos, name.length() );
       model.put( name.toUpperCase(), StringExtend.arrayToString( value, ',' ) );
     }
 
     String user = event.getRequestUser().getRemoteUser();
-    model.put( "USERNAME", "FHHNET\\MarkusSchneider" );
-    //model.put( "USERNAME", user );
+    int k = user.lastIndexOf( "\\" );
+    if( k > 0 )
+    {
+      user = user.substring( k + 1 );
+    }
+    model.put( "USERNAME", user );
+    model.put( "USERNAME", "SEC_ADMIN" );
     return model;
   }
 }

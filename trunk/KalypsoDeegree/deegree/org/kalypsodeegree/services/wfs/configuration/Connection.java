@@ -81,12 +81,6 @@ public interface Connection
   String getPassword();
 
   /**
-   * returns the version number of the spatial extension if an Oracle Spatial
-   * database is used.
-   */
-  String getSpatialVersion();
-
-  /**
    * returns the name of the sde database that is assigned to a SDE connection.
    */
   String getSDEDatabase();

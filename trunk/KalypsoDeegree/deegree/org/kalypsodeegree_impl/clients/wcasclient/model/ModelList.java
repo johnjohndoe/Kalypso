@@ -56,6 +56,12 @@ public class ModelList
 {
   protected HashMap list = null;
 
+  /**
+   * 
+   * 
+   * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
+   * @version 2.11.2002
+   */
   public ModelList()
   {
     list = new HashMap();

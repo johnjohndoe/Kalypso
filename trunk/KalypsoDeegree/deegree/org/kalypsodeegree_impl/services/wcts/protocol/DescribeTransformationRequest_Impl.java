@@ -115,7 +115,7 @@ public class DescribeTransformationRequest_Impl extends OGCWebServiceRequest_Imp
   }
 
   /**
-   * @see getSourceCRS
+   * @see #getSourceCRS()
    */
   public void setSourceCRS( CS_CoordinateSystem sourceCRS )
   {
@@ -131,7 +131,7 @@ public class DescribeTransformationRequest_Impl extends OGCWebServiceRequest_Imp
   }
 
   /**
-   * @see getDestinationCRS
+   * @see #getDestinationCRS()
    */
   public void setDestinationCRS( CS_CoordinateSystem destinationCRS )
   {

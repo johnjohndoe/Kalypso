@@ -100,12 +100,19 @@ public class WFSGServicePool extends ObjectPool
     return instance;
   }
 
+  /**
+   *  
+   */
   public void destroy()
   {
     clear();
     instance = null;
   }
 
+  /**
+   * @return @throws
+   *         Exception
+   */
   public synchronized Object acuireObject() throws Exception
   {
 
@@ -147,27 +154,23 @@ public class WFSGServicePool extends ObjectPool
       return o;
 
     }
-    else
-    // else initialize a new object
-    {
-      // create a new class instance
-      //Object o = new WFSGService_Impl( capa, formats );
-      Object o = WFSGFactory.createWFSGService( wfsgCapa, conf, null );
 
-      existingInstances++;
+    // create a new class instance
+    //Object o = new WFSGService_Impl( capa, formats );
+    Object o = WFSGFactory.createWFSGService( wfsgCapa, conf, null );
 
-      // add it to 'in use' container
-      in_use.add( o );
-      // set the start of its life time
-      startLifeTime.put( o, new Long( System.currentTimeMillis() ) );
-      // set the start of its usage
-      startUsageTime.put( o, new Long( System.currentTimeMillis() ) );
+    existingInstances++;
 
-      Debug.debugMethodEnd();
-      // return the object
-      return o;
+    // add it to 'in use' container
+    in_use.add( o );
+    // set the start of its life time
+    startLifeTime.put( o, new Long( System.currentTimeMillis() ) );
+    // set the start of its usage
+    startUsageTime.put( o, new Long( System.currentTimeMillis() ) );
 
-    }
+    Debug.debugMethodEnd();
+    // return the object
+    return o;
 
   }
 
@@ -193,6 +196,11 @@ public class WFSGServicePool extends ObjectPool
   public void onObjectKill( Object o )
   {}
 
+  /*
+   * }
+   * 
+   * @see java.lang.Object#toString()
+   */
   public String toString()
   {
     String ret = getClass().getName() + "\n";

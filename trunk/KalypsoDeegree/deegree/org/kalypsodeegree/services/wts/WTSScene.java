@@ -160,7 +160,7 @@ public interface WTSScene
    * adds a atmospheric condition to the scene.
    * <p>
    * 
-   * @see setAtmosphericConditions(AtmosphericCondition[])
+   * @see #setAtmosphericConditions(AtmosphericCondition[])
    */
   void addAtmosphericCondition( AtmosphericCondition conditions );
 

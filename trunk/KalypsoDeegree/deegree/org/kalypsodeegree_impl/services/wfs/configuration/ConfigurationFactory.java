@@ -67,6 +67,7 @@ import org.deegree_impl.io.DBAccess;
 import org.deegree_impl.io.DBConnectionPool;
 import org.deegree_impl.tools.Debug;
 import org.deegree_impl.tools.ParameterList_Impl;
+import org.deegree_impl.tools.StringExtend;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -112,7 +113,7 @@ public final class ConfigurationFactory
   public static DatastoreConfiguration createDatastoreConfiguration( Document doc )
       throws WFSConfigurationException
   {
-    Debug.debugMethodBegin( "ConfigurationFactory", "createDatastoreConfiguration(Document)" );
+    Debug.debugMethodBegin();
 
     DatastoreConfiguration dc = null;
 
@@ -125,39 +126,39 @@ public final class ConfigurationFactory
       String s = XMLTools.getAttrValue( element, "type" );
       int type = -1;
 
-      if( s.equals( "ORACLESPATIAL" ) )
+      if( "ORACLESPATIAL".equals( s ) )
       {
         type = DatastoreConfiguration.ORACLESPATIAL;
       }
-      else if( s.equals( "GMLDB" ) )
+      else if( "GMLDB".equals( s ) )
       {
         type = DatastoreConfiguration.GMLDB;
       }
-      else if( s.equals( "POINTDB" ) )
+      else if( "POINTDB".equals( s ) )
       {
         type = DatastoreConfiguration.POINTDB;
       }
-      else if( s.equals( "SHAPEFILES" ) )
+      else if( "SHAPEFILES".equals( s ) )
       {
         type = DatastoreConfiguration.SHAPEFILES;
       }
-      else if( s.equals( "SDE" ) )
+      else if( "SDE".equals( s ) )
       {
         type = DatastoreConfiguration.SDE;
       }
-      else if( s.equals( "BNA" ) )
+      else if( "BNA".equals( s ) )
       {
         type = DatastoreConfiguration.BNA;
       }
-      else if( s.equals( "POSTGIS" ) )
+      else if( "POSTGIS".equals( s ) )
       {
         type = DatastoreConfiguration.POSTGIS;
       }
-      else if( s.equals( "MYSQL" ) )
+      else if( "MYSQL".equals( s ) )
       {
         type = DatastoreConfiguration.MYSQL;
       }
-      else if( s.equals( "MAPINFO" ) )
+      else if( "MAPINFO".equals( s ) )
       {
         type = DatastoreConfiguration.MAPINFO;
       }
@@ -189,7 +190,8 @@ public final class ConfigurationFactory
     }
     catch( Exception e )
     {
-      throw new WFSConfigurationException( e.toString() );
+      e.printStackTrace();
+      throw new WFSConfigurationException( StringExtend.stackTraceToString( e.getStackTrace() ) );
     }
 
     Debug.debugMethodEnd();
@@ -221,7 +223,7 @@ public final class ConfigurationFactory
    */
   private static Connection createConnection( Element element ) throws Exception
   {
-    Debug.debugMethodBegin( "ConfigurationFactory", "createConnection" );
+    Debug.debugMethodBegin();
 
     Node node = element.getElementsByTagNameNS( namespace, "driver" ).item( 0 );
     String driver = node.getFirstChild().getNodeValue();
@@ -253,15 +255,6 @@ public final class ConfigurationFactory
       password = node.getFirstChild().getNodeValue();
     }
 
-    node = element.getElementsByTagNameNS( namespace, "spatialversion" ).item( 0 );
-
-    String spatialversion = null;
-
-    if( node != null )
-    {
-      spatialversion = node.getFirstChild().getNodeValue();
-    }
-
     node = element.getElementsByTagNameNS( namespace, "sdedatabase" ).item( 0 );
 
     String sdeDatabase = null;
@@ -284,11 +277,7 @@ public final class ConfigurationFactory
 
     Connection con = null;
 
-    if( spatialversion != null )
-    {
-      con = createConnectionOracle( driver, logon, user, password, spatialversion );
-    }
-    else if( sdeDatabase != null )
+    if( sdeDatabase != null )
     {
       con = createConnectionSDE( driver, logon, user, password, sdeDatabase );
     }
@@ -313,24 +302,6 @@ public final class ConfigurationFactory
       String password )
   {
     return new Connection_Impl( driver, logon, user, password );
-  }
-
-  /**
-   * creates a <tt>Connection<tt> object that describes the JDBC connection 
-   * paramter for accessing a database.
-   * @param driver name of the JDBC driver to be used
-   * @param logon connection description to a database
-   * @param user user name
-   * @param password users password
-   * @param spatialVersion version of the spatial extension if a Oracle database
-   *                       shall be connected
-   */
-  public static Connection createConnectionOracle( String driver, String logon, String user,
-      String password, String spatialVersion )
-  {
-    Connection_Impl con = new Connection_Impl( driver, logon, user, password );
-    con.setSpatialVersion( spatialVersion );
-    return con;
   }
 
   /**
@@ -514,7 +485,7 @@ public final class ConfigurationFactory
    */
   private static OutputFormat[] createOutputFormats( Element element ) throws Exception
   {
-    Debug.debugMethodBegin( "ConfigurationFactory", "createOutputFormats" );
+    Debug.debugMethodBegin();
 
     ArrayList list = new ArrayList();
 
@@ -1085,7 +1056,7 @@ public final class ConfigurationFactory
    * 
    * @param name
    *          Name of the column containing geo-spatial data
-   * @param dim
+   * @param dimension
    *          Dimension of the geo-spatial data; just used for POINTDB
    * @return <tt>GeoFieldIdentifier</tt>
    */

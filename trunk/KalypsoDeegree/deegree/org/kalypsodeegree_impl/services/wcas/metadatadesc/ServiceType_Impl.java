@@ -69,7 +69,7 @@ public class ServiceType_Impl implements org.deegree.services.wcas.metadatadesc.
   }
 
   /**
-   * @see getNameName
+   * @see #getNameName()
    */
   public void setNameName( String namename )
   {
@@ -86,7 +86,7 @@ public class ServiceType_Impl implements org.deegree.services.wcas.metadatadesc.
   }
 
   /**
-   * @see getNameValue
+   * @see #getNameValue()
    */
   public void setNameValue( String namevalue )
   {

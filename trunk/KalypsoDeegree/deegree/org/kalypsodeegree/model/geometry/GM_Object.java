@@ -67,8 +67,6 @@ public interface GM_Object
    */
   GM_Envelope getEnvelope();
 
-  void setEnvelope( GM_Envelope env );
-
   /**
    * returns the boundary of a geometry
    */

@@ -65,7 +65,10 @@ import org.deegree_impl.tools.Debug;
 public class GetServiceInfoListener extends InitServiceAdministrationListener
 {
 
-  public void performPrivilegedOperation( FormEvent event )
+  /**
+   * @see org.deegree.enterprise.control.WebListener#actionPerformed(org.deegree.enterprise.control.FormEvent)
+   */
+  public void actionPerformed( FormEvent event )
   {
     Debug.debugMethodBegin();
 
@@ -99,7 +102,13 @@ public class GetServiceInfoListener extends InitServiceAdministrationListener
       }
       else
       {
-        throw new Exception( "Es wurde kein gültiger RPC-event empfangen." );
+        throw new Exception( "No valid RPC event received." );
+      }
+
+      // check access constraints
+      if( !performAccessCheck( event ) )
+      {
+        return;
       }
 
       Set allServices = getBriefDescriptions( catalogURL );
@@ -126,9 +135,8 @@ public class GetServiceInfoListener extends InitServiceAdministrationListener
       getRequest().setAttribute( "SOURCE", this.getClass().getName() );
       getRequest().setAttribute(
           "MESSAGE",
-          "Die Serviceadministration konnte nicht "
-              + "aufgerufen werden, da ein Fehler augetreten ist.<br><br>"
-              + "Die Fehlermeldung lautet: <code>" + e.getMessage() + "</code>" );
+          "Service administration could not be initialized.<br><br>"
+              + "The error message is: <code>" + e.getMessage() + "</code>" );
       setNextPage( "admin_error.jsp" );
     }
 

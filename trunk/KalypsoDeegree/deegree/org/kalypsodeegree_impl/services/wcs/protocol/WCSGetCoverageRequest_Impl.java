@@ -98,18 +98,14 @@ class WCSGetCoverageRequest_Impl extends OGCWebServiceRequest_Impl implements WC
   private int width = 0;
 
   /**
-   * Creates a new WCSGetCoverageRequest_Impl object.
-   * 
+   * @param version
    * @param id
    * @param vendorspecificParameters
    * @param layer
-   * @param range
    * @param crs
    * @param responseCrs
    * @param boundingBox
-   * @param elevation
-   * @param timestamp
-   * @param param
+   * @param rpl
    * @param format
    * @param interpolationMethod
    * @param exceptions
@@ -167,18 +163,14 @@ class WCSGetCoverageRequest_Impl extends OGCWebServiceRequest_Impl implements WC
   }
 
   /**
-   * Creates a new WCSGetCoverageRequest_Impl object.
-   * 
+   * @param version
    * @param id
    * @param vendorspecificParameters
    * @param layer
-   * @param range
    * @param crs
    * @param responseCrs
    * @param boundingBox
-   * @param elevation
-   * @param timeExtent
-   * @param param
+   * @param rpl
    * @param resX
    * @param resY
    * @param resZ
@@ -208,18 +200,14 @@ class WCSGetCoverageRequest_Impl extends OGCWebServiceRequest_Impl implements WC
   }
 
   /**
-   * Creates a new WCSGetCoverageRequest_Impl object.
-   * 
+   * @param version
    * @param id
    * @param vendorspecificParameters
    * @param layer
-   * @param range
    * @param crs
    * @param responseCrs
    * @param boundingBox
-   * @param elevation
-   * @param timestamp
-   * @param param
+   * @param rpl
    * @param width
    * @param height
    * @param depth
@@ -414,7 +402,7 @@ class WCSGetCoverageRequest_Impl extends OGCWebServiceRequest_Impl implements WC
   }
 
   /**
-   * @see getWidth
+   * @see #getWidth()
    */
   public int getHeight()
   {
@@ -422,7 +410,7 @@ class WCSGetCoverageRequest_Impl extends OGCWebServiceRequest_Impl implements WC
   }
 
   /**
-   * @see getWidth
+   * @see #getWidth()
    */
   public int getDepth()
   {
@@ -456,7 +444,7 @@ class WCSGetCoverageRequest_Impl extends OGCWebServiceRequest_Impl implements WC
   }
 
   /**
-   * @see getResX
+   * @see #getResX()
    */
   public double getResY()
   {
@@ -464,7 +452,7 @@ class WCSGetCoverageRequest_Impl extends OGCWebServiceRequest_Impl implements WC
   }
 
   /**
-   * @see getResX
+   * @see #getResX()
    */
   public double getResZ()
   {

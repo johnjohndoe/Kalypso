@@ -45,6 +45,7 @@ package org.deegree_impl.gml;
 import org.deegree.gml.GMLCoord;
 import org.deegree.gml.GMLCoordinates;
 import org.deegree.gml.GMLPoint;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.tools.Debug;
 import org.w3c.dom.Document;
@@ -82,7 +83,7 @@ public class GMLPoint_Impl extends GMLGeometry_Impl implements GMLPoint
   {
     Debug.debugMethodBegin( "", "createGMLPoint" );
 
-    Element elem = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:Point" );
+    Element elem = doc.createElementNS( CommonNamespaces.GMLNS, "gml:Point" );
     GMLPoint point = new GMLPoint_Impl( elem );
 
     // create a coord to located the point
@@ -103,7 +104,7 @@ public class GMLPoint_Impl extends GMLGeometry_Impl implements GMLPoint
   {
     Debug.debugMethodBegin( this, "getCoord" );
 
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "coord" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coord" );
     GMLCoord coord = null;
 
     if( ( nl != null ) && ( nl.getLength() > 0 ) )
@@ -122,7 +123,7 @@ public class GMLPoint_Impl extends GMLGeometry_Impl implements GMLPoint
   {
     Debug.debugMethodBegin( this, "setCoord" );
 
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "coord" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coord" );
 
     // if a coord tag already exists remove it
     if( ( nl != null ) && ( nl.getLength() > 0 ) )
@@ -130,7 +131,7 @@ public class GMLPoint_Impl extends GMLGeometry_Impl implements GMLPoint
       element.removeChild( nl.item( 0 ) );
     }
 
-    nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "coordinates" );
+    nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coordinates" );
 
     // if a coordinates tag exists remove it
     if( ( nl != null ) && ( nl.getLength() > 0 ) )
@@ -151,7 +152,7 @@ public class GMLPoint_Impl extends GMLGeometry_Impl implements GMLPoint
   {
     Debug.debugMethodBegin( this, "getCoordinates()" );
 
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "coordinates" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coordinates" );
 
     GMLCoordinates c = null;
 
@@ -171,7 +172,7 @@ public class GMLPoint_Impl extends GMLGeometry_Impl implements GMLPoint
   {
     Debug.debugMethodBegin( this, "setCoordinates(GMLCoordinates)" );
 
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "coordinates" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coordinates" );
 
     // if a coordinates tag already exists remove it
     if( ( nl != null ) && ( nl.getLength() > 0 ) )
@@ -179,7 +180,7 @@ public class GMLPoint_Impl extends GMLGeometry_Impl implements GMLPoint
       element.removeChild( nl.item( 0 ) );
     }
 
-    nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "coord" );
+    nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coord" );
 
     // if a coord tag exists remove it
     if( ( nl != null ) && ( nl.getLength() > 0 ) )
@@ -198,10 +199,13 @@ public class GMLPoint_Impl extends GMLGeometry_Impl implements GMLPoint
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:58  doemming
+ * Revision 1.3  2004/10/07 14:09:13  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:24 doemming
- * backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 13:03:31 doemming ***
+ * empty log message *** Revision 1.5 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.4 2004/03/02 07:38:14 poth no message
  * 

@@ -1,3 +1,6 @@
+// $Header:
+// /cvsroot/deegree/deegree/org/deegree_impl/services/wms/WMService_Impl.java,v
+// 1.33 2004/05/26 08:50:48 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.
@@ -50,15 +53,19 @@ import org.deegree.services.OGCWebServiceRequest;
 import org.deegree.services.OGCWebServiceResponse;
 import org.deegree.services.WebServiceException;
 import org.deegree.services.wms.CurrentUpdateSequenceException;
+import org.deegree.services.wms.GetFeatureInfoHandler;
+import org.deegree.services.wms.GetMapHandler;
 import org.deegree.services.wms.InvalidUpdateSequenceException;
 import org.deegree.services.wms.capabilities.Operation;
 import org.deegree.services.wms.capabilities.Request;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
 import org.deegree.services.wms.protocol.WMSDescribeLayerRequest;
-import org.deegree.services.wms.protocol.WMSFeatureInfoRequest;
-import org.deegree.services.wms.protocol.WMSFeatureInfoResponse;
 import org.deegree.services.wms.protocol.WMSGetCapabilitiesRequest;
 import org.deegree.services.wms.protocol.WMSGetCapabilitiesResponse;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoRequest;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoResponse;
+import org.deegree.services.wms.protocol.WMSGetLegendGraphicRequest;
+import org.deegree.services.wms.protocol.WMSGetLegendGraphicResponse;
 import org.deegree.services.wms.protocol.WMSGetMapRequest;
 import org.deegree.services.wms.protocol.WMSGetMapResponse;
 import org.deegree.services.wms.protocol.WMSGetScaleBarRequest;
@@ -75,11 +82,15 @@ import org.deegree_impl.tools.Debug;
  * 
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
+ * @author last edited by: $Author$
+ * 
+ * @version 1.0. $Revision$, $Date$
+ * 
+ * @since 1.1
  */
 public class WMService_Impl extends OGCWebService_Impl
 {
-
-  private WMSCache cache = null;
+  private static WMSCache cache = null;
 
   private WMSCapabilities capabilities = null;
 
@@ -130,21 +141,21 @@ public class WMService_Impl extends OGCWebService_Impl
         }
       }
     }
-    else if( request instanceof WMSFeatureInfoRequest )
+    else if( request instanceof WMSGetFeatureInfoRequest )
     {
       // try retrieving result from the cache
-      result = cache.get( (WMSFeatureInfoRequest)request );
+      result = cache.get( (WMSGetFeatureInfoRequest)request );
 
       // if result can't be retrieved from the cache perform query
       if( result == null )
       {
         GetFeatureInfoHandler gmh = (GetFeatureInfoHandler)createHandler( request,
-            WMSFeatureInfoRequest.class, Operation.GETFEATUREINFO );
+            WMSGetFeatureInfoRequest.class, Operation.GETFEATUREINFO );
         result = gmh.performGetFeatureInfo();
 
-        if( ( (WMSFeatureInfoResponse)result ).getFeatureInfo() != null )
+        if( ( (WMSGetFeatureInfoResponse)result ).getFeatureInfo() != null )
         {
-          cache.push( request, ( (WMSFeatureInfoResponse)result ).getFeatureInfo() );
+          cache.push( request, ( (WMSGetFeatureInfoResponse)result ).getFeatureInfo() );
         }
       }
     }
@@ -166,7 +177,11 @@ public class WMService_Impl extends OGCWebService_Impl
     }
     else if( request instanceof WMSGetScaleBarRequest )
     {
-
+      result = handleGetScaleBar( (WMSGetScaleBarRequest)request );
+    }
+    else if( request instanceof WMSGetLegendGraphicRequest )
+    {
+      result = handleGetLegendGraphic( (WMSGetLegendGraphicRequest)request );
     }
 
     OGCWebServiceEvent event_ = new OGCWebServiceEvent_Impl( this, result, "" );
@@ -198,9 +213,8 @@ public class WMService_Impl extends OGCWebService_Impl
    * 
    * @param request
    *          request to be performed
-   * @param concrete
-   *          class of the request (WMSGetStylesRequest, WMSFeatureInfoRequest
-   *          etc.)
+   * @param requestClass
+   *          of the request (WMSGetStylesRequest, WMSFeatureInfoRequest etc.)
    * @param operationType
    *          type of the operation to perform by the handler
    */
@@ -289,7 +303,7 @@ public class WMService_Impl extends OGCWebService_Impl
     }
 
     WMSGetCapabilitiesResponse res = null;
-    res = WMSProtocolFactory.createWMSGetCapabilitiesResponse( request, null, capabilities );
+    res = WMSProtocolFactory.createGetCapabilitiesResponse( request, null, capabilities );
 
     Debug.debugMethodEnd();
     return res;
@@ -332,4 +346,62 @@ public class WMService_Impl extends OGCWebService_Impl
   // TODO
   }
 
+  /**
+   * 
+   * 
+   * @param request
+   * 
+   * @return @throws
+   *         WebServiceException
+   */
+  private OGCWebServiceResponse handleGetLegendGraphic( WMSGetLegendGraphicRequest request )
+      throws WebServiceException
+  {
+
+    Debug.debugMethodBegin();
+    // try retrieving result from the cache
+    OGCWebServiceResponse result = cache.get( (WMSGetLegendGraphicRequest)request );
+
+    if( result == null )
+    {
+      GetLegendGraphicHandler glgh = (GetLegendGraphicHandler)createHandler( request,
+          WMSGetLegendGraphicRequest.class, Operation.GETLEGENDGRAPHIC );
+      result = glgh.performGetLegendGraphic();
+      if( ( (WMSGetLegendGraphicResponse)result ).getLegendGraphic() != null )
+      {
+        cache.push( request, ( (WMSGetLegendGraphicResponse)result ).getLegendGraphic() );
+      }
+    }
+
+    Debug.debugMethodEnd();
+    return result;
+  }
+
+  private OGCWebServiceResponse handleGetScaleBar( WMSGetScaleBarRequest request )
+      throws WebServiceException
+  {
+    Debug.debugMethodBegin();
+
+    OGCWebServiceResponse result = null;
+
+    GetScaleBarHandler gsbh = (GetScaleBarHandler)createHandler( request,
+        WMSGetScaleBarRequest.class, Operation.GETSCALEBAR );
+    result = gsbh.performGetScaleBar();
+
+    Debug.debugMethodEnd();
+    return result;
+  }
 }
+/*******************************************************************************
+ * Changes to this class. What the people have been up to: $Log:
+ * WMService_Impl.java,v $ Revision 1.33 2004/05/26 08:50:48 poth no message
+ * 
+ * Revision 1.32 2004/04/27 15:40:38 poth no message
+ * 
+ * Revision 1.31 2004/04/02 06:41:56 poth no message
+ * 
+ * Revision 1.30 2004/03/31 07:12:07 poth no message
+ * 
+ * 
+ *  
+ ******************************************************************************/

@@ -69,7 +69,7 @@ public class PropertyRightsCode_Impl implements PropertyRightsCode
   }
 
   /**
-   * @see getRestrict
+   * @see #getRestrict()
    */
   public void setRestrict( String restrict )
   {

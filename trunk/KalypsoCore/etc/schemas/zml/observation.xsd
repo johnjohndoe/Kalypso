@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema targetNamespace="zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="zml.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../xlink/xlink.xsd"/>
+<xs:schema targetNamespace="zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="zml.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlinkext">
+	<xs:import namespace="http://www.w3.org/1999/xlinkext" schemaLocation="../xlink/xlinksext.xsd"/>
 	<xs:element name="observation">
 		<xs:annotation>
 			<xs:documentation>an observation made by a sensor. This schema is derived from the OGC Draft on SensorML.</xs:documentation>
@@ -21,7 +21,7 @@
 	</xs:complexType>
 	<xs:complexType name="MetadataListType">
 		<xs:sequence>
-			<xs:element name="metadata" type="MetadataType"  minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="metadata" type="MetadataType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AxisType">

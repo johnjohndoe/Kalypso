@@ -104,7 +104,6 @@ public class StringExtend
   public static String HTMLEncode( String source )
   {
     String target = null;
-
     target = StringExtend.replace( source, "ä", "&auml;", true );
     target = StringExtend.replace( target, "Ä", "&Auml;", true );
     target = StringExtend.replace( target, "ö", "&ouml;", true );
@@ -482,7 +481,7 @@ public class StringExtend
 
     for( int i = 0; st.hasMoreTokens(); i++ )
     {
-      String t = st.nextToken();
+      String t = st.nextToken().replace( ' ', '+' );
 
       if( ( t != null ) && ( t.length() > 0 ) )
       {
@@ -515,5 +514,42 @@ public class StringExtend
       sb.append( se[i].getLineNumber() + ")\n" );
     }
     return sb.toString();
+  }
+
+  /**
+   * gets the stacktrace array from the passed Excption and transforms it into a
+   * String
+   */
+  public static String stackTraceToString( Exception e )
+  {
+
+    StackTraceElement[] se = e.getStackTrace();
+    StringBuffer sb = new StringBuffer();
+    sb.append( e.getMessage() ).append( "\n" );
+    sb.append( e.getClass().getName() ).append( "\n" );
+    for( int i = 0; i < se.length; i++ )
+    {
+      sb.append( se[i].getClassName() + " " );
+      sb.append( se[i].getFileName() + " " );
+      sb.append( se[i].getMethodName() + "(" );
+      sb.append( se[i].getLineNumber() + ")\n" );
+      if( i > 4 )
+        break;
+    }
+    return sb.toString();
+  }
+
+  public static String toUTF8( String string )
+  {
+    if( string == null )
+      return null;
+    String tmp = null;
+    try
+    {
+      tmp = new String( string.getBytes(), "UTF-8" );
+    }
+    catch( Exception e )
+    {}
+    return tmp;
   }
 }

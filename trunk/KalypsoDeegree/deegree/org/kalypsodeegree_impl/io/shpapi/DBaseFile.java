@@ -147,45 +147,15 @@ public class DBaseFile
 
   // file position the caches starts
   private long startIndex = 0;
-
-  private int defaultFileShapeType = -1;
-
+final int m_defaultFileShapeType;
   /**
    * constructor <BR>
    * only for reading a dBase file <BR>
    */
-  public DBaseFile( String url, int defaultFileShapeType ) throws IOException
-  {
-    this.defaultFileShapeType = defaultFileShapeType;
-    fname = url;
-
-    //creates rafDbf
-    rafDbf = new RandomAccessFile( url + _dbf, "r" );
-
-    //dataArray = new byte[(int)rafDbf.length()];
-    if( cacheSize > rafDbf.length() )
-    {
-      cacheSize = rafDbf.length();
-    }
-
-    dataArray = new byte[(int)cacheSize];
-    rafDbf.read( dataArray );
-    rafDbf.seek( 0 );
-
-    //initialize dbase file
-    initDBaseFile();
-
-    filemode = 0;
-  }
-
-  /**
-   * constructor <BR>
-   * only for reading a dBase file <BR>
-   */
-  public DBaseFile( String url ) throws IOException
+  public DBaseFile( String url,int defaultFileShapeType ) throws IOException
   {
     fname = url;
-
+    m_defaultFileShapeType=defaultFileShapeType;
     //creates rafDbf
     rafDbf = new RandomAccessFile( url + _dbf, "r" );
 
@@ -211,6 +181,7 @@ public class DBaseFile
    */
   public DBaseFile( String url, FieldDescriptor[] fieldDesc ) throws DBaseException
   {
+    m_defaultFileShapeType=-1;
     fname = url;
 
     // create header
@@ -357,28 +328,32 @@ public class DBaseFile
       {
         ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, "java.lang.String", true );
       }
-      else if( column.type.equalsIgnoreCase( "F" ) )
+      else if( column.type.equalsIgnoreCase( "F" ) || column.type.equalsIgnoreCase( "N" ) )
       {
         if( column.prec == 0 )
         {
-          ftp[i] = FeatureFactory
-              .createFeatureTypeProperty( column.name, "java.lang.Integer", true );
+          if( column.size < 10 )
+          {
+            ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, "java.lang.Integer",
+                true );
+          }
+          else
+          {
+            ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, "java.lang.Long", true );
+          }
         }
         else
         {
-          ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, "java.lang.Float", true );
-        }
-      }
-      else if( column.type.equalsIgnoreCase( "N" ) )
-      {
-        if( column.prec == 0 )
-        {
-          ftp[i] = FeatureFactory
-              .createFeatureTypeProperty( column.name, "java.lang.Integer", true );
-        }
-        else
-        {
-          ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, "java.lang.Double", true );
+          if( column.size < 8 )
+          {
+            ftp[i] = FeatureFactory
+                .createFeatureTypeProperty( column.name, "java.lang.Float", true );
+          }
+          else
+          {
+            ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, "java.lang.Double",
+                true );
+          }
         }
       }
       else if( column.type.equalsIgnoreCase( "M" ) )
@@ -401,8 +376,7 @@ public class DBaseFile
 
     }
 
-    // Filter all chars, which cannot be used as element tag names
-    final int index = lastIndexOfOneOf( fname, "\\/?<>\"§$%&()=" );
+    int index = fname.lastIndexOf( "/" );
     ftName = fname;
 
     if( index >= 0 )
@@ -411,22 +385,13 @@ public class DBaseFile
     }
 
     ftp[ftp.length - 1] = FeatureFactory
-        .createFeatureTypeProperty( "GEOM", getGeometryType(), true );
+    .createFeatureTypeProperty( "GEOM",getGeometryType(), true );
     return FeatureFactory.createFeatureType( null, null, ftName, ftp );
-  }
-
-  private static int lastIndexOfOneOf( final String string, final String chars )
-  {
-    int index = -1;
-    for( int i = 0; i < chars.length(); i++ )
-      index = Math.max( index, string.lastIndexOf( chars.charAt( i ) ) );
-
-    return index;
   }
 
   private String getGeometryType()
   {
-    switch( defaultFileShapeType )
+    switch( m_defaultFileShapeType )
     {
     case ShapeConst.SHAPE_TYPE_POINT:
       return "org.deegree.model.geometry.GM_Point";
@@ -526,31 +491,33 @@ public class DBaseFile
       {
         // actualize cache starting at the current cursor position
         // if neccesary correct cursor position
-        if( ( rafDbf.length() - pos ) < cacheSize )
-        {
-          pos = rafDbf.length() - cacheSize;
-          if( pos < 0 )
-          {
-            pos = 0;
-          }
-        }
-
         rafDbf.seek( pos );
         rafDbf.read( dataArray );
         startIndex = pos;
         pos = 0;
       }
-
-      // make it into a String
-      //String result = new String(dataArray, pos, (int)file_datalength);
-      String result = new String( dataArray, (int)pos + column.position, column.size );
+      StringBuffer sb = new StringBuffer( column.size );
+      int i = 0;
+      while( i < column.size )
+      {
+        int kk = (int)pos + column.position + i;
+        /*
+         * if ( dataArray[kk] == -127 ) { sb.append( 'ü' ); } else if (
+         * dataArray[kk] == -108 ) { sb.append( 'ö' ); } else if ( dataArray[kk] ==
+         * -124 ) { sb.append( 'ä' ); } else
+         */if( dataArray[kk] != 32 )
+        {
+          sb.append( (char)dataArray[kk] );
+        }
+        i++;
+      }
 
       // if it's the pseudo column _DELETED, return
       // the first character in it
       //            if (col_name.equals("_DELETED")) {
       //                return result.substring(0, 1);
       //            }
-      return result.trim();
+      return sb.toString();
     }
     catch( Exception e )
     {
@@ -688,40 +655,36 @@ public class DBaseFile
         {
           fp[i] = value;
         }
-        else if( column.type.equalsIgnoreCase( "F" ) )
+        else if( column.type.equalsIgnoreCase( "F" ) || column.type.equalsIgnoreCase( "N" ) )
         {
           try
           {
             if( column.prec == 0 )
             {
-              fp[i] = new Integer( value );
+              if( column.size < 10 )
+              {
+                fp[i] = new Integer( value );
+              }
+              else
+              {
+                fp[i] = new Long( value );
+              }
             }
             else
             {
-              fp[i] = new Float( value );
+              if( column.size < 8 )
+              {
+                fp[i] = new Float( value );
+              }
+              else
+              {
+                fp[i] = new Double( value );
+              }
             }
           }
           catch( Exception ex )
           {
-            fp[i] = "0";
-          }
-        }
-        else if( column.type.equalsIgnoreCase( "N" ) )
-        {
-          try
-          {
-            if( column.prec == 0 )
-            {
-              fp[i] = new Integer( value );
-            }
-            else
-            {
-              fp[i] = new Double( value );
-            }
-          }
-          catch( Exception ex )
-          {
-            fp[i] = "0";
+            fp[i] = new Double( "0" );
           }
         }
         else if( column.type.equalsIgnoreCase( "M" ) )
@@ -782,9 +745,7 @@ public class DBaseFile
 
     goTop();
 
-    // step to the rowNo'th row
-    for( int j = 0; j < rowNo; j++ )
-      nextRecord();
+    record_number += rowNo;
 
     for( int i = 0; i < colHeader.size(); i++ )
     {
@@ -799,13 +760,37 @@ public class DBaseFile
       {
         row[i] = value;
       }
-      else if( column.type.equalsIgnoreCase( "F" ) )
+      else if( column.type.equalsIgnoreCase( "F" ) || column.type.equalsIgnoreCase( "N" ) )
       {
-        row[i] = new Double( value );
-      }
-      else if( column.type.equalsIgnoreCase( "N" ) )
-      {
-        row[i] = new Double( value );
+        try
+        {
+          if( column.prec == 0 )
+          {
+            if( column.size < 10 )
+            {
+              row[i] = new Integer( value );
+            }
+            else
+            {
+              row[i] = new Long( value );
+            }
+          }
+          else
+          {
+            if( column.size < 8 )
+            {
+              row[i] = new Float( value );
+            }
+            else
+            {
+              row[i] = new Double( value );
+            }
+          }
+        }
+        catch( Exception ex )
+        {
+          row[i] = new Double( "0" );
+        }
       }
       else if( column.type.equalsIgnoreCase( "M" ) )
       {

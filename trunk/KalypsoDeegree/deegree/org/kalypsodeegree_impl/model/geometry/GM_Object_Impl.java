@@ -105,11 +105,6 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
     return crs;
   }
 
-  public void setEnvelope( GM_Envelope env )
-  {
-    envelope = env;
-  }
-
   /**
    * sets the spatial reference system
    * 

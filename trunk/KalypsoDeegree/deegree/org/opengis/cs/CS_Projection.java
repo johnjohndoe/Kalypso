@@ -1,5 +1,5 @@
 /*
- * OpenGIS? Coordinate Transformation Services Implementation Specification
+ * OpenGIS® Coordinate Transformation Services Implementation Specification
  * Copyright (2001) OpenGIS consortium
  * 
  * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official

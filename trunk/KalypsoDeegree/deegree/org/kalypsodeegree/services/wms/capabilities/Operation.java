@@ -76,6 +76,8 @@ public interface Operation
 
   int PUTSTYLES = 6;
 
+  int GETSCALEBAR = 7;
+
   int UNKNOWN = -1;
 
   String GETCAPABILITIES_NAME = "GetCapabilities";
@@ -97,6 +99,8 @@ public interface Operation
   String GETSTYLES_NAME = "GetStyles";
 
   String PUTSTYLES_NAME = "PutStyles";
+
+  String GETSCALEBAR_NAME = "GetScaleBar";
 
   String UNKNOWN_NAME = "Unknown";
 

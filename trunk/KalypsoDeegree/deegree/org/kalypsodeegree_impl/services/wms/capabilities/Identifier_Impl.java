@@ -61,7 +61,7 @@ import org.deegree.xml.XMLTools;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$
  */
-class Identifier_Impl implements Identifier, Marshallable
+public class Identifier_Impl implements Identifier, Marshallable
 {
   private String authority = null;
 

@@ -65,7 +65,7 @@ import org.deegree_impl.tools.Debug;
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
-public class GraphicStroke_Impl implements GraphicStroke
+public class GraphicStroke_Impl implements GraphicStroke, Marshallable
 {
   private Graphic graphic = null;
 

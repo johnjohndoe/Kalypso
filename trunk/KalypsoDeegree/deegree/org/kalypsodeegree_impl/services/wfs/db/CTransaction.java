@@ -571,6 +571,7 @@ class CTransaction extends WFSMainLoop
 
     java.sql.Connection con = osa.getConnection();
     Statement stmt = con.createStatement();
+
     ResultSet rs = stmt.executeQuery( query.toString() );
 
     TreeSet fIDs = new TreeSet();

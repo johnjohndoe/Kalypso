@@ -72,7 +72,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$
  */
-class Capability_Impl implements Capability, Marshallable
+public class Capability_Impl implements Capability, Marshallable
 {
   private CException exception = null;
 

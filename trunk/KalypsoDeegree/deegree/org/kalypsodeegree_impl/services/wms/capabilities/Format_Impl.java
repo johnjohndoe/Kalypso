@@ -53,7 +53,7 @@ import org.deegree.services.wms.capabilities.Format;
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
-class Format_Impl implements Format
+public class Format_Impl implements Format
 {
   private String name = null;
 

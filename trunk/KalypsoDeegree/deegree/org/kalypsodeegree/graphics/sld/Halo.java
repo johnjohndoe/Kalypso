@@ -136,7 +136,7 @@ public interface Halo
   double getRadius( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see getRadius
+   * @see #getRadius(Feature)
    *      <p>
    * @param radius
    *          radius to be set for the halo

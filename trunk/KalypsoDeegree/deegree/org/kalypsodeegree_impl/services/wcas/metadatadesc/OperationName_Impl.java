@@ -68,7 +68,7 @@ public class OperationName_Impl implements OperationName
   }
 
   /**
-   * @see getNameNameSpace
+   * @see #getNameNameSpace()
    */
   public void setNameNameSpace( String namenamespace )
   {
@@ -85,7 +85,7 @@ public class OperationName_Impl implements OperationName
   }
 
   /**
-   * @see getNameValue
+   * @see #getNameValue()
    */
   public void setNameValue( String namevalue )
   {

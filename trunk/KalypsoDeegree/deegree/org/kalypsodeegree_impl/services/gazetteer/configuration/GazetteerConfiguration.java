@@ -1,6 +1,6 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/services/gazetteer/configuration/GazetteerConfiguration.java,v
-// 1.1.1.1 2004/05/11 16:43:27 doemming Exp $
+// /cvsroot/deegree/deegree/org/deegree_impl/services/gazetteer/configuration/GazetteerConfiguration.java,v
+// 1.2 2004/03/26 11:19:31 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.
@@ -106,10 +106,8 @@ public class GazetteerConfiguration
 }
 /*******************************************************************************
  * Changes to this class. What the people have been up to: $Log:
- * GazetteerConfiguration.java,v $ Revision 1.1.1.1 2004/05/11 16:43:27 doemming
- * backup of local modified deegree sources
- * 
- * Revision 1.2 2004/03/26 11:19:31 poth no message
+ * GazetteerConfiguration.java,v $ Revision 1.2 2004/03/26 11:19:31 poth no
+ * message
  * 
  * Revision 1.1 2004/03/24 12:36:22 poth no message
  * 

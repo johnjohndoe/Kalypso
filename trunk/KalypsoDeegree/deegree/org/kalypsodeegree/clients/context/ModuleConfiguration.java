@@ -64,8 +64,7 @@ public interface ModuleConfiguration
   /**
    * sets the online resource where to access the configuration document for a
    * module
-   * 
-   * @return
+   *  
    */
   void setOnlineResource( URL onlineResource );
 }

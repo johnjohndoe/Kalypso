@@ -11,10 +11,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.deegree.enterprise.control.FormEvent;
 import org.deegree_impl.clients.gazetteer.configuration.GazetteerClientConfiguration;
 
+/**
+ * @author Administrator
+ * 
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
+ */
 public class GazetteerClientRequestDispatcher extends
     org.deegree_impl.enterprise.control.RequestDispatcher
 {
 
+  /**
+   * Comment for <code>ERROR_PAGE</code>
+   */
   public static String ERROR_PAGE = "error.jsp";
 
   /**

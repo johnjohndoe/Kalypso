@@ -72,7 +72,7 @@ public interface DataStore extends Handler
   /**
    * the inverse operation to <tt>registerFeatureType</tt>
    * 
-   * @see registerFeatureType
+   * @see #registerFeatureType(String)
    */
   void removeFeatureType( String featureType );
 
@@ -103,7 +103,7 @@ public interface DataStore extends Handler
    * same as <tt>describeFeatureType(..)</tt> but locking the feature during
    * processing.
    * 
-   * @see #describeFeatureType
+   * @see #describeFeatureType(WFSDescribeFeatureTypeRequest)
    * 
    * @param request
    *          containing the request for zero, one or more features. The

@@ -332,6 +332,9 @@ public class Contact
     this.onlineResource = onlineResource;
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   public String toString()
   {
     return "Contact:\n" + "city = " + city + "\n" + "country = " + country + "\n" + "email = "

@@ -1,6 +1,6 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/clients/gazetteer/control/InitListener.java,v
-// 1.1.1.1 2004/05/11 16:43:27 doemming Exp $
+// /cvsroot/deegree/deegree/org/deegree_impl/clients/gazetteer/control/InitListener.java,v
+// 1.1 2004/03/15 07:38:05 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.
@@ -74,10 +74,7 @@ public final class InitListener extends AbstractListener
 }
 /*******************************************************************************
  * Changes to this class. What the people have been up to: $Log:
- * InitListener.java,v $ Revision 1.1.1.1 2004/05/11 16:43:27 doemming backup of
- * local modified deegree sources
- * 
- * Revision 1.1 2004/03/15 07:38:05 poth no message
+ * InitListener.java,v $ Revision 1.1 2004/03/15 07:38:05 poth no message
  * 
  * 
  *  

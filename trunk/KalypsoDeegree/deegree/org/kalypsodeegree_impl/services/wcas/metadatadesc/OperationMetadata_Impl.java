@@ -89,7 +89,7 @@ public class OperationMetadata_Impl implements OperationMetadata
   }
 
   /**
-   * @see getDCP
+   * @see #getDCP()
    */
   public void addDcp( Dcp dcp )
   {
@@ -97,7 +97,7 @@ public class OperationMetadata_Impl implements OperationMetadata
   }
 
   /**
-   * @see getDCP
+   * @see #getDCP()
    */
   public void setDcp( Dcp[] dcp )
   {
@@ -118,7 +118,7 @@ public class OperationMetadata_Impl implements OperationMetadata
   }
 
   /**
-   * @see getDependsOn
+   * @see #getDependsOn()
    */
   public void setDependsOn( DependsOn dependson )
   {
@@ -134,7 +134,7 @@ public class OperationMetadata_Impl implements OperationMetadata
   }
 
   /**
-   * @see getOperationDescription
+   * @see #getOperationDescription()
    */
   public void setOperationDescription( String operationdescription )
   {
@@ -150,7 +150,7 @@ public class OperationMetadata_Impl implements OperationMetadata
   }
 
   /**
-   * @see getOperationName
+   * @see #getOperationName()
    */
   public void setOperationName( OperationName operationname )
   {
@@ -167,7 +167,7 @@ public class OperationMetadata_Impl implements OperationMetadata
   }
 
   /**
-   * @see getParameter
+   * @see #getParameter()
    */
   public void addParameter( Parameter parameter )
   {
@@ -175,7 +175,7 @@ public class OperationMetadata_Impl implements OperationMetadata
   }
 
   /**
-   * @see getParameter
+   * @see #getParameter()
    */
   public void setParameter( Parameter[] parameter )
   {

@@ -55,7 +55,7 @@ import org.deegree.services.wcas.metadatadesc.CitedResponsibleParty;
  * @author AxxL
  *  
  */
-public interface SI_LocationInstance
+public interface SI_LocationInstance extends Comparable
 {
 
   /**

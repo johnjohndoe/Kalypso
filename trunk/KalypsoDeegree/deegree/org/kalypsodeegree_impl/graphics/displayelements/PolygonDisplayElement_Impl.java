@@ -144,8 +144,6 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
       if( geometry == null )
         return;
       Area area = null;
-      if( DEBUG_PaintEnv )
-        paint( g, geometry.getEnvelope(), projection );
       if( geometry instanceof GM_Surface )
       {
         area = calcTargetCoordinates( projection, (GM_Surface)geometry );
@@ -309,12 +307,20 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
         if( gFill != null )
         {
           BufferedImage texture = gFill.getGraphic().getAsImage( feature );
-          Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture
-              .getHeight( null ) );
-          g2.setPaint( new TexturePaint( texture, anchor ) );
+          if( texture != null )
+          {
+            Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture
+                .getHeight( null ) );
+            g2.setPaint( new TexturePaint( texture, anchor ) );
+          }
         }
 
-        g2.fill( area );
+        try
+        {
+          g2.fill( area );
+        }
+        catch( Exception e )
+        {}
       }
     }
 
@@ -322,7 +328,6 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
     if( stroke != null )
     {
       double opacity = stroke.getOpacity( feature );
-
       if( opacity > 0.01 )
       {
         Color color = stroke.getStroke( feature );
@@ -351,7 +356,12 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
         }
 
         g2.setStroke( bs2 );
-        g2.draw( area );
+        try
+        {
+          g2.draw( area );
+        }
+        catch( Exception e )
+        {}
       }
     }
   }

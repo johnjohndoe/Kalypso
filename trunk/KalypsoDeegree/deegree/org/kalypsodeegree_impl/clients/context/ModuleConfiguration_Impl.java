@@ -88,6 +88,9 @@ public class ModuleConfiguration_Impl implements ModuleConfiguration, Marshallab
     this.onlineResource = onlineResource;
   }
 
+  /**
+   * @see org.deegree.xml.Marshallable#exportAsXML()
+   */
   public String exportAsXML()
   {
     return null;

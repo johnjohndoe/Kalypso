@@ -60,6 +60,7 @@ import org.deegree.tools.ParameterList;
 import org.deegree_impl.services.OGCWebServiceException_Impl;
 import org.deegree_impl.services.wfs.protocol.WFSProtocolFactory;
 import org.deegree_impl.tools.Debug;
+import org.deegree_impl.tools.StringExtend;
 
 /**
  * class defining the basic processing of a getFeature request
@@ -215,10 +216,15 @@ abstract public class AbstractGetFeature extends WFSMainLoop
   private String getTableName( FeatureType ft, String prop )
   {
     String tab = ft.getMasterTable().getName();
-    int pos = prop.lastIndexOf( '.' );
+    String[] tmp = StringExtend.toArray( prop, "@", false );
+    int pos = tmp[0].lastIndexOf( '.' );
     if( pos > 0 )
     {
       tab = prop.substring( 0, pos );
+    }
+    if( tmp.length > 1 )
+    {
+      tab = tab + "@" + tmp[1];
     }
 
     if( tab != null )

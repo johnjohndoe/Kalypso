@@ -91,10 +91,12 @@ public class ViewContext extends AbstractContext implements Marshallable
     {
       throw new ContextException( "layerList isn't allowed to be null" );
     }
-
     this.layerList = layerList;
   }
 
+  /**
+   * @see org.deegree.xml.Marshallable#exportAsXML()
+   */
   public String exportAsXML()
   {
     StringBuffer sb = new StringBuffer( 50000 );

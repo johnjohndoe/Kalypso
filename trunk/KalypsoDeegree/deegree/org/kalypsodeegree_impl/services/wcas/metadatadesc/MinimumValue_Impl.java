@@ -80,7 +80,7 @@ public class MinimumValue_Impl implements MinimumValue
   }
 
   /**
-   * @see getValue
+   * @see #getValue()
    */
   public void setValue( Value value )
   {
@@ -98,7 +98,7 @@ public class MinimumValue_Impl implements MinimumValue
   }
 
   /**
-   * @see getValueDescription
+   * @see #getValueDescription()
    */
   public void setValueDescription( String valuedescription )
   {
@@ -116,7 +116,7 @@ public class MinimumValue_Impl implements MinimumValue
   }
 
   /**
-   * @see getValueOnLineResource
+   * @see #getValueOnLineResource()
    */
   public void setValueOnLineResource( ValueOnLineResource valueonlineresource )
   {
@@ -134,7 +134,7 @@ public class MinimumValue_Impl implements MinimumValue
   }
 
   /**
-   * @see getValueTitle
+   * @see #getValueTitle()
    */
   public void setValueTitle( String valuetitle )
   {

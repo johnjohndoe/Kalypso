@@ -1,0 +1,94 @@
+--+http://www.tuhh.de/kalypsoSpree:ZuflussCollection FeatureType 
+  |-+props:
+  | +http://www.tuhh.de/kalypsoSpree:ZuflussMember     FeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoSpree:Zufluss [1..1]
+--+http://www.tuhh.de/kalypsoSpree:Flutung FeatureType 
+  |-+props:
+  | +http://www.opengis.net/gml:description            java.lang.String [0..1]
+  | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
+  | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
+  | +http://www.tuhh.de/kalypsoSpree:Name              java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Ort               org.deegree.model.geometry.GM_Point [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Abgabe_eingang    org.kalypso.zml.obslink.TimeseriesLink [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Abgabe            org.kalypso.zml.obslink.TimeseriesLink [1..1]
+--+http://www.tuhh.de/kalypsoSpree:Zufluss FeatureType 
+  |-+props:
+  | +http://www.opengis.net/gml:description            java.lang.String [0..1]
+  | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
+  | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
+  | +http://www.tuhh.de/kalypsoSpree:Name              java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Ort               org.deegree.model.geometry.GM_Point [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Zugabe_eingang    org.kalypso.zml.obslink.TimeseriesLink [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Zugabe            org.kalypso.zml.obslink.TimeseriesLink [1..1]
+--+http://www.tuhh.de/kalypsoSpree:TalsperreCollection FeatureType 
+  |-+props:
+  | +http://www.tuhh.de/kalypsoSpree:TalsperreMember   FeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoSpree:Talsperre [2..2]
+--+http://www.tuhh.de/kalypsoSpree:FlusslaufModell FeatureType 
+  |-+props:
+  | +http://www.opengis.net/gml:description            java.lang.String [0..1]
+  | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
+  | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
+  | +http://www.tuhh.de/kalypsoSpree:Name              java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Ort               org.deegree.model.geometry.GM_Point [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Korrektur_Faktor  java.lang.Double [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Korrektur_Niveau  java.lang.Double [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Korrektur_Laufzeitjava.lang.Double [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:KorrekturEmpfehlunjava.lang.Double [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Wasserstand_gemessorg.kalypso.zml.obslink.TimeseriesLink [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Wasserstand_gemessorg.kalypso.zml.obslink.TimeseriesLink [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Wasserstand_gerechorg.kalypso.zml.obslink.TimeseriesLink [1..1]
+--+http://www.tuhh.de/kalypsoSpree:SpreeModell FeatureType 
+  |-+props:
+  | +http://www.opengis.net/gml:description            java.lang.String [0..1]
+  | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
+  | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
+  | +http://www.tuhh.de/kalypsoSpree:EZCollectionAssociFeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoSpree:EZCollection [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:FlusslaufModellColFeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoSpree:FlusslaufModellCollection [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:TalsperreCollectioFeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoSpree:TalsperreCollection [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:FlutungCollectionAFeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoSpree:FlutungCollection [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:ZuflussCollectionAFeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoSpree:ZuflussCollection [1..1]
+--+http://www.tuhh.de/kalypsoSpree:FlutungCollection FeatureType 
+  |-+props:
+  | +http://www.tuhh.de/kalypsoSpree:FlutungMember     FeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoSpree:Flutung [4..4]
+--+http://www.tuhh.de/kalypsoSpree:FlusslaufModellCollection FeatureType 
+  |-+props:
+  | +http://www.tuhh.de/kalypsoSpree:FlusslaufModellMemFeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoSpree:FlusslaufModell [5..5]
+--+http://www.tuhh.de/kalypsoSpree:Talsperre FeatureType 
+  |-+props:
+  | +http://www.opengis.net/gml:description            java.lang.String [0..1]
+  | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
+  | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
+  | +http://www.tuhh.de/kalypsoSpree:Name              java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Anfangsstauvolumenjava.lang.Double [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Ort               org.deegree.model.geometry.GM_Point [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Abgabe_eingang    org.kalypso.zml.obslink.TimeseriesLink [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Abgabe            org.kalypso.zml.obslink.TimeseriesLink [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Stauinhalt        org.kalypso.zml.obslink.TimeseriesLink [1..1]
+--+http://www.tuhh.de/kalypsoSpree:Einzugsgebiet FeatureType 
+  |-+props:
+  | +http://www.opengis.net/gml:description            java.lang.String [0..1]
+  | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
+  | +http://www.opengis.net/gml:boundedBy              org.deegree.model.geometry.GM_Envelope [0..1]
+  | +http://www.tuhh.de/kalypsoSpree:Name              java.lang.String [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Ort               org.deegree.model.geometry.GM_Point [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:BodenfeuchteMin   java.lang.Double [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Bodenfeuchte      java.lang.Double [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:BodenfeuchteMax   java.lang.Double [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Ausdehnung        java.lang.Double [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Niederschlag_eingaorg.kalypso.zml.obslink.TimeseriesLink [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Niederschlag_eingaorg.kalypso.zml.obslink.TimeseriesLink [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Wasserstand_gemessorg.kalypso.zml.obslink.TimeseriesLink [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Wasserstand_gemessorg.kalypso.zml.obslink.TimeseriesLink [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Wasserstand_gerechorg.kalypso.zml.obslink.TimeseriesLink [1..1]
+--+http://www.tuhh.de/kalypsoSpree:EZCollection FeatureType 
+  |-+props:
+  | +http://www.tuhh.de/kalypsoSpree:EZMember          FeatureAssociationType
+  |                                                     -->http://www.tuhh.de/kalypsoSpree:Einzugsgebiet [5..5]

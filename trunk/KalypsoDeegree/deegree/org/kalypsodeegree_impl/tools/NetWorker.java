@@ -319,11 +319,6 @@ public class NetWorker
       port = ":" + url.getPort();
     }
 
-    //    String host=url.getHost();
-    //    String protocoll=url.getProtocol();
-    //    String path=url.getPath();
-    //    String authority=url.getAuthority();
-    //    String query=url.getQuery();
     String s = url.getProtocol() + "://" + url.getHost() + port + url.getPath();//+"?"+query;
 
     return s;

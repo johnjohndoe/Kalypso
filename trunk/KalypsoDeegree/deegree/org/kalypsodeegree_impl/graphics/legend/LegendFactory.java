@@ -60,10 +60,8 @@ import org.deegree_impl.services.wfs.filterencoding.ComplexFilter;
 import org.deegree_impl.services.wfs.filterencoding.Literal;
 import org.deegree_impl.services.wfs.filterencoding.LogicalOperation;
 import org.deegree_impl.services.wfs.filterencoding.OperationDefines;
-import org.deegree_impl.services.wfs.filterencoding.PropertyIsBetweenOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyIsCOMPOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyIsLikeOperation;
-import org.deegree_impl.services.wfs.filterencoding.PropertyIsNullOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyName;
 import org.deegree_impl.services.wfs.filterencoding.SpatialOperation;
 import org.deegree_impl.tools.Debug;
@@ -82,6 +80,16 @@ public class LegendFactory
   private String legendtitle = "";
 
   private String legendtitlefilterproperty = "";
+
+  /**
+   * creates a <tt>LegendElement</tt> using the passed <tt>BufferedImage</tt>
+   * 
+   * @return <tt>LegendElement</tt>
+   */
+  public LegendElement createLegendElement( BufferedImage legendImage )
+  {
+    return new LegendElement_Impl( legendImage );
+  }
 
   /**
    * creates a <tt>LegendElement</tt> from a SLD <tt>Style</tt>. Depending
@@ -105,10 +113,28 @@ public class LegendFactory
       String propertyname = "";
 
       FeatureTypeStyle[] fts = ( (UserStyle)style ).getFeatureTypeStyles();
-      LegendElementCollection lec = createLegendElementCollection();
+      LegendElementCollection lec = new LegendElementCollection_Impl();
 
       for( int a = 0; a < fts.length; a++ )
       {
+        // legendtitle
+        if( getLegendTitle() != null && getLegendTitle().length() > 0 )
+        {
+          String ttl = getLegendTitle();
+          System.out.println( "title: " + ( (UserStyle)style ).getTitle() );
+          if( ( (UserStyle)style ).getTitle() != null )
+          {
+            setLegendTitle( ttl + ": " + ( (UserStyle)style ).getTitle() );
+          }
+          else
+          {
+            setLegendTitle( ttl + ": " + ( (UserStyle)style ).getName() );
+          }
+        }
+        else
+        {
+          setLegendTitle( fts[a].getName() );
+        }
         rules = fts[a].getRules();
 
         for( int b = 0; b < rules.length; b++ )
@@ -131,51 +157,20 @@ public class LegendFactory
           }
         }
       }
+      // System.out.println(getLegendTitle());
+      // lec.setTitle(getLegendTitle());
+      // return lec;
 
       if( lec.getSize() >= 1 )
       {
-        if( getLegendTitle() != null && getLegendTitle().length() > 0 )
-        {
-          if( getLegendTitleFilterProperty() == null
-              || getLegendTitleFilterProperty().trim().equals( "" ) )
-          {
-            lec.setTitle( getLegendTitle() );
-          }
-          else
-          {
-            lec.setTitle( getLegendTitle() + " (" + getLegendTitleFilterProperty() + ")" );
-          }
-        }
-        else
-        {
-          lec.setTitle( getLegendTitleFilterProperty() );
-        }
-        Debug.debugMethodEnd();
+        lec.setTitle( getLegendTitle() );
         return lec;
       }
-      else
-      {
-        Debug.debugMethodEnd();
-        return le;
-      }
+      Debug.debugMethodEnd();
+      return le;
     }
-    else
-    {
-      throw new LegendException( "LegendFactory: Error in creating the LegendElement:\n"
-          + "Given style is not a valid UserStyle." );
-    }
-  }
-
-  /**
-   * creates an empty <tt>LegendElementCollection</tt>
-   * 
-   * @return <tt>LegendElementCollection</tt>
-   */
-  public LegendElementCollection createLegendElementCollection()
-  {
-    Debug.debugMethodBegin( "LegendFactory", "createLegendElementCollection()" );
-    Debug.debugMethodEnd();
-    return new LegendElementCollection_Impl();
+    throw new LegendException( "LegendFactory: Error in creating the LegendElement:\n"
+        + "Given style is not a valid UserStyle." );
   }
 
   /**
@@ -258,7 +253,12 @@ public class LegendFactory
     {
       Style style = (Style)list.get( i );
       String name = style.getName();
-      name = name.replace( ':', '_' );
+      try
+      {
+        name = new String( name.replace( ':', '_' ).getBytes(), "UTF-8" );
+      }
+      catch( Exception e )
+      {}
       System.out.println( "creating: " + name );
       le = createLegendElement( style, width, height, "" );
       bi_temp = le.exportAsImage();
@@ -274,36 +274,41 @@ public class LegendFactory
    */
   private String getPropertyNameFromFilter( Filter filter ) throws LegendException
   {
-
-    Debug.debugMethodBegin( "LegendFactory", "getPropertyNameFromFilter()" );
-
-    String legendlabel = "";
-    
-    ComplexFilter cf = null;
-    
-    if(filter instanceof ComplexFilter)
-    	cf = (ComplexFilter)filter;    
-    else
-    	return "noComplexFilter";
+    Debug.debugMethodBegin( "LegendFactory", "getPropertyNameFromFilter" );
+    ComplexFilter cf = (ComplexFilter)filter;
 
     // System.out.println("Name der Operation: " +
-    // cf.getOperation().getOperatorName()); //DEBUG
-
+    // cf.getOperation().getOperatorName() + "\n" + cf.toXML()); //DEBUG
     Operation operation = cf.getOperation();
+    String ret = getPropertyNameFromOperation( operation );
+    Debug.debugMethodEnd();
+    return ret;
+
+  }
+
+  /**
+   * 
+   * @param operation
+   * @return @throws
+   *         LegendException
+   */
+  private String getPropertyNameFromOperation( Operation operation ) throws LegendException
+  {
+    Debug.debugMethodBegin( "LegendFactory", "getPropertyNameFromOperation" );
+
+    String legendlabel = "";
 
     // determines the operation
+    // IS COM
     if( operation instanceof PropertyIsCOMPOperation )
     {
       PropertyIsCOMPOperation pCOMPo = (PropertyIsCOMPOperation)operation;
-      legendlabel = getOperationString( pCOMPo.getOperatorId() );
-
       // gets the PropertyName of the operation for creating a legendtitle
       if( pCOMPo.getFirstExpression() instanceof PropertyName )
       {
-
         PropertyName propertyname = (PropertyName)pCOMPo.getFirstExpression();
-        setLegendTitleFilterProperty( propertyname.getValue() );
-
+        // setLegendTitleFilterProperty(propertyname.getValue());
+        legendlabel += propertyname.getValue();
       }
       else
       {
@@ -311,7 +316,7 @@ public class LegendFactory
             + "during the parsing of the Filter in the SLD."
             + "First Operation Expression is not of type Literal" );
       }
-
+      legendlabel += getOperationString( pCOMPo.getOperatorId() );
       // gets the Literal of the operation
       if( pCOMPo.getSecondExpression() instanceof Literal )
       {
@@ -324,7 +329,51 @@ public class LegendFactory
             + "during the parsing of the Filter in the SLD."
             + "Second Operation Expression is not of type Literal" );
       }
+      // LOGICAL
+    }
+    else if( operation instanceof LogicalOperation )
+    {
+      LogicalOperation logOp = (LogicalOperation)operation;
+      String operatorstring = getOperationString( logOp.getOperatorId() );
 
+      // Operator-ID: AND = 200, OR = 201, NOT = 202
+      if( logOp.getOperatorId() == OperationDefines.AND )
+      {
+        ArrayList andlist = logOp.getArguments();
+        String andstring = "";
+        for( int i = 0; i < andlist.size(); i++ )
+        {
+          andstring += getPropertyNameFromOperation( (Operation)andlist.get( i ) );
+          if( i < andlist.size() - 1 )
+          {
+            andstring += operatorstring;
+          }
+        }
+        legendlabel = andstring;
+      }
+      else if( logOp.getOperatorId() == OperationDefines.OR )
+      {
+        ArrayList orlist = logOp.getArguments();
+        String orstring = "";
+        for( int i = 0; i < orlist.size(); i++ )
+        {
+          orstring += getPropertyNameFromOperation( (Operation)orlist.get( i ) );
+          if( i < orlist.size() - 1 )
+          {
+            orstring += operatorstring;
+          }
+        }
+        legendlabel = orstring;
+      }
+      else if( logOp.getOperatorId() == OperationDefines.NOT )
+      {
+        ArrayList notlist = logOp.getArguments();
+        String notstring = getPropertyNameFromOperation( (Operation)notlist.get( 0 ) );
+        // not is followed by brackets: not (ID = 1 and ID = 2)
+        legendlabel = operatorstring + "(" + notstring + ")";
+      }
+
+      // SPATIAL
     }
     else if( operation instanceof SpatialOperation )
     {
@@ -332,6 +381,7 @@ public class LegendFactory
       SpatialOperation spatop = (SpatialOperation)operation;
 
       legendlabel = "spatial operation" + spatop;
+      // PROPERTY IS LIKE
     }
     else if( operation instanceof PropertyIsLikeOperation )
     {
@@ -340,31 +390,18 @@ public class LegendFactory
 
       legendlabel = prilop.getPropertyName().getValue()
           + getOperationString( prilop.getOperatorId() ) + prilop.getLiteral().getValue();
-
+      // LOGICAL
     }
-    else if( operation instanceof PropertyIsBetweenOperation )
-    {
-    	PropertyIsBetweenOperation prilop = (PropertyIsBetweenOperation)operation;
-        legendlabel = prilop.getPropertyName().getValue()+ getOperationString( prilop.getOperatorId() );
-    }  
-    else if( operation instanceof LogicalOperation)
-    {
-    	LogicalOperation logop = (LogicalOperation)operation;
-    	legendlabel = logop.getOperatorName() + logop.getOperatorId();
-    }
-    else if( operation instanceof PropertyIsNullOperation)
-    {
-    	PropertyIsNullOperation op = (PropertyIsNullOperation)operation;
-    	legendlabel = op.getOperatorName() + op.getOperatorId();
-    }    
     else
     {
-      // TODO implement other filter-operations
+      System.out.println( operation );
+      // TODO implement other filter-operations and ELSE!
       throw new LegendException( "Filter-Operation <" + operation.getOperatorName()
           + "> is no PropertyIsCOMPOperation." );
     }
 
     Debug.debugMethodEnd();
+    // System.out.println(legendlabel);
     return legendlabel;
 
   }
@@ -382,28 +419,37 @@ public class LegendFactory
     switch( operationID )
     {
     case OperationDefines.PROPERTYISEQUALTO:
-      operationString = "= ";
+      operationString = " = ";
       break;
     case OperationDefines.PROPERTYISLESSTHAN:
-      operationString = "< ";
+      operationString = " < ";
       break;
     case OperationDefines.PROPERTYISGREATERTHAN:
-      operationString = "> ";
+      operationString = " > ";
       break;
     case OperationDefines.PROPERTYISLESSTHANOREQUALTO:
-      operationString = "<= ";
+      operationString = " <= ";
       break;
     case OperationDefines.PROPERTYISGREATERTHANOREQUALTO:
-      operationString = ">=  ";
+      operationString = " >=  ";
       break;
     case OperationDefines.PROPERTYISLIKE:
       operationString = " is like ";
       break;
     case OperationDefines.PROPERTYISNULL:
-      operationString = "is NULL ";
+      operationString = " is NULL ";
       break;
     case OperationDefines.PROPERTYISBETWEEN:
       operationString = " is between ";
+      break;
+    case OperationDefines.AND:
+      operationString = " and ";
+      break;
+    case OperationDefines.OR:
+      operationString = " or ";
+      break;
+    case OperationDefines.NOT:
+      operationString = " not ";
       break;
     }
 
@@ -444,25 +490,47 @@ public class LegendFactory
   /**
    * @param string
    */
-  private void setLegendTitle( String string )
+  private void setLegendTitle( String title )
   {
-    this.legendtitle = string;
+    try
+    {
+      this.legendtitle = new String( title.getBytes(), "UTF-8" );
+    }
+    catch( Exception e )
+    {}
   }
 
   /**
-   * @return
+   * @return private String getLegendTitleFilterProperty() { return
+   *         legendtitlefilterproperty; }
    */
-  private String getLegendTitleFilterProperty()
-  {
-    return legendtitlefilterproperty;
-  }
 
   /**
    * @param string
+   * 
+   * private void setLegendTitleFilterProperty(String string) {
+   * legendtitlefilterproperty = string; }
    */
-  private void setLegendTitleFilterProperty( String string )
-  {
-    legendtitlefilterproperty = string;
-  }
 
 }
+
+/*******************************************************************************
+ * ****************************************************************************
+ * Changes to this class. What the people have been up to: $Log:
+ * LegendFactory.java,v $ Revision 1.19 2004/08/26 12:42:20 poth no message
+ * 
+ * Revision 1.18 2004/08/10 11:45:57 poth no message
+ * 
+ * Revision 1.17 2004/08/10 10:31:26 poth no message
+ * 
+ * Revision 1.16 2004/07/09 07:17:20 poth no message
+ * 
+ * Revision 1.15 2004/06/01 15:55:05 poth no message
+ * 
+ * Revision 1.14 2004/05/14 07:45:59 poth no message
+ * 
+ * Revision 1.13 2004/04/07 10:58:46 axel_schaefer bugfix
+ * 
+ * 
+ *  
+ ******************************************************************************/

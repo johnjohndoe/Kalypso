@@ -92,7 +92,7 @@ public class WCTS_Request_Impl implements WCTS_Request
   }
 
   /**
-   * @see getGetCapabilities
+   * @see #getGetCapabilities()
    */
   public void setGetCapabilities( ActionType getCapabilities )
   {
@@ -108,7 +108,7 @@ public class WCTS_Request_Impl implements WCTS_Request
   }
 
   /**
-   * @see getTransform
+   * @see #getTransform()
    */
   public void setTransform( ActionType transform )
   {
@@ -124,7 +124,7 @@ public class WCTS_Request_Impl implements WCTS_Request
   }
 
   /**
-   * @see getIsTransformable
+   * @see #getIsTransformable()
    */
   public void setIsTransformable( ActionType isTransformable )
   {
@@ -140,7 +140,7 @@ public class WCTS_Request_Impl implements WCTS_Request
   }
 
   /**
-   * @see getDescribeTransformation
+   * @see #getDescribeTransformation()
    */
   public void setDescribeTransformation( ActionType describeTransformation )
   {

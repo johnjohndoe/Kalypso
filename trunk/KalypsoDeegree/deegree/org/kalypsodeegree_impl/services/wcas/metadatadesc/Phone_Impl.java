@@ -78,7 +78,7 @@ public class Phone_Impl implements Phone
   }
 
   /**
-   * @see getFacsimile
+   * @see #getFacsimile()
    */
   public void addFacsimile( String facsimile )
   {
@@ -86,7 +86,7 @@ public class Phone_Impl implements Phone
   }
 
   /**
-   * @see getFacsimile
+   * @see #getFacsimile()
    */
   public void setFacsimile( String[] facsimile )
   {
@@ -107,7 +107,7 @@ public class Phone_Impl implements Phone
   }
 
   /**
-   * @see getOther
+   * @see #getOther()
    */
   public void addOther( String other )
   {
@@ -115,7 +115,7 @@ public class Phone_Impl implements Phone
   }
 
   /**
-   * @see getOther
+   * @see #getOther()
    */
   public void setOther( String[] other )
   {
@@ -136,7 +136,7 @@ public class Phone_Impl implements Phone
   }
 
   /**
-   * @see getOtherType
+   * @see #getOtherType()
    */
   public void addOtherType( String othertype )
   {
@@ -144,7 +144,7 @@ public class Phone_Impl implements Phone
   }
 
   /**
-   * @see getOtherType
+   * @see #getOtherType()
    */
   public void setOtherType( String[] othertype )
   {
@@ -164,7 +164,7 @@ public class Phone_Impl implements Phone
   }
 
   /**
-   * @see getVoice
+   * @see #getVoice()
    */
   public void addVoice( String voice )
   {
@@ -172,7 +172,7 @@ public class Phone_Impl implements Phone
   }
 
   /**
-   * @see getVoice
+   * @see #getVoice()
    */
   public void setVoice( String[] voice )
   {

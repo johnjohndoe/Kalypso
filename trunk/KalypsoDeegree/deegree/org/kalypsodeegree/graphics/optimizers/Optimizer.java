@@ -63,7 +63,7 @@ public interface Optimizer
    * Sets the associated <tt>MapView</tt> -instance. Is needed for the scale
    * and projection information. Called by the <tt>MapView</tt>.
    * 
-   * @param theme
+   * @param mapView
    */
   public void setMapView( MapView mapView );
 

@@ -72,7 +72,8 @@ import org.deegree_impl.model.geometry.GM_Envelope_Impl;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version 2002-03-01
  */
-class LayerBoundingBox_Impl extends GM_Envelope_Impl implements LayerBoundingBox, Marshallable
+public class LayerBoundingBox_Impl extends GM_Envelope_Impl implements LayerBoundingBox,
+    Marshallable
 {
   private String sRS = null;
 

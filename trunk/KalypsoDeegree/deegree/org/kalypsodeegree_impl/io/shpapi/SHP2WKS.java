@@ -298,20 +298,17 @@ public class SHP2WKS
           return false;
         }
         else if( point.getY() > cy )
-        { //downwards vertical line
-          // through point crosses ring
+        { //downwards vertical line through point crosses ring
           crossings++;
         }
       }
 
-      //check if point.x equals x of vertex i of ring while point.y >
-      // ring[i].y
+      //check if point.x equals x of vertex i of ring while point.y > ring[i].y
       if( ( ring[i].getX() == point.getX() ) && ( ring[i].getY() <= point.getY() ) )
       {
 
         if( ring[i].getY() == point.getY() )
-        { //point is on border of
-          // ring
+        { //point is on border of ring
           return false;
         }
 
@@ -357,8 +354,7 @@ public class SHP2WKS
 
   //    
   //    /**
-  //     * method: WKSLinearPolygon[] transformPolygon(CS_CoordinateSystem
-  // srs,<BR>
+  //     * method: WKSLinearPolygon[] transformPolygon(CS_CoordinateSystem srs,<BR>
   //     * SHPPolygon shppolygon))<BR>
   //     * transforms the SHPPolygon to a WKSGeometry<BR>
   //     * gets the polygon that should be transformed<BR>

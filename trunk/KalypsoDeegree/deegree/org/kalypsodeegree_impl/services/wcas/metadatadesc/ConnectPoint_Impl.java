@@ -86,7 +86,7 @@ public class ConnectPoint_Impl implements ConnectPoint
   }
 
   /**
-   * @see getApplicationProfile
+   * @see ConnectPoint_Impl#getApplicationProfile()
    */
   public void setApplicationProfile( String applicationprofile )
   {
@@ -138,7 +138,7 @@ public class ConnectPoint_Impl implements ConnectPoint
   }
 
   /**
-   * @see getOnlineResourceDescription
+   * @see ConnectPoint_Impl#getOnlineResourceDescription()
    */
   public void setOnlineResourceDescription( String onlineresourcedescription )
   {

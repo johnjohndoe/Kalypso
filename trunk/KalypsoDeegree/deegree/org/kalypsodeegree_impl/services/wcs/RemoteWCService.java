@@ -78,7 +78,7 @@ public class RemoteWCService extends OGCWebService_Impl
   /**
    * 
    * 
-   * @param request
+   * @param event
    *          request to be performed
    */
   public void doService( OGCWebServiceEvent event ) throws WebServiceException

@@ -45,6 +45,7 @@ package org.deegree_impl.gml;
 import org.deegree.gml.GMLException;
 import org.deegree.gml.GMLLinearRing;
 import org.deegree.gml.GMLPolygon;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.tools.Debug;
 import org.w3c.dom.Document;
@@ -82,7 +83,7 @@ public class GMLPolygon_Impl extends GMLGeometry_Impl implements GMLPolygon
   {
     Debug.debugMethodBegin( "GMLPolygon_Impl", "createGMLPolygon" );
 
-    Element elem = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:Polygon" );
+    Element elem = doc.createElementNS( CommonNamespaces.GMLNS, "gml:Polygon" );
     GMLPolygon poly = new GMLPolygon_Impl( elem );
 
     Debug.debugMethodEnd();
@@ -106,7 +107,7 @@ public class GMLPolygon_Impl extends GMLGeometry_Impl implements GMLPolygon
   {
     Debug.debugMethodBegin( this, "getExteriorRing" );
 
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "outerBoundaryIs" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "outerBoundaryIs" );
 
     GMLLinearRing exring = new GMLLinearRing_Impl( (Element)nl.item( 0 ) );
 
@@ -115,16 +116,14 @@ public class GMLPolygon_Impl extends GMLGeometry_Impl implements GMLPolygon
   }
 
   /**
-   * @see org.deegree_impl.gml.GMLPolygon_Impl#getExteriorRing()
-   *      <p>
-   *      If an exterior ring already exsists, it will be removed before setting
-   *      the new one.
+   * @see org.deegree_impl.gml.GMLPolygon_Impl#getExteriorRing() If an exterior
+   *      ring already exsists, it will be removed before setting the new one.
    */
   public void setExteriorRing( GMLLinearRing exteriorRing )
   {
     Debug.debugMethodBegin( this, "getExteriorRing" );
 
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "outerBoundaryIs" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "outerBoundaryIs" );
 
     // remove exterior ring if already exists
     if( ( nl != null ) && ( nl.getLength() > 0 ) )
@@ -132,7 +131,7 @@ public class GMLPolygon_Impl extends GMLGeometry_Impl implements GMLPolygon
       element.removeChild( nl.item( 0 ) );
     }
 
-    Element elem = element.getOwnerDocument().createElementNS( GMLGeometricMapping.GMLNS,
+    Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
         "gml:outerBoundaryIs" );
     element.appendChild( elem );
 
@@ -150,7 +149,7 @@ public class GMLPolygon_Impl extends GMLGeometry_Impl implements GMLPolygon
   {
     Debug.debugMethodBegin( "", "getInteriorRings" );
 
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "innerBoundaryIs" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "innerBoundaryIs" );
 
     GMLLinearRing[] lrs = null;
 
@@ -163,7 +162,7 @@ public class GMLPolygon_Impl extends GMLGeometry_Impl implements GMLPolygon
       for( int i = 0; i < nl.getLength(); i++ )
       {
         // get the ring that builds the boundary
-        NodeList nl_ = ( (Element)nl.item( i ) ).getElementsByTagNameNS( GMLGeometricMapping.GMLNS,
+        NodeList nl_ = ( (Element)nl.item( i ) ).getElementsByTagNameNS( CommonNamespaces.GMLNS,
             "LinearRing" );
         lrs[i] = new GMLLinearRing_Impl( (Element)nl_.item( 0 ) );
       }
@@ -184,7 +183,7 @@ public class GMLPolygon_Impl extends GMLGeometry_Impl implements GMLPolygon
     //TODO
     // check if submitted interior ring is located completly
     // within the exterior ring of the polygon
-    Element elem = element.getOwnerDocument().createElementNS( GMLGeometricMapping.GMLNS,
+    Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
         "gml:innerBoundaryIs" );
     element.appendChild( elem );
 
@@ -200,10 +199,15 @@ public class GMLPolygon_Impl extends GMLGeometry_Impl implements GMLPolygon
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:58  doemming
+ * Revision 1.3  2004/10/07 14:09:13  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:24 doemming
- * backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 13:03:30 doemming ***
+ * empty log message *** Revision 1.6 2004/07/09 07:16:56 poth no message
+ * 
+ * Revision 1.5 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.4 2004/03/02 07:38:14 poth no message
  * 

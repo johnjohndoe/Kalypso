@@ -60,7 +60,7 @@ public class MimeTypeMapper
    * 
    * @return
    */
-  public synchronized static boolean isOGCType( String contentType )
+  public static boolean isOGCType( String contentType )
   {
     return contentType.startsWith( "application/vnd.ogc" );
   }
@@ -72,7 +72,7 @@ public class MimeTypeMapper
    * 
    * @return
    */
-  public synchronized static boolean isImageType( String contentType )
+  public static boolean isImageType( String contentType )
   {
     return contentType.startsWith( "image" );
   }
@@ -85,7 +85,7 @@ public class MimeTypeMapper
    * 
    * @return
    */
-  public synchronized static boolean isKnownImageType( String contentType )
+  public static boolean isKnownImageType( String contentType )
   {
     return contentType.equalsIgnoreCase( "image/jpeg" )
         || contentType.equalsIgnoreCase( "image/jpg" )
@@ -94,6 +94,7 @@ public class MimeTypeMapper
         || contentType.equalsIgnoreCase( "image/tiff" )
         || contentType.equalsIgnoreCase( "image/bmp" )
         || contentType.equalsIgnoreCase( "image/svg+xml" )
+        || contentType.equalsIgnoreCase( "image/svg xml" )
         || contentType.equalsIgnoreCase( "image/png" );
   }
 
@@ -105,7 +106,7 @@ public class MimeTypeMapper
    * 
    * @return
    */
-  public synchronized static boolean isKnownMimeType( String contentType )
+  public static boolean isKnownMimeType( String contentType )
   {
     return contentType.equalsIgnoreCase( "image/jpeg" )
         || contentType.equalsIgnoreCase( "image/jpg" )
@@ -123,20 +124,21 @@ public class MimeTypeMapper
         || contentType.equalsIgnoreCase( "application/vnd.ogc.se_blank" )
         || contentType.equalsIgnoreCase( "application/vnd.ogc.wms_xml" )
         || contentType.equalsIgnoreCase( "application/vnd.ogc.gml" )
-        || contentType.equalsIgnoreCase( "image/svg+xml" );
+        || contentType.equalsIgnoreCase( "image/svg+xml" )
+        || contentType.equalsIgnoreCase( "image/svg xml" );
   }
 
   /**
    * maps a 'simple' format name like gif, jpg or text to the corresponding mime
-   * type --> e.g. image/gif, image/jpg or text/plain
+   * type --> e.g. image/gif, image/jpeg or text/plain
    * 
    * @param contentType
    * 
    * @return
    */
-  public synchronized static String toMimeType( String contentType )
+  public static String toMimeType( String contentType )
   {
-    Debug.debugMethodBegin( "MimeTypeMapper", "toMimeType" );
+    Debug.debugMethodBegin();
 
     String mimetype = "";
 

@@ -93,7 +93,7 @@ public class RelatedTable_Impl extends TableDescription_Impl implements RelatedT
   }
 
   /**
-   * @see isJoinTable
+   * @see #isJoinTable()
    */
   public void setJoinTable( boolean joinTable )
   {

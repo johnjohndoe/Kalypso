@@ -88,7 +88,8 @@ public class MySQLSQLBuilder extends AbstractSQLBuilder
     case OperationDefines.BEYOND:
     {
       sb.append( "Spatial operator" ).append(
-          OperationDefines.getNameById( operation.getOperatorId() ) ).append( " not implemented!" );
+          OperationDefines.getNameById( operation.getOperatorId() ) ).append(
+          " not implemented for MySQLDatastore !" );
       break;
     }
     case OperationDefines.BBOX:

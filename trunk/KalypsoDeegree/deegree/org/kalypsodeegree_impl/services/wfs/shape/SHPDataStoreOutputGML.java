@@ -101,7 +101,7 @@ public class SHPDataStoreOutputGML extends DefaultDataStoreOutputFormat
 
     ByteArrayOutputStream bos = new ByteArrayOutputStream( fc.getSize() * 1000 );
     GMLFeatureAdapter.export( fc, bos );
-    String s = new String( bos.toByteArray() );
+    String s = new String( bos.toByteArray(), "UTF-8" );
 
     Document doc = null;
     Parameter p = paramList.getParameter( WFSConstants.FILTER );

@@ -29,6 +29,7 @@
  53115 Bonn
  Germany
  E-Mail: poth@lat-lon.de
+
  Jens Fitzke
  Department of Geography
  University of Bonn
@@ -150,13 +151,8 @@ final public class GeoTransformer
    */
   public GM_Object transform( GM_Object geo ) throws Exception
   {
-    return transform( geo, geo.getCoordinateSystem() );
-  }
-
-  public GM_Object transform( GM_Object geo, CS_CoordinateSystem srcCS ) throws Exception
-  {
-    CoordinateSystem cs = org.deegree_impl.model.cs.Adapters.getDefault().wrap( srcCS );
-
+    CoordinateSystem cs = org.deegree_impl.model.cs.Adapters.getDefault().wrap(
+        geo.getCoordinateSystem() );
     ConvenienceTransformFactory ctf = null;
     ctf = ConvenienceTransformFactory.getInstance();
 
@@ -198,13 +194,18 @@ final public class GeoTransformer
     Debug.debugMethodBegin( this, "transformPoint" );
 
     double[] din = geo.getAsArray();
-
-    /*
-     * // wozu das ?? if ( geo.getCoordinateSystem().getName().equalsIgnoreCase(
-     * "EPSG:4326" ) ) { if ( din[0] <= -180 ) din[0] = -179.999; else if (
-     * din[0] >= 180 ) din[0] = 179.999; if ( din[1] <= -90 ) din[1] = -89.999;
-     * else if ( din[1] >= 90 ) din[1] = 89.999; }
-     */
+    // TODO macht der folgende if Sinn ?
+    if( geo.getCoordinateSystem().getName().equalsIgnoreCase( "EPSG:4326" ) )
+    {
+      if( din[0] <= -180 )
+        din[0] = -179.999;
+      else if( din[0] >= 180 )
+        din[0] = 179.999;
+      if( din[1] <= -90 )
+        din[1] = -89.999;
+      else if( din[1] >= 90 )
+        din[1] = 89.999;
+    }
     double[] dout = new double[din.length];
     trans.transform( din, 0, dout, 0, din.length - 1 );
 

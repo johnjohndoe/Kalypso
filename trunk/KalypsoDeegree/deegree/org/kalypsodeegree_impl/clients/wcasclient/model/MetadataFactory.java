@@ -50,7 +50,6 @@ import org.deegree.xml.XMLTools;
 import org.deegree_impl.clients.wcasclient.CatalogClientException;
 import org.deegree_impl.tools.Debug;
 import org.deegree_impl.tools.TimeTools;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -615,12 +614,12 @@ public class MetadataFactory
     return onlineTransferOptions;
   }
 
-  public static void main( String[] args ) throws Exception
-  {
-    java.io.FileReader reader = new java.io.FileReader( "c:/temp/test.xml" );
-    Document doc = XMLTools.parse( reader );
-    DetailedMetadata dm = MetadataFactory.createISO19115Full( doc.getDocumentElement(), null );
-    System.out.println( dm.getOnlineTransferOptions()[0].getLinkage() );
-  }
+  //    public static void main(String[] args) throws Exception {
+  //        java.io.FileReader reader = new java.io.FileReader( "c:/temp/test.xml" );
+  //        Document doc = XMLTools.parse( reader );
+  //        DetailedMetadata dm = MetadataFactory.createISO19115Full(
+  // doc.getDocumentElement(), null );
+  //        System.out.println(dm.getOnlineTransferOptions()[0].getLinkage());
+  //    }
 
 }

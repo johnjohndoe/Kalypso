@@ -82,7 +82,10 @@ class FeatureCollection_Impl extends Feature_Impl implements FeatureCollection, 
   FeatureCollection_Impl( String id, FeatureType featureType, FeatureProperty[] properties,
       int initialCapacity )
   {
-    super( id, featureType, properties );
+    //super( id, featureType, properties );
+    super(featureType,id);
+    for(int i=0;i<properties.length;i++)
+      setProperty(properties[i]);
     collection = new ArrayList( initialCapacity );
     FeatureTypeProperty[] ftp = new FeatureTypeProperty[1];
     ftp[0] = FeatureFactory.createFeatureTypeProperty( "features",
@@ -146,15 +149,14 @@ class FeatureCollection_Impl extends Feature_Impl implements FeatureCollection, 
   public Feature getFeatureById( String id )
   {
     Feature feature = null;
-    int pos = collection.indexOf( id );
-    if( pos >= 0 )
-      feature = (Feature)collection.get( pos );
-
-    /*
-     * for (int i = 0; i < collection.size(); i++) { feature =
-     * (Feature)collection.get( i ); if ( feature.getId().equals( id ) ) {
-     * break; } }
-     */
+    for( int i = 0; i < collection.size(); i++ )
+    {
+      feature = (Feature)collection.get( i );
+      if( feature.getId().equals( id ) )
+      {
+        break;
+      }
+    }
     return feature;
   }
 
@@ -175,10 +177,7 @@ class FeatureCollection_Impl extends Feature_Impl implements FeatureCollection, 
   public Feature removeFeature( Feature feature )
   {
     int index = collection.indexOf( feature );
-    if( index > -1 )
-      return removeFeature( index );
-    else
-      return feature;
+    return removeFeature( index );
   }
 
   /**

@@ -85,7 +85,7 @@ public class Linkage_Impl implements Linkage
   }
 
   /**
-   * @see getHref
+   * @see #getHref()
    */
   public void setHref( URL href )
   {
@@ -104,7 +104,7 @@ public class Linkage_Impl implements Linkage
   }
 
   /**
-   * @see getType
+   * @see #getType()
    */
   public void setType( String type )
   {
@@ -123,7 +123,7 @@ public class Linkage_Impl implements Linkage
   }
 
   /**
-   * @see getXlink
+   * @see #getXlink()
    */
   public void setXlink( URL xlink )
   {

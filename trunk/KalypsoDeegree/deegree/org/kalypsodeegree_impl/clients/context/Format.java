@@ -120,6 +120,9 @@ public class Format implements Marshallable
     this.current = current;
   }
 
+  /**
+   * @see org.deegree.xml.Marshallable#exportAsXML()
+   */
   public String exportAsXML()
   {
 

@@ -42,8 +42,11 @@
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.gml;
 
+import org.deegree.gml.GMLComplexProperty;
 import org.deegree.gml.GMLProperty;
+import org.deegree.model.feature.FeatureAssociationTypeProperty;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.DOMPrinter;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.model.feature.XLinkFeatureTypeProperty;
@@ -109,6 +112,17 @@ public class GMLProperty_Impl implements GMLProperty
    */
   public static GMLProperty createGMLProperty( Document doc, String propertyName,
       String propertyValue )
+  {
+    Debug.debugMethodBegin( "GMLProperty_Impl", "createGMLProperty(Document, String, String)" );
+
+    GMLProperty ls = createGMLProperty( doc, propertyName );
+    ls.setPropertyValue( propertyValue );
+    Debug.debugMethodEnd();
+    return ls;
+  }
+  
+  public static GMLProperty createGMLProperty( Document doc, String propertyName,
+      Element propertyValue )
   {
     Debug.debugMethodBegin( "GMLProperty_Impl", "createGMLProperty(Document, String, String)" );
 
@@ -236,8 +250,7 @@ public class GMLProperty_Impl implements GMLProperty
     {
       result = STRING;
     }
-    else if( element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "featureMember" )
-        .getLength() > 0 )
+    else if( element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "featureMember" ).getLength() > 0 )
     {
       result = FEATURECOLLECTION;
     }
@@ -401,6 +414,9 @@ public class GMLProperty_Impl implements GMLProperty
       result = new GMLGeometryCollection_Impl( XMLTools.getFirstElement( element ) );
       break;
     case FEATURE:
+      if(this instanceof GMLComplexProperty)
+        result=((GMLComplexProperty)this).getComplexPropertyValue();
+      else
       result = new GMLFeature_Impl( element );
       break;
     case FEATURECOLLECTION:
@@ -428,10 +444,11 @@ public class GMLProperty_Impl implements GMLProperty
   public void setPropertyValue( String value )
   {
     Debug.debugMethodBegin( this, "setPropertyValue" );
-
-    if( myFeatureTypeProperty instanceof XLinkFeatureTypeProperty )
+    
+    if( myFeatureTypeProperty instanceof XLinkFeatureTypeProperty 
+    || myFeatureTypeProperty instanceof FeatureAssociationTypeProperty )
     {
-      setAttributeValue( value );
+      setAttributeValue("#"+value);
       return;
     }
     Node node = element.getFirstChild();
@@ -499,16 +516,31 @@ public class GMLProperty_Impl implements GMLProperty
   {
     return element;
   }
+
+  public void setPropertyValue( Element valueElement )
+  {
+    Node node = element.getFirstChild();
+    // remove the propetry value if it already exist
+    if( node != null )
+    {
+      element.removeChild( node );
+    }
+    element.appendChild(valueElement);
+  }   
 }
 
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.4  2004/08/30 00:36:58  doemming
+ * Revision 1.5  2004/10/07 14:09:13  doemming
  * *** empty log message ***
- * Revision 1.3 2004/08/18 20:27:32 belger ***
- * empty log message ***
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.4 2004/08/31 14:35:15 doemming ***
+ * empty log message *** Revision 1.3 2004/08/18 20:27:32 belger *** empty log
+ * message ***
  * 
  * Revision 1.2 2004/08/11 11:20:16 doemming *** empty log message ***
  * 

@@ -54,7 +54,7 @@ import org.deegree.services.wms.capabilities.ServiceClass;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version 2002-03-01
  */
-class ServiceClass_Impl implements ServiceClass
+public class ServiceClass_Impl implements ServiceClass
 {
   private String className = null;
 

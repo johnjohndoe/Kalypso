@@ -65,7 +65,7 @@ class GM_Position_Impl implements GM_Position, Serializable
 
   private double[] point = null;
 
-  private static double mute = 0.000001;
+  private double mute = 0.000001;
 
   /**
    * constructor. initializes a point to the coordinate 0/0

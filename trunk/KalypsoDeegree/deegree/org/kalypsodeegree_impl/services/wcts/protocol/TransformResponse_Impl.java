@@ -108,7 +108,7 @@ public class TransformResponse_Impl extends OGCWebServiceResponse_Impl implement
   }
 
   /**
-   * @see getData
+   * @see #getGeometries()
    */
   public void addGeometry( GMLGeometry data )
   {
@@ -118,7 +118,7 @@ public class TransformResponse_Impl extends OGCWebServiceResponse_Impl implement
   }
 
   /**
-   * @see getData
+   * @see #getGeometries()
    */
   public void setGeometries( GMLGeometry[] data )
   {

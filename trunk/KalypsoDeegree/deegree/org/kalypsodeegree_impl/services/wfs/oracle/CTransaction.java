@@ -286,7 +286,7 @@ class CTransaction extends WFSMainLoop
       // get jdbc connection and access object for oracle spatial
       con = pool.acuireConnection( connect.getDriver(), connect.getLogon(), connect.getUser(),
           connect.getPassword() );
-      osa = new OracleSpatialAccess( con, connect.getSpatialVersion() );
+      osa = new OracleSpatialAccess( con );
       osa.setAutoCommit( false );
 
       String[] ftNames = insert.getFeatureTypes();
@@ -601,7 +601,7 @@ class CTransaction extends WFSMainLoop
       // get jdbc connection and access object for oracle spatial
       con = pool.acuireConnection( connect.getDriver(), connect.getLogon(), connect.getUser(),
           connect.getPassword() );
-      osa = new OracleSpatialAccess( con, connect.getSpatialVersion() );
+      osa = new OracleSpatialAccess( con );
       osa.setAutoCommit( false );
 
       FeatureType ft = config.getFeatureType( delete.getTypeName() );

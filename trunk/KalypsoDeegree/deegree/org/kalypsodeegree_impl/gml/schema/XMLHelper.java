@@ -19,273 +19,295 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.deegree_impl.gml.schema.NodeList_Impl;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-
 /**
- *
- * @author von Dömming
+ * 
+ * @author von D?mming
  */
-public class XMLHelper
-{
- 
+public class XMLHelper {
+	public static final String XMLSCHEMA_NS = "http://www.w3.org/2001/XMLSchema";
 
-    public static Document getAsDOM( String url ) throws Exception
-    {
-        return getAsDOM( new URL( url ) );
-    }
+	public static final String GMLSCHEMA_NS = "http://www.opengis.net/gml";
 
-    public static Document getAsDOM( File file ) throws Exception
-    {
-        return getAsDOM( new FileInputStream( file ) );
-    }
+	public static boolean isGlobalElementDefinition(Node node) {
+		Node parentNode = node.getParentNode();
+		String ns = parentNode.getNamespaceURI();
+		String name = parentNode.getLocalName();
+		return (XMLSCHEMA_NS.equals(ns) && "schema".equals(name));
+	}
 
-    public static Document getAsDOM( final InputStream inStream )
-        throws Exception
-    {
-      return getAsDOM( new InputSource( inStream ) );
-    }
-    
-    public static Document getAsDOM( final InputSource inputSource ) throws Exception
-    {
-      final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(  );
-      factory.setNamespaceAware( true );
+	public static Document getAsDOM(String url) throws Exception {
+		return getAsDOM(new URL(url));
+	}
 
-      final DocumentBuilder docuBuilder = factory.newDocumentBuilder(  );
+	public static Document getAsDOM(File file) throws Exception {
+		return getAsDOM(new FileInputStream(file));
+	}
 
-      final Document dom = docuBuilder.parse( inputSource );
-      return dom;
-    }
+	public static Document getAsDOM(final InputStream inStream)
+			throws Exception {
+		return getAsDOM(new InputSource(inStream));
+	}
 
-    public static Document getAsDOM( URL url ) throws Exception
-    {
-        System.out.println( "\n\n<!--\n " + url + "\n-->" );
+	public static Document getAsDOM(final InputSource inputSource)
+			throws Exception {
+		final DocumentBuilderFactory factory = DocumentBuilderFactory
+				.newInstance();
+		factory.setNamespaceAware(true);
 
-        URLConnection connect = url.openConnection(  );
+		final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
 
-        if( connect instanceof HttpURLConnection )
-        {
-            HttpURLConnection uc = (HttpURLConnection)connect;
-            uc.setRequestMethod( "GET" );
-            uc.setDoInput( true );
-            uc.setDoOutput( true );
-            uc.setUseCaches( false );
+		final Document dom = docuBuilder.parse(inputSource);
+		return dom;
+	}
 
-            return getAsDOM( uc.getInputStream(  ) );
-        }
-      
-            throw new Exception( "uups, no http connection" );
-    }
+	public static Document getAsDOM(final URL url) throws Exception {
+		//    System.out.println( "\n\n<!--\n " + url + "\n-->" );
 
-    public static Node getAttributeNode( Node node, String attributeName )
-    {
-        try
-        {
-            NamedNodeMap nodeMap = node.getAttributes(  );
+		final URLConnection connection = url.openConnection();
+		final InputSource source = new InputSource(connection.getInputStream());
+		final String contentEncoding = connection.getContentEncoding();
+		if (contentEncoding != null)
+			source.setEncoding(contentEncoding);
 
-            return nodeMap.getNamedItem( attributeName );
-        }
-        catch( Exception e )
-        {
-            return null;
-        }
-    }
+		return getAsDOM(source);
+	}
 
-    public static String getAttributeValue( Node node, String attributeName )
-    {
-        return getAttributeNode( node, attributeName ).getNodeValue(  );
-    }
+	public static Node getAttributeNode(Node node, String attributeName) {
+		try {
+			NamedNodeMap nodeMap = node.getAttributes();
 
-    public static NodeList getXPath( String xPathQuery, Node domNode )
-    {
-        NodeList nl = null;
+			return nodeMap.getNamedItem(attributeName);
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
-         try
-        {
-           nl = org.apache.xpath.XPathAPI.selectNodeList( domNode, xPathQuery );
-        }
-        catch( Exception e )
-        {
-            System.out.println( e.getMessage(  ) );
-            e.printStackTrace(  );
-        }
+	public static String getAttributeValue(Node node, String attributeName) {
+		return getAttributeNode(node, attributeName).getNodeValue();
+	}
 
-           return nl;
-    }
+	public static NodeList getXPath(String xPathQuery, Node domNode) {
+		NodeList nl = null;
 
-    public static String getXPathContent( String xPathQuery, Node domNode )
-    {
-        NodeList nl = getXPath( xPathQuery, domNode );
+		try {
+			nl = org.apache.xpath.XPathAPI.selectNodeList(domNode, xPathQuery);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
 
-        if( nl == null )
-            return null;
-     
-            String result = "test...";
+		return nl;
+	}
 
-            for( int i = 0; i < nl.getLength(  ); i++ )
-            {
-                Node node = nl.item( i );
+	public static String getXPathContent(String xPathQuery, Node domNode) {
+		NodeList nl = getXPath(xPathQuery, domNode);
 
-                 result += node.getNodeValue(  );
-            }
+		if (nl == null)
+			return null;
 
-            return result;
-     
-    }
+		String result = "test...";
 
-  
-    public static Document post( String url, String data )
-        throws Exception
-    {
-        return post( new URL( url ), data );
-    }
+		for (int i = 0; i < nl.getLength(); i++) {
+			Node node = nl.item(i);
 
-    public static Document post( URL url, String data )
-        throws Exception
-    {
-       URLConnection connect = url.openConnection(  );
+			result += node.getNodeValue();
+		}
 
-        if( connect instanceof HttpURLConnection )
-        {
-            HttpURLConnection uc = (HttpURLConnection)connect;
-            uc.setRequestMethod( "POST" );
-            uc.setDoInput( true );
-            uc.setDoOutput( true );
-            uc.setUseCaches( false );
+		return result;
 
-            PrintWriter pw = new PrintWriter( uc.getOutputStream(  ) );
-            pw.print( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + data );
-            pw.flush(  );
-            pw.close(  );
+	}
 
-     
-            return getAsDOM( uc.getInputStream(  ) );
-        }
+	public static Document post(String url, String data) throws Exception {
+		return post(new URL(url), data);
+	}
 
-            throw new Exception( "uups, no http connection" );
-    }
+	public static Document post(URL url, String data) throws Exception {
+		URLConnection connect = url.openConnection();
 
-    public static NodeList reduceByAttribute( NodeList nl, String attributeName, String attributeValue )
-    {
-        NodeList_Impl result = new NodeList_Impl();
+		if (connect instanceof HttpURLConnection) {
+			HttpURLConnection uc = (HttpURLConnection) connect;
+			uc.setRequestMethod("POST");
+			uc.setDoInput(true);
+			uc.setDoOutput(true);
+			uc.setUseCaches(false);
 
-        for( int i = 0; i < nl.getLength(  ); i++ )
-        {
-            try
-            {
-                NamedNodeMap nodeMap = nl.item( i ).getAttributes(  );
+			PrintWriter pw = new PrintWriter(uc.getOutputStream());
+			pw.print("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + data);
+			pw.flush();
+			pw.close();
 
-                if( attributeValue.equals( nodeMap.getNamedItem( attributeName ).getNodeValue(  ) ) )
-                    result.add( nl.item( i ) );
-            }
-            catch( Exception e )
-            {
-                // nothing to do
-            }
-        }
+			return getAsDOM(uc.getInputStream());
+		}
 
-        return result;
-    }
+		throw new Exception("uups, no http connection");
+	}
 
-    public static String toString( NodeList nl )
-    {
-        StringBuffer result = new StringBuffer(  );
+	public static NodeList reduceByAttribute(NodeList nl, String attributeName,
+			String attributeValue) {
+		NodeList_Impl result = new NodeList_Impl();
 
-        for( int i = 0; i < nl.getLength(  ); i++ )
-            result.append( toString( nl.item( i ) ) );
+		for (int i = 0; i < nl.getLength(); i++) {
+			try {
+				NamedNodeMap nodeMap = nl.item(i).getAttributes();
 
-        return result.toString(  );
-    }
+				if (attributeValue.equals(nodeMap.getNamedItem(attributeName)
+						.getNodeValue()))
+					result.add(nl.item(i));
+			} catch (Exception e) {
+				// nothing to do
+			}
+		}
 
-    public static String toString( Node node )
-    {
-        try
-        {
-            Transformer t = TransformerFactory.newInstance(  ).newTransformer(  );
-            DOMSource src = new DOMSource( node );
-            StringWriter sw = new StringWriter(  );
-            StreamResult result = new StreamResult( sw );
-            t.transform( src, result );
+		return result;
+	}
 
-            return sw.toString(  );
-        }
-        catch( Exception e )
-        {
-            e.printStackTrace(  );
+	public static String toString(NodeList nl) {
+		StringBuffer result = new StringBuffer();
 
-            return "sorry: " + e.getMessage(  );
-        }
-    }
+		for (int i = 0; i < nl.getLength(); i++)
+			result.append(toString(nl.item(i)));
 
-    public static String xslTransform( Node domNode, String outputMethod, String xslTemplateString )
-    {
-        try
-        {
-            String xslString =
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<xsl:stylesheet version=\"1.0\" " +
-                " xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">" + "<xsl:output method=\"" + outputMethod +
-                "\" />" + xslTemplateString + "</xsl:stylesheet>";
+		return result.toString();
+	}
 
-            DOMSource xmlSource = new DOMSource( domNode );
-            StreamSource xslSource = new StreamSource( new StringReader( xslString ) );
+	public static String toString(Node node) {
+		try {
+			Transformer t = TransformerFactory.newInstance().newTransformer();
+			DOMSource src = new DOMSource(node);
+			StringWriter sw = new StringWriter();
+			StreamResult result = new StreamResult(sw);
+			t.transform(src, result);
 
-            return xslTransform( xmlSource, xslSource );
+			return sw.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
 
-      
-        }
-        catch( Exception e )
-        {
-            e.printStackTrace(  );
+			return "sorry: " + e.getMessage();
+		}
+	}
 
-            return null;
-        }
-    }
+	public static String xslTransform(Node domNode, String outputMethod,
+			String xslTemplateString) {
+		try {
+			String xslString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+					+ "<xsl:stylesheet version=\"1.0\" "
+					+ " xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">"
+					+ "<xsl:output method=\"" + outputMethod + "\" />"
+					+ xslTemplateString + "</xsl:stylesheet>";
 
-    public static String xslTransform( Source xmlSource, Source xslSource )
-    {
-        try
-        {
-            TransformerFactory transformerFactory = TransformerFactory.newInstance(  );
+			DOMSource xmlSource = new DOMSource(domNode);
+			StreamSource xslSource = new StreamSource(new StringReader(
+					xslString));
 
-            //		transformerFactory.setAttribute("version",new String("1.0"));
-            Transformer transformer = transformerFactory.newTransformer( xslSource );
-            StringWriter resultSW = new StringWriter(  );
-            transformer.transform( xmlSource, new StreamResult( resultSW ) );
+			return xslTransform(xmlSource, xslSource);
 
-            return resultSW.toString(  );
+		} catch (Exception e) {
+			e.printStackTrace();
 
-         }
-        catch( Exception e )
-        {
-            e.printStackTrace(  );
+			return null;
+		}
+	}
 
-            return null;
-        }
-    }
+	public static String xslTransform(Source xmlSource, Source xslSource) {
+		try {
+			TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
 
-    public static String xslTransform( final File xmlFile, final File xslFile )
-    throws Exception
-    {
-      return xslTransform( new FileInputStream( xmlFile), new FileInputStream( xslFile) );
-    }
+			//		transformerFactory.setAttribute("version",new String("1.0"));
+			Transformer transformer = transformerFactory
+					.newTransformer(xslSource);
+			StringWriter resultSW = new StringWriter();
+			transformer.transform(xmlSource, new StreamResult(resultSW));
 
-    
-    public static String xslTransform( final InputStream xmlFile, final InputStream xslFile )
-        throws Exception
-    {
-  
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(  );
-        factory.setNamespaceAware( true );
+			return resultSW.toString();
 
-        DocumentBuilder docuBuilder = factory.newDocumentBuilder(  );
-        Document xmlDOM = docuBuilder.parse( xmlFile );
-        Document xslDOM = docuBuilder.parse( xslFile );
+		} catch (Exception e) {
+			e.printStackTrace();
 
-        return xslTransform( new DOMSource( xmlDOM ), new DOMSource( xslDOM ) );
-    }
+			return null;
+		}
+	}
+
+	public static String xslTransform(final File xmlFile, final File xslFile)
+			throws Exception {
+		return xslTransform(new FileInputStream(xmlFile), new FileInputStream(
+				xslFile));
+	}
+
+	public static String xslTransform(final InputStream xmlFile,
+			final InputStream xslFile) throws Exception {
+
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setNamespaceAware(true);
+
+		DocumentBuilder docuBuilder = factory.newDocumentBuilder();
+		Document xmlDOM = docuBuilder.parse(xmlFile);
+		Document xslDOM = docuBuilder.parse(xslFile);
+
+		return xslTransform(new DOMSource(xmlDOM), new DOMSource(xslDOM));
+	}
+
+	public static boolean isAbstractElementDefinition(Node node) {
+		String abstractStatus = ((Element) node).getAttribute("abstract");
+		if (abstractStatus == null)
+			return false;
+		if ("false".equals(abstractStatus) || "0".equals(abstractStatus)
+				|| "".equals(abstractStatus))
+			return false;
+		return true;
+	}
+
+	/**
+	 * Helper methode for easy handling obects in switch blocks
+	 * 
+	 * @return position of object in objectArray TODO move to a general
+	 *         HelperClass
+	 */
+	public static int indexOf(Object object, Object[] objectArray) {
+		for (int i = 0; i < objectArray.length; i++)
+			if (object.equals(objectArray[i]))
+				return i;
+		return -1;
+	}
+
+	/**
+	 * as every Feature must extend from AbstractFeatureType or
+	 * AbstractFeatureCollection this methods search for the root.
+	 * 
+	 * @return root type. e.g. "AbstractFeatureType" or
+	 *         "AbstractFeatureCollectionType"
+	 */
+	public static String getGMLBaseType(GMLSchema schema, Node complexTypeNode) {
+
+		Element element = (Element) complexTypeNode;
+		NodeList_Impl nl = new NodeList_Impl();
+		nl.add(element.getElementsByTagNameNS(XMLSCHEMA_NS, "restriction"));
+		nl.add(element.getElementsByTagNameNS(XMLSCHEMA_NS, "extension"));
+		//    System.out.println( toString( nl ) );
+		if (nl.getLength() == 0) {
+			if (!XMLHelper.GMLSCHEMA_NS.equals(schema.getTargetNS()))
+				return null;
+			SchemaAttribute typeNameAttribute = new SchemaAttribute(schema,
+					getAttributeNode(complexTypeNode, "name"));
+			return typeNameAttribute.getValue();
+		}
+		SchemaAttribute attribute = new SchemaAttribute(schema,
+				getAttributeNode(nl.item(0), "base"));
+
+		final String typeName = attribute.getValue();
+		final String typeNameSpace = attribute.getValueNS();
+		final GMLSchema typeSchema = schema.getGMLSchema(typeNameSpace);
+		Node contentNode = typeSchema.getContentNode(typeNameSpace, typeName);
+		if (contentNode == null)
+			System.out.println("test");
+		final String baseName = getGMLBaseType(typeSchema, contentNode);
+		return baseName;
+	}
 }

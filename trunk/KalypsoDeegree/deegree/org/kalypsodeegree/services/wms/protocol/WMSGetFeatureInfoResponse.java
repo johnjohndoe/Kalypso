@@ -50,7 +50,7 @@ import org.deegree.services.OGCWebServiceResponse;
  * @version $Revision$
  * @author $author$
  */
-public interface WMSFeatureInfoResponse extends OGCWebServiceResponse
+public interface WMSGetFeatureInfoResponse extends OGCWebServiceResponse
 {
   /**
    * returns the feature info the corresponds to an feature info request. The

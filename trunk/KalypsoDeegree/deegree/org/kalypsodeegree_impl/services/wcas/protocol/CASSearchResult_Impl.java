@@ -102,7 +102,7 @@ final public class CASSearchResult_Impl implements CASSearchResult
   }
 
   /**
-   * @see getSearchParameter
+   * @see #getSearchParameter()
    */
   public void setSearchParameter( String[] searchParameter )
   {
@@ -118,7 +118,7 @@ final public class CASSearchResult_Impl implements CASSearchResult
   }
 
   /**
-   * @see getSearchParameter
+   * @see #getSearchParameter()
    */
   public void addSearchParameter( String searchParameter )
   {
@@ -134,7 +134,7 @@ final public class CASSearchResult_Impl implements CASSearchResult
   }
 
   /**
-   * @see getResultData
+   * @see #getResultData()
    */
   public void setResultData( Object resultData )
   {
@@ -150,7 +150,7 @@ final public class CASSearchResult_Impl implements CASSearchResult
   }
 
   /**
-   * @see getElementSetName
+   * @see #getElementSetName()
    */
   public void setElementSetName( String elementSetName )
   {
@@ -167,7 +167,7 @@ final public class CASSearchResult_Impl implements CASSearchResult
   }
 
   /**
-   * @see isSuccessful
+   * @see #isSuccessful()
    */
   public void setSuccess( boolean success )
   {
@@ -184,7 +184,7 @@ final public class CASSearchResult_Impl implements CASSearchResult
   }
 
   /**
-   * @see getNumberOfRecords
+   * @see #getNumberOfRecords()
    */
   public void setNumberOfRecords( int numberOfRecords )
   {
@@ -200,7 +200,7 @@ final public class CASSearchResult_Impl implements CASSearchResult
   }
 
   /**
-   * @see getSchema
+   * @see #getSchema()
    */
   public void setSchema( String schemaName )
   {
@@ -228,10 +228,13 @@ final public class CASSearchResult_Impl implements CASSearchResult
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:48  doemming
+ * Revision 1.3  2004/10/07 14:09:04  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:26
- * doemming backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:51  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:53:32 doemming
+ * *** empty log message *** Revision 1.4 2004/05/10 08:40:58 poth no message
  * 
  * Revision 1.3 2004/02/09 08:00:13 poth no message
  * 

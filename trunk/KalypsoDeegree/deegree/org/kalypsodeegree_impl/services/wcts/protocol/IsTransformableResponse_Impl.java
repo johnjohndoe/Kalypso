@@ -87,7 +87,7 @@ public class IsTransformableResponse_Impl extends OGCWebServiceResponse_Impl imp
   }
 
   /**
-   * @see getTransformable
+   * @see #getTransformable()
    */
   public void setTransformable( boolean transformable )
   {

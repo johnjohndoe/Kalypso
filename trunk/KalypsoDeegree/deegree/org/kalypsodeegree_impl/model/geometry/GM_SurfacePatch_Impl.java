@@ -243,8 +243,6 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    */
   public boolean equals( Object other )
   {
-    //	if(other==this)
-    //    return true;
     if( ( other == null ) || !( other instanceof GM_SurfacePatch_Impl ) )
     {
       return false;

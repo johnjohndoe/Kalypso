@@ -82,7 +82,7 @@ public class Dcp_Impl implements Dcp
   }
 
   /**
-   * @see getConnectPoint
+   * @see #getConnectPoint()
    */
   public void setConnectPoint( ConnectPoint connectpoint )
   {
@@ -98,7 +98,7 @@ public class Dcp_Impl implements Dcp
   }
 
   /**
-   * @see getInvocationName
+   * @see #getInvocationName()
    */
   public void setInvocationName( String invocationname )
   {
@@ -116,7 +116,7 @@ public class Dcp_Impl implements Dcp
   }
 
   /**
-   * @see getParameter
+   * @see #getParameter()
    */
   public void addParameter( Parameter parameter )
   {
@@ -124,7 +124,7 @@ public class Dcp_Impl implements Dcp
   }
 
   /**
-   * @see getParameter
+   * @see #getParameter()
    */
   public void setParameter( Parameter[] parameter )
   {
@@ -151,7 +151,7 @@ public class Dcp_Impl implements Dcp
   }
 
   /**
-   * @see getType
+   * @see #getType()
    */
   public void setType( String type )
   {

@@ -82,7 +82,7 @@ public interface Symbolizer
   /**
    * Sets the MaxScaleDenominator
    * 
-   * @param maxDenominator
+   * @param maxScaleDenominator
    *          the MaxScaleDenominator
    */
   void setMaxScaleDenominator( double maxScaleDenominator );

@@ -103,7 +103,7 @@ public class FeatureTypeSchema_Impl implements FeatureTypeSchema
   }
 
   /**
-   * @see #getSchema
+   * @see #getSchema()
    */
   public void setSchema( org.w3c.dom.Document schema ) throws Exception
   {
@@ -116,7 +116,7 @@ public class FeatureTypeSchema_Impl implements FeatureTypeSchema
   }
 
   /**
-   * @see #getSchema
+   * @see #getSchema()
    */
   public void setSchema( org.w3c.dom.Element schema ) throws Exception
   {
