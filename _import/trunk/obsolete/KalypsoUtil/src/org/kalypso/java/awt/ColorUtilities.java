@@ -66,10 +66,24 @@ public class ColorUtilities
   }
 
   /**
+   * Create a random color. Alpha defaults to 1.
+   * 
    * @return a new Color which components have been given by Math.random().
    */
   public static Color random(  )
   {
     return new Color( (float)Math.random(  ), (float)Math.random(  ), (float)Math.random(  ) );
+  }
+
+  /**
+   * Create a random color with the given alpha value
+   * 
+   * @param alpha
+   * 
+   * @return a new Color which components have been given by Math.random().
+   */
+  public static Color random( final float alpha )
+  {
+    return new Color( (float)Math.random(  ), (float)Math.random(  ), (float)Math.random(  ), alpha );
   }
 }
