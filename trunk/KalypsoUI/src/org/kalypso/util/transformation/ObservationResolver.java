@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentThread;
 import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.java.util.StringUtilities;
@@ -75,12 +76,12 @@ public class ObservationResolver extends AbstractTransformation
       if( gmlFile == null )
         throw new TransformationException( "Datei nicht gefunden: " + gmlPath );
 
-      final URL gmlURL = ReplaceHelper.createURL( gmlFile );
+      final URL gmlURL = ResourceUtilities.createURL( gmlFile );
 
       final IFile schemaFile = root.getFile( new Path( schemaPath ) );
       if( schemaFile == null )
         throw new TransformationException( "Datei nicht gefunden: " + schemaPath );
-      final URL schemaURL = ReplaceHelper.createURL( schemaFile );
+      final URL schemaURL = ResourceUtilities.createURL( schemaFile );
 
       // todo: read via replaceToken?
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, schemaURL );
