@@ -43,31 +43,31 @@ public class XMLHelper {
 		return (XMLSCHEMA_NS.equals(ns) && "schema".equals(name));
 	}
 
-	public static Document getAsDOM(String url) throws Exception {
-		return getAsDOM(new URL(url));
+	public static Document getAsDOM(String url,boolean namespaceaware) throws Exception {
+		return getAsDOM(new URL(url),namespaceaware);
 	}
 
-	public static Document getAsDOM(File file) throws Exception {
-		return getAsDOM(new FileInputStream(file));
+	public static Document getAsDOM(File file,boolean namespaceaware) throws Exception {
+		return getAsDOM(new FileInputStream(file),namespaceaware);
 	}
 
-	public static Document getAsDOM(final InputStream inStream)
+	public static Document getAsDOM(final InputStream inStream,boolean namespaceaware)
 			throws Exception {
-		return getAsDOM(new InputSource(inStream));
+		return getAsDOM(new InputSource(inStream),namespaceaware);
 	}
 
-	public static Document getAsDOM(final InputSource inputSource)
+	public static Document getAsDOM(final InputSource inputSource,boolean namespaceaware)
 			throws Exception {
 		final DocumentBuilderFactory factory = DocumentBuilderFactory
 				.newInstance();
-		factory.setNamespaceAware(true);
+		factory.setNamespaceAware(namespaceaware);
 
 		final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
 		final Document dom = docuBuilder.parse(inputSource);
 		return dom;
 	}
 
-	public static Document getAsDOM(final URL url) throws Exception {
+	public static Document getAsDOM(final URL url,boolean namespaceaware) throws Exception {
 		//    System.out.println( "\n\n<!--\n " + url + "\n-->" );
 
 		final URLConnection connection = url.openConnection();
@@ -77,7 +77,7 @@ public class XMLHelper {
     if (contentEncoding != null)
 			source.setEncoding(contentEncoding);
 		// TODO set default encoding to "UTF-8" ??
-		return getAsDOM(source);
+		return getAsDOM(source,namespaceaware);
 	}
 
 	public static Node getAttributeNode(Node node, String attributeName) {
@@ -125,11 +125,11 @@ public class XMLHelper {
 
 	}
 
-	public static Document post(String url, String data) throws Exception {
-		return post(new URL(url), data);
+	public static Document post(String url, String data,boolean namespaceaware) throws Exception {
+		return post(new URL(url), data,namespaceaware);
 	}
 
-	public static Document post(URL url, String data) throws Exception {
+	public static Document post(URL url, String data,boolean namespaceaware) throws Exception {
 		URLConnection connect = url.openConnection();
 
 		if (connect instanceof HttpURLConnection) {
@@ -144,7 +144,7 @@ public class XMLHelper {
 			pw.flush();
 			pw.close();
 
-			return getAsDOM(uc.getInputStream());
+			return getAsDOM(uc.getInputStream(),namespaceaware);
 		}
 
 		throw new Exception("uups, no http connection");

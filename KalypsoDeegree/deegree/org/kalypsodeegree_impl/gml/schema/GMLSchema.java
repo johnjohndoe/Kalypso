@@ -44,7 +44,7 @@ public class GMLSchema
     m_url = documentURL;
     m_nodeFeatureTypeMap = new HashMap();
 
-    m_schemaDoc = XMLHelper.getAsDOM( documentURL );
+    m_schemaDoc = XMLHelper.getAsDOM( documentURL,true );
 
     setNameSpaces();
     setImportedSchemas();

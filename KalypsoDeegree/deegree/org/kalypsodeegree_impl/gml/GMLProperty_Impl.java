@@ -70,6 +70,7 @@ import org.w3c.dom.NodeList;
 public class GMLProperty_Impl implements GMLProperty
 {
   protected Element element = null;
+
   private FeatureTypeProperty myFeatureTypeProperty = null;
 
   /**
@@ -92,28 +93,29 @@ public class GMLProperty_Impl implements GMLProperty
    * factory method to create a GMLProperty. the property that will be return
    * doesn't contain a value.
    */
-  public static GMLProperty createGMLProperty( Document doc,FeatureTypeProperty ftp )
+  public static GMLProperty createGMLProperty( Document doc, FeatureTypeProperty ftp )
   {
-    Element elem = doc.createElementNS( ftp.getNamespace(),ftp.getName());
+    Element elem = doc.createElementNS( ftp.getNamespace(), ftp.getName() );
     GMLProperty ls = new GMLProperty_Impl( elem );
     return ls;
   }
 
-//  /**
-//   * factory method to create a GMLProperty.
-//   */
-//  public static GMLProperty createGMLProperty( Document doc, FeatureTypeProperty ftp,
-//      String propertyValue )
-//  {
-//    GMLProperty ls = createGMLProperty( doc, propertyName );
-//    ls.setPropertyValue( propertyValue );
-//    return ls;
-//  }
-  
+  //  /**
+  //   * factory method to create a GMLProperty.
+  //   */
+  //  public static GMLProperty createGMLProperty( Document doc,
+  // FeatureTypeProperty ftp,
+  //      String propertyValue )
+  //  {
+  //    GMLProperty ls = createGMLProperty( doc, propertyName );
+  //    ls.setPropertyValue( propertyValue );
+  //    return ls;
+  //  }
+
   public static GMLProperty createGMLProperty( Document doc, FeatureTypeProperty ftp,
       Element propertyValue )
   {
-    GMLProperty ls = createGMLProperty( doc,ftp );
+    GMLProperty ls = createGMLProperty( doc, ftp );
     ls.setPropertyValue( propertyValue );
     return ls;
   }
@@ -121,14 +123,14 @@ public class GMLProperty_Impl implements GMLProperty
   public static GMLProperty createGMLProperty( Document doc, FeatureTypeProperty ftp,
       String attributeValue )
   {
-    Element element = doc.createElementNS(ftp.getNamespace(), ftp.getName() );
+    Element element = doc.createElementNS( ftp.getNamespace(), ftp.getName() );
     GMLProperty gmlProp = new GMLProperty_Impl( ftp, element );
     gmlProp.setPropertyValue( attributeValue );
     return gmlProp;
   }
 
   /**
-   * 
+   *  
    */
   public Element getAsElement()
   {
@@ -142,9 +144,12 @@ public class GMLProperty_Impl implements GMLProperty
   {
     Debug.debugMethodBegin( this, "getName" );
     Debug.debugMethodEnd();
-    return element.getNamespaceURI()+":"+element.getLocalName();
-//    String s = element.getNodeName();
-//    return s;
+    String namespaceURI = element.getNamespaceURI();
+    if( namespaceURI != null )
+      return element.getNamespaceURI() + ":" + element.getLocalName();
+    return element.getLocalName();
+    //    String s = element.getNodeName();
+    //    return s;
   }
 
   /**
@@ -393,10 +398,10 @@ public class GMLProperty_Impl implements GMLProperty
       result = new GMLGeometryCollection_Impl( XMLTools.getFirstElement( element ) );
       break;
     case FEATURE:
-      if(this instanceof GMLComplexProperty)
-        result=((GMLComplexProperty)this).getComplexPropertyValue();
+      if( this instanceof GMLComplexProperty )
+        result = ( (GMLComplexProperty)this ).getComplexPropertyValue();
       else
-      result = new GMLFeature_Impl( element );
+        result = new GMLFeature_Impl( element );
       break;
     case FEATURECOLLECTION:
       result = new GMLFeatureCollection_Impl( element );
@@ -423,11 +428,11 @@ public class GMLProperty_Impl implements GMLProperty
   public void setPropertyValue( String value )
   {
     Debug.debugMethodBegin( this, "setPropertyValue" );
-    
-    if( myFeatureTypeProperty instanceof XLinkFeatureTypeProperty 
-    || myFeatureTypeProperty instanceof FeatureAssociationTypeProperty )
+
+    if( myFeatureTypeProperty instanceof XLinkFeatureTypeProperty
+        || myFeatureTypeProperty instanceof FeatureAssociationTypeProperty )
     {
-      setAttributeValue("#"+value);
+      setAttributeValue( "#" + value );
       return;
     }
     Node node = element.getFirstChild();
@@ -465,7 +470,7 @@ public class GMLProperty_Impl implements GMLProperty
   private void setAttributeValue( String value )
   {
     //  element.setAttribute("xmlns:xlink","http://www.w3.org/1999/xlink");
-    element.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", value );
+    element.setAttributeNS( "http://www.w3.org/1999/xlink", "xlink:href", value );
     // TODO use full qualified namespace-name
   }
 
@@ -504,28 +509,26 @@ public class GMLProperty_Impl implements GMLProperty
     {
       element.removeChild( node );
     }
-    element.appendChild(valueElement);
-  }   
+    element.appendChild( valueElement );
+  }
 }
 
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.7  2004/11/22 01:29:50  doemming
+ * Revision 1.8  2004/11/23 10:37:57  doemming
  * *** empty log message ***
- *
- * Revision 1.6  2004/11/16 10:44:16  doemming
- * *** empty log message ***
- *
- * Revision 1.5  2004/10/07 14:09:13  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:58  doemming
- * *** empty log message ***
- * Revision 1.4 2004/08/31 14:35:15 doemming ***
- * empty log message *** Revision 1.3 2004/08/18 20:27:32 belger *** empty log
- * message ***
+ * Revision 1.7 2004/11/22 01:29:50 doemming ***
+ * empty log message ***
+ * 
+ * Revision 1.6 2004/11/16 10:44:16 doemming *** empty log message ***
+ * 
+ * Revision 1.5 2004/10/07 14:09:13 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision
+ * 1.4 2004/08/31 14:35:15 doemming *** empty log message *** Revision 1.3
+ * 2004/08/18 20:27:32 belger *** empty log message ***
  * 
  * Revision 1.2 2004/08/11 11:20:16 doemming *** empty log message ***
  * 
