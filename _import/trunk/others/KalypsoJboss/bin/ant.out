@@ -1,8 +1,15 @@
 
 BUILD FAILED
-file:/home/doemming/xdoclet/bin/build_simcase.xml:243: Javadoc returned 1
-	at org.apache.tools.ant.taskdefs.Javadoc.execute(Javadoc.java:1840)
-	at xdoclet.DocletTask.execute(DocletTask.java:240)
+file:/home/doemming/kalypso/kalypso/bin/build_simcase.xml:243: /home/doemming/kalypso/kalypso/lib not found.
+	at org.apache.tools.ant.types.AbstractFileSet.getDirectoryScanner(AbstractFileSet.java:333)
+	at org.apache.tools.ant.types.Path.list(Path.java:332)
+	at org.apache.tools.ant.types.Path.list(Path.java:320)
+	at org.apache.tools.ant.types.Path.list(Path.java:320)
+	at org.apache.tools.ant.types.Path.toString(Path.java:355)
+	at xdoclet.ejb.EjbDocletTask.getContext(EjbDocletTask.java:292)
+	at xdoclet.DocletTask.validateSubTasks(DocletTask.java:399)
+	at xdoclet.DocletTask.validateOptions(DocletTask.java:394)
+	at xdoclet.DocletTask.execute(DocletTask.java:230)
 	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:166)
 	at org.apache.tools.ant.Task.perform(Task.java:317)
 	at org.apache.tools.ant.Target.execute(Target.java:309)
@@ -13,4 +20,4 @@ file:/home/doemming/xdoclet/bin/build_simcase.xml:243: Javadoc returned 1
 	at org.apache.tools.ant.Main.start(Main.java:196)
 	at org.apache.tools.ant.Main.main(Main.java:235)
 
-Total time: 37 seconds
+Total time: 26 seconds
