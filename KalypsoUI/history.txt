@@ -9,6 +9,7 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 ----------------
 Version 0.0.5 (Deploy vom XX.02.2005)
 ----------------
+- Bugfix: Die (manchmal) zufällig Farbvergabe im Wizard ist korrigiert.
 - Wizard: Spaltenbeschriftung und Legendeneinträge jetzt frei konfigurierbar
 - Wizard: Diagrammfarben für Kurven können jetzt festgelegt werden
 - FeatureEditor: jetzt mit Scrollbar
@@ -32,8 +33,13 @@ Jetzt Behandlung wie bei 0.0: optimaler Wert wird ermittelt und übernommen.
 - Bug #28
 - Bug #33
 - Bug #36
+- Bug #42
+- Bug #46
+- Bug #52
 - Bug #58
 - Bug #59
+- Bug #61
+- Bug #65
 
 ----------------
 Version 0.0.4 (Deploy vom 10.02.2005)

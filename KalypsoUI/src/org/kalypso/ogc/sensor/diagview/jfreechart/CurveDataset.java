@@ -40,9 +40,13 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.xy.AbstractIntervalXYDataset;
 import org.kalypso.ogc.sensor.SensorException;
 
@@ -56,17 +60,21 @@ import org.kalypso.ogc.sensor.SensorException;
 class CurveDataset extends AbstractIntervalXYDataset
 {
   private final List m_curves = new ArrayList();
+  
+  /** Map: curve -> color */
+  private final Map m_colors = new HashMap();
 
   public CurveDataset( )
   {
     // empty
   }
 
-  public void addCurveSerie( final XYCurveSerie xyc )
+  public void addCurveSerie( final XYCurveSerie xyc, final Color color )
   {
     synchronized( m_curves )
     {
       m_curves.add( xyc );
+      m_colors.put( xyc, color );
 
       fireDatasetChanged();
     }
@@ -79,6 +87,7 @@ class CurveDataset extends AbstractIntervalXYDataset
       if( m_curves.contains( xyc ) )
       {
         m_curves.remove( xyc );
+        m_colors.remove( xyc );
         
         fireDatasetChanged();
       }
@@ -261,5 +270,14 @@ class CurveDataset extends AbstractIntervalXYDataset
   public Number getEndY( int series, int item )
   {
     return getY( series, item );
+  }
+
+  public void reconfigureRenderer( final XYItemRenderer renderer )
+  {
+    for( int i = 0; i < m_curves.size(); i++ )
+    {
+      final Color color = (Color)m_colors.get( m_curves.get( i ) );
+      renderer.setSeriesPaint( i, color );
+    }
   }
 }

@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
+
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 

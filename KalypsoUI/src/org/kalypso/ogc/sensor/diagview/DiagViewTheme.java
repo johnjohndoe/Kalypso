@@ -162,20 +162,20 @@ public class DiagViewTheme extends AbstractObservationTheme
         }
 
         final String strc = tcurve.getColor();
-        Color color;
+        Color color = null;
         if( strc != null )
         {
           try
           {
             color = StringUtilities.stringToColor( strc );
           }
-          catch( IllegalArgumentException e )
+          catch( final IllegalArgumentException e )
           {
             e.printStackTrace();
-            color = ColorUtilities.random();
           }
         }
-        else
+          
+        if( color == null )
           color = ColorUtilities.random();
 
         // create curve and add it to theme
@@ -235,6 +235,8 @@ public class DiagViewTheme extends AbstractObservationTheme
 
           final Color colorFor = m_defaultcolor != null ? m_defaultcolor : TimeserieUtils
               .getColorFor( valueAxis[i].getType() );
+          System.out.println( "Create curve: " + colorFor );
+          
           final DiagViewCurve curve = new DiagViewCurve( replaceTokens( getName(), obs, valueAxis[i] ), colorFor, this, mappings,
               m_template );
 
