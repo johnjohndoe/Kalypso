@@ -2,6 +2,24 @@
 <calcwizard xmlns="xml.model.kalypso.org" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
+    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Einzugsgebiete" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="1"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=niederschlagZR"/>
+    </page>
+
+    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Zuflüsse" imageLocation="icons/calcwizard/kalypso32.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/zufluesse.gmt"/>
+
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="4"/>
+        
+        <arg name="timeserie3" value="diagDateAxis=d#diagValueAxis=a#nameColumn=Name#linkColumn=zuflussZR"/>
+    </page>
+
 <!--
  fuer jedes Teilmodell gibt es eine wizardpage,
  fuer jede wizarpage gibt es eine nacontrol_x.gml.
@@ -378,10 +396,19 @@
 	   	<arg name="selectionID" value="256"/>
 	</page>
 -->
-	<!--
-	<page className="org.kalypso.ui.calcwizard.MapAndTableWizardPage" pageTitle="Bodenfeuchte" imageLocation="icons/calcwizard/boden.gif" >
-	   <arg name="mapTemplate" value=".templates/calcCase/karte1.gmt"/>
-	   <arg name="tableTemplate" value=".templates/calcCase/table1.gtt"/>
+	<!-- Ergebnisablage -->
+	<page className="org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage"
+	   pageTitle="Ergebnisbearbeitung und Veröffentlichung"
+	   imageLocation="icons/calcwizard/kalypso32.gif" >
+	   	<arg name="mapTemplate" value="project:.templates/calcCase/export.gmt"/>
+	
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=qberechnetZR"/>
+        <arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=w2#nameColumn=Name#linkColumn=pegelZR"/>
+	
+	   	<arg name="mainSash" value="50"/>
+	   	<arg name="rightSash" value="40"/>
+	   	<arg name="selectionID" value="256"/>
 	</page>
--->
+
+
 </calcwizard>
