@@ -5,9 +5,9 @@ package org.kalypso.ogc.event;
  */
 public interface ModellEventProvider
 {
-  public void addModellListener(final ModellEventListener listener);
+  public void addModellListener( final ModellEventListener listener );
 
-  public void removeModellListener(final ModellEventListener listener);
+  public void removeModellListener( final ModellEventListener listener );
 
-  public void fireModellEvent(final ModellEvent event);
+  public void fireModellEvent( final ModellEvent event );
 }

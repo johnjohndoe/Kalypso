@@ -8,7 +8,7 @@ import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandPoster;
+import org.kalypso.util.command.ICommandTarget;
 
 /**
  * 
@@ -18,9 +18,9 @@ import org.kalypso.util.command.ICommandPoster;
 public abstract class AbstractWidget implements IWidget 
 {
   protected MapPanel m_mapPanel = null;
-  protected ICommandPoster m_commandPoster;
+  protected ICommandTarget m_commandPoster;
   
-  public void setCommandPoster( final ICommandPoster commandPoster )
+  public void setCommandPoster( final ICommandTarget commandPoster )
   {
     m_commandPoster = commandPoster;
   }

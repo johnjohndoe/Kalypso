@@ -6,55 +6,35 @@ import org.deegree.graphics.sld.UserStyle;
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.MapModell;
-import org.kalypso.ogc.event.ModellEvent;
-import org.kalypso.ogc.event.ModellEventListener;
-import org.kalypso.ogc.event.ModellEventProvider;
-import org.kalypso.ogc.event.ModellEventProviderAdapter;
 
 /**
  * @author vdoemming
  */
-public class KalypsoWMSTheme implements ModellEventProvider, ModellEventListener, IKalypsoTheme
+public class KalypsoWMSTheme extends AbstractKalypsoTheme
 {
-  private ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
-
+  // TODO: ist das richtig? ein layer im WMSTheme????
   private KalypsoFeatureLayer myLayer = null;
 
-//  private KalypsoUserStyle[] myStyles = null;
-
-  public boolean DEBUG_ENV = false;
+  //  private KalypsoUserStyle[] myStyles = null;
 
   private MapModell myParent = null;
 
-  private String myName;
-
   public KalypsoWMSTheme( final KalypsoFeatureLayer layer, final String name )
   {
+    super( name );
+
     myLayer = layer;
-//    myStyles = new KalypsoUserStyle[] {};
-    myName = name;
+    //    myStyles = new KalypsoUserStyle[] {};
 
     myLayer.addModellListener( this );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
+   */
   public void dispose()
   {
-    myLayer.removeModellListener( this );
-  }
-
-  /**
-   * returns the name of the layer
-   */
-  public String getName()
-  {
-    return myName;
-  }
-
-  public void setName( final String name )
-  {
-    myName = name;
-
-    fireModellEvent( null );
+    myLayer.removeModellListener(this);
   }
 
   /**
@@ -65,8 +45,8 @@ public class KalypsoWMSTheme implements ModellEventProvider, ModellEventListener
     double scale = myParent.getScale( g );
     GeoTransform p = myParent.getProjection();
     GM_Envelope bbox = myParent.getBoundingBox();
-//    for( int i = 0; i < myStyles.length; i++ )
-      myLayer.getSort().paint( g, p, scale, bbox );
+    //    for( int i = 0; i < myStyles.length; i++ )
+    myLayer.getSort().paint( g, p, scale, bbox );
 
     //    if( DEBUG_ENV )
     //      myIndexDE.paint( g, myParent.getProjection() );
@@ -77,8 +57,8 @@ public class KalypsoWMSTheme implements ModellEventProvider, ModellEventListener
     double scale = myParent.getScale( g );
     GeoTransform p = myParent.getProjection();
     GM_Envelope bbox = myParent.getBoundingBox();
-//    for( int i = 0; i < myStyles.length; i++ )
-      myLayer.getSort().paintSelected( g, p, scale, bbox, selectionId );
+    //    for( int i = 0; i < myStyles.length; i++ )
+    myLayer.getSort().paintSelected( g, p, scale, bbox, selectionId );
 
     //    if( DEBUG_ENV )
     //      myIndexDE.paint( g, myParent.getProjection() );
@@ -103,14 +83,15 @@ public class KalypsoWMSTheme implements ModellEventProvider, ModellEventListener
   //    }
   //  }
   //
-    /**
-     * returns the styles used for this <tt>Theme</tt>.
-     */
-    public UserStyle[] getStyles()
-    {
-      //return myStyles;
-      return myLayer.getSort().getStyles();
-    }
+  
+  /**
+   * returns the styles used for this <tt>Theme</tt>.
+   */
+  public UserStyle[] getStyles()
+  {
+    //return myStyles;
+    return myLayer.getSort().getStyles();
+  }
 
   public void addStyle( final KalypsoUserStyle style )
   {
@@ -139,32 +120,4 @@ public class KalypsoWMSTheme implements ModellEventProvider, ModellEventListener
     myParent = parent;
   }
 
-  public String toString()
-  {
-    return myName;
-  }
-
-  /**
-   * 
-   * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
-   */
-  public void onModellChange( ModellEvent modellEvent )
-  {
-    fireModellEvent( modellEvent );
-  }
-
-  public void addModellListener( ModellEventListener listener )
-  {
-    myEventProvider.addModellListener( listener );
-  }
-
-  public void fireModellEvent( ModellEvent event )
-  {
-    myEventProvider.fireModellEvent( event );
-  }
-
-  public void removeModellListener( ModellEventListener listener )
-  {
-    myEventProvider.removeModellListener( listener );
-  }
 }

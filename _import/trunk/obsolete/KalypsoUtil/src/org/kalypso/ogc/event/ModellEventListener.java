@@ -5,5 +5,5 @@ package org.kalypso.ogc.event;
  */
 public interface ModellEventListener
 {
-  public void onModellChange(ModellEvent modellEvent);
+  public void onModellChange( final ModellEvent modellEvent );
 }

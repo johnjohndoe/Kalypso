@@ -19,13 +19,12 @@ import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.event.ModellEventProvider;
 import org.kalypso.ogc.event.ModellEventProviderAdapter;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author doemming
  */
-public class MapModell implements ModellEventProvider, ModellEventListener//MapView,
+public class MapModell implements ModellEventProvider, ModellEventListener
 {
   private final ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
 
@@ -42,7 +41,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
   private final CS_CoordinateSystem myCoordinatesSystem;
 
   private final GeoTransform myProjection = new WorldToScreenTransform();
-  
+
   private IKalypsoTheme myActiveTheme = null;
 
   private GM_Envelope myBoundingBox = null;
@@ -55,79 +54,87 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
     myCoordinatesSystem = crs;
   }
 
-//  public MapModell( final Gismapview gisview, final CS_CoordinateSystem crs,
-//      final KeyedObjectPool layerPool, final KeyedObjectPool stylePool, final Object helper,
-//      final Component component )
-//  {
-//    myComponent = component;
-//    myEnabledThemeStatus = new HashMap();
-//    myActiveTheme = null;
-//    myCoordinatesSystem = crs;
-//    myThemes = new Vector();
-//    myProjection = new WorldToScreenTransform();    
-//
-//    final LayersType layerListType = gisview.getLayers();
-//    final List layerList = layerListType.getLayer();
-//
-//    for( int i = 0; i < layerList.size(); i++ )
-//    {
-//      final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList.get( i );
-//
-//      final KalypsoFeatureLayer layer;
-//      try
-//      {
-//        layer = (KalypsoFeatureLayer)layerPool.borrowObject( new PoolableObjectType( layerType
-//            .getLinktype(), layerType.getHref(), helper ) );
-//      }
-//      catch( Exception e1 )
-//      {
-//        e1.printStackTrace();
-//        continue;
-//      }
-//
-//      final KalypsoFeatureTheme theme = new KalypsoFeatureTheme( layer, layerType.getName() );
-//      final List stylesList = layerType.getStyle();
-//
-//      final List result = new ArrayList();
-//      for( int is = 0; is < stylesList.size(); is++ )
-//      {
-//        final StyleType styleType = ( (StyleType)stylesList.get( is ) );
-//        final IPoolableObjectType styleID = new PoolableObjectType( styleType.getLinktype(), styleType
-//            .getHref(), helper );
-//        try
-//        {
-//          final KalypsoUserStyle style = (KalypsoUserStyle)stylePool.borrowObject( styleID );
-//          result.add( style );
-//        }
-//        catch( Exception e )
-//        {
-//          e.printStackTrace();
-//        }
-//      }
-//
-//      if( result.size() == 0 )
-//        theme.setStyles( new KalypsoUserStyle[]
-//        { null } );
-//      else
-//        theme.setStyles( (KalypsoUserStyle[])result.toArray( new KalypsoUserStyle[result.size()] ) );
-//
-//      try
-//      {
-//        addTheme( theme );
-//      }
-//      catch( final Exception ex )
-//      {
-//        System.out.println( "could not add Theme" );
-//        ex.printStackTrace();
-//      }
-//    }
-//  }
+  //  public MapModell( final Gismapview gisview, final CS_CoordinateSystem crs,
+  //      final KeyedObjectPool layerPool, final KeyedObjectPool stylePool, final
+  // Object helper,
+  //      final Component component )
+  //  {
+  //    myComponent = component;
+  //    myEnabledThemeStatus = new HashMap();
+  //    myActiveTheme = null;
+  //    myCoordinatesSystem = crs;
+  //    myThemes = new Vector();
+  //    myProjection = new WorldToScreenTransform();
+  //
+  //    final LayersType layerListType = gisview.getLayers();
+  //    final List layerList = layerListType.getLayer();
+  //
+  //    for( int i = 0; i < layerList.size(); i++ )
+  //    {
+  //      final GismapviewType.LayersType.Layer layerType =
+  // (GismapviewType.LayersType.Layer)layerList.get( i );
+  //
+  //      final KalypsoFeatureLayer layer;
+  //      try
+  //      {
+  //        layer = (KalypsoFeatureLayer)layerPool.borrowObject( new
+  // PoolableObjectType( layerType
+  //            .getLinktype(), layerType.getHref(), helper ) );
+  //      }
+  //      catch( Exception e1 )
+  //      {
+  //        e1.printStackTrace();
+  //        continue;
+  //      }
+  //
+  //      final KalypsoFeatureTheme theme = new KalypsoFeatureTheme( layer,
+  // layerType.getName() );
+  //      final List stylesList = layerType.getStyle();
+  //
+  //      final List result = new ArrayList();
+  //      for( int is = 0; is < stylesList.size(); is++ )
+  //      {
+  //        final StyleType styleType = ( (StyleType)stylesList.get( is ) );
+  //        final IPoolableObjectType styleID = new PoolableObjectType(
+  // styleType.getLinktype(), styleType
+  //            .getHref(), helper );
+  //        try
+  //        {
+  //          final KalypsoUserStyle style = (KalypsoUserStyle)stylePool.borrowObject(
+  // styleID );
+  //          result.add( style );
+  //        }
+  //        catch( Exception e )
+  //        {
+  //          e.printStackTrace();
+  //        }
+  //      }
+  //
+  //      if( result.size() == 0 )
+  //        theme.setStyles( new KalypsoUserStyle[]
+  //        { null } );
+  //      else
+  //        theme.setStyles( (KalypsoUserStyle[])result.toArray( new
+  // KalypsoUserStyle[result.size()] ) );
+  //
+  //      try
+  //      {
+  //        addTheme( theme );
+  //      }
+  //      catch( final Exception ex )
+  //      {
+  //        System.out.println( "could not add Theme" );
+  //        ex.printStackTrace();
+  //      }
+  //    }
+  //  }
 
   public void activateTheme( IKalypsoTheme theme )
   {
     myActiveTheme = theme;
     fireModellEvent( null );
   }
+
   public IKalypsoTheme getActiveTheme()
   {
     return myActiveTheme;
@@ -135,15 +142,15 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
 
   public void addTheme( IKalypsoTheme theme ) throws Exception
   {
-    if(myActiveTheme==null)
-    myActiveTheme = theme;
+    if( myActiveTheme == null )
+      myActiveTheme = theme;
     myThemes.add( theme );
-    theme.setParent(this);
-    theme.getLayer().setCoordinatesSystem( myCoordinatesSystem );   
+    theme.setParent( this );
+    theme.getLayer().setCoordinatesSystem( myCoordinatesSystem );
     myEnabledThemeStatus.put( theme, THEME_ENABLED );
     theme.addModellListener( this );
-    fireModellEvent( null );   
-    }
+    fireModellEvent( null );
+  }
 
   public void clear()
   {
@@ -214,8 +221,8 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
       }
     }
   }
-  
-  public void paintSelected( Graphics g,int selectionId ) throws RenderException
+
+  public void paintSelected( Graphics g, int selectionId ) throws RenderException
   {
     if( getThemeSize() == 0 )
       return;
@@ -234,7 +241,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
     {
       if( isThemeEnabled( getTheme( i ) ) )
       {
-        getTheme( i ).paintSelected( g,selectionId );
+        getTheme( i ).paintSelected( g, selectionId );
       }
     }
   }
@@ -258,7 +265,6 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
    */
   private double calcScale( int mapWidth, int mapHeight )
   {
-
     try
     {
       CS_CoordinateSystem epsg4326crs = getCoordinatesSystem();
@@ -374,7 +380,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
   public void setBoundingBox( GM_Envelope env )
   {
     myBoundingBox = adjustBoundingBox( env );
-    myProjection.setSourceRect (myBoundingBox);   
+    myProjection.setSourceRect( myBoundingBox );
     fireModellEvent( null );
   }
 
@@ -452,24 +458,24 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
 
     for( int i = 0; i < themes.length; i++ )
     {
-        
-   if( isThemeEnabled( themes[i] ) )
-    {
+
+      if( isThemeEnabled( themes[i] ) )
+      {
         try
         {
           final GeoTransformer gt = new GeoTransformer( getCoordinatesSystem() );
           final GM_Envelope boundingBox = themes[i].getLayer().getBoundingBox();
-          
+
           if( boundingBox != null )
           {
-            final GM_Envelope env = gt.transformEnvelope( boundingBox, themes[i]
-                .getLayer().getCoordinatesSystem() );
+            final GM_Envelope env = gt.transformEnvelope( boundingBox, themes[i].getLayer()
+                .getCoordinatesSystem() );
             double minX = env.getMin().getX();
             double minY = env.getMin().getY();
-  
+
             double maxX = env.getMax().getX();
             double maxY = env.getMax().getY();
-  
+
             if( !found )
             {
               resultMinX = minX;
@@ -482,13 +488,13 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
             {
               if( minY < resultMinX )
                 resultMinX = minX;
-  
+
               if( minY < resultMinY )
                 resultMinY = minY;
-  
+
               if( maxX > resultMaxX )
                 resultMaxX = maxX;
-  
+
               if( maxY > resultMaxY )
                 resultMaxY = maxY;
             }

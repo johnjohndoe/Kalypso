@@ -5,7 +5,7 @@ package org.kalypso.util.command;
  * 
  * @author belger
  */
-public interface ICommandPoster
+public interface ICommandTarget
 {
   public void postCommand( final ICommand command, final Runnable runnable );
 }
