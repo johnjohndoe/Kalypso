@@ -1,7 +1,10 @@
 package org.kalypso.ui.repository.view;
 
 import org.eclipse.compare.Splitter;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -13,11 +16,14 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySourceProvider;
 import org.kalypso.repository.DefaultRepositoryContainer;
 import org.kalypso.repository.IRepository;
@@ -27,9 +33,11 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.repository.actions.AddRepositoryAction;
 import org.kalypso.ui.repository.actions.CollapseAllAction;
 import org.kalypso.ui.repository.actions.ConfigurePreviewAction;
+import org.kalypso.ui.repository.actions.CopyLinkAction;
 import org.kalypso.ui.repository.actions.ExpandAllAction;
 import org.kalypso.ui.repository.actions.ReloadAction;
 import org.kalypso.ui.repository.actions.RemoveRepositoryAction;
+import org.kalypso.util.adapter.IAdaptable;
 
 /**
  * Wird als ZeitreihenBrowser benutzt.
@@ -44,12 +52,14 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
   private final DefaultRepositoryContainer m_repContainer;
 
   private RemoveRepositoryAction m_removeAction = null;
+
   private ConfigurePreviewAction m_confAction = null;
+
   private ReloadAction m_reloadAction = null;
 
   private PropertySheetPage m_propsPage = null;
 
-
+  private CopyLinkAction m_copyLinkAction = null;
 
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
@@ -61,24 +71,25 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
       // lazy loading
       if( m_propsPage == null || m_propsPage.getControl().isDisposed() )
       {
-        // PropertySheetPage erzeugen. Sie wird in das standard PropertySheet von Eclipse dargestellt
-        m_propsPage  = new PropertySheetPage();
+        // PropertySheetPage erzeugen. Sie wird in das standard PropertySheet
+        // von Eclipse dargestellt
+        m_propsPage = new PropertySheetPage();
 
         // eigenes entry mit source provider
         final PropertySheetEntry entry = new PropertySheetEntry();
         entry.setPropertySourceProvider( new ObservationPropertySourceProvider() );
 
         m_propsPage.setRootEntry( entry );
-        
-        m_propsPage.selectionChanged(this, getSelection() );
+
+        m_propsPage.selectionChanged( this, getSelection() );
       }
-    
+
       return m_propsPage;
     }
-    
+
     return null;
   }
-  
+
   public RepositoryExplorerPart()
   {
     m_repContainer = KalypsoGisPlugin.getDefault().getRepositoryContainer();
@@ -98,13 +109,13 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
     if( m_confAction != null )
       m_confAction.dispose();
-    
+
     if( m_reloadAction != null )
       m_reloadAction.dispose();
 
     if( m_repViewer != null )
       removeSelectionChangedListener( this );
-    
+
     super.dispose();
   }
 
@@ -112,7 +123,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
   {
     return m_repViewer;
   }
-  
+
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -125,29 +136,67 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     m_repViewer.setLabelProvider( new LabelProvider() );
     m_repViewer.setInput( m_repContainer );
 
+    initContextMenu();
+
     final IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
-    
+
     toolBarManager.add( new AddRepositoryAction( this ) );
-    
+
     toolBarManager.add( new Separator() );
-    
+
     m_removeAction = new RemoveRepositoryAction( this );
     toolBarManager.add( m_removeAction );
-    
+
     m_confAction = new ConfigurePreviewAction( this );
     toolBarManager.add( m_confAction );
-    
+
     m_reloadAction = new ReloadAction( this );
     toolBarManager.add( m_reloadAction );
-    
+
     toolBarManager.add( new Separator() );
-    
+
     toolBarManager.add( new CollapseAllAction( this ) );
     toolBarManager.add( new ExpandAllAction( this ) );
 
     getViewSite().getActionBars().updateActionBars();
 
     addSelectionChangedListener( this );
+  }
+
+  /**
+   * Initializes and registers the context menu.
+   */
+  private void initContextMenu()
+  {
+    final MenuManager menuMgr = new MenuManager( "#PopupMenu" ); //$NON-NLS-1$
+    menuMgr.setRemoveAllWhenShown( true );
+    menuMgr.addMenuListener( new IMenuListener()
+    {
+      public void menuAboutToShow( final IMenuManager manager )
+      {
+        fillContextMenu( manager );
+      }
+    } );
+
+    final Menu menu = menuMgr.createContextMenu( m_repViewer.getTree() );
+    m_repViewer.getTree().setMenu( menu );
+    getSite().registerContextMenu( menuMgr, m_repViewer );
+    
+    m_copyLinkAction = new CopyLinkAction( this );
+  }
+
+  /**
+   * Called when the context menu is about to open.
+   */
+  protected void fillContextMenu( final IMenuManager menu )
+  {
+    if( isObservationSelected( getViewer().getSelection() ) != null )
+    {
+      menu.add( m_copyLinkAction );
+      menu.add( new Separator() );
+      menu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ));
+      menu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS + "-end" ));
+    }
   }
 
   /**
@@ -165,7 +214,29 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
     return (IRepository)element;
   }
-  
+
+  /**
+   * Returns the IObservation object when the selection is an IAdaptable object
+   * that get deliver an IObservation.
+   */
+  public IObservation isObservationSelected( final ISelection selection )
+  {
+    final IStructuredSelection sel = (IStructuredSelection)selection;
+    if( sel.isEmpty() )
+      return null;
+
+    final Object element = sel.getFirstElement();
+    if( element instanceof IAdaptable )
+    {
+      final IObservation obs = (IObservation)( (IAdaptable)element )
+          .getAdapter( IObservation.class );
+
+      return obs;
+    }
+
+    return null;
+  }
+
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
@@ -235,14 +306,14 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     if( m_propsPage != null && !m_propsPage.getControl().isDisposed() )
       m_propsPage.selectionChanged( this, event.getSelection() );
   }
-  
+
   /**
    * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
    */
   public void saveState( IMemento memento )
   {
     super.saveState( memento );
-    
+
     // TODO: save gui state (See ResourceNavigator)
   }
 
