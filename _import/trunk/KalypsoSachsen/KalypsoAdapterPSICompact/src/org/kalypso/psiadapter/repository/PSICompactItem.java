@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.psiadapter.PSICompactFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
@@ -28,8 +29,6 @@ public class PSICompactItem implements IRepositoryItem
 
   protected final ObjectInfo m_objectInfo;
 
-  private final boolean m_adaptable;
-
   private final int m_valueType;
 
   /**
@@ -39,18 +38,15 @@ public class PSICompactItem implements IRepositoryItem
    * @param name
    * @param identifier
    * @param info
-   * @param adaptable
    * @param valueType
    */
   public PSICompactItem( final PSICompactItem parent, final String name, final String identifier,
-      final PSICompact.ObjectInfo info, final boolean adaptable,
-      final int valueType )
+      final PSICompact.ObjectInfo info, final int valueType )
   {
     m_parent = parent;
     m_name = name;
     m_identifier = identifier;
     m_objectInfo = info;
-    m_adaptable = adaptable;
     m_valueType = valueType;
 
     m_children = new Vector();
@@ -112,7 +108,9 @@ public class PSICompactItem implements IRepositoryItem
   {
     try
     {
-      if( m_adaptable && anotherClass == IObservation.class )
+      final boolean adaptable = PSICompactFactory.getConnection().getMeasureType( m_identifier ) != PSICompact.TYPE_UNDEF;
+      
+      if( adaptable && anotherClass == IObservation.class )
         return new PSICompactObservationItem( getName(), getIdentifier(),
             m_objectInfo, m_valueType );
     }

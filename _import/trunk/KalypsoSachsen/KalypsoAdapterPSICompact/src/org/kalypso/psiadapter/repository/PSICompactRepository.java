@@ -74,10 +74,7 @@ public class PSICompactRepository extends AbstractRepository
           parent = (PSICompactItem) nodes.get( nodeID );
         else
         {
-          final boolean adaptable = psi.getMeasureType( nodeID ) != PSICompact.TYPE_UNDEF;
-
-          final PSICompactItem n = new PSICompactItem( parent, path[i], nodeID, info,
-              adaptable, valueType );
+          final PSICompactItem n = new PSICompactItem( parent, path[i], nodeID, info, valueType );
 
           // gleich parent item aktualisieren (wird nicht von der Child gemacht,
           // deswegen hier)
@@ -96,7 +93,7 @@ public class PSICompactRepository extends AbstractRepository
     // abnormal case...
     if( parent == null )
       return new PSICompactItem( null, "Keine Struktur in PSICompact...", "<Kein ID>",
-          new PSICompact.ObjectInfo(), false, 0 );
+          new PSICompact.ObjectInfo(), 0 );
 
     while( parent.getParent() != null )
       parent = (PSICompactItem) parent.getParent();
@@ -153,7 +150,7 @@ public class PSICompactRepository extends AbstractRepository
         System.out
             .println( "PSICompactRepository - Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
 
-        m_psiRoot = new PSICompactItem( null, "Fehler...", "Fehler", null, false, 0 );
+        m_psiRoot = new PSICompactItem( null, "Fehler...", "Fehler", null, 0 );
       }
       else
         m_psiRoot = nodeMeasurements;

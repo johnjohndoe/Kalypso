@@ -123,6 +123,10 @@ public class PSICompactObservationItem implements IObservation
 
     if( m_psicMetaData != null )
     {
+      // get axis list, side effect: the value converter will be initiliazed
+      // and it will be used here to convert the alarmstufen which we get in SI-m
+      getAxisList();
+      
       m_metadata.put( TimeserieConstants.MD_GKH, String.valueOf( m_psicMetaData
           .getHeight() ) );
       m_metadata.put( TimeserieConstants.MD_GKR, String.valueOf( m_psicMetaData
@@ -134,13 +138,13 @@ public class PSICompactObservationItem implements IObservation
       m_metadata.put( TimeserieConstants.MD_MESSTISCHBLATT, String
           .valueOf( m_psicMetaData.getMapNo() ) );
       m_metadata.put( TimeserieConstants.MD_ALARM_1, String
-          .valueOf( m_psicMetaData.getAlarm1() ) );
+          .valueOf( m_vc.psi2kalypso( m_psicMetaData.getAlarm1() ) ) );
       m_metadata.put( TimeserieConstants.MD_ALARM_2, String
-          .valueOf( m_psicMetaData.getAlarm2() ) );
+          .valueOf( m_vc.psi2kalypso( m_psicMetaData.getAlarm2() ) ) );
       m_metadata.put( TimeserieConstants.MD_ALARM_3, String
-          .valueOf( m_psicMetaData.getAlarm3() ) );
+          .valueOf( m_vc.psi2kalypso( m_psicMetaData.getAlarm3() ) ) );
       m_metadata.put( TimeserieConstants.MD_ALARM_4, String
-          .valueOf( m_psicMetaData.getAlarm4() ) );
+          .valueOf( m_vc.psi2kalypso( m_psicMetaData.getAlarm4() ) ) );
       m_metadata.put( TimeserieConstants.MD_FLUSS, m_psicMetaData.getRiver() );
       m_metadata.put( TimeserieConstants.MD_FLUSSGEBIET, m_psicMetaData
           .getRiversystem() );
