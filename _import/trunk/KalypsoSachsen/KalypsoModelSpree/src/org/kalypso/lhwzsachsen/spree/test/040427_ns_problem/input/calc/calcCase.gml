@@ -344,7 +344,7 @@
       <TalsperreMember>
         <Talsperre fid="TS_QUITZDORF">
           <Name>Quitzdorf</Name>
-          <Anfangsstauvolumen>0.0</Anfangsstauvolumen>
+          <Anfangsstauvolumen>10.0</Anfangsstauvolumen>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
               <gml:coordinates cs="," decimal="." ts=" ">14.748527499155514,51.290946380065435</gml:coordinates>
@@ -370,7 +370,7 @@
       <TalsperreMember>
         <Talsperre fid="TS_BAUTZEN">
           <Name>Bautzen</Name>
-          <Anfangsstauvolumen>0.0</Anfangsstauvolumen>
+          <Anfangsstauvolumen>30.0</Anfangsstauvolumen>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
               <gml:coordinates cs="," decimal="." ts=" ">14.47438224624109,51.21722084046126</gml:coordinates>
