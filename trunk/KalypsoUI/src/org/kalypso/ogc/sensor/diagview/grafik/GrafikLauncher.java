@@ -3,6 +3,7 @@ package org.kalypso.ogc.sensor.diagview.grafik;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.text.DateFormat;
@@ -70,16 +71,27 @@ public class GrafikLauncher
   {
     try
     {
+      // remove spaces because grafik cannot open a Vorlage when name
+      // contains spaces. Note: this will have no effect when the rest
+      // of the path still contains spaces. In that case grafik just won't
+      // find the vorlage.
+      // I called Jörg to solve this problem. We are waiting for a new version...
       final IFile tplFile = dest.getFile( FileUtilities
-          .nameWithoutExtension( odtFile.getName() )
+          .nameWithoutExtension( odtFile.getName() ).replaceAll( " ", "-")
           + ".tpl" );
-
+      
+      final StringWriter strWriter = new StringWriter();
+      
+      odt2tpl( odtFile, dest, strWriter );
+      
+      // use the windows encoding for the vorlage because of the grafik tool
+      // which uses it when reading...
       SetContentThread thread = new SetContentThread( tplFile, !tplFile
-          .exists(), false, false, new NullProgressMonitor() )
+          .exists(), false, false, new NullProgressMonitor(), "Cp1252" )
       {
         protected void write( final Writer writer ) throws Throwable
         {
-          odt2tpl( odtFile, dest, writer );
+          writer.write( strWriter.toString() );
         }
       };
 
@@ -288,7 +300,12 @@ public class GrafikLauncher
           final ITuppleModel values = obs.getValues( null );
           for( int i = 0; i < values.getCount(); i++ )
           {
-            writer.write( GRAFIK_DF.format( values.getElement( i, dateAxis ) ) );
+            if( i == 305 )
+              System.out.println("foo");
+            
+            final Object elt = values.getElement( i, dateAxis );
+            final String text = GRAFIK_DF.format( elt );
+            writer.write( text );
             writer.write( '\t' );
 
             for( int j = 0; j < numberAxes.length; j++ )

@@ -1,8 +1,12 @@
 package org.kalypso.ui.navigator;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
@@ -11,8 +15,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Opens the Grafik tool. Can operate on observation template and grafik
@@ -44,27 +52,48 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
    */
   public void run( final IAction action )
   {
-    try
+    final IFile currentFile = m_currentFile;
+    if( currentFile == null )
+      return;
+
+    final WorkspaceModifyOperation operation = new WorkspaceModifyOperation(
+        null )
     {
-      if( m_currentFile != null )
+      protected void execute( IProgressMonitor monitor ) throws CoreException,
+          InvocationTargetException, InterruptedException
       {
-        if( m_currentFile.getFileExtension().equalsIgnoreCase(
-            ObservationTemplateHelper.ODT_FILE_EXTENSION ) )
+        try
         {
-          final IContainer parent = m_currentFile.getParent();
+          if( currentFile.getFileExtension().equalsIgnoreCase(
+              ObservationTemplateHelper.ODT_FILE_EXTENSION ) )
+          {
+            final IContainer parent = currentFile.getParent();
 
-          final IFolder folder = parent.getFolder( new Path( "grafik" ) );
-          if( !folder.exists() )
-            folder.create( true, true, new NullProgressMonitor() );
+            final IFolder folder = parent.getFolder( new Path( "grafik" ) );
+            if( !folder.exists() )
+              folder.create( true, true, new NullProgressMonitor() );
 
-          GrafikLauncher.startGrafikODT( m_currentFile, folder );
+            GrafikLauncher.startGrafikODT( currentFile, folder );
+          }
+          else if( currentFile.getFileExtension().equalsIgnoreCase(
+              GrafikLauncher.TPL_FILE_EXTENSION ) )
+          {
+            GrafikLauncher.startGrafikTPL( currentFile );
+          }
         }
-        else if( m_currentFile.getFileExtension().equalsIgnoreCase(
-            GrafikLauncher.TPL_FILE_EXTENSION ) )
+        catch( SensorException e )
         {
-          GrafikLauncher.startGrafikTPL( m_currentFile );
+          e.printStackTrace();
+          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+              "Grafik konnte nicht gestartet werden", e ) );
         }
       }
+    };
+
+    try
+    {
+      PlatformUI.getWorkbench().getProgressService()
+          .busyCursorWhile( operation );
     }
     catch( Exception e )
     {
