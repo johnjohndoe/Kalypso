@@ -54,6 +54,13 @@
             name="Kalypso Observation DiagramEditor"
             id="org.kalypso.ogc.sensor.editor.ObservationDiagramEditor"
             extensions="zml"/>
+      <editor
+            class="org.kalypso.ogc.sensor.editor.ObservationTableEditor"
+            icon="icons/sample.gif"
+            default="true"
+            name="Kalypso Obsevation TableEditor"
+            id="org.kalypso.ogc.sensor.editor.ObservationTableEditor"
+            extensions="ott"/>
    </extension>
    <extension
          point="org.eclipse.ui.views">
