@@ -4,11 +4,14 @@
  */
 package org.kalypso.editor.styleeditor;
 
-
 import org.deegree.graphics.sld.Rule;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.graphics.sld.Rule_Impl;
+import org.deegree_impl.services.wfs.filterencoding.ComplexFilter;
+import org.deegree_impl.services.wfs.filterencoding.Literal;
+import org.deegree_impl.services.wfs.filterencoding.PropertyIsLikeOperation;
+import org.deegree_impl.services.wfs.filterencoding.PropertyName;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -69,7 +72,7 @@ public class RuleTabItemBuilder {
 		
 		ruleTabFolder = new TabFolder(tabFolderComposite,SWT.NULL);		
 		FormData RuleTableFolderLData = new FormData();
-		RuleTableFolderLData.height = 450;
+		RuleTableFolderLData.height = 500;
 		RuleTableFolderLData.width = 235;
 		RuleTableFolderLData.top =  new FormAttachment(10, 1000, 0);						
 		ruleTabFolder.setLayoutData(RuleTableFolderLData);				
@@ -79,7 +82,7 @@ public class RuleTabItemBuilder {
 			TabItem tabItem = new TabItem(ruleTabFolder, SWT.NULL);	
 			Composite composite = new Composite(ruleTabFolder,SWT.NULL);		
 			GridLayout compositeLayout = new GridLayout();
-			composite.setSize(270,350);
+			composite.setSize(270,400);
 			composite.setLayout(compositeLayout);
 			compositeLayout.marginWidth = 5;
 			compositeLayout.marginHeight = 5;		
@@ -114,8 +117,16 @@ public class RuleTabItemBuilder {
 			nameInputPanel.addPanelListener(new PanelListener() {				
 				public void valueChanged(PanelEvent event) {
 					rule.setName(((TextInputPanel)event.getSource()).getLabelText());
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
-					System.out.println(((Rule_Impl)rule).exportAsXML());
+				
+					
+					
+					  PropertyIsLikeOperation operation = new PropertyIsLikeOperation(new PropertyName("GEOM"),new Literal("test"),'*','a','b');
+					  ComplexFilter filter = new ComplexFilter(operation);
+					  rule.setFilter(filter);
+					 
+						userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+						System.out.println(((Rule_Impl)rule).exportAsXML());
+					
 					focuedRuleItem = ruleTabFolder.getSelectionIndex();	
 					draw();
 				}
@@ -130,12 +141,23 @@ public class RuleTabItemBuilder {
 					draw();
 				}
 			});			
-			SliderPanel maxDenominatorPanel = new SliderPanel(composite,"MinDenomiator:",0,10000000,100000,SliderPanel.INTEGER,rule.getMaxScaleDenominator());
+			SliderPanel maxDenominatorPanel = new SliderPanel(composite,"MaxDenomiator:",0,10000000,100000,SliderPanel.INTEGER,rule.getMaxScaleDenominator());
 			maxDenominatorPanel.addPanelListener(new PanelListener() {				
 				public void valueChanged(PanelEvent event) {
-					rule.setMaxScaleDenominator(((SliderPanel)event.getSource()).getSelection());
+					double max = ((SliderPanel)event.getSource()).getSelection();
+					rule.setMaxScaleDenominator(max);
+					Symbolizer symbolizers[] = rule.getSymbolizers();
+					for(int i=0; i<symbolizers.length; i++){
+						symbolizers[i].setMaxScaleDenominator(max);
+					}					
+					focuedRuleItem = ruleTabFolder.getSelectionIndex();
+//					PropertyIsLikeOperation operation = new PropertyIsLikeOperation(new PropertyName("NAME"),new Literal("E*"),'*','?','/');
+//					ComplexFilter filter = new ComplexFilter(operation);
+//					rule.setFilter(filter);
+					
+					System.out.println(((Rule_Impl)rule).exportAsXML());
 					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
-					focuedRuleItem = ruleTabFolder.getSelectionIndex();	
+					
 					draw();
 				}
 			});
@@ -225,7 +247,19 @@ public class RuleTabItemBuilder {
 					}									
 				}
 			});
-								
+				
+//			Button button = new Button(composite,SWT.NULL);
+//			final FilterDialog filterDialog = new FilterDialog(composite.getShell());
+//			button.addSelectionListener(new SelectionListener() {
+//				public void widgetSelected(SelectionEvent e) {
+//					filterDialog.open();
+//
+//				}
+//				public void widgetDefaultSelected(SelectionEvent e) {
+//					widgetSelected(e);
+//				}
+//			});
+			
 			for(int j=0; j<rule.getSymbolizers().length; j++){
 				new SymbolizerTabItemBuilder(symbolizerTabFolder,rule.getSymbolizers()[j],userStyle,featureType); 								
 			}			
