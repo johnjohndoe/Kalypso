@@ -1,1 +1,1 @@
-Benutzerhandbuch.
+Benutzerhandbuch für das Grafikprogramm.
