@@ -1,0 +1,36 @@
+package org.kalypso.services.repository;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+import org.kalypso.services.repository.beans.ItemBean;
+import org.kalypso.services.repository.beans.RepositoryBean;
+
+
+/**
+ * General service base interface for repositories.
+ * <p>
+ * <b>IMPORTANT NOTE</b>: this interface is primary not intended to be directly
+ * used as a webservice. It should be extended by some specific interfaces
+ * that, in turn, are eligible to be real web services.
+ * 
+ * @author schlienger
+ */
+public interface IRepositoryService extends Remote
+{
+  /**
+   * Lists the available repositories.
+   */
+  public RepositoryBean[] getRepositories() throws RemoteException;
+  
+  /**
+   * Lists the root-items of a given repository.
+   */
+  public ItemBean[] getRoots( final RepositoryBean repository ) throws RemoteException;
+  
+  /**
+   * Returns the children of the given item (parent node). Returns an empty array
+   * when the parent has no children.
+   */
+  public ItemBean[] getChildren( final ItemBean parent ) throws RemoteException;
+}

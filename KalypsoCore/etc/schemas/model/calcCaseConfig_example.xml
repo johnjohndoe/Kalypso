@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transformationConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.model.kalypso.org
+.\calcCaseConfig.xsd">
+
+<transformation className="org.kalypso.util.XslTransformer">
+		<arg name="input" value="modell.gml"/>
+		<arg name="xsl" value="xsl/calcCase.xsl"/>
+		<arg name="output" value="calcCase.gml"/>
+	</transformation>
+</transformationConfig>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modellist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="xml.model.kalypso.org" xsi:schemaLocation="xml.model.kalypso.org modellist.xsd">
+    <model name="SpreeModell" icon="spree_icon.gif" image="IMAGE_SPREE" label="Spree"/>
+    <model name="Weisse Elster" icon="we_icon.gif" image="IMAGE_WEISSEELSTER" label="Weisse Elster"/>
+</modellist>

@@ -1,0 +1,44 @@
+package org.kalypso.services.sensor.beans;
+
+/**
+ * Contains meta-information on the localisation of the data for an observation.
+ * 
+ * @author schlienger
+ */
+public class ObservationDescriptorBean
+{
+  private String m_location;
+
+  private String m_format;
+
+  public ObservationDescriptorBean()
+  {
+    this( "", "" );
+  }
+
+  public ObservationDescriptorBean( final String location, final String format )
+  {
+    m_location = location;
+    m_format = format;
+  }
+
+  public String getLocation()
+  {
+    return m_location;
+  }
+
+  public String getFormat()
+  {
+    return m_format;
+  }
+
+  public void setFormat( String format )
+  {
+    m_format = format;
+  }
+
+  public void setLocation( String location )
+  {
+    m_location = location;
+  }
+}
