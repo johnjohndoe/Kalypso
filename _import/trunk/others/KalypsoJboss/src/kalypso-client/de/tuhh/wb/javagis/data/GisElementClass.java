@@ -158,7 +158,13 @@ public abstract class GisElementClass implements TableListener
     }
     public Class getSimplePropertyClass(int n)
     {
-	return mm.simplePropertyClasses[met][n];
+		if("bce_db".equals(this.getSimplePropertyFormat(n)))
+			
+		 return TSLink.class;
+			
+		 else
+		return mm.simplePropertyClasses[met][n];
+		
     }
     public String getSimplePropertyName(int n)
     {
@@ -232,7 +238,7 @@ public abstract class GisElementClass implements TableListener
 	myVersion.setVectorSets(met,oId,vectorSets);
     }
 
-    public Object getSimplePropertyValue(Object oId,int n) throws ObjectNotFoundException 
+    public Object getSimplePropertyValue(Object oId,int n) throws ObjectNotFoundException
     {
 	if(!simpleProperties.containsKey(oId))
 	    {
@@ -242,16 +248,22 @@ public abstract class GisElementClass implements TableListener
 			preLoadSimplePropertyValues(idList);
 		    }
 		else
-		    {	
+		    {
 			Vector  result=myVersion.getSimplePropertyRow(met,oId);
 			simpleProperties.put(oId,result);
 		    }
 	    }
-	return ((Vector)simpleProperties.get(oId)).elementAt(n);
-    }
+	
+		Object value= ((Vector)simpleProperties.get(oId)).elementAt(n);
+		if(value != null && "bce_db".equals(this.getSimplePropertyFormat(n)))
+		 return new TSLink((String)value);
+		return value;
+	}
 
     public void setSimplePropertyValue(Object oId,int n, Object value)
     {
+	if("bce_db".equals(this.getSimplePropertyFormat(n)))
+		 value = ((TSLink)value).getString();
 	myVersion.setSimplePropertyValue(met,oId, n, value);
 	simpleProperties.remove(oId);
     }

@@ -122,7 +122,7 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
 	public Calendar getCalendar() {
 		Date hourDate = timeChooser.hourDateModel.getDate();
 		calendar.set(Calendar.HOUR_OF_DAY,hourDate.getHours());
-		System.out.println("Hour: "+hourDate.getHours()+", Calendar: "+calendar);
+		//System.out.println("Hour: "+hourDate.getHours()+", Calendar: "+calendar);
 		Date minuteDate = timeChooser.minuteDateModel.getDate();
 		calendar.set(Calendar.MINUTE,minuteDate.getMinutes());
 		return calendar;
