@@ -1,8 +1,10 @@
 package de.psi.go.lhwz;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,7 +21,7 @@ import javax.swing.JOptionPane;
  */
 public class PSICompactImpl implements PSICompact
 {
-//  private final String m_replicationDir;
+  //  private final String m_replicationDir;
 
   private final Map m_id2gemessene;
 
@@ -31,7 +33,7 @@ public class PSICompactImpl implements PSICompact
 
   private final Map m_id2wq;
 
-//  private final Map m_id2zml;
+  //  private final Map m_id2zml;
 
   private boolean m_init = false;
 
@@ -46,12 +48,52 @@ public class PSICompactImpl implements PSICompact
     m_id2vorhergesagte = new HashMap();
     m_id2measType = new HashMap();
     m_id2wq = new HashMap();
-//    m_id2zml = new HashMap();
+    //    m_id2zml = new HashMap();
 
-//    m_replicationDir = System.getProperty( "java.io.tmpdir" );
+    //    m_replicationDir = System.getProperty( "java.io.tmpdir" );
+  }
 
-    prepareObjects( m_id2gemessene, "m" );
-    prepareObjects( m_id2vorhergesagte, "v" );
+  /**
+   * simuliert eine Liste von PSI Objekte
+   * 
+   * @param map
+   * @param suffix
+   * @throws ECommException
+   */
+  private final void prepareObjects( Map map, String suffix )
+      throws ECommException
+  {
+    final BufferedReader reader = new BufferedReader( new InputStreamReader(
+        getClass().getResourceAsStream( "lhwz-ids.csv" ) ) );
+
+    try
+    {
+      String line = reader.readLine();
+
+      while( line != null )
+      {
+        final String id = line + "." + suffix;
+        final String[] splits = line.split( "\\." );
+        map.put( id , new ObjectInfo( id, splits[splits.length - 1] + "." + suffix ) );
+
+        line = reader.readLine();
+      }
+    }
+    catch( IOException e )
+    {
+      throw new ECommException( e );
+    }
+    finally
+    {
+      try
+      {
+        reader.close();
+      }
+      catch( IOException e )
+      {
+        e.printStackTrace();
+      }
+    }
   }
 
   /**
@@ -84,6 +126,10 @@ public class PSICompactImpl implements PSICompact
         e1.printStackTrace();
       }
     }
+
+    // build PSICompact-Structure
+    prepareObjects( m_id2gemessene, "Gemessene" );
+    prepareObjects( m_id2vorhergesagte, "Vorhergesagte" );
   }
 
   private void testInitDone( ) throws ECommException
@@ -131,7 +177,7 @@ public class PSICompactImpl implements PSICompact
 
     if( from == null || to == null )
       return new ArchiveData[0];
-    
+
     if( m_id2gemessene.containsKey( id ) || m_id2vorhergesagte.containsKey( id ) )
     {
       // overriden?
@@ -253,45 +299,6 @@ public class PSICompactImpl implements PSICompact
   }
 
   /**
-   * simuliert einer Liste von PSI Objekte
-   * 
-   * @param map
-   * @param suffix
-   */
-  private final void prepareObjects( Map map, String suffix )
-  {
-    String id = "PSI-ROOT";
-    map.put( id, new ObjectInfo( id, "PSI-Compact" ) );
-
-    id = "PSI-ROOT.PEGEL_1." + suffix;
-    map.put( id, new ObjectInfo( id, "Pegel1" + suffix ) );
-
-    id = "PSI-ROOT.PEGEL_2." + suffix;
-    map.put( id, new ObjectInfo( id, "Pegel2" + suffix ) );
-
-    id = "PSI-ROOT.LEVEL_1";
-    map.put( id, new ObjectInfo( id, "Level1" ) );
-
-    id = "PSI-ROOT.LEVEL_1.PEGEL_11." + suffix;
-    map.put( id, new ObjectInfo( id, "Pegel11" + suffix ) );
-
-    id = "PSI-ROOT.LEVEL_1.PEGEL_12." + suffix;
-    map.put( id, new ObjectInfo( id, "Pegel12" + suffix ) );
-
-    id = "PSI-ROOT.LEVEL_1.SUBLEVEL_1";
-    map.put( id, new ObjectInfo( id, "Sublevel1" ) );
-
-    id = "PSI-ROOT.LEVEL_1.SUBLEVEL_1.PEGEL_111." + suffix;
-    map.put( id, new ObjectInfo( id, "Pegel111" + suffix ) );
-
-    id = "PSI-ROOT.LEVEL_1.SUBLEVEL_1.PEGEL_112." + suffix;
-    map.put( id, new ObjectInfo( id, "Pegel112" + suffix ) );
-
-    id = "PSI-ROOT.LEVEL_2";
-    map.put( id, new ObjectInfo( id, "Level2" ) );
-  }
-
-  /**
    * @see de.psi.go.lhwz.PSICompact#getMeasureType(java.lang.String)
    */
   public int getMeasureType( String id ) throws ECommException
@@ -344,7 +351,7 @@ public class PSICompactImpl implements PSICompact
 
     return false;
   }
-  
+
   /**
    * @see de.psi.go.lhwz.PSICompact#removeFile(java.lang.String)
    */
@@ -372,7 +379,7 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    return m_conf.getProperty( userClass, "" ).split(",");
+    return m_conf.getProperty( userClass, "" ).split( "," );
   }
 
   /**

@@ -22,6 +22,7 @@ public class PSICompactItem implements IRepositoryItem
   private final PSICompactItem m_parent;
 
   private final String m_name;
+  private final String m_identifier;
 
   private final List m_children;
 
@@ -36,16 +37,18 @@ public class PSICompactItem implements IRepositoryItem
    * 
    * @param parent
    * @param name
+   * @param identifier
    * @param info
    * @param adaptable
    * @param valueType
    */
-  public PSICompactItem( final PSICompactItem parent, final String name,
+  public PSICompactItem( final PSICompactItem parent, final String name, final String identifier,
       final PSICompact.ObjectInfo info, final boolean adaptable,
       final int valueType )
   {
     m_parent = parent;
     m_name = name;
+    m_identifier = identifier;
     m_objectInfo = info;
     m_adaptable = adaptable;
     m_valueType = valueType;
@@ -154,6 +157,6 @@ public class PSICompactItem implements IRepositoryItem
    */
   public String getIdentifier( )
   {
-    return getRepository().getIdentifier() + m_objectInfo.getId();
+    return getRepository().getIdentifier() + m_identifier;
   }
 }

@@ -1,6 +1,7 @@
 package org.kalypso.psiadapter.repository;
 
-import java.util.Hashtable;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.kalypso.java.util.Arrays;
 import org.kalypso.psiadapter.PSICompactFactory;
@@ -12,7 +13,7 @@ import org.kalypso.repository.RepositoryException;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
-import de.psi.go.lhwz.PSICompact.*;
+import de.psi.go.lhwz.PSICompact.ObjectInfo;
 
 /**
  * Spezifisches Repository für die PSICompact Struktur.
@@ -40,54 +41,40 @@ public class PSICompactRepository extends AbstractRepository
    * @return item
    * @throws ECommException
    */
-  private PSICompactItem buildStructure( Hashtable nodes, int valueType )
+  private PSICompactItem buildStructure( Map nodes, int valueType )
       throws ECommException
   {
     ObjectInfo[] objInfos = PSICompactFactory.getConnection().getInfo(
         valueType );
 
-    /*
-     * TRICK #1:
-     * 
-     * Sortierung wichtig: damit werden die Leafs als erster bearbeitet und es
-     * wird garantiert dass die Items die nur Ebenen sind keine Zeitreihen
-     * subitems bekommen.
-     * 
-     * Die PSICompact Schnittstelle gibt nicht zurück, ob es sich um Ebenen oder
-     * echte Timeseries handelt. Wir bekommen lediglich die Struktur.
-     * 
-     * Siehe auch TRICK #2 unten.
-     */
     java.util.Arrays.sort( objInfos, new ObjectInfoLengthComparator() );
-
+    
     PSICompactItem parent = null;
 
     for( int k = 0; k < objInfos.length; k++ )
     {
       final ObjectInfo info = objInfos[k];
+      final String infoID = info.getId().trim();
 
-      final String[] path = info.getId().split( "\\." );
+      final String[] path = infoID.split( "\\." );
 
       for( int i = 0; i < path.length; i++ )
       {
-        final String nodeID = Arrays.implode( path, ".", 0, i );
+        if( path[i].length() == 0 )
+          continue;
+        
+        final String nodeID = Arrays.implode( path, ".", 0, i ).trim();
 
         if( nodeID.length() == 0 )
           continue;
 
         if( nodes.containsKey( nodeID ) )
-        {
           parent = (PSICompactItem) nodes.get( nodeID );
-        }
         else
         {
-          boolean adaptable = false;
+          final boolean adaptable = nodeID.equals( infoID );
 
-          // TRICK #2: nur die Leafs von der PSICompact Struktur sind Zeitreihen
-          if( i == path.length - 1 )
-            adaptable = true;
-
-          final PSICompactItem n = new PSICompactItem( parent, path[i], info,
+          final PSICompactItem n = new PSICompactItem( parent, path[i], nodeID, info,
               adaptable, valueType );
 
           // gleich parent item aktualisieren (wird nicht von der Child gemacht,
@@ -99,12 +86,14 @@ public class PSICompactRepository extends AbstractRepository
 
           parent = n;
         }
+        
+        System.out.println();
       }
     }
 
     // abnormal case...
     if( parent == null )
-      return new PSICompactItem( null, "Keine Struktur in PSICompact...",
+      return new PSICompactItem( null, "Keine Struktur in PSICompact...", "<Kein ID>",
           new PSICompact.ObjectInfo(), false, 0 );
 
     while( parent.getParent() != null )
@@ -150,7 +139,7 @@ public class PSICompactRepository extends AbstractRepository
   {
     try
     {
-      final Hashtable nodes = new Hashtable();
+      final TreeMap nodes = new TreeMap();
 
       final PSICompactItem nodeMeasurements = buildStructure( nodes,
           PSICompact.TYPE_MEASUREMENT );
@@ -162,7 +151,7 @@ public class PSICompactRepository extends AbstractRepository
         System.out
             .println( "PSICompactRepository - Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
 
-        m_psiRoot = new PSICompactItem( null, "Fehler...", null, false, 0 );
+        m_psiRoot = new PSICompactItem( null, "Fehler...", "Fehler", null, false, 0 );
       }
       else
         m_psiRoot = nodeMeasurements;

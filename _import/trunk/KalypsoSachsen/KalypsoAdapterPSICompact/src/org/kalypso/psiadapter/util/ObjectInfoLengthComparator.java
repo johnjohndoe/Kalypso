@@ -14,16 +14,11 @@ public class ObjectInfoLengthComparator implements Comparator
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( Object arg0, Object arg1 )
+  public int compare( final Object arg0, final Object arg1 )
   {
-    int l1 = ( (ObjectInfo)arg0 ).getId().length();
-    int l2 = ( (ObjectInfo)arg1 ).getId().length();
+    final String l1 = ( (ObjectInfo)arg0 ).getId();
+    final String l2 = ( (ObjectInfo)arg1 ).getId();
 
-    if( l1 > l2 )
-      return -1;
-    else if( l1 < l2 )
-      return 1;
-    else
-      return 0;
+    return l1.compareTo( l2 );
   }
 }

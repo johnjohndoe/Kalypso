@@ -18,17 +18,27 @@ public class PSICompactRepositoryTest extends TestCase
   {
     System.out.println( "Start listing for getChildren");
     
-    IRepository rep = PSICompactRepositoryFactory.getRepository();
+    final IRepository rep = PSICompactRepositoryFactory.getRepository();
     
-    IRepositoryItem[] items = rep.getChildren();
-    
-    for( int i = 0; i < items.length; i++ )
-    {
-      IRepositoryItem item = items[i];
-      
-      System.out.println( item );
-    }
+    recursiveGetChildren( rep.getChildren() );
     
     System.out.println( "Stop listing for getChildren");
+  }
+  
+  /**
+   * Goes recursively through the repository
+   *  
+   * @param items
+   * @throws RepositoryException
+   */
+  private void recursiveGetChildren( final IRepositoryItem[] items ) throws RepositoryException
+  {
+    for( int i = 0; i < items.length; i++ )
+    {
+      System.out.println( "Item: " + items[i].getName() + " ID: " + items[i].getIdentifier() );
+      
+      if( items[i].hasChildren() )
+        recursiveGetChildren( items[i].getChildren() );
+    }
   }
 }
