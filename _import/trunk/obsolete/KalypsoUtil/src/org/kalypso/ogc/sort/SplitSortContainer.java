@@ -10,7 +10,7 @@ import org.deegree_impl.model.geometry.GeometryFactory;
 
 public class SplitSortContainer
 {
-  private static final int MAX_OBJECTS = 25;
+  private static final int MAX_OBJECTS = 100;
 
   private SplitSortContainer[] mySubContainer =
   { null, null, null, null };
