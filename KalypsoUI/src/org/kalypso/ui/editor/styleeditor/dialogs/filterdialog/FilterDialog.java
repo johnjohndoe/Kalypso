@@ -1,9 +1,7 @@
 package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 
 import java.util.ArrayList;
-
 import javax.swing.event.EventListenerList;
-
 import org.deegree.graphics.sld.Rule;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
@@ -13,6 +11,7 @@ import org.deegree.services.wfs.filterencoding.FilterConstructionException;
 import org.deegree.services.wfs.filterencoding.Operation;
 import org.deegree_impl.graphics.sld.StyleFactory;
 import org.deegree_impl.services.wfs.filterencoding.AbstractFilter;
+import org.deegree_impl.services.wfs.filterencoding.BoundaryExpression;
 import org.deegree_impl.services.wfs.filterencoding.ComparisonOperation;
 import org.deegree_impl.services.wfs.filterencoding.ComplexFilter;
 import org.deegree_impl.services.wfs.filterencoding.FeatureFilter;
@@ -52,7 +51,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.ui.editor.styleeditor.dialogs.filterencoding.BoundaryExpression;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterencoding.ElseFilter;
 import org.kalypso.ui.editor.styleeditor.panels.ComparisonFilterComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.LogicalFilterComboPanel;
@@ -1501,7 +1499,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
 
     Label propertyLabel = new Label( configureGroup, SWT.NULL );
     propertyLabel.setText( "Property" );
-    final Combo propertyNameCombo = new Combo( configureGroup, SWT.NULL );
+    final Combo propertyNameCombo = new Combo( configureGroup, SWT.NULL );    
     // get all PropertyNames to use for filter
     ArrayList labelStringItems = new ArrayList();
     FeatureTypeProperty[] ftp = featureType.getProperties();
@@ -1529,7 +1527,6 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       items[j] = (String)labelStringItems.get( j );
     propertyNameCombo.setItems( items );
     propertyNameCombo.setText( "..." );
-
     Label literalLabel = new Label( configureGroup, SWT.NULL );
     literalLabel.setText( "LowerBoundary" );
     final Text literalText = new Text( configureGroup, SWT.BORDER );
