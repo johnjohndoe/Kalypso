@@ -17,7 +17,6 @@ public class TypeRegistrySingleton
     try
     {
       typeRegistry.registerTypeHandler( new GMLBoundingShapeTypeHandler() );
-    //  typeRegistry.registerTypeHandler( new GMLFeatueAssociationTypeHandler() );
     }
     catch( TypeRegistryException e )
     {

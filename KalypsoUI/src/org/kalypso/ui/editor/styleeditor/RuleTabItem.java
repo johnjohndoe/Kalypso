@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 12.07.2004
  *  
@@ -75,25 +75,23 @@ import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
  */
 public class RuleTabItem
 {
-
   private int counter = 0;
 
-  private TabFolder ruleTabFolder = null;
+  private TabFolder m_ruleTabFolder = null;
 
-  private int focusedRuleItem = -1;
+  private int m_focusedRuleItem = -1;
 
   private int focusedSymbolizerItem = -1;
 
-  private KalypsoUserStyle userStyle = null;
+  private KalypsoUserStyle m_userStyle;
 
-  private FeatureType featureType = null;
+  private final FeatureType m_featureType;
 
-  public RuleTabItem( TabFolder m_ruleTabFolder, KalypsoUserStyle m_userStyle,
-      FeatureType m_featureType )
+  public RuleTabItem( TabFolder ruleTabFolder, KalypsoUserStyle userStyle, FeatureType featureType )
   {
-    setRuleTabFolder( m_ruleTabFolder );
-    this.userStyle = m_userStyle;
-    this.featureType = m_featureType;
+    m_ruleTabFolder = ruleTabFolder;
+    m_userStyle = userStyle;
+    m_featureType = featureType;
   }
 
   public void drawRule( final Rule rule, int i )
@@ -228,12 +226,12 @@ public class RuleTabItem
     } );
 
     AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite,
-        MessageBundle.STYLE_EDITOR_SYMBOLIZER, featureType );
+        MessageBundle.STYLE_EDITOR_SYMBOLIZER, m_featureType );
 
     final EditSymbolizerPanel editSymbolizerPanel = new EditSymbolizerPanel( composite, rule
         .getSymbolizers().length );
 
-    new LegendLabel( composite, userStyle, i );
+    new LegendLabel( composite, m_userStyle, i );
 
     symbolizerTabFolder = new TabFolder( composite, SWT.NULL );
 
@@ -264,7 +262,7 @@ public class RuleTabItem
           int index = symbolizerTabFolder.getSelectionIndex();
           if( index == ( rule.getSymbolizers().length - 1 ) || index < 0 )
           {
-              // nothing
+            // nothing
           }
           else
           {
@@ -340,7 +338,7 @@ public class RuleTabItem
     buttonComposite.setLayout( new GridLayout( 1, true ) );
     Button button = new Button( buttonComposite, SWT.NULL );
     button.setText( MessageBundle.STYLE_EDITOR_EDIT_FILTER );
-    final FilterDialog filterDialog = new FilterDialog( composite.getShell(), featureType, rule );
+    final FilterDialog filterDialog = new FilterDialog( composite.getShell(), m_featureType, rule );
     filterDialog.addFilterDialogListener( new FilterDialogListener()
     {
       public void filterUpdated( FilterDialogEvent event )
@@ -367,7 +365,7 @@ public class RuleTabItem
 
     if( rule.getSymbolizers().length == 0 )
       symbolizerTabFolder.setVisible( false );
-    if( focusedRuleItem == i && focusedSymbolizerItem != -1 )
+    if( m_focusedRuleItem == i && focusedSymbolizerItem != -1 )
       symbolizerTabFolder.setSelection( focusedSymbolizerItem );
 
     composite.pack( true );
@@ -386,15 +384,15 @@ public class RuleTabItem
     if( rule.getSymbolizers().length == 0 )
     {
       // add dummy invisilbe placeholder
-      new SymbolizerTabItemBuilder( symbolizerTabFolder, null, userStyle, featureType );
+      new SymbolizerTabItemBuilder( symbolizerTabFolder, null, m_userStyle, m_featureType );
       symbolizerTabFolder.setVisible( false );
     }
     else
     {
       for( int j = 0; j < rule.getSymbolizers().length; j++ )
       {
-        new SymbolizerTabItemBuilder( symbolizerTabFolder, rule.getSymbolizers()[j], userStyle,
-            featureType );
+        new SymbolizerTabItemBuilder( symbolizerTabFolder, rule.getSymbolizers()[j], m_userStyle,
+            m_featureType );
       }
       symbolizerTabFolder.pack();
       symbolizerTabFolder.setSize( 224, 287 );
@@ -404,37 +402,17 @@ public class RuleTabItem
 
   public KalypsoUserStyle getUserStyle()
   {
-    return userStyle;
-  }
-
-  public void setUserStyle( KalypsoUserStyle m_userStyle )
-  {
-    this.userStyle = m_userStyle;
+    return m_userStyle;
   }
 
   public TabFolder getRuleTabFolder()
   {
-    return ruleTabFolder;
+    return m_ruleTabFolder;
   }
 
-  public void setRuleTabFolder( TabFolder m_ruleTabFolder )
+  public void setFocusedRuleItem( int focusedRuleItem )
   {
-    this.ruleTabFolder = m_ruleTabFolder;
-  }
-
-  public int getFocusedRuleItem()
-  {
-    return focusedRuleItem;
-  }
-
-  public void setFocusedRuleItem( int m_focusedRuleItem )
-  {
-    this.focusedRuleItem = m_focusedRuleItem;
-  }
-
-  public int getFocusedSymbolizerItem()
-  {
-    return focusedSymbolizerItem;
+    m_focusedRuleItem = focusedRuleItem;
   }
 
   public void setFocusedSymbolizerItem( int m_focusedSymbolizerItem )

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,12 +57,11 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.deegree.model.feature;
 
 import java.util.Map;
-
 
 /**
  * The FeatureType interface is intended to provide details of the type of a
@@ -79,7 +78,7 @@ import java.util.Map;
 public interface FeatureType
 {
   public static final int UNBOUND_OCCURENCY = -1;
-  
+
   /**
    * returns the direct parents of the FeatureType. If it hasn't a parent null
    * should be returned
@@ -88,6 +87,7 @@ public interface FeatureType
 
   /**
    * returns the direct children of the FeatureType
+   * 
    * @deprecated Don't use it!
    */
   public FeatureType[] getChildren();
@@ -108,16 +108,45 @@ public interface FeatureType
   public FeatureTypeProperty getProperty( String name );
 
   public String getNamespace();
-  public int getMinOccurs(int pos);
-  public int getMaxOccurs(int pos);
- 
 
+  /**
+   * @deprecated use getMinOccurs(String prop) instead
+   */
+  public int getMinOccurs( int pos );
+
+  /**
+   * @deprecated use getMaxOccurs(String prop) instead
+   */
+  public int getMaxOccurs( int pos );
+
+  public int getMaxOccurs( String linkName );
+
+  public int getMinOccurs( String linkName );
+
+  /**
+   * @deprecated don't use positions, use names only
+   */
   public int getPropertyPosition( String name );
+
+  /**
+   * @deprecated don't use positions, use names only
+   */
   public int getDefaultGeometryPropertyPosition();
-  
+
+  public FeatureTypeProperty getDefaultGeometryProperty();
+
   public String getSubstitutionGroup();
- 
-  
-  public Annotation getAnnotation(String langKey);
+
+  public Annotation getAnnotation( String langKey );
+
   public Map getAnnotationMap();
+
+  public void setVirtuelFeatureTypeProperty( FeatureTypeProperty[] properties );
+
+  public FeatureTypeProperty[] getVirtuelFeatureTypeProperty();
+
+  public FeatureTypeProperty getVirtuelFeatureTypeProperty( String propName );
+
+  public boolean isVirtuelProperty( String propertyName );
+
 }

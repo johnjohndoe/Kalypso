@@ -8,10 +8,12 @@ import org.deegree.model.feature.FeatureAssociationTypeProperty;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Point;
 import org.deegree.model.geometry.GM_Position;
+import org.deegree_impl.gml.schema.virtual.VirtuelFeatureTypeProperty;
 import org.deegree_impl.model.geometry.GM_Envelope_Impl;
 import org.deegree_impl.model.geometry.GeometryFactory;
 
@@ -67,8 +69,7 @@ public class Feature_Impl implements Feature
       }
     }
 
-    final FeatureProperty[] properties = FeatureFactory.createDefaultFeatureProperty( ftp,
-        false );
+    final FeatureProperty[] properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
     for( int i = 0; i < ftp.length; i++ )
     {
       if( properties[i].getValue() != null )
@@ -322,6 +323,7 @@ public class Feature_Impl implements Feature
 
   public boolean select( int selectID )
   {
+    System.out.println( "select feature " + m_id + " with " + selectID );
     if( isSelected( selectID ) )
       return false;
 
@@ -346,7 +348,7 @@ public class Feature_Impl implements Feature
 
   public boolean isSelected( int selectID )
   {
-    boolean selected=selectID == ( mySelection & selectID );
+    boolean selected = selectID == ( mySelection & selectID );
     return selected;
   }
 
@@ -364,5 +366,14 @@ public class Feature_Impl implements Feature
   public void setSelection( final int selection )
   {
     mySelection = selection;
+  }
+
+  /**
+   * @see org.deegree.model.feature.Feature#getVirtuelProperty(java.lang.String)
+   */
+  public Object getVirtuelProperty( String propertyName,GMLWorkspace workspace )
+  {
+    VirtuelFeatureTypeProperty virtuelFeatureTypeProperty = (VirtuelFeatureTypeProperty)m_featureType.getVirtuelFeatureTypeProperty(propertyName);
+    return virtuelFeatureTypeProperty.getVirtuelValue(this,workspace);
   }
 }

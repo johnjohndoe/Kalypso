@@ -60,6 +60,10 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.deegree_impl.graphics.sld;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 
 import org.deegree.filterencoding.Filter;
@@ -436,7 +440,7 @@ public class Rule_Impl implements Rule, Marshallable
     }
     sb.append( "</Rule>" );
 
-    Debug.debugMethodEnd();
+    Debug.debugMethodEnd();          
     return sb.toString();
   }
 }

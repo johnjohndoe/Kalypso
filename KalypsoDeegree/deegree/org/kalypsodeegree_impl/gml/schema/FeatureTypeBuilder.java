@@ -318,7 +318,7 @@ public class FeatureTypeBuilder
     }
     FeatureTypeProperty[] ftProperties = (FeatureTypeProperty[])featureTypePropertyList
         .toArray( new FeatureTypeProperty[featureTypePropertyList.size()] );
-    
+
     int[] minOccurs = new int[ftProperties.length];
     int[] maxOccurs = new int[ftProperties.length];
     for( int i = 0; i < ftProperties.length; i++ )
@@ -341,8 +341,12 @@ public class FeatureTypeBuilder
       else
         maxOccurs[i] = Integer.parseInt( max );
     }
-    return FeatureFactory.createFeatureType( m_name, m_namespace, ftProperties, minOccurs,
-        maxOccurs, m_substitutionGroup, m_annotationMap );
+    final FeatureType realFeatureType = FeatureFactory.createFeatureType( m_name, m_namespace,
+        ftProperties, minOccurs, maxOccurs, m_substitutionGroup, m_annotationMap );
+
+    realFeatureType.setVirtuelFeatureTypeProperty( FeatureFactory
+        .createVirtualFeatureTypeProperties( realFeatureType ) );
+    return realFeatureType;
   }
 
   public boolean isFeaturePropertyType()

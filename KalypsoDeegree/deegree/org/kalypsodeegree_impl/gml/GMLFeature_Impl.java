@@ -207,23 +207,6 @@ public class GMLFeature_Impl implements GMLFeature
   public String getName()
   {
     return element.getNodeName();
-// FIXED v.doemming@tuhh.de property gml:name should appear as a property 
-//
-//    Debug.debugMethodBegin( this, "getName" );
-//
-//    String name = null;
-//
-//    NodeList nl = element.getElementsByTagName( "gml:name" );
-//
-//    if( ( nl != null ) && ( nl.getLength() > 0 ) )
-//    {
-//      Element elem = (Element)nl.item( 0 );
-//      name = elem.getFirstChild().getNodeValue();
-//    }
-//
-//    Debug.debugMethodEnd();
-//   
-//    return name;
   }
   
   /**
@@ -235,7 +218,8 @@ public class GMLFeature_Impl implements GMLFeature
   }
   
   /**
-   * @see org.deegree.gml.GMLFeature#getNamespace()
+   * 
+   * @see org.deegree.gml.GMLFeature#getNamespaceURI()
    */
   public String getNamespaceURI()
   {
@@ -314,12 +298,6 @@ public class GMLFeature_Impl implements GMLFeature
         {
           Element elem = (Element)nl.item( i );
 
-//          // make sure that's a property node
-//          if( !XMLTools.toLocalName( elem.getNodeName() ).equals( "name" )
-//              && !XMLTools.toLocalName( elem.getNodeName() ).equals( "description" )
-//              && !XMLTools.toLocalName( elem.getNodeName() ).equals( "boundedBy" ) )
-//          {
-            //is it a geometry property
             if( isGeometryProperty( elem ) )
             {
               list.add( new GMLGeoProperty_Impl( elem ) );
@@ -534,19 +512,7 @@ public class GMLFeature_Impl implements GMLFeature
    */
   public void addProperty( GMLProperty property ) throws GMLException
   {
-    Debug.debugMethodBegin( this, "addProperty" );
-
-    //    	NodeList nl = element.getElementsByTagName( property.getName() );
-    //
-    //    	// remove property if it alread exists
-    //    	if (nl != null && nl.getLength() > 0) {
-    //    		element.removeChild( nl.item(0) );
-    //    	}
-    //
-    // insert new property
     XMLTools.insertNodeInto( ( (GMLProperty_Impl)property ).getAsElement(), element );
-
-    Debug.debugMethodEnd();
   }
 
   /**
@@ -600,8 +566,7 @@ public class GMLFeature_Impl implements GMLFeature
 
   /**
    * 
-   * 
-   * @return
+   * @see java.lang.Object#toString()
    */
   public String toString()
   {
@@ -613,6 +578,9 @@ public class GMLFeature_Impl implements GMLFeature
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.8  2005/02/28 13:34:14  doemming
+ * *** empty log message ***
+ *
  * Revision 1.7  2005/02/08 18:43:59  belger
  * *** empty log message ***
  *

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.deegree_impl.graphics.displayelements;
 
 import java.util.ArrayList;
@@ -82,6 +82,7 @@ import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.graphics.sld.TextSymbolizer;
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.geometry.GM_Curve;
 import org.deegree.model.geometry.GM_Exception;
 import org.deegree.model.geometry.GM_MultiCurve;
@@ -114,7 +115,7 @@ public class DisplayElementFactory
   /**
    * returns the display elements associated to a feature
    */
-  public static DisplayElement[] createDisplayElement( Object o, UserStyle[] styles )
+  public static DisplayElement[] createDisplayElement( Object o, UserStyle[] styles,GMLWorkspace workspace )
       throws IncompatibleGeometryTypeException
   {
     Debug.debugMethodBegin( "DisplayElementFactory", "getDisplayElement" );
@@ -183,7 +184,7 @@ public class DisplayElementFactory
                   for( int u = 0; u < symbolizers.length; u++ )
                   {
                     DisplayElement displayElement = DisplayElementFactory.buildDisplayElement(
-                        feature, symbolizers[u] );
+                        feature, symbolizers[u],workspace );
 
                     if( displayElement != null )
                     {
@@ -229,7 +230,7 @@ public class DisplayElementFactory
    *           compatible with the <tt>Symbolizer</tt>
    * @return constructed <tt>DisplayElement</tt>
    */
-  public static DisplayElement buildDisplayElement( Object o, Symbolizer symbolizer )
+  public static DisplayElement buildDisplayElement( Object o, Symbolizer symbolizer,GMLWorkspace workspace )
       throws IncompatibleGeometryTypeException
   {
     DisplayElement displayElement = null;
@@ -244,7 +245,11 @@ public class DisplayElementFactory
 
       if( geometry != null )
       {
-        geoProperty = (GM_Object)feature.getProperty( geometry.getPropertyName() );
+        // check if virtuel property
+        if( feature.getFeatureType().isVirtuelProperty( geometry.getPropertyName() ) )
+          geoProperty = (GM_Object)feature.getVirtuelProperty( geometry.getPropertyName(),workspace );
+        else
+          geoProperty = (GM_Object)feature.getProperty( geometry.getPropertyName() );
       }
       else
       {
