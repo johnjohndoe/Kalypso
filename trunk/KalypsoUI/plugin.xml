@@ -81,7 +81,6 @@
       <import plugin="org.apache.ant" export="true"/>
       <import plugin="org.kalypso.core" export="true"/>
       <import plugin="org.bce.eclipse.platform.contrib"/>
-      <import plugin="org.bce.eclipse.rcp.contrib"/>
    </requires>
 
    <extension
