@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
 import java.io.File;
@@ -219,7 +219,8 @@ public class NAZMLGenerator
     for( int i = 0; i < values.getCount(); i++ )
     {
       final Date date = (Date)values.getElement( i, dateAxis );
-      final Object value = values.getElement( i, valueAxis );
+      final Double value = (Double)values.getElement( i, valueAxis );
+
       if( i == 0 )
       {
         writer.write( "\n" );
@@ -228,7 +229,15 @@ public class NAZMLGenerator
         writer.write( "grap\n" );
 
       }
-      writer.write( m_grapDateFormat.format( date ) + " " + value.toString() + "\n" );
+      // sometimes values < 0 are used to indicate measure-failures,
+      // unfortunately
+      // the simulation kernel will hang in an endless loop and write a endless
+      // error file if this occurs, so we better prevent this in any case
+
+      if( value.doubleValue() < 0 )
+        writer.write( m_grapDateFormat.format( date ) + " 0.0\n" );
+      else
+        writer.write( m_grapDateFormat.format( date ) + " " + value.toString() + "\n" );
     }
   }
 }
