@@ -1,5 +1,7 @@
 package org.kalypso.ogc.gml.outline;
 
+import java.util.ArrayList;
+
 import org.deegree.graphics.sld.Rule;
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.model.feature.event.ModellEvent;
@@ -10,6 +12,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
 
 /**
  * Dieser TreeContentProvider akzeptiert nur MapModell'e als Input.
@@ -40,16 +43,25 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
     else if( parentElement instanceof ThemeStyleTreeObject )
     {
       final ThemeStyleTreeObject obj = (ThemeStyleTreeObject)parentElement;
-      
+
       final IKalypsoTheme theme = obj.getTheme();
       if( !( theme instanceof IKalypsoFeatureTheme ) )
         return null;
-      
+
       final KalypsoUserStyle userStyle = obj.getStyle();
       final Rule[] rules = userStyle.getFeatureTypeStyles()[0].getRules();
-      final RuleTreeObject[] result = new RuleTreeObject[rules.length];
+
+      // need to parse all rules as some might belong to a filter-rule-pattern
+      RuleFilterCollection rulePatternCollection = RuleFilterCollection.getInstance();
+      for( int i = 0; i < rules.length; i++ )
+      {
+        rulePatternCollection.addRule( rules[i] );
+      }
+      ArrayList filteredRules = rulePatternCollection.getFilteredRuleCollection();
+      final RuleTreeObject[] result = new RuleTreeObject[filteredRules.size()];
       for( int i = 0; i < result.length; i++ )
-        result[i] = new RuleTreeObject( rules[i], userStyle, (IKalypsoFeatureTheme)theme );
+        result[i] = new RuleTreeObject( filteredRules.get( i ), userStyle,
+            (IKalypsoFeatureTheme)theme );
       return result;
     }
     return null;
@@ -102,7 +114,7 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
 
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-   *      java.lang.Object, java.lang.Object)
+   *            java.lang.Object, java.lang.Object)
    */
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
