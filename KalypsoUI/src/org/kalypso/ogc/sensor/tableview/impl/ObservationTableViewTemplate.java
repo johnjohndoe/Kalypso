@@ -4,6 +4,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * An <code>ITableViewTemplate</code> designed to be used with an
@@ -23,9 +24,10 @@ public class ObservationTableViewTemplate extends DefaultTableViewTemplate
    * 
    * @param obs
    * @param editableColumns
+   * @param args
    */
   public void setObservation( final IObservation obs,
-      final boolean editableColumns )
+      final boolean editableColumns, final IVariableArguments args )
   {
     removeAllColumns();
 
@@ -51,6 +53,8 @@ public class ObservationTableViewTemplate extends DefaultTableViewTemplate
         final DefaultTableViewColumn col = new DefaultTableViewColumn( axes[i]
             .getName()
             + " - " + axes[i].getUnit(), editableColumns, 50, axes[i].getName(), obs );
+        
+        col.setArguments( args );
 
         addColumn( col );
       }

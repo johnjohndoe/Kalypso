@@ -8,6 +8,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * A default <code>IDiagramTemplate</code> that works directly with an <code>IObservation</code>.
@@ -40,8 +41,9 @@ public class ObservationDiagramTemplate extends DefaultDiagramTemplate
    * Sets the observation used by this template.
    * 
    * @param obs
+   * @param args
    */
-  public void setObservation( final IObservation obs  )
+  public void setObservation( final IObservation obs, final IVariableArguments args  )
   {
     removeAllCurves();
     setTitle( obs.getName() );
@@ -63,6 +65,7 @@ public class ObservationDiagramTemplate extends DefaultDiagramTemplate
         mappings.setProperty( valueAxis[i].getName(), "v" );
 
         final DiagramCurve curve = new DiagramCurve( valueAxis[i].getName(), obs, mappings, this );
+        curve.setArguments( args );
 
         addCurve( curve );
       }

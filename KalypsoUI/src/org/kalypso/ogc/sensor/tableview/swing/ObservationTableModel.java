@@ -68,7 +68,7 @@ public class ObservationTableModel extends AbstractTableModel
       }
 
       // values of observation of the column
-      final ITuppleModel tupModel = col.getObservation().getValues( null );
+      final ITuppleModel tupModel = col.getObservation().getValues( col.getArguments() );
 
       // fill shared column values
       for( int r = 0; r < tupModel.getCount(); r++ )

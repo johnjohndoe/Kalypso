@@ -108,7 +108,7 @@ public class DiagramViewPart extends ViewPart implements
 
         final IObservation obs = ObservationCache.getObservationFor( item );
         if( obs != null )
-          m_template.setObservation( obs );
+          m_template.setObservation( obs, ObservationViewHelper.makeDateRange( item ) );
       }
     };
 

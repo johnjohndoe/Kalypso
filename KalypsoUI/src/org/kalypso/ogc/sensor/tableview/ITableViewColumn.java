@@ -2,6 +2,7 @@ package org.kalypso.ogc.sensor.tableview;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.util.runtime.IVariableArguments;
 
 
 /**
@@ -43,4 +44,10 @@ public interface ITableViewColumn
    * @return the observation on which this column is based
    */
   public IObservation getObservation();
+  
+  /**
+   * @return variable arguments that can be used when fetching the values from the
+   * observation.
+   */
+  public IVariableArguments getArguments( );
 }
