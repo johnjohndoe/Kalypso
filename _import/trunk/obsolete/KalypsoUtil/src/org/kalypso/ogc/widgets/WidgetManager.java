@@ -32,21 +32,25 @@ public class WidgetManager implements MouseListener, MouseMotionListener
   // MouseAdapter
   public void mouseClicked( MouseEvent e )
   {
+    final IWidget actualWidget = getActualWidget();
+    if(actualWidget==null)
+      return;
+
     if( e.isPopupTrigger() )
-      getActualWidget().clickPopup( e.getPoint() );
-    else if( getActualWidget() != null )
-      switch( e.getButton() )
+      actualWidget.clickPopup( e.getPoint() );
+    else
+     switch( e.getButton() )
       {
       case MouseEvent.BUTTON1:
-        getActualWidget().leftClicked( e.getPoint() );
+        actualWidget.leftClicked( e.getPoint() );
         break;
 
       case MouseEvent.BUTTON2:
-        getActualWidget().middleClicked( e.getPoint() );
+        actualWidget.middleClicked( e.getPoint() );
         break;
 
       case MouseEvent.BUTTON3:
-        getActualWidget().rightClicked( e.getPoint() );
+        actualWidget.rightClicked( e.getPoint() );
         stopTemporaryWidget();
         break;
 
@@ -90,23 +94,26 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   public void mousePressed( MouseEvent e )
   {
+    final IWidget actualWidget = getActualWidget();
+    if(actualWidget==null)
+      return;
     if( e.isPopupTrigger() )
-      getActualWidget().clickPopup( e.getPoint() );
-    else if( getActualWidget() != null )
+      actualWidget.clickPopup( e.getPoint() );
+    else 
       switch( e.getButton() )
       {
       case MouseEvent.BUTTON1:
-        getActualWidget().leftPressed( e.getPoint() );
+        actualWidget.leftPressed( e.getPoint() );
 
         break;
 
       case MouseEvent.BUTTON2:
-        getActualWidget().middlePressed( e.getPoint() );
+        actualWidget.middlePressed( e.getPoint() );
 
         break;
 
       case MouseEvent.BUTTON3:
-        getActualWidget().rightPressed( e.getPoint() );
+        actualWidget.rightPressed( e.getPoint() );
 
         break;
 
@@ -117,26 +124,27 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   public void mouseReleased( MouseEvent e )
   {
-	  if( getActualWidget() == null )
+    final IWidget actualWidget = getActualWidget();
+      if( getActualWidget() == null )
 	  	return;
 	   
     if( e.isPopupTrigger() )
-      getActualWidget().clickPopup( e.getPoint() );
+      actualWidget.clickPopup( e.getPoint() );
     else
       switch( e.getButton() )
       {
       case MouseEvent.BUTTON1: // Left
-        getActualWidget().leftReleased( e.getPoint() );
+        actualWidget.leftReleased( e.getPoint() );
 
         break;
 
       case MouseEvent.BUTTON2:
-        getActualWidget().middleReleased( e.getPoint() );
+        actualWidget.middleReleased( e.getPoint() );
 
         break;
 
       case MouseEvent.BUTTON3: //Right
-        getActualWidget().perform();
+        actualWidget.perform();
 
         //		    getActualWidget().rightReleased(e.getPoint());
         break;
