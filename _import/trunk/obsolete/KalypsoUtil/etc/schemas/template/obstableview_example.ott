@@ -15,6 +15,7 @@
 			<foregroundcolor>red</foregroundcolor>
 			<backgroundcolor>white</backgroundcolor>
 			<tooltip>Ein pseudo-text als Tooltip</tooltip>
+			<font>arial</font>
 		</renderingrule>
 	</rules>
 </obstableview>

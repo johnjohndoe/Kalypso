@@ -6,6 +6,7 @@ import java.util.Date;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.psiadapter.util.ArchiveDataDateComparator;
+import org.kalypso.util.status.MaskedNumber;
 
 import de.psi.go.lhwz.PSICompact.ArchiveData;
 
@@ -17,7 +18,7 @@ import de.psi.go.lhwz.PSICompact.ArchiveData;
 public class PSICompactTuppleModel implements ITuppleModel
 {
   private final ArchiveData[] m_data;
-  private final Double[] m_values;
+  private final MaskedNumber[] m_values;
   private final String[] m_statuses;
 
   /**
@@ -26,7 +27,7 @@ public class PSICompactTuppleModel implements ITuppleModel
   public PSICompactTuppleModel( final ArchiveData[] data )
   {
     m_data = data;
-    m_values = new Double[m_data.length];
+    m_values = new MaskedNumber[m_data.length];
     m_statuses = new String[m_data.length];
   }
   
@@ -60,10 +61,10 @@ public class PSICompactTuppleModel implements ITuppleModel
     return m_data;
   }
 
-  private Double getValue( int index )
+  private MaskedNumber getValue( int index )
   {
     if( m_values[ index ] == null )
-      m_values[ index ] = new Double( m_data[index].getValue() );
+      m_values[ index ] = new MaskedNumber( m_data[index].getValue() );
 
     return m_values[ index ];
   }
@@ -83,7 +84,7 @@ public class PSICompactTuppleModel implements ITuppleModel
     m_data[index].setStatus( Integer.valueOf( status ).intValue() );
   }
 
-  private void setValue( int index, Double value )
+  private void setValue( int index, MaskedNumber value )
   {
     m_values[ index ] = value;
     
@@ -118,7 +119,7 @@ public class PSICompactTuppleModel implements ITuppleModel
     case 0:
       m_data[index].setTimestamp( (Date)element );
     case 1:
-      setValue( index, (Double)element );
+      setValue( index, (MaskedNumber)element );
     case 2:
       setStatus( index, (String)element );
     default:

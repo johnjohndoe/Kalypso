@@ -9,7 +9,7 @@ import org.kalypso.java.properties.PropertiesHelper;
 import org.kalypso.ogc.sensor.DefaultAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.values.IZmlValuesLoader;
-import org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider;
+import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel;
 import org.kalypso.ogc.sensor.zml.values.ZmlValueFactory;
 import org.kalypso.util.factory.FactoryException;
@@ -28,7 +28,7 @@ public class ZmlAxis extends DefaultAxis
 
   private final AxisType m_axisType;
 
-  private IZmlValuesProvider m_values = null;
+  private IZmlValues m_values = null;
 
   private IParser m_parser;
 
@@ -96,7 +96,7 @@ public class ZmlAxis extends DefaultAxis
     m_values = loader.load();
   }
 
-  public IZmlValuesProvider getValues()
+  public IZmlValues getValues()
   {
     return m_values;
   }

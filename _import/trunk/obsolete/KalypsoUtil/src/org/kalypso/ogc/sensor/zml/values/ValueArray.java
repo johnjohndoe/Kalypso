@@ -13,7 +13,7 @@ import org.kalypso.zml.AxisType;
  * 
  * @author schlienger 
  */
-public class ValueArray implements IZmlValuesLoader, IZmlValuesProvider
+public class ValueArray implements IZmlValuesLoader, IZmlValues
 {  
   private final AxisType.ValueArrayType m_va;
   private final ZmlAxis m_axis;
@@ -29,7 +29,7 @@ public class ValueArray implements IZmlValuesLoader, IZmlValuesProvider
   /**
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesLoader#load()
    */
-  public IZmlValuesProvider load( ) throws SensorException
+  public IZmlValues load( ) throws SensorException
   {
     StringTokenizer stok = new StringTokenizer( m_va.getValue(), m_va.getSeparator() );
 
@@ -57,7 +57,7 @@ public class ValueArray implements IZmlValuesLoader, IZmlValuesProvider
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider#getCount()
+   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#getCount()
    */
   public int getCount()
   {
@@ -65,7 +65,7 @@ public class ValueArray implements IZmlValuesLoader, IZmlValuesProvider
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider#getElement(int)
+   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#getElement(int)
    */
   public Object getElement( final int index )
   {
@@ -73,7 +73,7 @@ public class ValueArray implements IZmlValuesLoader, IZmlValuesProvider
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider#setElement(int, java.lang.Object)
+   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#setElement(int, java.lang.Object)
    */
   public void setElement( final int index, final Object element )
   {
@@ -81,7 +81,7 @@ public class ValueArray implements IZmlValuesLoader, IZmlValuesProvider
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider#indexOf(java.lang.Object)
+   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#indexOf(java.lang.Object)
    */
   public int indexOf( final Object obj )
   {

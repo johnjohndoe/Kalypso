@@ -28,7 +28,7 @@ import org.kalypso.zml.AxisType.ValueLinkType;
  * 
  * @author schlienger
  */
-public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
+public class ValueLink implements IZmlValuesLoader, IZmlValues
 {
   private final ValueLinkType m_valueLink;
   private final ZmlAxis m_axis;
@@ -68,7 +68,7 @@ public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
   /**
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesLoader#load()
    */
-  public IZmlValuesProvider load() throws SensorException
+  public IZmlValues load() throws SensorException
   {
     try
     {
@@ -96,7 +96,7 @@ public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider#getCount()
+   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#getCount()
    */
   public int getCount()
   {
@@ -104,7 +104,7 @@ public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider#getElement(int)
+   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#getElement(int)
    */
   public Object getElement( int index )
   {
@@ -128,7 +128,7 @@ public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider#setElement(int,
+   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#setElement(int,
    *      java.lang.Object)
    */
   public void setElement( int index, Object element )
@@ -148,7 +148,7 @@ public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider#indexOf(java.lang.Object)
+   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#indexOf(java.lang.Object)
    */
   public int indexOf( final Object obj )
   {

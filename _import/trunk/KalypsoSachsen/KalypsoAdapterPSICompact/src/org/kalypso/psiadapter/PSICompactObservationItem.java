@@ -203,6 +203,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
       String unit = PSICompactFactory.unitToString( m_psicMetaData.getUnit() );
       m_axes[1] = PSICompactFactory.getAxis( label, unit, Double.class, 1 );
 
+      // PSI-Status
       m_axes[2] = PSICompactFactory.getAxis( "Status", "", String.class, 2 );
     }
 

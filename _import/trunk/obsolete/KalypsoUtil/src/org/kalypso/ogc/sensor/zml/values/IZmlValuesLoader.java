@@ -11,5 +11,5 @@ import org.kalypso.ogc.sensor.SensorException;
 public interface IZmlValuesLoader
 {
   public void setModel( ZmlTuppleModel model );
-  public IZmlValuesProvider load( ) throws SensorException;
+  public IZmlValues load( ) throws SensorException;
 }

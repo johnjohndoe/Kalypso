@@ -1,14 +1,15 @@
 package org.kalypso.util.io;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
+import java.util.Iterator;
 import java.util.Vector;
 
 /**
- * Can parse a CSV file.
- * 
- * TODO: save file.
+ * Parses a CSV file. Save is possible using a Writer.
  * 
  * @author schlienger
  */
@@ -22,18 +23,19 @@ public class CSV
 
   /**
    * Constructor. Fetches the file and closes the reader;
+   * 
    * @throws IOException
    */
   public CSV( final Reader reader, final String split ) throws IOException
   {
     m_reader = reader;
     m_split = split;
-    
+
     fetchFile();
   }
 
   /**
-   * Fetches the CSV-File.
+   * Fetches the CSV-File. Closes the reader once finished.
    */
   private void fetchFile() throws IOException
   {
@@ -46,7 +48,7 @@ public class CSV
 
       line = r.readLine();
     }
-    
+
     r.close();
   }
 
@@ -57,7 +59,7 @@ public class CSV
   {
     return m_lines.size();
   }
-  
+
   /**
    * Returns the item at the given position in the CSV-File.
    */
@@ -71,6 +73,34 @@ public class CSV
    */
   public void setItem( final int row, final int col, String element )
   {
-    ((String[])m_lines.get( row ))[col] = element;
+    ( (String[])m_lines.get( row ) )[col] = element;
+  }
+
+  /**
+   * Saves the contents in the given Writer.
+   * 
+   * @throws IOException
+   */
+  public void save( final Writer writer ) throws IOException
+  {
+    BufferedWriter bw = new BufferedWriter( writer );
+
+    for( Iterator iter = m_lines.iterator(); iter.hasNext(); )
+    {
+      String[] items = (String[])iter.next();
+
+      for( int i = 0; i < items.length; i++ )
+      {
+        bw.write( items[i] );
+
+        // note: m_split is used as separator, maybe that's not good enough to
+        // use the same token as the one for spliting
+        if( i != items.length - 1 )
+          bw.write( m_split );
+      }
+
+      // end of line
+      bw.write( '\n' );
+    }
   }
 }
