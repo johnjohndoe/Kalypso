@@ -85,6 +85,8 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
       switch( delta.getKind() )
       {
       case IResourceDelta.REMOVED:
+        // todo: sollte eigentlich auch behandelt werden
+        // aber so, dass och die chance auf ein add besteht
         break;
         
       case IResourceDelta.ADDED:

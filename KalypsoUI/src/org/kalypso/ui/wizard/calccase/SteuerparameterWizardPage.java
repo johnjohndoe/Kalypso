@@ -161,7 +161,7 @@ public class SteuerparameterWizardPage extends WizardPage
   }
 
   /**
-   * Setzt dne aktuellen Rechenfall, ist dort schon eine .calculation vorhanden,
+   * Setzt die aktuelle Rechenvariante, ist dort schon eine .calculation vorhanden,
    * wird diese geladen, sonst die default.
    * 
    * @param currentCalcCase

@@ -23,7 +23,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
- * Die Implementierung erzeugt einen völlig neuen Rechenfall im
+ * Die Implementierung erzeugt eine völlig neue Rechenvariante im
  * Prognoseverzeichnis
  * 
  * @author belger
@@ -38,7 +38,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
   private final AddCalcCasePage m_page;
 
-  public static final String TOOLTIP = "Geben Sie hier die Bezeichnung des Rechenfalls ein";
+  public static final String TOOLTIP = "Geben Sie hier die Bezeichnung der Rechenvariante ein";
 
   private static final SimpleDateFormat m_format = new SimpleDateFormat( "yyyy-MM-dd_HH'h'mm" );
 

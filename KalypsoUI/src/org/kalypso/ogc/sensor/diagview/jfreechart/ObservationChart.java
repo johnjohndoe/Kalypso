@@ -149,6 +149,7 @@ public class ObservationChart extends JFreeChart implements
     }
     catch( Throwable e )
     {
+      // TODO: hier kann ne Nullpointer exception geben (es gibt nicht immer ein activeWokbenchWindow)
       MessageDialog.openError( Workbench.getInstance()
           .getActiveWorkbenchWindow().getShell(), "Aktualisierungsfehler", e
           .toString() );

@@ -28,7 +28,7 @@ import org.kalypso.ui.nature.CalcCaseCollector;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
- * Die Implementierung erzeugt einen völlig neuen Rechenfall im
+ * Die Implementierung erzeugt eine völlig neue Rechenvariante im
  * Prognoseverzeichnis
  * 
  * @author belger
@@ -200,7 +200,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
   {
     if( m_folder == null )
     {
-      m_page.setErrorMessage( "Es muss ein vorhandener Rechenfall ausgewählt werden." );
+      m_page.setErrorMessage( "Es muss eine vorhandene Rechenvariante ausgewählt werden." );
       m_page.setMessage( null );
       m_page.setPageComplete( false );
     }
