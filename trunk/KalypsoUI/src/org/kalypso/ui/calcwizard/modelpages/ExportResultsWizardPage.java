@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
 import java.io.Writer;
@@ -56,6 +56,7 @@ import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 
+import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
@@ -117,12 +118,20 @@ import org.kalypso.ui.calcwizard.bericht.IBerichtExporter;
 import org.kalypso.ui.metadoc.util.MultiDocumentServiceWrapper;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.url.UrlResolver;
+import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
  * 
- * <p>Unterstützte Argument:</p>
- * <p>exporterN:   Namen von Klassen, welche {@link org.kalypso.ui.calcwizard.bericht.IBerichtExporter} implementieren.</p>
- * <p>            Aus diesen kann der Nutzer für den Brichtsexport auswählen</p>
+ * <p>
+ * Unterstützte Argument:
+ * </p>
+ * <p>
+ * exporterN: Namen von Klassen, welche
+ * {@link org.kalypso.ui.calcwizard.bericht.IBerichtExporter}implementieren.
+ * </p>
+ * <p>
+ * Aus diesen kann der Nutzer für den Brichtsexport auswählen
+ * </p>
  * 
  * @author Belger
  */
@@ -157,7 +166,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   private List m_calcCaseFolder = new ArrayList();
 
   private CheckboxTableViewer m_checklist;
-  
+
   private IBerichtExporter[] m_berichtExporter;
 
   private static final String PROP_RESULT_TS_NAME = "resultProperty";
@@ -263,7 +272,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   private void createExportPanel( final Composite parent )
   {
     m_berichtExporter = createExporter();
-    
+
     // noch einen ListViewer einfügen!
     final Composite topPanel = new Composite( parent, SWT.NONE );
     topPanel.setLayout( new GridLayout( 2, false ) );
@@ -283,7 +292,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         refreshDiagram();
       }
     } );
-    
+
     final Composite buttonPanel = new Composite( topPanel, SWT.NONE );
     buttonPanel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     buttonPanel.setLayout( new GridLayout() );
@@ -318,8 +327,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         exportSelectedDocuments();
       }
     } );
-    
-    doItButton.setEnabled( !( m_berichtExporter == null || m_berichtExporter.length == 0  ) );
+
+    doItButton.setEnabled( !( m_berichtExporter == null || m_berichtExporter.length == 0 ) );
   }
 
   /**
@@ -335,7 +344,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       MessageDialog.openWarning( shell, "Berichte exportieren", "Keine Rechenvariante selektiert" );
       return;
     }
-    
+
     final FeatureList features = getFeatures( false );
     final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
     final List selectedFeatures = getSelectedFeatures( false );
@@ -358,13 +367,15 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     try
     {
       final ExportWizardBerichtWizard wizard = new ExportWizardBerichtWizard( features,
-          selectedFeatures, nameProperty, metadocService.getDummyDoc(), metadocService.getDoc(), m_berichtExporter );
+          selectedFeatures, nameProperty, metadocService.getDummyDoc(), metadocService.getDoc(),
+          m_berichtExporter );
       final WizardDialog dialog = new WizardDialog( getContainer().getShell(), wizard );
       if( dialog.open() == Window.OK )
       {
-//        final Feature[] choosenFeatures = wizard.getChoosenFeatures();
-//        final IBerichtExporter[] choosenExporter = wizard.getChoosenExporter();
-//        
+        //        final Feature[] choosenFeatures = wizard.getChoosenFeatures();
+        //        final IBerichtExporter[] choosenExporter =
+        // wizard.getChoosenExporter();
+        //        
       }
 
       // jeden gewünschten Typ exportieren
@@ -380,14 +391,14 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   private IBerichtExporter[] createExporter()
   {
     final Collection exporters = new ArrayList();
-    
+
     final Properties arguments = getArguments();
     for( final Iterator aIt = arguments.entrySet().iterator(); aIt.hasNext(); )
     {
       final Map.Entry entry = (Entry)aIt.next();
       final String key = (String)entry.getKey();
       final String exporterargs = (String)entry.getValue();
-      
+
       if( key.startsWith( "exporter" ) )
       {
         try
@@ -396,7 +407,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
           final String classname = props.getProperty( "class" );
           if( classname != null )
           {
-            final IBerichtExporter exporter = (IBerichtExporter)ClassUtilities.newInstance( classname, IBerichtExporter.class, this.getClass().getClassLoader() );
+            final IBerichtExporter exporter = (IBerichtExporter)ClassUtilities.newInstance(
+                classname, IBerichtExporter.class, this.getClass().getClassLoader() );
             exporter.setArguments( props );
             exporters.add( exporter );
           }
@@ -407,15 +419,28 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         }
       }
     }
-    
+
     return (IBerichtExporter[])exporters.toArray( new IBerichtExporter[exporters.size()] );
   }
 
   private List chooseSelectedFeatures( final IFolder calcCase )
   {
     // Timeserie-Links holen
-    final List features = getFeatures( false );
-    final List selectedFeatures = getSelectedFeatures( false );
+    List features = getFeatures( false );
+    List selectedFeatures = getSelectedFeatures( false );
+
+    final String resultProperty = getArguments().getProperty( PROP_RESULT_TS_NAME );
+    final URL context;
+    try
+    {
+      context = ResourceUtilities.createURL( calcCase );
+      features = filterForValidTimeseriesLinks( features, resultProperty, context );
+      selectedFeatures = filterForValidTimeseriesLinks( selectedFeatures, resultProperty, context );
+    }
+    catch( MalformedURLException e )
+    {
+      return null;
+    }
 
     // view it!
     final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
@@ -438,6 +463,46 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       return null;
 
     return Arrays.asList( dialog.getResult() );
+  }
+
+  /**
+   * test for each feature of the given list, if the timeserieslink in the given
+   * property is valid
+   * 
+   * @param featureList
+   *          list of features
+   * @param propertyNameTimeserieslink
+   * @param context
+   * @return List of features that have valid timeserieslinks
+   */
+  private List filterForValidTimeseriesLinks( List featureList, String propertyNameTimeserieslink,
+      URL context )
+  {
+    final List result = new ArrayList();
+
+    final UrlResolver resolver = new UrlResolver();
+    URL resultURL;
+    for( Iterator iter = featureList.iterator(); iter.hasNext(); )
+    {
+      Feature fe = (Feature)iter.next();
+      TimeseriesLink resultLink = (TimeseriesLink)fe.getProperty( propertyNameTimeserieslink );
+      if( resultLink == null )
+        continue;
+
+      try
+      {
+        resultURL = resolver.resolveURL( context, ZmlURL.getIdentifierPart( resultLink.getHref() ) );
+        // let's see if it throws an exception
+        resultURL.openStream();
+        // no exception means, result is existing
+        result.add( fe );
+      }
+      catch( Exception e )
+      {
+        //   nothing, as exception is expected if result is not there
+      }
+    }
+    return result;
   }
 
   /**
