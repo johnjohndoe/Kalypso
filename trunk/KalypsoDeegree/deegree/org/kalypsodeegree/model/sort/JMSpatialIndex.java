@@ -30,4 +30,6 @@ public interface JMSpatialIndex
     public void paint(Graphics g,GeoTransform geoTransform);
 
     public int rsize();
+    
+    public GM_Envelope getBoundingBox();
 }

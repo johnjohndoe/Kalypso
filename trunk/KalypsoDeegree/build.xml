@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
+
 The deegree build system is based on Apache Ant, which is a Java building tool.
 
 For more information refer to "http://jakarta.apache.org/ant/".
 
 Make sure that you have a reasonably recent version of Ant installed, i.e.
 it is in the PATH and can be executed by issuing "ant" on the command line.
-
+ 
 Furthermore you have to make sure, that the "JAVA_HOME" environment property
 is set to match the JDK you want to use. You need a version >=1.4.0 in order
 to compile deegree.
@@ -221,7 +222,7 @@ author: Markus Schneider - mschneider@lat-lon.de
                                         compile-mysql-support, compile-postgis-support" description="compile all deegree classes and interfaces"/>
                                         
 	<target name="jar" depends="compile" description="creating the deegree java library">
-		<jar jarfile="kalypsodeegree.jar" basedir="build"/>
+		<jar jarfile="../KalypsoUtil/lib/kalypsodeegree.jar" basedir="build" />
 	</target>                                        
 	
 	<target name="clean" description="Clean only generated classes">

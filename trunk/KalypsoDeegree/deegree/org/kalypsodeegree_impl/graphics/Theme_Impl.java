@@ -151,7 +151,7 @@ class Theme_Impl implements Theme {
 	Iterator it=displayElements.iterator();
 	while(it.hasNext())
 	    {
-		((DisplayContext)it.next()).paint(g,parent.getProjection(),scale);
+		//((DisplayContext)it.next()).paint(g,parent.getProjection(),scale);
 	    }
 	if(DEBUG_ENV)
 	    indexDE.paint(g,parent.getProjection());	
@@ -190,7 +190,7 @@ class Theme_Impl implements Theme {
 	Iterator it=displayContainer.iterator();
 	while(it.hasNext())
 	    {
-		((DisplayContext)it.next()).paintSelected(g,parent.getProjection(),scale);
+//		((DisplayContext)it.next()).paintSelected(g,parent.getProjection(),scale);
 	    }
         Debug.debugMethodEnd();
     }
