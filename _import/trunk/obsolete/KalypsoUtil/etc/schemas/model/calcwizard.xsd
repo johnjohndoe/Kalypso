@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="xml.model.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="xml.model.kalypso.org">
+    <xs:element name="calcwizard">
+        <xs:complexType>
+            <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                <xs:element name="page">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                <xs:element name="arg">
+                                    <xs:complexType>
+                                        <xs:attribute name="name" type="xs:string" use="required"/>
+                                        <xs:attribute name="value" type="xs:string" use="required"/>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:sequence>
+                        <xs:attribute name="className" type="xs:string" use="required"/>
+                        <xs:attribute name="pageTitle" type="xs:string" use="required"/>
+                        <xs:attribute name="imageLocation" type="xs:string" use="optional"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
