@@ -23,8 +23,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.editor.gmleditor.util.Clipboard;
 import org.kalypso.ui.editor.gmleditor.util.GMLReader;
 import org.kalypso.ui.editor.gmleditor.util.actions.AddFeatureAction;
+import org.kalypso.ui.editor.gmleditor.util.actions.CopyFeatureAction;
+import org.kalypso.ui.editor.gmleditor.util.actions.PasteFeatureAction;
 import org.kalypso.ui.editor.gmleditor.util.command.DeleteFeatureCommand;
 import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.gmleditor.util.model.FeatureElement;
@@ -57,6 +60,12 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
   protected Action moveFeatureDownAction = null;
   
   protected Action addFeatureActions[] = null;
+  
+  protected Action copyFeatureAction = null;
+  
+  protected Action pasteFeatureAction = null;
+  
+  protected Clipboard clipboard = null;
 
   /**
    * The constructor.
@@ -65,6 +74,8 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
    */
   public GMLEditorTreeView( Composite m_composite )
   {
+    clipboard = new Clipboard();
+    
     composite = m_composite;
     GridLayout layout = new GridLayout();
     layout.numColumns = 1;
@@ -85,8 +96,8 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
     layoutData.grabExcessVerticalSpace = true;
     layoutData.horizontalAlignment = GridData.FILL;
     layoutData.verticalAlignment = GridData.FILL;
-    treeViewer.getControl().setLayoutData( layoutData );
-
+    treeViewer.getControl().setLayoutData( layoutData );    
+    
     hookListeners();
     createActions();
     createMenu( treeViewer.getControl() );
@@ -230,7 +241,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
           }
         }
       }
-    };              
+    };    
   }
 
   protected void createMenu( Control control )
@@ -248,7 +259,11 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
         {
           for(int i=0; i<addFeatureActions.length; i++)
             mgr.add(addFeatureActions[i]);
-        }        
+        }
+        if(copyFeatureAction != null)
+          mgr.add(copyFeatureAction);
+        if(pasteFeatureAction != null)
+          mgr.add(pasteFeatureAction);
       }
     } );
     Menu menu = rootMenuManager.createContextMenu( control );
@@ -301,8 +316,22 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
           addFeatureActions = new Action[types.length];                              
           for(int i=0; i<types.length; i++)
           {            
-            addFeatureActions[i] = new AddFeatureAction(types[i], workspace, parentFeature, ((PropertyElement) obj).getProperty().getName(), 0);        
-          }          
+            addFeatureActions[i] = new AddFeatureAction(types[i], workspace, parentFeature, ((PropertyElement) obj).getProperty().getName(), 0, composite.getShell());        
+          }      
+          
+          pasteFeatureAction = new PasteFeatureAction(workspace, parentFeature,((PropertyElement) obj).getProperty().getName(),clipboard);
+          
+          if(clipboard.getClipboardFeature() != null)
+          {                       
+            pasteFeatureAction.setEnabled(true);
+          }
+          else
+          {            
+            pasteFeatureAction.setEnabled(false);
+          }
+          
+          if(copyFeatureAction != null)
+            copyFeatureAction.setEnabled(false);          
         }
         else
         {
@@ -310,6 +339,16 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
           moveFeatureUpAction.setEnabled( true );
           moveFeatureDownAction.setEnabled( true ); 
           addFeatureActions = null;
+          if(copyFeatureAction != null)
+            copyFeatureAction.setEnabled(false);
+          
+          if(obj instanceof FeatureElement)
+          {
+            copyFeatureAction = new CopyFeatureAction(((FeatureElement)obj).getFeature(),workspace, clipboard);
+            copyFeatureAction.setEnabled(true);
+          }
+          if(pasteFeatureAction != null)
+           pasteFeatureAction.setEnabled(false);                    
         }
       }
     } );
