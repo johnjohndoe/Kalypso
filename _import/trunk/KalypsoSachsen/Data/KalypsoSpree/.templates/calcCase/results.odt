@@ -4,7 +4,7 @@
 .\obsdiagview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
 
 	<title></title>
-	<legend title="Legende" visible="true"/>
+	<legend title="" visible="true"/>
 
 	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
 	<axis id="w" datatype="xs:double" label="Wasserstand" unit="cm" direction="vertical" position="left" />

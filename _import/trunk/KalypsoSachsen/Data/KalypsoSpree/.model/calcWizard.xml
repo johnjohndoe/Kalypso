@@ -152,15 +152,15 @@
 	   imageLocation="icons/calcwizard/kalypso32.gif" >
 	   	<arg name="mapTemplate" value="project:.templates/calcCase/pegel.gmt"/>
 	
-        <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
-        <arg name="timeserie2" value="nameString=%axisname% - Beobachtung#linkColumn=Wasserstand_gemessen"/>
-        <arg name="timeserie3" value="nameString=%axisname% - Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
-        <arg name="timeserie4" value="nameString=%axisname% - Vorhersage#linkColumn=Wasserstand_vorhersage"/>
+	        <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
+	        <arg name="timeserie2" value="nameString=%axisname% - Beobachtung#linkColumn=Wasserstand_gemessen"/>
+	        <arg name="timeserie3" value="nameString=%axisname% - Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
+	        <arg name="timeserie4" value="nameString=%axisname% - Vorhersage#linkColumn=Wasserstand_vorhersage"/>
 		
 		<arg name="ignoreType1" value="W"/>
-        <arg name="ignoreType2" value="Q"/>
-        <arg name="ignoreLabel1" value="Abfluss"/>
-        <arg name="ignoreLabel2" value="Wasserstand"/>
+	        <arg name="ignoreType2" value="Q"/>
+	        <arg name="ignoreLabel1" value="Abfluss"/>
+	        <arg name="ignoreLabel2" value="Wasserstand"/>
 		
 		<arg name="pegelNameProperty" value="Name"/>
 		<arg name="resultProperty" value="Wasserstand_vorhersage"/>
@@ -170,12 +170,29 @@
 	   	<arg name="rightSash" value="25"/>
 	   	<arg name="selectionID" value="256"/>
 
-	   	<arg name="exporter1" value="class=org.kalypso.ui.calcwizard.bericht.MapExporter;name=Karte"/>
-	   	<arg name="exporter2" value="class=org.kalypso.ui.calcwizard.bericht.ZmlTableExporter;name=Tabelle"/>
-	   	<arg name="exporter3" value="class=org.kalypso.ui.calcwizard.bericht.DiagrammExporter;name=Abflussgrafik"/>
-	   	<arg name="exporter4" value="class=org.kalypso.ui.calcwizard.bericht.DiagrammExporter;name=Wasserstandgrafik;"/>
+	   	<arg name="exporter1">
+	   		<arg name="class" value="org.kalypso.ui.calcwizard.bericht.MapExporter"/>
+	   		<arg name="name" value="Karte"/>
+	   	</arg>
+	   	<arg name="exporter2">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.ZmlTableExporter"/>
+	   		<arg name="name" value="Tabelle"/>
+	   	</arg>
+	   	<arg name="exporter3">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
+	   		<arg name="name" value="Abflussgrafik"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
+			<arg name="tokens">
+				<arg name="tok1" value="Wasserstand_vorhersage"/>
+			</arg>
+	   	</arg>
+	   	<arg name="exporter4">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
+	   		<arg name="name" value="Wasserstandgrafik"/>
+	   		<arg name="template" value="project:.templates/calcCase/berichtDiagW.odt"/>
+	   	</arg>
         
-       	<arg name="maximizeMap" value="true"/>
+   		<arg name="maximizeMap" value="true"/>
 	</page>
-
+	
 </calcwizard>

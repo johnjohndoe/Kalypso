@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="xsl/grafik-vorlage.xsl"?>
+<obsdiagview xmlns="obsdiagview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="obsdiagview.template.kalypso.org
+.\obsdiagview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<legend title="" visible="true"/>
+
+	<axis id="D" datatype="date" label="Datum" unit="" direction="horizontal" position="bottom" />
+	<axis id="Q" datatype="double" label="Abfluß" unit="m³" direction="vertical" position="left" />
+   	<axis id="N" datatype="double" label="Niederschlag" unit="cm" direction="vertical" position="right" inverted="true" />
+   	
+   	<!-- Kodierung color:
+   	red;green;blue[;alpha]
+   	
+   	jeweils in [0-255]
+   	-->
+
+   	<observation linktype="zml" xlink:href="%tok1%">
+		<curve id="C1" name="C1" color="0;0;250" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluß" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+</obsdiagview>
