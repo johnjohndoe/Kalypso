@@ -29,9 +29,6 @@ import de.psi.go.lhwz.PSICompact.WQParamSet;
 /**
  * Eine Observation aus PSICompact welche auch ein Repository Item ist.
  * 
- * TODO: SEHR WICHTIG: EINHEITEN RICHTIG BEHANDELN. Je nach Axistyp sollte ich
- * die PSI Werte dann in die Kalypso Einheit konvertieren.
- * 
  * @author schlienger
  */
 public class PSICompactObservationItem implements IObservation
@@ -44,15 +41,9 @@ public class PSICompactObservationItem implements IObservation
 
   private final int m_valueType;
 
-  private IAxis[] m_axes = null;
+  private final IAxis[] m_axes;
 
-  /** Metadaten aus PSICompact */
-  private ObjectMetaData m_psicMetaData = null;
-
-  /** Metadaten für die Observation */
-  private MetadataList m_metadata = null;
-
-  private WQParamSet[] m_psicWQParamSet = null;
+  private final MetadataList m_metadata;
 
   // used for caching
   private ITuppleModel m_values = null;
@@ -83,15 +74,107 @@ public class PSICompactObservationItem implements IObservation
     m_objectInfo = info;
     m_valueType = valueType;
 
-    m_psicMetaData = PSICompactFactory.getConnection().getObjectMetaData(
+    final ObjectMetaData psiMD = PSICompactFactory.getConnection()
+        .getObjectMetaData( m_objectInfo.getId() );
+
+    final WQParamSet[] psiWQ = PSICompactFactory.getConnection().getWQParams(
         m_objectInfo.getId() );
 
-    m_psicWQParamSet = PSICompactFactory.getConnection().getWQParams(
-        m_objectInfo.getId() );
+    m_axes = prepareAxes( psiMD );
 
-    constructMetadata();
+    m_metadata = prepareMetadata( psiMD, psiWQ );
   }
 
+  /**
+   * @param psiMD
+   * @return axis list
+   */
+  private IAxis[] prepareAxes( ObjectMetaData psiMD )
+  {
+    final IAxis[] axes = new IAxis[3];
+
+    // immer Datum Axis
+    axes[0] = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "",
+        Date.class, 0, true );
+
+    // Wert (Einheit abfragen)
+    final String label = toString();
+    final String unit = PSICompactRepositoryFactory.toKalypsoUnit( psiMD
+        .getUnit() );
+    axes[1] = new DefaultAxis( label, measureTypeToString(), unit,
+        Double.class, 1, false );
+
+    m_vc = PSICompactRepositoryFactory.getConverter( psiMD.getUnit(), unit );
+
+    // Status
+    axes[2] = KalypsoStatusUtils.getStatusAxisFor( axes[1], 2 );
+
+    return axes;
+  }
+
+  /**
+   * Helper für die Erzeugung der Metadaten
+   * 
+   * @param psiMD
+   * @param psiWQ
+   * @return metadata
+   * 
+   * @throws ECommException
+   */
+  private final MetadataList prepareMetadata( final ObjectMetaData psiMD, final WQParamSet[] psiWQ )
+      throws ECommException
+  {
+    final MetadataList metadata = new MetadataList();
+
+    metadata.put( ObservationConstants.MD_NAME, getName() );
+    metadata.put( ObservationConstants.MD_DESCRIPTION, m_objectInfo
+        .getDescription() );
+
+    if( psiMD != null )
+    {
+      metadata.put( TimeserieConstants.MD_GKH, String.valueOf( psiMD
+          .getHeight() ) );
+      metadata.put( TimeserieConstants.MD_GKR, String.valueOf( psiMD
+          .getRight() ) );
+      metadata.put( TimeserieConstants.MD_HOEHENANGABEART, psiMD
+          .getLevelUnit() );
+      metadata.put( TimeserieConstants.MD_PEGELNULLPUNKT, String
+          .valueOf( psiMD.getLevel() ) );
+      metadata.put( TimeserieConstants.MD_MESSTISCHBLATT, String
+          .valueOf( psiMD.getMapNo() ) );
+      metadata.put( TimeserieConstants.MD_ALARM_1, String.valueOf( m_vc
+          .psi2kalypso( psiMD.getAlarm1() ) ) );
+      metadata.put( TimeserieConstants.MD_ALARM_2, String.valueOf( m_vc
+          .psi2kalypso( psiMD.getAlarm2() ) ) );
+      metadata.put( TimeserieConstants.MD_ALARM_3, String.valueOf( m_vc
+          .psi2kalypso( psiMD.getAlarm3() ) ) );
+      metadata.put( TimeserieConstants.MD_ALARM_4, String.valueOf( m_vc
+          .psi2kalypso( psiMD.getAlarm4() ) ) );
+      metadata.put( TimeserieConstants.MD_FLUSS, psiMD.getRiver() );
+      metadata.put( TimeserieConstants.MD_FLUSSGEBIET, psiMD.getRiversystem() );
+    }
+
+    try
+    {
+      if( psiWQ != null )
+      {
+        final WechmannGroup group = PSICompactRepositoryFactory
+            .readWQParams( psiWQ );
+        final String xml = WechmannFactory.createXMLString( group );
+
+        metadata.put( TimeserieConstants.MD_WQ, xml );
+      }
+    }
+    catch( Exception e ) // generic exception caught for simplicity
+    {
+      e.printStackTrace();
+
+      throw new ECommException( e );
+    }
+    
+    return metadata;
+  }
+  
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getName()
    */
@@ -106,67 +189,6 @@ public class PSICompactObservationItem implements IObservation
   public String getIdentifier( )
   {
     return m_identifier;
-  }
-
-  /**
-   * Helper für die Erzeugung der Metadaten
-   * 
-   * @throws ECommException
-   */
-  private final void constructMetadata( ) throws ECommException
-  {
-    m_metadata = new MetadataList();
-
-    m_metadata.put( ObservationConstants.MD_NAME, getName() );
-    m_metadata.put( ObservationConstants.MD_DESCRIPTION, m_objectInfo
-        .getDescription() );
-
-    if( m_psicMetaData != null )
-    {
-      // get axis list, side effect: the value converter will be initiliazed
-      // and it will be used here to convert the alarmstufen which we get in SI-m
-      getAxisList();
-      
-      m_metadata.put( TimeserieConstants.MD_GKH, String.valueOf( m_psicMetaData
-          .getHeight() ) );
-      m_metadata.put( TimeserieConstants.MD_GKR, String.valueOf( m_psicMetaData
-          .getRight() ) );
-      m_metadata.put( TimeserieConstants.MD_HOEHENANGABEART, m_psicMetaData
-          .getLevelUnit() );
-      m_metadata.put( TimeserieConstants.MD_PEGELNULLPUNKT, String
-          .valueOf( m_psicMetaData.getLevel() ) );
-      m_metadata.put( TimeserieConstants.MD_MESSTISCHBLATT, String
-          .valueOf( m_psicMetaData.getMapNo() ) );
-      m_metadata.put( TimeserieConstants.MD_ALARM_1, String
-          .valueOf( m_vc.psi2kalypso( m_psicMetaData.getAlarm1() ) ) );
-      m_metadata.put( TimeserieConstants.MD_ALARM_2, String
-          .valueOf( m_vc.psi2kalypso( m_psicMetaData.getAlarm2() ) ) );
-      m_metadata.put( TimeserieConstants.MD_ALARM_3, String
-          .valueOf( m_vc.psi2kalypso( m_psicMetaData.getAlarm3() ) ) );
-      m_metadata.put( TimeserieConstants.MD_ALARM_4, String
-          .valueOf( m_vc.psi2kalypso( m_psicMetaData.getAlarm4() ) ) );
-      m_metadata.put( TimeserieConstants.MD_FLUSS, m_psicMetaData.getRiver() );
-      m_metadata.put( TimeserieConstants.MD_FLUSSGEBIET, m_psicMetaData
-          .getRiversystem() );
-    }
-
-    try
-    {
-      if( m_psicWQParamSet != null )
-      {
-        final WechmannGroup group = PSICompactRepositoryFactory
-            .readWQParams( m_psicWQParamSet );
-        final String xml = WechmannFactory.createXMLString( group );
-
-        m_metadata.put( TimeserieConstants.MD_WQ, xml );
-      }
-    }
-    catch( Exception e ) // generic exception caught for simplicity
-    {
-      e.printStackTrace();
-
-      throw new ECommException( e );
-    }
   }
 
   /**
@@ -247,28 +269,6 @@ public class PSICompactObservationItem implements IObservation
    */
   public IAxis[] getAxisList( )
   {
-    if( m_axes == null )
-    {
-      m_axes = new IAxis[3];
-
-      // immer Datum Axis
-      m_axes[0] = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "",
-          Date.class, 0, true );
-
-      // Wert (Einheit abfragen)
-      final String label = toString();
-      final String unit = PSICompactRepositoryFactory
-          .toKalypsoUnit( m_psicMetaData.getUnit() );
-      m_axes[1] = new DefaultAxis( label, measureTypeToString(), unit,
-          Double.class, 1, false );
-
-      m_vc = PSICompactRepositoryFactory.getConverter(
-          m_psicMetaData.getUnit(), unit );
-
-      // Status
-      m_axes[2] = KalypsoStatusUtils.getStatusAxisFor( m_axes[1], 2 );
-    }
-
     return m_axes;
   }
 

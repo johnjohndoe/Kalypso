@@ -9,6 +9,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
 import org.kalypso.psiadapter.PSICompactFactory;
 import org.kalypso.psiadapter.repository.conversion.IValueConverter;
 import org.kalypso.psiadapter.repository.conversion.KelvinCelsiusConverter;
+import org.kalypso.psiadapter.repository.conversion.NoConverter;
 import org.kalypso.psiadapter.repository.conversion.SIConverter;
 import org.kalypso.repository.AbstractRepositoryFactory;
 import org.kalypso.repository.IRepository;
@@ -250,17 +251,19 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
       {
         final String strPsiUnit = unitToString( psiUnit );
       
-        if( strPsiUnit.equals( kalypsoUnit ) )
-          return null;
-        
-        return new SIConverter( strPsiUnit, kalypsoUnit );
+        if( !strPsiUnit.equals( kalypsoUnit ) )
+          return new SIConverter( strPsiUnit, kalypsoUnit );
       }
       
       case PSICompact.SI_NO_UNIT:
       case PSICompact.SI_UNDEF:
       default:
-        return null;
+      {
+        // empty
+      }
     }
+    
+    return NoConverter.getInstance();
   }
   
   /**
