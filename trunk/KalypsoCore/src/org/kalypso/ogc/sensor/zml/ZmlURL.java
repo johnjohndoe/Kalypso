@@ -72,7 +72,9 @@ public class ZmlURL
 
     String[] strs = tmpUrl.split( "\\?", 2 );
 
-    tmpUrl = strs[0] + '?' + buildDateRangeSpec( dra ) + strs[1];
+    tmpUrl = strs[0] + '?' + buildDateRangeSpec( dra );
+    if( strs.length >= 2 )
+      tmpUrl += strs[1];
 
     return tmpUrl;
   }
@@ -98,7 +100,7 @@ public class ZmlURL
         .append( TAG_TO2 );
 
     // TODO prüfen ob in Ordnung dass die < und > Zeichen mit Entities ersetzt werden...
-    return bf.toString().replaceAll( "<", "&lt;" ).replaceAll( ">", "&gt;" );
+    return bf.toString();//.replaceAll( "<", "&lt;" ).replaceAll( ">", "&gt;" );
   }
 
   /**
