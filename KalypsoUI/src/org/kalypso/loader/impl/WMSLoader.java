@@ -9,17 +9,13 @@ import java.util.Properties;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
 import org.deegree_impl.services.wms.RemoteWMService;
 import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
-import org.deegree_impl.tools.NetWorker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.KalypsoWMSLayer;
 import org.kalypso.plugin.KalypsoGisPlugin;
-import org.kalypso.util.pool.ResourcePool;
 import org.opengis.cs.CS_CoordinateSystem;
-
-import sun.misc.BASE64Encoder;
 
 /**
  * Loads layers from a wms

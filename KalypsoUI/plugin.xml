@@ -189,7 +189,7 @@
           <!-- zoomInByRect with start and endpoint bounds -->     
           <action
                disabledIcon="icons/full/elcl16/kde_14_rectangle.gif"
-               toolbarPath="zoomin"
+               toolbarPath="karte"
                label="zoomin"
                class="org.kalypso.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
                tooltip="zoomin"
