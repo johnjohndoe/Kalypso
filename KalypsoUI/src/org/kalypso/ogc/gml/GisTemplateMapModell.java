@@ -2,12 +2,14 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 import java.util.List;
+import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IProject;
+import org.kalypso.java.properties.PropertiesHelper;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.loader.LoaderException;
@@ -21,12 +23,9 @@ import org.kalypso.template.gismapview.GismapviewType;
 import org.kalypso.template.gismapview.GismapviewType.LayersType;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.template.types.ExtentType;
-import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.opengis.cs.CS_CoordinateSystem;
-
-import com.sun.rsasign.bb;
 /**
  * 
  * @author Belger
@@ -54,24 +53,6 @@ public class GisTemplateMapModell implements IMapModell
       {
         addTheme( theme );
         enableTheme( theme, layerType.isVisible() );
-        // TODO soll hier wirklich "wms" - coodiert werden, das sollte doch generischer gehen
-        ILoaderFactory loaderFactory = KalypsoGisPlugin.getDefault().getLoaderFactory(KalypsoWMSLayer.class);
-        try
-        {
-          ILoader loaderInstance = loaderFactory.getLoaderInstance(layerType.getLinktype());
-          final String source = layerType.getHref();
-          PoolableObjectType poolType = new PoolableObjectType( "sld", source, project );
-          KalypsoWMSLayer layer = (KalypsoWMSLayer)loaderInstance.load(poolType.getSource(), project, null);
-          addTheme(new KalypsoWMSTheme(layerType.getName(),layer));
-        }
-        catch( FactoryException e )
-        {
-          e.printStackTrace();
-        }
-        catch( LoaderException e )
-        {
-          e.printStackTrace();
-        }
       }
     }
   }
@@ -86,9 +67,9 @@ public class GisTemplateMapModell implements IMapModell
       {
         final ILoader loaderInstance = loaderFactory.getLoaderInstance(layerType.getLinktype());
         final String source = layerType.getHref();
-        final PoolableObjectType poolType = new PoolableObjectType( "sld", source, project );
         
-        final KalypsoWMSLayer layer = (KalypsoWMSLayer)loaderInstance.load(poolType.getSource(), project, null);
+        final Properties properties = PropertiesHelper.parseFromString( source, '#' );
+        final KalypsoWMSLayer layer = (KalypsoWMSLayer)loaderInstance.load(properties, project, null);
         return new KalypsoWMSTheme( layerType.getName(), layer );
       }
       catch( FactoryException e )
