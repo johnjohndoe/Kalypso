@@ -126,7 +126,8 @@ public class UpdateModell
 
   private static void updateCatchments( Feature[] features ) throws Exception
   {
-    String intervallFilter = "?" + UpdateHelper.createIntervallFilter( 15, "MINUTE", "sum" );
+    String intervallFilter = "?" + UpdateHelper.createIntervallFilter( 1, "HOUR", "sum" );
+//    String intervallFilter = "?" + UpdateHelper.createIntervallFilter( 15, "MINUTE", "sum" );
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
