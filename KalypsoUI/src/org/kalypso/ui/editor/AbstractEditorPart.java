@@ -171,6 +171,8 @@ public abstract class AbstractEditorPart extends EditorPart implements
         : null;
     if( original != null )
       dialog.setOriginalFile( original );
+    else
+      dialog.setOriginalName( input.getName() );
 
     dialog.create();
 

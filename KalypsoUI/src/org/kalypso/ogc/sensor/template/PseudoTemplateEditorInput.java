@@ -5,6 +5,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IStorageEditorInput;
+import org.kalypso.java.io.FileUtilities;
 
 /**
  * PseudoTemplateEditorInput
@@ -15,15 +16,22 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
 {
   private final TemplateStorage m_storage;
 
+  private final String m_fileExtension;
+
   /**
    * Constructor
    * 
    * @param storage
    *          template storage on which this pseudo template is based
+   * @param fileExtension
+   *          name of the file extension that this template should have once
+   *          saved
    */
-  public PseudoTemplateEditorInput( final TemplateStorage storage )
+  public PseudoTemplateEditorInput( final TemplateStorage storage,
+      final String fileExtension )
   {
     m_storage = storage;
+    m_fileExtension = fileExtension;
   }
 
   /**
@@ -55,7 +63,8 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
    */
   public String getName( )
   {
-    return "Vorlage für " + m_storage.getName();
+    return "Vorlage für "
+        + FileUtilities.nameWithoutExtension( m_storage.getName() ) + m_fileExtension;
   }
 
   /**
@@ -81,11 +90,10 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   {
     return null;
   }
-  
+
   /**
-   * Call is delegated to Object class since we always want
-   * new pseudo templates even if the underlying file is the
-   * same one.
+   * Call is delegated to Object class since we always want new pseudo templates
+   * even if the underlying file is the same one.
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */

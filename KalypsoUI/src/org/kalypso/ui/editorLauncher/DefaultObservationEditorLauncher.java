@@ -21,10 +21,12 @@ import org.kalypso.ogc.sensor.template.TemplateStorage;
 public class DefaultObservationEditorLauncher implements IDefaultTemplateLauncher
 {
   private final String m_pseudoFilename;
+  private final String m_fileExtension;
 
-  public DefaultObservationEditorLauncher( final String pseudoFilename )
+  public DefaultObservationEditorLauncher( final String pseudoFilename, final String fileExtension )
   {
     m_pseudoFilename = pseudoFilename;
+    m_fileExtension = fileExtension;
   }
   
   /**
@@ -57,7 +59,7 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
       
       final PseudoTemplateEditorInput input = new PseudoTemplateEditorInput(
           new TemplateStorage( file, ResourceUtilities
-              .createURL( file ), "project:/" + projectRelativePath ) );
+              .createURL( file ), "project:/" + projectRelativePath ), m_fileExtension );
 
       return input;
     }
