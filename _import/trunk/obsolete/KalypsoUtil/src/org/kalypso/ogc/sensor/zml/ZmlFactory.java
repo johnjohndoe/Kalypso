@@ -21,6 +21,7 @@ import org.kalypso.ogc.sensor.zml.values.ValueLink;
 import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.parser.ParserFactory;
 import org.kalypso.zml.AxisType;
+import org.kalypso.zml.MetadataListType;
 import org.kalypso.zml.MetadataType;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.ObservationType;
@@ -118,11 +119,13 @@ public class ZmlFactory
   {
     try
     {
-      final ObservationType obsType = m_objectFactory.createObservationType();
+      final ObservationType obsType = m_objectFactory.createObservation();
       obsType.setName( obs.getName() );
       obsType.setEditable( obs.isEditable() );
 
-      final List metadataList = obsType.getMetadataList().getMetadata();
+      final MetadataListType metadataListType = m_objectFactory.createMetadataListType();
+      obsType.setMetadataList(metadataListType);
+      final List metadataList = metadataListType.getMetadata();
       for( final Iterator it = obs.getMetadata().entrySet().iterator(); it.hasNext(); )
       {
         final String mdKey = (String)it.next();

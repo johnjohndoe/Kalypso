@@ -22,7 +22,7 @@ public class SimpleTuppleModel implements ITuppleModel
     if( values == null )
       throw new IllegalArgumentException( "null values" );
 
-    m_tupples = new DefaultTableModel( axes, values.length );
+    m_tupples = new DefaultTableModel( values, axes );
   }
 
   /**
