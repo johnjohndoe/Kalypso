@@ -50,7 +50,6 @@
 package org.deegree_impl.model.cs;
 
 // OpenGIS dependencies
-import java.io.ObjectStreamException;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
@@ -376,7 +375,7 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
    * @throws ObjectStreamException
    *           is deserialization failed.
    */
-  private Object readResolve() throws ObjectStreamException
+  private Object readResolve()
   {
     final int value = getValue();
     if( value >= 0 && value < ENUMS.length )

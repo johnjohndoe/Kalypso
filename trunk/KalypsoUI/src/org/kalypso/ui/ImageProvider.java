@@ -42,5 +42,8 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_ICON_GTT = id( "icons/kalypso_gtt.gif" );
 
   public static final ImageDescriptor IMAGE_INTRO_BACKGROUND = id( "etc/kalypso32.gif" );
+  
+  public static final ImageDescriptor IMAGE_UTIL_CHECKED = id( "icons/util/checked.gif" );
+  public static final ImageDescriptor IMAGE_UTIL_UNCHECKED = id( "icons/util/unchecked.gif" );
 }
 

@@ -155,6 +155,7 @@ public class AxisInfo implements Serializable
    */
   public String getName( final Locale locale )
   {
+    locale.getClass();
     return name;
   }
 

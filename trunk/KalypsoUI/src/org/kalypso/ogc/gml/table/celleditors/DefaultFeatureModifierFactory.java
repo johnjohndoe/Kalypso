@@ -2,12 +2,13 @@ package org.kalypso.ogc.gml.table.celleditors;
 
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
+import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 
 /**
  * @author Belger
  */
-public class DefaultFeatureControlFactory implements IFeatureModifierFactory
+public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
 {
   /**
    * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.deegree.model.feature.FeatureTypeProperty)
@@ -30,6 +31,8 @@ public class DefaultFeatureControlFactory implements IFeatureModifierFactory
       return new StringModifier( ftp );
     if( "java.lang.String".equals( type ) )
       return new StringModifier( ftp );
+    if( "java.lang.Boolean".equals( type ) )
+      return new BooleanModifier( ftp );
 
     return new StringModifier( ftp );
   }

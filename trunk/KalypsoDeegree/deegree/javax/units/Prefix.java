@@ -36,7 +36,6 @@
 package javax.units;
 
 // Entrés/sorties
-import java.io.ObjectStreamException;
 import java.io.Serializable;
 
 import org.deegree_impl.model.resources.WeakHashSet;
@@ -229,7 +228,7 @@ import org.deegree_impl.model.resources.WeakHashSet;
    * banque des préfix. Si oui, l'exemplaire de la banque sera retourné plutôt
    * que de garder inutilement le préfix courant comme copie.
    */
-  private Object readResolve() throws ObjectStreamException
+  private Object readResolve() 
   {
     return intern();
   }

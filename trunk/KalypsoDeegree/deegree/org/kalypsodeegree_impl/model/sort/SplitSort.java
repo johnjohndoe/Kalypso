@@ -294,7 +294,15 @@ public class SplitSort implements FeatureList
    */
   public boolean addAll( Collection c )
   {
-    throw new UnsupportedOperationException();
+    boolean changed = false;
+    for( final Iterator iter = c.iterator(); iter.hasNext(); )
+    {
+      add( iter.next() );
+      
+      changed = true;
+    }
+    
+    return changed;
   }
 
   /**

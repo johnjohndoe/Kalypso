@@ -3,7 +3,6 @@ package org.deegree_impl.model.feature;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.graphics.displayelements.DisplayElement;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureAssociationTypeProperty;
 import org.deegree.model.feature.FeatureProperty;
@@ -43,8 +42,6 @@ public class Feature_Impl implements Feature
 
   // fields from old KalypsoFeature
   private int mySelection = 0;
-
-  private transient DisplayElement myDE[][] = null;
 
   protected Feature_Impl( FeatureType ft, String id )
   {

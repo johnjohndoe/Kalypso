@@ -65,10 +65,9 @@ public class ObservationTemplateHelper
    * @return diagram template object parsed from the file
    * @throws CoreException
    * @throws JAXBException
-   * @throws IOException
    */
   public static ObsdiagviewType loadDiagramTemplateXML( final IFile file )
-      throws CoreException, JAXBException, IOException
+      throws CoreException, JAXBException
   {
     final InputStream ins = file.getContents();
 

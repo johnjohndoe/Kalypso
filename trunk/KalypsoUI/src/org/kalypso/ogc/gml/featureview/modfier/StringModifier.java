@@ -8,6 +8,7 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 
@@ -23,6 +24,14 @@ public class StringModifier implements IFeatureModifier
   public StringModifier( final FeatureTypeProperty ftp )
   {
     m_ftp = ftp;
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
+   */
+  public void dispose()
+  {
+    // nix zu tun
   }
 
   /**
@@ -91,7 +100,7 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#createCellEditor(org.eclipse.swt.widgets.Composite)
    */
-  public CellEditor createCellEditor( Composite parent )
+  public CellEditor createCellEditor( final Composite parent )
   {
     return new TextCellEditor( parent );
   }
@@ -122,6 +131,23 @@ public class StringModifier implements IFeatureModifier
   public FeatureTypeProperty getFeatureTypeProperty()
   {
     return m_ftp;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.deegree.model.feature.Feature)
+   */
+  public String getLabel( Feature f )
+  {
+    final Object value = getValue( f );
+    return value == null ? "" : value.toString();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.deegree.model.feature.Feature)
+   */
+  public Image getImage( Feature f )
+  {
+    return null;
   }
 
 }
