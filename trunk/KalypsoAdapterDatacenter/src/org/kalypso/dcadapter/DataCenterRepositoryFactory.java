@@ -24,9 +24,9 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
    */
   public IRepository createRepository( ) throws RepositoryException
   {
-    final String url = "";
-    final String userName = "";
-    final String password = "";
+    final String url = "jdbc:edbc://LOCALHOST:II7/vnode::db_kalypso/INGRES";
+    final String userName = "ingres";
+    final String password = "ingres";
     
     return new DataCenterRepository( this, url, userName, password );
   }

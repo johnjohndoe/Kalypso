@@ -48,7 +48,6 @@ public class DataCenterObservation implements IObservation
    */
   public boolean isEditable( )
   {
-    // TODO Auto-generated method stub
     return false;
   }
 
@@ -57,7 +56,6 @@ public class DataCenterObservation implements IObservation
    */
   public IXlink getTarget( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -113,7 +111,6 @@ public class DataCenterObservation implements IObservation
   public void addListener( IObservationListener listener )
   {
     // TODO Auto-generated method stub
-
   }
 
   /**
@@ -122,7 +119,5 @@ public class DataCenterObservation implements IObservation
   public void removeListener( IObservationListener listener )
   {
     // TODO Auto-generated method stub
-
   }
-
 }

@@ -43,6 +43,7 @@ public class Level extends Persistent implements TreeNode
 
   /**
    * constructs a Level based on an identifier with the database
+   * 
    * @param con
    * @param id
    *          level identifier as existing in the database
@@ -54,13 +55,15 @@ public class Level extends Persistent implements TreeNode
 
   /**
    * Constructor with parameters
+   * 
    * @param con
    * @param id
    * @param name
    * @param desc
    * @param parentRef
    */
-  public Level( final Connection con, int id, String name, String desc, int parentRef )
+  public Level( final Connection con, int id, String name, String desc,
+      int parentRef )
   {
     super( con, id, false );
 
@@ -71,6 +74,7 @@ public class Level extends Persistent implements TreeNode
 
   /**
    * Returns the root level of the hierarchy
+   * 
    * @param con
    * 
    * @return the very root level
@@ -85,7 +89,10 @@ public class Level extends Persistent implements TreeNode
       ResultSet rs = st
           .executeQuery( "SELECT LVLID FROM DC_TREELEVEL WHERE PARENTLEVEL = 0" );
 
-      rs.next();
+      boolean b = rs.next();
+
+      if( !b )
+        return new Level( null, 0, "Keine Elemente", "Keine Elemente", -1 );
 
       Level level = null;
 
@@ -147,8 +154,7 @@ public class Level extends Persistent implements TreeNode
       m_children = new Vector();
 
       PreparedStatement stmt = m_con
-          .prepareStatement(
-              "SELECT * FROM DC_TREELEVEL WHERE PARENTLEVEL = ? ORDER BY LEVELNAME ASC" );
+          .prepareStatement( "SELECT * FROM DC_TREELEVEL WHERE PARENTLEVEL = ? ORDER BY LEVELNAME ASC" );
       stmt.setInt( 1, m_ID );
 
       ResultSet rs = stmt.executeQuery();
@@ -276,8 +282,7 @@ public class Level extends Persistent implements TreeNode
     try
     {
       PreparedStatement stmt = m_con
-          .prepareStatement(
-              "SELECT LEVELNAME, PARENTLEVEL, LEVELDESCRIPTION FROM DC_TREELEVEL WHERE LVLID = ?" );
+          .prepareStatement( "SELECT LEVELNAME, PARENTLEVEL, LEVELDESCRIPTION FROM DC_TREELEVEL WHERE LVLID = ?" );
 
       stmt.setInt( 1, m_ID );
 
