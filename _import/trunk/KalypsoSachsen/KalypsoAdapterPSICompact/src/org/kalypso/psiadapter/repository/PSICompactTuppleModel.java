@@ -53,8 +53,8 @@ public class PSICompactTuppleModel implements ITuppleModel
   {
     final IAxis[] axes = model.getAxisList();
     
-    final IAxis dateAxis = ObservationUtilities.findAxis( axes, Date.class )[0];
-    final IAxis valueAxis = ObservationUtilities.findAxis( axes, Number.class )[0];
+    final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class )[0];
+    final IAxis valueAxis = ObservationUtilities.findAxisByClass( axes, Number.class )[0];
     final IAxis statusAxis = KalypsoStatusUtils.findStatusAxis( axes );
   
     final ArchiveData[] data = constructData( model, dateAxis, valueAxis, statusAxis );

@@ -36,7 +36,7 @@ public class DoubleParser extends AbstractParser
     m_format = format;
 
     if( format.length() == 0 )
-      m_df = NumberFormat.getInstance();
+      m_df = new DecimalFormat(  );
     else
       m_df = new DecimalFormat( format );
   }
