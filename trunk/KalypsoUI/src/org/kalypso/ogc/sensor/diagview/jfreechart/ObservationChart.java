@@ -80,9 +80,6 @@ public class ObservationChart extends JFreeChart implements
 
     m_template = template;
 
-    // removed in this.dispose()
-    m_template.addTemplateEventListener( this );
-
     if( template.isShowLegend() )
     {
       final StandardLegend leg = new StandardLegend();
@@ -90,6 +87,9 @@ public class ObservationChart extends JFreeChart implements
 
       setLegend( leg );
     }
+    
+    // removed in this.dispose()
+    m_template.addTemplateEventListener( this );
   }
 
   /**

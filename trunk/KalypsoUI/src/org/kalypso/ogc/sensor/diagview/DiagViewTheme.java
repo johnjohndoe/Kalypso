@@ -44,6 +44,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.kalypso.java.awt.ColorUtilities;
 import org.kalypso.java.util.StringUtilities;
@@ -141,8 +142,19 @@ public class DiagViewTheme extends AbstractObservationTheme
         {
           final TypeAxisMapping tmap = (TypeAxisMapping) itm.next();
 
-          final IAxis obsAxis = ObservationUtilities.findAxisByName( obs
-              .getAxisList(), tmap.getObservationAxis() );
+          IAxis obsAxis;
+          try
+          {
+            obsAxis = ObservationUtilities.findAxisByName( obs.getAxisList(), tmap
+                .getObservationAxis() );
+          }
+          catch( final NoSuchElementException nse )
+          {
+            // If name doesn't match, we try to find it by type
+            obsAxis = ObservationUtilities.findAxisByType( obs.getAxisList(), tmap
+                .getObservationAxis() );
+          }
+
           final DiagramAxis diagAxis = m_template.getDiagramAxis( tmap
               .getDiagramAxis() );
 
@@ -223,7 +235,7 @@ public class DiagViewTheme extends AbstractObservationTheme
 
           final Color colorFor = m_defaultcolor != null ? m_defaultcolor : TimeserieUtils
               .getColorFor( valueAxis[i].getType() );
-          final DiagViewCurve curve = new DiagViewCurve( createCurveName( getName(), obs, valueAxis[i] ), colorFor, this, mappings,
+          final DiagViewCurve curve = new DiagViewCurve( replaceTokens( getName(), obs, valueAxis[i] ), colorFor, this, mappings,
               m_template );
 
           addCurve( curve );

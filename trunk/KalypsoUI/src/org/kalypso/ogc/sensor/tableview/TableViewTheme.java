@@ -185,7 +185,7 @@ public class TableViewTheme extends AbstractObservationTheme
 
           if( !valueAxis.getType().equals( getIgnoreType() ) )
           {
-            final TableViewColumn col = new TableViewColumn( createCurveName( getName(), obs, valueAxis ),
+            final TableViewColumn col = new TableViewColumn( replaceTokens( getName(), obs, valueAxis ),
                 m_editableColumns, 50, keyAxes[0], valueAxis, this, m_template );
 
             addColumn( col );

@@ -83,6 +83,8 @@ public class ObservationTable extends JTable implements ITemplateEventListener
 
   private MaskedNumberTableCellRenderer m_nbRenderer;
 
+  private final boolean m_waitForSwing;
+
   /**
    * Constructs a table based on the given template
    * 
@@ -90,17 +92,24 @@ public class ObservationTable extends JTable implements ITemplateEventListener
    */
   public ObservationTable( final TableViewTemplate template )
   {
+    this( template, false );
+  }
+  /**
+   * Constructs a table based on the given template
+   * 
+   * @param template
+   */
+  public ObservationTable( final TableViewTemplate template, final boolean waitForSwing )
+  {
     super( new ObservationTableModel() );
 
     m_template = template;
+    m_waitForSwing = waitForSwing;
 
     // for convenience
     m_model = (ObservationTableModel) getModel();
     m_model.setTable( this );
     m_model.setRules( template.getRules() );
-
-    // removed in this.dispose()
-    m_template.addTemplateEventListener( this );
 
     m_dateRenderer = new DateTableCellRenderer();
 
@@ -120,6 +129,16 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     setSelectionBackground( Color.YELLOW );
 
     getTableHeader().setReorderingAllowed( false );
+
+    // removed in this.dispose()
+    m_template.addTemplateEventListener( this );
+//    for( final Iterator tIt = m_template.getThemes().iterator(); tIt.hasNext(); )
+//      m_template.fireTemplateChanged( new TemplateEvent( m_template, tIt.next(), TemplateEvent.TYPE_ADD ) );
+//    for( final Iterator tIt = m_template.getThemes().iterator(); tIt.hasNext(); )
+//    {
+//      TableViewTheme theme = (TableViewTheme)tIt.next();
+//      
+//    }
   }
 
   public void dispose( )
@@ -134,7 +153,7 @@ public class ObservationTable extends JTable implements ITemplateEventListener
   /**
    * @see org.kalypso.ogc.sensor.template.ITemplateEventListener#onTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)
    */
-  public void onTemplateChanged( final TemplateEvent evt )
+  public final void onTemplateChanged( final TemplateEvent evt )
   {
     // for runnable
     final ObservationTableModel model = m_model;
@@ -199,7 +218,12 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     try
     {
       if( !SwingUtilities.isEventDispatchThread() )
-        SwingUtilities.invokeLater( runnable );
+      {
+        if( m_waitForSwing )
+          SwingUtilities.invokeAndWait( runnable );
+        else
+          SwingUtilities.invokeLater( runnable );
+      }
       else
         runnable.run();
 

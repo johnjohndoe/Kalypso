@@ -18,8 +18,8 @@ import org.kalypso.util.runtime.IVariableArguments;
  * 
  * @author schlienger
  */
-public abstract class AbstractViewTemplate extends
-    AbstractTemplateEventProvider implements IThemeEventListener
+public abstract class AbstractViewTemplate extends AbstractTemplateEventProvider implements
+    IThemeEventListener
 {
   private final List m_themes = new ArrayList();
 
@@ -29,7 +29,7 @@ public abstract class AbstractViewTemplate extends
    */
   private String m_ignoreType;
 
-  public String getIgnoreType( )
+  public String getIgnoreType()
   {
     return m_ignoreType;
   }
@@ -41,7 +41,42 @@ public abstract class AbstractViewTemplate extends
       m_ignoreType = ignoreType;
 
       for( final Iterator it = getThemes().iterator(); it.hasNext(); )
-        ((AbstractObservationTheme) it.next()).setIgnoreType( m_ignoreType );
+        ( (AbstractObservationTheme)it.next() ).setIgnoreType( m_ignoreType );
+    }
+  }
+
+  public void waitUntilLoaded( final int sleeptime, final int maxloops )
+      throws InterruptedException, IllegalStateException
+  {
+    synchronized( m_themes )
+    {
+      for( int i = 0; i < maxloops; i++ )
+      {
+        if( !isLoading() )
+          return;
+        Thread.sleep( sleeptime );
+      }
+
+      throw new IllegalStateException( "Template not loaded: time out" );
+    }
+  }
+
+  /**
+   * @return true when at least one theme is still loading
+   */
+  public boolean isLoading()
+  {
+    synchronized( m_themes )
+    {
+      for( Iterator it = getThemes().iterator(); it.hasNext(); )
+      {
+        AbstractObservationTheme element = (AbstractObservationTheme)it.next();
+
+        if( element.isLoading() )
+          return true;
+      }
+
+      return false;
     }
   }
 
@@ -74,8 +109,7 @@ public abstract class AbstractViewTemplate extends
       if( m_themes.remove( theme ) )
       {
         theme.removeListener( this );
-        fireTemplateChanged( new TemplateEvent( theme,
-            TemplateEvent.TYPE_REMOVE ) );
+        fireTemplateChanged( new TemplateEvent( theme, TemplateEvent.TYPE_REMOVE ) );
         theme.dispose();
       }
     }
@@ -84,7 +118,7 @@ public abstract class AbstractViewTemplate extends
   /**
    * Removes all the themes and fires event
    */
-  public void removeAllThemes( )
+  public void removeAllThemes()
   {
     synchronized( m_themes )
     {
@@ -92,22 +126,21 @@ public abstract class AbstractViewTemplate extends
       {
         final Iterator it = m_themes.iterator();
         while( it.hasNext() )
-          ((AbstractObservationTheme) it.next()).dispose();
+          ( (AbstractObservationTheme)it.next() ).dispose();
 
         m_themes.clear();
 
-        fireTemplateChanged( new TemplateEvent( this, null,
-            TemplateEvent.TYPE_REMOVE_ALL ) );
+        fireTemplateChanged( new TemplateEvent( this, null, TemplateEvent.TYPE_REMOVE_ALL ) );
       }
     }
   }
 
-  public void dispose( )
+  public void dispose()
   {
     removeAllThemes();
   }
 
-  public Collection getThemes( )
+  public Collection getThemes()
   {
     return m_themes;
   }
@@ -119,8 +152,7 @@ public abstract class AbstractViewTemplate extends
    * @param obs
    * @param args
    */
-  public void setObservation( final IObservation obs,
-      final IVariableArguments args )
+  public void setObservation( final IObservation obs, final IVariableArguments args )
   {
     removeAllThemes();
 
@@ -133,8 +165,7 @@ public abstract class AbstractViewTemplate extends
    * @param obs
    * @param args
    */
-  public abstract void addObservation( final IObservation obs,
-      final IVariableArguments args );
+  public abstract void addObservation( final IObservation obs, final IVariableArguments args );
 
   /**
    * Convenienve method for adding an observation to this template.
@@ -148,9 +179,8 @@ public abstract class AbstractViewTemplate extends
    * @param args
    * @return theme just being added
    */
-  public abstract AbstractObservationTheme addObservation(
-      final String themeName, final URL context, final String href,
-      final String linktype, final boolean ignoreExceptions,
+  public abstract AbstractObservationTheme addObservation( final String themeName,
+      final URL context, final String href, final String linktype, final boolean ignoreExceptions,
       final IVariableArguments args );
 
   /**
@@ -161,8 +191,8 @@ public abstract class AbstractViewTemplate extends
    * @throws FactoryException
    * @throws LoaderException
    */
-  public void saveObservation( final IObservation obs,
-      final IProgressMonitor monitor ) throws LoaderException, FactoryException
+  public void saveObservation( final IObservation obs, final IProgressMonitor monitor )
+      throws LoaderException, FactoryException
   {
     KalypsoGisPlugin.getDefault().getPool().saveObject( obs, monitor );
   }
