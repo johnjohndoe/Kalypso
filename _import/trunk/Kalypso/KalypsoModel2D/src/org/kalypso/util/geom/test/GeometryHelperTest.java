@@ -81,7 +81,7 @@ public class GeometryHelperTest extends TestCase {
     public void testgetSpannedArea() {
         double[] v = new double[] { 2d, 12d, 0 };
         double[] w = new double[] { 12, 5d, 0 };
-        double[] vectorProduct = GeometryHelper.getVectorProduct(v, w);
+//        double[] vectorProduct = GeometryHelper.getVectorProduct(v, w);
         System.out.println("v,w:" + GeometryHelper.getVectorProduct(v, w)[2]);
         System.out.println("w,v:" + GeometryHelper.getVectorProduct(w, v)[2]);
 

@@ -100,15 +100,9 @@ public class ConvertBC2XML {
     private static ArrayList fifthsList = new ArrayList();
     private static String[] sixthParamBlock = new String[100];
     
-    private static String[][] seventhParameterBlock = new String[3][100];
     private static String[][] block7 = new String[100][100];
     private static String[][]valueNCYC = new String[100][50];
     private static String[][]paramNCYC = new String[100][50];
-    private static String iqgenId;
-    private static String iqgenQF;
-    private static String iqgenQDir;
-    private static String ihgenId;
-    private static String ihgenHF;
     
     //namespaces
     private static String NS = "http://elbe.wb.tu-harburg.de";
@@ -595,7 +589,6 @@ public class ConvertBC2XML {
      * 
      * @param firstParam
      * @param st
-     * @return
      */
     public static String[][] setParamGroup(String firstParam, StringTokenizer st){
         
@@ -618,7 +611,6 @@ public class ConvertBC2XML {
     /**
      * sets the fourth block of parameters with viscosity, etc.
      * @param paramsBlock
-     * @param c
      */
     public static void setFourthParamGroup(String paramsBlock){
         HashMap fourthBlock = new HashMap();
@@ -651,7 +643,6 @@ public class ConvertBC2XML {
      * This is just a list of id of the points building a line.
      * 
      * @param paramsBlock
-     * @return
      */
     public static ArrayList setFifthParamGroup(String paramsBlock){
         int pos = paramsBlock.lastIndexOf("Linien)");
@@ -716,7 +707,6 @@ public class ConvertBC2XML {
      * The second block is similar to the sixth block.
      * 
      * @param paramsBlock
-     * @return
      */
     public static void setSeventhParamBlock(String paramsBlock, int k){
         String[]firstSplit = paramsBlock.split("IQGEN");
@@ -750,7 +740,6 @@ public class ConvertBC2XML {
     
     /**
      * gets the parameters of the seventh block
-     * @return
      */
     public static String[][] get7Block(){
         return block7;

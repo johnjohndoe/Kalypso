@@ -46,8 +46,8 @@
 
  E-Mail:
  katharina.lupp@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 21.10.2004
  * 
@@ -63,7 +63,6 @@ import java.util.ArrayList;
  */
 public class Edge {
 
- 
     private int id = 0;
     private int p1 = 0;
     private int p2 = 0;
@@ -78,15 +77,15 @@ public class Edge {
     public Edge(int id) {
         this.id = id;
     }
-    
+
     /**
      * 
-     *
+     *  
      */
-    public Edge (){
-        
+    public Edge() {
+
     }
-    
+
     /**
      * Constructor
      * 
@@ -119,18 +118,18 @@ public class Edge {
 
     /**
      * returns a boolean with the information if this <Edge>is already present
-     * in the <HashMap>of <Edges> and if it is present the <Edge> is clockwise.
+     * in the <HashMap>of <Edges>and if it is present the <Edge>is clockwise.
      */
-    public boolean existEdgeClockwise(ArrayList mapEdges, int idFE) {
+    public boolean existEdgeClockwise(ArrayList mapEdges) {
         boolean exists = false;
         for (int i = 0; i < mapEdges.size(); i++) {
             Edge ed = (Edge) mapEdges.get(i);
             if (ed != null) {
-                if (this.p1 == ed.getP1() && this.p2 == ed.getP2()){
-                    exists = true; 
+                if (this.p1 == ed.getP1() && this.p2 == ed.getP2()) {
+                    exists = true;
                     break;
                 }
-               
+
             }
         }
         return exists;
@@ -138,18 +137,19 @@ public class Edge {
 
     /**
      * returns a boolean with the information if this <Edge>is already present
-     * in the <HashMap>of <Edges> and if it is present the <Edge> is not clockwise.
+     * in the <HashMap>of <Edges>and if it is present the <Edge>is not
+     * clockwise.
+     * 
      * @param mapEdges
-     * @param idFE
-     * @return
+     * @return boolean if edge is not clockwise
      */
-    public boolean existEdgeNotClockwise(ArrayList mapEdges, int idFE) {
+    public boolean existEdgeNotClockwise(ArrayList mapEdges) {
         boolean exists = false;
         for (int i = 0; i < mapEdges.size(); i++) {
             Edge ed = (Edge) mapEdges.get(i);
             if (ed != null) {
-               if(this.p2 == ed.getP1() && this.p1 == ed.getP2()){
-                    exists = true; 
+                if (this.p2 == ed.getP1() && this.p1 == ed.getP2()) {
+                    exists = true;
                     break;
                 }
             }
@@ -158,18 +158,9 @@ public class Edge {
     }
 
     /**
-     * 
-     * @param idFE
-     * @param mapEdges
-     */
-    public void setFElements(int idFE, ArrayList mapEdges) {
-
-    }
-
-    /**
      * gets p1 of <Edge>
      * 
-     * @return
+     * @return int p1
      */
     public int getP1() {
         return this.p1;
@@ -187,7 +178,7 @@ public class Edge {
     /**
      * gets p2 of <Edge>
      * 
-     * @return
+     * @return int
      */
     public int getP2() {
         return this.p2;
@@ -204,16 +195,16 @@ public class Edge {
 
     /**
      * gets id of <Edge>
-     * 
-     * @return
+     * @return int id
      */
     public int getID() {
         return this.id;
     }
 
-    public void setID(int id){
+    public void setID(int id) {
         this.id = id;
     }
+
     /**
      * 
      * @return first element of <Edge>
@@ -242,7 +233,7 @@ public class Edge {
     /**
      * sets second element of <Edge>
      * 
-     * @param idFE1
+     * @param idFE2
      */
     public void setFE2(int idFE2) {
         this.idFE2 = idFE2;

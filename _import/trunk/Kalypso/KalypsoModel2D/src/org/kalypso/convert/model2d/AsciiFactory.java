@@ -111,7 +111,7 @@ public class AsciiFactory {
             sbALL.append(sbDyn.toString());
 
             OutputStreamWriter writer =
-				new OutputStreamWriter( new FileOutputStream("C:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\testBC.txt"), "UTF-8" );
+				new OutputStreamWriter( new FileOutputStream("C:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\testBC050305.txt"), "UTF-8" );
 	        writer.write(sbALL.toString());
 			writer.close();
       }catch(Exception ex){

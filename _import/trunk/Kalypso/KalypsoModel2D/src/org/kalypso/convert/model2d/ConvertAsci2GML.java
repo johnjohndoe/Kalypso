@@ -63,7 +63,6 @@ public class ConvertAsci2GML {
     
     private static String ns;
     private static String sl;
-    private static String xmlSchema;
     private static String inFile;
     private static String outFile;
     private static String gmlInFile;
@@ -139,7 +138,7 @@ public class ConvertAsci2GML {
 	        
 	        try{	            
 		        ConvertFEMAsci2XML xmlFile = new ConvertFEMAsci2XML();
-		        xmlFile.startFem2XML(xmlSchema, inFile, outFile, ns, sl);
+		        xmlFile.startFem2XML(inFile, outFile, ns, sl);
 		        boolean exists = xmlFile.existsDetailedFP();
 		        System.out.println("exists: " + exists);
 		        gmlInFile = outFile;

@@ -64,7 +64,7 @@ public class Test {
     
     public static void main(String[] args) {
         MeshPoint mp1 = new MeshPoint(143, 3586257.8984375, 5936190.1484375, 63.89112854003906);
-        MeshPoint mp2 = new MeshPoint(144, 3586342.0546875, 5936223.4296875, 63.74031066894531);
+//        MeshPoint mp2 = new MeshPoint(144, 3586342.0546875, 5936223.4296875, 63.74031066894531);
         MeshPoint mp3 = new MeshPoint(298, 3586248.7890625, 5936184.33984375, 64.0420150756836);
         MeshPoint mp4 = new MeshPoint(299, 3586256.203125, 5936158.1875, 63.40810012817383);
         

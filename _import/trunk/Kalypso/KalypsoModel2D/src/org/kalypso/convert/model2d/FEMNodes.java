@@ -105,10 +105,7 @@ public class FEMNodes {
         for (Iterator iter = fpFEs.iterator(); iter.hasNext();) {
             try{
                 Feature fpFE = (Feature) iter.next();
-                
                 GM_Point point = (GM_Point) fpFE.getProperty("geometry");
-                String coordinates = "FP   "+countNode+"  "+(point.getX()-m_xoffset)
-                					 +" " + (point.getY()-m_yoffset)+" "+point.getZ()+"\n";
                 String x = ""+(point.getX()-m_xoffset);
                 double xCoord = Double.parseDouble(x);
                 String y = ""+(point.getY()-m_yoffset);
@@ -205,7 +202,6 @@ public class FEMNodes {
     
     /**
      * gets the <ArrayList> of the <Nodes>
-     * @return
      */
     public ArrayList getNodeList(){
         return this.nodeList;

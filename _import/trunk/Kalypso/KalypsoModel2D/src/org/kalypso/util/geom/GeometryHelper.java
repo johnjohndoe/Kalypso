@@ -64,7 +64,6 @@ public class GeometryHelper {
      * 
      * @param v
      * @param w
-     * @return
      */
     public static double getAngle(double[] v, double w[]) {
         return Math.acos(getScalarProduct(v, w) / (getNorm(v) * getNorm(w)));
@@ -74,7 +73,6 @@ public class GeometryHelper {
      * 
      * @param v
      * @param w
-     * @return
      */
     public static double getSpannedArea(double[] v, double[] w) {
         return getNorm(getVectorProduct(v, w));
@@ -83,7 +81,6 @@ public class GeometryHelper {
     /**
      * 
      * @param v
-     * @return
      */
     public static double getNorm(double[] v) {
         double inner = 0d;
@@ -96,7 +93,6 @@ public class GeometryHelper {
      * 
      * @param v
      * @param w
-     * @return
      */
     public static double getScalarProduct(double[] v, double[] w) {
         double result = 0d;
@@ -109,7 +105,6 @@ public class GeometryHelper {
      * 
      * @param a
      * @param b
-     * @return
      */
     public static double[] getVectorProduct(double[] a, double b[]) {
         double result[] = new double[a.length];
@@ -123,7 +118,6 @@ public class GeometryHelper {
      * 
      * @param a
      * @param b
-     * @return
      */
     public static boolean isAngleClockwise(double[] a, double[] b) {
         return getVectorProduct(a, b)[2] > 0;

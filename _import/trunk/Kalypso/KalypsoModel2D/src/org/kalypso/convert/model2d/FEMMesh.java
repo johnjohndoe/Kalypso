@@ -81,9 +81,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
  */
 public class FEMMesh {
 
-    private StringBuffer sbMesh = new StringBuffer();
     private ArrayList roughnessList = new ArrayList();
-    private ArrayList colorList = new ArrayList();
     private ArrayList feList = new ArrayList();
     private ArrayList nodeList = new ArrayList();
     private ArrayList edgesList = new ArrayList();
@@ -138,7 +136,6 @@ public class FEMMesh {
 	                int idFe = (int)Double.parseDouble(""+meshFE.getProperty("feId"));
 	                this.addFEParameter(idFe, meshFE);
 	
-	                Object[] properties = meshFE.getProperties();
 	                GM_Surface geomProperty = (GM_Surface) meshFE
 	                        .getProperty("polygonProperty");
 	
@@ -204,8 +201,8 @@ public class FEMMesh {
      */
     private void organizeEdges(Edge edge, int idFE, boolean isClockwise) {
 
-        boolean existsClockwise = edge.existEdgeClockwise(this.edgesList, idFE);
-        boolean existsNotClockwise = edge.existEdgeNotClockwise(this.edgesList, idFE);
+        boolean existsClockwise = edge.existEdgeClockwise(this.edgesList);
+        boolean existsNotClockwise = edge.existEdgeNotClockwise(this.edgesList);
         if (!existsClockwise && !existsNotClockwise && isClockwise) {
             edge.setFE1(idFE);
             this.edgesList.add(countEdge, edge);
@@ -231,7 +228,6 @@ public class FEMMesh {
             
             
         } else if(existsClockwise && !isClockwise){
-            Edge edTmp = new Edge();
             for (int i = 0; i < this.edgesList.size(); i++) {
                 Edge ed = (Edge) this.edgesList.get(i);
                 if (edge.getP1() == ed.getP1() && edge.getP2() == ed.getP2()){
@@ -268,16 +264,13 @@ public class FEMMesh {
                     break;
                 }
             }
-            int posId = this.edgesList.indexOf(edge);
-            boolean contains = this.edgesList.contains(edge);
+
         }
     }
 
     /**
      * sets an <ArrayList>with the nodeIds of the particular <MeshPolygon>
-     * 
      * @param position
-     * @return
      */
     private int[] getNodeListOfPolygon(GM_Position[] position) {
         int[] ids = new int[position.length];
@@ -295,11 +288,9 @@ public class FEMMesh {
 
     /**
      * gets the id of the <Node>encountered in the particular <MeshPolygon>
-     * 
      * @param x
      * @param y
      * @param z
-     * @return
      */
     private int getNodeId(double x, double y, double z) {
         int idNode = 0;
@@ -365,7 +356,6 @@ public class FEMMesh {
      * @param roughInTS
      * @param order
      * @param dm
-     * @return
      */
     private StringWriter setFEStringWriter(int k, String roughOld, String roughInTS,
             								String order, String dm){
@@ -419,7 +409,7 @@ public class FEMMesh {
     /**
      * gets the <StringBuffer>of the roughness parameter
      * 
-     * @return
+     * @return <StringBuffer>
      */
     public StringBuffer getSB_RK() {
         return this.sbRoughness;
@@ -466,7 +456,7 @@ public class FEMMesh {
     /**
      * gets the <ArrayList>with id and particular <Roughness>
      * 
-     * @return
+     * @return <ArrayList>
      */
     public ArrayList getRough() {
         ArrayList listRK = roughness.getRoughness();
@@ -481,7 +471,7 @@ public class FEMMesh {
     /**
      * gets <StringBuffer>with the <Edge>informations
      * 
-     * @return
+     * @return <StringBuffer>
      */
     public StringBuffer getSB_AR() {
         return this.sbAR;
@@ -526,14 +516,14 @@ public class FEMMesh {
         return this.sbFE;
     }
 
-    /**
-     * sets <StringBuffer>with FE parameters
-     *  
-     */
-    private void setSB_FE() {
-        for (int i = 0; i < feList.size(); i++) {
-            String feStr = "FE  " + feList.get(i);
-            this.sbFE.append(feStr);
-        }
-    }
+//    /**
+//     * sets <StringBuffer>with FE parameters
+//     *  
+//     */
+//    private void setSB_FE() {
+//        for (int i = 0; i < feList.size(); i++) {
+//            String feStr = "FE  " + feList.get(i);
+//            this.sbFE.append(feStr);
+//        }
+//    }
 }

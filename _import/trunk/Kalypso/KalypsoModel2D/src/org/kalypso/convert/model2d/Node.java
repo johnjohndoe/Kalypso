@@ -115,7 +115,6 @@ public class Node {
     
     /**
      * gets y of <Node>
-     * @return
      */
     public double getY(){
         return this.y;
@@ -131,7 +130,6 @@ public class Node {
     
     /**
      * gets z of <Node>
-     * @return
      */
     public double getZ(){
         return this.z;

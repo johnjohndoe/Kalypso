@@ -97,7 +97,6 @@ public class Roughness {
     /**
      * tests if roughness is already present in vectorRoughness
      * @param roughness
-     * @return
      */
     private boolean testRoughness(ArrayList list, String roughness){
         if(!list.isEmpty() && list.contains(roughness)) exists = true;

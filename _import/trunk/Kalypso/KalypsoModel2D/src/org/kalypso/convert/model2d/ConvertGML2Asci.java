@@ -79,7 +79,6 @@ public class ConvertGML2Asci {
      * starts the insertion of the gml file in the kalypso environment
      * 
      * @param argsmap2
-     * @param sb
      */
     private static void convertGML2Asci(HashMap argsmap2) {
         try {

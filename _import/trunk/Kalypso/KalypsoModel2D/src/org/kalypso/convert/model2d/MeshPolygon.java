@@ -211,7 +211,6 @@ public class MeshPolygon {
      * <Edges> of the <MeshPolygon>
      * 
      * @param s
-     * @return
      */
     public StringBuffer getOrderOutOfSB(String[] s){
         StringBuffer sb = new StringBuffer(10000);
@@ -245,7 +244,6 @@ public class MeshPolygon {
      * sets the Order of the Edges of the <MeshPolygon>
      * @param s
      * @param sb
-     * @return
      */
     public StringBuffer setOrder(String[]s, StringBuffer sb){
         for(int k = 0; k < s.length; k++){
@@ -282,7 +280,6 @@ public class MeshPolygon {
     /**
      * tests if the particular id is already encountered
      * @param id
-     * @return
      */
     public boolean testIDs(int id){        
         for(int i = 0; i < vector.size(); i++){

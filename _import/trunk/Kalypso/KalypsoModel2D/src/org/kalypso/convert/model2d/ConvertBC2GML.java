@@ -88,7 +88,6 @@ import org.xml.sax.SAXException;
  */
 public class ConvertBC2GML {
     
-    private static HashMap mapBC = new HashMap();
     private static String[][]firstParamGroup = new String [2][100];
     private static String[][]firstNewParamGroup = new String [2][100];
     private static String[][]secondParamGroup = new String [2][100];
@@ -97,13 +96,6 @@ public class ConvertBC2GML {
     
     private static String[][]fourthParamGroup = new String [100][8];
     private static String[] id = new String[100];
-    private static ArrayList v1 = new ArrayList();
-    private static ArrayList v2 = new ArrayList();
-    private static ArrayList v3 = new ArrayList();
-    private static ArrayList v4 = new ArrayList();
-    private static ArrayList ks_ = new ArrayList();
-    private static ArrayList abst_ = new ArrayList();
-    private static ArrayList durchbaum_ = new ArrayList();
     private static String[] viscosity1 = new String[100];
     private static String[] viscosity2 = new String[100];
     private static String[] viscosity3 = new String[100];
@@ -115,15 +107,9 @@ public class ConvertBC2GML {
     private static ArrayList fifthsList = new ArrayList();
     private static String[] sixthParamBlock = new String[100];
     
-    private static String[][] seventhParameterBlock = new String[3][100];
     private static String[][] block7 = new String[100][100];
     private static String[][]valueNCYC = new String[100][50];
     private static String[][]paramNCYC = new String[100][50];
-    private static String iqgenId;
-    private static String iqgenQF;
-    private static String iqgenQDir;
-    private static String ihgenId;
-    private static String ihgenHF;
     private static int size7Group = 0;
     
     //namespaces
@@ -131,11 +117,11 @@ public class ConvertBC2GML {
     private static String GML_NS = "http://www.opengis.net/gml";
     private static String XLINK_NS = "http://www.w3.org/1999/xlink";
     private static String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
-    private static String XSI_schemaLocation_NS = "http://elbe.wb.tu-harburg.de/2dModel D:\\gml\\bc_gml2.xsd";
+    private static String XSI_schemaLocation_NS = "http://elbe.wb.tu-harburg.de/2dModel C:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\schema\\bc_gml2.xsd";
     
     //TODO locations of schema und gmlFile of 2d -> dynamic
     private static String gml2dFile = "./data/test/myMesh.gml";
-    private static String gml2dSchema = "http://troubadix.wb.tu-harburg.de/lupp/2dgml.xsd";
+    private static String gml2dSchema = "http://elbe.wb.tu-harburg.de/2dModel c:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\schema\\2dgml.xsd";
     
     
     public static void createGML(String outFile) {
@@ -733,7 +719,7 @@ public class ConvertBC2GML {
         
         if(thirdParamGroup[1][12].equalsIgnoreCase("1")){
             
-            setFourthParamGroup(paramsBlock[5], "NMAT");
+            setFourthParamGroup(paramsBlock[5]);
 	        
 	        int pos = paramsBlock[6].indexOf("IQGEN Zeilen");
 	        String fifthsParamBlock = paramsBlock[6].substring(0, pos);
@@ -747,7 +733,7 @@ public class ConvertBC2GML {
 	     	    setSeventhParamBlock(paramsBlock[i], i);
 	     	}
         }else {
-	        setFourthParamGroup(paramsBlock[4], "NMAT");
+	        setFourthParamGroup(paramsBlock[4]);
 	        
 	        int pos = paramsBlock[5].indexOf("IQGEN Zeilen");
 	        String fifthsParamBlock = paramsBlock[5].substring(0, pos);
@@ -772,7 +758,6 @@ public class ConvertBC2GML {
      * 
      * @param paramBlock
      * @param c
-     * @return
      */
     private static String[][] setFirstThreeParamGroups(String paramBlock, String c){
        String[][] s = new String[2][100];
@@ -792,7 +777,6 @@ public class ConvertBC2GML {
      * 
      * @param firstParam
      * @param st
-     * @return
      */
     private static String[][] setParamGroup(String firstParam, StringTokenizer st){
         
@@ -815,9 +799,8 @@ public class ConvertBC2GML {
     /**
      * sets the fourth block of parameters with viscosity, etc.
      * @param paramsBlock
-     * @param c
      */  
-    private static void setFourthParamGroup(String paramsBlock, String c){
+    private static void setFourthParamGroup(String paramsBlock){
         HashMap fourthBlock = new HashMap();
         int pos = paramsBlock.indexOf("1");
         String s = paramsBlock.substring(pos, paramsBlock.length());
@@ -848,7 +831,6 @@ public class ConvertBC2GML {
      * This is just a list of id of the points building a line.
      * 
      * @param paramsBlock
-     * @return
      */
     private static ArrayList setFifthParamGroup(String paramsBlock){
         int pos = paramsBlock.lastIndexOf("Linien)");
@@ -903,7 +885,6 @@ public class ConvertBC2GML {
      * The second block is similar to the sixth block.
      * 
      * @param paramsBlock
-     * @return
      */
     private static void setSeventhParamBlock(String paramsBlock, int k){
         String[]firstSplit = paramsBlock.split("IQGEN");
@@ -934,14 +915,6 @@ public class ConvertBC2GML {
         //second block 
         String[]seventhBBlock = setSixthParamGroup(firstSplit[1]);
         block7[k] = seventhBBlock; 
-    }
-    
-    /**
-     * gets the parameters of the seventh block
-     * @return
-     */
-    private static String[][] get7Block(){
-        return block7;
     }
     
 

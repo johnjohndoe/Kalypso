@@ -72,12 +72,14 @@ public class ConvertBC2Ascii {
     
     //TODO locations of schema und gmlFile of 2d -> dynamic
     private static String gml2dFile = "./data/test/myMesh.gml";
-    private static String gml2dSchema = "http://troubadix.wb.tu-harburg.de/lupp/2dgml.xsd";
+    private static String gml2dSchema = "http://elbe.wb.tu-harburg.de/2dModel c:/Programme/eclipse/workspace/Kalypso2d/data/schema/bc_gml2.xsd";
     
     public static void convertBC2Ascii(HashMap map){
         try{
 	        URL gmlURL = new File((String)map.get("InputFile")).toURL();
-	        URL schemaUrl = new URL((String)map.get("SchemaLocation"));
+//	        URL schemaUrl = new URL((String)map.get("SchemaLocation"));
+	        URL schemaUrl = new URL("http://elbe.wb.tu-harburg.de/2dModel C:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\schema\\bc_gml2.xsd");
+	        System.out.println(gmlURL+", "+ schemaUrl);
 	        GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL, schemaUrl);
 	        
 	        final Feature rootFeature = ws.getRootFeature();

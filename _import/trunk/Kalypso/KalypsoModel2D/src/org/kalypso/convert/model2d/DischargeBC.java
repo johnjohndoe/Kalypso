@@ -85,7 +85,6 @@ public class DischargeBC {
     /**
      * gets water level and discharge
      * @param list
-     * @return
      */
     public StringBuffer getQFHF(List list){
         StringBuffer sb = new StringBuffer();        
@@ -135,7 +134,6 @@ public class DischargeBC {
     /**
      * gets water level and discharge
      * @param list
-     * @return
      */
     public StringBuffer getQFHFDyn(List list){
         StringBuffer sb = new StringBuffer();        

@@ -189,7 +189,6 @@ public class ConvertFEMAsci2XML {
     
     /**
      * checks if start or result file of .2d
-     * @return
      */
     public boolean existsDetailedFP(){
         return detailedFP;
@@ -265,7 +264,7 @@ public class ConvertFEMAsci2XML {
     private static void setVA(String s, int i){
         StringTokenizer st = new StringTokenizer(s);
         while (st.hasMoreTokens()){
-            String t = st.nextToken();
+            st.nextToken();
             va_id[i]   = st.nextToken();
             va_x_velocity[i] = st.nextToken();
             va_y_velocity[i] = st.nextToken();
@@ -284,7 +283,7 @@ public class ConvertFEMAsci2XML {
     private static void setVO(String s, int i){
         StringTokenizer st = new StringTokenizer(s);
         while (st.countTokens()> 0){
-            String t     = st.nextToken();
+            st.nextToken();
             vo_id[i]     = st.nextToken();
             vo_param1[i] = st.nextToken();
             vo_param2[i] = st.nextToken();
@@ -299,7 +298,7 @@ public class ConvertFEMAsci2XML {
     private static void setZU(String s, int i){
         StringTokenizer st = new StringTokenizer(s);
         while (st.countTokens()> 0){
-            String t = st.nextToken();
+            st.nextToken();
             zu_info1[i] = st.nextToken();
             zu_info2[i] = st.nextToken();
             zu_info3[i] = st.nextToken();
@@ -316,7 +315,7 @@ public class ConvertFEMAsci2XML {
     private static void setGO(String s, int i){
         StringTokenizer st = new StringTokenizer(s);
         while (st.countTokens()> 0){
-            String t = st.nextToken();
+            st.nextToken();
             go_id[i]   = st.nextToken();
             go_timeStep1[i] = st.nextToken();
             go_timeStep2[i] = st.nextToken();
@@ -333,7 +332,7 @@ public class ConvertFEMAsci2XML {
         StringTokenizer st = new StringTokenizer(s);
         while (st.countTokens()> 0){
             if(st.hasMoreTokens() == true){
-                String t = st.nextToken();
+                st.nextToken();
             } 
             if(st.hasMoreTokens() == true){
                 ga_id[i] = st.nextToken();
@@ -407,7 +406,6 @@ public class ConvertFEMAsci2XML {
      * @param feString
      */
     private static void setFE(String feString){
-       String t = feString;
        tmpFE = feString.split("FE");
        fe_id = new String[tmpFE.length];
        fe_roughness = new String[tmpFE.length];
@@ -416,8 +414,6 @@ public class ConvertFEMAsci2XML {
        fe_roughnessTimeStep = new String[tmpFE.length];
        fe_orderOfProcessing = new String[tmpFE.length];
        fe_defaultMass = new String[tmpFE.length];
-       
-       StringBuffer sb = new StringBuffer();
 
        for(int i = 0; i < tmpFE.length; i++){
            String fe = tmpFE[i]; 
@@ -450,7 +446,6 @@ public class ConvertFEMAsci2XML {
         rk_idRoughness = new String[tmpRK.length];
         rk_roughness = new String[tmpRK.length];
         rk_color = new String[tmpRK.length];
-        int count = 1;
         for(int i = 1; i < tmpRK.length; i++){
             String rk = tmpRK[i];
             StringTokenizer st = new StringTokenizer(rk);
@@ -482,9 +477,6 @@ public class ConvertFEMAsci2XML {
 	                }else {
 	                    rk_param4[i]= ""+0;
 	                }
-	                
-//	                count++;
-	                
 		            break;
                     
                 }
@@ -739,7 +731,7 @@ public class ConvertFEMAsci2XML {
     /**
      * creates the elements and attributes of FE
      * @param doc
-     * @param efe
+     * @param erk
      * @param i
      */
     private static void createRKNode(Document doc, Element erk, int i){
@@ -780,7 +772,7 @@ public class ConvertFEMAsci2XML {
     
     /**
      * creates xml document with parameters from the fem asci file
-     * @param sbAsciFile
+     * @param outFile
      */
     private static void setXML(String outFile) {
         
@@ -835,46 +827,13 @@ public class ConvertFEMAsci2XML {
         }
     }
     
-    
-
-
     /**
-     * prints out helping information
-     * @param n an abstract integer to specifiy the help-information
-     */
-    private static void usage(int n) {
-        switch (n) {
-        case 0:
-            System.out
-                    .println("usage: java ConvertFEMAsci2XML [-s GMLSchema -i inputFile -o outputFileDirectory]\n"
-                            + "                      [ -d outputdir]\n"
-                            + "                      [--help]\n"
-                            + "\n"
-                            + "    -s          GMLSchema File-directory, containing absolut paths and filenames\n"
-                            + "    -i          inputFile-directory, containing absolut paths and filenames\n"
-                            + "    -o          destination-directory, containing absolut paths and filenames\n"
-                            + "    --help      shows this help.\n");
-            break;
-        case 1:
-            System.out
-                    .println("Try 'java ConvertFEMAsci2XML --help' for more information.");
-            break;
-        default:
-            System.out
-                    .println("Unknown usage: Try 'java ConvertFEMAsci2XML --help' for more information.");
-            break;
-        }
-    }
-    
-    /**
-     * 
-     * @param xmlSchema
      * @param inFile
      * @param outFile
      * @param ns
      * @param sl
      */
-    public void startFem2XML(String xmlSchema, String inFile, String outFile, String ns, String sl){
+    public void startFem2XML(String inFile, String outFile, String ns, String sl){
         try {
             NS = ns;
             XSI_schemaLocation_NS = sl;

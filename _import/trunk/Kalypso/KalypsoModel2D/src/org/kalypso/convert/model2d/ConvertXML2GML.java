@@ -100,12 +100,7 @@ public class ConvertXML2GML {
     private static int[] e_left = new int[100000];
     private static int[] e_right = new int[100000];
     private static int[] e_midSideNode = new int[100000];
-    
     private static String[][] ar = new String[100000][6];
-    private static int point1 = 0;
-    private static int point2 = 0;
-    private static int point3 = 0;
-    private static int point4 = 0;
     
     //FE
     private static int[] feId = new int[100000];
@@ -160,8 +155,6 @@ public class ConvertXML2GML {
     private static Element removeElement;
     
     //for testing
-    private static int testDreieck = 0;
-    private static int testViereck = 0;
     private static float m_xoffset=3500000;
     private static float m_yoffset=5900000;
     
@@ -169,7 +162,6 @@ public class ConvertXML2GML {
     
    /**
     * gets the comment of the asci file
-    * @return
     */
     private String getComment(){
         return comment;
@@ -307,8 +299,6 @@ public class ConvertXML2GML {
 
     /**
      * sets the parameters of va (xVelocity, yVelocity, riverDepth, waterLevel )
-     * 
-     * @param list
      */
     private static void setVA(FpParams.VaType vaType, int i) {
         xVelocity[i] = vaType.getXVelocity();
@@ -319,8 +309,6 @@ public class ConvertXML2GML {
 
     /**
      * sets the ga parameters (timeGradient1, timeGradient2, timeGradient3 )
-     * 
-     * @param list
      */
     private static void setGA(FpParams.GaType gaType, int i) {
         timeGradient1[i] = gaType.getTimeGradient1();
@@ -332,7 +320,6 @@ public class ConvertXML2GML {
      * sets the parameters of vo (degreeOfFreedomOfOldTimeGradient1,
      * degreeOfFreedomOfOldTimeGradient2, degreeOfFreedomOfOldTimeGradient3)
      * 
-     * @param list
      */
     private static void setVO(FpParams.VoType voType, int i) {
         degreeOfFreedomOfOldTimeGradient1[i] = voType
@@ -346,8 +333,6 @@ public class ConvertXML2GML {
     /**
      * sets the parameters of go (TimeGradientOfFormerTimeWarps1,
      * TimeGradientOfFormerTimeWarps2, TimeGradientOfFormerTimeWarps3)
-     * 
-     * @param list
      */
     private static void setGO(FpParams.GoType goType, int i) {
         timeGradientOfFormerTimeWarps1[i] = goType
@@ -360,8 +345,6 @@ public class ConvertXML2GML {
 
     /**
      * sets the parameters of zu (info1, info2, info3, info4, info5,info6)
-     * 
-     * @param list
      */
     private static void setZU(FpParams.ZuType zuType, int i) {
         info1[i] = zuType.getInfo1();
