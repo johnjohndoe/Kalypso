@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-Name: KalypsoUtil Plug-in
+Bundle-SymbolicName: org.kalypso.util
+Bundle-Version: 1.0.0
+Bundle-ClassPath: KalypsoUtil.jar
+Bundle-Vendor: org.kalypso
+Bundle-Localization: plugin
+Eclipse-AutoStart: true
+Provide-Package: org.kalypso.util.observer
