@@ -6,7 +6,7 @@
    version="0.0.1"
    provider-name="org.kalypso">
    <runtime>
-      <library name="kalypsoUtil.jar">
+      <library name="kalypsoutil.jar">
          <export name="*"/>
       </library>
       <library name="lib/commons-io-1.0.jar">
