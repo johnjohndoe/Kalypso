@@ -24,11 +24,14 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public abstract class SetContentThread extends CatchThread
 {
   private final PipedOutputStream m_pos = new PipedOutputStream();
+
   private final PipedInputStream m_pis;
 
   private CatchRunnable m_catchRunnable;
+
   private final IFile m_file;
 
+  private String m_charset;
 
   public SetContentThread( final IFile file, final boolean create, final boolean force,
       final boolean keepHistory, final IProgressMonitor monitor ) throws CoreException
@@ -37,19 +40,25 @@ public abstract class SetContentThread extends CatchThread
     try
     {
       m_pis = new PipedInputStream( m_pos );
-      
+
+      m_charset = "UTF-8";
+      if( !create )
+        m_charset = m_file.getCharset();
+      else
+        m_charset = m_file.getWorkspace().getRoot().getDefaultCharset();
+
       final InputStream is = m_pis;
       m_catchRunnable = new CatchRunnable()
-            {
-              protected void runIntern() throws Throwable
-              {
-                if( create )
-                  file.create( is, force, monitor );
-                else
-                  file.setContents( is, force, keepHistory, monitor );
-                is.close();
-              }
-            };
+      {
+        protected void runIntern() throws Throwable
+        {
+          if( create )
+            file.create( is, force, monitor );
+          else
+            file.setContents( is, force, keepHistory, monitor );
+          is.close();
+        }
+      };
       new Thread( m_catchRunnable ).start();
     }
     catch( final IOException e )
@@ -58,14 +67,6 @@ public abstract class SetContentThread extends CatchThread
       throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
           "Fehler beim Erzeugen der Kontrolldatei: " + e.getLocalizedMessage(), e ) );
     }
-  }
-  
-  private String getCharset() throws CoreException
-  {
-    if( m_file.exists() )
-        return m_file.getCharset();
-
-    return m_file.getWorkspace().getRoot().getDefaultCharset();
   }
 
   protected abstract void write( final Writer writer ) throws Throwable;
@@ -79,15 +80,16 @@ public abstract class SetContentThread extends CatchThread
 
   protected void runIntern() throws Throwable
   {
+    Writer outputStreamWriter = null;
     try
     {
-      final Writer outputStreamWriter = new OutputStreamWriter( m_pos, getCharset() );
-      
+      outputStreamWriter = new OutputStreamWriter( m_pos, m_charset );
       write( outputStreamWriter );
     }
     finally
     {
-      m_pos.close();
+      if( outputStreamWriter != null )
+        outputStreamWriter.close();
     }
   }
 

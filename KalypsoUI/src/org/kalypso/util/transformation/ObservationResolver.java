@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -95,22 +96,9 @@ public class ObservationResolver extends AbstractTransformation
       resolveTimeseries( gmlURL, replaceProperties, features, sourceObsName, targetObsName, targetFolder,
           new SubProgressMonitor( monitor, 1000 ) );
 
-      // GML wieder speichern
-      final SetContentThread thread = new SetContentThread( gmlFile, false, false, true,
-          new NullProgressMonitor() )
-      {
-        protected void write( final Writer writer ) throws Throwable
-        {
-          GmlSerializer.serializeFeature( writer, workspace.getRootFeature(),
-              new NullProgressMonitor() );
-        }
-      };
-      thread.start();
-      thread.join();
-
       monitor.done();
     }
-    catch( final Exception e )
+    catch( final Throwable e )
     {
       throw new TransformationException( e );
     }
@@ -130,12 +118,6 @@ public class ObservationResolver extends AbstractTransformation
     final FeatureType featureType = features[0].getFeatureType();
     checkColumn( featureType, sourceName );
     checkColumn( featureType, targetName );
-
-    //    final String zmlPrefix = featureType.getName() + "-" + sourceName + "-";
-
-    //    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool(
-    // IObservation.class );
-    //    final ObjectFactory factory = new ObjectFactory();
 
     monitor.beginTask( "Zeitreihen auslesen", features.length * 2 );
 
@@ -158,7 +140,7 @@ public class ObservationResolver extends AbstractTransformation
 
         final IFile targetfile = targetFolder.getFile( new Path( targetlink.getHref() ) );
         FolderUtilities.mkdirs( targetfile.getParent() );
-
+        
         final SetContentThread thread = new SetContentThread( targetfile, !targetfile.exists(), false, true,
             new NullProgressMonitor() )
         {
@@ -170,20 +152,24 @@ public class ObservationResolver extends AbstractTransformation
         };
         thread.start();
         thread.join();
-        
+
         final Throwable thrown = thread.getThrown();
         if( thrown != null )
           thrown.printStackTrace();
+        
+        final CoreException fileException = thread.getFileException();
+        if( fileException != null )
+          fileException.printStackTrace();
         // todo: handle errors?
 
         monitor.worked( 1 );
       }
-      catch( final Exception e )
+      catch( final Throwable e )
       {
         e.printStackTrace();
+        // TODO: report to user!
       }
     }
-
   }
 
   private void checkColumn( final FeatureType ft, final String sourceName )

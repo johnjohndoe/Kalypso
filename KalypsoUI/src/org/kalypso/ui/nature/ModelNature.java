@@ -507,15 +507,20 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     monitor.beginTask( "Berechnungsergebniss abrufen", results.length );
 
+    System.out.println( "Results: " + results.length );
+    
     for( int i = 0; i < results.length; i++ )
     {
       final CalcJobDataBean bean = results[i];
 
       final String beanPath = bean.getPath();
       final File serverfile = new File( serveroutputdir, beanPath );
+      
       final IFile targetfile = targetfolder.getFile( beanPath );
       FolderUtilities.mkdirs( targetfile.getParent() );
 
+      System.out.println( "Write: " + serverfile.getAbsolutePath() );
+      
       final SetContentThread thread = new SetContentThread( targetfile, true, false, false,
           new NullProgressMonitor() )
       {
@@ -538,6 +543,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       try
       {
         thread.join();
+        
+        System.out.println( "Wrote: " + serverfile.getAbsolutePath() );
       }
       catch( final InterruptedException e )
       {
@@ -549,6 +556,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       if( thrown != null )
         throw new CoreException( KalypsoGisPlugin.createErrorStatus(
             "Fehler beim Zurückladen der Ergebnisdateien", thrown ) );
+      final CoreException fileException = thread.getFileException();
+      if( fileException != null )
+          throw fileException;
 
       monitor.worked( 1 );
 
@@ -596,7 +606,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  /** TODO: handle cancel */
   public void runCalculation( final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
   {
@@ -753,17 +762,17 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
     finally
     {
-            try
-            {
-              calcService.disposeJob( job.getId() );
-            }
-            catch( final RemoteException e1 )
-            {
-              e1.printStackTrace();
-      
-              throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-                  "Kritischer Fehler bei Löschen des Rechen-Jobs", e1 ) );
-            }
+//            try
+//            {
+//              calcService.disposeJob( job.getId() );
+//            }
+//            catch( final RemoteException e1 )
+//            {
+//              e1.printStackTrace();
+//      
+//              throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+//                  "Kritischer Fehler bei Löschen des Rechen-Jobs", e1 ) );
+//            }
     }
   }
 
