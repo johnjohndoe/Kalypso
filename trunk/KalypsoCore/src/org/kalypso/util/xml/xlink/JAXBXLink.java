@@ -3,6 +3,7 @@ package org.kalypso.util.xml.xlink;
 import org.w3._1999.xlinkext.SimpleLinkType;
 
 
+
 /**
  * XLink wrapper over Jaxb XlinkBase.
  * 
@@ -10,7 +11,7 @@ import org.w3._1999.xlinkext.SimpleLinkType;
  */
 public class JAXBXLink implements IXlink
 {
-  private final org.w3._1999.xlinkext.SimpleLinkType m_xlink;
+  private final SimpleLinkType m_xlink;
 
   public JAXBXLink( final SimpleLinkType xlink )
   {
