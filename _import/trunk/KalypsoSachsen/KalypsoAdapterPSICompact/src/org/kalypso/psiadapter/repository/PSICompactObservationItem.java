@@ -6,14 +6,15 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannException;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannParams;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannSet;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannGroup;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.xlink.IXlink;
@@ -56,6 +57,8 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
    * 
    * @param parent
    *          kann null sein wenn dieses Objekt root ist
+   * @param name
+   * @param info
    * @param valueType
    *          aus PSICompact Sicht
    * 
@@ -102,8 +105,8 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   {
     m_metadata = new MetadataList();
 
-    m_metadata.put( MetadataList.MD_NAME, getName() );
-    m_metadata.put( MetadataList.MD_DESCRIPTION, m_objectInfo.getDescription() );
+    m_metadata.put( ObservationConstants.MD_NAME, getName() );
+    m_metadata.put( ObservationConstants.MD_DESCRIPTION, m_objectInfo.getDescription() );
 
     if( m_psicMetaData != null )
     {
@@ -127,7 +130,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   }
 
   /**
-   * Gibt das Messwerttyp dieser Zeitreihe zurück
+   * @return Messwerttyp dieser Zeitreihe
    */
   private String measureTypeToString()
   {
@@ -146,7 +149,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   }
 
   /**
-   * Gibt das Werttyp dieser Zeitreihe zurück
+   * @return das Werttyp dieser Zeitreihe
    */
   private String valueTypeToString()
   {
@@ -277,6 +280,8 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   /**
    * Helper that converts PSICompact WQParamSet objects to a WechmannSets
    * object.
+   * @param pset
+   * @return WechmannGroup constructed from the WQParamSet array
    * 
    * @throws WechmannException
    */
