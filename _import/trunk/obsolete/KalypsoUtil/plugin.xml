@@ -48,11 +48,12 @@
       <library name="lib/dom.jar">
          <export name="*"/>
       </library>
+      <library name="lib/junit.jar">
+         <export name="*"/>
+      </library>
    </runtime>
    <requires>
       <import plugin="org.kalypso.deegree"/>
-      <import plugin="org.junit"/>
-      <import plugin="org.eclipse.ui"/>
    </requires>
 
 </plugin>

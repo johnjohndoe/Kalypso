@@ -1,6 +1,5 @@
 package org.kalypso.psiadapter;
 
-import org.eclipse.swt.widgets.Shell;
 import org.kalypso.util.repository.IRepository;
 import org.kalypso.util.repository.IRepositoryFactory;
 import org.kalypso.util.repository.RepositoryException;
@@ -12,9 +11,9 @@ import org.kalypso.util.repository.RepositoryException;
 public class PSICompactRepositoryFactory implements IRepositoryFactory
 {
   /**
-   * @see org.kalypso.util.repository.IRepositoryFactory#configureRepository(org.eclipse.swt.widgets.Shell, org.kalypso.util.repository.IRepository)
+   * @see org.kalypso.util.repository.IRepositoryFactory#configureRepository(org.kalypso.util.repository.IRepository)
    */
-  public boolean configureRepository( Shell shell, IRepository rep )
+  public boolean configureRepository( final IRepository rep )
   {
     // no specific configuration to perform here
     

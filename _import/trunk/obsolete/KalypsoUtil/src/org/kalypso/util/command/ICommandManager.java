@@ -7,7 +7,7 @@ package org.kalypso.util.command;
  * Undo-Mechanismus.
  * </p>
  * <p>
- * Ein Kommando wird mittels {@link ICommandManager#postCommand( ICommand, Runnable )}dem
+ * Ein Kommando wird mittels {@link ICommandManager#postCommand( ICommand)}dem
  * CommandManager übergeben und von diesem ausgeführt. Das Runnable wird nach dem Kommando zusätzlich durchgeführt
  * </p>
  * Mittels {@link ICommandManager#canUndo()}und
@@ -26,7 +26,7 @@ public interface ICommandManager
   /**
    * Fügt ein Kommando zum Manager hinzu. Ruft {@link ICommand#process()}auf.
    */
-  public void postCommand( final ICommand command, final Runnable r ) throws Exception;
+  public void postCommand( final ICommand command ) throws Exception;
 
   public boolean canUndo();
 

@@ -3,6 +3,8 @@ package org.kalypso.ogc.widgets;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import org.kalypso.ogc.MapPanel;
+
 /**
  * @author bce
  */
@@ -11,7 +13,7 @@ public interface IWidget
   /**
    * Called from {@link WidgetManager} when Wdiget is activated
    */
-  public void activate();
+  public void activate( final MapPanel mapPanel );
  
   public void clickPopup( Point p );
 

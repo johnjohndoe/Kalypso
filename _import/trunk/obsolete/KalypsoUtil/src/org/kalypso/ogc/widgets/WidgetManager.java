@@ -33,13 +33,13 @@ public class WidgetManager implements MouseListener, MouseMotionListener
   public void mouseClicked( MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
-    if(actualWidget==null)
+    if( actualWidget == null )
       return;
 
     if( e.isPopupTrigger() )
       actualWidget.clickPopup( e.getPoint() );
     else
-     switch( e.getButton() )
+      switch( e.getButton() )
       {
       case MouseEvent.BUTTON1:
         actualWidget.leftClicked( e.getPoint() );
@@ -65,7 +65,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
     if( getActualWidget() != null )
     {
       getActualWidget().dragged( e.getPoint() );
-      
+
       myMapPanel.repaint();
     }
 
@@ -78,15 +78,15 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   public void mouseExited( MouseEvent e )
   {
-//
-    }
+  //
+  }
 
   public void mouseMoved( MouseEvent e )
   {
     if( getActualWidget() != null )
     {
       getActualWidget().moved( e.getPoint() );
-      
+
       myMapPanel.repaint();
     }
 
@@ -95,11 +95,11 @@ public class WidgetManager implements MouseListener, MouseMotionListener
   public void mousePressed( MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
-    if(actualWidget==null)
+    if( actualWidget == null )
       return;
     if( e.isPopupTrigger() )
       actualWidget.clickPopup( e.getPoint() );
-    else 
+    else
       switch( e.getButton() )
       {
       case MouseEvent.BUTTON1:
@@ -125,9 +125,9 @@ public class WidgetManager implements MouseListener, MouseMotionListener
   public void mouseReleased( MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
-      if( getActualWidget() == null )
-	  	return;
-	   
+    if( getActualWidget() == null )
+      return;
+
     if( e.isPopupTrigger() )
       actualWidget.clickPopup( e.getPoint() );
     else
@@ -210,32 +210,32 @@ public class WidgetManager implements MouseListener, MouseMotionListener
   //        return new FeatureEditWidget( );
   //    }
 
-  public void changeWidget( IWidget newWidget )
+  public void changeWidget( final IWidget newWidget )
   {
-    if(newWidget==null)
+    if( newWidget == null )
     {
-        myNormalWidget=null;
-    return;
+      myNormalWidget = null;
+      return;
     }
-        if( myTemporaryWidget != null ) // finish temporary widget if required
-      {
-        myTemporaryWidget.finish();
-        myTemporaryWidget = null;
-      }
+    if( myTemporaryWidget != null ) // finish temporary widget if required
+    {
+      myTemporaryWidget.finish();
+      myTemporaryWidget = null;
+    }
 
-      if( newWidget instanceof TemporaryActionWidget )
-      {
-        myTemporaryWidget = newWidget;
-      }
-      else
-      // normal widget
-      {
-        if( myNormalWidget != null)// && normalWidget != newWidget )
-          myNormalWidget.finish();
+    if( newWidget instanceof TemporaryActionWidget )
+    {
+      myTemporaryWidget = newWidget;
+    }
+    else
+    // normal widget
+    {
+      if( myNormalWidget != null )// && normalWidget != newWidget )
+        myNormalWidget.finish();
 
-        myNormalWidget = newWidget;
-        myNormalWidget.activate();
-      }
+      myNormalWidget = newWidget;
+      myNormalWidget.activate( myMapPanel );
+    }
 
     if( getActualWidget() != null )
     {
@@ -262,7 +262,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener
       //       
     }
   }
-
 
   private void stopTemporaryWidget()
   {

@@ -10,8 +10,6 @@ import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.event.ModellEvent;
-import org.kalypso.ogc.widgets.GisMapEditorWidgetActionDelegate;
-import org.kalypso.ogc.widgets.IWidget;
 import org.kalypso.ogc.widgets.WidgetManager;
 import org.opengis.cs.CS_CoordinateSystem;
 

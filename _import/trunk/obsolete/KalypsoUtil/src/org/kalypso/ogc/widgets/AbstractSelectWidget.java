@@ -8,9 +8,8 @@ import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.command.JMMarkSelectCommand;
 import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandManager;
 
-public abstract class AbstractSelectWidget extends GisMapEditorWidgetActionDelegate
+public abstract class AbstractSelectWidget extends AbstractWidget
 {
   private Point cursorPoint = null;
 
@@ -79,7 +78,7 @@ public abstract class AbstractSelectWidget extends GisMapEditorWidgetActionDeleg
 
   private void select()
   {
-    MapModell mapModell = myEditor.getMapPanel().getMapModell();
+    final MapModell mapModell = m_mapPanel.getMapModell();
     GeoTransform transform = mapModell.getProjection();
     if( startPoint != null )
     {
@@ -92,14 +91,7 @@ public abstract class AbstractSelectWidget extends GisMapEditorWidgetActionDeleg
         ICommand command = new JMMarkSelectCommand( mapModell.getActiveTheme(), GeometryFactory
             .createGM_Position( g1x, g1y ), gisRadius, mySelectionId,getSelectionMode() );
 
-        try
-        {
-          ( (ICommandManager)myEditor ).postCommand( command, null );
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-        }
+        m_commandPoster.postCommand( command, null );
       }
       else
       // dragged
@@ -118,17 +110,10 @@ public abstract class AbstractSelectWidget extends GisMapEditorWidgetActionDeleg
 
         if( minX != maxX && minY != maxY )
         {
-          ICommand command = new JMMarkSelectCommand( mapModell.getActiveTheme(), GeometryFactory
+          final ICommand command = new JMMarkSelectCommand( mapModell.getActiveTheme(), GeometryFactory
               .createGM_Envelope( minX, minY, maxX, maxY ), withinStatus, gisRadius, mySelectionId,getSelectionMode() );
 
-          try
-          {
-            ( (ICommandManager)myEditor ).postCommand( command, null );
-          }
-          catch( Exception e )
-          {
-            e.printStackTrace();
-          }
+          m_commandPoster.postCommand( command, null );
         }
       }
     }

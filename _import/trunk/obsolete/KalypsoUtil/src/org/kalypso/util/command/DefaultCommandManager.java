@@ -22,11 +22,9 @@ public class DefaultCommandManager implements ICommandManager
   /** points to last processed command */
   private int stackPos = -1;
 
-  public void postCommand( final ICommand command, final Runnable r ) throws Exception
+  public void postCommand( final ICommand command ) throws Exception
   {
       command.process();
-      if( r != null )
-        r.run();
 
       if( command.isUndoable() )
       {
