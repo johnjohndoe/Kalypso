@@ -64,6 +64,7 @@ import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree_impl.model.feature.FeatureFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -356,12 +357,27 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       return;
     }
 
-		final FeatureList features = getFeatures( );
-    // TODO: maybe filterForValidTS
-    
-    final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
-    final List selectedFeatures = getSelectedFeatures( );
+		FeatureList features = getFeatures( );
+    List selectedFeatures = getSelectedFeatures( );    
 
+    final String resultProperty = getArguments().getProperty(
+        PROP_RESULT_TS_NAME );
+    final URL context;
+    try
+    {
+      context = ResourceUtilities.createURL( selectedCalcCase );
+      features = FeatureFactory.createFeatureList(filterForValidTimeseriesLinks( features, resultProperty,
+          context ));
+      selectedFeatures = filterForValidTimeseriesLinks( selectedFeatures,
+          resultProperty, context );
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+          
+    final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
+    
     MultiDocumentServiceWrapper metadocService = null;
     try
     {
