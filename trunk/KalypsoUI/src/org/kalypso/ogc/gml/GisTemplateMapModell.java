@@ -34,6 +34,10 @@ public class GisTemplateMapModell implements IMapModell
   {
     m_modell = new MapModell( crs );
     
+    IKalypsoTheme legenTheme=new KalypsoLegendTheme(this);
+    addTheme(legenTheme);
+    enableTheme(legenTheme,false);
+
     final LayersType layerListType = gisview.getLayers();
     final List layerList = layerListType.getLayer();
 
@@ -50,6 +54,7 @@ public class GisTemplateMapModell implements IMapModell
         enableTheme( theme, layerType.isVisible() );
       }
     }
+    
   }
 
   private IKalypsoTheme loadTheme( final Layer layerType, final IProject project )

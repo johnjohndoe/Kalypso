@@ -267,6 +267,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
       myCoordinateSystem = org.deegree_impl.model.cs.Adapters.getDefault().export(
           csFac.getCSByName( "EPSG:4326" ) );
+          //csFac.getCSByName( "EPSG:31494" ) );
     }
     return myCoordinateSystem;
   }
