@@ -11,7 +11,6 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.kalypso.eclipse.jface.operation.IProgressRunnable;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.services.calcjob.CalcJobDescription;
-import org.kalypso.services.calcjob.CalcJobService;
 import org.kalypso.services.calcjob.CalcJobStatus;
 import org.kalypso.ui.nature.ModelNature;
 
@@ -62,13 +61,10 @@ public class CalcCaseRunnable implements IProgressRunnable
 
       final ModelNature nature = (ModelNature)folder.getProject().getNature( ModelNature.ID );
 
-      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
-
       int lastProgress = 0;
-
       while( true )
       {
-        final CalcJobDescription jobDescription = calcService.getJobDescription( jobID );
+        final CalcJobDescription jobDescription = nature.checkCalculation( jobID ); 
 
         monitor.setTaskName( jobDescription.getDescription() );
         final int progress = jobDescription.getProgress();
@@ -89,13 +85,13 @@ public class CalcCaseRunnable implements IProgressRunnable
           return Status.CANCEL_STATUS;
 
         case CalcJobStatus.ERROR:
-        final String message = jobDescription.getMessage();
-          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, message == null ? "" : message, null );
+          final String message = jobDescription.getMessage();
+          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, message == null ? ""
+              : message, null );
 
         case CalcJobStatus.FINISHED:
         {
-          final String[] results = calcService.retrieveResults( jobID );
-          return nature.putCalcCaseOutputData( folder, results, new SubProgressMonitor( monitor, 1000 ) );
+          return Status.OK_STATUS;
         }
         }
 
@@ -103,8 +99,7 @@ public class CalcCaseRunnable implements IProgressRunnable
 
         if( monitor.isCanceled() )
         {
-          calcService.cancelJob( jobID );
-          calcService.removeJob( jobID );
+          nature.stopCalculation( jobID );
           return Status.CANCEL_STATUS;
         }
       }
@@ -118,36 +113,12 @@ public class CalcCaseRunnable implements IProgressRunnable
 
   private String startCalculation( final IProgressMonitor monitor ) throws Exception
   {
-    monitor.beginTask( "Berechnung starten", 1000 );
+    final String folderPath = m_configuration.getAttribute(
+        IKalypsoLaunchConfigurationConstants.CALC_PATH, "" );
+    final IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(
+        new Path( folderPath ) );
 
-    try
-    {
-      final String calcType = m_configuration.getAttribute(
-          IKalypsoLaunchConfigurationConstants.CALC_TYPE, "" );
-      final String description = m_configuration.getAttribute(
-          IKalypsoLaunchConfigurationConstants.CALC_LABEL, "" );
-      final String folderPath = m_configuration.getAttribute(
-          IKalypsoLaunchConfigurationConstants.CALC_PATH, "" );
-
-      // die Dateien suchen und erzeugen
-      final IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(
-          new Path( folderPath ) );
-
-      final ModelNature nature = (ModelNature)folder.getProject().getNature( ModelNature.ID );
-      final String[] input = nature.getCalcCaseInputData( folder, new SubProgressMonitor( monitor,
-          500 ) );
-
-      // start job
-      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
-      final String jobID = calcService.createJob( calcType, description, input );
-
-      monitor.worked( 500 );
-
-      return jobID;
-    }
-    finally
-    {
-      monitor.done();
-    }
+    final ModelNature nature = (ModelNature)folder.getProject().getNature( ModelNature.ID );
+    return nature.startCalculation( folder, monitor );
   }
 }
