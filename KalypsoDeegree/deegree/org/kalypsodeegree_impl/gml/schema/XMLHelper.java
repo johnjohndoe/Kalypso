@@ -19,6 +19,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.batik.util.EncodingUtilities;
 import org.deegree.xml.XMLTools;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -76,7 +77,7 @@ public class XMLHelper {
 		
     if (contentEncoding != null)
 			source.setEncoding(contentEncoding);
-
+		// TODO set default encoding to "UTF-8" ??
 		return getAsDOM(source);
 	}
 
