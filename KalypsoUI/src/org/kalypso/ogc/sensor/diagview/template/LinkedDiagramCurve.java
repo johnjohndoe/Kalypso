@@ -1,21 +1,31 @@
 package org.kalypso.ogc.sensor.diagview.template;
 
+import java.net.URL;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.impl.DiagramCurve;
-import org.kalypso.util.link.ObjectLink;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.BorrowObjectJob;
+import org.kalypso.util.pool.IPoolListener;
+import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.xml.xlink.IXlink;
 
 /**
  * @author schlienger
  */
-public class LinkedDiagramCurve extends ObjectLink implements IDiagramCurve
+public class LinkedDiagramCurve implements IDiagramCurve, IPoolListener
 {
+  private final static Object DUMMY_OBJECT = new Object();
+  
   private final String m_name;
 
   private final IDiagramTemplate m_template;
@@ -26,14 +36,20 @@ public class LinkedDiagramCurve extends ObjectLink implements IDiagramCurve
 
   private IVariableArguments m_args = null;
 
-  public LinkedDiagramCurve( final String linkType, final IXlink xlink, final String name,
-      final Properties mappings, final IDiagramTemplate template )
-  {
-    super( linkType, xlink );
+  private final ResourcePool m_pool;
 
+  public LinkedDiagramCurve( final String linkType, final IXlink xlink, final String name,
+      final Properties mappings, final IDiagramTemplate template, final URL context )
+  {
     m_name = name;
     m_mappings = mappings;
     m_template = template;
+    
+    final PoolableObjectType key = new PoolableObjectType( linkType, xlink.getHRef(), context );
+    m_pool = KalypsoGisPlugin.getDefault().getPool( IObservation.class );
+    
+    final Job job = new BorrowObjectJob( "Link auslösen für Observation", m_pool, this, key, DUMMY_OBJECT );
+    job.schedule();
   }
 
   public boolean equals( Object obj )
@@ -70,12 +86,17 @@ public class LinkedDiagramCurve extends ObjectLink implements IDiagramCurve
   }
 
   /**
-   * @see org.kalypso.util.link.ObjectLink#linkResolved(java.lang.Object)
+   * @see org.kalypso.util.pool.IPoolListener#onObjectInvalid(org.kalypso.util.pool.ResourcePool, org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, boolean)
    */
-  public void linkResolved( Object object )
+  public void onObjectInvalid( ResourcePool source, IPoolableObjectType key, Object oldObject, boolean bCannotReload ) throws Exception
   {
-    super.linkResolved( object );
-
-    m_curve = new DiagramCurve( m_name, (IObservation)getLinkedObject(), m_mappings, m_template, m_args );
+    if( oldObject == DUMMY_OBJECT || m_curve.getObservation() == oldObject )
+    {
+      IObservation obs = (IObservation) m_pool.getObject( key, new NullProgressMonitor() );      
+      
+      m_curve = new DiagramCurve( m_name, obs, m_mappings, m_template, m_args );
+      
+      m_template.addCurve( this );
+    }
   }
 }

@@ -79,6 +79,8 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
   private static final String TAG_IDENFITIER = "identifier"; //$NON-NLS-1$
 
+  private static final String TAG_REPOSITORIES = "repositories"; //$NON-NLS-1$
+
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
@@ -361,12 +363,13 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     }
 
     // save list of repositories
+    final IMemento repsMem = memento.createChild( TAG_REPOSITORIES );
     for( final Iterator it = m_repContainer.getRepositories().iterator(); it.hasNext(); )
     {
       final IRepository rep = (IRepository)it.next();
 
-      final IMemento repMem = memento.createChild( TAG_REPOSITORY );
-      repMem.putTextData( new RepositoryConfigItem( rep.getFactory() ).saveState() );
+      final IMemento child = repsMem.createChild( TAG_REPOSITORY );
+      child.putTextData( new RepositoryConfigItem( rep.getFactory() ).saveState() );
     }
 
     // save visible expanded elements
@@ -398,20 +401,26 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
   {
     final TreeViewer viewer = getViewer();
 
-    final IMemento[] repMem = memento.getChildren( TAG_REPOSITORY );
-    for( int i = 0; i < repMem.length; i++ )
+    final IMemento repsMem = memento.getChild( TAG_REPOSITORIES );
+    if( repsMem != null )
     {
-      try
+      final IMemento[] repMem = repsMem.getChildren( TAG_REPOSITORY );
+      for( int i = 0; i < repMem.length; i++ )
       {
-        // TODO: Marc: bei neuer Workbench gibts hier ne NullPointerException (.getTextData() ) gibt nul zurück glaube ich)
-        final RepositoryConfigItem item = RepositoryConfigItem.restore( repMem[i].getTextData() );
+        if( repMem[i] == null )
+          continue;
+          
+        try
+        {
+          final RepositoryConfigItem item = RepositoryConfigItem.restore( repMem[i].getTextData() );
 
-        m_repContainer.addRepository( item.createFactory( getClass().getClassLoader() ).createRepository(), KalypsoGisPlugin.getDefault().getDefaultRepositoryProperties() );
-      }
-      catch( Exception e ) // generic exception caught for simplicity
-      {
-        // ignored
-        e.printStackTrace();
+          m_repContainer.addRepository( item.createFactory( getClass().getClassLoader() ).createRepository(), KalypsoGisPlugin.getDefault().getDefaultRepositoryProperties() );
+        }
+        catch( Exception e ) // generic exception caught for simplicity
+        {
+          // ignored
+          e.printStackTrace();
+        }
       }
     }
 

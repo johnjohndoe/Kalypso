@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -87,7 +88,7 @@ public class ObservationTemplateHelper
    * @return curve for the template
    */
   public static LinkedDiagramCurve createCurve( final ObsdiagviewType.CurveType baseCurve,
-      final IDiagramTemplate template )
+      final IDiagramTemplate template, final URL context )
   {
     Properties mappings = new Properties();
 
@@ -99,7 +100,7 @@ public class ObservationTemplateHelper
     }
 
     return new LinkedDiagramCurve( baseCurve.getLinktype(), new JAXBXLink( baseCurve ), baseCurve
-        .getName(), mappings, template );
+        .getName(), mappings, template, context );
   }
 
   /**

@@ -1,11 +1,20 @@
 package org.kalypso.ogc.sensor.tableview.template;
 
+import java.net.URL;
+
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
 import org.kalypso.template.obstableview.ObstableviewType;
-import org.kalypso.util.link.ObjectLink;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.BorrowObjectJob;
+import org.kalypso.util.pool.IPoolListener;
+import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.xml.xlink.IXlink;
 import org.kalypso.util.xml.xlink.JAXBXLink;
@@ -16,8 +25,10 @@ import org.kalypso.util.xml.xlink.JAXBXLink;
  * 
  * @author schlienger
  */
-public class LinkedTableViewColumn extends ObjectLink implements ITableViewColumn
+public class LinkedTableViewColumn implements ITableViewColumn, IPoolListener
 {
+  private final static Object DUMMY_OBJECT = new Object();
+
   private final String m_name;
 
   private final boolean m_isEditable;
@@ -32,62 +43,63 @@ public class LinkedTableViewColumn extends ObjectLink implements ITableViewColum
 
   private IVariableArguments m_args = null;
 
-  public LinkedTableViewColumn( final ObstableviewType.ColumnpairType col )
+  private final ResourcePool m_pool;
+
+  private final LinkedTableViewTemplate m_template;
+
+  public LinkedTableViewColumn( final LinkedTableViewTemplate template, final ObstableviewType.ColumnpairType col, final URL context )
   {
-    this( col.getValueAxis(), col.getLinktype(), new JAXBXLink( col ), col.isEditable(), col
-        .getWidth(), col.getSharedAxis(), col.getValueAxis() );
+    this( template, col.getValueAxis(), col.getLinktype(), new JAXBXLink( col ), col
+        .isEditable(), col.getWidth(), col.getSharedAxis(), col.getValueAxis(), context );
   }
 
-  public LinkedTableViewColumn( final String name, final String linkType, final IXlink xlink,
-      final boolean isEditable, final int width, final String sharedAxisName,
-      final String valueAxisName )
+  public LinkedTableViewColumn( final LinkedTableViewTemplate template, final String name, final String linkType,
+      final IXlink xlink, final boolean isEditable, final int width,
+      final String sharedAxisName, final String valueAxisName, final URL context )
   {
-    super( linkType, xlink );
-
+    m_template = template;
     m_name = name;
     m_isEditable = isEditable;
     m_width = width;
     m_sharedAxisName = sharedAxisName;
     m_valueAxisName = valueAxisName;
+
+    final PoolableObjectType key = new PoolableObjectType( linkType, xlink
+        .getHRef(), context );
+    m_pool = KalypsoGisPlugin.getDefault().getPool( IObservation.class );
+
+    final Job job = new BorrowObjectJob( "Link auslösen für Observation",
+        m_pool, this, key, DUMMY_OBJECT );
+    job.setRule( m_template.getSchedulingRule() );
+    job.schedule();
   }
 
-  /**
-   * @see org.kalypso.util.link.ObjectLink#linkResolved(java.lang.Object)
-   */
-  public void linkResolved( Object object )
-  {
-    super.linkResolved( object );
-
-    m_column = new TableViewColumn( m_name, (IObservation)getLinkedObject(), m_isEditable, m_width,
-        m_sharedAxisName, m_valueAxisName, m_args );
-  }
-
-  public String getName()
+  public String getName( )
   {
     return m_column.getName();
   }
 
-  public IObservation getObservation()
+  public IObservation getObservation( )
   {
     return m_column.getObservation();
   }
 
-  public IAxis getSharedAxis()
+  public IAxis getSharedAxis( )
   {
     return m_column.getSharedAxis();
   }
 
-  public IAxis getValueAxis()
+  public IAxis getValueAxis( )
   {
     return m_column.getValueAxis();
   }
 
-  public int getWidth()
+  public int getWidth( )
   {
     return m_column.getWidth();
   }
 
-  public boolean isEditable()
+  public boolean isEditable( )
   {
     return m_column.isEditable();
   }
@@ -97,7 +109,7 @@ public class LinkedTableViewColumn extends ObjectLink implements ITableViewColum
     m_column.setWidth( width );
   }
 
-  public IVariableArguments getArguments()
+  public IVariableArguments getArguments( )
   {
     return m_column.getArguments();
   }
@@ -108,5 +120,24 @@ public class LinkedTableViewColumn extends ObjectLink implements ITableViewColum
       m_column.setArguments( args );
     else
       m_args = args;
+  }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#onObjectInvalid(org.kalypso.util.pool.ResourcePool,
+   *      org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, boolean)
+   */
+  public void onObjectInvalid( ResourcePool source, IPoolableObjectType key,
+      Object oldObject, boolean bCannotReload ) throws Exception
+  {
+    if( oldObject == DUMMY_OBJECT || m_column.getObservation() == oldObject )
+    {
+      IObservation obs = (IObservation) m_pool.getObject( key,
+          new NullProgressMonitor() );
+
+      m_column = new TableViewColumn( m_name, obs, m_isEditable, m_width,
+          m_sharedAxisName, m_valueAxisName, m_args );
+      
+      m_template.addColumn( this );
+    }
   }
 }

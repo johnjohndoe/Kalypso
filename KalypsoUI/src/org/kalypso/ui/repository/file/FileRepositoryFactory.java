@@ -24,10 +24,8 @@ import org.kalypso.ui.repository.dialogs.FileRepositoryConfigDialog;
  */
 public class FileRepositoryFactory extends AbstractRepositoryFactory
 {
-  private String m_location = "";
-  private String m_identifier = "";
-  private String m_filters = "";
-
+  private final static String SEPARATOR = "#";
+  
   /**
    * @see org.kalypso.repository.IRepositoryFactory#configureRepository()
    */
@@ -43,9 +41,8 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
     
     if( res == Window.OK )
     {
-      m_location = dlg.getLocation();
-      m_identifier = dlg.getIdentifier();
-      m_filters = dlg.getFilters();
+      // update configuration to stay consistent
+      setConfiguration( dlg.getLocation() + SEPARATOR + dlg.getIdentifier() + SEPARATOR + dlg.getFilters() );
       
       b = true;
     }
@@ -54,7 +51,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
     
     return b;
   }
-
+  
   /**
    * @see org.kalypso.repository.IRepositoryFactory#createRepository()
    */
@@ -62,15 +59,17 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
   {
     final FileFilter filter;
     
-    if( m_filters.length() == 0 )
+    final String[] splits = getConfiguration().split( SEPARATOR );
+    
+    if( splits.length == 2 || splits[2].length() == 0 )
       filter = new AcceptAllFileFilter();
     else
     {
-      final String[] exts = m_filters.split(",");
+      final String[] exts = splits[2].split(",");
       filter = new MultipleWildCardFileFilter( exts, false, true, false );
     }
 
     // could be improved: instead of directly instantiating we could use class loading...
-    return new ZmlObservationRepository( this, m_location, m_identifier, isReadOnly(), filter );
+    return new ZmlObservationRepository( this, splits[0], splits[1], isReadOnly(), filter );
   }
 }
