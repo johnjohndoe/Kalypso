@@ -3,11 +3,11 @@
 .\obstableview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
 
 	<!-- die Liste der Zeitreihen -->
-	<columnpair id="c1" editable="true" width="50" sharedAxis="Datum" valueAxis="Pegel1" linktype="zml" xlink:type="simple" xlink:href="TYPE=relative#LOCATION=zml/Beispiel/beispiel.zml" xlink:actuate="onRequest"/>
+	<columnpair id="c1" editable="true" width="50" sharedAxis="Datum" valueAxis="Pegel1" linktype="zml" xlink:href="LOCATION=beispiel.zml" />
 	
-	<columnpair id="c2" editable="true" width="50" sharedAxis="Datum" valueAxis="Pegel2" linktype="zml" xlink:type="simple" xlink:href="TYPE=relative#LOCATION=zml/Beispiel/beispiel.zml" xlink:actuate="onRequest"/>
+	<columnpair id="c2" editable="true" width="50" sharedAxis="Datum" valueAxis="Pegel2" linktype="zml" xlink:href="LOCATION=beispiel.zml" />
 	
-	<columnpair id="c3" editable="true" width="50" sharedAxis="Datum" valueAxis="Pegel" linktype="zml" xlink:type="simple" xlink:href="TYPE=relative#LOCATION=zml/Beispiel/inline.zml" xlink:actuate="onRequest"/>
+	<columnpair id="c3" editable="true" width="50" sharedAxis="Datum" valueAxis="Pegel" linktype="zml" xlink:href="LOCATION=inline.zml" />
 	
 	<!-- wie die Darstellung erfolgt -->
 	<rules>

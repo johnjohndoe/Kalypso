@@ -3,12 +3,12 @@
 ./observation.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<name>Nauwalde</name>
 	
-	<axis name="Datum" type="date" unit="" datatype="TYPE=xs:date#FORMAT=yyMMddHHmm">
-		<valueLink separator="  " xlink:type="simple" xlink:href="TYPE=relative#LOCATION=nauwalde.uvf#COLUMN=1#LINE=5" xlink:actuate="onRequest"/>
+	<axis name="Datum" type="date" datatype="TYPE=xs:date#FORMAT=yyMMddHHmm">
+		<valueLink separator="  " column="1" line="5" xlink:href="nauwalde.uvf" />
 	</axis>
 	
 	<axis name="Pegel-Nauwalde" type="pegel" unit="m3/s" datatype="TYPE=xs:double">
-		<valueLink separator="  " xlink:type="simple" xlink:href="TYPE=relative#LOCATION=nauwalde.uvf#COLUMN=2#LINE=5" xlink:actuate="onRequest"/>
+		<valueLink separator="  " column="2" line="5" xlink:href="nauwalde.uvf" />
 	</axis>
 
 </observation>

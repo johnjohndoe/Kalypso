@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <observation xmlns="zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="zml.kalypso.org
 ./observation.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-
-	<name>Beispiel.zml</name>
+	<name>Eine Test-Observation</name>
 	
-	<target/>
-
 	<!-- die Metadaten list ist erweiterbar -->
 	<metadataList>
 		<metadata name="Pegelnullpunkt" value="10"/>
@@ -20,12 +17,12 @@
 		entsprechen aber den Java-Format wie man aus der API-Docs entnehmen
 		kann (Siehe SimpleDateFormat, NumberFormat, usw).
 	-->
-	<axis name="Datum" type="date" unit="" datatype="TYPE=xs:date#FORMAT=dd.MM.yyyy">
+	<axis name="Datum" key="true" type="datum" datatype="TYPE=xs:date#FORMAT=dd.MM.yyyy">
 		<valueArray>01.01.2004 02.01.2004 03.01.2004 04.01.2004 05.01.2004 06.01.2004 07.01.2004 08.01.2004 09.01.2004 10.01.2004 11.01.2004 12.01.2004 13.01.2004 14.01.2004 15.01.2004 16.01.2004 17.01.2004 18.01.2004 19.01.2004 20.01.2004 21.01.2004</valueArray>
 	</axis>
 	
 	<!-- hier sind die Werte "inline" -->
-	<axis name="Pegel1" type="pegel" unit="m" datatype="TYPE=xs:double">
+	<axis name="Pegel1" type="W" unit="m" datatype="TYPE=xs:double">
 		<valueArray>1 2,3 7 4,4 5 6,1 7 8 9 10 4 12 5,6 14 2,1 3,4 6,7 8,9 5,6 11 16,6</valueArray>
 	</axis>
 
@@ -36,9 +33,8 @@
 		Dazu kommt noch die Angabe der Spaltennummer (COLUMN) wie
 		es in der CSV-Datei zu finden ist.
 	-->
-	<axis name="Pegel2" type="pegel" unit="m" datatype="TYPE=xs:double">
-		<valueLink separator=" " xlink:type="simple" xlink:href="TYPE=relative#LOCATION=beispiel.values.txt#COLUMN=2" xlink:actuate="onRequest"/>
-		<!-- valueLink separator=" " xlink:type="simple" xlink:href="TYPE=absolute#LOCATION=file://PC072/C/Programme/eclipse-3.0/runtime-workspace/KalypsoTestProject/zml/beispiel.values.txt#COLUMN=2" xlink:actuate="onRequest"/ -->
+	<axis name="Pegel2" type="W" unit="m" datatype="TYPE=xs:double">
+		<valueLink separator=" " column="2" xlink:href="beispiel.values.txt"/>
 	</axis>
 
 </observation>

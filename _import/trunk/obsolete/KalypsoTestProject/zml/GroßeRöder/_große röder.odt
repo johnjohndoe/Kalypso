@@ -8,12 +8,12 @@
 	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
 	<axis id="w" datatype="xs:double" label="Pegel" unit="m³/s" direction="vertical" position="left" />
 
-   	<curve id="C1" name="Grossenhain" linktype="zml" xlink:type="simple" xlink:href="TYPE=relative#LOCATION=zml/GroßeRöder/grossenhain.zml" xlink:actuate="onRequest">
+   	<curve id="C1" name="Grossenhain" linktype="zml" xlink:href="LOCATION=grossenhain.zml" >
 	   	<mapping observation-axis="Datum" diagram-axis="d" />
 	   	<mapping observation-axis="Pegel-Grossenhain" diagram-axis="w" />
    	</curve>
 	   	
-	<curve id="C2" name="Nauwalde" linktype="zml" xlink:type="simple" xlink:href="TYPE=relative#LOCATION=zml/GroßeRöder/nauwalde.zml" xlink:actuate="onRequest">
+	<curve id="C2" name="Nauwalde" linktype="zml" xlink:href="LOCATION=nauwalde.zml" >
 		<mapping observation-axis="Datum" diagram-axis="d" />
 		<mapping observation-axis="Pegel-Nauwalde" diagram-axis="w" />
    	</curve>
