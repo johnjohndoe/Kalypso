@@ -8,9 +8,25 @@
 	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
 	<axis id="w" datatype="xs:double" label="Pegel" unit="m³/s" direction="vertical" position="left" />
 
-   	<curve id="C1" name="Abfluss" linktype="zml" xlink:href="LOCATION=q_adorf.zml" >
-	   	<mapping observation-axis="Datum" diagram-axis="d" />
-	   	<mapping observation-axis="Adorf" diagram-axis="w" />
-   	</curve>
-   
+	<observation linktype="zml" xlink:href="LOCATION=q_adorf.zml">
+	   	<curve id="C1" name="Abfluss"  >
+		   	<mapping observation-axis="Datum" diagram-axis="d" />
+	   		<mapping observation-axis="Adorf" diagram-axis="w" />
+	   	</curve>
+   	</observation>
+   	
+	<observation linktype="zml" xlink:href="LOCATION=alarmstufe1.zml">
+	   	<curve id="C2" name="Alarmstufe1"  >
+		   	<mapping observation-axis="Datum" diagram-axis="d" />
+	   		<mapping observation-axis="Alarmstufe1" diagram-axis="w" />
+	   	</curve>
+   	</observation>
+
+	<observation linktype="zml" xlink:href="LOCATION=alarmstufe2.zml">
+	   	<curve id="C3" name="Alarmstufe2"  >
+		   	<mapping observation-axis="Datum" diagram-axis="d" />
+	   		<mapping observation-axis="Alarmstufe2" diagram-axis="w" />
+	   	</curve>
+   	</observation>
+  
 </obsdiagview>
