@@ -65,7 +65,7 @@ import org.deegree_impl.tools.Debug;
 import org.deegree_ext.model.sort.DisplayContext;
 import org.deegree_ext.model.sort.JMSpatialIndex;
 import org.deegree_ext.model.sort.JMSpatialIndexFactory;
-import de.tuhh.wb.jm.view.JMMapView;
+//import de.tuhh.wb.jm.view.JMMapView;
 
 import java.util.Iterator;
 import org.deegree.model.geometry.GM_Envelope;
@@ -115,6 +115,7 @@ class Theme_Impl implements Theme {
     private List highlighter		= Collections.synchronizedList( new ArrayList() );
     private List eventController	= Collections.synchronizedList( new ArrayList() );
     
+  public static boolean DEBUG_ENV=false;
         
     Theme_Impl(String name, Layer layer, UserStyle[] styles) {
         this.layer = layer;
@@ -143,18 +144,19 @@ class Theme_Impl implements Theme {
         Debug.debugMethodBegin( this, "paint(Graphics)" );
 	System.out.println("DE elements in index: "+indexDE.rsize());
         double scale = parent.getScale();
-	GM_Envelope env=JMMapView.getMapView().getBoundingBox();
+	//GM_Envelope env=JMMapView.getMapView().getBoundingBox();
 	List displayElements=new ArrayList();
-	indexDE.query(env,displayElements);
+	indexDE.query(parent.getBoundingBox(),displayElements);
 
 	Iterator it=displayElements.iterator();
 	while(it.hasNext())
 	    {
 		((DisplayContext)it.next()).paint(g,parent.getProjection(),scale);
 	    }
-	if(de.tuhh.wb.jm.Debug.showIndexEnv())
+	if(DEBUG_ENV)
 	    indexDE.paint(g,parent.getProjection());	
 	        Debug.debugMethodEnd();
+  
     }
     
     /**
@@ -181,9 +183,9 @@ class Theme_Impl implements Theme {
         Debug.debugMethodBegin( this, "paintSeleced" );
 
         double scale = parent.getScale();
-	GM_Envelope env=JMMapView.getMapView().getBoundingBox();
+	//GM_Envelope env=JMMapView.getMapView().getBoundingBox();
 	List displayContainer=new ArrayList();
-	indexDE.query(env,displayContainer);
+	indexDE.query(parent.getBoundingBox(),displayContainer);
 
 	Iterator it=displayContainer.iterator();
 	while(it.hasNext())
@@ -204,7 +206,7 @@ class Theme_Impl implements Theme {
      * deselecting single DisplayElements or groups of DisplayElements.
      * A selector may offers methods like 'select all DisplayElements
      * within a specified bounding box' or 'select all DisplayElements
-     * thats area is larger than 120 km²' etc.
+     * thats area is larger than 120 km?' etc.
      */
     public void addSelector(Selector selector) {
         this.selector.add( selector );

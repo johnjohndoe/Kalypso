@@ -317,7 +317,7 @@ class MapView_Impl implements MapView {
      * deselecting single DisplayElements or groups of DisplayElements.
      * A selector may offers methods like 'select all DisplayElements
      * within a specified bounding box' or 'select all DisplayElements
-     * thats area is larger than 120 km²' etc.
+     * thats area is larger than 120 km?' etc.
      */
     public void addSelector(Selector obj) {
         for (int i = 0; i < themesL.size(); i++) {

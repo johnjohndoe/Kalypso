@@ -60,7 +60,7 @@ import org.deegree.model.geometry.GM_Position;
 import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.deegree_impl.tools.Debug;
-import de.tuhh.wb.jm.tools.Tools;
+
 
 
 /**
@@ -77,7 +77,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl
     /** Use serialVersionUID for interoperability. */
     private final static long serialVersionUID = -4657962592230618248L;
 
-    /**
+   /**
      * Creates a new LineStringDisplayElement_Impl object.
      *
      * @param feature 
@@ -127,6 +127,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl
         super( feature, geometry, symbolizer );
     }
 
+
     /**
      *  renders the DisplayElement to the submitted graphic context
      */
@@ -135,8 +136,8 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl
 
         try {
             int[][] pos = null;
-	    if(de.tuhh.wb.jm.Debug.showDisplayEnv())
-		Tools.paint(g,geometry.getEnvelope());
+	    if(DEBUG_PaintEnv)
+		paint(g,geometry.getEnvelope(),projection);
             if ( geometry instanceof GM_Curve ) {
                 pos = calcTargetCoordinates( projection, (GM_Curve)geometry );
                 drawLine( g, pos );
