@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -73,8 +73,9 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * -----------------------------------------------------------------------
  * </p>
  * 
- * @version @author Andreas Poth
- *          <p>
+ * @version
+ * @author Andreas Poth
+ *         <p>
  */
 class GM_Position_Impl implements GM_Position, Serializable
 {
@@ -91,7 +92,10 @@ class GM_Position_Impl implements GM_Position, Serializable
   GM_Position_Impl()
   {
     point = new double[]
-    { 0, 0, 0 };
+    {
+        0,
+        0,
+        0 };
   }
 
   /**
@@ -105,7 +109,9 @@ class GM_Position_Impl implements GM_Position, Serializable
   GM_Position_Impl( double x, double y )
   {
     point = new double[]
-    { x, y };
+    {
+        x,
+        y };
   }
 
   /**
@@ -121,7 +127,10 @@ class GM_Position_Impl implements GM_Position, Serializable
   GM_Position_Impl( double x, double y, double z )
   {
     point = new double[]
-    { x, y, z };
+    {
+        x,
+        y,
+        z };
   }
 
   /**
@@ -230,5 +239,18 @@ class GM_Position_Impl implements GM_Position, Serializable
     }
 
     return ret;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Position#getDistance(org.kalypsodeegree.model.geometry.GM_Position)
+   */
+  public double getDistance( GM_Position other )
+  {
+    final double[] otherPos = other.getAsArray();
+    final double[] pos = getAsArray();
+    double square = 0;
+    for( int j = 0; j < pos.length; j++ )
+      square += Math.pow( pos[j] - otherPos[j], 2d );
+    return Math.pow( square, 0.5d );
   }
 }

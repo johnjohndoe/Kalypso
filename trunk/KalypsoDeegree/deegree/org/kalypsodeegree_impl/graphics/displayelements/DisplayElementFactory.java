@@ -184,7 +184,7 @@ public class DisplayElementFactory
                   for( int u = 0; u < symbolizers.length; u++ )
                   {
                     DisplayElement displayElement = DisplayElementFactory.buildDisplayElement(
-                        feature, symbolizers[u],workspace );
+                        feature, symbolizers[u], workspace );
 
                     if( displayElement != null )
                     {
@@ -225,8 +225,8 @@ public class DisplayElementFactory
    *           compatible with the <tt>Symbolizer</tt>
    * @return constructed <tt>DisplayElement</tt>
    */
-  public static DisplayElement buildDisplayElement( Object o, Symbolizer symbolizer,GMLWorkspace workspace )
-      throws IncompatibleGeometryTypeException
+  public static DisplayElement buildDisplayElement( Object o, Symbolizer symbolizer,
+      GMLWorkspace workspace ) throws IncompatibleGeometryTypeException
   {
     DisplayElement displayElement = null;
 
@@ -242,7 +242,8 @@ public class DisplayElementFactory
       {
         // check if virtuel property
         if( feature.getFeatureType().isVirtuelProperty( geometry.getPropertyName() ) )
-          geoProperty = (GM_Object)feature.getVirtuelProperty( geometry.getPropertyName(),workspace );
+          geoProperty = (GM_Object)feature.getVirtuelProperty( geometry.getPropertyName(),
+              workspace );
         else
           geoProperty = (GM_Object)feature.getProperty( geometry.getPropertyName() );
       }
@@ -252,9 +253,11 @@ public class DisplayElementFactory
       }
 
       // if the geometry property is null, do not build a DisplayElement
-      /*
-       * if (geoProperty == null) { return null; }
-       */
+
+      if( geoProperty == null )
+      {
+        return null;
+      }
 
       // PointSymbolizer
       if( symbolizer instanceof PointSymbolizer )
@@ -282,7 +285,7 @@ public class DisplayElementFactory
       }
       else
       {
-        System.out.println("symbolizer...?");
+        System.out.println( "symbolizer...?" );
       }
     }
 

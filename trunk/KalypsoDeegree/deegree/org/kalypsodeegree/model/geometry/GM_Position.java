@@ -102,4 +102,6 @@ public interface GM_Position
    * coordinate by the second field of <tt>d</tt> and so on...
    */
   public void translate( double[] d );
+
+  public double getDistance( GM_Position position );
 }

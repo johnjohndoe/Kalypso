@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -72,6 +72,7 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * default implementation of the GM_Curve interface from package jago.model.
@@ -188,16 +189,62 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   }
 
   /**
-   * calculates the centroid of the Curve
+   * calculates the centroid of the Curve <br>
+   * if you follow the curve and measure the length from start to end, the
+   * centeroid should be half the way.
    */
   private void calculateCentroid()
   {
     try
     {
+      final GM_Position[] positions = getAsLineString().getPositions();
+      if( positions.length < 2 )
+        return;
+      final double length = getLength();
+      if( length == 0 )
+      {
+        centroid = new GM_Point_Impl( positions[0], getCoordinateSystem() );
+        return;
+      }
+      final double halfWay = length / 2d;
+      double coveredDistance = 0;
+      int i = 1;
+      for( ; i < positions.length; i++ )
+      {
+        double d = positions[i].getDistance( positions[i - 1] );
+        if( coveredDistance + d <= halfWay )
+          coveredDistance += d;
+        else
+          break;
+      }
+      final GM_Position newPos = GeometryUtilities.createGM_PositionAt( positions[i - 1],
+          positions[i], halfWay - coveredDistance );
+      centroid = new GM_Point_Impl( newPos, getCoordinateSystem() );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * calculates the centroid of the Curve
+   * 
+   *  
+   */
+  private void calculateCentroidAsWeight()
+  {
+    //   this is the origininal method calculateCenteroid from deegree
+    //   I (doemming) implemented calculateCenteroid() new, so that the centeroid
+    // is half on the full-point-by-point way from the start to the end of the
+    // curve, in my eyes it is more logical that way when using pointsymbolizers
+    // with curves (they should be on the line)
+    try
+    {
       GM_Position[] positions = getAsLineString().getPositions();
 
       double[] cen = new double[positions[0].getAsArray().length];
-
+      // 
       for( int i = 0; i < positions.length; i++ )
       {
         double[] pos = positions[i].getAsArray();
@@ -294,7 +341,19 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    */
   public double getLength()
   {
-    return -1;
+    try
+    {
+      double result = 0;
+      final GM_Position[] positions = getAsLineString().getPositions();
+      for( int i = 1; i < positions.length; i++ )
+        result += positions[i].getDistance( positions[i - 1] );
+      return result;
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+      return 0;
+    }
   }
 
   /**
