@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gistableview xmlns="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
-		<layer id="layer1" xlink:type="simple" xlink:actuate="onRequest"  
-		xlink:href="SERVICE=RESOURCE#PATH=shapes/gew_sachsen#SRS=EPSG:31469"
-		 linktype="shape"/>
-</gistableview>

@@ -72,4 +72,13 @@ public class ReaderUtilities
     
     return content;
   }
+
+  public static void dumpAllAvailable( final Reader reader ) throws IOException
+  {
+    while( reader.ready() )
+    {
+      final char c = (char)reader.read();
+      System.out.print( c );
+    }
+  }
 }

@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gistableview xmlns="gistableview.template.kalypso.org"><layer id="1" linktype="gml" ns1:actuate="onRequest" ns1:href="SERVICE=RESOURCE#XSD=.modellTyp/calccase.xsd#PATH=rechenfaelle/r1/calcCase.gml#LAYER=Einzugsgebiet" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"><column editable="false" name="Name" width="100"/><column editable="false" name="Bodenfeuchte" width="100"/><column editable="false" name="Ausdehnung" width="100"/><column editable="false" name="Niederschlag" width="100"/><column editable="false" name="Wasserstand" width="100"/><column editable="false" name="wasserstand-local" width="100"/></layer></gistableview>
-
