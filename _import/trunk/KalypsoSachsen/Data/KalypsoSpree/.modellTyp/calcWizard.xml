@@ -12,18 +12,6 @@
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=Niederschlag_eingabe"/>
     </page>
 
-    <page className="org.kalypso.ui.calcwizard.ObservationMapTableDiagWizardPage" pageTitle="Eingabe Wasserstände" imageLocation="icons/calcwizard/boden.gif" >
-        <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/ezg.gmt"/>
-        <arg name="tableTemplate" value=".modellTyp/vorlagen/rechenfall/table1.ott"/>
-        <arg name="diagTemplate" value=".modellTyp/vorlagen/rechenfall/wsp.odt"/>
-
-        <arg name="mainSash" value="50"/>
-        <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="2"/>
-        
-        <arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
-    </page>
-
     <page className="org.kalypso.ui.calcwizard.ObservationMapTableDiagWizardPage" pageTitle="Eingabe Talsperrenabgaben" imageLocation="icons/calcwizard/boden.gif" >
         <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/talsperren.gmt"/>
         <arg name="tableTemplate" value=".modellTyp/vorlagen/rechenfall/table1.ott"/>
@@ -35,6 +23,18 @@
         
         
         <arg name="timeserie3" value="diagDateAxis=d#diagValueAxis=a#nameColumn=Name#linkColumn=Abgabe"/>
+    </page>
+
+    <page className="org.kalypso.ui.calcwizard.ObservationMapTableDiagWizardPage" pageTitle="Eingabe Wasserstände" imageLocation="icons/calcwizard/boden.gif" >
+        <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/ezg.gmt"/>
+        <arg name="tableTemplate" value=".modellTyp/vorlagen/rechenfall/table1.ott"/>
+        <arg name="diagTemplate" value=".modellTyp/vorlagen/rechenfall/wsp.odt"/>
+
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="2"/>
+        
+        <arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
     </page>
 
     <page className="org.kalypso.ui.calcwizard.ObservationMapTableDiagWizardPage" pageTitle="Eingabe Wasserstände" imageLocation="icons/calcwizard/boden.gif" >
