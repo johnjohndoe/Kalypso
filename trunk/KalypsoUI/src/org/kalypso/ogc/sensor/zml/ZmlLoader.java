@@ -45,7 +45,7 @@ public class ZmlLoader extends AbstractLoader
       
       if( type.equals( "relative" ) )
       {
-        IResource m = project.findMember( location );
+        final IResource m = project.findMember( location );
         
         if( m != null )
           url = m.getLocation().toFile().toURL();

@@ -91,6 +91,7 @@ public class CalcCaseRunnable implements IProgressRunnable
 
         case CalcJobStatus.FINISHED:
         {
+          nature.retrieveCalculation( jobID );
           return Status.OK_STATUS;
         }
         }
