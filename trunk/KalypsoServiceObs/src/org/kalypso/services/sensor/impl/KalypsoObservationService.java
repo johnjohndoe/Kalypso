@@ -200,11 +200,8 @@ public class KalypsoObservationService implements IObservationService
         throw e;
       }
 
-      final DateRangeArgument args;
-
+      DateRangeArgument args = null;
       if( drb == null )
-        throw new RemoteException( "No DateRange specified when reading data from observation service!" );
-      else
         args = new DateRangeArgument( drb.getFrom(), drb.getTo() );
 
       m_logger.info( "Reading data for observation: " + obs.getName() + " Arguments: " + args );

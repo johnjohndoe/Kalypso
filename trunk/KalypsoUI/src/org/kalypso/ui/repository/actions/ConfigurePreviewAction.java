@@ -12,7 +12,7 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
-import org.kalypso.ui.repository.dialogs.PreviewConfigDialog;
+import org.kalypso.ui.repository.dialogs.DateRangeInputDialog;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 
 /**
@@ -55,8 +55,8 @@ public class ConfigurePreviewAction extends AbstractRepositoryExplorerAction
 
     prepareParameters( rep, df );
 
-    final PreviewConfigDialog dlg = new PreviewConfigDialog( getShell(),
-        m_useRange, m_from, m_to, m_nDays, df );
+    final DateRangeInputDialog dlg = new DateRangeInputDialog( getShell(),
+        m_useRange, m_from, m_to, m_nDays, df, null );
 
     if( dlg.open() == Window.OK )
     {

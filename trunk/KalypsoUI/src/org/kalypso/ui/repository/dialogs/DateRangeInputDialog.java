@@ -16,6 +16,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 
 /**
@@ -23,18 +24,18 @@ import org.kalypso.ui.preferences.IKalypsoPreferences;
  * 
  * @author schlienger
  */
-public class PreviewConfigDialog extends TitleAreaDialog
+public class DateRangeInputDialog extends TitleAreaDialog
 {
   private final static String msg = "Wählen Sie zwischen Tagesanzahl- oder Zeitraumeingabe.\n"
       + "- Tagesanzahl: Anzahl letzte angezeigte Tagen (0 = ganzer Zeitraum)\n"
       + "- Zeitraum: Eingabe-Von und Eingabe-Bis (Beispielformat: 22.01.2000 13:30)";
 
   private final static String title = "Repository-Vorschau Konfiguration";
-  
+
   private final static String errTitle = "Eingabe bitte prufen...";
-  
+
   private final static String errMsg = "Fehlerhafte Eingabe, ";
-  
+
   private PreferenceStore m_store;
 
   private BooleanFieldEditor m_fUseRange;
@@ -47,8 +48,11 @@ public class PreviewConfigDialog extends TitleAreaDialog
 
   private final DateFormat m_df;
 
+  private AbstractUIPlugin m_plugin;
+
   /**
-   * Constructor
+   * Constructor. If plugin is specified, then its DialogSettings are used as
+   * default values.
    * 
    * @param parentShell
    * @param useRange
@@ -56,13 +60,33 @@ public class PreviewConfigDialog extends TitleAreaDialog
    * @param to
    * @param days
    * @param df
+   * @param plugin
    */
-  public PreviewConfigDialog( final Shell parentShell, final boolean useRange,
-      final Date from, final Date to, final int days, final DateFormat df )
+  public DateRangeInputDialog( final Shell parentShell, boolean useRange,
+      Date from, Date to, int days, final DateFormat df,
+      final AbstractUIPlugin plugin )
   {
-    super( parentShell ); //, title, msg, null, null );
+    super( parentShell );
 
     m_df = df;
+
+    m_plugin = plugin;
+
+    if( plugin != null )
+    {
+      useRange = plugin.getDialogSettings().getBoolean(
+          IKalypsoPreferences.USE_RANGE );
+
+      long d = plugin.getDialogSettings().getLong(
+          IKalypsoPreferences.DATE_FROM );
+      from = new Date( d );
+
+      d = plugin.getDialogSettings().getLong( IKalypsoPreferences.DATE_TO );
+      to = new Date( d );
+
+      days = plugin.getDialogSettings().getInt(
+          IKalypsoPreferences.NUMBER_OF_DAYS );
+    }
 
     m_store = new PreferenceStore();
     m_store.setDefault( IKalypsoPreferences.USE_RANGE, useRange );
@@ -105,7 +129,7 @@ public class PreviewConfigDialog extends TitleAreaDialog
     m_fNumberOfDays.setEmptyStringAllowed( false );
     m_fNumberOfDays
         .setErrorMessage( "Geben Sie einen Zahl im Bereich [0 - N] ein." );
-    
+
     m_fUseRange.setPreferenceStore( m_store );
     m_fUseRange.loadDefault();
 
@@ -138,35 +162,47 @@ public class PreviewConfigDialog extends TitleAreaDialog
 
     if( isUseRange() )
     {
-      if( !m_fDateFrom.isValid() || parseForDate( m_fDateFrom.getStringValue() ) == null )
+      if( !m_fDateFrom.isValid()
+          || parseForDate( m_fDateFrom.getStringValue() ) == null )
       {
-        MessageDialog.openInformation( getParentShell(), errTitle,
-            errMsg + m_fDateFrom.getLabelText() + ": " + m_fDateFrom.getStringValue() );
+        MessageDialog.openInformation( getParentShell(), errTitle, errMsg
+            + m_fDateFrom.getLabelText() + ": " + m_fDateFrom.getStringValue() );
         return;
       }
-      
-      if( !m_fDateTo.isValid() || parseForDate( m_fDateTo.getStringValue() ) == null )
+
+      if( !m_fDateTo.isValid()
+          || parseForDate( m_fDateTo.getStringValue() ) == null )
       {
-        MessageDialog.openInformation( getParentShell(), errTitle,
-            errMsg + m_fDateTo.getLabelText() + ": " + m_fDateTo.getStringValue() );
+        MessageDialog.openInformation( getParentShell(), errTitle, errMsg
+            + m_fDateTo.getLabelText() + ": " + m_fDateTo.getStringValue() );
         return;
       }
-      
+
       m_fDateFrom.store();
       m_fDateTo.store();
     }
     else
     {
-      if( !m_fNumberOfDays.isValid() || Integer.valueOf( m_fNumberOfDays.getStringValue() ).intValue() < 0 )
+      if( !m_fNumberOfDays.isValid()
+          || Integer.valueOf( m_fNumberOfDays.getStringValue() ).intValue() < 0 )
       {
-        MessageDialog.openInformation( getParentShell(), errTitle,
-            errMsg + m_fNumberOfDays.getLabelText() + ": " + m_fNumberOfDays.getStringValue() );
+        MessageDialog.openInformation( getParentShell(), errTitle, errMsg
+            + m_fNumberOfDays.getLabelText() + ": "
+            + m_fNumberOfDays.getStringValue() );
         return;
       }
-      
+
       m_fNumberOfDays.store();
     }
 
+    if( m_plugin != null )
+    {
+      m_plugin.getDialogSettings().put( IKalypsoPreferences.USE_RANGE, isUseRange() );
+      m_plugin.getDialogSettings().put( IKalypsoPreferences.DATE_FROM, getDateFrom().getTime() );
+      m_plugin.getDialogSettings().put( IKalypsoPreferences.DATE_TO, getDateTo().getTime() );
+      m_plugin.getDialogSettings().put( IKalypsoPreferences.NUMBER_OF_DAYS, getNumberOfDays() );
+    }
+    
     super.okPressed();
   }
 
@@ -205,9 +241,10 @@ public class PreviewConfigDialog extends TitleAreaDialog
   {
     return m_store.getInt( IKalypsoPreferences.NUMBER_OF_DAYS );
   }
-  
+
   /**
-   * Helper: parses the given string into a date. If a ParseException occurs, it returns null.
+   * Helper: parses the given string into a date. If a ParseException occurs, it
+   * returns null.
    * 
    * @param str
    * @return new Date or null if ParseException occured.

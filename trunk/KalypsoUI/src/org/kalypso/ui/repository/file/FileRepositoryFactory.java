@@ -10,6 +10,7 @@ import org.kalypso.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
 import org.kalypso.repository.AbstractRepositoryFactory;
 import org.kalypso.repository.IRepository;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.repository.dialogs.FileRepositoryConfigDialog;
 
 /**
@@ -33,7 +34,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
   {
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
    
-    final FileRepositoryConfigDialog dlg = new FileRepositoryConfigDialog( shell, "", "", "" );
+    final FileRepositoryConfigDialog dlg = new FileRepositoryConfigDialog( shell, "", "", "", KalypsoGisPlugin.getDefault() );
     
     final int res = dlg.open();
     
