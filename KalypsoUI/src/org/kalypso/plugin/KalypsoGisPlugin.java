@@ -7,7 +7,6 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.commons.pool.KeyedObjectPool;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;

@@ -5,16 +5,17 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.ogc.sensor.IObservation;
+import org.eclipse.ui.views.properties.IPropertySheetPage;
+import org.eclipse.ui.views.properties.PropertySheetEntry;
+import org.eclipse.ui.views.properties.PropertySheetPage;
+import org.kalypso.ogc.sensor.ObservationPropertySourceProvider;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.repository.DefaultRepositoryContainer;
 import org.kalypso.util.repository.IRepositoryContainer;
@@ -32,12 +33,38 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 {
   protected TreeViewer m_repViewer = null;
 
-  private Label m_metaViewer = null;
-
   private final DefaultRepositoryContainer m_repContainer;
 
   private RemoveRepositoryAction m_removeAction;
 
+  private PropertySheetPage m_propsPage = null;
+
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( Class adapter )
+  {
+    if( adapter == IPropertySheetPage.class )
+    {
+      // lazy loading
+      if( m_propsPage == null )
+      {
+        // PropertySheetPage erzeugen. Sie wird in das standard PropertySheet von Eclipse dargestellt
+        m_propsPage  = new PropertySheetPage();
+
+        // eigenes entry mit source provider
+        PropertySheetEntry entry = new PropertySheetEntry();
+        entry.setPropertySourceProvider( new ObservationPropertySourceProvider() );
+
+        m_propsPage.setRootEntry( entry );
+      }
+    
+      return m_propsPage;
+    }
+    
+    return null;
+  }
+  
   public RepositoryExplorerPart()
   {
     m_repContainer = KalypsoGisPlugin.getDefault().getRepositoryContainer();
@@ -50,8 +77,6 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
    */
   public void dispose()
   {
-    super.dispose();
-
     m_repContainer.removeRepositoryContainerListener( this );
 
     if( m_removeAction != null )
@@ -59,6 +84,8 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
     if( m_repViewer != null )
       removeSelectionChangedListener( this );
+    
+    super.dispose();
   }
 
   /**
@@ -72,9 +99,6 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     m_repViewer.setContentProvider( new RepositoryTreeContentProvider() );
     m_repViewer.setLabelProvider( new LabelProvider() );
     m_repViewer.setInput( m_repContainer );
-
-    m_metaViewer = new Label( split, SWT.CENTER );
-    m_metaViewer.setText( "" );
 
     final Shell shell = getSite().getShell();
     m_removeAction = new RemoveRepositoryAction( shell, this );
@@ -154,17 +178,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
-
-    String text = "<Kein Element selektiert>";
-    if( !selection.isEmpty() )
-    {
-      Object obj = selection.getFirstElement();
-
-      if( obj instanceof IObservation )
-        text = ( (IObservation)obj ).getMetadata().toString();
-    }
-
-    m_metaViewer.setText( text );
+    if( m_propsPage != null )
+      m_propsPage.selectionChanged( this, event.getSelection() );
   }
 }
