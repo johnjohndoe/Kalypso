@@ -81,8 +81,8 @@ public class DataCenterLevelItem implements IRepositoryItem
       while( it.hasNext() )
         list.add( new DataCenterChannelItem( m_rep, this, (Channel)it.next()) );
 
-      m_children = (DataCenterLevelItem[]) list
-          .toArray( new DataCenterLevelItem[list.size()] );
+      m_children = (IRepositoryItem[]) list
+          .toArray( new IRepositoryItem[list.size()] );
     }
 
     return m_children;

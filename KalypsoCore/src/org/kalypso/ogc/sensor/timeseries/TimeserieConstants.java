@@ -103,4 +103,7 @@ public abstract class TimeserieConstants implements ObservationConstants
    * handelt es sich um eine Vorhersage Zeitreihe.
    */
   public final static String MD_VORHERSAGE = "Vorhersage";
+  
+  public final static String MD_DATE_BEGIN = "Datum-Von";
+  public final static String MD_DATE_END = "Datum-Bis";
 }

@@ -26,6 +26,8 @@ import com.bce.datacenter.db.persistent.Persistent;
  */
 public class Timeserie extends Persistent
 {
+  private final static TimeserieTupple[] EMPTY_TUPPLE = new TimeserieTupple[0];
+  
   private String m_dataTableName;
 
   private String m_description;
@@ -40,6 +42,7 @@ public class Timeserie extends Persistent
 
   /**
    * Constructor
+   * 
    * @param con
    * @param id
    *          internal db identifier
@@ -51,6 +54,7 @@ public class Timeserie extends Persistent
 
   /**
    * Constructor with parameters
+   * 
    * @param con
    * @param id
    * @param name
@@ -59,8 +63,8 @@ public class Timeserie extends Persistent
    * @param tableName
    * @param channelRef
    */
-  public Timeserie(final Connection con, int id, String name, String desc, String type,
-      String tableName, int channelRef )
+  public Timeserie( final Connection con, int id, String name, String desc,
+      String type, String tableName, int channelRef )
   {
     super( con, id, false );
 
@@ -168,13 +172,14 @@ public class Timeserie extends Persistent
   /**
    * Looks up for a timeserie in the database according to the given
    * dataTableName.
+   * 
    * @param con
    * @param dataTableName
    * @return
    * @throws SQLException
    */
-  public static Timeserie findTimeserie( final Connection con, final String dataTableName )
-      throws SQLException
+  public static Timeserie findTimeserie( final Connection con,
+      final String dataTableName ) throws SQLException
   {
     final String sql = "SELECT TSID FROM TS_TIMESERIES WHERE DATATABLENAME = ?";
 
@@ -348,6 +353,105 @@ public class Timeserie extends Persistent
   }
 
   /**
+   * Returns values in the form of an array of TimeserieTupples
+   * 
+   * @param from
+   * @param to
+   * @return
+   * @throws SQLException
+   */
+  public TimeserieTupple[] getValues( final java.util.Date from, final java.util.Date to )
+      throws SQLException
+  {
+    final Statement st = m_con.createStatement();
+
+    // get the name of the timeseries table
+    final String tabname = m_dataTableName;
+
+    /*
+     * prepare statement for extracting desired timeseries and create a temp
+     * table with these timeseries
+     */
+    String str = "SELECT TSTIME, VALUE, FLAG FROM " + tabname;
+
+    String tmp_stmt = "";
+
+    if( from != null )
+    {
+      /* the where clause contains just one from-to time range */
+
+      // time-from
+      tmp_stmt = "( TSTIME >= '" + from + "'";
+
+      // look if time-to is specified
+      if( to == null )
+      {
+        // no time-to, so close the parenthesis and stop processing
+        tmp_stmt += ")";
+      }
+      else
+      {
+        // add time-to specification
+        tmp_stmt += (" AND TSTIME <= '" + to + "')");
+      }
+    }
+    else
+    {
+      if( to != null )
+      {
+        tmp_stmt = "TSTIME <= '" + to + "'";
+      }
+    }
+
+    // look if some where clause has been created
+    if( tmp_stmt != "" )
+    {
+      // add where clause
+      str += (" WHERE " + tmp_stmt);
+    }
+
+    try
+    {
+      final ResultSet set = st.executeQuery( str );
+
+      final Vector list = new Vector();
+
+      while( set.next() )
+      {
+        final Date datum = new Date( set.getTime( 1 ).getTime()
+            + set.getDate( 1 ).getTime() );
+        final Double value = new Double( set.getDouble( 2 ) );
+        final String status = set.getString( 3 );
+
+        list.add( new TimeserieTupple( datum, value, status ) );
+      }
+
+      set.close();
+      st.close();
+
+      m_con.commit();
+      
+      return (TimeserieTupple[]) list.toArray( new TimeserieTupple[list.size()] );
+    }
+    catch( SQLException e )
+    {
+      m_con.rollback();
+      
+      return EMPTY_TUPPLE;
+    }
+  }
+
+  /**
+   * Sets the values in the db
+   * 
+   * @param tupples
+   */
+  public void setValues( final TimeserieTupple[] tupples )
+  {
+    // TODO
+  }
+  
+  /**
    * @see java.lang.Object#toString()
    */
   public String toString( )
@@ -363,8 +467,7 @@ public class Timeserie extends Persistent
     try
     {
       PreparedStatement stmt = m_con
-          .prepareStatement(
-              "SELECT NAME, DESCRIPTION, TYPE, CHANNEL_REF, DATATABLENAME FROM TS_TIMESERIES WHERE TSID = ?" );
+          .prepareStatement( "SELECT NAME, DESCRIPTION, TYPE, CHANNEL_REF, DATATABLENAME FROM TS_TIMESERIES WHERE TSID = ?" );
 
       stmt.setInt( 1, m_ID );
 
@@ -400,6 +503,7 @@ public class Timeserie extends Persistent
 
   /**
    * Fast load of all timeseries for a channel
+   * 
    * @param con
    * @param channelRef
    * @return list of all timeseries for a channel
@@ -411,8 +515,7 @@ public class Timeserie extends Persistent
     try
     {
       PreparedStatement stmt = con
-          .prepareStatement(
-              "SELECT TSID, NAME, DESCRIPTION, TYPE, DATATABLENAME FROM TS_TIMESERIES WHERE CHANNEL_REF = ? ORDER BY NAME" );
+          .prepareStatement( "SELECT TSID, NAME, DESCRIPTION, TYPE, DATATABLENAME FROM TS_TIMESERIES WHERE CHANNEL_REF = ? ORDER BY NAME" );
 
       stmt.setInt( 1, channelRef );
 
