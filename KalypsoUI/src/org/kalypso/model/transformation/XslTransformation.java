@@ -73,7 +73,7 @@ public class XslTransformation extends AbstractTransformation
       
       outputFile.create( pis, false, new SubProgressMonitor( monitor, 1000 ) );
       outputFile.setCharset( inputFile.getCharset(), new SubProgressMonitor( monitor, 1000 ) );
-      
+
       if( thread.getThrowable() != null )
         throw new TransformationException( thread.getThrowable() );
     }
