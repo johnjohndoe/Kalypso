@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Vector;
 //import java.util.Enumeration;
 
-//import de.tuhh.wb.javagis.Main;
+import de.tuhh.wb.javagis.Main;
 import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.simulation.KonfigWrite;
 import de.tuhh.wb.javagis.FileSystemUtils;
@@ -64,8 +64,7 @@ public class StartKalypso implements KalypsoXmlImportListener {
 			//Check: targetDir exists
 			if (!targetDir.exists())
 				targetDir.mkdirs();
-			File kalypsoTemplate = new File("C://Kalypso//bin//template");
-			//File kalypsoTemplate=new File(Main.props.getProperty("template_simulation"));
+			File kalypsoTemplate=new File(Main.props.getProperty("template_simulation"));
 			System.out.println(
 				"copy template from " + kalypsoTemplate.toString());
 			System.out.print(I18n.get("LV_SD_runSim1"));

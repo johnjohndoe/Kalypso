@@ -156,7 +156,6 @@ public class SimulationDialog
 		}
 		if ("start".equals(command)) {
 			File kalypsoTemplate=new File(Main.props.getProperty("template_simulation"));
-			//File kalypsoTemplate = new File("C://Kalypso//bin//template");
 			File kalypsoInp = new File(kalypsoTemplate, "inp.dat");
 			File zftFile = new File(kalypsoInp, "tis_eik.zft");
 			File[] inpFiles = kalypsoInp.listFiles();
@@ -239,7 +238,6 @@ public class SimulationDialog
 				targetDir.mkdirs();
 			File kalypsoTemplate =
 				new File(Main.props.getProperty("template_simulation"));
-			//File kalypsoTemplate = new File("C://Kalypso//bin//template");
 			System.out.println(
 				"copy template from " + kalypsoTemplate.toString());
 
