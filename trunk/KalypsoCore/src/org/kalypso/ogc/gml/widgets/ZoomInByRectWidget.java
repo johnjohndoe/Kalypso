@@ -36,14 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
 
-import org.deegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.util.command.ICommand;
 
@@ -54,99 +53,72 @@ import org.kalypso.util.command.ICommand;
  * 
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  */
-public class ZoomInByRectWidget extends AbstractWidget {
+public class ZoomInByRectWidget extends AbstractWidget
+{
 
-    private Point endPoint = null;
+  private Point m_endPoint = null;
 
-    private Point startPoint = null;
+  private Point m_startPoint = null;
 
-    public void dragged(Point p) {
-        //System.out.println("dragged");
-        if (startPoint == null)
-            startPoint = p;
-        {
-            endPoint = p;
-        }
-        //System.out.println("draggedPoint: " + startPoint + " " + endPoint);
+  private static final double MIN_PIXEL_ZOOM_BOX = 20;
+
+  public void dragged( Point p )
+  {
+    if( m_startPoint == null )
+      m_startPoint = p;
+    {
+      m_endPoint = p;
     }
+  }
 
-    public void leftPressed(Point p) {
-        this.startPoint = p;
-        this.endPoint = null;
-        //System.out.println("leftPressed " + this.startPoint + " " + this.endPoint);
+  public void leftPressed( Point p )
+  {
+    m_startPoint = p;
+    m_endPoint = null;
+  }
+
+  public void leftReleased( Point p )
+  {
+    m_endPoint = p;
+    perform();
+  }
+
+  /*
+   * paints the dragged rectangle defined by the start and end point of the drag
+   * box
+   */
+  public void paint( Graphics g )
+  {
+    if( m_startPoint != null && m_endPoint != null )
+    {
+      final int x1 = (int)m_startPoint.getX();
+      final int y1 = (int)m_startPoint.getY();
+      final int x2 = (int)m_endPoint.getX();
+      final int y2 = (int)m_endPoint.getY();
+      g.drawRect( x1 < x2 ? x1 : x2, y1 < y2 ? y1 : y2, Math.abs( x2 - x1 ), Math.abs( y2 - y1 ) );
     }
+  }
 
-    public void leftReleased(Point p) {
-        this.endPoint = p;
-        //System.out.println("leftReleased " + this.startPoint + " " + this.endPoint);
-        
-        perform();
-        
+  /*
+   * performs the zoomin action.
+   * 
+   * @see org.kalypso.ogc.widgets.AbstractWidget#performIntern()
+   */
+  protected final ICommand performIntern()
+  {
+    if( m_startPoint != null && m_endPoint != null )
+    {
+      double x1 = m_startPoint.getX();
+      double y1 = m_startPoint.getY();
+      double x2 = m_endPoint.getX();
+      double y2 = m_endPoint.getY();
+      //performs zoomin by point
+      m_startPoint = null;
+      m_endPoint = null;
+      if( Math.abs( x1 - x2 ) > MIN_PIXEL_ZOOM_BOX && Math.abs( y1 - y2 ) > MIN_PIXEL_ZOOM_BOX )
+        return new ChangeExtentCommand( getMapPanel(), getBox( x1, y1, x2, y2 ) );
     }
-
-    /*
-     * paints the dragged rectangle defined by the start and end point of the
-     * drag box
-     */
-    public void paint(Graphics g) {
-       if (startPoint != null && endPoint != null) {        
-            final int x  = (int)Math.round(startPoint.getX());
-            final int y  = (int)Math.round(startPoint.getY());
-			
-			double dx = Math.abs( endPoint.getX() - startPoint.getX() );
-			double dy = Math.abs( endPoint.getY() - startPoint.getY() );
-			
-			g.drawRect(x, y, (int) dx, (int) dy);
-
-        }
-    }
-
-    /*
-     * performs the zoomin action.
-     * 
-     * @see org.kalypso.ogc.widgets.AbstractWidget#performIntern()
-     */
-    protected final ICommand performIntern() {
-
-        if (startPoint != null && endPoint != null) {
-            double x = startPoint.getX();
-            double y = startPoint.getY();
-            double x2 = endPoint.getX();
-            double y2 = endPoint.getY();
-                        
-            double wi = (x2 - x);
-            double he = (y2 - y);
-
-            double centerx = (x2 + x) / 2.0;
-            double centery = (y2 + y) / 2.0;
-
-            double xmin = centerx - (wi / 2.0);
-            double xmax = centerx + (wi / 2.0);
-            double ymax = centery + (he / 2.0);
-            double ymin = centery - (he / 2.0);
-            double dx = Math.abs( x2 - x );
-    		double dy = Math.abs( y2 - y );
-    		
-    		//performs zoomin by point
-            if (dx < 5 || dy < 5){
-                dx = 5;
-                dy = 5;
-                int facX = (int)Math.round(dx * 75);
-    			int facY = (int)Math.round(dy * 75);
-    			xmin = x - ( facX / 2.0 );
-    			xmax = x + ( facX / 2.0 );
-    			ymin = y - ( facY / 2.0 );
-    			ymax = y + ( facY / 2.0 );
-    	    }
-            GM_Envelope zoomBox = getBox(xmin, ymin, xmax, ymax);//GeometryFactory.createGM_Envelope(
-
-            startPoint = null;
-            endPoint = null;
-
-            return new ChangeExtentCommand(getMapPanel(), zoomBox);
-        }
-
-        return null;
-    }
+    return null;
+  }
 
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;
@@ -65,7 +65,8 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   private ICommandTarget m_commandPoster;
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
    */
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
@@ -79,7 +80,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
     // TODO: register modelllistener?
     m_commandPoster = commandPoster;
     m_mapPanel = mapPanel;
-    
+
     if( m_mapPanel != null )
       m_mapPanel.getMapModell().addModellListener( this );
     // registerModelllistener
@@ -138,22 +139,14 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
 
   /*
    * returns GM_Envelope for the pixel xmin, ymin, xmax, ymax.
-   * 
-   * GeoTransformInterface declares the methods which have to be implemented by
-   * each class that executes a geographical coordinat transformation.
+   *  
    */
   protected final GM_Envelope getBox( double x, double y, double x2, double y2 )
   {
 
     final GeoTransform gt = m_mapPanel.getProjection();
-
-    double xmin = gt.getSourceX( x );
-    double ymin = gt.getSourceY( y );
-    double xmax = gt.getSourceX( x2 );
-    double ymax = gt.getSourceY( y2 );
-
-    GM_Envelope bbox = GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax );
-    return bbox;
+    return GeometryFactory.createGM_Envelope( gt.getSourceX( x ), gt.getSourceY( y ), gt
+        .getSourceX( x2 ), gt.getSourceY( y2 ) );
   }
 
   /**
@@ -303,31 +296,32 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
     }
   }
 
-//  public FeatureType getActiveFeatureType()
-//  {
-//    try
-//    {
-//      return ( getActiveTheme() ).getFeatureType();
-//    }
-//    catch( Exception e )
-//    {
-//      // no active layer
-//      // layer not loaded complete
-//      // not a featurelayer e.g. a wms-layer
-//      return null;
-//    }
-//  }
+  //  public FeatureType getActiveFeatureType()
+  //  {
+  //    try
+  //    {
+  //      return ( getActiveTheme() ).getFeatureType();
+  //    }
+  //    catch( Exception e )
+  //    {
+  //      // no active layer
+  //      // layer not loaded complete
+  //      // not a featurelayer e.g. a wms-layer
+  //      return null;
+  //    }
+  //  }
 
-//  public KalypsoFeatureLayer[] getAllKalypsoFeatureLayers()
-//  {
-//    List result = new ArrayList();
-//    IKalypsoTheme[] themes = m_mapPanel.getMapModell().getAllThemes();
-//    for( int i = 0; i < themes.length; i++ )
-//    {
-//      IKalypsoLayer layer = themes[i].getLayer();
-//      if( layer != null && layer instanceof KalypsoFeatureLayer )
-//        result.add( layer );
-//    }
-//    return (KalypsoFeatureLayer[])result.toArray( new KalypsoFeatureLayer[result.size()] );
-//  }
+  //  public KalypsoFeatureLayer[] getAllKalypsoFeatureLayers()
+  //  {
+  //    List result = new ArrayList();
+  //    IKalypsoTheme[] themes = m_mapPanel.getMapModell().getAllThemes();
+  //    for( int i = 0; i < themes.length; i++ )
+  //    {
+  //      IKalypsoLayer layer = themes[i].getLayer();
+  //      if( layer != null && layer instanceof KalypsoFeatureLayer )
+  //        result.add( layer );
+  //    }
+  //    return (KalypsoFeatureLayer[])result.toArray( new
+  // KalypsoFeatureLayer[result.size()] );
+  //  }
 }
