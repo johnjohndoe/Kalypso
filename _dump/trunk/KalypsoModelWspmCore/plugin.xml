@@ -12,9 +12,6 @@
       <library name="libs/commons-io-1.0.jar">
          <export name="*"/>
       </library>
-      <library name="libs/hb15.jar">
-         <export name="*"/>
-      </library>
       <library name="libs/trove.jar">
          <export name="*"/>
       </library>
