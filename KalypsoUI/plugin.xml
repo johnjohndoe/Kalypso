@@ -108,6 +108,12 @@
             <separator name="spalten"/>
          </menu>
          <action
+               label="Exportieren...."
+               class="org.kalypso.ui.editor.gistableeditor.actions.ExportTableAction"
+               tooltip="Die Tabellenansicht auf verschiedene Weisen exportieren."
+               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
+               id="org.kalypso.ui.editors.tableeditor.Export"/>
+         <action
                toolbarPath="tabelle"
                label="Zeile hinzufügen"
                tooltip="Fügt eine Zeile am Ende der Tabelle ein"
@@ -140,11 +146,17 @@
          </action>
          <action
                toolbarPath="tabelle"
-               label="Toggle Editing"
-               tooltip="Sartet oder stopt das Editieren der Tabellendaten"
+               label="Bearbeitung beenden"
+               tooltip="Beendet das Editieren der Tabellendaten"
                class="org.kalypso.ui.editor.gistableeditor.actions.StartEditingActionDelagate"
-               style="toggle"
-               state="true"
+               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
+               id="org.kalypso.ui.editor.gistableeditor.StartEditingAction">
+         </action>
+         <action
+               toolbarPath="tabelle"
+               label="Bearbeitung starten"
+               tooltip="Startet das Editieren der Tabellendaten"
+               class="org.kalypso.ui.editor.gistableeditor.actions.StartEditingActionDelagate"
                menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
                id="org.kalypso.ui.editor.gistableeditor.StartEditingAction">
          </action>

@@ -18,6 +18,7 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -48,7 +49,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author Belger
  */
 
-public class ViewResultsWizardPage extends AbstractCalcWizardPage implements ModellEventListener
+public class ExportResultsWizardPage extends AbstractCalcWizardPage implements ModellEventListener
 {
   // Beispiel:
   //   <page className="org.kalypso.ui.calcwizard.ViewResultsWizardPage"
@@ -99,12 +100,12 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
 
   protected TimeserieFeatureProps[] m_tsProps;
 
-  public ViewResultsWizardPage()
+  public ExportResultsWizardPage()
   {
     super( "<ViewResultsWizardPage>" );
   }
 
-  public ViewResultsWizardPage( String title )
+  public ExportResultsWizardPage( String title )
   {
     super( title );
   }
@@ -128,7 +129,7 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
       createMapPanel( sashForm );
       final SashForm rightSash = new SashForm( sashForm, SWT.VERTICAL );
       createTablePanel( rightSash );
-      createGrafikToolButton( rightSash );
+      createExportPanel( rightSash );
 
       final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
       final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
@@ -150,7 +151,7 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
     }
   }
 
-  private void createGrafikToolButton( final Composite parent )
+  private void createExportPanel( final Composite parent )
   {
     final String diagFileName = getArguments().getProperty( PROP_DIAGTEMPLATE );
     final IFile diagFile = (IFile)getProject().findMember( diagFileName );
@@ -164,14 +165,27 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
       e.printStackTrace();
     }
 
-    //final Composite composite = new Composite( parent, SWT.RIGHT );
+    final Composite composite = new Composite( parent, SWT.NONE );
+    composite.setLayout( new GridLayout() );
 
-    final Button button = new Button( parent, SWT.PUSH );
+    final Button button = new Button( composite, SWT.PUSH );
     button.setText( "Zeitreihe bearbeiten" );
     button.addSelectionListener( new GraficToolStarter() );
-    button.setVisible( true );
-    //composite.setVisible(true);
-    //button.setEnabled(true);
+    
+    final Button exportQDiagramm = new Button( composite, SWT.CHECK );
+    exportQDiagramm.setText( "Durchflussgrafik" );
+
+    final Button exportWRadio = new Button( composite, SWT.CHECK );
+    exportWRadio.setText( "Wasserstandsgrafik" );
+    
+    final Button exportTableRadio = new Button( composite, SWT.CHECK );
+    exportTableRadio.setText( "Tabelle" );
+
+    final Button exportMap = new Button( composite, SWT.CHECK );
+    exportMap.setText( "Kartenansicht" );
+    
+    final Button doItButton = new Button( composite ,SWT.PUSH );
+    doItButton.setText( "Bericht(e) ablegen" );
   }
 
   private void createTablePanel( final Composite parent )
