@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.file;
+package org.kalypso.ui.repository.file;
 
 import java.io.FileFilter;
 
@@ -16,11 +16,6 @@ import org.kalypso.repository.IRepository;
  */
 public class ObservationFileRepositoryFactory extends AbstractRepositoryFactory
 {
-  public ObservationFileRepositoryFactory( final String conf )
-  {
-    super( conf );
-  }
-  
   /**
    * @see org.kalypso.repository.IRepositoryFactory#configureRepository(org.kalypso.repository.IRepository)
    */

@@ -1,6 +1,8 @@
 package org.kalypso.ui;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.MissingResourceException;
 import java.util.Properties;
@@ -11,6 +13,8 @@ import java.util.logging.Logger;
 
 import javax.swing.UIManager;
 import javax.xml.bind.JAXBException;
+import javax.xml.rpc.ServiceException;
+import javax.xml.rpc.Stub;
 
 import org.deegree.tools.IURLConnectionFactory;
 import org.deegree_impl.extension.ITypeRegistry;
@@ -24,6 +28,9 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultCellEditorFactory;
 import org.kalypso.ogc.gml.table.celleditors.ICellEditorFactory;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.repository.DefaultRepositoryContainer;
+import org.kalypso.services.ProxyFactory;
+import org.kalypso.services.proxy.IObservationService;
+import org.kalypso.services.proxy.Kalypso_ObservationService_Impl;
 import org.kalypso.ui.repository.RepositorySpecification;
 import org.kalypso.util.pool.ResourcePool;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -34,8 +41,17 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoGisPlugin extends AbstractUIPlugin
 {
+  /** name of the property where the client conf files can be found */
+  public static final String CLIENT_CONF_URLS = "kalypso.client.conf";
+
   private static final String BUNDLE_NAME = KalypsoGisPlugin.class.getPackage().getName()
       + ".resources.KalypsoGisPluginResources"; //$NON-NLS-N$
+
+  /** location of the pool properties file */
+  private static final String POOL_PROPERTIES = "resources/pools.properties"; //$NON-NLS-N$
+
+  /** location of the observation properties file */
+  private static final String OBSERVATION_REPOSITORIES_PROPERTIES = "resources/observation_repositories.properties"; //$NON-NLS-N$
 
   private static KalypsoGisPlugin m_plugin = null;
 
@@ -47,8 +63,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   private final HashMap myLoaderFactories = new HashMap();
 
-  private static final String POOL_PROPERTIES = "resources/pools.properties"; //$NON-NLS-N$
-
   private final Properties myPoolProperties = new Properties();
 
   private Properties m_ftpProperties;
@@ -58,11 +72,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
    * user. For each available repository, the IRepositoryFactory is provided.
    */
   private final Properties m_zmlRepositoriesProperties = new Properties();
-
-  /**
-   * Location of the properties file.
-   */
-  private static final String ZML_REPOSITORIES_PROPERTIES = "resources/zml_repositories.properties"; //$NON-NLS-N$
 
   /** Manages the list of repositories. */
   private DefaultRepositoryContainer m_tsRepositoryContainer = null;
@@ -74,15 +83,35 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   private IURLConnectionFactory m_urlConnectionFactory;
 
+  /** factory for webservice proxy for the kalypso client */
+  private ProxyFactory m_proxyFactory;
+
+  /** configuration of the client */
+  private Properties m_mainConf;
+
   /**
-   * The constructor.
+   * The constructor. Manages the configuration of the kalypso client.
    */
   public KalypsoGisPlugin()
   {
     m_plugin = this;
 
     configureLogger();
-    configureProxy();
+
+    try
+    {
+      prepareConfigure();
+      configure();
+      configureProxy();
+      configurePool();
+      configureObservationRepositorySpecifications();
+      configureServiceProxyFactory();
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
+
     try
     {
       m_resourceBundle = ResourceBundle.getBundle( BUNDLE_NAME );
@@ -96,19 +125,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
     try
     {
-      myPoolProperties.load( this.getClass().getResourceAsStream( POOL_PROPERTIES ) );
-
-      m_zmlRepositoriesProperties.load( getClass()
-          .getResourceAsStream( ZML_REPOSITORIES_PROPERTIES ) );
-      prepareRepositoriesSpecifications();
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
-
-    try
-    {
+      // for AWT and Swing stuff used with SWT_AWT so that they look like OS
+      // controls
       UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
     }
     catch( Exception e1 )
@@ -117,6 +135,106 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     }
 
     registerTypeHandler();
+  }
+
+  /**
+   * Prepare configuration of the Kalypso Client: reads the system properties
+   * and the localisation(s) of the kalypso client configuration file.
+   */
+  private void prepareConfigure()
+  {
+    // get system properties and use them as main configuration
+    m_mainConf = new Properties( System.getProperties() );
+
+    // set the localisation of the Configuration files
+    // TODO get this information from some external place (like Eclipse prefs)
+    m_mainConf.setProperty( CLIENT_CONF_URLS, "http://pc242:8080/KalypsoConf/kalypso-client.ini" );
+  }
+
+  /**
+   * Loads the client configuration
+   * 
+   * @throws IllegalStateException if no configuration could be loaded
+   */
+  private void configure() throws IllegalStateException
+  {
+    final String[] locs = m_mainConf.getProperty( CLIENT_CONF_URLS ).split( ";" );
+
+    final Properties conf = new Properties();
+
+    for( int i = 0; i < locs.length; i++ )
+    {
+      InputStream stream = null;
+
+      try
+      {
+        final URL url = new URL( locs[i] );
+
+        stream = url.openStream();
+
+        conf.load( stream );
+        
+        m_mainConf.putAll( conf );
+        
+        return;
+      }
+      catch( Exception e ) // generic exception used to simplify processing
+      {
+        // do nothing, try with next location
+      }
+      finally
+      {
+        try
+        {
+          if( stream != null )
+            stream.close();
+        }
+        catch( IOException e1 )
+        {
+          e1.printStackTrace();
+        }
+      }
+    }
+    
+    throw new IllegalStateException( "Could not load client configuration from server!" );
+  }
+
+  /**
+   * Loads the pool configuration
+   */
+  private void configurePool() throws IOException
+  {
+    myPoolProperties.load( this.getClass().getResourceAsStream( POOL_PROPERTIES ) );
+  }
+
+  /**
+   * Sets service proxy factory specific properties and creates the proxy factory object.
+   */
+  private void configureServiceProxyFactory()
+  {
+    // this is the base classname (actually just package name) of all the kalypso service proxies
+    m_mainConf.setProperty( ProxyFactory.KALYPSO_PROXY_BASE, "org.kalypso.services.proxy" );
+
+    m_proxyFactory = new ProxyFactory( m_mainConf );
+  }
+
+  /**
+   * Loads the properties related to the available repositories. For each of these repositories,
+   * it creates a simple wrapper class that contains its specification.
+   */
+  private void configureObservationRepositorySpecifications() throws IOException
+  {
+    m_zmlRepositoriesProperties.load( getClass().getResourceAsStream(
+        OBSERVATION_REPOSITORIES_PROPERTIES ) );
+
+    final String[] available = m_zmlRepositoriesProperties.getProperty( "available" ).split( "," );
+
+    m_repositoriesSpecification = new RepositorySpecification[available.length];
+
+    for( int i = 0; i < available.length; i++ )
+      m_repositoriesSpecification[i] = new RepositorySpecification( available[i],
+          m_zmlRepositoriesProperties.getProperty( available[i] ), m_zmlRepositoriesProperties
+              .getProperty( available[i] + "_FACTORY" ) );
   }
 
   private void configureLogger()
@@ -133,26 +251,34 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   }
 
   /**
-   * Helper: vorbereitet die Liste der zur Verfügung stehende Repositories.
-   */
-  private void prepareRepositoriesSpecifications()
-  {
-    String[] available = m_zmlRepositoriesProperties.getProperty( "available" ).split( "," );
-
-    m_repositoriesSpecification = new RepositorySpecification[available.length];
-
-    for( int i = 0; i < available.length; i++ )
-      m_repositoriesSpecification[i] = new RepositorySpecification( available[i],
-          m_zmlRepositoriesProperties.getProperty( available[i] ), m_zmlRepositoriesProperties
-              .getProperty( available[i] + "_FACTORY" ) );
-  }
-
-  /**
    * Liefert die Liste der Konfigurierte und Zugreifbare Zeitreihen Repositories
    */
   public RepositorySpecification[] getRepositoriesSpecifications()
   {
     return m_repositoriesSpecification;
+  }
+
+  /**
+   * Liefert die Kalypso Service ProxyFactory
+   */
+  public ProxyFactory getServiceProxyFactory()
+  {
+    return m_proxyFactory;
+  }
+  
+  /**
+   * Convenience method that returns the observation service proxy
+   * 
+   * @throws ServiceException
+   */
+  public IObservationService getObservationServiceProxy() throws ServiceException
+  {
+    final Kalypso_ObservationService_Impl koi = new Kalypso_ObservationService_Impl();
+    final IObservationService port = koi.getIObservationServicePort();
+    final String strEndPoint = "http://pc242:8080/Kalypso_ObservationService/IObservationServicePort";
+    ((Stub)port)._setProperty( javax.xml.rpc.Stub.ENDPOINT_ADDRESS_PROPERTY, strEndPoint );
+    return port;
+    //return (IObservationService)m_proxyFactory.getProxy( "Kalypso_ObservationService", "IObservationService" );
   }
 
   //  TODO public OutputLogger getOutputLogger()
@@ -314,22 +440,23 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     return mySelectionIdProvider;
   }
 
-//  public CalcJobService getCalcService()
-//  {
-//    if( m_calcJobService == null )
-//    {
-//      try
-//      {
-//        m_calcJobService = (CalcJobService)SimpleServiceFactory.createService( "CalcJob.Default", CalcJobService.class );
-//      }
-//      catch( FactoryException e )
-//      {
-//        e.printStackTrace();
-//      }
-//    }
-//
-//    return m_calcJobService;
-//  }
+  //  public CalcJobService getCalcService()
+  //  {
+  //    if( m_calcJobService == null )
+  //    {
+  //      try
+  //      {
+  //        m_calcJobService = (CalcJobService)SimpleServiceFactory.createService(
+  // "CalcJob.Default", CalcJobService.class );
+  //      }
+  //      catch( FactoryException e )
+  //      {
+  //        e.printStackTrace();
+  //      }
+  //    }
+  //
+  //    return m_calcJobService;
+  //  }
 
   private void registerTypeHandler()
   {
@@ -374,34 +501,35 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     return 0x1;
   }
 
-//  private class URLConnectionFactory implements IURLConnectionFactory
-//  {
-//    private final String m_property;
-//
-//    private final String m_value;
-//
-//    private URLConnectionFactory( String property, String value )
-//    {
-//      m_property = property;
-//      m_value = value;
-//    }
-//
-//    private URLConnectionFactory()
-//    {
-//      m_property = null;
-//      m_value = null;
-//    }
-//
-//    /**
-//     * @see org.deegree.tools.IURLConnectionFactory#createURLConnection(java.net.URL)
-//     */
-//    public URLConnection createURLConnection( URL url ) throws IOException
-//    {
-//      if( m_property == null )
-//        return url.openConnection();
-//      URLConnection connection = url.openConnection();
-//      connection.setRequestProperty( m_property, m_value );
-//      return connection;
-//    }
-//  }
+  //  private class URLConnectionFactory implements IURLConnectionFactory
+  //  {
+  //    private final String m_property;
+  //
+  //    private final String m_value;
+  //
+  //    private URLConnectionFactory( String property, String value )
+  //    {
+  //      m_property = property;
+  //      m_value = value;
+  //    }
+  //
+  //    private URLConnectionFactory()
+  //    {
+  //      m_property = null;
+  //      m_value = null;
+  //    }
+  //
+  //    /**
+  //     * @see
+  // org.deegree.tools.IURLConnectionFactory#createURLConnection(java.net.URL)
+  //     */
+  //    public URLConnection createURLConnection( URL url ) throws IOException
+  //    {
+  //      if( m_property == null )
+  //        return url.openConnection();
+  //      URLConnection connection = url.openConnection();
+  //      connection.setRequestProperty( m_property, m_value );
+  //      return connection;
+  //    }
+  //  }
 }

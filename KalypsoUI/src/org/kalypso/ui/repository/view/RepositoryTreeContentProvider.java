@@ -25,9 +25,9 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
-  public Object[] getChildren( Object parentElement )
+  public Object[] getChildren( final Object parentElement )
   {
-    IRepositoryItem item = testArg( parentElement );
+    final IRepositoryItem item = testArg( parentElement );
 
     return item.getChildren();
   }
@@ -35,9 +35,9 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
-  public Object getParent( Object element )
+  public Object getParent( final Object element )
   {
-    IRepositoryItem item = testArg( element );
+    final IRepositoryItem item = testArg( element );
 
     if( item == null )
       return null;
@@ -48,9 +48,9 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
-  public boolean hasChildren( Object element )
+  public boolean hasChildren( final Object element )
   {
-    IRepositoryItem item = testArg( element );
+    final IRepositoryItem item = testArg( element );
 
     return item.hasChildren();
   }
@@ -58,9 +58,9 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
-  public Object[] getElements( Object inputElement )
+  public Object[] getElements( final Object inputElement )
   {
-    IRepositoryContainer container = (IRepositoryContainer)inputElement;
+    final IRepositoryContainer container = (IRepositoryContainer)inputElement;
     
     return container.getRepositories().toArray();
   }

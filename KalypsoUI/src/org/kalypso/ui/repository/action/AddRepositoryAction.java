@@ -6,6 +6,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.eclipse.jface.action.FullAction;
+import org.kalypso.java.lang.reflect.ClassUtilities.ClassUtilityException;
 import org.kalypso.repository.IRepositoryContainer;
 import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.RepositoryException;
@@ -21,6 +22,7 @@ import org.kalypso.ui.repository.RepositorySpecification;
 public class AddRepositoryAction extends FullAction
 {
   private final Shell m_shell;
+
   private final IRepositoryContainer m_cp;
 
   public AddRepositoryAction( final Shell shell, final IRepositoryContainer cp )
@@ -36,26 +38,32 @@ public class AddRepositoryAction extends FullAction
    */
   public void run()
   {
-    ListDialog dlg = new ListDialog( m_shell );
+    final ListDialog dlg = new ListDialog( m_shell );
     dlg.setLabelProvider( new LabelProvider() );
-    dlg.setContentProvider( new ArrayContentProvider(  ) );
+    dlg.setContentProvider( new ArrayContentProvider() );
     dlg.setTitle( "Repository Typ auswählen" );
     dlg.setInput( KalypsoGisPlugin.getDefault().getRepositoriesSpecifications() );
     if( dlg.open() != Window.OK )
       return;
 
-    RepositorySpecification spec = (RepositorySpecification)dlg.getResult()[0];
-    IRepositoryFactory f = spec.createFactory();
-    
-    if( f.configureRepository( null ) )
-      try
-      {
+    final RepositorySpecification spec = (RepositorySpecification)dlg.getResult()[0];
+
+    try
+    {
+      final IRepositoryFactory f = spec.createFactory();
+
+      if( f.configureRepository( null ) )
         m_cp.addRepository( f.createRepository() );
-      }
-      catch( RepositoryException e )
-      {
-        // TODO: logging
-        e.printStackTrace();
-      }
+    }
+    catch( RepositoryException e )
+    {
+      // TODO: logging
+      e.printStackTrace();
+    }
+    catch( ClassUtilityException e )
+    {
+      // TODO logging
+      e.printStackTrace();
+    }
   }
 }
