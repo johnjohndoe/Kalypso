@@ -3,7 +3,6 @@ package org.kalypso.editor.tableeditor;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -84,9 +83,6 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       throw new RuntimeException( e );
     }
   }
-  
-
-
 
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
@@ -100,12 +96,23 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       tableviewLayerType.setSource( m_source );
       tableviewLayerType.setType( m_type );
       final List columns = tableviewLayerType.getColumn();
-      final FeatureTypeProperty[] properties = m_layerTable.getModel().getVisibleProperties();
-      for( int i = 0; i < properties.length; i++ )
+
+      final LayerTableModel model = m_layerTable.getModel();
+      
+      final FeatureTypeProperty[] ftps = model.getFeatureType().getProperties();
+      for( int i = 0; i < ftps.length; i++ )
       {
-        final ColumnType columnType = m_typeFactory.createTableviewLayerTypeColumnType();
-        columnType.setName( properties[i].getName() );
-        columns.add( columnType );
+        final FeatureTypeProperty ftp = ftps[i];
+        if( model.isColumn( ftp ) )
+        {
+          final ColumnType columnType = m_typeFactory.createTableviewLayerTypeColumnType();
+  
+          columnType.setName( ftp.getName() );
+          columnType.setEditable( model.isEditable( ftp ) );
+          columnType.setWidth( m_layerTable.getWidth( ftp ) );
+  
+          columns.add( columnType );
+        }
       }
 
       final Tableview tableview = m_tableviewObjectFactory.createTableview();
@@ -147,8 +154,9 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   public void createPartControl( Composite parent )
   {
     super.createPartControl( parent );
-    
-    final ICellEditorFactory factory = KalypsoGisPlugin.getDefault().getFeatureTypeCellEditorFactory();
+
+    final ICellEditorFactory factory = KalypsoGisPlugin.getDefault()
+        .getFeatureTypeCellEditorFactory();
     m_layerTable = new LayerTable( parent, this, factory );
 
     load();
@@ -169,6 +177,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     catch( final ResourceException re )
     {
       // TODO: handle ResourceException: e.g. Resource is out of sync
+      re.printStackTrace();
     }
     catch( final CoreException e )
     {
@@ -186,7 +195,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     m_type = null;
     if( tableview == null )
       return;
-    
+
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
 
     final TableviewLayerType layerType = tableview.getLayer();
@@ -197,15 +206,19 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     try
     {
       final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)plugin.getPool( Layer.class )
-          .borrowObject(
-              new PoolableObjectType( m_type, m_source, project ) );
+          .borrowObject( new PoolableObjectType( m_type, m_source, project ) );
 
-      final List cols = new ArrayList();
-      for( final Iterator iter = layerType.getColumn().iterator(); iter.hasNext(); )
-        cols.add( ( (ColumnType)iter.next() ).getName() );
+      final List columnList = layerType.getColumn();
+      final LayerTableModel.Column[] columns = new LayerTableModel.Column[columnList.size()];
+      int count = 0;
+      for( final Iterator iter = columnList.iterator(); iter.hasNext(); )
+      {
+        final ColumnType ct = (ColumnType)iter.next();
+        final FeatureTypeProperty ftp = layer.getFeatureType().getProperty( ct.getName() );
+        columns[count++] = new LayerTableModel.Column( ftp, ct.getWidth(), ct.isEditable() );
+      }
 
-      m_layerTable.setModel( new LayerTableModel( layer, (String[])cols.toArray( new String[cols
-          .size()] ) ) );
+      m_layerTable.setModel( new LayerTableModel( layer, columns ) );
     }
     catch( final Exception e )
     {
@@ -228,7 +241,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
    */
   public void addSelectionChangedListener( ISelectionChangedListener listener )
   {
-    m_layerTable.addSelectionChangedListener(listener);
+    m_layerTable.addSelectionChangedListener( listener );
   }
 
   /**
@@ -244,7 +257,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
    */
   public void removeSelectionChangedListener( ISelectionChangedListener listener )
   {
-  m_layerTable.removeSelectionChangedListener(listener);
+    m_layerTable.removeSelectionChangedListener( listener );
   }
 
   /**
@@ -252,6 +265,6 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
    */
   public void setSelection( ISelection selection )
   {
-    m_layerTable.setSelection(selection);
+    m_layerTable.setSelection( selection );
   }
 }

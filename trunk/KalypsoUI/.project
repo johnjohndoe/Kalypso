@@ -4,6 +4,7 @@
 	<comment></comment>
 	<projects>
 		<project>KalypsoPSICompactAdapter</project>
+		<project>backupdeegree</project>
 		<project>KalypsoUtil</project>
 	</projects>
 	<buildSpec>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.kalypso.enterprise"
+      label="org.kalypso.enterprise"
+      version="1.0.0"
+      provider-name="kalypso.org">
+
+   <install-handler/>
+
+   <description>
+      Kalypso Enterprise
+   </description>
+
+   <copyright url="copyright.html">
+      
+   </copyright>
+
+   <license url="licence.html">
+      
+   </license>
+
+   <url>
+      <update label="BCE local" url="file://Q:/lhz04085/work/eclipse_update_site"/>
+   </url>
+
+   <requires>
+      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.compare"/>
+      <import plugin="org.eclipse.core.runtime"/>
+   </requires>
+
+   <plugin
+         id="org.kalypso.psiadapter"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.util"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.deegree"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+</feature>
