@@ -369,7 +369,7 @@ public class ObservationPlot extends XYPlot
     }
 
     // add a constant Y line if obs has alarmstufen
-    if( yAxis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+    if( obs != null && yAxis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
     {
       final String[] alarms = TimeserieUtils.findOutMDAlarmLevel( obs );
       final MetadataList mdl = obs.getMetadataList();
