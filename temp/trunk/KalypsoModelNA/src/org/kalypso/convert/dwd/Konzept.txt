@@ -1,0 +1,12 @@
+messung:
+
+Gebietsniederschlagsmodell
+aus Krieging Zuordnungsdatei wird Filter-Konfiguration erstellt.
+Modell+Raster=Filter
+
+
+
+Vorhersage:
+Observer auf Rasterdateiverzeichnis,
+neue Datei einlesen und ZML generieren:
+input Modell+Raster=ZML(csv)-Datei fuer jedes Teilgebiet.
