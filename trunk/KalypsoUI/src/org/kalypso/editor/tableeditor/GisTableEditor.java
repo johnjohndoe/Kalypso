@@ -10,7 +10,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-
+import org.apache.commons.pool.KeyedObjectPool;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
@@ -28,11 +28,11 @@ import org.kalypso.editor.tableeditor.layerTable.LayerTable;
 import org.kalypso.editor.tableeditor.layerTable.LayerTableModel;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.plugin.KalypsoGisPlugin;
+import org.kalypso.template.gistableview.Gistableview;
+import org.kalypso.template.gistableview.ObjectFactory;
+import org.kalypso.template.gistableview.GistableviewType.LayerType;
+import org.kalypso.template.gistableview.GistableviewType.LayerType.ColumnType;
 import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypso.xml.tableview.ObjectFactory;
-import org.kalypso.xml.tableview.Tableview;
-import org.kalypso.xml.types.TableviewLayerType;
-import org.kalypso.xml.types.TableviewLayerType.ColumnType;
 
 /**
  * <p>
@@ -54,9 +54,7 @@ import org.kalypso.xml.types.TableviewLayerType.ColumnType;
  */
 public class GisTableEditor extends AbstractEditorPart implements ISelectionProvider
 {
-  private final ObjectFactory m_tableviewObjectFactory = new ObjectFactory();
-
-  private final org.kalypso.xml.types.ObjectFactory m_typeFactory = new org.kalypso.xml.types.ObjectFactory();
+  private final ObjectFactory m_gistableviewFactory = new ObjectFactory();
 
   private final Unmarshaller m_unmarshaller;
 
@@ -72,8 +70,8 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   {
     try
     {
-      m_unmarshaller = m_tableviewObjectFactory.createUnmarshaller();
-      m_marshaller = m_tableviewObjectFactory.createMarshaller();
+      m_unmarshaller = m_gistableviewFactory.createUnmarshaller();
+      m_marshaller = m_gistableviewFactory.createMarshaller();
     }
     catch( JAXBException e )
     {
@@ -91,11 +89,17 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
     try
     {
-      final TableviewLayerType tableviewLayerType = m_typeFactory.createTableviewLayerType();
-      tableviewLayerType.setId( "1" );
-      tableviewLayerType.setSource( m_source );
-      tableviewLayerType.setType( m_type );
-      final List columns = tableviewLayerType.getColumn();
+      final Gistableview gistableview = m_gistableviewFactory.createGistableview();
+      final LayerType layer = m_gistableviewFactory.createGistableviewTypeLayerType();
+      layer.setId( "1" );
+      layer.setHref( m_source );
+      layer.setLinktype( m_type );
+      layer.setActuate( "onRequest" );
+      layer.setType( "simple" );
+
+      gistableview.setLayer( layer );
+      
+      final List columns = layer.getColumn();
 
       final LayerTableModel model = m_layerTable.getModel();
       
@@ -105,7 +109,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
         final FeatureTypeProperty ftp = ftps[i];
         if( model.isColumn( ftp ) )
         {
-          final ColumnType columnType = m_typeFactory.createTableviewLayerTypeColumnType();
+          final ColumnType columnType = m_gistableviewFactory.createGistableviewTypeLayerTypeColumnType();
   
           columnType.setName( ftp.getName() );
           columnType.setEditable( model.isEditable( ftp ) );
@@ -115,11 +119,8 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
         }
       }
 
-      final Tableview tableview = m_tableviewObjectFactory.createTableview();
-      tableview.setLayer( tableviewLayerType );
-
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      m_marshaller.marshal( tableview, bos );
+      m_marshaller.marshal( gistableview, bos );
       bos.close();
 
       final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
@@ -168,11 +169,11 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       return;
     final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
-    Tableview tableview = null;
+    Gistableview tableview = null;
 
     try
     {
-      tableview = (Tableview)m_unmarshaller.unmarshal( input.getStorage().getContents() );
+      tableview = (Gistableview)m_unmarshaller.unmarshal( input.getStorage().getContents() );
     }
     catch( final ResourceException re )
     {
@@ -198,15 +199,18 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
 
-    final TableviewLayerType layerType = tableview.getLayer();
+    final LayerType layerType = tableview.getLayer();
 
-    m_source = layerType.getSource();
-    m_type = layerType.getType();
+    m_source = layerType.getHref();
+    m_type = layerType.getLinktype();
 
     try
     {
-      final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)plugin.getPool( KalypsoFeatureLayer.class )
-          .borrowObject( new PoolableObjectType( m_type, m_source, project ) );
+      final KeyedObjectPool layerPool = plugin.getPool( KalypsoFeatureLayer.class );
+      final PoolableObjectType layerKey = new PoolableObjectType( m_type, m_source, project );
+      
+      final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)layerPool.borrowObject( layerKey );
+      
       final List columnList = layerType.getColumn();
       final LayerTableModel.Column[] columns = new LayerTableModel.Column[columnList.size()];
       int count = 0;

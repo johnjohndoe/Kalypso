@@ -24,16 +24,14 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
   {
     if( parentElement instanceof KalypsoTheme )
     {
-    	KalypsoTheme theme = (KalypsoTheme)parentElement;
-        System.out.println("TreeContentProvider.getChildren("+theme.getName()+")");
-    	UserStyle[] styles=theme.getStyles();
-    	ThemeStyleTreeObject[] result=new ThemeStyleTreeObject[styles.length];
-		for(int i=0;i<styles.length;i++)
-    	{
-    		result[i]=new ThemeStyleTreeObject(theme,styles[i]);
-			
-    	}
-    	return result;//( theme ).getStyles();
+      KalypsoTheme theme = (KalypsoTheme)parentElement;
+      System.out.println( "TreeContentProvider.getChildren(" + theme.getName() + ")" );
+      final UserStyle[] styles = theme.getStyles();
+      final ThemeStyleTreeObject[] result = new ThemeStyleTreeObject[styles.length];
+      for( int i = 0; i < styles.length; i++ )
+        result[i] = new ThemeStyleTreeObject( theme, styles[i] );
+
+      return result;//( theme ).getStyles();
     }
     return null;
   }
@@ -98,13 +96,15 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
   {
     if( m_viewer != null )
     {
-      m_viewer.getControl().getDisplay().asyncExec( new Runnable() {
+      m_viewer.getControl().getDisplay().asyncExec( new Runnable()
+      {
 
         public void run()
         {
           if( !m_viewer.getControl().isDisposed() )
             m_viewer.refresh();
-        }} );
+        }
+      } );
     }
   }
 }
