@@ -332,5 +332,23 @@
       </viewContribution>
 
    </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            icon="icons/observation_repository.gif"
+            class="org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"
+            name="Observation Repository"
+            id="org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"/>
+      <perspective
+            icon="icons/admin.gif"
+            class="org.kalypso.ui.perspectives.AdminPerspectiveFactory"
+            name="Kalypso Administrator"
+            id="org.kalypso.ui.perspectives.AdminPerspectiveFactory"/>
+      <perspective
+            icon="icons/modeler.gif"
+            class="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"
+            name="Kalypso Modeler"
+            id="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"/>
+   </extension>
 
 </plugin>
