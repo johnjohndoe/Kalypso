@@ -62,13 +62,7 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
 
       setControl( sashForm );
 
-      parent.getDisplay().asyncExec( new Runnable()
-      {
-        public void run()
-        {
-          maximizeMap();
-        }
-      } );
+      postCreateControl();
     }
     catch( final Exception e )
     {

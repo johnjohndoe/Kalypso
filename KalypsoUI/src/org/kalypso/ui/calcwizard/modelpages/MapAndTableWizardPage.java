@@ -48,13 +48,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
 
       setControl( sashForm );
 
-      parent.getDisplay().asyncExec( new Runnable()
-      {
-        public void run()
-        {
-          maximizeMap();
-        }
-      } );
+      postCreateControl();
     }
     catch( final Exception e )
     {

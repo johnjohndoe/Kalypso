@@ -41,7 +41,6 @@ import org.kalypso.ui.calcwizard.createpages.AddCalcCasePage;
 import org.kalypso.ui.calcwizard.createpages.AddNewCalcCaseChoice;
 import org.kalypso.ui.calcwizard.createpages.ContinueOldCalcCaseChoice;
 import org.kalypso.ui.calcwizard.createpages.CopyServerCalcCaseChoice;
-import org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage;
 import org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage;
 import org.kalypso.ui.calcwizard.modelpages.IModelWizardPage;
 import org.kalypso.ui.nature.ModelNature;
@@ -428,11 +427,11 @@ public class CalcWizard implements IWizard, IProjectProvider
       return null;
 
     final IWizardPage wizardPage = (IWizardPage)m_pages.get( index + 1 );
-    if( wizardPage instanceof AbstractCalcWizardPage )
-    {
-      ((AbstractCalcWizardPage)wizardPage).refreshDiagram();
-      ((AbstractCalcWizardPage)wizardPage).refreshZMLTable();
-    }
+//    if( wizardPage instanceof AbstractCalcWizardPage )
+//    {
+//      ((AbstractCalcWizardPage)wizardPage).refreshDiagram();
+//      ((AbstractCalcWizardPage)wizardPage).refreshZMLTable();
+//    }
     
     return wizardPage;
   }
