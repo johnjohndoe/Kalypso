@@ -57,7 +57,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
   private static final int SELECTION_ID = 0x10;
 
   private final TimeSeriesCollection m_tsCol = new TimeSeriesCollection();
-  
+
   private LayerTableViewer m_viewer;
 
   private IMapModell m_mapModell;
@@ -66,7 +66,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
   {
     super( "<MapAndTableWizardPage>" );
   }
-  
+
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
@@ -91,7 +91,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
       final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
       final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
-      // TODO: konfigure
       sashForm.setWeights( new int[]
       { mainWeight, 100 - mainWeight } );
 
@@ -129,7 +128,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     {
       final String templateFileName = getArguments().getProperty( PROP_TABLETEMPLATE );
       final IFile templateFile = (IFile)getProject().findMember( templateFileName );
-      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile );
+      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile, getReplaceProperties() );
 
       m_viewer = new LayerTableViewer( parent, getProject(), KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), SELECTION_ID );
@@ -153,7 +152,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile );
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
     m_mapModell = new GisTemplateMapModell( gisview, getProject(), crs );
     m_mapModell.addModellListener( this );
@@ -162,6 +161,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     // Karte //
     ///////////
     final MapPanel mapPanel = new MapPanel( this, crs, SELECTION_ID );
+    mapPanel.setBoundingBox( GisTemplateHelper.getBoundingBox( gisview ) );
     final Composite mapComposite = new Composite( mapView, SWT.RIGHT | SWT.EMBEDDED );
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
 
@@ -173,7 +173,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
     mapPanel.changeWidget( new ToggleSelectWidget() );
-    
+
     /////////////
     // Legende //
     /////////////
@@ -195,27 +195,28 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     return true;
   }
 
-   /**
+  /**
    * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    // TODO: Marc will do it
-//    final String propNames = getArguments().getProperty(  PROP_TIMEPROPNAME, "" );
-//    final String[] timeNames = propNames.split( "#" );
-//
-//    final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
-//    if( !( layer instanceof KalypsoFeatureLayer ) )
-//      return;
-//    
-//    final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
-//    final KalypsoFeature[] allFeatures = kfl.getAllFeatures();
-//    for( int i = 0; i < allFeatures.length; i++ )
-//    {
-//      if( allFeatures[i].isSelected( SELECTION_ID ) )
-//      {
-//        // do something
-//      }
-//    }
+  // TODO: Marc will do it
+  //    final String propNames = getArguments().getProperty( PROP_TIMEPROPNAME, ""
+  // );
+  //    final String[] timeNames = propNames.split( "#" );
+  //
+  //    final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
+  //    if( !( layer instanceof KalypsoFeatureLayer ) )
+  //      return;
+  //    
+  //    final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
+  //    final KalypsoFeature[] allFeatures = kfl.getAllFeatures();
+  //    for( int i = 0; i < allFeatures.length; i++ )
+  //    {
+  //      if( allFeatures[i].isSelected( SELECTION_ID ) )
+  //      {
+  //        // do something
+  //      }
+  //    }
   }
 }

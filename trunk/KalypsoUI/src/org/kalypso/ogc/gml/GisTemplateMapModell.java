@@ -2,29 +2,22 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 import java.util.List;
-import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IProject;
-import org.kalypso.java.properties.PropertiesHelper;
-import org.kalypso.loader.ILoader;
-import org.kalypso.loader.ILoaderFactory;
-import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
-import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.GismapviewType;
 import org.kalypso.template.gismapview.GismapviewType.LayersType;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType.StyleType;
-import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.opengis.cs.CS_CoordinateSystem;
