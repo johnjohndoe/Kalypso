@@ -99,8 +99,6 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 				  jPanel,
 				  tableModel.getDescription());
 		    
-
-		
 		//		tabbedPane.addTab(tableModel.getName(),scroller);
 		//		tabbedPane.setToolTipTextAt(index,"<html>m<sup>2</sup></html>");
 		
@@ -122,10 +120,10 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 					tableCol.setCellRenderer(bceCells);
 					tableCol.setCellEditor(bceCells);
 				    }
-					/*if(tableModel.isDateButton(col))
-					 {
-					DateChooser dateChooser = new DateChooser(jTable);
-					 }*/
+				/*if(tableModel.isDateButton(col))
+				  {
+				  DateChooser dateChooser = new DateChooser(jTable);
+				  }*/
 			    }
 		    }
 		tableModel.setGisView(this);

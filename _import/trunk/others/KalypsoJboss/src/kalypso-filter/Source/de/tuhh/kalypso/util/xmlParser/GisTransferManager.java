@@ -114,7 +114,7 @@ public class GisTransferManager implements KalypsoXmlImportListener
 			}
 			if( table.equals( "wc" ) )
 			{
-				addTransferObject( table, gisTransferObject );
+			        addTransferObject( table, gisTransferObject );
 				//System.out.println( "Recieved " + table + "-object" );
 			}
 		}
@@ -123,7 +123,7 @@ public class GisTransferManager implements KalypsoXmlImportListener
 	/** This method invokes the mapping of the gis-transfer-objects.*/
 	public void mapGisObjects( StrandTable strands, WcTable wcList, RbTable ribs ) throws Exception
 	{
-	        mapStrands( strands, wcList, "nullStrand" );
+	    mapStrands( strands, wcList,"nullStrand" );
 		mapStrands( strands, wcList,"channel" );
 		mapStrands( strands, wcList,"rhb" );
 		mapStrands( strands, wcList,"rht" );

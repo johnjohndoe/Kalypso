@@ -18,6 +18,7 @@ public class ServiceTools
 {
     public ServiceTools()
     {}
+
     private static String getCapabilitiesURL="http://destructivus.wb.tu-harburg.de:8080/geoserver/GetCapabilities";
     private static String describeFeatureTypeURL="http://destructivus.wb.tu-harburg.de:8080/geoserver/DescribeFeatureType";
     private static String getFeatureURL="http://destructivus.wb.tu-harburg.de:8080/geoserver/GetFeature";

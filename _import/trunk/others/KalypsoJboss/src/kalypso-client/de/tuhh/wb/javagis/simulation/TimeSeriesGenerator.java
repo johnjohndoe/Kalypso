@@ -213,7 +213,8 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 			    default:
 				break;
 			    }
-			
+			if(timeSeriesFile.exists())
+			    throw new Exception("timeserie exists local, no need to fetch from timeseries database");
 			String text;
 
 			System.out.println("station-file: "+timeSeriesFile.getPath());
@@ -301,6 +302,8 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 			File timeSeriesFile=new File(myDestinationDir,stationName+".ver");
 			System.out.println("station-file: "+timeSeriesFile.getPath());
 			
+			if(timeSeriesFile.exists())
+			    throw new Exception("timeserie exists local, no need to fetch from timeseries database");
 			//measured:
 
 			SimpleTimeSeries sequence=new TempTimeSeries(myStartDate,myEndDate);
@@ -368,7 +371,7 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 	    }
 	catch(Exception e)
 	    {
-		//		LogView()
+		LogView.getInstance().print(e.getMessage());
 		e.printStackTrace();
 	    }
 	LogView.getInstance().toFront();

@@ -140,91 +140,99 @@ public class GisMap extends JPanel
 	
     public void zoomToFullExtent()
     {
-	// todo: solve this problem with a flag
 	boolean minXset=false;
 	boolean minYset=false;
 	boolean maxXset=false;
 	boolean maxYset=false;
-	double minX = Double.MAX_VALUE;
-	double minY = Double.MAX_VALUE;
-	double maxX = 0-Double.MAX_VALUE;
-	double maxY = 0-Double.MAX_VALUE;
 
+	double minX = 0;
+	double minY = 0;
+	double maxX = 0;
+	double maxY = 0;
+	
 	for(int i=0;i<gisObjectClasses.size();i++)
 	    {
 		GisObjectClass gisObjectClass=(GisObjectClass)gisObjectClasses.elementAt(i);
-		Vector idList=(Vector)objectIdListVector.elementAt(i);
-		for(int n=0;n<idList.size();n++)
+		if(!netModel.getHiddenElements().contains(gisObjectClass.getKey()))
 		    {
-			try
+			Vector idList=(Vector)objectIdListVector.elementAt(i);
+			for(int n=0;n<idList.size();n++)
 			    {
-				Object oId=idList.elementAt(n);
-				GisPoint gp=gisObjectClass.getBasePoint(oId);
-				double cx=gp.getX();
-				double cy=gp.getY();
-				if(cx > maxX || !maxXset)
+				try
 				    {
-					maxX = cx;
-					maxXset=true;
+					Object oId=idList.elementAt(n);
+					GisPoint gp=gisObjectClass.getBasePoint(oId);
+					double cx=gp.getX();
+					double cy=gp.getY();
+					if(cx > maxX || !maxXset)
+					    {
+						maxX = cx;
+						maxXset=true;
+					    }
+					if(cx < minX || !minXset)
+					    {
+						minX = cx;
+						minXset=true;
+					    }
+					if(cy > maxY || !maxYset)
+					    {
+						maxY = cy;
+						maxYset=true;
+					    }
+					if(cy < minY || !minYset)
+					    {
+						minY = cy;
+						minYset=true;
+					    }
 				    }
-				if(cx < minX || !minXset)
+				catch(ObjectNotFoundException e)
 				    {
-					minX = cx;
-					minXset=true;
+					//
 				    }
-				if(cy > maxY || !maxYset)
-				    {
-					maxY = cy;
-					maxYset=true;
-				    }
-				if(cy < minY || !minYset)
-				    {
-					minY = cy;
-					minYset=true;
-				    }
-			    }
-			catch(ObjectNotFoundException e)
-			    {
-				//
 			    }
 		    }
 	    }
-	GisPoint gp1;
-	GisPoint gp2;
+	minY=minY-(maxY-minY)*0.1;
+
+	double gk_centerX;
+	double gk_centerY;
+	double gk_width;
+	double gk_height;
+
 	if(!maxXset) // nothing is set ~ no objetcts
 	    {
-		gp1 = new GisPoint(1000,500);
-		gp2 = new GisPoint(0,0);
+		gk_centerX=1000;
+		gk_centerY=500;
+		
+		gk_height=200;
+		gk_width=ratioWtoH*gk_height;
 	    }
 	else
 	    {
-		if(minX==maxX)
-		    maxX=minX+1000;
-		if(minY==maxY)
-		    maxY=minY+500;
-		gp1 = new GisPoint(maxX,maxY);
-		gp2 = new GisPoint(minX,minY);
+		gk_centerX=(minX+maxX)/2d;
+		gk_centerY=(minY+maxY)/2d;
+		gk_width=maxX-minX;
+		gk_height=maxY-minY;
 	    }
 
-	//	System.out.println("MaxX: "+maxX+"MaxY: "+maxY+"MinX: "+minX+"MinY: "+minY);
-	ScreenPoint sp1 = this.trafo.convert(gp1);
-	ScreenPoint sp2 = this.trafo.convert(gp2);
-	//	System.out.println("MaxXsp1: "+sp1.getX()+"MaxYsp1: "+sp1.getY()+"MinXsp2: "+sp2.getX()+"MinYsp2: "+sp2.getY());
-	// making a frame around...
-	double extX=Math.abs(sp1.getX()-sp2.getX())*0.1;
-	double extY=Math.abs(sp1.getY()-sp2.getY())*0.1;
-	double maxX1 = sp1.getX()+extX;
-	double maxY1 = sp1.getY()+extY;
-	double minX1 = sp2.getX()-extX;
-	double minY1 = sp2.getY()-extY;
-	ScreenPoint sp1neu = new ScreenPoint(maxX1,maxY1);
-	ScreenPoint sp2neu = new ScreenPoint(minX1,minY1);
-	GisPoint gp1neu = this.trafo.convert(sp1neu);
-	GisPoint gp2neu = this.trafo.convert(sp2neu);
-	//	System.out.println("MaxX1: "+gp1neu.getX()+"MaxY1: "+gp1neu.getY()+"MinX1: "+gp2neu.getX()+"MinY1: "+gp2neu.getY());
-	this.mapBox = new GisBox(gp2neu,gp1neu);
-	this.trafo=new Transformation(screenBox,mapBox,Transformation._UseGK);
-	updateImage();
+
+	gk_width=gk_width*1.1;
+	gk_height=gk_height*1.1;
+	
+	if(ratioWtoH*gk_height<gk_width) 	//hoehe aus breite berechnen
+	    gk_height=gk_width/ratioWtoH;
+	else // breite aus hoehe berechnen
+	    gk_width=gk_height*ratioWtoH;
+
+	
+
+
+	GisPoint minGP=new GisPoint(gk_centerX-gk_width/2d,gk_centerY-gk_height/2d);
+	GisPoint maxGP=new GisPoint(gk_centerX+gk_width/2d,gk_centerY+gk_height/2d);
+
+	zoomTo(new GisBox(minGP,maxGP));
+	//	this.trafo=new Transformation(screenBox,mapBox,Transformation._UseGK);
+	//	updateImage();
     }
 
     /*

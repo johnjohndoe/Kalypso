@@ -53,6 +53,7 @@ public class Main
 	Main main=new Main();
     }
     
+
     public Main()
     {
 	viewManager=new ViewManager();

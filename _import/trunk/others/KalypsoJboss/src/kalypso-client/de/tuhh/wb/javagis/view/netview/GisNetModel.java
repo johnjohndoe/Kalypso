@@ -39,6 +39,10 @@ public class GisNetModel implements ActionListener,ElementClassListener
     private HashSet hiddenElements=new HashSet();
     private HashSet showProperty=new HashSet();
 
+    public HashSet getHiddenElements()
+    {
+	return hiddenElements;
+    }
     // all GisObjectClasses should have symbol-mode
     private GisMap myGisMap=null;
 
@@ -124,27 +128,30 @@ public class GisNetModel implements ActionListener,ElementClassListener
     public GisObject snap(GisPoint snapPoint)
     {
 	GisObject result=null;
-	double distance=1000000d; // radius
+	double distance=0; // radius
 	double testDistance;
 	for(int i=0;i<myGisObjectClasses.size();i++)
 	    {
 		GisObjectClass gisObjectClass=(GisObjectClass)myGisObjectClasses.elementAt(i);
-		Vector idList=(Vector)myObjectIdListVector.elementAt(i);
-		for(int n=0;n<idList.size();n++)
+		if(!hiddenElements.contains(gisObjectClass.getKey()))
 		    {
-			Object oId=idList.elementAt(n);
-			try
+			Vector idList=(Vector)myObjectIdListVector.elementAt(i);
+			for(int n=0;n<idList.size();n++)
 			    {
-				testDistance=gisObjectClass.getBasePoint(oId).distanceSq(snapPoint);
-				if(testDistance<distance)
+				Object oId=idList.elementAt(n);
+				try
 				    {
-					distance=testDistance;
-					result=gisObjectClass.getGisObject(oId);
+					testDistance=gisObjectClass.getBasePoint(oId).distanceSq(snapPoint);
+					if(testDistance<distance || result==null)
+					    {
+						distance=testDistance;
+						result=gisObjectClass.getGisObject(oId);
+					    }
 				    }
-			    }
-			catch(ObjectNotFoundException e)
-			    {
-				//
+				catch(ObjectNotFoundException e)
+				    {
+					//
+				    }
 			    }
 		    }
 	    }
@@ -156,33 +163,36 @@ public class GisNetModel implements ActionListener,ElementClassListener
     public GisRelation snapRelation(GisPoint snapPoint)
     {
 	GisRelation result=null;
-	double distance=1000000d; // radius
+	double distance=0; // radius
 	double testDistance;
 	Transformation trafo=myGisMap.trafo;
 	for(int i=0;i<myGisRelationClasses.size();i++)
 	    {
 		GisRelationClass gisRelationClass=(GisRelationClass)myGisRelationClasses.elementAt(i);
-		Vector idList=(Vector)myRelationIdListVector.elementAt(i);
-		for(int n=0;n<idList.size();n++)
+		if(!hiddenElements.contains(gisRelationClass.getKey()))
 		    {
-			Object rId=idList.elementAt(n);
-			try
+			Vector idList=(Vector)myRelationIdListVector.elementAt(i);
+			for(int n=0;n<idList.size();n++)
 			    {
-
-				GisPoint gpSrc=gisRelationClass.getBasePointSource(rId);
-				GisPoint gpDest=gisRelationClass.getBasePointDestination(rId);
-				double cx=(gpSrc.getX()+gpDest.getX())/2.0d;
-				double cy=(gpSrc.getY()+gpDest.getY())/2.0d;				
-				testDistance=(new GisPoint(cx,cy)).distanceSq(snapPoint);
-				if(testDistance<distance)
+				Object rId=idList.elementAt(n);
+				try
 				    {
-					distance=testDistance;
-					result=gisRelationClass.getGisRelation(rId);
+					
+					GisPoint gpSrc=gisRelationClass.getBasePointSource(rId);
+					GisPoint gpDest=gisRelationClass.getBasePointDestination(rId);
+					double cx=(gpSrc.getX()+gpDest.getX())/2.0d;
+					double cy=(gpSrc.getY()+gpDest.getY())/2.0d;				
+					testDistance=(new GisPoint(cx,cy)).distanceSq(snapPoint);
+					if(testDistance<distance || result==null)
+					    {
+						distance=testDistance;
+						result=gisRelationClass.getGisRelation(rId);
+					    }
 				    }
-			    }
-			catch(ObjectNotFoundException e)
-			    {
-				//
+				catch(ObjectNotFoundException e)
+				    {
+					//
+				    }
 			    }
 		    }
 	    }

@@ -152,8 +152,17 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
     public void componentResized(ComponentEvent e)
     {
 	System.out.println("component resized...");
-	this.setSize(getSize().width,(int)(getSize().width/gisMap.ratioWtoH));
-	gisMap.setScreenBox(new ScreenBox(0,0,this.getSize().width,this.getSize().height));
+	if(getJMenuBar()!=null)
+	    {
+		this.setSize(getSize().width,(int)(getSize().width/gisMap.ratioWtoH+getJMenuBar().getHeight()));
+		gisMap.setScreenBox(new ScreenBox(0,0,this.getSize().width,this.getSize().height-getJMenuBar().getHeight()));
+	    }
+	else
+	    {
+		this.setSize(getSize().width,(int)(getSize().width/gisMap.ratioWtoH));
+		gisMap.setScreenBox(new ScreenBox(0,0,this.getSize().width,this.getSize().height));
+	    }
+	gisMap.updateImage();
     }
     
     public void componentShown(ComponentEvent e)

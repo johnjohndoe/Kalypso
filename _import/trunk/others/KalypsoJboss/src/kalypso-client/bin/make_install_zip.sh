@@ -34,7 +34,7 @@ cp /tmp/kalypso.jar $INSTALL
 
 echo -e "copy additional files from $SRC to $INSTALL"
  cd $SRC
- cp -r symbols xsl tutorial i18n template deegree KalypsoRRM.bat kalypsoMain.conf $INSTALL
+ cp -r symbols xsl tutorial i18n template deegree KalypsoRRM.bat profile.conf kalypsoMain.conf $INSTALL
  cp kalypsoMain_dos.conf $INSTALL/kalypsoMain.conf
 
  cd $INSTALL

@@ -1,6 +1,5 @@
 package de.tuhh.wb.javagis.model;
 
-
 import java.lang.*;
 import java.rmi.RemoteException;
 import javax.ejb.EJBObject;

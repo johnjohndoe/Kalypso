@@ -40,6 +40,11 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 	try
 	    {
 		this.myIdList=gisElementClass.getAllPrimaryKeys();
+		/*
+		  System.out.println("-- preloadingSimplePropertyValues for ..."+getName());
+		  gisElementClass.preLoadSimplePropertyValues(myIdList);
+		  System.out.println("   ... finished");
+		*/
 	    }
 	catch(ObjectNotFoundException e)
 	    {

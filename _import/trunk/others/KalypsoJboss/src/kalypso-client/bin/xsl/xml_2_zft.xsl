@@ -11,7 +11,7 @@
       </xsl:call-template>
     </xsl:for-each>
 
-    <xsl:for-each select="/theme/table[@key='rb']/o/sp/@m_rbNumber">
+    <xsl:for-each select="//table[@key='rb']/o/sp/@m_rbNumber">
       <xsl:sort data-type="number" />
       <xsl:call-template name="zft">
         <xsl:with-param name="num" select="."/>

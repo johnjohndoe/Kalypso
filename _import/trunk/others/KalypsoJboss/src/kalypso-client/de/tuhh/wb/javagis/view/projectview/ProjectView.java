@@ -3,6 +3,7 @@ package de.tuhh.wb.javagis.view.projectview;
 import java.util.Vector;
 import java.util.Hashtable;
 import javax.swing.tree.*;
+import de.tuhh.wb.javagis.Main;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -138,7 +139,8 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
     private void reloadProjectTree()
     {
 	// server access is allowed only for local users
-	String host="elbe.wb.tu-harburg.de";
+	
+	String host=Main.props.getProperty("jboss_host");
 	String port="";
 	String user="kalypso-user";
 	String pass="";

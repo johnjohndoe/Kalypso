@@ -33,6 +33,7 @@ import javax.ejb.ObjectNotFoundException;
 
 public abstract class GisElementClass implements TableListener
 {
+    private boolean propertiesArePreloaded=false;
     private List elementClassListeners;
     Version myVersion;
     int met; // myElementTable
@@ -235,8 +236,16 @@ public abstract class GisElementClass implements TableListener
     {
 	if(!simpleProperties.containsKey(oId))
 	    {
-		Vector  result=myVersion.getSimplePropertyRow(met,oId);
-		simpleProperties.put(oId,result);
+		if(!propertiesArePreloaded)
+		    {
+			Vector idList=getAllPrimaryKeys();
+			preLoadSimplePropertyValues(idList);
+		    }
+		else
+		    {	
+			Vector  result=myVersion.getSimplePropertyRow(met,oId);
+			simpleProperties.put(oId,result);
+		    }
 	    }
 	return ((Vector)simpleProperties.get(oId)).elementAt(n);
     }
@@ -263,7 +272,7 @@ public abstract class GisElementClass implements TableListener
 		    {
 			Object primKey=e.nextElement();
 			simpleProperties.put(primKey,resultRows.get(primKey));
-			System.out.println("Cache: add "+primKey);
+			//			System.out.println("Cache: add "+primKey);
 		    }
 	    }
 	catch(ObjectNotFoundException e)
