@@ -39,18 +39,17 @@ public class SldLoader extends AbstractLoader
       final String sourcePath = source.getProperty( "PATH", "" );
       
       final URL url = UrlResolver.resolveURL( context, sourcePath );
-      
 
       final Reader reader = new InputStreamReader( url.openStream() );
-      final StyledLayerDescriptor myStyledLayerDescriptor = SLDFactory.createSLD( reader );
+      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
       reader.close();
       
       final IResource resource = ResourceUtilities.findFileFromURL( url );
-      addResource( resource, myStyledLayerDescriptor );
+      addResource( resource, styledLayerDescriptor );
 
       monitor.done();
-      
-      return myStyledLayerDescriptor;
+
+      return styledLayerDescriptor;
     }
     catch( final Exception e )
     {

@@ -22,12 +22,4 @@ public class DefaultLoaderFactory extends ConfigurableCachableObjectFactory impl
   {
     return (ILoader)getObjectInstance( type, ILoader.class );
   }
-
-  /**
-   * @see org.kalypso.loader.ILoaderFactory#getTypes()
-   */
-  public String[] getTypes()
-  {
-    return (String[])getProperties().keySet().toArray( new String[] {} );
-  }
 }

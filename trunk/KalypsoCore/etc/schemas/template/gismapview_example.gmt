@@ -4,11 +4,11 @@
 	
 	<extent bottom="1245.0" left="123.4" right="456.7" top="111.1"/>
 	<layers>
-		<layer id="argls" name="Pegel" xlink:type="simple" xlink:actuate="onRequest" xlink:href="RESOURCE#shapes/example#unknown" linktype="shape" visible="false">
+		<layer id="argls" name="Pegel" featurePath="collection/featureMember" xlink:type="simple" xlink:actuate="onRequest" xlink:href="RESOURCE#shapes/example#unknown" linktype="shape" visible="false">
 			<kalypso:style xlink:href="./styles/pegel.sld" linktype="sld"/>
 			<kalypso:style xlink:href="./styles/pegel.sld" linktype="sld"/>
 		</layer>
-		<layer id="urgl" name="Einzugsgebiete" xlink:type="simple" xlink:actuate="onRequest" xlink:href="FILE#E:\wspproj\MapDemo\map\Rebrach_profile#unknown" linktype="shape" visible="true">
+		<layer id="urgl" name="Einzugsgebiete" featurePath="collection/featureMember" xlink:type="simple" xlink:actuate="onRequest" xlink:href="FILE#E:\wspproj\MapDemo\map\Rebrach_profile#unknown" linktype="shape" visible="true">
 			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="x" linktype="sld"/>
 			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="./sld/teilgebiete.sld" linktype="sld"/>
 			<kalypso:depends layerid="argls"/>

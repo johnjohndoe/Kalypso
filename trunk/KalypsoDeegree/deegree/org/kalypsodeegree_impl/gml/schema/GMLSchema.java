@@ -2,10 +2,8 @@ package org.deegree_impl.gml.schema;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 import org.deegree.model.feature.FeatureType;
 import org.w3c.dom.Document;
@@ -224,21 +222,5 @@ public class GMLSchema
         return type;
     }
     return null;
-  }
-
-  public FeatureType[] getResolveSubstitutionGroup( FeatureType ft )
-  {
-    List result = new ArrayList();
-    String substitutionGroup = ft.getNamespace() + ":" + ft.getName();
-    if( substitutionGroup == null )
-      return new FeatureType[0];
-    FeatureType[] fts = getFeatureTypes();
-    for( int i = 0; i < fts.length; i++ )
-    {
-      final String substiGroup = fts[i].getSubstitutionGroup();
-      if( substitutionGroup.equals( substiGroup ) )
-        result.add( fts[i] );
-    }
-    return (FeatureType[])result.toArray( new FeatureType[result.size()] );
   }
 }

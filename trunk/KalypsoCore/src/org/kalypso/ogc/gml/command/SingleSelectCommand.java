@@ -6,7 +6,6 @@ package org.kalypso.ogc.gml.command;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.event.ModellEventProvider;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -26,13 +25,13 @@ public class SingleSelectCommand implements ICommand
   private final ICommand m_unselectAllCommand;
 
   public SingleSelectCommand( final Feature feature, int selectionId,
-      ModellEventProvider eventProvider, KalypsoFeatureLayer[] layers )
+      ModellEventProvider eventProvider )
   {
     m_feature = feature;
     mySelectionId = selectionId;
 
     m_modellEventProvider = eventProvider;
-    m_unselectAllCommand = new UnselectAllCommand( layers, selectionId );
+    m_unselectAllCommand = new UnselectAllCommand( selectionId );
   }
 
   public boolean isUndoable()

@@ -2,8 +2,6 @@ package org.kalypso.ogc.gml.table;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 
 /**
  * @author bce
@@ -18,8 +16,12 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     if( inputElement == null )
       return new Object[] {};
 
-    final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)((IKalypsoTheme)inputElement).getLayer();
-    return layer == null ? new Object[] {} : layer.getAllFeatures();
+    return null;
+    
+    // TODO: change input to what?
+//    final GMLWorkspace theme = (KalypsoFeatureTheme)inputElement;
+//    
+//    return theme == null ? new Object[] {} : theme.getWork.getAllFeatures();
   }
 
   /**

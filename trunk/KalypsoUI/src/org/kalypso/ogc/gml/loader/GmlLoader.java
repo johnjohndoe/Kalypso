@@ -8,7 +8,6 @@ import java.net.URL;
 import java.util.Properties;
 
 import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -19,15 +18,11 @@ import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentThread;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.ogc.gml.GMLHelper;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.url.UrlResolver;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * Lädt ein RootedFeature aus einem GML
+ * Lädt einen GMLWorkspace aus einem GML
  * 
  * @author Belger
  */
@@ -40,10 +35,6 @@ public class GmlLoader extends AbstractLoader
   protected Object loadIntern( final Properties source, final URL context,
       final IProgressMonitor monitor ) throws LoaderException
   {
-    final String featureName = source.getProperty( "LAYER", null );
-    if( featureName == null )
-      throw new LoaderException( "Must specify 'LAYER' in source" );
-
     try
     {
       monitor.beginTask( "GML laden", 1000 );
@@ -56,24 +47,6 @@ public class GmlLoader extends AbstractLoader
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, schemaURL );
 
-      final FeatureType ft = GMLHelper.getFeatureType( workspace, featureName );
-      if( ft == null )
-        throw new LoaderException( "Feature-type not found: " + featureName );
-
-      final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-
-      final KalypsoFeatureLayer layer = new KalypsoFeatureLayer( ft.getName(), ft, crs, workspace );
-      // TODO: das folgende könnte eigentlich der Konstruktor vom Layer machen
-      final Feature[] features = workspace.getFeatures( ft );
-      for( int j = 0; j < features.length; j++ )
-      {
-        Feature feature = features[j];
-        GMLHelper.checkCrs( feature, crs );
-        layer.addFeature( feature );
-      }
-      layer.optimize();
-      // TODO: bis hierher
-
       final IResource schemaFile = ResourceUtilities.findFileFromURL( schemaURL );
       final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
 
@@ -85,7 +58,7 @@ public class GmlLoader extends AbstractLoader
 
       monitor.done();
 
-      return layer;
+      return workspace;
     }
     catch( final LoaderException le )
     {
@@ -119,8 +92,8 @@ public class GmlLoader extends AbstractLoader
 
     try
     {
-      final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)data;
-      final Feature rootFeature = layer.getWorkspace().getRootFeature();
+      final GMLWorkspace workspace = (GMLWorkspace)data;
+      final Feature rootFeature = workspace.getRootFeature();
 
       final URL gmlURL = UrlResolver.resolveURL( context, gmlPath );
   

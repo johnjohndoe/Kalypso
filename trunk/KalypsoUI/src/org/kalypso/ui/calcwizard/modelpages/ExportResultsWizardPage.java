@@ -4,12 +4,11 @@ import java.awt.Frame;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree_impl.model.feature.visitors.GetSelectionVisitor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.GroupMarker;
@@ -29,8 +28,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.IKalypsoLayer;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.actions.FullExtentMapAction;
 import org.kalypso.ogc.gml.map.actions.ToggleSingleSelectWidgetAction;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -294,23 +293,20 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
      */
     public void widgetSelected( SelectionEvent e )
     {
-      final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
-      if( !( layer instanceof KalypsoFeatureLayer ) )
+      final IKalypsoTheme theme = m_mapModell.getActiveTheme();
+      if( !( theme instanceof KalypsoFeatureTheme ) )
         return;
 
       m_obsdiagviewType.getCurve().clear();
 
-      final List selectedFeatures = new ArrayList();
       FileOutputStream fos = null;
 
       try
       {
-        final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
-        final Feature[] allFeatures = kfl.getAllFeatures();
-        for( int i = 0; i < allFeatures.length; i++ )
-          if( allFeatures[i].isSelected( SELECTION_ID ) )
-            selectedFeatures.add( allFeatures[i] );
+        final KalypsoFeatureTheme kft = (KalypsoFeatureTheme)theme;
 
+        final List selectedFeatures = GetSelectionVisitor.getSelectedFeatures( kft.getWorkspace(), kft.getFeatureType(), SELECTION_ID );
+        
         if( selectedFeatures.size() > 0 )
           KalypsoWizardHelper.updateXMLDiagramTemplate( m_tsProps, selectedFeatures,
               m_obsdiagviewType );

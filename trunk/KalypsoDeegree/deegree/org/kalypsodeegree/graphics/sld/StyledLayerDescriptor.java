@@ -124,4 +124,7 @@ public interface StyledLayerDescriptor
    *          the version of the SLD
    */
   void setVersion( String version );
+  
+  /** Finds a user style by its name */
+  public UserStyle findUserStyle( final String name );
 }

@@ -13,6 +13,7 @@
 			<xs:extension base="xlinkext:SimpleLinkType">
 				<xs:attribute name="id" type="xs:ID" use="required"/>
 				<xs:attribute name="linktype" type="xs:string" use="required"/>
+				<xs:attribute name="featurePath" type="xs:string" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -25,6 +26,7 @@
 							<xs:complexContent>
 								<xs:extension base="xlinkext:SimpleLinkType">
 									<xs:attribute name="linktype" type="xs:string" use="required"/>
+									<xs:attribute name="style" type="xs:string" use="required"/>
 								</xs:extension>
 							</xs:complexContent>
 						</xs:complexType>

@@ -1,4 +1,4 @@
-package org.kalypso.ogc.gml.sort;
+package org.deegree_impl.model.sort;
 
 import java.awt.Graphics;
 

@@ -7,7 +7,7 @@ package org.kalypso.ogc.gml.command;
 import java.util.List;
 
 import org.deegree.model.feature.Feature;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.deegree.model.feature.GMLWorkspace;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -17,22 +17,21 @@ import org.kalypso.util.command.ICommand;
  */
 public class JMMarkSelectCommand implements ICommand
 {
-
-  private final List myListFe[];
+  private final List m_features;
 
   private final int mySelectionId;
 
   private final int mySelectionMode;
 
-  private final KalypsoFeatureLayer[] m_layers;
+  private final GMLWorkspace m_workspace;
 
-  public JMMarkSelectCommand( final List[] featureLists, int selectionId, int selectionModus,
-      KalypsoFeatureLayer[] layers )
+  public JMMarkSelectCommand( final GMLWorkspace workspace, final List features, int selectionId,
+      int selectionModus )
   {
-    myListFe = featureLists;
+    m_workspace = workspace;
+    m_features = features;
     mySelectionId = selectionId;
     mySelectionMode = selectionModus;
-    m_layers = layers;
   }
 
   public boolean isUndoable()
@@ -47,56 +46,50 @@ public class JMMarkSelectCommand implements ICommand
 
   public void redo() throws Exception
   {
-    for( int n = 0; n < myListFe.length; n++ )
+    for( int i = 0; i < m_features.size(); i++ )
     {
-      List listFe = myListFe[n];
-      for( int i = 0; i < listFe.size(); i++ )
+      Feature fe = (Feature)m_features.get( i );
+      switch( mySelectionMode )
       {
-        Feature fe = (Feature)listFe.get( i );
-        switch( mySelectionMode )
-        {
-        case JMSelector.MODE_SELECT:
-          fe.select( mySelectionId );
-          break;
-        case JMSelector.MODE_UNSELECT:
-          fe.unselect( mySelectionId );
-          break;
-        case JMSelector.MODE_TOGGLE:
-          fe.toggle( mySelectionId );
-          break;
-        default:
-          break;
-        }
+      case JMSelector.MODE_SELECT:
+        fe.select( mySelectionId );
+        break;
+      case JMSelector.MODE_UNSELECT:
+        fe.unselect( mySelectionId );
+        break;
+      case JMSelector.MODE_TOGGLE:
+        fe.toggle( mySelectionId );
+        break;
+      default:
+        break;
       }
-      m_layers[n].fireModellEvent( null );
     }
+
+    m_workspace.fireModellEvent( null );
   }
 
   public void undo() throws Exception
   {
-    for( int n = 0; n < myListFe.length; n++ )
+    for( int i = 0; i < m_features.size(); i++ )
     {
-      List listFe = myListFe[n];
-      for( int i = 0; i < listFe.size(); i++ )
+      Feature fe = (Feature)m_features.get( i );
+      switch( mySelectionMode )
       {
-        Feature fe = (Feature)listFe.get( i );
-        switch( mySelectionMode )
-        {
-        case JMSelector.MODE_SELECT:
-          fe.unselect( mySelectionId );
-          break;
-        case JMSelector.MODE_UNSELECT:
-          fe.select( mySelectionId );
-          break;
-        case JMSelector.MODE_TOGGLE:
-          fe.toggle( mySelectionId );
-          break;
-        default:
-          break;
-        }
+      case JMSelector.MODE_SELECT:
+        fe.unselect( mySelectionId );
+        break;
+      case JMSelector.MODE_UNSELECT:
+        fe.select( mySelectionId );
+        break;
+      case JMSelector.MODE_TOGGLE:
+        fe.toggle( mySelectionId );
+        break;
+      default:
+        break;
       }
-      m_layers[n].fireModellEvent( null );
     }
+
+    m_workspace.fireModellEvent( null );
   }
 
   /**

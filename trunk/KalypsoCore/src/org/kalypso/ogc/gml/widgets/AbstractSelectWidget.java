@@ -10,8 +10,8 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.model.geometry.GeometryFactory;
-import org.kalypso.ogc.gml.IKalypsoLayer;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.JMMarkSelectCommand;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.command.SingleSelectCommand;
@@ -82,8 +82,9 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     // TODO: sollte diese ganze umrechnerei nicht einfach die view machen???
     final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
-    final IKalypsoLayer activeLayer = getActiveLayer();    
-    if( activeLayer == null || !( activeLayer instanceof KalypsoFeatureLayer ) )
+
+    final IKalypsoTheme activeTheme = getActiveTheme();
+    if( activeTheme == null || !( activeTheme instanceof KalypsoFeatureTheme ) )
     {
       myStartPoint = null;
       myEndPoint = null;
@@ -103,17 +104,15 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         JMSelector selector = new JMSelector( getSelectionMode() );
         GM_Position pointSelect = GeometryFactory.createGM_Position( g1x, g1y );
 
-        Feature fe = selector.selectNearest( pointSelect, gisRadius, (KalypsoFeatureLayer)activeLayer, false,
-            mapPanel.getSelectionID() );
+        Feature fe = selector.selectNearest( pointSelect, gisRadius,
+            ((KalypsoFeatureTheme)activeTheme).getFeatureList(), false, mapPanel.getSelectionID() );
         List listFe = new ArrayList();
         if( fe != null )
           listFe.add( fe );
         //List listFe = selector.select( pointSelect, activeTheme,
         // mapPanel.getSelectionID() );
         if( !listFe.isEmpty() )
-        {
-          fireCommand( listFe, (KalypsoFeatureLayer)activeLayer, mapPanel.getSelectionID() );
-        }
+          fireCommand( listFe, (KalypsoFeatureTheme)activeTheme, mapPanel.getSelectionID() );
       }
       else
       // dragged
@@ -134,10 +133,10 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         {
           final JMSelector selector = new JMSelector( getSelectionMode() );
           GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
-          List listFe = selector.select( envSelect, (KalypsoFeatureLayer)activeLayer, withinStatus, mapPanel
-              .getSelectionID() );
-          if( !listFe.isEmpty() )
-            fireCommand( listFe, (KalypsoFeatureLayer)activeLayer, mapPanel.getSelectionID() );
+          List features = selector.select( envSelect, ((KalypsoFeatureTheme)activeTheme).getFeatureList(), withinStatus,
+              mapPanel.getSelectionID() );
+          if( !features.isEmpty() )
+            fireCommand( features, (KalypsoFeatureTheme)activeTheme, mapPanel.getSelectionID() );
         }
       }
     }
@@ -145,21 +144,17 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     myEndPoint = null;
   }
 
-  private void fireCommand( List listFe, KalypsoFeatureLayer activeLayer, int selectionId )
+  private void fireCommand( final List features, final KalypsoFeatureTheme activeTheme, final int selectionId )
   {
     ICommand command = null;
     if( allowOnlyOneSelectedFeature() )
     {
-      Feature fe = (Feature)listFe.get( 0 );
-      command = new SingleSelectCommand( fe, selectionId, activeLayer, getAllKalypsoFeatureLayers() );
+      Feature fe = (Feature)features.get( 0 );
+      command = new SingleSelectCommand( fe, selectionId, activeTheme );
     }
     else
     {
-      List[] feLists = new List[]
-      { listFe };
-      KalypsoFeatureLayer[] feLayers = new KalypsoFeatureLayer[]
-      { activeLayer };
-      command = new JMMarkSelectCommand( feLists, selectionId, getSelectionMode(), feLayers );
+      command = new JMMarkSelectCommand( activeTheme.getWorkspace(), features, selectionId, getSelectionMode() );
     }
     postCommand( command, null );
   }

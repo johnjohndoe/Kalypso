@@ -32,20 +32,20 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 /**
  * @author sbad0205
  */
-public class KalypsoLegendTheme implements IKalypsoTheme
+public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
 {
   private ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
 
   private Image m_Image = null;
 
-  private Color backColor = new Color(240,240,240);
+  private Color backColor = new Color( 240, 240, 240 );
 
   private int m_styleWidth = 170;
 
   private int m_styleHeight = 50;
- 
+
   private Font m_font = new Font( "SansSerif", Font.BOLD, m_styleHeight / 5 );
-  
+
   private int m_imageHeight = 0;
 
   private int m_imageWidth = 0;
@@ -93,47 +93,15 @@ public class KalypsoLegendTheme implements IKalypsoTheme
   public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
       int selectionId )
   {
-    int w=g.getClipBounds().width;
-    int h=g.getClipBounds().height;
-    if(m_Image==null)
+    int w = g.getClipBounds().width;
+    int h = g.getClipBounds().height;
+    if( m_Image == null )
       updateLegend();
     if( selectionId < 0 && m_Image != null )
     {
       g.setPaintMode();
-      g.drawImage( m_Image, w-m_imageWidth,h-m_imageHeight, m_imageWidth, m_imageHeight, null );
+      g.drawImage( m_Image, w - m_imageWidth, h - m_imageHeight, m_imageWidth, m_imageHeight, null );
     }
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getStyles()
-   */
-  public UserStyle[] getStyles()
-  {
-    return NO_STYLE;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#addStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
-   */
-  public void addStyle( KalypsoUserStyle style )
-  {
-    throw new UnsupportedOperationException( "legend can not have styles" );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#removeStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
-   */
-  public void removeStyle( KalypsoUserStyle style )
-  {
-  // do nothing
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getLayer()
-   */
-  public IKalypsoLayer getLayer()
-  {
-    return null;
   }
 
   public void addModellListener( final ModellEventListener listener )
@@ -156,85 +124,86 @@ public class KalypsoLegendTheme implements IKalypsoTheme
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    
+
     if( modellEvent != null && modellEvent.getType() == ModellEvent.LEGEND_UPDATED )
       return;
-    m_Image=null;
-      //updateLegend();
-     }
+    m_Image = null;
+    //updateLegend();
+  }
 
   private void updateLegend()
   {
     List stylesCol = new ArrayList();
 
-    int max=m_mapModell.getThemeSize();
+    int max = m_mapModell.getThemeSize();
     for( int i = 0; i < max; i++ )
     {
-      IKalypsoTheme theme = m_mapModell.getTheme(i);
-     
-      UserStyle[] styles = theme.getStyles();
-      if( m_mapModell.isThemeEnabled(theme) && styles != null && styles.length > 0 )
+      final IKalypsoTheme theme = m_mapModell.getTheme( i );
+
+      if( m_mapModell.isThemeEnabled( theme ) && theme instanceof KalypsoFeatureTheme )
       {
-        IKalypsoLayer layer = theme.getLayer();
-        if( layer != null && layer instanceof KalypsoFeatureLayer )
+        final KalypsoFeatureTheme featureTheme = (KalypsoFeatureTheme)theme;
+
+        final UserStyle[] styles = featureTheme.getStyles();
+        final FeatureType ft = featureTheme.getFeatureType();
+
+        for( int n = 0; n < styles.length; n++ )
         {
-          FeatureType ft = ( (KalypsoFeatureLayer)layer ).getFeatureType();
-          for( int n = 0; n < styles.length; n++ )
+          final UserStyle style = styles[n];
+          final Image styleImage = getLegend( ft, style, m_styleWidth, m_styleHeight );
+          final Graphics g = styleImage.getGraphics();
+          g.setPaintMode();
+          g.setColor( backColor );
+          g.setColor( Color.black );
+
+          if( n == 0 )
           {
-
-            UserStyle style = styles[n];
-            Image styleImage = getLegend( ft, style, m_styleWidth, m_styleHeight );
-            Graphics g = styleImage.getGraphics();
-            g.setPaintMode();
-            g.setColor( backColor );
+            g.setFont( m_font );
             g.setColor( Color.black );
+            final String title = theme.getName();
+            g.drawString( title, 2, m_font.getSize() );
 
-            if( n == 0 )
-            {
-              g.setFont( m_font );
-              g.setColor( Color.black );
-              String title=theme.getName();
-              g.drawString( title, 2, m_font.getSize() );
-
-            }
-            stylesCol.add( styleImage );
           }
-
+          stylesCol.add( styleImage );
         }
       }
     }
-    if(stylesCol.isEmpty())
+    
+    if( stylesCol.isEmpty() )
       return;
+    
     // draw bufferedImage...
-    Image tmpImage = new BufferedImage(  m_styleWidth, m_styleHeight
-        * stylesCol.size(), BufferedImage.TYPE_INT_RGB );
-    Graphics g = tmpImage.getGraphics();
+    final Image tmpImage = new BufferedImage( m_styleWidth, m_styleHeight * stylesCol.size(),
+        BufferedImage.TYPE_INT_RGB );
+    final Graphics g = tmpImage.getGraphics();
     g.setPaintMode();
     g.setColor( backColor );
-    g.fillRect( 0, 0,  m_styleWidth, m_styleHeight * stylesCol.size() );
+    g.fillRect( 0, 0, m_styleWidth, m_styleHeight * stylesCol.size() );
+    
     for( int i = 0; i < stylesCol.size(); i++ )
     {
-      Image styleImage = (Image)stylesCol.get( i );
+      final Image styleImage = (Image)stylesCol.get( i );
       int pos = i;
       g.drawImage( styleImage, 0, m_styleHeight * pos, m_styleWidth - 1, m_styleHeight - 1, null );
       g.setColor( Color.black );
       g.drawRect( 0, m_styleHeight * pos, m_styleWidth - 1, m_styleWidth - 2 );
     }
     // rahmen
-    g.setColor(Color.DARK_GRAY);
+    g.setColor( Color.DARK_GRAY );
     m_imageHeight = m_styleHeight * stylesCol.size();
-    m_imageWidth =  m_styleWidth;
-    g.drawRect(0, 0, m_imageWidth-1, m_imageHeight-1);
+    m_imageWidth = m_styleWidth;
+    g.drawRect( 0, 0, m_imageWidth - 1, m_imageHeight - 1 );
     m_Image = tmpImage;
-    fireModellEvent( new ModellEvent(this,ModellEvent.LEGEND_UPDATED) );
+    fireModellEvent( new ModellEvent( null, ModellEvent.LEGEND_UPDATED ) );
   }
 
   private Image getLegend( FeatureType ft, UserStyle style, int width, int height )
   {
-    double yborder = m_font.getSize()+3;
-    double xborder = width/3;
+    double yborder = m_font.getSize() + 3;
+    double xborder = width / 3;
     GM_Envelope srcEnv = GeometryFactory.createGM_Envelope( 0, 0, 1, 1 );
-    GM_Envelope destEnv = GeometryFactory.createGM_Envelope( xborder, yborder, width-xborder, height - yborder);
+    GM_Envelope destEnv = GeometryFactory.createGM_Envelope( xborder, yborder, width - xborder,
+        height - yborder );
     GeoTransform transform = new WorldToScreenTransform( srcEnv, destEnv );
 
     Image image = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );
@@ -293,7 +262,9 @@ public class KalypsoLegendTheme implements IKalypsoTheme
   private static GM_Object DEFAULT_POINT = GeometryFactory.createGM_Point( 0.5, 0.5, null );
 
   private static GM_Position[] DEFAULT_LINEPOSITIONS = new GM_Position[]
-  { GeometryFactory.createGM_Position( 0.00, 0.3 ), GeometryFactory.createGM_Position( 0.33, 0.7 ),
+  {
+      GeometryFactory.createGM_Position( 0.00, 0.3 ),
+      GeometryFactory.createGM_Position( 0.33, 0.7 ),
       GeometryFactory.createGM_Position( 0.66, 0.3 ),
       GeometryFactory.createGM_Position( 1.00, 0.7 ), };
 
@@ -324,5 +295,12 @@ public class KalypsoLegendTheme implements IKalypsoTheme
     {
       e.printStackTrace();
     }
+  }
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
+   */
+  public GM_Envelope getBoundingBox()
+  {
+    return null;
   }
 }
