@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+
+  <context id="remove_all_action_context">
+    <description>Este mandato elimina todos los archivos de construcción de la vista Ant.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="search_for_buildfiles_action_context">
+    <description>Este mandato busca archivos de construcción y los añade a la vista Ant.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="edit_launch_configuration_action_context">
+    <description>Este mandato abre un diálogo para editar una configuración de lanzamiento asociada con el archivo de construcción seleccionado.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="run_target_action_context">
+    <description>Este mandato ejecuta el destino seleccionado o el destino por omisión del archivo de construcción seleccionado.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="remove_project_action_context">
+    <description>Este mandato elimina los archivos de construcción seleccionados de la vista Ant.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+  <context id="refresh_buildfile_action_context">
+ 	<description>Este mandato renueva los archivos seleccionados en la vista Ant. Si no hay nada seleccionado en la vista Ant, se renuevan todos los archivos.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+  <context id="add_buildfile_action_context">
+    <description>Este mandato solicita que seleccione un archivo de construcción del área de trabajo para añadirlo a la vista.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="add_task_dialog_context">
+    <description>Este diálogo le permite definir una tarea Ant para
+las construcciones Ant. Debe establecer el nombre, la ubicación y el archivo de clase. </description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+  <context id="edit_task_dialog_context">
+    <description>Este diálogo le permite editar una tarea Ant
+existente definida para las construcciones Ant. </description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+  <context id="add_type_dialog_context">
+    <description>Este diálogo le permite definir un tipo Ant para
+las construcciones Ant. Debe establecer el nombre, la ubicación y el archivo de clase. </description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+  <context id="edit_type_dialog_context">
+    <description>Este diálogo le permite editar una tarea Ant
+existente definida para las construcciones Ant. </description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="add_property_dialog_context">
+    <description>Este diálogo le permite definir una propiedad Ant
+que se utilice en una construcción Ant. </description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+  <context id="edit_property_dialog_context">
+    <description>Este diálogo le permite editar una propiedad Ant
+existente. </description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="search_for_buildfiles_dialog_context">
+    <description>Este diálogo permite buscar archivos de construcción en el área de trabajo.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="status_dialog_context">
+    <description>Este diálogo tiene una barra de estado con los botones
+Aceptar/Cancelar para visualizar un estado. </description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+  </context>
+
+  <context id="message_with_toggle_dialog_context">
+    <description>Este diálogo le permite conmutar la visualización de
+este tipo en un diálogo que aparece como resultado de una determinada
+acción. </description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="target_order_dialog_context">
+    <description>Este diálogo permite especificar el orden en que los destinos Ant seleccionados se ejecutarán. Esta ordenación no altera temporalmente las dependencias especificadas en el archivo de construcción.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_preference_page_context">
+    <description>En esta página puede configurar las preferencias de Ant.</description>
+   	<topic label="Preferencias - Ant" href="reference/ref-antprefs.htm"/>    
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_runtime_preference_page_context">
+    <description>En esta página puede configurar el entorno de tiempo de ejecución de Ant.</description>
+    <topic label="Preferencias - Tiempo de ejecución de Ant" href="reference/ref-antruntimeprefs.htm"/>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_editor_preference_page_context">
+    <description>En esta página puede configurar las preferencias del editor Ant.</description>
+    <topic label="Preferencias - Editor Ant" href="reference/ref-anteditorprefs.htm"/>
+    <topic label="Editor Ant" href="reference/ref-anteditor.htm"/> 
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_types_page_context">
+    <description>En esta página puede añadir o editar tipos personalizados de Ant, que se especifican en
+un archivo de clase Java, y que se utilizarán al ejecutar archivos de construcción de Ant.</description>
+    <topic label="Preferencias - Tiempo de ejecución de Ant" href="reference/ref-antruntimeprefs.htm"/>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_classpath_page_context">
+    <description>En esta página puede configurar la vía de acceso de clases de tiempo de ejecución de Ant.</description>
+    <topic label="Preferencias - Tiempo de ejecución de Ant" href="reference/ref-antruntimeprefs.htm"/>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_properties_page_context">
+    <description>En esta página puede configurar las propiedades disponibles para Ant.</description>
+    <topic label="Preferencias - Tiempo de ejecución de Ant" href="reference/ref-antruntimeprefs.htm"/>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_tasks_page_context">
+    <description>En esta página puede añadir o editar tareas personalizadas de Ant, que se especifican en
+un archivo de clase Java, y que se utilizarán al ejecutar archivos de construcción de Ant.</description>
+    <topic label="Preferencias - Tiempo de ejecución de Ant" href="reference/ref-antruntimeprefs.htm"/>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_view_context">
+    <description>Esta vista permite ver los archivos de construcción de Ant en un lugar y ejecutar rápidamente un destino o el destino por omisión de un archivo de construcción.</description>
+    <topic label="Vista Ant" href="reference/ref-antview.htm"/>
+    <topic label="Editor Ant" href="reference/ref-anteditor.htm"/> 
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+  <context id="ant_editor_context">
+    <description>El editor Ant proporciona soporte de edición de texto específico de los archivos de construcción Ant.</description>
+    <topic label="Editor Ant" href="reference/ref-anteditor.htm"/> 
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_main_tab_context">
+    <description>Esta pestaña permite configurar la ubicación de los archivos de construcción y otros atributos de esta configuración de lanzamiento.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_targets_tab_context">
+    <description>Esta pestaña permite configurar qué destinos ejecutará esta configuración de lanzamiento.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_properties_tab_context">
+    <description>Esta pestaña permite configurar las propiedades que se pasarán a Ant cuando se ejecute esta configuración de lanzamiento.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_classpath_tab_context">
+    <description>Esta pestaña permite configurar la vía de acceso de clases que se utilizará cuando se ejecute esta configuración de lanzamiento.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+   <context id="ant_jre_tab_context">
+    <description>Esta pestaña le permite configurar el JRE que se
+utiliza para la construcción Ant. Por omisión, Ant se ejecuta en la
+misma máquina virtual Java (JVM) que Eclipse. Si designa un JRE
+alternativo, la construcción Ant se producirá en una JVM distinta. </description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+</contexts>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+
+<contexts>
+
+<!-- F1 on F1 -->
+   <context  id="f1Shell" >
+      <description>コンテキストに依存した InfoPop ヘルプが、ビュー、ウィザード、フィールド、チェック・ボックス、ボタン、メニュー項目を含む多くのインターフェースに対して提供されています。 このヘルプを見るには、項目をクリックしてその項目をフォーカスする、またはタブ・キーを使用して、次に F1 を押します。
+
+InfoPop には、その項目に関する詳細な情報を検索できるオンライン・ヘルプのトピックへのリンクを含んでいるものがあります。
+
+この InfoPop は、InfoPop がすでに開いている状態でユーザーが F1 を押したため表示されたものです。</description>
+   </context>
+
+<!-- Preference page for help browsers -->
+   <context  id="prefPageBrowsers" >
+      <description>Web ブラウザーを選択できます。  選択された Web ブラウザーは、ヘルプ目次を表示するために使用されるデフォルト・ブラウザーになります。</description>
+	  <topic label="「設定」ダイアログ" href="/org.eclipse.platform.doc.user/reference/ref-72.htm"/>
+   </context>
+
+<!-- Path to custom browser on preference page for help browsers -->
+   <context  id="prefPageCustomBrowserPath" >
+      <description>リストからカスタムの Web ブラウザーを選択した場合、ブラウザーを起動するブラウザー・プログラムのパスを指定してください。  プログラムがシステム・パス上にある場合は、そのプログラム名のみを指定することもできます。
+
+プログラムが最後のパラメーターとして URL を受け入れない場合、%1 ストリングを使用して、コマンドで URL パラメーターの位置を指示することができます。</description>
+      <topic label="「設定」ダイアログ" href="/org.eclipse.platform.doc.user/reference/ref-72.htm"/>
+   </context>
+
+<!-- Application server preference page -->
+   <context  id="prefPageAppServer" >
+      <description>これらの設定によって、内部<b>アプリケーション・サーバー</b>が使用するネットワーク・インターフェース・アドレスおよびポート番号をオーバーライドできます。  使用しようとしているポートがすでに使用されているとき、または IP アドレスが変更されたときは、設定を変更してください。
+
+インターフェース・アドレスを自動判別するには、ホスト・フィールドを<b>ブランク</b>にしておきます。
+
+システムによって動的に割り当てられたポートを使用するには、ポート・フィールドに <b>0</b> を指定します。
+
+通常の状態では、「<b>デフォルト</b>」設定を使用してください。</description>
+      <topic label="「設定」ダイアログ" href="/org.eclipse.platform.doc.user/reference/ref-72.htm"/>
+   </context>
+
+</contexts>

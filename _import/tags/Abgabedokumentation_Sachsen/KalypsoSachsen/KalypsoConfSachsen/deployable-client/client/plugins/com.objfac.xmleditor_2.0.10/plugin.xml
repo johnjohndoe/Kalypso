@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="com.objfac.xmleditor" name="%pluginLiteName" version="2.0.10"
+	provider-name="Bocaloco Software LLC" class="com.objfac.xmleditor.XMLPlugin"
+	>
+	<runtime>
+		<library name="xmleditor.jar"/>
+		<library name="isorelax.jar"/>
+		<library name="javax-xml.jar"/>
+		<library name="jaxen.jar"/>
+		<library name="jing.jar"/>
+		<library name="moved.jar"/>
+		<library name="trangutils.jar"/>
+		<library name="saxpath.jar"/>
+		<library name="util.jar"/>
+		<library name="walker.jar"/>
+		<library name="xerces.jar"/>
+		<library name="xml.jar"/>
+		<library name="xml-apis.jar"/>
+	</runtime>
+	<requires>
+		<import plugin="org.eclipse.ui"/>
+		<!-- $if version >= 3.0.0 $ -->
+		<import plugin="org.eclipse.jface.text" optional="true"/>
+		<import plugin="org.eclipse.ui.editors" optional="true"/>
+		<import plugin="org.eclipse.ui.ide" optional="true"/>
+		<import plugin="org.eclipse.ui.workbench.texteditor" optional="true"/>
+		<import plugin="org.eclipse.ui.views" optional="true"/>
+		<!-- $endif $ -->
+		<import plugin="org.eclipse.core.resources"/>
+		<import plugin="org.eclipse.core.runtime"/>
+		<import plugin="org.eclipse.swt"/>
+		<import plugin="org.eclipse.search"/>
+		<import plugin="org.eclipse.jdt.ui" optional="true"/>
+		<import plugin="org.eclipse.pde" optional="true"/>
+	</requires>
+
+	<extension id="xmlbuilder" name="XML Builder"
+		point="org.eclipse.core.resources.builders">
+		<builder>
+			<run class="com.objfac.xmleditor.project.XMLProjectBuilder">
+				<parameter name="optimize" value="true"/>
+			</run>
+		</builder>
+	</extension>
+	<extension id="xmlnature" name="%xmlNatureName"
+		point="org.eclipse.core.resources.natures">
+		<runtime>
+			<run class="com.objfac.xmleditor.project.XMLProjectNature">
+			</run>
+		</runtime>
+	</extension>
+	<extension point="org.eclipse.ui.perspectives">
+		<perspective name="%perspectiveName"
+			icon="icons/full/cview16/perspective.gif"
+			class="com.objfac.xmleditor.XMLPerspectiveFactory"
+			id="com.objfac.xmleditor.perspective">
+		</perspective>
+	</extension>
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension targetID="com.objfac.xmleditor.perspective">
+			<showInPart id="org.eclipse.ui.views.ResourceNavigator"/>
+			<showInPart id="org.eclipse.jdt.ui.PackageExplorer"/>
+		</perspectiveExtension>
+		<perspectiveExtension targetID="org.eclipse.ui.resourcePerspective">
+			<newWizardShortcut id="com.objfac.xmleditor.wizard.newxml.xml"/>
+			<newWizardShortcut id="com.objfac.xmleditor.wizard.newxml.dtd"/>
+			<newWizardShortcut id="com.objfac.xmleditor.wizard.newproject"/>
+			<perspectiveShortcut id="com.objfac.xmleditor.perspective"/>
+			<actionSet id="com.objfac.xmleditor.XMLActionSet"/>
+		</perspectiveExtension>
+		<perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
+			<newWizardShortcut id="com.objfac.xmleditor.wizard.newxml.xml"/>
+			<newWizardShortcut id="com.objfac.xmleditor.wizard.newxml.dtd"/>
+			<newWizardShortcut id="com.objfac.xmleditor.wizard.newproject"/>
+			<perspectiveShortcut id="com.objfac.xmleditor.perspective"/>
+			<actionSet id="com.objfac.xmleditor.XMLActionSet"/>
+		</perspectiveExtension>
+		<perspectiveExtension targetID="org.eclipse.pde.ui.PDEPerspective">
+			<newWizardShortcut id="com.objfac.xmleditor.wizard.newxml.xml"/>
+			<newWizardShortcut id="com.objfac.xmleditor.wizard.newxml.dtd"/>
+			<newWizardShortcut id="com.objfac.xmleditor.wizard.newproject"/>
+			<perspectiveShortcut id="com.objfac.xmleditor.perspective"/>
+			<actionSet id="com.objfac.xmleditor.XMLActionSet"/>
+		</perspectiveExtension>
+	</extension>
+	<extension point="org.eclipse.help.toc">
+		<toc file="toc.xml" primary="true">
+		</toc>
+	</extension>
+	<extension point="org.eclipse.ui.editors">
+		<editor name="%xmlLiteEditorName.dtd" default="true"
+			icon="icons/basic/obj16/dtdfile.gif" extensions="dtd,mod"
+			contributorClass="com.objfac.xmleditor.XMLActionContributor"
+			class="com.objfac.xmleditor.DTDEditor"
+			id="com.objfac.xmleditor.XMLEditor.dtd">
+		</editor>
+	</extension>
+	<extension point="org.eclipse.ui.editors">
+		<editor name="%xmlLiteEditorName" default="true"
+			icon="icons/basic/obj16/xml.gif"
+			extensions="xml,tld,xsl,xslt,xhtml,html,htm,rng,nrl,php,xsd"
+			contributorClass="com.objfac.xmleditor.XMLActionContributor"
+			class="com.objfac.xmleditor.XMLEditor"
+			id="com.objfac.xmleditor.XMLEditor">
+		</editor>
+	</extension>
+	<!-- $if version < 3.0.0$
+	<extension id="com.objfac.xmleditor"
+		point="org.eclipse.ui.documentProviders">
+	$else$ -->
+	<extension id="com.objfac.xmleditor"
+		point="org.eclipse.ui.editors.documentProviders">
+	<!-- $endif$ -->
+		<provider 
+			extensions="xml,tld,xsl,xslt,xhtml,html,htm,rng,nrl,php,xsd,dtd,mod" 
+			class="com.objfac.xmleditor.XMLDocumentProvider" 
+			id="com.objfac.xmleditor.XMLDocumentProvider"/>
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page name="%pref_XMLBuddy"
+			class="com.objfac.xmleditor.preferences.XMLBuddyPreferencePage"
+			id="com.objfac.xmleditor.XMLBuddyPrefs">
+		</page>
+		<page name="%pref_ContentAssist" 
+			category="com.objfac.xmleditor.XMLBuddyPrefs" 
+			class="com.objfac.xmleditor.preferences.XMLAssistPreferencePage" 
+			id="com.objfac.xmleditor.XMLAssistPrefs">
+		</page>
+		<page name="%pref_Formatting" 
+			category="com.objfac.xmleditor.XMLBuddyPrefs" 
+			class="com.objfac.xmleditor.preferences.XMLFormatPreferencePage" 
+			id="com.objfac.xmleditor.XMLFormattingPrefs">
+		</page>
+		<page name="%pref_Outline" category="com.objfac.xmleditor.XMLBuddyPrefs"
+			class="com.objfac.xmleditor.preferences.XMLOutlinePreferencePage"
+			id="com.objfac.xmleditor.XMLOutlinePrefs">
+		</page>
+		<page name="%pref_XML"
+			category="com.objfac.xmleditor.XMLBuddyPrefs"
+			class="com.objfac.xmleditor.preferences.XMLPreferencePage"
+			id="com.objfac.xmleditor.XMLPrefs">
+		</page>
+		<page name="%pref_Validation" category="com.objfac.xmleditor.XMLPrefs"
+			class="com.objfac.xmleditor.preferences.XMLValidationPreferencePage"
+			id="com.objfac.xmleditor.XMLValidationPrefs">
+		</page>
+		<page name="%pref_Colors" category="com.objfac.xmleditor.XMLPrefs"
+			class="com.objfac.xmleditor.preferences.XMLColorPreferencePage"
+			id="com.objfac.xmleditor.XMLTextPrefs">
+		</page>
+		<page name="%pref_Encoding" category="com.objfac.xmleditor.XMLPrefs"
+			class="com.objfac.xmleditor.preferences.XMLEncodingPreferencePage"
+			id="com.objfac.xmleditor.XMLEncodingPrefs">
+		</page>
+		<page name="%pref_DTD"
+			category="com.objfac.xmleditor.XMLValidationPrefs"
+			class="com.objfac.xmleditor.preferences.XMLDTDPreferencePage"
+			id="com.objfac.xmleditor.XMLDTDPrefs">
+		</page>
+	</extension>
+	<extension point="org.eclipse.ui.editorActions">
+		<editorContribution targetID="com.objfac.xmleditor.XMLEditor"
+			id="com.objfac.xmleditor.actions.xml">
+			<menu label="%XML.label" id="com.objfac.xmleditor.topLevelMenu.xml">
+				<separator name="validateGroup"/>
+				<separator name="editGroup"/>
+				<separator name="navigationGroup"/>
+				<separator name="selectionGroup"/>
+				<separator name="transformGroup"/>
+				<separator name="updateGroup"/>
+			</menu>
+			<menu label="%Update.label"
+				path="com.objfac.xmleditor.topLevelMenu.xml/updateGroup"
+				id="UpdateMenu">
+				<separator name="versionGroup"/>
+			</menu>
+			<action accelerator="Ctrl+Shift+V" label="%Validate.label"
+				icon="icons/full/validate.gif" tooltip="%Validate.tooltip"
+				class="com.objfac.xmleditor.actions.XMLValidateAction"
+				menubarPath="com.objfac.xmleditor.topLevelMenu.xml/validateGroup"
+				id="com.objfac.xmleditor.topLevelMenu.xml.validate">
+			</action>
+			<action accelerator="Ctrl+Shift+C" label="%ClearValidate.label"
+				tooltip="%ClearValidate.tooltip"
+				class="com.objfac.xmleditor.actions.XMLClearValidateAction"
+				menubarPath="com.objfac.xmleditor.topLevelMenu.xml/validateGroup"
+				id="com.objfac.xmleditor.topLevelMenu.xml.clearvalidate">
+			</action>
+			<action accelerator="Ctrl+Shift+F" label="%TempFormat.label"
+				tooltip="%TempFormat.tooltip"
+				class="com.objfac.xmleditor.actions.XMLTempFormatAction"
+				menubarPath="com.objfac.xmleditor.topLevelMenu.xml/editGroup"
+				id="com.objfac.xmleditor.topLevelMenu.xml.tempformat">
+			</action>
+			<action accelerator="Shift+TAB" label="%ShiftLeft.label"
+				tooltip="%ShiftLeft.tooltip"
+				class="com.objfac.xmleditor.actions.XMLShiftLeftAction"
+				menubarPath="com.objfac.xmleditor.topLevelMenu.xml/editGroup"
+				id="com.objfac.xmleditor.topLevelMenu.xml.shiftleft">
+			</action>
+			<action accelerator="TAB" label="%ShiftRight.label"
+				tooltip="%ShiftRight.tooltip"
+				class="com.objfac.xmleditor.actions.XMLShiftRightAction"
+				menubarPath="com.objfac.xmleditor.topLevelMenu.xml/editGroup"
+				id="com.objfac.xmleditor.topLevelMenu.xml.shiftright">
+			</action>
+			<action accelerator="Ctrl+Shift+U" label="%OpenURI.label"
+				tooltip="%OpenURI.tooltip"
+				class="com.objfac.xmleditor.actions.OpenURIAction"
+				menubarPath="com.objfac.xmleditor.topLevelMenu.xml/navigationGroup"
+				id="com.objfac.xmleditor.topLevelMenu.xml.OpenURI">
+			</action>
+			<action accelerator="Ctrl+T" label="%SelectTag.label"
+				tooltip="%SelectTag.tooltip"
+				class="com.objfac.xmleditor.actions.XMLSelectTagAction"
+				menubarPath="com.objfac.xmleditor.topLevelMenu.xml/selectionGroup"
+				id="com.objfac.xmleditor.topLevelMenu.xml.SelectTag">
+			</action>
+			<action label="%GenerateDTD.label" tooltip="%GenerateDTD.tooltip" 
+				class="com.objfac.xmleditor.actions.XMLGenerateDTDAction" 
+				menubarPath="com.objfac.xmleditor.topLevelMenu.xml/transformGroup" 
+				id="com.objfac.xmleditor.topLevelMenu.xml.GenerateDTD">
+			</action>
+			<action label="%Version.label" tooltip="%Version.tooltip" 
+				class="com.objfac.xmleditor.actions.VersionAction" 
+				menubarPath="com.objfac.xmleditor.topLevelMenu.xml/UpdateMenu/versionGroup" 
+				id="com.objfac.xmleditor.topLevelMenu.xml.Version">
+			</action>
+		</editorContribution>
+	</extension>
+	<extension point="org.eclipse.ui.popupMenus">
+		<viewerContribution targetID="com.objfac.xmleditor.XMLEditor"
+			id="com.objfac.xmleditor.contextMenu">
+			<action label="%Validate.label" icon="icons/full/validate.gif"
+				class="com.objfac.xmleditor.actions.XMLValidateAction"
+				id="com.objfac.xmleditor.contextMenu.Validate">
+			</action>
+		</viewerContribution>
+	</extension>
+	<extension point="org.eclipse.ui.editorActions">
+		<editorContribution targetID="com.objfac.xmleditor.XMLEditor.dtd"
+			id="com.objfac.xmleditor.actions.dtd">
+			<menu label="%XML.label" id="com.objfac.xmleditor.topLevelMenu.dtd">
+				<separator name="validateGroup"/>
+				<separator name="editGroup"/>
+				<separator name="navigationGroup"/>
+				<separator name="selectionGroup"/>
+				<separator name="transformGroup"/>
+				<separator name="updateGroup"/>
+			</menu>
+			<menu label="%Update.label"
+				path="com.objfac.xmleditor.topLevelMenu.dtd/updateGroup"
+				id="UpdateMenu">
+				<separator name="versionGroup"/>
+			</menu>
+			<action accelerator="Ctrl+Shift+V" label="%Validate.label"
+				icon="icons/full/validate.gif" tooltip="%Validate.tooltip"
+				class="com.objfac.xmleditor.actions.XMLValidateAction"
+				menubarPath="com.objfac.xmleditor.topLevelMenu.dtd/validateGroup"
+				id="com.objfac.xmleditor.topLevelMenu.dtd.validate">
+			</action>
+			<action accelerator="Ctrl+Shift+C" label="%ClearValidate.label"
+				tooltip="%ClearValidate.tooltip"
+				class="com.objfac.xmleditor.actions.XMLClearValidateAction"
+				menubarPath="com.objfac.xmleditor.topLevelMenu.dtd/validateGroup"
+				id="com.objfac.xmleditor.topLevelMenu.dtd.clearvalidate">
+			</action>
+			<action accelerator="Ctrl+Shift+F" label="%TempFormat.label"
+				tooltip="%TempFormat.tooltip"
+				class="com.objfac.xmleditor.actions.XMLTempFormatAction"
+				menubarPath="com.objfac.xmleditor.topLevelMenu.dtd/editGroup"
+				id="com.objfac.xmleditor.topLevelMenu.dtd.tempformat">
+			</action>
+			<action accelerator="Shift+TAB" label="%ShiftLeft.label"
+				tooltip="%ShiftLeft.tooltip"
+				class="com.objfac.xmleditor.actions.XMLShiftLeftAction"
+				menubarPath="com.objfac.xmleditor.topLevelMenu.dtd/editGroup"
+				id="com.objfac.xmleditor.topLevelMenu.dtd.shiftleft">
+			</action>
+			<action accelerator="TAB" label="%ShiftRight.label"
+				tooltip="%ShiftRight.tooltip"
+				class="com.objfac.xmleditor.actions.XMLShiftRightAction"
+				menubarPath="com.objfac.xmleditor.topLevelMenu.dtd/editGroup"
+				id="com.objfac.xmleditor.topLevelMenu.dtd.shiftright">
+			</action>
+			<action accelerator="Ctrl+Shift+U" label="%OpenURI.label"
+				tooltip="%OpenURI.tooltip"
+				class="com.objfac.xmleditor.actions.OpenURIAction"
+				menubarPath="com.objfac.xmleditor.topLevelMenu.dtd/navigationGroup"
+				id="com.objfac.xmleditor.topLevelMenu.dtd.OpenURI">
+			</action>
+			<action accelerator="Ctrl+T" label="%SelectTag.label" 
+				tooltip="%SelectTag.tooltip" 
+				class="com.objfac.xmleditor.actions.XMLSelectTagAction" 
+				menubarPath="com.objfac.xmleditor.topLevelMenu.dtd/selectionGroup" 
+				id="com.objfac.xmleditor.topLevelMenu.dtd.SelectTag">
+			</action>
+			<action label="%GenerateDTD.label" tooltip="%GenerateDTD.tooltip" 
+				class="com.objfac.xmleditor.actions.XMLGenerateDTDAction" 
+				menubarPath="com.objfac.xmleditor.topLevelMenu.dtd/transformGroup" 
+				id="com.objfac.xmleditor.topLevelMenu.dtd.GenerateDTD">
+			</action>
+			<action label="%Version.label" tooltip="%Version.tooltip" 
+				class="com.objfac.xmleditor.actions.VersionAction" 
+				menubarPath="com.objfac.xmleditor.topLevelMenu.dtd/UpdateMenu/versionGroup" 
+				id="com.objfac.xmleditor.topLevelMenu.dtd.Version">
+			</action>
+		</editorContribution>
+	</extension>
+	<extension point="org.eclipse.ui.popupMenus">
+		<viewerContribution targetID="com.objfac.xmleditor.XMLEditor.dtd"
+			id="com.objfac.xmleditor.contextMenu">
+			<action label="%Validate.label" icon="icons/full/validate.gif"
+				class="com.objfac.xmleditor.actions.XMLValidateAction"
+				id="com.objfac.xmleditor.contextMenu.Validate">
+			</action>
+		</viewerContribution>
+	</extension>
+	<extension point="org.eclipse.ui.propertyPages">
+		<page objectClass="org.eclipse.core.resources.IFile"
+			name="%xmlResourcepage" nameFilter="*.*"
+			class="com.objfac.xmleditor.properties.XMLResourcePropertyPage"
+			id="com.objfac.xmleditor.resourcepage">
+		</page>
+	</extension>
+	<extension point="org.eclipse.ui.newWizards">
+		<category name="%NewWizard.category"
+			id="com.objfac.xmleditor.wizard.newxml">
+		</category>
+		<wizard name="%NewXMLWizard.name"
+			icon="icons/full/ctool16/newxml_wiz.gif"
+			category="com.objfac.xmleditor.wizard.newxml"
+			class="com.objfac.xmleditor.wizards.NewXMLWizard"
+			id="com.objfac.xmleditor.wizard.newxml.xml">
+			<description> %NewXMLWizard.desc </description>
+			<selection class="org.eclipse.core.resources.IResource">
+			</selection>
+		</wizard>
+		<wizard name="%NewDTDWizard.name"
+			icon="icons/full/ctool16/newdtd_wiz.gif"
+			category="com.objfac.xmleditor.wizard.newxml"
+			class="com.objfac.xmleditor.wizards.NewDTDWizard"
+			id="com.objfac.xmleditor.wizard.newxml.dtd">
+			<description> %NewDTDWizard.desc </description>
+			<selection class="org.eclipse.core.resources.IResource">
+			</selection>
+		</wizard>
+		<wizard name="%NewProjectWizard.name"
+			icon="icons/full/ctool16/newprj_wiz.gif"
+			category="com.objfac.xmleditor.wizard.newxml"
+			class="org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard"
+			preferredPerspectives="com.objfac.xmleditor.perspective,org.eclipse.pde.ui.PDEPerspective,org.eclipse.jdt.ui.JavaPerspective,org.eclipse.ui.resourcePerspective"
+			project="true" finalPerspective="com.objfac.xmleditor.perspective"
+			id="com.objfac.xmleditor.wizard.newproject">
+			<description> %NewProjectWizard.desc </description>
+		</wizard>
+	</extension>
+	<extension point="org.eclipse.ui.actionSets">
+		<actionSet label="%XMLCreationActionSet.label" visible="true"
+			id="com.objfac.xmleditor.XMLActionSet">
+			<action label="%OpenDTDWizardAction.label"
+				icon="icons/full/ctool16/newdtd_wiz.gif"
+				tooltip="%OpenDTDWizardAction.tooltip"
+				class="com.objfac.xmleditor.wizards.NewDTDWizardAction"
+				toolbarPath="Normal/XMLWizards"
+				id="com.objfac.xmleditor.actions.OpenDTDWizard">
+			</action>
+			<action label="%OpenXMLWizardAction.label"
+				icon="icons/full/ctool16/newxml_wiz.gif"
+				tooltip="%OpenXMLWizardAction.tooltip"
+				class="com.objfac.xmleditor.wizards.NewXMLWizardAction"
+				toolbarPath="Normal/XMLWizards"
+				id="com.objfac.xmleditor.actions.OpenXMLWizard">
+			</action>
+		</actionSet>
+	</extension>
+
+	<extension id="xmlproblem" name="%xmlProblemName"
+		point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.core.resources.problemmarker"/>
+		<super type="org.eclipse.core.resources.textmarker"/>
+		<persistent value="true">
+		</persistent>
+	</extension>
+	<extension id="xmlcheck" name="%xmlCheckName"
+		point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.core.resources.problemmarker"/>
+		<super type="org.eclipse.core.resources.textmarker"/>
+		<persistent value="false">
+		</persistent>
+	</extension>
+
+	<!-- $if version >= 3.0.0 $ -->
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type name="com.objfac.xmlproblemannotationerror" 
+			markerType="com.objfac.xmleditor.xmlproblem" markerSeverity="2">
+		</type>
+	</extension>
+	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		<specification annotationType="com.objfac.xmlproblemannotationerror" 
+			label="%ProblemMarkerErrorPreference.label" 
+			symbolicIcon="error"
+			markerType="com.objfac.xmleditor.xmlproblem" 
+			textPreferenceKey="problemMarkerErrorIndication" 
+			textPreferenceValue="true" 
+			highlightPreferenceKey="problemMarkerErrorHighlighting" 
+			highlightPreferenceValue="false" 
+			overviewRulerPreferenceKey="problemMarkerErrorIndicationInOverviewRuler" 
+			overviewRulerPreferenceValue="true" 
+			verticalRulerPreferenceKey="problemMarkerErrorIndicationInVerticalRuler" 
+			verticalRulerPreferenceValue="true" 
+			colorPreferenceKey="problemMarkerErrorIndicationColor" 
+			colorPreferenceValue="255,0,128" presentationLayer="5" 
+			showInNextPrevDropdownToolbarActionKey="showproblemMarkerErrorInNextPrevDropdownToolbarAction" 
+			showInNextPrevDropdownToolbarAction="true" 
+			isGoToNextNavigationTargetKey="isproblemMarkerErrorGoToNextNavigationTarget" 
+			isGoToNextNavigationTarget="true" 
+			isGoToPreviousNavigationTargetKey="isproblemMarkerErrorGoToPreviousNavigationTarget" 
+			isGoToPreviousNavigationTarget="true"
+			contributesToHeader="true">
+		</specification>
+	</extension>
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type name="com.objfac.xmlproblemannotationwarning" 
+			markerType="com.objfac.xmleditor.xmlproblem" markerSeverity="1">
+		</type>
+	</extension>
+	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		<specification annotationType="com.objfac.xmlproblemannotationwarning" 
+			label="%ProblemMarkerWarningPreference.label" 
+			symbolicIcon="warning"
+			markerType="com.objfac.xmleditor.xmlproblem" 
+			textPreferenceKey="problemMarkerWarningIndication" 
+			textPreferenceValue="true" 
+			highlightPreferenceKey="problemMarkerWarningHighlighting" 
+			highlightPreferenceValue="false" 
+			overviewRulerPreferenceKey="problemMarkerWarningIndicationInOverviewRuler" 
+			overviewRulerPreferenceValue="true" 
+			verticalRulerPreferenceKey="problemMarkerWarningIndicationInVerticalRuler" 
+			verticalRulerPreferenceValue="true" 
+			colorPreferenceKey="problemMarkerWarningIndicationColor" 
+			colorPreferenceValue="244,200,45" presentationLayer="5" 
+			showInNextPrevDropdownToolbarActionKey="showproblemMarkerWarningInNextPrevDropdownToolbarAction" 
+			showInNextPrevDropdownToolbarAction="true" 
+			isGoToNextNavigationTargetKey="isproblemMarkerWarningGoToNextNavigationTarget" 
+			isGoToNextNavigationTarget="true" 
+			isGoToPreviousNavigationTargetKey="isproblemMarkerWarningGoToPreviousNavigationTarget" 
+			isGoToPreviousNavigationTarget="true"
+			contributesToHeader="true">
+		</specification>
+	</extension>
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type name="com.objfac.xmlproblemannotationinfo" 
+			markerType="com.objfac.xmleditor.xmlproblem" markerSeverity="0">
+		</type>
+	</extension>
+	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		<specification annotationType="com.objfac.xmlproblemannotationinfo" 
+			label="%ProblemMarkerInfoPreference.label" 
+			symbolicIcon="info"
+			markerType="com.objfac.xmleditor.xmlproblem" 
+			textPreferenceKey="problemMarkerInfoIndication" 
+			textPreferenceValue="true" 
+			highlightPreferenceKey="problemMarkerInfoHighlighting" 
+			highlightPreferenceValue="false" 
+			overviewRulerPreferenceKey="problemMarkerInfoIndicationInOverviewRuler" 
+			overviewRulerPreferenceValue="true" 
+			verticalRulerPreferenceKey="problemMarkerInfoIndicationInVerticalRuler" 
+			verticalRulerPreferenceValue="true" 
+			colorPreferenceKey="problemMarkerInfoIndicationColor" 
+			colorPreferenceValue="244,200,45" presentationLayer="5" 
+			showInNextPrevDropdownToolbarActionKey="showproblemMarkerInfoInNextPrevDropdownToolbarAction" 
+			showInNextPrevDropdownToolbarAction="true" 
+			isGoToNextNavigationTargetKey="isproblemMarkerInfoGoToNextNavigationTarget" 
+			isGoToNextNavigationTarget="true" 
+			isGoToPreviousNavigationTargetKey="isproblemMarkerInfoGoToPreviousNavigationTarget" 
+			isGoToPreviousNavigationTarget="true"
+			contributesToHeader="true">
+		</specification>
+	</extension>
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type name="com.objfac.xmlcheckerrorannotation" 
+			markerType="com.objfac.xmleditor.xmlcheck" markerSeverity="2">
+		</type>
+	</extension>
+	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		<specification annotationType="com.objfac.xmlcheckerrorannotation" 
+			label="%CheckMarkerErrorPreference.label" 
+			icon="icons/full/obj16/vagueerror.gif" 
+			markerType="com.objfac.xmleditor.xmlcheck" 
+			textPreferenceKey="checkMarkerErrorIndication" 
+			textPreferenceValue="true" 
+			highlightPreferenceKey="checkMarkerErrorHighlighting" 
+			highlightPreferenceValue="false" 
+			overviewRulerPreferenceKey="checkMarkerErrorIndicationInOverviewRuler" 
+			overviewRulerPreferenceValue="true" 
+			verticalRulerPreferenceKey="checkMarkerErrorIndicationInVerticalRuler" 
+			verticalRulerPreferenceValue="true" 
+			colorPreferenceKey="checkMarkerErrorIndicationColor" 
+			colorPreferenceValue="0,128,255" presentationLayer="5" 
+			showInNextPrevDropdownToolbarActionKey="showCheckMarkerErrorInNextPrevDropdownToolbarAction" 
+			showInNextPrevDropdownToolbarAction="true" 
+			isGoToNextNavigationTargetKey="isCheckMarkerErrorGoToNextNavigationTarget" 
+			isGoToNextNavigationTarget="true" 
+			isGoToPreviousNavigationTargetKey="isCheckMarkerErrorGoToPreviousNavigationTarget" 
+			isGoToPreviousNavigationTarget="true"
+			contributesToHeader="true">
+		</specification>
+	</extension>
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type name="com.objfac.xmlcheckwarningannotation" 
+			markerType="com.objfac.xmleditor.xmlcheck" markerSeverity="1">
+		</type>
+	</extension>
+	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		<specification annotationType="com.objfac.xmlcheckwarningannotation" 
+			label="%CheckMarkerWarningPreference.label" 
+			icon="icons/full/obj16/vagueerror.gif" 
+			markerType="com.objfac.xmleditor.xmlcheck" 
+			textPreferenceKey="checkMarkerWarningIndication" 
+			textPreferenceValue="true" 
+			highlightPreferenceKey="checkMarkerWarningHighlighting" 
+			highlightPreferenceValue="false" 
+			overviewRulerPreferenceKey="checkMarkerWarningIndicationInOverviewRuler" 
+			overviewRulerPreferenceValue="true" 
+			verticalRulerPreferenceKey="checkMarkerWarningIndicationInVerticalRuler" 
+			verticalRulerPreferenceValue="true" 
+			colorPreferenceKey="checkMarkerWarningIndicationColor" 
+			colorPreferenceValue="0,128,255" presentationLayer="5" 
+			showInNextPrevDropdownToolbarActionKey="showCheckMarkerWarningInNextPrevDropdownToolbarAction" 
+			showInNextPrevDropdownToolbarAction="true" 
+			isGoToNextNavigationTargetKey="isCheckMarkerWarningGoToNextNavigationTarget" 
+			isGoToNextNavigationTarget="true" 
+			isGoToPreviousNavigationTargetKey="isCheckMarkerWarningGoToPreviousNavigationTarget" 
+			isGoToPreviousNavigationTarget="true"
+			contributesToHeader="true">
+		</specification>
+	</extension>
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type name="com.objfac.xmlcheckinfoannotation" 
+			markerType="com.objfac.xmleditor.xmlcheck" markerSeverity="0">
+		</type>
+	</extension>
+	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		<specification annotationType="com.objfac.xmlcheckinfoannotation" 
+			label="%CheckMarkerInfoPreference.label" 
+			icon="icons/full/obj16/vagueerror.gif" 
+			markerType="com.objfac.xmleditor.xmlcheck" 
+			textPreferenceKey="checkMarkerInfoIndication" 
+			textPreferenceValue="true" 
+			highlightPreferenceKey="checkMarkerInfoHighlighting" 
+			highlightPreferenceValue="false" 
+			overviewRulerPreferenceKey="checkMarkerInfoIndicationInOverviewRuler" 
+			overviewRulerPreferenceValue="true" 
+			verticalRulerPreferenceKey="checkMarkerInfoIndicationInVerticalRuler" 
+			verticalRulerPreferenceValue="true" 
+			colorPreferenceKey="checkMarkerInfoIndicationColor" 
+			colorPreferenceValue="0,128,255" presentationLayer="5" 
+			showInNextPrevDropdownToolbarActionKey="showCheckMarkerInfoInNextPrevDropdownToolbarAction" 
+			showInNextPrevDropdownToolbarAction="true" 
+			isGoToNextNavigationTargetKey="isCheckMarkerInfoGoToNextNavigationTarget" 
+			isGoToNextNavigationTarget="true" 
+			isGoToPreviousNavigationTargetKey="isCheckMarkerInfoGoToPreviousNavigationTarget" 
+			isGoToPreviousNavigationTarget="true"
+			contributesToHeader="true">
+		</specification>
+	</extension>
+	<extension point="org.eclipse.core.filebuffers.documentSetup" 
+		id="com.objfac.xmleditor.XMLDocumentSetupParticipant" 
+		name="%xmlDocumentSetupParticipant.name" >
+		<participant extensions="xml,tld,xsl,xslt,xhtml,html,htm,rng,php,xsd,dtd,mod" 
+			contentTypeId="com.objfac.xmlbuddy.xmlfile" 
+			class="com.objfac.xmleditor.extensions.XMLDocumentSetupParticipant">
+		</participant>
+	</extension>
+	<!-- $endif $ -->
+</plugin>
+

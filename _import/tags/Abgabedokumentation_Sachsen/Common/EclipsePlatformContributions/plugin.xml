@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.bce.eclipse.platform.contrib"
+   name="EclipsePlatformContributions Plug-in"
+   version="0.0.1"
+   provider-name="bce.org"
+   class="org.bce.eclipse.platform.EclipsePlatformContributionsPlugin">
+
+   <runtime>
+      <library name="EclipsePlatformContributions.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.resources"/>
+   </requires>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.ui.internal.editors.text.JavaFileEditorInput"
+            class="org.bce.eclipse.platform.adapter.JavaFileEditorInputAdapter">
+         <adapter type="org.eclipse.core.runtime.IPath"/>
+      </factory>
+   </extension>
+
+</plugin>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>582090</name>
+    <metadataList>
+        <metadata name="Name" value="582090"/>
+        <metadata name="Beschreibung" value="Spremberg"/>
+        <metadata name="Alarmstufe 4" value="3.00"/>
+        <metadata name="Alarmstufe 3" value="2.50"/>
+        <metadata name="Alarmstufe 2" value="2.00"/>
+        <metadata name="Alarmstufe 1" value="1.50"/>
+    </metadataList>
+    <axis datatype="TYPE=double" key="false" name="Wasserstand 582090" type="W" unit="m">
+        <valueArray separator=";">0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0</valueArray>
+    </axis>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2005-01-02T16:00:00;2005-01-02T19:00:00;2005-01-02T22:00:00;2005-01-03T01:00:00;2005-01-03T04:00:00;2005-01-03T07:00:00;2005-01-03T10:00:00;2005-01-03T13:00:00;2005-01-03T16:00:00;2005-01-03T19:00:00;2005-01-03T22:00:00;2005-01-04T01:00:00;2005-01-04T04:00:00;2005-01-04T07:00:00;2005-01-04T10:00:00;2005-01-04T13:00:00;2005-01-04T16:00:00</valueArray>
+    </axis>
+</observation>
+

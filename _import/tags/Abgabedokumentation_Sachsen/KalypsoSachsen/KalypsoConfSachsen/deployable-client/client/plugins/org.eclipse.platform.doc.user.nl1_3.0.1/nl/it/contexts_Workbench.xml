@@ -1,0 +1,1190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+    <!-- Actions -->
+    <context id="add_bookmark_action_context">
+        <description>I <b>segnalibri</b> inseriscono un &quot;ancoraggio&quot; in una riga specifica di una risorsa del workbench.</description>
+        <topic label="Aggiunta di un segnalibro" href="tasks/tasks-81.htm"/>
+        <topic label="Segnalibri" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="add_task_action_context">
+        <description>Le <b>attività</b> inseriscono un &quot;ancoraggio&quot; in una riga specifica di una risorsa del workbench.</description>
+        <topic label="Aggiunta di un'attività" href="tasks/tasks-77b.htm"/>
+        <topic label="Vista Attività" href="concepts/ctskview.htm"/>
+    </context>
+    <context id="incremental_build_action_context">
+        <description>Una <b>generazione incrementale</b> compila solo le risorse del progetto selezionato che sono state modificate dopo l'ultima generazione.</description>
+        <topic label="Vista Selezione - Rigenera tutto" href="reference/ref-27.htm"/>
+        <topic label="Generazioni" href="concepts/concepts-22.htm"/>
+        <topic label="Generazione di risorse" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="full_build_action_context">
+        <description>Una <b>generazione completa</b> compila le risorse nel
+progetto selezionato da zero. Questo tipo di generazione viene eseguito solo quando viene effettuata una generazione manuale.</description>
+        <topic label="Vista Selezione - Rigenera tutto" href="reference/ref-27.htm"/>
+        <topic label="Generazioni" href="concepts/concepts-22.htm"/>
+        <topic label="Generazione di risorse" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="global_incremental_build_action_context">
+        <description>Una generazione incrementale compila solo le risorse modificate a partire dall'ultima generazione.</description>
+        <topic label="Generazioni" href="concepts/concepts-22.htm"/>
+        <topic label="Generazione di risorse" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="global_full_build_action_context">
+        <description>Una <b>generazione completa</b> compila l'intero workbench da zero. Questo tipo di generazione viene eseguito solo quando viene effettuata una generazione manuale.</description>
+        <topic label="Generazioni" href="concepts/concepts-22.htm"/>
+        <topic label="Generazione di risorse" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="close_resource_action_context">
+        <description>Questa azione chiude la risorsa selezionata.</description>
+        <topic label="Chiusura delle risorse" href="tasks/tasks-47.htm"/>
+        <topic label="Vista Selezione - Chiudi" href="reference/ref-27.htm"/>
+    </context>
+    <context id="open_resource_action_context">
+        <description>Questa azione apre la risorsa selezionata.</description>
+        <topic label="Apertura di risorse" href="tasks/tasks-46.htm"/>
+        <topic label="Vista Selezione - Apri" href="reference/ref-27.htm"/>
+    </context>
+    <context id="open_file_action_context">
+        <description>Questa azione provoca l'apertura della risorsa selezionata nell'area di editor o nell'editor esterno specificato.</description>
+        <topic label="Vista Selezione - Apri con..." href="reference/ref-27.htm"/>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="open_system_editor_action_context">
+        <description>Questa azione provoca l'apertura della risorsa selezionata nell'editor di sistema predefinito per questo tipo di file.</description>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+        <topic label="Modifica esterna di un file" href="tasks/tasks-52.htm"/>
+    </context>
+    <context id="refresh_action_context">
+        <description>Questa azione aggiorna il contenuto e l'aspetto della vista.</description>
+        <topic label="Vista Selezione - Aggiorna" href="reference/ref-27.htm"/>
+    </context>
+    <context id="move_resource_action_context">
+        <description>Questo comando consente di spostare una risorsa da una posizione ad un'altra.</description>
+        <topic label="Spostamento di risorse" href="tasks/tasks-63.htm"/>
+        <topic label="Vista Selezione - Sposta" href="reference/ref-27.htm"/>
+    </context>
+    <context id="copy_resource_action_context">
+        <description>Questo comando consente di copiare una risorsa da una posizione ad un'altra.</description>
+        <topic label="Vista Selezione - Copia" href="reference/ref-27.htm"/>
+    </context>
+    <context id="move_project_action_context">
+        <description>Questo comando consente di spostare un progetto da una posizione a un'altra.</description>
+        <topic label="Spostamento di risorse" href="tasks/tasks-63.htm"/>
+        <topic label="Vista Selezione - Sposta" href="reference/ref-27.htm"/>
+    </context>
+    <context id="copy_project_action_context">
+        <description>Questo comando consente di copiare un progetto da una posizione a un'altra.</description>
+        <topic label="Vista Selezione - Copia" href="reference/ref-27.htm"/>
+    </context>
+    <context id="rename_resource_action_context">
+        <description>Questo comando consente di fornire un nuovo nome per la risorsa selezionata.</description>
+        <topic label="Ridenominazione delle risorse" href="tasks/tasks-66.htm"/>
+        <topic label="Vista Selezione - Rinomina" href="reference/ref-27.htm"/>
+    </context>
+    <context id="delete_resource_action_context">
+        <description>Questo comando consente di eliminare la risorsa selezionata.</description>
+        <topic label="Eliminazione di risorse" href="tasks/tasks-67.htm"/>
+        <topic label="Vista Selezione - Elimina" href="reference/ref-27.htm"/>
+    </context>
+    <context id="delete_retarget_action_context">
+        <description>Questo comando elimina la risorsa o l'elemento selezionato.</description>
+        <topic label="Eliminazione di risorse" href="tasks/tasks-67.htm"/>
+        <topic label="Vista Selezione - Elimina" href="reference/ref-27.htm"/>
+    </context>
+    <context id="property_dialog_action_context">
+        <description>Questo comando visualizza le proprietà della risorsa
+selezionata.</description>
+        <topic label="Visualizzazione delle proprietà delle risorse" href="tasks/tasks-49.htm"/>
+        <topic label="Vista Selezione - Proprietà" href="reference/ref-27.htm"/>
+    </context>
+    <context id="project_property_dialog_action_context">
+        <description>Questo comando visualizza le proprietà del progetto per la risorsa
+selezionata.</description>
+        <topic label="Menu progetto - Proprietà" href="reference/ref-59.htm"/>
+        <topic label="Visualizzazione delle proprietà delle risorse" href="tasks/tasks-49.htm"/>
+    </context>
+    <context id="create_folder_action_context">
+        <description>Questo comando consente di creare una nuova cartella.</description>
+        <topic label="Risorse" href="concepts/concepts-12.htm"/>
+        <topic label="Creazione risorse - Cartelle" href="tasks/tasks-43.htm"/>
+        <topic label="Procedura guidata Nuova cartella" href="reference/ref-38.htm"/>
+    </context>
+    <context id="create_file_action_context">
+        <description>Questo comando consente di creare un nuovo file.</description>
+        <topic label="Risorse" href="concepts/concepts-12.htm"/>
+        <topic label="Creazione risorse - File" href="tasks/tasks-44.htm"/>
+        <topic label="Procedura guidata Nuovo file" href="reference/ref-39.htm"/>
+    </context>
+    <context id="new_action_context">
+        <description>Questo comando consente di creare un nuovo elemento, quale
+una risorsa.</description>
+        <topic label="Risorse" href="concepts/concepts-12.htm"/>
+        <topic label="Nuove procedure guidate del workbench" href="reference/ref-37.htm"/>
+    </context>
+    <context id="import_action_context">
+        <description>Questo comando consente di importare risorse.</description>
+        <topic label="Importazione" href="tasks/tasks-53.htm"/>
+        <topic label="Importazione da una directory" href="tasks/tasks-55.htm"/>
+        <topic label="Importazione da un file zip" href="tasks/tasks-55bg.htm"/>
+        <topic label="Menu File - Importa" href="reference/ref-56.htm"/>
+    </context>
+    <context id="export_action_context">
+        <description>Questo comando consente di esportare risorse.</description>
+        <topic label="Esportazione" href="tasks/tasks-57.htm"/>
+        <topic label="Esportazione nel filesystem" href="tasks/tasks-59.htm"/>
+        <topic label="Esportazione in un file zip" href="tasks/tasks-59ag.htm"/>
+        <topic label="Menu File - Esporta" href="reference/ref-56.htm"/>
+    </context>
+    <context id="scrub_local_action_context">
+        <description>Il workbench è in preparazione per una generazione.</description>
+        <topic label="Generazioni" href="concepts/concepts-22.htm"/>
+    </context>
+    <context id="set_page_action_context">
+        <description>Questo comando aggiorna la visualizzazione del workbench.</description>
+        <topic label="Vista Selezione - Aggiorna" href="reference/ref-27.htm"/>
+    </context>
+    <context id="save_perspective_action_context">
+        <description>Questa opzione di menu consente di salvare la prospettiva corrente come prospettiva definita.</description>
+        <topic label="Prospettive" href="concepts/concepts-4.htm"/>
+        <topic label="Salvataggio delle prospettive" href="tasks/tasks-9i.htm"/>
+        <topic label="Menu Finestra - Salva prospettiva con nome" href="reference/ref-60.htm"/>
+    </context>
+    <context id="save_as_action_context">
+        <description>Questo comando consente di salvare la risorsa in modifica in un'altra posizione del workbench.</description>
+        <topic label="Menu File - Salva con nome" href="reference/ref-56.htm"/>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="save_all_action_context">
+        <description>Questo comando consente di salvare contemporaneamente tutte le risorse aperte nell'area di editor.</description>
+        <topic label="Menu File - Salva tutto" href="reference/ref-56.htm"/>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="save_action_context">
+        <description>Questo comando salva la risorsa correntemente attiva nell'area di editor.</description>
+        <topic label="Menu File - Salva" href="reference/ref-56.htm"/>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="about_action_context">
+        <description>Questo comando visualizza le informazioni sul prodotto.</description>
+        <topic label="Menu Guida - Informazioni sul prodotto" href="reference/ref-61.htm"/>
+    </context>
+    <context id="close_all_action_context">
+        <description>Questo comando chiude tutti gli editor correntemente aperti nell'area di editor.</description>
+        <topic label="Menu File - Chiudi tutto" href="reference/ref-56.htm"/>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="close_page_action_context">
+        <description>Questo comando chiude la prospettiva attiva.</description>
+        <topic label="Prospettive - Concetto" href="concepts/concepts-4.htm"/>
+        <topic label="Menu Finestra - Chiudi prospettiva" href="reference/ref-60.htm"/>
+        <topic label="Prospettive - Riferimento" href="reference/ref-6.htm"/>
+    </context>
+    <context id="close_part_action_context">
+        <description>Questo comando chiude l'editor correntemente attivo.</description>
+        <topic label="Menu File - Chiudi" href="reference/ref-56.htm"/>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="edit_action_sets_action_context">
+        <description>Questo comando consente di personalizzare gli insiemi di
+azioni disponibili sulla barra degli strumenti e sulla barra dei menu del workbench.</description>
+        <topic label="Configurazione di prospettive" href="tasks/tasks-9k.htm"/>
+        <topic label="Menu Finestra - Personalizza prospettiva" href="reference/ref-60.htm"/>
+    </context>
+    <context id="edit_perspectives_action_context">
+        <description>Questo comando consente di eliminare o reimpostare prospettive definite oppure definire la prospettiva predefinita.</description>
+        <topic label="Prospettive - Concetto" href="concepts/concepts-4.htm"/>
+        <topic label="Modifica della posizione in cui aprire le prospettive" href="tasks/tasks-24.htm"/>
+        <topic label="Prospettive - Riferimento" href="reference/ref-6.htm"/>
+    </context>
+    <context id="close_all_pages_action_context">
+        <description>Questa azione chiude tutte le prospettive correntemente aperte.</description>
+        <topic label="Prospettive - Concetto" href="concepts/concepts-4.htm"/>
+        <topic label="Menu Finestra - Chiudi tutte le prospettive" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_new_page_action_context">
+        <description>Questa azione apre una nuova pagina.</description>
+        <topic label="Prospettive - Concetto" href="concepts/concepts-4.htm"/>
+        <topic label="Nuove prospettive" href="tasks/tasks-9f.htm"/>
+        <topic label="Menu Finestra - Apri prospettiva" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_preferences_action_context">
+        <description>Questa azione apre la finestra di dialogo delle preferenze.</description>
+        <topic label="Workbench - Preferenze" href="reference/ref-10.htm"/>
+    </context>
+    <context id="open_new_window_action_context">
+        <description>Questa azione apre una nuova finestra.</description>
+        <topic label="Apertura delle prospettive" href="tasks/tasks-9f.htm"/>
+        <topic label="Modifica della posizione in cui aprire le prospettive" href="tasks/tasks-24.htm"/>
+        <topic label="Workbench" href="concepts/concepts-2.htm"/>
+        <topic label="Prospettive" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="open_new_action_context">
+        <description>Questa azione apre una nuova prospettiva.</description>
+        <topic label="Prospettive - Concetto" href="concepts/concepts-4.htm"/>
+        <topic label="Apertura di nuove prospettive" href="tasks/tasks-24.htm"/>
+        <topic label="Menu Finestra - Apri prospettiva" href="reference/ref-60.htm"/>
+    </context>
+    <context id="next_page_action_context">
+        <description>Questa azione visualizzerà la successiva prospettiva aperta.</description>
+        <topic label="Prospettive - Concetto" href="concepts/concepts-4.htm"/>
+        <topic label="Modifica della posizione in cui aprire le prospettive" href="tasks/tasks-24.htm"/>
+    </context>
+    <context id="quick_start_action_context">
+        <description>Questa azione aprirà l'editor di benvenuto.</description>
+        <topic label="Menu Guida - Benvenuti" href="reference/ref-61.htm"/>
+    </context>
+    <context id="tips_and_tricks_action_context">
+        <description>Questa azione aprirà la pagina di guida Consigli e suggerimenti.</description>
+        <topic label="Menu Guida - Consigli e suggerimenti" href="reference/ref-61.htm"/>
+    </context>
+    <context id="quit_action_context">
+        <description>Questa azione provocherà il salvataggio e l'uscita
+dallo spazio di lavoro.</description>
+        <topic label="Menu File - Esci" href="reference/ref-56.htm"/>
+    </context>
+    <context id="reset_perspective_action_context">
+        <description>Questa azione reimposterà la prospettiva sul layout
+originale (predefinito).</description>
+        <topic label="Prospettive" href="concepts/concepts-4.htm"/>
+        <topic label="Reimposta prospettive" href="tasks/tasks-9j.htm"/>
+        <topic label="Menu Finestra - Reimposta prospettiva" href="reference/ref-60.htm"/>
+    </context>
+    <context id="target_editors_visibility_action_context">
+        <description>Questa azione consente di nascondere o visualizzare l'area di editor.  
+È possibile aumentare l'area di altre viste quando si nasconde l'area di
+editor.</description>
+        <topic label="Menu Finestra - Mostra/Nascondi editor" href="reference/ref-60.htm"/>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="switch_to_perspective_action_context">
+        <description>Questa azione apre una nuova prospettiva selezionata dall'utente.</description>
+        <topic label="Prospettive - Concetto" href="concepts/concepts-4.htm"/>
+        <topic label="Passaggio tra le prospettive" href="tasks/tasks-28.htm"/>
+        <topic label="Menu Finestra - Apri prospettiva" href="reference/ref-60.htm"/>
+        <topic label="Prospettive - Riferimento" href="reference/ref-6.htm"/>
+    </context>
+    <context id="show_view_action_context">
+        <description>Questa azione mostrerà una vista selezionata dall'utente.</description>
+        <topic label="Visualizzazione delle viste" href="tasks/tasks-3.htm"/>
+        <topic label="Menu Finestra - Mostra vista" href="reference/ref-60.htm"/>
+    </context>
+    <context id="show_view_other_action_context">
+        <description>Apre una finestra di dialogo per selezionare la vista
+da mostrare.</description>
+        <topic label="Visualizzazione delle viste" href="tasks/tasks-3.htm"/>
+        <topic label="Menu Finestra - Mostra vista" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_perspective_action_context">
+        <description>Apre la prospettiva selezionata.</description>
+        <topic label="Apertura delle prospettive" href="tasks/tasks-9f.htm"/>
+        <topic label="Menu Finestra - Apri prospettiva" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_perspective_other_action_context">
+        <description>Apre una finestra di dialogo per selezionare la
+prospettiva da aprire.</description>
+        <topic label="Apertura delle prospettive" href="tasks/tasks-9f.htm"/>
+        <topic label="Menu Finestra - Apri prospettiva" href="reference/ref-60.htm"/>
+    </context>
+    <context id="remove_bookmark_action_context">
+        <description>Rimuove un segnalibro.</description>
+        <topic label="Eliminazione di un segnalibro" href="tasks/tasks-82.htm"/>
+        <topic label="Segnalibri" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="open_bookmark_action_context">
+        <description>Apre la risorsa in cui è presente un segnalibro.</description>
+        <topic label="Segnalibri" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="select_all_bookmark_action_context">
+        <description>Seleziona tutti i segnalibri.</description>
+        <topic label="Segnalibri" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="filter_selection_action_context">
+        <description>Questo comando consente il filtro dei tipi visualizzati
+in Selezione risorse.</description>
+        <topic label="Vista Selezione - Filtri" href="reference/ref-27.htm"/>
+    </context>
+    <context id="goto_resource_action_context">
+        <description>Vai alla risorsa selezionata.</description>
+        <topic label="Vista Selezione - Vai a" href="reference/ref-27.htm"/>
+    </context>
+    <context id="resource_navigator_move_action_context">
+        <description>Sposta la risorsa selezionata in un'altra posizione.</description>
+        <topic label="Spostamento di risorse" href="tasks/tasks-63.htm"/>
+        <topic label="Vista Selezione - Sposta" href="reference/ref-27.htm"/>
+    </context>
+    <context id="resource_navigator_rename_action_context">
+        <description>Rinomina la risorsa selezionata.</description>
+        <topic label="Ridenominazione delle risorse" href="tasks/tasks-66.htm"/>
+        <topic label="Vista Selezione - Rinomina" href="reference/ref-27.htm"/>
+    </context>
+    <context id="show_in_navigator_action_context">
+        <description>Mostra la risorsa selezionata nella vista Selezione.</description>
+        <topic label="Risorse" href="concepts/concepts-12.htm"/>
+        <topic label="Vista Selezione" href="reference/ref-27.htm"/>
+    </context>
+    <context id="sort_view_action_context">
+        <description>Questo comando modifica l'ordine dei tipi visualizzati in Selezione risorse.</description>
+        <topic label="Ordinamento delle risorse" href="tasks/tasks-48.htm"/>
+        <topic label="Vista Selezione - Ordina" href="reference/ref-27.htm"/>
+    </context>
+    <context id="properties_categories_action_context">
+        <description>Mostra i valori delle proprietà raggruppati in base alla categoria.</description>
+        <topic label="Vista Proprietà" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="properties_defaults_action_context">
+        <description>Imposta il valore della proprietà selezionata sul valore predefinito.</description>
+        <topic label="Vista Proprietà" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="properties_filter_action_context">
+        <description>Filtra le proprietà.</description>
+        <topic label="Vista Proprietà" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="purge_completed_task_action_context">
+        <description>Rimuove tutte le attività completate dall'elenco.</description>
+        <topic label="Eliminazione di attività" href="tasks/tasks-78.htm"/>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="new_task_action_context">
+        <description>Crea una nuova attività.</description>
+        <topic label="Aggiunta di un'attività non associata" href="tasks/tasks-77.htm"/>
+        <topic label="Aggiunta di un'attività associata" href="tasks/tasks-77b.htm"/>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="remove_task_action_context">
+        <description>Rimuove un'attività da questo elenco.</description>
+        <topic label="Eliminazione di attività" href="tasks/tasks-78.htm"/>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="goto_task_action_context">
+        <description>Apre la risorsa associata a un'attività.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="undo_action_context">
+        <description>Annulla la modifica precedente.</description>
+        <topic label="Menu Modifica - Annulla ultima modifica" href="reference/ref-57.htm"/>
+    </context>
+    <context id="redo_action_context">
+        <description>Ripete la modifica precedente.</description>
+        <topic label="Menu Modifica - Ripeti ultima modifica" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cut_action_context">
+        <description>Taglia il testo selezionato e lo copia negli appunti.</description>
+        <topic label="Menu Modifica - Taglia" href="reference/ref-57.htm"/>
+    </context>
+    <context id="copy_action_context">
+        <description>Copia la selezione negli Appunti.</description>
+        <topic label="Menu Modifica - Copia" href="reference/ref-57.htm"/>
+    </context>
+    <context id="paste_action_context">
+        <description>Incolla il contenuto degli appunti nella posizione corrente del cursore.</description>
+        <topic label="Menu Modifica - Incolla" href="reference/ref-57.htm"/>
+    </context>
+    <context id="delete_action_context">
+        <description>Elimina la selezione.</description>
+        <topic label="Menu Modifica - Elimina" href="reference/ref-57.htm"/>
+    </context>
+    <context id="selectAll_action_context">
+        <description>Seleziona tutto il contenuto del file.</description>
+        <topic label="Menu Modifica - Seleziona tutto" href="reference/ref-57.htm"/>
+    </context>
+    <context id="ShiftLeft_action_context">
+        <description>Sposta a sinistra il testo selezionato, riducendo il rientro.</description>
+    </context>
+    <context id="ShiftRight_action_context">
+        <description>Sposta a destra il testo selezionato, aumentando il rientro.</description>
+    </context>
+    <context id="find_action_context">
+        <description>Questa azione visualizza una finestra di dialogo per la specifica del testo da ricercare nell'editor.</description>
+        <topic label="Menu Modifica - Trova/Sostituisci" href="reference/ref-57.htm"/>
+    </context>
+    <context id="bookmark_action_context">
+        <description>Aggiunge un segnalibro su questa risorsa.</description>
+        <topic label="Menu Modifica - Aggiungi segnalibro" href="reference/ref-57.htm"/>
+    </context>
+    <context id="addTask_action_context">
+        <description>Aggiunge un'attività associata a questa risorsa.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="revert_action_context">
+        <description>Ritorna al contenuto salvato.</description>
+    </context>
+    <context id="GotoLine_action_context">
+        <description>Posiziona il cursore all'inizio di una riga specificata.</description>
+    </context>
+    <context id="open_workspace_file_action_context">
+        <description>Apre un editor per la risorsa specificata.</description>
+        <topic label="Menu Esplora - Apri risorsa" href="reference/ref-58.htm"/>
+    </context>
+    <context id="print_action_context">
+        <description>Questo comando stampa la risorsa correntemente attiva
+nell'area di editor.</description>
+    </context>
+    <context id="select_working_set_action_context">
+        <description>Seleziona un insieme di lavoro dall'elenco per renderlo
+attivo.</description>
+    </context>
+    <context id="clear_working_set_action_context">
+        <description>Deseleziona l'insieme di lavoro attivo.</description>
+    </context>
+    <context id="edit_working_set_action_context">
+        <description>Modifica il contenuto dell'insieme di lavoro attivo.</description>
+    </context>
+    <context id="show_in_action_context">
+        <description>Mostra la selezione corrente nella vista
+specificata.</description>
+    </context>
+    <context id="navigation_history_forward">
+        <description>Si sposta in avanti nella cronologia di
+selezione.</description>
+        <topic label="Menu Esplora - Avanti" href="reference/ref-58.htm"/>
+    </context>
+    <context id="navigation_history_backward">
+        <description>Si sposta indietro nella cronologia di navigazione.</description>
+        <topic label="Menu Esplora - Indietro" href="reference/ref-58.htm"/>
+    </context>
+    <!-- Dialogs -->
+    <context id="about_dialog_context">
+        <description>Questa finestra di dialogo visualizza le informazioni sul prodotto.</description>
+        <topic label="Menu Guida - Informazioni sul prodotto" href="reference/ref-61.htm"/>
+    </context>
+    <context id="action_set_selection_dialog_context">
+        <description>Ciascuna prospettiva include un insieme predefinito di azioni
+accessibili dalla barra dei menu e dalla barra degli strumenti del workbench. Le
+azioni correlate sono riunite in insiemi di azioni.</description>
+        <topic label="Configurazione di prospettive" href="tasks/tasks-9k.htm"/>
+        <topic label="Menu Finestra - Personalizza prospettiva" href="reference/ref-60.htm"/>
+    </context>
+    <context id="editor_selection_dialog_context">
+        <description>In questa finestra di dialogo è possibile associare vari editor incorporati o esterni ai diversi tipi di risorse del workbench.</description>
+        <topic label="Preferenze - Associazioni file" href="reference/ref-13.htm"/>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="file_extension_dialog_context">
+        <description>In questa finestra di dialogo, indicare l'estensione per il tipo di file da identificare.</description>
+        <topic label="Preferenze - Associazioni file" href="reference/ref-13.htm"/>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="preference_dialog_context">
+        <description>Questa finestra di dialogo consente di impostare le preferenze del proprio workbench.</description>
+        <topic label="Finestra di dialogo Preferenze" href="reference/ref-72.htm"/>
+    </context>
+    <context id="property_dialog_context">
+        <description>Questa finestra di dialogo consente di visualizzare o modificare le proprietà della risorsa selezionata.</description>
+        <topic label="Vista Selezione - Pagina Proprietà" href="reference/ref-27.htm"/>
+        <topic label="Proprietà delle risorse" href="tasks/tasks-49.htm"/>
+    </context>
+    <context id="save_perspective_dialog_context">
+        <description>Finestra di dialogo per il salvataggio di una prospettiva specificata dall'utente.</description>
+        <topic label="Prospettive" href="concepts/concepts-4.htm"/>
+        <topic label="Salvataggio delle prospettive" href="tasks/tasks-9i.htm"/>
+    </context>
+    <context id="select_perspective_dialog_context">
+        <description>Finestra di dialogo per la selezione di una prospettiva.</description>
+        <topic label="Prospettive - Concetto" href="concepts/concepts-4.htm"/>
+        <topic label="Salvataggio delle prospettive" href="tasks/tasks-9i.htm"/>
+        <topic label="Menu Finestra" href="reference/ref-60.htm"/>
+    </context>
+    <context id="project_location_selection_dialog_context">
+        <description>Finestra di dialogo per la selezione del percorso di un
+progetto.</description>
+    </context>
+    <context id="show_view_dialog_context">
+        <description>Finestra di dialogo per la selezione di una vista.</description>
+        <topic label="Visualizzazione delle viste" href="tasks/tasks-3.htm"/>
+    </context>
+    <context id="save_as_dialog_context">
+        <description>Finestra di dialogo per la specifica del nome e del
+percorso di
+una risorsa da salvare.</description>
+    </context>
+    <context id="type_filtering_dialog_context">
+        <description>Utilizzare questa finestra di dialogo per filtrare i tipi di file.</description>
+        <topic label="Procedura guidata Esportazione" href="reference/ref-71.htm"/>
+        <topic label="Procedura guidata Importazione" href="reference/ref-70.htm"/>
+    </context>
+    <context id="container_selection_dialog_context">
+        <description>Finestra di dialogo per la selezione di una cartella.</description>
+    </context>
+    <context id="file_selection_dialog_context">
+        <description>Finestra di dialogo per la selezione di un file.</description>
+    </context>
+    <context id="list_selection_dialog_context">
+        <description>Finestra di dialogo per la selezione di una voce da un elenco.</description>
+    </context>
+    <context id="yes_no_cancel_list_selection_dialog_context">
+        <description>Finestra di dialogo per accettare, rifiutare o annullare una selezione da un elenco.</description>
+    </context>
+    <context id="resource_selection_dialog_context">
+        <description>Finestra di dialogo per la selezione di una risorsa.</description>
+    </context>
+    <context id="goto_resource_dialog_context">
+        <description>Finestra di dialogo per la selezione di una risorsa da ricercare nello spazio di lavoro.</description>
+    </context>
+    <context id="task_filters_dialog_context">
+        <description>Finestra di dialogo che consente di mostrare o nascondere attività in base a un determinato criterio.</description>
+        <topic label="Filtro dell'elenco delle attività" href="tasks/tasks-79.htm"/>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="find_replace_dialog_context">
+        <description>Finestra di dialogo per la ricerca e la sostituzione del testo specificato.</description>
+		<topic label="Espressioni regolari disponibili" href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html" />
+    </context>
+    <context id="goto_line_dialog_context">
+        <description>Finestra di dialogo per la specifica di una riga su cui posizionare il cursore.</description>
+    </context>
+    <!-- Editors -->
+    <context id="welcome_editor_context">
+        <description>Guida rapida e semplice per introdurre i nuovi utenti ad alcune attività di base.</description>
+        <topic label="Menu Guida in linea" href="reference/ref-61.htm"/>
+    </context>
+    <context id="text_editor_context">
+        <description>Viene utilizzato un editor di testo per modificare i file.</description>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="system_summary_editor_context">
+        <description>Mostra i dettagli di configurazione del prodotto.</description>
+    </context>
+    <!-- Preference pages -->
+    <context id="file_editors_preference_page_context">
+        <description>Su questa pagina delle preferenze è possibile associare vari editor incorporati ed esterni ai diversi tipi di risorse del workbench.</description>
+        <topic label="Preferenze - Associazioni file" href="reference/ref-13.htm"/>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="build_order_preference_page_context">
+        <description>Consente di modificare l'ordine in cui i progetti vengono
+generati nello spazio di lavoro.</description>
+        <topic label="Modifica dell'ordine di generazione" href="tasks/tasks-14.htm"/>
+    </context>
+    <context id="file_states_preference_page_context">
+        <description>Questa pagina delle preferenze è utilizzata per configurare la cronologia file locale per il workbench.</description>
+        <topic label="Cronologia locale" href="concepts/concepts-17a.htm"/>
+        <topic label="Preferenze - Cronologia locale" href="reference/ref-14.htm"/>
+        <topic label="Selezione - Cronologia locale" href="reference/ref-27.htm"/>
+    </context>
+    <context id="perspectives_preference_page_context">
+        <description>Consente di impostare lo stato delle prospettive esistenti.</description>
+        <topic label="Preferenze - Prospettive" href="reference/ref-15.htm"/>
+        <topic label="Prospettive" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="views_preference_page_context">
+        <description>Questa pagina delle preferenze è utilizzata per impostare
+preferenze di aspetto e di layout delle viste nel workbench.</description>
+        <topic label="Preferenze - Aspetto" href="reference/ref-16.htm"/>
+        <topic label="Viste" href="concepts/concepts-5.htm"/>
+    </context>
+    <context id="workbench_preference_page_context">
+        <description>Consente di impostare le preferenze generali del workbench.</description>
+        <topic label="Preferenze - Workbench" href="reference/ref-10.htm"/>
+    </context>
+    <context id="font_preference_page_context">
+        <description>Questa pagina delle preferenze viene utilizzata per
+impostare i tipi di carattere utilizzati nel workbench.</description>
+        <topic label="Preferenze - Tipi di carattere" href="reference/ref-fonts.htm"/>
+    </context>
+    <context id="workbench_editor_preference_page_context">
+        <description>Questa pagina delle preferenze è utilizzata per impostare preferenze per l'area dell'editor nel workbench.</description>
+        <topic label="Preferenze - Editor" href="reference/ref-texteditorprefs.htm"/>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="compare_viewers_preference_page_context">
+        <description>Questa pagina delle preferenze è utilizzata per impostare preferenze per il confronto di visualizzatori nel workbench.</description>
+        <topic label="Preferenze - Confronta" href="reference/ref-11.htm"/>
+        <topic label="Confronto di risorse" href="reference/ref-25.htm"/>
+    </context>
+    <!-- Property pages -->
+    <context id="project_reference_property_page_context">
+        <description>Consente di impostare i progetti cui si fa riferimento.</description>
+        <topic label="Vista Selezione - Pagina Proprietà" href="reference/ref-27.htm"/>
+        <topic label="Visualizzazione delle proprietà delle risorse" href="tasks/tasks-49.htm"/>
+    </context>
+    <context id="resource_info_property_page_context">
+        <description>Consente di visualizzare informazioni relative alla risorsa selezionata.</description>
+        <topic label="Vista Selezione - Pagina Proprietà" href="reference/ref-27.htm"/>
+        <topic label="Visualizzazione delle proprietà delle risorse" href="tasks/tasks-49.htm"/>
+    </context>
+    <!-- Views -->
+    <context id="bookmark_view_context">
+        <description>Visualizza tutti i segnalibri.</description>
+        <topic label="Viste" href="concepts/concepts-5.htm"/>
+        <topic label="Vista segnalibri" href="reference/ref-28.htm"/>
+    </context>
+    <context id="content_outline_context">
+        <description>Visualizza la struttura di una risorsa (se applicabile) sottoposta a modifica.</description>
+        <topic label="Viste" href="concepts/concepts-5.htm"/>
+        <topic label="Vista Struttura" href="concepts/coutline.htm"/>
+    </context>
+    <context id="resource_view_context">
+        <description>Questa vista mostra tutte le risorse nello spazio di lavoro.</description>
+        <topic label="Viste" href="concepts/concepts-5.htm"/>
+        <topic label="Vista Selezione" href="reference/ref-27.htm"/>
+    </context>
+    <context id="property_sheet_view_context">
+        <description>Questa vista mostra le proprietà di una risorsa selezionata.</description>
+        <topic label="Viste" href="concepts/concepts-5.htm"/>
+        <topic label="Vista Proprietà" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="task_list_view_context">
+        <description>Questa vista mostra problemi di generazione e attività
+(promemoria) create dall'utente o automaticamente generate durante la fase di
+generazione.</description>
+        <topic label="Viste" href="concepts/concepts-5.htm"/>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <!-- Property sheet -->
+    <context id="property_sheet_page_help_context">
+        <description>La vista Proprietà mostra le proprietà della risorsa
+selezionata.</description>
+        <topic label="Viste" href="concepts/concepts-5.htm"/>
+        <topic label="Vista Proprietà" href="concepts/cpropview.htm"/>
+    </context>
+    <!-- Windows -->
+    <context id="detached_window_context">
+        <description>Le viste possono essere disancorate da una finestra del workbench ed essere inserite in finestre mobili sul desktop.</description>
+        <topic label="Ancoraggio delle viste" href="tasks/tasks-3e.htm"/>
+        <topic label="Layout della finestra del workbench" href="reference/ref-23.htm"/>
+        <topic label="Viste" href="concepts/concepts-5.htm"/>
+    </context>
+    <context id="workbench_window_context">
+        <description>Ogni finestra del workbench contiene una o più prospettive, composte da diverse viste e editor.</description>
+        <topic label="Workbench" href="concepts/concepts-2.htm"/>
+        <topic label="Prospettive" href="concepts/concepts-4.htm"/>
+        <topic label="Gestione del workbench" href="tasks/tasks-1.htm"/>
+    </context>
+    <!-- Wizard pages -->
+    <context id="new_project_wizard_page_context">
+        <description>Questa procedura guidata consente di creare agevolmente un nuovo progetto Java nel workbench.</description>
+        <topic label="Procedura guidata Nuovo progetto" href="reference/ref-37.htm"/>
+        <topic label="Risorse" href="concepts/concepts-12.htm"/>
+        <topic label="Creazione risorse - Progetti" href="tasks/tasks-42.htm"/>
+    </context>
+    <context id="new_project_reference_wizard_page_context">
+        <description>Questa pagina della procedura guidata consente di selezionare altri progetti a cui farà riferimento questo progetto.</description>
+        <topic label="Pagina Seleziona i progetti di riferimento" href="reference/ref-37.htm"/>
+        <topic label="Risorse" href="concepts/concepts-12.htm"/>
+    </context>
+    <context id="new_folder_wizard_page_context">
+        <description>Procedura guidata per la creazione di una nuova risorsa cartella.</description>
+        <topic label="Procedura guidata Nuova cartella" href="reference/ref-38.htm"/>
+        <topic label="Risorse" href="concepts/concepts-12.htm"/>
+        <topic label="Creazione risorse - Cartelle" href="tasks/tasks-43.htm"/>
+    </context>
+    <context id="new_file_wizard_page_context">
+        <description>Procedura guidata per la creazione di una nuova risorsa file.</description>
+        <topic label="Procedura guidata Nuovo file" href="reference/ref-39.htm"/>
+        <topic label="Risorse" href="concepts/concepts-12.htm"/>
+        <topic label="Creazione risorse - File" href="tasks/tasks-44.htm"/>
+    </context>
+    <context id="new_wizard_selection_wizard_page_context">
+        <description>Scegliere il tipo di risorsa che si desidera creare.</description>
+        <topic label="Risorse" href="concepts/concepts-12.htm"/>
+    </context>
+    <context id="export_wizard_selection_wizard_page_context">
+        <description>Scegliere il tipo di esportazione da eseguire.</description>
+        <topic label="Esportazione di file" href="tasks/tasks-57.htm"/>
+        <topic label="Esportazione nel filesystem" href="tasks/tasks-59.htm"/>
+        <topic label="Esportazione in un file zip" href="tasks/tasks-59ag.htm"/>
+    </context>
+    <context id="import_wizard_selection_wizard_page_context">
+        <description>Scegliere il tipo di importazione da eseguire.</description>
+        <topic label="Utilizzo della procedura guidata Importazione" href="tasks/tasks-55.htm"/>
+    </context>
+    <context id="file_system_export_wizard_page">
+        <description>Questa pagina aiuta l'utente a fornire tutte le informazioni necessarie per esportare risorse nel filesystem.</description>
+        <topic label="Utilizzo della procedura guidata Esportazione" href="tasks/tasks-59.htm"/>
+        <topic label="Procedura guidata Esportazione" href="reference/ref-71.htm"/>
+    </context>
+    <context id="file_system_import_wizard_page">
+        <description>Questa pagina aiuta l'utente a fornire tutte le informazioni necessarie per importare file dal filesystem.</description>
+        <topic label="Importazione da filesystem" href="tasks/tasks-55.htm"/>
+        <topic label="Procedura guidata Importazione" href="reference/ref-70.htm"/>
+    </context>
+    <context id="zip_file_export_wizard_page">
+        <description>Questa pagina aiuta l'utente a fornire tutte le informazioni necessarie per esportare risorse dallo spazio di lavoro in un file di archivio.</description>
+        <topic label="Esportazione in un file zip" href="tasks/tasks-59ag.htm"/>
+        <topic label="Procedura guidata Esportazione" href="reference/ref-71.htm"/>
+    </context>
+    <context id="zip_file_import_wizard_page">
+        <description>Questa pagina aiuta l'utente a fornire tutte le informazioni necessarie per importare file da un file di archivio nello spazio di lavoro.</description>
+        <topic label="Importazione da un file zip" href="tasks/tasks-55bg.htm"/>
+        <topic label="Procedura guidata Importazione" href="reference/ref-70.htm"/>
+    </context>
+    <!-- Wizards -->
+    <context id="new_wizard_context">
+        <description>Queste procedure guidate consentono la creazione di
+nuove risorse e/o elementi</description>
+        <topic label="Risorse" href="concepts/concepts-12.htm"/>
+    </context>
+    <context id="new_wizard_shortcut_context">
+        <description>Apre una procedura guidata di creazione.</description>
+    </context>
+    <context id="new_file_wizard_context">
+        <description>Procedura guidata per la creazione di una nuova risorsa file.</description>
+        <topic label="Procedura guidata Nuovo file" href="reference/ref-39.htm"/>
+        <topic label="Risorse" href="concepts/concepts-12.htm"/>
+        <topic label="Creazione risorse - File" href="tasks/tasks-44.htm"/>
+    </context>
+    <context id="new_folder_wizard_context">
+        <description>Procedura guidata per la creazione di una nuova risorsa cartella.</description>
+        <topic label="Procedura guidata Nuova cartella" href="reference/ref-38.htm"/>
+        <topic label="Risorse" href="concepts/concepts-12.htm"/>
+        <topic label="Creazione risorse - Cartelle" href="tasks/tasks-43.htm"/>
+    </context>
+    <context id="new_project_wizard_context">
+        <description>Procedura guidata per la creazione di un nuovo progetto.</description>
+        <topic label="Procedura guidata Nuovo progetto" href="reference/ref-37.htm"/>
+        <topic label="Risorse" href="concepts/concepts-12.htm"/>
+        <topic label="Creazione risorse - Progetti" href="tasks/tasks-42.htm"/>
+    </context>
+    <context id="import_wizard_context">
+        <description>Procedura guidata per l'importazione di risorse.</description>
+        <topic label="Utilizzo della procedura guidata Importazione" href="tasks/tasks-55.htm"/>
+    </context>
+    <context id="export_wizard_context">
+        <description>Procedura guidata per l'esportazione di risorse.</description>
+        <topic label="Esportazione di file" href="tasks/tasks-57.htm"/>
+        <topic label="Esportazione nel filesystem" href="tasks/tasks-59.htm"/>
+        <topic label="Esportazione in un file zip" href="tasks/tasks-59ag.htm"/>
+        <topic label="Procedura guidata Esportazione" href="reference/ref-71.htm"/>
+    </context>
+    <!-- terminal reference commented out in org.eclipse.ui.internal.WorkbenchActionBuilder, line 301 
+  <context id="close_all_saved_action_context">
+    <description></description>
+  </context>
+  -->
+    <context id="show_view_menu_action_context">
+        <description>Visualizza il menu per la vista attiva.</description>
+    </context>
+    <context id="workbench_editors_action_context">
+        <description>Visualizza la finestra di dialogo Passa all'editor.</description>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <!-- terminal reference in org.eclipse.ui.internal.IHelpContextIds, line 77
+  <context id="new_wizard_shortcut_action_context">
+    <description></description>
+  </context>
+  -->
+    <context id="text_cut_action_context">
+        <description>Taglia il testo selezionato e lo copia negli appunti.</description>
+        <topic label="Menu Modifica - Taglia" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_copy_action_context">
+        <description>Copia la selezione negli Appunti.</description>
+        <topic label="Menu Modifica - Copia" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_paste_action_context">
+        <description>Incolla il contenuto degli appunti nella posizione corrente del cursore.</description>
+        <topic label="Menu Modifica - Incolla" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_select_all_action_context">
+        <description>Seleziona tutti i contenuti.</description>
+        <topic label="Menu Modifica - Seleziona tutto" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_delete_action_context">
+        <description>Elimina la selezione.</description>
+        <topic label="Menu Modifica - Elimina" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_cut_action_context">
+        <description>Taglia il testo selezionato e lo copia negli appunti.</description>
+        <topic label="Menu Modifica - Taglia" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_copy_action_context">
+        <description>Copia la selezione negli Appunti.</description>
+        <topic label="Menu Modifica - Copia" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_paste_action_context">
+        <description>Incolla il contenuto degli appunti nella posizione corrente del cursore.</description>
+        <topic label="Menu Modifica - Incolla" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_delete_action_context">
+        <description>Elimina la selezione.</description>
+        <topic label="Menu Modifica - Elimina" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_find_action_context">
+        <description>Questa azione visualizza una finestra di dialogo per la specifica del testo da ricercare nell'editor.</description>
+        <topic label="Menu Modifica - Trova/Sostituisci" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_select_all_action_context">
+        <description>Seleziona tutti i contenuti.</description>
+        <topic label="Menu Modifica - Seleziona tutto" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_undo_action_context">
+        <description>Annulla la modifica precedente.</description>
+        <topic label="Menu Modifica - Annulla ultima modifica" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_redo_action_context">
+        <description>Ripete la modifica precedente.</description>
+        <topic label="Menu Modifica - Ripeti ultima modifica" href="reference/ref-57.htm"/>
+    </context>
+    <context id="working_set_selection_dialog_context">
+        <description>Questa finestra di dialogo consente di aggiungere, rimuovere e configurare insiemi di lavoro per l'utilizzo all'interno del workbench.  Un insieme di lavoro è un sottoinsieme dello spazio di lavoro.</description>
+    </context>
+    <context id="delete_project_dialog_context">
+        <description>Questa finestra di dialogo chiede di confermare se si desidera o no eliminare il progetto selezionato; in caso di risposta affermativa, chiede se si desidera eliminare anche i file di progetto sottostanti sul filesystem locale corrispondenti a tale progetto.</description>
+    </context>
+    <context id="filter_dialog_context">
+        <description>Questa finestra di dialogo consente di selezionare i filtri per isolare specifici elementi esclusivamente dello spazio di lavoro.</description>
+    </context>
+    <context id="marker_resolution_selection_dialog_context">
+        <description>Questa finestra di dialogo consente di scegliere da un
+elenco di risoluzioni possibili.</description>
+    </context>
+    <context id="workbench_editors_dialog">
+        <description>Questa finestra di dialogo visualizza tutti gli editor aperti, consentendo di scegliere opportunamente quali si desiderano chiudere o salvare.</description>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="welcome_page_selection_dialog">
+        <description>Questa finestra di dialogo consente scegliere tra una delle pagine iniziali disponibili. Le pagine iniziali possono fornire un punto di partenza utilizzando componenti particolari del workbench.</description>
+    </context>
+    <context id="decorators_preference_page_context">
+        <description>Questa pagina consente di specificare quali decoratori si desiderano visualizzare sugli elementi all'interno del workbench. I decoratori forniscono ulteriori informazioni su un elemento, evitando visualizzazioni confuse.</description>
+        <topic label="Preferenze - Decorazioni etichette" href="reference/ref-decorations.htm"/>
+    </context>
+    <context id="startup_preference_page_context">
+        <description>Questa pagina mostra tutti i plugin attivati all'avvio
+del workbench.</description>
+        <topic label="Preferenze - Avvio" href="reference/ref-startup.htm"/>
+    </context>
+    <context id="working_set_new_wizard_context">
+        <description>Questa procedura guidata condurrà l'utente nel processo di creazione di un insieme di lavoro.</description>
+    </context>
+    <context id="working_set_edit_wizard_context">
+        <description>Questa procedura guidata condurrà l'utente nel processo di modifica di un insieme di lavoro.</description>
+    </context>
+    <context id="filters_action_context">
+        <description>Visualizza una finestra di dialogo che consente di selezionare i filtri per isolare specifici elementi esclusivamente dello spazio di lavoro.</description>
+    </context>
+    <context id="mark_completed_action_context">
+        <description>Contrassegna l'attività selezionata come
+&apos;completata&apos;.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="resolve_marker_action_context">
+        <description>Visualizza una finestra di dialogo che consente di
+scegliere da un elenco di risoluzioni possibili.</description>
+    </context>
+    <context id="select_all_tasks_action_context">
+        <description>Seleziona tutte le attività nella vista Attività.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_properties_action_context">
+        <description>Visualizza una finestra di dialogo che consente di impostare le proprietà per l'attività selezionata.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="back_action_context">
+        <description>Sposta indietro di un frame.</description>
+        <topic label="Vista Selezione" href="concepts/cnav.htm"/>
+    </context>
+    <context id="forward_action_context">
+        <description>Sposta avanti di un frame.</description>
+        <topic label="Vista Selezione" href="concepts/cnav.htm"/>
+    </context>
+    <context id="go_into_action_context">
+        <description>Eseguire il drill down nell'elemento selezionato</description>
+        <topic label="Vista Selezione" href="concepts/cnav.htm"/>
+    </context>
+    <context id="up_action_context">
+        <description>Sposta su di un frame.</description>
+        <topic label="Vista Selezione" href="concepts/cnav.htm"/>
+    </context>
+    <context id="lock_toolbar_action_context">
+        <description>Blocca le barre degli strumenti all'interno del workbench.</description>
+    </context>
+    <context id="about_plugins_dialog_context">
+        <description>Questa finestra di dialogo mostra i dettagli sui plugin
+installati.</description>
+    </context>
+    <context id="about_features_plugins_dialog_context">
+        <description>Questa finestra di dialogo mostra i dettagli sui plugin
+all'interno di una particolare funzione.</description>
+    </context>
+    <context id="about_features_dialog_context">
+        <description>Questa finestra di dialogo mostra i dettagli sulle
+funzioni installate.</description>
+    </context>
+    <context id="working_set_resource_page">
+        <description>Questa pagina consente di scegliere le risorse che faranno parte di un insieme di lavoro.</description>
+    </context>
+    <context id="working_set_type_page">
+        <description>Questa pagina consente di selezionare il tipo di insieme di
+lavoro desiderato.</description>
+    </context>
+    <context id="copy_bookmark_action_context">
+        <description>Copia il segnalibro selezionato negli appunti.</description>
+        <topic label="Menu Modifica - Copia" href="reference/ref-57.htm"/>
+        <topic label="Segnalibri" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="paste_bookmark_action_context">
+        <description>Incolla i segnalibri negli appunti.</description>
+        <topic label="Menu Modifica - Incolla" href="reference/ref-57.htm"/>
+        <topic label="Segnalibri" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_properties_action_context">
+        <description>Visualizza una finestra di dialogo che consente di
+impostare le proprietà per il segnalibro selezionato.</description>
+        <topic label="Segnalibri" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_ascending_action_context">
+        <description>Ordina i segnalibri in ordine crescente.</description>
+        <topic label="Segnalibri" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_descending_action_context">
+        <description>Ordina i segnalibri in ordine decrescente.</description>
+        <topic label="Segnalibri" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_description_action_context">
+        <description>Ordina i segnalibri per descrizione.</description>
+        <topic label="Segnalibri" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_resource_action_context">
+        <description>Ordina i segnalibri per risorsa.</description>
+        <topic label="Segnalibri" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_folder_action_context">
+        <description>Ordina i segnalibri per cartella.</description>
+        <topic label="Segnalibri" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_location_action_context">
+        <description>Ordina i segnalibri per percorso.</description>
+        <topic label="Segnalibri" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_creation_time_action_context">
+        <description>Ordina i segnalibri per data di creazione.</description>
+        <topic label="Segnalibri" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="resource_navigator_copy_action_context">
+        <description>Copia la risorsa selezionata negli appunti.</description>
+        <topic label="Menu Modifica - Copia" href="reference/ref-57.htm"/>
+        <topic label="Vista Selezione" href="concepts/cnav.htm"/>
+    </context>
+    <context id="resource_navigator_paste_action_context">
+        <description>Incolla la risorsa memorizzata negli appunti sulla posizione della risorsa correntemente selezionata.</description>
+        <topic label="Menu Modifica - Incolla" href="reference/ref-57.htm"/>
+        <topic label="Vista Selezione" href="concepts/cnav.htm"/>
+    </context>
+    <context id="properties_copy_action_context">
+        <description>Copia la proprietà selezionata negli appunti.</description>
+        <topic label="Menu Modifica - Copia" href="reference/ref-57.htm"/>
+    </context>
+    <context id="copy_task_action_context">
+        <description>Copia l'attività selezionata negli appunti.</description>
+        <topic label="Menu Modifica - Copia" href="reference/ref-57.htm"/>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="paste_task_action_context">
+        <description>Incolla il contenuto degli appunti nella posizione corrente del cursore.</description>
+        <topic label="Menu Modifica - Incolla" href="reference/ref-57.htm"/>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_properties_dialog_context">
+        <description>Questa finestra di dialogo consente di impostare le proprietà per l'attività selezionata.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_type_action_context">
+        <description>Ordina le attività per tipo.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_completed_action_context">
+        <description>Ordina le attività per completamento.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_priority_action_context">
+        <description>Ordina le attività per priorità.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_description_action_context">
+        <description>Ordina le attività per descrizione.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_resource_action_context">
+        <description>Ordina le attività per risorsa.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_folder_action_context">
+        <description>Ordina le attività per cartella.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_location_action_context">
+        <description>Ordina le attività per percorso.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_creation_time_action_context">
+        <description> Ordina le attività per data di creazione.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_ascending_action_context">
+        <description>Ordina le attività in ordine crescente.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_descending_action_context">
+        <description>Ordina le attività in ordine decrescente.</description>
+        <topic label="Vista Attività" href="reference/ref-31.htm"/>
+    </context>
+    <context id="show_part_pane_menu_action_context">
+        <description>Apre il menu di sistema della vista o dell'editor attivi.</description>
+    </context>
+    <context id="cycle_part_forward_action_context">
+        <description>Visualizza un menu che consente di spostarsi avanti nelle
+viste correntemente aperte.</description>
+    </context>
+    <context id="cycle_part_backward_action_context">
+        <description>Visualizza un menu che consente di spostarsi indietro
+nelle viste correntemente aperte.</description>
+    </context>
+    <context id="cycle_editor_forward_action_context">
+        <description>Visualizza un menu che consente di spostarsi avanti negli editor correntemente aperti.</description>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="cycle_editor_backward_action_context">
+        <description>Visualizza un menu che consente di spostarsi indietro
+negli editor correntemente aperti.</description>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="cycle_perspective_forward_action_context">
+        <description>Visualizza un menu che consente di spostarsi avanti nelle prospettive correntemente aperte.</description>
+        <topic label="Prospettive" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="cycle_perspective_backward_action_context">
+        <description>Visualizza un menu che consente di spostarsi indietro nelle prospettive correntemente aperte.</description>
+        <topic label="Prospettive" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="activate_editor_action_context">
+        <description>Attiva il riquadro dell'editor.</description>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <!-- part of project capability support. currently unused.
+  <context id="project_capability_property_page_context">
+    <description></description>
+  </context>
+
+  <context id="new_project_capability_wizard_page_context">
+    <description></description>
+  </context>
+
+  <context id="new_project_review_wizard_page_context">
+    <description></description>
+  </context>
+
+  <context id="new_project_configure_wizard_page_context">
+    <description></description>
+  </context>
+
+  <context id="show_project_perspective_dialog_context">
+    <description></description>
+  </context>
+
+  <context id="update_capability_wizard_context">
+    <description></description>
+  </context>
+  -->
+
+    <!--new context ids-->
+    <context id="goto_last_edit_position_action_context">
+        <description>Questo comando riporta indietro all'ultimo percorso di
+modifica.</description>
+    </context>
+    <context id="ConvertLineDelimitersToMAC_action_context">
+        <description>Questo comando converte il file per utilizzare i
+delimitatori di riga normali di MacOS (CR).</description>
+    </context>
+    <context id="ConvertLineDelimitersToUNIX_action_context">
+        <description>Questo comando converte il file per utilizzare i
+delimitatori di riga normali di Unix/MacOS X (LF).</description>
+    </context>
+    <context id="ConvertLineDelimitersToWindows_action_context">
+        <description>Questo comando converte il file per utilizzare i
+delimitatori di riga normali di Windows (CRLF).</description>
+    </context>
+    <context id="FindIncrementalReverse_action_context">
+        <description>Questo comando passa al modo di ricerca incrementale
+precedente oppure va alla corrispondenza precedente se si trova già in modo
+incrementale. Esc esce dal modo di ricerca incrementale.</description>
+    </context>
+    <context id="DeleteLineToBeginning_action_context">
+        <description>Questo comando cancella il testo dal punto in cui si trova
+il cursore fino all'inizio della riga.</description>
+    </context>
+    <context id="DeleteLineToEnd_action_context">
+        <description>Questo comando cancella il testo dal punto in cui si trova
+il cursore fino alla fine della riga.</description>
+    </context>
+    <context id="SetMark_action_context">
+        <description>Questo comando imposta un contrassegno nell'editor.</description>
+    </context>
+    <context id="FindNext_action_context">
+        <description>Questo comando trova la corrispondenza successiva nell'editor.</description>
+    </context>
+    <context id="CutLine_action_context">
+        <description>Questo comando taglia l'intera riga negli
+appunti.</description>
+    </context>
+    <context id="DeleteLine_action_context">
+        <description>Questo comando cancella l'intera riga.</description>
+    </context>
+    <context id="CutLineToEnd_action_context">
+        <description>Questo comando taglia il testo dal punto in cui si trova
+il cursore fino alla fine della riga e lo mette negli appunti.</description>
+    </context>
+    <context id="ClearMark_action_context">
+        <description>Questo comando annulla il contrassegno
+precedentemente impostato nell'editor.</description>
+    </context>
+    <context id="SwapMark_action_context">
+        <description>Scambia la posizione del cursore corrente con il
+contrassegno precedentemente impostato.</description>
+    </context>
+    <context id="FindIncremental_action_context">
+        <description>Questo comando passa al modo di ricerca incrementale
+successivo oppure va alla corrispondenza successiva se si trova già in
+modo incrementale. Esc esce dal modo di ricerca incrementale.</description>
+    </context>
+    <context id="FindPrevious_action_context">
+        <description>Questo comando trova la corrispondenza precedente nell'editor.</description>
+    </context>
+    <context id="CutLineToBeginning_action_context">
+        <description>Questo comando taglia il testo dal punto in cui si trova
+il cursore fino all'inizio della riga e lo mette negli appunti.</description>
+    </context>
+    <context id="US-ASCII_action_context">
+        <description>Questo comando imposta la codifica a US-ASCII.</description>
+    </context>
+    <context id="ISO-8859-1_action_context">
+        <description>Questo comando imposta la codifica a ISO-8859-1.</description>
+    </context>
+    <context id="UTF-8_action_context">
+        <description>Questo comando imposta la codifica a UTF-8.</description>
+    </context>
+    <context id="UTF-16BE_action_context">
+        <description>Questo comando imposta la codifica a UTF-16 (big-endian).</description>
+    </context>
+    <context id="UTF-16LE_action_context">
+        <description>Questo comando imposta la codifica a UTF-16
+(little-endian).</description>
+    </context>
+    <context id="UTF-16_action_context">
+        <description>Questo comando imposta la codifica a UTF-16.</description>
+    </context>
+    <context id="System_action_context">
+        <description>Questo comando imposta la codifica alla codifica di
+sistema corrente.</description>
+    </context>
+    <context id="Default_action_context">
+        <description>Questo comando imposta la codifica sulla codifica predefinita.</description>
+    </context>
+    <context id="Custom_action_context">
+        <description>Questo comando consente di impostare una codifica
+personalizzata.</description>
+    </context>
+    <context id="text_editor_preference_page_context">
+        <description>Questa pagina delle preferenze è utilizzata per impostare
+preferenze per l'editor di testo.</description>
+        <topic label="Preferenze - Editor di testo" href="reference/ref-texteditorprefs.htm"/>
+        <topic label="Editor" href="concepts/concepts-6.htm"/>
+    </context>
+    <!-- Help Menu: Help Contents -->
+    <context  id="help_contents_action_context" >
+        <description>Questo comando visualizza la Guida. La vista Guida contiene documentazione di supporto, argomenti e informazioni relativi al workbench e ai componenti installati.</description>
+        <topic label="Sistema della Guida in linea" href="/org.eclipse.platform.doc.user/concepts/chelpsys.htm"/>
+        <topic label="Menu Guida - Argomenti della Guida" href="/org.eclipse.platform.doc.user/reference/ref-61.htm"/>
+    </context>
+</contexts>

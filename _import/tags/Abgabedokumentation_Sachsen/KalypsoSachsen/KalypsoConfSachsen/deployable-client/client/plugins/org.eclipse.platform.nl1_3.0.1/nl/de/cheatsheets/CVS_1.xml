@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<cheatsheet title="CVS - Unterschiedliche Verzweigungen mischen">
+
+	<intro 
+		href="/org.eclipse.platform.doc.user/reference/ref-cheatsheets.htm">
+		<description>
+Dieser Spickzettel startet automatisch Assistenten, führt Aktionen aus und führt Sie durch die einzelnen Schritte, mit denen Sie �änderungen aus einer CVS-Verzweigung in eine andere Verzweigung oder in HEAD mischen können. Klicken Sie auf das Hilfesymbol (?), wenn Sie mehr über die Verwendung von Spickzetteln wissen oder eine Liste der verfügbaren Spickzettel anzeigen möchten. Wenn Sie die Arbeit mit diesem Spickzettel beginnen möchten, klicken Sie unten auf die Schaltfläche 'Anfangen'.</description>
+	</intro>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Verzweigungs- und Versionsinformationen ermitteln">
+		<description>
+In diesem Schritt müssen Sie den Namen der Verzweigung oder der Version ermitteln, die die �änderungen enthält, sowie die Version, aus der die Verzweigung erstellt wurde. Hierbei handelt es sich um eine manuelle Task. Sie müssen die entsprechenden �änderungen vornehmen und dann auf die Schaltfläche 'Fertig' klicken, um mit dem nächsten Schritt fortfahren zu können. 
+		</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Ziel in den Arbeitsbereich laden">
+		<description>
+Wählen Sie das Projekt aus, und wählen Sie dann im Kontextmenü die Optionen 'Ersetzen durch &gt; Andere Verzweigung oder Version' aus. Wählen Sie dann  die Verzweigung aus, die als Ersetzung verwendet werden soll. In diesem Schritt müssen Sie sicherstellen, dass das Ziel in den Arbeitsbereich geladen wird. Hierbei handelt es sich um eine manuelle Task. Sie müssen die entsprechenden �änderungen vornehmen und dann auf die Schaltfläche 'Fertig' klicken, um mit dem nächsten Schritt fortfahren zu können.</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm" 
+		title="Details für Mischoperation">
+		<description>
+Wählen Sie das Projekt aus, wählen Sie die Optionen 'Team &gt; Mischen' aus, und arbeiten Sie den Assistenten wie erforderlich durch. Dieser Schritt gibt die Details für die Mischoperation an.  Hierbei handelt es sich um eine manuelle Task. Sie müssen die entsprechenden �änderungen vornehmen und dann auf die Schaltfläche 'Fertig' klicken, um mit dem nächsten Schritt fortfahren zu können.</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Mit Mischeditor arbeiten">
+		<description>
+Im Mischeditor werden die �änderungen manuell gemischt. Dieser Schritt lädt die erforderlichen �änderungen in den Arbeitsbereich. Hierbei handelt es sich um eine manuelle Task. Sie müssen die entsprechenden �änderungen vornehmen und dann auf die Schaltfläche 'Fertig' klicken, um mit dem nächsten Schritt fortfahren zu können.</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="�änderungen festschreiben">
+		<description>
+Wählen Sie die Optionen 'Team &gt; Mit Repository synchronisieren' aus, und schreiben Sie anschließend alle �änderungen im Repository fest. Dieser Schritt schließt die Übertragung der �änderungen aus dem Arbeitsbereich in das CVS-Repository ab. Hierbei handelt es sich um eine manuelle Task. Sie müssen die entsprechenden �änderungen vornehmen und dann auf die Schaltfläche 'Fertig' klicken, um mit dem nächsten Schritt fortfahren zu können.</description>
+	</item>
+
+</cheatsheet>
