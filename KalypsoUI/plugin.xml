@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.ui"
+   name="Kalypso UI"
+   version="1.0.0"
+   provider-name="org.kalypso"
+   class="org.kalypso.plugin.KalypsoGisPlugin">
+   <runtime>
+      <library name="kalypsoUi.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/deegreekalypso.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.kalypso.util"/>
+      <import plugin="org.eclipse.ui"/>
+   </requires>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            icon="icons/sample.gif"
+            class="org.kalypso.editor.mapeditor.GisMapEditor"
+            default="true"
+            name="Kalypso Gisview Editor"
+            id="org.kalypso.editor.mapeditor.GisMapEditor"
+            extensions="gmt"/>
+      <editor
+            class="org.kalypso.editor.tableeditor.GisTableEditor"
+            icon="icons/sample.gif"
+            default="true"
+            name="Kalypso GisTableEditor"
+            id="org.kalypso.editor.tableeditor.GisTableEditor"
+            extensions="gtt"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.kalypso.util.repository.view.RepositoryExplorerPart"
+            icon="icons/sample.gif"
+            category="Kalypso"
+            name="Zeitreihen Repository"
+            id="org.kalypso.util.repository.view.RepositoryExplorerPart"/>
+      <category
+            name="Kalypso"
+            id="Kalypso"/>
+   </extension>
+
+</plugin>
