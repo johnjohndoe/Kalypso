@@ -14,6 +14,7 @@ import org.deegree.graphics.sld.Geometry;
 import org.deegree.graphics.sld.PolygonSymbolizer;
 import org.deegree.graphics.sld.Rule;
 import org.deegree.graphics.sld.Symbolizer;
+import org.deegree.graphics.sld.TextSymbolizer;
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
@@ -41,6 +42,9 @@ import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
 import org.kalypso.ui.editor.styleeditor.panels.ControlRulePanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
+import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
+import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
+import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.TextSymbolizerLayout;
 
 /**
  * @author F.Lindemann
@@ -115,7 +119,7 @@ public class SLDEditorGuiBuilder
     }
 
     // check whether there are featureTypes that have numeric properties to be used by a pattern-filter    
-    ArrayList numericFeatureTypePropertylist = new ArrayList();
+    final ArrayList numericFeatureTypePropertylist = new ArrayList();
     FeatureTypeProperty[] ftp = getFeatureType().getProperties();
     for( int i = 0; i < ftp.length; i++ )
     {
@@ -137,7 +141,7 @@ public class SLDEditorGuiBuilder
         numericFeatureTypePropertylist.add( ftp[i] );
     }    
     ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite, "Rule:",
-        rulePatternCollection.size() );
+        rulePatternCollection.size() , numericFeatureTypePropertylist.size());
 
     final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder( mainComposite,
         rulePatternCollection, userStyle, theme );
@@ -235,6 +239,80 @@ public class SLDEditorGuiBuilder
         }
         case ControlRulePanel.ADD_PATTERN_RULE:
         {
+          // create a pattern-filter for this style
+          if( numericFeatureTypePropertylist.size() > 0 )
+          {
+            ArrayList ruleList = new ArrayList();
+            // set by default first featuretypeproperty
+            FeatureTypeProperty prop = (FeatureTypeProperty)numericFeatureTypePropertylist.get( 0 );
+            BoundaryExpression upperBoundary = null;
+            BoundaryExpression lowerBoundary = null;
+            PropertyName propertyName = new PropertyName( prop.getName() );
+            PropertyIsBetweenOperation operation = null;           
+           
+            int geometryType = TextSymbolizerLayout.getFeatureTypeGeometryType(getFeatureType());
+//            switch(geometryType)
+//            {
+//              case GM_POINT:
+//              {
+//                break;
+//              }
+//              case GM_LINESTRING:
+//              {
+//                break;
+//              }
+//              case GM_POLYGON:
+//              {
+//                break;
+//              }
+//              case GM_MULTIPOINT:
+//              {
+//                break;
+//              }  
+//              case GM_OBJECT:
+//              {
+//                break;
+//              }                  
+//            }
+              
+              
+            String[] geometryObjects = AddSymbolizerPanel.getGeometries( getFeatureType() );
+            if( geometryObjects.length > 0 )
+            {       
+              System.out.println("prop " + prop + " geom " +  geometryObjects[0] );
+//              // I choose to use a ploygon-symbolier hopeing that it works
+//              Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( geometryObjects[0], "Polygon",
+//                  getFeatureType() );
+//              Geometry geom = symbo.getGeometry();
+//
+//              String patternName = "-title-" + new Date().getTime();
+//
+//              for( int i = 0; i < 5; i++ )
+//              {
+//                lowerBoundary = new BoundaryExpression( "" + ( i * 1 ) );
+//                upperBoundary = new BoundaryExpression( "" + ( ( i + 1 ) * 1 ) );
+//                operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary,
+//                    upperBoundary );
+//
+//                PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
+//                symb.setGeometry( geom );
+//
+//                Color color = new Color( 600000 * ( i + 1 ) );
+//                Fill fill = StyleFactory.createFill( color );
+//                symb.setFill( fill );
+//                Symbolizer s[] =
+//                { symb };
+//
+//                ruleList.add( StyleFactory.createRule( s, patternName, "-name-" + i, "abstract",
+//                    null, new ComplexFilter( operation ), false, symb.getMinScaleDenominator(), symb
+//                        .getMaxScaleDenominator() ) );
+//                userStyle.getFeatureTypeStyles()[0].addRule( StyleFactory.createRule( s,
+//                    patternName,"-name-" + i, "abstract", null, new ComplexFilter( operation ),
+//                    false, symb.getMinScaleDenominator(), symb.getMaxScaleDenominator() ) );
+              }
+              //userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );             
+           //   buildSWTGui( userStyle, theme );
+            }               
           System.out.println("sadfsd");
           break;
         }

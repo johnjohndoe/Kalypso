@@ -44,9 +44,13 @@ public class ControlRulePanel
 
   private int canDelete = -1;
 
-  public ControlRulePanel( Composite parent, String m_labelText, int m_size )
+  private int possibleNumericFeatureTypeNumber = 0;
+
+  public ControlRulePanel( Composite parent, String m_labelText, int m_size,
+      int m_possibleNumericFeatureTypeNumber )
   {
     setCanDelete( m_size );
+    setPossibleNumericFeatureTypeNumber( m_possibleNumericFeatureTypeNumber );
     setLabelText( m_labelText );
     composite = new Composite( parent, SWT.NULL );
     FormLayout compositeLayout = new FormLayout();
@@ -85,6 +89,8 @@ public class ControlRulePanel
     addPatternRuleButtonData.top = new FormAttachment( 100, 1000, 0 );
     addPatternRuleButton.setLayoutData( addPatternRuleButtonData );
     addPatternRuleButton.setText( "+" );
+    if( getPossibleNumericFeatureTypeNumber() == 0 )
+      addPatternRuleButton.setEnabled( false );
     addPatternRuleButton.setToolTipText( "Add Pattern rule" );
     addPatternRuleButton.addSelectionListener( new SelectionListener()
     {
@@ -245,5 +251,15 @@ public class ControlRulePanel
   public void setLabelText( String m_labelText )
   {
     this.labelText = m_labelText;
+  }
+
+  public int getPossibleNumericFeatureTypeNumber()
+  {
+    return possibleNumericFeatureTypeNumber;
+  }
+
+  public void setPossibleNumericFeatureTypeNumber( int m_possibleNumericFeatureTypeNumber )
+  {
+    this.possibleNumericFeatureTypeNumber = m_possibleNumericFeatureTypeNumber;
   }
 }
