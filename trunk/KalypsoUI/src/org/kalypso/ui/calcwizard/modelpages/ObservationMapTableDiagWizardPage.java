@@ -124,7 +124,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     final Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayout( new GridLayout() );
     
-    final Control mapControl = initMap( composite, MapPanel.WIDGET_TOGGLE_SELECT );
+    final Control mapControl = initMap( composite, MapPanel.WIDGET_SINGLE_SELECT);
     final GridData gridData = new GridData( GridData.FILL_BOTH );
     mapControl.setLayoutData( gridData );
   }
