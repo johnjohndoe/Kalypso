@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<NaModell fid="NaModell0" 
-xmlns:gml="http://www.opengis.net/gml" 
+<NaModell fid="NaModell0" xmlns:gml="http://www.opengis.net/gml" 
 xmlns:xlink="http://www.w3.org/1999/xlink" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xsi:schemaLocation="project:/.model/schema/namodell.xsd">
@@ -98,13 +97,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1002" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1002" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1002" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1002" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1002.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -200,13 +199,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1003" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1003" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1003" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1003" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1003.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -302,13 +301,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1004" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1004" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1004" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1004" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1004.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -404,13 +403,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1005" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1005" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1005" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1005" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1005.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1005.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -506,13 +505,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1006" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1006" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1006" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1006" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1006.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1006.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -608,13 +607,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1007" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1007" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1007" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1007" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1007.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1007.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -710,13 +709,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1008" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1008" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1008" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1008" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1008.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1008.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -812,13 +811,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1009" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1009" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1009" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1009" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1009.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1009.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -914,13 +913,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1010" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1010" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1010" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1010" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1010.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1010.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -1016,13 +1015,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1011" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1011" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1011" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1011" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1011.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1011.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -1118,13 +1117,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1012" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1012" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1012" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1012" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1012.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1012.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -1220,13 +1219,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1013" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1013" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1013" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1013" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1013.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1013.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -1322,13 +1321,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1014" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1014" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1014" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1014" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1014.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1014.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -1424,13 +1423,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1016" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1016" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1016" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1016" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1016.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1016.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -1526,13 +1525,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1020" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1020" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1020" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1020" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1020.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1020.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -1628,13 +1627,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1021" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1021" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1021" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1021" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1021.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1021.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -1730,13 +1729,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1022" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1022" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1022" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1022" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1022.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1022.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -1816,7 +1815,7 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <igwzu>1</igwzu>
           <grundwasserabflussMember>
             <grundwasserabfluss fid="grundwasserabfluss57">
-              <ngwzu xlink:href="#Catchment1014"/>
+              <ngwzu xlink:href="#Catchment1024"/>
               <gwwi>1.0</gwwi>
             </grundwasserabfluss>
           </grundwasserabflussMember>
@@ -1832,13 +1831,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1023" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1023" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1023" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1023" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1023.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1023.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -1934,13 +1933,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1024" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1024" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1024" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1024" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1024.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1024.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -2036,13 +2035,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1025" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1025" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1025" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1025" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1025.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1025.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -2138,13 +2137,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1110" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1110" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1110" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1110" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1110.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1110.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -2240,13 +2239,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1200" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1200" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1200" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1200" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1200.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -2342,13 +2341,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1201" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1201" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1201" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1201" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1201.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1201.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -2444,13 +2443,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1210" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1210" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1210" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1210" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1210.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1210.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -2546,13 +2545,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1211" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1211" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1211" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1211" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1211.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1211.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -2648,13 +2647,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1212" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1212" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1212" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1212" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1212.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1212.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -2750,13 +2749,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1220" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1220" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1220" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1220" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1220.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1220.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -2852,13 +2851,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1221" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1221" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1221" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1221" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1221.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1221.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -2954,13 +2953,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1300" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1300" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1300" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1300" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1300.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -3056,13 +3055,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1301" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1301" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1301" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1301" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1301.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1301.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -3158,13 +3157,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1302" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1302" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1302" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1302" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1302.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1302.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -3260,13 +3259,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1303" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1303" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1303" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1303" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1303.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1303.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -3362,13 +3361,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1304" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1304" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1304" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1304" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1304.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1304.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -3464,13 +3463,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1401" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1401" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1401" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1401" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1401.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1401.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -3566,13 +3565,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1402" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1402" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1402" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1402" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1402.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1402.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -3668,13 +3667,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1403" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1403" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1403" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1403" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1403.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1403.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -3770,13 +3769,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1404" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1404" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1404" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1404" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1404.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1404.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -3871,13 +3870,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1500" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1500" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1500" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1500" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1500.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1500.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -3973,13 +3972,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1600" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1600" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1600" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1600" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1600.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1600.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -4075,13 +4074,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1601" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1601" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1601" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1601" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1601.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1601.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -4177,13 +4176,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1700" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1700" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1700" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1700" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1700.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1700.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -4279,13 +4278,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1800" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1800" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1800" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1800" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1800.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1800.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -4381,13 +4380,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2000" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2000" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2000" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2000" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2000.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -4483,13 +4482,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2003" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2003" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2003" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2003" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2003.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -4585,13 +4584,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2004" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2004" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2004" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2004" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2004.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -4687,13 +4686,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2005" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2005" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2005" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2005" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2005.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2005.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -4789,13 +4788,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2006" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2006" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2006" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2006" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2006.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2006.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -4891,13 +4890,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2007" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2007" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2007" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2007" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2007.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2007.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -4993,13 +4992,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2008" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2008" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2008" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2008" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2008.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2008.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -5095,13 +5094,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3001" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3001" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3001" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3001" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3001.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -5197,13 +5196,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3002" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3002" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3002" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3002" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3002.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -5299,13 +5298,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3003" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3003" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3003" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3003" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3003.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -5401,13 +5400,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3004" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3004" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3004" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3004" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3004.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -5503,13 +5502,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3100" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3100" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3100" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3100" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3100.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -5605,13 +5604,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3101" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3101" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3101" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3101" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3101.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3101.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -5707,13 +5706,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3102" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3102" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3102" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3102" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3102.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3102.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -5809,13 +5808,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3103" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3103" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3103" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3103" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3103.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3103.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -5911,13 +5910,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3104" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3104" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3104" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3104" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3104.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3104.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -6013,13 +6012,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3105" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3105" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3105" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3105" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3105.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3105.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -6115,13 +6114,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3201" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3201" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3201" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3201" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3201.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3201.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -6217,13 +6216,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3202" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3202" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3202" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3202" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3202.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3202.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -6319,13 +6318,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3203" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3203" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3203" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment3203" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3203.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment3203.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -6421,13 +6420,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4000" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4000" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4000" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4000" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment4000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment4000.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -6523,13 +6522,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4001" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4001" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4001" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4001" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment4001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment4001.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -6625,13 +6624,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4002" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4002" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4002" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4002" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment4002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment4002.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -6727,13 +6726,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4100" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4100" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4100" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4100" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment4100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment4100.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -6829,13 +6828,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4101" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4101" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4101" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4101" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment4101.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment4101.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -6931,13 +6930,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4200" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4200" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4200" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment4200" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment4200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment4200.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -7020,13 +7019,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment5000" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment5000" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment5000" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment5000" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment5000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment5000.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -7122,13 +7121,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment6000" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment6000" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment6000" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment6000" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment6000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment6000.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -7223,13 +7222,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment6100" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment6100" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment6100" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment6100" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment6100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment6100.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -7325,13 +7324,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7001" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7001" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7001" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7001" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7001.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -7427,13 +7426,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7002" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7002" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7002" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7002" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7002.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -7529,13 +7528,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7003" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7003" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7003" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7003" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7003.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -7631,13 +7630,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7004" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7004" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7004" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7004" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7004.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -7733,13 +7732,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7005" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7005" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7005" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7005" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7005.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7005.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -7835,13 +7834,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7006" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7006" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7006" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7006" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7006.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7006.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -7937,13 +7936,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7007" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7007" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7007" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7007" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7007.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7007.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -8039,13 +8038,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7008" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7008" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7008" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7008" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7008.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7008.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -8141,13 +8140,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7200" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7200" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7200" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7200" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7200.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -8243,13 +8242,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7201" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7201" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7201" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7201" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7201.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7201.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -8345,13 +8344,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7203" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7203" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7203" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7203" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7203.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7203.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -8447,13 +8446,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7204" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7204" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7204" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7204" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7204.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7204.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -8549,13 +8548,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7300" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7300" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7300" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7300" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7300.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -8651,13 +8650,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7302" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7302" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7302" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7302" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7302.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7302.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -8753,13 +8752,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7303" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7303" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7303" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7303" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7303.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7303.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -8855,13 +8854,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7304" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7304" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7304" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7304" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7304.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7304.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -8957,13 +8956,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7305" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7305" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7305" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7305" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7305.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7305.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -9059,13 +9058,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7306" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7306" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7306" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7306" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7306.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7306.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -9160,13 +9159,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7307" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7307" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7307" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7307" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7307.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7307.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -9266,13 +9265,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7099" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7099" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7099" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7099" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7099.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7099.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -9368,13 +9367,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7202" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7202" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7202" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment7202" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7202.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment7202.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -9470,13 +9469,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1000" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1000" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1000" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1000" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1000.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -9572,13 +9571,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1001" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1001" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1001" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1001" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1001.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -9674,13 +9673,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1027" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1027" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1027" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1027" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1027.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1027.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -9776,13 +9775,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1100" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1100" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1100" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1100" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1100.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -9878,13 +9877,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1026" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1026" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1026" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment1026" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1026.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment1026.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -9980,13 +9979,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <temperaturZRRepositoryVorhersage/>
           <temperaturZR/>
           <niederschlagZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2001" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2001" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepository>
           <niederschlagZRRepositoryVorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2001" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:GebietsNiederschlaege://Catchment2001" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZRRepositoryVorhersage>
           <niederschlagZR>
-            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Niederschlag/Niederschlag_Catchment2001.zml" ns1:type="simple" timeaxis="date" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </niederschlagZR>
         </Catchment>
       </catchmentMember>
@@ -15343,10 +15342,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node2003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node2003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node2003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node2003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15367,13 +15366,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:*.zml://Pegel/q_leipzig-thekla.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_leipzig-thekla.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15394,10 +15393,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1005.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1005.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1005.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1005.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15418,13 +15417,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:*.zml://Pegel/q_adorf.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_adorf.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1700.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1700.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1700.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1700.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15445,10 +15444,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1027.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1027.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1027.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1027.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15469,10 +15468,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1006.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1006.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1006.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1006.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15493,10 +15492,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node4000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node4000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node4000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node4000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15517,10 +15516,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15541,10 +15540,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node3101.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node3101.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3101.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3101.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15565,10 +15564,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7202.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7202.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7202.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7202.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15589,10 +15588,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15613,10 +15612,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node3201.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node3201.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3201.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3201.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15637,13 +15636,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:*.zml://Pegel/q_oberthau.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_oberthau.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15664,10 +15663,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1110.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1110.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1110.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1110.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15688,10 +15687,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node3002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node3002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15711,13 +15710,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:*.zml://Pegel/q_oelsnitz.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_oelsnitz.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1600.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1600.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1600.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1600.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15738,13 +15737,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:*.zml://Pegel/q_strassberg.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_strassberg.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1401.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1401.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1401.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1401.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15765,10 +15764,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node2004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node2004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node2004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node2004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15789,10 +15788,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz>0.5</zproz>
           <verzweigungNodeMember xlink:href="#Node8802"/>
@@ -15813,13 +15812,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:*.zml://Pegel/q_elsterberg.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_elsterberg.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15840,10 +15839,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node4200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node4200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node4200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node4200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15864,10 +15863,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz>0.5</zproz>
           <verzweigungNodeMember xlink:href="#Node8801"/>
@@ -15888,10 +15887,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node2001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node2001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node2001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node2001.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15909,20 +15908,20 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel7203"/>
           <zuflussZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node7300" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node7300" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepository>
           <zuflussZR>
-            <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node7300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node7300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZR>
           <nzufPfad>P:\vwe04121\modell\hydrologie\namod\zufluss\koberbach.kz</nzufPfad>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:*.zml://Pegel/q_neukirchen.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_neukirchen.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15943,10 +15942,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15963,18 +15962,18 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel1300"/>
           <zuflussZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1301" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1301" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepository>
           <zuflussZR>
-            <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node1301.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node1301.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZR>
           <nzufPfad>P:\vwe04121\modell\hydrologie\namod\zufluss\poehl.kz</nzufPfad>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1301.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1301.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1301.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1301.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -15995,10 +15994,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node8802.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node8802.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node8802.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node8802.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16019,13 +16018,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:*.zml://Pegel/q_weida.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_weida.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node2002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node2002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node2002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node2002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16046,10 +16045,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node3202.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node3202.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3202.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3202.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16070,10 +16069,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node4101.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node4101.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node4101.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node4101.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16110,10 +16109,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1003.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz>0.5</zproz>
           <verzweigungNodeMember xlink:href="#Node8802"/>
@@ -16134,10 +16133,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7302.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7302.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7302.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7302.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16158,13 +16157,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:*.zml://Pegel/q_greiz.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_greiz.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1220.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1220.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1220.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1220.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16185,10 +16184,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1302.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1302.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1302.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1302.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16209,13 +16208,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:*.zml://Pegel/q_kleindalzig.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_kleindalzig.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1020.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1020.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1020.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1020.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16236,10 +16235,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node8801.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node8801.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node8801.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node8801.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16260,10 +16259,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1021.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1021.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1021.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1021.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16284,10 +16283,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1211.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1211.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1211.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1211.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16304,18 +16303,18 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel6000"/>
           <zuflussZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node6100" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node6100" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepository>
           <zuflussZR>
-            <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node6100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node6100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZR>
           <nzufPfad>P:\vwe04121\modell\hydrologie\namod\zufluss\droeda.kz</nzufPfad>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node6100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node6100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node6100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node6100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16336,10 +16335,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16360,10 +16359,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7006.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7006.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7006.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7006.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16384,10 +16383,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1023.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1023.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1023.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1023.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16408,10 +16407,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1800.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1800.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1800.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1800.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16432,13 +16431,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:*.zml://Pegel/q_goessnitz.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_goessnitz.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7200.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16459,13 +16458,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:*.zml://Pegel/q_gera.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_gera.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1210.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1210.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1210.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1210.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16481,10 +16480,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node10000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node10000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node10000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node10000.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16505,10 +16504,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7004.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16529,10 +16528,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16553,10 +16552,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7201.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7201.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7201.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7201.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16573,18 +16572,18 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel7004"/>
           <zuflussZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node7100" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node7100" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepository>
           <zuflussZR>
-            <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node7100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node7100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZR>
           <nzufPfad>P:\vwe04121\modell\hydrologie\namod\zufluss\boehlen.kz</nzufPfad>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16605,13 +16604,13 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:*.zml://Pegel/q_mylau.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:FlussPegel://Pegel/q_mylau.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZRRepository>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node4100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node4100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node4100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node4100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16632,10 +16631,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node3102.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node3102.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3102.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3102.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16652,18 +16651,18 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel1401"/>
           <zuflussZRRepository>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1500" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1500" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZRRepository>
           <zuflussZR>
-            <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node1500.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Node1500.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </zuflussZR>
           <nzufPfad>P:\vwe04121\modell\hydrologie\namod\zufluss\magwitz.kz</nzufPfad>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1500.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1500.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1500.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1500.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16684,10 +16683,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1026.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1026.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1026.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1026.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
@@ -16708,10 +16707,10 @@ xsi:schemaLocation="project:/.model/schema/namodell.xsd">
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR>
-            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7203.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node7203.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </pegelZR>
           <qberechnetZR>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7203.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7203.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </qberechnetZR>
           <zproz/>
           <verzweigungNodeMember xlink:href="#"/>
