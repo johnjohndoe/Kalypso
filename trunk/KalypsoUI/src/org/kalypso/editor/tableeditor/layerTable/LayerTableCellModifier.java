@@ -56,9 +56,18 @@ public class LayerTableCellModifier implements ICellModifier
    */
   public void modify( final Object element, final String property, final Object value )
   {
-    final KalypsoFeature  feature = (KalypsoFeature)((TableItem)element).getData();
+    final TableItem tableItem = (TableItem)element;
+    final KalypsoFeature  feature = (KalypsoFeature)tableItem.getData();
     final KalypsoFeatureLayer layer = m_modell.getLayer();
-    m_commandManager.postCommand( new ModifyFeatureCommand( layer, feature, property, value ), null );
+    try
+    {
+      m_commandManager.postCommand( new ModifyFeatureCommand( layer, feature, property, value ), null );
+    }
+    catch( final Exception e )
+    {
+      // sollte nicht passieren
+      e.printStackTrace();
+    }
    }
 
 }

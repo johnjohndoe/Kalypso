@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.loader.ILoaderListener;
+import org.kalypso.loader.LoaderException;
 import org.kalypso.util.factory.FactoryException;
 
 /**
@@ -16,16 +17,16 @@ import org.kalypso.util.factory.FactoryException;
  */
 public class ResourcePool implements IObjectChangeProvider, ILoaderListener
 {
+  /** type -> CountableObject */
   private final Map myPool = new HashMap();
 
   private final IObjectChangeProvider m_objectChangeProvider = new ObjectChangeAdapter();
 
   private final ILoaderFactory m_factory;
-  
+
   /** type -> loader */
   private final Map m_loaderCache = new HashMap();
 
-  
   public ResourcePool( final ILoaderFactory factory )
   {
     m_factory = factory;
@@ -34,16 +35,14 @@ public class ResourcePool implements IObjectChangeProvider, ILoaderListener
   public void dispose()
   {
     for( Iterator iter = m_loaderCache.values().iterator(); iter.hasNext(); )
-      ((ILoader)iter.next()).removeLoaderListener( this );
+      ( (ILoader)iter.next() ).removeLoaderListener( this );
   }
 
-  /**
-   * @see org.apache.commons.pool.KeyedObjectPool#borrowObject(java.lang.Object)
-   */
-  public Object getObject( final IPoolableObjectType key, final IProgressMonitor monitor ) throws Exception
+  public Object getObject( final IPoolableObjectType key, final IProgressMonitor monitor )
+      throws Exception
   {
     addObject( key, monitor );
-    
+
     final CountableObject obj = (CountableObject)myPool.get( key );
     obj.increment();
     return obj.getObject();
@@ -65,7 +64,8 @@ public class ResourcePool implements IObjectChangeProvider, ILoaderListener
     destroyObject( key, cObj.getObject() );
   }
 
-  private void addObject( final IPoolableObjectType key, final IProgressMonitor monitor ) throws Exception
+  private void addObject( final IPoolableObjectType key, final IProgressMonitor monitor )
+      throws Exception
   {
     if( !myPool.containsKey( key ) )
     {
@@ -131,66 +131,87 @@ public class ResourcePool implements IObjectChangeProvider, ILoaderListener
   }
 
   /**
-   * @see org.kalypso.loader.ILoaderListener#onLoaderObjectInvalid(java.lang.Object, boolean)
+   * @see org.kalypso.loader.ILoaderListener#onLoaderObjectInvalid(java.lang.Object,
+   *      boolean)
    */
-  public void onLoaderObjectInvalid( final Object oldValue, final boolean bCannotReload ) throws Exception
+  public void onLoaderObjectInvalid( final Object oldValue, final boolean bCannotReload )
+      throws Exception
   {
-    // find key
+    final IPoolableObjectType key = findKey( oldValue );
+    if( key != null )
+    {
+      myPool.remove( key );
+
+      fireOnObjectInvalid( oldValue, bCannotReload );
+    }
+  }
+
+  private IPoolableObjectType findKey( Object oldValue )
+  {
     for( Iterator iter = myPool.entrySet().iterator(); iter.hasNext(); )
     {
       final Map.Entry element = (Entry)iter.next();
       final CountableObject co = (CountableObject)element.getValue();
       if( co.getObject() == oldValue )
-      {
-        myPool.remove( element.getKey() );
-
-        fireOnObjectInvalid( oldValue, bCannotReload );
-      }
+        return (IPoolableObjectType)element.getKey();
     }
+
+    return null;
   }
 
   /**
    * Erzeugt ein Objekt anhand seines Typs. Benutzt den entsprechenden ILoader.
-   * 
-   * @param key ein IPoolableObjectType
-   * @param monitor
-   * 
-   * @see org.apache.commons.pool.KeyedPoolableObjectFactory#makeObject(java.lang.Object)
    */
-  private Object makeObject( final IPoolableObjectType key, final IProgressMonitor monitor ) throws Exception
+  private Object makeObject( final IPoolableObjectType key, final IProgressMonitor monitor )
+      throws Exception
   {
     final String type = key.getType();
-    
+
     final ILoader loader = getLoader( type );
-    
+
     final Object object = loader.load( key.getSource(), key.getProject(), monitor );
-    
+
     return object;
   }
-  
+
   private ILoader getLoader( final String type ) throws FactoryException
   {
     ILoader loader = (ILoader)m_loaderCache.get( type );
     if( loader == null )
     {
       loader = m_factory.getLoaderInstance( type );
-      
+
       loader.addLoaderListener( this );
-      
+
       m_loaderCache.put( type, loader );
     }
-    
+
     return loader;
   }
-  
 
-  /**
-   * @see org.apache.commons.pool.KeyedPoolableObjectFactory#destroyObject(java.lang.Object, java.lang.Object)
-   */
   private void destroyObject( final IPoolableObjectType key, final Object object ) throws Exception
   {
     final ILoader loader = getLoader( key.getType() );
     loader.release( object );
+  }
+
+  public void saveObject( final Object object, final IProgressMonitor monitor ) throws FactoryException
+  {
+    final IPoolableObjectType key = findKey( object );
+    
+    if( key != null )
+    {
+      final ILoader loader = getLoader( key.getType() ); 
+
+      try
+      {
+        loader.save( key.getSource(), key.getProject(), monitor, object );
+      }
+      catch( LoaderException e )
+      {
+        throw new FactoryException( e );
+      }
+    }
   }
 
 }

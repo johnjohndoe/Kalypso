@@ -3,7 +3,6 @@ package org.kalypso.editor.tableeditor.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.editor.tableeditor.command.SaveDataCommand;
 
 /**
  * @author belger
@@ -18,7 +17,7 @@ public class SaveDataActionDelagate extends GisTableAbstractActionDelagate
     if( !MessageDialog.openConfirm( getEditor().getSite().getShell(), "Daten speichern", "Sollen die Daten wirklich gespeichert werden?" ) )
       return;
     
-    getEditor().postCommand( new SaveDataCommand( getEditor() ), null );
+    getEditor().saveData();
   }
 
   /**

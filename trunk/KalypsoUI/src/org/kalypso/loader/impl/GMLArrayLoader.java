@@ -11,7 +11,10 @@ import org.deegree.gml.GMLFeatureCollection;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.gml.GMLDocument_Impl;
+import org.deegree_impl.gml.GMLFeatureCollection_Impl;
+import org.deegree_impl.gml.GMLFeature_Impl;
 import org.deegree_impl.model.feature.FeatureFactory;
+import org.deegree_impl.model.feature.GMLFeatureAdapter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -147,13 +150,35 @@ public final class GMLArrayLoader extends AbstractLoader
   }
 
   /**
-   * 
-   * @see org.kalypso.loader.ILoader#save(java.util.Properties,
-   *      java.lang.Object)
+   * @see org.kalypso.loader.AbstractLoader#save(java.util.Properties, org.eclipse.core.resources.IProject, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
-  public void save( final Properties source, final Object data ) throws LoaderException
+  public void save( final Properties source, final IProject project, final IProgressMonitor monitor, final Object data )
   {
-    // TODO: support it
-    throw new LoaderException( "Operation not supported" );
+    final KalypsoFeatureLayer[] layers = (KalypsoFeatureLayer[])data;
+    
+
+    GMLFeatureCollection gmlFC = new GMLFeatureCollection_Impl( "Features" );
+    for( int i = 0; i < layers.length; i++ )
+    {
+      final KalypsoFeatureLayer layer = layers[i];
+      final KalypsoFeature[] features = layer.getAllFeatures();
+      for( int j = 0; j < features.length; j++ )
+      {
+        final KalypsoFeature feature = features[j];
+
+        // TODO: wrap feature to gmlfeature
+      }
+      
+    }
+    
+    final GMLDocument gmlDoc = new GMLDocument_Impl( );
+    gmlDoc.setRoot( gmlFC );
+
+    
+    final String sourcePath = source.getProperty( "PATH", "" );
+    final IFile file = project.getFile( sourcePath );
+
+    // TODO: write gml in extra thread
   }
+  
 }

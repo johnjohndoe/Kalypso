@@ -34,7 +34,16 @@ public class RedoAction extends FullAction implements ICommandManagerListener
   public void run()
   {
     if( m_commandManager.canRedo() )
-      m_commandManager.redo();
+    {
+      try
+      {
+        m_commandManager.redo();
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
   }
   
   public void dispose()

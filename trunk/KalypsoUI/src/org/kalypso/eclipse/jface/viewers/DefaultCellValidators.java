@@ -19,16 +19,12 @@ public class DefaultCellValidators
       try
       {
         if( value != null )
-        {
           Double.parseDouble(value.toString());
-          System.out.println( "Valid: " + value.toString() );
-        }
         
         return null;
       }
       catch( final NumberFormatException nfe )
       {
-        System.out.println( "Not valid: " + value.toString() );
         return "Dezimalzahl erwartet (z.B. 10.4)";
       }
     }

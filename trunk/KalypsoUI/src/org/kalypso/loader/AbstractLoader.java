@@ -116,11 +116,10 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   }
 
   /**
-   * 
-   * @see org.kalypso.loader.ILoader#save(java.util.Properties,
-   *      java.lang.Object)
+   * @throws LoaderException
+   * @see org.kalypso.loader.ILoader#save(java.util.Properties, org.eclipse.core.resources.IProject, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
-  public void save( final Properties source, final Object data ) throws LoaderException
+  public void save( final Properties source, final IProject project, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
     throw new LoaderException( "Operation not supported" );
   }
