@@ -12,7 +12,7 @@
 		<complexContent>
 			<extension base="filters:abstractFilterType">
 				<sequence>
-					<element ref="filters:filter"/>
+					<element ref="filters:filter" minOccurs="0"/>
 				</sequence>
 				<!-- W or Q -->
 				<attribute name="type" type="string"/>
@@ -27,7 +27,7 @@
 			<extension base="filters:abstractFilterType">
 				<sequence>
 					<element ref="vc:valueComp" minOccurs="0" maxOccurs="unbounded"/>
-					<element ref="filters:filter"/>
+					<element ref="filters:filter" minOccurs="0"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -39,7 +39,7 @@
 		<complexContent>
 			<extension base="filters:abstractFilterType">
 				<sequence>
-					<element ref="filters:filter"/>
+					<element ref="filters:filter" minOccurs="0"/>
 				</sequence>
 				<attribute name="operator" type="string"/>
 				<attribute name="operand" type="string"/>
