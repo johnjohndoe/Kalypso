@@ -7,5 +7,7 @@ package org.kalypso.util.loader;
  */
 public interface ILoaderFactory
 {
-  public ILoader getLoaderInstance( String type ) throws LoaderException;
+  public ILoader getLoaderInstance( final String type ) throws LoaderException;
+  
+  public ILoaderUI getLoaderControl( final String type ) throws LoaderException;
 }

@@ -24,9 +24,8 @@ public class DefaultLoaderFactory implements ILoaderFactory
 
   public ILoader getLoaderInstance( String type ) throws LoaderException
   {
-    String className = m_props.getProperty( type );
+    final String className = m_props.getProperty( type );
 
-    // z.Zeit unsere ShapeLoader
     ILoader loader = (ILoader)m_loaders.get( type );
 
     if( loader == null )
@@ -44,5 +43,22 @@ public class DefaultLoaderFactory implements ILoaderFactory
     }
 
     return loader;
+  }
+
+  /**
+   * @see org.kalypso.util.loader.ILoaderFactory#getLoaderControl(java.lang.String)
+   */
+  public ILoaderUI getLoaderControl( final String type ) throws LoaderException
+  {
+    final String className = m_props.getProperty( type + "_ui" );
+    
+    try
+    {
+      return (ILoaderUI)ClassUtilities.newInstance( className, ILoaderUI.class );
+    }
+    catch( ClassUtilityException e )
+    {
+      throw new LoaderException( e );
+    }
   }
 }
