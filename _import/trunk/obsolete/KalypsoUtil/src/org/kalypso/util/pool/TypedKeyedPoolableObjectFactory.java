@@ -32,7 +32,7 @@ public class TypedKeyedPoolableObjectFactory implements KeyedPoolableObjectFacto
     
     ILoader loader = m_factory.getLoaderInstance( objType.getType(), m_classLoader );
     
-    return loader.load( objType.getSource() );
+    return loader.load( objType.getSource(), objType.getHelper() );
   }
 
   /**

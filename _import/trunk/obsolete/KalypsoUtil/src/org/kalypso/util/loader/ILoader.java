@@ -6,7 +6,7 @@ package org.kalypso.util.loader;
  */
 public interface ILoader
 {
-  public Object load( String source ) throws LoaderException;
+  public Object load( final String source, final Object helper ) throws LoaderException;
   
   public void save( String source, Object data ) throws LoaderException;
 

@@ -9,4 +9,6 @@ public interface IPoolableObjectType
   public String getType();
   
   public String getSource();
+  
+  public Object getHelper();
 }
