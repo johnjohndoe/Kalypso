@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org"><layer featurePath="FlusslaufModellCollectionAssociation/FlusslaufModellMember" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="calcCase.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"><column editable="false" name="Name" width="100"/><column editable="true" name="Korrektur_Faktor" width="98"/><column editable="true" name="Korrektur_Niveau" width="103"/><column editable="true" name="Korrektur_Laufzeit" width="109"/><column editable="false" name="KorrekturEmpfehlungLaufzeit" width="156"/></layer></gistableview>
+

@@ -9,6 +9,23 @@
 			<argument name="input" value=":project:.templates/steuerparameter.gft"/>
 			<argument name="output" value=":calcdir:steuerparameter.gft"/>
 		</transformation>
+
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/Anfangsvolumen.gtt"/>
+			<argument name="output" value=":calcdir:Anfangsvolumen.gtt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/Bodenfeuchten.gtt"/>
+			<argument name="output" value=":calcdir:Bodenfeuchten.gtt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/Flusslaufparameter.gtt"/>
+			<argument name="output" value=":calcdir:Flusslaufparameter.gtt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/Gesamtansicht.gmt"/>
+			<argument name="output" value=":calcdir:Gesamtansicht.gmt"/>
+		</transformation>
 	</createTransformations>
 	
 	<!-- TODO: Results.xml erzeugen/kopieren? -->
