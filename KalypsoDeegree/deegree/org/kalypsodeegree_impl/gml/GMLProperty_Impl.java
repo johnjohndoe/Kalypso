@@ -68,7 +68,6 @@ import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.DOMPrinter;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.tools.Debug;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -104,46 +103,6 @@ public class GMLProperty_Impl implements GMLProperty
   {
     myFeatureTypeProperty = ftp;
     this.element = element;
-  }
-
-  /**
-   * factory method to create a GMLProperty. the property that will be return
-   * doesn't contain a value.
-   */
-  public static GMLProperty createGMLProperty( Document doc, FeatureTypeProperty ftp )
-  {
-    Element elem = doc.createElementNS( ftp.getNamespace(), ftp.getName() );
-    GMLProperty ls = new GMLProperty_Impl( elem );
-    return ls;
-  }
-
-  //  /**
-  //   * factory method to create a GMLProperty.
-  //   */
-  //  public static GMLProperty createGMLProperty( Document doc,
-  // FeatureTypeProperty ftp,
-  //      String propertyValue )
-  //  {
-  //    GMLProperty ls = createGMLProperty( doc, propertyName );
-  //    ls.setPropertyValue( propertyValue );
-  //    return ls;
-  //  }
-
-  public static GMLProperty createGMLProperty( Document doc, FeatureTypeProperty ftp,
-      Element propertyValue )
-  {
-    GMLProperty ls = createGMLProperty( doc, ftp );
-    ls.setPropertyValue( propertyValue );
-    return ls;
-  }
-
-  public static GMLProperty createGMLProperty( Document doc, FeatureTypeProperty ftp,
-      String attributeValue )
-  {
-    Element element = doc.createElementNS( ftp.getNamespace(), ftp.getName() );
-    GMLProperty gmlProp = new GMLProperty_Impl( ftp, element );
-    gmlProp.setPropertyValue( attributeValue );
-    return gmlProp;
   }
 
   /**
@@ -533,6 +492,9 @@ public class GMLProperty_Impl implements GMLProperty
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.11  2005/02/08 18:43:59  belger
+ * *** empty log message ***
+ *
  * Revision 1.10  2005/01/18 12:50:42  doemming
  * *** empty log message ***
  *

@@ -150,26 +150,6 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
   }
 
   /**
-   * creates a GMLFeatureCollection that doesn't contain a property and that
-   * hasn't an id.
-   */
-  public static GMLFeatureCollection createGMLFeatureCollection( Document doc, String collectionName )
-  {
-    Debug.debugMethodBegin();
-
-    Element elem = doc.createElement( collectionName );
-    elem.setAttribute( "xmlns:gml", CommonNamespaces.GMLNS );
-
-    Element el = doc.createElementNS( CommonNamespaces.GMLNS, "gml:boundedBy" );
-    elem.appendChild( el );
-
-    GMLFeatureCollection feature = new GMLFeatureCollection_Impl( elem );
-
-    Debug.debugMethodEnd();
-    return feature;
-  }
-
-  /**
    * returns all features of the collection
    */
   public GMLFeature[] getFeatures()
@@ -424,6 +404,9 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2005/02/08 18:43:59  belger
+ * *** empty log message ***
+ *
  * Revision 1.5  2005/01/18 12:50:42  doemming
  * *** empty log message ***
  *

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,13 +57,14 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.deegree_impl.gml;
 
 import java.util.Iterator;
 import java.util.List;
 
 import org.deegree.gml.GMLCoordinates;
+import org.deegree.gml.GMLDocument;
 import org.deegree.gml.GMLException;
 import org.deegree.gml.GMLFeature;
 import org.deegree.gml.GMLFeatureCollection;
@@ -98,7 +99,6 @@ import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.gml.schema.Mapper;
 import org.deegree_impl.tools.Debug;
 import org.deegree_impl.tools.StringExtend;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -577,16 +577,16 @@ public class GMLFactory
   /**
    * creates a GMLFeature from a XML Element
    */
-  public static GMLFeature createGMLFeature( Document doc, DeegreeFeature feature ) throws GMLException
+  public static GMLFeature createGMLFeature( final GMLDocument doc, final DeegreeFeature feature )
+      throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLFeature(Feature)" );
 
-    GMLFeature gmlF = GMLFeature_Impl.createGMLFeature( doc, feature.getFeatureType().getName() );
+    final GMLFeature gmlF = doc.createGMLFeature( feature.getFeatureType() );
 
-    FeatureType ft = feature.getFeatureType();
-    FeatureTypeProperty[] ftp = ft.getProperties();
-    Object[] properties = feature.getProperties();
-
+    final FeatureType ft = feature.getFeatureType();
+    final FeatureTypeProperty[] ftp = ft.getProperties();
+    final Object[] properties = feature.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
       GMLProperty prop = null;
@@ -599,14 +599,9 @@ public class GMLFactory
       else
       {
         if( properties[i] != null )
-        {
-          prop = GMLProperty_Impl.createGMLProperty( doc, ftp[i], properties[i]
-              .toString() );
-        }
+          prop = doc.createGMLProperty( ftp[i], properties[i].toString() );
         else
-        {
-          prop = GMLProperty_Impl.createGMLProperty( doc, ftp[i], "" );
-        }
+          prop = doc.createGMLProperty( ftp[i], "" );
       }
 
       gmlF.addProperty( prop );
@@ -633,35 +628,33 @@ public class GMLFactory
     return null;
   }
 
-  public static GMLFeature createGMLFeature( Document doc, Feature feature ) throws GMLException
+  public static GMLFeature createGMLFeature( final GMLDocument doc, Feature feature ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLFeature(Feature)" );
 
-    GMLFeature gmlFeature = GMLFeature_Impl.createGMLFeature( doc, feature.getFeatureType().getName() );
+    final GMLFeature gmlFeature = doc.createGMLFeature( feature.getFeatureType() );
 
-    FeatureType ft = feature.getFeatureType();
+    final FeatureType ft = feature.getFeatureType();
 
-    FeatureTypeProperty[] ftp = ft.getProperties();
-    Object[] properties = feature.getProperties();
-
+    final FeatureTypeProperty[] ftp = ft.getProperties();
+    final Object[] properties = feature.getProperties();
     for( int i = 0; i < ftp.length; i++ )
-    {
       addGMLProperties( doc, gmlFeature, properties[i], ftp[i], ft.getMinOccurs( i ) );
-    }
-    String id = feature.getId();
-    if(id!=null)
-      gmlFeature.setId(id);
+
+    final String id = feature.getId();
+    if( id != null )
+      gmlFeature.setId( id );
     return gmlFeature;
   }
 
-  private static void addGMLProperties( Document doc, GMLFeature gmlFeature, Object value,
-      FeatureTypeProperty ftp, int min ) throws GMLException
+  private static void addGMLProperties( final GMLDocument doc, final GMLFeature gmlFeature, final Object value,
+      final FeatureTypeProperty ftp, final int min ) throws GMLException
   {
-  	
+
     // marshalling
-      final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
-          .getTypeHandlerForClassName( ftp.getType() );
-      
+    final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
+        .getTypeHandlerForClassName( ftp.getType() );
+
     GMLProperty prop = null;
     if( value instanceof List )
     {
@@ -672,21 +665,21 @@ public class GMLFactory
     else if( value == null )
     {
       if( min > 0 )
-        prop = GMLProperty_Impl.createGMLProperty( doc, ftp, "" );
+        prop = doc.createGMLProperty( ftp, "" );
     }
-    else if(typeHandler!=null)
+    else if( typeHandler != null )
     {
-		final Element element = doc.createElement( ftp.getName() );
+      final Element element = doc.createElement( ftp.getName() );
       try
-	  {
-		typeHandler.marshall( value, element );
-      	}
-      catch (TypeRegistryException e) 
-	  {
-		e.printStackTrace();
-	  }
+      {
+        typeHandler.marshall( value, element );
+      }
+      catch( TypeRegistryException e )
+      {
+        e.printStackTrace();
+      }
       prop = new GMLCustomProperty_Impl( ftp, element );
- 	  }
+    }
     else if( value instanceof GM_Object )
     {
       GMLGeometry geom = createGMLGeometry( (GM_Object)value );
@@ -694,22 +687,19 @@ public class GMLFactory
     }
     else if( value instanceof Feature )
     {
-      Feature fe = (Feature)value;
-      GMLFeature gmlFe = createGMLFeature( doc, fe );
-      prop = GMLProperty_Impl.createGMLProperty( doc, ftp, gmlFe.getAsElement() );
+      final Feature fe = (Feature)value;
+      final GMLFeature gmlFe = createGMLFeature( doc, fe );
+      prop = doc.createGMLProperty( ftp, gmlFe.getAsElement() );
     }
- else if(value instanceof String
-        && ftp instanceof FeatureAssociationTypeProperty)
+    else if( value instanceof String && ftp instanceof FeatureAssociationTypeProperty )
     {
-     // gmlproperty of featureassociation must be created with featuretype
-     String href=value.toString();
-     prop = GMLProperty_Impl.createGMLProperty(doc, ftp, href);
-      }
+      // gmlproperty of featureassociation must be created with featuretype
+      String href = value.toString();
+      prop = doc.createGMLProperty( ftp, href );
+    }
     else
-    {
-    	
-      prop = GMLProperty_Impl.createGMLProperty( doc, ftp, Mapper.mapJavaValueToXml(value,ftp.getType()) );
-    }
+      prop = doc.createGMLProperty( ftp, Mapper.mapJavaValueToXml( value, ftp.getType() ) );
+
     // TODO integrate typehandler ??
     if( prop != null )
       gmlFeature.addProperty( prop );
@@ -720,20 +710,19 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.8  2005/01/18 12:50:42  doemming
+ * Revision 1.9  2005/02/08 18:43:59  belger
  * *** empty log message ***
- *
- * Revision 1.7  2004/11/22 01:29:50  doemming
- * *** empty log message ***
- *
- * Revision 1.6  2004/10/07 19:28:24  doemming
- * *** empty log message ***
- *
- * Revision 1.5  2004/10/07 14:09:13  doemming
- * *** empty log message ***
- * Revision 1.1 2004/09/02 23:56:58 doemming *** empty
- * log message *** Revision 1.3 2004/08/31 13:03:31 doemming *** empty log
- * message *** Revision 1.9 2004/04/07 06:43:48 poth no message
+ * Revision 1.8 2005/01/18 12:50:42 doemming *** empty
+ * log message ***
+ * 
+ * Revision 1.7 2004/11/22 01:29:50 doemming *** empty log message ***
+ * 
+ * Revision 1.6 2004/10/07 19:28:24 doemming *** empty log message ***
+ * 
+ * Revision 1.5 2004/10/07 14:09:13 doemming *** empty log message *** Revision
+ * 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision 1.3
+ * 2004/08/31 13:03:31 doemming *** empty log message *** Revision 1.9
+ * 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.8 2004/03/29 10:37:13 poth no message
  * 

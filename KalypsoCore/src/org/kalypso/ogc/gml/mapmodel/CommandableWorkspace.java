@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.mapmodel;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
@@ -258,5 +259,13 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
       throws Exception
   {
     m_workspace.addLinkedFeature( parent, propName, pos, newFeature );
+  }
+
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#getNamespaceMap()
+   */
+  public Map getNamespaceMap()
+  {
+    return m_workspace.getNamespaceMap();
   }
 }

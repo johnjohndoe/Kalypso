@@ -2,6 +2,7 @@ package org.deegree.model.feature;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 import org.deegree.model.feature.event.ModellEventProvider;
 
@@ -66,4 +67,6 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public void addLinkedFeature( Feature parent, String propName, int pos, Feature newFeature )
       throws Exception;
+
+  public Map getNamespaceMap();
 }

@@ -71,7 +71,6 @@ import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.DOMPrinter;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.tools.Debug;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -103,61 +102,16 @@ public class GMLFeature_Impl implements GMLFeature
    * 
    * @param element
    */
-  public GMLFeature_Impl( Element element )
+  public GMLFeature_Impl( final Element element )
   {
     setElement( element );
   }
 
-  /**
-   * 
-   * 
-   * @param element
-   */
   protected void setElement( Element element )
   {
     this.element = element;
   }
 
-  /**
-   * creates a GMLFeature that doesn't contain a property and that hasn't an id.
-   */
-  public static GMLFeature createGMLFeature( Document doc, String featureTypeName )
-  {
-    Debug.debugMethodBegin( "", "createGMLFeature(Document, String)" );
-
-    Element elem = doc.createElement( featureTypeName );
-    GMLFeature feature = new GMLFeature_Impl( elem );
-
-    Debug.debugMethodEnd();
-    return feature;
-  }
-
-  /**
-   * creates a GMLFeature.
-   */
-  public static GMLFeature createGMLFeature( Document doc, String featureTypeName, String id,
-      GMLProperty[] properties ) throws GMLException
-  {
-    Debug.debugMethodBegin( "", "createGMLFeature(Document, String, String, GMLProperty[])" );
-
-    Element elem = doc.createElement( featureTypeName );
-    GMLFeature feature = new GMLFeature_Impl( elem );
-    feature.setId( id );
-
-    for( int i = 0; i < properties.length; i++ )
-    {
-      feature.addProperty( properties[i] );
-    }
-
-    Debug.debugMethodEnd();
-    return feature;
-  }
-
-  /**
-   * 
-   * 
-   * @return
-   */
   public Element getAsElement()
   {
     return element;
@@ -659,6 +613,9 @@ public class GMLFeature_Impl implements GMLFeature
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.7  2005/02/08 18:43:59  belger
+ * *** empty log message ***
+ *
  * Revision 1.6  2005/02/03 18:37:42  belger
  * *** empty log message ***
  *

@@ -38,6 +38,9 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   private final FeatureType[] m_featureTypes;
 
+  /** xmlns -> namespaceURI */
+  private final Map m_nsMap;
+
   /**
    * 
    * @see org.deegree.model.feature.GMLWorkspace#getFeature(org.deegree.model.feature.FeatureType,
@@ -49,12 +52,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   public GMLWorkspace_Impl( final FeatureType[] featureTypes, final Feature feature,
-      final URL context, final String schemaLocation, final String schemaNamespace )
+      final URL context, final String schemaLocation, final String schemaNamespace, final Map nsMap )
   {
     m_featureTypes = featureTypes;
     m_context = context;
     m_schemaLocation = schemaLocation;
     m_schemaNamespace = schemaNamespace;
+    m_nsMap = nsMap;
 
     m_rootFeature = feature;
 
@@ -552,5 +556,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
     // TODO eigene exception entwerfen
     throw new Exception( "New Feature violates maxOccurs" );
+  }
+  
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#getNamespaceMap()
+   */
+  public Map getNamespaceMap()
+  {
+    return m_nsMap;
   }
 }
