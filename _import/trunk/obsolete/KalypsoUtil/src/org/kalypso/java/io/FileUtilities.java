@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,11 +42,10 @@ public class FileUtilities
    * @throws IOException
    *           there are problems!
    */
-  public static File makeFileFromUrl( boolean charMode, final String prefix,
-      final String suffix, URL url, boolean useCache ) throws IOException
+  public static File makeFileFromUrl( boolean charMode, final String prefix, final String suffix,
+      URL url, boolean useCache ) throws IOException
   {
-    return makeFileFromStream( charMode, prefix, suffix, url.openStream(),
-        useCache );
+    return makeFileFromStream( charMode, prefix, suffix, url.openStream(), useCache );
   }
 
   /**
@@ -70,8 +70,7 @@ public class FileUtilities
    *           problems reading from stream or writing to temp. file
    */
   public static File makeFileFromStream( boolean charMode, final String prefix,
-      final String suffix, InputStream ins, boolean useCache )
-      throws IOException
+      final String suffix, InputStream ins, boolean useCache ) throws IOException
   {
     if( useCache )
     {
@@ -107,8 +106,8 @@ public class FileUtilities
    * @param ins
    * @throws IOException
    */
-  public static void makeFileFromStream( final boolean charMode,
-      final File file, final InputStream ins ) throws IOException
+  public static void makeFileFromStream( final boolean charMode, final File file,
+      final InputStream ins ) throws IOException
   {
     if( charMode )
     {
@@ -120,8 +119,7 @@ public class FileUtilities
     else
     {
       final BufferedInputStream in = new BufferedInputStream( ins );
-      final BufferedOutputStream out = new BufferedOutputStream(
-          new FileOutputStream( file ) );
+      final BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( file ) );
 
       StreamUtilities.streamCopy( in, out );
     }
@@ -161,17 +159,17 @@ public class FileUtilities
         return files[0];
     }
 
-    throw new FileNotFoundException( "File with prefix (" + prefix
-        + ") and suffix (" + suffix + ") was not found in " + path );
+    throw new FileNotFoundException( "File with prefix (" + prefix + ") and suffix (" + suffix
+        + ") was not found in " + path );
   }
 
   /**
-   * Rekursives löschen von Dateien und Verzeichnissen
+   * Rekursives l?schen von Dateien und Verzeichnissen
    * 
    * @param file
-   *          Falls das Argument eine Datei ist, wird diese gelöscht. Ist es ein
+   *          Falls das Argument eine Datei ist, wird diese gel?scht. Ist es ein
    *          Verzeichnis, werden alle dieses mitsamt aller darin liegenden
-   *          Verzeichnisse und Dateien gelöscht.
+   *          Verzeichnisse und Dateien gel?scht.
    */
   public static void deleteRecursive( final File file )
   {
@@ -198,8 +196,7 @@ public class FileUtilities
    */
   public static File createNewTempDir( final String prefix )
   {
-    return createNewTempDir( prefix, new File( System
-        .getProperty( "java.io.tmpdir" ) ) );
+    return createNewTempDir( prefix, new File( System.getProperty( "java.io.tmpdir" ) ) );
   }
 
   /**
@@ -216,8 +213,7 @@ public class FileUtilities
   {
     while( true )
     {
-      final File newDir = new File( parentDir, prefix
-          + System.currentTimeMillis() );
+      final File newDir = new File( parentDir, prefix + System.currentTimeMillis() );
       if( newDir.mkdir() )
         return newDir;
     }
@@ -229,12 +225,11 @@ public class FileUtilities
    * @param basedir
    * @param absoluteFile
    * 
-   * @return Ein File-Object, welches einen relativen Pfad enthält; null, wenn
+   * @return Ein File-Object, welches einen relativen Pfad enth?lt; null, wenn
    *         <code>basedir</code> kein Parent-Dir von
    *         <code>absoluteFile</code> ist
    */
-  public static File getRelativeFileTo( final File basedir,
-      final File absoluteFile )
+  public static File getRelativeFileTo( final File basedir, final File absoluteFile )
   {
     final String rel = getRelativePathTo( basedir, absoluteFile );
 
@@ -253,16 +248,15 @@ public class FileUtilities
    * @param absoluteFile
    * @return the relative path from absoluteFile to basedir
    */
-  public static String getRelativePathTo( final File basedir,
-      final File absoluteFile )
+  public static String getRelativePathTo( final File basedir, final File absoluteFile )
   {
     final String baseAbs = basedir.getAbsolutePath();
     final String absAbs = absoluteFile.getAbsolutePath();
     if( !absAbs.startsWith( baseAbs ) )
       return null;
 
-    final String rel = absAbs.length() == baseAbs.length() ? "" : absAbs
-        .substring( baseAbs.length() );
+    final String rel = absAbs.length() == baseAbs.length() ? "" : absAbs.substring( baseAbs
+        .length() );
 
     return rel;
   }
@@ -290,6 +284,9 @@ public class FileUtilities
     return false;
   }
 
+  /**
+   * returns characters after last "." of given file name
+   */
   public static String getSuffix( final File file )
   {
     final String name = file.getAbsolutePath();
@@ -321,7 +318,7 @@ public class FileUtilities
     final int lastIndexOf = fileName.lastIndexOf( '.' );
     if( lastIndexOf == -1 )
       return fileName;
-    
+
     return fileName.substring( 0, lastIndexOf );
   }
 }
