@@ -268,11 +268,10 @@ public class ServiceTools
 	+ "</xsl:template>";
 
 	
-    public static String xslTransform(Node domNode, String outputMethod,String xslTemplateString)
+    public static String xslTransform(Node domNode, String outputMethod,String xslTemplateString) throws Exception
     {
-	try
-	    {
-		String xslString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+
+	String xslString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 		    + "<xsl:stylesheet version=\"1.0\" "
 		    //		    + "xmlns:xalan=\"http://xml.apache.org/xslt\""
 		    + " xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">"
@@ -284,10 +283,10 @@ public class ServiceTools
 		//		System.out.println(xslString);
 		//		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		//		DocumentBuilder db = dbf.newDocumentBuilder();
-		DOMSource xmlSource = new DOMSource(domNode);
-		StreamSource xslSource = new StreamSource(new StringReader(xslString));
-		return xslTransform(xmlSource,xslSource);
-		/*	
+	DOMSource xmlSource = new DOMSource(domNode);
+	StreamSource xslSource = new StreamSource(new StringReader(xslString));
+	return xslTransform(xmlSource,xslSource);
+	/*	
 		  TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		  Transformer transformer =transformerFactory.newTransformer(xslSource);
 		  StringWriter resultSW=new StringWriter();
@@ -296,12 +295,7 @@ public class ServiceTools
 		  // reuse the transformer with a new Source, which is our identity stylesheet itself
 		  //	transformer.transform( new StreamSource(new java.io.StringReader(xslString) ) , new StreamResult(System.out) );
 		  */
-	    }
-	catch(Exception e)
-	    {
-		e.printStackTrace();
-		return null;
-	    }
+
     }
 
     public static String xslTransform(File xmlFile,File xslFile) throws Exception
@@ -316,10 +310,9 @@ public class ServiceTools
 	return xslTransform(new DOMSource(xmlDOM),new DOMSource(xslDOM));
     }
 
-    public static String xslTransform(Source xmlSource, Source xslSource)
+    public static String xslTransform(Source xmlSource, Source xslSource) throws Exception
     {
-	try
-	    {		
+
 		//		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		//		DocumentBuilder db = dbf.newDocumentBuilder();
 
@@ -331,11 +324,5 @@ public class ServiceTools
 		return resultSW.toString();
 		// reuse the transformer with a new Source, which is our identity stylesheet itself
 		//	transformer.transform( new StreamSource(new java.io.StringReader(xslString) ) , new StreamResult(System.out) );
-	    }
-	catch(Exception e)
-	    {
-		e.printStackTrace();
-		return null;
-	    }
     }
 }
