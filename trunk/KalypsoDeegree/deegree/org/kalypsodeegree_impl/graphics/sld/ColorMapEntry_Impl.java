@@ -147,5 +147,10 @@ public class ColorMapEntry_Impl implements ColorMapEntry
 
     return colorMapEntry;
   }
+  
+  public Object clone() 
+  {
+    return new ColorMapEntry_Impl(m_color,m_opacity,m_quantity,m_label);
+  }
 
 }
