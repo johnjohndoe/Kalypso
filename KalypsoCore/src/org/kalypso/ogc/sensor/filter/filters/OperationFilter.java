@@ -19,14 +19,12 @@ public class OperationFilter extends AbstractObservationFilter
 
     private IObservation m_baseobservation=null;
     private OperationFilterType m_baseFilter=null;
-    private int m_operation=OPERATION_UNKNOWN;
-    private double m_operand;
     
-    public void initFilter(Object conf, IObservation baseObs)
-            throws SensorException
+    private final int m_operation;
+    private final double m_operand;
+    
+    public OperationFilter(OperationFilterType filter)
     {
-        super.initFilter(conf,baseObs);
-        OperationFilterType filter=(OperationFilterType) conf;
         m_operand = Double.parseDouble(filter.getOperand());
         final String operator = filter.getOperator();
         if (operator.equals("+"))
@@ -40,8 +38,15 @@ public class OperationFilter extends AbstractObservationFilter
         else
             throw new IllegalArgumentException("unknown operator '" + operator
                     + "' in filter");
-        m_baseobservation=baseObs;
         m_baseFilter=filter;        
+        
+    }
+
+    public void initFilter(Object dummy, IObservation baseObs)
+            throws SensorException
+    {
+        m_baseobservation=baseObs;
+        super.initFilter(dummy,baseObs);
     }
     
     public ITuppleModel getValues(IVariableArguments args)

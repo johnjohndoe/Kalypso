@@ -27,15 +27,13 @@ public class FilterFactoryTest extends TestCase
   
   protected void tearDown( ) throws Exception
   {
-    super.tearDown();
-    
+    super.tearDown();    
     m_ins.close();
   }
 
   public void testCreateFilter( ) throws SensorException
   {
-    IObservation obs = FilterFactory.createFilter( m_ins );
-    
+    IObservation obs = FilterFactory.createFilter( m_ins );    
     assertTrue( obs instanceof WQObservationFilter );
   }
 }
