@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="deegree"/>
+	<classpathentry kind="src" path="deegree/"/>
 	<classpathentry exported="true" kind="lib" path="lib/acme/acme.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/jai_codec.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jts/jts.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/jai_core.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/mlibwrapper_jai.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/java3d/vecmath.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/junit/junit.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/dom.jar"/>
@@ -14,15 +15,12 @@
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/jaxrpc-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/jaxrpc-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/jaxrpc-spi.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jwsdp/mail.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jwsdp/saaj-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jwsdp/saaj-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/xercesImpl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/braju/hb15.jar"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/java3d/vecmath.jar"/>
-	<classpathentry kind="lib" path="lib/jwsdp/mail.jar"/>
-	<classpathentry kind="lib" path="lib/jwsdp/saaj-api.jar"/>
-	<classpathentry kind="lib" path="lib/jwsdp/saaj-impl.jar"/>
-	<classpathentry kind="lib" path="lib/sldRasterSymbolizerBinding.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/sldRasterSymbolizerBinding.jar"/>
 	<classpathentry kind="lib" path="lib/javaBinding/jaxb-api.jar"/>
 	<classpathentry kind="lib" path="lib/javaBinding/jaxb-impl.jar"/>
 	<classpathentry kind="lib" path="lib/javaBinding/jaxb-libs.jar"/>
@@ -31,5 +29,7 @@
 	<classpathentry kind="lib" path="lib/javaBinding/namespace.jar"/>
 	<classpathentry kind="lib" path="lib/javaBinding/relaxngDatatype.jar"/>
 	<classpathentry kind="lib" path="lib/javaBinding/xsdlib.jar"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
