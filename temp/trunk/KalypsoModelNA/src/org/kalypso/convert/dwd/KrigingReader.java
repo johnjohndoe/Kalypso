@@ -1,9 +1,9 @@
 package org.kalypso.convert.dwd;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,18 +19,27 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.geometry.GM_Object;
 import org.deegree_impl.model.cs.ConvenienceCSFactory;
 import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.NOperationFilter;
 import org.kalypso.zml.filters.ObjectFactory;
 import org.kalypso.zml.filters.OperationFilter;
 import org.kalypso.zml.filters.ZmlFilter;
+import org.kalypso.zml.repository.virtual.Item;
+import org.kalypso.zml.repository.virtual.Level;
+import org.kalypso.zml.repository.virtual.VirtualRepository;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3._1999.xlinkext.SimpleLinkType;
 
 public class KrigingReader
 {
     private final String doublePattern = "[0-9\\.]+";
+
     private final ObjectFactory filterFac = new ObjectFactory();
+
+    private final org.kalypso.zml.repository.virtual.ObjectFactory vRepFac = new org.kalypso.zml.repository.virtual.ObjectFactory();
+
     private final Marshaller m_marshaller;
+
     private final Pattern BLOCK = Pattern.compile(".*BLOCK:.+?("
             + doublePattern + ").+?(" + doublePattern + ").+");
 
@@ -45,12 +54,13 @@ public class KrigingReader
 
     public KrigingReader(Reader reader) throws IOException, JAXBException
     {
-        m_marshaller= filterFac.createMarshaller();
+        m_marshaller = filterFac.createMarshaller();
         krigingElements = parse(reader);
         reader.close();
     }
 
-    public String createFilter(final Feature feature, final String geoPropName)
+    public AbstractFilterType createFilter(final Feature feature,
+            final String geoPropName)
     {
         System.out.println("creatFilter for " + feature.getId());
         final GM_Object geom = (GM_Object) feature.getProperty(geoPropName);
@@ -62,7 +72,7 @@ public class KrigingReader
         return createFilter(elements);
     }
 
-    private String createFilter(List krigingElements)
+    private AbstractFilterType createFilter(List krigingElements)
     {
         if (krigingElements.size() < m_min)
             m_min = krigingElements.size();
@@ -92,7 +102,7 @@ public class KrigingReader
             }
         }
         final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
-        
+
         try
         {
             NOperationFilter nOperationFilter = filterFac
@@ -109,20 +119,17 @@ public class KrigingReader
                 filter.setOperand(Double.toString(rel.getFactor()));
                 final ZmlFilter zmlLink = filterFac.createZmlFilter();
                 final SimpleLinkType type = linkFac.createSimpleLinkType();
-                type.setHref("Ombrometer_"+rel.getId());
+                type.setHref("Ombrometer_" + rel.getId());
                 zmlLink.setZml(type);
                 filter.setFilter(zmlLink);
                 System.out.println(rel.getId() + " " + rel.getFactor());
             }
-            StringWriter writer=new StringWriter();
-            m_marshaller.marshal(nOperationFilter,writer);
-            writer.close();
-            System.out.println(writer.toString());
+            //            StringWriter writer=new StringWriter();
+            //            m_marshaller.marshal(nOperationFilter,writer);
+            //            writer.close();
+            //            System.out.println(writer.toString());
+            return nOperationFilter;
         } catch (JAXBException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e)
         {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -182,4 +189,24 @@ public class KrigingReader
         return result;
     }
 
+    public VirtualRepository createRepositoryConf( Feature[] features,
+            String geoPropName) throws JAXBException
+    {
+        final VirtualRepository repository = vRepFac.createVirtualRepository();
+        final Level level = vRepFac.createLevel();
+        level.setId("Messung");
+        level.setName("WeisseElster - Gebietsniederschlaege");
+        repository.getLevel().add(level);
+
+        for (int i = 0; i < features.length; i++)
+        {
+            final Feature feature = features[i];
+            final Item item = vRepFac.createItem();
+            item.setId(feature.getId());
+            item.setName("Niederschlag - " + feature.getId());
+            item.setFilter(createFilter(feature, geoPropName));
+            level.getItem().add(item);
+        }
+        return repository;
+    }
 }
