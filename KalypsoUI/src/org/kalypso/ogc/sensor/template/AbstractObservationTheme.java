@@ -308,7 +308,7 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
       bf.append( m_name );
 
     if( m_obs != null )
-      bf.append( "Thema: " ).append( m_obs.getName() ).append( " (" ).append(
+      bf.append( m_obs.getName() ).append( " (" ).append(
           m_obs.getHref() ).append( ')' );
 
     if( bf.length() == 0 )

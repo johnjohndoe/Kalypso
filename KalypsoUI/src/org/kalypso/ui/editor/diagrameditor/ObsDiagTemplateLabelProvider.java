@@ -42,7 +42,7 @@ package org.kalypso.ui.editor.diagrameditor;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewTheme;
+import org.kalypso.ogc.sensor.diagview.DiagViewTheme;
 import org.kalypso.ui.ImageProvider;
 
 /**

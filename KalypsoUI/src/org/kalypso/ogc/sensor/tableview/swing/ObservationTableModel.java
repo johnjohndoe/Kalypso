@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,6 +54,7 @@ import java.util.logging.Logger;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -62,11 +64,12 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.tableview.ITableViewRules;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewTheme;
+import org.kalypso.ogc.sensor.tableview.TableViewColumn;
+import org.kalypso.ogc.sensor.tableview.TableViewTheme;
+import org.kalypso.ogc.sensor.tableview.rules.ITableViewRules;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
  * TableModel das mit IObservation benutzt werden kann. Kann in eine JTable
@@ -119,6 +122,13 @@ public class ObservationTableModel extends AbstractTableModel
 
   private final Logger m_logger = Logger.getLogger( getClass().getName() );
 
+  private ObservationTable m_table;
+
+  protected void setTable( final ObservationTable table )
+  {
+    m_table = table;
+  }
+  
   /**
    * Sets the flag for synchronizing the observations with the values in this
    * table model. When true, the observations are synchronized in this call, and
@@ -174,13 +184,8 @@ public class ObservationTableModel extends AbstractTableModel
       if( col == null )
         return;
 
-      // tricky: when there is already the same column (not necessarely the same
-      // object
-      // reference), remove it to be sure to add the last created one
-      //if( m_columns.contains( col ) )
-      //  m_columns.remove( col );
-
-      m_columns.add( col );
+      if( !m_columns.contains( col ) )
+        m_columns.add( col );
 
       final IAxis keyAxis = col.getKeyAxis();
 
@@ -216,6 +221,13 @@ public class ObservationTableModel extends AbstractTableModel
 
       // add tablecolumn to tablemodel
       m_valuesModel.addColumn( col.getName() );
+      
+      // adapt width of column
+      // TODO: listen for column width changes (initiated by the user) and 
+      // store it in the template when saving it
+      final int colIx = m_valuesModel.findColumn( col.getName() );
+      final TableColumn tableColumn = m_table.getColumnModel().getColumn( colIx );
+      tableColumn.setPreferredWidth( col.getWidth() );
 
       // add tablecolumn to status model
       final IAxis statusAxis = getStatusAxis( col );
@@ -805,5 +817,20 @@ public class ObservationTableModel extends AbstractTableModel
       addColumn( (TableViewColumn) it.next() );
 
     return pos;
+  }
+
+  /**
+   * Returns the corresponding NumberFormat for the given column. The
+   * NumberFormat is type dependent. For instance, Water-level is displayed
+   * differently than Rainfall.
+   * 
+   * @param column
+   * @return adequate instance of NumberFormat
+   * @see org.kalypso.ogc.sensor.timeseries.TimeserieUtils#getNumberFormatFor(String)
+   */
+  public NumberFormat getNumberFormat( int column )
+  {
+    final TableViewColumn col = (TableViewColumn) m_columns.get( column - 1 );
+    return TimeserieUtils.getNumberFormatFor( col.getAxis().getType() );
   }
 }

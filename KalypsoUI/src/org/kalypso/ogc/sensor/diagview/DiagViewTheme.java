@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.diagview.impl;
+package org.kalypso.ogc.sensor.diagview;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -51,7 +51,6 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.DiagramTemplateUtils;
 import org.kalypso.ogc.sensor.proxy.IProxyFactory;
 import org.kalypso.ogc.sensor.template.AbstractObservationTheme;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -228,7 +227,7 @@ public class DiagViewTheme extends AbstractObservationTheme
           DiagramAxis daDate = m_template.getDiagramAxis( dateAxis.getType() );
           if( daDate == null )
           {
-            daDate = DiagramTemplateUtils.createAxisFor( dateAxis );
+            daDate = DiagViewUtils.createAxisFor( dateAxis );
             m_template.addAxis( daDate );
           }
           mappings[0] = new AxisMapping( dateAxis, daDate );
@@ -237,7 +236,7 @@ public class DiagViewTheme extends AbstractObservationTheme
           DiagramAxis daValue = m_template.getDiagramAxis( type );
           if( daValue == null )
           {
-            daValue = DiagramTemplateUtils.createAxisFor( valueAxis[i] );
+            daValue = DiagViewUtils.createAxisFor( valueAxis[i] );
             m_template.addAxis( daValue );
           }
           mappings[1] = new AxisMapping( valueAxis[i], daValue );

@@ -38,14 +38,14 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.tableview.impl;
+package org.kalypso.ogc.sensor.tableview;
 
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.tableview.ITableViewRules;
+import org.kalypso.ogc.sensor.tableview.rules.ITableViewRules;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.ogc.sensor.template.AbstractViewTemplate;
 import org.kalypso.template.obstableview.ObstableviewType;
@@ -101,9 +101,14 @@ public class TableViewTemplate extends AbstractViewTemplate
   public void setBaseTemplate( final ObstableviewType obsTableView,
       final URL context )
   {
+    removeAllThemes();
+    
     final RulesType trules = obsTableView.getRules();
     if( trules != null )
     {
+      // clear the rules since we get ones from the xml
+      getRules().removeAllRules();
+      
       for( final Iterator it = trules.getRenderingrule().iterator(); it
           .hasNext(); )
         getRules().addRule(

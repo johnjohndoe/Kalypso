@@ -56,9 +56,9 @@ import org.eclipse.ui.internal.Workbench;
 import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.java.swing.table.SelectAllCellEditor;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewTheme;
+import org.kalypso.ogc.sensor.tableview.TableViewColumn;
+import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.TableViewTheme;
 import org.kalypso.ogc.sensor.tableview.swing.editor.DoubleCellEditor;
 import org.kalypso.ogc.sensor.tableview.swing.marker.ForecastLabelMarker;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
@@ -75,13 +75,6 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  */
 public class ObservationTable extends JTable implements ITemplateEventListener
 {
-  private final static NumberFormat NF = NumberFormat.getInstance();
-  static
-  {
-    //NF.setMaximumFractionDigits( 3 );
-    NF.setMinimumFractionDigits( 3 );
-  }
-
   private final ObservationTableModel m_model;
 
   private final TableViewTemplate m_template;
@@ -103,6 +96,7 @@ public class ObservationTable extends JTable implements ITemplateEventListener
 
     // for convenience
     m_model = (ObservationTableModel) getModel();
+    m_model.setTable( this );
     m_model.setRules( template.getRules() );
 
     // removed in this.dispose()
@@ -110,7 +104,7 @@ public class ObservationTable extends JTable implements ITemplateEventListener
 
     m_dateRenderer = new DateTableCellRenderer();
 
-    m_nbRenderer = new MaskedNumberTableCellRenderer( NF );
+    m_nbRenderer = new MaskedNumberTableCellRenderer( m_model );
 
     setDefaultRenderer( Date.class, m_dateRenderer );
     setDefaultRenderer( Number.class, m_nbRenderer );
@@ -130,9 +124,11 @@ public class ObservationTable extends JTable implements ITemplateEventListener
 
   public void dispose( )
   {
-    m_template.removeTemplateEventListener( this );
-    m_model.clearColumns();
     m_dateRenderer.clearMarkers();
+    m_template.removeTemplateEventListener( this );
+    
+    m_model.clearColumns();
+    m_model.setTable( null );
   }
 
   /**

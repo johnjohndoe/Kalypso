@@ -57,8 +57,8 @@ import org.jfree.chart.ChartPanel;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.DiagramTemplateUtils;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
@@ -105,8 +105,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
     try
     {
       m_obsChart = new ObservationChart( m_template );
-      m_template.addTemplateEventListener( m_obsChart );
-
+      
       // chart panel without any popup menu
       final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false,
           false, false, false );
@@ -151,18 +150,17 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
    */
   public void dispose( )
   {
+    if( m_obsChart != null )
+      m_obsChart.dispose();
+
     if( m_template != null )
     {
       m_template.removeTemplateEventListener( this );
-      m_template.removeTemplateEventListener( m_obsChart );
       m_template.dispose();
     }
 
     if( m_outline != null )
       m_outline.dispose();
-
-    if( m_obsChart != null )
-      m_obsChart.dispose();
 
     super.dispose();
   }
@@ -181,10 +179,10 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
     {
       protected void write( Writer writer ) throws Throwable
       {
-        final ObsdiagviewType type = DiagramTemplateUtils
+        final ObsdiagviewType type = DiagViewUtils
             .buildDiagramTemplateXML( m_template );
 
-        DiagramTemplateUtils.saveDiagramTemplateXML( type, writer );
+        DiagViewUtils.saveDiagramTemplateXML( type, writer );
 
         resetDirty();
       }
@@ -221,7 +219,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
       }
       else
       {
-        final ObsdiagviewType baseTemplate = DiagramTemplateUtils
+        final ObsdiagviewType baseTemplate = DiagViewUtils
             .loadDiagramTemplateXML( storage.getContents() );
 
         final String strUrl = ResourceUtilities.createURLSpec( input

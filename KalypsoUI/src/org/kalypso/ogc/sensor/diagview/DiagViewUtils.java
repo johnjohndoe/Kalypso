@@ -53,11 +53,6 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.diagview.impl.AxisMapping;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewCurve;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewTheme;
-import org.kalypso.ogc.sensor.diagview.impl.DiagramAxis;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.template.obsdiagview.ObjectFactory;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
@@ -68,40 +63,43 @@ import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.template.obsdiagview.ObsdiagviewType.LegendType;
 
 /**
- * Observation template handling made easy.
+ * Observation Diagramm Template Handling made easy.
  * 
  * @author schlienger
  */
-public class DiagramTemplateUtils
+public class DiagViewUtils
 {
   public final static String ODT_FILE_EXTENSION = "odt";
 
   private final static ObjectFactory ODT_OF = new ObjectFactory();
 
-  private DiagramTemplateUtils( )
+  /**
+   * Not to be instanciated
+   */
+  private DiagViewUtils( )
   {
-    // not to be instanciated
+    // empty
   }
 
   /**
    * Saves the given template (binding). Closes the stream.
    * 
-   * @param tpl
-   * @param out
+   * @param xml
+   * @param outs
    * @throws JAXBException
    */
-  public static void saveDiagramTemplateXML( final ObsdiagviewType tpl,
-      final OutputStream out ) throws JAXBException
+  public static void saveDiagramTemplateXML( final ObsdiagviewType xml,
+      final OutputStream outs ) throws JAXBException
   {
     try
     {
       final Marshaller m = ODT_OF.createMarshaller();
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      m.marshal( tpl, out );
+      m.marshal( xml, outs );
     }
     finally
     {
-      IOUtils.closeQuietly( out );
+      IOUtils.closeQuietly( outs );
     }
   }
 
@@ -151,45 +149,45 @@ public class DiagramTemplateUtils
   }
 
   /**
-   * Builds the template binding type using the given template.
+   * Builds the xml binding object using the given diagram view template
    * 
    * @param template
-   * @return binding type, ready for marshalling
+   * @return xml binding object (ready for marshalling for instance)
    * @throws JAXBException
    */
   public static ObsdiagviewType buildDiagramTemplateXML(
       final DiagViewTemplate template ) throws JAXBException
   {
-    final ObsdiagviewType bdgTemplate = ODT_OF.createObsdiagview();
+    final ObsdiagviewType xmlTemplate = ODT_OF.createObsdiagview();
 
-    final LegendType bdgLegend = ODT_OF.createObsdiagviewTypeLegendType();
-    bdgLegend.setTitle( template.getLegendName() );
-    bdgLegend.setVisible( template.isShowLegend() );
+    final LegendType xmlLegend = ODT_OF.createObsdiagviewTypeLegendType();
+    xmlLegend.setTitle( template.getLegendName() );
+    xmlLegend.setVisible( template.isShowLegend() );
 
-    bdgTemplate.setLegend( bdgLegend );
-    bdgTemplate.setTitle( template.getTitle() );
+    xmlTemplate.setLegend( xmlLegend );
+    xmlTemplate.setTitle( template.getTitle() );
 
-    final List bdgAxes = bdgTemplate.getAxis();
+    final List xmlAxes = xmlTemplate.getAxis();
     final Iterator itAxes = template.getDiagramAxes().iterator();
     while( itAxes.hasNext() )
     {
       final DiagramAxis axis = (DiagramAxis) itAxes.next();
 
-      final TypeAxis bdgAxis = ODT_OF.createTypeAxis();
-      bdgAxis.setDatatype( axis.getDataType() );
-      bdgAxis.setDirection( axis.getDirection() );
-      bdgAxis.setId( axis.getIdentifier() );
-      bdgAxis.setInverted( axis.isInverted() );
-      bdgAxis.setLabel( axis.getLabel() );
-      bdgAxis.setPosition( axis.getPosition() );
-      bdgAxis.setUnit( axis.getUnit() );
+      final TypeAxis xmlAxis = ODT_OF.createTypeAxis();
+      xmlAxis.setDatatype( axis.getDataType() );
+      xmlAxis.setDirection( axis.getDirection() );
+      xmlAxis.setId( axis.getIdentifier() );
+      xmlAxis.setInverted( axis.isInverted() );
+      xmlAxis.setLabel( axis.getLabel() );
+      xmlAxis.setPosition( axis.getPosition() );
+      xmlAxis.setUnit( axis.getUnit() );
 
-      bdgAxes.add( bdgAxis );
+      xmlAxes.add( xmlAxis );
     }
 
     int ixCurve = 1;
 
-    final List bdgThemes = bdgTemplate.getObservation();
+    final List xmlThemes = xmlTemplate.getObservation();
     final Iterator itThemes = template.getThemes().iterator();
     while( itThemes.hasNext() )
     {
@@ -198,43 +196,43 @@ public class DiagramTemplateUtils
 
       final IObservation obs = theme.getObservation();
 
-      final TypeObservation bdgTheme = ODT_OF.createTypeObservation();
-      bdgTheme.setLinktype( "zml" );
-      bdgTheme.setHref( obs.getHref() );
+      final TypeObservation xmlTheme = ODT_OF.createTypeObservation();
+      xmlTheme.setLinktype( "zml" );
+      xmlTheme.setHref( obs.getHref() );
 
-      final List bdgCurves = bdgTheme.getCurve();
+      final List xmlCurves = xmlTheme.getCurve();
 
       final Iterator itCurves = theme.getCurves().iterator();
       while( itCurves.hasNext() )
       {
         final DiagViewCurve curve = (DiagViewCurve) itCurves.next();
 
-        final TypeCurve bdgCurve = ODT_OF.createTypeCurve();
-        bdgCurve.setId( "C" + ixCurve++ );
-        bdgCurve.setName( curve.getName() );
-        bdgCurve.setColor( StringUtilities.colorToString( curve.getColor() ) );
+        final TypeCurve xmlCurve = ODT_OF.createTypeCurve();
+        xmlCurve.setId( "C" + ixCurve++ );
+        xmlCurve.setName( curve.getName() );
+        xmlCurve.setColor( StringUtilities.colorToString( curve.getColor() ) );
 
-        final List bdgMappings = bdgCurve.getMapping();
+        final List xmlMappings = xmlCurve.getMapping();
 
         final AxisMapping[] mappings = curve.getMappings();
         for( int i = 0; i < mappings.length; i++ )
         {
-          final TypeAxisMapping bdgMapping = ODT_OF.createTypeAxisMapping();
-          bdgMapping.setDiagramAxis( mappings[i].getDiagramAxis()
+          final TypeAxisMapping xmlMapping = ODT_OF.createTypeAxisMapping();
+          xmlMapping.setDiagramAxis( mappings[i].getDiagramAxis()
               .getIdentifier() );
-          bdgMapping.setObservationAxis( mappings[i].getObservationAxis()
+          xmlMapping.setObservationAxis( mappings[i].getObservationAxis()
               .getName() );
 
-          bdgMappings.add( bdgMapping );
+          xmlMappings.add( xmlMapping );
         }
 
-        bdgCurves.add( bdgCurve );
+        xmlCurves.add( xmlCurve );
       }
 
-      bdgThemes.add( bdgTheme );
+      xmlThemes.add( xmlTheme );
     }
 
-    return bdgTemplate;
+    return xmlTemplate;
   }
 
   /**

@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.tableview.impl;
+package org.kalypso.ogc.sensor.tableview;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -144,7 +144,9 @@ public class TableViewTheme extends AbstractObservationTheme
         final IAxis valueAxis = ObservationUtilities.findAxisByName( obs
             .getAxisList(), tcol.getAxis() );
 
-        final TableViewColumn column = new TableViewColumn( tcol.getAxis(),
+        final String colName = tcol.getName() != null ? tcol.getName() : tcol.getAxis();
+        
+        final TableViewColumn column = new TableViewColumn( colName,
             tcol.isEditable(), tcol.getWidth(), keyAxis, valueAxis, this,
             m_template );
 

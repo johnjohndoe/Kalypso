@@ -35,10 +35,13 @@ public abstract class AbstractViewTemplate extends
 
   public void setIgnoreType( final String ignoreType )
   {
-    m_ignoreType = ignoreType;
+    synchronized( m_themes )
+    {
+      m_ignoreType = ignoreType;
 
-    for( final Iterator it = getThemes().iterator(); it.hasNext(); )
-      ((AbstractObservationTheme) it.next()).setIgnoreType( m_ignoreType );
+      for( final Iterator it = getThemes().iterator(); it.hasNext(); )
+        ((AbstractObservationTheme) it.next()).setIgnoreType( m_ignoreType );
+    }
   }
 
   /**
@@ -48,11 +51,14 @@ public abstract class AbstractViewTemplate extends
    */
   public void addTheme( final AbstractObservationTheme theme )
   {
-    theme.addListener( this );
-    theme.setIgnoreType( m_ignoreType );
-    m_themes.add( theme );
+    synchronized( m_themes )
+    {
+      theme.addListener( this );
+      theme.setIgnoreType( m_ignoreType );
+      m_themes.add( theme );
 
-    fireTemplateChanged( new TemplateEvent( theme, TemplateEvent.TYPE_ADD ) );
+      fireTemplateChanged( new TemplateEvent( theme, TemplateEvent.TYPE_ADD ) );
+    }
   }
 
   /**
@@ -62,11 +68,16 @@ public abstract class AbstractViewTemplate extends
    */
   public void removeTheme( final AbstractObservationTheme theme )
   {
-    fireTemplateChanged( new TemplateEvent( theme, TemplateEvent.TYPE_REMOVE ) );
-
-    theme.removeListener( this );
-    m_themes.remove( theme );
-    theme.dispose();
+    synchronized( m_themes )
+    {
+      if( m_themes.remove( theme ) )
+      {
+        theme.removeListener( this );
+        fireTemplateChanged( new TemplateEvent( theme,
+            TemplateEvent.TYPE_REMOVE ) );
+        theme.dispose();
+      }
+    }
   }
 
   /**
@@ -74,13 +85,20 @@ public abstract class AbstractViewTemplate extends
    */
   public void removeAllThemes( )
   {
-    final Iterator it = m_themes.iterator();
-    while( it.hasNext() )
-      ((AbstractObservationTheme) it.next()).dispose();
+    synchronized( m_themes )
+    {
+      if( m_themes.size() > 0 )
+      {
+        final Iterator it = m_themes.iterator();
+        while( it.hasNext() )
+          ((AbstractObservationTheme) it.next()).dispose();
 
-    m_themes.clear();
-    
-    fireTemplateChanged( new TemplateEvent( this, null, TemplateEvent.TYPE_REMOVE_ALL ) );
+        m_themes.clear();
+
+        fireTemplateChanged( new TemplateEvent( this, null,
+            TemplateEvent.TYPE_REMOVE_ALL ) );
+      }
+    }
   }
 
   public void dispose( )

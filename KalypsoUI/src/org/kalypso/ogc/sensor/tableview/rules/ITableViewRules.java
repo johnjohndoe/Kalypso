@@ -38,59 +38,25 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.diagview.impl;
+package org.kalypso.ogc.sensor.tableview.rules;
 
-import org.kalypso.ogc.sensor.IAxis;
+import java.util.List;
+
 
 /**
- * Default implementation of <code>IAxisMapping</code>.
+ * Container for rendering-rules
  * 
  * @author schlienger
- *
  */
-public class AxisMapping
+public interface ITableViewRules
 {
-  private final IAxis m_oAxis;
-  private final DiagramAxis m_dAxis;
-
-  public AxisMapping( final IAxis oAxis, final DiagramAxis dAxis )
-  {
-    m_oAxis = oAxis;
-    m_dAxis = dAxis;
-  }
-
-  public IAxis getObservationAxis()
-  {
-    return m_oAxis;
-  }
-
-  public DiagramAxis getDiagramAxis()
-  {
-    return m_dAxis;
-  }
+  public void addRule( RenderingRule rule );
+  public void removeRule( RenderingRule rule );
   
-  /**
-   * @see java.lang.Object#toString()
-   */
-  public String toString( )
-  {
-    return m_oAxis + " - " + m_dAxis;
-  }
+  public RenderingRule[] findRules( int mask );
   
-//  /**
-//   * Convenience method that builds a properties object and sets its property-entries
-//   * so that they are adequate to the given mappings.
-//   * 
-//   * @param mappings
-//   * @return properties
-//   */
-//  public static Properties saveAsProperties( IAxisMapping[] mappings )
-//  {
-//    Properties props = new Properties();
-//    
-//    for( int i = 0; i < mappings.length; i++ )
-//      props.setProperty( mappings[i].getObservationAxis().getName(), mappings[i].getDiagramAxis().getIdentifier() );
-//    
-//    return props;
-//  }
+  public boolean isEmpty();
+
+  public List getRules();
+  public void removeAllRules( );
 }

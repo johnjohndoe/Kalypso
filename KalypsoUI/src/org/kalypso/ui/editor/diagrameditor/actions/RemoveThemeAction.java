@@ -44,7 +44,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.eclipse.jface.action.FullAction;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewTheme;
+import org.kalypso.ogc.sensor.diagview.DiagViewTheme;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.diagrameditor.ObsDiagOutlinePage;
 

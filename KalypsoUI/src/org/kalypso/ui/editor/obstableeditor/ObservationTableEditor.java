@@ -41,11 +41,13 @@
 package org.kalypso.ui.editor.obstableeditor;
 
 import java.awt.Frame;
+import java.io.Writer;
 import java.net.URL;
 
 import javax.swing.JScrollPane;
 
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -54,8 +56,9 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.ogc.sensor.tableview.ObservationTableTemplateFactory;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
+import org.kalypso.eclipse.util.SetContentHelper;
+import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
@@ -172,7 +175,6 @@ public class ObservationTableEditor extends AbstractEditorPart implements
     if( m_template != null )
     {
       m_template.removeTemplateEventListener( this );
-      m_template.removeTemplateEventListener( m_table );
       m_template.dispose();
     }
 
@@ -183,16 +185,31 @@ public class ObservationTableEditor extends AbstractEditorPart implements
   }
 
   /**
-   * Speichert z.Z. nur die Daten.
-   * 
    * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
   protected void doSaveInternal( IProgressMonitor monitor,
-      IFileEditorInput input )
+      IFileEditorInput input ) throws CoreException
   {
-    // TODO Vorlage speichern
-    System.out.println( "TODO: Vorlage auch speichern..." );
+    if( m_template == null )
+      return;
+
+    final SetContentHelper thread = new SetContentHelper()
+    {
+      protected void write( Writer writer ) throws Throwable
+      {
+        final ObstableviewType type = TableViewUtils
+            .buildTableTemplateXML( m_template );
+
+        TableViewUtils.saveTableTemplateXML( type, writer );
+
+        resetDirty();
+      }
+    };
+
+    thread.setFileContents( input.getFile(), false, true, monitor );
+
+    fireDirty();
   }
 
   /**
@@ -216,7 +233,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
       }
       else
       {
-        final ObstableviewType baseTemplate = ObservationTableTemplateFactory
+        final ObstableviewType baseTemplate = TableViewUtils
             .loadTableTemplateXML( storage.getContents() );
 
         final String strUrl = ResourceUtilities.createURLSpec( input

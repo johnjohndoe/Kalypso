@@ -38,50 +38,59 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.tableview;
+package org.kalypso.ogc.sensor.diagview;
 
-import java.io.InputStream;
-
-import javax.xml.bind.JAXBException;
-
-import org.apache.commons.io.IOUtils;
-import org.kalypso.template.obstableview.ObjectFactory;
-import org.kalypso.template.obstableview.ObstableviewType;
+import org.kalypso.ogc.sensor.IAxis;
 
 /**
- * ObservationTableTemplateFactory
+ * Default implementation of <code>IAxisMapping</code>.
  * 
  * @author schlienger
+ *
  */
-public class ObservationTableTemplateFactory
+public class AxisMapping
 {
-  private final static ObjectFactory OF = new ObjectFactory();
-  
-  
-  private ObservationTableTemplateFactory( )
+  private final IAxis m_oAxis;
+  private final DiagramAxis m_dAxis;
+
+  public AxisMapping( final IAxis oAxis, final DiagramAxis dAxis )
   {
-    // not instanciation
+    m_oAxis = oAxis;
+    m_dAxis = dAxis;
   }
 
-  /**
-   * Loads the xml template from the given stream. Closes the stream.
-   * 
-   * @param ins
-   * @return table view template
-   * @throws JAXBException
-   */
-  public static ObstableviewType loadTableTemplateXML( final InputStream ins ) throws JAXBException
+  public IAxis getObservationAxis()
   {
-    try
-    {
-      final ObstableviewType baseTemplate = (ObstableviewType) OF
-          .createUnmarshaller().unmarshal( ins );
-      
-      return baseTemplate;
-    }
-    finally
-    {
-      IOUtils.closeQuietly( ins );
-    }
+    return m_oAxis;
   }
+
+  public DiagramAxis getDiagramAxis()
+  {
+    return m_dAxis;
+  }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString( )
+  {
+    return m_oAxis + " - " + m_dAxis;
+  }
+  
+//  /**
+//   * Convenience method that builds a properties object and sets its property-entries
+//   * so that they are adequate to the given mappings.
+//   * 
+//   * @param mappings
+//   * @return properties
+//   */
+//  public static Properties saveAsProperties( IAxisMapping[] mappings )
+//  {
+//    Properties props = new Properties();
+//    
+//    for( int i = 0; i < mappings.length; i++ )
+//      props.setProperty( mappings[i].getObservationAxis().getName(), mappings[i].getDiagramAxis().getIdentifier() );
+//    
+//    return props;
+//  }
 }

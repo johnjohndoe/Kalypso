@@ -46,8 +46,8 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import org.kalypso.java.util.PropertiesHelper;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
+import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
+import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 
 /**

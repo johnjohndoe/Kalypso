@@ -43,7 +43,6 @@ package org.kalypso.ogc.sensor.tableview.rules;
 import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.tableview.ITableViewRules;
 import org.kalypso.template.obstableview.TypeRenderingRule;
 
 /**

@@ -46,8 +46,8 @@ import org.jfree.data.general.Series;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.impl.DiagViewCurve;
-import org.kalypso.ogc.sensor.diagview.impl.DiagramAxis;
+import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
+import org.kalypso.ogc.sensor.diagview.DiagramAxis;
 
 /**
  * A CurveSerie.

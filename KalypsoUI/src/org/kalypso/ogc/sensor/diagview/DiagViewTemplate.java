@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.diagview.impl;
+package org.kalypso.ogc.sensor.diagview;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -230,6 +230,9 @@ public class DiagViewTemplate extends AbstractViewTemplate
   public void setBaseTemplate( final ObsdiagviewType obsDiagView,
       final URL context )
   {
+    removeAllAxes();
+    removeAllThemes();
+    
     setTitle( obsDiagView.getTitle() );
     setLegendName( obsDiagView.getLegend() == null ? "" : obsDiagView
         .getLegend().getTitle() );

@@ -36,16 +36,19 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries;
 
 import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
@@ -64,14 +67,18 @@ public class TimeserieUtils
 {
   private static Properties m_config;
 
+  private static HashMap m_formatMap = null;
+
+  private static NumberFormat m_defaultFormat = null;
+
   private TimeserieUtils( )
   {
     // no instanciation
   }
 
   /**
-   * Finds out which metadata of the given observation begin with the
-   * given prefix.
+   * Finds out which metadata of the given observation begin with the given
+   * prefix.
    * <p>
    * This is for instance usefull for the Alarmstufen
    * 
@@ -79,22 +86,23 @@ public class TimeserieUtils
    * @param mdPrefix
    * @return list of metadata keys or empty array if nothing found
    */
-  public final static String[] findOutMDBeginningWith( final IObservation obs, final String mdPrefix )
+  public final static String[] findOutMDBeginningWith( final IObservation obs,
+      final String mdPrefix )
   {
     final MetadataList mdl = obs.getMetadataList();
-    
+
     final ArrayList mds = new ArrayList();
-    
+
     final Iterator it = mdl.keySet().iterator();
     while( it.hasNext() )
     {
       final String md = it.next().toString();
-      
+
       if( md.startsWith( mdPrefix ) )
         mds.add( md );
     }
-    
-    return (String[]) mds.toArray( new String[mds.size()]);
+
+    return (String[]) mds.toArray( new String[mds.size()] );
   }
 
   /**
@@ -107,10 +115,9 @@ public class TimeserieUtils
   {
     return findOutMDBeginningWith( obs, "Alarmstufe" );
   }
-  
+
   /**
-   * Returns the color to use when displaying the value of the
-   * given Alarmstufe.
+   * Returns the color to use when displaying the value of the given Alarmstufe.
    * 
    * @param mdAlarm
    * @return color
@@ -120,10 +127,10 @@ public class TimeserieUtils
     final String strColor = getProperties().getProperty( "COLOR_" + mdAlarm );
     if( strColor == null )
       return Color.RED;
-    
+
     return StringUtilities.stringToColor( strColor );
   }
-  
+
   /**
    * Layze loading of the properties
    * 
@@ -131,12 +138,13 @@ public class TimeserieUtils
    */
   private static Properties getProperties( )
   {
-    if( m_config == null )  
+    if( m_config == null )
     {
       m_config = new Properties();
-     
-      InputStream ins = TimeserieUtils.class.getResourceAsStream( "resource/config.properties" );
-      
+
+      InputStream ins = TimeserieUtils.class
+          .getResourceAsStream( "resource/config.properties" );
+
       try
       {
         m_config.load( ins );
@@ -204,7 +212,7 @@ public class TimeserieUtils
 
     return null;
   }
-  
+
   /**
    * Units are read from the config.properties file.
    * 
@@ -217,7 +225,7 @@ public class TimeserieUtils
 
     return strUnit;
   }
-  
+
   /**
    * TODO fill the names in the config.properties file
    * 
@@ -233,7 +241,8 @@ public class TimeserieUtils
 
   /**
    * @param type
-   * @return a Color that is defined to be used with the given axis type, or a random color when no fits
+   * @return a Color that is defined to be used with the given axis type, or a
+   *         random color when no fits
    */
   public static Color getColorFor( final String type )
   {
@@ -241,7 +250,7 @@ public class TimeserieUtils
 
     if( strColor != null )
       return StringUtilities.stringToColor( strColor );
-    
+
     // no color found? so return random one
     return ColorUtilities.random();
   }
@@ -256,14 +265,18 @@ public class TimeserieUtils
 
     if( strColor != null )
       return StringUtilities.stringToColor( strColor );
-    
+
     // no color found? so return random one
     return ColorUtilities.random();
   }
 
   /**
-   * <p>Transforms physical units to TYPE-Constant used in Axis (best guess)</p>
-   * <p>Uses UNIT_TO_TYPE_ Keys in config.properties</p>
+   * <p>
+   * Transforms physical units to TYPE-Constant used in Axis (best guess)
+   * </p>
+   * <p>
+   * Uses UNIT_TO_TYPE_ Keys in config.properties
+   * </p>
    * 
    * @param unit
    * @return type
@@ -271,5 +284,54 @@ public class TimeserieUtils
   public static String getTypeForUnit( final String unit )
   {
     return getProperties().getProperty( "UNIT_TO_TYPE_" + unit, "" );
+  }
+
+  /**
+   * Returns a NumberFormat instance according to the given timeserie type. If 
+   * there is no specific instance for the given type, then a default number format
+   * is returned.
+   * 
+   * @param type
+   * @return instance of NumberFormat that can be used to display the values to
+   *         the user
+   */
+  public static NumberFormat getNumberFormatFor( final String type )
+  {
+    final NumberFormat nf = (NumberFormat) getFormatMap().get( type );
+    if( nf != null )
+      return nf;
+
+    return getDefaultFormat();
+  }
+
+  private static Map getFormatMap( )
+  {
+    if( m_formatMap == null )
+    {
+      m_formatMap = new HashMap();
+
+      // for W
+      final NumberFormat wf = NumberFormat.getInstance();
+      wf.setMinimumFractionDigits( 0 );
+      m_formatMap.put( TimeserieConstants.TYPE_WATERLEVEL, wf );
+
+      // for N
+      final NumberFormat nf = NumberFormat.getInstance();
+      nf.setMinimumFractionDigits( 1 );
+      m_formatMap.put( TimeserieConstants.TYPE_RAINFALL, nf );
+    }
+
+    return m_formatMap;
+  }
+
+  private static NumberFormat getDefaultFormat( )
+  {
+    if( m_defaultFormat == null )
+    {
+      m_defaultFormat = NumberFormat.getNumberInstance();
+      m_defaultFormat.setMinimumFractionDigits( 3 );
+    }
+
+    return m_defaultFormat;
   }
 }
