@@ -1,0 +1,8 @@
+Der Server wird über System-Properties konfiguriert (betrifft eig. jeder Service):
+
+- kalypso.server.tempdir: (nicht repliziert)
+- kalypso.server.datadir: (repliziert)
+- kalypso.server.confdir: (nicht repliziert)
+
+Konvention: die Konfiguration einer Service liegt unter
+kalypso.server.confdir/<service_name>/*.*

@@ -1,0 +1,9 @@
+Konfiguration des Client
+
+Jeder Client braucht lediglich zu wissen, wo die Konfigurationsdatei zentral liegt (URL). Pro
+Client gibt es normalerweise eine Liste von URL für jede alternative Konfigurationsdatei.
+Sollte die erste Konfigurationsdatei nicht zur Verfügung stehen, versucht es der Client
+mit der nächste, usw., bis es klappt.
+
+Die Konfigurationsdatei ist wie eine Properties-Datei aufgebaut. Siehe kalypso-client.ini für
+mehr Information.
