@@ -108,10 +108,10 @@ public class PrognoseView extends ViewPart
     form.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
 
     final GridLayout gridLayout = new GridLayout( 1, false );
-    gridLayout.horizontalSpacing = 20;
-    gridLayout.verticalSpacing = 20;
-    gridLayout.marginHeight = 20;
-    gridLayout.marginWidth = 20;
+//    gridLayout.horizontalSpacing = 20;
+//    gridLayout.verticalSpacing = 20;
+//    gridLayout.marginHeight = 20;
+//    gridLayout.marginWidth = 20;
     form.getBody().setLayout( gridLayout );
     form.getBody().setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
 
