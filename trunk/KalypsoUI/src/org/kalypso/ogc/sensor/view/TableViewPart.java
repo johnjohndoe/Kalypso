@@ -86,15 +86,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
    */
   public void selectionChanged( SelectionChangedEvent event )
   {
-    try
-    {
-      m_model.setColumns( null, null );
-    }
-    catch( SensorException e )
-    {
-      // TODO handling
-      e.printStackTrace();
-    }
+    m_model.clearColumns();
 
     StructuredSelection selection = (StructuredSelection)event.getSelection();
 

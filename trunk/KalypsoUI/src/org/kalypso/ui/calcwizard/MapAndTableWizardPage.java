@@ -2,6 +2,8 @@ package org.kalypso.ui.calcwizard;
 
 import java.awt.Frame;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IFile;
@@ -22,22 +24,26 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.time.TimeSeriesCollection;
 import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayer;
+import org.kalypso.ogc.gml.KalypsoFeature;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.ogc.sensor.deegree.TimeserieFeatureProps;
+import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.widgets.ToggleSelectWidget;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.services.calcjob.CalcJobDescription;
 import org.kalypso.services.calcjob.CalcJobStatus;
 import org.kalypso.template.GisTemplateHelper;
+import org.kalypso.template.ObservationTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.nature.ModelNature;
@@ -57,6 +63,9 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
   /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
   public final static String PROP_TABLETEMPLATE = "tableTemplate";
 
+  /** Pfad auf die Vorlage für das Diagramm (.odt Datei) */
+  public final static String PROP_DIAGTEMPLATE = "diagTemplate";
+
   /** Position des Haupt-Sash: Integer von 0 bis 100 */
   public final static String PROP_MAINSASH = "mainSash";
 
@@ -64,14 +73,12 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
   public final static String PROP_RIGHTSASH = "rightSash";
 
   /**
-   * Property-Names zum Layer in der Tabelle: alle Zeitreihen dieser Spalten
-   * werden im diagram angezeigt
+   * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen
+   * geben-Property geben: eine für jede Kurventyp.
    */
-  public final static String PROP_TIMEPROPNAME = "timeseriesPropertyNames";
+  public final static String PROP_TIMEPROPNAME = "timeserie";
 
   private static final int SELECTION_ID = 0x10;
-
-  private final TimeSeriesCollection m_tsCol = new TimeSeriesCollection();
 
   private LayerTableViewer m_viewer;
 
@@ -80,6 +87,12 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
   private GM_Envelope m_boundingBox;
 
   private MapPanel m_mapPanel;
+
+  private Frame m_diagFrame = null;
+
+  private IDiagramTemplate m_diagTemplate = null;
+
+  private ObservationChart m_obsChart = null;
 
   public MapAndTableWizardPage()
   {
@@ -159,19 +172,35 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
 
   private void createDiagramPanel( final Composite parent )
   {
-    final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+    final String diagFileName = getArguments().getProperty( PROP_DIAGTEMPLATE );
+    final IFile diagFile = (IFile)getProject().findMember( diagFileName );
 
-    final Frame vFrame = SWT_AWT.new_Frame( composite );
+    try
+    {
+      // actually creates the template
+      m_diagTemplate = ObservationTemplateHelper.loadDiagramTemplate( diagFile );
 
-    final JFreeChart chart = ChartFactory.createTimeSeriesChart( "", "Datum", "Wert", m_tsCol,
-        false, false, false );
+      final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+      m_diagFrame = SWT_AWT.new_Frame( composite );
+      m_diagFrame.setVisible( true );
 
-    final ChartPanel chartPanel = new ChartPanel( chart );
-    chartPanel.setMouseZoomable( true, false );
+      m_obsChart = new ObservationChart( m_diagTemplate );
+      m_diagTemplate.addTemplateEventListener( m_obsChart );
 
-    vFrame.setVisible( true );
-    chartPanel.setVisible( true );
-    vFrame.add( chartPanel );
+      final ChartPanel chartPanel = new ChartPanel( m_obsChart );
+      chartPanel.setMouseZoomable( true, false );
+
+      m_diagFrame.setVisible( true );
+      chartPanel.setVisible( true );
+      m_diagFrame.add( chartPanel );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+
+      final Text text = new Text( parent, SWT.CENTER );
+      text.setText( "Kein Diagram vorhanden" );
+    }
   }
 
   private void createTablePanel( final Composite parent )
@@ -253,24 +282,30 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-  // TODO: Marc will do it
-  //    final String propNames = getArguments().getProperty( PROP_TIMEPROPNAME, ""
-  // );
-  //    final String[] timeNames = propNames.split( "#" );
-  //
-  //    final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
-  //    if( !( layer instanceof KalypsoFeatureLayer ) )
-  //      return;
-  //    
-  //    final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
-  //    final KalypsoFeature[] allFeatures = kfl.getAllFeatures();
-  //    for( int i = 0; i < allFeatures.length; i++ )
-  //    {
-  //      if( allFeatures[i].isSelected( SELECTION_ID ) )
-  //      {
-  //        // do something
-  //      }
-  //    }
+    if( m_diagFrame == null )
+      return;
+
+    final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
+    if( !( layer instanceof KalypsoFeatureLayer ) )
+      return;
+
+    final List selectedFeatures = new ArrayList();
+
+    final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
+    final KalypsoFeature[] allFeatures = kfl.getAllFeatures();
+    for( int i = 0; i < allFeatures.length; i++ )
+      if( allFeatures[i].isSelected( SELECTION_ID ) )
+        selectedFeatures.add( allFeatures[i] );
+
+    m_diagTemplate.removeAllCurves();
+
+    if( selectedFeatures.size() > 0 )
+    {
+      final TimeserieFeatureProps[] tsProps = KalypsoWizardHelper
+          .parseTimeserieFeatureProps( getArguments() );
+
+      KalypsoWizardHelper.updateDiagramTemplate( tsProps, selectedFeatures, m_diagTemplate );
+    }
   }
 
   public void maximizeMap()
@@ -281,7 +316,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
   protected void runCalculation()
   {
     m_viewer.saveData();
-    
+
     try
     {
       getWizard().getContainer().run( false, true, new IRunnableWithProgress()
@@ -291,33 +326,35 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
         {
           try
           {
-            
-            monitor.beginTask( "Prognoserechnung durchführen",  2000 );
-            
-            final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature( ModelNature.ID );
-            final String jobID = nature.startCalculation( getCalcFolder(), new SubProgressMonitor( monitor, 100 ) );
-            
+
+            monitor.beginTask( "Prognoserechnung durchführen", 2000 );
+
+            final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature(
+                ModelNature.ID );
+            final String jobID = nature.startCalculation( getCalcFolder(), new SubProgressMonitor(
+                monitor, 100 ) );
+
             while( !monitor.isCanceled() )
             {
               // check if job is ready!
               final CalcJobDescription description = nature.checkCalculation( jobID );
               switch( description.getState() )
               {
-                case CalcJobStatus.ERROR:
-                  setErrorMessage( description.getMessage() );
-                  return;
-                  
-                  case CalcJobStatus.FINISHED:
-                    return;
+              case CalcJobStatus.ERROR:
+                setErrorMessage( description.getMessage() );
+                return;
+
+              case CalcJobStatus.FINISHED:
+                return;
               }
-              
+
               Thread.sleep( 100 );
               monitor.worked( 10 );
             }
-            
+
             if( monitor.isCanceled() )
             {
-              nature.stopCalculation(jobID);
+              nature.stopCalculation( jobID );
               throw new InterruptedException( "Abbruch durch Benutzer" );
             }
             // auf rechnung warten!

@@ -1,10 +1,10 @@
 package org.kalypso.ogc.sensor.template;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.kalypso.java.util.Arrays;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
@@ -39,11 +39,15 @@ public class LinkedTableViewTemplate implements ITableViewTemplate, ILinkResolve
     m_template = new TableViewTemplate();
 
     final List cols = obsTableView.getColumnpair();
+
+    // the list of columns, will be added to template once links are resolved
+    final List linkedColumns = new ArrayList( cols.size() );
+
     for( Iterator it = cols.iterator(); it.hasNext(); )
     {
       ObstableviewType.ColumnpairType col = (ObstableviewType.ColumnpairType)it.next();
 
-      m_template.addColumn( new LinkedTableViewColumn( col ) );
+      linkedColumns.add( new LinkedTableViewColumn( col ) );
     }
 
     final RulesType trules = obsTableView.getRules();
@@ -54,8 +58,8 @@ public class LinkedTableViewTemplate implements ITableViewTemplate, ILinkResolve
     }
 
     // resolve the links!
-    new LinkResolver( (LinkedTableViewColumn[])Arrays.castArray( m_template.getColumns(),
-        new LinkedTableViewColumn[0] ), IObservation.class, project, this );
+    new LinkResolver( (LinkedTableViewColumn[])linkedColumns.toArray( new LinkedTableViewColumn[0] ),
+        IObservation.class, project, this );
   }
 
   public void addColumn( ITableViewColumn column )
