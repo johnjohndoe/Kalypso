@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
+<xs:schema targetNamespace="wechmann.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="wechmann.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlinkext">
+	<xs:element name="wechmann">
+		<xs:annotation>
+			<xs:documentation>The Wechmann Parametersets</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="set" type="WechmannSet" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="WechmannSet">
+		<xs:sequence>
+			<xs:element name="validity" minOccurs="0">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="format" type="xs:string" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="params" type="WechmannParams" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="WechmannParams">
+		<xs:sequence>
+			<xs:element name="w1" type="xs:double"/>
+			<xs:element name="lnk1" type="xs:double"/>
+			<xs:element name="k2" type="xs:double"/>
+			<xs:element name="wgr" type="xs:double" default="-1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

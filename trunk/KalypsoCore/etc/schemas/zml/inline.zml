@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <observation xmlns="zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="zml.kalypso.org
 ./observation.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<name>Eine Test-Observation</name>

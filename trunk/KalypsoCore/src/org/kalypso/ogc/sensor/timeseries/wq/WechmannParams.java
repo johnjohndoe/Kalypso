@@ -32,12 +32,20 @@ public final class WechmannParams
    */
   private final double m_Q4WGR;
 
+  // used for persistence
+  private static final String TAG_W1 = "w1";
+  private static final String TAG_LNK1 = "lnk1";
+  private static final String TAG_K2 = "k2";
+  private static final String TAG_WGR = "wgr";
+
   /**
    * Creates the parameters with a WGR value of Double.MAX_VALUE. Use this
    * constructor when the WGR value is not defined, thus the parameters are
    * valid for all possible W values.
+   * 
+   * @throws WechmannException
    */
-  public WechmannParams( double W1, double LNK1, double K2 )
+  public WechmannParams( double W1, double LNK1, double K2 ) throws WechmannException
   {
     this( W1, LNK1, K2, Double.MAX_VALUE );
   }
@@ -53,8 +61,10 @@ public final class WechmannParams
    *          Konstante
    * @param WGR
    *          obere Wasserstandsgrenze in cm
+   * 
+   * @throws WechmannException
    */
-  public WechmannParams( double W1, double LNK1, double K2, double WGR )
+  public WechmannParams( double W1, double LNK1, double K2, double WGR ) throws WechmannException
   {
     m_W1 = W1;
     m_LNK1 = LNK1;
@@ -100,29 +110,25 @@ public final class WechmannParams
     final NumberFormat nf = NumberFormat.getNumberInstance();
     nf.setMinimumFractionDigits( 5 );
 
-    bf.append( "<params>" );
-
-    bf.append( "<w1>" );
+    bf.append( "<" ).append( TAG_W1 ).append( ">" );
     bf.append( nf.format( m_W1 ) );
-    bf.append( "</w1>" );
+    bf.append( "</" ).append( TAG_W1 ).append( ">" );
 
-    bf.append( "<lnk1>" );
+    bf.append( "<" ).append( TAG_LNK1 ).append( ">" );
     bf.append( nf.format( m_LNK1 ) );
-    bf.append( "</lnk1>" );
+    bf.append( "</" ).append( TAG_LNK1 ).append( ">" );
 
-    bf.append( "<k2>" );
+    bf.append( "<" ).append( TAG_K2 ).append( ">" );
     bf.append( nf.format( m_K2 ) );
-    bf.append( "</k2>" );
+    bf.append( "</" ).append( TAG_K2 ).append( ">" );
 
     // only include the WGR value if it is defined
     if( Double.compare( m_WGR, Double.MAX_VALUE ) != 0 )
     {
-      bf.append( "<wgr>" );
+      bf.append( "<" ).append( TAG_WGR ).append( ">" );
       bf.append( nf.format( m_WGR ) );
-      bf.append( "</wgr>" );
+      bf.append( "</" ).append( TAG_WGR ).append( ">" );
     }
-
-    bf.append( "</params>" );
 
     return bf.toString();
   }

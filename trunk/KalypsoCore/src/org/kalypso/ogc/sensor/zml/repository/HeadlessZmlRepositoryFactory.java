@@ -63,6 +63,6 @@ public class HeadlessZmlRepositoryFactory extends AbstractRepositoryFactory
     else
       filter = new AcceptAllFileFilter();
 
-    return new ZmlObservationRepository( conf[0], isReadOnly(), filter );
+    return new ZmlObservationRepository( this, conf[0], isReadOnly(), filter );
   }
 }

@@ -11,8 +11,8 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
@@ -27,37 +27,19 @@ import org.kalypso.zml.ObservationType;
 public class ZmlLoader extends AbstractLoader
 {
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties,
-   *      org.eclipse.core.resources.IProject,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
-  protected Object loadIntern( final Properties source, final IProject project,
-      final IProgressMonitor monitor ) throws LoaderException
+  protected Object loadIntern( Properties source, URL context, IProgressMonitor monitor ) throws LoaderException
   {
-    final String type = source.getProperty( "TYPE" );
     final String location = source.getProperty( "LOCATION" );
 
     monitor.beginTask( "Laden von ZML-Datei von " + location, 1 );
 
-    URL url = null;
+    URL url = null; 
 
     try
     {
-
-      if( type.equals( "relative" ) )
-      {
-        final IResource m = project.findMember( location );
-
-        if( m != null )
-          url = m.getLocation().toFile().toURL();
-        else
-          throw new LoaderException( "Location <" + location + "> could not be found in project:"
-              + project );
-      }
-      else if( type.equals( "absolute" ) )
-        url = new URL( location );
-      else
-        throw new LoaderException( "Href Type is not supported: " + type );
+      url = UrlUtilities.resolveURL( context, location );
     }
     catch( MalformedURLException e )
     {

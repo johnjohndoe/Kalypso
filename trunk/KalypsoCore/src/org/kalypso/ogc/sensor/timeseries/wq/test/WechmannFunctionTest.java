@@ -1,6 +1,7 @@
 package org.kalypso.ogc.sensor.timeseries.wq.test;
 
 import org.kalypso.java.util.DoubleComparator;
+import org.kalypso.ogc.sensor.timeseries.wq.WechmannException;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannFunction;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannParams;
 
@@ -26,7 +27,7 @@ public class WechmannFunctionTest extends TestCase
     m_wp2 = new WechmannParams( -43.32, -7.24065, 2.131 );
   }
   
-  public void testComputeQ()
+  public void testComputeQ() throws WechmannException
   {
     assertTrue( m_dc01.compare( WechmannFunction.computeQ( m_wp1, 115 ), 32.9 ) == 0 );
     assertTrue( m_dc01.compare( WechmannFunction.computeQ( m_wp1, 168 ), 64.4 ) == 0 );
@@ -48,7 +49,7 @@ public class WechmannFunctionTest extends TestCase
     assertEquals( 293, WechmannFunction.computeW( m_wp2, q ), 0.0001 );
   }
 
-  public void testComputeW()
+  public void testComputeW() throws WechmannException
   {
     assertTrue( m_dc1.compare( WechmannFunction.computeW( m_wp1, 5.82 ), 33 ) == 0 );
     assertTrue( m_dc1.compare( WechmannFunction.computeW( m_wp1, 27.8 ), 104 ) == 0 );
