@@ -34,7 +34,7 @@ public class FilterFactory
    *            configuration string for the filter
    * </pre>
    */
-  private final static String REGEXP_FILTER = "filter\\((\\p{Alpha}+?)*([\\p{Alpha}-_.!~']+?)\\)";
+  private final static String REGEXP_FILTER = "filter\\((\\w+)\\*([\\w-.!~']+)\\)";
 
   private final Pattern m_pattern;
 
@@ -94,7 +94,7 @@ public class FilterFactory
           "URL-fragment does not contain a valid filter specification. URL: "
               + strUrl );
 
-    final String strFrag = strUrl.substring( i1, strUrl.length() - i2 );
+    final String strFrag = strUrl.substring( i1, i2 + 1 );
 
     final Matcher matcher = m_pattern.matcher( strFrag );
 
@@ -103,8 +103,8 @@ public class FilterFactory
           "URL-fragment does not contain a valid filter specification. Fragment: "
               + strFrag );
 
-    final String filterId = matcher.group( 0 );
-    final String filterConf = matcher.group( 1 );
+    final String filterId = matcher.group( 1 );
+    final String filterConf = matcher.group( 2 );
 
     try
     {
@@ -117,7 +117,7 @@ public class FilterFactory
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
-      throw new SensorException( "URL could not be resolved", e );
+      throw new SensorException( "Could not create filter for: " + strFrag, e );
     }
   }
   

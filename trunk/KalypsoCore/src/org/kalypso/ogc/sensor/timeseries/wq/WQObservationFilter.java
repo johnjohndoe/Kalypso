@@ -20,18 +20,22 @@ import org.xml.sax.InputSource;
  * WQObservationFilter
  * 
  * Conf: (one of TimeserieConstants.TYPE_*) denotes the type of the model
- *
+ * 
  * @author schlienger
  */
 public class WQObservationFilter extends AbstractObservationFilter
 {
   private IAxis[] m_axes;
+
   private IAxis m_dateAxis;
+
   private IAxis m_srcAxis;
+
   private IAxis m_destAxis;
 
   /**
-   * @see org.kalypso.ogc.sensor.filter.AbstractObservationFilter#initFilter(java.lang.String, org.kalypso.ogc.sensor.IObservation)
+   * @see org.kalypso.ogc.sensor.filter.AbstractObservationFilter#initFilter(java.lang.String,
+   *      org.kalypso.ogc.sensor.IObservation)
    */
   public void initFilter( final String conf, final IObservation obs )
   {
@@ -39,7 +43,7 @@ public class WQObservationFilter extends AbstractObservationFilter
 
     // (one of TimeserieConstants.TYPE_*) denotes the type of the model
     final String type = conf;
-    
+
     final IAxis[] axes = obs.getAxisList();
     m_axes = new IAxis[axes.length + 1];
     for( int i = 0; i < axes.length; i++ )
@@ -68,7 +72,7 @@ public class WQObservationFilter extends AbstractObservationFilter
       throw new IllegalArgumentException(
           "Type is not supported. Must one of W_AVAILABLE or Q_AVAILABE." );
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.filter.AbstractObservationFilter#getAxisList()
    */
@@ -76,32 +80,59 @@ public class WQObservationFilter extends AbstractObservationFilter
   {
     return m_axes;
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.filter.AbstractObservationFilter#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
   public ITuppleModel getValues( IVariableArguments args )
       throws SensorException
   {
-    final String wechmann = getMetadataList().getProperty( TimeserieConstants.MD_WQ );
+    final String wechmann = getMetadataList().getProperty(
+        TimeserieConstants.MD_WQ );
     final WechmannGroup group;
     try
     {
-      group = WechmannFactory.parse( new InputSource( new StringReader( wechmann ) ) );
+      group = WechmannFactory.parse( new InputSource( new StringReader(
+          wechmann ) ) );
     }
     catch( WechmannException e )
     {
       throw new SensorException( e );
     }
-    
-    return new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_destAxis, group );
+
+    return new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis,
+        m_srcAxis, m_destAxis, group );
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.filter.AbstractObservationFilter#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
   public void setValues( final ITuppleModel values ) throws SensorException
   {
     super.setValues( values );
+  }
+
+  /**
+   * @return Returns the dateAxis.
+   */
+  public IAxis getDateAxis( )
+  {
+    return m_dateAxis;
+  }
+
+  /**
+   * @return Returns the destAxis.
+   */
+  public IAxis getDestAxis( )
+  {
+    return m_destAxis;
+  }
+
+  /**
+   * @return Returns the srcAxis.
+   */
+  public IAxis getSrcAxis( )
+  {
+    return m_srcAxis;
   }
 }
