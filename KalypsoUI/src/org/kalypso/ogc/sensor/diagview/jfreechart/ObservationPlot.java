@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import org.jfree.chart.LegendItem;
+import org.jfree.chart.LegendItemCollection;
 import org.jfree.chart.annotations.XYTextAnnotation;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.NumberAxis;
@@ -49,11 +51,11 @@ public class ObservationPlot extends XYPlot
   private static final ConfigurableCachableObjectFactory OF;
 
   /** default line renderer */
-  private static final XYItemRenderer LINE_RENDERER = new StandardXYItemRenderer(
+  private final XYItemRenderer LINE_RENDERER = new StandardXYItemRenderer(
       StandardXYItemRenderer.LINES );
 
   /** default bar renderer */
-  private static final XYItemRenderer BAR_RENDERER = new XYBarRenderer();
+  private final XYItemRenderer BAR_RENDERER = new XYBarRenderer();
 
   static
   {
@@ -347,7 +349,7 @@ public class ObservationPlot extends XYPlot
    * 
    * @param curve
    */
-  public void removeCurve( final IDiagramCurve curve )
+  public synchronized void removeCurve( final IDiagramCurve curve )
   {
     final XYCurveSerie serie = (XYCurveSerie) m_curve2serie.get( curve );
     if( serie != null )
@@ -383,15 +385,19 @@ public class ObservationPlot extends XYPlot
               final ValueAxis cAxis = (ValueAxis) m_diag2chartAxis.get( dAxis );
               final Integer pos = (Integer) m_chartAxes2Pos.get( cAxis );
               
+              // trick: if it is the only axis, then do not remove it
+              // else NullPointerException in drawQuadrants (JFreeChart)
               if( getRangeAxis() != getRangeAxis( pos.intValue() ) )
               {
                 setRangeAxis( pos.intValue(), null );
               	m_chartAxes2Pos.remove( cAxis );
               	m_diag2chartAxis.remove( dAxis );
-                m_diagAxis2ds.remove( dAxis );
-                
-              	break;
               }
+
+              it.remove();
+              
+              // break, that's it
+              break;
             }
           }
         }
@@ -448,6 +454,25 @@ public class ObservationPlot extends XYPlot
   }
 
   /**
+   * @see org.jfree.chart.plot.XYPlot#getLegendItems()
+   */
+  public LegendItemCollection getLegendItems()
+  {
+    System.out.println("have a look: " + this );
+    
+    final LegendItemCollection legendItemCollection = super.getLegendItems();
+    
+    for( final Iterator iter = legendItemCollection.iterator(); iter.hasNext(); )
+    {
+      final LegendItem li = (LegendItem)iter.next();
+      System.out.println( li.getLabel() );
+    }
+    
+    return legendItemCollection;
+  }
+
+
+  /**
    * Helper that creates a marker
    * 
    * @param start
@@ -474,7 +499,7 @@ public class ObservationPlot extends XYPlot
    * @param axisType
    * @return renderer
    */
-  private final static XYItemRenderer getRenderer( final String axisType )
+  private final XYItemRenderer getRenderer( final String axisType )
   {
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
       return BAR_RENDERER;
