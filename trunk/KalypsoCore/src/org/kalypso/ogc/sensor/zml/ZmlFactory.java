@@ -140,18 +140,18 @@ public class ZmlFactory
       throws SensorException
   {
     InputStream inputStream = null;
-
+      
     try
     {
-      // Eclipse Platform's URLStreamHandler cannot deal with
+      final String zmlId = ZmlURL.getIdentifierPart( url );
+      
+      // if no id specified, only use the filter part to retrieve observation
+      if( zmlId == null || zmlId.length() == 0 )
+        return FilterFactory.createFilter( url.getQuery() );
+
+      // NOTE: Eclipse Platform's URLStreamHandler cannot deal with
       // URLs that contain a fragment part (begining with '?').
-      // WORKAROUND: we remove it here
-      // TODO: check if Eclipse can deal with fragments that begin with '#'
-      String strUrl = url.toExternalForm();
-      int ix = strUrl.lastIndexOf( '?' );
-      if( ix != -1 )
-        strUrl = strUrl.substring( 0, ix );
-      final URL tmpUrl = new URL( strUrl );
+      final URL tmpUrl = new URL( zmlId );
       
       // stream is closed in finally
       inputStream = tmpUrl.openStream();
@@ -282,7 +282,7 @@ public class ZmlFactory
     IVariableArguments args = null;
     
     // check if a DateRange proxy can be created
-    args = ZmlUrlParser.checkDateRange( str );
+    args = ZmlURL.checkDateRange( str );
     if( args != null )
       return new ArgsObservationProxy( args, baseObs );
     
