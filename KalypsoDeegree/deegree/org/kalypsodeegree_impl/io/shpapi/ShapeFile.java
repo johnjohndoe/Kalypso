@@ -632,13 +632,9 @@ public class ShapeFile {
         cnt = 0;
 
         for ( int i = 0; i < pairs.length; i++ ) {
-            int pos = pairs[i].getName().lastIndexOf( '.' );
-
-            if ( pos < 0 ) {
-                pos = 0;
-            }
-
-            String s = pairs[i].getName().substring( pos + 1 );
+            final String name = pairs[i].getName();
+            final int pos = name.lastIndexOf( '.' );
+            final String s = pos == -1 ? name : name.substring( pos + 1 );
 
             if ( pairs[i].getValue() instanceof Integer ) {
                 fieldDesc[cnt] = new FieldDescriptor( s, "N", (byte)20, (byte)0 );

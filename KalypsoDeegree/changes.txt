@@ -1,0 +1,2 @@
+Belger: Änderung in org.deegree_impl.io.shpapi.ShapeFile.initDBaseFile:
+	Bugfix?: Falls im Namen der FeatureProperty kein '.' vorkam, wurd das erste Zeichen abgeschnitten

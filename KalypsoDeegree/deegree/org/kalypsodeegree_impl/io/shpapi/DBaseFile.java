@@ -355,7 +355,8 @@ public class DBaseFile {
 
         }
 
-        int index = fname.lastIndexOf( "/" );
+        // Filter all chars, which cannot be used as element tag names
+        final int index = lastIndexOfOneOf( fname, "\\/?<>\"§$%&()=" );
         ftName = fname;
 
         if ( index >= 0 ) {
@@ -367,7 +368,15 @@ public class DBaseFile {
 								     true );
         return FeatureFactory.createFeatureType( null, null, ftName, ftp );
     }
-	
+    
+    private static int lastIndexOfOneOf( final String string, final String chars )
+    {
+      int index = -1;
+      for( int i = 0; i < chars.length(); i++ )
+        index = Math.max( index, string.lastIndexOf( chars.charAt( i ) ) );
+      
+      return index;
+    }
 
     private String getGeometryType()
     {

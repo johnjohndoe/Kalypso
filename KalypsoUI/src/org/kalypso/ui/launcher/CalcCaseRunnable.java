@@ -85,8 +85,12 @@ public class CalcCaseRunnable implements IProgressRunnable
         case CalcJobStatus.UNKNOWN:
           break;
 
-        case CalcJobStatus.ABORTED:
+        case CalcJobStatus.CANCELED:
           return Status.CANCEL_STATUS;
+
+        case CalcJobStatus.ERROR:
+          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, jobDescription
+              .getMessage(), null );
 
         case CalcJobStatus.FINISHED:
         {
