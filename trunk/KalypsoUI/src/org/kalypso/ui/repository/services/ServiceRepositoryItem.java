@@ -1,10 +1,15 @@
 package org.kalypso.ui.repository.services;
 
+import java.net.URL;
 import java.rmi.RemoteException;
 
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.zml.ZmlObservation;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.ItemBean;
+import org.kalypso.services.proxy.ObservationBean;
+import org.kalypso.services.proxy.ObservationDataDescriptorBean;
 
 /**
  * @author schlienger
@@ -80,8 +85,29 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class anotherClass )
+  public Object getAdapter( final Class anotherClass )
   {
+    if( anotherClass == IObservation.class && m_bean instanceof ObservationBean )
+    {
+      final ObservationBean ob = (ObservationBean)m_bean;
+      
+      try
+      {
+        final ObservationDataDescriptorBean oddb = m_srv.readData( ob );
+        
+        final ZmlObservation obs = new ZmlObservation( new URL( oddb.getLocation() ) );
+        
+        m_srv.clearTempData( oddb );
+        
+        return obs;
+      }
+      catch( Exception e ) // generic exception caught for simplicity
+      {
+        e.printStackTrace();
+        return null;
+      }
+    }
+    
     return null;
   }
   
