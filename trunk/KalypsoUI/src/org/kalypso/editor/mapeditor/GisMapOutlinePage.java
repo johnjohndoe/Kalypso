@@ -1,6 +1,10 @@
 package org.kalypso.editor.mapeditor;
 
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -14,7 +18,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.editor.mapeditor.actions.AddThemeAction;
@@ -157,6 +163,22 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     toolBarManager.add( m_removeAction );
     toolBarManager.add( m_openStyleDialogAction );
     actionBars.updateActionBars();
+    
+    MenuManager menuMgr = new MenuManager("#ThemeContextMenu");
+	menuMgr.setRemoveAllWhenShown(true);
+	menuMgr.addMenuListener(new IMenuListener() {
+		public void menuAboutToShow(IMenuManager manager) {
+			manager.add(m_addAction);
+			manager.add(m_moveOneDownAction);
+			manager.add(m_moveOneUpAction);	
+			manager.add(m_removeAction);				
+			manager.add(new Separator());			
+			manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+			manager.add(m_openStyleDialogAction);
+		}
+	});
+	Menu menu = menuMgr.createContextMenu(m_viewer.getControl());
+	m_viewer.getControl().setMenu(menu);    
   }
 
   /**
