@@ -7,7 +7,7 @@ import org.kalypso.ogc.sensor.ObservationConstants;
  * 
  * @author schlienger
  */
-public interface TimeserieConstants extends ObservationConstants
+public abstract class TimeserieConstants implements ObservationConstants
 {
   /** Niederschlag */
   public final static String TYPE_RAINFALL = "N";
@@ -48,4 +48,22 @@ public interface TimeserieConstants extends ObservationConstants
   public final static String MD_FLUSSGEBIET = "Flussgebiet";
   
   public final static String MD_FLUSS = "Fluss";
+  
+  /**
+   * @param type
+   * @return corresponding unit
+   */
+  public static String getUnit( final String type )
+  {
+    return type;
+  }
+  
+  /**
+   * @param type
+   * @return corresponding name (user friendly)
+   */
+  public static String getName( final String type )
+  {
+    return type;
+  }
 }
