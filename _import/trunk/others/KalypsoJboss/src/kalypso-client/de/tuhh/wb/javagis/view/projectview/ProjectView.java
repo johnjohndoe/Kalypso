@@ -115,12 +115,13 @@ public class ProjectView
 		mi.setActionCommand("updateProjectTree");
 		mi.addActionListener(this);
 		edit.add(mi);
-
-		mi = new JMenuItem(I18n.get("PVJMenuItem_OpenTrafoView"));
+		
+		/// In ViewManager-Menü verschoben ///
+		/*mi = new JMenuItem(I18n.get("PVJMenuItem_OpenTrafoView"));
 		//	mi.setIcon((new ImageIcon( "symbols/Refresh16.gif")));
 		mi.setActionCommand("openTrafoView");
 		mi.addActionListener(this);
-		edit.add(mi);
+		edit.add(mi);*/
 
 		/*    mi = new JMenuItem("View Log File");
 		 mi.setIcon((new ImageIcon("symbols/View16.gif")));

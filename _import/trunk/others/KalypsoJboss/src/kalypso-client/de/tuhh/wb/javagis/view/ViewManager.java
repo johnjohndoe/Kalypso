@@ -47,6 +47,7 @@ import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.view.netview.GisNetView;
 import de.tuhh.wb.javagis.view.projectview.ProjectView;
 import de.tuhh.wb.javagis.view.tableview.GisTableView;
+import de.tuhh.wb.javagis.view.trafoview.TrafoView;
 //import de.tuhh.wb.javagis.tools.WaitingThread;
 
 public class ViewManager
@@ -101,6 +102,9 @@ public class ViewManager
 	private JButton xmlEDataButton = new JButton();
 	private JButton xmlIButton = new JButton();
 	private JButton calibrationButton = new JButton();
+	private JMenu jMenu_Tools = new JMenu();
+	private JMenuItem jMenuItem_graficTool = new JMenuItem();
+	private JMenuItem jMenuItem_TrafoView = new JMenuItem();
 
 	private static JComboBox comboBox;
 	private static boolean processingFlag = true;
@@ -407,6 +411,32 @@ public class ViewManager
 			SCE_KALYPSO.openSCEView();
 		}
 
+		if ("openTrafoView".equals(e.getActionCommand())) {
+			TrafoView.openTrafoView();
+		}
+
+		if ("openGraficTool".equals(e.getActionCommand())) {
+			//System.out.println("Open Grafic Tool");
+			String myCommand = "grafik.exe";
+			File kalypsoTemplate =
+				new File(Main.props.getProperty("template_simulation"));
+			File myWorkingDir = new File(kalypsoTemplate,"tools");
+			String commandLine =
+				myWorkingDir.getPath()
+					+ System.getProperty("file.separator")
+					+ myCommand;
+			String dummy[] = { "" };
+			try {
+				Process process_SCE =
+					(Runtime.getRuntime()).exec(
+						commandLine,
+						dummy,
+						myWorkingDir);
+			} catch (Exception exeption) {
+				System.out.println("Cannot open Grafic-Tool");
+			}
+		}
+
 		if ("comboBoxChanged".equals(e.getActionCommand())) {
 			if (processingFlag) {
 				int index = comboBox.getItemCount();
@@ -689,8 +719,19 @@ public class ViewManager
 		comboBox.setRenderer(new MyCellRenderer());
 		comboBox.addActionListener(this);
 
+		jMenu_Tools.setText(I18n.get("jMenu_Tools"));
+		jMenuItem_TrafoView.setText(I18n.get("PVJMenuItem_OpenTrafoView"));
+		jMenuItem_TrafoView.setActionCommand("openTrafoView");
+		jMenuItem_TrafoView.addActionListener(this);
+		jMenu_Tools.add(jMenuItem_TrafoView);
+		jMenuItem_graficTool.setText(I18n.get("JMenuItem_OpenGraficTool"));
+		jMenuItem_graficTool.setActionCommand("openGraficTool");
+		jMenuItem_graficTool.addActionListener(this);
+		jMenu_Tools.add(jMenuItem_graficTool);
+
 		menubar.setBorderPainted(true);
 		menubar.add(jMenu_ProjectManager);
+		menubar.add(jMenu_Tools);
 		//menubar.add(jMenu_Preprocessing);
 		//menubar.add(jMenu_Postprocessing);
 		//menubar.add(jMenu_Post);

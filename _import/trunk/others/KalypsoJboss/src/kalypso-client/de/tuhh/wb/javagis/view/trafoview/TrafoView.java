@@ -40,7 +40,7 @@ public class TrafoView extends JInternalFrame implements InternalFrameListener,A
     {
 	if(instance==null)
 	    {	    
-		instance=new TrafoView("Transformview");
+		instance=new TrafoView(I18n.get("TrafoView.WindowTitle"));
 
 	    }
 	ViewManager.addToDesktop(instance);
