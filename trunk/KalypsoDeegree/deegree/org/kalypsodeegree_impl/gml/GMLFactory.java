@@ -77,6 +77,7 @@ import org.deegree.xml.XMLTools;
 import org.deegree_impl.extension.ITypeHandler;
 import org.deegree_impl.extension.TypeRegistryException;
 import org.deegree_impl.extension.TypeRegistrySingleton;
+import org.deegree_impl.gml.schema.Mapper;
 import org.deegree_impl.tools.Debug;
 import org.deegree_impl.tools.StringExtend;
 import org.w3c.dom.Document;
@@ -618,8 +619,7 @@ public class GMLFactory
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLFeature(Feature)" );
 
-    GMLFeature gmlFeature = GMLFeature_Impl.createGMLFeature( doc, feature.getFeatureType()
-        .getName() );
+    GMLFeature gmlFeature = GMLFeature_Impl.createGMLFeature( doc, feature.getFeatureType().getName() );
 
     FeatureType ft = feature.getFeatureType();
 
@@ -691,7 +691,8 @@ public class GMLFactory
       }
     else
     {
-      prop = GMLProperty_Impl.createGMLProperty( doc, ftp.getName(), value.toString() );
+    	
+      prop = GMLProperty_Impl.createGMLProperty( doc, ftp.getName(), Mapper.mapJavaValueToXml(value,ftp.getType()) );
     }
     // TODO integrate typehandler ??
     if( prop != null )
@@ -703,6 +704,9 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2004/10/07 19:28:24  doemming
+ * *** empty log message ***
+ *
  * Revision 1.5  2004/10/07 14:09:13  doemming
  * *** empty log message ***
  * Revision 1.1 2004/09/02 23:56:58 doemming *** empty
