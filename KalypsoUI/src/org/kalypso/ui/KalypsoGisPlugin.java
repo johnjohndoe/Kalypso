@@ -6,6 +6,7 @@ import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -28,12 +29,16 @@ import org.kalypso.ogc.gml.table.celleditors.ICellEditorFactory;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.repository.DefaultRepositoryContainer;
 import org.kalypso.repository.RepositorySpecification;
+import org.kalypso.services.IServicesConstants;
 import org.kalypso.services.ProxyFactory;
+import org.kalypso.services.ocs.OcsURLStreamHandler;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.url.URLConstants;
+import org.osgi.service.url.URLStreamHandlerService;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -92,8 +97,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
     configureLogger();
 
-    // TODO: MARC: Gernot moved configuration code to start(), check, if ok 
-
     try
     {
       m_resourceBundle = ResourceBundle.getBundle( BUNDLE_NAME );
@@ -131,8 +134,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     m_mainConf.putAll( System.getProperties() );
 
     // try to laod conf file
-    // TODO: MARC: getPluginPreferences throws NullPointerException if called from
-    // Konstructor of Plugin, that why i moved it to start()
     final String[] locs = getPluginPreferences().getString( IKalypsoPreferences.CLIENT_CONF_URLS )
         .split( ";" );
 
@@ -241,6 +242,24 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   }
 
   /**
+   * Eclipse comes with its own StreamHandler proxy. So we just need to say which
+   * Handler to use for the protocol we can cover.
+   * <p>
+   * Following handlers are registered:
+   * <ul>
+   * <li>OcsURLStreamHandler for 'kalypso-ocs' protocol. Handles Observation WebService urls.</li>
+   * <li>TODO: insert your own handlers here...</li>
+   * </ul> 
+   */
+  private void configureURLStreamHandler( final BundleContext context )
+  {
+    // register the observation webservice url stream handler
+    final Hashtable properties = new Hashtable(1);
+    properties.put(URLConstants.URL_HANDLER_PROTOCOL, new String[] {IServicesConstants.URL_PROTOCOL_OBSERVATION_SERVICE});
+    context.registerService(URLStreamHandlerService.class.getName(), new OcsURLStreamHandler(), properties);
+  }
+  
+  /**
    * Liefert die Liste der Konfigurierte und Zugreifbare Zeitreihen Repositories
    */
   public RepositorySpecification[] getRepositoriesSpecifications()
@@ -313,7 +332,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   {
     super.start( context );
     
-    // TODO: MARC: Gernot moved configuration code to start(), check, if ok 
     try
     {
       configure();
@@ -321,6 +339,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       configurePool();
       configureObservationRepositorySpecifications();
       configureServiceProxyFactory();
+      configureURLStreamHandler( context );
     }
     catch( final IOException e )
     {
@@ -440,6 +459,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   {
     final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
 
+    
+    
     try
     {
       // TODO: read TypeHandler from property-file

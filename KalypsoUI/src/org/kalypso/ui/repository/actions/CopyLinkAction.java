@@ -26,9 +26,6 @@ public class CopyLinkAction extends AbstractRepositoryExplorerAction
     if( obs == null )
       return;
 
-    // TODO: remove this output once testing finished
-    System.out.println("Link: " + obs.getIdentifier() );
-    
     final Clipboard clipboard = new Clipboard( getExplorer().getSite().getShell().getDisplay() );
     clipboard.setContents(new Object[]{ obs.getIdentifier() }, new Transfer[]{TextTransfer.getInstance() });
     clipboard.dispose();
