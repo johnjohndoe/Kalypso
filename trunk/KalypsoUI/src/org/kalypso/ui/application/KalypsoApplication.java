@@ -25,36 +25,44 @@ public class KalypsoApplication implements IPlatformRunnable
    */
   public Object run( final Object args ) throws Exception
   {
-    final String[] rights = chooseRight( KalypsoGisPlugin.getDefault().getUserRights() /*, username */);
-    
+    final String[] rights = chooseRight( KalypsoGisPlugin.getDefault()
+        .getUserRights() /* , username */);
+
     if( rights == null )
       return null;
-    
+
     for( int i = 0; i < rights.length; i++ )
       System.out.println( "Rights dump: '" + rights[i] + "'" );
-    
+
     return startWorkbench( new KalypsoWorkbenchAdvisor( rights ) );
   }
 
-  private String[] chooseRight( final String[] givenrights /*, final String username */)
+  private String[] chooseRight( final String[] givenrights /*
+                                                            * , final String
+                                                            * username
+                                                            */)
   {
-    // leere Rechte rauschmeissen
-    final List rights = new ArrayList( givenrights.length );
-    for( int i = 0; i < givenrights.length; i++ )
+    final List rights = new ArrayList();
+
+    if( givenrights != null )
     {
-      final String right = givenrights[i];
-      if( right != null && right.trim().length() != 0 )
-        rights.add( right.trim() );
+      // leere Rechte rauschmeissen
+      for( int i = 0; i < givenrights.length; i++ )
+      {
+        final String right = givenrights[i];
+        if( right != null && right.trim().length() != 0 )
+          rights.add( right.trim() );
+      }
     }
-    
+
     String[] choosenRights = null;
     final Display display = new Display();
     final Shell shell = new Shell( display );
-    
+
     final ImageDescriptor id = ImageProvider.IMAGE_KALYPSO_ICON;
-    
+
     shell.setImage( id.createImage() );
-    
+
     if( rights.size() == 0 )
     {
       while( true )
@@ -74,8 +82,9 @@ public class KalypsoApplication implements IPlatformRunnable
         }
       }
     }
-    else /* if( rights.length == 1 ) */
-      choosenRights = (String[])rights.toArray( new String[] {} );
+    else
+      /* if( rights.length == 1 ) */
+      choosenRights = (String[]) rights.toArray( new String[] {} );
 
     shell.dispose();
     display.dispose();
