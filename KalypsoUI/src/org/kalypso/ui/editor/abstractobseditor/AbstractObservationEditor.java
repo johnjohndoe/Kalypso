@@ -110,7 +110,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
               .getContents() );
   
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          DiagViewUtils.applyXMLTemplate( (DiagView)getView(), baseTemplate, new URL( strUrl ) );
+          DiagViewUtils.applyXMLTemplate( (DiagView)getView(), baseTemplate, new URL( strUrl ), false );
         }
         else if( view instanceof TableView )
         {
@@ -118,7 +118,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
           .loadTableTemplateXML( storage.getContents() );
   
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ) );
+          TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ), false );
         }
       }
     }

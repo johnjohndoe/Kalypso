@@ -87,6 +87,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 
 /**
@@ -117,7 +118,7 @@ public class LecGUI extends JPanel
       "orange", "pink", "red", "white", "yellow" };
 
   // GUI Variables declaration //
-  private JPanel filePanel;
+  private JPanel m_filePanel;
 
   private JTextField sourcesld_tf;
 
@@ -205,9 +206,9 @@ public class LecGUI extends JPanel
 
     JPanel mainPanel = new JPanel( new BorderLayout() );
 
-    filePanel = initFilePanel();
-    filePanel.setBorder( new javax.swing.border.EmptyBorder( new Insets( 10, 10, 10, 10 ) ) );
-    mainPanel.add( filePanel, BorderLayout.NORTH );
+    m_filePanel = initFilePanel();
+    m_filePanel.setBorder( new javax.swing.border.EmptyBorder( new Insets( 10, 10, 10, 10 ) ) );
+    mainPanel.add( m_filePanel, BorderLayout.NORTH );
 
     optionsPanel = initOptionsPanel();
     optionsPanel.setBorder( new javax.swing.border.EmptyBorder( new Insets( 10, 10, 10, 10 ) ) );
@@ -226,17 +227,13 @@ public class LecGUI extends JPanel
     add( debugPanel, BorderLayout.CENTER );
   }
 
-  /**
-   * 
-   * @return
-   */
   private JPanel initDebugPanel()
   {
     JPanel panel = new JPanel( new BorderLayout() );
 
     JScrollPane jScrollPane1 = new JScrollPane();
-    jScrollPane1.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS );
-    jScrollPane1.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS );
+    jScrollPane1.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
+    jScrollPane1.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS );
     this.debugTextArea = new JTextArea();
     this.debugTextArea.setFont( new java.awt.Font( "Monospaced", 0, 11 ) );
     this.debugTextArea.setEditable( false );
@@ -260,7 +257,7 @@ public class LecGUI extends JPanel
    */
   private JPanel initFilePanel()
   {
-    JPanel filePanel = new JPanel();
+    final JPanel filePanel = new JPanel();
     GridBagLayout gridbag = new GridBagLayout();
     GridBagConstraints c = new GridBagConstraints();
     filePanel.setLayout( gridbag );
@@ -543,46 +540,26 @@ public class LecGUI extends JPanel
     this.targetdir_tf.setText( content );
   }
 
-  /**
-   * 
-   * @return
-   */
   private String getSelectedFormat()
   {
     return (String)this.formatCBox.getSelectedItem();
   }
 
-  /**
-   * 
-   * @return
-   */
   private String getSelectedColor()
   {
     return (String)this.colorCBox.getSelectedItem();
   }
 
-  /**
-   * 
-   * @return
-   */
   private String getSelectedWidth()
   {
     return this.widthspinner.getValue().toString();
   }
 
-  /**
-   * 
-   * @return
-   */
   private String getSelectedHeight()
   {
     return this.heightspinner.getValue().toString();
   }
 
-  /**
-   * 
-   * @return
-   */
   private String getSelectedTitle()
   {
     return this.titletextfield.getText();
@@ -889,6 +866,9 @@ class LecGUIMenuHandler implements ActionListener
 /*******************************************************************************
  * ****************************************************************************
  * Changes to this class. What the people have been up to: $Log$
+ * Changes to this class. What the people have been up to: Revision 1.6  2005/03/31 18:25:09  belger
+ * Changes to this class. What the people have been up to: *** empty log message ***
+ * Changes to this class. What the people have been up to:
  * Changes to this class. What the people have been up to: Revision 1.5  2005/03/08 11:01:10  doemming
  * Changes to this class. What the people have been up to: *** empty log message ***
  * Changes to this class. What the people have been up to:

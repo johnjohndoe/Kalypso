@@ -4,7 +4,7 @@
    id="org.kalypso.core"
    name="KalypsoCore Plug-in"
    version="0.0.5"
-   provider-name="org.kalypso">
+   provider-name="kalypso.org">
 
    <runtime>
       <library name="lib/jaxb-api.jar">

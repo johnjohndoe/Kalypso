@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
 import java.util.HashMap;
@@ -66,12 +66,14 @@ import java.util.HashMap;
  * Defines codes and constants for easy coping with the different kinds of
  * Expressions (both XML-Entities & JavaObjects).
  * 
+ * Change: the static, lazily initialized members where NOT thread safe.
+ * Better: use the class in a non static way  
+ * 
  * @author Markus Schneider
  * @version 06.08.2002
  */
 public class ExpressionDefines
 {
-
   // expression codes
   public static final int EXPRESSION = 0;
 
@@ -91,16 +93,39 @@ public class ExpressionDefines
 
   public static final int UNKNOWN = -1;
 
+  /** used to associate names with the expressions */
+  private static HashMap names = new HashMap();
+
+  /** used to associate ids (Integers) with the expressions */
+  private static HashMap ids = new HashMap();
+  
+  public ExpressionDefines()
+  {
+      addExpression( EXPRESSION, "Expression" );
+      addExpression( PROPERTYNAME, "PropertyName" );
+      addExpression( LITERAL, "Literal" );
+      addExpression( FUNCTION, "Function" );
+      addExpression( ADD, "Add" );
+      addExpression( SUB, "Sub" );
+      addExpression( MUL, "Mul" );
+      addExpression( DIV, "Div" );
+  }
+  
+  private void addExpression( final int id, final String name )
+  {
+    final ExpressionInfo expressionInfo = new ExpressionInfo( id, name );
+    names.put( name.toLowerCase(), expressionInfo );
+    ids.put( new Integer( id ), expressionInfo );
+  }
+  
   /**
    * Returns the id of an expression for a given name.
    * 
    * @return EXPRESSION / PROPERTYNAME / LITERAL / ...
    */
-  public static int getIdByName( String name )
+  public int getIdByName( final String name )
   {
-    if( names == null )
-      buildHashMaps();
-    ExpressionInfo expression = (ExpressionInfo)names.get( name.toLowerCase() );
+    final ExpressionInfo expression = (ExpressionInfo)names.get( name.toLowerCase() );
     if( expression == null )
       return UNKNOWN;
     return expression.id;
@@ -111,54 +136,25 @@ public class ExpressionDefines
    * 
    * @return null / Name of expression
    */
-  public static String getNameById( int id )
+  public String getNameById( int id )
   {
-    if( names == null )
-      buildHashMaps();
-    ExpressionInfo expression = (ExpressionInfo)ids.get( new Integer( id ) );
+    final ExpressionInfo expression = (ExpressionInfo)ids.get( new Integer( id ) );
     if( expression == null )
       return null;
     return expression.name;
   }
 
-  // used to associate names with the expressions
-  private static HashMap names = null;
-
-  // used to associate ids (Integers) with the expressions
-  private static HashMap ids = null;
-
-  private static void addExpression( int id, String name )
+  private static final class ExpressionInfo
   {
-    ExpressionInfo expressionInfo = new ExpressionInfo( id, name );
-    names.put( name.toLowerCase(), expressionInfo );
-    ids.put( new Integer( id ), expressionInfo );
-  }
+    public final int id;
 
-  private static void buildHashMaps()
-  {
-    names = new HashMap();
-    ids = new HashMap();
-    addExpression( EXPRESSION, "Expression" );
-    addExpression( PROPERTYNAME, "PropertyName" );
-    addExpression( LITERAL, "Literal" );
-    addExpression( FUNCTION, "Function" );
-    addExpression( ADD, "Add" );
-    addExpression( SUB, "Sub" );
-    addExpression( MUL, "Mul" );
-    addExpression( DIV, "Div" );
+    public final String name;
+
+    public ExpressionInfo( final int id, final String name )
+    {
+      this.id = id;
+      this.name = name;
+    }
   }
 }
 
-class ExpressionInfo
-{
-  int id;
-
-  String name;
-
-  ExpressionInfo( int id, String name )
-  {
-    this.id = id;
-    this.name = name;
-
-  }
-}

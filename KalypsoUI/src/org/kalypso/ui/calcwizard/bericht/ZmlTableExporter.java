@@ -89,8 +89,7 @@ public class ZmlTableExporter extends AbstractBerichtExporter
     final TableView view = new TableView();
     final ObservationTable table = new ObservationTable( view, true );
 
-    TableViewUtils.applyXMLTemplate( view, xml, getContext() );
-    view.waitUntilLoaded( 100, 100 );
+    TableViewUtils.applyXMLTemplate( view, xml, getContext(), true );
 
     // warte auf table to perform refresh in swing thread
     // TODO: still need it?

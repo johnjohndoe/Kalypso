@@ -46,7 +46,9 @@ import java.util.Iterator;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.NameUtils;
+import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.PooledObsProvider;
 import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
@@ -62,9 +64,12 @@ import org.kalypso.util.pool.PoolableObjectWaiter;
  */
 public class TableViewColumnXMLLoader extends PoolableObjectWaiter
 {
-  public TableViewColumnXMLLoader( final TableView view, final TypeObservation xmlObs, final URL context )
+  /**
+   * @param synchron Falls true, wird die Obersvation sofort geladen und im gleichen thread objectLoaded ausgeführt 
+   */
+  public TableViewColumnXMLLoader( final TableView view, final TypeObservation xmlObs, final URL context, final boolean synchron )
   {
-    super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[] { view, xmlObs } );
+    super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[] { view, xmlObs }, synchron );
   }
 
   /**
@@ -89,7 +94,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
       final String colName = tcol.getName() != null ? tcol.getName() : tcol.getAxis();
       final String name = NameUtils.replaceTokens( colName, obs, valueAxis );
       
-      final PooledObsProvider provider = new PooledObsProvider( key, null );
+      final IObsProvider provider = key == null ? (IObsProvider)new PlainObsProvider( obs, null ) : new PooledObsProvider( key, null );
       final TableViewColumn column = new TableViewColumn( m_view, provider, name, tcol.isEditable(), tcol
           .getWidth(), keyAxis, valueAxis );
 

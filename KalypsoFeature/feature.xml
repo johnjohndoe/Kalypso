@@ -5,10 +5,7 @@
       version="0.0.5"
       provider-name="kalypso.org"
       plugin="org.kalypso.ui"
-      os="win32"
-      ws="win32"
-      arch="x86"
-      image="splash.bmp"
+      image="kalypso32.gif"
       primary="true"
       application="org.kalypso.ui.application">
 
@@ -19,11 +16,11 @@
    </description>
 
    <copyright url="copyright.html">
-      Copyright
+      
    </copyright>
 
    <license url="licence.html">
-      Lizenztext
+      
    </license>
 
    <requires>
@@ -36,10 +33,10 @@
       <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.compare"/>
-      <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.debug.ui"/>
       <import plugin="org.apache.ant"/>
+      <import plugin="org.eclipse.ui.editors"/>
    </requires>
 
    <plugin
