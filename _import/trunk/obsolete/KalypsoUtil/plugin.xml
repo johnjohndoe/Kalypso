@@ -9,6 +9,9 @@
       <library name="kalypsoUtil.jar">
          <export name="*"/>
       </library>
+      <library name="lib/commons-io-1.0.jar">
+         <export name="*"/>
+      </library>
       <library name="lib/junit.jar">
          <export name="*"/>
       </library>
