@@ -47,7 +47,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 import javax.xml.bind.Marshaller;
-import javax.xml.transform.OutputKeys;
 
 import junit.framework.TestCase;
 
