@@ -7,14 +7,16 @@ package org.kalypso.ui.editor.styleeditor.panels;
 import javax.swing.event.EventListenerList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
  * @author F.Lindemann
@@ -62,98 +64,110 @@ public class ConfigurePointSymbolizerPanel
 
   private void init()
   {
-    Button addMarkButton = new Button( composite, SWT.PUSH );
+    Label addMarkButton = new Label( composite, SWT.PUSH );
+    addMarkButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
     FormData addMarkButtonData = new FormData();
     addMarkButtonData.height = 18;
     addMarkButtonData.width = 18;
     addMarkButtonData.left = new FormAttachment( 200, 1000, 0 );
     addMarkButtonData.top = new FormAttachment( 100, 1000, 0 );
     addMarkButton.setLayoutData( addMarkButtonData );
-    addMarkButton.setText( "+" );
-    addMarkButton.setToolTipText( "Add mark" );
-    addMarkButton.addSelectionListener( new SelectionListener()
+    addMarkButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD_MARK );
+    addMarkButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( ADD_MARK );
         fire();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
-    Button removeMarkButton = new Button( composite, SWT.PUSH );
+    Label removeMarkButton = new Label( composite, SWT.PUSH );
+    removeMarkButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
     if( getCanDelete() == 1 )
-      removeMarkButton.setEnabled( false );
+      removeMarkButton.setVisible(false);
     FormData removeMarkButtonData = new FormData();
     removeMarkButtonData.height = 18;
     removeMarkButtonData.width = 18;
     removeMarkButtonData.left = new FormAttachment( 400, 1000, 0 );
     removeMarkButtonData.top = new FormAttachment( 100, 1000, 0 );
     removeMarkButton.setLayoutData( removeMarkButtonData );
-    removeMarkButton.setText( "-" );
-    removeMarkButton.setToolTipText( "Remove mark" );
-    removeMarkButton.addSelectionListener( new SelectionListener()
+    removeMarkButton.setToolTipText( MessageBundle.STYLE_EDITOR_REMOVE_MARK );
+    removeMarkButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( REM_MARK );
         fire();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
-    Button moveBackwardMarkButton = new Button( composite, SWT.PUSH );
+    Label moveBackwardMarkButton = new Label( composite, SWT.PUSH );
+    moveBackwardMarkButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_BACKWARD.createImage() );
     FormData moveBackwardMarkButtonData = new FormData();
     moveBackwardMarkButtonData.height = 18;
     moveBackwardMarkButtonData.width = 18;
     moveBackwardMarkButtonData.left = new FormAttachment( 600, 1000, 0 );
     moveBackwardMarkButtonData.top = new FormAttachment( 100, 1000, 0 );
     moveBackwardMarkButton.setLayoutData( moveBackwardMarkButtonData );
-    moveBackwardMarkButton.setText( "<-" );
-    moveBackwardMarkButton.setToolTipText( "Move Backward" );
-    moveBackwardMarkButton.addSelectionListener( new SelectionListener()
+    moveBackwardMarkButton.setToolTipText( MessageBundle.STYLE_EDITOR_BACKWARD );
+    moveBackwardMarkButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( BAK_MARK );
         fire();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
-    Button moveForwardMarkButton = new Button( composite, SWT.PUSH );
+    Label moveForwardMarkButton = new Label( composite, SWT.PUSH );
+    moveForwardMarkButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
     FormData moveForwardMarkButtonData = new FormData();
     moveForwardMarkButtonData.height = 18;
     moveForwardMarkButtonData.width = 18;
     moveForwardMarkButtonData.left = new FormAttachment( 800, 1000, 0 );
     moveForwardMarkButtonData.top = new FormAttachment( 100, 1000, 0 );
     moveForwardMarkButton.setLayoutData( moveForwardMarkButtonData );
-    moveForwardMarkButton.setText( "->" );
-    moveForwardMarkButton.setToolTipText( "Move Forward" );
-    moveForwardMarkButton.addSelectionListener( new SelectionListener()
+    moveForwardMarkButton.setToolTipText( MessageBundle.STYLE_EDITOR_FORWARD );
+    moveForwardMarkButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( FOR_MARK );
         fire();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
   }
 

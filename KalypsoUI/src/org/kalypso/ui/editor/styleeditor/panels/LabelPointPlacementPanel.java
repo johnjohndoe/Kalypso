@@ -5,21 +5,19 @@
 package org.kalypso.ui.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
-
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
+import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 
 /**
  * @author F.Lindemann
@@ -71,20 +69,21 @@ public class LabelPointPlacementPanel
   private void init()
   {
 
-    Button okButton = new Button( composite, SWT.PUSH );
+    Label okButton = new Label( composite, SWT.PUSH );
+    okButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_OK.createImage() );
     FormData okButtonData = new FormData();
     okButtonData.height = 18;
     okButtonData.width = 20;
-    okButtonData.left = new FormAttachment( 910, 1000, 0 );
+    okButtonData.left = new FormAttachment( 810, 1000, 0 );
     okButtonData.top = new FormAttachment( 100, 1000, 0 );
     okButton.setLayoutData( okButtonData );
-    okButton.setText( "Ok" );
+    okButton.setToolTipText( MessageBundle.STYLE_EDITOR_OK );
 
     yInput = new Text( composite, SWT.BORDER );
     FormData offsetInputData = new FormData();
     offsetInputData.height = 10;
     offsetInputData.width = 16;
-    offsetInputData.left = new FormAttachment( 760, 1000, 0 );
+    offsetInputData.left = new FormAttachment( 660, 1000, 0 );
     offsetInputData.top = new FormAttachment( 100, 1000, 0 );
     yInput.setLayoutData( offsetInputData );
     yInput.setText( "" + yValue );
@@ -93,7 +92,7 @@ public class LabelPointPlacementPanel
     FormData yLabelData = new FormData();
     yLabelData.height = 16;
     yLabelData.width = 5;
-    yLabelData.left = new FormAttachment( 740, 1000, 0 );
+    yLabelData.left = new FormAttachment( 640, 1000, 0 );
     yLabelData.top = new FormAttachment( 100, 1000, 0 );
     yLabel.setLayoutData( yLabelData );
     yLabel.setText( "/" );
@@ -102,7 +101,7 @@ public class LabelPointPlacementPanel
     FormData xInputData = new FormData();
     xInputData.height = 10;
     xInputData.width = 16;
-    xInputData.left = new FormAttachment( 590, 1000, 0 );
+    xInputData.left = new FormAttachment( 490, 1000, 0 );
     xInputData.top = new FormAttachment( 100, 1000, 0 );
     xInput.setLayoutData( xInputData );
     xInput.setText( "" + xValue );
@@ -125,9 +124,9 @@ public class LabelPointPlacementPanel
     offsetLabel.setLayoutData( offsetLabelData );
     offsetLabel.setText( label );
 
-    okButton.addSelectionListener( new SelectionListener()
+    okButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         Double xDouble = null;
         Double yDouble = null;
@@ -146,21 +145,22 @@ public class LabelPointPlacementPanel
         }
         catch( NumberFormatException nfe )
         {
-          //TODO
-          IStatus status = new Status( IStatus.ERROR,
-              "org.kalypso.ui.editor.mapeditor.views.styleeditor", 0,
-              "InputError-Stroke-Dasharray", nfe );
-          ErrorDialog.openError( getComposite().getShell(), "Input-Error",
-              "Input needs to be of type float", status );
-          getXInput().setText( "" + xDouble );
+          StyleEditorErrorDialog error = new StyleEditorErrorDialog( getComposite().getShell(),
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+              MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
+          error.showError();
+          getXInput().setText( "" + getXValue() );
           getYInput().setText( "" + getYValue() );
         }
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
   }
 

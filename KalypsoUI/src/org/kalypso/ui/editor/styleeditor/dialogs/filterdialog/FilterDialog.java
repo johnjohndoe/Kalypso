@@ -36,6 +36,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
@@ -51,6 +53,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterencoding.ElseFilter;
 import org.kalypso.ui.editor.styleeditor.panels.ComparisonFilterComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.LogicalFilterComboPanel;
@@ -64,13 +68,13 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
 
   private LogicalFilterComboPanel logicalCombo = null;
 
-  private Button logicalButton = null;
+  private Label logicalButton = null;
 
   private ComparisonFilterComboPanel comparisonCombo = null;
 
-  private Button compButton = null;
+  private Label compButton = null;
 
-  private Button featureIdButton = null;
+  private Label featureIdButton = null;
 
   private FeatureType featureType = null;
 
@@ -78,7 +82,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
 
   private FilterDialogTreeNode currentNode = mRoot;
 
-  private Button elseFilterButton = null;
+  private Label elseFilterButton = null;
 
   private Composite globalConfigureComposite = null;
 
@@ -123,7 +127,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
   protected void configureShell( Shell shell )
   {
     super.configureShell( shell );
-    shell.setText( "Filter Dialog" );
+    shell.setText( MessageBundle.STYLE_EDITOR_FILTER );
     shell.setSize( 500, 450 );
   }
 
@@ -211,14 +215,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     // **** TITLE/NAME of rule
     Label nameLabel = new Label( composite, 0 );
     if( rule.getTitle() != null )
-      nameLabel.setText( "Filter for Rule: " + rule.getTitle() );
+      nameLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_FOR_RULE + rule.getTitle() );
     else
-      nameLabel.setText( "Filter for Rule: " + rule.getName() );
+      nameLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_FOR_RULE + rule.getName() );
     nameLabel.setFont( new Font( null, "Arial", 10, SWT.BOLD ) );
 
     // ****
     Label titleLabel = new Label( composite, SWT.NULL );
-    titleLabel.setText( "Available Filter types" );
+    titleLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_AVAILABLE );
     titleLabel.setFont( new Font( null, "Arial", 8, SWT.BOLD ) );
     GridData titleLabelData = new GridData();
     titleLabelData.horizontalAlignment = GridData.CENTER;
@@ -232,10 +236,10 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     ogcGroupData.heightHint = 100;
     functionComposite.setLayout( new GridLayout( 2, false ) );
     Group ogcFilter = new Group( functionComposite, SWT.NULL );
-    ogcFilter.setText( "OGC-Filter" );
+    ogcFilter.setText( MessageBundle.STYLE_EDITOR_FILTER_OGC );
     ogcFilter.setLayoutData( ogcGroupData );
     Group sldFilter = new Group( functionComposite, SWT.NULL );
-    sldFilter.setText( "SLD-Filter" );
+    sldFilter.setText( MessageBundle.STYLE_EDITOR_FILTER_SLD );
     GridData sldGroupData = new GridData();
     sldGroupData.widthHint = 210;
     sldGroupData.heightHint = 100;
@@ -245,13 +249,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     ogcFilter.setLayout( new GridLayout( 3, false ) );
     // ++++ Logical filter line
     Label logicalLabel = new Label( ogcFilter, SWT.NULL );
-    logicalLabel.setText( "Logical:" );
+    logicalLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_LOGICAL );
     logicalCombo = new LogicalFilterComboPanel( ogcFilter );
-    logicalButton = new Button( ogcFilter, SWT.NULL );
-    logicalButton.setText( "Add" );
-    logicalButton.addSelectionListener( new SelectionListener()
+    logicalButton = new Label( ogcFilter, SWT.NULL );
+    logicalButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
+    logicalButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
+    logicalButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         FilterDialogTreeNode childNode = new FilterDialogTreeNode( getLogicalCombo()
             .getSelectionName( getLogicalCombo().getSelection() ),
@@ -264,20 +269,25 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         setFilterInvalid();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
+
     // ++++ Comparison filter line
     Label comparisonLabel = new Label( ogcFilter, SWT.NULL );
-    comparisonLabel.setText( "Comparison:" );
+    comparisonLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_COMPARISON );
     comparisonCombo = new ComparisonFilterComboPanel( ogcFilter );
-    compButton = new Button( ogcFilter, SWT.NULL );
-    compButton.setText( "Add" );
-    compButton.addSelectionListener( new SelectionListener()
+    compButton = new Label( ogcFilter, SWT.NULL );
+    compButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
+    compButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
+    compButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         FilterDialogTreeNode childNode = new FilterDialogTreeNode( getComparisonCombo()
             .getSelectionName( getComparisonCombo().getSelection() ),
@@ -290,19 +300,24 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         setFilterInvalid();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
+
     //	++++ Comparison FilterFilter line
     Label featureFilterLabel = new Label( ogcFilter, SWT.NULL );
-    featureFilterLabel.setText( "FeatureFilter:" );
-    featureIdButton = new Button( ogcFilter, SWT.NULL );
-    featureIdButton.setText( "Add FeatureFilter" );
-    featureIdButton.addSelectionListener( new SelectionListener()
+    featureFilterLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_FEATURE );
+    featureIdButton = new Label( ogcFilter, SWT.NULL );
+    featureIdButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
+    featureIdButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
+    featureIdButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         FilterDialogTreeNode childNode = new FilterDialogTreeNode( "FT_ID",
             FilterDialogTreeNode.FEATUREID_NODE_TYPE );
@@ -314,22 +329,26 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         setFilterInvalid();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
     // ----- SLD Filter
     sldFilter.setLayout( new GridLayout( 2, false ) );
     //	++++ Comparison ElseFilter line
     Label elseFilterLabel = new Label( sldFilter, SWT.NULL );
-    elseFilterLabel.setText( "ElseFilter:" );
-    elseFilterButton = new Button( sldFilter, SWT.NULL );
-    elseFilterButton.setText( "Add ElseFilter" );
-    elseFilterButton.addSelectionListener( new SelectionListener()
+    elseFilterLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_ELSE );
+    elseFilterButton = new Label( sldFilter, SWT.NULL );
+    elseFilterButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
+    elseFilterButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
+    elseFilterButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         FilterDialogTreeNode childNode = new FilterDialogTreeNode( "ElseFilter",
             FilterDialogTreeNode.ELSEFILTER_TYPE );
@@ -341,10 +360,13 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         setFilterInvalid();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
     // **** FOURTH ROW
@@ -352,7 +374,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     secondRowComposite.setLayout( new GridLayout( 2, true ) );
 
     Label treeLabel = new Label( secondRowComposite, SWT.NULL );
-    treeLabel.setText( "Filter-Structure" );
+    treeLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_STRUKTUR );
     treeLabel.setFont( new Font( null, "Arial", 8, SWT.BOLD ) );
     GridData treeLabelData = new GridData();
     treeLabelData.horizontalAlignment = GridData.CENTER;
@@ -360,7 +382,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     treeLabel.setLayoutData( treeLabelData );
 
     Label inputLabel = new Label( secondRowComposite, SWT.NULL );
-    inputLabel.setText( "Configuration" );
+    inputLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_CONFIG );
     inputLabel.setFont( new Font( null, "Arial", 8, SWT.BOLD ) );
     GridData inputLabelData = new GridData();
     inputLabelData.horizontalAlignment = GridData.CENTER;
@@ -400,7 +422,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     Composite thirdRowComposite = new Composite( composite, SWT.NULL );
     thirdRowComposite.setLayout( new GridLayout( 2, false ) );
     validateFilterButton = new Button( thirdRowComposite, SWT.NULL );
-    validateFilterButton.setText( "validate" );
+    validateFilterButton.setText( MessageBundle.STYLE_EDITOR_FILTER_VALIDATE );
     validateFilterButton.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
@@ -412,7 +434,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           if( isValidated() )
           {
             getErrorLabel().setText( "" );
-            getValidateFilterButton().setText( "apply" );
+            getValidateFilterButton().setText( MessageBundle.STYLE_EDITOR_FILTER_APPLY );
             setReturnFilter( generateFilter( children ) );
             if( getReturnFilter() instanceof ElseFilter )
             {
@@ -442,7 +464,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
 
             if( validFilter )
             {
-              getValidateFilterButton().setText( "apply" );
+              getValidateFilterButton().setText( MessageBundle.STYLE_EDITOR_FILTER_APPLY );
               setValidated( true );
             }
           }
@@ -453,7 +475,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           if( isValidated() )
           {
             getErrorLabel().setText( "" );
-            getValidateFilterButton().setText( "apply" );
+            getValidateFilterButton().setText( MessageBundle.STYLE_EDITOR_FILTER_APPLY );
             setReturnFilter( null );
             getRule().setFilter( null );
             getRule().setElseFilter( false );
@@ -461,7 +483,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           }
           else
           {
-            getValidateFilterButton().setText( "apply" );
+            getValidateFilterButton().setText( MessageBundle.STYLE_EDITOR_FILTER_APPLY );
             setValidated( true );
           }
         }
@@ -846,7 +868,8 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         boolean evaluation = false;
         // NOT needs to have exactly one child
         if( child.getChildren().length != 1 )
-          throw new FilterDialogException( new FilterDialogError( child, "needs to have one child" ) );
+          throw new FilterDialogException( new FilterDialogError( child,
+              MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILD ) );
 
         if( ( (FilterDialogTreeNode)child.getChildren()[0] ).getType() == FilterDialogTreeNode.LOGICAL_NODE_TYPE )
         {
@@ -855,7 +878,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           evaluation = validateFilter( tmpArray );
           if( !evaluation )
             throw new FilterDialogException( new FilterDialogError( (FilterDialogTreeNode)child
-                .getChildren()[0], "has to have one child" ) );
+                .getChildren()[0], MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILD ) );
         }
         else
         {
@@ -870,7 +893,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         // AND needs to have more than 1 child
         if( child.getChildren().length < 2 )
           throw new FilterDialogException( new FilterDialogError( child,
-              "needs to have at least two children" ) );
+              MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILDREN ) );
         for( int i = 0; i < child.getChildren().length; i++ )
         {
           if( ( (FilterDialogTreeNode)child.getChildren()[i] ).getType() == FilterDialogTreeNode.LOGICAL_NODE_TYPE )
@@ -892,7 +915,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         // OR needs to have more than 1 child
         if( child.getChildren().length < 2 )
           throw new FilterDialogException( new FilterDialogError( child,
-              "needs to have at least two children" ) );
+              MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILDREN ) );
         for( int i = 0; i < child.getChildren().length; i++ )
         {
           if( ( (FilterDialogTreeNode)child.getChildren()[i] ).getType() == FilterDialogTreeNode.LOGICAL_NODE_TYPE )
@@ -1026,45 +1049,45 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
   private void disableLogicalOperations()
   {
     logicalCombo.disable();
-    logicalButton.setEnabled( false );
+    logicalButton.setVisible( false );
   }
 
   private void enableLogicalOperations()
   {
     logicalCombo.enable();
-    logicalButton.setEnabled( true );
+    logicalButton.setVisible( true );
   }
 
   private void disableComparisonOperations()
   {
     comparisonCombo.disable();
-    compButton.setEnabled( false );
+    compButton.setVisible( false );
   }
 
   private void enableComparisonOperations()
   {
     comparisonCombo.enable();
-    compButton.setEnabled( true );
+    compButton.setVisible( true );
   }
 
   private void disableFeatureOperations()
   {
-    featureIdButton.setEnabled( false );
+    featureIdButton.setVisible( false );
   }
 
   private void enableFeatureOperations()
   {
-    featureIdButton.setEnabled( true );
+    featureIdButton.setVisible( true );
   }
 
   private void disableElseFilter()
   {
-    elseFilterButton.setEnabled( false );
+    elseFilterButton.setVisible( false );
   }
 
   private void enableElseFilter()
   {
-    elseFilterButton.setEnabled( true );
+    elseFilterButton.setVisible( true );
   }
 
   private void createContextMenu( Control menuControl )
@@ -1075,7 +1098,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     {
       public void menuAboutToShow( IMenuManager manager )
       {
-        manager.add( new MenuAction( "Delete" ) );
+        manager.add( new MenuAction( MessageBundle.STYLE_EDITOR_DELETE ) );
       }
     } );
 
@@ -1095,14 +1118,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     //		 **** Configuration
     configureGroup = new Group( innerConfigureComposite, SWT.NULL );
     configureGroup.setLayout( new GridLayout( 2, false ) );
-    configureGroup.setText( "Configure Filter" );
+    configureGroup.setText( MessageBundle.STYLE_EDITOR_FILTER_CONFIG_FILTER );
     GridData groupCompositeData = new GridData();
     groupCompositeData.widthHint = 200;
     groupCompositeData.heightHint = 100;
     configureGroup.setLayoutData( groupCompositeData );
 
     Label propertyLabel = new Label( configureGroup, SWT.NULL );
-    propertyLabel.setText( "FeatureID" );
+    propertyLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_FEATURE_ID );
     final Text featureIdText = new Text( configureGroup, SWT.BORDER );
     featureIdText
         .setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
@@ -1112,12 +1135,12 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     featureIdText.setLayoutData( textData );
 
     if( data != null && data.getFeatureId() != null )
-    {     
+    {
       featureIdText.setText( data.getFeatureId() );
     }
 
     Button addButton = new Button( configureGroup, SWT.NULL );
-    addButton.setText( "set" );
+    addButton.setText( MessageBundle.STYLE_EDITOR_SET );
     addButton.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
@@ -1133,7 +1156,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
             getCurrentNode().setData( fiddata );
             setFilterInvalid();
           }
-          getErrorLabel().setText( "" );
+          getErrorLabel().setText( MessageBundle.STYLE_EDITOR_SET );
         }
         catch( FilterDialogException e1 )
         {
@@ -1166,14 +1189,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     //		 **** Configuration
     configureGroup = new Group( innerConfigureComposite, SWT.NULL );
     configureGroup.setLayout( new GridLayout( 2, false ) );
-    configureGroup.setText( "Configure Filter" );
+    configureGroup.setText( MessageBundle.STYLE_EDITOR_FILTER_CONFIG_FILTER );
     GridData groupCompositeData = new GridData();
     groupCompositeData.widthHint = 200;
     groupCompositeData.heightHint = 100;
     configureGroup.setLayoutData( groupCompositeData );
 
     Label propertyLabel = new Label( configureGroup, SWT.NULL );
-    propertyLabel.setText( "Property" );
+    propertyLabel.setText( MessageBundle.STYLE_EDITOR_PROPERTY );
     final Combo propertyNameCombo = new Combo( configureGroup, SWT.NULL );
     GridData propertyNameComboData = new GridData( 75, 30 );
     propertyNameCombo.setLayoutData( propertyNameComboData );
@@ -1195,7 +1218,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     }
 
     Button addButton = new Button( configureGroup, SWT.NULL );
-    addButton.setText( "set" );
+    addButton.setText( MessageBundle.STYLE_EDITOR_SET );
     if( labelStringItems.size() == 0 )
       addButton.setEnabled( false );
     addButton.addSelectionListener( new SelectionListener()
@@ -1259,14 +1282,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     //		 **** Configuration
     configureGroup = new Group( innerConfigureComposite, SWT.NULL );
     configureGroup.setLayout( new GridLayout( 2, false ) );
-    configureGroup.setText( "Configure Filter" );
+    configureGroup.setText( MessageBundle.STYLE_EDITOR_FILTER_CONFIG_FILTER );
     GridData groupCompositeData = new GridData();
     groupCompositeData.widthHint = 200;
     groupCompositeData.heightHint = 100;
     configureGroup.setLayoutData( groupCompositeData );
 
     Label propertyLabel = new Label( configureGroup, SWT.NULL );
-    propertyLabel.setText( "Property" );
+    propertyLabel.setText( MessageBundle.STYLE_EDITOR_PROPERTY );
     final Combo propertyNameCombo = new Combo( configureGroup, SWT.NULL );
     GridData propertyNameComboData = new GridData( 75, 30 );
     propertyNameCombo.setLayoutData( propertyNameComboData );
@@ -1309,7 +1332,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     propertyNameCombo.setText( "..." );
 
     Label literalLabel = new Label( configureGroup, SWT.NULL );
-    literalLabel.setText( "Value" );
+    literalLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_VALUE );
     final Text literalText = new Text( configureGroup, SWT.BORDER );
     literalText
         .setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
@@ -1324,7 +1347,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       literalText.setText( literal );
 
     Button addButton = new Button( configureGroup, SWT.NULL );
-    addButton.setText( "set" );
+    addButton.setText( MessageBundle.STYLE_EDITOR_SET );
     if( labelStringItems.size() == 0 )
       addButton.setEnabled( false );
     addButton.addSelectionListener( new SelectionListener()
@@ -1396,14 +1419,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     //		 **** Configuration
     configureGroup = new Group( innerConfigureComposite, SWT.NULL );
     configureGroup.setLayout( new GridLayout( 2, false ) );
-    configureGroup.setText( "Configure Filter" );
+    configureGroup.setText( MessageBundle.STYLE_EDITOR_FILTER_CONFIG_FILTER );
     GridData groupCompositeData = new GridData();
     groupCompositeData.widthHint = 200;
     groupCompositeData.heightHint = 100;
     configureGroup.setLayoutData( groupCompositeData );
 
     Label propertyLabel = new Label( configureGroup, SWT.NULL );
-    propertyLabel.setText( "Property" );
+    propertyLabel.setText( MessageBundle.STYLE_EDITOR_PROPERTY );
     final Combo propertyNameCombo = new Combo( configureGroup, SWT.NULL );
     GridData propertyNameComboData = new GridData( 75, 30 );
     propertyNameCombo.setLayoutData( propertyNameComboData );
@@ -1420,7 +1443,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     propertyNameCombo.setText( "..." );
 
     Label literalLabel = new Label( configureGroup, SWT.NULL );
-    literalLabel.setText( "Value" );
+    literalLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_VALUE );
     final Text literalText = new Text( configureGroup, SWT.BORDER );
     literalText
         .setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
@@ -1440,13 +1463,13 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     if( data == null )
       data = new LikeComparisonData();
     Label wildCard = new Label( configureGroup, SWT.NULL );
-    wildCard.setText( "Wildcard: '" + data.getWildCard() + "'" );
+    wildCard.setText( MessageBundle.STYLE_EDITOR_FILTER_WILDCARD + "" + data.getWildCard() + "'" );
     Label otherInfo = new Label( configureGroup, SWT.NULL );
-    otherInfo.setText( "SingleChar: '" + data.getSingleChar() + "'  Escape: '"
-        + data.getEscapeChar() + "'" );
+    otherInfo.setText( MessageBundle.STYLE_EDITOR_FILTER_SINGLECHAR + data.getSingleChar()
+        + MessageBundle.STYLE_EDITOR_FILTER_ESCAPE + data.getEscapeChar() + "'" );
 
     Button addButton = new Button( configureGroup, SWT.NULL );
-    addButton.setText( "set" );
+    addButton.setText( MessageBundle.STYLE_EDITOR_SET );
     if( labelStringItems.size() == 0 )
       addButton.setEnabled( false );
     addButton.addSelectionListener( new SelectionListener()
@@ -1499,14 +1522,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     //		 **** Configuration
     configureGroup = new Group( innerConfigureComposite, SWT.NULL );
     configureGroup.setLayout( new GridLayout( 2, false ) );
-    configureGroup.setText( "Configure Filter" );
+    configureGroup.setText( MessageBundle.STYLE_EDITOR_FILTER_CONFIG_FILTER );
     GridData groupCompositeData = new GridData();
     groupCompositeData.widthHint = 200;
     groupCompositeData.heightHint = 100;
     configureGroup.setLayoutData( groupCompositeData );
 
     Label propertyLabel = new Label( configureGroup, SWT.NULL );
-    propertyLabel.setText( "Property" );
+    propertyLabel.setText( MessageBundle.STYLE_EDITOR_PROPERTY );
     final Combo propertyNameCombo = new Combo( configureGroup, SWT.NULL );
     GridData propertyNameComboData = new GridData( 75, 30 );
     propertyNameCombo.setLayoutData( propertyNameComboData );
@@ -1538,7 +1561,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     propertyNameCombo.setItems( items );
     propertyNameCombo.setText( "..." );
     Label literalLabel = new Label( configureGroup, SWT.NULL );
-    literalLabel.setText( "LowerBoundary" );
+    literalLabel.setText( MessageBundle.STYLE_EDITOR_LOWER_BOUNDARY );
     final Text literalText = new Text( configureGroup, SWT.BORDER );
     literalText
         .setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
@@ -1548,7 +1571,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     literalText.setLayoutData( textData );
 
     Label literalLabel2 = new Label( configureGroup, SWT.NULL );
-    literalLabel2.setText( "UpperBoundary" );
+    literalLabel2.setText( MessageBundle.STYLE_EDITOR_UPPER_BOUNDARY );
     final Text literalText2 = new Text( configureGroup, SWT.BORDER );
     literalText2
         .setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
@@ -1571,7 +1594,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     }
 
     Button addButton = new Button( configureGroup, SWT.NULL );
-    addButton.setText( "set" );
+    addButton.setText( MessageBundle.STYLE_EDITOR_SET );
     if( labelStringItems.size() == 0 )
       addButton.setEnabled( false );
     addButton.addSelectionListener( new SelectionListener()
@@ -1624,7 +1647,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
   void setFilterInvalid()
   {
     isValidated = false;
-    validateFilterButton.setText( "validate" );
+    validateFilterButton.setText( MessageBundle.STYLE_EDITOR_FILTER_VALIDATE );
     returnFilter = null;
   }
 

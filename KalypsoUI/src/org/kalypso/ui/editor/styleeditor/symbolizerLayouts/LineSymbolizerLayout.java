@@ -12,6 +12,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.panels.ColorChooserPanel;
 import org.kalypso.ui.editor.styleeditor.panels.ComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
@@ -45,7 +46,6 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     compositeLayout.marginHeight = 2;
 
     Group strokeGroup = new Group( composite, SWT.NULL );
-    strokeGroup.setText( "Stroke" );
     GridData strokeGroupData = new GridData();
     strokeGroupData.widthHint = 210;
     strokeGroupData.heightHint = 244;
@@ -55,7 +55,8 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
 
     // Stroke ColorChooser
     ColorChooserPanel strokeColorChooserPanel = null;
-    strokeColorChooserPanel = new ColorChooserPanel( strokeGroup, "Color:", stroke.getStroke( null ) );
+    strokeColorChooserPanel = new ColorChooserPanel( strokeGroup, MessageBundle.STYLE_EDITOR_COLOR,
+        stroke.getStroke( null ) );
     strokeColorChooserPanel.addColorChooserListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -67,8 +68,8 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     // Stroke Width Slider
-    SliderPanel strokeWidthPanel = new SliderPanel( strokeGroup, "Width:", 0, 10, 1,
-        SliderPanel.INTEGER, stroke.getWidth( null ) );
+    SliderPanel strokeWidthPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_WIDTH,
+        0, 10, 1, SliderPanel.INTEGER, stroke.getWidth( null ) );
     strokeWidthPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -80,8 +81,8 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     // Stroke Opacity Slider
-    SliderPanel strokeOpacityPanel = new SliderPanel( strokeGroup, "Opacity:", 0, 1, 1,
-        SliderPanel.DECIMAL, stroke.getOpacity( null ) );
+    SliderPanel strokeOpacityPanel = new SliderPanel( strokeGroup,
+        MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, stroke.getOpacity( null ) );
     strokeOpacityPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -93,8 +94,8 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     // Stroke Linejoin ComboPanel
-    ComboPanel strokeLinejoinPanel = new StrokeLinejoinComboPanel( strokeGroup, "Linejoin", stroke
-        .getLineJoin( null ) );
+    ComboPanel strokeLinejoinPanel = new StrokeLinejoinComboPanel( strokeGroup,
+        MessageBundle.STYLE_EDITOR_LINEJOIN, stroke.getLineJoin( null ) );
     stroke.setLineJoin( strokeLinejoinPanel.getSelection() );
     strokeLinejoinPanel.addPanelListener( new PanelListener()
     {
@@ -107,8 +108,8 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     // Stroke Linecap ComboPanel
-    ComboPanel strokeLinecapPanel = new StrokeLinecapComboPanel( strokeGroup, "Linecap", stroke
-        .getLineCap( null ) );
+    ComboPanel strokeLinecapPanel = new StrokeLinecapComboPanel( strokeGroup,
+        MessageBundle.STYLE_EDITOR_LINECAP, stroke.getLineCap( null ) );
     stroke.setLineCap( strokeLinecapPanel.getSelection() );
     strokeLinecapPanel.addPanelListener( new PanelListener()
     {
@@ -122,7 +123,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
 
     // Stroke DashOffset
     StrokeDashoffsetPanel strokeDashoffsetPanel = new StrokeDashoffsetPanel( strokeGroup,
-        "Dashoffset", stroke.getDashOffset( null ) );
+        MessageBundle.STYLE_EDITOR_DASHOFFSET, stroke.getDashOffset( null ) );
     strokeDashoffsetPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -134,8 +135,8 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     // Stroke DashArray
-    StrokeDasharrayPanel strokeDasharrayPanel = new StrokeDasharrayPanel( strokeGroup, "Dasharray",
-        stroke.getDashArray( null ) );
+    StrokeDasharrayPanel strokeDasharrayPanel = new StrokeDasharrayPanel( strokeGroup,
+        MessageBundle.STYLE_EDITOR_DASHARRAY, stroke.getDashArray( null ) );
     strokeDasharrayPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )

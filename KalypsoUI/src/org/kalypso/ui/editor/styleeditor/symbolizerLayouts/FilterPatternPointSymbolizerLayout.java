@@ -18,6 +18,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.panels.ColorPalettePanel;
 import org.kalypso.ui.editor.styleeditor.panels.ComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
@@ -69,8 +70,8 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerLayout
     final Object objects[] = graphic.getMarksAndExtGraphics();
     Mark mark = (Mark)objects[0];
 
-    ComboPanel wellKnownNameComboBox = new WellKnownNameComboPanel( group, "Type", mark
-        .getWellKnownName() );
+    ComboPanel wellKnownNameComboBox = new WellKnownNameComboPanel( group,
+        MessageBundle.STYLE_EDITOR_TYPE, mark.getWellKnownName() );
     for( int i = 0; i < getRuleCollection().size(); i++ )
     {
       Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
@@ -105,8 +106,8 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerLayout
       }
     } );
 
-    SliderPanel graphicSizePanel = new SliderPanel( group, "Size:", 1, 15, 1, SliderPanel.INTEGER,
-        graphic.getSize( null ) );
+    SliderPanel graphicSizePanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_SIZE, 1, 15,
+        1, SliderPanel.INTEGER, graphic.getSize( null ) );
     for( int i = 0; i < getRuleCollection().size(); i++ )
     {
       Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
@@ -132,7 +133,7 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerLayout
       }
     } );
 
-    // get all colors for each rule of the pattern for this specific symbolizer    
+    // get all colors for each rule of the pattern for this specific symbolizer
     Color[] colors = new Color[getRuleCollection().size()];
     for( int i = 0; i < getRuleCollection().size(); i++ )
     {
@@ -150,7 +151,7 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerLayout
 
     if( colorPalettePanel == null )
     {
-      colorPalettePanel = new ColorPalettePanel( group, colors, getRuleCollection());
+      colorPalettePanel = new ColorPalettePanel( group, colors, getRuleCollection() );
       colorPalettePanel.setType( ColorPalettePanel.CUSTOM_TRANSITION );
       // init colors of PointSymbolizer
       for( int i = 0; i < getRuleCollection().size(); i++ )
@@ -167,7 +168,7 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerLayout
                         .getBlue() ) );
           }
         }
-      }      
+      }
 
       colorPalettePanel.addColorPalettePanelListener( new PanelListener()
       {

@@ -5,7 +5,6 @@
 package org.kalypso.ui.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FormAttachment;
@@ -15,6 +14,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
 
 /**
@@ -51,12 +51,13 @@ public class ColorPalettePanel
   private Color[] colorArray = null;
 
   private int colorPaletteSelection = 0;
+
   private RuleCollection ruleCollection = null;
 
-  public ColorPalettePanel( Composite parent, Color[] colors, RuleCollection m_ruleCollection)
+  public ColorPalettePanel( Composite parent, Color[] colors, RuleCollection m_ruleCollection )
   {
     this.type = RED_GREEN_TRANSITION;
-    setRuleCollection(m_ruleCollection);
+    setRuleCollection( m_ruleCollection );
     composite = new Composite( parent, SWT.NULL );
     FormLayout compositeLayout = new FormLayout();
     GridData compositeData = new GridData();
@@ -108,7 +109,7 @@ public class ColorPalettePanel
     comboBox = new ColorPaletteComboBox( palleteParentComposite );
     comboBox.setSelection( colorPaletteSelection );
     final ColorPalette colorPallete = new ColorPalette( palleteParentComposite, getColorArray(),
-        COLOR_SIZE, COLOR_BORDER, getRuleCollection());
+        COLOR_SIZE, COLOR_BORDER, getRuleCollection() );
 
     comboBox.addPanelListener( new PanelListener()
     {
@@ -182,7 +183,7 @@ public class ColorPalettePanel
     fillColorLabelLData.left = new FormAttachment( 0, 1000, 0 );
     fillColorLabelLData.top = new FormAttachment( 100, 1000, 0 );
     fillColorLabel.setLayoutData( fillColorLabelLData );
-    fillColorLabel.setText( "ColorPattern" );
+    fillColorLabel.setText( MessageBundle.STYLE_EDITOR_COLOR_PATTERN );
   }
 
   //public static Color[] initializeColors(int type,int numberOfColors)
@@ -345,10 +346,12 @@ public class ColorPalettePanel
   {
     this.comboBox = m_comboBox;
   }
+
   public RuleCollection getRuleCollection()
   {
     return ruleCollection;
   }
+
   public void setRuleCollection( RuleCollection m_ruleCollection )
   {
     this.ruleCollection = m_ruleCollection;

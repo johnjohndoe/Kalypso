@@ -26,6 +26,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.panels.ColorChooserPanel;
 import org.kalypso.ui.editor.styleeditor.panels.FontChooserPanel;
 import org.kalypso.ui.editor.styleeditor.panels.LabelPlacementComboPanel;
@@ -81,7 +82,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     // ***** Font group
     Group fontGroup = new Group( composite, SWT.NULL );
     GridData fontGroupData = new GridData();
-    fontGroupData.widthHint = 210;    
+    fontGroupData.widthHint = 210;
     fontGroupData.heightHint = 244;
     fontGroup.setLayoutData( fontGroupData );
     fontGroup.setLayout( compositeLayout );
@@ -112,8 +113,10 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         }
       }
     }
-    textLabelComboPanel = new TextLabelComboPanel( fontGroup, "Label:", featureType, labelTextCombo );
-    labelTextInput = new TextInputPanel( fontGroup, "Or text:", labelTextField );
+    textLabelComboPanel = new TextLabelComboPanel( fontGroup, MessageBundle.STYLE_EDITOR_LABEL,
+        featureType, labelTextCombo );
+    labelTextInput = new TextInputPanel( fontGroup, MessageBundle.STYLE_EDITOR_OR_TEXT,
+        labelTextField );
 
     textLabelComboPanel.addPanelListener( new PanelListener()
     {
@@ -141,7 +144,8 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     Font font = textSymbolizer.getFont();
-    FontChooserPanel fontChooserPanel = new FontChooserPanel( fontGroup, "Font:", font );
+    FontChooserPanel fontChooserPanel = new FontChooserPanel( fontGroup,
+        MessageBundle.STYLE_EDITOR_FONT, font );
     fontChooserPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -171,8 +175,8 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     }
     // Halo ColorChooser
     ColorChooserPanel haloColorChooserPanel = null;
-    haloColorChooserPanel = new ColorChooserPanel( fontGroup, "Color:", halo.getFill().getFill(
-        null ) );
+    haloColorChooserPanel = new ColorChooserPanel( fontGroup, MessageBundle.STYLE_EDITOR_COLOR,
+        halo.getFill().getFill( null ) );
     haloColorChooserPanel.addColorChooserListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -188,8 +192,8 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 
     // Halo Opacity Slider
     SliderPanel haloOpacityPanel = null;
-    haloOpacityPanel = new SliderPanel( fontGroup, "Opacity:", 0, 1, 1, SliderPanel.DECIMAL, halo
-        .getFill().getOpacity( null ) );
+    haloOpacityPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1,
+        SliderPanel.DECIMAL, halo.getFill().getOpacity( null ) );
     haloOpacityPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -204,8 +208,8 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 
     // Halo Stroke Opacity Slider
     SliderPanel haloStrokeOpacityPanel = null;
-    haloStrokeOpacityPanel = new SliderPanel( fontGroup, "Stroke Opacity:", 0, 1, 1,
-        SliderPanel.DECIMAL, halo.getStroke().getOpacity( null ) );
+    haloStrokeOpacityPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_STROKE_OPACITY,
+        0, 1, 1, SliderPanel.DECIMAL, halo.getStroke().getOpacity( null ) );
     haloStrokeOpacityPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -226,7 +230,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
             .createLinePlacement( "auto" ) );
       int linePlacementIndex = labelPlacement.getLinePlacement().getPlacementType( null );
       LabelPlacementComboPanel labelPlacementComboBoxPanel = new LabelPlacementComboPanel(
-          fontGroup, "Placement:", linePlacementIndex );
+          fontGroup, MessageBundle.STYLE_EDITOR_PLACEMENT, linePlacementIndex );
       labelPlacementComboBoxPanel.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
@@ -239,8 +243,8 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         }
       } );
 
-      SliderPanel gapPanel = new SliderPanel( fontGroup, "Gap:", 0, 10, 1, SliderPanel.INTEGER,
-          labelPlacement.getLinePlacement().getGap( null ) );
+      SliderPanel gapPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_GAP, 0, 10, 1,
+          SliderPanel.INTEGER, labelPlacement.getLinePlacement().getGap( null ) );
       gapPanel.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
@@ -262,7 +266,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 
       double displacement[] = labelPlacement.getPointPlacement().getDisplacement( null );
       LabelPointPlacementPanel labelPointPlacementPanel = new LabelPointPlacementPanel( fontGroup,
-          "Placement:", displacement );
+          MessageBundle.STYLE_EDITOR_PLACEMENT, displacement );
       labelPointPlacementPanel.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
@@ -275,8 +279,9 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         }
       } );
 
-      SliderPanel rotationPanel = rotationPanel = new SliderPanel( fontGroup, "Rotation:", 0, 360,
-          15, SliderPanel.INTEGER, labelPlacement.getPointPlacement().getRotation( null ) * 180 );
+      SliderPanel rotationPanel = rotationPanel = new SliderPanel( fontGroup,
+          MessageBundle.STYLE_EDITOR_ROTATION, 0, 360, 15, SliderPanel.INTEGER, labelPlacement
+              .getPointPlacement().getRotation( null ) * 180 );
       rotationPanel.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )

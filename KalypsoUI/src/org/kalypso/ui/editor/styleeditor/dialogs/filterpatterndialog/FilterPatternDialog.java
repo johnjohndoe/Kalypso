@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialogEvent;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialogListener;
@@ -47,7 +48,7 @@ public class FilterPatternDialog extends Dialog
   protected void configureShell( Shell shell )
   {
     super.configureShell( shell );
-    shell.setText( "Configuration" );
+    shell.setText( MessageBundle.STYLE_EDITOR_FILTER_CONFIG );
     shell.setSize( 200, 200 );
   }
 
@@ -56,38 +57,38 @@ public class FilterPatternDialog extends Dialog
     // check whether boundaries are set and lowerBoundary<upperBoundary
     if( lowerBoundaryText.getText() == null || lowerBoundaryText.getText().trim().length() == 0 )
     {
-      new StyleEditorErrorDialog( getShell(), "Eingabefehler", "LowerBoundary wurde nicht gesetzt" )
-          .showError();
+      new StyleEditorErrorDialog( getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+          MessageBundle.STYLE_EDITOR_PATTERN_LOWER_BOUNDARY ).showError();
       super.cancelPressed();
       return;
     }
     else if( upperBoundaryText.getText() == null
         || upperBoundaryText.getText().trim().length() == 0 )
     {
-      new StyleEditorErrorDialog( getShell(), "Eingabefehler", "UpperBoundary wurde nicht gesetzt" )
-          .showError();
+      new StyleEditorErrorDialog( getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+          MessageBundle.STYLE_EDITOR_PATTERN_UPPER_BOUNDARY ).showError();
       super.cancelPressed();
       return;
     }
     else if( !( isNumeric( lowerBoundaryText.getText() ) ) )
     {
-      new StyleEditorErrorDialog( getShell(), "Eingabefehler",
-          "LowerBoundary ist kein numerischer Wert" ).showError();
+      new StyleEditorErrorDialog( getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+          MessageBundle.STYLE_EDITOR_PATTERN_LOWER_ERROR ).showError();
       super.cancelPressed();
       return;
     }
     else if( !( isNumeric( upperBoundaryText.getText() ) ) )
     {
-      new StyleEditorErrorDialog( getShell(), "Eingabefehler",
-          "UpperBoundary ist kein numerischer Wert" ).showError();
+      new StyleEditorErrorDialog( getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+          MessageBundle.STYLE_EDITOR_PATTERN_UPPER_ERROR ).showError();
       super.cancelPressed();
       return;
     }
     else if( Double.parseDouble( lowerBoundaryText.getText() ) > Double
         .parseDouble( upperBoundaryText.getText() ) )
     {
-      new StyleEditorErrorDialog( getShell(), "Eingabefehler",
-          "UpperBoundary darf nicht kleiner als LowerBoundary sein" ).showError();
+      new StyleEditorErrorDialog( getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+          MessageBundle.STYLE_EDITOR_PATTERN_UPPER_LOWER_ERROR ).showError();
       super.cancelPressed();
       return;
     }
@@ -147,7 +148,7 @@ public class FilterPatternDialog extends Dialog
     } );
 
     Label lowerBoundaryLabel = new Label( composite, SWT.NULL );
-    lowerBoundaryLabel.setText( "LowerBoundary" );
+    lowerBoundaryLabel.setText( MessageBundle.STYLE_EDITOR_LOWER_BOUNDARY );
     lowerBoundaryText = new Text( composite, SWT.BORDER );
     GridData textData = new GridData();
     textData.widthHint = 90;
@@ -156,7 +157,7 @@ public class FilterPatternDialog extends Dialog
     lowerBoundaryText.setText( ( (BoundaryExpression)operation.getLowerBoundary() ).getValue() );
 
     Label upperBoundaryLabel = new Label( composite, SWT.NULL );
-    upperBoundaryLabel.setText( "UpperBoundary" );
+    upperBoundaryLabel.setText( MessageBundle.STYLE_EDITOR_UPPER_BOUNDARY );
     upperBoundaryText = new Text( composite, SWT.BORDER );
     GridData textData2 = new GridData();
     textData2.widthHint = 90;

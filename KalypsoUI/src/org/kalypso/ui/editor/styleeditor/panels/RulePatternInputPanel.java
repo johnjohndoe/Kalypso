@@ -7,15 +7,16 @@ package org.kalypso.ui.editor.styleeditor.panels;
 import javax.swing.event.EventListenerList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 
 /**
@@ -75,11 +76,11 @@ public class RulePatternInputPanel
     urlLabel.setText( label );
 
     Label minLabel = new Label( composite, SWT.NULL );
-    minLabel.setText( "min:" );
+    minLabel.setText( MessageBundle.STYLE_EDITOR_MIN );
 
     minText = new Text( composite, SWT.BORDER );
     minText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
-    GridData minTextData = new GridData( 15, 10 );
+    GridData minTextData = new GridData( 25, 10 );
     minText.setLayoutData( minTextData );
     minText.setText( "" + min );
 
@@ -90,11 +91,11 @@ public class RulePatternInputPanel
     new Label( composite, SWT.NULL ).setLayoutData( new GridData( 50, 15 ) );
 
     Label maxLabel = new Label( composite, SWT.NULL );
-    maxLabel.setText( "max:" );
+    maxLabel.setText( MessageBundle.STYLE_EDITOR_MAX );
 
     maxText = new Text( composite, SWT.BORDER );
     maxText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
-    GridData maxTextData = new GridData( 15, 10 );
+    GridData maxTextData = new GridData( 25, 10 );
     maxText.setLayoutData( maxTextData );
     maxText.setText( "" + max );
 
@@ -105,21 +106,22 @@ public class RulePatternInputPanel
     new Label( composite, SWT.NULL ).setLayoutData( new GridData( 50, 15 ) );
 
     Label stepLabel = new Label( composite, SWT.NULL );
-    stepLabel.setText( "step:" );
+    stepLabel.setText( MessageBundle.STYLE_EDITOR_STEP );
 
     stepText = new Text( composite, SWT.BORDER );
     stepText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
-    GridData stepTextData = new GridData( 15, 10 );
+    GridData stepTextData = new GridData( 25, 10 );
     stepText.setLayoutData( stepTextData );
     stepText.setText( "" + step );
 
-    Button okButton = new Button( composite, SWT.PUSH );
+    Label okButton = new Label( composite, SWT.PUSH );
+    okButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_OK.createImage() );
     GridData okButtonData = new GridData( 22, 15 );
     okButton.setLayoutData( okButtonData );
-    okButton.setText( "Ok" );
-    okButton.addSelectionListener( new SelectionListener()
+    okButton.setToolTipText( MessageBundle.STYLE_EDITOR_OK );
+    okButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         try
         {
@@ -131,28 +133,32 @@ public class RulePatternInputPanel
           if( t_min > t_max )
           {
             StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
-                .getShell(), "Input value invalid", "Min<Max" );
+                .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+                MessageBundle.STYLE_EDITOR_MIN_MAX );
             errorDialog.showError();
           }
           // step>(max-min)
           else if( t_step > ( t_max - t_min ) )
           {
             StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
-                .getShell(), "Input value invalid", "Step cannot be larger than (Max-Min)" );
+                .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+                MessageBundle.STYLE_EDITOR_STEP_TOO_LARGE );
             errorDialog.showError();
           }
           // step needs to be positive
           else if( t_step <= 0 )
           {
             StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
-                .getShell(), "Input value invalid", "Step needs to be positive >0" );
+                .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+                MessageBundle.STYLE_EDITOR_STEP_NOT_POSITIVE );
             errorDialog.showError();
           }
-          // restrict editor to 50 steps
+          // restrict editor to 35 steps
           else if( ( (int)Math.ceil( ( t_max - t_min ) / t_step ) ) > 35 )
           {
-            new StyleEditorErrorDialog( getComposite().getShell(), "Verweis",
-                "Editor ist auf 35 Abschnitte begrenzt" ).showError();
+            new StyleEditorErrorDialog( getComposite().getShell(),
+                MessageBundle.STYLE_EDITOR_REMARK, MessageBundle.STYLE_EDITOR_PATTERN_LIMIT )
+                .showError();
           }
           else
           {
@@ -165,7 +171,8 @@ public class RulePatternInputPanel
         catch( NumberFormatException nfe )
         {
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
-              .getShell(), "Input needs to be of type double", "needs to be double" );
+              .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+              MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           errorDialog.showError();
           getMinText().setText( "" + getMin() );
           getMaxText().setText( "" + getMax() );
@@ -177,10 +184,13 @@ public class RulePatternInputPanel
         }
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
   }
 

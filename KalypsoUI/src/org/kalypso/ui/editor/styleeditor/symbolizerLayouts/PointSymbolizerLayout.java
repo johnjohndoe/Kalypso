@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.panels.ColorChooserPanel;
 import org.kalypso.ui.editor.styleeditor.panels.ComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.ConfigurePointSymbolizerPanel;
@@ -108,8 +109,8 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     if( selectionIndex < objects.length )
       markExtGraphicTabFolder.setSelection( selectionIndex );
 
-    SliderPanel graphicSizePanel = new SliderPanel( graphicDetails, "Size:", 1, 15, 1,
-        SliderPanel.INTEGER, graphic.getSize( null ) );
+    SliderPanel graphicSizePanel = new SliderPanel( graphicDetails,
+        MessageBundle.STYLE_EDITOR_SIZE, 1, 15, 1, SliderPanel.INTEGER, graphic.getSize( null ) );
     graphicSizePanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -120,25 +121,28 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
       }
     } );
 
-//    SliderPanel graphicOpacityPanel = new SliderPanel( graphicDetails, "Opacity:", 0, 1, 1,
-//        SliderPanel.DECIMAL, graphic.getOpacity( null ) );
-//    graphicOpacityPanel.addPanelListener( new PanelListener()
-//    {
-//      public void valueChanged( PanelEvent event )
-//      {
-//        double opacity = ( (SliderPanel)event.getSource() ).getSelection();
-//        graphic.setOpacity( opacity );
-//        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
-//      }
-//    } );
+    //    SliderPanel graphicOpacityPanel = new SliderPanel( graphicDetails,
+    // MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1,
+    //        SliderPanel.DECIMAL, graphic.getOpacity( null ) );
+    //    graphicOpacityPanel.addPanelListener( new PanelListener()
+    //    {
+    //      public void valueChanged( PanelEvent event )
+    //      {
+    //        double opacity = ( (SliderPanel)event.getSource() ).getSelection();
+    //        graphic.setOpacity( opacity );
+    //        userStyle.fireModellEvent( new ModellEvent( userStyle,
+    // ModellEvent.STYLE_CHANGE ) );
+    //      }
+    //    } );
 
-    SliderPanel rotationPanel = new SliderPanel( graphicDetails, "Rotation:", 0, 360, 15,
-        SliderPanel.INTEGER, graphic.getRotation( null ) * 180 );
+    SliderPanel rotationPanel = new SliderPanel( graphicDetails,
+        MessageBundle.STYLE_EDITOR_ROTATION, 0, 360, 15, SliderPanel.INTEGER, graphic
+            .getRotation( null ) * 180 );
     rotationPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
-        double rotation = ( (SliderPanel)event.getSource() ).getSelection();        
+        double rotation = ( (SliderPanel)event.getSource() ).getSelection();
         graphic.setRotation( rotation );
         userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
       }
@@ -159,7 +163,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
             pointSymbolizer.getGraphic().addMarksAndExtGraphic( newMark );
             setSelectionIndex( graphic.getMarksAndExtGraphics().length - 1 );
             draw();
-            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );            
+            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
           }
           catch( FilterEvaluationException e )
           {
@@ -173,7 +177,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
           {
             Object object = objects[index];
             pointSymbolizer.getGraphic().removeMarksAndExtGraphic( object );
-            setSelectionIndex( index -1);
+            setSelectionIndex( index - 1 );
             if( getSelectionIndex() < 0 )
               setSelectionIndex( 0 );
             userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
@@ -280,8 +284,8 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     {
       final Mark mark = (Mark)object;
       tabItem.setText( "Mark" + ( markCounter++ ) );
-      ComboPanel wellKnownNameComboBox = new WellKnownNameComboPanel( group, "Type", mark
-          .getWellKnownName() );
+      ComboPanel wellKnownNameComboBox = new WellKnownNameComboPanel( group,
+          MessageBundle.STYLE_EDITOR_TYPE, mark.getWellKnownName() );
       wellKnownNameComboBox.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
@@ -297,8 +301,8 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         markFill = StyleFactory.createFill();
       else
         markFill = mark.getFill();
-      ColorChooserPanel fillColorChooserPanel = new ColorChooserPanel( group, "Fill-Color:",
-          markFill.getFill( null ) );
+      ColorChooserPanel fillColorChooserPanel = new ColorChooserPanel( group,
+          MessageBundle.STYLE_EDITOR_FILL_COLOR, markFill.getFill( null ) );
       fillColorChooserPanel.addColorChooserListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
@@ -310,8 +314,9 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         }
       } );
 
-      SliderPanel fillOpacityPanel = new SliderPanel( group, "Fill-Opacity", 0, 1, 1,
-          SliderPanel.DECIMAL, markFill.getOpacity( null ) );
+      SliderPanel fillOpacityPanel = new SliderPanel( group,
+          MessageBundle.STYLE_EDITOR_FILL_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, markFill
+              .getOpacity( null ) );
       fillOpacityPanel.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
@@ -327,8 +332,8 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         markStroke = StyleFactory.createStroke();
       else
         markStroke = mark.getStroke();
-      ColorChooserPanel strokeColorChooserPanel = new ColorChooserPanel( group, "Color:",
-          markStroke.getStroke( null ) );
+      ColorChooserPanel strokeColorChooserPanel = new ColorChooserPanel( group,
+          MessageBundle.STYLE_EDITOR_COLOR, markStroke.getStroke( null ) );
       strokeColorChooserPanel.addColorChooserListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
@@ -340,20 +345,22 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         }
       } );
 
-//      SliderPanel strokeWidthPanel = new SliderPanel( group, "width:", 0, 10, 1,
-//          SliderPanel.INTEGER, markStroke.getWidth( null ) );
-//      strokeWidthPanel.addPanelListener( new PanelListener()
-//      {
-//        public void valueChanged( PanelEvent event )
-//        {
-//          double width = ( (SliderPanel)event.getSource() ).getSelection();
-//          markStroke.setWidth( width );
-//          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
-//        }
-//      } );
+      //      SliderPanel strokeWidthPanel = new SliderPanel( group,
+      // MessageBundle.STYLE_EDITOR_WIDTH, 0, 10, 1,
+      //          SliderPanel.INTEGER, markStroke.getWidth( null ) );
+      //      strokeWidthPanel.addPanelListener( new PanelListener()
+      //      {
+      //        public void valueChanged( PanelEvent event )
+      //        {
+      //          double width = ( (SliderPanel)event.getSource() ).getSelection();
+      //          markStroke.setWidth( width );
+      //          userStyle.fireModellEvent( new ModellEvent( userStyle,
+      // ModellEvent.STYLE_CHANGE ) );
+      //        }
+      //      } );
 
-      SliderPanel strokeOpacityPanel = new SliderPanel( group, "Opacity:", 0, 1, 1,
-          SliderPanel.DECIMAL, markStroke.getOpacity( null ) );
+      SliderPanel strokeOpacityPanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_OPACITY,
+          0, 1, 1, SliderPanel.DECIMAL, markStroke.getOpacity( null ) );
       strokeOpacityPanel.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
@@ -368,8 +375,8 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     {
       final ExternalGraphic externalGraphic = (ExternalGraphic)object;
       tabItem.setText( "ExtGraph" + ( extGraphicCounter++ ) );
-      UrlInputPanel urlInputPanel = new UrlInputPanel( group, "URL:", externalGraphic
-          .getOnlineResource() );
+      UrlInputPanel urlInputPanel = new UrlInputPanel( group, MessageBundle.STYLE_EDITOR_URL,
+          externalGraphic.getOnlineResource() );
       urlInputPanel.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
@@ -379,7 +386,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
           userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
         }
       } );
-      new FormatDisplayPanel( group, "Format:", externalGraphic.getFormat() );
+      new FormatDisplayPanel( group, MessageBundle.STYLE_EDITOR_FORMAT, externalGraphic.getFormat() );
     }
   }
 
