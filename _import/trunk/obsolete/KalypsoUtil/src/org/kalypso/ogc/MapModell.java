@@ -7,8 +7,6 @@ import java.util.Vector;
 
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
-import org.deegree_impl.model.ct.GeoTransformer;
-import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.event.ModellEventProvider;
@@ -56,18 +54,18 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
   {
     if( myActiveTheme == null )
       myActiveTheme = theme;
-    
+
     myThemes.add( theme );
-    
+
     final KalypsoFeatureLayer layer = theme.getLayer();
     if( layer != null )
       layer.setCoordinatesSystem( myCoordinatesSystem );
-    
+
     myEnabledThemeStatus.put( theme, THEME_ENABLED );
-    
+
     theme.addModellListener( this );
-    
-    fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED  ) );
+
+    fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
   }
 
   public void clear()
@@ -98,43 +96,45 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
     return myCoordinatesSystem;
   }
 
-//  /**
-//   * renders the map to the passed graphic context
-//   * 
-//   * @param g
-//   * @throws RenderException
-//   *           thrown if the passed <tt>Graphic<tt> haven't
-//   *                         clipbounds. use g.setClip( .. );
-//   */
-//  public void paint( final Graphics g ) throws RenderException
-//  {
-//    if( getThemeSize() == 0 )
-//      return;
-//    if( g.getClipBounds() == null )
-//    {
-//      throw new RenderException( "no clip bounds defined for graphic context" );
-//    }
-//
-//    int x = g.getClipBounds().x;
-//    int y = g.getClipBounds().y;
-//    int w = g.getClipBounds().width;
-//    int h = g.getClipBounds().height;
-//    myProjection.setDestRect( x - 2, y - 2, w + x, h + y );
-//    
-//    //myScale = calcScale( g.getClipBounds().width, g.getClipBounds().height );
-//    
-//    final double scale = calcScale( g.getClipBounds().width, g.getClipBounds().height );
-//    final GeoTransform p = getProjection();
-//    final GM_Envelope bbox = getBoundingBox();
-//    
-//    for( int i = 0; i < getThemeSize(); i++ )
-//    {
-//      if( isThemeEnabled( getTheme( i ) ) )
-//        getTheme( i ).paint( g, p, scale, bbox );
-//    }
-//  }
+  //  /**
+  //   * renders the map to the passed graphic context
+  //   *
+  //   * @param g
+  //   * @throws RenderException
+  //   * thrown if the passed <tt>Graphic<tt> haven't
+  //   * clipbounds. use g.setClip( .. );
+  //   */
+  //  public void paint( final Graphics g ) throws RenderException
+  //  {
+  //    if( getThemeSize() == 0 )
+  //      return;
+  //    if( g.getClipBounds() == null )
+  //    {
+  //      throw new RenderException( "no clip bounds defined for graphic context" );
+  //    }
+  //
+  //    int x = g.getClipBounds().x;
+  //    int y = g.getClipBounds().y;
+  //    int w = g.getClipBounds().width;
+  //    int h = g.getClipBounds().height;
+  //    myProjection.setDestRect( x - 2, y - 2, w + x, h + y );
+  //    
+  //    //myScale = calcScale( g.getClipBounds().width, g.getClipBounds().height );
+  //    
+  //    final double scale = calcScale( g.getClipBounds().width,
+  // g.getClipBounds().height );
+  //    final GeoTransform p = getProjection();
+  //    final GM_Envelope bbox = getBoundingBox();
+  //    
+  //    for( int i = 0; i < getThemeSize(); i++ )
+  //    {
+  //      if( isThemeEnabled( getTheme( i ) ) )
+  //        getTheme( i ).paint( g, p, scale, bbox );
+  //    }
+  //  }
 
-  public void paintSelected( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final int selectionId )
+  public void paintSelected( final Graphics g, final GeoTransform p, final GM_Envelope bbox,
+      final double scale, final int selectionId )
   {
     if( getThemeSize() == 0 )
       return;
@@ -146,17 +146,16 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
     }
   }
 
-//  public double getScale()
-//  {
-//    return myScale;
-//  }
-//
-//  public double getScale( Graphics g )
-//  {
-//    myScale = calcScale( g.getClipBounds().width, g.getClipBounds().height );
-//    return myScale;
-//  }
-
+  //  public double getScale()
+  //  {
+  //    return myScale;
+  //  }
+  //
+  //  public double getScale( Graphics g )
+  //  {
+  //    myScale = calcScale( g.getClipBounds().width, g.getClipBounds().height );
+  //    return myScale;
+  //  }
 
   public IKalypsoTheme getTheme( int pos )
   {
@@ -234,58 +233,24 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
     fireModellEvent( null );
   }
 
-  public GM_Envelope getFullExtentBoundingBox()
+public GM_Envelope getFullExtentBoundingBox()
   {
     IKalypsoTheme[] themes = getAllThemes();
-    boolean found = false;
-    double resultMinX = 0;
-    double resultMaxX = 0;
-
-    double resultMinY = 0;
-    double resultMaxY = 0;
-
+    GM_Envelope result = null;
+    
     for( int i = 0; i < themes.length; i++ )
     {
       if( isThemeEnabled( themes[i] ) && themes[i].getLayer() != null )
       {
         try
         {
-          final GeoTransformer gt = new GeoTransformer( getCoordinatesSystem() );
+  //        final GeoTransformer gt = new GeoTransformer( getCoordinatesSystem() );
           final GM_Envelope boundingBox = themes[i].getLayer().getBoundingBox();
 
-          if( boundingBox != null )
-          {
-            final GM_Envelope env = gt.transformEnvelope( boundingBox, themes[i].getLayer()
-                .getCoordinatesSystem() );
-            double minX = env.getMin().getX();
-            double minY = env.getMin().getY();
-
-            double maxX = env.getMax().getX();
-            double maxY = env.getMax().getY();
-
-            if( !found )
-            {
-              resultMinX = minX;
-              resultMinY = minY;
-              resultMaxX = maxX;
-              resultMaxY = maxY;
-              found = true;
-            }
-            else
-            {
-              if( minY < resultMinX )
-                resultMinX = minX;
-
-              if( minY < resultMinY )
-                resultMinY = minY;
-
-              if( maxX > resultMaxX )
-                resultMaxX = maxX;
-
-              if( maxY > resultMaxY )
-                resultMaxY = maxY;
-            }
-          }
+          if( result == null )
+            result=boundingBox;         
+          else        
+            result=result.merge(boundingBox);  
         }
         catch( final Exception e )
         {
@@ -294,13 +259,77 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
         }
       }
     }
-
-    if( found )
-    {
-      return GeometryFactory.createGM_Envelope( resultMinX, resultMinY, resultMaxX, resultMaxY );
-    }
-    return null;
+    return result;
   }
+    //  public GM_Envelope getFullExtentBoundingBox()
+  //  {
+  //    IKalypsoTheme[] themes = getAllThemes();
+  //    boolean found = false;
+  //    double resultMinX = 0;
+  //    double resultMaxX = 0;
+  //
+  //    double resultMinY = 0;
+  //    double resultMaxY = 0;
+  //
+  //    for( int i = 0; i < themes.length; i++ )
+  //    {
+  //      if( isThemeEnabled( themes[i] ) && themes[i].getLayer() != null )
+  //      {
+  //        try
+  //        {
+  //          final GeoTransformer gt = new GeoTransformer( getCoordinatesSystem() );
+  //          final GM_Envelope boundingBox = themes[i].getLayer().getBoundingBox();
+  //
+  //          if( boundingBox != null )
+  //          {
+  //            final GM_Envelope env = gt.transformEnvelope( boundingBox,
+  // themes[i].getLayer()
+  //                .getCoordinatesSystem() );
+  //            double minX = env.getMin().getX();
+  //            double minY = env.getMin().getY();
+  //
+  //            double maxX = env.getMax().getX();
+  //            double maxY = env.getMax().getY();
+  //
+  //            if( !found )
+  //            {
+  //              resultMinX = minX;
+  //              resultMinY = minY;
+  //              resultMaxX = maxX;
+  //              resultMaxY = maxY;
+  //              found = true;
+  //            }
+  //            else
+  //            {
+  //              if( minX < resultMinX )
+  //                resultMinX = minX;
+  //
+  //              if( minY < resultMinY )
+  //                resultMinY = minY;
+  //
+  //              if( maxX > resultMaxX )
+  //                resultMaxX = maxX;
+  //
+  //              if( maxY > resultMaxY )
+  //                resultMaxY = maxY;
+  //            }
+  //          }
+  //        }
+  //        catch( final Exception e )
+  //        {
+  //          // TODO: das sollte nicht sein, exception einfach weiterwerfen
+  //          e.printStackTrace();
+  //        }
+  //      }
+  //    }
+  //
+  //    if( found )
+  //    {
+  //      return GeometryFactory.createGM_Envelope( resultMinX, resultMinY,
+  // resultMaxX, resultMaxY );
+  //    }
+  //    return null;
+  //  }
 
   public void addModellListener( ModellEventListener listener )
   {
@@ -323,7 +352,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
   public void onModellChange( final ModellEvent modellEvent )
   {
     // TODO: invalidate myself??
-    
+
     fireModellEvent( modellEvent );
   }
 }
