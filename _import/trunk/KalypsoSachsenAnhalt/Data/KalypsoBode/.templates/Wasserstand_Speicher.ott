@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <obstableview xmlns="obstableview.template.kalypso.org">
     <observation linktype="zml" ns1:href="Zeitreihen/Wasserstand_Speicher/Rappbode.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column axis="Wasserstand" editable="true" id="c1" name="W - TS Rappbode" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c1" name="TS Rappbode" width="50"/>
     </observation>
     <observation linktype="zml" ns2:href="Zeitreihen/Wasserstand_Speicher/Kalte_Bode.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
-        <column axis="Wasserstand" editable="true" id="c2" name="W - HWR Kalte Bode" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c2" name="HWR Kalte Bode" width="50"/>
     </observation>
     <observation linktype="zml" ns3:href="Zeitreihen/Wasserstand_Speicher/Wendefurth.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
-        <column axis="Wasserstand" editable="true" id="c3" name="W - TS Wendefurth" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c3" name="TS Wendefurth" width="50"/>
     </observation>
     <rules>
         <renderingrule mask="2">

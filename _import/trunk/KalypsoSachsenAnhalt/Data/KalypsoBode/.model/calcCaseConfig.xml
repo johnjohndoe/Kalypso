@@ -2,74 +2,37 @@
 <calcCaseConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.model.kalypso.org calcCaseConfig.xsd">
 	<!-- Rechenfall anlegen, ohne Zeitreihen -->
 	<createTransformations logFile="calcCase.log">
-		<!-- Modell.gml -->
+		<!-- Bodemodell.gml  und *.gmv-->
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.templates/Modell/bodemodell.gml"/>
 			<argument name="output" value=":calcdir:bodemodell.gml"/>
 		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/Modell/bodemodell.gmv"/>
+			<argument name="output" value=":calcdir:bodemodell.gmv"/>
+		</transformation>
+
+		<!-- Kartenansichten  -->
 		<transformation className="org.kalypso.util.transformation.CopyOrMoveDirTransformation">
 			<argument name="input" value=":project:.templates/Modell/Karten/"/>
 			<argument name="output" value=":calcdir:/Karten"/>
 		</transformation>
 
-		<!-- Kartenansichten (ohne Shapes) -->
-<!--
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Modell/Karten/Eingabepegel.gmt"/>
-			<argument name="output" value=":calcdir:Karten/Eingabepegel.gmt"/>
-		</transformation>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Modell/Karten/Niederschlagsgebiete.gmt"/>
-			<argument name="output" value=":calcdir:Karten/Niederschlagsgebiete.gmt"/>
-		</transformation>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Modell/Karten/Niederschlagsstationen.gmt"/>
-			<argument name="output" value=":calcdir:Karten/Niederschlagsstationen.gmt"/>
-		</transformation>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Modell/Karten/Speicher.gmt"/>
-			<argument name="output" value=":calcdir:Karten/Speicher.gmt"/>
-		</transformation>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Modell/Karten/Übersicht.gmt"/>
-			<argument name="output" value=":calcdir:Karten/Übersicht.gmt"/>
-		</transformation>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Modell/Karten/Vorhersagepegel.gmt"/>
-			<argument name="output" value=":calcdir:Karten/Vorhersagepegel.gmt"/>
-		</transformation>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Modell/Karten/Wasserlaufmodelle.gmt"/>
-			<argument name="output" value=":calcdir:Karten/Wasserlaufmodelle.gmt"/>
-		</transformation>
-		-->
 		<!-- Parameteransichten -->
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Modell/Parameter/Niederschlagsgebiete.gtt"/>
-			<argument name="output" value=":calcdir:Modell/Parameter/Niederschlagsgebiete.gtt"/>
-		</transformation>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Modell/Parameter/Niederschlagsstationen.gtt"/>
-			<argument name="output" value=":calcdir:Modell/Parameter/Niederschlagsstationen.gtt"/>
-		</transformation>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Modell/Parameter/Pegel.gtt"/>
-			<argument name="output" value=":calcdir:Modell/Parameter/Pegel.gtt"/>
-		</transformation>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Modell/Parameter/Speicher.gtt"/>
-			<argument name="output" value=":calcdir:Modell/Parameter/Speicher.gtt"/>
-		</transformation>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Modell/Parameter/WLM_Laufzeiten.gtt"/>
-			<argument name="output" value=":calcdir:Modell/Parameter/WLM_Laufzeiten.gtt"/>
+		<transformation className="org.kalypso.util.transformation.CopyOrMoveDirTransformation">
+			<argument name="input" value=":project:.templates/Modell/Parameter/"/>
+			<argument name="output" value=":calcdir:/Parameter"/>
 		</transformation>
 		
 	</createTransformations>
 
 	
-	<!-- Zeitreihen laden-->
+	<!-- Zeitreihen laden (hier Fake als Kopie) -->
 	<updateTransformations logFile="calcCase.log">
+		<transformation className="org.kalypso.util.transformation.CopyOrMoveDirTransformation">
+			<argument name="input" value=":project:.templates/Zeitreihen"/>
+			<argument name="output" value=":calcdir:/Zeitreihen"/>
+		</transformation>
 	</updateTransformations>
 
 	<!-- -->

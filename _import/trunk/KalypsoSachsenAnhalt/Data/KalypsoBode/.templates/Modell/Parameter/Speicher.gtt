@@ -2,7 +2,11 @@
 <gistableview xmlns="gistableview.template.kalypso.org">
     <layer featurePath="SpeicherCollectionAssociation/SpeicherMember[Speicher]" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="../bodemodell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column editable="true" name="Name" width="96"/>
-        <column editable="true" name="WISKI_Name" width="83"/>
-     </layer>
+        <column editable="true" name="MindestabgabeParameter" width="157"/>
+        <column editable="true" name="MaximalabgabeParameter" width="158"/>
+        <column editable="true" name="TrinkwasserParameter" width="143"/>
+        <column editable="true" name="EACollectionAssociation" width="146"/>
+        <sort inverse="false" propertyName="WISKI_Name"/>
+    </layer>
 </gistableview>
 
