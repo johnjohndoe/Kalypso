@@ -13,6 +13,7 @@ import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.psiadapter.PSICompactFactory;
@@ -98,13 +99,15 @@ public class PSICompactObservationItem implements IObservation
     final IAxis[] axes = new IAxis[3];
 
     // immer Datum Axis
-    axes[0] = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "",
+    axes[0] = new DefaultAxis( TimeserieUtils.getName( TimeserieConstants.TYPE_DATE ), TimeserieConstants.TYPE_DATE, TimeserieUtils.getUnit( TimeserieConstants.TYPE_DATE ),
         Date.class, 0, true );
 
     // Wert (Einheit abfragen)
-    final String label = toString();
     final int psiUnit = psiMD.getUnit();
     final String unit = PSICompactRepositoryFactory.toKalypsoUnit( psiUnit );
+    
+    final String type = TimeserieUtils.getTypeForUnit( unit );
+    final String label = TimeserieUtils.getName( type );
     
     axes[1] = new DefaultAxis( label, measureTypeToString(), unit,
         Double.class, 1, false );

@@ -42,11 +42,11 @@ public class PSICompactCommiter implements IMetaDocCommiter
         .getLocation() )
         + ".xml" );
 
+    // just fetch the name of the file (without path, not necessary for PSICompact)
+    final File docFile = new File( docBean.getLocation() );
+    
     try
     {
-      // just fetch the name of the file (without path, not necessary for PSICompact)
-      final File docFile = new File( docBean.getLocation() );
-      
       final Properties mdProps = new Properties();
       mdProps.putAll( docBean.getMetadata() );
       
@@ -69,6 +69,11 @@ public class PSICompactCommiter implements IMetaDocCommiter
     catch( Exception e ) // generic for simplicity
     {
       throw new MetaDocException( e );
+    }
+    finally
+    {
+      docFile.delete();
+      xmlFile.delete();
     }
   }
 }

@@ -9,7 +9,7 @@
         <metadata name="Alarmstufe 3" value="350"/>
         <metadata name="Alarmstufe 4" value="380"/>
     </metadataList>
-    <axis datatype="TYPE=double" key="false" name="Wasserstand" type="W" unit="cm am Pegel">
+    <axis datatype="TYPE=double" key="false" name="Wasserstand" type="W" unit="cm">
         <valueArray separator=";"/>
     </axis>
     <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="false" name="Datum" type="date" unit="">

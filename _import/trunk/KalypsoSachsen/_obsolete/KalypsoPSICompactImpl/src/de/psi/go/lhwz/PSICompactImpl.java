@@ -526,7 +526,7 @@ public class PSICompactImpl implements PSICompact
    * 
    * @return random data
    */
-  private final ArchiveData[] randomData( final Date from, final Date to )
+  protected final ArchiveData[] randomData( final Date from, final Date to )
   {
     final Calendar cal = Calendar.getInstance();
     cal.setTime( from );
@@ -559,8 +559,8 @@ public class PSICompactImpl implements PSICompact
 
       return toMeasType( nba.getType() );
     }
-    else
-      return PSICompact.MEAS_LEVEL;
+
+    return PSICompact.MEAS_LEVEL;
   }
 
   /**
