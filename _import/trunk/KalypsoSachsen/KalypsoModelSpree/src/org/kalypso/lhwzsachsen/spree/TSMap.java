@@ -39,7 +39,6 @@ public class TSMap
       return TimeserieConstants.TYPE_RAINFALL;
     if( tsName.startsWith( "PA" ) )
       return TimeserieConstants.TYPE_RAINFALL;
-
     if( tsName.startsWith( "V_" ) )
       return TimeserieConstants.TYPE_VOLUME;
 
