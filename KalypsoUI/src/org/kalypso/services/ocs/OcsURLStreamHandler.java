@@ -2,12 +2,11 @@ package org.kalypso.services.ocs;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.commons.io.FileUtils;
-import org.kalypso.ogc.sensor.zml.ZmlUrlParser;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.proxy.DateRangeBean;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.OCSDataBean;
@@ -35,29 +34,25 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
    */
   public URLConnection openConnection( final URL u ) throws IOException
   {
-    final String strUrl = u.toExternalForm();
-
     // kalypso observation service protocol?
-    if( !strUrl.startsWith( SCHEME_OCS ) )
+    if( !u.toExternalForm().startsWith( SCHEME_OCS ) )
       return u.openConnection();
 
     try
     {
-      final URI srvUri = new URI( strUrl.replaceFirst( SCHEME_OCS + ":", "" ) );
-
       DateRangeBean drb = null;
       
       // The query part of the URL (after the ?...) contains some additional
       // specification: from-to, filter, etc.
-      final String query = srvUri.getQuery();
+      final String query = u.getQuery();
       if( query != null )
       {
-        final DateRangeArgument dra = ZmlUrlParser.checkDateRange( query );
+        final DateRangeArgument dra = ZmlURL.checkDateRange( query );
         
         drb = new DateRangeBean( dra.getFrom().getTime(), dra.getTo().getTime() );
       }
 
-      final String obsId = srvUri.getPath();
+      final String obsId = ZmlURL.getIdentifierPart( u ).replaceFirst( SCHEME_OCS + ":", "" );
       final ObservationBean ob = new ObservationBean( obsId, "", "", null );
 
       final IObservationService srv = KalypsoGisPlugin.getDefault()

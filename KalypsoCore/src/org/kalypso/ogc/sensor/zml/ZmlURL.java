@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.zml;
 
+import java.net.URL;
 import java.util.Date;
 
 import org.kalypso.util.parser.ParserException;
@@ -11,11 +12,29 @@ import org.kalypso.util.xml.XmlTypes;
  * 
  * @author schlienger
  */
-public class ZmlUrlParser
+public class ZmlURL
 {
-  private ZmlUrlParser( )
+  private ZmlURL( )
   {
     // do not instanciate
+  }
+  
+  /**
+   * Returns only the identifier part of the zml url. The URL may contain a query part
+   * which will be ignored by this convenience method.
+   * 
+   * @param url
+   * @return only identifier
+   */
+  public static String getIdentifierPart( final URL url )
+  {
+    final String strUrl = url.toExternalForm();
+    
+    int ix = strUrl.indexOf( '?' );
+    if( ix != -1 )
+      return strUrl.substring( 0, ix );
+    
+    return strUrl;
   }
 
   /**
