@@ -31,6 +31,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.url.UrlResolver;
 import org.kalypso.zml.ObservationType;
@@ -49,6 +50,10 @@ public class ObservationResolver extends AbstractTransformation
   private static final String PROP_SOURCEOBS1 = "sourceObservation1";
 
   private static final String PROP_SOURCEOBS2 = "sourceObservation2";
+  
+  private static final String PROP_RANGEMODE1 = "rangeMode1";
+
+  private static final String PROP_RANGEMODE2 = "rangeMode2";
 
   private static final String PROP_TARGETOBS = "targetObservation";
 
@@ -85,6 +90,9 @@ public class ObservationResolver extends AbstractTransformation
     final String endsimString = properties.getProperty( PROP_ENDSIM, "" );
     final String startforecastString = properties.getProperty( PROP_STARTFORECAST, "" );
 
+    final String rangeMode1 = properties.getProperty( PROP_RANGEMODE1, "start-middle" );
+    final String rangeMode2 = properties.getProperty( PROP_RANGEMODE2, "middle-stop" );
+    
     try
     {
       final Date start = (Date)Mapper.mapXMLValueToJava( startsimString, "java.util.Date" );
@@ -117,7 +125,7 @@ public class ObservationResolver extends AbstractTransformation
         throw new OperationCanceledException();
 
       resolveTimeseries( gmlURL, features, sourceObsName1, sourceObsName2, targetObsName,
-          targetFolder, start, middle, stop, new SubProgressMonitor( monitor, 1000 ) );
+          targetFolder, start, middle, stop, rangeMode1, rangeMode2, new SubProgressMonitor( monitor, 1000 ) );
 
       monitor.done();
     }
@@ -154,7 +162,7 @@ public class ObservationResolver extends AbstractTransformation
    */
   private void resolveTimeseries( final URL baseURL, final Feature[] features,
       final String sourceName1, final String sourceName2, final String targetName,
-      final IFolder targetFolder, final Date start, final Date middle, final Date stop,
+      final IFolder targetFolder, final Date start, final Date middle, final Date stop, final String rangeMode1, final String rangeMode2,
       final IProgressMonitor monitor ) throws TransformationException, MalformedURLException,
       SensorException
   {
@@ -169,6 +177,12 @@ public class ObservationResolver extends AbstractTransformation
 
     monitor.beginTask( "Zeitreihen auslesen", features.length * 2 );
 
+    // parse range modi
+    final Date from1 = parseRange( start, middle, stop, rangeMode1, false, start );
+    final Date to1 = parseRange( start, middle, stop, rangeMode1, true, middle );
+    final Date from2 = parseRange( start, middle, stop, rangeMode2, false, middle );
+    final Date to2 = parseRange( start, middle, stop, rangeMode2, true, stop );
+    
     for( int i = 0; i < features.length; i++ )
     {
       if( monitor.isCanceled() )
@@ -176,8 +190,8 @@ public class ObservationResolver extends AbstractTransformation
 
       final Feature feature = features[i];
 
-      final IObservation obs1 = getObservation( feature, sourceName1, start, middle, baseURL );
-      final IObservation obs2 = getObservation( feature, sourceName2, middle, stop, baseURL );
+      final IObservation obs1 = getObservation( feature, sourceName1, from1, to1, baseURL );
+      final IObservation obs2 = getObservation( feature, sourceName2, from2, to2, baseURL );
 
       final TimeseriesLink targetlink = (TimeseriesLink)feature.getProperty( targetName );
       if( obs1 == null || targetlink == null )
@@ -186,10 +200,16 @@ public class ObservationResolver extends AbstractTransformation
       try
       {
         final IObservation obs;
+        final IVariableArguments dateRange;
         if( obs2 == null )
+        {
           obs = obs1;
+          dateRange = new DateRangeArgument( from1, to1 );
+        }
         else
         {
+          dateRange = new DateRangeArgument( from1, to2 );
+          
           // NOTE: the order is important:
           // obs( i ) has a higher priority than obs( i + 1 )
           // with 'i' the index in the observations array...
@@ -210,7 +230,7 @@ public class ObservationResolver extends AbstractTransformation
         {
           protected void write( final Writer w ) throws Throwable
           {
-            final ObservationType type = ZmlFactory.createXML( obs, null );
+            final ObservationType type = ZmlFactory.createXML( obs, dateRange );
             ZmlFactory.getMarshaller().marshal( type, w );
           }
         };
@@ -234,6 +254,34 @@ public class ObservationResolver extends AbstractTransformation
         // todo: report to user!
       }
     }
+  }
+
+  private Date parseRange( final Date start, final Date middle, final Date stop, String rangeMode1, boolean firstOrLast, final Date standard )
+  {
+    final String[] strings = rangeMode1.split( "-" );
+    if( strings == null || strings.length != 2 )
+      return standard;
+    
+    if( !firstOrLast )
+      return mapRange( strings[0], start, middle, stop, standard );
+
+    return mapRange( strings[1], start, middle, stop, standard );
+  }
+  
+  
+
+  private Date mapRange( final String string, final Date start, final Date middle, final Date stop, final Date standard )
+  {
+    if( "start".equals( string ) )
+      return start;
+    
+    if( "middle".equals(string) )
+      return middle;
+    
+    if( "stop".equals(string))
+      return stop;
+    
+    return standard;
   }
 
   private IObservation getObservation( final Feature feature, final String sourceProperty,
