@@ -421,8 +421,8 @@ public class SpreeCalcJob extends AbstractCalcJob
       }
     }
 
-    final DefaultAxis dateAxis = new DefaultAxis( "Datum", "datum", "", Date.class, 0 );
-    final IAxis valueAxis = new DefaultAxis( "Wert", "wert", "", Double.class, 1 );
+    final DefaultAxis dateAxis = new DefaultAxis( "Datum", "datum", "", Date.class, 0, true );
+    final IAxis valueAxis = new DefaultAxis( "Wert", "wert", "", Double.class, 1, false );
     final IAxis[] achsen = new IAxis[]
     {
         dateAxis,
@@ -478,7 +478,7 @@ public class SpreeCalcJob extends AbstractCalcJob
         //metadata.setProperty( "Berechnung", (String)dataMap.get( DATA_LABEL ) );
         metadata.setProperty( "StartZeit", (String)dataMap.get( DATA_STARTDATESTRING ) );
 
-        final IObservation observation = new SimpleObservation( column, false, null, metadata,
+        final IObservation observation = new SimpleObservation( column, column, false, null, metadata,
             achsen );
         observation.setValues( model );
 
