@@ -83,7 +83,7 @@ public class ZmlAxis extends DefaultAxis
    * @param context url of the ZmlObservation document, used when paths are relative
    * @param model the model
    */
-  public void fetchValues( final URL context, final ZmlTuppleModel model ) throws SensorException
+  public synchronized void fetchValues( final URL context, final ZmlTuppleModel model ) throws SensorException
   {
     IZmlValuesLoader loader;
     try

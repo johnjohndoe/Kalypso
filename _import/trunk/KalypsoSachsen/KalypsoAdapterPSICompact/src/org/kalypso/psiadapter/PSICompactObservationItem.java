@@ -131,11 +131,9 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
     }
 
     if( m_psicWQParamSet != null )
-    {
-      m_metadata.put( MD_WQ, m_psicWQParamSet.toString() );
-    }
+      m_metadata.put( MD_WQ, PSICompactFactory.wqParamSet2String( m_psicWQParamSet ) );
   }
-
+  
   /**
    * Gibt das Messwerttyp dieser Zeitreihe zurück
    */

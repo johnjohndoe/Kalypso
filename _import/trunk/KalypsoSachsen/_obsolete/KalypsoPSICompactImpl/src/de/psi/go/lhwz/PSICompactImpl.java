@@ -3,10 +3,13 @@ package de.psi.go.lhwz;
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
+
+import de.psi.go.lhwz.PSICompact.WQParamSet;
 
 /**
  * Test Implementierung von der PSICompact Schnitstelle. 
@@ -22,15 +25,18 @@ public class PSICompactImpl implements PSICompact
 
 	private final Map m_id2values;
 	private final Map m_id2measType;
+  
+  private final Map m_id2wq;
 
 	public PSICompactImpl()
 	{
 		super();
 		
-		m_id2values = new Hashtable();
-		m_id2gemessene = new Hashtable();
-		m_id2vorhergesagte = new Hashtable();
-		m_id2measType = new Hashtable();
+		m_id2values = new HashMap();
+		m_id2gemessene = new HashMap();
+		m_id2vorhergesagte = new HashMap();
+		m_id2measType = new HashMap();
+    m_id2wq = new HashMap();
 		
 		prepareObjects( m_id2gemessene, "m" );
 		prepareObjects( m_id2vorhergesagte, "v" );
@@ -118,7 +124,16 @@ public class PSICompactImpl implements PSICompact
 	 */
 	public WQParamSet[] getWQParams(String id)
   {
-		return null;
+    WQParamSet[] pset = (WQParamSet[])m_id2wq.get( id );
+    
+    if( pset == null )
+    {
+      pset = new WQParamSet[] {new WQParamSet( new Date(), new WQData[] { new WQData(Math.random(), Math.random(), Math.random(), Math.random()) } ) };
+      
+      m_id2wq.put( id, pset );
+    }
+    
+		return pset;
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package org.kalypso.psiadapter;
 
+import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
@@ -9,6 +10,8 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.util.repository.RepositoryException;
 
 import de.psi.go.lhwz.PSICompact;
+import de.psi.go.lhwz.PSICompact.WQData;
+import de.psi.go.lhwz.PSICompact.WQParamSet;
 
 /**
  * The entry point to the PSICompact interface from PSI.
@@ -17,6 +20,8 @@ import de.psi.go.lhwz.PSICompact;
  */
 public final class PSICompactFactory
 {
+  private final static SimpleDateFormat m_sdf = new SimpleDateFormat( "dd.MM.yyyy HH.mm.ss" );
+
   private static String PSI_CLASS = null;
 
   protected static PSICompact m_psiCompact = null;
@@ -31,7 +36,7 @@ public final class PSICompactFactory
 
   private final static Map m_axes = new Hashtable();
 
-  private static final Integer m_zero = new Integer(0);
+  private final static Integer m_zero = new Integer( 0 );
 
   /**
    * Returns the connection to the PSI-Interface implementation. This method is
@@ -195,7 +200,8 @@ public final class PSICompactFactory
   /**
    * Converts the PSICompact-Status to the Kalypso internal BitMask.
    * 
-   * @param status as delivered by PSICompact
+   * @param status
+   *          as delivered by PSICompact
    * @return an integer representing a bitmask.
    */
   public final static Integer statusToMask( int status )
@@ -292,16 +298,48 @@ public final class PSICompactFactory
       final int position )
   {
     final String key = label + unit + dataClass.getName();
-    
+
     IAxis axis = (IAxis)m_axes.get( key );
-    
+
     if( axis == null )
     {
       axis = new PSICompactAxis( label, unit, dataClass, false, position );
 
       m_axes.put( key, axis );
     }
-    
+
     return axis;
+  }
+
+  /**
+   * Helper that produces a string from the given WQParamSet array.
+   */
+  public static String wqParamSet2String( final WQParamSet[] pset )
+  {
+    final StringBuffer bf = new StringBuffer();
+
+    for( int i = 0; i < pset.length; i++ )
+    {
+      bf.append( m_sdf.format( pset[i].getValidFrom() ) ).append( '#' );
+
+      final WQData[] ds = pset[i].getWqData();
+      for( int j = 0; j < ds.length; j++ )
+      {
+        // WGR: obere Wasserstandsgrenze in cm
+        // W1: Konstante W1
+        // LNK1: Konstante LNK1
+        // K2: Konstante K2
+
+        bf.append( ds[j].getWGR() ).append( ';' ).append( ds[j].getW1() ).append( ';' ).append(
+            ds[j].getLNK1() ).append( ';' ).append( ds[j].getK2() );
+        
+        if( j == ds.length - 1 )
+          bf.append(" < ");
+      }
+      
+      bf.append(" | ");
+    }
+
+    return bf.toString();
   }
 }
