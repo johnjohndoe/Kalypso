@@ -144,7 +144,13 @@ public class KalypsoStatusUtils
 
     if( checkMask( mask, KalypsoStati.BIT_USER_MODIFIED ) )
       return "Vom Benutzer geändert";
-    
+
+    if( checkMask( mask, KalypsoStati.BIT_REQUIRED ) )
+      return "Eingabe erforderlich";
+
+    if( checkMask( mask, KalypsoStati.BIT_LOCKED ) )
+      return "Eingabe gesperrt";
+
     return null;
   }
 }

@@ -37,8 +37,24 @@ Version ...
 	* Alarmstufen, Prognosestart werden dargestellt
 	
 - Zeitreihen Repository Browser:
-	* 
-
+	* Neue Aktion: 'Export als' - Exportiert die ausgewählte Zeitreihe als lokale Datei.
+	Dabei wird ein kurzes Wizard geöffnet mit Datum und Datei-Angabe.
+	* Jetzt mit Icons
+	* Wenn die Einstellungen für Datum Von-Bis geändert wurden, dann wird der Observation
+	cache gelöscht.
+	
+- Observation Table Viewer:
+	* Dauer der Vorhersage wird markiert (Einstellbar, Siehe properties)
+	* Status wird angezeigt. Wenn der Benutzer ein Wert ändert, wird der
+	Status auch geändert.
+	
+- Synchronisation zwischen Observation Tabelle und Diagramm
+	* Die Synchronisation findet statt anhand einer Helper runnable namens
+	'SetValuesForDirtyColumns'.
+	* In abgeleitete Klassen von AbstractCalcWizardPage kann dieses Vorgehen über ein Aufrauf von
+	'registerObservationTableModelChangeListener()'.
+	* Im ObservationTableEditor wird dies auch eingestellt.
+	
 - GIS Darstellung:
 	Koordinatensystem aller Karten ist jetzt Gauss-Krüger 5
 	Die fehlenden Gewässer der Spree wurden in der Übersichtskarte ergänzt

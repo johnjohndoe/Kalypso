@@ -238,7 +238,8 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
   {
     final IDiagramTemplateTheme theme = findTheme( obs );
     
-    fireTemplateChanged( new TemplateEvent( theme, TemplateEvent.TYPE_REFRESH ) );
+    if( theme != null )
+      fireTemplateChanged( new TemplateEvent( theme, TemplateEvent.TYPE_REFRESH ) );
   }
   
   /**
@@ -254,7 +255,7 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
     {
       final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) it.next();
       
-      if( theme.getObservation() == obs )
+      if( theme.getObservation().equals( obs ) )
         return theme;
     }
     

@@ -8,6 +8,7 @@ import javax.swing.JScrollPane;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
@@ -19,6 +20,8 @@ import org.kalypso.ogc.sensor.tableview.ObservationTableTemplateFactory;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ogc.sensor.tableview.swing.event.ObservationModelChangeListener;
+import org.kalypso.ogc.sensor.tableview.swing.event.SetValuesForDirtyColumnsRunnable;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
@@ -43,6 +46,8 @@ public class ObservationTableEditor extends AbstractEditorPart implements
 
   private boolean m_dirty = false;
 
+  private ObservationModelChangeListener m_listener;
+
   /**
    * @return Returns the model.
    */
@@ -58,7 +63,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
   {
     return m_table;
   }
-  
+
   /**
    * @return Returns the template.
    */
@@ -66,7 +71,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
   {
     return m_template;
   }
-  
+
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -81,6 +86,12 @@ public class ObservationTableEditor extends AbstractEditorPart implements
     m_model = new ObservationTableModel();
     m_model.setRules( m_template.getRules() );
     m_table = new ObservationTable( m_model );
+
+    final IRunnableWithProgress rwp = new SetValuesForDirtyColumnsRunnable(
+        m_template, m_model );
+    m_listener = new ObservationModelChangeListener(
+        "Daten synchronisieren (Zml)", rwp );
+    m_model.addTableModelListener( m_listener );
 
     m_template.addTemplateEventListener( m_table );
     m_template.addTemplateEventListener( this );
@@ -127,6 +138,9 @@ public class ObservationTableEditor extends AbstractEditorPart implements
       m_template.removeTemplateEventListener( m_table );
       m_template.dispose();
     }
+    
+    if( m_model != null && m_listener != null )
+      m_model.removeTableModelListener( m_listener );
 
     if( m_outline != null )
       m_outline.dispose();

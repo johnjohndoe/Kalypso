@@ -235,17 +235,16 @@ public class ObservationResolver extends AbstractTransformation
       try
       {
         final IObservation obs;
-        //        final IVariableArguments dateRange;
+        
         if( obs2 == null )
         {
+          // No need for a ForecastFilter since obs2 is null
+          
           obs = obs1;
-          //  dateRange = new DateRangeArgument( from1, to1 );
         }
         else
         {
-          //  dateRange = new DateRangeArgument( from1, to2 );
-
-          // NOTE: the order is important:
+          // NOTE for ForecastFilter: the order is important:
           // obs( i ) has a higher priority than obs( i + 1 )
           // with 'i' the index in the observations array...
 
@@ -254,12 +253,14 @@ public class ObservationResolver extends AbstractTransformation
           obs = fc;
         }
         
-          // set forecast metadata, might be used in diagram for instance
+        // set forecast metadata, might be used in diagram for instance
         // to mark the forecast range
         TimeserieUtils.setForecast( obs, from2, to2 );
 
-        final IFile targetfile = targetFolder.getFile( new Path( targetlink
-            .getHref() ) );
+        // remove query part if present, href is also used as file name here!
+        final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
+        
+        final IFile targetfile = targetFolder.getFile( new Path( href ) );
         FolderUtilities.mkdirs( targetfile.getParent() );
 
         final SetContentThread thread = new SetContentThread( targetfile,
@@ -267,8 +268,7 @@ public class ObservationResolver extends AbstractTransformation
         {
           protected void write( final Writer w ) throws Throwable
           {
-            final ObservationType type = ZmlFactory.createXML( obs, null );//dateRange
-                                                                           // );
+            final ObservationType type = ZmlFactory.createXML( obs, null );
             ZmlFactory.getMarshaller().marshal( type, w );
           }
         };

@@ -523,24 +523,24 @@ public class KalypsoObservationService implements IObservationService
    */
   public void reload( ) throws RemoteException
   {
-    m_repositoryBeans = null;
-
-    for( Iterator it = m_repositories.iterator(); it.hasNext(); )
-    {
-      final IRepository rep = (IRepository) it.next();
-
-      try
-      {
-        rep.reload();
-      }
-      catch( RepositoryException e )
-      {
-        m_logger.throwing( getClass().getName(), "reload", e );
-        throw new RemoteException( "", e );
-      }
-    }
-
     init();
+    
+//    m_repositoryBeans = null;
+//
+//    for( Iterator it = m_repositories.iterator(); it.hasNext(); )
+//    {
+//      final IRepository rep = (IRepository) it.next();
+//
+//      try
+//      {
+//        rep.reload();
+//      }
+//      catch( RepositoryException e )
+//      {
+//        m_logger.throwing( getClass().getName(), "reload", e );
+//        throw new RemoteException( "", e );
+//      }
+//    }
   }
 
   /**

@@ -122,7 +122,7 @@ public abstract class SetContentThread extends CatchThread
       // TODO: ugly! better to switch contents of this method and 'runIntern' of
       // inner thread
       // to be shure, that file is written when this thread exits
-      if( m_thread.isAlive() ) // this if statement inserted by Marc to test if hanging-problem can be solved
+      if( m_thread.isAlive() ) // this if statement inserted by Marc to test if hanging-problem can be solved this way
         m_thread.join();
     }
   }

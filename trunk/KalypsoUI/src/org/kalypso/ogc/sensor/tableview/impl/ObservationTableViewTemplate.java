@@ -14,7 +14,7 @@ import org.kalypso.util.runtime.IVariableArguments;
  */
 public class ObservationTableViewTemplate extends DefaultTableViewTemplate
 {
-  /** If set, axises with this type will be ignored */
+  /** If set, axes with this type will be ignored */
   private String m_ignoreType;
 
   public ObservationTableViewTemplate()

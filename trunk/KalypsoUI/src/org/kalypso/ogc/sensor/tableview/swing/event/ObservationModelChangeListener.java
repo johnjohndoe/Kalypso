@@ -39,8 +39,11 @@ public class ObservationModelChangeListener implements TableModelListener
   public void tableChanged( TableModelEvent e )
   {
     final IRunnableWithProgress rwp = m_rwp;
-    final String msg = m_message;
+//    final String msg = m_message;
 
+    // all this stuff commented out because of synchronisation problems.
+    // and it is actually bad code to make a thread for each change in the gui
+    // TODO remoce all these comments once testing has been fully done
 //    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
 //    {
 //      protected void execute( IProgressMonitor monitor ) throws CoreException,
