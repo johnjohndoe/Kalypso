@@ -70,7 +70,6 @@ import org.w3c.dom.NodeList;
 public class GMLProperty_Impl implements GMLProperty
 {
   protected Element element = null;
-
   private FeatureTypeProperty myFeatureTypeProperty = null;
 
   /**
@@ -81,72 +80,55 @@ public class GMLProperty_Impl implements GMLProperty
   public GMLProperty_Impl( Element element )
   {
     this.element = element;
-
   }
 
   public GMLProperty_Impl( FeatureTypeProperty ftp, Element element )
   {
     myFeatureTypeProperty = ftp;
     this.element = element;
-
   }
 
   /**
    * factory method to create a GMLProperty. the property that will be return
    * doesn't contain a value.
    */
-  public static GMLProperty createGMLProperty( Document doc, String propName )
+  public static GMLProperty createGMLProperty( Document doc,FeatureTypeProperty ftp )
   {
-    Debug.debugMethodBegin( "", "createGMLProperty(Document, String)" );
-
-    Element elem = doc.createElement( propName );
-
+    Element elem = doc.createElementNS( ftp.getNamespace(),ftp.getName());
     GMLProperty ls = new GMLProperty_Impl( elem );
-
-    Debug.debugMethodEnd();
     return ls;
   }
 
-  /**
-   * factory method to create a GMLProperty.
-   */
-  public static GMLProperty createGMLProperty( Document doc, String propertyName,
-      String propertyValue )
-  {
-    Debug.debugMethodBegin( "GMLProperty_Impl", "createGMLProperty(Document, String, String)" );
-
-    GMLProperty ls = createGMLProperty( doc, propertyName );
-    ls.setPropertyValue( propertyValue );
-    Debug.debugMethodEnd();
-    return ls;
-  }
+//  /**
+//   * factory method to create a GMLProperty.
+//   */
+//  public static GMLProperty createGMLProperty( Document doc, FeatureTypeProperty ftp,
+//      String propertyValue )
+//  {
+//    GMLProperty ls = createGMLProperty( doc, propertyName );
+//    ls.setPropertyValue( propertyValue );
+//    return ls;
+//  }
   
-  public static GMLProperty createGMLProperty( Document doc, String propertyName,
+  public static GMLProperty createGMLProperty( Document doc, FeatureTypeProperty ftp,
       Element propertyValue )
   {
-    Debug.debugMethodBegin( "GMLProperty_Impl", "createGMLProperty(Document, String, String)" );
-
-    GMLProperty ls = createGMLProperty( doc, propertyName );
+    GMLProperty ls = createGMLProperty( doc,ftp );
     ls.setPropertyValue( propertyValue );
-    Debug.debugMethodEnd();
     return ls;
   }
 
   public static GMLProperty createGMLProperty( Document doc, FeatureTypeProperty ftp,
       String attributeValue )
   {
-    Element element = doc.createElement( ftp.getName() );
+    Element element = doc.createElementNS(ftp.getNamespace(), ftp.getName() );
     GMLProperty gmlProp = new GMLProperty_Impl( ftp, element );
     gmlProp.setPropertyValue( attributeValue );
-
-    Debug.debugMethodEnd();
     return gmlProp;
   }
 
   /**
    * 
-   * 
-   * @return
    */
   public Element getAsElement()
   {
@@ -171,10 +153,7 @@ public class GMLProperty_Impl implements GMLProperty
    */
   private boolean isGeometryProperty()
   {
-    Debug.debugMethodBegin( this, "isGeometryProperty" );
-
     boolean flag = false;
-
     String name = XMLTools.toLocalName( element.getNodeName() );
 
     if( name.equals( "pointProperty" ) || name.equals( "lineStringProperty" )
@@ -486,14 +465,13 @@ public class GMLProperty_Impl implements GMLProperty
   private void setAttributeValue( String value )
   {
     //  element.setAttribute("xmlns:xlink","http://www.w3.org/1999/xlink");
-    element.setAttribute( "xlink:href", value );
+    element.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", value );
     // TODO use full qualified namespace-name
   }
 
   /**
    * 
-   * 
-   * @return
+   * @see java.lang.Object#toString()
    */
   public String toString()
   {
@@ -510,7 +488,8 @@ public class GMLProperty_Impl implements GMLProperty
   }
 
   /**
-   * @see org.deegree.gml.GMLProperty#getValueNode()
+   * 
+   * @see org.deegree.gml.GMLProperty#getElement()
    */
   public Element getElement()
   {
@@ -533,6 +512,9 @@ public class GMLProperty_Impl implements GMLProperty
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.7  2004/11/22 01:29:50  doemming
+ * *** empty log message ***
+ *
  * Revision 1.6  2004/11/16 10:44:16  doemming
  * *** empty log message ***
  *

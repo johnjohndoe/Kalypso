@@ -58,24 +58,26 @@ import org.deegree_impl.tools.Debug;
  */
 public class GMLNameSpace_Impl implements GMLNameSpace
 {
-  private String nameSpace = null;
+  private final String m_nameSpace;
+
+  private final String m_shortName;
 
   /**
    * Creates a new GMLNameSpace_Impl object.
    */
-  public GMLNameSpace_Impl()
-  {
-    nameSpace = "";
-  }
-
+  //  public GMLNameSpace_Impl()
+  //  {
+  //    nameSpace = "";
+  //  }
   /**
    * Creates a new GMLNameSpace_Impl object.
    * 
    * @param nameSpace
    */
-  public GMLNameSpace_Impl( String nameSpace )
+  public GMLNameSpace_Impl( String shortName, String nameSpace )
   {
-    this.nameSpace = nameSpace;
+    m_shortName = shortName;
+    m_nameSpace = nameSpace;
   }
 
   /**
@@ -86,18 +88,18 @@ public class GMLNameSpace_Impl implements GMLNameSpace
    */
   public String getNameSpaceName()
   {
+
     Debug.debugMethodBegin( this, "getNameSpaceName" );
-
-    int pos = nameSpace.indexOf( ":" );
-
-    if( pos < 0 )
-    {
-      pos = nameSpace.indexOf( "=" );
-    }
-
     Debug.debugMethodEnd();
+    return "xmlns";
+    //    int pos = nameSpace.indexOf( ":" );
+    //
+    //    if( pos < 0 )
+    //    {
+    //      pos = nameSpace.indexOf( "=" );
+    //    }
 
-    return nameSpace.substring( 0, pos ).trim();
+    //    return nameSpace.substring( 0, pos ).trim();
   }
 
   /**
@@ -112,15 +114,16 @@ public class GMLNameSpace_Impl implements GMLNameSpace
   {
     Debug.debugMethodBegin( this, "getSubSpaceName" );
 
-    int pos1 = nameSpace.indexOf( ":" );
-    int pos2 = nameSpace.indexOf( "=" );
+    //    int pos1 = nameSpace.indexOf( ":" );
+    //    int pos2 = nameSpace.indexOf( "=" );
+    //
+    //    if( pos1 == -1 || pos2 == -1 || pos1>pos2)
+    //      return null;
 
-    if( pos1 == -1 || pos2 == -1 )
-      return null;
-    
     Debug.debugMethodEnd();
 
-    return nameSpace.substring( pos1 + 1, pos2 ).trim();
+    //    return nameSpace.substring( pos1 + 1, pos2 ).trim();
+    return m_shortName;
   }
 
   /**
@@ -133,11 +136,12 @@ public class GMLNameSpace_Impl implements GMLNameSpace
   {
     Debug.debugMethodBegin( this, "getNameSpaceValue" );
 
-    int pos = nameSpace.indexOf( "=" );
+    //    int pos = nameSpace.indexOf( "=" );
 
     Debug.debugMethodEnd();
 
-    return nameSpace.substring( pos + 1, nameSpace.length() ).trim();
+    //    return nameSpace.substring( pos + 1, nameSpace.length() ).trim();
+    return m_nameSpace;
   }
 
   /**
@@ -148,12 +152,13 @@ public class GMLNameSpace_Impl implements GMLNameSpace
 
   /**
    * 
-   * 
-   * @return
+   * @see java.lang.Object#toString()
    */
   public String toString()
   {
-    return nameSpace;
+    if( m_shortName != null )
+      return "xmlns:" + m_shortName + "=" + m_nameSpace;
+    return "xmlns=" + m_nameSpace;
   }
 }
 
@@ -161,16 +166,16 @@ public class GMLNameSpace_Impl implements GMLNameSpace
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.4  2004/11/17 14:48:41  belger
+ * Revision 1.5  2004/11/22 01:29:50  doemming
  * *** empty log message ***
- *
- * Revision 1.3  2004/10/07 14:09:14  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:58  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 13:03:30 doemming
- * *** empty log message *** Revision 1.4 2004/03/02 07:38:14 poth no message
+ * Revision 1.4 2004/11/17 14:48:41 belger ***
+ * empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:14 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision
+ * 1.3 2004/08/31 13:03:30 doemming *** empty log message *** Revision 1.4
+ * 2004/03/02 07:38:14 poth no message
  * 
  * Revision 1.3 2004/01/03 13:46:45 poth no message
  * 

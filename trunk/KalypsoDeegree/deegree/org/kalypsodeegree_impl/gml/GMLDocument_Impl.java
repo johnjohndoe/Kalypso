@@ -46,7 +46,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -59,10 +59,21 @@ import org.deegree.gml.GMLNameSpace;
 import org.deegree.xml.DOMPrinter;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.tools.Debug;
+import org.w3c.dom.Attr;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Comment;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
+import org.w3c.dom.EntityReference;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.ProcessingInstruction;
+import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 /**
@@ -76,31 +87,37 @@ import org.xml.sax.SAXException;
  * @version 07.02.2001
  *          <p>
  */
-public class GMLDocument_Impl implements GMLDocument
+public class GMLDocument_Impl implements GMLDocument, Document, Element
 {
-  private org.w3c.dom.Document document = null;
+  private final org.w3c.dom.Document m_document;
+
+  private Element getGMLElement()
+  {
+    return m_document.getDocumentElement();
+  }
+
   private static final String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
+
+  private final HashMap m_nameSpaces = new HashMap();
 
   /**
    * Creates a new GMLDocument_Impl object.
    */
   public GMLDocument_Impl()
   {
-    Debug.debugMethodBegin( this, "GMLDocument_Impl()" );
-
     DocumentBuilder parser = null;
-
     try
     {
-      parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+      fac.setNamespaceAware( true );
+      parser = fac.newDocumentBuilder();
     }
     catch( ParserConfigurationException ex )
     {
       ex.printStackTrace();
     }
-
-    document = parser.newDocument();
-    Debug.debugMethodEnd();
+    m_document = parser.newDocument();
+    XMLTools.insertNodeInto( m_document.createElement( "fake" ), m_document );
   }
 
   /**
@@ -113,9 +130,7 @@ public class GMLDocument_Impl implements GMLDocument
    */
   public GMLDocument_Impl( Reader reader ) throws IOException, SAXException
   {
-    Debug.debugMethodBegin( this, "GMLDocument_Impl(Reader)" );
-    document = XMLTools.parse( reader );
-    Debug.debugMethodEnd();
+    m_document = XMLTools.parse( reader );
   }
 
   /**
@@ -125,46 +140,28 @@ public class GMLDocument_Impl implements GMLDocument
    */
   public GMLDocument_Impl( Document document )
   {
-    setDocument( document );
-  }
-
-  /**
-   * returns the dom document representing the GML document
-   */
-  public Document getDocument()
-  {
-    return document;
-  }
-
-  /**
-   * @see org.deegree_impl.gml.GMLDocument_Impl#getDocument()
-   */
-  public void setDocument( Document document )
-  {
-    this.document = document;
+    m_document = document;
   }
 
   /**
    * returns the location of the schema the document based on
    */
-  public URL getSchemaLocation( ) throws MalformedURLException
+  public URL getSchemaLocation() throws MalformedURLException
   {
     Debug.debugMethodBegin( this, "getSchemaLocation" );
-
     try
     {
-      final String schemaLocation = document.getDocumentElement().getAttributeNS(
+      final String schemaLocation = m_document.getDocumentElement().getAttributeNS(
           "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation" );
       if( schemaLocation == null )
         return null;
 
-      final String namespaceURI = document.getDocumentElement().getNamespaceURI();
+      final String namespaceURI = m_document.getDocumentElement().getNamespaceURI();
       if( namespaceURI != null && schemaLocation.startsWith( namespaceURI ) )
       {
         final String path = schemaLocation.substring( namespaceURI.length() );
         return new URL( path );
       }
-
       return new URL( schemaLocation );
     }
     finally
@@ -176,18 +173,18 @@ public class GMLDocument_Impl implements GMLDocument
   /**
    * returns the location of the schema the document based on
    */
-  public String getSchemaLocationName( ) 
+  public String getSchemaLocationName()
   {
     Debug.debugMethodBegin( this, "getSchemaLocation" );
 
     try
     {
-      final String schemaLocation = document.getDocumentElement().getAttributeNS(
-          XSI_NS, "schemaLocation" );
+      final String schemaLocation = m_document.getDocumentElement().getAttributeNS( XSI_NS,
+          "schemaLocation" );
       if( schemaLocation == null )
         return null;
 
-      final String namespaceURI = document.getDocumentElement().getNamespaceURI();
+      final String namespaceURI = m_document.getDocumentElement().getNamespaceURI();
       if( namespaceURI != null && schemaLocation.startsWith( namespaceURI ) )
       {
         final String path = schemaLocation.substring( namespaceURI.length() ).trim();
@@ -202,49 +199,17 @@ public class GMLDocument_Impl implements GMLDocument
     }
   }
 
-  
   /**
    * sets the location of schema the document based on
    */
-  public void setSchemaLocation( URL schema )
+  public void setSchemaLocation( URL schemaLocation )
   {
-    setSchemaLocation( schema.toString() );
+    setSchemaLocation( schemaLocation.toString() );
   }
-  
+
   public void setSchemaLocation( final String loc )
   {
-    Debug.debugMethodBegin( this, "setSchemaLocation" );
-
-    Element root = document.getDocumentElement();
-    root.setAttribute( "xsi:schemaLocation", loc );
-    Debug.debugMethodEnd();
-  }
-
-  /**
-   * returns the name spaces used within the document
-   */
-  public GMLNameSpace[] getNameSpaces()
-  {
-    Debug.debugMethodBegin( this, "getNameSpace" );
-
-    Element root = document.getDocumentElement();
-    NamedNodeMap nnm = root.getAttributes();
-
-    ArrayList list = new ArrayList();
-
-    for( int i = 0; i < nnm.getLength(); i++ )
-    {
-      if( nnm.item( i ).getNodeValue().indexOf( "xmlns" ) >= 0 )
-      {
-        GMLNameSpace gns = new GMLNameSpace_Impl( nnm.item( i ).getNodeName() + "="
-            + nnm.item( i ).getNodeValue() );
-        list.add( gns );
-      }
-    }
-
-    Debug.debugMethodEnd();
-
-    return (GMLNameSpace[])list.toArray( new GMLNameSpace[list.size()] );
+    setAttribute( "xsi:schemaLocation", loc );
   }
 
   /**
@@ -252,70 +217,76 @@ public class GMLDocument_Impl implements GMLDocument
    */
   public void addNameSpace( GMLNameSpace nameSpace )
   {
-    Debug.debugMethodBegin();
+    if( m_nameSpaces.containsKey( nameSpace.getNameSpaceValue() ) )
+      return;
+    m_nameSpaces.put( nameSpace.getNameSpaceValue(), nameSpace );
+  }
 
-    Element root = document.getDocumentElement();
-
-    if( nameSpace.getSubSpaceName() != null )
+  public void applyNameSpaces()
+  {
+    GMLNameSpace[] nameSpaces = getNameSpaces();
+    for( int i = 0; i < nameSpaces.length; i++ )
     {
-      root.setAttribute( nameSpace.getNameSpaceName() + ":" + nameSpace.getSubSpaceName(),
-          nameSpace.getNameSpaceValue() );
+      GMLNameSpace nameSpace = nameSpaces[i];
+      Element root = m_document.getDocumentElement();
+      if( nameSpace.getSubSpaceName() != null )
+      {
+        root.setAttribute( nameSpace.getNameSpaceName() + ":" + nameSpace.getSubSpaceName(),
+            nameSpace.getNameSpaceValue() );
+      }
+      else
+      {
+        root.setAttribute( nameSpace.getNameSpaceName(), nameSpace.getNameSpaceValue() );
+      }
     }
-    else
-    {
-      root.setAttribute( nameSpace.getNameSpaceName(), nameSpace.getNameSpaceValue() );
-    }
-
-    Debug.debugMethodEnd();
   }
 
   /**
    * returns the root element of the document as GMLFeatureCollection.
+   * 
+   * @deprecated
    */
   public GMLFeatureCollection getRoot()
   {
-    return new GMLFeatureCollection_Impl( document.getDocumentElement() );
+    return new GMLFeatureCollection_Impl( m_document.getDocumentElement() );
   }
 
   public GMLFeature getRootFeature()
   {
-    return new GMLFeature_Impl( document.getDocumentElement() );
+    return new GMLFeature_Impl( m_document.getDocumentElement() );
   }
 
   /**
    * @see org.deegree_impl.gml.GMLDocument_Impl#getRoot()
+   * @deprecated
    */
   public void setRoot( GMLFeatureCollection root )
   {
-    Debug.debugMethodBegin();
-
-    Node node = document.getDocumentElement();
-
+    Node node = m_document.getDocumentElement();
     // remove root node if it already exists
     if( node != null )
     {
-      document.removeChild( node );
+      m_document.removeChild( node );
     }
-
-    XMLTools.insertNodeInto( ( (GMLFeatureCollection_Impl)root ).getAsElement(), document );
-
-    Debug.debugMethodEnd();
+    XMLTools.insertNodeInto( ( (GMLFeatureCollection_Impl)root ).getAsElement(), m_document );
   }
 
   public void setRoot( GMLFeature rootFeature )
   {
     Debug.debugMethodBegin();
 
-    Node node = document.getDocumentElement();
+    Node node = m_document.getDocumentElement();
 
     // remove root node if it already exists
     if( node != null )
     {
-      document.removeChild( node );
+      m_document.removeChild( node );
     }
 
-    XMLTools.insertNodeInto( rootFeature.getAsElement(), document );
-
+    XMLTools.insertNodeInto( rootFeature.getAsElement(), m_document );
+    //    
+    applyNameSpaces();
+    //
     Debug.debugMethodEnd();
   }
 
@@ -329,49 +300,332 @@ public class GMLDocument_Impl implements GMLDocument
 
   /**
    * 
-   * 
-   * @return
+   * @see java.lang.Object#toString()
    */
   public String toString()
   {
-    return DOMPrinter.nodeToString( document, "" );
+    return DOMPrinter.nodeToString( m_document, "" );
   }
 
-  /* #GMLSchema lnkGMLSchema; */
-}
+  /**
+   * @see org.deegree.gml.GMLDocument#getNameSpaces()
+   */
+  public GMLNameSpace[] getNameSpaces()
+  {
+    return (GMLNameSpace[])m_nameSpaces.values().toArray( new GMLNameSpace[m_nameSpaces.size()] );
+  }
 
-/*
- * Changes to this class. What the people haven been up to:
- * 
- * $Log$
- * Revision 1.6  2004/11/01 15:38:01  belger
- * *** empty log message ***
- *
- * Revision 1.5  2004/10/31 18:34:01  belger
- * *** empty log message ***
- * Revision 1.4 2004/10/07 14:09:14 doemming ***
- * empty log message ***
- * 
- * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision
- * 1.3 2004/08/31 13:03:31 doemming *** empty log message *** Revision 1.7
- * 2004/03/02 07:38:14 poth no message
- * 
- * Revision 1.6 2004/02/19 10:08:56 poth no message
- * 
- * Revision 1.5 2003/11/28 11:35:56 poth no message
- * 
- * Revision 1.4 2003/06/17 07:44:43 poth no message
- * 
- * Revision 1.3 2003/04/23 15:44:39 poth no message
- * 
- * Revision 1.2 2003/04/17 13:54:48 poth no message
- * 
- * Revision 1.1.1.1 2002/09/25 16:01:01 poth no message
- * 
- * Revision 1.4 2002/08/19 15:59:29 ap no message
- * 
- * Revision 1.3 2002/08/05 16:11:02 ap no message
- * 
- * Revision 1.2 2002/04/23 14:24:55 ap no message
- *  
- */
+  public Node appendChild( Node arg0 ) throws DOMException
+  {
+    return m_document.appendChild( arg0 );
+  }
+
+  public Node cloneNode( boolean arg0 )
+  {
+    return m_document.cloneNode( arg0 );
+  }
+
+  public Attr createAttribute( String arg0 ) throws DOMException
+  {
+    return m_document.createAttribute( arg0 );
+  }
+
+  public Attr createAttributeNS( String arg0, String arg1 ) throws DOMException
+  {
+    return m_document.createAttributeNS( arg0, arg1 );
+  }
+
+  public CDATASection createCDATASection( String arg0 ) throws DOMException
+  {
+    return m_document.createCDATASection( arg0 );
+  }
+
+  public Comment createComment( String arg0 )
+  {
+    return m_document.createComment( arg0 );
+  }
+
+  public DocumentFragment createDocumentFragment()
+  {
+    return m_document.createDocumentFragment();
+  }
+
+  public Element createElement( String arg0 ) throws DOMException
+  {
+    return m_document.createElement( arg0 );
+  }
+
+  public Element createElementNS( String namespace, String propName ) throws DOMException
+  {
+    if( propName.indexOf( ":" ) > -1 )
+    {
+      // it seems that prefix is allready set
+      return m_document.createElementNS( namespace, propName );
+    }
+    GMLNameSpace ns = (GMLNameSpace)m_nameSpaces.get( namespace );
+    if( ns != null )
+    {
+      String prefix = ns.getSubSpaceName();
+      if( prefix != null )
+        return m_document.createElementNS( namespace, prefix + ":" + propName );
+    }
+    return m_document.createElementNS( namespace, propName );
+  }
+
+  public EntityReference createEntityReference( String arg0 ) throws DOMException
+  {
+    return m_document.createEntityReference( arg0 );
+  }
+
+  public ProcessingInstruction createProcessingInstruction( String arg0, String arg1 )
+      throws DOMException
+  {
+    return m_document.createProcessingInstruction( arg0, arg1 );
+  }
+
+  public Text createTextNode( String arg0 )
+  {
+    return m_document.createTextNode( arg0 );
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  public boolean equals( Object obj )
+  {
+    return m_document.equals( obj );
+  }
+
+  public NamedNodeMap getAttributes()
+  {
+    return m_document.getAttributes();
+  }
+
+  public NodeList getChildNodes()
+  {
+    return m_document.getChildNodes();
+  }
+
+  public DocumentType getDoctype()
+  {
+    return m_document.getDoctype();
+  }
+
+  public Element getDocumentElement()
+  {
+    return m_document.getDocumentElement();
+  }
+
+  public Element getElementById( String arg0 )
+  {
+    return m_document.getElementById( arg0 );
+  }
+
+  public NodeList getElementsByTagName( String arg0 )
+  {
+    return m_document.getElementsByTagName( arg0 );
+  }
+
+  public NodeList getElementsByTagNameNS( String arg0, String arg1 )
+  {
+    return m_document.getElementsByTagNameNS( arg0, arg1 );
+  }
+
+  public Node getFirstChild()
+  {
+    return m_document.getFirstChild();
+  }
+
+  public DOMImplementation getImplementation()
+  {
+    return m_document.getImplementation();
+  }
+
+  public Node getLastChild()
+  {
+    return m_document.getLastChild();
+  }
+
+  public String getLocalName()
+  {
+    return m_document.getLocalName();
+  }
+
+  public String getNamespaceURI()
+  {
+    return m_document.getNamespaceURI();
+  }
+
+  public Node getNextSibling()
+  {
+    return m_document.getNextSibling();
+  }
+
+  public String getNodeName()
+  {
+    return m_document.getNodeName();
+  }
+
+  public short getNodeType()
+  {
+    return m_document.getNodeType();
+  }
+
+  public String getNodeValue() throws DOMException
+  {
+    return m_document.getNodeValue();
+  }
+
+  public Document getOwnerDocument()
+  {
+    return m_document.getOwnerDocument();
+  }
+
+  public Node getParentNode()
+  {
+    return m_document.getParentNode();
+  }
+
+  public String getPrefix()
+  {
+    return m_document.getPrefix();
+  }
+
+  public Node getPreviousSibling()
+  {
+    return m_document.getPreviousSibling();
+  }
+
+  public boolean hasAttributes()
+  {
+    return m_document.hasAttributes();
+  }
+
+  public boolean hasChildNodes()
+  {
+    return m_document.hasChildNodes();
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  public int hashCode()
+  {
+    return m_document.hashCode();
+  }
+
+  public Node importNode( Node arg0, boolean arg1 ) throws DOMException
+  {
+    return m_document.importNode( arg0, arg1 );
+  }
+
+  public Node insertBefore( Node arg0, Node arg1 ) throws DOMException
+  {
+    return m_document.insertBefore( arg0, arg1 );
+  }
+
+  public boolean isSupported( String arg0, String arg1 )
+  {
+    return m_document.isSupported( arg0, arg1 );
+  }
+
+  public void normalize()
+  {
+    m_document.normalize();
+  }
+
+  public Node removeChild( Node arg0 ) throws DOMException
+  {
+    return m_document.removeChild( arg0 );
+  }
+
+  public Node replaceChild( Node arg0, Node arg1 ) throws DOMException
+  {
+    return m_document.replaceChild( arg0, arg1 );
+  }
+
+  public void setNodeValue( String arg0 ) throws DOMException
+  {
+    m_document.setNodeValue( arg0 );
+  }
+
+  public void setPrefix( String arg0 ) throws DOMException
+  {
+    m_document.setPrefix( arg0 );
+  }
+
+  public void removeAttribute( String arg0 ) throws DOMException
+  {
+    getGMLElement().removeAttribute( arg0 );
+  }
+
+  public Attr setAttributeNodeNS( Attr arg0 ) throws DOMException
+  {
+    return getGMLElement().setAttributeNodeNS( arg0 );
+  }
+
+  public void setAttributeNS( String arg0, String arg1, String arg2 ) throws DOMException
+  {
+    getGMLElement().setAttributeNS( arg0, arg1, arg2 );
+  }
+
+  public Attr getAttributeNode( String arg0 )
+  {
+    return getGMLElement().getAttributeNode( arg0 );
+  }
+
+  public void removeAttributeNS( String arg0, String arg1 ) throws DOMException
+  {
+    getGMLElement().removeAttributeNS( arg0, arg1 );
+  }
+
+  public Attr getAttributeNodeNS( String arg0, String arg1 )
+  {
+    return getGMLElement().getAttributeNodeNS( arg0, arg1 );
+  }
+
+  public boolean hasAttributeNS( String arg0, String arg1 )
+  {
+    return getGMLElement().hasAttributeNS( arg0, arg1 );
+  }
+
+  public void setAttribute( String arg0, String arg1 ) throws DOMException
+  {
+    getGMLElement().setAttribute( arg0, arg1 );
+  }
+
+  public Attr removeAttributeNode( Attr arg0 ) throws DOMException
+  {
+    return getGMLElement().removeAttributeNode( arg0 );
+  }
+
+  public boolean hasAttribute( String arg0 )
+  {
+    return getGMLElement().hasAttribute( arg0 );
+  }
+
+  public Attr setAttributeNode( Attr arg0 ) throws DOMException
+  {
+    return getGMLElement().setAttributeNode( arg0 );
+  }
+
+  public String getTagName()
+  {
+    return getGMLElement().getTagName();
+  }
+
+  public String getAttribute( String arg0 )
+  {
+    return getGMLElement().getAttribute( arg0 );
+  }
+
+  public String getAttributeNS( String arg0, String arg1 )
+  {
+    return getGMLElement().getAttributeNS( arg0, arg1 );
+  }
+
+  public Document getDocument()
+  {
+    return m_document;
+  }
+}

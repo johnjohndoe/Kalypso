@@ -52,35 +52,38 @@ public final class GmlSerializer
     try
     {
       final GMLDocument gmlDoc = new GMLDocument_Impl();
-      GMLFeature gmlFeature = GMLFactory.createGMLFeature( gmlDoc.getDocument(), workspace
-          .getRootFeature() );
-      gmlDoc.setRoot( gmlFeature );
-
+      
       final String schemaNamespace = workspace.getSchemaNamespace();
       if( schemaNamespace != null )
       {
-        final GMLNameSpace namespace = new GMLNameSpace_Impl( "xmlns=" + schemaNamespace );
+        final GMLNameSpace namespace = new GMLNameSpace_Impl(null, schemaNamespace );
         gmlDoc.addNameSpace( namespace );
       }
       
       final GMLNameSpace gmlNameSpace = new GMLNameSpace_Impl(
-          "xmlns:gml=http://www.opengis.net/gml" );
+          "gml","http://www.opengis.net/gml" );
       final GMLNameSpace xlinkNameSpace = new GMLNameSpace_Impl(
-          "xmlns:xlink=http://ww  w.w3.org/1999/xlink" );
+          "xlink","http://www.w3.org/1999/xlink" );
       final GMLNameSpace xsiNameSpace = new GMLNameSpace_Impl(
-          "xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance" );
+          "xsi","http://www.w3.org/2001/XMLSchema-instance" );
       gmlDoc.addNameSpace( gmlNameSpace );
       gmlDoc.addNameSpace( xlinkNameSpace );
       gmlDoc.addNameSpace( xsiNameSpace );
 
+      GMLFeature gmlFeature = GMLFactory.createGMLFeature( gmlDoc, workspace
+          .getRootFeature() );
+      gmlDoc.setRoot( gmlFeature );
+
+      
+      workspace.getContext();
       final String schemaLoc = workspace.getSchemaLocation();
       if( schemaLoc != null )
         gmlDoc.setSchemaLocation( schemaLoc );
 
       // DOM als GML schreiben
-      final Document xmlDOM = gmlDoc.getDocument();
+      final Document xmlDOM = gmlDoc;
       final Transformer t = TransformerFactory.newInstance().newTransformer();
-
+      
       t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
       t.setOutputProperty( OutputKeys.INDENT, "yes" );
 

@@ -47,6 +47,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * 
@@ -59,19 +60,10 @@ import org.w3c.dom.Document;
  * @version 07.02.2001
  *          <p>
  */
-public interface GMLDocument
+public interface GMLDocument extends Document
 {
-
-  /**
-   * returns the dom document representing the GML document
-   */
   public Document getDocument();
-
-  /**
-   * @see #getDocument()
-   */
-  public void setDocument( Document document );
-
+  
   /**
    * returns the location of the schema the document based on
    */
@@ -125,6 +117,9 @@ public interface GMLDocument
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2004/11/22 01:29:50  doemming
+ * *** empty log message ***
+ *
  * Revision 1.5  2004/11/01 15:38:01  belger
  * *** empty log message ***
  *
