@@ -2,6 +2,7 @@ package org.kalypso.repository.conf;
 
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilities.ClassUtilityException;
+import org.kalypso.repository.AbstractRepositoryFactory;
 import org.kalypso.repository.IRepositoryFactory;
 
 /**
@@ -35,7 +36,12 @@ public class RepositoryConfigItem
    */
   public IRepositoryFactory createFactory() throws ClassUtilityException
   {
-    return (IRepositoryFactory)ClassUtilities.newInstance( m_className, IRepositoryFactory.class,
-        getClass().getClassLoader(), new Class[] { String.class }, new Object[] { m_conf } );
+    IRepositoryFactory rf = (IRepositoryFactory)ClassUtilities.newInstance( m_className, IRepositoryFactory.class,
+        getClass().getClassLoader() );
+    
+    if( rf instanceof AbstractRepositoryFactory )
+      ((AbstractRepositoryFactory)rf).setConfiguration( m_conf );
+    
+    return rf;
   }
 }

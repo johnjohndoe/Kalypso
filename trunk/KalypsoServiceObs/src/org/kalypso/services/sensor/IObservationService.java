@@ -21,6 +21,11 @@ public interface IObservationService extends IRepositoryService
   public int getServiceVersion() throws RemoteException;
   
   /**
+   * Returns true when the given node contains Observations.
+   */
+  public boolean hasObservations( final ItemBean node ) throws RemoteException;
+  
+  /**
    * Returns the list of Observations at the given node.
    */
   public ObservationBean[] getObservations( final ItemBean node ) throws RemoteException;
