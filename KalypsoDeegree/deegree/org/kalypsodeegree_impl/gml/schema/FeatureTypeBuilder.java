@@ -291,8 +291,8 @@ public class FeatureTypeBuilder
     {
       return m_XLinkProp;
     }
-    if( m_typeName == null )
-      System.out.println( "debug" );
+//    if( m_typeName == null )
+//      System.out.println( "debug" );
 
     if( m_isCutoumType )
       return new CustoumFeatureTypeProperty( m_name, m_namespace, m_typeName, true, m_annotationMap );
