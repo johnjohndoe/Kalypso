@@ -1,7 +1,5 @@
 package org.kalypso.ogc.sensor.impl;
 
-import java.util.List;
-
 import org.kalypso.ogc.sensor.IAxis;
 
 /**
@@ -15,13 +13,9 @@ public class DefaultAxis implements IAxis
 
   protected String m_unit;
 
-  protected boolean m_restricted;
-
   protected Class m_dataClass;
 
   protected int m_position;
-
-  protected List m_restrictedValues;
 
   protected String m_type;
 
@@ -36,19 +30,16 @@ public class DefaultAxis implements IAxis
    *          unit of the axis
    * @param dataClass
    *          className of the data on this axis
-   * @param restricted
-   *          true if axis restricts the range of data that can be assigned
    * @param position
    *          position of this axis in regards to the tupple of data
    */
   public DefaultAxis( final String label, final String type, final String unit,
-      final Class dataClass, final boolean restricted, final int position )
+      final Class dataClass, final int position )
   {
     m_label = label;
     m_type = type;
     m_unit = unit;
     m_dataClass = dataClass;
-    m_restricted = restricted;
     m_position = position;
   }
 
@@ -57,10 +48,7 @@ public class DefaultAxis implements IAxis
    */
   public DefaultAxis( final IAxis axis )
   {
-    this( axis.getLabel(), axis.getType(), axis.getUnit(), axis.getDataClass(),
-        axis.isRestricted(), axis.getPosition() );
-
-    setRestrictedValues( axis.getRestrictedValues() );
+    this( axis.getLabel(), axis.getType(), axis.getUnit(), axis.getDataClass(), axis.getPosition() );
   }
 
   /**
@@ -90,21 +78,6 @@ public class DefaultAxis implements IAxis
   public int getPosition()
   {
     return m_position;
-  }
-
-  public List getRestrictedValues()
-  {
-    return m_restrictedValues;
-  }
-
-  public void setRestrictedValues( List restrictedValues )
-  {
-    m_restrictedValues = restrictedValues;
-  }
-
-  public boolean isRestricted()
-  {
-    return m_restricted;
   }
 
   /**
