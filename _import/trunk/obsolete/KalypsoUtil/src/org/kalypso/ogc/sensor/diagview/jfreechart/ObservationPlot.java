@@ -49,7 +49,7 @@ public class ObservationPlot extends XYPlot
   /**
    * Removes all curves from plot.
    */
-  public void clearCurves()
+  public synchronized void clearCurves()
   {
     for( int i = 0; i < getDatasetCount(); i++ )
       setDataset( i, null );
@@ -60,7 +60,7 @@ public class ObservationPlot extends XYPlot
   /**
    * Adds a curve to the plot
    */
-  public void addCurve( final IDiagramCurve curve ) throws SensorException
+  public synchronized void addCurve( final IDiagramCurve curve ) throws SensorException
   {
     IAxisMapping[] mings = curve.getMappings();
     IAxis xAxis = null;

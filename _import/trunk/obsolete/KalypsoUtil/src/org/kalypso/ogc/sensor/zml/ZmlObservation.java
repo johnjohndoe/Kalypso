@@ -119,7 +119,7 @@ public class ZmlObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
+  public synchronized ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {
     if( m_model == null )
       m_model = new ZmlTuppleModel( m_url, m_axes );
@@ -135,7 +135,7 @@ public class ZmlObservation implements IObservation
   // TODO
   }
 
-  public IAxis[] getAxisList()
+  public synchronized IAxis[] getAxisList()
   {
     return m_observation.getAxisList();
   }

@@ -217,13 +217,13 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
+  public synchronized ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {
     // TODO: I'm lazy here: I could create default from and to dates
     if( !( args instanceof DateRangeArgument ) )
       throw new SensorException( "Brauche DateRange as Argument. Kann sonst die PSICompact Schnittstelle nicht abfragen" );
     
-    DateRangeArgument dr = (DateRangeArgument)args;
+    final DateRangeArgument dr = (DateRangeArgument)args;
     
     if( m_values != null && dr.getFrom().compareTo( m_from ) == 0 && dr.getTo().compareTo( m_to ) == 0 )
       return m_values;
@@ -233,7 +233,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
       m_from = dr.getFrom();
       m_to = dr.getTo();
 
-      ArchiveData[] data = PSICompactFactory.getConnection().getArchiveData( m_objectInfo.getId(),
+      final ArchiveData[] data = PSICompactFactory.getConnection().getArchiveData( m_objectInfo.getId(),
           PSICompact.ARC_MIN15, m_from, m_to );
 
       m_values = new PSICompactTuppleModel( data );
