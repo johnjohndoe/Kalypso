@@ -1,5 +1,6 @@
 package org.kalypso.util.transformation;
 
+import java.io.BufferedWriter;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -20,12 +21,27 @@ public abstract class AbstractTransformation implements ITransformation
   }
 
   /**
-   * @see org.kalypso.util.transformation.ITransformation#transform(org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.util.transformation.ITransformation#transform(java.io.BufferedWriter,
+   *      java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void transform( final IProgressMonitor monitor ) throws TransformationException
+  public void transform( final BufferedWriter msgWriter,
+      final BufferedWriter logWriter, final IProgressMonitor monitor )
+      throws TransformationException
   {
-    transformIntern( m_properties, monitor );
+    transformIntern( m_properties, msgWriter, logWriter, monitor );
   }
 
-  protected abstract void transformIntern( final Properties properties, final IProgressMonitor monitor ) throws TransformationException;
+  /**
+   * @see ITransformation#transform(BufferedWriter, BufferedWriter,
+   *      IProgressMonitor)
+   * 
+   * @param properties
+   * @param msgWriter
+   * @param logWriter
+   * @param monitor
+   * @throws TransformationException
+   */
+  protected abstract void transformIntern( final Properties properties,
+      final BufferedWriter msgWriter, final BufferedWriter logWriter,
+      final IProgressMonitor monitor ) throws TransformationException;
 }

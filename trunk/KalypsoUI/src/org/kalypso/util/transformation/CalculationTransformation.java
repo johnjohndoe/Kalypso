@@ -1,5 +1,6 @@
 package org.kalypso.util.transformation;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -27,7 +28,13 @@ public class CalculationTransformation extends AbstractTransformation
   /** Key/Value Paare */
   public static final String PROP_ENTRY = "entry";
 
+  /**
+   * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties,
+   *      java.io.BufferedWriter, java.io.BufferedWriter,
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
   public void transformIntern( final Properties properties,
+      final BufferedWriter msgWriter, final BufferedWriter logWriter,
       final IProgressMonitor monitor ) throws TransformationException
   {
     try
@@ -38,7 +45,7 @@ public class CalculationTransformation extends AbstractTransformation
 
       final CatchThread ct = new CatchThread()
       {
-        protected void runIntern() throws Throwable
+        protected void runIntern( ) throws Throwable
         {
           targetProperties.store( pos, "Steuerparameter der Berechnung" );
           pos.close();
@@ -46,7 +53,8 @@ public class CalculationTransformation extends AbstractTransformation
       };
       ct.start();
 
-      final IFile outputFile = ResourcesPlugin.getWorkspace().getRoot().getFile( new Path( properties.getProperty( PROP_OUTPUT ) ) );
+      final IFile outputFile = ResourcesPlugin.getWorkspace().getRoot()
+          .getFile( new Path( properties.getProperty( PROP_OUTPUT ) ) );
       outputFile.create( pis, false, monitor );
     }
     catch( final CoreException e )
@@ -61,29 +69,34 @@ public class CalculationTransformation extends AbstractTransformation
 
   /**
    * Aus den Entries wieder einzelne Properties machen
-   */ 
+   * 
+   * @param properties
+   * @return properties
+   */
   private Properties parseProperties( final Properties properties )
   {
     final Properties newProps = new Properties();
 
     for( final Iterator pIt = properties.entrySet().iterator(); pIt.hasNext(); )
     {
-      final Map.Entry entry = (Entry)pIt.next();
+      final Map.Entry entry = (Entry) pIt.next();
 
       final String key = entry.getKey().toString();
 
       if( key.startsWith( PROP_ENTRY ) )
       {
         final String value = entry.getValue().toString();
-        final Properties entryProp = PropertiesHelper.parseFromString( value, '#' );
+        final Properties entryProp = PropertiesHelper.parseFromString( value,
+            '#' );
 
-        for( final Iterator eIt = entryProp.entrySet().iterator(); eIt.hasNext(); )
+        for( final Iterator eIt = entryProp.entrySet().iterator(); eIt
+            .hasNext(); )
         {
-          final Map.Entry entryEntry = (Entry)eIt.next();
+          final Map.Entry entryEntry = (Entry) eIt.next();
 
           final String entryKey = entryEntry.getKey().toString();
           final String entryValue = entryEntry.getValue().toString();
-          
+
           newProps.setProperty( entryKey, entryValue );
         }
       }

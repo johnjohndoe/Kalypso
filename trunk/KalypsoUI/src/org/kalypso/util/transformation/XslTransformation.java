@@ -2,6 +2,7 @@ package org.kalypso.util.transformation;
 
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.io.BufferedWriter;
 import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -26,50 +27,59 @@ import org.w3c.dom.Document;
 public class XslTransformation extends AbstractTransformation
 {
   /**
-   * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties,
+   *      java.io.BufferedWriter, java.io.BufferedWriter,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void transformIntern( final Properties properties, final IProgressMonitor monitor )
-      throws TransformationException
+  public void transformIntern( final Properties properties,
+      final BufferedWriter msgWriter, final BufferedWriter logWriter,
+      final IProgressMonitor monitor ) throws TransformationException
   {
     monitor.beginTask( "XSL Transformation", 3000 );
-    
+
     final String input = properties.getProperty( "input" );
     final String xsl = properties.getProperty( "xsl" );
     final String output = properties.getProperty( "output" );
 
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    
-    final IFile inputFile = (IFile)root.findMember( input );
-    final IFile xslFile = (IFile)root.findMember( xsl );
-    final IFile outputFile = (IFile)root.findMember( output );
+
+    final IFile inputFile = (IFile) root.findMember( input );
+    final IFile xslFile = (IFile) root.findMember( xsl );
+    final IFile outputFile = (IFile) root.findMember( output );
 
     try
     {
-      final StreamSource xslSource = new StreamSource( xslFile.getContents(), xslFile.getCharset() );  
-      
-      final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      final StreamSource xslSource = new StreamSource( xslFile.getContents(),
+          xslFile.getCharset() );
+
+      final DocumentBuilderFactory factory = DocumentBuilderFactory
+          .newInstance();
       factory.setNamespaceAware( true );
       final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
       final Document xmlDOM = docuBuilder.parse( inputFile.getContents() );
-      final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      final Transformer transformer = transformerFactory.newTransformer( xslSource );
-      
+      final TransformerFactory transformerFactory = TransformerFactory
+          .newInstance();
+      final Transformer transformer = transformerFactory
+          .newTransformer( xslSource );
+
       final PipedInputStream pis = new PipedInputStream();
       final PipedOutputStream pos = new PipedOutputStream( pis );
       final CatchThread thread = new CatchThread()
       {
-        protected void runIntern() throws Throwable
+        protected void runIntern( ) throws Throwable
         {
-          transformer.transform( new DOMSource( xmlDOM ), new StreamResult( pos ) );
+          transformer.transform( new DOMSource( xmlDOM ),
+              new StreamResult( pos ) );
           pos.close();
         }
       };
       thread.start();
-      
+
       monitor.worked( 1000 );
-      
+
       outputFile.create( pis, false, new SubProgressMonitor( monitor, 1000 ) );
-      outputFile.setCharset( inputFile.getCharset(), new SubProgressMonitor( monitor, 1000 ) );
+      outputFile.setCharset( inputFile.getCharset(), new SubProgressMonitor(
+          monitor, 1000 ) );
 
       if( thread.getThrown() != null )
         throw new TransformationException( thread.getThrown() );

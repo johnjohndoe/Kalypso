@@ -1,5 +1,6 @@
 package org.kalypso.util.transformation;
 
+import java.io.BufferedWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,6 +28,7 @@ import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoProcolWriter;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -70,9 +72,11 @@ public class ObservationResolver extends AbstractTransformation
 
   /**
    * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties,
+   *      java.io.BufferedWriter, java.io.BufferedWriter,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   protected void transformIntern( final Properties properties,
+      final BufferedWriter msgWriter, final BufferedWriter logWriter,
       final IProgressMonitor monitor ) throws TransformationException
   {
     monitor.beginTask( "Zeitreihen auflösen", 3000 );
@@ -137,7 +141,8 @@ public class ObservationResolver extends AbstractTransformation
 
       resolveTimeseries( gmlURL, features, sourceObsName1, sourceObsName2,
           targetObsName, targetFolder, start, middle, stop, rangeMode1,
-          rangeMode2, new SubProgressMonitor( monitor, 1000 ) );
+          rangeMode2, new SubProgressMonitor( monitor, 1000 ), msgWriter,
+          logWriter );
 
       monitor.done();
     }
@@ -182,6 +187,8 @@ public class ObservationResolver extends AbstractTransformation
    * @param rangeMode1
    * @param rangeMode2
    * @param monitor
+   * @param msgWriter
+   * @param logWriter
    * 
    * @throws TransformationException
    * @throws SensorException
@@ -191,7 +198,8 @@ public class ObservationResolver extends AbstractTransformation
       final String sourceName1, final String sourceName2,
       final String targetName, final IFolder targetFolder, final Date start,
       final Date middle, final Date stop, final String rangeMode1,
-      final String rangeMode2, final IProgressMonitor monitor )
+      final String rangeMode2, final IProgressMonitor monitor,
+      final BufferedWriter msgWriter, final BufferedWriter logWriter )
       throws TransformationException, MalformedURLException, SensorException
   {
     if( features.length == 0 )
@@ -254,6 +262,10 @@ public class ObservationResolver extends AbstractTransformation
         // set forecast metadata, might be used in diagram for instance
         // to mark the forecast range
         TimeserieUtils.setForecast( obs, from2, to2 );
+
+        // protocol the observations here and inform the user
+        KalypsoProcolWriter.analyseValues( obs, obs.getValues( null ),
+            msgWriter, logWriter );
 
         // remove query part if present, href is also used as file name here!
         final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );

@@ -12,6 +12,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -310,6 +311,9 @@ public class CalcWizard implements IWizard, IProjectProvider
   
   
   /**
+   * @param page
+   * @return true if can go to next page
+   * 
    * @see org.eclipse.jface.wizard.IWizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
    */
   public boolean doNext( final IWizardPage page )
@@ -331,13 +335,16 @@ public class CalcWizard implements IWizard, IProjectProvider
         {
           monitor.beginTask( "aktualisiere Zeitreihen", 3000 );
 
+          IStatus status = null;
+          
           final IFolder currentCalcCase = m_addCalcCasePage.getCurrentCalcCase();
           m_controlPage.saveChanges( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
           if( m_controlPage.isUpdate() )
           {
             final ModelNature nature = (ModelNature)currentCalcCase.getProject().getNature(
                 ModelNature.ID );
-            nature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
+            
+            status = nature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
           }
           else
             monitor.worked( 1000 );
@@ -345,6 +352,9 @@ public class CalcWizard implements IWizard, IProjectProvider
           addModelPages( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
 
           resetResultPage( m_addCalcCasePage.getCalcCases() );
+          
+          if( status != null && status != org.eclipse.core.runtime.Status.OK_STATUS )
+            throw new CoreException( status );
         }
       }
     };
@@ -363,23 +373,37 @@ public class CalcWizard implements IWizard, IProjectProvider
     {
       e.printStackTrace();
 
+      boolean ret = false;
+      String title = "Fehler";
+      
       final Throwable te = e.getTargetException();
       if( te instanceof CoreException )
       {
-        ErrorDialog.openError( getContainer().getShell(), "Fehler",
-            "Fehler beim Aufruf der nächsten Wizard-Seite",
-            ( (CoreException)e.getTargetException() ).getStatus() );
+        final IStatus status = ((CoreException)te).getStatus();
+        
+        // in that case we still allow to go to the next page
+        // since the status has a severity of WARNING
+        // inform the user and let him go to the next page
+        if( status.getSeverity() == IStatus.WARNING )
+        {
+          ret = true;
+          title = "Warnung";
+        }
+        
+        ErrorDialog.openError( getContainer().getShell(), title,
+            "Aktualisierung des Berechnungsfalls", status );
       }
       else
       {
         // CoreExceptions are handled above, but unexpected runtime exceptions
         // and errors may still occur.
-        MessageDialog.openError( getContainer().getShell(), "Interner Fehler",
+        MessageDialog.openError( getContainer().getShell(), title,
             "Fehler beim Aufruf der nächsten Wizard-Seite: " + te.getLocalizedMessage() );
       }
 
-      return false;
+      return ret;
     }
+    
     return true;
   }
 

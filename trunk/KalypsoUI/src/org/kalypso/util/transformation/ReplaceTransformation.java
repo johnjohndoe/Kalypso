@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.io.BufferedWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.Map;
@@ -29,11 +30,13 @@ import org.kalypso.java.util.StringUtilities;
 public class ReplaceTransformation extends AbstractTransformation
 {
   /**
-   * @throws TransformationException
    * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties,
+   *      java.io.BufferedWriter, java.io.BufferedWriter,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void transformIntern( final Properties properties, final IProgressMonitor monitor ) throws TransformationException
+  public void transformIntern( final Properties properties,
+      final BufferedWriter msgWriter, final BufferedWriter logWriter,
+      final IProgressMonitor monitor ) throws TransformationException
   {
     monitor.beginTask( "Transform", 2000 );
 
@@ -41,10 +44,10 @@ public class ReplaceTransformation extends AbstractTransformation
 
     for( Iterator iter = properties.entrySet().iterator(); iter.hasNext(); )
     {
-      final Map.Entry entry = (Entry)iter.next();
+      final Map.Entry entry = (Entry) iter.next();
 
-      final String key = (String)entry.getKey();
-      final String value = (String)entry.getValue();
+      final String key = (String) entry.getKey();
+      final String value = (String) entry.getValue();
 
       if( key.startsWith( "protocol" ) )
       {
@@ -57,10 +60,10 @@ public class ReplaceTransformation extends AbstractTransformation
 
     for( Iterator iter = properties.entrySet().iterator(); iter.hasNext(); )
     {
-      final Map.Entry entry = (Entry)iter.next();
+      final Map.Entry entry = (Entry) iter.next();
 
-      final String key = (String)entry.getKey();
-      final String value = (String)entry.getValue();
+      final String key = (String) entry.getKey();
+      final String value = (String) entry.getValue();
 
       if( key.startsWith( "file" ) )
       {
@@ -72,19 +75,22 @@ public class ReplaceTransformation extends AbstractTransformation
         catch( final Exception e )
         {
           e.printStackTrace();
-          
+
           throw new TransformationException( e );
         }
       }
     }
   }
 
-  private void replaceFilecontent( final IFile file, final Properties replaceProperties )
-      throws FileNotFoundException, IOException, UnsupportedEncodingException, CoreException
+  private void replaceFilecontent( final IFile file,
+      final Properties replaceProperties ) throws FileNotFoundException,
+      IOException, UnsupportedEncodingException, CoreException
   {
-    final InputStreamReader r = new InputStreamReader( file.getContents(), file.getCharset() );
+    final InputStreamReader r = new InputStreamReader( file.getContents(), file
+        .getCharset() );
     final String string = ReaderUtilities.readStringFromReader( r );
-    final String newContent = StringUtilities.replaceAll( string, replaceProperties );
+    final String newContent = StringUtilities.replaceAll( string,
+        replaceProperties );
 
     final PipedOutputStream pos = new PipedOutputStream();
     final PipedInputStream pis = new PipedInputStream( pos );
@@ -94,12 +100,12 @@ public class ReplaceTransformation extends AbstractTransformation
       /**
        * @see java.lang.Thread#run()
        */
-      public void run()
+      public void run( )
       {
         try
         {
-          final ByteArrayInputStream bis = new ByteArrayInputStream( newContent.getBytes( file
-              .getCharset() ) );
+          final ByteArrayInputStream bis = new ByteArrayInputStream( newContent
+              .getBytes( file.getCharset() ) );
           StreamUtilities.streamCopy( bis, pos );
         }
         catch( final Exception e )

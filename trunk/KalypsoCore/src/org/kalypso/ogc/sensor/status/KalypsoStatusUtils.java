@@ -56,6 +56,17 @@ public class KalypsoStatusUtils
 
     return STATUS_AXIS_LABELPREFIX + axis.getName();
   }
+  
+  /**
+   * Returns the axis label without the status marker
+   * 
+   * @param axis
+   * @return just axis label
+   */
+  public static String getAxisLabelFor( final IAxis axis )
+  {
+    return axis.getName().replaceAll( STATUS_AXIS_LABELPREFIX, "" );
+  }
 
   /**
    * Creates a status axis for the given 'normal' axis.
@@ -127,6 +138,25 @@ public class KalypsoStatusUtils
     return (IAxis[]) list.toArray( new IAxis[list.size()] );
   }
 
+  /**
+   * Returns the list of non-status axes
+   * 
+   * @param axes
+   * @return non-status axes
+   */
+  public static IAxis[] withoutStatusAxes( final IAxis[] axes )
+  {
+    final ArrayList list = new ArrayList();
+
+    for( int i = 0; i < axes.length; i++ )
+    {
+      if( !isStatusAxis( axes[i] ) )
+        list.add( axes[i] );
+    }
+
+    return (IAxis[]) list.toArray( new IAxis[list.size()] );
+  }
+  
   /**
    * Checks if bit is in the mask.
    * 
