@@ -1,14 +1,22 @@
 package org.kalypso.repository.virtual;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.zml.repository.virtual.ItemType;
+import org.kalypso.zml.repository.virtual.LevelType;
 import org.kalypso.zml.repository.virtual.ObjectFactory;
 import org.kalypso.zml.repository.virtual.VirtualRepositoryType;
 import org.xml.sax.InputSource;
@@ -20,47 +28,106 @@ import org.xml.sax.InputSource;
  */
 public class VirtualRepository extends AbstractRepository
 {
+  /** used for parsing xml repository spec */
   private static final ObjectFactory OF = new ObjectFactory();
+
+  /** child items */
+  private IRepositoryItem[] m_children;
   
-  /**
-   * @param factory
-   */
-  public VirtualRepository( final IRepositoryFactory factory, final InputSource specSource ) throws SensorException
-  {
-    super( factory );
-    
-    try
-    {
-      final VirtualRepositoryType vrt = (VirtualRepositoryType) OF.createUnmarshaller().unmarshal( specSource );
-      
-      vrt.getLevel();
-    }
-    catch( JAXBException e )
-    {
-      e.printStackTrace();
-      throw new SensorException( e );
-    }
-  }
+  /** stores the mapping between ids and items */
+  private final Map m_idMap = new Hashtable();
 
   /**
+   * Constructor
+   * 
    * @param factory
    * @param location
    * @param readOnly
+   * @throws RepositoryException
    */
   public VirtualRepository( IRepositoryFactory factory, String location,
-      boolean readOnly )
+      boolean readOnly ) throws RepositoryException
   {
     super( factory, location, readOnly );
-    // TODO Auto-generated constructor stub
+
+    try
+    {
+      buildRepository( );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+
+      throw new RepositoryException( e );
+    }
+  }
+
+  private final void buildRepository( )
+      throws JAXBException, FileNotFoundException
+  {
+    final InputSource specSource = new InputSource( new FileInputStream(
+        new File( m_location ) ) );
+    
+    final VirtualRepositoryType vrt = (VirtualRepositoryType) OF
+        .createUnmarshaller().unmarshal( specSource );
+
+    m_children = (IRepositoryItem[]) buildStructure( null, vrt.getLevel() )
+        .toArray( new IRepositoryItem[0] );
+  }
+
+  private final List buildStructure( final VirtualRepositoryItem parent,
+      final List levels )
+  {
+    final List rItems = new ArrayList( levels.size() );
+
+    for( final Iterator it = levels.iterator(); it.hasNext(); )
+    {
+      final LevelType level = (LevelType) it.next();
+
+      final VirtualRepositoryItem rItem = new VirtualRepositoryItem( this,
+          level.getName(), level.getId(), parent );
+      
+      final List children = new ArrayList();
+      children.addAll( buildStructure( rItem, level.getLevel() ) );
+      children.addAll( buildItems( rItem, level.getItem() ) );
+
+      rItem.setChildren( children );
+      
+      m_idMap.put( rItem.getIdentifier(), rItem );
+
+      rItems.add( rItem );
+    }
+
+    return rItems;
+  }
+
+  private final List buildItems( final VirtualRepositoryItem parent,
+      final List items )
+  {
+    final List rItems = new ArrayList( items.size() );
+    for( final Iterator it = items.iterator(); it.hasNext(); )
+    {
+      final ItemType item = (ItemType) it.next();
+
+      final VirtualRepositoryItem rItem = new VirtualRepositoryItem( this, item
+          .getName(), item.getId(), parent );
+      
+      rItem.setFilterType( item.getFilter() );
+      
+      m_idMap.put( rItem.getIdentifier(), rItem );
+
+      rItems.add( rItem );
+    }
+
+    return rItems;
   }
 
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
-  public IRepositoryItem findItem( String id ) throws RepositoryException
+  public IRepositoryItem findItem( final String id ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return null;
+    return (IRepositoryItem) m_idMap.get( id );
   }
 
   /**
@@ -68,17 +135,29 @@ public class VirtualRepository extends AbstractRepository
    */
   public void reload( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
+    m_children = null;
+    m_idMap.clear();
+    
+    try
+    {
+      buildRepository( );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
 
+      throw new RepositoryException( e );
+    }
   }
 
   /**
+   * Returns <pre>vrep://</pre>.
+   * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
   public String getIdentifier( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return "vrep://";
   }
 
   /**
@@ -86,8 +165,7 @@ public class VirtualRepository extends AbstractRepository
    */
   public boolean hasChildren( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return false;
+    return m_children != null && m_children.length > 0;
   }
 
   /**
@@ -95,8 +173,6 @@ public class VirtualRepository extends AbstractRepository
    */
   public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_children;
   }
-
 }

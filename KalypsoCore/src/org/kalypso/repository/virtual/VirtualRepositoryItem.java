@@ -1,8 +1,16 @@
 package org.kalypso.repository.virtual;
 
+import java.lang.reflect.UndeclaredThrowableException;
+import java.util.List;
+
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.filter.FilterFactory;
+import org.kalypso.ogc.sensor.filter.IFilterCreator;
+import org.kalypso.ogc.sensor.filter.IObservationFilter;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.zml.filters.AbstractFilterType;
 
 /**
  * VirtualRepositoryItem
@@ -11,14 +19,27 @@ import org.kalypso.repository.RepositoryException;
  */
 public class VirtualRepositoryItem implements IRepositoryItem
 {
+  private IRepository m_repository;
+  private String m_name;
+  private String m_itemId;
+  private IRepositoryItem m_parent = null;
+  private IRepositoryItem[] m_children = null;
+  private AbstractFilterType m_filterType = null;
 
   /**
+   * Constructor
    * 
+   * @param rep
+   * @param name
+   * @param itemId
+   * @param parent
    */
-  public VirtualRepositoryItem( )
+  public VirtualRepositoryItem( final IRepository rep, final String name, final String itemId, final VirtualRepositoryItem parent )
   {
-    super();
-    // TODO Auto-generated constructor stub
+    m_repository = rep;
+    m_name = name;
+    m_itemId = itemId;
+    m_parent = parent;
   }
 
   /**
@@ -26,17 +47,17 @@ public class VirtualRepositoryItem implements IRepositoryItem
    */
   public String getName( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_name;
   }
 
   /**
+   * Returns <pre>vrep://<item_id></pre>.
+   * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
   public String getIdentifier( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return getRepository().getIdentifier() + m_itemId;
   }
 
   /**
@@ -44,8 +65,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
    */
   public IRepositoryItem getParent( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_parent;
   }
 
   /**
@@ -53,8 +73,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
    */
   public boolean hasChildren( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return false;
+    return m_children != null && m_children.length > 0;
   }
 
   /**
@@ -62,26 +81,54 @@ public class VirtualRepositoryItem implements IRepositoryItem
    */
   public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_children;
   }
 
+  public void setChildren( final List children )
+  {
+    m_children = (IRepositoryItem[]) children.toArray( new IRepositoryItem[children.size()] );
+  }
+  
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
   public IRepository getRepository( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_repository;
   }
 
+  /**
+   * Sets the filter type. If valid, this allows this item to be adapted into an IObservation.
+   * 
+   * @param filterType
+   */
+  public void setFilterType( final AbstractFilterType filterType )
+  {
+    m_filterType = filterType;
+  }
+  
   /**
    * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
    */
   public Object getAdapter( Class anotherClass )
   {
-    // TODO Auto-generated method stub
+    if( m_filterType != null && anotherClass == IObservation.class )
+    {
+      try
+      {
+        final IFilterCreator creator = FilterFactory.getCreatorInstance( m_filterType );
+        
+        final IObservationFilter filter = creator.createFilter( m_filterType, null );
+        
+        return filter;
+      }
+      catch( Exception e ) // generic exception caught for simplicity
+      {
+        e.printStackTrace();
+        throw new UndeclaredThrowableException( e );
+      }
+    }
+    
     return null;
   }
-
 }
