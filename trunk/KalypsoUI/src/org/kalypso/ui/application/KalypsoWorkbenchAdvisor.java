@@ -17,7 +17,7 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
-import org.kalypso.services.user.common.IUserServiceConstants;
+import org.kalypso.services.user.UserServiceConstants;
 import org.kalypso.ui.IKalypsoUIConstants;
 
 /**
@@ -79,7 +79,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   {
     super.fillActionBars( window, actionConfigurer, flags );
 
-    if( !hasRight( IUserServiceConstants.RIGHT_ADMIN ) )
+    if( !hasRight( UserServiceConstants.RIGHT_ADMIN ) )
     {
       final IMenuManager menuManager = actionConfigurer.getMenuManager();
       
@@ -116,7 +116,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     super.preWindowOpen( windowConfigurer );
     
 
-    if( !hasRight( IUserServiceConstants.RIGHT_EXPERT ) && !hasRight( IUserServiceConstants.RIGHT_ADMIN ) )
+    if( !hasRight( UserServiceConstants.RIGHT_EXPERT ) && !hasRight( UserServiceConstants.RIGHT_ADMIN ) )
     {
       windowConfigurer.setShowCoolBar( false );
       windowConfigurer.setShowFastViewBars( false );

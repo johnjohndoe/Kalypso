@@ -70,9 +70,11 @@ public class ExportTableBerichtWizard extends Wizard
       final String value = splits.length >= 2 ? splits[1] : null;
       
       String typename = null;
+      Object realValue = null; 
       try
       {
         typename = Mapper.mapXMLSchemaType2JavaType( xmltype );
+        realValue = Mapper.mapXMLValueToJava( value, typename );
       }
       catch( final Exception e )
       {
@@ -80,7 +82,7 @@ public class ExportTableBerichtWizard extends Wizard
         typename = "java.lang.String";
       }
       ftpColl.add( FeatureFactory.createFeatureTypeProperty( name, typename, false ) );
-      fpColl.add( FeatureFactory.createFeatureProperty( name, value ) );
+      fpColl.add( FeatureFactory.createFeatureProperty( name, realValue ) );
       
       ints[count++] = 1;
     }

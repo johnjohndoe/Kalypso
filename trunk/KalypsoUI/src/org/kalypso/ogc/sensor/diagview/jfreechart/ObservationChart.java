@@ -1,11 +1,12 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
-import java.lang.reflect.InvocationTargetException;
-
 import javax.swing.SwingUtilities;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.internal.Workbench;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardLegend;
+import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
@@ -52,57 +53,46 @@ public class ObservationChart extends JFreeChart implements
    */
   public void onTemplateChanged( final TemplateEvent evt )
   {
-    final Runnable runnable = new Runnable()
+    final CatchRunnable runnable = new CatchRunnable()
     {
-      public void run( )
+      protected void runIntern( ) throws Throwable
       {
-        try
-        {
-          if( evt.getType() == TemplateEvent.TYPE_ADD
-              && evt.getObject() instanceof IDiagramCurve )
-            ((ObservationPlot) getPlot()).addCurve( (IDiagramCurve) evt
-                .getObject() );
+        if( evt.getType() == TemplateEvent.TYPE_ADD
+            && evt.getObject() instanceof IDiagramCurve )
+          ((ObservationPlot) getPlot()).addCurve( (IDiagramCurve) evt
+              .getObject() );
 
-//          if( evt.getType() == TemplateEvent.TYPE_REFRESH && 
-//              evt.getObject() instanceof Collection )
-//          {
-//            clearChart();
-//
-//            final Iterator itThemes = ((Collection) evt.getObject()).iterator();
-//            while( itThemes.hasNext() )
-//            {
-//              final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) itThemes
-//                  .next();
-//              final Iterator it = theme.getCurves().iterator();
-//              while( it.hasNext() )
-//                ((ObservationPlot) getPlot()).addCurve( (IDiagramCurve) it
-//                    .next() );
-//            }
-//          }
+        //          if( evt.getType() == TemplateEvent.TYPE_REFRESH &&
+        //              evt.getObject() instanceof Collection )
+        //          {
+        //            clearChart();
+        //
+        //            final Iterator itThemes = ((Collection) evt.getObject()).iterator();
+        //            while( itThemes.hasNext() )
+        //            {
+        //              final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) itThemes
+        //                  .next();
+        //              final Iterator it = theme.getCurves().iterator();
+        //              while( it.hasNext() )
+        //                ((ObservationPlot) getPlot()).addCurve( (IDiagramCurve) it
+        //                    .next() );
+        //            }
+        //          }
 
-          if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
-            clearChart();
-        }
-        catch( SensorException e )
-        {
-          throw new RuntimeException( e );
-        }
+        if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
+          clearChart();
       }
     };
-    
+
     try
     {
       SwingUtilities.invokeAndWait( runnable );
+      if( runnable.getThrown() != null  )
+        throw runnable.getThrown();
     }
-    catch( InterruptedException e )
+    catch( Throwable e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( InvocationTargetException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      MessageDialog.openError( Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Aktualisierungsfehler", e.toString() );
     }
   }
 }

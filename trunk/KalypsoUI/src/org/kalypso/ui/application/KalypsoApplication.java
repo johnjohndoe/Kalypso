@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.kalypso.eclipse.jface.dialogs.PasswordDialog;
-import org.kalypso.services.user.common.IUserServiceConstants;
+import org.kalypso.services.user.UserServiceConstants;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -49,9 +49,15 @@ public class KalypsoApplication implements IPlatformRunnable
       // leere Rechte rauschmeissen
       for( int i = 0; i < givenrights.length; i++ )
       {
-        final String right = givenrights[i];
-        if( right != null && right.trim().length() != 0 )
-          rights.add( right.trim() );
+        String right = givenrights[i];
+        if( right != null )
+        {
+          right = right.trim();
+
+          if( right.length() != 0
+              && UserServiceConstants.isValidUserRight( right ) )
+            rights.add( right.trim() );
+        }
       }
     }
 
@@ -77,7 +83,7 @@ public class KalypsoApplication implements IPlatformRunnable
 
         if( "hochwasser".equals( dialog.getValue() ) )
         {
-          choosenRights = new String[] { IUserServiceConstants.RIGHT_ADMIN };
+          choosenRights = new String[] { UserServiceConstants.RIGHT_ADMIN };
           break;
         }
       }

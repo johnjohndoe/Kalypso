@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
@@ -66,7 +68,7 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     }
     catch( Throwable e )
     {
-      e.printStackTrace();
+      MessageDialog.openError( Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Aktualisierungsfehler", e.toString() );
     }
   }
 }

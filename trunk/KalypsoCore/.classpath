@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-libs.jar"/>
@@ -13,8 +12,9 @@
 	<classpathentry exported="true" kind="lib" path="lib/dom.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/junit.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/coreBinding.jar"/>
+	<classpathentry kind="src" path="src/"/>
+	<classpathentry exported="true" kind="lib" path="lib/ant.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/ant.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

@@ -113,8 +113,11 @@ public class PrognoseView extends ViewPart
       final File serverProject = new File( serverRoot, projectName );
       
       if( !serverProject.exists() )
-      // TODO: error message
+      {
+        // TODO: error message
+        System.out.println( "Servermodel does not exist! Cannot start Prognose." );
         return;
+      }
       
       final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
       synchronizer.updateLocal();
