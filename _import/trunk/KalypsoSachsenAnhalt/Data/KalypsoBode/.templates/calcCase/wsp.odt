@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="xsl/grafik-vorlage.xsl"?>
+<obsdiagview xmlns="obsdiagview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="obsdiagview.template.kalypso.org
+.\obsdiagview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<title></title>
+	<legend title="Legende" visible="true"/>
+
+	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
+	<axis id="w" datatype="xs:double" label="Wasserstand" unit="cm" direction="vertical" position="left" />
+</obsdiagview>
