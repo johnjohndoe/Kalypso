@@ -64,8 +64,6 @@ public class WQTuppleModel extends AbstractTuppleModel
   
   private final ITuppleModel m_model;
 
-  private final IAxis[] m_axes;
-
   private final IAxis m_srcAxis;
 
   private final IAxis m_destAxis;
@@ -100,21 +98,14 @@ public class WQTuppleModel extends AbstractTuppleModel
       final IAxis dateAxis, final IAxis srcAxis, final IAxis destAxis,
       final WechmannGroup wsets )
   {
+    super( axes );
+    
     m_model = model;
-    m_axes = axes;
     m_wsets = wsets;
 
     m_dateAxis = dateAxis;
     m_srcAxis = srcAxis;
     m_destAxis = destAxis;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
-   */
-  public IAxis[] getAxisList( )
-  {
-    return m_axes;
   }
 
   /**

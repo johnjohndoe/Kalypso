@@ -68,7 +68,7 @@ public class ObservationUtilities
   {
     //  not intended to be instanciated
   }
-
+  
   /**
    * Finds the axis of the given observation that has the given name.
    * 

@@ -56,6 +56,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
@@ -68,6 +69,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.java.io.FileUtilities;
+import org.kalypso.java.io.ProcessWraper;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -149,6 +151,7 @@ public class GrafikLauncher
       final ObsdiagviewType odt, final IFolder dest,
       final IProgressMonitor monitor ) throws SensorException
   {
+    List sync = null;
     StringWriter strWriter = null;
     try
     {
@@ -161,7 +164,7 @@ public class GrafikLauncher
 
       strWriter = new StringWriter();
 
-      odt2tpl( odt, dest, strWriter, monitor );
+      sync = odt2tpl( odt, dest, strWriter, monitor );
 
       // redeclared final for being used in SetContentHelper
       final StringWriter schWriter = strWriter;
@@ -179,7 +182,7 @@ public class GrafikLauncher
       sch.setFileContents( tplFile, false, false, new NullProgressMonitor(),
           "Cp1252" );
 
-      startGrafikTPL( tplFile );
+      startGrafikTPL( tplFile, sync );
 
       return tplFile;
     }
@@ -190,6 +193,9 @@ public class GrafikLauncher
     finally
     {
       IOUtils.closeQuietly( strWriter );
+      
+      if( sync != null )
+        sync.clear();
     }
   }
 
@@ -201,13 +207,13 @@ public class GrafikLauncher
    * 
    * @throws SensorException
    */
-  public static void startGrafikTPL( final IFile tplFile )
+  public static void startGrafikTPL( final IFile tplFile, final List sync )
       throws SensorException
   {
     final File file = ResourceUtilities
         .makeFileFromPath( tplFile.getFullPath() );
 
-    startGrafikTPL( file );
+    startGrafikTPL( file, sync );
   }
 
   /**
@@ -216,7 +222,7 @@ public class GrafikLauncher
    * @param tplFile
    * @throws SensorException
    */
-  public static void startGrafikTPL( final File tplFile )
+  private static void startGrafikTPL( final File tplFile, final List sync )
       throws SensorException
   {
     try
@@ -254,16 +260,49 @@ public class GrafikLauncher
         tmp.delete();
       }
 
-      Runtime.getRuntime().exec(
+      final Process proc = Runtime.getRuntime().exec(
           grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath()
               + '"' );
+
+      final ProcessWraper wraper = new ProcessWraper( proc, null )
+      {
+        public void processCanceled( )
+        {
+          // empty
+        }
+
+        public void processTerminated( final int returnCode )
+        {
+          synchroniseZml( );
+        }
+
+        private void synchroniseZml()
+        {
+          for( final Iterator it = sync.iterator(); it.hasNext(); )
+          {
+            final RememberForSync rfs = (RememberForSync) it.next();
+           
+            try
+            {
+              rfs.synchronizeZml();
+            }
+            catch( Exception e )
+            {
+              e.printStackTrace();
+            }
+          }
+        }
+      };
+      
+      // wait for grafik to finish and eventually synchronise data
+      wraper.waitForProcess();
     }
-    catch( IOException e )
+    catch( Exception e )
     {
       throw new SensorException( e );
     }
   }
-
+  
   /**
    * Converts a diagram template file to a grafik tpl.
    * <p>
@@ -281,10 +320,12 @@ public class GrafikLauncher
    * @throws CoreException
    * @throws IOException
    */
-  private static void odt2tpl( final ObsdiagviewType odt, final IFolder dest,
+  private static List odt2tpl( final ObsdiagviewType odt, final IFolder dest,
       final Writer writer, final IProgressMonitor monitor )
       throws CoreException, IOException
   {
+    final List sync = new Vector();
+
     final UrlResolver urlRes = new UrlResolver();
     final URL context = ResourceUtilities.createURL( dest.getParent() );
 
@@ -299,7 +340,7 @@ public class GrafikLauncher
     for( int i = 0; i < tobs.length; i++ )
     {
       if( monitor.isCanceled() )
-        return;
+        return sync;
 
       // now try to locate observation file
       final URL url = urlRes.resolveURL( context, tobs[i].getHref() );
@@ -358,6 +399,9 @@ public class GrafikLauncher
         // convert to dat-file, ready to be read by the grafik tool
         zml2dat( obs, datFile, dateAxis, axis, monitor );
 
+        final RememberForSync rfs = new RememberForSync( zmlFile, datFile, axis );
+        sync.add( rfs );
+
         cc++;
       }
 
@@ -397,6 +441,8 @@ public class GrafikLauncher
       final ValueAndColor vac = (ValueAndColor) yLines.get( it.next() );
       writer.write( "yKonst: " + vac.value + " " + vac.label + '\n' );
     }
+
+    return sync;
   }
 
   /**
@@ -429,7 +475,6 @@ public class GrafikLauncher
           writer.write( '\t' );
 
           writer.write( values.getElement( i, axis ).toString() );
-          writer.write( '\t' );
 
           writer.write( '\n' );
         }

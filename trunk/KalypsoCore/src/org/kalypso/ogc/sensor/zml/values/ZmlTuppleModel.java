@@ -62,11 +62,9 @@ public class ZmlTuppleModel extends AbstractTuppleModel
    */
   public ZmlTuppleModel( final Map valuesMap )
   {
-    m_valuesMap = valuesMap;
+    super( (IAxis[]) valuesMap.keySet().toArray( new IAxis[0]) );
     
-    final IAxis[] axes = getAxisList();
-    for( int j = 0; j < axes.length; j++ )
-      mapAxisToPos( axes[j], j );
+    m_valuesMap = valuesMap;
   }
 
   /**
@@ -95,14 +93,6 @@ public class ZmlTuppleModel extends AbstractTuppleModel
       return -1;
 
     return values.indexOf( element );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
-   */
-  public IAxis[] getAxisList( )
-  {
-    return (IAxis[]) m_valuesMap.keySet().toArray( new IAxis[0]);
   }
 
   /**
