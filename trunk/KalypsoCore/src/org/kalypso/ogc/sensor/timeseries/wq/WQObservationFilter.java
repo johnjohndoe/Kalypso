@@ -93,8 +93,11 @@ public class WQObservationFilter extends AbstractObservationFilter
     final WechmannGroup group;
     try
     {
+      
       group = WechmannFactory.parse( new InputSource( new StringReader(
-          wechmann ) ) );
+          wechmann.replaceAll(";","") ) ) );
+//      group = WechmannFactory.parse( new InputSource( new StringReader(
+//          wechmann ) ) );
     }
     catch( WechmannException e )
     {
