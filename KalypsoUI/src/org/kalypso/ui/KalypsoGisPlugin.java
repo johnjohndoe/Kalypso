@@ -49,7 +49,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   /** location of the observation properties file */
   private static final String OBSERVATION_REPOSITORIES_PROPERTIES = "resources/repositories.properties"; //$NON-NLS-N$
 
-  private static KalypsoGisPlugin m_plugin = null;
+  private static KalypsoGisPlugin THE_PLUGIN = null;
 
   private ResourceBundle m_resourceBundle = null;
 
@@ -81,29 +81,18 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   private ProxyFactory m_proxyFactory;
 
   /** configuration of the client */
-  private Properties m_mainConf;
+  private final Properties m_mainConf = new Properties();
 
   /**
    * The constructor. Manages the configuration of the kalypso client.
    */
   public KalypsoGisPlugin()
   {
-    m_plugin = this;
+    THE_PLUGIN = this;
 
     configureLogger();
 
-    try
-    {
-      configure();
-      configureProxy();
-      configurePool();
-      configureObservationRepositorySpecifications();
-      configureServiceProxyFactory();
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
+    // TODO: MARC: Gernot moved configuration code to start(), check, if ok 
 
     try
     {
@@ -122,7 +111,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       // controls
       UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
     }
-    catch( Exception e1 )
+    catch( final Exception e1 )
     {
       e1.printStackTrace();
     }
@@ -142,6 +131,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     m_mainConf.putAll( System.getProperties() );
 
     // try to laod conf file
+    // TODO: MARC: getPluginPreferences throws NullPointerException if called from
+    // Konstructor of Plugin, that why i moved it to start()
     final String[] locs = getPluginPreferences().getString( IKalypsoPreferences.CLIENT_CONF_URLS )
         .split( ";" );
 
@@ -322,7 +313,20 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   {
     super.start( context );
     
-    // TODO: move configuration from Constructor to this place
+    // TODO: MARC: Gernot moved configuration code to start(), check, if ok 
+    try
+    {
+      configure();
+      configureProxy();
+      configurePool();
+      configureObservationRepositorySpecifications();
+      configureServiceProxyFactory();
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
+    
   }
 
   /**
@@ -344,10 +348,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   public static KalypsoGisPlugin getDefault()
   {
     // m_plugin should be set in the constructor
-    if( m_plugin == null )
+    if( THE_PLUGIN == null )
       throw new NullPointerException( "Plugin Kalypso noch nicht instanziert!" );
 
-    return m_plugin;
+    return THE_PLUGIN;
   }
 
   /**
