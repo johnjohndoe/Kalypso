@@ -475,4 +475,50 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     return m_schemaNamespace;
   }
+
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#createFeature(org.deegree.model.feature.FeatureType)
+   */
+  public Feature createFeature( FeatureType type )
+  {
+    String newId=createFeatureId(type);
+    return FeatureFactory.createFeature(newId, type);
+  }
+
+  private String createFeatureId( FeatureType type )
+  {
+    String id = type.getName();
+    int no =0; 
+    while(!m_indexMap.containsKey(id+Integer.toString(no)))
+      no++;
+    return id+Integer.toString(no);
+  }
+  /*
+   * @param parent null if rootFeature else parent
+   * @param propname 
+   * @param pos if propvalue is list, else ignore   
+   */
+  public void addFeature(Feature parent,String propName,int pos,Feature newFeature) throws Exception
+  {
+    Object prop = parent.getProperty( propName );
+        
+    if(prop instanceof List)
+    {
+      ((List)prop).add(pos, newFeature);
+        m_indexMap.put(newFeature.getId(), newFeature);
+        return;
+    }     
+    else if(prop == null) // element not set
+    {
+      int propPos = parent.getFeatureType().getPropertyPosition( propName);
+      if(propPos != -1)
+      {
+        parent.getProperties()[propPos] = newFeature;      
+        m_indexMap.put(newFeature.getId(), newFeature);
+      }
+      return;
+    }
+    throw new Exception("New Feature violates maxOccurs");    
+  }
+  // TODO eigene exception entwerfen
 }

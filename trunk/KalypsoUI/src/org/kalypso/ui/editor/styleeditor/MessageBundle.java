@@ -47,7 +47,7 @@ public class MessageBundle
 {
   public final static String STYLE_EDITOR_NO_STYLE_FOR_EDITOR = "Kein Style zum Anzeigen selektiert";
 
-  public final static String STYLE_EDITOR_EDITOR_TITLE = "Style Editor v1.0";
+  public final static String STYLE_EDITOR_EDITOR_TITLE = "Style Editor";
 
   public final static String STYLE_EDITOR_STYLE = "Style: ";
 

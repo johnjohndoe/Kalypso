@@ -39,7 +39,7 @@ public class FeatureAssociationTypeProperty_Impl extends FeatureTypeProperty_Imp
     m_associatedFT = associationFeatureType;
     m_associationFeatureTypes = null;//associationFeatureTypes;
     m_schema = schema;
-    m_associatedNode = null;
+    m_associatedNode = null;    
   }
 
   public FeatureAssociationTypeProperty_Impl( String name, String namespace, String type,
