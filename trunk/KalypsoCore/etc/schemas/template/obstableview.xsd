@@ -25,7 +25,7 @@
 	<!-- typeObservation -->
 	<xs:complexType name="typeObservation">
 		<xs:complexContent>
-			<xs:extension base="kalypso:layerType">
+			<xs:extension base="kalypso:kalypsoLinkType">
 				<xs:sequence>
 					<xs:element name="column" type="myns:typeColumn" minOccurs="1" maxOccurs="unbounded"/>
 				</xs:sequence>
