@@ -20,7 +20,7 @@
             <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./ergebnisse/zeitreihen/QX_SCHIRG.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Wasserstand_gerechnet>
           <Wasserstand_vorhersage>
-            <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./ergebnisse/zeitreihen/QV_SCHIRG.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./ergebnisse/zeitreihen/QV_SCHIRG.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Wasserstand_vorhersage>
           <Wasserstand_vorhersageAblage>
             <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582010.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>

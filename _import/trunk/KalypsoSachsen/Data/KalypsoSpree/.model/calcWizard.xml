@@ -143,8 +143,12 @@
         <arg name="timeserie3" 
         	value="nameColumn=Name#linkColumn=Wasserstand_gerechnet#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
         <arg name="timeserie4" 
-        	value="nameColumn=Name#linkColumn=Wasserstand_vorhersage#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
+        	value="nameColumn=Name#linkColumn=Wasserstand_vorhersage"/>
 		
+		<arg name="pegelNameProperty" value="Name"/>
+		<arg name="resultProperty" value="Wasserstand_vorhersage"/>
+		<arg name="prognoseProperty" value="Wasserstand_vorhersageAblage"/>
+
 	   	<arg name="mainSash" value="50"/>
 	   	<arg name="rightSash" value="40"/>
 	   	<arg name="selectionID" value="256"/>
