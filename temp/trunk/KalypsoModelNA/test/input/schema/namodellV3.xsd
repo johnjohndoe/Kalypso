@@ -2,7 +2,7 @@
 <!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Andersen (no) -->
 <schema targetNamespace="http://www.tuhh.de/kalypsoNA" version="0.9" xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" 
 	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified" >
-	<import namespace="http://www.opengis.net/gml" schemaLocation="http://troubadix.wb.tu-harburg.de/doemming/test/feature.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<!--<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
 	-->
 	<element name="NaModell" type="na:NaModellType"/>

@@ -20,9 +20,12 @@ public class ParseManager
 
   private final GMLSchema m_schema;
 
-  public ParseManager( GMLSchema schema, CatchmentManager catchmentManager,
+private final Configuration m_conf;
+
+  public ParseManager( GMLSchema schema,Configuration conf, CatchmentManager catchmentManager,
       ChannelManager channelManager )
   {
+  	m_conf=conf;
     m_catchmentManager = catchmentManager;
     m_channelManager = channelManager;
     m_schema = schema;
@@ -30,17 +33,17 @@ public class ParseManager
 
   public Feature asciiToFeature() throws IOException
   {
-  
+  	ModelManager modelManager=new ModelManager();
     // get all FeatureTypes...
     FeatureType naModellFT = m_schema.getFeatureType( "NaModell" );
     FeatureType catchmentCollectionFT = m_schema.getFeatureType( "CatchmentCollection" );
     FeatureType virtualChannelCollectionFT = m_schema.getFeatureType( "VirtualChannelCollection" );
     FeatureType kmChannelCollectionFT = m_schema.getFeatureType( "KMChannelCollection" );
     // create all Features (and FeatureCollections)
-    Feature naModellFe = FeatureFactory.createFeature("1", naModellFT);
-    Feature catchmentCollectionFe = FeatureFactory.createFeature( "2",catchmentCollectionFT);
-    Feature virtualChannelCollectionFe = FeatureFactory.createFeature("3", virtualChannelCollectionFT);
-    Feature kmChannelCollectionFe = FeatureFactory.createFeature( "4",kmChannelCollectionFT);
+    Feature naModellFe = modelManager.createFeature( naModellFT);
+    Feature catchmentCollectionFe = modelManager.createFeature( catchmentCollectionFT);
+    Feature virtualChannelCollectionFe = modelManager.createFeature( virtualChannelCollectionFT);
+    Feature kmChannelCollectionFe = modelManager.createFeature( kmChannelCollectionFT);
 
     // complete Feature NaModell
     FeatureProperty prop = FeatureFactory.createFeatureProperty( "CatchmentCollectionMember",
@@ -56,7 +59,7 @@ public class ParseManager
     naModellFe.setProperty( prop );
 
     //complete Feature CatchmentCollection
-    Feature[] features = m_catchmentManager.parseFile( new File( "data/inp.dat/we_nat.geb" ) );
+    Feature[] features = m_catchmentManager.parseFile(m_conf.getCatchmentFile().toURL());
     for( int i = 0; i < features.length; i++ )
     {
       Feature catchmentFE = features[i];
@@ -65,7 +68,7 @@ public class ParseManager
     }
 
     //complete Features of ChannelCollections
-    features = m_channelManager.parseFile( new File( "data/inp.dat/we_nat.ger" ) );
+    features = m_channelManager.parseFile( m_conf.getChannelFile().toURL());
     for( int i = 0; i < features.length; i++ )
     {
       Feature channelFE = features[i];

@@ -1,11 +1,11 @@
 package org.kalypso.convert.namodel;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,7 +17,6 @@ import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.feature.FeatureFactory;
-import org.kalypso.convert.AbstractManager;
 
 /**
  * @author doemming
@@ -36,10 +35,10 @@ public class ChannelManager extends AbstractManager
 
   private FeatureType m_kmParameterFT;
 
-  public ChannelManager( GMLSchema schema, File defFile, Feature rootFeature )
+  public ChannelManager( GMLSchema schema, Configuration conf )
       throws IOException
   {
-    super( defFile, rootFeature );
+    super( conf.getChannelFormatURL() );
     m_virtualChannelFT = schema.getFeatureType( "VirtualChannel" );
     m_kmChannelFT = schema.getFeatureType( "KMChannel" );
     m_kmParameterFT = schema.getFeatureType( "KMParameter" );
@@ -49,12 +48,14 @@ public class ChannelManager extends AbstractManager
 
   /**
    * 
-   * @see org.kalypso.convert.AbstractManager#parseFile(java.io.File)
+   * @see org.kalypso.convert.namodel.AbstractManager#parseFile(java.io.File)
    */
-  public Feature[] parseFile( File file ) throws IOException
+  public Feature[] parseFile( URL url ) throws IOException
   {
     List result=new ArrayList();
-    LineNumberReader reader = new LineNumberReader( new FileReader( file ) );
+    LineNumberReader reader = new LineNumberReader( new InputStreamReader(url.openConnection().getInputStream()));// new FileReader( file ) );
+    
+//    LineNumberReader reader = new LineNumberReader( new FileReader( file ) );
     Feature fe=null;
     while( (fe=readNextFeature( reader ))!=null)
       result.add(fe);
@@ -94,7 +95,7 @@ public class ChannelManager extends AbstractManager
       // List kmParameterFeatures=new ArrayList();
       for( int i = 0; i < 5; i++ )
       {
-        Feature kmParameterFeature = FeatureFactory.createFeature( null,m_kmParameterFT);
+        Feature kmParameterFeature = createFeature( m_kmParameterFT);
         line = reader.readLine();
         System.out.println( " km(" + i + "): " + line );
         createProperties( kmPropCollector, line, 3 );
@@ -116,16 +117,16 @@ public class ChannelManager extends AbstractManager
     return feature;
   }
 
-  public void writeFile( Writer writer ) throws IOException
+  public void writeFile( Writer writer,Feature rootFeature ) throws IOException
   {
 
-    Feature kmChannelCol = (Feature)m_rootFeature.getProperty( "KMChannelCollectionMember" );
+    Feature kmChannelCol = (Feature)rootFeature.getProperty( "KMChannelCollectionMember" );
     List kmChannelList = (List)kmChannelCol.getProperty( "kmChannelMember" );
     Iterator iter = kmChannelList.iterator();
     while( iter.hasNext() )
       writeFeature( writer,(Feature)iter.next() );
 
-    Feature vChannelCol = (Feature)m_rootFeature
+    Feature vChannelCol = (Feature)rootFeature
         .getProperty( "VirtualChannelCollectionMember" );
     List vChannelList = (List)vChannelCol.getProperty( "virtualChannelMember" );
     iter = vChannelList.iterator();
@@ -158,5 +159,10 @@ public class ChannelManager extends AbstractManager
       throw new UnsupportedOperationException( "can not write Feature to ascii"
           + feature.toString() );
 
+  }
+  
+  public String mapID(int id, FeatureType ft) 
+  {
+  	return ft.getName()+id;
   }
 }

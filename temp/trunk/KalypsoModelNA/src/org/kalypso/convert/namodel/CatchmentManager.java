@@ -1,11 +1,11 @@
 package org.kalypso.convert.namodel;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,7 +19,6 @@ import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.feature.FeatureAssociationTypeProperty_Impl;
 import org.deegree_impl.model.feature.FeatureFactory;
-import org.kalypso.convert.AbstractManager;
 
 /**
  * @author doemming
@@ -32,10 +31,10 @@ public class CatchmentManager extends AbstractManager
 
   private final FeatureType m_grundwasserabflussFT;
 
-  public CatchmentManager( GMLSchema schema, File defFile, Feature rootFeature )
+  public CatchmentManager( GMLSchema schema, Configuration conf)//File defFile, Feature rootFeature  )
       throws IOException
   {
-    super( defFile, rootFeature );
+    super( conf.getCatchmentFormatURL());//conf.getRootFeature());
     m_featureType = schema.getFeatureType( "Catchment" );
     FeatureTypeProperty ftp1 = m_featureType.getProperty( "bodenkorrekturmember" );
     m_bodenKorrekturFT = ( (FeatureAssociationTypeProperty_Impl)ftp1 ).getAssociationFeatureType();
@@ -53,10 +52,10 @@ public class CatchmentManager extends AbstractManager
    * @throws IOException
    * @see AbstractManager#parseFile(java.io.File)
    */
-  public Feature[] parseFile( File file ) throws IOException
+  public Feature[] parseFile( URL url ) throws IOException
   {
     List result=new ArrayList();
-    LineNumberReader reader = new LineNumberReader( new FileReader( file ) );
+    LineNumberReader reader = new LineNumberReader( new InputStreamReader(url.openConnection().getInputStream()));// new FileReader( file ) );
     Feature fe=null;
     while( (fe=readNextFeature( reader ))!=null)
       result.add(fe);
@@ -89,7 +88,7 @@ public class CatchmentManager extends AbstractManager
       System.out.println( i + ": " + line );
       HashMap col2 = new HashMap();
       createProperties( col2, line, 9 );
-      final Feature bodenkorrekturFE = FeatureFactory.createFeature( null,m_bodenKorrekturFT);
+      final Feature bodenkorrekturFE = createFeature(m_bodenKorrekturFT);
       Collection collection = col2.values();
       setParsedProperties( bodenkorrekturFE, collection );
       list.add( bodenkorrekturFE );
@@ -123,9 +122,12 @@ public class CatchmentManager extends AbstractManager
       createProperties( col2, line, format14 );
       for( int i = 0; i < igwzu; i++ )
       {
-        Feature fe =  FeatureFactory.createFeature(null, m_grundwasserabflussFT);
+        Feature fe =  createFeature( m_grundwasserabflussFT);
         FeatureProperty fp1 = (FeatureProperty)col2.get( "ngwzu" + i );
-        FeatureProperty ngwzuProp = FeatureFactory.createFeatureProperty( "ngwzu", fp1.getValue() );
+        int ngwzuID=Integer.parseInt(fp1.getValue().toString());
+        Feature ngwzuFE=getFeature(ngwzuID,m_featureType);
+        String ngwzuStringID=ngwzuFE.getId();
+        FeatureProperty ngwzuProp = FeatureFactory.createFeatureProperty( "ngwzu", ngwzuStringID);
         fe.setProperty( ngwzuProp );
         FeatureProperty fp2 = (FeatureProperty)col2.get( "gwwi" + i );
         FeatureProperty nwwiProp = FeatureFactory.createFeatureProperty( "gwwi", fp2.getValue() );
@@ -153,9 +155,9 @@ public class CatchmentManager extends AbstractManager
     return feature;
   }
 
-  public void writeFile( Writer writer ) throws IOException
+  public void writeFile( Writer writer,Feature rootFeature ) throws IOException
   {
-    Feature col = (Feature)m_rootFeature.getProperty( "CatchmentCollectionMember" );
+    Feature col = (Feature)rootFeature.getProperty( "CatchmentCollectionMember" );
     List list = (List)col.getProperty( "catchmentMember" );
     Iterator iter = list.iterator();
     while( iter.hasNext() )
@@ -210,6 +212,17 @@ public class CatchmentManager extends AbstractManager
       writer.write("ende gebietsdatensatz"  + "\n" );
 
   }
+
+
+
+
+/* (non-Javadoc)
+ * @see org.kalypso.convert.AbstractManager#mapID(int, org.deegree.model.feature.FeatureType)
+ */
+public String mapID(int id, FeatureType ft) 
+{
+	return ft.getName()+id;
+}
 
   
 

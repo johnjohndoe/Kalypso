@@ -1,10 +1,11 @@
-package org.kalypso.convert;
+package org.kalypso.convert.namodel;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Writer;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -29,37 +30,40 @@ public abstract class AbstractManager
   // und
   // (intDI,stringID)
 
-  public final Feature m_rootFeature;
+//  public final Feature m_rootFeature;
 
   private static final HashMap m_allFeatures = new HashMap(); // (stringID,feature)
 
   private String[] m_asciiFormat;
 
-  public AbstractManager( File parseDefinition, Feature rootFeature ) throws IOException
+  public AbstractManager( URL parseDefinition) throws IOException
   {
-    readParseDefinition( parseDefinition );
-    m_rootFeature = rootFeature;
+  	if(parseDefinition!=null)
+  	  readParseDefinition( parseDefinition );
+//    m_rootFeature = rootFeature;
   }
   
   public Feature getFeature( int id, FeatureType ft )
   {
-    if( !exists( id ) )
-      createFeature( id, ft );
-    return (Feature)m_allFeatures.get( getMappedID( id ) );
+    IntID intID=new IntID(id,ft);
+  	if(! m_map.containsKey(intID))
+      createFeature( intID );
+  	String stringID=(String) m_map.get(intID);
+    return (Feature)m_allFeatures.get(stringID );
   }
 
-  //  public ExtFeature getFeature( String id, FeatureType ft )
+  // public ExtFeature getFeature( String id, FeatureType ft )
   //  {
   //    if( !exists( id ) )
   //      createFeature( id, ft );
   //    return (ExtFeature)m_managedFeatures.get( id );
   //  }
 
-  private boolean exists( int id )
-  {
-    Integer key = new Integer( id );
-    return m_map.containsKey( key );
-  }
+//  private boolean exists( int id )
+//  {
+//    Integer key = new Integer( id );
+//    return m_map.containsKey( key );
+//  }
 
   //  private boolean exists( String id )
   //  {
@@ -72,23 +76,31 @@ public abstract class AbstractManager
   //    ExtFeature feature = ExtFeatureFactory.createFeature( ft, id );
   //    m_allFeatures.put( id, feature );
   //  }
-
-  private void createFeature( int id, FeatureType ft )
-  {
-    createMapping( id );
-    String stringID = getMappedID( id );
+  
+  private static int count=0;
+public Feature createFeature(FeatureType ft)
+{
+	String stringID = mapID(count++,ft);
+	return FeatureFactory.createFeature(stringID,ft); 
+	
+}
+  private void createFeature( IntID intID )
+  { 	
+    createMapping( intID);
+    String stringID = (String) m_map.get(intID);
     Feature feature = null;//= FeatureFactory.createFeature( stringID,
     // m_featureType,
     //    new Object[m_featureType.getProperties().length] );
     try
     {
-      feature = FeatureFactory.createFeature(stringID,ft); 
+      feature = FeatureFactory.createFeature(stringID,intID.getFeatureType()); 
     }
     catch( Exception e )
     {
       e.printStackTrace();
     }
-
+    if(m_allFeatures.containsKey(stringID))
+    	throw new UnsupportedOperationException("IDs are not unique");
     m_allFeatures.put( stringID, feature );
   }
 
@@ -99,10 +111,11 @@ public abstract class AbstractManager
   //    m_map.put( intID, id );
   //  }
 
-  private void createMapping( int id )
+  public abstract String mapID(int id,FeatureType ft);
+  
+  private void createMapping( IntID intID)
   {
-    Integer intID = new Integer( id );
-    String stringID = intID.toString();
+  	String stringID=mapID(intID.getID(),intID.getFeatureType());
     m_map.put( stringID, intID );
     m_map.put( intID, stringID );
   }
@@ -122,19 +135,20 @@ public abstract class AbstractManager
   //    }
   //    return -1;
   //  }
+  
+//// TODO make abstract and implement by parent
+//  private final String getMappedID( int id )
+//  {
+//    Integer key = new Integer( id );
+//    if( m_map.containsKey( key ) )
+//      return (String)m_map.get( key );
+//    return null;
+//  }
 
-  private final String getMappedID( int id )
-  {
-    Integer key = new Integer( id );
-    if( m_map.containsKey( key ) )
-      return (String)m_map.get( key );
-    return null;
-  }
-
-  private void readParseDefinition( File file ) throws IOException
+  private void readParseDefinition( URL formatURL ) throws IOException
   {
     List result = new ArrayList();
-    LineNumberReader reader = new LineNumberReader( new FileReader( file ) );
+    LineNumberReader reader = new LineNumberReader( new InputStreamReader(formatURL.openStream()) );
 
     String line;
     while( ( line = reader.readLine() ) != null )
@@ -142,9 +156,9 @@ public abstract class AbstractManager
     m_asciiFormat = (String[])result.toArray( new String[result.size()] );
   }
 
-  public abstract Feature[] parseFile( File file ) throws IOException;
+  public abstract Feature[] parseFile( URL url ) throws IOException;
 
-  public abstract void writeFile( Writer writer ) throws IOException;
+  public abstract void writeFile( Writer writer,Feature rootFeature ) throws IOException;
 
   private final static Pattern patternBrackets = Pattern.compile( "[\\(|\\)]" );
 
@@ -384,5 +398,45 @@ public abstract class AbstractManager
       }
     }
     return b.toString();
+  }
+  
+  private class IntID
+  {
+  	private final int m_intID;
+  	private final FeatureType m_ft;
+  	
+  	public IntID(int intID, FeatureType ft)
+  		{
+  			m_intID=intID;
+  			m_ft=ft;
+  		}
+  	public int getID()
+  	{
+  			return m_intID;
+  	}
+  	public FeatureType getFeatureType()
+  	{
+  			return m_ft;
+  	}
+  	
+  	public boolean equals(Object object)
+  	{
+  		if(!(object instanceof IntID))
+  			return false;
+  		
+  		IntID other=(IntID) object;
+  	
+  		return (other.getID()==getID()
+  			&& other.getFeatureType()==getFeatureType());
+  	}
+  	
+  	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		return (m_ft.getName()+m_intID).hashCode();
+	}
+  
   }
 }
