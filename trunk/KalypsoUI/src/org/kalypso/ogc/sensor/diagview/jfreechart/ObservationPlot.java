@@ -45,9 +45,6 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  */
 public class ObservationPlot extends XYPlot
 {
-  /** color used for the internal markers this plot creates */
-  private static final Color MARKER_COLOR = new Color( 0f, 0f, 1f, 0.15f );
-
   private static final ConfigurableCachableObjectFactory OF;
 
   /** default line renderer */
@@ -276,7 +273,8 @@ public class ObservationPlot extends XYPlot
       setDataset( pos, cds );
       
       final XYItemRenderer renderer = getRenderer( yAxis.getType() );
-      renderer.setSeriesPaint( pos, curve.getPaint() );
+      // TODO: verify if pos is valid for use as index of series...
+      renderer.setSeriesPaint( pos == 0 ? pos : pos-1, curve.getPaint() );
       setRenderer( pos, renderer );
 
       mapDatasetToDomainAxis( pos, ((Integer) m_chartAxes2Pos
@@ -301,7 +299,7 @@ public class ObservationPlot extends XYPlot
       {
         final long end = fr.getTo().getTime();
         final Marker marker = createMarker( begin.doubleValue(), end,
-          TimeserieConstants.MD_VORHERSAGE );
+          TimeserieConstants.MD_VORHERSAGE, TimeserieUtils.getColorForMD( TimeserieConstants.MD_VORHERSAGE ) );
         
         addDomainMarker( marker, Layer.BACKGROUND );
         
@@ -319,7 +317,7 @@ public class ObservationPlot extends XYPlot
 	      final Double value = new Double( mdl.getProperty( alarms[i] ) );
 	      if( !m_yConsts.containsKey( value ) )
 	      {
-	        final Color color = TimeserieUtils.getColorFor( alarms[i] );
+	        final Color color = TimeserieUtils.getColorForAlarmLevel( alarms[i] );
 	        m_yConsts.put( value, new ValueAndColor( alarms[i] + " (" + value.doubleValue() + ")", value.doubleValue(), color ) );
 	        
 	        final double x;
@@ -408,13 +406,14 @@ public class ObservationPlot extends XYPlot
    * @param start
    * @param end
    * @param label
+   * @param color
    * @return marker
    */
   private final static Marker createMarker( double start, double end,
-      String label )
+      String label, Color color )
   {
     final IntervalMarker marker = new IntervalMarker( start, end );
-    marker.setPaint( MARKER_COLOR );
+    marker.setPaint( color );
     marker.setLabel( label );
     marker.setLabelAnchor( RectangleAnchor.BOTTOM );
     marker.setLabelTextAnchor( TextAnchor.CENTER );
