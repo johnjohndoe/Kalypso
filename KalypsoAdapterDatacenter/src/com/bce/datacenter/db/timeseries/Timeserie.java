@@ -435,6 +435,8 @@ public class Timeserie extends Persistent
     }
     catch( SQLException e )
     {
+      e.printStackTrace();
+      
       m_con.rollback();
       
       return EMPTY_TUPPLE;
