@@ -1,0 +1,8 @@
+#! /bin/bash
+#cd ../build
+#jar -cf deploy/ejb-andreas.jar META-INF/*xml -C classes de
+#su jboss -c cp deploy/ejb-andreas.jar /opt/jboss/jboss/server/default/deploy/ 
+#cd ../bin
+ls -lart ../build/ejb/generic-ejb/*.jar
+cp ../build/ejb/generic-ejb/*.jar ../src/kalypso-client/bin/
+su jboss -c cp ../build/ejb/generic-ejb/*.jar /opt/jboss/jboss/server/default/deploy/

@@ -1,0 +1,16 @@
+
+BUILD FAILED
+file:/home/doemming/xdoclet/bin/build_simcase.xml:243: Javadoc returned 1
+	at org.apache.tools.ant.taskdefs.Javadoc.execute(Javadoc.java:1840)
+	at xdoclet.DocletTask.execute(DocletTask.java:240)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:166)
+	at org.apache.tools.ant.Task.perform(Task.java:317)
+	at org.apache.tools.ant.Target.execute(Target.java:309)
+	at org.apache.tools.ant.Target.performTasks(Target.java:334)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1306)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1250)
+	at org.apache.tools.ant.Main.runBuild(Main.java:610)
+	at org.apache.tools.ant.Main.start(Main.java:196)
+	at org.apache.tools.ant.Main.main(Main.java:235)
+
+Total time: 37 seconds

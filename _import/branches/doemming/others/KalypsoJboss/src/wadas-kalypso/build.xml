@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<!-- ======================================================================= -->
+<!-- wadas-kalypso -->
+<!-- ======================================================================= -->
+
+<project name="WADAS-KALYPSO" default="compile" basedir=".">
+
+    <property environment="env"/>
+    <property name="src.dir" value="${basedir}/src"/>
+    <property name="build.dir" value="${basedir}/build"/>
+    <property name="build.classes.dir" value="${build.dir}"/>
+
+  <!-- Build classpath -->
+  <path id="classpath">
+        <fileset dir="${basedir}/lib">
+	        <include name="**/*.*"/>
+        </fileset>
+	<pathelement location="${build.classes.dir}"/>
+	<!-- So that we can get jndi.properties for InitialContext -->
+  </path>
+
+  <property name="build.classpath" refid="classpath"/>
+
+  <!-- =================================================================== -->
+  <!-- Prepares the build directory                                        -->
+  <!-- =================================================================== -->
+  <target name="prepare" >
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.classes.dir}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Compiles the source code                                            -->
+  <!-- =================================================================== -->
+  <target name="compile" depends="prepare">
+    
+    <javac srcdir="${src.dir}"
+           destdir="${build.classes.dir}"
+           debug="on"
+           deprecation="on"
+           optimize="on"
+           includes="**">
+            <classpath refid="classpath"/>
+    </javac>
+  </target>
+
+  <target name="run.test">
+    <java classname="test.Test" fork="yes" dir=".">
+      <classpath refid="classpath"/>
+    </java>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Cleans up generated stuff                                           -->
+  <!-- =================================================================== -->
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+  </target>
+
+</project>

@@ -1,0 +1,28 @@
+<html>
+
+<title> Kalypso Manual </title>
+
+<head> <h2> Background  </h2>
+</head>
+<img src=blueline.gif align="center" >
+<br>
+<body>
+Concept of Kalypso RRM is the dissolving of model and controldata which enables the user to run simulations with same controlsetup (date, timestep, rootnode and output) for different <b>ModelData</b> versions e.g. for calibration or validation of initial conditions.
+
+User chooses modelversion either from existing version by copy or direct opening (edits in version are automatically stored in database). Furthermore operator defines subsystem of whole drainage network by setting root node which selects subsystem for simulation of flood event using Forecast Model.
+The NETVIEW visualises all objects and relations of the whole drainage network. Root node for special subsystem can be read out. Complete drainage network  upstream root node is taken as subsystem for simulation. Use ArcView Project to view geography of catchments and drainage network.
+For the catchments which are part of the user defined subsystem at first the hydrological stations measuring precipitation and temperature time-series set in ModelData version should be checked in DataCenter tables, cause of existing values (measured or/ and forecast) for the simulation of flood event.
+In ModelData each catchment can use one hydrological station which is added by file name of rain and climate station to catchment object. The file name represents the location of station (rachiw.st) and is used by the<i> Kalypso</i> Fortran simulation routine to get time-series because the RRM handles with files which are generated automatically when simulation is started.
+Filename only changes when station is set to other catchment.
+
+<br><br>
+<img src=ScreenShot030.gif align="center" >
+
+</body>
+<br><br>
+<hr>
+
+FLOMATIS Forecast System, User Manual<i> Kalypso</i> RRM 2/2003 and <i>Kalypso</i> Forecast 2/2003
+
+
+</HTML>

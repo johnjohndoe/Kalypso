@@ -1,0 +1,1162 @@
+%!PS-Adobe-3.0
+%%Title: VersionSession.java
+%%For: JbossUser
+%%Creator: a2ps version 4.13
+%%CreationDate: Sat Jan  4 12:47:05 2003
+%%BoundingBox: 24 50 571 818
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 2
+%%PageOrder: Ascend
+%%DocumentMedia: A4dj 595 842 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontMatrix get 3 get 1000 mul
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Define these in case they're not in the FontInfo (also, here
+    % they're easier to get to.
+    /UnderlinePosition 1 def
+    /UnderlineThickness 1 def
+    
+    % Get the underline position and thickness if they're defined.
+    currentdict /FontInfo known {
+      FontInfo
+      
+      dup /UnderlinePosition known {
+	dup /UnderlinePosition get
+	0 exch FontMatrix transform exch pop
+	/UnderlinePosition exch def
+      } if
+      
+      dup /UnderlineThickness known {
+	/UnderlineThickness get
+	0 exch FontMatrix transform exch pop
+	/UnderlineThickness exch def
+      } if
+      
+    } if
+    currentdict 
+  end 
+} bind def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 595 def
+/sw 842 def
+/llx 50 def
+/urx 818 def
+/ury 571 def
+/lly 24 def
+/#copies 1 def
+/th 15.000000 def
+/fnfs 11 def
+/bfs 7.739558 def
+/cw 4.643735 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 81.400000 mul
+def
+/ph
+   500.749386 th add
+def
+/pmw urx llx sub pw 2 mul sub 1 div def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+  dup pmw add pw add
+] def
+/y [
+  pmh ph add 0 mul ph add
+  dup
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 0 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1-2) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.250614 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( de.tuhh.wb.javagis.model;) p n
+() N
+() N
+(import) K
+( java.lang.*;) p n
+(import) K
+( java.rmi.RemoteException;) p n
+(import) K
+( javax.ejb.EJBObject;) p n
+(import) K
+( javax.ejb.CreateException;) p n
+(import) K
+( javax.ejb.RemoveException;) p n
+(import) K
+( javax.ejb.FinderException;) p n
+(import) K
+( javax.ejb.EJBException;) p n
+(import) K
+( javax.ejb.SessionBean;) p n
+(import) K
+( javax.ejb.SessionContext;) p n
+(import) K
+( javax.naming.InitialContext;) p n
+(import) K
+( javax.naming.NamingException;) p n
+(import) K
+( java.util.Vector;) p n
+(import) K
+( java.util.Hashtable;) p n
+(import) K
+( java.util.Collection;) p n
+(import) K
+( java.util.Iterator;) p n
+(import) K
+( java.awt.geom.Point2D;) p n
+() N
+(import) K
+( de.tuhh.wb.javagis.property.VectorSet;) p n
+() N
+(import) K
+( de.tuhh.wb.javagis.xml.GisTransferObject;) p n
+(import) K
+( java.io.PrintWriter;) p n
+( ) N
+(public) K
+( ) p
+(interface) K
+( ) p
+(VersionSession) L
+( ) p
+(extends) K
+( EJBObject) p n
+({) N
+(    ) S
+(public) K
+( java.lang.Object createVersion\(String project,String name,String stat) p n
+(e,java.lang.String description,java.lang.String history \) ) S
+(throws) K
+( javax.ejb.Creat) p n
+(eException, java.rmi.RemoteException;) N
+(    ) S
+(public) K
+( ) p
+(void) k
+( removeVersion\(Object oId \) ) p
+(throws) K
+( RemoveException, FinderExcepti) p n
+(on,  RemoteException;) N
+() N
+(    ) S
+(// return number of versions) c n
+(    ) p
+(public) K
+( ) p
+(int) k
+( getSize\(  \) ) p
+(throws) K
+( FinderException, RemoteException;) p n
+(    ) S
+(// returns number of elements in Version) c n
+(    ) p
+(public) K
+( ) p
+(int) k
+( getNumberOfObjects\( Object vId \) ) p
+(throws) K
+( FinderException, RemoteEx) p n
+(ception;) N
+() N
+(    ) S
+(public) K
+( String getVersionProject\(Object vId\)  ) p
+(throws) K
+(  RemoteException,  Finde) p n
+(rException;) N
+(    ) S
+(public) K
+( String getVersionState\(Object vId\)  ) p
+(throws) K
+(  RemoteException,  FinderE) p n
+(xception;) N
+(    ) S
+(public) K
+( String getVersionName\(Object vId\)  ) p
+(throws) K
+(  RemoteException,  FinderEx) p n
+(ception;) N
+(    ) S
+(public) K
+( String getVersionDescription\(Object vId\)  ) p
+(throws) K
+(  RemoteException,  F) p n
+(inderException;) N
+(    ) S
+(public) K
+( String getVersionHistory\(Object vId\)  ) p
+(throws) K
+(  RemoteException,  Finde) p n
+(rException;) N
+() N
+(    ) S
+(public) K
+( ) p
+(void) k
+(   setVersionProject\(Object vId,String project\)  ) p
+(throws) K
+(  RemoteEx) p n
+(ception,  FinderException;) N
+(    ) S
+(public) K
+( ) p
+(void) k
+(   setVersionState\(Object vId,String state\)  ) p
+(throws) K
+(  RemoteExcept) p n
+(ion,  FinderException;) N
+(    ) S
+(public) K
+( ) p
+(void) k
+(   setVersionName\(Object vId,String name\)  ) p
+(throws) K
+(  RemoteExceptio) p n
+(n,  FinderException;) N
+(    ) S
+(public) K
+( ) p
+(void) k
+(   setVersionDescription\(Object vId,String descrition\)  ) p
+(throws) K
+(  R) p n
+(emoteException,  FinderException;) N
+(    ) S
+(public) K
+( ) p
+(void) k
+(   setVersionHistory\(Object vId,String history\)  ) p
+(throws) K
+(  RemoteEx) p n
+(ception,  FinderException;) N
+() N
+(    ) S
+(public) K
+( java.util.Vector getPrimaryKeyList\(  \) ) p
+(throws) K
+(  FinderException,  Remo) p n
+(teException;) N
+() N
+(VersionSession.java) (Page 1/3) (Jan 04, 03 12:41) title
+border
+/v 1 store
+/x0 x v get 3.250614 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(    ) p
+(//    public void importFromXml\( java.lang.Object vId,java.lang.String fileN) c n
+(ame \) throws javax.naming.NamingException,  CreateException,  FinderException, j) N
+(ava.io.IOException, org.xml.sax.SAXException,  RemoteException;) N
+(    ) p
+(//    public void exportToXml\( java.lang.Object versionId,java.lang.String f) c n
+(ileName \) throws javax.naming.NamingException, java.io.IOException,  CreateExcep) N
+(tion,  RemoteException;) N
+() p n
+(    ) S
+(public) K
+( ) p
+(void) k
+( run\(String command\) ) p
+(throws) K
+(  RemoteException;) p n
+() N
+(    ) S
+(//model-data:) c n
+(    ) p
+(// Elements:) c n
+(    ) p
+(public) K
+( String[] getElementKeys\(\) ) p
+(throws) K
+( RemoteException;) p n
+(    ) S
+(public) K
+( String[] getObjectKeys\(\) ) p
+(throws) K
+(  RemoteException;) p n
+(    ) S
+(public) K
+( String[] getRelationKeys\(\) ) p
+(throws) K
+(  RemoteException;) p n
+(    ) S
+(public) K
+( String[] getElementNames\(\) ) p
+(throws) K
+(  RemoteException;) p n
+(    ) S
+(public) K
+( String[] getElementSymbolNames\(\) ) p
+(throws) K
+(  RemoteException;) p n
+(    ) S
+(public) K
+( String[] elementDescriptions\(\) ) p
+(throws) K
+(  RemoteException;) p n
+() N
+(    ) S
+(//Properies:) c n
+(    ) p
+(public) K
+( String[] elementGetSimplePropertyKeys\() p
+(int) k
+( elementTable\) ) p
+(throws) K
+(  Remot) p n
+(eException;) N
+(    ) S
+(public) K
+( String[] elementGetSimplePropertyNames\() p
+(int) k
+( elementTable\) ) p
+(throws) K
+(  Remo) p n
+(teException;) N
+(    ) S
+(public) K
+( String[] elementGetSimplePropertyDescriptions\() p
+(int) k
+( elementTable\) ) p
+(throw) K n
+(s) S
+(  RemoteException;) p n
+(    ) S
+(public) K
+( Class[] elementGetSimplePropertyClasses\() p
+(int) k
+( elementTable\) ) p
+(throws) K
+(  Rem) p n
+(oteException;) N
+(    ) S
+(public) K
+( String[] elementGetSimplePropertyFormats\() p
+(int) k
+( elementTable\) ) p
+(throws) K
+(  Re) p n
+(moteException;) N
+(    ) S
+(public) K
+( String[] elementGetVectorSetKeys\() p
+(int) k
+( elementTable\) ) p
+(throws) K
+(  RemoteExce) p n
+(ption;) N
+(    ) S
+(public) K
+( String[] elementGetVectorSetNames\() p
+(int) k
+( elementTable\) ) p
+(throws) K
+(  RemoteExc) p n
+(eption;) N
+(    ) S
+(public) K
+( String[] elementGetVectorSetDescriptions\() p
+(int) k
+( elementTable\) ) p
+(throws) K
+(  Re) p n
+(moteException;) N
+() N
+(    ) S
+(public) K
+( ) p
+(boolean) k
+([] elementIsRelation\(\) ) p
+(throws) K
+(  RemoteException;) p n
+(    ) S
+(public) K
+( String[] relationGetForwardLabels\(\) ) p
+(throws) K
+(  RemoteException;) p n
+(    ) S
+(public) K
+( String[] relationGetBackwardLabels\(\) ) p
+(throws) K
+(  RemoteException;) p n
+(    ) S
+(public) K
+( String[] relationGetSourceKeys\() p
+(int) k
+( relationTable\) ) p
+(throws) K
+(  RemoteExcep) p n
+(tion;) N
+(    ) S
+(public) K
+( String[] relationGetDestinationKeys\() p
+(int) k
+( relationTable\) ) p
+(throws) K
+(  Remote) p n
+(Exception;) N
+() N
+(    ) S
+(public) K
+( String[] relationForwardRelations\() p
+(int) k
+( objectTable\) ) p
+(throws) K
+(  RemoteExce) p n
+(ption;) N
+(    ) S
+(public) K
+( String[] relationBackwardRelations\() p
+(int) k
+( objectTable\) ) p
+(throws) K
+(  RemoteExc) p n
+(eption;) N
+() N
+() N
+(    ) S
+(//PropertyAccess:) c n
+(    ) p
+(public) K
+( Vector getPrimaryKeyList\() p
+(int) k
+( elementTable,Object vId\) ) p
+(throws) K
+( FinderEx) p n
+(ception,  RemoteException;) N
+(    ) S
+(public) K
+( ) p
+(void) k
+( elementSetVectorSet\() p
+(int) k
+( elementTable,Object eId,) p
+(int) k
+( pos,Object v) p n
+(alue\) ) S
+(throws) K
+( FinderException, RemoteException;) p n
+(    ) S
+(public) K
+( Object elementGetVectorSet\() p
+(int) k
+( elementTable,Object eId,) p
+(int) k
+( pos\) ) p
+(throw) K n
+(s) S
+( FinderException, RemoteException;) p n
+(    ) S
+(public) K
+( ) p
+(void) k
+( elementSetVectorSets\() p
+(int) k
+( elementTable,Object eId,Vector vectorSe) p n
+(ts\) ) S
+(throws) K
+( FinderException, RemoteException;) p n
+(    ) S
+(public) K
+( Vector elementGetVectorSets\() p
+(int) k
+( elementTable,Object eId\) ) p
+(throws) K
+( Finde) p n
+(rException, RemoteException;) N
+() N
+() N
+(    ) S
+(public) K
+( Point2D.Double elementGetBasePoint\() p
+(int) k
+( pos,Object oId\) ) p
+(throws) K
+( FinderE) p n
+(VersionSession.java) (Page 2/3) (Jan 04, 03 12:41) title
+border
+grestore
+(Printed by JbossUser) rhead
+(VersionSession.java) (1/2) (Saturday January 04, 2003) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.250614 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(xception, RemoteException;) p n
+(    ) S
+(public) K
+( ) p
+(void) k
+( elementSetBasePoint\() p
+(int) k
+( pos,Object oId, Point2D.Double point\) ) p
+(th) K n
+(rows) S
+( FinderException, RemoteException;) p n
+(    ) S
+(public) K
+( ) p
+(void) k
+( elementSetSimpleProperty\() p
+(int) k
+( table,Object oId, ) p
+(int) k
+( pos,Object va) p n
+(lue\) ) S
+(throws) K
+( FinderException, RemoteException;) p n
+(    ) S
+(public) K
+( Object elementGetSimpleProperty\() p
+(int) k
+( elementTable,Object oId, ) p
+(int) k
+( pos\)) p n
+( ) S
+(throws) K
+( FinderException, RemoteException;) p n
+(    ) S
+(public) K
+( Vector elementGetSimplePropertyRow\() p
+(int) k
+( elementTable,Object oId\) ) p
+(throw) K n
+(s) S
+( FinderException, RemoteException;) p n
+(    ) S
+(public) K
+( Hashtable elementGetSimplePropertyRows\() p
+(int) k
+( elementTable,Vector eIds\) ) p
+() K n
+(throws) S
+( FinderException, RemoteException;) p n
+() N
+(    ) N
+(    ) S
+(public) K
+( Vector getRelationVector\() p
+(int) k
+( relationTable,Object rId\) ) p
+(throws) K
+( FinderE) p n
+(xception, RemoteException;) N
+() N
+() N
+(    ) S
+(public) K
+( Vector objectGetForwardRelations\() p
+(int) k
+( objectTable,Object oId\) ) p
+(throws) K
+( F) p n
+(inderException, RemoteException;) N
+(    ) S
+(public) K
+( Vector objectGetBackwardRelations\() p
+(int) k
+( objectTable,Object oId\) ) p
+(throws) K
+( ) p n
+(FinderException, RemoteException;) N
+() N
+(    ) S
+(public) K
+( Object objectCreate\() p
+(int) k
+( objectTable,Object vId\) ) p
+(throws) K
+( CreateExceptio) p n
+(n, RemoteException;) N
+(    ) S
+(public) K
+( Object createRelation\() p
+(int) k
+( relationTable,Object vId,String srcKey,Obje) p n
+(ct srcId,String destKey,Object destId\) ) S
+(throws) K
+( CreateException,FinderException, R) p n
+(emoteException;) N
+(    ) S
+(public) K
+( ) p
+(void) k
+( removeElement\() p
+(int) k
+( elementTable,Object eId\) ) p
+(throws) K
+( RemoveExceptio) p n
+(n, FinderException, RemoteException;) N
+(}) N
+(VersionSession.java) (Page 3/3) (Jan 04, 03 12:41) title
+border
+grestore
+(Printed by JbossUser) rhead
+(VersionSession.java) (2/2) (Saturday January 04, 2003) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF

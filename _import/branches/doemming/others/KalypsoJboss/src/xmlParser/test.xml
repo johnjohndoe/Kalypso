@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><theme><table key="Channel"><o ID="1"><sp m_strandNr="6" m_wcIndex="64" m_TEST="46" m_testBoolean="false"/>
+</o><o ID="3"><sp m_strandNr="64" m_wcIndex="45" m_TEST="654" m_testBoolean="true" m_qBoardfull="5.0" m_distribFact="46.0"/>
+</o><o ID="2"><sp m_strandNr="456" m_wcIndex="64" m_TEST="5" m_testBoolean="true" m_qBoardfull="46.0" m_distribFact="6.0"/>
+</o></table><table key="Strand"><o ID="1"><sp m_strandNr="4" m_wcIndex="hrh" m_qBoardfull="5.0" m_distribFact="46.0"/>
+</o></table><table key="Rel_ch2str"></table></theme>

@@ -1,0 +1,49 @@
+<html>
+
+<title> Kalypso-Tutorial </title>
+<head> <h2> Main Features </h2></head>
+<img src=blueline.gif align="center" >
+<br>
+<br>
+
+<body>
+Dependent on well calibrated ModelData version user can start this tool from WINDOWS START MENU to forecast flood and get quickly graphical output for warnings.<br>
+When developing this tool special interest was the easy handling without the whole information of model parameters for calibration.
+Furthermore possibility of forecast without without received predicted time-series. Templates represent inthis way characteristic rain or temperature sequences in river basin. <br>
+These templates characterise a relative date formate, relied on the begin of forecast
+<br><br>
+<img src=Screenshot027.gif align="center" >
+<br><br>
+Templates are stored in file and can edit via a normal editor. These functionality enables to simulate for vast regions special climate situations/ possible flood events. Operator can initiate additional runs, display the data from each run and analyse the
+effects on flooding.
+<br>
+To use this tool at first a <b>ModelData</b> version for actual flood event must be exported to xml-file in directory which user can define by FILE CHOOSER. The initial conditions should be validated before in processor <i>Kalypso</i> RRM.
+<br>
+User defines in toolbox date of forecast and manually or via offsets start and end date of simulation. To use estimated initial conditions startdate should be always the same when changing the interval of forecast forward.
+Value of time-step is not fixed but user has to remember that <i>Kalypso</i> routine can only calculate up to 1086 time-steps (including post-carriage).
+Root node enables to simulate subsystem of whole drainage network.
+Separated in two masks user can define hydrological stations used for the forecast simulation. Stations which are not separately for the Forecast tool get same properties like in set in <b>ModelData</b> version.
+To get template for stations user can take FILE CHOOSER to find directory with templates.<br>
+The Figure bellow shows the different possibilities of mapping time-series to flood forecasting.
+<br><br>
+<img src=Screenshot028.gif align="center" ><br><br>
+<img src=Screenshot029.gif align="center" ><br><br>
+Properties of mapping for time-series can be controlled by user by the options to use template or ignore it.
+In contrast to the forecast time-series from DataCentre, the templates are files with user defined precipitation or temperature intervals (e.g. heavy rain, winter, summer). <br>
+The main characteristic of the templates is the independency of date. If templates are included, the program calculates form begin of forecast the mapping of time-series.
+<br>
+The toolbox offers four different outputs of simulation: Hydrological time-series of precipitation, temperature and discharge or automatically converted water stages for gauges are possible.
+<br><br>
+<b>WQ-Transformation</b><br>
+For this automatic WQ-Transformation the Forecast Tool needs WQ-Tables for nodes which should obtain water stages. The necessary WQ-Tables can be exported from DataCentre to Forecast Tool.
+Operator must sae them in folder __________________ for filename the contributing node number with ending wq is used (7770.wq).
+<br><br>
+<b>Graphical Output</b><br>
+To visualise nodes and catchments and kind of output must be set. Before simulation runs user also must define directory for output via FILE CHOOSER. Saving of generated results is same like already explained in previous chapters.
+Automatically after simulation run GraphicTool opens and presents with predefined template.
+<br><br>
+<hr>
+
+User Manual<i> Kalypso</i> RRM 2/2003 and <i>Kalypso</i> Forecast 2/2003
+
+</HTML>

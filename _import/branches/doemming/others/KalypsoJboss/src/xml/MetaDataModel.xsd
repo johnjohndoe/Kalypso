@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by Anoby (have no company :-() -->
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Simon Nazrebik (no) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="theme">
+		<xs:annotation>
+			<xs:documentation>root-element, captures everything that belongs to one  theme</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="_ThemeType">
+					<xs:sequence>
+						<xs:element name="topology" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:complexContent>
+									<xs:extension base="_TopologyType"/>
+								</xs:complexContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="network" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:complexContent>
+									<xs:extension base="_NetworkType"/>
+								</xs:complexContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="objectClass" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:complexContent>
+									<xs:extension base="_ObjectClassType"/>
+								</xs:complexContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="relationClass" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:complexContent>
+									<xs:extension base="_RelationshipClassType"/>
+								</xs:complexContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+		<xs:key name="topologyID">
+			<xs:selector xpath="./topology"/>
+			<xs:field xpath="@ID"/>
+		</xs:key>
+		<xs:key name="networkID">
+			<xs:selector xpath="./network"/>
+			<xs:field xpath="@ID"/>
+		</xs:key>
+		<xs:key name="objectClassID">
+			<xs:selector xpath="./objectClass"/>
+			<xs:field xpath="@ID"/>
+		</xs:key>
+		<xs:keyref name="object_river_REF" refer="topologyID">
+			<xs:selector xpath="./objectClass/belongsToTopology"/>
+			<xs:field xpath="@ref"/>
+		</xs:keyref>
+		<xs:keyref name="relation_fromObjectClass_REF" refer="objectClassID">
+			<xs:selector xpath="./relationClass/fromObjectClass"/>
+			<xs:field xpath="@ref"/>
+		</xs:keyref>
+		<xs:keyref name="relation_toObjectClass_REF" refer="objectClassID">
+			<xs:selector xpath="./relationClass/toObjectClass"/>
+			<xs:field xpath="@ref"/>
+		</xs:keyref>
+		<xs:keyref name="relation_network_REF" refer="networkID">
+			<xs:selector xpath="./relationClass/belongsToNetwork"/>
+			<xs:field xpath="@ref"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:complexType name="_ThemeType">
+		<xs:complexContent>
+			<xs:extension base="_TableElementType">
+				<xs:sequence>
+					<xs:element name="package" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="_ObjectClassType">
+		<xs:annotation>
+			<xs:documentation>Discribes an Object</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="_TableElementType">
+				<xs:sequence>
+					<xs:element name="belongsToTopology" type="_LinkType" minOccurs="0"/>
+					<xs:element name="geometry" type="_ShapeType" minOccurs="0"/>
+					<xs:element name="symbol" type="xs:string" minOccurs="0"/>
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="simpleProperty" type="_SimpleParameterType"/>
+						<xs:element name="vectorSet" type="_VectorSetType"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="_RelationshipClassType">
+		<xs:annotation>
+			<xs:documentation>Discribes the Relation between ObjectClasses</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="_TableElementType">
+				<xs:sequence>
+					<xs:element name="fromObjectClass" type="_LinkType" maxOccurs="unbounded"/>
+					<xs:element name="toObjectClass" type="_LinkType" maxOccurs="unbounded"/>
+					<xs:element name="forwardLabel" type="xs:string"/>
+					<xs:element name="backwardLabel" type="xs:string"/>
+					<xs:element name="fromCardinalityMax" type="xs:string"/>
+					<xs:element name="toCardinalityMax" type="xs:string"/>
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="functionProperty" type="_FunktionParameterType"/>
+						<xs:element name="simpleProperty" type="_SimpleParameterType"/>
+						<xs:element name="chartProperty" type="_TrackingParameterType"/>
+						<xs:element name="vectorSet" type="_VectorSetType"/>
+					</xs:choice>
+					<xs:element name="belongsToNetwork" type="_LinkType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="_NetworkType">
+		<xs:annotation>
+			<xs:documentation>Defines a network</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="_TableElementType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="_TopologyType">
+		<xs:annotation>
+			<xs:documentation>Defines a topology</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="_TableElementType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="_ParameterType">
+		<xs:annotation>
+			<xs:documentation>Discribes the Properties of an ObjectClass or RelationshipClass</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="key" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="_TableElementType" abstract="true">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="description" type="xs:string"/>
+		</xs:sequence>
+		<xs:attribute name="ID" type="xs:ID"/>
+	</xs:complexType>
+	<xs:complexType name="_GeometryType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="shortCutName" type="xs:string"/>
+			<xs:element name="shape" type="_ShapeType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="_FunktionDataType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="sizeOf"/>
+			<xs:enumeration value="lengthOf"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="_SimpleDataType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="java.lang.Integer"/>
+			<xs:enumeration value="java.lang.Float"/>
+			<xs:enumeration value="java.lang.Double"/>
+			<xs:enumeration value="java.lang.String"/>
+			<xs:enumeration value="java.util.Date"/>
+			<xs:enumeration value="java.lang.Boolean"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="_ShapeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Point"/>
+			<xs:enumeration value="LineString"/>
+			<xs:enumeration value="Line"/>
+			<xs:enumeration value="LinearRing"/>
+			<xs:enumeration value="Polygon"/>
+			<xs:enumeration value="MultiPolygon"/>
+			<xs:enumeration value="MultiLineString"/>
+			<xs:enumeration value="MultiPoint"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="_CardinalityType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="unbound"/>
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="_SimpleParameterType">
+		<xs:complexContent>
+			<xs:extension base="_ParameterType">
+				<xs:sequence>
+					<xs:element name="type" type="_SimpleDataType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="_TrackingParameterType">
+		<xs:complexContent>
+			<xs:extension base="_ParameterType">
+				<xs:sequence>
+					<xs:element name="axis" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:complexContent>
+								<xs:extension base="_SimpleParameterType"/>
+							</xs:complexContent>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="_FunktionParameterType">
+		<xs:complexContent>
+			<xs:extension base="_ParameterType">
+				<xs:sequence>
+					<xs:element name="function" type="_FunktionDataType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="_PropertyType"/>
+	<xs:complexType name="_VectorSetType">
+		<xs:complexContent>
+			<xs:extension base="_ParameterType">
+				<xs:choice maxOccurs="unbounded">
+					<xs:element name="simpleProperty" type="_SimpleParameterType"/>
+					<xs:element name="vectorSet" type="_VectorSetType"/>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="_LinkType">
+		<xs:attribute name="ref"/>
+	</xs:complexType>
+</xs:schema>
