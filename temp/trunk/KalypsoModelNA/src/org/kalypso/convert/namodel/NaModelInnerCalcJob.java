@@ -36,12 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,6 +50,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
@@ -67,6 +69,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.CopyUtils;
+import org.apache.commons.io.IOUtils;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
@@ -133,6 +136,8 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
 
   private final String TEMPLATE_CONF_FILE = "misc/resourceFile.conf";
 
+  private boolean m_succeeded = false;
+
   public NaModelInnerCalcJob()
   {
     m_urlUtilities = new UrlUtilities();
@@ -171,16 +176,47 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
       if( isCanceled() )
         return;
       startCalculation( exeDir );
+      checkSucceeded( exeDir );
+      if( isSucceeded() )
+      {
+        setMessage( "lade Ergebnisse" );
 
-      setMessage( "lade Ergebnisse" );
-      loadResults( exeDir, modellWorkspace, logBuffer, outDir );
-
+        loadResults( exeDir, modellWorkspace, logBuffer, outDir );
+      }
       System.out.println( "fertig" );
     }
     catch( Exception e )
     {
       e.printStackTrace();
       throw new CalcJobServiceException( "Simulation konnte nicht durchgefuehrt werden", e );
+    }
+  }
+
+  public void checkSucceeded( final File inputDir )
+  {
+    Reader logFileReader = null;
+    LineNumberReader reader = null;
+    try
+    {
+      final File logDir = new File( inputDir, "start" );
+      final File logFile = new File( logDir, "output.res" );
+      logFileReader = new FileReader( logFile );
+      reader = new LineNumberReader( logFileReader );
+      String line;
+      while( ( line = reader.readLine() ) != null )
+      {
+        if( line.indexOf( "berechnung wurde ohne fehler beendet" ) >= 0 )
+          m_succeeded = true;
+      }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( reader );
+      IOUtils.closeQuietly( logFileReader );
     }
   }
 
@@ -454,7 +490,8 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
                 TimeserieConstants.MD_GKR,
                 TimeserieConstants.MD_HOEHENANGABEART,
                 TimeserieConstants.MD_PEGELNULLPUNKT,
-                TimeserieConstants.MD_WQ } );
+                TimeserieConstants.MD_WQ,
+                TimeserieConstants.MD_VORHERSAGE } );
 
           }
         }
@@ -683,5 +720,10 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
         e1.printStackTrace();
       }
     }
+  }
+
+  public boolean isSucceeded()
+  {
+    return m_succeeded;
   }
 }

@@ -49,7 +49,7 @@ public class KalypsoNADefaultSchema
 {
   private static KalypsoNADefaultSchema m_instance;
 
-  public static KalypsoNADefaultSchema getInstance()
+  private static KalypsoNADefaultSchema getInstance()
   {
     if( m_instance == null )
       m_instance = new KalypsoNADefaultSchema();
@@ -64,6 +64,11 @@ public class KalypsoNADefaultSchema
   public static URL getDefaultNaModellSchemaURL()
   {
     return getInstance().getClass().getResource( "namodell.xsd" );
+  }
+
+  public static URL getDefaultNaControlSchemaURL()
+  {
+    return getInstance().getClass().getResource( "nacontrol.xsd" );
   }
 
 }

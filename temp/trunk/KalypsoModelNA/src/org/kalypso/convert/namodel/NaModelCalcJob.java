@@ -139,4 +139,11 @@ public class NaModelCalcJob implements ICalcJob
     return false;
   }
 
+  public boolean isSucceeded()
+  {
+    if( m_calcJob != null)
+      return ((NaModelInnerCalcJob)m_calcJob).isSucceeded();
+    return false;
+  }
+
 }

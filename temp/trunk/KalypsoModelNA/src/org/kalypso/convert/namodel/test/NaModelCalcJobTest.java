@@ -65,7 +65,7 @@ public class NaModelCalcJobTest extends TestCase
     registry.registerTypeHandler( new ObservationLinkHandler() );
 
     //    File baseDir = new File( "C:\\simulation\\test" );
-    final File baseDir = new File( "C:\\Programme\\KalypsoServer\\data\\tmp\\TEST2" );
+    final File baseDir = new File( "C:\\Programme\\KalypsoServer\\data\\tmp\\TEST" );
     final File simDir = new File( baseDir, "sim" );
     final File ergDir = new File( baseDir, "output" );
     if( simDir.exists() )

@@ -36,9 +36,9 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel;
+ 
+ ---------------------------------------------------------------------------------------------------*/
+package org.kalypso.convert.namodel.net;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -51,19 +51,58 @@ import java.util.List;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.GMLWorkspace;
 import org.kalypso.convert.ASCIIHelper;
+import org.kalypso.convert.namodel.AsciiBuffer;
+import org.kalypso.convert.namodel.CatchmentManager;
+import org.kalypso.convert.namodel.ChannelManager;
+import org.kalypso.convert.namodel.NAZMLGenerator;
+import org.kalypso.convert.namodel.NetFileManager;
+import org.kalypso.convert.namodel.net.visitors.NetElementVisitor;
 import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
+/**
+ * A NetElement encapsulates a Channel-Element and its dependencies <br>
+ * In the example below each channel represents one netelement. Here you can see
+ * the dependencies related the one channel written in capital letter in the
+ * middle.
+ * 
+ * <pre>
+ *                    Node----->-----Node
+ *                      |              |
+ *                      V              V
+ *                      |              |
+ *   Catchment--->---CHANNEL        Channel (downstream)
+ *       |              |           
+ *       |              V           
+ *       V              |           
+ *       |             Node
+ *       |              |
+ *    Catchment         V
+ *       |              |
+ *       V           Channel (downstream)
+ *       |
+ *    Channel (downstream)
+ * 
+ * 
+ * </pre>
+ * 
+ *  
+ */
 public class NetElement
 {
+
+  //  private boolean m_virtual = false;
+
+  private boolean m_calculated = false;
+
   private final NetFileManager m_manager;
 
-  public final static int UNCALCULATED = 1;
-
-  public final static int CALCULATED = 2;
+  //  public final static int UNCALCULATED = 1;
+  //
+  //  public final static int CALCULATED = 2;
 
   private final List m_upStreamDepends = new ArrayList();
 
@@ -75,7 +114,7 @@ public class NetElement
 
   private static final String ENDKNOTEN = "   10000";
 
-  private int m_status = UNCALCULATED;
+  //  private int m_status = UNCALCULATED;
 
   private final UrlUtilities m_urlUtils = new UrlUtilities();
 
@@ -96,7 +135,7 @@ public class NetElement
   public NetElement( NetFileManager manager, Feature channelFE )
   {
     m_channelFE = channelFE;
-    this.m_manager = manager;
+    m_manager = manager;
   }
 
   public Feature getChannel()
@@ -104,24 +143,31 @@ public class NetElement
     return m_channelFE;
   }
 
+  public Feature getDownStreamNode()
+  {
+    return m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
+  }
+
   public boolean isCalculated()
   {
-    return m_status == CALCULATED;
+    return m_calculated;
   }
 
   public boolean resultExists()
   {
+    return m_manager.resultExists( getDownStreamNode() );
+  }
+
+  public void removeResult()
+  {
     final Feature knotU = m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
-    return m_manager.resultExists( knotU );
+    m_manager.removeResult( knotU );
   }
 
   /**
-   * @param isRootElement
-   *          upstream from root node, only first channel is not upstream from
-   *          rootnode
+   *  
    */
-  public void berechne( AsciiBuffer asciiBuffer, List nodeList, boolean isRootElement )
-      throws IOException, Exception
+  public void berechne( AsciiBuffer asciiBuffer, List nodeList ) throws IOException, Exception
   {
     if( isCalculated() )
       return;
@@ -132,9 +178,9 @@ public class NetElement
       berechneOberlauf( asciiBuffer, nodeList );
 
     // calculate me
-    write( asciiBuffer, nodeList, resultExists, isRootElement );
+    write( asciiBuffer, nodeList );
     generateTimeSeries();
-    m_status = CALCULATED;
+
   }
 
   public void berechneOberlauf( AsciiBuffer asciiBuffer, List nodeList ) throws Exception
@@ -143,13 +189,13 @@ public class NetElement
     {
       // berechne oberlauf
       NetElement element = (NetElement)iter.next();
-      element.berechne( asciiBuffer, nodeList, false );
+      element.berechne( asciiBuffer, nodeList );
     }
   }
 
-  private void generateTimeSeries() throws IOException, Exception
+  public void generateTimeSeries() throws IOException, Exception
   {
-    Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, this.m_manager.m_conf
+    Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, m_manager.m_conf
         .getCatchemtFT(), "entwaesserungsStrangMember" );
     for( int i = 0; i < catchmentFeatures.length; i++ )
     {
@@ -181,9 +227,19 @@ public class NetElement
       m_downStreamDepends.add( downStreamElement );
   }
 
+  public Feature getChannelsBelowDownStreamNode()
+  {
+    return m_workspace.resolveLink( getDownStreamNode(), "downStreamChannelMember" );
+  }
+
   public List getDownStreamNetElements()
   {
     return m_downStreamDepends;
+  }
+
+  public List getUpStreamNetElements()
+  {
+    return m_upStreamDepends;
   }
 
   public void addUpStream( NetElement upStreamElement )
@@ -193,32 +249,28 @@ public class NetElement
     upStreamElement.addDownStream( this );
   }
 
-  public void writeRootChannel( AsciiBuffer asciiBuffer, List processedRootNodes )
+  public void writeRootChannel( AsciiBuffer asciiBuffer, int virtuelChannelId )
   {
-    final Feature knotO = m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
-    if( !processedRootNodes.contains( knotO ) )
-    {
-      processedRootNodes.add( knotO );
-      int channelID = 10000 + processedRootNodes.size();
-      asciiBuffer.getNetBuffer().append( "   " + channelID );
-      asciiBuffer.getNetBuffer().append( ASCIIHelper.toAsciiLine( knotO, m_netAsciiFormat[11] ) );
-      asciiBuffer.getNetBuffer().append( ENDKNOTEN );
-      asciiBuffer.getNetBuffer().append( " 0\n" );
+    final Feature knotu = m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
+    if( knotu == null )
+      System.out.println( "knotU=null" );
+    asciiBuffer.getNetBuffer().append( "   " + virtuelChannelId );
+    asciiBuffer.getNetBuffer().append( ASCIIHelper.toAsciiLine( knotu, m_netAsciiFormat[11] ) );
+    asciiBuffer.getNetBuffer().append( ENDKNOTEN );
+    asciiBuffer.getNetBuffer().append( " 0\n" );
 
-      asciiBuffer.getChannelBuffer().append( channelID + "\n" );
-      asciiBuffer.getChannelBuffer().append( ChannelManager.VIRTUALCHANNEL + "\n" );
-    }
+    asciiBuffer.getChannelBuffer().append( virtuelChannelId + "\n" );
+    asciiBuffer.getChannelBuffer().append( ChannelManager.VIRTUALCHANNEL + "\n" );
+    //    m_virtual = true;
   }
 
   /**
    * writes part 1 of netfile
-   * 
-   * @param isRootElement
-   *          false: this is a source node
+   *  
    */
-  public void write( AsciiBuffer asciiBuffer, List nodeList, boolean resultExists,
-      boolean isRootElement )
+  public void write( AsciiBuffer asciiBuffer, List nodeList )
   {
+    boolean resultExists = resultExists();
     asciiBuffer.addFeatureToWrite( getChannel() );
     final Feature knotU = m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
 
@@ -239,6 +291,7 @@ public class NetElement
         knotO = features[i];
         continue;
       }
+      m_calculated = true;
     }
     // collect related catchments
     final List catchmentList = new ArrayList();
@@ -300,4 +353,14 @@ public class NetElement
     if( knotU != null && !nodeList.contains( knotU ) )
       nodeList.add( knotU );
   }
+
+  public void accept( NetElementVisitor visitor )
+  {
+    visitor.visit( this );
+  }
+
+  //  public boolean isVirtual()
+  //  {
+  //    return m_virtual;
+  //  }
 }

@@ -57,8 +57,6 @@ import org.kalypso.convert.namodel.NAZMLGenerator;
 import org.kalypso.convert.namodel.schema.KalypsoNADefaultSchema;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.timeseries.wq.WQFilterUtilities;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
@@ -69,9 +67,6 @@ import org.kalypso.zml.obslink.TimeseriesLink;
 public class UpdateModell
 {
   private final URL m_modellURL;
-
-  private final static String FILTER_WQ = "?"
-      + WQFilterUtilities.createWQFilterInline( TimeserieConstants.TYPE_RUNOFF );
 
   public final static String PSI_PROGNOSE_SUFFIX = ".P1_MW";
 
@@ -108,7 +103,7 @@ public class UpdateModell
 
   public void updateIt() throws Exception
   {
-    URL schemaURL = KalypsoNADefaultSchema.getInstance().getDefaultNaModellSchemaURL();
+    URL schemaURL = KalypsoNADefaultSchema.getDefaultNaModellSchemaURL();
     GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modellURL, schemaURL );
 
     // Catchments...
@@ -429,7 +424,7 @@ public class UpdateModell
         // zufluss lokal
         TimeseriesLink linkZufluss = NAZMLGenerator
             .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_ZUFLUSS_LOKAL + fe.getId()
-                + ".zml" );// + FILTER_WQ );
+                + ".zml" );
         setTSLink( fe, "zuflussZR", linkZufluss );
       }
       //pegelRep
@@ -473,7 +468,7 @@ public class UpdateModell
       // berechnet
       TimeseriesLink linkBerechnet = NAZMLGenerator
           .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_BERECHNET_LOKAL + fe.getId()
-              + ".zml" + FILTER_WQ );
+              + ".zml" );
       setTSLink( fe, "qberechnetZR", linkBerechnet );
       setTSLink( fe, "pegelBerechnetZRRepository", null );
       setTSLink( fe, "zuflussZR", null );

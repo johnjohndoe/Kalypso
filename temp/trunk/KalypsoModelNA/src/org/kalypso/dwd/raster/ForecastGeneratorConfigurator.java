@@ -158,7 +158,7 @@ public class ForecastGeneratorConfigurator
 
     System.out.println( "loading model: " + m_modelFile.getName() );
     final URL modellURL = m_modelFile.toURL();
-    final URL schemaURL = KalypsoNADefaultSchema.getInstance().getDefaultNaModellSchemaURL();
+    final URL schemaURL = KalypsoNADefaultSchema.getDefaultNaModellSchemaURL();
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellURL, schemaURL );
     m_features = workspace.getFeatures( workspace.getFeatureType( "Catchment" ) );
   }
