@@ -260,6 +260,10 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   {
     m_workspace.addLinkedFeature( parent, propName, pos, newFeature );
   }
+  
+  public void removeLinkedFeature(Feature parentFeature, String propName, Feature linkFeature){
+    m_workspace.removeLinkedFeature(parentFeature, propName, linkFeature);
+  }
 
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getNamespaceMap()

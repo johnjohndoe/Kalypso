@@ -67,6 +67,8 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public void addLinkedFeature( Feature parent, String propName, int pos, Feature newFeature )
       throws Exception;
+  
+  public void removeLinkedFeature(Feature parentFeature, String propName, Feature linkFeature);
 
   public Map getNamespaceMap();
 }

@@ -4,10 +4,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -28,6 +24,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.Clipboard;
 import org.kalypso.ui.editor.gmleditor.util.GMLReader;
 import org.kalypso.ui.editor.gmleditor.util.actions.AddFeatureAction;
+import org.kalypso.ui.editor.gmleditor.util.actions.AddLinkAction;
 import org.kalypso.ui.editor.gmleditor.util.actions.CopyFeatureAction;
 import org.kalypso.ui.editor.gmleditor.util.actions.EditFeatureAction;
 import org.kalypso.ui.editor.gmleditor.util.actions.PasteFeatureAction;
@@ -41,6 +38,10 @@ import org.kalypso.ui.editor.gmleditor.util.model.LinkedFeatureElement;
 import org.kalypso.ui.editor.gmleditor.util.model.Model;
 import org.kalypso.ui.editor.gmleditor.util.model.PropertyElement;
 import org.kalypso.ui.editor.gmleditor.util.model.visitors.FindDataElementsVisitor;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListener
 {
@@ -65,6 +66,8 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
   protected Action moveFeatureDownAction = null;
 
   protected Action addFeatureActions[] = null;
+
+  protected Action addLinkActions[] = null;
 
   protected Action copyFeatureAction = null;
 
@@ -152,7 +155,8 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
                 ( (PropertyElement)model.getParent() ).getProperty().getName(), childItem );
             try
             {
-              m_workspace.postCommand( command );
+              //m_workspace.postCommand( command );
+              m_gmlEditor.postCommand(command, null);
               return;
             }
             catch( Exception e )
@@ -272,6 +276,11 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
           for( int i = 0; i < addFeatureActions.length; i++ )
             mgr.add( addFeatureActions[i] );
         }
+        if( addLinkActions != null )
+        {
+          for( int i = 0; i < addLinkActions.length; i++ )
+            mgr.add( addLinkActions[i] );
+        }
         if( copyFeatureAction != null )
           mgr.add( copyFeatureAction );
         if( pasteFeatureAction != null )
@@ -326,9 +335,13 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
               .getFeature();
 
           addFeatureActions = new Action[types.length];
+          addLinkActions = new Action[types.length];
           for( int i = 0; i < types.length; i++ )
           {
-            addFeatureActions[i] = new AddFeatureAction( types[i], m_workspace, parentFeature,
+            addFeatureActions[i] = new AddFeatureAction( types[i], m_workspace, m_gmlEditor,
+                parentFeature, ( (PropertyElement)obj ).getProperty().getName(), 0, m_composite
+                    .getShell() );
+            addLinkActions[i] = new AddLinkAction( types[i], m_workspace, m_gmlEditor, parentFeature,
                 ( (PropertyElement)obj ).getProperty().getName(), 0, m_composite.getShell() );
           }
 
@@ -355,6 +368,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
           moveFeatureUpAction.setEnabled( true );
           moveFeatureDownAction.setEnabled( true );
           addFeatureActions = null;
+          addLinkActions = null;
           if( copyFeatureAction != null )
             copyFeatureAction.setEnabled( false );
           if( editFeatureAction != null )
@@ -415,7 +429,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
 
     if( m_composite == null || m_composite.isDisposed() )
       return;
-    
+
     m_composite.getDisplay().asyncExec( new Runnable()
     {
       public void run()

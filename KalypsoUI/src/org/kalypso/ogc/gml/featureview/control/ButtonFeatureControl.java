@@ -59,11 +59,15 @@ import org.kalypso.ogc.gml.featureview.dialog.CalendarFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.FeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog;
+import org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog;
+import org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.gml.schema.DateWithoutTime;
+import org.kalypsodeegree_impl.model.cv.RangeSet;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
 /**
  * @author belger
@@ -90,7 +94,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   public static IFeatureDialog chooseDialog( final Feature feature, final FeatureTypeProperty ftp )
   {
     final String typename = ftp.getType();
-    
+    // TODO make extensionpoint for this
 //    if( typename.equals( "java.lang.String" ) )
 //      return text;
 //    if( typeName.equals( "java.lang.Double" ) )
@@ -109,6 +113,14 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       return new CalendarFeatureDialog( feature, ftp );
     if( "FeatureAssociationType".equals(typename) )
       return new FeatureDialog( feature, ftp );
+    
+    if(RectifiedGridDomain.class.getName().equals(typename)){
+      return new RectifiedGridDomainFeatureDialog(feature,ftp);
+    }
+    
+    if(RangeSet.class.getName().equals(typename)){
+      return new RangeSetFeatureDialog(feature,ftp);
+    }
     
     return new NotImplementedFeatureDialog();
   }

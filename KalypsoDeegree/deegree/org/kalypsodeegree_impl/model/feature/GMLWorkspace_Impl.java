@@ -563,6 +563,27 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     // TODO eigene exception entwerfen
     throw new Exception( "New Feature violates maxOccurs" );
   }
+  
+  public void removeLinkedFeature(Feature parentFeature, String propName, Feature linkFeature){
+    Object prop = parentFeature.getProperty( propName );
+    Object properties[] = parentFeature.getProperties();
+    int propIndex = 0;
+    for( ; propIndex < properties.length; propIndex++ )
+      if( properties[propIndex] == prop )
+        break;
+
+    int maxOccurs = parentFeature.getFeatureType().getMaxOccurs( propIndex );
+
+    if( maxOccurs == 1 )
+    {
+      properties[propIndex] = null;
+    }
+    else if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+    {
+      List list = (List)prop;
+      list.remove( linkFeature.getId() );
+    }
+  }
 
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getNamespaceMap()
