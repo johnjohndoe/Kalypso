@@ -1,6 +1,8 @@
 package org.kalypso.editor.tableeditor;
 
+import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.EditorActionBarContributor;
 
@@ -20,9 +22,18 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
       final IMenuManager tableMenu = menuManager
           .findMenuUsingPath( "org.kalypso.editors.tableeditor.menu" );
 
-      final IMenuManager spaltenMenu = ((GisTableEditor)targetEditor).getLayerTable().getSpaltenMenu(  );
-      if( spaltenMenu != null )
-        tableMenu.appendToGroup( "spalten", spaltenMenu );
+      final IMenuManager spaltenMenu = new MenuManager( "Spalten" );
+      spaltenMenu.setRemoveAllWhenShown( true );
+      spaltenMenu.addMenuListener( new IMenuListener()
+      {
+        public void menuAboutToShow( final IMenuManager manager )
+        {
+          ((GisTableEditor)targetEditor).getLayerTable().appendSpaltenActions( manager );
+        }
+      } );
+      
+//      if( spaltenMenu != null )
+      tableMenu.appendToGroup( "spalten", spaltenMenu );
     }
   }
 }

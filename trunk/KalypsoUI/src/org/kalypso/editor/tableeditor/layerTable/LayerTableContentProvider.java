@@ -2,6 +2,8 @@ package org.kalypso.editor.tableeditor.layerTable;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 
 /**
  * @author bce
@@ -13,7 +15,11 @@ public class LayerTableContentProvider implements IStructuredContentProvider
    */
   public Object[] getElements( final Object inputElement )
   {
-   return ((LayerTableModel)inputElement).getTheme().getLayer().getAllFeatures();
+    if( inputElement == null )
+      return new Object[] {};
+
+    final KalypsoFeatureLayer layer = ((IKalypsoTheme)inputElement).getLayer();
+    return layer == null ? new Object[] {} : layer.getAllFeatures();
   }
 
   /**

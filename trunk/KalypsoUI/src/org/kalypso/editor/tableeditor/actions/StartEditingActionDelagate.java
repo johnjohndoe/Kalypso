@@ -13,12 +13,12 @@ public class StartEditingActionDelagate extends GisTableAbstractActionDelagate
    */
   public void run( final IAction action )
   {
-    getEditor().getTheme().setEditing( action.isChecked() );
+    getEditor().getLayerTable().getTheme().setEditing( action.isChecked() );
   }
   
   protected boolean isChecked()
   {
-    return getEditor().getTheme() != null && getEditor().getTheme().isEditing();
+    return getEditor().getLayerTable().getTheme() != null && getEditor().getLayerTable().getTheme().isEditing();
   }
 
   /**
@@ -26,6 +26,6 @@ public class StartEditingActionDelagate extends GisTableAbstractActionDelagate
    */
   protected boolean isEnabled( final ISelection selection )
   {
-    return getEditor().getTheme() != null;
+    return getEditor().getLayerTable().getTheme() != null;
   }
 }

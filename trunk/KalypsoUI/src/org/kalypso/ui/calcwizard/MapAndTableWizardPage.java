@@ -76,19 +76,23 @@ public class MapAndTableWizardPage extends WizardPage
     {
       // links karte
       createMapPanel( sashForm );
-
-      // rechts tabelle
-      final Text text = new Text( sashForm, SWT.NONE );
-      text.setText( m_arguments.getProperty(PROP_TABLETEMPLATE) );
+      createTablePanel( sashForm );
+      
+      sashForm.setWeights( new int[] { 70, 30 } );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
     }
 
-    
-
     setControl( sashForm );
+  }
+
+  private void createTablePanel( final Composite parent )
+  {
+    // rechts tabelle
+    final Text text = new Text( parent, SWT.NONE );
+    text.setText( m_arguments.getProperty(PROP_TABLETEMPLATE) );
   }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException

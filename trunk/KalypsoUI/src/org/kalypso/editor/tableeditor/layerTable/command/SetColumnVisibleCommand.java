@@ -1,23 +1,31 @@
 package org.kalypso.editor.tableeditor.layerTable.command;
 
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.kalypso.editor.tableeditor.layerTable.LayerTableModel;
+import org.kalypso.editor.tableeditor.layerTable.LayerTableViewer;
 import org.kalypso.util.command.ICommand;
 
 /**
- * @author bce
+ * @author Belger
  */
 public class SetColumnVisibleCommand implements ICommand
 {
-  private final LayerTableModel m_model;
-  private final FeatureTypeProperty m_ftp;
+  private final String m_propertyName;
+
   private final boolean m_bVisible;
 
-  public SetColumnVisibleCommand( final LayerTableModel model, final FeatureTypeProperty ftp, final boolean bVisible )
+  private final LayerTableViewer m_viewer;
+
+  private final boolean m_wasEditable;
+
+  private final int m_oldWidth;
+
+  public SetColumnVisibleCommand( final LayerTableViewer viewer, final String propertyName,
+      final boolean bVisible )
   {
-    m_model = model;
-    m_ftp = ftp;
+    m_viewer = viewer;
+    m_propertyName = propertyName;
     m_bVisible = bVisible;
+    m_wasEditable = viewer.isEditable( propertyName );
+    m_oldWidth = viewer.getWidth( propertyName );
   }
 
   /**
@@ -33,7 +41,7 @@ public class SetColumnVisibleCommand implements ICommand
    */
   public void process() throws Exception
   {
-    m_model.showColumn( m_ftp, m_bVisible );
+    doIt( m_viewer, m_propertyName, m_bVisible, 100, false );
   }
 
   /**
@@ -41,7 +49,7 @@ public class SetColumnVisibleCommand implements ICommand
    */
   public void redo() throws Exception
   {
-    process();
+    doIt( m_viewer, m_propertyName, m_bVisible, 100, false );
   }
 
   /**
@@ -49,7 +57,7 @@ public class SetColumnVisibleCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    m_model.showColumn( m_ftp, !m_bVisible );
+    doIt( m_viewer, m_propertyName, !m_bVisible, m_oldWidth, m_wasEditable );
   }
 
   /**
@@ -57,7 +65,20 @@ public class SetColumnVisibleCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Spalte '" + m_ftp.getName() + "' " + ( m_bVisible ? "anzeigen" : "verstecken" );
+    return "Spalte '" + m_propertyName + "' " + ( m_bVisible ? "anzeigen" : "verstecken" );
   }
-
+  
+  private void doIt( final LayerTableViewer viewer, final String propertyName, final boolean bVisible, final int width, final boolean editable )
+  {
+    m_viewer.getControl().getDisplay().syncExec( new Runnable()
+    {
+      public void run()
+      {
+        if( bVisible )
+          viewer.addColumn( propertyName, width, editable );
+        else
+          viewer.removeColumn( propertyName );
+      }
+    } );
+  }
 }

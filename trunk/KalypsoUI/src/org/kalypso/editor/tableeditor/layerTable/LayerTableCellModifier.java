@@ -1,7 +1,5 @@
 package org.kalypso.editor.tableeditor.layerTable;
 
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.ogc.command.ModifyFeatureCommand;
@@ -16,14 +14,11 @@ import org.kalypso.util.command.ICommand;
  */
 public class LayerTableCellModifier implements ICellModifier
 {
-  private final FeatureType m_type;
+  private final LayerTableViewer m_viewer;
   
-  private final LayerTableModel m_modell;
-
-  public LayerTableCellModifier( final LayerTableModel modell, final FeatureType type )
+  public LayerTableCellModifier( final LayerTableViewer viewer )
   {
-    m_modell = modell;
-    m_type = type;
+    m_viewer = viewer;
   }
   
   /**
@@ -31,13 +26,7 @@ public class LayerTableCellModifier implements ICellModifier
    */
   public boolean canModify( final Object element, final String property )
   {
-    final FeatureTypeProperty ftp = getFeatureTypeProperty( property );
-    return m_modell.isEditable( ftp );
-  }
-
-  private FeatureTypeProperty getFeatureTypeProperty( final String property )
-  {
-    return m_type.getProperty( property );
+    return m_viewer.isEditable( property );
   }
 
   /**
@@ -55,9 +44,9 @@ public class LayerTableCellModifier implements ICellModifier
   {
     final TableItem tableItem = (TableItem)element;
     final KalypsoFeature  feature = (KalypsoFeature)tableItem.getData();
-    final KalypsoFeatureLayer layer = m_modell.getTheme().getLayer();
+    final KalypsoFeatureLayer layer = m_viewer.getTheme().getLayer();
     
     final ICommand command = new ModifyFeatureCommand( layer, feature, property, value );
-    m_modell.postCommand( command, null );
+    m_viewer.postCommand( command, null );
    }
 }

@@ -1,29 +1,23 @@
 package org.kalypso.editor.tableeditor.actions;
 
-import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.jface.action.Action;
-import org.kalypso.editor.tableeditor.layerTable.LayerTable;
+import org.kalypso.editor.tableeditor.layerTable.LayerTableViewer;
 import org.kalypso.editor.tableeditor.layerTable.command.SetColumnVisibleCommand;
-import org.kalypso.util.command.ICommandTarget;
 
 public final class ColumnAction extends Action
 {
-  private final FeatureTypeProperty m_ftp;
+  private final LayerTableViewer m_viewer;
+  private final String m_propertyName;
 
-  private final LayerTable m_layerTable;
-
-  private ICommandTarget m_commandTarget;
-
-  public ColumnAction( final ICommandTarget commandTarget, final LayerTable layerTable,
-      final FeatureTypeProperty ftp, final boolean bVisible )
+  public ColumnAction( final LayerTableViewer viewer,
+      final String propertyName )
   {
-    super( ftp.getName() );
+    super( propertyName );
 
-    m_ftp = ftp;
-    m_commandTarget = commandTarget;
-    m_layerTable = layerTable;
+    m_viewer = viewer;
+    m_propertyName = propertyName;
 
-    setChecked( bVisible );
+    setChecked( viewer.hasColumn( propertyName ) );
   }
 
   /**
@@ -32,8 +26,8 @@ public final class ColumnAction extends Action
   public void run()
   {
     final SetColumnVisibleCommand setColumnVisibleCommand = new SetColumnVisibleCommand(
-        m_layerTable.getModel(), m_ftp, isChecked() );
+        m_viewer, m_propertyName, isChecked() );
 
-    m_commandTarget.postCommand( setColumnVisibleCommand, null );
+    m_viewer.postCommand( setColumnVisibleCommand, null );
   }
 }
