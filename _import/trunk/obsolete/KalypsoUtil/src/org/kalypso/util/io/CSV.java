@@ -24,6 +24,8 @@ public class CSV implements ITabledValues
 
   private final int m_line;
 
+  private final boolean m_ignoreEmptyLines;
+
   /**
    * Constructor. Fetches the file and closes the reader;
    * 
@@ -32,14 +34,18 @@ public class CSV implements ITabledValues
    *          the string used for spliting each line into chunks
    * @param line
    *          the line number to start reading the values at
+   * @param ignoreEmptyLines
+   *          when true, empty lines are not stored in this object
    * 
    * @throws IOException
    */
-  public CSV( final Reader reader, final String split, final int line ) throws IOException
+  public CSV( final Reader reader, final String split, final int line,
+      final boolean ignoreEmptyLines ) throws IOException
   {
     m_reader = reader;
     m_split = split;
     m_line = line;
+    m_ignoreEmptyLines = ignoreEmptyLines;
 
     fetchFile();
   }
@@ -47,7 +53,7 @@ public class CSV implements ITabledValues
   /**
    * Fetches the CSV-File. Closes the reader once finished.
    */
-  private void fetchFile() throws IOException
+  private void fetchFile( ) throws IOException
   {
     BufferedReader r = null;
 
@@ -67,6 +73,12 @@ public class CSV implements ITabledValues
 
       while( line != null )
       {
+        if( m_ignoreEmptyLines && line.length() == 0 )
+        {
+          line = r.readLine();
+          continue;
+        }
+
         m_lines.add( line.split( m_split ) );
 
         line = r.readLine();
@@ -88,7 +100,7 @@ public class CSV implements ITabledValues
   /**
    * Returns the number of lines fetched from the CSV-File.
    */
-  public int getLines()
+  public int getLines( )
   {
     return m_lines.size();
   }
@@ -98,7 +110,7 @@ public class CSV implements ITabledValues
    */
   public String getItem( final int row, final int col )
   {
-    return ( (String[])m_lines.get( row ) )[col];
+    return ((String[]) m_lines.get( row ))[col];
   }
 
   /**
@@ -106,7 +118,7 @@ public class CSV implements ITabledValues
    */
   public void setItem( final int row, final int col, String element )
   {
-    ( (String[])m_lines.get( row ) )[col] = element;
+    ((String[]) m_lines.get( row ))[col] = element;
   }
 
   /**
@@ -120,7 +132,7 @@ public class CSV implements ITabledValues
 
     for( Iterator iter = m_lines.iterator(); iter.hasNext(); )
     {
-      String[] items = (String[])iter.next();
+      String[] items = (String[]) iter.next();
 
       for( int i = 0; i < items.length; i++ )
       {

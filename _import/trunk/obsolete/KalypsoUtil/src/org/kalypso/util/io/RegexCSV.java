@@ -25,21 +25,28 @@ public class RegexCSV implements ITabledValues
 
   private final Pattern m_pattern;
 
+  private final boolean m_ignoreEmptyLines;
+
   /**
    * Constructor. Fetches the file and closes the reader;
    * 
    * @param reader
+   * @param p
+   *          regex pattern to use when disecating the lines
    * @param line
    *          the line number to start reading the values at
-   * 
+   * @param ignoreEmptyLines
+   *          when true empty lines are ignored and not added to this object
    * 
    * @throws IOException
    */
-  public RegexCSV( final Reader reader, final Pattern p, final int line ) throws IOException
+  public RegexCSV( final Reader reader, final Pattern p, final int line,
+      final boolean ignoreEmptyLines ) throws IOException
   {
     m_reader = reader;
     m_line = line;
     m_pattern = p;
+    m_ignoreEmptyLines = ignoreEmptyLines;
 
     fetchFile();
   }
@@ -47,7 +54,7 @@ public class RegexCSV implements ITabledValues
   /**
    * Fetches the CSV-File. Closes the reader once finished.
    */
-  private void fetchFile() throws IOException
+  private void fetchFile( ) throws IOException
   {
     BufferedReader r = null;
 
@@ -67,13 +74,19 @@ public class RegexCSV implements ITabledValues
 
       while( line != null )
       {
+        if( m_ignoreEmptyLines && line.length() == 0 )
+        {
+          line = r.readLine();
+          continue;
+        }
+        
         Matcher m = m_pattern.matcher( line );
         if( m.matches() )
         {
           String[] sLine = new String[m.groupCount()];
 
           for( int i = 0; i < sLine.length; i++ )
-            sLine[i] = m.group( i+1 );
+            sLine[i] = m.group( i + 1 );
 
           m_lines.add( sLine );
         }
@@ -96,7 +109,7 @@ public class RegexCSV implements ITabledValues
   /**
    * Returns the number of lines fetched from the CSV-File.
    */
-  public int getLines()
+  public int getLines( )
   {
     return m_lines.size();
   }
@@ -106,7 +119,7 @@ public class RegexCSV implements ITabledValues
    */
   public String getItem( final int row, final int col )
   {
-    return ( (String[])m_lines.get( row ) )[col];
+    return ((String[]) m_lines.get( row ))[col];
   }
 
   /**
@@ -114,7 +127,7 @@ public class RegexCSV implements ITabledValues
    */
   public void setItem( final int row, final int col, String element )
   {
-    ( (String[])m_lines.get( row ) )[col] = element;
+    ((String[]) m_lines.get( row ))[col] = element;
   }
 
   /**
@@ -128,7 +141,7 @@ public class RegexCSV implements ITabledValues
 
     for( Iterator iter = m_lines.iterator(); iter.hasNext(); )
     {
-      String[] items = (String[])iter.next();
+      String[] items = (String[]) iter.next();
 
       for( int i = 0; i < items.length; i++ )
       {

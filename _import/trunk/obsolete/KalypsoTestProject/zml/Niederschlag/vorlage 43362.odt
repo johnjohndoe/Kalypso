@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="xsl/grafik-vorlage.xsl"?>
+<obsdiagview xmlns="obsdiagview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<title>Niederschlag Darstellung</title>
+	<legend title="Legende" visible="true"/>
+
+	<axis id="date" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
+	<axis id="N" datatype="xs:double" label="Niederschlag" unit="mm" direction="vertical" position="right" inverted="true" />
+
+	<observation linktype="zml" xlink:href="43362.zml" >
+	   	<curve id="C1" name="C1">
+		   	<mapping observation-axis="Datum" diagram-axis="date" />
+	   		<mapping observation-axis="Niederschlag" diagram-axis="N" />
+	   	</curve>
+	</observation>
+   
+</obsdiagview>
