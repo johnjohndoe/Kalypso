@@ -222,6 +222,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       final MetadataList metadata = new MetadataList();
       if( targetObservation != null && selection.isRetainMetadata() )
         metadata.putAll( targetObservation.getMetadataList() );
+      metadata.putAll( srcObservation.getMetadataList() );
       IObservation newObservation = new SimpleObservation( href, id, name, false, xlink, metadata,
           axesNew, newTuppelModel );
       ObservationType type = ZmlFactory.createXML( newObservation, null );
