@@ -80,6 +80,7 @@ public class KonfigWrite
 		    writeln(out," "+teilgebiete.getSimpleProperty("v_tgn",row));
 	    }
 	writeln(out,"99999");
+	//TODO Vectorset Startwerte (JH)
 	// do not store long term results
 	writeln(out,"99999");	
 	if(gto.getSimpleProperty("lzpath")!=null)
@@ -127,10 +128,8 @@ public class KonfigWrite
 	String endDate=gto.getSimplePropertyFormatedDate("m_endDate","yyyy MM dd HH");
 	
 	writeln(out,"xxx");
-	writeln(out,"xxx   kurzzeit");
 	writeln(out,"x einzugsgebiet");
-	writeln(out,"x 2(?); projektverzeichnis; System(XXXX); Zustand (YYY); Simulationsbeginn(dat+Zeit); Simulationsende; Konfigurationsdatei mit Pfad");
-	
+	writeln(out,"x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Simulationsbeginn(dat+Zeit); Simulationsende; Konfigurationsdatei mit Pfad");
 	writeln(out,"2 "+projectPath.getAbsolutePath()+" "+system+" "+zustand+"  "+startDate+" "+endDate+" "+"start"+File.separator+"nam.konfig");
 	//	write(out,"2 d:\\nam_tisza "+system+" "+zustand+"  1998 11 03 16 1998 11 30 22 start\\NAM.konfig\n");
 	out.close();	

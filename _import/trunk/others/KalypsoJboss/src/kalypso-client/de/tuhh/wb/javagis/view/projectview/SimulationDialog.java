@@ -420,10 +420,10 @@ public class SimulationDialog
 					> 23.9) {
 					this.simulationType = LONGTERM;
 					LogView.println(
-						"es wird eine LANGzeitsimulation durchgefuert");
+						"Es wird eine LANGzeitsimulation durchgef\u00FChrt");
 				} else
 					LogView.println(
-						"es wird eine KURZzeitsimulation durchgefuert");
+						"Es wird eine KURZzeitsimulation durchgef\u00FChrt");
 				File startDir = new File(targetDir, "start");
 				File naModelDir = new File(targetDir, "na-modell");
 				this.myNaModelDir = naModelDir;
