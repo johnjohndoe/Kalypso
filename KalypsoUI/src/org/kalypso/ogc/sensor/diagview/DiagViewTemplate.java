@@ -50,6 +50,7 @@ import java.util.Map;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.proxy.IProxyFactory;
+import org.kalypso.ogc.sensor.template.AbstractObservationTheme;
 import org.kalypso.ogc.sensor.template.AbstractViewTemplate;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxis;
@@ -75,6 +76,11 @@ public class DiagViewTemplate extends AbstractViewTemplate
   public DiagViewTemplate( )
   {
     this( "", "", false );
+  }
+
+  public DiagViewTemplate( final boolean showLegend )
+  {
+    this( "", "", showLegend );
   }
 
   public DiagViewTemplate( final String title, final String legendName,
@@ -265,17 +271,9 @@ public class DiagViewTemplate extends AbstractViewTemplate
   }
 
   /**
-   * Convenienve method for adding an observation to this template.
-   * 
-   * @param themeName
-   *          used as part of the col name if not null
-   * @param context
-   * @param href
-   * @param linktype
-   * @param ignoreExceptions
-   * @param args
+   * @see org.kalypso.ogc.sensor.template.AbstractViewTemplate#addObservation(java.lang.String, java.net.URL, java.lang.String, java.lang.String, boolean, org.kalypso.util.runtime.IVariableArguments)
    */
-  public void addObservation( final String themeName, final URL context,
+  public AbstractObservationTheme addObservation( final String themeName, final URL context,
       final String href, final String linktype, final boolean ignoreExceptions,
       final IVariableArguments args )
   {
@@ -293,6 +291,8 @@ public class DiagViewTemplate extends AbstractViewTemplate
     addTheme( theme );
 
     theme.loadObservation( key );
+    
+    return theme;
   }
 
   /**

@@ -54,7 +54,6 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
@@ -63,20 +62,16 @@ import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obstableview.ObstableviewType;
-import org.kalypso.ui.editor.AbstractEditorPart;
+import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
 
 /**
  * The Observation TableEditor.
  * 
  * @author schlienger
  */
-public class ObservationTableEditor extends AbstractEditorPart
+public class ObservationTableEditor extends AbstractObservationEditor
 {
-  protected final TableViewTemplate m_template = new TableViewTemplate();
-
   protected final ObservationTable m_table;
-
-  protected ObsTableOutlinePage m_outline = null;
 
   /**
    * Constructor: the ObservationTable is already created here because
@@ -89,7 +84,9 @@ public class ObservationTableEditor extends AbstractEditorPart
    */
   public ObservationTableEditor( )
   {
-    m_table = new ObservationTable( m_template );
+    super( new TableViewTemplate() );
+    
+    m_table = new ObservationTable( (TableViewTemplate) getTemplate() );
   }
   
   /**
@@ -106,14 +103,6 @@ public class ObservationTableEditor extends AbstractEditorPart
   public ObservationTable getTable( )
   {
     return m_table;
-  }
-
-  /**
-   * @return Returns the template.
-   */
-  public TableViewTemplate getTemplate( )
-  {
-    return m_template;
   }
 
   /**
@@ -134,42 +123,12 @@ public class ObservationTableEditor extends AbstractEditorPart
   }
 
   /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
-  public Object getAdapter( Class adapter )
-  {
-    if( adapter == IContentOutlinePage.class )
-    {
-      // lazy loading
-      if( m_outline == null || m_outline.getControl() != null
-          && m_outline.getControl().isDisposed() )
-      {
-        // dispose when not null (not sure if this is ok)
-        if( m_outline != null )
-          m_outline.dispose();
-
-        m_outline = new ObsTableOutlinePage( this );
-        m_outline.setTemplate( m_template );
-      }
-
-      return m_outline;
-    }
-    return null;
-  }
-
-  /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
   public void dispose( )
   {
     m_table.dispose();
     
-    if( m_template != null )
-      m_template.dispose();
-
-    if( m_outline != null )
-      m_outline.dispose();
-
     super.dispose();
   }
 
@@ -180,7 +139,8 @@ public class ObservationTableEditor extends AbstractEditorPart
   protected void doSaveInternal( IProgressMonitor monitor,
       IFileEditorInput input ) throws CoreException
   {
-    if( m_template == null )
+    final TableViewTemplate template = (TableViewTemplate) getTemplate();
+    if( template == null )
       return;
 
     final SetContentHelper helper = new SetContentHelper()
@@ -188,7 +148,7 @@ public class ObservationTableEditor extends AbstractEditorPart
       protected void write( Writer writer ) throws Throwable
       {
         final ObstableviewType type = TableViewUtils
-            .buildTableTemplateXML( m_template );
+            .buildTableTemplateXML( template );
 
         TableViewUtils.saveTableTemplateXML( type, writer );
       }
@@ -206,6 +166,7 @@ public class ObservationTableEditor extends AbstractEditorPart
   {
     monitor.beginTask( "Tabelle-Vorlage laden", IProgressMonitor.UNKNOWN );
 
+    final TableViewTemplate template = (TableViewTemplate) getTemplate();
     try
     {
       final IStorage storage = input.getStorage();
@@ -213,7 +174,7 @@ public class ObservationTableEditor extends AbstractEditorPart
       if( storage instanceof TemplateStorage )
       {
         final TemplateStorage ts = (TemplateStorage) storage;
-        m_template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
+        template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
             "zml", false, null );
       }
       else
@@ -223,7 +184,7 @@ public class ObservationTableEditor extends AbstractEditorPart
 
         final String strUrl = ResourceUtilities.createURLSpec( input
             .getStorage().getFullPath() );
-        m_template.setBaseTemplate( baseTemplate, new URL( strUrl ) );
+        template.setBaseTemplate( baseTemplate, new URL( strUrl ) );
       }
     }
     catch( Exception e )

@@ -70,7 +70,7 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
 public class DiagramViewPart extends ViewPart implements
     ISelectionChangedListener, IPartListener
 {
-  protected final DiagViewTemplate m_template = new DiagViewTemplate();
+  protected final DiagViewTemplate m_template = new DiagViewTemplate( true );
 
   private ObservationChart m_chart;
 

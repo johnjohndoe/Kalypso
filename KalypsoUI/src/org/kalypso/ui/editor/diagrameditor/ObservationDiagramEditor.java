@@ -52,7 +52,6 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentHelper;
@@ -61,31 +60,29 @@ import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
-import org.kalypso.ogc.sensor.template.ITemplateEventListener;
-import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
-import org.kalypso.ui.editor.AbstractEditorPart;
+import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
 
 /**
  * Observation Diagram Editor.
  * 
  * @author schlienger
  */
-public class ObservationDiagramEditor extends AbstractEditorPart implements
-    ITemplateEventListener
+public class ObservationDiagramEditor extends AbstractObservationEditor
 {
-  protected final DiagViewTemplate m_template = new DiagViewTemplate();
-
   protected Frame m_diagFrame = null;
 
   protected ObservationChart m_obsChart = null;
 
-  protected ObsDiagOutlinePage m_outline = null;
-
   // TODO: maybe set a preference for this flag. It is currently always true.
   private boolean m_useAutoProxy = true;
 
+  public ObservationDiagramEditor()
+  {
+    super( new DiagViewTemplate( true ) );
+  }
+  
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -97,12 +94,9 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
     m_diagFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
         | SWT.EMBEDDED ) );
 
-    // listener on template in order to set dirty flag when template changes
-    m_template.addTemplateEventListener( this );
-
     try
     {
-      m_obsChart = new ObservationChart( m_template );
+      m_obsChart = new ObservationChart( (DiagViewTemplate) getTemplate() );
       
       // chart panel without any popup menu
       final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false,
@@ -119,46 +113,12 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#getAdapter(java.lang.Class)
-   */
-  public Object getAdapter( Class adapter )
-  {
-    if( adapter == IContentOutlinePage.class )
-    {
-      // lazy loading
-      if( m_outline == null || m_outline.getControl() != null
-          && m_outline.getControl().isDisposed() )
-      {
-        // dispose when not null (not sure if this is ok)
-        if( m_outline != null )
-          m_outline.dispose();
-
-        m_outline = new ObsDiagOutlinePage();
-        m_outline.setTemplate( m_template );
-      }
-
-      return m_outline;
-    }
-
-    return super.getAdapter( adapter );
-  }
-
-  /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
   public void dispose( )
   {
     if( m_obsChart != null )
       m_obsChart.dispose();
-
-    if( m_template != null )
-    {
-      m_template.removeTemplateEventListener( this );
-      m_template.dispose();
-    }
-
-    if( m_outline != null )
-      m_outline.dispose();
 
     super.dispose();
   }
@@ -170,7 +130,8 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
   protected void doSaveInternal( IProgressMonitor monitor,
       IFileEditorInput input ) throws CoreException
   {
-    if( m_template == null )
+    final DiagViewTemplate template = (DiagViewTemplate) getTemplate();
+    if( template == null )
       return;
 
     final SetContentHelper helper = new SetContentHelper()
@@ -178,7 +139,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
       protected void write( Writer writer ) throws Throwable
       {
         final ObsdiagviewType type = DiagViewUtils
-            .buildDiagramTemplateXML( m_template );
+            .buildDiagramTemplateXML( template );
 
         DiagViewUtils.saveDiagramTemplateXML( type, writer );
       }
@@ -196,6 +157,8 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
   {
     monitor.beginTask( "Diagramm-Vorlage laden", IProgressMonitor.UNKNOWN );
 
+    final DiagViewTemplate template = (DiagViewTemplate) getTemplate();
+    
     try
     {
       final IStorage storage = input.getStorage();
@@ -203,12 +166,12 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
       if( storage instanceof TemplateStorage )
       {
         final TemplateStorage ts = (TemplateStorage) storage;
-        m_template.setTitle( ts.getName() );
+        template.setTitle( ts.getName() );
 
         if( m_useAutoProxy )
-          m_template.setProxyFactory( AutoProxyFactory.getInstance() );
+          template.setProxyFactory( AutoProxyFactory.getInstance() );
 
-        m_template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
+        template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
             "zml", false, null );
       }
       else
@@ -218,7 +181,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
 
         final String strUrl = ResourceUtilities.createURLSpec( input
             .getStorage().getFullPath() );
-        m_template.setBaseTemplate( baseTemplate, new URL( strUrl ) );
+        template.setBaseTemplate( baseTemplate, new URL( strUrl ) );
       }
     }
     catch( Exception e )
@@ -232,36 +195,10 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.template.ITemplateEventListener#onTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)
-   */
-  public void onTemplateChanged( TemplateEvent evt )
-  {
-    if( evt.isType( TemplateEvent.TYPE_ADD | TemplateEvent.TYPE_REMOVE
-        | TemplateEvent.TYPE_REMOVE_ALL ) )
-    {
-      getSite().getShell().getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          fireDirty();
-        }
-      } );
-    }
-  }
-
-  /**
    * @return chart
    */
   public ObservationChart getChart( )
   {
     return m_obsChart;
-  }
-
-  /**
-   * @return template
-   */
-  public DiagViewTemplate getTemplate( )
-  {
-    return m_template;
   }
 }

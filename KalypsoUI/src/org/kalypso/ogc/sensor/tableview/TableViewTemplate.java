@@ -47,6 +47,7 @@ import java.util.List;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.rules.ITableViewRules;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
+import org.kalypso.ogc.sensor.template.AbstractObservationTheme;
 import org.kalypso.ogc.sensor.template.AbstractViewTemplate;
 import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.template.obstableview.TypeObservation;
@@ -130,18 +131,9 @@ public class TableViewTemplate extends AbstractViewTemplate
   }
 
   /**
-   * Convenienve method for adding an observation to this template.
-   * 
-   * @param themeName
-   *          used as part of the col name if not null
-   * @param context
-   * @param href
-   * @param linktype
-   * @param ignoreExceptions
-   * @param args
-   * @return theme just being added
+   * @see org.kalypso.ogc.sensor.template.AbstractViewTemplate#addObservation(java.lang.String, java.net.URL, java.lang.String, java.lang.String, boolean, org.kalypso.util.runtime.IVariableArguments)
    */
-  public TableViewTheme addObservation( final String themeName, final URL context,
+  public AbstractObservationTheme addObservation( final String themeName, final URL context,
       final String href, final String linktype, final boolean ignoreExceptions,
       final IVariableArguments args )
   {

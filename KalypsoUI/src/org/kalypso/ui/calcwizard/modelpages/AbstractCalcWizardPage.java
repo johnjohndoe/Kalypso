@@ -388,7 +388,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     try
     {
       // actually creates the template
-      m_diagTemplate = new DiagViewTemplate();
+      m_diagTemplate = new DiagViewTemplate( true );
 
       final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
       m_diagTemplate.setIgnoreType( ignoreType );

@@ -1,44 +1,4 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
-
- This file is part of kalypso.
- Copyright (C) 2004, 2005 by:
-
- Technical University Hamburg-Harburg (TUHH)
- Institute of River and coastal engineering
- Denickestr. 22
- 21073 Hamburg, Germany
- http://www.tuhh.de/wb
-
- and
- 
- Bjoernsen Consulting Engineers (BCE)
- Maria Trost 3
- 56070 Koblenz, Germany
- http://www.bjoernsen.de
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
- Contact:
-
- E-Mail:
- belger@bjoernsen.de
- schlienger@bjoernsen.de
- v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.obstableeditor;
+package org.kalypso.ui.editor.abstractobseditor;
 
 import java.net.URL;
 import java.util.Iterator;
@@ -71,29 +31,32 @@ import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer2;
 import org.kalypso.eclipse.ui.views.contentouline.ContentOutlinePage2;
 import org.kalypso.ogc.sensor.commands.AddThemeCommand2;
+import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
+import org.kalypso.ogc.sensor.diagview.DiagViewTheme;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
-import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.TableViewTheme;
+import org.kalypso.ogc.sensor.template.AbstractObservationTheme;
+import org.kalypso.ogc.sensor.template.AbstractViewTemplate;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.obstableeditor.actions.RemoveThemeAction;
+import org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction;
 
 /**
- * ObsDiagOutlinePage
+ * AbstractObsOutlinePage
  * 
  * @author schlienger
  */
-public class ObsTableOutlinePage extends ContentOutlinePage2 implements
+public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     ITemplateEventListener, ICheckStateListener
 {
-  protected TableViewTemplate m_template;
+  protected AbstractViewTemplate m_template;
 
   private RemoveThemeAction m_removeThemeAction;
 
-  private final ObservationTableEditor m_editor;
+  private final AbstractObservationEditor m_editor;
 
-  public ObsTableOutlinePage( ObservationTableEditor editor )
+  public ObservationEditorOutlinePage( AbstractObservationEditor editor )
   {
     m_editor = editor;
   }
@@ -106,16 +69,16 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
     super.createControl( parent );
 
     final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer) getTreeViewer();
-    
+
     // drop support for files
     Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
     tv.addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers,
         new DropAdapter( tv, m_editor ) );
 
-    tv.setLabelProvider( new ObsTableTemplateLabelProvider() );
-    tv.setContentProvider( new ObsTableTemplateContentProvider() );
+    tv.setLabelProvider( new ObsTemplateLabelProvider() );
+    tv.setContentProvider( new ObsTemplateContentProvider() );
     tv.setInput( m_template );
-    
+
     tv.addCheckStateListener( this );
 
     m_removeThemeAction = new RemoveThemeAction( this );
@@ -133,7 +96,7 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
   /**
    * @return the selected theme or null
    */
-  public TableViewTheme getSelectedTheme( )
+  public AbstractObservationTheme getSelectedTheme( )
   {
     final ISelection sel = getSelection();
 
@@ -141,20 +104,23 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
     {
       final Object element = ((IStructuredSelection) sel).getFirstElement();
 
-      if( element instanceof TableViewTheme )
-        return (TableViewTheme) element;
+      if( element instanceof AbstractObservationTheme )
+        return (AbstractObservationTheme) element;
 
       if( element instanceof TableViewColumn )
         return ((TableViewColumn) element).getTheme();
+      
+      if( element instanceof DiagViewCurve )
+        return ((DiagViewCurve) element).getTheme();
     }
 
     return null;
   }
-  
+
   /**
    * @return true if a theme is selected
    */
-  public boolean isThemeSelected()
+  public boolean isThemeSelected( )
   {
     final ISelection sel = getSelection();
 
@@ -162,18 +128,18 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
     {
       final Object element = ((IStructuredSelection) sel).getFirstElement();
 
-      return element instanceof TableViewTheme;
+      return element instanceof AbstractObservationTheme;
     }
-    
+
     return false;
   }
 
-  public TableViewTemplate getTemplate( )
+  public AbstractViewTemplate getTemplate( )
   {
     return m_template;
   }
-  
-  public ObservationTableEditor getEditor( )
+
+  public AbstractObservationEditor getEditor( )
   {
     return m_editor;
   }
@@ -224,7 +190,7 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
   /**
    * @param template
    */
-  public void setTemplate( TableViewTemplate template )
+  public void setTemplate( AbstractViewTemplate template )
   {
     if( m_template != null )
       m_template.removeTemplateEventListener( this );
@@ -254,7 +220,7 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
   {
     if( m_removeThemeAction != null )
       m_removeThemeAction.dispose();
-    
+
     if( m_template != null )
       m_template.removeTemplateEventListener( this );
 
@@ -277,6 +243,11 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
       final TableViewColumn col = (TableViewColumn) element;
       col.setShown( event.getChecked() );
     }
+    else if( element instanceof DiagViewCurve )
+    {
+      final DiagViewCurve curve = (DiagViewCurve) element;
+      curve.setShown( event.getChecked() );
+    }
     else if( element instanceof TableViewTheme )
     {
       final TableViewTheme theme = (TableViewTheme) element;
@@ -287,8 +258,18 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
         col.setShown( event.getChecked() );
       }
     }
+    else if( element instanceof DiagViewTheme )
+    {
+      final DiagViewTheme theme = (DiagViewTheme) element;
+
+      for( final Iterator it = theme.getCurves().iterator(); it.hasNext(); )
+      {
+        final DiagViewCurve curve = (DiagViewCurve) it.next();
+        curve.setShown( event.getChecked() );
+      }
+    }
   }
-  
+
   /**
    * DropAdapter
    * 
@@ -296,9 +277,9 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
    */
   private class DropAdapter extends ViewerDropAdapter
   {
-    protected final ObservationTableEditor m_editor2;
+    protected final AbstractObservationEditor m_editor2;
 
-    protected DropAdapter( Viewer viewer, ObservationTableEditor editor )
+    protected DropAdapter( Viewer viewer, AbstractObservationEditor editor )
     {
       super( viewer );
       m_editor2 = editor;
@@ -317,7 +298,7 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
 
       final String[] files = (String[]) data;
 
-      final Job updateTemplateJob = new Job( "Tabelle aktualisieren" )
+      final Job updateTemplateJob = new Job( "Vorlage aktualisieren" )
       {
         protected IStatus run( IProgressMonitor monitor )
         {
@@ -334,10 +315,11 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
               file = (IFile) wksp.findMember( file.getFullPath() );
               final URL url = ResourceUtilities.createURL( file );
 
-              final TableViewTheme theme = m_template.addObservation( file.getName(), url, url
-                  .toExternalForm(), "zml", false, null );
-              
-              m_editor2.postCommand( new AddThemeCommand2( m_template, theme ), null );
+              final AbstractObservationTheme theme = m_template.addObservation( file
+                  .getName(), url, url.toExternalForm(), "zml", false, null );
+
+              m_editor2.postCommand( new AddThemeCommand2( m_template, theme ),
+                  null );
             }
 
             return Status.OK_STATUS;
@@ -374,4 +356,5 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
       return true;
     }
   }
+
 }
