@@ -31,6 +31,7 @@
       <import plugin="org.kalypso.util" export="true"/>
       <import plugin="org.kalypso.deegree" export="true"/>
       <import plugin="org.kalypso.core" export="true"/>
+      <import plugin="org.eclipse.ui.forms"/>
    </requires>
    <extension
          point="org.eclipse.ui.editors">
@@ -343,6 +344,45 @@
             class="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"
             name="Kalypso Modeler"
             id="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"/>
+   </extension>
+   <extension
+         id="product"
+         name="Kalypso Enterprise"
+         point="org.eclipse.core.runtime.products">
+      <product
+            description="Kalypso Enterprise Modelling Machine"
+            name="Kalypso Enterprise"
+            application="org.kalypso.ui.application">
+         <property
+               value="Kalypso Enterprise Copyright 2004 by BCE Koblenz and TUHH"
+               name="aboutText"/>
+         <property
+               value="etc/kalypso32.gif"
+               name="aboutImage"/>
+         <property
+               value="etc/kalypso32.gif"
+               name="featureImage"/>
+         <property
+               value="etc/kalypso16.gif"
+               name="windowImage"/>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro">
+      <intro
+            icon="etc/kalypso16.gif"
+            class="org.kalypso.ui.intro.ModelChooserIntro"
+            id="modelIntro"/>
+      <introProductBinding
+            introId="modelIntro"
+            productId="org.kalypso.ui.product"/>
+   </extension>
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run class="org.kalypso.ui.application.KalypsoApplication"/>
+      </application>
    </extension>
 
 </plugin>
