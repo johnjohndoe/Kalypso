@@ -42,8 +42,8 @@
   <CatchmentsFaktn>1.0</CatchmentsFaktn>
   <CatchmentsFaktorAigw>1.0</CatchmentsFaktorAigw>
   <KMChannels><![CDATA[//KMChannel[@fid="KMChannel1700"]]]></KMChannels>
-  <KMChannelsFaktorRkf>0.5</KMChannelsFaktorRkf>
-  <KMChannelsFaktorRnf>0.5</KMChannelsFaktorRnf>
+  <KMChannelsFaktorRkf>1.0</KMChannelsFaktorRkf>
+  <KMChannelsFaktorRnf>1.0</KMChannelsFaktorRnf>
   <rootNode>Node1700</rootNode>
   <resultForRootNodeOnly>true</resultForRootNodeOnly>
   <pegelZR>
