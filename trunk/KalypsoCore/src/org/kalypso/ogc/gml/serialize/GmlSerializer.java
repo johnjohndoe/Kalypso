@@ -89,9 +89,6 @@ public final class GmlSerializer
     }
   }
 
-  /**
-   * @deprecated use {@link #createGMLWorkspace(URL, IUrlResolver)}instead.
-   */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final URL schemaURL )
       throws Exception
   {
