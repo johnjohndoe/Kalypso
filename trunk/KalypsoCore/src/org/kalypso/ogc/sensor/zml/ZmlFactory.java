@@ -114,8 +114,8 @@ public class ZmlFactory
   /**
    * Supported types are listed in the types2parser.properties file.
    * 
-   * TODO: noch das default format (_format) hinzufügen und eventuell die xs: Zeugs wegmachen
-   * Siehe properties datei
+   * TODO: noch das default format (_format) hinzufügen und eventuell die xs:
+   * Zeugs wegmachen Siehe properties datei
    * 
    * @param className
    * @return the XSD-Type for the given Java-Class
@@ -140,25 +140,37 @@ public class ZmlFactory
       throws SensorException
   {
     InputStream inputStream = null;
-      
+
     try
     {
       final String zmlId = ZmlURL.getIdentifierPart( url );
-      
+
       // if no id specified, only use the filter part to retrieve observation
       if( zmlId == null || zmlId.length() == 0 )
         return FilterFactory.createFilter( url.getQuery() );
 
-      // TODO: unterscheide lokale und remote Zeitreihen!
-      // file: or platform:
-      
-      // NOTE: Eclipse Platform's URLStreamHandler cannot deal with
-      // URLs that contain a fragment part (begining with '?').
-      final URL tmpUrl = new URL( zmlId );
-      
-      // stream is closed in finally
-      inputStream = tmpUrl.openStream();
+      // check if this is a local url. In the positive, we remove the
+      // query part because Eclipse Platform's URLStreamHandler cannot deal with
+      // it.
+      final String scheme = ZmlURL.getSchemePart( url );
+      if( scheme.startsWith( "file" ) || scheme.startsWith( "platform" ) )
+      {
+        // only take the simple part of the url
+        final URL tmpUrl = new URL( zmlId );
 
+        // stream is closed in finally
+        inputStream = tmpUrl.openStream();
+      }
+      else
+      {
+        // default behaviour (might use a specific stream handler like
+        // the OCSUrlStreamHandler )
+        inputStream = url.openStream();
+      }
+
+      // url is given as an argument here (and not tmpUrl) in order not to
+      // loose the query part we might have removed because of Eclipse's 
+      // url handling.
       return parseXML( new InputSource( inputStream ), identifier, url );
     }
     catch( IOException e )
@@ -233,11 +245,11 @@ public class ZmlFactory
       {
         // if format not specified, then we use the default specification
         // found in the properties file. Every type can have a default format
-        // declared in this file using the convention that the property 
+        // declared in this file using the convention that the property
         // must be build using the type name followed by the '_format' string.
         if( format == null || format == "" )
           format = getProperties().getProperty( type + "_format" );
-        
+
         parser = getParserFactory().createParser( type, format );
 
         values = createValues( context, tmpAxis, parser );
@@ -260,35 +272,39 @@ public class ZmlFactory
       target = new JAXBXLink( obs.getTarget() );
 
     final IObservation zmlObs = new SimpleObservation( identifier, obs
-        .getName(), obs.isEditable(), target, metadata, model.getAxisList(), model );
+        .getName(), obs.isEditable(), target, metadata, model.getAxisList(),
+        model );
 
     // tricky: first check if a proxy has been specified in the url
     final IObservation proxyObs = createProxyFrom( context, zmlObs );
-    
+
     // tricky: maybe make a filtered observation out of this one
-    final IObservation filteredObs = FilterFactory.createFilterFrom( context, proxyObs );
-    
+    final IObservation filteredObs = FilterFactory.createFilterFrom( context,
+        proxyObs );
+
     return filteredObs;
   }
-  
+
   /**
-   * Helper: mey create a proxy observation depending on the information coded in the url.
+   * Helper: mey create a proxy observation depending on the information coded
+   * in the url.
    * 
    * @param context
    * @param baseObs
    * @return proxy or original observation
    */
-  private static IObservation createProxyFrom( final URL context, final IObservation baseObs )
+  private static IObservation createProxyFrom( final URL context,
+      final IObservation baseObs )
   {
     final String str = context.toExternalForm();
 
     IVariableArguments args = null;
-    
+
     // check if a DateRange proxy can be created
     args = ZmlURL.checkDateRange( str );
     if( args != null )
       return new ArgsObservationProxy( args, baseObs );
-    
+
     return baseObs;
   }
 
@@ -341,8 +357,7 @@ public class ZmlFactory
       obsType.setName( obs.getName() );
       obsType.setEditable( obs.isEditable() );
 
-      final MetadataListType metadataListType = OF
-          .createMetadataListType();
+      final MetadataListType metadataListType = OF.createMetadataListType();
       obsType.setMetadataList( metadataListType );
       final List metadataList = metadataListType.getMetadata();
       for( final Iterator it = obs.getMetadataList().entrySet().iterator(); it
@@ -352,7 +367,7 @@ public class ZmlFactory
 
         final String mdKey = (String) entry.getKey();
         final String mdValue = (String) entry.getValue();
-        
+
         final MetadataType mdType = OF.createMetadataType();
         mdType.setName( mdKey );
         mdType.setValue( mdValue );
@@ -375,8 +390,7 @@ public class ZmlFactory
         axisType.setType( axes[i].getType() );
         axisType.setKey( axes[i].isKey() );
 
-        final ValueArrayType valueArrayType = OF
-            .createAxisTypeValueArrayType();
+        final ValueArrayType valueArrayType = OF.createAxisTypeValueArrayType();
 
         valueArrayType.setSeparator( ";" );
         valueArrayType.setValue( buildValueString( values, axes[i] ) );
@@ -431,7 +445,8 @@ public class ZmlFactory
   }
 
   /**
-   * TODO: marc, check if the date format can be fetched from the properties here
+   * TODO: marc, check if the date format can be fetched from the properties
+   * here
    * 
    * @param model
    * @param axis
@@ -443,15 +458,16 @@ public class ZmlFactory
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
-      sb.append( XmlTypes.PDATE.toString( model.getElement( i, axis ) ) ).append( ";" );
+      sb.append( XmlTypes.PDATE.toString( model.getElement( i, axis ) ) )
+          .append( ";" );
 
     if( amount > 0 )
       sb.append( XmlTypes.PDATE.toString( model.getElement( amount, axis ) ) );
   }
 
   /**
-   * Uses the default toString() method of the elements.
-   * TODO: check if this always works fine for XML-Schema types
+   * Uses the default toString() method of the elements. TODO: check if this
+   * always works fine for XML-Schema types
    * 
    * @param model
    * @param axis

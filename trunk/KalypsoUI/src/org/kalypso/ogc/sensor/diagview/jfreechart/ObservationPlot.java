@@ -5,11 +5,14 @@ import java.util.Map;
 
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.StandardXYItemRenderer;
+import org.jfree.chart.renderer.XYBarRenderer;
+import org.jfree.chart.renderer.XYItemRenderer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
 import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
  * @author schlienger
@@ -24,6 +27,12 @@ public class ObservationPlot extends XYPlot
 
   /** maps the diagram axes (from the template) to a dataset */
   private transient final Map m_axes2ds = new HashMap();
+  
+  /** default line renderer */
+  private static final XYItemRenderer LINE_RENDERER = new StandardXYItemRenderer( StandardXYItemRenderer.LINES );
+  
+  /** default bar renderer */
+  private static final XYItemRenderer BAR_RENDERER = new XYBarRenderer( );
 
   /**
    * Constructor.
@@ -43,7 +52,8 @@ public class ObservationPlot extends XYPlot
     m_diag2chartAxis = diag2chartAxis;
     m_chartAxes2Pos = chartAxes2Pos;
 
-    setRenderer( new StandardXYItemRenderer( StandardXYItemRenderer.LINES ) );
+    // standard renderer
+    setRenderer( LINE_RENDERER );
   }
 
   /**
@@ -103,7 +113,7 @@ public class ObservationPlot extends XYPlot
       int pos = m_axes2ds.values().size();
 
       setDataset( pos, cds );
-      setRenderer( pos, getRenderer() );
+      setRenderer( pos, getRenderer( yAxis.getType() ) );
 
       mapDatasetToDomainAxis( pos, ( (Integer)m_chartAxes2Pos
           .get( m_diag2chartAxis.get( xDiagAxis ) ) ).intValue() );
@@ -112,5 +122,19 @@ public class ObservationPlot extends XYPlot
     }
     
     cds.addCurveSerie( xyc );
+  }
+
+  /**
+   * Returns the adequate renderer for the given axis type.
+   * 
+   * @param axisType
+   * @return renderer
+   */
+  private XYItemRenderer getRenderer( final String axisType )
+  {
+    if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
+      return BAR_RENDERER;
+    
+    return LINE_RENDERER;
   }
 }

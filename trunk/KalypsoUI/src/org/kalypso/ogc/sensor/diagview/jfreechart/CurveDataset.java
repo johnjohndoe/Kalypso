@@ -3,15 +3,14 @@ package org.kalypso.ogc.sensor.diagview.jfreechart;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jfree.data.AbstractSeriesDataset;
-import org.jfree.data.XYDataset;
+import org.jfree.data.AbstractIntervalXYDataset;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
  * 
  * @author schlienger
  */
-class CurveDataset extends AbstractSeriesDataset implements XYDataset
+class CurveDataset extends AbstractIntervalXYDataset
 {
   private final List m_curves = new ArrayList();
 
@@ -107,5 +106,37 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
   {
     Number value = getYValue( series, item );
     return value == null ? Double.NaN : value.doubleValue();
+  }
+
+  /**
+   * @see org.jfree.data.IntervalXYDataset#getStartXValue(int, int)
+   */
+  public Number getStartXValue( int series, int item )
+  {
+    return getXValue( series, item );
+  }
+
+  /**
+   * @see org.jfree.data.IntervalXYDataset#getEndXValue(int, int)
+   */
+  public Number getEndXValue( int series, int item )
+  {
+    return getXValue( series, item );
+  }
+
+  /**
+   * @see org.jfree.data.IntervalXYDataset#getStartYValue(int, int)
+   */
+  public Number getStartYValue( int series, int item )
+  {
+    return getYValue( series, item );
+  }
+
+  /**
+   * @see org.jfree.data.IntervalXYDataset#getEndYValue(int, int)
+   */
+  public Number getEndYValue( int series, int item )
+  {
+    return getYValue( series, item );
   }
 }
