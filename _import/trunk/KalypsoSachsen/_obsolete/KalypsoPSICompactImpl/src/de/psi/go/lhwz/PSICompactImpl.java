@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +15,16 @@ import java.util.Properties;
 
 import javax.swing.JOptionPane;
 
+import org.apache.commons.io.IOUtils;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.util.runtime.args.DateRangeArgument;
+import org.xml.sax.InputSource;
+
 /**
  * Test Implementierung von der PSICompact Schnitstelle.
  * 
@@ -21,19 +32,15 @@ import javax.swing.JOptionPane;
  */
 public class PSICompactImpl implements PSICompact
 {
-  //  private final String m_replicationDir;
+  private final Map m_id2obj;
 
-  private final Map m_id2gemessene;
+  private final Map m_id2zml;
 
-  private final Map m_id2vorhergesagte;
+  private final Map m_id2wq;
 
   private final Map m_id2values;
 
   private final Map m_id2measType;
-
-  private final Map m_id2wq;
-
-  //  private final Map m_id2zml;
 
   private boolean m_init = false;
 
@@ -44,27 +51,24 @@ public class PSICompactImpl implements PSICompact
     super();
 
     m_id2values = new HashMap();
-    m_id2gemessene = new HashMap();
-    m_id2vorhergesagte = new HashMap();
+    m_id2obj = new HashMap();
     m_id2measType = new HashMap();
     m_id2wq = new HashMap();
-    //    m_id2zml = new HashMap();
-
-    //    m_replicationDir = System.getProperty( "java.io.tmpdir" );
+    m_id2zml = new HashMap();
   }
 
   /**
    * simuliert eine Liste von PSI Objekte
    * 
-   * @param map
-   * @param suffix
+   * @param mapId
+   * @param mapZml
    * @throws ECommException
    */
-  private final void prepareObjects( Map map, String suffix )
+  private final void prepareObjects( final Map mapId, final Map mapZml )
       throws ECommException
   {
     final BufferedReader reader = new BufferedReader( new InputStreamReader(
-        getClass().getResourceAsStream( "lhwz-ids.csv" ) ) );
+        getClass().getResourceAsStream( "fake/lhwz-ids.csv" ) ) );
 
     try
     {
@@ -72,9 +76,28 @@ public class PSICompactImpl implements PSICompact
 
       while( line != null )
       {
-        final String id = line + "." + suffix;
-        final String[] splits = line.split( "\\." );
-        map.put( id , new ObjectInfo( id, splits[splits.length - 1] + "." + suffix ) );
+        if( line.length() > 0 )
+        {
+          final String[] splitsLine = line.split( ";" );
+
+          if( splitsLine.length >= 1 )
+          {
+            String id = splitsLine[0].replaceAll(";", "");
+            
+            String zml = splitsLine.length >= 2 ? splitsLine[1] : "";
+            String desc = splitsLine.length >= 3 ? splitsLine[2] : "";
+
+            if( zml != "" )
+              mapZml.put( id, zml );
+
+            if( desc == "" )
+            {
+              final String[] splitsId = id.split( "\\." );
+              desc = splitsId[splitsId.length - 1];
+            }
+            mapId.put( id, new ObjectInfo( id, desc ) );
+          }
+        }
 
         line = reader.readLine();
       }
@@ -128,8 +151,7 @@ public class PSICompactImpl implements PSICompact
     }
 
     // build PSICompact-Structure
-    prepareObjects( m_id2gemessene, "Gemessene" );
-    prepareObjects( m_id2vorhergesagte, "Vorhergesagte" );
+    prepareObjects( m_id2obj, m_id2zml );
   }
 
   private void testInitDone( ) throws ECommException
@@ -157,13 +179,7 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    if( typespec == TYPE_MEASUREMENT )
-      return (ObjectInfo[]) m_id2gemessene.values().toArray( new ObjectInfo[0] );
-    else if( typespec == TYPE_VALUE )
-      return (ObjectInfo[]) m_id2vorhergesagte.values().toArray(
-          new ObjectInfo[0] );
-    else
-      return new ObjectInfo[0];
+    return (ObjectInfo[]) m_id2obj.values().toArray( new ObjectInfo[0] );
   }
 
   /**
@@ -178,17 +194,76 @@ public class PSICompactImpl implements PSICompact
     if( from == null || to == null )
       return new ArchiveData[0];
 
-    if( m_id2gemessene.containsKey( id ) || m_id2vorhergesagte.containsKey( id ) )
+    if( m_id2obj.containsKey( id ) )
     {
       // overriden?
       if( m_id2values.containsKey( id ) )
         return (ArchiveData[]) m_id2values.get( id );
 
-      // generate random data
-      return randomData( from, to );
+      final ArchiveData[] data;
+
+      // zml?
+      if( m_id2zml.containsKey( id ) )
+        data = readFromZml( id, from, to );
+      else
+        data = randomData( from, to );
+
+      m_id2values.put( id, data );
+      return data;
     }
 
     return new ArchiveData[0];
+  }
+
+  /**
+   * @param id
+   * @param from
+   * @param to
+   * @return data
+   */
+  private ArchiveData[] readFromZml( String id, Date from, Date to )
+  {
+    final String fname = (String) m_id2zml.get( id );
+
+    final InputStream stream = getClass().getResourceAsStream( "fake/" + fname );
+    InputSource ins = new InputSource( stream );
+
+    final DateRangeArgument dra = new DateRangeArgument( from, to );
+    final String strUrl = ZmlURL.insertDateRange( getClass().getResource(
+        "fake/" + fname ).toExternalForm(), dra );
+    try
+    {
+      final URL url = new URL( strUrl );
+
+      final IObservation obs = ZmlFactory.parseXML( ins, fname, url );
+
+      final ITuppleModel values = obs.getValues( dra );
+      final IAxis dateAxis = ObservationUtilities.findAxisByClass( obs
+          .getAxisList(), Date.class )[0];
+      final IAxis valueAxis = ObservationUtilities.findAxisByClass( obs
+          .getAxisList(), Number.class )[0];
+
+      final ArchiveData[] data = new ArchiveData[values.getCount()];
+      for( int i = 0; i < data.length; i++ )
+      {
+        Date d = (Date) values.getElement( i, dateAxis );
+        Number n = (Number) values.getElement( i, valueAxis );
+
+        data[i] = new ArchiveData( d, PSICompact.STATUS_AUTO, n.doubleValue() );
+      }
+
+      return data;
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+
+      return null;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( stream );
+    }
   }
 
   /**
@@ -273,7 +348,7 @@ public class PSICompactImpl implements PSICompact
     final String property = m_conf.getProperty( userId, null );
     if( property == null )
       return null;
-    
+
     return property.split( "," );
   }
 

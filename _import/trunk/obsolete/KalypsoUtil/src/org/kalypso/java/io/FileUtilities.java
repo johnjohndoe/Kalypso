@@ -284,15 +284,24 @@ public class FileUtilities
   }
 
   /**
-   * returns characters after last "." of given file name
+   * @param name name of path of the file
+   * @return characters after last "." of given file name
    */
-  public static String getSuffix( final File file )
+  public static String getSuffix( final String name )
   {
-    final String name = file.getAbsolutePath();
     final String[] strings = name.split( "." );
     if( strings.length != 0 )
       return strings[strings.length - 1];
     return null;
+  }
+  
+  /**
+   * @param file
+   * @return characters after last "." of given file name
+   */
+  public static String getSuffix( final File file )
+  {
+    return getSuffix( file.getAbsolutePath() );
   }
 
   /**

@@ -150,6 +150,24 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
   }
 
   /**
+   * Helper that returns the appropriate archive type depending on the 
+   * measure type.
+   * 
+   * @param measType
+   * @return archive type
+   */
+  public final static int measureTypeToArchiveType( int measType )
+  {
+    switch( measType )
+    {
+      case PSICompact.MEAS_RAINFALL:
+        return PSICompact.ARC_HOUR;
+      default:
+        return PSICompact.ARC_MIN15;
+    }
+  }
+  
+  /**
    * Helper für die Übersetzung des valueType in eine leesbare String
    * 
    * @param valueType

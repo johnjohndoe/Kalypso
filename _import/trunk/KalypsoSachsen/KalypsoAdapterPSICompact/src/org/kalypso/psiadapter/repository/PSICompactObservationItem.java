@@ -167,7 +167,7 @@ public class PSICompactObservationItem implements IObservation
    */
   private String measureTypeToString( )
   {
-    int measType = -1;
+    int measType = PSICompact.MEAS_UNDEF;
 
     try
     {
@@ -180,6 +180,26 @@ public class PSICompactObservationItem implements IObservation
     }
 
     return PSICompactRepositoryFactory.measureTypeToString( measType );
+  }
+  
+  /**
+   * @return welche Archivtyp benutzt werden soll
+   */
+  private int measureTypeToArchiveType( )
+  {
+    int measType = PSICompact.MEAS_UNDEF;
+
+    try
+    {
+      measType = PSICompactFactory.getConnection().getMeasureType(
+          m_objectInfo.getId() );
+    }
+    catch( ECommException e )
+    {
+      e.printStackTrace();
+    }
+
+    return PSICompactRepositoryFactory.measureTypeToArchiveType( measType );
   }
 
   /**
@@ -273,7 +293,7 @@ public class PSICompactObservationItem implements IObservation
       m_to = dr.getTo();
 
       final ArchiveData[] data = PSICompactFactory.getConnection()
-          .getArchiveData( m_objectInfo.getId(), PSICompact.ARC_MIN15, m_from,
+          .getArchiveData( m_objectInfo.getId(), measureTypeToArchiveType(), m_from,
               m_to );
 
       m_values = new PSICompactTuppleModel( data, getAxisList() );
@@ -302,7 +322,7 @@ public class PSICompactObservationItem implements IObservation
       try
       {
         PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(),
-            PSICompact.ARC_MIN15, model.getData()[0].getTimestamp(),
+            measureTypeToArchiveType(), model.getData()[0].getTimestamp(),
             model.getData() );
       }
       catch( ECommException e )
