@@ -16,7 +16,6 @@ import org.deegree_impl.extension.ITypeRegistry;
 import org.deegree_impl.extension.TypeRegistryException;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.eclipse.jface.viewers.DefaultCellEditorFactory;
 import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
@@ -147,16 +146,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   public RepositorySpecification[] getRepositoriesSpecifications()
   {
     return m_repositoriesSpecification;
-  }
-
-  public ImageDescriptor imageDescriptor( final String imageFilePath )
-  {
-    return imageDescriptor( "org.kalypso.ui", imageFilePath );
-  }
-
-  public ImageDescriptor imageDescriptor( final String pluginID, final String imageFilePath )
-  {
-    return AbstractUIPlugin.imageDescriptorFromPlugin( pluginID, imageFilePath );
   }
 
 //  TODO public OutputLogger getOutputLogger()

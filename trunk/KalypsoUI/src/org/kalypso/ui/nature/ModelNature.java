@@ -34,6 +34,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.transformation.ICalculationCaseTransformation;
 import org.kalypso.model.transformation.TransformationException;
 import org.kalypso.model.transformation.TransformationFactory;
@@ -400,6 +402,14 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     monitor.worked( 1000 );
     
     return Status.OK_STATUS;
+  }
+
+  public static void runPrognose( final Shell shell, final String name )
+  {
+    System.out.println( name );
+    final IProject project = (IProject)ResourcesPlugin.getWorkspace().getRoot().findMember( name );
+    
+    MessageDialog.openInformation( shell, "Prognoserechnung",  project.getName() );
   }
 
 }

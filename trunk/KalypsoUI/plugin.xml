@@ -10,26 +10,28 @@
       <library name="kalypsoUi.jar">
          <export name="*"/>
       </library>
+      <library name="lib/junit.jar">
+         <export name="*"/>
+      </library>
    </runtime>
    <requires>
-      <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.eclipse.ui.workbench"/>
-      <import plugin="org.eclipse.jface"/>
-      <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.compare"/>
-      <import plugin="org.junit"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.kalypso.util"/>
-      <import plugin="org.kalypso.deegree"/>
-      <import plugin="org.kalypso.psiadapter"/>
-      <import plugin="org.eclipse.debug.core"/>
-      <import plugin="org.eclipse.debug.ui"/>
-      <import plugin="org.kalypso.services"/>
+      <import plugin="org.eclipse.ui.editors" export="true"/>
+      <import plugin="org.eclipse.ui.workbench" export="true"/>
+      <import plugin="org.eclipse.jface" export="true"/>
+      <import plugin="org.eclipse.jface.text" export="true"/>
+      <import plugin="org.eclipse.core.resources" export="true"/>
+      <import plugin="org.eclipse.ui.ide" export="true"/>
+      <import plugin="org.eclipse.ui.views" export="true"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor" export="true"/>
+      <import plugin="org.eclipse.ui" export="true"/>
+      <import plugin="org.eclipse.compare" export="true"/>
+      <import plugin="org.eclipse.core.runtime" export="true"/>
+      <import plugin="org.kalypso.util" export="true"/>
+      <import plugin="org.kalypso.deegree" export="true"/>
+      <import plugin="org.kalypso.psiadapter" export="true"/>
+      <import plugin="org.eclipse.debug.core" export="true"/>
+      <import plugin="org.eclipse.debug.ui" export="true"/>
+      <import plugin="org.kalypso.services" export="true"/>
    </requires>
    <extension
          point="org.eclipse.ui.editors">
