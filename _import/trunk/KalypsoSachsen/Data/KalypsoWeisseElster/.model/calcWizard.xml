@@ -96,6 +96,8 @@
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 
+
+<!-- kommentiert zum testen 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kalibrierung Pegel Elsterberg 5/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
@@ -277,7 +279,7 @@
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
-
+-->
 	<!-- Ergebniskontrolle NA-Modelle-->
 	<!--
 	<page className="org.kalypso.ui.calcwizard.ExportResultsWizardPage"
@@ -296,17 +298,15 @@
 	</page>
 -->
 	<!-- Ergebnisablage -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage"
-	   pageTitle="Ergebnisbearbeitung und Veröffentlichung"
-	   imageLocation="icons/calcwizard/kalypso32.gif" >
-	   	<arg name="mapTemplate" value="project:.templates/calcCase/export.gmt"/>
-	
-        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=qberechnetZR"/>
-        <arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=w2#nameColumn=Name#linkColumn=pegelZR"/>
-	
-	   	<arg name="mainSash" value="50"/>
-	   	<arg name="rightSash" value="40"/>
-	   	<arg name="selectionID" value="256"/>
+	<page className="org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung" 
+		imageLocation="icons/calcwizard/kalypso32.gif" >
+		<arg name="mapTemplate" value="project:.templates/calcCase/export.gmt"/>
+		<arg name="timeserie1" 
+			value="nameColumn=Name#linkColumn=qberechnetZR#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
+		<arg name="timeserie2" value="nameColumn=Name#linkColumn=pegelZR"/>
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="40"/>
+		<arg name="selectionID" value="256"/>
 	</page>
 
 
