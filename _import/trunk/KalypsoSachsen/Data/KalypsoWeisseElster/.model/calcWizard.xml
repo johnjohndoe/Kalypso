@@ -2,6 +2,24 @@
 <calcwizard xmlns="xml.model.kalypso.org" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
+<!--
+ fuer jedes Teilmodell gibt es eine wizardpage,
+ fuer jede wizarpage gibt es eine nacontrol_x.gml.
+ die wizardpage ist eine Ansicht auf das rootFeature der nacontrol_x.gml.
+ 
+ die wizardpage ist folgendermassen aufgebaut:
+     die 5 KallibrierungsParameter aus nacontrol_x.gml
+  2. Diagrammview auf den Pegel und auf das Ergebnis
+     PegelLink und ErgebnisLink ist ebenfalls im nacontrol_x.gml enthalten.
+    (oder fuer jede wizardpage auch eine Diagrammvorlage ?)
+ 
+  es gibt einen Button "berechnen" 
+  (evt.) gibt einen Button "ergebnis anpassen": ergebniszeitreihe wird mit pegel verschmolzen
+
+  es gibt einen NEXT-Button:
+ 
+-->
+
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/boden.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/teilgebiete.gmt"/>
         <arg name="tableTemplate" value=".templates/calcCase/teilgebiete.ott"/>
@@ -11,6 +29,7 @@
         <arg name="selectionID" value="1"/>
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=Niederschlag_eingabe"/>
     </page>
+
 <!--
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Talsperrenabgaben" imageLocation="icons/calcwizard/boden.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>

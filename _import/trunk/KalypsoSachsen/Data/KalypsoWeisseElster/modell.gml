@@ -19,10 +19,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>1321500</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>42140.lz</langzeit>
           <namfn/>
-          <faktn>1.12</faktn>
+          <faktn>1.61</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -91,7 +91,8 @@
           <klupor>0.00</klupor>
           <izkn>1002</izkn>
           <niederschlagZRRepository>
-            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="kalypso-ocs:WeißeElster://Andreas/zml/N_C_1002.zml"  ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag"/>
+            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" 
+            ns1:href="kalypso-ocs:WeißeElster://Andreas/zml/N_C_1002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag"/>
           </niederschlagZRRepository>
           <niederschlagZR>
             <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="zml/N_C_1002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag"/>
@@ -115,10 +116,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>14911217</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>43380.lz</langzeit>
           <namfn/>
-          <faktn>1.46</faktn>
+          <faktn>1.71</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -211,10 +212,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>3234356</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>43380.lz</langzeit>
           <namfn/>
-          <faktn>1.78</faktn>
+          <faktn>1.82</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -307,10 +308,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>4914109</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>43380.lz</langzeit>
           <namfn/>
-          <faktn>1.79</faktn>
+          <faktn>1.86</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -406,7 +407,7 @@
           <kurzzeit>03368.kz</kurzzeit>
           <langzeit>42556.lz</langzeit>
           <namfn/>
-          <faktn>1.01</faktn>
+          <faktn>1.48</faktn>
           <namft>03368.tmp</namft>
           <namept>03368.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -499,10 +500,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>14844603</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>42140.lz</langzeit>
           <namfn/>
-          <faktn>1.25</faktn>
+          <faktn>1.63</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -595,10 +596,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>42709417</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>43380.lz</langzeit>
           <namfn/>
-          <faktn>1.6</faktn>
+          <faktn>1.75</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -691,10 +692,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>7857371</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>42140.lz</langzeit>
           <namfn/>
-          <faktn>1.17</faktn>
+          <faktn>1.62</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -787,10 +788,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>3253716</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>42140.lz</langzeit>
           <namfn/>
-          <faktn>1.44</faktn>
+          <faktn>1.72</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -883,10 +884,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>11238472</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>43380.lz</langzeit>
           <namfn/>
-          <faktn>1.82</faktn>
+          <faktn>1.83</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -982,7 +983,7 @@
           <kurzzeit>03368.kz</kurzzeit>
           <langzeit>42556.lz</langzeit>
           <namfn/>
-          <faktn>0.89</faktn>
+          <faktn>1.35</faktn>
           <namft>03368.tmp</namft>
           <namept>03368.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -1075,10 +1076,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>18435186</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>43325.lz</langzeit>
           <namfn/>
-          <faktn>1.59</faktn>
+          <faktn>1.98</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -1171,10 +1172,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>35160621</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>43380.lz</langzeit>
           <namfn/>
-          <faktn>1.89</faktn>
+          <faktn>1.86</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -1270,7 +1271,7 @@
           <kurzzeit>03368.kz</kurzzeit>
           <langzeit>42556.lz</langzeit>
           <namfn/>
-          <faktn>0.96</faktn>
+          <faktn>1.49</faktn>
           <namft>03368.tmp</namft>
           <namept>03368.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -1366,7 +1367,7 @@
           <kurzzeit>03375.kz</kurzzeit>
           <langzeit>43403.lz</langzeit>
           <namfn/>
-          <faktn>1.9</faktn>
+          <faktn>1.8</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -1462,7 +1463,7 @@
           <kurzzeit>03375.kz</kurzzeit>
           <langzeit>43403.lz</langzeit>
           <namfn/>
-          <faktn>1.92</faktn>
+          <faktn>1.79</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -1942,7 +1943,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43366.lz</langzeit>
           <namfn/>
-          <faktn>1.05</faktn>
+          <faktn>1.25</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -2038,7 +2039,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43321.lz</langzeit>
           <namfn/>
-          <faktn>1.01</faktn>
+          <faktn>1.19</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -2134,7 +2135,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43362.lz</langzeit>
           <namfn/>
-          <faktn>0.93</faktn>
+          <faktn>1.17</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -2230,7 +2231,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43313.lz</langzeit>
           <namfn/>
-          <faktn>0.86</faktn>
+          <faktn>1.19</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -2326,7 +2327,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43311.lz</langzeit>
           <namfn/>
-          <faktn>0.89</faktn>
+          <faktn>1.16</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -2422,7 +2423,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43360.lz</langzeit>
           <namfn/>
-          <faktn>0.78</faktn>
+          <faktn>1.08</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -2518,7 +2519,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43309.lz</langzeit>
           <namfn/>
-          <faktn>1.35</faktn>
+          <faktn>1.89</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -2614,7 +2615,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43311.lz</langzeit>
           <namfn/>
-          <faktn>1.98</faktn>
+          <faktn>2.11</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -2709,7 +2710,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43338.lz</langzeit>
           <namfn/>
-          <faktn>1.31</faktn>
+          <faktn>1.92</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -2805,7 +2806,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43338.lz</langzeit>
           <namfn/>
-          <faktn>1.22</faktn>
+          <faktn>1.9</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -2901,7 +2902,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43333.lz</langzeit>
           <namfn/>
-          <faktn>1.18</faktn>
+          <faktn>1.83</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -2997,7 +2998,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43309.lz</langzeit>
           <namfn/>
-          <faktn>1.23</faktn>
+          <faktn>1.79</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -3093,7 +3094,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43305.lz</langzeit>
           <namfn/>
-          <faktn>1.32</faktn>
+          <faktn>1.98</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -3189,7 +3190,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43330.lz</langzeit>
           <namfn/>
-          <faktn>1.19</faktn>
+          <faktn>1.68</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -3285,7 +3286,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43334.lz</langzeit>
           <namfn/>
-          <faktn>1.18</faktn>
+          <faktn>1.67</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -3381,7 +3382,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43330.lz</langzeit>
           <namfn/>
-          <faktn>1.26</faktn>
+          <faktn>1.47</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -3477,7 +3478,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43332.lz</langzeit>
           <namfn/>
-          <faktn>1.09</faktn>
+          <faktn>1.29</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -3573,7 +3574,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43305.lz</langzeit>
           <namfn/>
-          <faktn>1.3</faktn>
+          <faktn>1.84</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -3660,7 +3661,7 @@
             </gml:Polygon>
           </Ort>
           <inum>1600</inum>
-          <generateResult/>
+          <generateResult>1</generateResult>
           <ispk>7</ispk>
           <text>Ezg_agg2.shp</text>
           <flaech>111306599</flaech>
@@ -3668,7 +3669,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43303.lz</langzeit>
           <namfn/>
-          <faktn>1.6</faktn>
+          <faktn>2.03</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -3756,7 +3757,7 @@
             </gml:Polygon>
           </Ort>
           <inum>1601</inum>
-          <generateResult/>
+<generateResult>1</generateResult>
           <ispk>7</ispk>
           <text>Ezg_agg2.shp</text>
           <flaech>45928212</flaech>
@@ -3764,7 +3765,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43336.lz</langzeit>
           <namfn/>
-          <faktn>1.7</faktn>
+          <faktn>2.28</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -3852,7 +3853,7 @@
             </gml:Polygon>
           </Ort>
           <inum>1700</inum>
-          <generateResult/>
+<generateResult>1</generateResult>
           <ispk>7</ispk>
           <text>Ezg_agg2.shp</text>
           <flaech>122714629</flaech>
@@ -3860,7 +3861,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43328.lz</langzeit>
           <namfn/>
-          <faktn>1.8</faktn>
+          <faktn>2.05</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -3948,7 +3949,7 @@
             </gml:Polygon>
           </Ort>
           <inum>1800</inum>
-          <generateResult/>
+<generateResult>1</generateResult>
           <ispk>7</ispk>
           <text>Ezg_agg2.shp</text>
           <flaech>47666091</flaech>
@@ -3956,7 +3957,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43326.lz</langzeit>
           <namfn/>
-          <faktn>1.3</faktn>
+          <faktn>1.83</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -4052,7 +4053,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43358.lz</langzeit>
           <namfn/>
-          <faktn>0.66</faktn>
+          <faktn>1.15</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -4148,7 +4149,7 @@
           <kurzzeit>04234.kz</kurzzeit>
           <langzeit>43351.lz</langzeit>
           <namfn/>
-          <faktn>1.46</faktn>
+          <faktn>1.79</faktn>
           <namft>04234.tmp</namft>
           <namept>04234.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -4244,7 +4245,7 @@
           <kurzzeit>04234.kz</kurzzeit>
           <langzeit>43355.lz</langzeit>
           <namfn/>
-          <faktn>1.46</faktn>
+          <faktn>1.58</faktn>
           <namft>04234.tmp</namft>
           <namept>04234.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -4340,7 +4341,7 @@
           <kurzzeit>04234.kz</kurzzeit>
           <langzeit>43333.lz</langzeit>
           <namfn/>
-          <faktn>1.4</faktn>
+          <faktn>1.76</faktn>
           <namft>04234.tmp</namft>
           <namept>04234.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -4436,7 +4437,7 @@
           <kurzzeit>04234.kz</kurzzeit>
           <langzeit>43351.lz</langzeit>
           <namfn/>
-          <faktn>1.45</faktn>
+          <faktn>1.87</faktn>
           <namft>04234.tmp</namft>
           <namept>04234.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -4532,7 +4533,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43354.lz</langzeit>
           <namfn/>
-          <faktn>0.69</faktn>
+          <faktn>1.07</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -4628,7 +4629,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43357.lz</langzeit>
           <namfn/>
-          <faktn>0.63</faktn>
+          <faktn>0.97</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -4721,10 +4722,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>10888718</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>42140.lz</langzeit>
           <namfn/>
-          <faktn>1.11</faktn>
+          <faktn>1.64</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -4817,10 +4818,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>22190546</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>42526.lz</langzeit>
           <namfn/>
-          <faktn>1.34</faktn>
+          <faktn>1.77</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -4913,10 +4914,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>31317647</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>42526.lz</langzeit>
           <namfn/>
-          <faktn>1.22</faktn>
+          <faktn>1.68</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -5009,10 +5010,10 @@
           <text>Ezg_agg2.shp</text>
           <flaech>22991385</flaech>
           <pns>n</pns>
-          <kurzzeit>03368.kz</kurzzeit>
+          <kurzzeit>03375.kz</kurzzeit>
           <langzeit>42140.lz</langzeit>
           <namfn/>
-          <faktn>1.29</faktn>
+          <faktn>1.75</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -5108,7 +5109,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>42526.lz</langzeit>
           <namfn/>
-          <faktn>0.91</faktn>
+          <faktn>0.81</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -5204,7 +5205,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>42526.lz</langzeit>
           <namfn/>
-          <faktn>0.95</faktn>
+          <faktn>0.8</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -5300,7 +5301,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>41339.lz</langzeit>
           <namfn/>
-          <faktn>0.96</faktn>
+          <faktn>0.79</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -5396,7 +5397,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>42526.lz</langzeit>
           <namfn/>
-          <faktn>0.84</faktn>
+          <faktn>0.74</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -5492,7 +5493,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>42514.lz</langzeit>
           <namfn/>
-          <faktn>0.93</faktn>
+          <faktn>0.81</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -5588,7 +5589,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>42514.lz</langzeit>
           <namfn/>
-          <faktn>0.98</faktn>
+          <faktn>0.82</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -5684,7 +5685,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>41312.lz</langzeit>
           <namfn/>
-          <faktn>1.09</faktn>
+          <faktn>0.87</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -5780,7 +5781,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>41312.lz</langzeit>
           <namfn/>
-          <faktn>1.12</faktn>
+          <faktn>0.93</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -5876,7 +5877,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>41339.lz</langzeit>
           <namfn/>
-          <faktn>1.03</faktn>
+          <faktn>0.82</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -5972,7 +5973,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>04435.kz</langzeit>
           <namfn/>
-          <faktn>1.49</faktn>
+          <faktn>1.96</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -6068,7 +6069,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>04435.kz</langzeit>
           <namfn/>
-          <faktn>1.46</faktn>
+          <faktn>1.99</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -6164,7 +6165,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>04435.kz</langzeit>
           <namfn/>
-          <faktn>2.09</faktn>
+          <faktn>2.21</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -6260,7 +6261,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>04435.kz</langzeit>
           <namfn/>
-          <faktn>1.6</faktn>
+          <faktn>2.05</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -6356,7 +6357,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>04435.kz</langzeit>
           <namfn/>
-          <faktn>2.06</faktn>
+          <faktn>2.35</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -6452,7 +6453,7 @@
           <kurzzeit>04435.kz</kurzzeit>
           <langzeit>43345.lz</langzeit>
           <namfn/>
-          <faktn>0.57</faktn>
+          <faktn>1.13</faktn>
           <namft>04435.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -6548,7 +6549,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43336.lz</langzeit>
           <namfn/>
-          <faktn>1.88</faktn>
+          <faktn>2.3</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -6631,7 +6632,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43330.lz</langzeit>
           <namfn/>
-          <faktn>1.1</faktn>
+          <faktn>1.22</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -6727,7 +6728,7 @@
           <kurzzeit>04426.kz</kurzzeit>
           <langzeit>43330.lz</langzeit>
           <namfn/>
-          <faktn>1.05</faktn>
+          <faktn>1.1</faktn>
           <namft>04426.tmp</namft>
           <namept>04426.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -6822,7 +6823,7 @@
           <kurzzeit>03375.kz</kurzzeit>
           <langzeit>42140.lz</langzeit>
           <namfn/>
-          <faktn>1.27</faktn>
+          <faktn>1.67</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -6918,7 +6919,7 @@
           <kurzzeit>03375.kz</kurzzeit>
           <langzeit>42140.lz</langzeit>
           <namfn/>
-          <faktn>1.35</faktn>
+          <faktn>1.73</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -7014,7 +7015,7 @@
           <kurzzeit>03375.kz</kurzzeit>
           <langzeit>43380.lz</langzeit>
           <namfn/>
-          <faktn>1.62</faktn>
+          <faktn>1.86</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -7110,7 +7111,7 @@
           <kurzzeit>03375.kz</kurzzeit>
           <langzeit>43478.lz</langzeit>
           <namfn/>
-          <faktn>1.75</faktn>
+          <faktn>1.97</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -7206,7 +7207,7 @@
           <kurzzeit>03375.kz</kurzzeit>
           <langzeit>43478.lz</langzeit>
           <namfn/>
-          <faktn>1.57</faktn>
+          <faktn>1.9</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -7302,7 +7303,7 @@
           <kurzzeit>03375.kz</kurzzeit>
           <langzeit>42405.lz</langzeit>
           <namfn/>
-          <faktn>1.72</faktn>
+          <faktn>2.01</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -7398,7 +7399,7 @@
           <kurzzeit>03375.kz</kurzzeit>
           <langzeit>43380.lz</langzeit>
           <namfn/>
-          <faktn>1.72</faktn>
+          <faktn>1.86</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -7494,7 +7495,7 @@
           <kurzzeit>03375.kz</kurzzeit>
           <langzeit>42140.lz</langzeit>
           <namfn/>
-          <faktn>1.18</faktn>
+          <faktn>1.64</faktn>
           <namft>03375.tmp</namft>
           <namept>03375.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -7590,7 +7591,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43433.lz</langzeit>
           <namfn/>
-          <faktn>1.38</faktn>
+          <faktn>1.17</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -7686,7 +7687,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43433.lz</langzeit>
           <namfn/>
-          <faktn>1.62</faktn>
+          <faktn>1.21</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -7782,7 +7783,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43415.lz</langzeit>
           <namfn/>
-          <faktn>1.73</faktn>
+          <faktn>1.27</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -7878,7 +7879,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43433.lz</langzeit>
           <namfn/>
-          <faktn>1.63</faktn>
+          <faktn>1.22</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -7974,7 +7975,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43424.lz</langzeit>
           <namfn/>
-          <faktn>1.31</faktn>
+          <faktn>1.35</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -8070,7 +8071,7 @@
           <kurzzeit>04422.kz</kurzzeit>
           <langzeit>43421.lz</langzeit>
           <namfn/>
-          <faktn>1.08</faktn>
+          <faktn>1.24</faktn>
           <namft>04422.tmp</namft>
           <namept>04422.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -8166,7 +8167,7 @@
           <kurzzeit>04422.kz</kurzzeit>
           <langzeit>42042.lz</langzeit>
           <namfn/>
-          <faktn>1.15</faktn>
+          <faktn>1.26</faktn>
           <namft>04422.tmp</namft>
           <namept>04422.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -8262,7 +8263,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43421.lz</langzeit>
           <namfn/>
-          <faktn>1.23</faktn>
+          <faktn>1.32</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -8358,7 +8359,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43424.lz</langzeit>
           <namfn/>
-          <faktn>1.18</faktn>
+          <faktn>1.31</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -8454,7 +8455,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43424.lz</langzeit>
           <namfn/>
-          <faktn>1.13</faktn>
+          <faktn>1.31</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -8550,7 +8551,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43424.lz</langzeit>
           <namfn/>
-          <faktn>1.12</faktn>
+          <faktn>1.28</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -8650,7 +8651,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43436.lz</langzeit>
           <namfn/>
-          <faktn>1.15</faktn>
+          <faktn>1.07</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -8745,7 +8746,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43415.lz</langzeit>
           <namfn/>
-          <faktn>1.73</faktn>
+          <faktn>1.25</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -8841,7 +8842,7 @@
           <kurzzeit>03368.kz</kurzzeit>
           <langzeit>43505.lz</langzeit>
           <namfn/>
-          <faktn>0.99</faktn>
+          <faktn>1.41</faktn>
           <namft>03368.tmp</namft>
           <namept>03368.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -8937,7 +8938,7 @@
           <kurzzeit>03368.kz</kurzzeit>
           <langzeit>42544.lz</langzeit>
           <namfn/>
-          <faktn>1.12</faktn>
+          <faktn>1.59</faktn>
           <namft>03368.tmp</namft>
           <namept>03368.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -9129,7 +9130,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43323.lz</langzeit>
           <namfn/>
-          <faktn>1.1</faktn>
+          <faktn>1.06</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -9321,7 +9322,7 @@
           <kurzzeit>04406.kz</kurzzeit>
           <langzeit>43358.lz</langzeit>
           <namfn/>
-          <faktn>0.68</faktn>
+          <faktn>1.17</faktn>
           <namft>04406.tmp</namft>
           <namept>04406.ver</namept>
           <namfzf>we999.zfl</namfzf>
@@ -14773,12 +14774,10 @@
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel3002"/>
           <zuflussZRRepository>
-            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" 
-            linktype="zml" ns1:href="kalypso-ocs:WeißeElster://Andreas/zufluss/Q_N3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
+            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="kalypso-ocs:WeißeElster://Andreas/zufluss/Q_N3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
           </zuflussZRRepository>
           <zuflussZR>
-            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml"
-             ns1:href="zufluss/Q_N3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
+            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="zufluss/Q_N3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
           </zuflussZR>
           <nzufPfad>P:\vwe04121\modell\hydrologie\namod\zufluss\q_leipzig.dat</nzufPfad>
           <pegelZRRepository/>
@@ -15056,20 +15055,14 @@
             </gml:Point>
           </Ort>
           <num>1600</num>
-          <generateResult>true</generateResult>
+          <generateResult>1</generateResult>
           <downStreamChannelMember xlink:href="#VirtualChannel1777"/>
           <zuflussZRRepository/>
           <zuflussZR/>
           <nzufPfad/>
           <pegelZRRepository/>
           <pegelZR/>
-          <qberechnetZR>
-            <TimeseriesLink xmlns="obslink.zml.kalypso.org" 
-            xmlns:ns1="http://www.w3.org/1999/xlink" 
-            linktype="zml"
-             ns1:href="Ergebnisse/Abfluss/Q_1800.zml"
-              ns1:type="simple" timeaxis="Datum" valueaxis="Niederschlag"/>
-          </qberechnetZR>
+          <qberechnetZR/>
           <zproz/>
           <verzweigungNodeMember/>
         </Node>
