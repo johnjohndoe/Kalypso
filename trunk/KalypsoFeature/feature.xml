@@ -84,4 +84,16 @@
          install-size="0"
          version="0.0.5"/>
 
+   <plugin
+         id="org.bce.eclipse.platform.contrib"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+   <plugin
+         id="org.kalypso.ui.observationimport"
+         download-size="0"
+         install-size="0"
+         version="0.0.5"/>
+
 </feature>
