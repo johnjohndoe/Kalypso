@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="valuecomp.filters.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlinkext="http://www.w3.org/1999/xlinkext" xmlns:vc="valuecomp.filters.zml.kalypso.org">
+	
+	<!-- valueComp hierarchy base type: axis on which comparison is done is defined by axisType -->
+	<complexType name="abstractValueCompType" abstract="true">
+		<attribute name="axisType" type="string" use="required"/>
+	</complexType>
+	<element name="valueComp" type="vc:abstractValueCompType"/>
+	
+	<!-- simple value comp: uses one value for comparisons -->
+	<complexType name="simpleValueCompType">
+		<complexContent>
+			<extension base="vc:abstractValueCompType">
+				<!-- value used for comparison -->
+				<attribute name="value" type="string" use="required"/>
+				<!-- mode used when comparing: one of inc (inclusive) or exc (exclusive) -->
+				<attribute name="mode" type="string" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- 'smaller than' comparison -->
+	<complexType name="smallerValueCompType">
+		<complexContent>
+			<extension base="vc:simpleValueCompType"/>
+		</complexContent>
+	</complexType>
+	<element name="compSmaller" type="vc:smallerValueCompType" substitutionGroup="vc:valueComp"/>
+	
+	<!-- 'bigger than' comparison -->
+	<complexType name="biggerValueCompType">
+		<complexContent>
+			<extension base="vc:simpleValueCompType"/>
+		</complexContent>
+	</complexType>
+	<element name="compBigger" type="vc:biggerValueCompType" substitutionGroup="vc:valueComp"/>
+
+	<!-- 'between' comparison -->
+	<complexType name="betweenValueCompType">
+		<complexContent>
+			<extension base="vc:simpleValueCompType">
+				<attribute name="value2" type="string" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="compBetween" type="vc:betweenValueCompType" substitutionGroup="vc:valueComp"/>
+	
+</schema>

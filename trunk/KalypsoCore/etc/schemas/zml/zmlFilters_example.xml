@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wqFilter xmlns="filters.zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="filters.zml.kalypso.org
+zmlFilters.xsd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:vc="valuecomp.filters.zml.kalypso.org" type="W">
+
+	<valueFilter>
+		<vc:compBigger value="5.3" axisType="W" mode="inc"/>
+		<vc:compSmaller value="6.54" axisType="W" mode="exc"/>
+		<vc:compBetween value="2004-03-30" value2="2004-04-24" axisType="date" mode="inc"/>
+		<zmlFilter>
+			<zml xlink:href="etwas"/>
+		</zmlFilter>
+	</valueFilter>
+
+</wqFilter>

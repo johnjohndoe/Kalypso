@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="filters.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlinkext="http://www.w3.org/1999/xlinkext" xmlns:filters="filters.zml.kalypso.org">
+<schema targetNamespace="filters.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlinkext="http://www.w3.org/1999/xlinkext" xmlns:filters="filters.zml.kalypso.org" xmlns:vc="valuecomp.filters.zml.kalypso.org">
 	<import namespace="http://www.w3.org/1999/xlinkext" schemaLocation="../xlink/xlinksext.xsd"/>
+	<import namespace="valuecomp.filters.zml.kalypso.org" schemaLocation="./zmlFiltersValueComp.xsd"/>
+	
+	<!-- filter hierarchy base type -->
 	<complexType name="abstractFilterType" abstract="true"/>
 	<element name="filter" type="filters:abstractFilterType"/>
-	<element name="operationFilter" type="filters:operationFilterType" substitutionGroup="filters:filter"/>
+	
+	<!-- Filter: WQ Transformation -->
+	<complexType name="wqFilterType">
+		<complexContent>
+			<extension base="filters:abstractFilterType">
+				<sequence>
+					<element ref="filters:filter"/>
+				</sequence>
+				<!-- W or Q -->
+				<attribute name="type" type="string"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="wqFilter" type="filters:wqFilterType" substitutionGroup="filters:filter"/>
+	
+	<!-- Filter: valueFilter -->
+	<complexType name="valueFilterType">
+		<complexContent>
+			<extension base="filters:abstractFilterType">
+				<sequence>
+					<element ref="vc:valueComp" minOccurs="0" maxOccurs="unbounded"/>
+					<element ref="filters:filter"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="valueFilter" type="filters:valueFilterType" substitutionGroup="filters:filter"/>
+	
+	<!-- Filter: Math Operation on values -->
 	<complexType name="operationFilterType">
 		<complexContent>
 			<extension base="filters:abstractFilterType">
@@ -17,7 +48,9 @@
 			<!-- e.g. 5 -->
 		</complexContent>
 	</complexType>
-	<element name="nOperationFilter" type="filters:nOperationFilterType" substitutionGroup="filters:filter"/>
+	<element name="operationFilter" type="filters:operationFilterType" substitutionGroup="filters:filter"/>
+	
+	<!-- Filter: Math Operation between Filters -->
 	<complexType name="nOperationFilterType">
 		<complexContent>
 			<extension base="filters:abstractFilterType">
@@ -29,14 +62,18 @@
 			<!-- +, -, *, / oder min, max, avg ... -->
 		</complexContent>
 	</complexType>
-	<element name="zmlFilter" type="filters:zmlFilterType" substitutionGroup="filters:filter"/>
+	<element name="nOperationFilter" type="filters:nOperationFilterType" substitutionGroup="filters:filter"/>
+	
+	<!-- Filter: ZML-Link -->
 	<complexType name="zmlFilterType">
 		<complexContent>
 			<extension base="filters:abstractFilterType">
 				<sequence>
-					<element name="link" type="xlinkext:SimpleLinkType"/>
+					<element name="zml" type="xlinkext:SimpleLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
+	<element name="zmlFilter" type="filters:zmlFilterType" substitutionGroup="filters:filter"/>
+	
 </schema>
