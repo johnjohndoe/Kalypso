@@ -3,27 +3,27 @@
 	<extent bottom="50.99678799998588" left="14.340792728726877" right="14.986512202195462" top="51.53907066733935"/>
 	<layers>
 		<layer name="Vorhersagepegel (N-A Modell)" visible="true" id="active_0" linktype="gml" ns1:actuate="onRequest" ns1:href="PATH=calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=.modellTyp/modell.xsd" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-			<ns2:style linktype="style" ns1:actuate="onRequest" ns1:href="PATH=styles/namodelle.sld#STYLE=NA-Modelle#" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+			<ns2:style linktype="style" ns1:actuate="onRequest" ns1:href="PATH=.styles/namodelle.sld#STYLE=NA-Modelle#" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
 		</layer>
 
 		<layer name="Vorhersagepegel (Flußlaufmodell)" visible="true" id="0" linktype="gml" ns1:actuate="onRequest" ns1:href="PATH=calcdir:calcCase.gml#LAYER=Flusslaufmodell#SERVICE=RESOURCE#XSD=.modellTyp/modell.xsd#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-			<ns2:style linktype="style" ns1:actuate="onRequest" ns1:href="PATH=styles/flusslaufmodelle.sld#STYLE=Flusslaufmodelle#" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+			<ns2:style linktype="style" ns1:actuate="onRequest" ns1:href="PATH=.styles/flusslaufmodelle.sld#STYLE=Flusslaufmodelle#" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
 		</layer>
 
 		<layer name="Eingabepegel (Talsperre)" visible="true" id="0" linktype="gml" ns1:actuate="onRequest" ns1:href="PATH=calcdir:calcCase.gml#LAYER=Talsperre#SERVICE=RESOURCE#XSD=.modellTyp/modell.xsd" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-			<ns2:style linktype="style" ns1:actuate="onRequest" ns1:href="PATH=styles/talsperren.sld#STYLE=Talsperren#" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+			<ns2:style linktype="style" ns1:actuate="onRequest" ns1:href="PATH=.styles/talsperren.sld#STYLE=Talsperren#" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
 		</layer>
 		
 		<layer name="Eingabepegel (Zuflusse)" visible="true" id="4" linktype="gml" ns7:actuate="onRequest" ns7:href="PATH=calcdir:calcCase.gml#LAYER=Zufluss#SERVICE=RESOURCE#XSD=.modellTyp/modell.xsd#" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
-			<ns8:style linktype="style" ns7:actuate="onRequest" ns7:href="PATH=styles/zufluesse.sld#STYLE=Zufluesse#" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
+			<ns8:style linktype="style" ns7:actuate="onRequest" ns7:href="PATH=.styles/zufluesse.sld#STYLE=Zufluesse#" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
 		</layer>
 <!--
 		<layer name="Eingabepegel (Zuflusse)" visible="true" id="4" linktype="gml" ns7:actuate="onRequest" ns7:href="PATH=calcdir:calcCase.gml#LAYER=Flutung#SERVICE=RESOURCE#XSD=.modellTyp/modell.xsd#" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
-			<ns8:style linktype="style" ns7:actuate="onRequest" ns7:href="PATH=styles/zufluesse.sld#STYLE=Zufluesse#" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
+			<ns8:style linktype="style" ns7:actuate="onRequest" ns7:href="PATH=.styles/zufluesse.sld#STYLE=Zufluesse#" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
 		</layer>
 -->
-		<layer name="Gewässerverlauf" visible="true" id="1" linktype="shape" ns3:actuate="onRequest" ns3:href="SRS=EPSG:31469#PATH=shapes/schoeps_loebauer_wasser#SERVICE=RESOURCE#" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
-			<ns4:style linktype="style" ns3:actuate="onRequest" ns3:href="PATH=styles/styles.sld#STYLE=sachsenrivers#" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
+		<layer name="Gewässerverlauf" visible="true" id="1" linktype="shape" ns3:actuate="onRequest" ns3:href="SRS=EPSG:31469#PATH=.shapes/schoeps_loebauer_wasser#SERVICE=RESOURCE#" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+			<ns4:style linktype="style" ns3:actuate="onRequest" ns3:href="PATH=.styles/styles.sld#STYLE=sachsenrivers#" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
 		</layer>
 	</layers>
 </gismapview>

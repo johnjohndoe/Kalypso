@@ -23,7 +23,6 @@
 		</Pegel>
 			</gml:featureMember>
 
-
 	<gml:featureMember>
 		<Pegel fid="neu">
 			<Name>Abzweig Kleine Spree</Name>
@@ -145,10 +144,7 @@
 				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcaldir:.results/WV_BOXBRG.zml"/>
 			    </PegelBerechnung>
 		</Pegel>
-		</Flusslaufmodell>
 	</gml:featureMember>
-
-
 
 	<gml:featureMember>
 		<Pegel fid="new">
@@ -216,8 +212,9 @@
 			    </PegelBerechnung>
 		</Pegel>
 	</gml:featureMember>
+	
 	<gml:featureMember>
-		<Einzugsgebiet fid="new">
+		<Pegel fid="new">
 			<Name>Schirgiswalde</Name>
 			<Ort>
 				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
@@ -243,7 +240,7 @@
 
 
 	<gml:featureMember>
-		<Einzugsgebiet fid="new">
+		<Pegel fid="new">
 			<Name>Bautzen WB</Name>
 			<Ort>
 				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
@@ -269,7 +266,7 @@
 
 
 	<gml:featureMember>
-		<Einzugsgebiet fid="new">
+		<Pegel fid="new">
 			<Name>Gröditz 1</Name>
 			<Ort>
 				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
@@ -295,7 +292,7 @@
 
 
 	<gml:featureMember>
-		<Einzugsgebiet fid="new">
+		<Pegel fid="new">
 			<Name>Jänkendorf</Name>
 			<Ort>
 				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
@@ -321,7 +318,7 @@
 
 
 	<gml:featureMember>
-		<Einzugsgebiet fid="new">
+		<Pegel fid="new">
 			<Name>Särichen</Name>
 			<Ort>
 				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
@@ -347,9 +344,8 @@
 
 
 	<gml:featureMember>
-		<Talsperre fid="ID1">
+		<Pegel fid="ID1">
 			<Name>Bautzen</Name>
-			<Anfangsstauvolumen>0.0</Anfangsstauvolumen>
 			<Ort>
 				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
 					<gml:coordinates cs="," decimal="." ts=" ">5463280,5675800</gml:coordinates>
@@ -373,9 +369,8 @@
 	
 	
 	<gml:featureMember>
-		<Talsperre fid="ID2">
+		<Pegel fid="ID2">
 			<Name>Quitzdorf</Name>
-			<Anfangsstauvolumen>0.0</Anfangsstauvolumen>
 			<Ort>
 				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
 					<!-- Koordinaten Pegel Sproitz -->

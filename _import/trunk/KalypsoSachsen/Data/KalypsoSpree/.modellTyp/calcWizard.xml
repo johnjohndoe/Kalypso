@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.model.kalypso.org calcwizard.xsd">
+<!--
     <page className="org.kalypso.ui.calcwizard.ObservationMapTableDiagWizardPage" pageTitle="Eingabe Niederschlag" imageLocation="icons/calcwizard/boden.gif" >
         <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/ezg.gmt"/>
         <arg name="tableTemplate" value=".modellTyp/vorlagen/rechenfall/table1.ott"/>
@@ -103,32 +104,28 @@
         <arg name="selectionID" value="128"/>
         
     </page>
+-->
+	<!-- Ergebniskontroole NA-Modelle-->
+	<page className="org.kalypso.ui.calcwizard.ExportResultsWizardPage"
+	   pageTitle="Ergebniskontrolle Pegel"
+	   imageLocation="icons/calcwizard/boden.gif" >
+	   	<arg name="mapTemplate" value="project:.modellTyp/vorlagen/rechenfall/ergebniskontrollePegel.gmt"/>
+	   	<arg name="tableTemplate"  value="project:.modellTyp/vorlagen/rechenfall/ergebniskontrollePegel.gtt"/>
+		<arg name="diagTemplate" value=".modellTyp/vorlagen/rechenfall/results.odt"/>
+	
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=PegelBerechnung"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=NiederschlagMessung"/>
+	
+	   	<arg name="mainSash" value="50"/>
+	   	<arg name="rightSash" value="40"/>
+	   	<arg name="selectionID" value="256"/>
+	</page>
 
-
-<!-- Ergebniskontroole NA-Modelle-->
-<page className="org.kalypso.ui.calcwizard.ViewResultsWizardPage"
-   pageTitle="Ergebniskontrolle Pegel"
-   imageLocation="icons/calcwizard/boden.gif" >
-   	<arg name="mapTemplate" value="project:.modellTyp/vorlagen/rechenfall/ergebniskontrollePegel.gmt"/>
-   	<arg name="tableTemplate"  value="project:.modellTyp/vorlagen/rechenfall/ergebniskontrollePegel.gtt"/>
-	<arg name="diagTemplate" value=".modellTyp/vorlagen/rechenfall/results.odt"/>
-
-	<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=PegelBerechnung"/>
-	<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=NiederschlagMessung"/>
-
-   	<arg name="mainSash" value="50"/>
-   	<arg name="rightSash" value="40"/>
-   	<arg name="selectionID" value="256"/>
-   	
-   	
-</page>
 
 <!--
-    <page className="org.kalypso.ui.calcwizard.MapAndTableWizardPage" pageTitle="Bodenfeuchte" imageLocation="icons/calcwizard/boden.gif" >
-        <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/karte1.gmt"/>
-        <arg name="tableTemplate" value=".modellTyp/vorlagen/rechenfall/table1.gtt"/>
-    </page>
+	<page className="org.kalypso.ui.calcwizard.MapAndTableWizardPage" pageTitle="Bodenfeuchte" imageLocation="icons/calcwizard/boden.gif" >
+	   <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/karte1.gmt"/>
+	   <arg name="tableTemplate" value=".modellTyp/vorlagen/rechenfall/table1.gtt"/>
+	</page>
 -->
-
-
 </calcwizard>

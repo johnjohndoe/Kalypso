@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Observation editable="false" xmlns="zml.kalypso.org"><Name>PG_SCHIRG</Name><MetadataList><Metadata name="StartZeit" value="27.4.2005 12:00"/><Metadata name="Berechnung" value="Prognose"/></MetadataList><Axis datatype="TYPE=xs:date#FORMAT=yyyy.MM.dd HH:mm:ss" name="Datum" unit=""><ValueArray separator=";">2004.04.27 07:00:00;2004.04.27 13:00:00;2004.04.27 19:00:00;2004.04.28 01:00:00;2004.04.28 07:00:00</ValueArray></Axis><Axis datatype="TYPE=xs:double" name="Wert" unit=""><ValueArray separator=";">0;10;15;25;0</ValueArray></Axis></Observation>
-

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+	<name>QV_BWALDE</name>
+	<metadataList>
+		<metadata name="StartZeit" value="27.4.2005 12:00"/>
+		<metadata name="Berechnung" value="Prognose"/>
+	</metadataList>
+<axis type="date" datatype="TYPE=xs:date#FORMAT=yyyy.MM.dd HH:mm:ss" name="Datum" unit="">
+<valueArray separator=";">2004.04.27 01:00:00;2004.04.27 04:00:00;2004.04.27 07:00:00;2004.04.27 10:00:00;2004.04.27 13:00:00;2004.04.27 16:00:00;2004.04.27 19:00:00;2004.04.27 22:00:00;2004.04.28 01:00:00;2004.04.28 04:00:00;2004.04.28 07:00:00;2004.04.28 10:00:00;2004.04.28 13:00:00;2004.04.28 16:00:00;2004.04.28 19:00:00;2004.04.28 22:00:00;2004.04.29 01:00:00;2004.04.29 04:00:00;2004.04.29 07:00:00;2004.04.29 10:00:00;2004.04.29 13:00:00</valueArray></axis>
+<axis type="value" datatype="TYPE=xs:double" name="Wert" unit="">
+<valueArray separator=";">1;1;1;1;5;5;5;5;5;5;5;5;5;5;5;5;5;5;1;1;1</valueArray></axis></observation>
+

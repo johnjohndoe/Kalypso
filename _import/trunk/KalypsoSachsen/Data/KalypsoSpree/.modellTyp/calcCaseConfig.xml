@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformationConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<transformation className="org.kalypso.model.transformation.CalculationTransformation">
+	<transformation className="org.kalypso.util.transformation.CalculationTransformation">
 		<arg name="output" value="calcdir:.calculation"/>
 		<arg name="entry0" value="startTime=#SYSTEM_TIME#"/>
 	</transformation>
 
-	<transformation className="org.kalypso.model.transformation.CopyTransformation">
+	<transformation className="org.kalypso.util.transformation.CopyTransformation">
 		<arg name="input" value="project:modell.gml"/>
 		<arg name="output" value="calcdir:calcCase.gml"/>
 	</transformation>
 
 <!-- Einzugsgebiete -->
-	<transformation className="org.kalypso.model.transformation.ObservationResolver">
+	<transformation className="org.kalypso.util.transformation.ObservationResolver">
 		<arg name="project" value="project:"/>
 		<arg name="type" value="gml"/>
 		<arg name="href" value="PATH=calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
@@ -20,7 +20,7 @@
 		<arg name="targetFolder" value="calcdir:zeitreihen"/>
 	</transformation>
 
-	<transformation className="org.kalypso.model.transformation.ObservationResolver">
+	<transformation className="org.kalypso.util.transformation.ObservationResolver">
 		<arg name="project" value="project:"/>
 		<arg name="type" value="gml"/>
 		<arg name="href" value="PATH=calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
@@ -30,7 +30,7 @@
 	</transformation>
 
 <!-- Flusslaufmodelle -->
-	<transformation className="org.kalypso.model.transformation.ObservationResolver">
+	<transformation className="org.kalypso.util.transformation.ObservationResolver">
 		<arg name="project" value="project:"/>
 		<arg name="type" value="gml"/>
 		<arg name="href" value="PATH=calcdir:calcCase.gml#LAYER=Flusslaufmodell#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
@@ -40,7 +40,7 @@
 	</transformation>
 
 <!-- Talsperre -->
-	<transformation className="org.kalypso.model.transformation.ObservationResolver">
+	<transformation className="org.kalypso.util.transformation.ObservationResolver">
 		<arg name="project" value="project:"/>
 		<arg name="type" value="gml"/>
 		<arg name="href" value="PATH=calcdir:calcCase.gml#LAYER=Talsperre#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
@@ -50,7 +50,8 @@
 	</transformation>
 
 <!-- Flutung -->
-	<transformation className="org.kalypso.model.transformation.ObservationResolver">
+
+	<transformation className="org.kalypso.util.transformation.ObservationResolver">
 		<arg name="project" value="project:"/>
 		<arg name="type" value="gml"/>
 		<arg name="href" value="PATH=calcdir:calcCase.gml#LAYER=Flutung#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
@@ -59,7 +60,7 @@
 		<arg name="targetFolder" value="calcdir:zeitreihen"/>
 	</transformation>
 
-	<transformation className="org.kalypso.model.transformation.ObservationResolver">
+	<transformation className="org.kalypso.util.transformation.ObservationResolver">
 		<arg name="project" value="project:"/>
 		<arg name="type" value="gml"/>
 		<arg name="href" value="PATH=calcdir:calcCase.gml#LAYER=Zufluss#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
@@ -67,14 +68,13 @@
 		<arg name="targetObservation" value="Zugabe"/>
 		<arg name="targetFolder" value="calcdir:zeitreihen"/>
 	</transformation>
-	
-	<transformation className="org.kalypso.model.transformation.CopyTransformation">
+
+	<transformation className="org.kalypso.util.transformation.CopyTransformation">
 		<arg name="input" value="project:.examples/results.gml"/>
 		<arg name="output" value="calcdir:results.gml"/>
 	</transformation>
-	
 
-	<transformation className="org.kalypso.model.transformation.ReplaceTransformation">
+	<transformation className="org.kalypso.util.transformation.ReplaceTransformation">
 		<arg name="protocol0" value="calcdir=calcdir:"/>
 		<arg name="protocol1" value="localcalc=localcalc:"/>
 		<arg name="file0" value="calcdir:calcCase.gml"/>
