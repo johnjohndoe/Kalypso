@@ -83,8 +83,6 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
 
   protected ObsDiagOutlinePage m_outline = null;
 
-  private boolean m_dirty = false;
-
   // TODO: maybe set a preference for this flag. It is currently always true.
   private boolean m_useAutoProxy = true;
 
@@ -175,7 +173,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
     if( m_template == null )
       return;
 
-    final SetContentHelper thread = new SetContentHelper()
+    final SetContentHelper helper = new SetContentHelper()
     {
       protected void write( Writer writer ) throws Throwable
       {
@@ -183,14 +181,10 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
             .buildDiagramTemplateXML( m_template );
 
         DiagViewUtils.saveDiagramTemplateXML( type, writer );
-
-        resetDirty();
       }
     };
 
-    thread.setFileContents( input.getFile(), false, true, monitor );
-
-    fireDirty();
+    helper.setFileContents( input.getFile(), false, true, monitor );
   }
 
   /**
@@ -200,7 +194,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
   protected void loadInternal( final IProgressMonitor monitor,
       final IStorageEditorInput input )
   {
-    monitor.beginTask( "Vorlage Laden", IProgressMonitor.UNKNOWN );
+    monitor.beginTask( "Diagramm-Vorlage laden", IProgressMonitor.UNKNOWN );
 
     try
     {
@@ -245,8 +239,6 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
     if( evt.isType( TemplateEvent.TYPE_ADD | TemplateEvent.TYPE_REMOVE
         | TemplateEvent.TYPE_REMOVE_ALL ) )
     {
-      m_dirty = true;
-
       getSite().getShell().getDisplay().asyncExec( new Runnable()
       {
         public void run( )
@@ -255,19 +247,6 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
         }
       } );
     }
-  }
-
-  protected void resetDirty( )
-  {
-    m_dirty = false;
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#isDirty()
-   */
-  public boolean isDirty( )
-  {
-    return m_dirty;
   }
 
   /**

@@ -61,8 +61,6 @@ import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.template.ITemplateEventListener;
-import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.ui.editor.AbstractEditorPart;
@@ -72,17 +70,13 @@ import org.kalypso.ui.editor.AbstractEditorPart;
  * 
  * @author schlienger
  */
-public class ObservationTableEditor extends AbstractEditorPart implements
-    ITemplateEventListener
+public class ObservationTableEditor extends AbstractEditorPart
 {
   protected final TableViewTemplate m_template = new TableViewTemplate();
 
   protected final ObservationTable m_table;
 
   protected ObsTableOutlinePage m_outline = null;
-
-  private boolean m_dirty = false;
-
 
   /**
    * Constructor: the ObservationTable is already created here because
@@ -96,8 +90,6 @@ public class ObservationTableEditor extends AbstractEditorPart implements
   public ObservationTableEditor( )
   {
     m_table = new ObservationTable( m_template );
-
-    m_template.addTemplateEventListener( this );
   }
   
   /**
@@ -156,7 +148,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
         if( m_outline != null )
           m_outline.dispose();
 
-        m_outline = new ObsTableOutlinePage();
+        m_outline = new ObsTableOutlinePage( this );
         m_outline.setTemplate( m_template );
       }
 
@@ -173,10 +165,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
     m_table.dispose();
     
     if( m_template != null )
-    {
-      m_template.removeTemplateEventListener( this );
       m_template.dispose();
-    }
 
     if( m_outline != null )
       m_outline.dispose();
@@ -194,7 +183,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
     if( m_template == null )
       return;
 
-    final SetContentHelper thread = new SetContentHelper()
+    final SetContentHelper helper = new SetContentHelper()
     {
       protected void write( Writer writer ) throws Throwable
       {
@@ -202,14 +191,10 @@ public class ObservationTableEditor extends AbstractEditorPart implements
             .buildTableTemplateXML( m_template );
 
         TableViewUtils.saveTableTemplateXML( type, writer );
-
-        resetDirty();
       }
     };
 
-    thread.setFileContents( input.getFile(), false, true, monitor );
-
-    fireDirty();
+    helper.setFileContents( input.getFile(), false, true, monitor );
   }
 
   /**
@@ -219,7 +204,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
   protected void loadInternal( final IProgressMonitor monitor,
       final IStorageEditorInput input ) throws Exception
   {
-    monitor.beginTask( "Vorlage Laden", IProgressMonitor.UNKNOWN );
+    monitor.beginTask( "Tabelle-Vorlage laden", IProgressMonitor.UNKNOWN );
 
     try
     {
@@ -249,38 +234,5 @@ public class ObservationTableEditor extends AbstractEditorPart implements
     {
       monitor.done();
     }
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.template.ITemplateEventListener#onTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)
-   */
-  public void onTemplateChanged( TemplateEvent evt )
-  {
-    if( evt.isType( TemplateEvent.TYPE_ADD | TemplateEvent.TYPE_REMOVE
-        | TemplateEvent.TYPE_REMOVE_ALL ) )
-    {
-      m_dirty = true;
-
-      getSite().getShell().getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          fireDirty();
-        }
-      } );
-    }
-  }
-
-  protected void resetDirty( )
-  {
-    m_dirty = false;
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#isDirty()
-   */
-  public boolean isDirty( )
-  {
-    return m_dirty;
   }
 }
