@@ -14,7 +14,7 @@
 						</xs:complexContent>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="view" type="ns1:featureviewType">
+				<xs:element name="view" type="ns1:featureviewType" minOccurs="0" maxOccurs="unbounded">
 				</xs:element>
 			</xs:sequence>
 		</xs:complexType>

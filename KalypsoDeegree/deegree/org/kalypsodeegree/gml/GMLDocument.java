@@ -75,7 +75,12 @@ public interface GMLDocument
   /**
    * returns the location of the schema the document based on
    */
-  public URL getSchemaLocation() throws MalformedURLException;
+  public URL getSchemaLocation( ) throws MalformedURLException;
+
+  /**
+   * returns the location of the schema the document based on as string
+   */
+  public String getSchemaLocationName( );
 
   /**
    * sets the location of schema the document based on
@@ -115,6 +120,9 @@ public interface GMLDocument
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.4  2004/10/31 18:34:01  belger
+ * *** empty log message ***
+ *
  * Revision 1.3  2004/10/07 14:09:01  doemming
  * *** empty log message ***
  *

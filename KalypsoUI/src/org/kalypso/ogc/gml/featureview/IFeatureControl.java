@@ -33,4 +33,7 @@ public interface IFeatureControl
   
   public void addModifyListener( final ModifyListener l );
   public void removeModifyListener( final ModifyListener l );
+  
+  public void addChangeListener( final IFeatureChangeListener l );
+  public void removeChangeListener( final IFeatureChangeListener l );
 }

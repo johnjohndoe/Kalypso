@@ -330,7 +330,7 @@
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
                id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction"/>
 	  </editorContribution>
-	        <editorContribution
+      <editorContribution
             targetID="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
             id="org.kalypso.ui.editor.obstableeditor.EditorContribution">
          <action

@@ -2,15 +2,11 @@ package org.kalypso.util.url;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Map.Entry;
 
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.util.net.IUrlResolver;
 
 /**
  * <p>Erzeugt aus einem String eine URL</p>
@@ -18,28 +14,8 @@ import org.kalypso.java.net.UrlUtilities;
  * 
  * @author belger
  */
-public class UrlResolver
+public class UrlResolver implements IUrlResolver
 {
-  final Properties m_replaceTokens = new Properties();
-  
-  public UrlResolver( final Properties replaceTokens )
-  {
-    m_replaceTokens.putAll( replaceTokens );
-  }
-  
-  public URL resolveUrl( final String templateUrl ) throws MalformedURLException
-  {
-    for( final Iterator iter = m_replaceTokens.entrySet().iterator(); iter.hasNext(); )
-    {
-      final Map.Entry entry = (Entry)iter.next();
-      final String token = (String)entry.getKey();
-      final String replace = (String)entry.getValue();
-      templateUrl.replaceAll( token, replace );
-    }
-    
-    return new URL( templateUrl );
-  }
-
   /**
    * <p>Löst eine URL relativ zu einer anderen auf.</p>
    * <p>Also handles the pseudo protocol 'project:'. If project: ist specified in relativeURL,
@@ -48,7 +24,7 @@ public class UrlResolver
    * </p>
    * @throws MalformedURLException
    */
-  public static URL resolveURL( final URL baseURL, final String relativeURL ) throws MalformedURLException
+  public URL resolveURL( final URL baseURL, final String relativeURL ) throws MalformedURLException
   {
     if( relativeURL.startsWith( "project:" ) )
     {
@@ -62,7 +38,7 @@ public class UrlResolver
       return new URL( projectURL + "/" + relPath );      
     }
     
-    return UrlUtilities.resolveURL(  baseURL, relativeURL );
+    return new URL( baseURL, relativeURL );
   }
 
 }

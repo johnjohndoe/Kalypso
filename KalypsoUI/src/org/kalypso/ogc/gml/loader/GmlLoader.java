@@ -34,6 +34,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class GmlLoader extends AbstractLoader
 {
+  
+  private final static UrlResolver URL_RESOLVER = new UrlResolver();
   /**
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties,
    *      java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
@@ -45,13 +47,13 @@ public class GmlLoader extends AbstractLoader
     {
       monitor.beginTask( "GML laden", 1000 );
 
-      final URL schemaURL = getSchemaURL( source, context );
+//      final URL schemaURL = getSchemaURL( source, context );
       final URL gmlURL = getGmlURL( source, context );
 
-      final IResource schemaFile = ResourceUtilities.findFileFromURL( schemaURL );
+//      final IResource schemaFile = ResourceUtilities.findFileFromURL( null );
       final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
       
-      final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, schemaURL ) );
+      final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, URL_RESOLVER ) );
 
       try
       {
@@ -67,8 +69,8 @@ public class GmlLoader extends AbstractLoader
       if( gmlFile != null )
         addResource( gmlFile, workspace );
 
-      if( schemaFile != null )
-        addResource( schemaFile, workspace );
+//      if( schemaFile != null )
+//        addResource( schemaFile, workspace );
 
       return workspace;
     }
@@ -93,13 +95,13 @@ public class GmlLoader extends AbstractLoader
   private URL getGmlURL( Properties source, URL context ) throws MalformedURLException
   {
     final String gmlPath = source.getProperty( "PATH", "" );
-    return UrlResolver.resolveURL( context, gmlPath );
+    return URL_RESOLVER.resolveURL( context, gmlPath );
   }
 
   private URL getSchemaURL( final Properties source, final URL context ) throws MalformedURLException
   {
     final String schemaPath = source.getProperty( "XSD", "" );
-    return UrlResolver.resolveURL( context, schemaPath );
+    return URL_RESOLVER.resolveURL( context, schemaPath );
   }
 
   /**

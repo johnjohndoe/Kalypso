@@ -141,7 +141,7 @@ public class ObservationResolver extends AbstractTransformation
       {
         final String sourceref = StringUtilities.replaceAll( sourcelink.getHref(), replaceProperties );
         
-        final URL sourceURL = UrlResolver.resolveURL( baseURL, sourceref );
+        final URL sourceURL = new UrlResolver().resolveURL( baseURL, sourceref );
 
         final IObservation obs = ZmlFactory.parseXML( sourceURL, targetName );
 

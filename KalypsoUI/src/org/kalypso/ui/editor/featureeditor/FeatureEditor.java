@@ -1,38 +1,54 @@
 package org.kalypso.ui.editor.featureeditor;
 
-import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.eclipse.util.SetContentThread;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.FeaturetemplateType.LayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.AbstractEditorPart;
-import org.kalypso.util.command.ICommandTarget;
+import org.kalypso.util.command.DefaultCommandManager;
+import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
@@ -46,8 +62,7 @@ import org.xml.sax.InputSource;
  * 
  * @author belger
  */
-public class FeatureEditor extends AbstractEditorPart implements ISelectionProvider,
-    ICommandTarget, IPoolListener
+public class FeatureEditor extends EditorPart implements IPoolListener, ModellEventListener
 {
   private final ObjectFactory m_templateFactory = new ObjectFactory();
 
@@ -57,7 +72,7 @@ public class FeatureEditor extends AbstractEditorPart implements ISelectionProvi
 
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
 
-  private Composite m_panel;
+  protected Composite m_panel;
 
   private IPoolableObjectType m_key;
 
@@ -68,6 +83,32 @@ public class FeatureEditor extends AbstractEditorPart implements ISelectionProvi
   private FeatureComposite m_featureComposite = new FeatureComposite( null, new URL[] {} );
 
   private Label m_label;
+
+  private final Runnable m_dirtyRunnable = new Runnable()
+  {
+    public void run()
+    {
+      if( m_panel != null )
+      {
+        m_panel.getDisplay().asyncExec( new Runnable( ) {
+          public void run()
+          {
+            fireDirtyChange(  );
+          }} );
+      }
+    }
+  };
+
+  protected final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget(
+      new DefaultCommandManager(), m_dirtyRunnable );
+
+  private final IFeatureChangeListener m_changeListener = new IFeatureChangeListener()
+  {
+    public void featureChanged( final FeatureChange change )
+    {
+      onFeatureChanged( change );
+    }
+  };
 
   public FeatureEditor()
   {
@@ -84,125 +125,274 @@ public class FeatureEditor extends AbstractEditorPart implements ISelectionProvi
       throw new RuntimeException( e );
     }
   }
-  
+
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
   public void dispose()
   {
+    setWorkspace( null );
+
+    m_commandTarget.dispose();
+
     m_featureComposite.dispose();
-    
+
     m_pool.removePoolListener( this );
 
     super.dispose();
   }
 
-  /** File must exist! */
-  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
+  /**
+   * @see org.eclipse.ui.ISaveablePart#isSaveAsAllowed()
+   */
+  public boolean isSaveAsAllowed()
   {
-  // TODO implement it
-  // die Daten speichern!
+    return false;
   }
 
-  public final void saveTemplate( final IFile file, final IProgressMonitor monitor )
+  /**
+   * @see org.eclipse.ui.part.EditorPart#doSaveAs()
+   */
+  public void doSaveAs()
   {
-    if( m_featureComposite == null || m_workspace == null )
-      return;
+    throw new UnsupportedOperationException();
+  }
 
+  /**
+   * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite,
+   *      org.eclipse.ui.IEditorInput)
+   */
+  public void init( final IEditorSite site, final IEditorInput input ) throws PartInitException
+  {
+    if( !( input instanceof IStorageEditorInput ) )
+      throw new PartInitException( "Can only use IStorageEditorInput" );
+
+    setSite( site );
+
+    setInput( input );
+  }
+
+  /**
+   * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
+   */
+  protected final void setInput( final IEditorInput input )
+  {
+    if( !( input instanceof IStorageEditorInput ) )
+      throw new IllegalArgumentException( "Only IStorageEditorInput supported" );
+
+    super.setInput( input );
+
+    load( (IStorageEditorInput)input );
+  }
+
+  /**
+   * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public void doSave( final IProgressMonitor monitor )
+  {
     try
     {
-      final Feature feature = m_featureComposite.getFeature();
-      final FeatureType featureType = feature.getFeatureType();
-      final String featurePath = m_workspace.getFeaturepathForFeature( feature );
+      m_pool.saveObject( m_workspace, monitor );
 
-      final FeatureviewType featureview = m_featureComposite.getFeatureview( featureType );
-
-      final LayerType layer = m_templateFactory.createFeaturetemplateTypeLayerType();
-      layer.setHref( m_key.getSourceAsString() );
-      layer.setLinktype( m_key.getType() );
-      layer.setFeaturePath( featurePath );
-
-      final Featuretemplate featuretemplate = m_templateFactory.createFeaturetemplate();
-      featuretemplate.setLayer( layer );
-      featuretemplate.setView( featureview );
-
-      final SetContentThread thread = new SetContentThread( file, !file.exists(), false, true,
-          monitor )
-      {
-        protected void write( Writer writer ) throws Throwable
-        {
-          m_marshaller.marshal( featuretemplate, writer );
-        }
-      };
-
-      thread.start();
-      try
-      {
-        thread.join();
-      }
-      catch( InterruptedException e1 )
-      {
-        e1.printStackTrace();
-      }
-
-      final CoreException fileException = thread.getFileException();
-      if( fileException != null )
-        throw fileException;
-
-      final Throwable thrown = thread.getThrown();
-      if( thrown != null )
-        throw thrown;
+      m_commandTarget.resetDirty();
+      fireDirtyChange();
     }
-    catch( final Throwable e )
+    catch( final Exception e )
     {
-      // TODO: error handling!
       e.printStackTrace();
+
+      final IStatus status = KalypsoGisPlugin.createErrorStatus( "", e );
+      ErrorDialog.openError( getSite().getShell(), "Speichern", "Fehler beim Speichern der Daten",
+          status );
     }
   }
+
+  /**
+   * @see org.eclipse.ui.part.EditorPart#isDirty()
+   */
+  public boolean isDirty()
+  {
+    return m_commandTarget.isDirty();
+  }
+
+  /**
+   * @see org.eclipse.ui.IWorkbenchPart#setFocus()
+   */
+  public void setFocus()
+  {
+  // nix
+  }
+
+  //  private final void saveTemplate( final IFile file, final IProgressMonitor
+  // monitor )
+  //  {
+  //    if( m_featureComposite == null || m_workspace == null )
+  //      return;
+  //
+  //    try
+  //    {
+  //      final Feature feature = m_featureComposite.getFeature();
+  //      final FeatureType featureType = feature.getFeatureType();
+  //      final String featurePath = m_workspace.getFeaturepathForFeature( feature );
+  //
+  //      final FeatureviewType featureview = m_featureComposite.getFeatureview(
+  // featureType );
+  //
+  //      final LayerType layer =
+  // m_templateFactory.createFeaturetemplateTypeLayerType();
+  //      layer.setHref( m_key.getSourceAsString() );
+  //      layer.setLinktype( m_key.getType() );
+  //      layer.setFeaturePath( featurePath );
+  //
+  //      final Featuretemplate featuretemplate =
+  // m_templateFactory.createFeaturetemplate();
+  //      featuretemplate.setLayer( layer );
+  //      featuretemplate.setView( featureview );
+  //
+  //      final SetContentThread thread = new SetContentThread( file, !file.exists(),
+  // false, true,
+  //          monitor )
+  //      {
+  //        protected void write( Writer writer ) throws Throwable
+  //        {
+  //          m_marshaller.marshal( featuretemplate, writer );
+  //        }
+  //      };
+  //
+  //      thread.start();
+  //      try
+  //      {
+  //        thread.join();
+  //      }
+  //      catch( InterruptedException e1 )
+  //      {
+  //        e1.printStackTrace();
+  //      }
+  //
+  //      final CoreException fileException = thread.getFileException();
+  //      if( fileException != null )
+  //        throw fileException;
+  //
+  //      final Throwable thrown = thread.getThrown();
+  //      if( thrown != null )
+  //        throw thrown;
+  //    }
+  //    catch( final Throwable e )
+  //    {
+  //      // todo: error handling!
+  //      e.printStackTrace();
+  //    }
+  //  }
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   public void createPartControl( final Composite parent )
   {
-    super.createPartControl( parent );
-
     m_panel = new Composite( parent, SWT.NONE );
     m_panel.setLayout( new GridLayout() );
 
-    createControls();
+    final IActionBars actionBars = getEditorSite().getActionBars();
+    actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
+    actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
+    actionBars.updateActionBars();
+
+    createControls( null );
+
+    setWorkspace( m_workspace );
   }
 
-  protected final void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input )
-      throws Exception
+  protected final void load( final IStorageEditorInput input )
+  {
+    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
+    {
+      protected void execute( final IProgressMonitor monitor ) throws CoreException
+      {
+        loadInput( input, monitor );
+      }
+    };
+
+    final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+    try
+    {
+      progressService.busyCursorWhile( op );
+    }
+    catch( final InvocationTargetException e )
+    {
+      e.printStackTrace();
+
+      final CoreException ce = (CoreException)e.getTargetException();
+      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Laden der Ansicht",
+          ce.getStatus() );
+    }
+    catch( final InterruptedException e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  protected final void loadInput( final IStorageEditorInput input, final IProgressMonitor monitor )
+      throws CoreException
   {
     monitor.beginTask( "Ansicht laden", 1000 );
 
-    final IFile file = input.getFile();
-    final InputSource is = new InputSource( file.getContents() );
-    is.setEncoding( file.getCharset() );
+    try
+    {
+      final IStorage storage = input.getStorage();
+      final InputSource is = new InputSource( storage.getContents() );
+      
+      if( storage instanceof IEncodedStorage )
+        is.setEncoding( ((IEncodedStorage)storage).getCharset() );
 
-    final Featuretemplate m_template = (Featuretemplate)m_unmarshaller.unmarshal( is );
+      final Featuretemplate m_template = (Featuretemplate)m_unmarshaller.unmarshal( is );
 
-    m_featureComposite.addView( m_template.getView() );
+      final List views = m_template.getView();
+      for( Iterator iter = views.iterator(); iter.hasNext(); )
+        m_featureComposite.addView( (FeatureviewType)iter.next() );
 
-    final LayerType layer = m_template.getLayer();
+      final LayerType layer = m_template.getLayer();
 
-    m_featurePath = layer.getFeaturePath();
+      m_featurePath = layer.getFeaturePath();
 
-    final String href = layer.getHref();
-    final String linktype = layer.getLinktype();
-    final URL context = ResourceUtilities.createURL( file );
+      final String href = layer.getHref();
+      final String linktype = layer.getLinktype();
+      
+      final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( storage.getFullPath() );
+      final URL context = ResourceUtilities.createURL( file );
 
-    m_key = new PoolableObjectType( linktype, href, context );
-    m_pool.addPoolListener( this, m_key );
+      m_key = new PoolableObjectType( linktype, href, context );
+      m_pool.addPoolListener( this, m_key );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
 
-    monitor.worked( 1000 );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "Fehler beim Parsen der Context-URL", e ) );
+    }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
+
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Lesen von XML", e ) );
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 
   private void setWorkspace( final CommandableWorkspace workspace )
   {
+    if( m_workspace != null )
+      m_workspace.removeModellListener( this );
+
     m_workspace = workspace;
+
+    if( m_workspace != null )
+      m_workspace.addModellListener( this );
+
+    m_commandTarget.setCommandManager( workspace );
 
     if( m_panel == null || m_panel.isDisposed() )
       return;
@@ -211,41 +401,9 @@ public class FeatureEditor extends AbstractEditorPart implements ISelectionProvi
     {
       public void run()
       {
-        createControls();
+        createControls( workspace );
       }
     } );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
-  {
-  // nix tun
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
-  public ISelection getSelection()
-  {
-    return null;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
-  {
-  // nix tun
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
-  public void setSelection( final ISelection selection )
-  {
-  // nix tun
   }
 
   /**
@@ -267,14 +425,10 @@ public class FeatureEditor extends AbstractEditorPart implements ISelectionProvi
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
     if( m_pool.equalsKeys( key, m_key ) )
-    {
-      m_featureComposite.setFeature( null );
-      m_featureComposite.disposeControl();
-      m_featureComposite.updateControl();
-    }
+      setWorkspace( null );
   }
 
-  protected void createControls()
+  protected void createControls( final CommandableWorkspace workspace )
   {
     // erstmal alles reseten
     if( m_label != null && !m_label.isDisposed() )
@@ -286,7 +440,7 @@ public class FeatureEditor extends AbstractEditorPart implements ISelectionProvi
     m_featureComposite.setFeature( null );
     m_featureComposite.updateControl();
 
-    if( m_workspace == null )
+    if( workspace == null )
     {
       if( m_panel != null )
       {
@@ -298,7 +452,7 @@ public class FeatureEditor extends AbstractEditorPart implements ISelectionProvi
       return;
     }
 
-    final Object featureFromPath = m_workspace.getFeatureFromPath( m_featurePath );
+    final Object featureFromPath = workspace.getFeatureFromPath( m_featurePath );
     if( featureFromPath instanceof Feature )
     {
       final Feature feature = (Feature)featureFromPath;
@@ -307,12 +461,46 @@ public class FeatureEditor extends AbstractEditorPart implements ISelectionProvi
       m_featureComposite.createControl( m_panel, SWT.NONE, feature.getFeatureType() );
       m_featureComposite.setFeature( feature );
       m_featureComposite.updateControl();
-      
+
       m_panel.layout();
+
+      m_featureComposite.addChangeListener( m_changeListener );
+
+      m_commandTarget.resetDirty();
+      fireDirtyChange();
     }
     else
     {
-      // TODO Fehlermeldung anzeigen
+      // todo Fehlermeldung anzeigen
+    }
+  }
+
+  protected void onFeatureChanged( final FeatureChange change )
+  {
+    m_commandTarget.postCommand( new ChangeFeaturesCommand( m_workspace, new FeatureChange[]
+    { change } ), m_dirtyRunnable );
+  }
+
+  protected void fireDirtyChange()
+  {
+     firePropertyChange( PROP_DIRTY );
+  }
+
+  /**
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
+   */
+  public void onModellChange( final ModellEvent modellEvent )
+  {
+    final FeatureComposite featureComposite = m_featureComposite;
+    if( m_panel != null )
+    {
+      m_panel.getDisplay().asyncExec( new Runnable()
+      {
+        public void run()
+        {
+          featureComposite.updateControl();
+        }
+      } );
     }
   }
 }

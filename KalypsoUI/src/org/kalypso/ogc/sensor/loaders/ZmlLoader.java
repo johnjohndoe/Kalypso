@@ -71,7 +71,7 @@ public class ZmlLoader extends AbstractLoader
       throws MalformedURLException
   {
     final String path = source.getProperty( "LOCATION", "" );
-    return UrlResolver.resolveURL( context, path );
+    return new UrlResolver().resolveURL( context, path );
   }
 
   /**
