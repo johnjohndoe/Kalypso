@@ -104,7 +104,7 @@
 
         <arg name="ignoreType1" value="V"/>
         <arg name="ignoreType2" value="Q"/>
-        <arg name="ignoreLabel2" value="Abfluss"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
         <arg name="ignoreLabel2" value="Volumen"/>
 
         <arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
@@ -154,6 +154,11 @@
         	value="nameColumn=Name#linkColumn=Wasserstand_gerechnet#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
         <arg name="timeserie4" 
         	value="nameColumn=Name#linkColumn=Wasserstand_vorhersage"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 		
 		<arg name="pegelNameProperty" value="Name"/>
 		<arg name="resultProperty" value="Wasserstand_vorhersage"/>

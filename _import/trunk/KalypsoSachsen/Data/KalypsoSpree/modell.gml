@@ -418,7 +418,7 @@
           <Name>ZL RL Lohsa II</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5465479.0,5698586.9999999115</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5466790,5697390</gml:coordinates>
             </gml:Point>
           </Ort>
           <Abfluss_eingang>
@@ -434,7 +434,7 @@
           <Name>ZL RL Bärwalde</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5466760.0,5697399.9999999115</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5466277,5692313</gml:coordinates>
             </gml:Point>
           </Ort>
           <Abfluss_eingang>

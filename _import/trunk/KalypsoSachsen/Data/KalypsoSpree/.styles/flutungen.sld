@@ -12,24 +12,6 @@
 					<Name>Zufluesse</Name>
 					<MinScaleDenominator>0.0</MinScaleDenominator>
 					<MaxScaleDenominator>9.0E99</MaxScaleDenominator>
-					<PointSymbolizer>
-						<Geometry>
-							<ogc:PropertyName>Ort</ogc:PropertyName>
-						</Geometry>
-						<Graphic>
-							<Mark>
-								<WellKnownName>triangle</WellKnownName>
-								<Fill>
-									<CssParameter name="fill">#00abab</CssParameter>
-								</Fill>
-								<Stroke>
-									<CssParameter name="stroke">#111111</CssParameter>
-									<CssParameter name="stroke-width">1.0</CssParameter>
-								</Stroke>
-							</Mark>
-							<Size>15.0</Size>
-						</Graphic>
-					</PointSymbolizer>
 					<TextSymbolizer>
 						<Geometry>
 							<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -48,11 +30,29 @@
 							<PointPlacement auto="true">
 								<Displacement>
 									<DisplacementX>10.0</DisplacementX>
-									<DisplacementY>-10.0</DisplacementY>
+									<DisplacementY>12.0</DisplacementY>
 								</Displacement>
 							</PointPlacement>
 						</LabelPlacement>
 					</TextSymbolizer>
+					<PointSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>Ort</ogc:PropertyName>
+						</Geometry>
+						<Graphic>
+							<Mark>
+								<WellKnownName>triangle</WellKnownName>
+								<Fill>
+									<CssParameter name="fill">#00abab</CssParameter>
+								</Fill>
+								<Stroke>
+									<CssParameter name="stroke">#111111</CssParameter>
+									<CssParameter name="stroke-width">1.0</CssParameter>
+								</Stroke>
+							</Mark>
+							<Size>15.0</Size>
+						</Graphic>
+					</PointSymbolizer>
 				</Rule>
 			</FeatureTypeStyle>
 		</UserStyle>
