@@ -16,15 +16,19 @@ public class LikeComparisonData extends AbstractComparisonData
 		return literal;
 	}
 	public void setLiteral(String literal) {
-		this.literal = literal;
+		this.literal = literal.trim();
 	}
-	
-	public boolean verify()
+		
+	public boolean verify() throws FilterDialogException 
 	{
-		if(literal != null && propertyName != null)
-			return true;
-		return false;	
-	}
+		if(literal == null || literal.trim().length() == 0 || propertyName == null)
+		{
+			throw new FilterDialogException(new FilterDialogError(null,FilterDialogError.INCOMPLETE));
+		}
+		else 
+			return true;		
+	}	
+	
 	public char getEscapeChar() {
 		return escapeChar;
 	}

@@ -17,6 +17,7 @@ public class FilterDialogTreeNode {
 	public static final int LOGICAL_NODE_TYPE= 1;	
 	public static final int COMPARISON_NODE_TYPE= 2;
 	public static final int FEATUREID_NODE_TYPE= 3;	
+	public static final int ELSEFILTER_TYPE= 4;	
 	
 	// or PARAMETER_TYPE SUCH AS LITERAL, PROPERTY_NAME
 	public static final int PARAMETER_TYPE = 4;
@@ -103,7 +104,7 @@ public class FilterDialogTreeNode {
 		return name;
 	}
 	
-	public boolean validate()
+	public boolean validate() throws FilterDialogException
 	{
 		if(type == LOGICAL_NODE_TYPE)
 		{
@@ -112,22 +113,31 @@ public class FilterDialogTreeNode {
 				if(children != null && children.size() == 1)
 					return true;
 				else
-					return false;
+					throw new FilterDialogException(new FilterDialogError(this,"needs to have only one child"));
 			}
 			else
 			{
 				if(children != null && children.size()>1)
 					return true;
 				else
-					return false;
+					throw new FilterDialogException(new FilterDialogError(this,"needs to have at least two children"));
 			}
 		}
 		else
 		{
 			if(data != null)
-				return data.verify();
+			{			
+				try {
+					return data.verify();
+				} catch (FilterDialogException e) {
+					e.getError().setNode(this);
+					throw e;
+				}				
+			}
 			else
-				return false;
+			{
+				throw new FilterDialogException(new FilterDialogError(this,FilterDialogError.DATA_NULL));
+			}
 		}		
 	}
 

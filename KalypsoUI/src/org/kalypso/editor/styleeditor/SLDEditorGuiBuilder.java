@@ -12,6 +12,7 @@ import org.deegree.graphics.sld.UserStyle;
 import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.Composite;
@@ -32,14 +33,14 @@ public class SLDEditorGuiBuilder {
 	private KalypsoUserStyle userStyle = null;
 	private FeatureType featureType = null;	
 	private Composite parent = null;
-	private Composite mainComposite = null;	
+	private ScrolledComposite scrollComposite = null;	
 	private Label titleLabel = null;
 	private int focusedRuleItem = -1;
 	
 	public SLDEditorGuiBuilder(Composite parent, ViewPart part)
 	{	
-		this.parent = parent;	
-		buildSWTGui(null,null);
+		this.parent = parent;		
+		buildSWTGui(null,null);		
 	}
 	
 	public void buildSWTGui(final KalypsoUserStyle userStyle, final FeatureType featureType)
@@ -51,18 +52,22 @@ public class SLDEditorGuiBuilder {
 	{	
 		if(index != -1)
 			focusedRuleItem = index;
-		if(mainComposite != null)
-			mainComposite.dispose();
-		mainComposite = new Composite(parent, SWT.NULL);
+		if(scrollComposite != null)
+			scrollComposite.dispose();
+				
+		scrollComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);				
+		Composite mainComposite = new Composite(scrollComposite, SWT.NONE);		
 		mainComposite.setLayout(new GridLayout());		
-		mainComposite.layout();			
+		mainComposite.layout();					
+		scrollComposite.setContent(mainComposite);
+		scrollComposite.setSize(253,659);
 		
 		Label nameLabel = null;
 		if(userStyle == null)
 		{
 			nameLabel = new Label(mainComposite, 0);
 			nameLabel.setText("No style found to show in editor");
-			mainComposite.pack(true);			
+			scrollComposite.pack(true);			
 			return;
 		}
 		else
@@ -158,7 +163,7 @@ public class SLDEditorGuiBuilder {
 		ruleTabItemBuilder.draw();
 		if(focusedRuleItem>-1)
 			ruleTabItemBuilder.setSelectedRule(focusedRuleItem);
-		mainComposite.pack(true);				
+		mainComposite.pack(true);			
 	}
 	
 	private Rule[] getRules(UserStyle style){
