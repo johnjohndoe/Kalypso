@@ -97,7 +97,10 @@ public class ObservationPlot extends XYPlot
 
     final Collection curves = template.getCurves();
     for( Iterator it = curves.iterator(); it.hasNext(); )
-      addCurve( (IDiagramCurve) it.next() );
+    {
+      final IDiagramCurve diagramCurve = (IDiagramCurve) it.next();
+      addCurve( diagramCurve );
+    }
   }
 
   /**
@@ -106,19 +109,19 @@ public class ObservationPlot extends XYPlot
    * @param diagAxis
    * @throws SensorException
    */
-  private final void addDiagramAxis( IDiagramAxis diagAxis ) throws SensorException
+  private final void addDiagramAxis( IDiagramAxis diagAxis )
+      throws SensorException
   {
     final ValueAxis vAxis;
-    
+
     try
     {
-      vAxis = (ValueAxis) OF.getObjectInstance( diagAxis
-          .getDataType(), ValueAxis.class, new Object[] { diagAxis
-          .toFullString() } );
+      vAxis = (ValueAxis) OF.getObjectInstance( diagAxis.getDataType(),
+          ValueAxis.class, new Object[] { diagAxis.toFullString() } );
     }
     catch( FactoryException e )
     {
-      throw new SensorException(e);
+      throw new SensorException( e );
     }
 
     vAxis.setInverted( diagAxis.isInverted() );
@@ -156,9 +159,9 @@ public class ObservationPlot extends XYPlot
   {
     for( int i = 0; i < getDatasetCount(); i++ )
       setDataset( i, null );
-    
+
     m_axes2ds.clear();
-    
+
     m_chartAxes2Pos.clear();
     m_diag2chartAxis.clear();
     m_domPos = 0;
@@ -234,12 +237,44 @@ public class ObservationPlot extends XYPlot
   }
 
   /**
+   * overriden to return a default axis when no real axes defined yet
+   * 
+   * @see org.jfree.chart.plot.XYPlot#getDomainAxis()
+   */
+  public ValueAxis getDomainAxis( )
+  {
+    synchronized( m_diag2chartAxis )
+    {
+      if( m_diag2chartAxis.size() == 0 )
+        return new NumberAxis();
+
+      return super.getDomainAxis();
+    }
+  }
+
+  /**
+   * overriden to return a default axis when no real axes defined yet
+   * 
+   * @see org.jfree.chart.plot.XYPlot#getRangeAxis()
+   */
+  public ValueAxis getRangeAxis( )
+  {
+    synchronized( m_diag2chartAxis )
+    {
+      if( m_diag2chartAxis.size() == 0 )
+        return new NumberAxis();
+
+      return super.getRangeAxis();
+    }
+  }
+  
+  /**
    * Returns the adequate renderer for the given axis type.
    * 
    * @param axisType
    * @return renderer
    */
-  private XYItemRenderer getRenderer( final String axisType )
+  private final static XYItemRenderer getRenderer( final String axisType )
   {
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
       return BAR_RENDERER;
@@ -248,36 +283,10 @@ public class ObservationPlot extends XYPlot
   }
 
   /**
-   * overriden to return a default axis when no real axes defined yet
-   * 
-   * @see org.jfree.chart.plot.XYPlot#getDomainAxis()
-   */
-  public ValueAxis getDomainAxis( )
-  {
-    if( m_diag2chartAxis.size() == 0 )
-      return new NumberAxis();
-      
-    return super.getDomainAxis();
-  }
-  
-  /**
-   * overriden to return a default axis when no real axes defined yet
-   * 
-   * @see org.jfree.chart.plot.XYPlot#getRangeAxis()
-   */
-  public ValueAxis getRangeAxis( )
-  {
-    if( m_diag2chartAxis.size() == 0 )
-      return new NumberAxis();
-    
-    return super.getRangeAxis();
-  }
-  
-  /**
    * @param diagAxis
    * @return location according to axis
    */
-  private static AxisLocation getLocation( final IDiagramAxis diagAxis )
+  private final static AxisLocation getLocation( final IDiagramAxis diagAxis )
   {
     if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
     {

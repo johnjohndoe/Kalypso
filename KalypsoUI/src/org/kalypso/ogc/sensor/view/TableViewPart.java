@@ -81,10 +81,10 @@ public class TableViewPart extends ViewPart implements
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    final Runnable runnable = new Runnable()
-    {
-      public void run( )
-      {
+//    final Runnable runnable = new Runnable()
+//    {
+//      public void run( )
+//      {
         m_template.removeAllThemes();
 
         final StructuredSelection selection = (StructuredSelection) event
@@ -96,21 +96,21 @@ public class TableViewPart extends ViewPart implements
         final IRepositoryItem item = (IRepositoryItem) selection
             .getFirstElement();
 
-        final IObservation obs = ObservationCache.getObservationFor( item );
+        final IObservation obs = ObservationCache.getInstance().getObservationFor( item );
         if( obs != null )
           m_template.setObservation( obs, false, ObservationViewHelper.makeDateRange( item ) );
-      }
-    };
-
-    try
-    {
-      // execute this in the swing ui thread because we are using a swing component (JTable)
-      SwingUtilities.invokeLater( runnable );
-    }
-    catch( Exception e ) // generic exception caught for simplicity
-    {
-      e.printStackTrace();
-    }
+//      }
+//    };
+//
+//    try
+//    {
+//      // execute this in the swing ui thread because we are using a swing component (JTable)
+//      SwingUtilities.invokeLater( runnable );
+//    }
+//    catch( Exception e ) // generic exception caught for simplicity
+//    {
+//      e.printStackTrace();
+//    }
   }
 
   /**

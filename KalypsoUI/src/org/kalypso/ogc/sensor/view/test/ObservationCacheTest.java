@@ -14,7 +14,7 @@ public class ObservationCacheTest extends TestCase
 {
   public void testGetObservationFor()
   {
-    final IObservation obs = ObservationCache.getObservationFor( new FooAdaptable() );
+    final IObservation obs = ObservationCache.getInstance().getObservationFor( new FooAdaptable() );
     
     assertNotNull( obs );
     

@@ -94,7 +94,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private ILoaderFactory m_loaderFactory;
 
   private DefaultFeatureModifierFactory m_defaultFeatureControlFactory;
-
+  
   /**
    * The constructor. Manages the configuration of the kalypso client.
    */
@@ -396,7 +396,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     getPreferenceStore().removePropertyChangeListener( this );
     
-    ObservationCache.clear();
+    // clear the observation cache
+    ObservationCache.clearCache();
   }
 
   public static String getId( )
@@ -595,5 +596,4 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     return new File( locations[0] );
   }
-
 }

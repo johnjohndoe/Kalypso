@@ -1,6 +1,10 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.Iterator;
+
+import javax.swing.SwingUtilities;
 
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardLegend;
@@ -14,7 +18,8 @@ import org.kalypso.ogc.sensor.template.TemplateEvent;
 /**
  * @author schlienger
  */
-public class ObservationChart extends JFreeChart implements ITemplateEventListener
+public class ObservationChart extends JFreeChart implements
+    ITemplateEventListener
 {
   /**
    * Creates an ObservationChart
@@ -22,26 +27,27 @@ public class ObservationChart extends JFreeChart implements ITemplateEventListen
    * @param template
    * @throws SensorException
    */
-  public ObservationChart( final IDiagramTemplate template ) throws SensorException
+  public ObservationChart( final IDiagramTemplate template )
+      throws SensorException
   {
     super( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, ChartFactory
         .createObservationPlot( template ), template.isShowLegend() );
-    
+
     if( template.isShowLegend() )
     {
       final StandardLegend leg = new StandardLegend();
       leg.setTitle( template.getLegendName() );
-      
+
       setLegend( leg );
     }
   }
 
   /**
-   *  Clears the curves in the chart
+   * Clears the curves in the chart
    */
-  public void clearChart()
+  public void clearChart( )
   {
-    ( (ObservationPlot)getPlot() ).clearCurves();
+    ((ObservationPlot) getPlot()).clearCurves();
   }
 
   /**
@@ -49,26 +55,57 @@ public class ObservationChart extends JFreeChart implements ITemplateEventListen
    */
   public void onTemplateChanged( final TemplateEvent evt )
   {
+    final Runnable runnable = new Runnable()
+    {
+      public void run( )
+      {
+        try
+        {
+          if( evt.getType() == TemplateEvent.TYPE_ADD
+              && evt.getObject() instanceof IDiagramCurve )
+            ((ObservationPlot) getPlot()).addCurve( (IDiagramCurve) evt
+                .getObject() );
+
+          if( evt.getType() == TemplateEvent.TYPE_REFRESH
+              && evt.getObject() instanceof Collection )
+          {
+            clearChart();
+
+            final Iterator itThemes = ((Collection) evt.getObject()).iterator();
+            while( itThemes.hasNext() )
+            {
+              final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) itThemes
+                  .next();
+              final Iterator it = theme.getCurves().iterator();
+              while( it.hasNext() )
+                ((ObservationPlot) getPlot()).addCurve( (IDiagramCurve) it
+                    .next() );
+            }
+          }
+
+          if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
+            clearChart();
+        }
+        catch( SensorException e )
+        {
+          throw new RuntimeException( e );
+        }
+      }
+    };
+    
     try
     {
-      if( evt.getType() == TemplateEvent.TYPE_ADD && evt.getObject() instanceof IDiagramCurve )
-        ( (ObservationPlot)getPlot() ).addCurve( (IDiagramCurve)evt.getObject() );
-      
-      // TODO je crois que c'est inutile maintenant
-      if( evt.getType() == TemplateEvent.TYPE_LOADED && evt.getObject() instanceof IDiagramTemplateTheme )
-      {
-        final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) evt.getObject();
-        final Iterator it = theme.getCurves().iterator();
-        while( it.hasNext() )
-          ( (ObservationPlot)getPlot() ).addCurve( (IDiagramCurve)it.next() );
-      }
-      
-      if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
-        clearChart();
+      SwingUtilities.invokeAndWait( runnable );
     }
-    catch( SensorException e )
+    catch( InterruptedException e )
     {
-      throw new RuntimeException( e );
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( InvocationTargetException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 }

@@ -54,7 +54,7 @@ public class ObservationTemplateHelper
   }
 
   /**
-   * Saves the given template (binding).
+   * Saves the given template (binding). Closes the stream.
    * 
    * @param tpl
    * @param out
@@ -63,13 +63,20 @@ public class ObservationTemplateHelper
   public static void saveDiagramTemplateXML( final ObsdiagviewType tpl,
       final OutputStream out ) throws JAXBException
   {
-    final Marshaller m = OF.createMarshaller();
-    m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    m.marshal( tpl, out );
+    try
+    {
+      final Marshaller m = OF.createMarshaller();
+      m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+      m.marshal( tpl, out );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( out );
+    }
   }
-  
+
   /**
-   * Saves the given template (binding).
+   * Saves the given template (binding). Closes the writer.
    * 
    * @param tpl
    * @param writer
@@ -78,9 +85,16 @@ public class ObservationTemplateHelper
   public static void saveDiagramTemplateXML( final ObsdiagviewType tpl,
       final Writer writer ) throws JAXBException
   {
-    final Marshaller m = OF.createMarshaller();
-    m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    m.marshal( tpl, writer );
+    try
+    {
+      final Marshaller m = OF.createMarshaller();
+      m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+      m.marshal( tpl, writer );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
   }
 
   /**
@@ -117,21 +131,21 @@ public class ObservationTemplateHelper
   public static ObsdiagviewType buildDiagramTemplateXML(
       final IDiagramTemplate template ) throws JAXBException
   {
-    final ObsdiagviewType bdgTemplate = OF.createObsdiagviewType();
-    
+    final ObsdiagviewType bdgTemplate = OF.createObsdiagview();
+
     final LegendType bdgLegend = OF.createObsdiagviewTypeLegendType();
     bdgLegend.setTitle( template.getLegendName() );
     bdgLegend.setVisible( template.isShowLegend() );
-    
+
     bdgTemplate.setLegend( bdgLegend );
     bdgTemplate.setTitle( template.getTitle() );
-    
+
     final List bdgAxes = bdgTemplate.getAxis();
     final Iterator itAxes = template.getDiagramAxes().iterator();
     while( itAxes.hasNext() )
     {
       final IDiagramAxis axis = (IDiagramAxis) itAxes.next();
-      
+
       final TypeAxis bdgAxis = OF.createTypeAxis();
       bdgAxis.setDatatype( axis.getDataType() );
       bdgAxis.setDirection( axis.getDirection() );
@@ -140,56 +154,59 @@ public class ObservationTemplateHelper
       bdgAxis.setLabel( axis.getLabel() );
       bdgAxis.setPosition( axis.getPosition() );
       bdgAxis.setUnit( axis.getUnit() );
-      
+
       bdgAxes.add( bdgAxis );
     }
-    
+
     int ixCurve = 1;
-    
+
     final List bdgThemes = bdgTemplate.getObservation();
     final Iterator itThemes = template.getThemes().iterator();
     while( itThemes.hasNext() )
     {
-      final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) itThemes.next();
-      
+      final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) itThemes
+          .next();
+
       // can only deal with ZML observations
       final IObservation obs = theme.getObservation();
       if( !(obs instanceof ZmlObservation) )
         continue;
-      
+
       final TypeObservation bdgTheme = OF.createTypeObservation();
       bdgTheme.setLinktype( "zml" );
       bdgTheme.setHref( ((ZmlObservation) obs).getHref() );
-      
+
       final List bdgCurves = bdgTheme.getCurve();
-      
+
       final Iterator itCurves = theme.getCurves().iterator();
       while( itCurves.hasNext() )
       {
         final IDiagramCurve curve = (IDiagramCurve) itCurves.next();
-        
+
         final TypeCurve bdgCurve = OF.createTypeCurve();
         bdgCurve.setId( "C" + ixCurve++ );
         bdgCurve.setName( curve.getName() );
-        
+
         final List bdgMappings = bdgCurve.getMapping();
 
         final IAxisMapping[] mappings = curve.getMappings();
         for( int i = 0; i < mappings.length; i++ )
         {
           final TypeAxisMapping bdgMapping = OF.createTypeAxisMapping();
-          bdgMapping.setDiagramAxis( mappings[i].getDiagramAxis().getIdentifier() );
-          bdgMapping.setObservationAxis( mappings[i].getObservationAxis().getName() );
-          
+          bdgMapping.setDiagramAxis( mappings[i].getDiagramAxis()
+              .getIdentifier() );
+          bdgMapping.setObservationAxis( mappings[i].getObservationAxis()
+              .getName() );
+
           bdgMappings.add( bdgMapping );
         }
-        
+
         bdgCurves.add( bdgCurve );
       }
-      
+
       bdgThemes.add( bdgTheme );
     }
-    
+
     return bdgTemplate;
   }
 
