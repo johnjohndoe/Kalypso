@@ -9,6 +9,8 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 ----------------
 Version 0.0...
 ----------------
+- Bugfix: falls beim Laden über den Pool oder beim Informieren der Keylistener eine Exception auftrat, wurde ein
+key als immer noch ladend markiert, und konnte nicht mehr neu geladen werden
 - ZML-Format erweitert: Values können jetzt in einem CDATA-Block im <data/> Element
   verlinkt werden. Dabei benutzt man die selbe Methodik wie bei verlinkte Dateien,
   nur das href-Attribut soll leer sein oder "#data" beinhalten.
