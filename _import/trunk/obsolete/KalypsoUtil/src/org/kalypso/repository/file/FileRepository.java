@@ -2,6 +2,8 @@ package org.kalypso.repository.file;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.io.filter.AcceptAllFileFilter;
@@ -30,8 +32,8 @@ public class FileRepository extends AbstractRepository
       m_filter = filter;
 
     m_root = new File( location );
-//    if( !m_root.exists() )
-//      throw new IllegalArgumentException( "Location existiert nicht! (Location: " + location + ")" );
+    if( !m_root.exists() )
+      throw new IllegalArgumentException( "Location existiert nicht! (Location: " + location + ")" );
   }
 
   public FileRepository( final String location, final boolean readOnly )
@@ -69,11 +71,20 @@ public class FileRepository extends AbstractRepository
   }
 
   /**
+   * Returns the URL of the root dir.
+   * 
    * @see org.kalypso.repository.IRepository#getIdentifier()
    */
   public String getIdentifier()
   {
-    return "file";
+    try
+    {
+      return m_root.toURL().toExternalForm();
+    }
+    catch( MalformedURLException e )
+    {
+      throw new IllegalStateException( e.getLocalizedMessage() );
+    }
   }
 
   /**
@@ -87,9 +98,20 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
-  public IRepositoryItem findItem( String id ) throws RepositoryException
+  public IRepositoryItem findItem( final String id ) throws RepositoryException
   {
-    final File f = new File( id );
+    final URL url;
+    
+    try
+    {
+      url = new URL( id );
+    }
+    catch( MalformedURLException e )
+    {
+      throw new RepositoryException( e );
+    }
+    
+    final File f = new File( url.getPath() );
     
     if( !f.exists() )
       throw new RepositoryException( "File <" + id + "> does not exist!" );

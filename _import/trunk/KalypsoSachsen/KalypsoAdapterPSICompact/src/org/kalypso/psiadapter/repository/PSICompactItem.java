@@ -102,10 +102,13 @@ public class PSICompactItem implements IRepositoryItem
   }
 
   /**
+   * Returns <pre>psicompact:/psi...id</pre> with psi...id being the id that is delivered 
+   * from the PSICompact interface.
+   * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
   public String getIdentifier()
   {
-    return m_objectInfo.getId();
+    return getRepository().getIdentifier() + m_objectInfo.getId();
   }
 }

@@ -281,12 +281,4 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
     // only editable when it represents a forecast
     return m_valueType == PSICompact.TYPE_VALUE;
   }
-
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getIdentifier()
-   */
-  public String getIdentifier()
-  {
-    return m_objectInfo.getId();
-  }
 }

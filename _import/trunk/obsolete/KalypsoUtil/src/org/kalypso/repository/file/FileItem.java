@@ -1,11 +1,14 @@
 package org.kalypso.repository.file;
 
 import java.io.File;
+import java.net.MalformedURLException;
 
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 
 /**
+ * An item of a <code>FileRepository</code> that represents a <code>File</code>.
+ * 
  * @author schlienger
  */
 public class FileItem implements IRepositoryItem
@@ -92,10 +95,19 @@ public class FileItem implements IRepositoryItem
   }
 
   /**
+   * Returns the URL of the file.
+   * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
   public String getIdentifier()
   {
-    return m_file.getAbsolutePath();
+    try
+    {
+      return m_file.toURL().toExternalForm();
+    }
+    catch( MalformedURLException e )
+    {
+      throw new IllegalStateException( e.getLocalizedMessage() );
+    }
   }
 }

@@ -114,11 +114,13 @@ public class PSICompactRepository extends AbstractRepository
   }
 
   /**
+   * Always returns <pre>psicompact:/</pre>
+   * 
    * @see org.kalypso.repository.IRepository#getIdentifier()
    */
   public String getIdentifier()
   {
-    return "psicompact";
+    return "psicompact:/";
   }
 
   /**
@@ -166,8 +168,10 @@ public class PSICompactRepository extends AbstractRepository
 
   /**
    * Helper: finds using recursion. Returns null when not found
+   * 
+   * @throws RepositoryException
    */
-  private IRepositoryItem findItemRecursive( final IRepositoryItem item, final String id )
+  private IRepositoryItem findItemRecursive( final IRepositoryItem item, final String id ) throws RepositoryException
   {
     if( item.getIdentifier().equalsIgnoreCase( id ) )
       return item;
