@@ -32,12 +32,9 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
     
     layout.addActionSet( "org.kalypso.actionSet.model" );
     
-    layout.addNewWizardShortcut( "org.kalypso.wizard.newMap" );
-    layout.addNewWizardShortcut( "org.kalypso.wizard.newGtt" );
-    layout.addNewWizardShortcut( "org.kalypso.wizard.newOdt" );
-    layout.addNewWizardShortcut( "org.kalypso.wizard.newOtt" );
-    layout.addNewWizardShortcut( "org.kalypso.wizard.newCalcCase" );
-    
+    layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder");//$NON-NLS-1$
+    layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.file");//$NON-NLS-1$
+
     layout.setFixed( true );
   }
   
@@ -46,13 +43,7 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
    */
   protected void setContentsOfShowViewMenu( IPageLayout layout )
   {
-    layout.addShowViewShortcut( IPageLayout.ID_OUTLINE );
     layout.addShowViewShortcut( IPageLayout.ID_RES_NAV );
-    
-    layout.addShowViewShortcut( "org.kalypso.ui.repository.view.RepositoryExplorerPart" );
-    layout.addShowViewShortcut( "org.kalypso.ogc.sensor.view.DiagramViewPart" );
-    layout.addShowViewShortcut( "org.kalypso.ogc.sensor.view.TableViewPart" );
+    layout.addShowViewShortcut( IPageLayout.ID_OUTLINE );
   }
-  
-  
 }

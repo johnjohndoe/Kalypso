@@ -1,0 +1,18 @@
+Änderungshistorie von Kalypso
+-----------------------------
+
+Start: Stand 12.11.2004 Schulung Dresden
+
+Version ...
+-----------
+- Menü 'Modell' aufgeteilt in 'Modell' und 'Rechenvariante'
+	- neue Menüpunkte:
+				Rechenfall neu
+				Rechenfall archivieren
+				Rechenfall vom Server laden
+				Rechenfall: Zeitreihen aktualisieren
+- Rechenfall neu: 
+	- 'Weiter' Knopf ist automatisch selektiert
+	- Bugfix: Fehler, falls im Navigator nichts selektiert war
+- Modeler Perspective: Standards für Menüs 'Neu' und 'Sicht anzeigen' überarbeitet
+

@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ContainerGenerator;
@@ -209,5 +210,15 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
 
     if( monitor.isCanceled() )
       throw new OperationCanceledException();
+  }
+  
+  /**
+   * @see org.eclipse.jface.wizard.IWizard#createPageControls(org.eclipse.swt.widgets.Composite)
+   */
+  public void createPageControls( final Composite pageContainer )
+  {
+    // nichts tun, die Seiten sollen lazy initialisiert werden
+    // weil die Steuerparameter Seite erst aufgebaut werden kann,
+    // wenn das Projekt festliegt
   }
 }

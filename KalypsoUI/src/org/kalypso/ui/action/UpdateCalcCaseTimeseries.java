@@ -11,12 +11,13 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.kalypso.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
  * @author belger
  */
-public class StartCalculationActionDelegate implements IWorkbenchWindowActionDelegate
+public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
 {
   private IWorkbenchWindow m_window;
 
@@ -25,7 +26,7 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
    */
   public void dispose()
   {
-  // nix zu tun?
+    // nix tun  
   }
 
   /**
@@ -43,16 +44,22 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
   {
     final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
-    final IFolder[] calcCasesToCalc = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection, "Berechnung starten", "Folgende Rechenvarianten werden berechnet:" );
+    // Rechenfälle raussuchen
+    final IFolder[] calcCases = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection, "Zeitreihen aktualisieren", "Folgende Rechenvarianten werden aktualisiert:" );
     
-    if( calcCasesToCalc == null )
+    if( calcCases == null )
       return;
     
-    for( int i = 0; i < calcCasesToCalc.length; i++ )
+    // die Rechenfälle sollen nacheinander aktualisiert werden
+    // parallelität macht hier keinen Sinn
+    final MutexSchedulingRule mutexRule = new MutexSchedulingRule(  );
+    
+    // alle Rechenfälle aktualisieren
+    for( int i = 0; i < calcCases.length; i++ )
     {
-      final IFolder folder = calcCasesToCalc[i];
+      final IFolder calcCase = calcCases[i];
 
-      final Job job = new Job( "Berechne: " + folder.getName() )
+      final Job job = new Job( "Aktualisiere Zeitreihen: " + calcCase.getName() )
       {
         /**
          * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -61,8 +68,9 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
         {
           try
           {
-            final ModelNature nature = (ModelNature)folder.getProject().getNature( ModelNature.ID );
-            nature.runCalculation( folder, monitor );
+            final ModelNature nature = (ModelNature)calcCase.getProject().getNature( ModelNature.ID );
+            
+            nature.updateCalcCase( calcCase, monitor );
           }
           catch( final CoreException e )
           {
@@ -75,17 +83,16 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
         }
       };
       job.setUser( true );
+      job.setRule( mutexRule );
       job.schedule();
     }
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    // mir doch egal!
+    // mir wurscht
   }
-
 }
