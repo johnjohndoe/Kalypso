@@ -214,13 +214,15 @@ public class SimulationDialog extends JInternalFrame implements ActionListener,I
 		    targetDir.mkdirs();
 		File kalypsoTemplate=new File(Main.props.getProperty("template_simulation"));
 		System.out.println("copy template from "+kalypsoTemplate.toString());
+
 		LogView.println(I18n.get("LV_SD_runSim1"));
 		LogView.print(I18n.get("LV_SD_runSim2")+kalypsoTemplate.toString());
 		LogView.print(I18n.get("LV_SD_runSim3")+targetDir.toString()+"... ");
+
 		KonfigWrite.clearSimulationDir(targetDir);
 		FileSystemUtils.copyRecursiveDir(kalypsoTemplate,targetDir);
 		LogView.println(I18n.get("LV_SD_runSim4"));
-		this.xmlTempDir=new File(targetDir,"xml_temp");
+		this.xmlTempDir=new File(targetDir,"out_tis.eik");//xml_temp");
 		if(!xmlTempDir.exists())
 		    xmlTempDir.mkdirs();
 		File simulationCaseFile=new File(xmlTempDir,"simulationCase.xml");
