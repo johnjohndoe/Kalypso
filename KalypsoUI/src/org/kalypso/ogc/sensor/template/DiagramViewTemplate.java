@@ -142,7 +142,7 @@ public class DiagramViewTemplate extends AbstractTemplateAdapter implements IDia
     {
       final ObsdiagviewType.CurveType baseCurve = (ObsdiagviewType.CurveType)it.next();
 
-      m_curves.add( new Curve( baseCurve, m_file.getProject(), this ) );
+      new Curve( baseCurve, m_file.getProject(), this );
     }
   }
 
