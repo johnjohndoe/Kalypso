@@ -141,6 +141,7 @@ return text.replace(',','.');
 	throws IOException
     {
 	//	toAsciiFile(outputFile," "," yy MM dd   1.00 ","##############0.00");
+        //TODO Format readable in GraficTool (JH)
 	toAsciiFile(outputFile," ","dd MM yyyy hh ","##0.00");
     }
 }
