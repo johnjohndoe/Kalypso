@@ -44,7 +44,10 @@ import java.awt.Color;
 
 
 /**
- * Some useful method dealing with java.awt.Color
+ * Some useful method dealing with java.awt.Color. See also org.kalypso.java.util.StringUtilities for
+ * some other methods using Colors and Strings.
+ *
+ * @see org.kalypso.java.util.StringUtilities
  *
  * @author schlienger
  */
