@@ -28,17 +28,17 @@ public class ObservationTableModel extends AbstractTableModel
 {
   private final static ITableViewColumn[] EMPTY_COLS = new ITableViewColumn[0];
 
-  private ITableViewColumn[] m_columns = EMPTY_COLS;
+  private transient ITableViewColumn[] m_columns = EMPTY_COLS;
 
-  private IVariableArguments m_args = null;
+  private transient IVariableArguments m_args = null;
 
   /** common column */
-  private Set m_cc = null;
+  private transient Set m_cc = null;
 
   /** common fake axis */
-  private DefaultAxis m_ccAxis = null;
+  private transient DefaultAxis m_ccAxis = null;
 
-  private ITableViewRules m_rules = null;
+  private transient ITableViewRules m_rules = null;
 
   public ObservationTableModel()
   {

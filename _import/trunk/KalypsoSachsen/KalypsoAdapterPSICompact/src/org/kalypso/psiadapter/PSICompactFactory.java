@@ -314,7 +314,7 @@ public final class PSICompactFactory
    * Factory method um Achsen zu erzeugen.
    * <p>
    */
-  public static IAxis getAxis( final String label, final String unit, final Class dataClass,
+  public static IAxis getAxis( final String label, final String type, final String unit, final Class dataClass,
       final int position )
   {
     final String key = label + unit + dataClass.getName();
@@ -323,7 +323,7 @@ public final class PSICompactFactory
 
     if( axis == null )
     {
-      axis = new PSICompactAxis( label, unit, dataClass, false, position );
+      axis = new PSICompactAxis( label, type, unit, dataClass, false, position );
 
       m_axes.put( key, axis );
     }

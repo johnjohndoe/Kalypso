@@ -18,7 +18,7 @@ import org.kalypso.util.factory.FactoryException;
 /**
  * @author schlienger
  */
-public class ChartFactory
+public final class ChartFactory
 {
   private final static ConfigurableCachableObjectFactory m_objFactory;
 

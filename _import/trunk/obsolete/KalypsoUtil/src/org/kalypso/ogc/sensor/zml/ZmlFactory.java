@@ -128,7 +128,7 @@ public class ZmlFactory
       final MetadataListType metadataListType = m_objectFactory.createMetadataListType();
       obsType.setMetadataList(metadataListType);
       final List metadataList = metadataListType.getMetadata();
-      for( final Iterator it = obs.getMetadata().entrySet().iterator(); it.hasNext(); )
+      for( final Iterator it = obs.getMetadataList().entrySet().iterator(); it.hasNext(); )
       {
         final Map.Entry entry = (Entry)it.next();
         

@@ -5,7 +5,7 @@
 	<element name="TimeseriesLink">
 		<complexType>
 			<complexContent>
-				<extension base="xlink:xlink-base">
+				<extension base="xlink:SimpleLinkType">
 					<attribute name="linktype" type="string"/>
 					<attribute name="timeaxis" type="string"/>
 					<attribute name="valueaxis" type="string"/>

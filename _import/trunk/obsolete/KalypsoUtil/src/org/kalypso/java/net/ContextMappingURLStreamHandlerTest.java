@@ -10,9 +10,9 @@ import junit.framework.TestCase;
 /**
  * @author schlienger
  */
-public class SchemeReplaceURLStreamHandlerTest extends TestCase
+public class ContextMappingURLStreamHandlerTest extends TestCase
 {
-  private SchemeReplaceURLStreamHandler handler;
+  private ContextMappingURLStreamHandler handler;
 
   /**
    * @see junit.framework.TestCase#setUp()
@@ -21,14 +21,14 @@ public class SchemeReplaceURLStreamHandlerTest extends TestCase
   {
     super.setUp();
    
-    handler = new SchemeReplaceURLStreamHandler();
+    handler = new ContextMappingURLStreamHandler();
 
-    final String projectReplace = "C:/Programme/eclipse-3.0/workspace/KalypsoUtil/";
+    final URL projectReplace = new URL( "file:C:/Programme/eclipse-3.0/workspace/KalypsoUtil/" );
     
-    final String wkspReplace = "C:/Programme/eclipse-3.0/workspace/";
+    final URL wkspReplace = new URL( "file:C:/Programme/eclipse-3.0/workspace/" );
     
-    handler.setSchemeReplacement( "project", projectReplace );
-    handler.setSchemeReplacement( "workspace", wkspReplace );
+    handler.setStringReplacement( "project", projectReplace );
+    handler.setStringReplacement( "workspace", wkspReplace );
 
     final ConfigurableURLStreamHandlerFactory fact = new ConfigurableURLStreamHandlerFactory(  );
     fact.setHandler( "project", handler );

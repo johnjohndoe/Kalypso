@@ -36,7 +36,7 @@ public class PSICompactRepository extends AbstractRepository
       {
         System.out.println( "Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
 
-        m_psiRoot = new PSICompactItem( null, "psi", new ObjectInfo("psi", "psi root") );
+        m_psiRoot = new PSICompactItem( null, "psi" );
       }
       else
         m_psiRoot = nodeMeasurements;
@@ -96,7 +96,7 @@ public class PSICompactRepository extends AbstractRepository
           if( i == path.length - 1 )
             n = new PSICompactObservationItem( parent, path[i], info, valueType );
           else
-            n = new PSICompactItem( parent, path[i], info );
+            n = new PSICompactItem( parent, path[i] );
 
           // gleich parent item aktualisieren (wird nicht von der Child gemacht, deswegen hier)
           if( parent != null )

@@ -16,17 +16,17 @@ import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
  */
 class XYCurveSerie extends Series
 {
-  private final IAxis m_xAxis;
+  private transient final IAxis m_xAxis;
 
-  private final IDiagramAxis m_xDiagAxis;
+  private transient final IDiagramAxis m_xDiagAxis;
 
-  private final IAxis m_yAxis;
+  private transient final IAxis m_yAxis;
 
-  private final IDiagramAxis m_yDiagAxis;
+  private transient final IDiagramAxis m_yDiagAxis;
 
-  private final IDiagramCurve m_curve;
+  private transient final IDiagramCurve m_curve;
 
-  private ITuppleModel m_values = null;
+  private transient ITuppleModel m_values = null;
 
   /**
    * Constructor. Fetches the values (ITuppleModel).

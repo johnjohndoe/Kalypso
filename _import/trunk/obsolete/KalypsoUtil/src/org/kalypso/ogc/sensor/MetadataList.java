@@ -7,17 +7,17 @@ import java.util.Properties;
  * 
  * @author schlienger
  */
-public class Metadata extends Properties
+public class MetadataList extends Properties
 {
   public final static String MD_NAME = "Name";
   public final static String MD_DESCRIPTION = "Beschreibung";
 
-  public Metadata()
+  public MetadataList()
   {
     super();
   }
 
-  public Metadata( Properties arg0 )
+  public MetadataList( Properties arg0 )
   {
     super( arg0 );
   }

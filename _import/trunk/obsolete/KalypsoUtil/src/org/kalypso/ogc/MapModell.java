@@ -23,9 +23,9 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
 {
   private final ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
 
-  private final static Boolean THEME_ENABLED = new Boolean( true );
+  private final static Boolean THEME_ENABLED = Boolean.valueOf( true );
 
-  private final static Boolean THEME_DISABLED = new Boolean( false );
+  private final static Boolean THEME_DISABLED = Boolean.valueOf( false );
 
   private final Vector myThemes = new Vector();
 

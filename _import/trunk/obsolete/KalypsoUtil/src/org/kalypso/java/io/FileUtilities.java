@@ -200,10 +200,9 @@ public class FileUtilities
   public static File createRandomTmpDir( final String prefix )
   {
     final File tmpDir = new File( System.getProperty( "java.io.tmpdir" ) );
-    File dataDir = null;
 
     int count = 0;
-    while( dataDir == null && count < 100 )
+    while( count < 100 )
     {
       final File tmpDataDir = new File( tmpDir, prefix + new Random().nextInt() );
       if( tmpDataDir.mkdir() )

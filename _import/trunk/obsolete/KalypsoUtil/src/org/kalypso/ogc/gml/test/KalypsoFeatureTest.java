@@ -20,7 +20,7 @@ public class KalypsoFeatureTest extends TestCase
   {
     final GMLSchema schema = new GMLSchema(
       XMLTools.getAsDOM(
-          getClass().getResourceAsStream("point.xsd")));
+          KalypsoFeatureTest.class.getResourceAsStream("point.xsd")));
     final FeatureType featureType = schema.getFeatureTypes()[0];
     
     final Object[] properties = new Object[featureType.getProperties().length];

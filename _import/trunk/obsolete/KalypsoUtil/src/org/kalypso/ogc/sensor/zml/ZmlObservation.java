@@ -14,14 +14,14 @@ import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITarget;
 import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.Metadata;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.DefaultTarget;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel;
 import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.util.xml.xlink.IXlink;
+import org.kalypso.util.xml.xlink.JAXBXLink;
 import org.kalypso.zml.AxisType;
 import org.kalypso.zml.MetadataType;
 import org.kalypso.zml.ObjectFactory;
@@ -78,14 +78,9 @@ public class ZmlObservation implements IObservation
     final Observation obs = (Observation)u.unmarshal( new InputSource( inputStream ) );
     inputStream.close();
 
-    // target
-    ITarget target = null;
-    if( obs.getTargetProperty() != null )
-      target = new DefaultTarget( obs.getTargetProperty() );
-
     // metadata
-    final Metadata metadata = new Metadata();
-    metadata.put( Metadata.MD_NAME, obs.getName() );
+    final MetadataList metadata = new MetadataList();
+    metadata.put( MetadataList.MD_NAME, obs.getName() );
 
     if( obs.getMetadataList() != null )
     {
@@ -110,16 +105,17 @@ public class ZmlObservation implements IObservation
       axisList.add( new ZmlAxis( tmpAxis, i ) );
     }
 
-    m_axes = (ZmlAxis[])axisList.toArray( new ZmlAxis[ axisList.size() ] );
-    
-    m_observation = new SimpleObservation( obs.getName(), obs.isEditable(), target, metadata,
-        (IAxis[])axisList.toArray( new IAxis[0] ) );
+    m_axes = (ZmlAxis[])axisList.toArray( new ZmlAxis[axisList.size()] );
+
+    m_observation = new SimpleObservation( obs.getName(), obs.isEditable(), new JAXBXLink( obs
+        .getTarget() ), metadata, (IAxis[])axisList.toArray( new IAxis[0] ) );
   }
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public synchronized ITuppleModel getValues( final IVariableArguments args ) throws SensorException
+  public synchronized ITuppleModel getValues( final IVariableArguments args )
+      throws SensorException
   {
     if( m_model == null )
       m_model = new ZmlTuppleModel( m_url, m_axes );
@@ -140,9 +136,9 @@ public class ZmlObservation implements IObservation
     return m_observation.getAxisList();
   }
 
-  public Metadata getMetadata()
+  public MetadataList getMetadataList()
   {
-    return m_observation.getMetadata();
+    return m_observation.getMetadataList();
   }
 
   public String getName()
@@ -150,14 +146,9 @@ public class ZmlObservation implements IObservation
     return m_observation.getName();
   }
 
-  public ITarget getTarget()
+  public IXlink getTarget()
   {
     return m_observation.getTarget();
-  }
-
-  public int hashCode()
-  {
-    return m_observation.hashCode();
   }
 
   public boolean isEditable()

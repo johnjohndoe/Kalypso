@@ -2,11 +2,11 @@ package org.kalypso.ogc.sensor.impl;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITarget;
 import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.Metadata;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.util.xml.xlink.IXlink;
 
 /**
  * @author schlienger
@@ -14,23 +14,29 @@ import org.kalypso.util.runtime.IVariableArguments;
 public class SimpleObservation implements IObservation
 {
   private final String m_name;
+
   private boolean m_editable;
-  private final ITarget m_target;
-  private final Metadata m_metadata;
+
+  private final IXlink m_target;
+
+  private final MetadataList m_metadata;
+
   private final IAxis[] m_axes;
+
   private ITuppleModel m_values = null;
 
-  public SimpleObservation( final String name, final boolean editable, final ITarget target, final Metadata metadata, final IAxis[] axes )
+  public SimpleObservation( final String name, final boolean editable, final IXlink target,
+      final MetadataList metadata, final IAxis[] axes )
   {
     m_name = name;
     m_editable = editable;
     m_target = target;
     m_metadata = metadata;
     m_axes = axes;
-    
+
     m_values = new SimpleTuppleModel( axes );
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getName()
    */
@@ -50,15 +56,15 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getTarget()
    */
-  public ITarget getTarget()
+  public IXlink getTarget()
   {
     return m_target;
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getMetadata()
+   * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
    */
-  public Metadata getMetadata()
+  public MetadataList getMetadataList()
   {
     return m_metadata;
   }
@@ -78,7 +84,7 @@ public class SimpleObservation implements IObservation
   {
     if( m_values == null )
       throw new SensorException( "Keine Werte vorhanden." );
-    
+
     return m_values;
   }
 
@@ -89,7 +95,7 @@ public class SimpleObservation implements IObservation
   {
     if( values == null )
       throw new SensorException( "Null nicht erlaubt." );
-    
+
     m_values = values;
   }
 }

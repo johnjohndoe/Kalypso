@@ -4,13 +4,13 @@ import java.util.Date;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITarget;
 import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.Metadata;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
+import org.kalypso.util.xml.xlink.IXlink;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
@@ -36,7 +36,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   private WQParamSet[] m_psicWQParamSet = null;
 
   /** Metadaten für die Observation */
-  private Metadata m_metadata = null;
+  private MetadataList m_metadata = null;
 
   private IAxis[] m_axes = null;
 
@@ -76,7 +76,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   public PSICompactObservationItem( final PSICompactItem parent, final String name,
       final PSICompact.ObjectInfo info, final int valueType )
   {
-    super( parent, name, info );
+    super( parent, name );
 
     m_objectInfo = info;
     m_valueType = valueType;
@@ -112,10 +112,10 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
    */
   private void constructMetadata()
   {
-    m_metadata = new Metadata();
+    m_metadata = new MetadataList();
 
-    m_metadata.put( Metadata.MD_NAME, getName() );
-    m_metadata.put( Metadata.MD_DESCRIPTION, m_objectInfo.getDescription() );
+    m_metadata.put( MetadataList.MD_NAME, getName() );
+    m_metadata.put( MetadataList.MD_DESCRIPTION, m_objectInfo.getDescription() );
 
     if( m_psicMetaData != null )
     {
@@ -172,15 +172,15 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getTarget()
    */
-  public ITarget getTarget()
+  public IXlink getTarget()
   {
-    return (ITarget)getParent();
+    return null;
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getMetadata()
+   * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
    */
-  public Metadata getMetadata()
+  public MetadataList getMetadataList()
   {
     return m_metadata;
   }
@@ -197,18 +197,18 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
       m_axes = new IAxis[4];
 
       // immer Datum Axis
-      m_axes[0] = PSICompactFactory.getAxis( "Datum", "", Date.class, 0 );
+      m_axes[0] = PSICompactFactory.getAxis( "Datum", "datum", "", Date.class, 0 );
 
       // Wert (Einheit abfragen)
       String label = toString();
       String unit = PSICompactFactory.unitToString( m_psicMetaData.getUnit() );
-      m_axes[1] = PSICompactFactory.getAxis( label, unit, Double.class, 1 );
+      m_axes[1] = PSICompactFactory.getAxis( label, "pegel", unit, Double.class, 1 );
 
       // PSI-Status
-      m_axes[2] = PSICompactFactory.getAxis( "Status", "", String.class, 2 );
+      m_axes[2] = PSICompactFactory.getAxis( "Status", "", "", String.class, 2 );
       
       // Kalypso internal status
-      m_axes[3] = PSICompactFactory.getAxis( KalypsoStatusUtils.getStatusAxisLabelFor( m_axes[1] ), "", Integer.class, 3 );
+      m_axes[3] = PSICompactFactory.getAxis( KalypsoStatusUtils.getStatusAxisLabelFor( m_axes[1] ), "kalypso_status", "", Integer.class, 3 );
     }
 
     return m_axes;

@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * A configurable <code>URLStreamHandlerFactory</code>. You can set various
+ * <code>URLStreamHandler</code> that match specific protocols. 
+ * 
  * @author schlienger
  */
 public class ConfigurableURLStreamHandlerFactory implements URLStreamHandlerFactory
@@ -23,7 +26,7 @@ public class ConfigurableURLStreamHandlerFactory implements URLStreamHandlerFact
   public URLStreamHandler createURLStreamHandler( final String protocol )
   {
     if( !m_map.containsKey( protocol ) )
-      return null;
+      return null; // let default Java implementation decide what to do...
 
     final URLStreamHandler handler = (URLStreamHandler)m_map.get( protocol );
     return handler;

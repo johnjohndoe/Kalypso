@@ -1,0 +1,10 @@
+Konfigurationsdienst.
+
+Die Schnittstelle dieser Dienst ist hier definiert:
+KalypsoServices:org.kalypso.services.conf.IConfiguration
+
+Jeder Client braucht lediglich zu wissen, mit welchen Konfigurationsdienste er sich
+verbinden kann. Er sollte die Reihe nach versuchen, sich mit dem Konfserver zu verbinden.
+
+Dieser Dienst bildet den Eintrittspunkt in der KalypsoServer Welt. Anhand dieser Dienst
+kann ein Client die einzelne andere Dienst finden.

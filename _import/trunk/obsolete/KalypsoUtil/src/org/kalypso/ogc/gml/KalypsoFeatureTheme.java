@@ -32,35 +32,37 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme
     myLayer.removeModellListener( this );
   }
 
-//  /**
-//   * renders the layer to the submitted graphic context
-//   */
-//  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox )
-//  {
-////    final double scale = myParent.getScale( g );
-////    final GeoTransform p = myParent.getProjection();
-////    final GM_Envelope bbox = myParent.getBoundingBox();
-//    //    for( int i = 0; i < myStyles.length; i++ )
-//    myLayer.getSort().paint( g, p, scale, bbox );
-//
-//    //    if( DEBUG_ENV )
-//    //      myIndexDE.paint( g, myParent.getProjection() );
-//  }
+  //  /**
+  //   * renders the layer to the submitted graphic context
+  //   */
+  //  public void paint( final Graphics g, final GeoTransform p, final double
+  // scale, final GM_Envelope bbox )
+  //  {
+  //// final double scale = myParent.getScale( g );
+  //// final GeoTransform p = myParent.getProjection();
+  //// final GM_Envelope bbox = myParent.getBoundingBox();
+  //    // for( int i = 0; i < myStyles.length; i++ )
+  //    myLayer.getSort().paint( g, p, scale, bbox );
+  //
+  //    // if( DEBUG_ENV )
+  //    // myIndexDE.paint( g, myParent.getProjection() );
+  //  }
 
-  public void paintSelected( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final int selectionId )
+  public void paintSelected( final Graphics g, final GeoTransform p, final double scale,
+      final GM_Envelope bbox, final int selectionId )
   {
-    if(myLayer instanceof KalypsoFeatureLayer)
+    if( myLayer instanceof KalypsoFeatureLayer )
     {
-    //    double scale = myParent.getScale( g );
-//    GeoTransform p = myParent.getProjection();
-//    GM_Envelope bbox = myParent.getBoundingBox();
-    //    for( int i = 0; i < myStyles.length; i++ )
-    ((KalypsoFeatureLayer)myLayer).getSort().paintSelected( g, p, scale, bbox, selectionId );
+      //    double scale = myParent.getScale( g );
+      //    GeoTransform p = myParent.getProjection();
+      //    GM_Envelope bbox = myParent.getBoundingBox();
+      //    for( int i = 0; i < myStyles.length; i++ )
+      ( (KalypsoFeatureLayer)myLayer ).getSort().paintSelected( g, p, scale, bbox, selectionId );
 
-    //    if( DEBUG_ENV )
-    //      myIndexDE.paint( g, myParent.getProjection() );
+      //    if( DEBUG_ENV )
+      //      myIndexDE.paint( g, myParent.getProjection() );
     }
-   }
+  }
 
   //  /**
   //   * stes the styles used for this <tt>Theme</tt>. If this method will be
@@ -88,23 +90,23 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme
   {
     //return myStyles;
     // TODO
-    if(myLayer instanceof KalypsoFeatureLayer)
-    return ((KalypsoFeatureLayer)myLayer).getSort().getStyles();
+    if( myLayer instanceof KalypsoFeatureLayer )
+      return ( (KalypsoFeatureLayer)myLayer ).getSort().getStyles();
     return null;
   }
 
   public void addStyle( final KalypsoUserStyle style )
   {
-    if(myLayer instanceof KalypsoFeatureLayer)
-    ((KalypsoFeatureLayer)myLayer).getSort().addStyle( style );
+    if( myLayer instanceof KalypsoFeatureLayer )
+      ( (KalypsoFeatureLayer)myLayer ).getSort().addStyle( style );
 
     fireModellEvent( null );
   }
 
   public void removeStyle( final KalypsoUserStyle style )
   {
-    if(myLayer instanceof KalypsoFeatureLayer)
-      ((KalypsoFeatureLayer)myLayer).getSort().removeStyle( style );
+    if( myLayer instanceof KalypsoFeatureLayer )
+      ( (KalypsoFeatureLayer)myLayer ).getSort().removeStyle( style );
 
     fireModellEvent( null );
   }

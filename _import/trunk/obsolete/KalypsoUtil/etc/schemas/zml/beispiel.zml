@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Observation xmlns="zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="zml.kalypso.org
+<observation xmlns="zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="zml.kalypso.org
 ./observation.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<Name>Eine Test-Observation</Name>
+	<name>Eine Test-Observation</name>
 	
-	<!-- die Target-Property kann etwas beliebiges sein -->
-	<TargetProperty source="./model.gml#pegel" type="gml" objectid="234"/>
-
 	<!-- die Metadaten list ist erweiterbar -->
-	<MetadataList>
-		<Metadata name="Pegelnullpunkt" value="10"/>
-		<Metadata name="Rechtswert" value="445566"/>
-		<Metadata name="Hochwert" value="887766"/>
-		<Metadata name="Alarmstufe 1" value="4.3"/>
-		<Metadata name="Alarmstufe 2" value="5.6"/>
-	</MetadataList>
+	<metadataList>
+		<metadata name="Pegelnullpunkt" value="10"/>
+		<metadata name="Rechtswert" value="445566"/>
+		<metadata name="Hochwert" value="887766"/>
+		<metadata name="Alarmstufe 1" value="4.3"/>
+		<metadata name="Alarmstufe 2" value="5.6"/>
+	</metadataList>
 
 	<!-- im datatype der Achse kann man eine FORMAT-Angabe machen 
 		Die Mögliche Eingabe als FORMAT sind abhängig vom Datentyp, sie
 		entsprechen aber den Java-Format wie man aus der API-Docs entnehmen
 		kann (Siehe SimpleDateFormat, NumberFormat, usw).
 	-->
-	<Axis name="Datum" unit="" datatype="TYPE=xs:date#FORMAT=dd.MM.yyyy">
-		<ValueArray>01.01.2004 02.01.2004 03.01.2004 04.01.2004 05.01.2004 06.01.2004 07.01.2004 08.01.2004 09.01.2004 10.01.2004 11.01.2004 12.01.2004 13.01.2004 14.01.2004 15.01.2004 16.01.2004 17.01.2004 18.01.2004 19.01.2004 20.01.2004 21.01.2004</ValueArray>
-	</Axis>
+	<axis name="Datum" type="datum" unit="" datatype="TYPE=xs:date#FORMAT=dd.MM.yyyy">
+		<valueArray>01.01.2004 02.01.2004 03.01.2004 04.01.2004 05.01.2004 06.01.2004 07.01.2004 08.01.2004 09.01.2004 10.01.2004 11.01.2004 12.01.2004 13.01.2004 14.01.2004 15.01.2004 16.01.2004 17.01.2004 18.01.2004 19.01.2004 20.01.2004 21.01.2004</valueArray>
+	</axis>
 	
 	<!-- hier sind die Werte "inline" -->
-	<Axis name="Pegel1" unit="m" datatype="TYPE=xs:double">
-		<ValueArray>1 2.3 7 4.4 5 6.1 7 8 9 10 4 12 5.6 14 2.1 3.4 6.7 8.9 5.6 11 16.6</ValueArray>
-	</Axis>
+	<axis name="Pegel1" type="pegel" unit="m" datatype="TYPE=xs:double">
+		<valueArray>1 2.3 7 4.4 5 6.1 7 8 9 10 4 12 5.6 14 2.1 3.4 6.7 8.9 5.6 11 16.6</valueArray>
+	</axis>
 
 	<!-- hier sind die Werte in eine andere CSV-Datei
 		Zwei Links-Typen (TYPE) sind möglich:
@@ -36,9 +33,8 @@
 		Dazu kommt noch die Angabe der Spaltennummer (COLUMN) wie
 		es in der CSV-Datei zu finden ist.
 	-->
-	<Axis name="Pegel2" unit="m" datatype="TYPE=xs:double">
-		<ValueLink separator=" " xlink:type="simple" xlink:href="TYPE=relative#LOCATION=beispiel.values.txt#COLUMN=2" xlink:actuate="onRequest"/>
-		<!-- ValueLink separator=" " xlink:type="simple" xlink:href="TYPE=absolute#LOCATION=file://PC072/C/Programme/eclipse-3.0/runtime-workspace/KalypsoTestProject/zml/beispiel.values.txt#COLUMN=2" xlink:actuate="onRequest"/ -->
-	</Axis>
+	<axis name="Pegel2" type="pegel" unit="m" datatype="TYPE=xs:double">
+		<valueLink separator=" " xlink:href="TYPE=relative#LOCATION=beispiel.values.txt#COLUMN=2"/>
+	</axis>
 
-</Observation>
+</observation>

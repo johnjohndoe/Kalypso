@@ -17,13 +17,13 @@ import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 public class ObservationPlot extends XYPlot
 {
   /** maps the diagram axis (from the template) to the chart axis */
-  private final Map m_diag2chartAxis;
+  private transient final Map m_diag2chartAxis;
 
   /** maps the chart axis to its position in the plot */
-  private final Map m_chartAxes2Pos;
+  private transient final Map m_chartAxes2Pos;
 
   /** maps the diagram axes (from the template) to a dataset */
-  private final Map m_axes2ds = new HashMap();
+  private transient final Map m_axes2ds = new HashMap();
 
   /**
    * Constructor.

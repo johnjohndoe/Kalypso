@@ -49,7 +49,7 @@ public class JMSchemaTest extends TestCase
   public void loadSchemaAndCompareIt( final String xsdName, final String compareFile )
       throws Exception
   {
-    final GMLSchema jmSchema = new GMLSchema( XMLTools.getAsDOM( getClass().getResourceAsStream(
+    final GMLSchema jmSchema = new GMLSchema( XMLTools.getAsDOM( JMSchemaTest.class.getResourceAsStream(
         xsdName ) ) );
 
     final FeatureType[] ftps = jmSchema.getFeatureTypes();
@@ -57,6 +57,14 @@ public class JMSchemaTest extends TestCase
 
     System.out.println( result );
 
+    // TODO Method may fail to close stream
+    //
+    //    The method creates an IO stream object, does not assign it to any fields,
+    // pass it to other methods, or return it,
+    //     and does not appear to close the stream on all paths out of the method.
+    // This may result in a file descriptor leak.
+    //     It is generally a good idea to use a finally block to ensure that streams
+    // are closed.
     final BufferedReader reader = new BufferedReader( new InputStreamReader( getClass()
         .getResourceAsStream( compareFile ) ) );
     final StringBuffer goal = new StringBuffer();
@@ -77,18 +85,17 @@ public class JMSchemaTest extends TestCase
   {
     loadAndWriteGML( "obslink_schema.xsd", "obslink_schema.gml" );
   }
-  
+
   public void testXLink() throws Exception
   {
     loadSchemaAndCompareIt( "xlink_schema.xsd", "xlink_schema.txt" );
   }
-  
+
   public void testXlinkGML() throws Exception
   {
     loadAndWriteGML( "xlink_schema.xsd", "xlink_schema.gml" );
   }
-  
-  
+
   private void loadAndWriteGML( final String xsdFile, final String gmlFile ) throws Exception
   {
     InputSource schemaSource = new InputSource( getClass().getResourceAsStream( xsdFile ) );

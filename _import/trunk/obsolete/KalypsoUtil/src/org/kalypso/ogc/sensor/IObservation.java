@@ -1,6 +1,7 @@
 package org.kalypso.ogc.sensor;
 
 import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.util.xml.xlink.IXlink;
 
 /**
  * Eine sog. Observation im Sinne von OGC Sensor-ML. Beschreibt eine maschinelle
@@ -23,12 +24,12 @@ public interface IObservation
   /**
    * Returns the target object for which this observation has measurements.
    */
-  public ITarget getTarget();
+  public IXlink getTarget();
 
   /**
    * Returns the list of Metadata.
    */
-  public Metadata getMetadata();
+  public MetadataList getMetadataList();
 
   /**
    * Returns the list of axis

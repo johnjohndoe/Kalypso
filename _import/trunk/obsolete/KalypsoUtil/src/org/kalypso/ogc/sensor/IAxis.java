@@ -13,6 +13,9 @@ public interface IAxis
   /** returns the class of the data in this axis */
   public Class getDataClass();
   
+  /** returns the application dependent type of this axis */
+  public String getType();
+  
   /** returns the unit of this axis */
   public String getUnit();
   

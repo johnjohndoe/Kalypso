@@ -1,58 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema targetNamespace="zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified"
-    xmlns="zml.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../xlink/xlink.xsd"/>
-    <xs:element name="Observation">
-        <xs:annotation>
-            <xs:documentation>an observation made by a sensor. This schema is derived from the OGC Draft on SensorML.</xs:documentation>
-        </xs:annotation>
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="Name" type="xs:string"/>
-                <xs:element name="TargetProperty" type="TargetPropertyType" minOccurs="0"/>
-                <xs:element name="MetadataList" type="MetadataListType" minOccurs="0"/>
-                <xs:element name="Axis" type="AxisType" maxOccurs="unbounded"/>
-            </xs:sequence>
-            <xs:attribute name="editable" type="xs:boolean" use="optional" default="true"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:complexType name="MetadataType">
-        <xs:attribute name="name" type="xs:string" use="required"/>
-        <xs:attribute name="value" type="xs:anySimpleType" use="required"/>
-    </xs:complexType>
-    <xs:complexType name="AxisType">
-        <xs:choice>
-            <xs:element name="ValueLink">
-                <xs:complexType>
-                    <xs:complexContent>
-                        <xs:extension base="xlink:xlink-base">
-                            <xs:attribute name="separator" type="xs:string" use="optional" default=";"/>
-                        </xs:extension>
-                    </xs:complexContent>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="ValueArray">
-                <xs:complexType>
-                    <xs:simpleContent>
-                        <xs:extension base="xs:string">
-                            <xs:attribute name="separator" type="xs:string" use="optional" default=" "/>
-                        </xs:extension>
-                    </xs:simpleContent>
-                </xs:complexType>
-            </xs:element>
-        </xs:choice>
-        <xs:attribute name="name" type="xs:string" use="required"/>
-        <xs:attribute name="unit" type="xs:string" use="required"/>
-        <xs:attribute name="datatype" type="xs:string" use="required"/>
-    </xs:complexType>
-    <xs:complexType name="MetadataListType">
-        <xs:sequence>
-            <xs:element name="Metadata" type="MetadataType" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="TargetPropertyType">
-        <xs:attribute name="source" type="xs:string" use="required"/>
-        <xs:attribute name="type" type="xs:string" use="required"/>
-        <xs:attribute name="objectid" type="xs:string" use="required"/>
-    </xs:complexType>
+<xs:schema targetNamespace="zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="zml.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../xlink/xlink.xsd"/>
+	<xs:element name="observation">
+		<xs:annotation>
+			<xs:documentation>an observation made by a sensor. This schema is derived from the OGC Draft on SensorML.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name" type="xs:string"/>
+				<xs:element name="target" type="xlink:SimpleLinkType" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="metadataList" type="MetadataListType" minOccurs="0"/>
+				<xs:element name="axis" type="AxisType" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="editable" type="xs:boolean" use="optional" default="true"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="MetadataType">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:anySimpleType" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="MetadataListType">
+		<xs:sequence>
+			<xs:element name="metadata" type="MetadataType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AxisType">
+		<xs:choice>
+			<xs:element name="valueLink">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="xlink:SimpleLinkType">
+							<xs:attribute name="separator" type="xs:string" use="optional" default=";"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="valueArray">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="separator" type="xs:string" use="optional" default=" "/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="type" type="xs:string" use="required"/>
+		<xs:attribute name="unit" type="xs:string" use="required"/>
+		<xs:attribute name="datatype" type="xs:string" use="required"/>
+	</xs:complexType>
 </xs:schema>
