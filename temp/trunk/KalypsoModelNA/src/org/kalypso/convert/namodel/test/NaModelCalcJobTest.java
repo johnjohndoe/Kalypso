@@ -24,9 +24,9 @@ public class NaModelCalcJobTest extends TestCase
     registry.registerTypeHandler( new ObservationLinkHandler() );
 
     //    File baseDir = new File( "C:\\simulation\\test" );
-    File baseDir = new File( "C:\\Programme\\KalypsoServer\\data\\tmp\\CalcJob-12-1099789953265" );
-    File simDir = new File( baseDir, "sim" );
-    File ergDir = new File( baseDir, "output" );
+    final File baseDir = new File( "C:\\Programme\\KalypsoServer\\data\\tmp\\CalcJob-0-1099844834217" );
+    final File simDir = new File( baseDir, "sim" );
+    final File ergDir = new File( baseDir, "output" );
     if( simDir.exists() )
       FileUtils.cleanDirectory( simDir );
     if( ergDir.exists() )
@@ -48,7 +48,7 @@ public class NaModelCalcJobTest extends TestCase
     // controlGMLResource ),
     //        new FileOutputStream( controlGML ) );
 
-    CalcJobDataBean[] beans = new CalcJobDataBean[]
+    final CalcJobDataBean[] beans = new CalcJobDataBean[]
     {
         new CalcJobDataBean( NaModelCalcJob.MODELL_ID, "Modelldaten", "calc/calcCase.gml" ),
         new CalcJobDataBean( NaModelCalcJob.CONTROL_ID, "Steuerdaten", "calc/.nacontrol.gml" ),

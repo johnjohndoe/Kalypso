@@ -208,7 +208,7 @@ public class NAZMLGenerator
     switch( type )
     {
     case NA_NIEDERSCHLAG_EINGABE:
-      return col == 1 ? TimeserieConstants.TYPE_DATE : TimeserieConstants.TYPE_RAINFALL;//"Niederschlag";
+      return col == 1 ? "Datum" : TimeserieConstants.TYPE_RAINFALL;//"Niederschlag";
     case NA_ZUFLUSS_EINGABE:
       return col == 1 ? "Datum" : TimeserieConstants.TYPE_RUNOFF;//"Abfluss";
     case NA_ABFLUSS_BERECHNET:
