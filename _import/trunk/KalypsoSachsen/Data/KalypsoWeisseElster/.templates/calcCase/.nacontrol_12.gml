@@ -41,7 +41,7 @@
   <CatchmentsFaktorRetobTetint>1.0</CatchmentsFaktorRetobTetint>
   <CatchmentsFaktn>1.0</CatchmentsFaktn>
   <CatchmentsFaktorAigw>1.0</CatchmentsFaktorAigw>
-  <KMChannels><![CDATA[//KMChannel[@fid="KMChannel1800" or @fid="KMChannel1700" or @fid="KMChannel1600" or @fid="KMChannel1601"]]]></KMChannels>
+  <KMChannels><![CDATA[//KMChannel[@fid="KMChannel1020" or @fid="KMChannel1021" or @fid="KMChannel1024" or @fid="KMChannel1100" or @fid="KMChannel1022" or @fid="KMChannel1023" or @fid="KMChannel1025" or @fid="KMChannel1026" or @fid="KMChannel1027"]]]></KMChannels>
   <KMChannelsFaktorRkf>1.0</KMChannelsFaktorRkf>
   <KMChannelsFaktorRnf>1.0</KMChannelsFaktorRnf>
   <rootNode>Node1020</rootNode>
