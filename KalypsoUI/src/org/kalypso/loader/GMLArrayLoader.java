@@ -69,14 +69,14 @@ public class GMLArrayLoader implements ILoader
             .getDefault().getCoordinatesSystem() ) );
       }
 
-      final InputStreamReader reader = new InputStreamReader( file.getContents() );
+      final InputStreamReader reader = new InputStreamReader( file.getContents(), file.getCharset() );
       GMLDocument gml = new GMLDocument_Impl( reader );
       reader.close();
 
       GMLFeatureCollection gmlFC = gml.getRoot();
       GMLFeature[] gmlFeatures = gmlFC.getFeatures();
 
-      for( int i = 0; i < 10; i++ ) // TODO gmlFeatures.length; i++ )
+      for( int i = 0; i < gmlFeatures.length; i++ )
       {
         if( i % 10 == 0 )
         {

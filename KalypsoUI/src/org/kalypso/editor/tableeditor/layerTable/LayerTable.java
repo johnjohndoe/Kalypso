@@ -18,13 +18,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.editor.tableeditor.actions.ColumnAction;
+import org.kalypso.ogc.event.ModellEvent;
+import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommandManager;
 
 /**
  * @author bce
  */
-public class LayerTable implements ILayerTableModelListener, ISelectionProvider
+public class LayerTable implements ILayerTableModelListener, ISelectionProvider, ModellEventListener
 {
   protected final TableViewer m_viewer;
 
@@ -34,11 +36,19 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
 
   private MenuManager m_menu;
 
+  private Runnable m_refreshRunner = new Runnable()
+  {
+    public void run()
+    {
+      m_viewer.refresh( /* row */);
+    }
+  };
+
   public LayerTable( final Composite parent, final ICommandManager commandManager )
   {
     m_commandManager = commandManager;
 
-    m_viewer = new TableViewer( parent, SWT.MULTI /*| SWT.FULL_SELECTION */);
+    m_viewer = new TableViewer( parent, SWT.MULTI /* | SWT.FULL_SELECTION */);
 
     m_viewer.setContentProvider( new LayerTableContentProvider() );
     m_viewer.setLabelProvider( new LayerTableLabelProvider() );
@@ -50,7 +60,10 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
   public void dispose()
   {
     if( m_model != null )
+    {
       m_model.removeModelListener( this );
+      m_model.getLayer().removeModellListener( this );
+    }
 
     if( m_menu != null )
       m_menu.dispose();
@@ -69,7 +82,10 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
       columns[i].dispose();
 
     if( m_model != null )
+    {
       m_model.removeModelListener( this );
+      m_model.getLayer().addModellListener( this );
+    }
 
     m_model = model;
 
@@ -77,6 +93,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
       return;
 
     m_model.addModelListener( this );
+    m_model.getLayer().addModellListener( this );
 
     if( m_menu != null )
       m_menu.dispose();
@@ -102,7 +119,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
       m_menu.add( new ColumnAction( m_commandManager, this, ftp, getModel().isVisible( ftp ) ) );
 
       colProperties[i] = Integer.toString( i );
-      
+
       // TODO: create cell editor dependent on FeatureType
       cellEditors[i] = new TextCellEditor( table );
     }
@@ -111,8 +128,8 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
 
     m_viewer.setColumnProperties( colProperties );
     m_viewer.setCellEditors( cellEditors );
-    m_viewer.setCellModifier( new LayerTableCellModifier( featureType ) );
     m_viewer.setInput( model );
+    m_viewer.setCellModifier( new LayerTableCellModifier( m_commandManager, model, featureType ) );
   }
 
   protected void handleColumn( final TableColumn tc )
@@ -151,13 +168,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
    */
   public void onRowsChanged( final Feature row )
   {
-    m_viewer.getControl().getDisplay().asyncExec( new Runnable()
-    {
-      public void run()
-      {
-        m_viewer.refresh( /* row */);
-      }
-    } );
+    m_viewer.getControl().getDisplay().asyncExec( m_refreshRunner );
   }
 
   public void selectRow( final Feature feature )
@@ -196,7 +207,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
     m_viewer.setSelection( selection );
   }
@@ -204,6 +215,14 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
   public IMenuManager getMenu()
   {
     return m_menu;
+  }
+
+  /**
+   * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
+   */
+  public void onModellChange( final ModellEvent modellEvent )
+  {
+    m_viewer.getControl().getDisplay().asyncExec( m_refreshRunner );
   }
 
 }

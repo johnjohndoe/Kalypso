@@ -258,7 +258,7 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
    */
   public void postCommand( final ICommand c, final Runnable runnable )
   {
-    final Job job = new EditorPartJob( this, c, m_commandManager, runnable );
+    final Job job = new EditorPartJob( this, c, m_commandManager, runnable, EditorPartJob.POST );
     job.schedule();
   }
 
@@ -267,7 +267,8 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
    */
   public void redo()
   {
-    m_commandManager.redo();
+    final Job job = new EditorPartJob( this, null, m_commandManager, null, EditorPartJob.REDO );
+    job.schedule();
   }
 
   /**
@@ -275,7 +276,8 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
    */
   public void undo()
   {
-    m_commandManager.undo();
+    final Job job = new EditorPartJob( this, null, m_commandManager, null, EditorPartJob.UNDO );
+    job.schedule();
     // TODO. geht das?
     //    if( m_commandManager.canUndo() )
     //      setDirty( false );
