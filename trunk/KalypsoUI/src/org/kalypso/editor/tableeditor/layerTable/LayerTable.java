@@ -5,19 +5,24 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.kalypso.editor.tableeditor.layerTable.command.SetColumnVisibleCommand;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommandManager;
 
 /**
  * @author bce
  */
-public class LayerTable implements ILayerTableModelListener
+public class LayerTable implements ILayerTableModelListener, ISelectionProvider
 {
   protected final TableViewer m_viewer;
 
@@ -175,5 +180,34 @@ public class LayerTable implements ILayerTableModelListener
       }
     } );
 
+  }
+
+  public ISelection getSelection()
+  {
+    return m_viewer == null ? null : (IStructuredSelection)m_viewer.getSelection();
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    m_viewer.addSelectionChangedListener(listener);
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    m_viewer.removeSelectionChangedListener(listener);  
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+   */
+  public void setSelection( ISelection selection )
+  {
+    m_viewer.setSelection(selection);
   }
 }

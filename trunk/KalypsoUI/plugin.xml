@@ -57,5 +57,35 @@
             name="Kalypso"
             id="Kalypso"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            targetID="org.kalypso.editor.tableeditor.GisTableEditor"
+            id="org.kalypso.editor.tableeditor.GisTableActionDelegate">
+         <menu
+               label="Tabelle"
+               path="additions"
+               id="org.kalypso.editors.tableeditor.menu">
+            <separator name="tabelle"/>
+         </menu>
+         <action
+               toolbarPath="tabelle"
+               label="Zeile hinzufügen"
+               tooltip="Fügt eine Zeile am Ende der Tabelle ein"
+               class="org.kalypso.editor.tableeditor.actions.AddRowActionDelagate"
+               style="push"
+               menubarPath="org.kalypso.editors.tableeditor.menu/tabelle"
+               id="org.kalypso.editors.tableeditor.AddRowAction"/>
+         <action
+               toolbarPath="tabelle"
+               label="Zeile(n) löschen"
+               tooltip="Löscht die selektierte(n) Zeile(n)"
+               class="org.kalypso.editor.tableeditor.actions.RemoveRowsActionDelegate"
+               style="push"
+               menubarPath="org.kalypso.editors.tableeditor.menu/tabelle"
+               id="org.kalypso.editors.tableeditor.RemoveRowsAction">
+         </action>
+      </editorContribution>
+   </extension>
 
 </plugin>

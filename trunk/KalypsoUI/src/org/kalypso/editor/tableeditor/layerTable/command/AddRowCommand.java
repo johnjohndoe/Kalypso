@@ -1,4 +1,4 @@
-package org.kalypso.editor.tableeditor.actions;
+package org.kalypso.editor.tableeditor.layerTable.command;
 
 import org.deegree.model.feature.Feature;
 import org.kalypso.editor.tableeditor.layerTable.LayerTableModel;
