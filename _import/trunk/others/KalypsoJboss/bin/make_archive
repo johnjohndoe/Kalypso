@@ -1,0 +1,9 @@
+#! /bin/bash
+cd ..
+
+ tar -v -z -cf ~/archive/`date +%Y%b%d_%H`_EjbGis.tgz bin/ src/ lib/ classes/ deploys/
+# zip -r ~/archive/`date +%Y%b%d_%H`_EjbGis.zip        bin/ src/ lib/ classes/ deploys/
+
+echo "directory archive :"
+ls -larth ~/archive
+echo "ready."

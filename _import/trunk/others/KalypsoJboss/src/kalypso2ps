@@ -1,0 +1,55 @@
+#/bin/bash
+a2ps -2 --toc --left-footer= --right-footer= --footer= --left-title= --header=  --pretty-print=java \
+--highlight-level=heavy --sides=duplex --output=src_client.ps `cat clientsources`
+#kalypso-client/de/tuhh/wb/javagis/*.java \
+#kalypso-client/de/tuhh/wb/javagis/*/*.java \
+#kalypso-client/de/tuhh/wb/javagis/*/*/*.java 
+
+
+#xsl:
+#echo client ...
+#cd ../xsl/
+#a2ps -2 --toc --left-footer= --header=  --pretty-print=xml \
+#--highlight-level=heavy --sides=duplex \
+#--output=$OUTPUT/source_xsl.ps \
+#*.xsl \
+
+#client:
+#echo client ...
+#cd ../kalypso-client/
+#a2ps -2 --toc --left-footer= --header=  --pretty-print=java \
+#--highlight-level=heavy --sides=duplex \
+#--output=$OUTPUT/source_client.ps \
+
+#server-interfaces
+#echo server-interfaces...
+#cd ../kalypso-src/
+#a2ps -2 --toc --left-footer= --header=  --pretty-print=java \
+#--highlight-level=heavy --sides=duplex \
+#--output=$OUTPUT/source_server_interfaces.ps \
+#de/tuhh/wb/javagis/*.java \
+#de/tuhh/wb/javagis/*/*.java \
+#de/tuhh/wb/javagis/*/*/*.java 
+
+#server-beans
+#echo server-beans
+#cd ../../tmp/src/java/
+#a2ps -2 --toc --left-footer= --header=  --pretty-print=java \
+#--highlight-level=heavy --sides=duplex \
+#--output=$OUTPUT/source_server_beans.ps \
+#de/tuhh/wb/javagis/*.java \
+#de/tuhh/wb/javagis/*/*.java \
+#de/tuhh/wb/javagis/*/*/*.java \
+#de/tuhh/wb/javagis/*/*/*/*.java 
+
+#server-beans2
+#echo server-beans2
+#cd ../../../gen-src/java/
+#a2ps -2 --toc --left-footer= --header=  --pretty-print=java \
+#--highlight-level=heavy --sides=duplex \
+#--output=$OUTPUT/source_server_beans2.ps \
+#de/tuhh/wb/javagis/*.java \
+#de/tuhh/wb/javagis/*/*.java \
+#de/tuhh/wb/javagis/*/*/*.java \
+#de/tuhh/wb/javagis/*/*/*/*.java 
+

@@ -1,0 +1,102 @@
+<html>
+
+<title> Kalypso Manual </title>
+
+<head> <h2> Context Menu </h2>
+</head>
+<br>
+
+<body>
+This manual is written for users of the FLOMATIS Forecast Model consisting of the components:
+<ul>
+<li>Rainfall-Runoff-Model
+<li>Kalypso RRM
+<li>Kalypso Forecast.
+</ul>
+Its emphasis lies on application of the interface. Only that part of the program visible to the user is described (user interface). No detailed information about the programming code and the theory background of Rainfall-Runoff-Modelling, processor of Forecast Model, is given.<br>
+The user is informed about how to handle the program and to require simulation results to forecast floods.
+<br> <br>
+<b>Background </b><br> <br>
+Because of the complex hydrological processes in the Upper Tisza River Basin UTRB)and the extreme change in topography between the alpine mountains and lowlands a high spatial and temporal resolution of the forecast, <br>
+the model should have the highest priority followed by improved data management and more sophisticated and refined process modelling.  <br>
+Thus these model qualities have been the main targets of the new program package called FLOMATIS Forecast System. <br>
+This system will be composed of the following main software components:<br>
+<br>
+<b>DataCenter</b>
+<ul>
+<li> Standard Relational Database (DB) INGRES
+<li> Database Management System (DBMS) for hydrological data service, <br>
+e.g. graphic tools for visualisation of time series of hydrological and meteorological data,<br>
+data editor and data fetcher with the possibility to tailor it to individual data formats which runs as application server in the background and updates automatically the INGRES DB by screening external sources.
+</ul>
+<br>
+<b><i>Kalypso</i> RRM</b>
+<ul>
+<li> Preprocessor for fast definition of event dependent operational parameters
+<li> Processor consisting of the conceptional Rainfall-Runoff-Model (RRM) Kalypso
+<li> Postprocessor which provides tools for easy documentation and presentation of the results in graphics
+</ul>
+
+
+<b><i>Kalypso</i> Forecast</i></b>
+<ul>
+<li> Forecast dependent on calibrated model with defined and validated initial conditions
+<li> Enables to forecast flood using templates for precipitation and temperature (sequences of standard/ observed climate situations in UTRB)
+<li> Automatic graphical predefined output for nodes and catchments: Discharge, Watertable (simulated discharge is converted by defined QW-tables for gauges to watertable), Precipitation, Temperature.
+</ul>
+<br>
+<b>Objectives of the Kalypso RRM</b>
+<br><br>
+The Kalypso RRM enables to simulate the main hydrological processes in a catchment. To forecast floods it is necessary to know the discharge components and the temporal flow of flood peak.
+This sophisticated approach relies on numerous data of topology, hydrology, landuse, pedology, geology, water usage and drainage of the catchment area.
+As a part of the FLOMATIS Forecast System the Kalypso RRM is used for the hydrological simulation. As a consequence of the existing hydrological and climate data sets in the project region only a shortterm simulation can be practiced.<br>
+In contrast to a longterm simulation of many years, a shortterm simulation is characterised by defined initial conditions and calculation timesteps less than 24 hours.
+Model bases on a temporal and spatial dissolving of the hydrological processes in catchment. The user defines both the simulation start and end date and the time step for the calculation.
+The number of time steps is reduced to 1086. The value of timestep used for the shortterm simulation is not fixed. A post-carriage of the defined end date of simulation is possible to take all effective precipitation contributing to discharge in account.
+Spatially the whole project region is divided in catchments which are bordered by watersheds of the surface. Each catchment consists of several hydrotopes to consider the different landuse, pedology in catchment.
+The catchments are connected to the strands of the river network which is reflected in a tree structure with a defined ending and starting, tree structure.
+<br><br>
+<b>Work Flow of  RRM</b>
+<br>
+<img src=ScreenShot019.gif align="center" >
+<br><br>
+<b>Data-acquisition and preprocessing for project Tisza</b><br>
+The topological data sets used for the Forecast Model of the UTRB are fixed. Visualisation can be managed in the Geographic Information System ArcView or ArcExplorer. <br>
+Sources are the data sets of the FLOMATIS status quo report and other information received by the internet (FAO, CIA).
+Model drainage network consists of 106 strands, 122 catchments and 308 hydrotopes.
+For spatial landuse five different types are defined:
+<ul>
+<li> Arable
+<li> Pastures
+<li> Mixed crops
+<li> Forest
+<li> Settlemet (sealed area)
+</ul>
+In order to surface relief three elevation zones are extracted by geographic information system:
+<ul>
+<li> Lowland: 	less than 200 m
+<li> Foothill: 	200 m - 800 m
+<li> Alpine: 	> 800 m
+</ul>
+In the whole river basin three different soiltypes with two layers reflect the pedology.
+<ul>
+<li> Lowlands: Tshernosem (black earth soils)
+<li>Foothill: Braun-Podzol
+<li> Alpine: Podzol
+</ul>
+Hydrological and meteorological time-series are also part of the FLOMATIS status quo report (Only flood events 1998 and 2001).
+As consequence of the topography fast concentration times of the surface flow are the main characteristic of flood events in the region. To model this translation of the discharge time-area-functions for the mountain regions are created which are fixed in the RRM, too.
+Flood Routing with the KALININ-MILJUKOV-METHODE was not practical cause of a lack of channel data. Used was a transformation from MUSKINGUM to KALININ-MILJUKOV which calculates the parameters with input and corresponding output discharge hydrographs:<br>
+For characteristic river sections in alpine and lowland region a flood routing calculation was done. According to the enormous increase of catchment area between two gauges, discharge volume was equalised. The flowtime k was transferred via length of the river segment to the other strands in elevation zone, n (number of memory elements) is dependent of k.
+<br><br>
+<b>System Structure</b>
+<br><br>
+<img src=ScreenShot020.gif align="center" >
+
+<br><br>
+<hr>
+
+FLOMATIS Forecast System, User Manual<i> Kalypso</i> RRM 2/2003 and <i>Kalypso</i> Forecast 2/2003
+
+
+</HTML>

@@ -1,0 +1,25 @@
+#/bin/bash
+CLASSPATH=.
+CLASSPATH=$CLASSPATH:bin/edbc.jar:bin/openroad.jar:../wadas-kalypso/lib/
+CLASSPATH=$CLASSPATH:../wadas-kalypso/src/
+CLASSPATH=$CLASSPATH:../kalypso-filter/Source
+CLASSPATH=$CLASSPATH:bin/jbossall-client.jar
+CLASSPATH=$CLASSPATH:bin/javaGis1-ejb.jar:bin/javaGis2-ejb.jar:bin/javaGis3-ejb.jar
+
+
+#CLASSPATH=`cat jboss_libs_classpath`:.:../kalypso-run:../kalypso-filter/Source:../deploys/javaGis1-ejb.jar:../deploys/javaGis2-ejb.jar:../deploys/javaGis3-ejb.jar
+#CLASSPATH=$CLASSPATH:../wadas-kalypso/src
+
+echo CLASSPATH=$CLASSPATH
+javac -d bin de/tuhh/wb/javagis/simpleclient/Main.java 2>javac.out 
+#javac Test.java 2>javac.out 
+echo -e "fertig\n\a";
+less javac.out
+
+#
+#echo CLASSPATH=$CLASSPATH
+#javac -d bin de/tuhh/wb/javagis/Main.java 2>javac.out 
+##javac Test.java 2>javac.out 
+#echo -e "fertig\n\a";
+#less javac.out
+#
