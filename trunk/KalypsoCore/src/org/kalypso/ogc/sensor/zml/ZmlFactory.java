@@ -166,7 +166,7 @@ public class ZmlFactory
 
       // url is given as an argument here (and not tmpUrl) in order not to
       // loose the query part we might have removed because of Eclipse's
-      // url handling.
+      // url handling.      
       return parseXML( new InputSource( inputStream ), identifier, url );
     }
     catch( IOException e )

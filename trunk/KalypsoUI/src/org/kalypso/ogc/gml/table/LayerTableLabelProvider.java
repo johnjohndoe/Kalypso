@@ -15,7 +15,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider
 
   public LayerTableLabelProvider( final LayerTableViewer layerTable )
   {
-    m_viewer = layerTable;
+    m_viewer = layerTable;    
   }
   
   /**
@@ -63,7 +63,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider
    */
   public void addListener( final ILabelProviderListener listener )
   {
-    // TODO  Listener informieren, wenn sich der Wert eines Features geändert hat?
+    // TODO  Listener informieren, wenn sich der Wert eines Features geändert hat?    
   }
 
   /**
