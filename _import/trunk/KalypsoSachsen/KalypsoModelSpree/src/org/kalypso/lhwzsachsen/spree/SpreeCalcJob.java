@@ -633,7 +633,7 @@ public class SpreeCalcJob extends AbstractCalcJob
 
     final String dateType = TimeserieConstants.TYPE_DATE;
     final DefaultAxis dateAxis = new DefaultAxis( "Datum", dateType, TimeserieUtils.getUnit( dateType ),
-        Date.class, 0, true );
+        Date.class, true );
 
     final Date[] dateArray = (Date[])dates.toArray( new Date[dates.size()] );
 
@@ -686,7 +686,7 @@ public class SpreeCalcJob extends AbstractCalcJob
         final String unit = TimeserieUtils.getUnit( valueType );
         final String name = TimeserieUtils.getName( valueType );
         
-        final IAxis valueAxis = new DefaultAxis( name, valueType, unit, Double.class, 1, false );
+        final IAxis valueAxis = new DefaultAxis( name, valueType, unit, Double.class, false );
         final IAxis[] achsen = new IAxis[]
         {
             dateAxis,

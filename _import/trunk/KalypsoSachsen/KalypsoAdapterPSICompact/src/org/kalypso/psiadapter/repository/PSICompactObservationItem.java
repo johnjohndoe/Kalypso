@@ -100,7 +100,7 @@ public class PSICompactObservationItem implements IObservation
 
     // immer Datum Axis
     axes[0] = new DefaultAxis( TimeserieUtils.getName( TimeserieConstants.TYPE_DATE ), TimeserieConstants.TYPE_DATE, TimeserieUtils.getUnit( TimeserieConstants.TYPE_DATE ),
-        Date.class, 0, true );
+        Date.class, true );
 
     // Wert (Einheit abfragen)
     final int psiUnit = psiMD.getUnit();
@@ -110,12 +110,12 @@ public class PSICompactObservationItem implements IObservation
     final String label = TimeserieUtils.getName( type ) + " " + getName();
     
     axes[1] = new DefaultAxis( label, type, unit,
-        Double.class, 1, false );
+        Double.class, false );
     
     m_vc = PSICompactRepositoryFactory.getConverter( psiUnit, unit );
 
     // Status
-    axes[2] = KalypsoStatusUtils.createStatusAxisFor( axes[1], 2 );
+    axes[2] = KalypsoStatusUtils.createStatusAxisFor( axes[1] );
 
     return axes;
   }

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<observation editable="true" xmlns="zml.kalypso.org">
-    <name>LEER</name>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>582090</name>
     <metadataList>
-        <metadata name="Name" value="LEER"/>
-        <metadata name="WQ-Parameter" value="&lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot; &gt;&lt;set&gt;&lt;params&gt;&lt;w1&gt;101.69&lt;/w1&gt;&lt;lnk1&gt;-3.13351&lt;/lnk1&gt;&lt;k2&gt;1.34118&lt;/k2&gt;&lt;wgr&gt;350.0&lt;/wgr&gt;&lt;/params&gt;&lt;params&gt;&lt;w1&gt;137.89&lt;/w1&gt;&lt;lnk1&gt;-6.35777&lt;/lnk1&gt;&lt;k2&gt;1.98249&lt;/k2&gt;&lt;/params&gt;&lt;/set&gt;&lt;/wechmann&gt;"/>
-        <metadata name="Alarmstufe 1" value="260"/>
-        <metadata name="Alarmstufe 2" value="320"/>
-        <metadata name="Alarmstufe 3" value="350"/>
-        <metadata name="Alarmstufe 4" value="380"/>
+        <metadata name="Name" value="582090"/>
+        <metadata name="Beschreibung" value="Spremberg"/>
+        <metadata name="Alarmstufe 4" value="3"/>
+        <metadata name="Alarmstufe 3" value="3"/>
+        <metadata name="Alarmstufe 2" value="3"/>
+        <metadata name="Alarmstufe 1" value="3"/>
     </metadataList>
-    <axis datatype="TYPE=double" key="false" name="Wasserstand" type="W" unit="cm">
-        <valueArray separator=";"/>
+    <axis datatype="TYPE=double" key="false" name="Wasserstand 582090" type="W" unit="cm">
+        <valueArray separator=";">0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0</valueArray>
     </axis>
-    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="false" name="Datum" type="date" unit="">
-        <valueArray separator=";"/>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2005-01-02T16:00:00;2005-01-02T19:00:00;2005-01-02T22:00:00;2005-01-03T01:00:00;2005-01-03T04:00:00;2005-01-03T07:00:00;2005-01-03T10:00:00;2005-01-03T13:00:00;2005-01-03T16:00:00;2005-01-03T19:00:00;2005-01-03T22:00:00;2005-01-04T01:00:00;2005-01-04T04:00:00;2005-01-04T07:00:00;2005-01-04T10:00:00;2005-01-04T13:00:00;2005-01-04T16:00:00</valueArray>
     </axis>
 </observation>
 

@@ -29,6 +29,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
 
   private final Integer[] m_kalypsoStati;
 
+  /** list of axes (0: date, 1:value, 2:status) */
   private final IAxis[] m_axes;
 
   private final IValueConverter m_vc;
@@ -37,7 +38,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
    * Constructor with ArchiveData[]
    * 
    * @param data
-   * @param axes
+   * @param axes list of axes (0: date, 1:value, 2:status)
    */
   public PSICompactTuppleModel( final ArchiveData[] data, final IAxis[] axes )
   {
@@ -48,7 +49,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
    * Constructor with ArchiveData[] and a value converter
    * 
    * @param data
-   * @param axes
+   * @param axes list of axes (0: date, 1:value, 2:status)
    * @param vc optional value converter when units are different between kalypso and psi
    */
   public PSICompactTuppleModel( final ArchiveData[] data, final IAxis[] axes, final IValueConverter vc )
@@ -59,6 +60,9 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
 
     m_values = new Double[m_data.length];
     m_kalypsoStati = new Integer[m_data.length];
+    
+    for( int i = 0; i < axes.length; i++ )
+      mapAxisToPos( axes[i], i );
   }
 
   /**
@@ -202,9 +206,9 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int,
    *      org.kalypso.ogc.sensor.IAxis)
    */
-  public Object getElement( int index, IAxis axis )
+  public Object getElement( int index, IAxis axis ) throws SensorException
   {
-    switch( axis.getPosition() )
+    switch( getPositionFor( axis ) )
     {
       case 0:
         return m_data[index].getTimestamp();
@@ -213,7 +217,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
       case 2:
         return getKalypsoStatus( index );
       default:
-        throw new IllegalArgumentException( "Position von Axis " + axis
+        throw new SensorException( "Position von Axis " + axis
             + " ist ungültig" );
     }
   }
@@ -222,9 +226,9 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
    *      org.kalypso.ogc.sensor.IAxis)
    */
-  public void setElement( int index, Object element, IAxis axis )
+  public void setElement( int index, Object element, IAxis axis ) throws SensorException
   {
-    switch( axis.getPosition() )
+    switch( getPositionFor( axis ) )
     {
       case 0:
         m_data[index].setTimestamp( (Date) element );
@@ -233,7 +237,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
       case 2:
         m_kalypsoStati[index] = (Integer) element;
       default:
-        throw new IllegalArgumentException( "Position von Achse " + axis
+        throw new SensorException( "Position von Achse " + axis
             + " ist ungültig" );
     }
   }
