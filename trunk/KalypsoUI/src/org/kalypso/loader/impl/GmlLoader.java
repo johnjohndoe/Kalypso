@@ -29,6 +29,8 @@ public class GmlLoader extends AbstractLoader implements IPoolListener
 
   public void dispose()
   {
+    super.dispose();
+    
     m_gmlArrayPool.removePoolListener( this );
   }
 
@@ -65,21 +67,11 @@ public class GmlLoader extends AbstractLoader implements IPoolListener
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#save(java.util.Properties,
-   *      java.lang.Object)
-   */
-  public void save( Properties source, Object data ) throws LoaderException
-  {
-    // TODO: support it
-    throw new LoaderException( "Operation not supported" );
-  }
-
-  /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
   public String getDescription()
   {
-    return null;
+    return "GML Layer";
   }
 
   public void onObjectInvalid( final Object oldValue, final boolean bCannotReload )

@@ -9,11 +9,6 @@ import org.deegree_impl.io.shpapi.ShapeFile;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
@@ -27,20 +22,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author schlienger
  *  
  */
-public class ShapeLoader extends AbstractLoader implements IResourceChangeListener
+public class ShapeLoader extends AbstractLoader
 {
-  final AbstractLoaderResourceDeltaVisitor m_visitor = new AbstractLoaderResourceDeltaVisitor( this );
-  
-  public ShapeLoader()
-  {
-    ResourcesPlugin.getWorkspace().addResourceChangeListener( this );
-  }
-
-  public void dispose()
-  {
-    ResourcesPlugin.getWorkspace().removeResourceChangeListener( this );
-  }
-
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
@@ -59,15 +42,22 @@ public class ShapeLoader extends AbstractLoader implements IResourceChangeListen
       final String sourceType = source.getProperty( "SERVICE", "FILE" );
       final String sourcePath = source.getProperty( "PATH", "" );
 
-      IFile resource = null;
+      IFile shpResource = null;
+      IFile dbfResource = null;
+      IFile shxResource = null;
+      
       File sourceFile = null;
       if( sourceType.equals( "FILE" ) )
         sourceFile = new File( sourcePath );
       else
       //RESOURCE
       {
-        resource = project.getFile( sourcePath );
+        final IFile resource = project.getFile( sourcePath );
         sourceFile = resource.getLocation().toFile();
+
+        shpResource = project.getFile( sourcePath + ".shp" );
+        dbfResource = project.getFile( sourcePath + ".dbf" );
+        shxResource = project.getFile( sourcePath + ".shx" );
       }
 
       final String sourceSrs = source.getProperty( "SRS", "" );
@@ -90,10 +80,10 @@ public class ShapeLoader extends AbstractLoader implements IResourceChangeListen
           csFac.getCSByName( sourceSrs ) );
       //      final int max= count < 20 ? count:20;
       final int max = count; // < 20 ? count:20;
-      if( max < count ) // TODO
+      if( max < count ) 
         System.out.println( "WARNUNG es werden nur " + max + " von " + count + " Features geladen" );
 
-      monitor.beginTask( "Features werden geladen...", max + 1 );
+      monitor.beginTask( "Geometrien werden geladen...", max + 1 );
       
       for( int i = 0; i < max; i++ )
       {
@@ -112,7 +102,12 @@ public class ShapeLoader extends AbstractLoader implements IResourceChangeListen
       
       monitor.worked( max );
 
-      m_visitor.addResource( resource, layer );
+      if( shpResource != null )
+        addResource( shpResource, layer );
+      if( dbfResource != null )
+        addResource( dbfResource, layer );
+      if( shxResource != null )
+        addResource( shxResource, layer );
 
       return layer;
     }
@@ -120,47 +115,6 @@ public class ShapeLoader extends AbstractLoader implements IResourceChangeListen
     {
       e.printStackTrace();
       throw new LoaderException( e );
-    }
-  }
-
-  /**
-   * 
-   * @see org.kalypso.loader.ILoader#save(java.util.Properties,
-   *      java.lang.Object)
-   */
-  public void save( final Properties source, final Object data ) throws LoaderException
-  {
-    // TODO: Transformation vom laden muss rueckgaengig gemacht werden !
-    // TODO: support it
-    throw new LoaderException( "Operation not supported" );
-  }
-
-  /**
-   * @see org.kalypso.loader.ILoader#release(java.lang.Object)
-   */
-  public void release( final Object object )
-  {
-    m_visitor.releaseResource(object);
-    
-    super.release(object);
-  }
-
-  /**
-   * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-   */
-  public void resourceChanged( final IResourceChangeEvent event )
-  {
-    if( event.getType() == IResourceChangeEvent.POST_CHANGE )
-    {
-      final IResourceDelta delta = event.getDelta();
-      try
-      {
-        delta.accept( m_visitor );
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-      }
     }
   }
 }

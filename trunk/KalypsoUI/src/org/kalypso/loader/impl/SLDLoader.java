@@ -18,11 +18,6 @@ import org.kalypso.loader.LoaderException;
  */
 public class SLDLoader extends AbstractLoader
 {
-  public SLDLoader()
-  {
-  // nothing
-  }
-
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
@@ -44,24 +39,14 @@ public class SLDLoader extends AbstractLoader
       final Reader reader = new InputStreamReader( file.getContents() );
       final StyledLayerDescriptor myStyledLayerDescriptor = SLDFactory.createSLD( reader );
       reader.close();
+      
+      addResource( file, project );
 
       return myStyledLayerDescriptor;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new LoaderException( e );
     }
-  }
-
-  /**
-   * 
-   * @see org.kalypso.loader.ILoader#save(java.util.Properties,
-   *      java.lang.Object)
-   */
-  public void save( final Properties source, final Object data ) throws LoaderException
-  {
-    // TODO: Transformation vom laden muss rueckgaengig gemacht werden !
-    // TODO: support it
-    throw new LoaderException( "Operation not supported" );
   }
 }
