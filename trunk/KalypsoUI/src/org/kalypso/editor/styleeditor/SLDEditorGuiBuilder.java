@@ -46,7 +46,7 @@ public class SLDEditorGuiBuilder {
 	{	
 		if(mainComposite != null)
 			mainComposite.dispose();
-		mainComposite = new Composite(parent, SWT.EMBEDDED);
+		mainComposite = new Composite(parent, SWT.NULL);
 		mainComposite.setLayout(new GridLayout());		
 		mainComposite.layout();			
 		
