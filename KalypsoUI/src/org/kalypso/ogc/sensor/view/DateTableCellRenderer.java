@@ -16,6 +16,8 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class DateTableCellRenderer extends DefaultTableCellRenderer
 {
+  // TODO: Wenn die Daten keine Zeit-Information haben, dann wird die aktuelle Systemzeit
+  // im TableView angezeit!!!
   private final static DateFormat df = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
 
   /**
