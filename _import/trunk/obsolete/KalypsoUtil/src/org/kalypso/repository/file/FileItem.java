@@ -13,6 +13,8 @@ import org.kalypso.repository.IRepositoryItem;
  */
 public class FileItem implements IRepositoryItem
 {
+  private final static IRepositoryItem[] EMPTY_ITEMS = new IRepositoryItem[0];
+  
   private final FileRepository m_rep;
   private final File m_file;
 
@@ -43,8 +45,12 @@ public class FileItem implements IRepositoryItem
    */
   public IRepositoryItem[] getChildren()
   {
-    File[] files = m_file.listFiles( m_rep.getFilter() );
-    IRepositoryItem[] items = new IRepositoryItem[ files.length ];
+    final File[] files = m_file.listFiles( m_rep.getFilter() );
+    
+    if( files == null )
+      return EMPTY_ITEMS;
+    
+    final IRepositoryItem[] items = new IRepositoryItem[ files.length ];
     
     for( int i = 0; i < items.length; i++ )
       items[i] = m_rep.createItem( files[i] );

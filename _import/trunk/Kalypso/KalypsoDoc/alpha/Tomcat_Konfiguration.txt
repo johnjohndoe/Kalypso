@@ -26,7 +26,20 @@ Beispiel --------------------------------------------------------------------
 
 // ACHTUNG: diese Stelle ist Platformabhängig, da hier der echte FileSeparator ('\') übergeben werden muss
 grant {
+	// sonst startet der Service nicht mit dem Security Manager (WSDL kann nicht angezeigt werden z.B.)
+	permission java.io.FilePermission "C:\\-", "read";
+	
+	// tricky: es muss genau so heissen wie in FilePermission verglichen wird
 	permission java.io.FilePermission "\\\\Pc242\\KalypsoServer\\data\\-", "read";
+	
+	permission java.io.FilePermission "\\\\Pc242\\KalypsoServer\\data\\tmp\\-", "read,write,delete";
+	
+	permission java.io.FilePermission "C:\\Programme\\KalypsoServer\\data\\tmp\\-", "read,write,delete";
+	
+	permission java.util.PropertyPermission "kalypso.*", "read";
+	
+
+	permission java.util.logging.LoggingPermission "control";
 };
 
 -----------------------------------------------------------------------------

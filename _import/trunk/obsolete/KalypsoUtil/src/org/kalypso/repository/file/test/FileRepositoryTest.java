@@ -35,4 +35,20 @@ public class FileRepositoryTest extends TestCase
     
     System.out.println( "Found item: " + item );
   }
+  
+  public void testGetChildren() throws RepositoryException
+  {
+    output( m_rep, "" );  
+  }
+  
+  private void output( final IRepositoryItem item, final String space ) throws RepositoryException
+  {
+    System.out.println( item.getIdentifier() );
+    
+    final IRepositoryItem[] items = item.getChildren();
+    for( int i = 0; i < items.length; i++ )
+    {
+      output( items[i], space + " " );
+    }
+  }
 }

@@ -3,7 +3,6 @@ package org.kalypso.repository.file;
 import java.io.File;
 import java.io.FileFilter;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.io.filter.AcceptAllFileFilter;
@@ -92,7 +91,7 @@ public class FileRepository extends AbstractRepository
    */
   public void reload()
   {
-    // nothing to do
+  // nothing to do
   }
 
   /**
@@ -100,28 +99,28 @@ public class FileRepository extends AbstractRepository
    */
   public IRepositoryItem findItem( final String id ) throws RepositoryException
   {
-    final URL url;
+    // both lowercase to be sure comparison is done homogeneously
+    final String rootURL = getIdentifier().toLowerCase();
+    final String mid = id.toLowerCase();
     
-    try
-    {
-      url = new URL( id );
-    }
-    catch( MalformedURLException e )
-    {
-      throw new RepositoryException( e );
-    }
-    
-    final File f = new File( url.getPath() );
-    
+    if( !mid.startsWith( rootURL ) )
+      throw new RepositoryException( "File <" + mid + "> seems not to be part of the repository: "
+          + m_root );
+
+    final String path = m_root.getAbsolutePath() + File.separator + mid.replaceFirst( rootURL, "" );
+
+    final File f = new File( path );
+
     if( !f.exists() )
-      throw new RepositoryException( "File <" + id + "> does not exist!" );
-    
+      throw new RepositoryException( "File <" + mid + "> does not exist!" );
+
     if( !m_filter.accept( f ) )
-      throw new RepositoryException( "File <" + id + "> does not fit filter!" );
-    
+      throw new RepositoryException( "File <" + mid + "> does not fit filter!" );
+
     if( !FileUtilities.isChildOf( m_root, f ) )
-      throw new RepositoryException( "File <" + id + "> is not part of this File Repository starting at:" + m_root );
-    
+      throw new RepositoryException( "File <" + mid
+          + "> is not part of this File Repository starting at:" + m_root );
+
     return createItem( f );
   }
 }
