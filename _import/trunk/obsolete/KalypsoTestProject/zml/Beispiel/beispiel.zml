@@ -17,7 +17,7 @@
 		entsprechen aber den Java-Format wie man aus der API-Docs entnehmen
 		kann (Siehe SimpleDateFormat, NumberFormat, usw).
 	-->
-	<axis name="Datum" key="true" type="datum" datatype="TYPE=xs:date#FORMAT=dd.MM.yyyy">
+	<axis name="Datum" key="true" type="date" datatype="TYPE=xs:date#FORMAT=dd.MM.yyyy">
 		<valueArray>01.01.2004 02.01.2004 03.01.2004 04.01.2004 05.01.2004 06.01.2004 07.01.2004 08.01.2004 09.01.2004 10.01.2004 11.01.2004 12.01.2004 13.01.2004 14.01.2004 15.01.2004 16.01.2004 17.01.2004 18.01.2004 19.01.2004 20.01.2004 21.01.2004</valueArray>
 	</axis>
 	

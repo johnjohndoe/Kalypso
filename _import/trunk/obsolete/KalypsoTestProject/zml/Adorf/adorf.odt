@@ -28,5 +28,5 @@
 	   		<mapping observation-axis="Alarmstufe2" diagram-axis="w" />
 	   	</curve>
    	</observation>
-  
+
 </obsdiagview>

@@ -5,13 +5,13 @@ E:\user\schlienger\dev\kalypso\KalypsoCore\etc\schemas\template\obstableview.xsd
 	<observation linktype="zml" xlink:href="LOCATION=beispiel.zml" >
 		<column id="c1" editable="true" width="50" axis="Pegel1" />
 	
-		<column id="c2" editable="true" width="50" axis="Pegel2" />
+	<!--	<column id="c2" editable="true" width="50" axis="Pegel2" />-->
 	</observation>
-	
+<!--	
 	<observation linktype="zml" xlink:href="LOCATION=inline.zml" >
 		<column id="c3" editable="true" width="50" axis="Pegel" />
 	</observation>
-	
+	-->
 	<!-- wie die Darstellung erfolgt -->
 	<rules>
 		<renderingrule mask="01">
