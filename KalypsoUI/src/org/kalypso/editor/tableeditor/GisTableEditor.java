@@ -65,9 +65,6 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 {
   private static final Object DUMMY_OBJECT = new Object();
   
-  /** leider abhängig von implementation von IEditorPart */
-  public static final int PROP_LAYERDIRTY = 0x1000;
-
   protected final ResourcePool m_layerPool = KalypsoGisPlugin.getDefault().getPool(
       KalypsoFeatureLayer.class );
 
@@ -366,8 +363,6 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   public void setLayerDirty( final boolean isDirty )
   {
     m_isLayerDirty = isDirty;
-    
-    firePropertyChange( PROP_LAYERDIRTY );
   }
 
   public ICommandManager getLayerCommandManager()
