@@ -8,7 +8,6 @@ import org.kalypso.java.io.filter.AcceptAllFileFilter;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.RepositoryException;
 
 /**
  * Ein File Repository.
@@ -134,7 +133,7 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
-  public IRepositoryItem findItem( final String id ) throws RepositoryException
+  public IRepositoryItem findItem( final String id ) 
   {
     // both lowercase to be sure comparison is done homogeneously
     final String baseId = getIdentifier().toLowerCase();

@@ -1,9 +1,6 @@
 package org.kalypso.util.parser.impl;
 
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
-import java.text.ParseException;
 
 import org.kalypso.util.parser.AbstractParser;
 import org.kalypso.util.parser.ParserException;
@@ -31,7 +28,9 @@ public class DoubleParser extends AbstractParser
    */
   public DoubleParser( String format )
   {
-
+    
+    format.getClass();
+    //
   }
 
   /**

@@ -27,7 +27,7 @@ public class FileRepositoryTest extends TestCase
     m_rep = new FileRepository( null, m_root.getParent(), "test", true );
   }
 
-  public void testFindItem() throws RepositoryException
+  public void testFindItem() 
   {
     final IRepositoryItem item = m_rep.findItem( "test://export/logs.zip" );
     

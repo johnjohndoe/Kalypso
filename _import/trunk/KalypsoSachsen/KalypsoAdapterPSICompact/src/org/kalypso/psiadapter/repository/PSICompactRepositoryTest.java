@@ -14,7 +14,7 @@ import org.kalypso.repository.RepositoryException;
 public class PSICompactRepositoryTest extends TestCase
 {
 
-  public void testGetChildren( ) throws RepositoryException, ClassNotFoundException
+  public void testGetChildren( ) throws RepositoryException
   {
     System.out.println( "Start listing for getChildren");
     

@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  */
 public class PSICompactImpl implements PSICompact
 {
-  private final String m_replicationDir;
+//  private final String m_replicationDir;
 
   private final Map m_id2gemessene;
 
@@ -31,7 +31,7 @@ public class PSICompactImpl implements PSICompact
 
   private final Map m_id2wq;
 
-  private final Map m_id2zml;
+//  private final Map m_id2zml;
 
   private boolean m_init = false;
 
@@ -46,9 +46,9 @@ public class PSICompactImpl implements PSICompact
     m_id2vorhergesagte = new HashMap();
     m_id2measType = new HashMap();
     m_id2wq = new HashMap();
-    m_id2zml = new HashMap();
+//    m_id2zml = new HashMap();
 
-    m_replicationDir = System.getProperty( "java.io.tmpdir" );
+//    m_replicationDir = System.getProperty( "java.io.tmpdir" );
 
     prepareObjects( m_id2gemessene, "m" );
     prepareObjects( m_id2vorhergesagte, "v" );
@@ -141,8 +141,8 @@ public class PSICompactImpl implements PSICompact
       // generate random data
       return randomData( from, to );
     }
-    else
-      return new ArchiveData[0];
+
+    return new ArchiveData[0];
   }
 
   /**

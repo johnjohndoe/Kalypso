@@ -11,7 +11,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
@@ -323,10 +322,8 @@ public class PSICompactObservationItem implements IObservation
    * @param pset
    * @return WechmannGroup constructed from the WQParamSet array
    * 
-   * @throws WechmannException
    */
   public static WechmannGroup readWQParams( final WQParamSet[] pset )
-      throws WechmannException
   {
     final WechmannSet[] wsets = new WechmannSet[pset.length];
     for( int i = 0; i < pset.length; i++ )

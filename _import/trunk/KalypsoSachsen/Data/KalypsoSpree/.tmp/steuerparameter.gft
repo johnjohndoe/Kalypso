@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="featureview.template.kalypso.org
 D:\Kalypso\KalypsoCore\etc\schemas\template\featureview.xsd">
-	<layer id="foo" featurePath="" linktype="gml" xlink:href="./.calculation"/>
+	<layer id="foo" featurePath="" linktype="gml" xlink:href="PATH=./.calculation#XSD=project:/.model/schema/control.xsd"/>
 	<view typename="SpreeControl" style="0" tooltip="TopLevel">
-		<gridData grabExcessHorizontalSpace="false"/>
+		<gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="4" verticalAlignment="4"/>
 		<gridLayout numColumns="1" horizontalSpacing="10"/>
 		<label text="Steuerparameter eingeben" style="0"/>
 		<group style="0" text="Steuerparameter">

@@ -296,7 +296,7 @@ public class SpreeInputWorker
           "Eingabedatei für Rechenmodell konnte nicht erzeugt werden. Layer nicht gefunden: "
               + layerName, null );
       
-      final Feature[] features = workspace.getFeatures(featureType);
+//      final Feature[] features = workspace.getFeatures(featureType);
       
       // TODO: restore mapping
 //      ShapeSerializer.serialize( features, mapping, geoName, filenameBase );

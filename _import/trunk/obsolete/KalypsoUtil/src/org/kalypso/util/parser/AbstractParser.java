@@ -16,7 +16,7 @@ public abstract class AbstractParser implements IParser
    * 
    * @see org.kalypso.util.parser.IParser#toString(java.lang.Object)
    */
-  public String toString( Object obj ) throws ParserException
+  public String toString( Object obj ) 
   {
 //    if( ( obj != null ) && !getObjectClass().isAssignableFrom( obj.getClass() ) )
 //      throw new ParserException( "Object " + obj.toString() + " (type: " + obj.getClass().getName()

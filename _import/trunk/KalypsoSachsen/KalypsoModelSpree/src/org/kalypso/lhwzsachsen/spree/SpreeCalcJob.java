@@ -494,6 +494,8 @@ public class SpreeCalcJob extends AbstractCalcJob
   public void writeResultsToFolder( final String tsFilename, final File outdir, final Map dataMap,
       final TSMap tsmap ) throws Exception
   {
+    dataMap.getClass();
+    
     final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
     final CS_CoordinateSystem crs = org.deegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( "EPSG:4326" ) );
