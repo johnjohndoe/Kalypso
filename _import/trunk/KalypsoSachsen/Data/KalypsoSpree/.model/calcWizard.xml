@@ -197,7 +197,7 @@
 	   	
 	   	<arg name="exporter4">
 			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
-	   		<arg name="name" value="Wasserstandgrafik"/>
+	   		<arg name="name" value="Wasserstandsgrafik"/>
 	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagW.odt"/>
 	   		<arg name="width" value="1024"/>
 	   		<arg name="height" value ="768"/>
