@@ -59,6 +59,8 @@ import org.kalypso.util.pool.ResourcePool;
  * zus?tzlich eine Aktualisierung der View bei jeder Aktion durchgef?hrt
  * </p>
  * 
+ * TODO: release keys after use!
+ * 
  * @author belger
  */
 public class GisTableEditor extends AbstractEditorPart implements ISelectionProvider, IPoolListener
