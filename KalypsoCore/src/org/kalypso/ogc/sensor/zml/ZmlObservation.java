@@ -78,7 +78,17 @@ public class ZmlObservation implements IObservation
 
     // unmarshal and close stream
     final InputStream inputStream = m_url.openStream();
-    final Observation obs = (Observation)u.unmarshal( new InputSource( inputStream ) );
+    final Observation obs;
+    
+    try
+    {
+      obs = (Observation)u.unmarshal( new InputSource( inputStream ) );
+    }
+    catch( JAXBException e )
+    {
+      throw new SensorException( "Error while unmarshalling: " + url.toExternalForm(), e );
+    }
+    
     inputStream.close();
 
     // metadata

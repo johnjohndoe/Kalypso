@@ -186,10 +186,22 @@ public class ZmlFactory
       buildStringDateAxis( model, axis, sb );
     else if( Number.class.isAssignableFrom( axis.getDataClass() ) )
       buildStringNumberAxis( model, axis, sb );
+    else if( String.class.isAssignableFrom( axis.getDataClass() ) )
+      buildStringAxis( model, axis, sb );
     else
-      throw new IllegalArgumentException( "data type currently not supported" );
+     throw new IllegalArgumentException( "Data type currently not supported" );
 
     return sb.toString();
+  }
+
+  private static void buildStringAxis( ITuppleModel model, IAxis axis, StringBuffer sb )
+  {
+    final int amount = model.getCount() - 1;
+    for( int i = 0; i < amount; i++ )
+      sb.append( model.getElement( i, axis.getPosition() ) ).append( ";" );
+
+    if( amount > 0 )
+      sb.append( model.getElement( amount, axis.getPosition() ) );
   }
 
   private static void buildStringDateAxis( final ITuppleModel model, final IAxis axis,
@@ -199,7 +211,8 @@ public class ZmlFactory
     for( int i = 0; i < amount; i++ )
       sb.append( m_df.format( model.getElement( i, axis.getPosition() ) ) ).append( ";" );
 
-    sb.append( m_df.format( model.getElement( amount, axis.getPosition() ) ) );
+    if( amount > 0 )
+      sb.append( m_df.format( model.getElement( amount, axis.getPosition() ) ) );
   }
 
   private static void buildStringNumberAxis( final ITuppleModel model, final IAxis axis,
@@ -209,7 +222,8 @@ public class ZmlFactory
     for( int i = 0; i < amount; i++ )
       sb.append( m_nf.format( model.getElement( i, axis.getPosition() ) ) ).append( ";" );
 
-    sb.append( m_nf.format( model.getElement( amount, axis.getPosition() ) ) );
+    if( amount > 0 )
+      sb.append( m_nf.format( model.getElement( amount, axis.getPosition() ) ) );
   }
   
   public static Marshaller getMarshaller() throws JAXBException

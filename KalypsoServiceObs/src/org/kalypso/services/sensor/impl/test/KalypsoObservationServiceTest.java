@@ -93,7 +93,8 @@ public class KalypsoObservationServiceTest extends TestCase
       final ObservationBean ob = (ObservationBean)bean;
       
       final Map map = ob.getMetadataList();
-      
+     
+      System.out.println( space + "Bean is observation: " + ob.getId() );
       System.out.println( space + "Metadata for " + ob.getName() + " are:" + map );
       
       final DateRangeArgument dra = ObservationUtilities.createPastDaysArgument( 30 );
@@ -110,6 +111,10 @@ public class KalypsoObservationServiceTest extends TestCase
       
       System.out.println( space + "Data cleared" );
       assertFalse( f.exists() );
+    }
+    else
+    {
+      System.out.println( space + "Bean not an observation: " + bean.getName() + " ID=" + bean.getId() );
     }
     
     if( m_srv.hasChildren( bean ) )
