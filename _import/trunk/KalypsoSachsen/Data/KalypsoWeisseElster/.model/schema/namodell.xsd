@@ -133,12 +133,22 @@
 							</documentation>
 						</annotation>
 					</element>
-					<!-- ZR berechnet hier wird das ergebnis gespeichert-->
+
+					<!-- ZR berechnet, hier wird das ergebnis gespeichert-->
 					<element name="qberechnetZR" type="obslink:TimeseriesLink">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Abfluss berechnet</label>
 								<tooltip>Berechnete Abflussganglinie</tooltip>
+								<description>.</description>
+							</documentation>
+						</annotation>
+					</element>
+    				<element name="pegelBerechnetZRAblage" type="obslink:TimeseriesLink">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>ZR Ablage Berechnung</label>
+								<tooltip>Verknuepfung zur Ablage des Ergebnisses in der Datenbank</tooltip>
 								<description>.</description>
 							</documentation>
 						</annotation>

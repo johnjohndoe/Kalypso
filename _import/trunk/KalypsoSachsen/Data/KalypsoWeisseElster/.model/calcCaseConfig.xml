@@ -77,6 +77,13 @@
 			<argument name="output" value=":calcdir:.nacontrol_17.gml"/>
 		</transformation>
 
+<!-- copy sce config -->
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/sce.xml"/>
+			<argument name="output" value=":calcdir:.sce.xml"/>
+		</transformation>
+
+
 <!--
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.model/nacontrol_1302.gml"/>
@@ -190,4 +197,100 @@
 		</transformation>
 -->		
  </updateTransformations>
+
+	<afterCalcTransformations logFile="calcCase.log">
+	<!-- nach optimierung soll optimierte datei uebernommen werden 
+		 hinweis: ist die datei nicht vorhanden, soll auch nix kopiert werden, z.B. wenn nicht optimiert wurde		 
+     -->
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_1.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_1.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_2.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_2.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_3.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_3.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_4.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_4.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_5.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_5.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_6.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_6.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_7.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_7.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_8.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_8.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_9.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_9.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_10.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_10.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_11.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_11.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_12.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_12.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_13.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_13.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_14.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_14.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_15.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_15.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_16.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_16.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_17.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_17.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/expertControl.gtt"/>
+			<argument name="output" value=":calcdir:expertControl.gtt"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+	</afterCalcTransformations>
 </calcCaseConfig>

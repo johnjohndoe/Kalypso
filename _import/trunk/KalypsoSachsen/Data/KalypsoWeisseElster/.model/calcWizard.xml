@@ -317,6 +317,4 @@
 		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="256"/>
 	</page>
-
-
 </calcwizard>
