@@ -562,10 +562,11 @@
                menubarPath="org.kalypso.menu.model/modelStart"
                id="org.kalypso.action.model.updateModel"/>
          <action
+               helpContextId="org.kalypso.manual.menu_modell"
                label="Modelle vom Server laden"
-               icon="icons/util/copy_l_co.gif"
-               class="org.kalypso.ui.action.LoadServerModelDelegate"
                tooltip="lädt ein Modell vom Sever, falls es nicht bereits vorhanden ist"
+               class="org.kalypso.ui.action.LoadServerModelDelegate"
+               icon="icons/util/copy_l_co.gif"
                menubarPath="org.kalypso.menu.model/modelStart"
                id="org.kalypso.action.model.checkoutModel"/>
       </actionSet>
