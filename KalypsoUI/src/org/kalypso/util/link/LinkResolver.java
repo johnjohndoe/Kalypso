@@ -48,10 +48,15 @@ public class LinkResolver implements IPoolListener
     }
   }
 
+  public void dispose()
+  {
+    m_key2link.clear();
+  }
+  
   /**
    * @see org.kalypso.util.pool.IPoolListener#onObjectInvalid(org.kalypso.util.pool.ResourcePool, org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, boolean)
    */
-  public void onObjectInvalid( ResourcePool source, IPoolableObjectType key, Object oldObject, boolean bCannotReload ) throws Exception
+  public synchronized void onObjectInvalid( ResourcePool source, IPoolableObjectType key, Object oldObject, boolean bCannotReload ) throws Exception
   {
     final ObjectLink link = (ObjectLink)m_key2link.get( key );
     

@@ -2,12 +2,9 @@ package org.kalypso.ui.calcwizard;
 
 import java.awt.Frame;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -30,9 +27,8 @@ import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.sensor.deegree.TimeserieFeatureProps;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
-import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.ogc.sensor.template.LinkedTableViewTemplate;
 import org.kalypso.ogc.widgets.ToggleSelectWidget;
 import org.kalypso.plugin.KalypsoGisPlugin;
@@ -89,6 +85,8 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
   private LinkedTableViewTemplate m_tableTemplate = null;
 
+  private TimeserieFeatureProps[] m_tsProps;
+
   public ObservationMapTableDiagWizardPage()
   {
     super( "<ObservationMapTableDiagWizardPage>" );
@@ -121,6 +119,8 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
       final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
+      m_tsProps = KalypsoWizardHelper.parseTimeserieFeatureProps( getArguments() );
+      
       m_sashForm.setWeights( new int[]
       { mainWeight, 100 - mainWeight } );
 
@@ -183,13 +183,11 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
       m_tableFrame = SWT_AWT.new_Frame( composite );
 
-      final JTable table = new JTable( m_tableModel );
-      table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
-      table.setDefaultRenderer( Number.class, new MaskedNumberTableCellRenderer() );
+      final ObservationTable table = new ObservationTable( m_tableModel );
       table.setVisible( true );
 
       final JScrollPane pane = new JScrollPane( table );
-      pane.setBorder( BorderFactory.createEmptyBorder() );
+      //pane.setBorder( BorderFactory.createEmptyBorder() );
 
       m_tableFrame.setVisible( true );
       table.setVisible( true );
@@ -250,7 +248,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    if( m_diagFrame == null )
+    if( m_diagFrame == null || !isCurrentPage() )
       return;
 
     final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
@@ -270,11 +268,8 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       
     if( selectedFeatures.size() > 0 )
     {
-      final TimeserieFeatureProps[] tsProps = KalypsoWizardHelper
-          .parseTimeserieFeatureProps( getArguments() );
-
-      KalypsoWizardHelper.updateDiagramTemplate( tsProps, selectedFeatures, m_diagTemplate );
-      KalypsoWizardHelper.updateTableTemplate( tsProps, selectedFeatures, m_tableTemplate );
+      KalypsoWizardHelper.updateDiagramTemplate( m_tsProps, selectedFeatures, m_diagTemplate );
+      KalypsoWizardHelper.updateTableTemplate( m_tsProps, selectedFeatures, m_tableTemplate );
     }
   }
 }

@@ -1,6 +1,8 @@
 package org.kalypso.ui.calcwizard;
 
 import java.awt.Frame;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -27,13 +29,15 @@ import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.mapactions.FullExtentMapAction;
 import org.kalypso.ogc.gml.mapactions.ToggleSingleSelectWidgetAction;
-import org.kalypso.ogc.gml.mapactions.ZoomOutMapAction;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.ogc.sensor.deegree.TimeserieFeatureProps;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.template.GisTemplateHelper;
+import org.kalypso.template.ObservationTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
+import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -72,17 +76,24 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
   /** Position des rechten Sash: Integer von 0 bis 100 */
   public final static String PROP_RIGHTSASH = "rightSash";
 
+  /** Pfad auf die Vorlage für das Diagramm (.odt Datei) */
+  public final static String PROP_DIAGTEMPLATE = "diagTemplate";
+  
   /**
-   * Property-Names zum Layer in der Tabelle: alle Zeitreihen dieser Spalten
-   * werden im diagram angezeigt
+   * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen
+   * geben-Property geben: eine für jede Kurventyp.
    */
-  public final static String PROP_TIMEPROPNAME = "timeseriesPropertyNames";
-
+  public final static String PROP_TIMEPROPNAME = "timeserie";
+  
   private static final int SELECTION_ID = 0x100;
 
   private LayerTableViewer m_viewer;
 
-  private IMapModell m_mapModell;
+  protected IMapModell m_mapModell;
+
+  protected ObsdiagviewType m_obsdiagviewType;
+
+  protected TimeserieFeatureProps[] m_tsProps;
 
   public ViewResultsWizardPage()
   {
@@ -118,6 +129,8 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
       final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
       final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
+      m_tsProps = KalypsoWizardHelper.parseTimeserieFeatureProps( getArguments() );
+
       // TODO: konfigure
       sashForm.setWeights( new int[]
       { mainWeight, 100 - mainWeight } );
@@ -135,6 +148,18 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
 
   private void createGrafikToolButton( final Composite parent )
   {
+    final String diagFileName = getArguments().getProperty( PROP_DIAGTEMPLATE );
+    final IFile diagFile = (IFile)getProject().findMember( diagFileName );
+
+    try
+    {
+      m_obsdiagviewType = ObservationTemplateHelper.loadDiagramTemplateXML( diagFile );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    
     //final Composite composite = new Composite( parent, SWT.RIGHT );
 
     final Button button = new Button( parent, SWT.PUSH );
@@ -151,7 +176,8 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
     {
       final String templateFileName = getArguments().getProperty( PROP_TABLETEMPLATE );
       final IFile templateFile = (IFile)getProject().findMember( templateFileName );
-      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,   getReplaceProperties()  );
+      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,
+          getReplaceProperties() );
 
       m_viewer = new LayerTableViewer( parent, getProject(), KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), SELECTION_ID );
@@ -175,7 +201,7 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile,   getReplaceProperties()  );
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
     m_mapModell = new GisTemplateMapModell( gisview, getProject(), crs );
     m_mapModell.addModellListener( this );
@@ -206,7 +232,6 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
     tbm.add( new Separator() );
 
     tbm.add( new FullExtentMapAction( this, mapPanel ) );
-  
 
     final ToolBar toolBar = tbm.createControl( mapView );
 
@@ -237,7 +262,7 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    //
+  //
   }
 
   private class GraficToolStarter implements SelectionListener
@@ -249,30 +274,31 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
     public void widgetSelected( SelectionEvent e )
     {
       System.out.println( "GraficToolStarter.widgetSelected() start GrafikTool" );
-      final String propNames = getArguments().getProperty( PROP_TIMEPROPNAME, "" );
-      final String[] timeNames = propNames.split( "#" );
 
       final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
       if( !( layer instanceof KalypsoFeatureLayer ) )
         return;
 
-      final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
-      final KalypsoFeature[] allFeatures = kfl.getAllFeatures();
-      for( int i = 0; i < allFeatures.length; i++ )
+      m_obsdiagviewType.getCurve().clear();
+      
+      final List selectedFeatures = new ArrayList();
+      
+      try
       {
-        if( allFeatures[i].isSelected( SELECTION_ID ) )
-        {
-         
-          for( int j = 0; j < timeNames.length; j++ )
-          {
-            System.out.println(timeNames[j]);
-            Object observation = allFeatures[i].getProperty( timeNames[j] );
-            if( observation == null )
-              System.out.println( "observation is null" );
-            else
-              System.out.println( "observation is type:" + observation.getClass().toString() );
-          }
-        }
+        final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
+        final KalypsoFeature[] allFeatures = kfl.getAllFeatures();
+        for( int i = 0; i < allFeatures.length; i++ )
+          if( allFeatures[i].isSelected( SELECTION_ID ) )
+            selectedFeatures.add( allFeatures[i] );
+
+        if( selectedFeatures.size() > 0 )
+          KalypsoWizardHelper.updateXMLDiagramTemplate( m_tsProps, selectedFeatures, m_obsdiagviewType );
+        
+        ObservationTemplateHelper.openGrafik4odt( m_obsdiagviewType );
+      }
+      catch( Exception ex )
+      {
+        ex.printStackTrace();
       }
     }
 
@@ -280,6 +306,8 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
      * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
      */
     public void widgetDefaultSelected( SelectionEvent e )
-    {}
+    {
+    // empty  
+    }
   }
 }

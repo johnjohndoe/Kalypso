@@ -2,10 +2,8 @@ package org.kalypso.ogc.sensor.editor;
 
 import java.awt.Frame;
 import java.io.IOException;
-import java.util.Date;
 
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.CoreException;
@@ -15,9 +13,8 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.editor.AbstractEditorPart;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
-import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.ogc.sensor.template.LinkedTableViewTemplate;
 import org.kalypso.template.ObservationTemplateHelper;
 
@@ -39,9 +36,7 @@ public class ObservationTableEditor extends AbstractEditorPart
   {
     super.createPartControl( parent );
 
-    final JTable table = new JTable( m_model );
-    table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
-    table.setDefaultRenderer( Number.class, new MaskedNumberTableCellRenderer() );
+    final ObservationTable table = new ObservationTable( m_model );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );

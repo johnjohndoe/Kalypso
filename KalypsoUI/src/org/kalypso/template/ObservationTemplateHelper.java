@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -14,6 +16,7 @@ import javax.xml.bind.JAXBException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.java.io.FileUtilities;
+import org.kalypso.ogc.sensor.diagview.DiagramTemplateFactory;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.template.LinkedDiagramCurve;
 import org.kalypso.ogc.sensor.template.LinkedDiagramTemplate;
@@ -44,9 +47,9 @@ public class ObservationTemplateHelper
   }
 
   /**
-   * Loads a LinkedDiagramTemplate from the given file.
+   * Loads the binded template.
    */
-  public static IDiagramTemplate loadDiagramTemplate( final IFile file ) throws CoreException,
+  public static ObsdiagviewType loadDiagramTemplateXML( final IFile file ) throws CoreException,
       JAXBException, IOException
   {
     final InputStream ins = file.getContents();
@@ -54,7 +57,16 @@ public class ObservationTemplateHelper
         .unmarshal( ins );
     ins.close();
 
-    return new LinkedDiagramTemplate( baseTemplate, file.getProject() );
+    return baseTemplate;
+  }
+
+  /**
+   * Loads a LinkedDiagramTemplate from the given file.
+   */
+  public static IDiagramTemplate loadDiagramTemplate( final IFile file ) throws CoreException,
+      JAXBException, IOException
+  {
+    return new LinkedDiagramTemplate( loadDiagramTemplateXML(file), file.getProject() );
   }
 
   /**
@@ -150,6 +162,60 @@ public class ObservationTemplateHelper
     }
   }
 
+  public static void openGrafik4odt( final ObsdiagviewType tpl ) throws Exception
+  {
+    final InputStream xsl = ObservationTemplateHelper.class
+        .getResourceAsStream( "/org/kalypso/plugin/resources/xsl/grafik-vorlage.xsl" );
+
+    final PipedOutputStream pos = new PipedOutputStream();
+    final PipedInputStream pis = new PipedInputStream( pos );
+
+    final Runnable runnable = new Runnable()
+    {
+      public void run()
+      {
+        try
+        {
+          DiagramTemplateFactory.writeTemplate( tpl, pos );
+        }
+        catch( JAXBException e )
+        {
+          e.printStackTrace();
+        }
+        finally
+        {
+          try
+          {
+            pos.close();
+          }
+          catch( IOException e1 )
+          {
+            e1.printStackTrace();
+          }
+        }
+      }
+    };
+
+    final Thread thread = new Thread( runnable );
+    thread.start();
+
+    final String str = XMLTools.xslTransform( pis, xsl );
+    pis.close();
+
+    final File file = File.createTempFile( "grafik", "vorlage" );
+    file.deleteOnExit();
+
+    FileWriter fw = new FileWriter( file );
+    fw.write( str );
+    fw.close();
+
+    final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe",
+        GrafikViewActionDelegate.class
+            .getResourceAsStream( "/org/kalypso/plugin/resources/exe/grafik.exe_" ), true );
+
+    Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V" + file.getAbsolutePath() );
+  }
+
   /**
    * Starts the grafik.exe on the given grafik-template file.
    * 
@@ -165,13 +231,15 @@ public class ObservationTemplateHelper
               .getResourceAsStream( "/org/kalypso/plugin/resources/exe/grafik.exe_" ), true );
 
       /*
-       * Blöder Workaround weil das Grafik-Tool nicht mit relativen Pfad arbeiten kann:
-       * wir ersetzen _XXXX_ aus der .tpl Datei mit dem aktuellen Projektpfad.
+       * Blöder Workaround weil das Grafik-Tool nicht mit relativen Pfad
+       * arbeiten kann: wir ersetzen _XXXX_ aus der .tpl Datei mit dem aktuellen
+       * Projektpfad.
        * 
-       * Deswegen: wenn _XXXX_ als Pfadteil in der Vorlage benutzt wird, sollte es
-       * sich auf dem Projekt beziehen.
+       * Deswegen: wenn _XXXX_ als Pfadteil in der Vorlage benutzt wird, sollte
+       * es sich auf dem Projekt beziehen.
        */
-      final BufferedReader reader = new BufferedReader( new FileReader( tplFile.getLocation().toFile() ) );
+      final BufferedReader reader = new BufferedReader( new FileReader( tplFile.getLocation()
+          .toFile() ) );
 
       final StringBuffer buffer = new StringBuffer();
       String line = reader.readLine();
