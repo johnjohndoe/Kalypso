@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="BodeV1.0">
-<!-- Relativ zum Projektverzeichnis -->
-    <input id="SchemaDir" path=".model/schema" relativeToCalcCase="false"/>
-
-<!-- Relativ zum Rechenfall -->
-    <input id="GML" path="bodemodell.gml" relativeToCalcCase="true"/>
-    <input id="CALC" path=".calculation" relativeToCalcCase="true"/>
-
-<!-- DIR -->	
-	<input id="ZeitreihenDir" path="Zeitreihen" relativeToCalcCase="true"/>
-    
+	<!-- Verzeichnisse relativ zum Projektverzeichnis (.../input/base/) -->
+	<input id="SchemaDir" path=".model/schema" relativeToCalcCase="false"/>
+	
+	<!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
+	<input id="GML" path="bodemodell.gml" relativeToCalcCase="true"/>
+	<input id="CONTROL_GML" path=".calculation" relativeToCalcCase="true"/>
+	<input id="CONTROL_XSD" path=".model/schema/control.xsd" relativeToCalcCase="false"/>
+	
+	<!-- Verzeichnisse relativ zur Rechenvariante (.../input/calc/) -->
+	
+	<!--	<input id="ZeitreihenDir" path="Zeitreihen" relativeToCalcCase="true"/> -->
+	<input id="QPegelDir" path="Zeitreihen/Abfluss_Pegel" relativeToCalcCase="true"/>
+	<input id="QSpeicherDir" path="Zeitreihen/Abgabe_Speicher" relativeToCalcCase="true"/>
+	<input id="NsGebietDir" path="Zeitreihen/Niederschlag_Gebiet" relativeToCalcCase="true"/>
 </modelspec>
