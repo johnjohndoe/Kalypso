@@ -12,7 +12,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.java.io.filter.PrefixSuffixFilter;
+import org.kalypso.java.util.StringUtilities;
 
 /**
  * Utility class for io and files
@@ -252,8 +254,19 @@ public class FileUtilities
     final String baseAbs = basedir.getAbsolutePath();
     final String absAbs = absoluteFile.getAbsolutePath();
     if( !absAbs.startsWith( baseAbs ) )
-      return null;
-
+    {
+      String difference = StringUtils.difference(baseAbs, absAbs);
+      if(difference==null || "".equals(difference))
+        return null;
+      final int index=absAbs.indexOf(difference);
+      if(index<5)
+        return null;
+      String back=baseAbs.substring(index);
+      // TODO change regExp to "everything except fileseparator"
+      String x=back.replaceAll("[a-zA-Z0-9]+", "..");
+      String result=x+File.separator+difference;
+      return result;
+    }
     final String rel = absAbs.length() == baseAbs.length() ? "" : absAbs.substring( baseAbs
         .length() );
 
