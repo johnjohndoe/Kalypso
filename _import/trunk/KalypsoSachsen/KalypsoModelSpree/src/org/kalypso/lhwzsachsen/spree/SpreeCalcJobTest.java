@@ -50,8 +50,7 @@ public class SpreeCalcJobTest extends TestCase
 
     cj.disposeJob();
 
-//    FileUtilities.deleteRecursive( basedir );
-//    FileUtilities.deleteRecursive( tmpdir );
+    FileUtilities.deleteRecursive( basedir );
   }
 
   private CalcJobDataBean[] createInput( final File basedir) throws IOException, TypeRegistryException, JAXBException

@@ -1,24 +1,23 @@
 package org.kalypso.lhwzsachsen.spree;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureCollection;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.geometry.GM_Point;
@@ -50,6 +49,10 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class SpreeInputWorker
 {
+  private final static ConvenienceCSFactoryFull CRS_FACT = new ConvenienceCSFactoryFull();
+  private final static CS_CoordinateSystem DEFAULT_CRS = Adapters.getDefault()
+      .export( CRS_FACT.getCSByName( "EPSG:4326" ) );
+  
   private SpreeInputWorker()
   {
   // wird nicht instantiiert
@@ -75,8 +78,9 @@ public class SpreeInputWorker
 
     final Map inputMap = hashInput( input );
 
-    final File propsFile = checkInput( "PROPS", inputMap, inputdir );
-    final Map props = parseCalculationFile( propsFile, nativedir );
+    final File controlGML = checkInput( "CONTROL_GML", inputMap, inputdir );
+    final File controlXSD = checkInput( "CONTROL_XSD", inputMap, inputdir );
+    final Map props = parseControlFile( controlGML, controlXSD, nativedir );
 
     final KalypsoFeatureLayer[] layers = loadGML( inputdir, inputMap );
 
@@ -129,14 +133,15 @@ public class SpreeInputWorker
     final FeatureTypeProperty[] ftps = (FeatureTypeProperty[])ftpList
         .toArray( new FeatureTypeProperty[ftpList.size()] );
     final FeatureType type = FeatureFactory.createFeatureType( null, null, "TS_TYPE", ftps );
-    final FeatureCollection fc = FeatureFactory
-        .createFeatureCollection( tsFilename, type, null, 10 );
 
     // Werte schreiben
     final DateFormat specialDateFormat = new SimpleDateFormat( "yMM.dd" );
     final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
     final Calendar calendar = Calendar.getInstance();
     final Date[] dateArray = (Date[])valuesMap.get( "DATE" );
+    
+    final Collection shapeFeatures = new ArrayList(dateArray.length);
+    
     for( int i = 0; i < dateArray.length; i++ )
     {
       final Date date = dateArray[i];
@@ -180,11 +185,11 @@ public class SpreeInputWorker
       System.out.println( );
 
       final Feature feature = FeatureFactory.createFeature( "" + ( i + 1 ), type, data );
-      fc.appendFeature( feature );
+      shapeFeatures.add( feature );
     }
 
     final ShapeFile shapeFile = new ShapeFile( tsFilename, "rw" );
-    shapeFile.writeShape( fc );
+    shapeFile.writeShape( (Feature[])shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
     shapeFile.close();
 
     //    // Hack: festes Zeitreihen File
@@ -290,6 +295,8 @@ public class SpreeInputWorker
     }
     catch( final GmlSerializeException e )
     {
+      e.printStackTrace();
+      
       throw new CalcJobServiceException( "Fehler beim Schreiben der Eingabedateien", e );
     }
   }
@@ -300,14 +307,10 @@ public class SpreeInputWorker
     // GML lesen
     try
     {
-      ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-      final CS_CoordinateSystem crs = Adapters.getDefault()
-          .export( csFac.getCSByName( "EPSG:4326" ) );
-
-      final File xsdFile = checkInput( "XSD", map, inputdir );
+      final File xsdFile = checkInput( "MODELL_XSD", map, inputdir );
       final File gmlFile = checkInput( "GML", map, inputdir );
 
-      return GmlSerializer.deserialize( xsdFile.toURL(), gmlFile.toURL(), crs, null );
+      return GmlSerializer.deserialize( xsdFile.toURL(), gmlFile.toURL(), DEFAULT_CRS, null );
     }
     catch( final Exception ioe )
     {
@@ -317,16 +320,14 @@ public class SpreeInputWorker
     }
   }
 
-  public static Map parseCalculationFile( final File propsfile, final File nativedir )
+  public static Map parseControlFile( final File controlGML, final File controlXSD, final File nativedir )
       throws CalcJobServiceException
   {
     try
     {
-      final Properties props = new Properties();
-      props.load( new FileInputStream( propsfile ) );
+      final Feature controlFeature = GmlSerializer.deserializeFeature( controlGML.toURL(), controlXSD.toURL() );
 
-      final String date = props.getProperty( SpreeCalcJob.CALC_PROP_STARTTIME );
-      final Date startTime = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ).parse( date );
+      final Date startTime = (Date)controlFeature.getProperty( "startforecast" );
 
       final String startTimeString = new SimpleDateFormat( "yyMMdd" ).format( startTime );
       final String baseFileName = "HW" + startTimeString;
@@ -352,7 +353,6 @@ public class SpreeInputWorker
       dataMap.put( SpreeCalcJob.DATA_TSFILE, tsFile );
 
       return dataMap;
-
     }
     catch( final Exception e )
     {

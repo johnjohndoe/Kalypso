@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.spree.control" version="0.1" xmlns:spree="org.kalypso.spree.control" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<element name="SpreeControl" type="spree:_SpreeControlType"/>
+	<complexType name="_SpreeControlBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="_SpreeControlType">
+		<complexContent>
+			<extension base="spree:_SpreeControlBaseType">
+                <sequence>
+                    <element name="startsimulation" type="dateTime"/>
+                    <element name="startforecast" type="dateTime"/>
+                    <element name="editor" type="string"/>
+                    <element name="description" type="string"/>
+                    <element name="comment" type="string"/>
+                    <element name="calctime" type="dateTime"/>
+                </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

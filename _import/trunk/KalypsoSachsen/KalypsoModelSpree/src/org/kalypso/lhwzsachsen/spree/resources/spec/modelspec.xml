@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="spree">
-    <input id="PROPS" path=".calculation" relativeToCalcCase="true"/>
-    <input id="XSD" path=".modellTyp/modell.xsd" relativeToCalcCase="false"/>
+    <input id="CONTROL_GML" path=".calculation.gml" relativeToCalcCase="true"/>
+    <input id="CONTROL_XSD" path=".modellTyp/modell/control.xsd" relativeToCalcCase="false"/>
+    <input id="FEATURE_XSD" path=".modellTyp/modell/feature.xsd" relativeToCalcCase="false"/>
+    <input id="GEOMETRY_XSD" path=".modellTyp/modell/geometry.xsd" relativeToCalcCase="false"/>
+    <input id="MODELL_XSD" path=".modellTyp/modell/modell.xsd" relativeToCalcCase="false"/>
+    <input id="OBSLINK_XSD" path=".modellTyp/modell/obslink.xsd" relativeToCalcCase="false"/>
+    <input id="XLINKS_XSD" path=".modellTyp/modell/xlinks.xsd" relativeToCalcCase="false"/>
+    <input id="XLINKSEXT_XSD" path=".modellTyp/modell/xlinksext.xsd" relativeToCalcCase="false"/>
     <input id="GML" path="calcCase.gml" relativeToCalcCase="true"/>
     <input id="PA_BAUTZWB" path="zeitreihen/PA_BAUTZWB.zml" relativeToCalcCase="true"/>
     <input id="PA_GROEDI" path="zeitreihen/PA_GROEDI.zml" relativeToCalcCase="true"/>

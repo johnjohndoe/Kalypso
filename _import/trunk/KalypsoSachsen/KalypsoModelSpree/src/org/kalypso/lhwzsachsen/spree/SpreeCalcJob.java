@@ -46,13 +46,13 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class SpreeCalcJob extends AbstractCalcJob
 {
-  public static final String CALC_PROP_STARTTIME = "startTime";
+//  public static final String CALC_PROP_STARTTIME = "startTime";
 
   public static final String VHS_FILE = "_vhs.dbf";
 
   public static final String FLP_FILE = "_flp";
 
-  public static final String FLP_NAME = "Flusslaufmodell";
+  public static final String FLP_NAME = "FlusslaufModell";
 
   public static final String FLP_GEOM = "Ort";
 
