@@ -46,8 +46,7 @@ public class SteuerparameterWizardPage extends WizardPage
 {
   private final IProjectProvider m_projectProvider;
 
-  private final FeatureComposite m_featureComposite = new FeatureComposite( null, new URL[]
-  {  } );
+  private final FeatureComposite m_featureComposite = new FeatureComposite( null, new URL[] {} );
 
   private boolean m_overrideCanFlipToNextPage;
 
@@ -80,25 +79,6 @@ public class SteuerparameterWizardPage extends WizardPage
     m_panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     createFeatureControl( m_panel );
-
-    final Button checkUpdate = new Button( m_panel, SWT.CHECK );
-    checkUpdate.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    checkUpdate.setText( "Zeitreihen aktualisieren" );
-    checkUpdate
-        .setToolTipText( "falls aktiv, werden die Zeitreihen im nächsten Schritt aktualisiert" );
-    checkUpdate.setSelection( m_update );
-    m_checkUpdate = checkUpdate;
-
-    checkUpdate.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      public void widgetSelected( final SelectionEvent e )
-      {
-        setUpdate( checkUpdate.getSelection() );
-      }
-    } );
 
     setControl( m_panel );
   }
@@ -200,19 +180,32 @@ public class SteuerparameterWizardPage extends WizardPage
   /**
    * Setzt dne aktuellen Rechenfall, ist dort schon eine .calculation vorhanden,
    * wird diese geladen, sonst die default.
-   * 
    */
   public void setFolder( final IFolder currentCalcCase )
   {
     m_currentCalcCase = currentCalcCase;
 
-    createFeatureControl( m_panel );
+    final Composite panel = m_panel;
+    if( panel != null && !panel.isDisposed() )
+    {
+      m_panel.getDisplay().asyncExec( new Runnable( ) {
+        public void run()
+        {
+          createFeatureControl( panel );
+          panel.layout();
+        }} );
+    }
   }
 
-  private void createFeatureControl( final Composite panel )
+  protected void createFeatureControl( final Composite panel )
   {
-      // dispose old control
-      m_featureComposite.disposeControl();
+    // dispose old control
+    m_featureComposite.disposeControl();
+    if( m_checkUpdate != null )
+    {
+      m_checkUpdate.dispose();
+      m_checkUpdate = null;
+    }
     final IProject project = m_projectProvider.getProject();
     if( project == null )
       return;
@@ -231,26 +224,34 @@ public class SteuerparameterWizardPage extends WizardPage
 
       m_featureComposite.setFeature( f );
       m_featureComposite.addView( viewURL );
-      
+
       final Control featureControl = m_featureComposite.createControl( panel, SWT.NONE );
       featureControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+      final Button checkUpdate = new Button( m_panel, SWT.CHECK );
+      checkUpdate.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+      checkUpdate.setText( "Zeitreihen aktualisieren" );
+      checkUpdate
+          .setToolTipText( "falls aktiv, werden die Zeitreihen im nächsten Schritt aktualisiert" );
+      checkUpdate.setSelection( m_update );
+      m_checkUpdate = checkUpdate;
+
+      checkUpdate.addSelectionListener( new SelectionAdapter()
+      {
+        /**
+         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+         */
+        public void widgetSelected( final SelectionEvent e )
+        {
+          setUpdate( checkUpdate.getSelection() );
+        }
+      } );
       
       final FeatureComposite featureComposite = m_featureComposite;
       if( featureComposite != null )
       {
         featureComposite.setFeature( m_workspace.getRootFeature() );
-
-        final Control control = m_featureComposite.getControl();
-        if( control != null && !control.isDisposed() )
-        {
-          control.getDisplay().asyncExec( new Runnable()
-          {
-            public void run()
-            {
-              featureComposite.updateControl();
-            }
-          } );
-        }
+        featureComposite.updateControl();
       }
     }
     catch( final MalformedURLException e )
@@ -270,5 +271,5 @@ public class SteuerparameterWizardPage extends WizardPage
   {
     return null;
   }
-  
+
 }
