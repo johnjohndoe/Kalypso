@@ -49,6 +49,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
@@ -58,10 +59,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
-import org.deegree.services.capabilities.CException;
+import org.deegree.ogcbasic.ContactAddress;
 import org.deegree.ogcbasic.ContactInformation;
 import org.deegree.ogcbasic.ContactPersonPrimary;
-import org.deegree.ogcbasic.ContactAddress;
+import org.deegree.services.capabilities.CException;
 import org.deegree.services.capabilities.DCPType;
 import org.deegree.services.capabilities.MetadataURL;
 import org.deegree.services.capabilities.Service;
@@ -90,10 +91,10 @@ import org.deegree.xml.ElementList;
 import org.deegree.xml.XMLParsingException;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.model.geometry.GeometryFactory;
-import org.deegree_impl.services.capabilities.CException_Impl;
 import org.deegree_impl.ogcbasic.ContactAddress_Impl;
 import org.deegree_impl.ogcbasic.ContactInformation_Impl;
 import org.deegree_impl.ogcbasic.ContactPersonPrimary_Impl;
+import org.deegree_impl.services.capabilities.CException_Impl;
 import org.deegree_impl.services.capabilities.DCPType_Impl;
 import org.deegree_impl.services.capabilities.HTTP_Impl;
 import org.deegree_impl.services.capabilities.MetadataURL_Impl;
@@ -102,6 +103,8 @@ import org.deegree_impl.tools.StringExtend;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+
+import sun.misc.BASE64Encoder;
 
 
 /**
@@ -137,12 +140,13 @@ public class OGCWMSCapabilitiesFactory {
             capabilities = createCapabilities( reader );            
         } catch ( IOException e ) {
             throw new XMLParsingException( "IOException encountered while parsing " + 
-                                           "WMSCapabilities-Document: " + e.getMessage() );
+                                           "WMSCapabilities-Document: " + e.getMessage(),e );
         }
 
         return capabilities;
     }
-
+    
+ 
     /**
      * Creates a <tt>WMSCapabilities</tt>-instance from the given Reader.
      * <p>
