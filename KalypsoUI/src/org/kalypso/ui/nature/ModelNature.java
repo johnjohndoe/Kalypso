@@ -578,8 +578,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   }
 
   private void retrieveOutput( final String serverpath, final IFolder targetfolder,
-      final CalcJobDataBean[] results ) throws CoreException
+      final CalcJobDataBean[] results, final IProgressMonitor monitor ) throws CoreException
   {
+    monitor.beginTask( "Berechnungsergebniss abrufen", results.length );
+
     final File serverdir = new File( serverpath );
 
     for( int i = 0; i < results.length; i++ )
@@ -591,7 +593,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final IFile targetfile = targetfolder.getFile( beanPath );
       FolderUtilities.mkdirs( targetfile.getParent() );
 
-      final SetContentThread thread = new SetContentThread( targetfile, true, false, false, new NullProgressMonitor() )
+      final SetContentThread thread = new SetContentThread( targetfile, true, false, false,
+          new NullProgressMonitor() )
       {
         protected void writeStream() throws Throwable
         {
@@ -606,12 +609,18 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       catch( final InterruptedException e )
       {
         e.printStackTrace();
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Zurückladen der Ergebnisdateien", e ) );
+        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+            "Fehler beim Zurückladen der Ergebnisdateien", e ) );
       }
       final Throwable thrown = thread.getThrown();
       if( thrown != null )
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Zurückladen der Ergebnisdateien", thrown ) );
+        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+            "Fehler beim Zurückladen der Ergebnisdateien", thrown ) );
+
+      monitor.worked( 1 );
     }
+
+    monitor.done();
   }
 
   public GMLWorkspace getDefaultControl() throws CoreException
@@ -636,19 +645,19 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
+  /** TODO: handle cancel */
   public void runCalculation( final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
   {
-    monitor.beginTask( "Berechnung durchführen", 1000 );
-
     if( !isCalcCalseFolder( folder ) )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Verzeichnis ist kein Rechenfall :" + folder.getName(), null ) );
 
-    // getJobService
     final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault().getServiceProxyFactory();
 
     final Modelspec modelspec = getModelspec();
+
+    monitor.beginTask( "Initialisierung der Berechnung", 4000 );
 
     // todo: description?
     final CalcJobBean job;
@@ -675,6 +684,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           "Rechendienst konnte nicht initialisiert werden", e ) );
     }
 
+    monitor.worked( 1000 );
+
     try
     {
       final String jobID = job.getId();
@@ -686,9 +697,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       // Daten zum Service schieben
       final CalcJobDataBean[] inputBeans = prepareCalcCaseInput( modelspec, folder, targetdir,
-          monitor );
+          new SubProgressMonitor( monitor, 1000 ) );
       calcService.startJob( jobID, inputBeans );
 
+      monitor.setTaskName( "Berechnung wird durchgeführt" );
+      final SubProgressMonitor calcMonitor = new SubProgressMonitor( monitor, 100 );
+      int oldProgess = 0;
       while( true )
       {
         final CalcJobBean bean = calcService.getJob( jobID );
@@ -720,19 +734,35 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Kritischer Fehler", e1 ) );
         }
 
+        int progress = bean.getProgress();
+        calcMonitor.worked( progress - oldProgess );
+        oldProgess = progress;
+
         if( monitor.isCanceled() )
           calcService.cancelJob( jobID );
         // trotzdem weiterwarten, der Job muss von selbst zurückkehren
       }
+      
+      final CalcJobBean jobBean = calcService.getJob( jobID );
+      int progress = jobBean.getProgress();
+      calcMonitor.worked( progress - oldProgess );
+      calcMonitor.done();
+      
+      monitor.setTaskName( "Berechnungsergebnisse vom Server lesen" );
 
       // Abhängig von den Ergebnissen was machen
-      final CalcJobBean jobBean = calcService.getJob( jobID );
       switch( jobBean.getState() )
       {
       case ICalcServiceConstants.FINISHED:
         // einfach stoppen, die Ergebnisse werden abgeholt
-        // TODO Ergebnisse abholen
-        break;
+        final CalcJobDataBean[] results = jobBean.getResults();
+        final IFolder outputfolder = folder.getFolder( "Ergebnisse" );
+        if( outputfolder.exists() )
+          outputfolder.delete( false, false, new NullProgressMonitor() );
+
+        retrieveOutput( jobBean.getBasedir(), outputfolder, results, new SubProgressMonitor(
+            monitor, 1000 ) );
+        return;
 
       case ICalcServiceConstants.CANCELED:
         throw new CoreException( new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0,
@@ -747,12 +777,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechenvorgang fehlerhaft:\n"
             + jobBean.getMessage(), null ) );
       }
-
-      final CalcJobDataBean[] results = jobBean.getResults();
-      final IFolder outputfolder = folder.getFolder( "Ergebnisse" );
-      if( outputfolder.exists() )
-        outputfolder.delete( false, false, new NullProgressMonitor() );
-      retrieveOutput( jobBean.getBasedir(), outputfolder, results );
     }
     catch( final RemoteException e )
     {
