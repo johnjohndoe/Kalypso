@@ -337,7 +337,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   public void onModellChange( final ModellEvent modellEvent )
   {
     final FeatureComposite featureComposite = m_featureComposite;
-    if( m_panel != null )
+    if( m_panel != null && !m_panel.isDisposed() )
     {
       m_panel.getDisplay().asyncExec( new Runnable()
       {

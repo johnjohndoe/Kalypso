@@ -6,6 +6,8 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 
 ###############################################################################
 
+- Bug75: "Fehler beim Drücken auf 'optimieren' (Widget war disposed	!)"
+- Bug41: "Beim Öffnen mehrerer Tabellen können über Tabelle-Spalten nur die Elemente der zuerst geöffneten Tabelle ausgewählt werden auch wenn eine andere Tabellenart  aktiv ist."
 - Gis-Tabelle: die Sortierung kann durch ein erneutes Drücken auf den Spaltenkopf wieder ausgestellt werden; also
 1. vorwärts, 2. rückwärts, 3. unsortiert
 - Bugfix: Die Keys der Gis-Tabellen wurden im Wizard nicht wieder freigegeben

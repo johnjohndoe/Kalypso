@@ -204,9 +204,9 @@ public final class KeyInfo extends Job implements ILoaderListener
     return m_key;
   }
 
-  public int getListeners()
+  public IPoolListener[] getListeners()
   {
-    return m_listeners.size();
+    return (IPoolListener[])m_listeners.toArray( new IPoolListener[m_listeners.size()] ) ;
   }
   
   public Object getObject()
