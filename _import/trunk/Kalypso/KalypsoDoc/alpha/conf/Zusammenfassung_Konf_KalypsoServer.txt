@@ -1,0 +1,33 @@
+1. kalypso_server_start.bat und kalypso_server_stop.bat
+
+	Pfad (mit der Freigabe) vom Temp-Verzeichnis definieren. Dieses
+	Verzeichnis kann irgendwo erstellt werden. Es muss nur (mit der Freigabe)
+	von jede Arbeitsplatz aus zugreifbar sein.
+	
+	Beispiel:
+	KALYPSO_SERVER_TMP=\\lfug-kv-01\kalypso
+
+2. Freigabe
+
+	Sicherstellen dass es eine Freigabe auf das Temp-Verzeichnis 
+	mit Lese- und Schreiberechte für Jeder gibt.
+	
+3. catalina.policy
+
+	Java Permissions richtig setzen, u.a. für das definierte Temp-Verzeichnis
+	anpassen. Achtung: Groß/Kleinschreibung (Siehe Kommentar in Datei).
+	
+4. kalypso-client.ini
+
+	in webapps/KalypsoConf (unter Tomcat) muss es diese Datei geben. Dort die URLs
+	der eingesetzte Services prüfen.
+	
+5. manager.xml und admin.xml
+
+	Diese Dateien (in conf/catalina/localhost) prüfen. Der Gesamtpfad von Tomcat
+	ist dort angeben. Pfad prüfen und gegebenfalls anpassen damit es mit dem
+	tatsächlichen Pfad stimmt.
+
+6. conf
+
+	Konfigurationsdateien der einzelne Dienste prüfen.
