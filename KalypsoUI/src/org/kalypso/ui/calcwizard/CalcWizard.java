@@ -275,8 +275,7 @@ public class CalcWizard implements IWizard, IProjectProvider
    */
   public boolean canFinish()
   {
-    // TODO only finish on last page!
-    return false;
+    return true;
   }
 
   /**
@@ -309,6 +308,8 @@ public class CalcWizard implements IWizard, IProjectProvider
     return (IWizardPage)m_pages.get( 0 );
   }
 
+  
+  
   /**
    * @see org.eclipse.jface.wizard.IWizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
    */
@@ -443,7 +444,13 @@ public class CalcWizard implements IWizard, IProjectProvider
       // first page or page not found
       return null;
 
-    return (IWizardPage)m_pages.get( index - 1 );
+    final IWizardPage wizardPage = (IWizardPage)m_pages.get( index - 1 );
+  
+    // von den Modelpages gehts nicht mehr zurück
+    if( page instanceof IModelWizardPage && !( wizardPage instanceof IModelWizardPage ) )
+      return null;
+    
+    return wizardPage;
   }
 
   /**
@@ -550,4 +557,22 @@ public class CalcWizard implements IWizard, IProjectProvider
     m_container = wizardContainer;
   }
 
+  public void restart()
+  {
+    getContainer().showPage( getStartingPage() );
+
+    // delete current modelpages
+    for( final Iterator iter = m_pages.iterator(); iter.hasNext(); )
+    {
+      final Object page = iter.next();
+      if( page instanceof IModelWizardPage )
+      {
+        final IModelWizardPage modelpage = (IModelWizardPage)page;
+        iter.remove();
+        modelpage.dispose();
+      }
+    }
+    
+    return;
+  }
 }

@@ -1,6 +1,5 @@
 package org.kalypso.ui.calcwizard.modelpages;
 
-import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -136,14 +135,6 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
   public boolean performFinish()
   {
     return true;
-  }
-
-  /**
-   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
-   */
-  public void onModellChange( final ModellEvent modellEvent )
-  {
-    refreshTimeseries();
   }
 
   /**

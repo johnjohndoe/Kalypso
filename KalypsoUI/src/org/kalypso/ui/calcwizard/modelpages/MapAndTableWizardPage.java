@@ -150,14 +150,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
     return true;
   }
 
-  /**
-   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
-   */
-  public void onModellChange( final ModellEvent modellEvent )
-  {
-    refreshTimeseries();
-  }
-
   protected void runCalculation( )
   {
     final LayerTableViewer viewer = getLayerTable();
@@ -168,8 +160,11 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
           throws CoreException
       {
         monitor.beginTask( "Berechnung wird durchgeführt", 2000 );
+        
+        // TODO: alle Modelpages speichern
+        // auch die Zeitreihen
         viewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
-
+        
         final ModelNature nature = (ModelNature) getCalcFolder().getProject()
             .getNature( ModelNature.ID );
         nature.runCalculation( getCalcFolder(), new SubProgressMonitor( monitor, 1000 ) );

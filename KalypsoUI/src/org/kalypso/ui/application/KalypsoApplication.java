@@ -41,8 +41,12 @@ public class KalypsoApplication implements IPlatformRunnable
     }
     
     rights = chooseRight( rights, username );
+    
     if( rights == null )
       return null;
+    
+    for( int i = 0; i < rights.length; i++ )
+      System.out.println( rights[i] );
     
     return startWorkbench( new KalypsoWorkbenchAdvisor( rights ) );
   }

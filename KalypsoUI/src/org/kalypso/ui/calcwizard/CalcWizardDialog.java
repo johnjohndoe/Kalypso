@@ -1,14 +1,20 @@
 package org.kalypso.ui.calcwizard;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.ui.calcwizard.modelpages.IModelWizardPage;
 
 /**
  * @author belger
  */
 public class CalcWizardDialog extends WizardDialog
 {
+  public final static int NEW_PROGNOSE_ID = IDialogConstants.CLIENT_ID + 1;
+  
   public CalcWizardDialog( final Shell parentShell, final CalcWizard newWizard )
   {
     super( parentShell, newWizard );
@@ -31,4 +37,48 @@ public class CalcWizardDialog extends WizardDialog
     
     super.nextPressed();
   }
+  
+  /**
+   * @see org.eclipse.jface.wizard.WizardDialog#buttonPressed(int)
+   */
+  protected void buttonPressed( int buttonId )
+  {
+    if( buttonId == NEW_PROGNOSE_ID )
+    {
+      final CalcWizard wizard = (CalcWizard)getWizard();
+      wizard.restart();
+    }
+    
+    super.buttonPressed( buttonId );
+  }
+  
+  /**
+   * @see org.eclipse.jface.wizard.WizardDialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
+   */
+  protected void createButtonsForButtonBar( Composite parent )
+  {
+    createButton( parent, NEW_PROGNOSE_ID, "Neue Vorhersage anlegen", false );
+    
+    super.createButtonsForButtonBar( parent );
+  }
+  
+  /**
+   * @see org.eclipse.jface.wizard.WizardDialog#updateButtons()
+   */
+  public void updateButtons()
+  {
+    super.updateButtons();
+    
+    final IWizardPage currentPage = getCurrentPage();
+    
+    if( currentPage instanceof IModelWizardPage )
+    {
+      final IWizardPage previousPage = currentPage.getPreviousPage();
+      if( previousPage != null && !( previousPage instanceof IModelWizardPage ) )
+        getButton( IDialogConstants.BACK_ID ).setEnabled( false );
+    }
+    
+    getButton(  NEW_PROGNOSE_ID ).setEnabled( currentPage instanceof IModelWizardPage );
+  }
+  
 }

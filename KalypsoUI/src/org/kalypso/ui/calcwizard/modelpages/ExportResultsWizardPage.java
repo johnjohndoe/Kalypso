@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree_impl.model.feature.visitors.GetSelectionVisitor;
 import org.eclipse.core.resources.IFile;
@@ -102,10 +101,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
           mainWeight,
           100 - mainWeight } );
 
-//      rightSash.setWeights( new int[]
-//      {
-//          rightWeight,
-//          100 - rightWeight } );
+      rightSash.setWeights( new int[]
+      {
+          rightWeight,
+          100 - rightWeight } );
 
       rightSash.addControlListener( getControlAdapter() );
       sashForm.addControlListener( getControlAdapter() );
@@ -119,7 +118,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       {
         m_obsdiagviewType = ObservationTemplateHelper.loadDiagramTemplateXML( diagFile.getContents() );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -133,26 +132,27 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   private void createExportPanel( final Composite parent )
   {
     // noch einen ListViewer einfügen!
-    final Composite leftHalf = new Composite( parent, SWT.NONE );
-    leftHalf.setLayout( new GridLayout( 2, false ) );
+    final Composite topPanel = new Composite( parent, SWT.NONE );
+    topPanel.setLayout( new GridLayout( 2, false ) );
 
-    m_checklist = CheckboxTableViewer.newCheckList( leftHalf, SWT.BORDER );
+    m_checklist = CheckboxTableViewer.newCheckList( topPanel, SWT.BORDER );
+    m_checklist.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
     m_checklist.setContentProvider( new ArrayContentProvider() );
     m_checklist.setLabelProvider( new WorkbenchLabelProvider() );
     m_checklist.setInput( m_calcCaseFolder );
 
-    final Composite rightHalf = new Composite( parent, SWT.NONE );
-    rightHalf.setLayout( new GridLayout(  ) );
-
-    final Button button = new Button( rightHalf, SWT.PUSH );
+    final Button button = new Button( topPanel, SWT.PUSH );
     button.setText( "Zeitreihe bearbeiten" );
     button.setToolTipText( "Öffnet die die selektierten Zeitreihen zur Bearbeitung" );
     button.addSelectionListener( new GraficToolStarter() );
-    button.setLayoutData( new GridData(  ) );
-
-    final Group exportGroup = new Group( rightHalf, SWT.NONE );
+    final GridData buttonGridData = new GridData(  );
+    buttonGridData.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
+    button.setLayoutData( buttonGridData );
+    
+    final Group exportGroup = new Group( topPanel, SWT.NONE );
     exportGroup.setText( "Berichtsablage" );
     exportGroup.setLayout( new GridLayout() );
+    exportGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     
     final Button exportQDiagramm = new Button( exportGroup, SWT.CHECK );
     exportQDiagramm.setText( "Durchflussgrafik" );
@@ -186,14 +186,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   public boolean performFinish()
   {
     return true;
-  }
-
-  /**
-   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
-   */
-  public void onModellChange( final ModellEvent modellEvent )
-  {
-  //
   }
 
   private class GraficToolStarter implements SelectionListener
@@ -260,6 +252,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
    */
   protected TSLinkWithName[] getObservationsToShow()
   {
+    
+    
     // TODO: implement it!
 
     return new TSLinkWithName[] {};
