@@ -20,9 +20,9 @@ public class FileRepository extends AbstractRepository
   private final File m_root;
   private final FileFilter m_filter;
 
-  public FileRepository( final String identifier, final String location, final FileFilter filter )
+  public FileRepository( final String location, final FileFilter filter )
   {
-    super( identifier, location );
+    super( location );
 
     if( filter == null )
       m_filter = new AcceptAllFileFilter();
@@ -34,9 +34,9 @@ public class FileRepository extends AbstractRepository
         throw new IllegalArgumentException( "Location existiert nicht! (Location: " + location + ")" );
   }
   
-  public FileRepository( final String identifier, final String location )
+  public FileRepository( final String location )
   {
-    this( identifier, location, null );
+    this( location, null );
   }
 
   /**

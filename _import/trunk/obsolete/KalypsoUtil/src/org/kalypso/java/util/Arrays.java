@@ -1,4 +1,4 @@
-package org.kalypso.java.lang;
+package org.kalypso.java.util;
 
 /**
  * utility stuff for arrays
@@ -354,5 +354,44 @@ public class Arrays
     buf.append( array[to] );
 
     return buf.toString();
+  }
+  
+  /**
+   * Removes a new array same as da but without duplicates, given the array da
+   * is sorted! This method looks sequentially, checking if the elements at
+   * position i and i+1 are equal. <br>
+   * If you call this method on a potentially unsorted array, it might not
+   * change anything.
+   * 
+   * @param da
+   * @param delta
+   * 
+   * @return
+   */
+  public static double[] removeDupicates( double[] da, double delta )
+  {
+    DoubleComparator dc = new DoubleComparator( delta );
+
+    int i = 0;
+
+    double[] dtmp = new double[da.length];
+    int itmp = 0;
+
+    while( i < da.length )
+    {
+      while( ( i < ( da.length - 1 ) ) && ( dc.compare( da[i], da[i + 1] ) == 0 ) )
+        i++;
+
+      dtmp[itmp] = da[i];
+
+      itmp++;
+      i++;
+    }
+
+    double[] dres = new double[itmp];
+
+    System.arraycopy( dtmp, 0, dres, 0, itmp );
+
+    return dres;
   }
 }

@@ -1,27 +1,52 @@
 package org.kalypso.util.repository;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
+
 /**
  * 
  * @author schlienger
  */
 public abstract class AbstractRepository implements IRepository
 {
-  private final String m_identifier;
-
   private final String m_location;
 
-  public AbstractRepository( final String identifier, final String location )
+  private final List m_listeners;
+
+  public AbstractRepository( final String location )
   {
-    m_identifier = identifier;
     m_location = location;
+    m_listeners = new Vector();
   }
 
   /**
-   * @see org.kalypso.util.repository.IRepository#getIdentifier()
+   * @see org.kalypso.util.repository.IRepository#addRepositoryListener(org.kalypso.util.repository.IRepositoryListener)
    */
-  public String getIdentifier()
+  public void addRepositoryListener( IRepositoryListener l )
   {
-    return m_identifier;
+    m_listeners.add( l );
+  }
+
+  /**
+   * @see org.kalypso.util.repository.IRepository#fireRepositoryStructureChanged()
+   */
+  public void fireRepositoryStructureChanged()
+  {
+    for( Iterator iter = m_listeners.iterator(); iter.hasNext(); )
+    {
+      IRepositoryListener element = (IRepositoryListener)iter.next();
+
+      element.onRepositoryStructureChanged();
+    }
+  }
+
+  /**
+   * @see org.kalypso.util.repository.IRepository#removeRepositoryListener(org.kalypso.util.repository.IRepositoryListener)
+   */
+  public void removeRepositoryListener( IRepositoryListener l )
+  {
+    m_listeners.remove( l );
   }
 
   /**
@@ -47,7 +72,7 @@ public abstract class AbstractRepository implements IRepository
   {
     return null;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */

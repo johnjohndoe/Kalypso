@@ -7,8 +7,9 @@ import java.util.Vector;
 
 
 /**
+ * Beinhaltet eine Liste von Repositories und verwaltet Listeners.
+ * 
  * @author schlienger
- *  
  */
 public class DefaultRepositoryContainer implements IRepositoryContainer
 {

@@ -8,7 +8,9 @@ package org.kalypso.util.repository;
  */
 public interface IRepository extends IRepositoryItem
 {
-  public String getIdentifier();
-  
   public String getLocation();
+  
+  public void addRepositoryListener( IRepositoryListener l );
+  public void removeRepositoryListener( IRepositoryListener l );
+  public void fireRepositoryStructureChanged();
 }
