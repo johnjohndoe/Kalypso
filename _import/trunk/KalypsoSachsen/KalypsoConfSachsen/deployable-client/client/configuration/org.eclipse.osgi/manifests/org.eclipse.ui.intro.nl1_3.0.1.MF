@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Generated-from: 1092667484000;type=4
-Bundle-Name: Intro Plugin NL Support
-Bundle-SymbolicName: org.eclipse.ui.intro.nl1
-Bundle-Version: 3.0.1
-Bundle-ClassPath: nl1.jar
-Fragment-Host: org.eclipse.ui.intro;bundle-version="[3.0.1,4.0.0)"
-Bundle-Localization: plugin

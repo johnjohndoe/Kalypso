@@ -81,7 +81,7 @@ wichtig:
 	<property name="war.path" value="file:///${dist.services}/${deployable.war}" />
 
 	<property name="core.path" value="${workspace}/KalypsoCoreServices" />
-	<property file="${core.path}/etc/ant/tomcat.properties" />
+	<property file="${project.path}/tomcat.properties" />
 
 	<path id="ant.classpath">
 		<fileset dir="${core.path}/lib" includes="*.jar" />

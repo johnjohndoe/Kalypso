@@ -3,7 +3,7 @@
 <plugin
    id="org.kalypso.manual"
    name="Kalypso - Manual"
-   version="0.0.5"
+   version="1.0.0"
    provider-name="kalypso.org">
 
    <requires>

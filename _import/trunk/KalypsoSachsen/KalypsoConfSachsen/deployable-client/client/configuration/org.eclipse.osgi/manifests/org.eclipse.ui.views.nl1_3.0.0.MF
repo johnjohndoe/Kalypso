@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Generated-from: 1092667484000;type=4
-Bundle-Name: Views NL Support
-Bundle-SymbolicName: org.eclipse.ui.views.nl1
-Bundle-Version: 3.0.0
-Bundle-ClassPath: nl1.jar
-Fragment-Host: org.eclipse.ui.views;bundle-version="[3.0.0,4.0.0)"
-Bundle-Localization: plugin

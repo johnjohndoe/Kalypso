@@ -33,6 +33,9 @@
 	</target>
 
 	<!-- deploy for bce in the project directory on Q-Drive -->
+  	<!-- TODO: remove old instalation 
+  		Besser gesagt *remove*, denn das klappt nicht, weil feature-and-plugins im Hintergrund läuft!
+  	-->
 	<target name="deploy-for-bce" depends="feature-and-plugins" description="deploy for bce in the project directory on Q-Drive">
 		<copy todir="Q:\\lhz04085\\work\\kalypso_deploy\\kalypso">
 			<fileset dir="${dist.client}" excludes="**/CVS/**"/>
