@@ -29,8 +29,8 @@ import org.kalypso.util.runtime.IVariableArguments;
  * 
  * @author schlienger
  */
-public class LinkedTableViewTemplate extends ObservationTableViewTemplate implements
-    IPoolListener
+public class LinkedTableViewTemplate extends ObservationTableViewTemplate
+    implements IPoolListener
 {
   private final ResourcePool m_pool;
 
@@ -42,7 +42,7 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
   public LinkedTableViewTemplate( )
   {
     super();
-    
+
     m_pool = KalypsoGisPlugin.getDefault().getPool();
     m_key2themes = new TreeMap( m_pool.getKeyComparator() );
   }
@@ -61,8 +61,8 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
     {
       for( final Iterator it = trules.getRenderingrule().iterator(); it
           .hasNext(); )
-        getRules().addRule( RulesFactory.createRenderingRule( (TypeRenderingRule) it
-            .next() ) );
+        getRules().addRule(
+            RulesFactory.createRenderingRule( (TypeRenderingRule) it.next() ) );
     }
 
     final List list = obsTableView.getObservation();
@@ -85,7 +85,8 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
    * @param key
    * @param theme
    */
-  public void startLoading( final PoolableObjectType key, final ITableViewTheme theme )
+  private void startLoading( final PoolableObjectType key,
+      final ITableViewTheme theme )
   {
     // first record key
     m_key2themes.put( key, theme );
@@ -93,26 +94,30 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
     // finally launch request on pool
     m_pool.addPoolListener( this, key );
   }
-  
+
   /**
    * Convenienve method for adding an observation to this template.
-   *
-   * @param themeName used as part of the col name if not null
+   * 
+   * @param themeName
+   *          used as part of the col name if not null
    * @param context
    * @param href
    * @param linktype
    * @param ignoreExceptions
    * @param args
    */
-  public void addObservation( final String themeName, final URL context, final String href, final String linktype, final boolean ignoreExceptions, final IVariableArguments args )
+  public void addObservation( final String themeName, final URL context,
+      final String href, final String linktype, final boolean ignoreExceptions,
+      final IVariableArguments args )
   {
     // create key according to observation link
-    final PoolableObjectType key = new PoolableObjectType( linktype, href, context, ignoreExceptions );
+    final PoolableObjectType key = new PoolableObjectType( linktype, href,
+        context, ignoreExceptions );
 
     // fake theme because it won't be added directly to this template
     DefaultTableViewTheme fakeTheme = new DefaultTableViewTheme( themeName );
     fakeTheme.setArguments( args );
-    
+
     // use load mechanism
     startLoading( key, fakeTheme );
   }
@@ -125,7 +130,8 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
    * @throws FactoryException
    * @throws LoaderException
    */
-  public void saveObservation( final IObservation obs, final IProgressMonitor monitor ) throws LoaderException, FactoryException
+  public void saveObservation( final IObservation obs,
+      final IProgressMonitor monitor ) throws LoaderException, FactoryException
   {
     m_pool.saveObject( obs, monitor );
   }
@@ -136,7 +142,7 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
   public void removeAllThemes( )
   {
     m_key2themes.clear();
-    
+
     super.removeAllThemes();
   }
 
@@ -151,7 +157,7 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
       while( it.hasNext() )
       {
         Object key = it.next();
-        
+
         if( m_key2themes.get( key ) == theme )
         {
           m_key2themes.remove( key );
@@ -159,7 +165,7 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
         }
       }
     }
-    
+
     super.removeTheme( theme );
   }
 
@@ -183,17 +189,20 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
   {
     if( status.isOK() && newValue != null )
     {
-      final DefaultTableViewTheme theme = (DefaultTableViewTheme) m_key2themes.get( key );
+      final DefaultTableViewTheme theme = (DefaultTableViewTheme) m_key2themes
+          .get( key );
 
       if( theme != null )
       {
         final IObservation obs = (IObservation) newValue;
-        
+
         theme.setObservation( obs );
-  
+
         // was it a fake theme?
         if( theme.getColumns().size() == 0 )
+        {
           addObservation( obs, true, theme.getArguments() );
+        }
         else
           addTheme( theme );
       }
@@ -212,7 +221,7 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
 
     if( theme == null )
       return;
-    
+
     removeTheme( theme );
   }
 }

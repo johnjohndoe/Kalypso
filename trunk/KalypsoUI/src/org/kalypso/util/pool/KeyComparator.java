@@ -28,7 +28,10 @@ class KeyComparator implements Comparator
         final URL sourceURL1 = m_urlResolver.resolveURL( k1.getContext(), k1.getLocation() );
         final URL sourceURL2 = m_urlResolver.resolveURL( k2.getContext(), k2.getLocation() );
 
-        return sourceURL1.hashCode() - sourceURL2.hashCode();
+        final String source1 = sourceURL1.toExternalForm();
+        final String source2 = sourceURL2.toExternalForm();
+        
+        return source1.compareTo( source2 );
     }
     catch( MalformedURLException e )
     {
