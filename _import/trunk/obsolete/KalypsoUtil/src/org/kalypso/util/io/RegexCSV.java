@@ -29,7 +29,8 @@ public class RegexCSV implements ITabledValues
    * Constructor. Fetches the file and closes the reader;
    * 
    * @param reader
-   * @param line the line number to start reading the values at
+   * @param line
+   *          the line number to start reading the values at
    * 
    * 
    * @throws IOException
@@ -39,7 +40,7 @@ public class RegexCSV implements ITabledValues
     m_reader = reader;
     m_line = line;
     m_pattern = p;
-    
+
     fetchFile();
   }
 
@@ -49,7 +50,7 @@ public class RegexCSV implements ITabledValues
   private void fetchFile() throws IOException
   {
     BufferedReader r = null;
-    
+
     try
     {
       r = new BufferedReader( m_reader );
@@ -63,20 +64,22 @@ public class RegexCSV implements ITabledValues
         line = r.readLine();
         lineNR++;
       }
-      
+
       while( line != null )
       {
         Matcher m = m_pattern.matcher( line );
-        String[] sLine = new String[m.groupCount()];
-        
-        for( int i = 0; i < sLine.length; i++ )
-          sLine[i] = m.group(i);
-        
-        m_lines.add( sLine );
+        if( m.matches() )
+        {
+          String[] sLine = new String[m.groupCount()];
 
+          for( int i = 0; i < sLine.length; i++ )
+            sLine[i] = m.group( i+1 );
+
+          m_lines.add( sLine );
+        }
         line = r.readLine();
       }
-      
+
       r.close();
     }
     catch( IOException e )
