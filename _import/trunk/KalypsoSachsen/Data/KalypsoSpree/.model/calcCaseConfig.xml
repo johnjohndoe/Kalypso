@@ -42,7 +42,6 @@
 	
 <!-- Einzugsgebiete -->
 	<updateTransformations>
-		
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
 			<argument name="feature" value="Einzugsgebiet"/>
@@ -53,7 +52,7 @@
 			<argument name="startsim" value=":startsim:"/>
 			<argument name="startforecast" value=":startforecast:"/>
 			<argument name="endsim" value=":endsim:"/>
-</transformation>
+		</transformation>
 	
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
@@ -107,6 +106,8 @@
 			<argument name="feature" value="Zufluss"/>
 			<argument name="sourceObservation1" value="Zugabe_eingang"/>
 			<argument name="targetObservation" value="Zugabe"/>
+			<argument name="rangeMode1" value="start-stop"/>
+			<argument name="rangeMode2" value=""/>
 			<argument name="targetFolder" value=":calcdir:"/>
 			<argument name="startsim" value=":startsim:"/>
 			<argument name="startforecast" value=":startforecast:"/>
