@@ -280,6 +280,8 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
 
   protected void runCalculation()
   {
+    m_viewer.saveData();
+    
     try
     {
       getWizard().getContainer().run( false, true, new IRunnableWithProgress()
@@ -289,7 +291,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
         {
           try
           {
-            m_viewer.saveData();
             
             monitor.beginTask( "Prognoserechnung durchführen",  2000 );
             
