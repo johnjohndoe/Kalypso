@@ -33,7 +33,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.optimize.IOpmizingJob;
+import org.kalypso.optimize.IOptimizingJob;
 import org.kalypso.optimize.transform.OptimizeModelUtils;
 import org.kalypso.optimize.transform.ParameterOptimizeContext;
 import org.kalypso.optimizer.AutoCalibration;
@@ -53,7 +53,7 @@ import org.w3c.dom.Document;
  * 
  * @author doemming
  */
-public class NAOptimizingJob implements IOpmizingJob
+public class NAOptimizingJob implements IOptimizingJob
 {
   private final File m_baseInputDir;
 
@@ -141,7 +141,7 @@ public class NAOptimizingJob implements IOpmizingJob
   }
 
   /**
-   * @see org.kalypso.optimize.IOpmizingJob#calculate()
+   * @see org.kalypso.optimize.IOptimizingJob#calculate()
    */
   public void calculate()
   {
@@ -174,7 +174,7 @@ public class NAOptimizingJob implements IOpmizingJob
   }
 
   /**
-   * @see org.kalypso.optimize.IOpmizingJob#setBestEvaluation(boolean)
+   * @see org.kalypso.optimize.IOptimizingJob#setBestEvaluation(boolean)
    */
   public void setBestEvaluation( boolean lastWasBest )
   {
@@ -213,7 +213,7 @@ public class NAOptimizingJob implements IOpmizingJob
   }
 
   /**
-   * @see org.kalypso.optimize.IOpmizingJob#optimize(org.kalypso.optimizer.Parameter[],
+   * @see org.kalypso.optimize.IOptimizingJob#optimize(org.kalypso.optimizer.Parameter[],
    *      double[])
    */
   public void optimize( Parameter[] parameterConf, double values[] ) throws Exception
@@ -249,7 +249,7 @@ public class NAOptimizingJob implements IOpmizingJob
   /**
    * @throws SensorException
    * @throws MalformedURLException
-   * @see org.kalypso.optimize.IOpmizingJob#getMeasuredTimeSeries()
+   * @see org.kalypso.optimize.IOptimizingJob#getMeasuredTimeSeries()
    */
   public TreeMap getMeasuredTimeSeries() throws MalformedURLException, SensorException
   {
@@ -279,7 +279,7 @@ public class NAOptimizingJob implements IOpmizingJob
    * @return
    * @throws SensorException
    * @throws MalformedURLException
-   * @see org.kalypso.optimize.IOpmizingJob#getCalcedTimeSeries()
+   * @see org.kalypso.optimize.IOptimizingJob#getCalcedTimeSeries()
    */
   public TreeMap getCalcedTimeSeries() throws MalformedURLException, SensorException
   {
@@ -306,7 +306,7 @@ public class NAOptimizingJob implements IOpmizingJob
   }
 
   /**
-   * @see org.kalypso.optimize.IOpmizingJob#getResults()
+   * @see org.kalypso.optimize.IOptimizingJob#getResults()
    */
   public CalcJobDataBean[] getResults()
   {
@@ -345,7 +345,7 @@ public class NAOptimizingJob implements IOpmizingJob
   }
 
   /**
-   * @see org.kalypso.optimize.IOpmizingJob#getOptimizeConfiguration()
+   * @see org.kalypso.optimize.IOptimizingJob#getOptimizeConfiguration()
    */
   public AutoCalibration getOptimizeConfiguration()
   {

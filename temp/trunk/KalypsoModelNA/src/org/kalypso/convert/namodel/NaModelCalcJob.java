@@ -8,7 +8,7 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.feature.FeatureHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.optimize.IOpmizingJob;
+import org.kalypso.optimize.IOptimizingJob;
 import org.kalypso.optimize.OptimizerCalJob;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -43,7 +43,7 @@ public class NaModelCalcJob implements ICalcJob
       
       if( optimize )
       {
-        final IOpmizingJob optimizeJob;
+        final IOptimizingJob optimizeJob;
         optimizeJob = new NAOptimizingJob( basedir, beans );
         m_calcJob = new OptimizerCalJob( LOGGER, optimizeJob );
       }
