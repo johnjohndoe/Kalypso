@@ -8,10 +8,10 @@ import java.util.List;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
-import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -29,11 +29,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.ogc.gml.GisTemplateHelper;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.MapPanel;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.widgets.SingleElementSelectWidget;
 import org.kalypso.ogc.sensor.SensorException;
@@ -42,27 +39,22 @@ import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.diagview.template.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.template.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
-import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.ModelNature;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Belger
  */
 public class MapAndTableWizardPage extends AbstractCalcWizardPage implements ModellEventListener
 {
-  /** Pfad auf Vorlage f?r die Karte (.gmt Datei) */
-  public final static String PROP_MAPTEMPLATE = "mapTemplate";
-
   /** Der Titel der Seite */
   public static final String PROP_MAPTITLE = "mapTitle";
 
-  /** Pfad auf Vorlage f?r die Gis-Tabell (.gtt Datei) */
+  /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
   public final static String PROP_TABLETEMPLATE = "tableTemplate";
 
-  /** Pfad auf die Vorlage f?r das Diagramm (.odt Datei) */
+  /** Pfad auf die Vorlage für das Diagramm (.odt Datei) */
   public final static String PROP_DIAGTEMPLATE = "diagTemplate";
 
   /** Position des Haupt-Sash: Integer von 0 bis 100 */
@@ -77,15 +69,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
-  private static final int SELECTION_ID = 0x10;
-
   private LayerTableViewer m_viewer;
-
-  private IMapModell m_mapModell;
-
-  private GM_Envelope m_boundingBox;
-
-  private MapPanel m_mapPanel;
 
   private Frame m_diagFrame = null;
 
@@ -105,8 +89,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
    */
   public void dispose()
   {
-    if( m_mapModell != null )
-      m_mapModell.removeModellListener( this );
+    super.dispose();
   }
 
   /**
@@ -230,7 +213,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
 
       m_viewer = new LayerTableViewer( parent, this, getProject(), KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), SELECTION_ID, false );
-      m_viewer.applyTableTemplate( template, getProject() );
+      m_viewer.applyTableTemplate( template, getContext() );
     }
     catch( final Exception e )
     {
@@ -245,15 +228,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     ///////////////
     // MapModell //
     ///////////////
-    final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
-    final IFile mapFile = (IFile)getProject().findMember( mapFileName );
-
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
-    final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-    m_mapModell = new GisTemplateMapModell( gisview, getProject(), crs );
-    m_mapModell.addModellListener( this );
-
-    m_mapPanel = new MapPanel( this, crs, SELECTION_ID );
 
     ////////
     // UI //
@@ -261,23 +235,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     final Composite mapPanel = new Composite( parent, SWT.NONE );
     mapPanel.setLayout( new GridLayout() );
 
-    final Composite mapComposite = new Composite( mapPanel, SWT.EMBEDDED | SWT.BORDER );
-    mapComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
-    final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
-
-    virtualFrame.setVisible( true );
-    m_mapPanel.setVisible( true );
-    virtualFrame.add( m_mapPanel );
-
-    m_mapPanel.setMapModell( m_mapModell );
-    m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
-    m_boundingBox = GisTemplateHelper.getBoundingBox( gisview );
-
-    // das kann erst passieren, wenn die Control fertig ist: beim ersten rezise
-    // event
-    m_mapPanel.setBoundingBox( m_boundingBox );
-    m_mapPanel.changeWidget( new SingleElementSelectWidget() );
+    initMap( mapPanel, new SingleElementSelectWidget() );
   }
 
   /**
@@ -299,7 +257,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     if( m_diagFrame == null || !isCurrentPage() )
       return;
 
-    final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
+    final IKalypsoLayer layer = getMapModell().getActiveTheme().getLayer();
     if( !( layer instanceof KalypsoFeatureLayer ) )
       return;
 
@@ -337,11 +295,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     }
   }
 
-  public void maximizeMap()
-  {
-    m_mapPanel.setBoundingBox( m_boundingBox );
-  }
-
   protected void runCalculation()
   {
     m_viewer.saveData();
@@ -350,9 +303,9 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     {
       public void execute( final IProgressMonitor monitor ) throws CoreException
       {
-//        monitor.beginTask( "Berechnung wird durchgeführt", 2000 );
+        monitor.beginTask( "Berechnung läuft...", 1000 );
         final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature( ModelNature.ID );
-        nature.runCalculation( getCalcFolder(), monitor );
+        nature.runCalculation( getCalcFolder(), new SubProgressMonitor( monitor, 1000 ) );
       }
     };
 

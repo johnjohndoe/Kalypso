@@ -10,7 +10,6 @@ import org.deegree.services.wms.capabilities.WMSCapabilities;
 import org.deegree_impl.services.wms.RemoteWMService;
 import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
 import org.deegree_impl.tools.NetWorker;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
@@ -34,18 +33,6 @@ public class WmsLoader extends AbstractLoader
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
   protected Object loadIntern( Properties source, URL context, IProgressMonitor monitor ) throws LoaderException
-  {
-    // TODO: currently unsupported, remove deprecated one and implement this one
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties,
-   *      org.eclipse.core.resources.IProject,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
-  public Object loadIntern( final Properties source, final IProject project,
-      final IProgressMonitor monitor ) throws LoaderException
   {
     try
     {

@@ -34,5 +34,4 @@ public interface GMLWorkspace extends ModellEventProvider
       String linkPropertyName );
 
   public Feature getFeature( FeatureType ft, String id );
-
 }

@@ -1,24 +1,50 @@
 package org.kalypso.ui.calcwizard.modelpages;
 
+import java.awt.Frame;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
+import javax.xml.bind.JAXBException;
+
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree.model.geometry.GM_Envelope;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.ogc.gml.GisTemplateHelper;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.MapPanel;
+import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Belger
  */
 public abstract class AbstractCalcWizardPage extends WizardPage implements IModelWizardPage,
-    ICommandTarget
+    ICommandTarget, ModellEventListener
 {
+  public static final int SELECTION_ID = 0x10;
+  
+  /** Pfad auf Vorlage für die Karte (.gmt Datei) */
+  public final static String PROP_MAPTEMPLATE = "mapTemplate";
+  
   private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( null );
 
   private Properties m_arguments = null;
@@ -28,10 +54,25 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private IFolder m_calcFolder = null;
   
   private Properties m_replaceProperties = new Properties();
+  
+  private IMapModell m_mapModell = null;
+
+  private MapPanel m_mapPanel;
+  
+  private GM_Envelope m_boundingBox;
 
   public AbstractCalcWizardPage( final String name )
   {
     super( name );
+  }
+  
+  /**
+   * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
+   */
+  public void dispose()
+  {
+    if( m_mapModell != null )
+      m_mapModell.removeModellListener( this );
   }
 
   public Properties getArguments()
@@ -75,7 +116,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_arguments = arguments;
     m_calcFolder = calcFolder;
     
-    m_replaceProperties.setProperty( "calcdir:", calcFolder.getProjectRelativePath().toString() + "/" );
+    try
+    {
+      final URL calcURL = ResourceUtilities.createURL( calcFolder );
+      m_replaceProperties.setProperty( "calcdir:", calcURL.toString() );
+    }
+    catch( final MalformedURLException e )
+    {
+      // TODO: error handling
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -91,5 +141,48 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected Properties getReplaceProperties()
   {
     return m_replaceProperties;
+  }
+
+
+  protected void initMap( final Composite parent, final IWidget widget ) throws IOException, JAXBException, CoreException
+  {
+    final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
+    final IFile mapFile = (IFile)getProject().findMember( mapFileName );
+    if( mapFile == null )
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Vorlagendatei existiert nicht: " + mapFileName, null ) );
+
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
+    final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+    m_mapModell = new GisTemplateMapModell( gisview, ResourceUtilities.createURL(mapFile), crs );
+
+    m_mapModell.addModellListener( this );
+
+    m_mapPanel = new MapPanel( this, crs, SELECTION_ID );
+    m_boundingBox = GisTemplateHelper.getBoundingBox( gisview );
+    final Composite mapComposite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+    mapComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    
+    final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
+
+    virtualFrame.setVisible( true );
+    m_mapPanel.setVisible( true );
+    virtualFrame.add( m_mapPanel );
+
+    m_mapPanel.setMapModell( m_mapModell );
+    m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
+
+    m_mapPanel.changeWidget( widget );
+
+    m_mapPanel.setBoundingBox( m_boundingBox );
+  }
+
+  protected IMapModell getMapModell()
+  {
+    return m_mapModell;
+  }
+  
+  public void maximizeMap()
+  {
+    m_mapPanel.setBoundingBox( m_boundingBox );
   }
 }

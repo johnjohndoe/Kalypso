@@ -4,12 +4,12 @@ import java.awt.Frame;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.xml.bind.JAXBException;
 
 import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -18,6 +18,7 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -159,9 +160,10 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     monitor.worked( 1000 );
 
-    final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
-
-    final IMapModell mapModell = new GisTemplateMapModell( gisview, project, KalypsoGisPlugin
+    final IFile inputFile = ( (IFileEditorInput)getEditorInput() ).getFile();
+    final URL context = ResourceUtilities.createURL( inputFile );
+    
+    final IMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin
         .getDefault().getCoordinatesSystem() );
     setMapModell( mapModell );
 

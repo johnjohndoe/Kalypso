@@ -1,5 +1,6 @@
 package org.kalypso.ogc.gml.table;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -239,7 +240,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     super.handleDispose( event );
   }
 
-  public void applyTableTemplate( final Gistableview tableView, final IProject project )
+  public void applyTableTemplate( final Gistableview tableView, final URL context )
   {
     m_isApplyTemplate = true;
     
@@ -249,7 +250,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     if( tableView != null )
     {
       final LayerType layer = tableView.getLayer();
-      setTheme( new PoolableKalypsoFeatureTheme( layer, project ) );
+      setTheme( new PoolableKalypsoFeatureTheme( layer, context ) );
   
       final SortType sort = layer.getSort();
       if( sort != null )
@@ -611,7 +612,14 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   public void saveData()
   {
-    getTheme().saveFeatures();
+    try
+    {
+      getTheme().saveFeatures();
+    }
+    catch( FactoryException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   /**

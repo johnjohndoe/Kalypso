@@ -485,7 +485,14 @@
             <groupMarker name="modelStart"/>
             <separator name="modelSep"/>
             <groupMarker name="calcCaseStart"/>
+            <groupMarker name="prognoseStart"/>
          </menu>
+		 <action
+               label="Hochwasser Vorhersage durchführen"
+               class="org.kalypso.ui.action.StartCalcWizardAction"
+               menubarPath="org.kalypso.menu.model/prognoseStart"
+               id="org.kalypso.action.model.checkoutModel"/>
+               
          <action
                label="Berechnung durchführen"
                class="org.kalypso.ui.action.StartCalculationActionDelegate"
@@ -504,7 +511,6 @@
                tooltip="legt eine Variante vom aktuelle gewählten Modell an"
                menubarPath="org.kalypso.menu.model/modelStart"
                id="org.kalypso.action.model.copyModel"/>
-
          <action
                label="Modell zurückspeichern"
                tooltip="Speichert die Änderungen am Modell auf den Server zurück"
@@ -518,11 +524,6 @@
          <action
                label="Modell vom Server laden"
                tooltip="lädt ein Modell vom Sever, falls es nicht bereits vorhanden ist"
-               menubarPath="org.kalypso.menu.model/modelStart"
-               id="org.kalypso.action.model.checkoutModel"/>
-         <action
-               label="Vorhersagerechnung"
-               class="org.kalypso.ui.action.StartCalcWizardAction"
                menubarPath="org.kalypso.menu.model/modelStart"
                id="org.kalypso.action.model.checkoutModel"/>
       </actionSet>

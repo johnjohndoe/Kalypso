@@ -55,6 +55,7 @@ public class GisTemplateHelper
   public static final Gismapview loadGisMapView( final IFile file, final Properties replaceProps )
       throws CoreException, IOException, JAXBException
   {
+    // TODO: replace with 'ReplaceToken'
     final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file
         .getCharset() );
     final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );

@@ -9,28 +9,23 @@ import javax.swing.JScrollPane;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
-import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.jfree.chart.ChartPanel;
-import org.kalypso.ogc.gml.GisTemplateHelper;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayer;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.MapPanel;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.widgets.ToggleSelectWidget;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
@@ -41,9 +36,7 @@ import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.tableview.template.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.template.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
-import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author schlienger
@@ -51,9 +44,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage implements
     ModellEventListener
 {
-  /** Pfad auf Vorlage f?r die Karte (.gmt Datei) */
-  public final static String PROP_MAPTEMPLATE = "mapTemplate";
-
   /** Der Titel der Seite */
   public static final String PROP_MAPTITLE = "mapTitle";
 
@@ -75,10 +65,6 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
-  private static final int SELECTION_ID = 0x10;
-
-  private IMapModell m_mapModell = null;
-
   private Frame m_diagFrame = null;
 
   private Frame m_tableFrame = null;
@@ -97,10 +83,6 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
   private boolean m_useResolver = false;
 
-  private MapPanel m_mapPanel;
-
-  private GM_Envelope m_boundingBox;
-
   private ObservationTable m_table;
 
   public ObservationMapTableDiagWizardPage()
@@ -113,9 +95,6 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
    */
   public void dispose()
   {
-    if( m_mapModell != null )
-      m_mapModell.removeModellListener( this );
-
     if( m_diagTemplate != null )
       m_diagTemplate.removeTemplateEventListener( m_obsChart );
     
@@ -261,39 +240,10 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
   {
-    final ViewForm mapView = new ViewForm( parent, SWT.FLAT );
+    final Composite mapPanel = new Composite( parent, SWT.NONE );
+    mapPanel.setLayout( new GridLayout() );
 
-    final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
-    final IFile mapFile = (IFile)getProject().findMember( mapFileName );
-    if( mapFile == null )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Vorlagendatei existiert nicht: " + mapFileName, null ) );
-
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
-    final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-    m_mapModell = new GisTemplateMapModell( gisview, getProject(), crs );
-    m_mapModell.addModellListener( this );
-
-    m_mapPanel = new MapPanel( this, crs, SELECTION_ID );
-    m_boundingBox = GisTemplateHelper.getBoundingBox( gisview );
-    final Composite mapComposite = new Composite( mapView, SWT.RIGHT | SWT.EMBEDDED );
-    final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
-
-    virtualFrame.setVisible( true );
-    m_mapPanel.setVisible( true );
-    virtualFrame.add( m_mapPanel );
-
-    m_mapPanel.setMapModell( m_mapModell );
-    m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
-
-    m_mapPanel.changeWidget( new ToggleSelectWidget() );
-
-    final GisMapOutlineViewer outlineViewer = new GisMapOutlineViewer( this, m_mapModell );
-    outlineViewer.createControl( mapView );
-
-    mapView.setContent( mapComposite );
-    mapView.setTopLeft( outlineViewer.getControl() );
-
-    m_mapPanel.setBoundingBox( m_boundingBox );
+    initMap( mapPanel, new ToggleSelectWidget() );
   }
 
   /**
@@ -312,7 +262,15 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     if( m_diagFrame == null || !isCurrentPage() )
       return;
 
-    final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
+    final IMapModell mapModell = getMapModell();
+    if( mapModell == null )
+      return;
+    
+    final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+    if( activeTheme == null )
+      return;
+    
+    final IKalypsoLayer layer = activeTheme.getLayer();
     if( !( layer instanceof KalypsoFeatureLayer ) )
       return;
 
@@ -331,28 +289,17 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     {
       try
       {
-        KalypsoWizardHelper.updateDiagramTemplate( m_tsProps, selectedFeatures,
-            m_diagTemplate, m_useResolver, getContext() );
-        KalypsoWizardHelper.updateTableTemplate( m_tsProps, selectedFeatures,
-            m_tableTemplate, m_useResolver, getContext() );
+        KalypsoWizardHelper.updateDiagramTemplate( m_tsProps, selectedFeatures, m_diagTemplate,
+            m_useResolver, getContext() );
+        KalypsoWizardHelper.updateTableTemplate( m_tsProps, selectedFeatures, m_tableTemplate,
+            m_useResolver, getContext() );
       }
       catch( final SensorException e )
       {
+        // TODO: error handling?
+        
         e.printStackTrace();
-        getShell().getDisplay().asyncExec( new Runnable()
-            {
-              public void run( )
-              {
-                MessageDialog.openError( getShell(), "Aktualisierungsfehler", e.getLocalizedMessage() );
-              }
-            });
       }
     }
   }
-
-  public void maximizeMap()
-  {
-    m_mapPanel.setBoundingBox( m_boundingBox );
-  }
-
 }
