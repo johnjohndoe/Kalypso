@@ -45,13 +45,6 @@ import java.io.FileWriter;
 import java.io.Writer;
 import java.net.URL;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypso.convert.WeisseElsterConstants;
 import org.kalypso.convert.namodel.NAZMLGenerator;
 import org.kalypso.convert.namodel.schema.KalypsoNADefaultSchema;
@@ -59,6 +52,13 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author huebsch
@@ -72,7 +72,13 @@ public class UpdateModellKollau
 
   public final static String PSI_PROGNOSE_SUFFIX = ".P1_MW";
 
-  public final static String KollauPREFIX_LINK_N_LOKAL = "Niederschlag/Niederschlag_";//...+.zml
+  public final static String KollauPREFIX_LINK_N_LOKAL = "Niederschlag/Ombrometer_";//...+.zml
+
+  public final static String KollauPREFIX_LINK_N_REPSITORY = "project:/.model/Zeitreihen/Niederschlag/Ombrometer_";//...+.zml
+
+  public final static String KollauPREFIX_LINK_GEBN_LOKAL = "Niederschlag/";//...+.zml
+
+  public final static String KollauPREFIX_LINK_GEBN_REPOSITORY = "project:/.model/Zeitreihen/Niederschlag/";
 
   public static void main( String[] args )
   {
@@ -111,7 +117,8 @@ public class UpdateModellKollau
     // Catchments...
     final FeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
     final Feature[] catchmentFEs = workspace.getFeatures( catchmentFT );
-//    updateCatchments( catchmentFEs );
+    //    updateCatchments( catchmentFEs );
+    //    updateGebNiederschlagZR( catchmentFEs );
     updateNiederschlagZR( catchmentFEs );
     // Nodes
     final FeatureType nodeFT = workspace.getFeatureType( "Node" );
@@ -125,16 +132,18 @@ public class UpdateModellKollau
     writer.close();
     System.out.println( " updated model is written to " + file.getCanonicalPath() );
   }
+
   private static void updateCatchments( Feature[] features ) throws Exception
   {
 
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
-      
+
     }
   }
-//  int asciiID = Integer.parseInt( (String)idProp.getValue() );
+
+  //  int asciiID = Integer.parseInt( (String)idProp.getValue() );
   private static void updateNiederschlagZR( Feature[] features ) throws Exception
   {
 
@@ -152,27 +161,74 @@ public class UpdateModellKollau
         TimeseriesLink linkNiederschlagZR = NAZMLGenerator
             .generateobsLink( KollauPREFIX_LINK_N_LOKAL + "wasserwerk.zml" );
         setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
+        TimeseriesLink linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator
+            .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "wasserwerk.zml" );
+        setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepositoryVorhersage );
+        TimeseriesLink linkNiederschlagZRRepository = NAZMLGenerator
+            .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "wasserwerk.zml" );
+        setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
       }
-      else if( id == 601 ||(id>= 603 && id<=608) || (id>= 619 && id<=620))
+      else if( id == 601 || ( id >= 603 && id <= 608 ) || ( id >= 619 && id <= 620 ) )
       {
         TimeseriesLink linkNiederschlagZR = NAZMLGenerator
-        .generateobsLink( KollauPREFIX_LINK_N_LOKAL + "Desy.zml" );
-    setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
-      }
-      
-      else if((id>= 400 && id<=407) ||  id == 503 || id == 501 ||(id>= 609 && id<=618))
-      {
-        TimeseriesLink linkNiederschlagZR = NAZMLGenerator
-        .generateobsLink( KollauPREFIX_LINK_N_LOKAL + "DB.zml" );
-    setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
+            .generateobsLink( KollauPREFIX_LINK_N_LOKAL + "Desy.zml" );
+        setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
+        TimeseriesLink linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator
+            .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Desy.zml" );
+        setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepositoryVorhersage );
+        TimeseriesLink linkNiederschlagZRRepository = NAZMLGenerator
+            .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Desy.zml" );
+        setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
       }
 
-      else if(id == 107|| id == 301 ||id == 409 ||id == 500 ||id == 505 ||(id>= 621 && id<=623) ||  (id>= 700 && id<=704)||  (id>= 708 && id<=730) || id ==900)
+      else if( ( id >= 400 && id <= 407 ) || id == 503 || id == 501 || ( id >= 609 && id <= 618 ) )
       {
         TimeseriesLink linkNiederschlagZR = NAZMLGenerator
-        .generateobsLink( KollauPREFIX_LINK_N_LOKAL + "Bauhof.zml" );
-    setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
+            .generateobsLink( KollauPREFIX_LINK_N_LOKAL + "DB.zml" );
+        setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
+        TimeseriesLink linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator
+            .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "DB.zml" );
+        setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepositoryVorhersage );
+        TimeseriesLink linkNiederschlagZRRepository = NAZMLGenerator
+            .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "DB.zml" );
+        setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
       }
+
+      else if( id == 107 || id == 301 || id == 409 || id == 500 || id == 505
+          || ( id >= 621 && id <= 623 ) || ( id >= 700 && id <= 704 ) || ( id >= 708 && id <= 730 )
+          || id == 900 )
+      {
+        TimeseriesLink linkNiederschlagZR = NAZMLGenerator
+            .generateobsLink( KollauPREFIX_LINK_N_LOKAL + "Bauhof.zml" );
+        setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
+        TimeseriesLink linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator
+            .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Bauhof.zml" );
+        setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepositoryVorhersage );
+        TimeseriesLink linkNiederschlagZRRepository = NAZMLGenerator
+            .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Bauhof.zml" );
+        setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
+      }
+    }
+  }
+
+  private static void updateGebNiederschlagZR( Feature[] features ) throws Exception
+  {
+
+    for( int i = 0; i < features.length; i++ )
+    {
+      final Feature feature = features[i];
+
+      // Niederschlag Lokale Gebietsniederschlagszeitreihen setzen
+      Object idObj = feature.getProperty( "inum" );
+      int id = Integer.parseInt( idObj.toString() );
+      TimeseriesLink linkNiederschlagZR = NAZMLGenerator
+          .generateobsLink( KollauPREFIX_LINK_GEBN_LOKAL + "Niederschlag_Catchment" + id + ".zml" );
+      setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
+      TimeseriesLink linkNiederschlagZRRepository = NAZMLGenerator
+          .generateobsLink( KollauPREFIX_LINK_GEBN_REPOSITORY + "Niederschlag_Catchment" + id
+              + ".zml" );
+      setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
+      setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepository );
     }
   }
 
