@@ -13,7 +13,7 @@
 <!--
 	<transformation className="org.kalypso.model.transformation.XslTransformation">
 		<arg name="input" value="modell.gml"/>
-		<arg name="xsl" value="modellTyp/calcCaseTrans.xsl"/>
+		<arg name="xsl" value=".modellTyp/calcCaseTrans.xsl"/>
 		<arg name="output" value="calcCase.gml"/>
 	</transformation>
 -->

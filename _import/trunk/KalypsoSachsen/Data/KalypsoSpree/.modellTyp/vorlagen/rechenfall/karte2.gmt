@@ -2,10 +2,9 @@
 <gismapview xmlns="gismapview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<extent bottom="1245.0" left="123.4" right="456.7" top="111.1"/>
 	<layers>
-		<layer name="Vorhersagepegel (N-A Modell)" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=modellTyp/modell.xsd#LAYER=Einzugsgebiet" linktype="gml">
-			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/namodelle.sld#STYLE=NA-Modelle" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
+		<layer name="Vorhersagepegel (Flußlaufmodell)" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=.modellTyp/modell.xsd#LAYER=Flusslaufmodell" linktype="gml">
+			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/flusslaufmodelle.sld#STYLE=Flusslaufmodelle" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
 		</layer>
-
 		<layer name="Gewässerverlauf" visible="true" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/schoeps_loebauer_wasser#SRS=EPSG:31469" linktype="shape">
 			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/styles.sld#STYLE=sachsenrivers" linktype="style" />
 		</layer>

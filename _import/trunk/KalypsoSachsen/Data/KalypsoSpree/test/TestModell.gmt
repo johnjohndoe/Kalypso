@@ -3,7 +3,7 @@
 	<extent bottom="1245.0" left="123.4" right="456.7" top="111.1"/>
 	<layers>
 
-		<layer name="Talsperren" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=modellTyp/modell.xsd#LAYER=Talsperre" linktype="gml">
+		<layer name="Talsperren" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=.modellTyp/modell.xsd#LAYER=Talsperre" linktype="gml">
 			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/styles.sld#STYLE=Talsperren" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
 		</layer>
 
@@ -20,15 +20,15 @@
 	-->
 		</layer>
 
-		<layer name="Einzugsgebiete" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=modellTyp/modell.xsd#LAYER=Einzugsgebiet" linktype="gml">
+		<layer name="Einzugsgebiete" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=.modellTyp/modell.xsd#LAYER=Einzugsgebiet" linktype="gml">
 			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/styles.sld#STYLE=Einzugsgebiete" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
 		</layer>
 
-		<layer name="Flusslaufmodelle" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=modellTyp/modell.xsd#LAYER=Flusslaufmodell" linktype="gml">
+		<layer name="Flusslaufmodelle" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=.modellTyp/modell.xsd#LAYER=Flusslaufmodell" linktype="gml">
 			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/styles.sld#STYLE=Flusslaufmodelle" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
 		</layer>
 
-		<layer name="Zuflüsse" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=modellTyp/modell.xsd#LAYER=Zufluss" linktype="gml">
+		<layer name="Zuflüsse" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=.modellTyp/modell.xsd#LAYER=Zufluss" linktype="gml">
 			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/styles.sld#STYLE=Zufluesse" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
 		</layer>
 		
