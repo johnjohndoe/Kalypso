@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="deegree/"/>
+	<classpathentry kind="src" path="deegree"/>
 	<classpathentry exported="true" kind="lib" path="lib/acme/acme.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/jai_codec.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/java3d/j3dcore.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jts/jts.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-awt-util.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-css.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-dom.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-svg-dom.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-svggen.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-util.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-xml.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/ecw/ermapperdoc.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/jai_core.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/mlibwrapper_jai.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/java3d/j3dutils.jar"/>
@@ -27,8 +19,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/jaxrpc-spi.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/mail.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mail/mail.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/mysql/mysql-connector-java-3.0.8-stable-bin.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/oracle/ojdbc14.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/servlet/jsdk2.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/saaj-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/saaj-impl.jar"/>
