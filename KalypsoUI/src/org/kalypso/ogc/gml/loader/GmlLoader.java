@@ -115,6 +115,10 @@ public class GmlLoader extends AbstractLoader
             GmlSerializer.serializeWorkspace( writer, workspace);            
           }
         };
+
+        // damit der change event nicht kommt
+        savingResource( file );
+        
         thread.setFileContents( file, false, true, new NullProgressMonitor() );
       }
       else if( file == null && gmlURL.getProtocol().equals( "file" ) )

@@ -1,6 +1,8 @@
 package org.kalypso.loader;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
@@ -31,13 +33,15 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
 
   private final AbstractLoader m_loader;
 
+  private Collection m_ignoreOneTimeList = new HashSet();
+
   public AbstractLoaderResourceDeltaVisitor( final AbstractLoader loader )
   {
     m_loader = loader;
   }
 
   /**
-   * TRICKY: manschmal hat der Pfad der Resource zwei slashes, manschmal nicht.
+   * TRICKY: manchmal hat der Pfad der Resource zwei slashes, manchmal nicht.
    * Deswegen dieser Methode: sie ersetzt die "//" mit "/" wenn es notwendig
    * ist. Der PFad wird letztendlich als key für der Map benutzt, um zu prüfen
    * ob eine Resource schon da ist.
@@ -79,6 +83,12 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
   public boolean visit( IResourceDelta delta ) throws CoreException
   {
     final IResource resource = delta.getResource();
+    if( m_ignoreOneTimeList.contains( resource ) )
+    {
+      m_ignoreOneTimeList.remove( resource );
+      return true;
+    }
+    
     final Object oldValue = m_resourceMap.get( pathFor( resource ) );
     if( oldValue != null )
     {
@@ -109,5 +119,13 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
     }
 
     return true;
+  }
+
+  /**
+   * Der nächste change event dieser Resource wird ignoriert
+   */
+  public void ignoreResourceOneTime( final IResource resource )
+  {
+    m_ignoreOneTimeList.add( resource );
   }
 }
