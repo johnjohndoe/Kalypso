@@ -12,6 +12,7 @@
 		<fileset dir="./lib/" includes="*.jar" />
 		<pathelement location="${build.proxy}" />
 		<pathelement location="${build}" />
+		<pathelement location="${workspace}/KalypsoCoreServices/build/bin" />
 	</path>
 
 	<path id="ant.classpath">
@@ -20,8 +21,8 @@
 
 	<path id="compile.classpath">
 		<path refid="generate.classpath"/>
-		<pathelement location="${project.path}/build/bin" />
-		<pathelement location="${workspace}/KalypsoCoreServices/build/bin" />
+		<!--schon in build.properties pathelement location="${project.path}/build/bin" /-->
+		<!-- schon in generate.classpath pathelement location="${workspace}/KalypsoCoreServices/build/bin" /-->
 	</path>
 
 	<fileset id="compile.jars" dir="./lib/" includes="*.jar" />
