@@ -21,8 +21,8 @@
     <property name="lib.dir" value="lib" />
     <property name="xdoclet.jar.path" value="${basedir}/lib/xdoclet.jar" />
     <property name="log4j.jar.path" value="lib/log4j.jar" />
-    <property name="log4j.path" value="${basedir}/script" />
-    <property name="ant.jar.path" value="lib/ant.jar" />
+    <!--<property name="log4j.path" value="${basedir}/script" />
+   --> <property name="ant.jar.path" value="lib/ant.jar" />
     
     <property name="Name" value="JavaGis2" />
     <property name="name" value="javaGis2" />    
@@ -127,22 +127,36 @@
   </target>
 
   <target name="prepare-java-sources" depends="prepare">
-
-    <exec executable="/opt/j2sdk1.4.2/bin/java"
-	  failonerror="true" dir=""
-	  output="${xsl-target.dir}/idManagerSource.java">
-      <arg line="-Dcom.jclark.xsl.sax.parser=org.apache.xerces.parsers.SAXParser com.jclark.xsl.sax.Driver"/>
+    
+ <java fork="true" failonerror="true" classpath="${lib.dir}/xt.jar:${lib.dir}/xercesImpl.jar" classname="com.jclark.xsl.sax.Driver" output="${xsl-target.dir}/idManagerSource.java">
+  <jvmarg line="-Dcom.jclark.xsl.sax.parser=org.apache.xerces.parsers.SAXParser"/>
+    <arg line="${xml.src.dir}/NA_Control.xml"/>
+       <arg line="${xsl.src.dir}/2idManager.xsl"/>
+</java>
+<!--    <exec executable="java" 
+	  output="${xsl-target.dir}/idManagerSource.java" 
+	  failonerror="true" >
+      <arg line="-Dcom.jclark.xsl.sax.parser=org.apache.xerces.parsers.SAXParser"/>
       <arg line="${xml.src.dir}/NA_Control.xml"/>
       <arg line="${xsl.src.dir}/2idManager.xsl"/>
     </exec>       
-
+-->
+    <!--
     <exec executable="java"
 	  failonerror="true"
 	  output="${xsl-target.dir}/versionSource.java">
       <arg line="-Dcom.jclark.xsl.sax.parser=org.apache.xerces.parsers.SAXParser com.jclark.xsl.sax.Driver"/>
       <arg line="${xml.src.dir}/NA_Control.xml"/>
       <arg line="${xsl.src.dir}/2versionSource.xsl"/>
-    </exec>       
+    </exec>     
+    -->
+    <java fork="true" failonerror="true" classpath="${lib.dir}/xt.jar:${lib.dir}/xercesImpl.jar" classname="com.jclark.xsl.sax.Driver" 
+      output="${xsl-target.dir}/versionSource.java">
+      <jvmarg line="-Dcom.jclark.xsl.sax.parser=org.apache.xerces.parsers.SAXParser"/>
+        <arg line="${xml.src.dir}/NA_Control.xml"/>
+           <arg line="${xsl.src.dir}/2versionSource.xsl"/>
+    </java>
+    <!--
     <exec executable="java"
 	  failonerror="true"
 	  output="${xsl-target.dir}/source.java">
@@ -150,7 +164,14 @@
       <arg line="${xml.src.dir}/NA_Control.xml"/>
       <arg line="${xsl.src.dir}/2source.xsl"/>
     </exec>
-
+    -->
+    <java fork="true" failonerror="true" classpath="${lib.dir}/xt.jar:${lib.dir}/xercesImpl.jar" classname="com.jclark.xsl.sax.Driver" 
+    output="${xsl-target.dir}/source.java">
+        <jvmarg line="-Dcom.jclark.xsl.sax.parser=org.apache.xerces.parsers.SAXParser"/>
+    <arg line="${xml.src.dir}/NA_Control.xml"/>
+         <arg line="${xsl.src.dir}/2source.xsl"/>
+      </java>
+<!--
     <exec executable="java"
 	  failonerror="true"
 	  output="${xsl-target.dir}/vectorSets.java">
@@ -158,7 +179,13 @@
       <arg line="${xml.src.dir}/NA_Control.xml"/>
       <arg line="${xsl.src.dir}/2VectorSets.xsl"/>
     </exec>
-    
+    -->
+    <java fork="true" failonerror="true" classpath="${lib.dir}/xt.jar:${lib.dir}/xercesImpl.jar" classname="com.jclark.xsl.sax.Driver" 
+    output="${xsl-target.dir}/vectorSets.java">
+          <jvmarg line="-Dcom.jclark.xsl.sax.parser=org.apache.xerces.parsers.SAXParser"/>
+    <arg line="${xml.src.dir}/NA_Control.xml"/>
+          <arg line="${xsl.src.dir}/2VectorSets.xsl"/>
+        </java>
     <!--
   <copy todir="${xsl-target.dir}" >
   <fileset dir="${java-template.dir}"/>
@@ -167,7 +194,8 @@
   </target>
   
   <target name="seperate" depends="prepare-java-sources"> 
-    <exec executable="./extractJavaSource.pl"
+  
+    <exec executable="${bin.dir}/extractJavaSource.pl"
 	  dir="${bin.dir}"
 	  failonerror="true"
 	  >
@@ -224,16 +252,24 @@
   <!-- Run EJBDoclet -->
   <target name="ejbdoclet" depends="seperate">
     <taskdef name="ejbdoclet"
-	     classname="xdoclet.ejb.EjbDocletTask" classpath="${xdoclet.jar.path};${log4j.jar.path};${ant.jar.path}"
+	     classname="xdoclet.ejb.EjbDocletTask" classpath="${xdoclet.jar.path};${log4j.jar.path};${ant.jar.path};${lib.dir}/j2ee.jar"
 	     />
     
     <ejbdoclet
-	       sourcepath="${java.dir};${log4j.path}"
+	       sourcepath="${java.dir}"
 	       destdir="${generated.java.dir}" 
 	       classpathref="project.class.path"
 	       excludedtags="@version,@author"
 	       ejbspec="2.0"
 	       force="${xdoclet.force}">
+    <!--  <ejbdoclet
+     	       sourcepath="${java.dir};${log4j.path}"
+     	       destdir="${generated.java.dir}" 
+     	       classpathref="project.class.path"
+     	       excludedtags="@version,@author"
+     	       ejbspec="2.0"
+     	       force="${xdoclet.force}">
+         -->
       <!-- 
       destdir="${generated.java.dir}" 
       where to put generated files 

@@ -19,7 +19,7 @@ import de.tuhh.wb.javagis.simulation.TimeSeriesGenerator;
  * is not attached to a node but to a strand ( strand is hirarchically higher then
  * the node ). It is assumed that the rb is attached to the outnode of the rootstrand.
  *
- * @author <A HREF="mailto:c.kuepferle@tuhh.de">Christoph Küpferle</A>
+ * @author <A HREF="mailto:c.kuepferle@tuhh.de">Christoph K?pferle</A>
  * @version Rb.java,v 1.0 2002/07/01
  */
 
@@ -131,7 +131,7 @@ public class Rb extends Object implements Comparable
 	 * @param m_aquifPorosity  ( 0 < porosity < 1 )*/
 	private double m_aquifPorosity = -1.0;
 	/** Extracted discharge from shallow aquifer.
-	 * @param m_aquifExtact [m³/s].*/
+	 * @param m_aquifExtact [m?/s].*/
 	private double m_aquifExtract = -1.0;
 	/** Rate of inflow to the deep aquifer.
 	 * @param m_aquifInflowDeepAquif ( 0 < inflow < 1 )*/

@@ -227,7 +227,7 @@ public class ViewManager
 			GisTableView gisTableView =
 				new GisTableView(title, version.getGisObjectTableModels());
 			//System.out.println("Version: "+version.getVersionId());
-			//System.out.println("Table: "+I18n.get("windowTitleTV")+version.getLabel()+" geöffnet");
+			//System.out.println("Table: "+I18n.get("windowTitleTV")+version.getLabel()+" ge?ffnet");
 			gisTableView.setVisible(true);
 			gisTableView.setSize(670, 300);
 			desktop.add(gisTableView);
@@ -712,8 +712,8 @@ public class ViewManager
 		calibrationButton.setMaximumSize(new Dimension(30, 110));
 		calibrationButton.setPreferredSize(new Dimension(30, 30));
 		calibrationButton.setToolTipText(I18n.get("ButtonAutomateCalibration"));
-		calibrationButton.setIcon(
-			(new ImageIcon(cl.getResource("symbols/calibration.gif"))));
+	//	calibrationButton.setIcon(
+	//		(new ImageIcon(cl.getResource("symbols/calibration.gif"))));
 		calibrationButton.addActionListener(this);
 		calibrationButton.setActionCommand("automateCalibration");
 
