@@ -26,6 +26,7 @@
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="org.kalypso.util"/>
       <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.compare"/>
    </requires>
    <extension
          point="org.eclipse.ui.editors">

@@ -14,6 +14,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.util.loader.DefaultLoaderFactory;
 import org.kalypso.util.loader.ILoaderFactory;
 import org.kalypso.util.pool.TypedKeyedPoolableObjectFactory;
+import org.kalypso.util.repository.DefaultRepositoryContainer;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
 
@@ -40,6 +41,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   private final Properties myPoolProperties = new Properties();
 
   private static final String POOL_PROPERTIES = "resources/pools.properties";
+
+  private DefaultRepositoryContainer m_tsRepositoryContainer;
 
   
   /**
@@ -188,5 +191,13 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       myCoordinateSystem=org.deegree_impl.model.cs.Adapters.getDefault(  ).export(csFac.getCSByName("EPSG:4326"));
     }
     return myCoordinateSystem;
+  }
+
+  public DefaultRepositoryContainer getRepositoryContainer()
+  {
+    if( m_tsRepositoryContainer == null )
+        m_tsRepositoryContainer = new DefaultRepositoryContainer();
+    
+    return m_tsRepositoryContainer;
   }
 }
