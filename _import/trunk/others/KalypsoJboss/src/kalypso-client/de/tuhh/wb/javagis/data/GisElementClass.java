@@ -91,7 +91,11 @@ public abstract class GisElementClass implements TableListener
 	if(symbol==null)
 	    {
 		if(mm.isRelation[met])
-		    symbol = Toolkit.getDefaultToolkit().getImage("symbols/arrow.gif");
+		    {
+			String symbolPath="symbols/rel_"+getKey()+".gif";
+			System.out.println("Relation: "+symbolPath);
+			symbol = Toolkit.getDefaultToolkit().getImage(symbolPath);
+		    }
 		else
 		    symbol = Toolkit.getDefaultToolkit().getImage("symbols/"+mm.elementSymbolNames[met]+".gif");
 		MediaTracker mt = new MediaTracker(dummyComponent);
