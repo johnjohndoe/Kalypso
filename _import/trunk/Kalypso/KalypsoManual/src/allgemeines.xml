@@ -172,12 +172,12 @@
       </listitem>
     </orderedlist>
 
-    <para>Beide Modelle werden durch die KALYPSO Modeler Oberfläche (<xref
-    linkend="grafische_oberflaeche" />) unterstützt. Gleichzeitig sind
+    <para>Beide Modelle werden durch die KALYPSO Modeler Oberfläche (siehe
+    <xref linkend="grafische_oberflaeche" />) unterstützt. Gleichzeitig sind
     innerhalb der Installation in der Landeshochwasserwarnzentrale Sachsen
     zwei Vorhersage-Wizards verfügbar, die den Anwender im Falle der
     Hochwasservorhersage gezielt durch die spezifische Vorhersageberechnung
-    der jeweiligen Modelle leiten (<xref
+    der jeweiligen Modelle leiten (siehe <xref
     linkend="vorhersage_wizards" />).</para>
   </section>
 
@@ -259,7 +259,7 @@
     <para>Das Speichern des Modells (einschließlich Modellspezifikation,
     Modelldatei, Vorlagen, gemessene und berechnete Zeitreihen sowie
     Rechenfälle) auf dem Server und ähnliche Funktionen werden mittels eines
-    speziellen Menüs <guilabel>Modell</guilabel> (<xref
+    speziellen Menüs <guilabel>Modell</guilabel> (siehe <xref
     linkend="grundfunktionen" />) im Hauptmenü von KALYPSO angesteuert.</para>
 
     <para>Dieses Datenmanagement-Prinzip ist insbesondere transparent im

@@ -14,8 +14,9 @@
       im <emphasis role="bold">Karten</emphasis>-Verzeichnis enthalten. Die
       zur Visualisierung benötigten Shape-Files befinden sich im <emphasis
       role="bold">Grunddaten</emphasis>-Verzeichnis. Der Name des Ordners für
-      die Rechenläufe ist frei wählbar. Standardmäßig ist ein Ordner <emphasis
-      role="bold">Rechenläufe</emphasis> im Projekt vordefiniert.</para>
+      die Rechenvarianten ist frei wählbar. Standardmäßig ist ein Ordner
+      <emphasis role="bold">Rechenvarianten</emphasis> im Projekt
+      vordefiniert.</para>
 
       <figure id="pic_navigator_spree">
         <title>Navigator-Ansicht Vorhersagemodell Spree</title>
@@ -30,10 +31,11 @@
       <para><emphasis>Tabellen</emphasis></para>
 
       <para>Die Eingabe bzw. Änderung von Parametern erfolgt in Tabellen. Die
-      Editierungsmöglichkeiten von Tabellen wird in <xref
+      Editierungsmöglichkeiten von Tabellen werden in <xref
       linkend="ansichtssteuerung" /> beschrieben. Die in den Tabellen
-      enthaltenen Modellparameter werden in Anhang A-X erläutert. Folgende
-      Tabellen sind im Projekt enthalten:</para>
+      enthaltenen Modellparameter werden in <xref
+      linkend="spree_modellparameter" /> erläutert. Folgende Tabellen sind im
+      Projekt enthalten:</para>
 
       <itemizedlist>
         <listitem>
@@ -72,23 +74,23 @@
         </listitem>
       </itemizedlist>
 
-      <para><emphasis>Karten</emphasis></para>
+      <para><emphasis>Ordner Karten</emphasis></para>
 
-      <para>Im Vorhersagemodell Spree ist standardmäßig eine Karte enthalten,
-      die das Einzugsgebiet der Spree im Lageplan zeigt. Angezeigt wird das
-      Gewässersystem mit den Vorhersagepegeln für die N-A-Modelle und die
-      Flusslauflaufmodelle sowie die Eingabepegel für die Talsperrenzufüsse
-      und Überleitungen. Die Änderung der Darstellungsoptionen oder Erstellen
-      neuer Karten bleibt dem Benutzer vorbehalten. Zum Bearbeiten von Karten
-      siehe .</para>
+      <para>Im Vorhersagemodell Spree ist standardmäßig eine Karten-Vorlage
+      enthalten, die das Einzugsgebiet der Spree im Lageplan zeigt. Angezeigt
+      wird das Gewässersystem mit den Vorhersagepegeln für die N-A-Modelle und
+      die Flusslauflaufmodelle sowie die Eingabepegel für die
+      Talsperrenzufüsse und Überleitungen. Die Änderung der
+      Darstellungsoptionen oder Erstellen neuer Karten bleibt dem Benutzer
+      vorbehalten. Zum Bearbeiten von Kartenvorlagen wird auf die Technische
+      Dokumentation verwiesen.</para>
 
-      <para><emphasis>Grunddaten</emphasis></para>
+      <para><emphasis>Odner Grunddaten</emphasis></para>
 
       <para>Das Verzeichnis Grunddaten enthält Geoinformationen über das
       Einzugsgebiet der Spree in Form von Shape-Files. Diese können genutzt
-      werden, um Lagepläne in Form von Karten zu erstellen (siehe Kapitel
-      Erstellen von Karten). Folgende Dateien sind im Projekt
-      enthalten.</para>
+      werden, um Lagepläne in Form von Karten zu erstellen (siehe Technische
+      Dokumentation). Folgende Themen sind im Projekt enthalten:</para>
 
       <itemizedlist>
         <listitem>
@@ -112,13 +114,14 @@
     <section id="spree_rechenlaeufe">
       <title>Rechenvarianten</title>
 
-      <para>Das Verzeichnis Rechenvarianten enthält alle zur Modellberechnung
-      notwendigen Dateien. Diese werden beim Anlegen eines neuen Rechenfalls
-      automatisch vom Programm in das entsprechende Verzeichnis
-      kopiert.</para>
+      <para>Das Verzeichnis einer Rechenvariante enthält alle zur
+      Modellberechnung notwendigen Dateien. Diese werden beim Anlegen eines
+      neuen Rechenfalls automatisch vom Programm in das entsprechende
+      Verzeichnis kopiert. Der Name einer Rechenvariante ist vom Benutzer frei
+      wählbar.</para>
 
       <figure>
-        <title>Verzeichnis Rechenläufe (Spree)</title>
+        <title>Verzeichnis Rechenvarianten (Spree)</title>
 
         <mediaobject>
           <imageobject>
@@ -161,17 +164,17 @@
       Ergebnisdateien im Unterordner <emphasis
       role="bold">Ergebnisse</emphasis> gespeichert. Die Speicherung der
       Dateien erfolgt im lokalen Arbeitsverzeichnis und muss ggfs. vom
-      Anwender auf dem Server aktualisiert werden (siehe Technische
-      Dokumentation).</para>
+      Anwender auf dem Server gespeichert werden (siehe <xref
+      linkend="modellverwaltung" />).</para>
     </section>
 
-    <section>
+    <section id="spree_modellparameter">
       <title>Liste der Modellparameter</title>
 
       <para>Im Folgenden werden alle verwendeten Modellparameter und Spalten
       der Modelltabellen für das Vorhersagemodell Spree erläutert. Die Eingabe
-      der Parameter erfolgt entweder in den Modelltabellen (Expertenmodus)
-      oder in der Programmoberfläche (Vorhersagemodus).</para>
+      der Parameter erfolgt entweder im KALYPSO Modeler (Expertenmodus) oder
+      im Vorhersage-Wizard.</para>
 
       <table>
         <title>Parameter N-A-Modelle</title>
@@ -363,7 +366,7 @@
       <emphasis role="bold">Karten</emphasis>-Verzeichnis enthalten. Die zur
       Visualisierung benötigten Shape-Files befinden sich im <emphasis
       role="bold">Shape</emphasis>-Verzeichnis. Der Name des Ordners für die
-      Rechenläufe ist frei wählbar. Standardmäßig ist ein Ordner <emphasis
+      Rechenvarianten ist frei wählbar. Standardmäßig ist ein Ordner <emphasis
       role="bold">Rechenvarianten</emphasis> im Projekt vordefiniert.</para>
 
       <figure id="pic_we_navigator">
@@ -379,10 +382,11 @@
       <para><emphasis>Tabellen</emphasis></para>
 
       <para>Die Eingabe bzw. Änderung von Parametern erfolgt in Tabellen. Die
-      Editierungsmöglichkeiten von Tabellen wird im Kapitel Ansichtssteuerung
-      beschrieben. Die in den Tabellen enthaltenen Modellparameter werden in
-      <xref linkend="weisse_elster_modellparameter" /> erläutert. Folgende
-      Tabellen sind im Projekt enthalten:</para>
+      Editierungsmöglichkeiten von Tabellen wird in <xref
+      linkend="ansichtssteuerung" /> beschrieben. Die in den Tabellen
+      enthaltenen Modellparameter werden in <xref
+      linkend="weisse_elster_modellparameter" /> erläutert. Folgende Tabellen
+      sind im Projekt enthalten:</para>
 
       <itemizedlist>
         <listitem>
@@ -405,55 +409,19 @@
         </listitem>
       </itemizedlist>
 
-      <para><emphasis>Karten</emphasis></para>
+      <para><emphasis>Ordner Karten</emphasis></para>
 
       <para>Im Vorhersagemodell Weiße Elster sind standardmäßig zwei Karten
-      enthalten, die zum Einen das Einzugsgebiet der Weißen Elster im Lageplan
-      und andererseits einen schematische Vereinfachung des Einzugsgebietes
-      auf das Modellschema darstellen. Dargestellt wird jeweils das gesamte
-      Einzugsgebiet mit der Unterteilung in Teilgebiete. In der Gebietsansicht
-      werden neben den Gewässern auch die Vorhersagepegel sowie die
-      Niederschlagsstationen dargstellt. In der Systemansicht erfolgt eine
-      vereinfachte Ansicht des Einzugsgebietes. Neben den Teilgebieten wird
-      eine schematische Ansicht der Gerinnestränge und alle im Modell
-      vorhandenen Knoten dargestellt. Alle Systemelemente sind mit der
+      enthalten: einen Lageplan des Einzugsgebietes der Weißen Elster, der
+      gleichzeitig alle Modellelemente (Teilgebiete, Knoten, Gerinnestränge)
+      enthält. Zum Anderen ist eine Übersichtskarte mit den für die
+      Modellberechnungen verwendeten Ombrometern enthalten. Dargestellt wird
+      jeweils das gesamte Einzugsgebiet mit der Unterteilung in Teilgebiete.
+      In der Gebietsansicht werden neben den Gewässern auch die
+      Vorhersagepegel dargstellt. Alle Systemelemente sind mit der
       Nummerierung versehen, die im Modell verwendet wird. Die Kartenansichten
       und die dargestellten Elemente können beliebig geändert werden (siehe
       <xref linkend="ansichtssteuerung" />).</para>
-
-      <para><emphasis>Shape-Files</emphasis></para>
-
-      <para>Das Verzeichnis Shapes enthält Geoinformationen über das
-      Einzugsgebiet der Weißen Elster in Form von Shape-Files. Diese können
-      genutzt werden, um Lagepläne in Form von Karten zu erstellen (siehe
-      Kapitel Erstellen von Karten). Im Projekt sind u.a. die folgenden
-      Shape-Dateien enthalten:</para>
-
-      <itemizedlist>
-        <listitem>
-          <para>Einzugsgebietsgrenze</para>
-        </listitem>
-
-        <listitem>
-          <para>Teilgebiete</para>
-        </listitem>
-
-        <listitem>
-          <para>Gewässernetz</para>
-        </listitem>
-
-        <listitem>
-          <para>Gewässerknoten (Pegel)</para>
-        </listitem>
-
-        <listitem>
-          <para>Niederschlagsstationen</para>
-        </listitem>
-      </itemizedlist>
-
-      <para>Zum Hinzufügen oder Entfernen von Shape-Dateien müssen die
-      Kartenvorlagen vom Benutzer geändert werden (siehe Technische
-      Dokumentation).</para>
     </section>
 
     <section id="weisse_elster_rechenlaeufe">
@@ -469,7 +437,7 @@
       Verzeichnis gespeichert.</para>
 
       <figure id="pic_weisse_elster_rechenlauf">
-        <title>Verzeichnis Rechenläufe (Weisse Elster)</title>
+        <title>Verzeichnis Rechenvarianten (Weisse Elster)</title>
 
         <mediaobject>
           <imageobject>
@@ -477,13 +445,6 @@
           </imageobject>
         </mediaobject>
       </figure>
-
-      <para>Die zur Berechnung notwendigen Modelldaten werden in der Datei
-      <emphasis>calcCase.gml</emphasis> gespeichert. Bei standardmäßig
-      eingeschaltetem gml-Filter ist diese Datei allerdings für den Benutzer
-      nicht sichtbar. Es wird empfohlen, die Bearbeitung der Modellparameter
-      in den Modell-Tabellen vorzunehmen und nicht die
-      <emphasis>calcCase.gml</emphasis> direkt zu bearbeiten.</para>
 
       <para>Die Steuerdaten der Berechnung können in einer Eingabemaske durch
       Öffnen der Tabelle expertcontrol vorgegeben werden. Neben den
@@ -510,13 +471,14 @@
 
       <para>Im Folgenden werden alle verwendeten Modellparameter für das
       Vorhersagemodell Weiße Elster erläutert. Die Eingabe der Parameter
-      erfolgt in den Modelltabellen und Eingabemasken (Expertenmodus) oder
-      teilweise in der Programmoberfläche (Vorhersagemodus). Weitere
-      Erläuterungen zu den Modellparametern befinden sich in der
-      Grundlagenbeschreibung zum Vorhersagemodell Weiße Elster.</para>
+      erfolgt in den Modelltabellen und Eingabemasken im KALYPSO Modeler oder
+      eingeschränkt im Vorhersage-Wizard. Weitere Erläuterungen zu den
+      Modellparametern befinden sich im Erläuterungsbericht zum
+      Hochwasservorhersagemodell Weiße Elster (Teil 1: Theoretische Grundlagen
+      und Modellkonzept).</para>
 
       <table id="dummy3">
-        <title>Modellparameter der Teilgebiete</title>
+        <title>Modellparameter der Teilgebiete (Weiße Elster)</title>
 
         <tgroup cols="3">
           <tbody>
@@ -927,7 +889,7 @@
       </table>
 
       <table>
-        <title>Modellparameter der Gerinneelemente</title>
+        <title>Modellparameter der Gerinneelemente (Weiße Elster)</title>
 
         <tgroup cols="3">
           <tbody>
