@@ -168,7 +168,7 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
     monitor.beginTask( "Seite wird aktualisiert", m_choices.size() );
     for( Iterator iter = m_choices.iterator(); iter.hasNext(); )
     {
-      ((IAddCalcCaseChoice)iter.next()).update( new NullProgressMonitor() );
+      ((IAddCalcCaseChoice)iter.next()).refresh( new NullProgressMonitor() );
       monitor.worked( 1 );
     }
     
@@ -183,9 +183,9 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
     // todo: neuen Rechenfall wieder löschen?
   }
 
-  public boolean isUpdateCalcCase()
+  public boolean shouldUpdate()
   {
-    return m_choice == null ? false : m_choice.isUpdateCalcCase();
+    return m_choice == null ? false : m_choice.shouldUpdate();
   }
 
   public List getCalcCases()

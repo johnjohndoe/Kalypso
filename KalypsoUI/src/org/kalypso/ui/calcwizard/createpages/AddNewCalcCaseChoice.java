@@ -1,15 +1,25 @@
 package org.kalypso.ui.calcwizard.createpages;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
@@ -28,6 +38,14 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
   private final AddCalcCasePage m_page;
 
+  public static final String TOOLTIP = "Geben Sie hier die Bezeichnung des Rechenfalls ein";
+
+  private SimpleDateFormat m_format = new SimpleDateFormat( "dd-MM-yyyy_hh:mm" );
+
+  protected String m_name;
+
+  private Text m_edit;
+
   public AddNewCalcCaseChoice( final String label, final IProject project,
       final AddCalcCasePage page )
   {
@@ -43,18 +61,54 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
   public void createControl( final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new GridLayout() );
+    panel.setLayout( new GridLayout( 2, false ) );
 
     final Label label = new Label( panel, SWT.NONE );
-    label.setText( "keine weiteren Eingaben nötig" );
+    label.setText( "Bezeichnung: " );
+    label.setToolTipText( TOOLTIP );
+
     final GridData labelData = new GridData();
-    labelData.grabExcessHorizontalSpace = true;
-    labelData.grabExcessVerticalSpace = true;
-    labelData.horizontalAlignment = GridData.CENTER;
-    labelData.verticalAlignment = GridData.CENTER;
+    labelData.grabExcessHorizontalSpace = false;
+    labelData.horizontalAlignment = GridData.BEGINNING;
     label.setLayoutData( labelData );
 
+    final Text edit = new Text( panel, SWT.BORDER );
+    edit.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    edit.setToolTipText( TOOLTIP );
+    edit.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( final ModifyEvent e )
+      {
+        setName( edit.getText() );
+      }
+    } );
+    m_edit = edit;
+
     m_control = panel;
+
+    try
+    {
+      refresh( new NullProgressMonitor() );
+    }
+    catch( final CoreException e1 )
+    {
+      e1.printStackTrace();
+    }
+  }
+
+  protected void setName( final String text )
+  {
+    final IStatus status = m_project.getWorkspace().validateName( text, IResource.FILE );
+    if( status.getSeverity() == IStatus.OK )
+    {
+      m_page.setErrorMessage( null );
+      m_page.setMessage( null );
+    }
+    else
+    {
+      m_page.setMessage( null );
+      m_page.setErrorMessage( status.getMessage() );
+    }
   }
 
   /**
@@ -63,7 +117,19 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
   public IFolder perform( final IProgressMonitor monitor ) throws CoreException
   {
     final ModelNature nature = (ModelNature)m_project.getNature( ModelNature.ID );
-    return nature.createNewPrognose( monitor );
+
+    final IFolder prognoseFolder = nature.getPrognoseFolder();
+    if( m_name.length() == 0 )
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "Geben Sie einen Namen für die Vorhersage ein", null ) );
+    final IFolder calcCaseFolder = prognoseFolder.getFolder( m_name );
+    if( calcCaseFolder.exists() )
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "Eine Vorhersage mit diesem Namen existiert bereits: " + m_name, null ) );
+
+    ModelNature.createCalculationCaseInFolder( calcCaseFolder, monitor );
+
+    return calcCaseFolder;
   }
 
   /**
@@ -83,17 +149,62 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
   }
 
   /**
-   * @see org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice#update(org.eclipse.core.runtime.IProgressMonitor)
+   * @throws CoreException
+   * @see org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice#refresh(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void update( final IProgressMonitor monitor )
+  public void refresh( final IProgressMonitor monitor ) throws CoreException
   {
-  // tut nix
+    final StringBuffer buffer = new StringBuffer( "Vorhersage-" );
+
+    buffer.append( m_format.format( new Date() ) );
+
+    final int count = createNewName( buffer.toString() );
+    if( count != 0 )
+      buffer.append( "_#" + count );
+
+    final Text edit = m_edit;
+    if( !edit.isDisposed() )
+    {
+      edit.getDisplay().asyncExec( new Runnable()
+      {
+        public void run()
+        {
+          edit.setText( buffer.toString() );
+        }
+      } );
+    }
+  }
+
+  private int createNewName( final String dateString ) throws CoreException
+  {
+    final ModelNature nature = (ModelNature)m_project.getNature( ModelNature.ID );
+    final IFolder prognoseFolder = nature.getPrognoseFolder();
+    final IResource[] resources = prognoseFolder.exists() ? prognoseFolder.members() : new IResource[] {};
+    
+    int count = 0;
+    while( true )
+    {
+      boolean bFound = false;
+      for( int i = 0; i < resources.length; i++ )
+      {
+        if( resources[i].getName().equals( dateString ) )
+        {
+          bFound = true;
+          break;
+        }
+      }
+
+      if( !bFound )
+        return count;
+
+      count++;
+    }
   }
 
   /**
-   * @see org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice#isUpdateCalcCase()
+   * @see org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice#shouldUpdate()
    */
-  public boolean isUpdateCalcCase()
+  public boolean shouldUpdate()
   {
     return true;
   }

@@ -22,6 +22,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.CalcCaseCollector;
@@ -33,10 +34,10 @@ import org.kalypso.ui.nature.ModelNature;
  * 
  * @author belger
  */
-public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
+public class CopyCalcCaseChoice implements IAddCalcCaseChoice
 {
   private Control m_control;
-  
+
   private IFolder m_folder;
 
   private final String m_label;
@@ -48,8 +49,10 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
   private Collection m_oldCalcCases = new LinkedList();
 
   private final AddCalcCasePage m_page;
-  
-  public ContinueOldCalcCaseChoice( final String label, final IProject project, final AddCalcCasePage page )
+
+  private Text m_edit;
+
+  public CopyCalcCaseChoice( final String label, final IProject project, final AddCalcCasePage page )
   {
     m_label = label;
     m_project = project;
@@ -67,11 +70,13 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     final Label label = new Label( panel, SWT.NONE );
     label.setText( "wählen Sie eine der vorhandenen Hochwasser-Vorhersagen:" );
 
-    final ListViewer viewer = new ListViewer( panel, SWT.BORDER ); 
+    final ListViewer viewer = new ListViewer( panel, SWT.BORDER );
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new WorkbenchLabelProvider() );
     viewer.setInput( m_oldCalcCases );
-    viewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    final GridData viewerData = new GridData( GridData.FILL_BOTH );
+    viewerData.horizontalSpan = 2;
+    viewer.getControl().setLayoutData( viewerData );
 
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -81,10 +86,20 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
         if( selection.isEmpty() )
           setFolder( null );
         else
-          setFolder( (IFolder)selection.getFirstElement() ); 
+          setFolder( (IFolder)selection.getFirstElement() );
       }
     } );
     m_viewer = viewer;
+
+    final Label nameLabel = new Label( panel, SWT.NONE );
+    nameLabel.setLayoutData( new GridData() );
+    nameLabel.setText( "Bezeichnung:" );
+    nameLabel.setToolTipText( AddNewCalcCaseChoice.TOOLTIP );
+
+    final Text edit = new Text( panel, SWT.BORDER );
+    edit.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    edit.setToolTipText( AddNewCalcCaseChoice.TOOLTIP );
+    m_edit = edit;
 
     m_control = panel;
 
@@ -102,7 +117,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
   {
     m_folder = folder;
   }
-  
+
   public void refresh( final IProgressMonitor monitor ) throws CoreException
   {
     final ModelNature nature = (ModelNature)m_project.getNature( ModelNature.ID );
@@ -110,12 +125,11 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
 
     // alle Prognosen finden
     final CalcCaseCollector calcCaseCollector = new CalcCaseCollector();
-    if( prognoseFolder.exists() )
-      prognoseFolder.accept( calcCaseCollector );
+    prognoseFolder.accept( calcCaseCollector );
     final IFolder[] calcCases = calcCaseCollector.getCalcCases();
 
     final List usedCalcCases = m_page.getCalcCases();
-    
+
     m_oldCalcCases.clear();
 
     IFolder newSelect = null;
@@ -124,7 +138,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
       for( int i = 0; i < calcCases.length; i++ )
       {
         final IFolder folder = calcCases[i];
-        
+
         if( !usedCalcCases.contains( folder ) )
         {
           m_oldCalcCases.add( folder );
@@ -146,12 +160,12 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
 
           if( newSelectFinal == null )
             viewer.setSelection( StructuredSelection.EMPTY );
-          else  
+          else
             viewer.setSelection( new StructuredSelection( newSelectFinal ) );
         }
       } );
     }
-    
+
     m_page.getWizard().getContainer().updateButtons();
   }
 
@@ -161,10 +175,27 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
    */
   public IFolder perform( final IProgressMonitor monitor ) throws CoreException
   {
+    final ModelNature nature = (ModelNature)m_project.getNature( ModelNature.ID );
+
+    final IFolder folder = nature.getPrognoseFolder();
+    final String name = m_edit.getText();
+    if( name.length() == 0 )
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "Geben Sie einen Namen für die Vorhersage ein", null ) );
+
+    final IFolder calcCaseFolder = folder.getFolder( name );
+    if( calcCaseFolder.exists() )
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "Eine Vorhersage mit diesem namen existiert bereits: " + name, null ) );
+
     if( m_folder == null )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Es muss eine vorhandene Berechnung ausgewählt werden", null ) );
-    
-    return m_folder;
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "Es muss eine vorhandene Berechnung ausgewählt werden", null ) );
+
+    // quellverzeichnis holen
+    m_folder.copy( calcCaseFolder.getFullPath(), false, monitor );
+
+    return calcCaseFolder;
   }
 
   /**
@@ -188,7 +219,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
    */
   public boolean shouldUpdate()
   {
-    return false;
+    return true;
   }
 
 }

@@ -30,6 +30,7 @@ import org.kalypso.ui.nature.ModelNature;
 public class NewCalculationCaseWizard extends BasicNewResourceWizard
 {
   private NewCalculationCaseCreateFolderPage m_createFolderPage;
+
   private SteuerparameterWizardPage m_createControlPage;
 
   /**
@@ -51,7 +52,8 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     super.addPages();
     m_createFolderPage = new NewCalculationCaseCreateFolderPage( "Rechenfall", getSelection() );
     m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, false );
-    
+    m_createControlPage.setUpdate( true );
+
     addPage( m_createFolderPage );
     addPage( m_createControlPage );
   }
@@ -65,19 +67,19 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     final IFolder folder = createCalculationCase();
     if( folder == null )
       return false;
-    
+
     // im Navigator zeigen
     selectAndReveal( folder );
 
     return true;
   }
-  
+
   private IFolder createCalculationCase()
   {
     final IFolder newFolderHandle = m_createFolderPage.getFolder();
-    
+
     final SteuerparameterWizardPage controlPage = m_createControlPage;
-    
+
     WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
     {
       public void execute( final IProgressMonitor monitor ) throws CoreException
@@ -86,12 +88,17 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
         {
           monitor.beginTask( IDEWorkbenchMessages
               .getString( "WizardNewFolderCreationPage.progress" ), 5000 ); //$NON-NLS-1$
-          final ContainerGenerator generator = new ContainerGenerator( newFolderHandle.getParent().getFullPath() );
+          final ContainerGenerator generator = new ContainerGenerator( newFolderHandle.getParent()
+              .getFullPath() );
           generator.generateContainer( new SubProgressMonitor( monitor, 1000 ) );
           createFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
-          ModelNature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
+          ModelNature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor(
+              monitor, 1000 ) );
           controlPage.saveChanges( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
-          ModelNature.updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
+          if( controlPage.isUpdate() )
+            ModelNature.updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
+          else
+            monitor.worked( 1000 );
         }
         finally
         {
@@ -113,7 +120,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     catch( final InvocationTargetException e )
     {
       e.printStackTrace();
-      
+
       if( e.getTargetException() instanceof CoreException )
       {
         ErrorDialog.openError( getContainer().getShell(), // Was
@@ -144,7 +151,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
 
     return newFolderHandle;
   }
-  
+
   private void cleanup( final IFolder folder )
   {
     try
@@ -156,7 +163,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
       e.printStackTrace();
     }
   }
-  
+
   /**
    * Creates a folder resource given the folder handle.
    * 
@@ -168,8 +175,10 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
    *              if the operation fails
    * @exception OperationCanceledException
    *              if the operation is canceled
+   * 
+   * TODO: move this code to FolderUtilities
    */
-  protected void createFolder( IFolder folderHandle, IProgressMonitor monitor )
+  protected void createFolder( final IFolder folderHandle, final IProgressMonitor monitor )
       throws CoreException
   {
     try
@@ -178,15 +187,14 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
       // Update: Recursive to create any folders which do not exist already
       if( !folderHandle.exists() )
       {
-        IContainer parent = folderHandle.getParent();
+        final IContainer parent = folderHandle.getParent();
         if( parent instanceof IFolder && ( !( (IFolder)parent ).exists() ) )
-        {
           createFolder( (IFolder)parent, monitor );
-        }
+
         folderHandle.create( false, true, monitor );
       }
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       // If the folder already existed locally, just refresh to get contents
       if( e.getStatus().getCode() == IResourceStatus.PATH_OCCUPIED )
