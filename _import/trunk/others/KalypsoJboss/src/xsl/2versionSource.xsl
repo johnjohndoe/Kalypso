@@ -51,6 +51,9 @@
          import de.tuhh.wb.javagis.xml.KalypsoXmlImportListener;
          import org.xml.sax.SAXException;
 
+         import java.io.IOException;
+         import java.io.Writer;
+         import java.io.StringWriter;
          import java.io.PrintWriter;
          import java.io.FileWriter;
          import java.io.File;
@@ -99,6 +102,8 @@
 
          public class VersionSessionBean implements SessionBean, KalypsoXmlImportListener 
          {
+         private static int MAX_XML_SIZE=500000;
+
          private transient Hashtable env; //Environment
          private transient IdManagerLocalHome idManagerLocalHome;
          private transient VersionLocalHome myVersionLocalHome;
@@ -434,13 +439,13 @@
 
 
 
-         private void exportToXml(PrintWriter out,Collection col)
+         private void exportToXml(Writer out,Collection col) throws IOException
          {
           Iterator it=col.iterator();
           while(it.hasNext())
           {
            GisTransferObject gto=((ElementLocal)it.next()).toGisTransferObject();
-           out.print(gto.toXmlString());
+           out.write(gto.toXmlString());
           } 
          }
 
@@ -457,8 +462,29 @@
          java.rmi.RemoteException,
          javax.ejb.CreateException
          {
-         PrintWriter out=new PrintWriter(new FileWriter(exportFile));
-         Tools.genXmlTag(out,"?xml version=\"1.0\" encoding=\"ISO-8859-1\"?");
+          exportToXml(vId,new PrintWriter(new FileWriter(exportFile)));
+         }
+
+         /**
+         * @ejb:interface-method
+         */
+         public String exportToXml(Object vId) throws
+         FinderException,
+         javax.naming.NamingException,
+         java.io.IOException,
+         java.rmi.RemoteException,
+         javax.ejb.CreateException
+         {
+          StringWriter stringWriter=new StringWriter(MAX_XML_SIZE);
+          exportToXml(vId,stringWriter);
+          return stringWriter.toString();
+         }
+
+         public void exportToXml(Object vId,Writer out) throws
+         FinderException,
+         java.io.IOException
+         {
+          Tools.genXmlTag(out,"?xml version=\"1.0\" encoding=\"ISO-8859-1\"?");
          //         Tools.genXmlTag(out,"?xml version=\"1.0\" encoding=\"UTF-8\"?");
          Tools.genXmlTag(out,"theme");
 

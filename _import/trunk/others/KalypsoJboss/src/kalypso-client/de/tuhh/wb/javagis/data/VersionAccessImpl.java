@@ -258,7 +258,7 @@ public class VersionAccessImpl implements VersionAccess
 
     public void xmlExport(String themeKey,Object vId,File exportFile)
     {
-	myVersionClass.exportToXml(themeKey,vId,exportFile);
+	myVersionClass.exportToXml(themeKey,vId,exportFile);	
     }
 
     public void simulate(int pos)

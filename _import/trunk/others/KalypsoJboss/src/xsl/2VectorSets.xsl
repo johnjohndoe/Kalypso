@@ -33,6 +33,8 @@
         package <xsl:value-of select="$package"/>.vectorsets;
 
         import java.lang.*;
+        import java.io.IOException;
+        import java.io.Writer;
         import java.io.PrintWriter;
         import java.util.Vector;
         import de.tuhh.wb.javagis.model.Tools;    
@@ -306,7 +308,7 @@
               }
              }
 
-            public void toXml(PrintWriter out)
+            public void toXml(Writer out) throws IOExcpetion
             {
              Tools.genXmlTag(out,"v","key","<xsl:value-of select="$myVectorSet"/>");
 

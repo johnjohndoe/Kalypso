@@ -1,15 +1,16 @@
 package de.tuhh.wb.javagis.model;
 
-import java.io.PrintWriter; 
+//import java.io.PrintWriter; 
+import java.io.Writer; 
 import org.xml.sax.helpers.AttributesImpl;
-
+import java.io.IOException;
 public abstract class Tools
 {
-    public static void genXml(PrintWriter out, String name,String attributeName,String attribute, String content)
+    public static void genXml(Writer out, String name,String attributeName,String attribute, String content) throws IOException
     {
-	out.print("<"+name+" "+attributeName+"=\""+attribute+"\">");
-	out.print(content);
-	out.print("</"+name+">");
+	out.write("<"+name+" "+attributeName+"=\""+attribute+"\">");
+	out.write(content);
+	out.write("</"+name+">");
     }
  
     /*    public static void genXml(PrintWriter out, String name,String[] attributeName,String[] attribute, String content)
@@ -28,51 +29,51 @@ public abstract class Tools
 	    }
     }
     */
-    public static void genXml(PrintWriter out, String name,String[] attributeName,Object[] attribute, String content)
+    public static void genXml(Writer out, String name,String[] attributeName,Object[] attribute, String content) throws IOException
     {
-	out.print("<"+name);
+	out.write("<"+name);
 	for(int i=0;i<attributeName.length;i++)
 	    if(attribute[i]!=null)
-		out.print(" "+attributeName[i]+"=\""+attribute[i].toString()+"\"");
+		out.write(" "+attributeName[i]+"=\""+attribute[i].toString()+"\"");
 
 	if("".equals(content))
-	    out.print("/>");
+	    out.write("/>");
 	else
 	    {
-		out.print(">");
-		out.print(content);
-		out.print("</"+name+">");
+		out.write(">");
+		out.write(content);
+		out.write("</"+name+">");
 	    }
     }
 
-    public static void genXmlOpenTag(PrintWriter out, String name,String[] attributeName,Object[] attribute)
+    public static void genXmlOpenTag(Writer out, String name,String[] attributeName,Object[] attribute)  throws IOException
     {
-	out.print("<"+name);
+	out.write("<"+name);
 	for(int i=0;i<attributeName.length;i++)
 	    if(attribute[i]!=null)
-		out.print(" "+attributeName[i]+"=\""+attribute[i].toString()+"\"");
-	out.print(">");    
+		out.write(" "+attributeName[i]+"=\""+attribute[i].toString()+"\"");
+	out.write(">");    
     }
 
-    public static void genXml(PrintWriter out, String name, String content)
+    public static void genXml(Writer out, String name, String content)  throws IOException
     {
-	out.print("<"+name+">");
-	out.print(content);
-	out.print("</"+name+">");
+	out.write("<"+name+">");
+	out.write(content);
+	out.write("</"+name+">");
     }
-    public static void genXmlTag(PrintWriter out, String name)
+    public static void genXmlTag(Writer out, String name)  throws IOException
     {
-	out.print("<"+name+">");
+	out.write("<"+name+">");
     }
-    public static void genXmlTag(PrintWriter out, String name,String attributeName,String attribute)
+    public static void genXmlTag(Writer out, String name,String attributeName,String attribute) throws IOException
     {
-	out.print("<"+name+" "+attributeName+"=\""+attribute+"\">");
+	out.write("<"+name+" "+attributeName+"=\""+attribute+"\">");
     }
     
     //    public static void xslt(String xmlSource,String destination,String xslFile)
     //    {}
 
-    public static String genXmlTag(String tagName,AttributesImpl atts)
+    public static String genXmlTag(String tagName,AttributesImpl atts)  
     {
 
 	StringBuffer xml=new StringBuffer();

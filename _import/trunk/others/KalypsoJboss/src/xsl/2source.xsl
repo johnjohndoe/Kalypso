@@ -108,6 +108,8 @@
     import javax.ejb.EntityContext;
     import javax.ejb.FinderException;
     import java.io.PrintWriter;
+    import java.io.Writer;
+    import java.io.IOException;
 
     import java.util.Vector;
     import java.util.ArrayList;
@@ -842,7 +844,7 @@
     /**
     * @ejb:interface-method
     */
-    public void toXML(PrintWriter out)
+    public void toXML(Writer out) throws IOException
     {
      Tools.genXmlTag(out,"o","ID",String.valueOf(getId()));
 

@@ -1,5 +1,8 @@
 package de.tuhh.wb.javagis.data;
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import javax.naming.InitialContext;
 import javax.rmi.PortableRemoteObject;
 import java.util.List;
@@ -605,8 +608,23 @@ public class VersionClass implements EJBEventListener
  	try
 	    {
 		VersionSession versionSession=getVersionSession(themeKey);
-		versionSession.exportToXml(vId,file);
+		//		String content=versionSession.exportToXml(vId,file);
+		String content=versionSession.exportToXml(vId);
 		lostVersionSession=false;
+		PrintWriter out=null;
+		try
+		    {
+			out=new PrintWriter(new FileWriter(file));
+			out.print(content);
+			out.close();
+		    }
+		catch(IOException e)
+		    {
+			e.printStackTrace();
+			if(out==null)
+			    out.close();
+		    }
+
 	    }
 	catch(Exception e)
 	    {
