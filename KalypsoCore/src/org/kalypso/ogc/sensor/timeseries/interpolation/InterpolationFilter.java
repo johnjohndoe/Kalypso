@@ -124,7 +124,7 @@ public class InterpolationFilter extends AbstractObservationFilter
       for( int i = 0; i < valueAxes.length; i++ )
       {
         final Number nb = (Number) values.getElement( startIx, valueAxes[i] );
-        v1[valueAxes[i].getPosition()] = nb.doubleValue();
+        v1[intModel.getPositionFor( valueAxes[i] )] = nb.doubleValue();
       }
 
       while( cal.getTime().compareTo( begin ) < 0 )
@@ -138,14 +138,15 @@ public class InterpolationFilter extends AbstractObservationFilter
       cal.setTime( begin );
 
       final Object[] tupple = new Object[valueAxes.length + 1];
-      tupple[dateAxis.getPosition()] = cal.getTime();
+      tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();
 
       for( int i = 0; i < valueAxes.length; i++ )
       {
         final Number nb = (Number) values.getElement( startIx, valueAxes[i] );
 
-        tupple[valueAxes[i].getPosition()] = nb;
-        v1[valueAxes[i].getPosition()] = nb.doubleValue();
+        final int pos = intModel.getPositionFor( valueAxes[i] );
+        tupple[pos] = nb;
+        v1[pos] = nb.doubleValue();
       }
 
       intModel.addTupple( tupple );
@@ -166,7 +167,7 @@ public class InterpolationFilter extends AbstractObservationFilter
       for( int ia = 0; ia < valueAxes.length; ia++ )
       {
         final Number nb = (Number) values.getElement( ix, valueAxes[ia] );
-        v2[valueAxes[ia].getPosition()] = nb.doubleValue();
+        v2[intModel.getPositionFor( valueAxes[ia] )] = nb.doubleValue();
       }
 
       while( cal.getTime().compareTo( d2 ) <= 0 )
@@ -174,32 +175,29 @@ public class InterpolationFilter extends AbstractObservationFilter
         long ms = cal.getTimeInMillis();
 
         Object[] tupple = new Object[valueAxes.length + 1];
-        tupple[dateAxis.getPosition()] = cal.getTime();
+        tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();
 
         for( int ia = 0; ia < valueAxes.length; ia++ )
         {
+          final int pos = intModel.getPositionFor( valueAxes[ia] );
+
           if( KalypsoStatusUtils.isStatusAxis( valueAxes[ia] ) )
           {
             // this is the status axis
             // no interpolation but a bitwise OR
-            tupple[valueAxes[ia].getPosition()] = new Integer(
-                (int) v1[valueAxes[ia].getPosition()]
-                    | (int) v2[valueAxes[ia].getPosition()] );
+            tupple[pos] = new Integer( (int) v1[pos] | (int) v2[pos] );
           }
           else
           {
             // normal case: perform the interpolation
             try
             {
-              eq.setPoints( d1.getTime(), v1[valueAxes[ia].getPosition()], d2
-                  .getTime(), v2[valueAxes[ia].getPosition()] );
-              tupple[valueAxes[ia].getPosition()] = new Double( eq
-                  .computeY( ms ) );
+              eq.setPoints( d1.getTime(), v1[pos], d2.getTime(), v2[pos] );
+              tupple[pos] = new Double( eq.computeY( ms ) );
             }
             catch( SameXValuesException e )
             {
-              tupple[valueAxes[ia].getPosition()] = new Double(
-                  v1[valueAxes[ia].getPosition()] );
+              tupple[pos] = new Double( v1[pos] );
             }
           }
         }
@@ -230,21 +228,23 @@ public class InterpolationFilter extends AbstractObservationFilter
    * @param valueAxes
    * @param intModel
    * @param cal
+   * @throws SensorException
    */
   private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes,
       final SimpleTuppleModel intModel, final Calendar cal )
+      throws SensorException
   {
     final Object[] tupple = new Object[valueAxes.length + 1];
-    tupple[dateAxis.getPosition()] = cal.getTime();
+    tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();
 
     for( int i = 0; i < valueAxes.length; i++ )
     {
+      final int pos = intModel.getPositionFor( valueAxes[i] );
+
       if( KalypsoStatusUtils.isStatusAxis( valueAxes[i] ) )
-      {
-        tupple[valueAxes[i].getPosition()] = m_defaultStatus;
-      }
+        tupple[pos] = m_defaultStatus;
       else
-        tupple[valueAxes[i].getPosition()] = m_defValue;
+        tupple[pos] = m_defValue;
     }
 
     intModel.addTupple( tupple );

@@ -72,12 +72,11 @@ public class KalypsoStatusUtils
    * Creates a status axis for the given 'normal' axis.
    * 
    * @param axis
-   * @param pos
    * @return new status axis
    * @throws IllegalArgumentException
    *           if given axis is already a status axis
    */
-  public static IAxis createStatusAxisFor( final IAxis axis, final int pos )
+  public static IAxis createStatusAxisFor( final IAxis axis )
       throws IllegalArgumentException
   {
     if( isStatusAxis( axis ) )
@@ -85,7 +84,7 @@ public class KalypsoStatusUtils
           + " is already a status axis!" );
 
     return new DefaultAxis( STATUS_AXIS_LABELPREFIX + axis.getName(),
-        STATUS_AXIS_TYPE, STATUS_AXIS_UNIT, STATUS_AXIS_DATACLASS, pos, false );
+        STATUS_AXIS_TYPE, STATUS_AXIS_UNIT, STATUS_AXIS_DATACLASS, false );
   }
 
   /**

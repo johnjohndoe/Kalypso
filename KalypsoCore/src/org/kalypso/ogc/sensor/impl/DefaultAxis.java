@@ -3,7 +3,7 @@ package org.kalypso.ogc.sensor.impl;
 import org.kalypso.ogc.sensor.IAxis;
 
 /**
- * Simple default implementation of the IAxis interface.
+ * Default implementation of the IAxis interface.
  * 
  * @author schlienger
  */
@@ -14,8 +14,6 @@ public class DefaultAxis implements IAxis
   private String m_unit;
 
   private Class m_dataClass;
-
-  private int m_position;
 
   private String m_type;
 
@@ -32,18 +30,15 @@ public class DefaultAxis implements IAxis
    *          unit of the axis
    * @param dataClass
    *          className of the data on this axis
-   * @param position
-   *          position of this axis in regards to the tupple of data
    * @param isKey
    */
   public DefaultAxis( final String label, final String type, final String unit,
-      final Class dataClass, final int position, final boolean isKey )
+      final Class dataClass, final boolean isKey )
   {
     m_label = label;
     m_type = type;
     m_unit = unit;
     m_dataClass = dataClass;
-    m_position = position;
     m_isKey = isKey;
   }
 
@@ -55,7 +50,7 @@ public class DefaultAxis implements IAxis
   public DefaultAxis( final IAxis axis )
   {
     this( axis.getName(), axis.getType(), axis.getUnit(), axis.getDataClass(),
-        axis.getPosition(), axis.isKey() );
+        axis.isKey() );
   }
 
   /**
@@ -82,11 +77,6 @@ public class DefaultAxis implements IAxis
     return m_dataClass;
   }
 
-  public int getPosition( )
-  {
-    return m_position;
-  }
-
   /**
    * @see java.lang.Object#toString()
    */
@@ -108,14 +98,9 @@ public class DefaultAxis implements IAxis
 
     final IAxis other = (IAxis) obj;
 
-    // TODO: bin mir gar nicht sicher ob die Position doch wichtig ist!
-    // ist ziemlich schlecht die position nicht zu berücksichtigen!
-    // deswegen hier dieser Versuch mit position auch als criteria
-    //
-    // Important: Axis' position is not relevant for two axes to be equal
     if( m_dataClass == other.getDataClass() && m_isKey == other.isKey()
-        && m_label.equals( other.getName() ) && m_type.equals( other.getType() )
-        && m_unit.equals( other.getUnit() ) && m_position == other.getPosition() )
+        && m_type.equals( other.getType() )
+        && m_unit.equals( other.getUnit() ) )
       return true;
 
     return false;
@@ -128,10 +113,8 @@ public class DefaultAxis implements IAxis
   {
     final StringBuffer bf = new StringBuffer();
 
-    // Important: Axis' position is not relevant for two axes to be equal
-    // TODO Gleiche Anmerkung hier wie für equals bez. position
     bf.append( m_dataClass.getName() ).append( m_isKey ).append( m_label )
-        .append( m_type ).append( m_unit ).append( m_position );
+        .append( m_type ).append( m_unit );
 
     return bf.toString().hashCode();
   }

@@ -66,7 +66,7 @@ public class ValueFilter extends AbstractObservationFilter
         final Object elt = values.getElement( i, axes[j] );
         
         if( comp == null || comp.validates( elt ) )
-          tupple.add( axes[j].getPosition(), elt );
+          tupple.add( newValues.getPositionFor( axes[j] ), elt );
         else
         {
           add = false;

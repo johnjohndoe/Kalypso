@@ -26,35 +26,38 @@ public class ForecastTuppleModel extends AbstractTuppleModel
    * 
    * @throws SensorException
    */
-  public ForecastTuppleModel( final ITuppleModel[] models ) throws SensorException
+  public ForecastTuppleModel( final ITuppleModel[] models )
+      throws SensorException
   {
     Date lastDate = DateUtilities.getMinimum();
-    
+
     m_model = new SimpleTuppleModel( models[0].getAxisList() );
 
     for( int i = 0; i < models.length; i++ )
     {
       final IAxis[] axes = models[i].getAxisList();
-      final IAxis[] dateAxes = ObservationUtilities.findAxisByClass( axes, Date.class );
+      final IAxis[] dateAxes = ObservationUtilities.findAxisByClass( axes,
+          Date.class );
       if( dateAxes.length == 0 )
-        throw new IllegalArgumentException("no date axis");
-      
+        throw new IllegalArgumentException( "no date axis" );
+
       final IAxis dateAxis = dateAxes[0];
-      
+
       for( int rowIx = 0; rowIx < models[i].getCount(); rowIx++ )
       {
         final Date date = (Date) models[i].getElement( rowIx, dateAxis );
 
         if( date.compareTo( lastDate ) > 0 )
         {
-          final Object[] tupple = new Object[ axes.length ];
-          
+          final Object[] tupple = new Object[axes.length];
+
           for( int colIx = 0; colIx < axes.length; colIx++ )
-            tupple[ axes[colIx].getPosition() ] = models[i].getElement( rowIx, axes[colIx]);
-          
+            tupple[m_model.getPositionFor( axes[colIx] )] = models[i]
+                .getElement( rowIx, axes[colIx] );
+
           m_model.addTupple( tupple );
         }
- 
+
         lastDate = date;
       }
     }
@@ -77,25 +80,29 @@ public class ForecastTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int,
+   *      org.kalypso.ogc.sensor.IAxis)
    */
-  public Object getElement( int index, IAxis axis ) 
+  public Object getElement( int index, IAxis axis ) throws SensorException
   {
     return m_model.getElement( index, axis );
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
+   *      org.kalypso.ogc.sensor.IAxis)
    */
   public void setElement( int index, Object element, IAxis axis )
+      throws SensorException
   {
     m_model.setElement( index, element, axis );
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
+   *      org.kalypso.ogc.sensor.IAxis)
    */
-  public int indexOf( Object element, IAxis axis )
+  public int indexOf( Object element, IAxis axis ) throws SensorException
   {
     return m_model.indexOf( element, axis );
   }

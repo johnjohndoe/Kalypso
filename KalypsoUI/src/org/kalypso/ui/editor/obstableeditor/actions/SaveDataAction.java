@@ -11,6 +11,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
@@ -67,8 +68,17 @@ public class SaveDataAction extends AbstractEditorActionDelegate
           for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
             ((ITableViewColumn) itcol.next()).setDirty( false );
 
-          final ITuppleModel values = model.getValues( theme );
-
+          final ITuppleModel values;
+          try
+          {
+            values = model.getValues( theme );
+          }
+          catch( SensorException e1 )
+          {
+            e1.printStackTrace();
+            return;
+          }
+          
           final Job job = new Job( "ZML-Speichern: " + obs.getName() )
           {
             protected IStatus run( IProgressMonitor monitor )

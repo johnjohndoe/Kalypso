@@ -67,7 +67,7 @@ public class WQObservationFilter extends AbstractObservationFilter
       m_srcAxis = ObservationUtilities.findAxisByType( axes,
           TimeserieConstants.TYPE_RUNOFF );
       m_destAxis = new DefaultAxis( name, TimeserieConstants.TYPE_WATERLEVEL,
-          unit, Double.class, m_axes.length - 1, false );
+          unit, Double.class, false );
       m_axes[m_axes.length - 1] = m_destAxis;
     }
     else if( TimeserieConstants.TYPE_WATERLEVEL.equals( type ) )
@@ -80,7 +80,7 @@ public class WQObservationFilter extends AbstractObservationFilter
       m_srcAxis = ObservationUtilities.findAxisByType( axes,
           TimeserieConstants.TYPE_WATERLEVEL );
       m_destAxis = new DefaultAxis( name, TimeserieConstants.TYPE_RUNOFF, unit,
-          Double.class, m_axes.length - 1, false );
+          Double.class, false );
       m_axes[m_axes.length - 1] = m_destAxis;
     }
     else

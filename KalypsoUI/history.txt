@@ -1,10 +1,19 @@
+
 Änderungshistorie von Kalypso
 -----------------------------
 
-Start: Stand 12.11.2004 Schulung Dresden
-
+-----------
 Version ...
 -----------
+- Refactoring in: IAxis und ITuppleModel.
+	Position der Achse nicht mehr in IAxis, sondern ITuppleModel abhängig.
+	Achsen sind gleich wenn dataClass, type, unit, und key gleich sind.
+
+
+
+----------------
+Version 20050104
+----------------
 - Menü 'Modell' aufgeteilt in 'Modell' und 'Rechenvariante'
 	- neue Menüpunkte:
 				Rechenfall neu
@@ -146,3 +155,7 @@ Version ...
 - Bugfix: Login-Abfrage bei fehlenden Rechten (Programmstart):bei Druck auf Cancel ist der Splash nicht verschwunden
 
 - Hochwasser-Perspective: bei fehlendem Server bessere Meldung
+
+----------------------------------------
+Start: Stand 12.11.2004 Schulung Dresden
+----------------------------------------

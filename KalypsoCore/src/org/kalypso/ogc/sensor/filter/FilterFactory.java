@@ -145,20 +145,6 @@ public class FilterFactory
     return obsFilter;
   }
   
-
-  /**
-   * Creates a filter hierarchy according to the specification found in the
-   * given xml string.
-   * 
-   * @param xmlStr
-   * @return filter
-   * @throws SensorException
-   */
-  public static IObservation createFilter( final String xmlStr ) throws SensorException
-  {
-    return createFilter( new InputSource( new StringReader( xmlStr) ) );
-  }
-  
   /**
    * Creates a filter hierarchy using the InputSource.
    * 
