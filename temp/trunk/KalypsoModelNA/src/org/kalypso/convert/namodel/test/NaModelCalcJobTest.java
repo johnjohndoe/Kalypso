@@ -67,7 +67,7 @@ public class NaModelCalcJobTest extends TestCase
     final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
     registry.registerTypeHandler( new ObservationLinkHandler() );
 
-    File baseDir = new File( "C:\\TMP\\kalypsonatest" );
+    File baseDir = new File( "C:\\simulation\\test" );
 //    File baseDir = FileUtilities.createNewTempDir( "NA_Simulation" );
 //    baseDir.mkdirs();
 
@@ -83,12 +83,11 @@ public class NaModelCalcJobTest extends TestCase
 
     CalcJobDataBean[] beans = new CalcJobDataBean[]
     {
-        new CalcJobDataBean( NaModelCalcJob.MODELL_ID, "Modelldaten", "./calc/calcCase.gml" ),
-        new CalcJobDataBean( NaModelCalcJob.CONTROL_ID, "Steuerdaten", "./calc/nacontrol.gml" ),
-        new CalcJobDataBean( "NiederschlagDir", "niederschlag", "./calc/zml/" ),
-        new CalcJobDataBean( "ZuflussDir", "zufluesse", "./calc/zufluss/" ),
-        new CalcJobDataBean( "PegelDir", "pegel", "./calc/pegel/" ), };
-
+        new CalcJobDataBean( NaModelCalcJob.MODELL_ID, "Modelldaten", "./calcCase.gml" ),
+        new CalcJobDataBean( NaModelCalcJob.CONTROL_ID, "Steuerdaten", "./nacontrol.gml" ),
+        new CalcJobDataBean( "NiederschlagDir", "niederschlag", "./Niederschlag/" ),
+        new CalcJobDataBean( "ZuflussDir", "zufluesse", "./Zufluss/" ),
+        new CalcJobDataBean( "PegelDir", "pegel", "./Pegel/" ), };
     try
     {
       final NaModelCalcJob job = new NaModelCalcJob();

@@ -163,7 +163,7 @@ public class NetFileManager extends AbstractManager
 
 	    final TimeseriesLink resultLink = NAZMLGenerator
 	    .copyToTimeseriesLink( null, NAZMLGenerator.NA_ABFLUSS_BERECHNET, m_conf
-	        .getGmlBaseDir(),"Ergebnis/Berechnet/Abfluss_"+fe.getId()+".zml", true ,true);
+	        .getGmlBaseDir(),"Ergebnisse/Berechnet/Abfluss_"+fe.getId()+".zml", true ,true);
 	    FeatureProperty ergProp = FeatureFactory.createFeatureProperty( "qberechnetZR",
 	        resultLink );
 	    propCollector.put( "qberechnetZR", ergProp );

@@ -41,12 +41,7 @@ public class XMLServiceTools
       for( int i = 0; i < nl.getLength(); i++ )
       {
         Node node = nl.item( i );
-        System.out.println( XMLServiceTools.toString( node ) );
-        
-        String parameter = XMLTools.getStringValue(node);
-        System.out.println("parameter: <"+parameter+">");
         setTextNode( myDom, node, value );
-        System.out.println( XMLServiceTools.toString( node ) );
       }
     }
   }

@@ -120,8 +120,8 @@ public class NaModelCalcJob extends AbstractCalcJob
       setMessage( "starte Simulationskern" );
       if( isCanceled() )
         return;
-      startCalculation( exeDir ); // TODO
-      // ergebnisse aufbereiten
+      startCalculation( exeDir ); 
+      
       setMessage( "lade Ergebnisse" );
       loadResults( exeDir, modellWorkspace, logBuffer, outDir );
 
@@ -235,13 +235,13 @@ public class NaModelCalcJob extends AbstractCalcJob
   private void updateFactorParameter( GMLWorkspace modellWorkspace )
   {
     // Catchments
-    final Feature[] catchmentFEs = modellWorkspace
-        .getFeatures( modellWorkspace.getFeatureType( "Catchment" ) );
+    final Feature[] catchmentFEs = modellWorkspace.getFeatures( modellWorkspace
+        .getFeatureType( "Catchment" ) );
     update( catchmentFEs, m_catchmentFactorParameterTarget, m_catchmentFactorsParameter );
 
     // KMChannels
-    final Feature[] kmChanneFEs = modellWorkspace
-        .getFeatures( modellWorkspace.getFeatureType( "KMChannel" ) );
+    final Feature[] kmChanneFEs = modellWorkspace.getFeatures( modellWorkspace
+        .getFeatureType( "KMChannel" ) );
     for( int i = 0; i < kmChanneFEs.length; i++ )
     {
       Feature feature = kmChanneFEs[i];
@@ -297,10 +297,10 @@ public class NaModelCalcJob extends AbstractCalcJob
   {
     // ASCII-Files
     // generiere ZML Ergebnis Dateien
-    final File outDir = new File( simDir, "out_we.nat" );
+    final File ascciResultDir = new File( simDir, "out_we.nat" );
     MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( new String[]
     { "*.qgs" }, false, false, true );
-    File[] qgsFiles = outDir.listFiles( filter );
+    File[] qgsFiles = ascciResultDir.listFiles( filter );
     if( qgsFiles.length != 0 )
     {
       // read ascii result file
@@ -351,26 +351,30 @@ public class NaModelCalcJob extends AbstractCalcJob
         final TimeseriesLink pegelLink = (TimeseriesLink)feature.getProperty( "pegelZR" );
         if( pegelLink != null )
         {
-          log
-              .append( "zu diesem Knoten existiert ein Pegel, einige Pegelmetadaten (z.B. Wechmann-Funktion) werden in Ergebniszeitreihe uebernommen\n" );
           final URL pegelURL = UrlUtilities.resolveURL( modellWorkspace.getContext(), pegelLink
               .getHref() );
-          final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" );
-          copyMetaData( pegelObservation.getMetadataList(), resultObservation.getMetadataList(),
-              new String[]
-              {
-                  TimeserieConstants.MD_ALARM_1,
-                  TimeserieConstants.MD_ALARM_2,
-                  TimeserieConstants.MD_ALARM_3,
-                  TimeserieConstants.MD_ALARM_4,
-                  TimeserieConstants.MD_FLUSS,
-                  TimeserieConstants.MD_FLUSSGEBIET,
-                  TimeserieConstants.MD_GKH,
-                  TimeserieConstants.MD_GKR,
-                  TimeserieConstants.MD_HOEHENANGABEART,
-                  TimeserieConstants.MD_PEGELNULLPUNKT,
-                  TimeserieConstants.MD_WQ } );
+          if( ( new File(pegelURL.getFile())).exists() )
+          {
 
+            log
+                .append( "zu diesem Knoten existiert ein Pegel, einige Pegelmetadaten (z.B. Wechmann-Funktion) werden in Ergebniszeitreihe uebernommen\n" );
+            final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" );
+            copyMetaData( pegelObservation.getMetadataList(), resultObservation.getMetadataList(),
+                new String[]
+                {
+                    TimeserieConstants.MD_ALARM_1,
+                    TimeserieConstants.MD_ALARM_2,
+                    TimeserieConstants.MD_ALARM_3,
+                    TimeserieConstants.MD_ALARM_4,
+                    TimeserieConstants.MD_FLUSS,
+                    TimeserieConstants.MD_FLUSSGEBIET,
+                    TimeserieConstants.MD_GKH,
+                    TimeserieConstants.MD_GKR,
+                    TimeserieConstants.MD_HOEHENANGABEART,
+                    TimeserieConstants.MD_PEGELNULLPUNKT,
+                    TimeserieConstants.MD_WQ } );
+
+          }
         }
         // lese ergebnis-link um target fuer zml zu finden
         TimeseriesLink resultLink = (TimeseriesLink)feature.getProperty( "qberechnetZR" );
@@ -381,7 +385,8 @@ public class NaModelCalcJob extends AbstractCalcJob
                   + feature.getId() + " ." );
           continue;
         }
-        String resultPathRelative = resultLink.getHref();
+//        String resultPathRelative = resultLink.getHref();
+        String resultPathRelative = FileUtilities.getRelativePathTo(new File(outputDir,"Ergebnisse"), new File( outputDir, resultLink.getHref() ));
         final File resultFile = new File( outputDir, resultPathRelative );
         resultFile.getParentFile().mkdirs();
 
@@ -393,7 +398,7 @@ public class NaModelCalcJob extends AbstractCalcJob
         writer.close();
 
         addResult( new CalcJobDataBean( "ERG" + feature.getId(), "Berechnungsergebnis zu Knoten #"
-            + feature.getId(), resultPathRelative ) );
+            + feature.getId(), resultPathRelative ) );        
       }
     }
   }
@@ -426,35 +431,37 @@ public class NaModelCalcJob extends AbstractCalcJob
     // TODO: use it, or REMOVE it
     log.getClass();
 
-    addDirToResults(simDir,"inp.dat" , outputdir);
-    addDirToResults(simDir,"klima.dat" , outputdir);
-    addDirToResults(simDir,"out_we.nat" , outputdir);
-//    final File inpDir = new File( simDir, "inp.dat" );
-//    // inputdateien
-//    final File[] inpDirResults = inpDir.listFiles();
-//    for( int i = 0; i < inpDirResults.length; i++ )
-//    {
-//      final File file = inpDirResults[i];
-//      copyResult( simDir, file, outputdir, file.getName(), file.getName() );
-//    }
+    addDirToResults( simDir, "inp.dat", outputdir );
+    addDirToResults( simDir, "start", outputdir );
+    addDirToResults( simDir, "klima.dat", outputdir );
+    addDirToResults( simDir, "out_we.nat", outputdir );
+    //    final File inpDir = new File( simDir, "inp.dat" );
+    //    // inputdateien
+    //    final File[] inpDirResults = inpDir.listFiles();
+    //    for( int i = 0; i < inpDirResults.length; i++ )
+    //    {
+    //      final File file = inpDirResults[i];
+    //      copyResult( simDir, file, outputdir, file.getName(), file.getName() );
+    //    }
 
-//    final File klimaDir = new File( simDir, "klima.dat" );
-//    // klimadateien
-//    final File[] klimaDirResults = klimaDir.listFiles();
-//    for( int i = 0; i < klimaDirResults.length; i++ )
-//    {
-//      final File file = klimaDirResults[i];
-//      copyResult( simDir, file, outputdir, file.getName(), file.getName() );
-//    }
+    //    final File klimaDir = new File( simDir, "klima.dat" );
+    //    // klimadateien
+    //    final File[] klimaDirResults = klimaDir.listFiles();
+    //    for( int i = 0; i < klimaDirResults.length; i++ )
+    //    {
+    //      final File file = klimaDirResults[i];
+    //      copyResult( simDir, file, outputdir, file.getName(), file.getName() );
+    //    }
 
-//    final File outDir = new File( simDir, "out_we.nat" );
-//    // outputdateien
-//    final File[] outDirResults = outDir.listFiles();
-//    for( int i = 0; i < outDirResults.length; i++ )
-//    {
-//      final File file = outDirResults[i];
-//      copyResult( simDir, file, outputdir, FileUtilities.getSuffix( file ), file.getName() );
-//    }
+    //    final File outDir = new File( simDir, "out_we.nat" );
+    //    // outputdateien
+    //    final File[] outDirResults = outDir.listFiles();
+    //    for( int i = 0; i < outDirResults.length; i++ )
+    //    {
+    //      final File file = outDirResults[i];
+    //      copyResult( simDir, file, outputdir, FileUtilities.getSuffix( file ),
+    // file.getName() );
+    //    }
 
     // log und error dateien:
     final File logDir = new File( simDir, "start" );

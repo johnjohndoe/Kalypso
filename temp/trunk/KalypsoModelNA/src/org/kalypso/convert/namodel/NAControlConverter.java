@@ -11,7 +11,7 @@ import org.deegree_impl.model.feature.FeatureHelper;
 
 public class NAControlConverter
 {
-//  private static final String NL = System.getProperty( "line.separator" );
+  //  private static final String NL = System.getProperty( "line.separator" );
 
   // graphicTool: types
   public static final int LINE = 0;
@@ -29,25 +29,24 @@ public class NAControlConverter
 
   public static final int RIGHT = 1;
 
-  public static void featureToASCII(File projectPath,GMLWorkspace controlWorkspace, GMLWorkspace modellWorkspace )
-      throws IOException
+  public static void featureToASCII( File projectPath, GMLWorkspace controlWorkspace,
+      GMLWorkspace modellWorkspace ) throws IOException
   {
-    final Feature controlFE=controlWorkspace.getRootFeature();
-    final File startDir=new File(projectPath,"start");
+    final Feature controlFE = controlWorkspace.getRootFeature();
+    final File startDir = new File( projectPath, "start" );
     startDir.mkdirs();
-    
-    final File startFile=new File(startDir,"we_nat_start.txt");
-    final File falStartFile=new File(startDir,"falstart.lst");
-    
+
+    final File startFile = new File( startDir, "we_nat_start.txt" );
+    final File falStartFile = new File( startDir, "falstart.lst" );
+
     // write FalStart
-    final StringBuffer b1= new StringBuffer();
-    writeFalstart(controlFE, projectPath,startFile, b1);
+    final StringBuffer b1 = new StringBuffer();
+    writeFalstart( controlFE, projectPath, startFile, b1 );
     //write it
     final FileWriter writer1 = new FileWriter( falStartFile );
     writer1.write( b1.toString() );
     writer1.close();
-    
-    
+
     // generate Start
     final StringBuffer b = new StringBuffer();
     appendResultsToGenerate( controlFE, b );
@@ -60,7 +59,7 @@ public class NAControlConverter
 
   private static void appendResultsToGenerate( Feature controlFE, StringBuffer b )
   {
-    b.append( " " + FeatureHelper.getAsString(controlFE, "timeStep" ) + "\n" );
+    b.append( " " + FeatureHelper.getAsString( controlFE, "timeStep" ) + "\n" );
 
     b.append( getBoolean( controlFE.getProperty( "tmp" ) )
         + "       Temperatur                 .tmp\n" );
@@ -124,7 +123,7 @@ public class NAControlConverter
     for( int i = 0; i < nodeFEs.length; i++ )
     {
       if( FeatureHelper.booleanIsTrue( nodeFEs[i], "generateResult", false ) )
-        b.append( FeatureHelper.getAsString(nodeFEs[i], "num" ) + "\n" );
+        b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
     }
     b.append( "99999\n" );
     // teilgebiete
@@ -133,14 +132,15 @@ public class NAControlConverter
     for( int i = 0; i < catchmentFEs.length; i++ )
     {
       if( FeatureHelper.booleanIsTrue( catchmentFEs[i], "generateResult", false ) )
-        b.append( FeatureHelper.getAsString(catchmentFEs[i], "inum" ) + "\n" );
+        b.append( FeatureHelper.getAsString( catchmentFEs[i], "inum" ) + "\n" );
     }
     b.append( "99999\n" );
     // TODO startwerte fuer die kurzzeitsimulation
     b.append( "99999\n" );
   }
 
-  private static void writeFalstart( Feature controlFE,File projectPath,File startFile,StringBuffer b )
+  private static void writeFalstart( Feature controlFE, File projectPath, File startFile,
+      StringBuffer b )
   {
 
     //	File dest=new File(FileSystemUtils.getNaWorkDir(),FalstartFileName);
@@ -150,8 +150,8 @@ public class NAControlConverter
 
     //	String projectPath=FileSystemUtils.getNaWorkDir().getAbsolutePath();
 
-    String startDate = FeatureHelper.getFormatedDate( controlFE, "startsimulation", "yyyy MM dd HH",
-        "notset" );
+    String startDate = FeatureHelper.getFormatedDate( controlFE, "startsimulation",
+        "yyyy MM dd HH", "notset" );
     String endDate = FeatureHelper.getFormatedDate( controlFE, "endsimulation", "yyyy MM dd HH",
         "notset" );
 
@@ -159,8 +159,12 @@ public class NAControlConverter
     b.append( "x einzugsgebiet\n" );
     b
         .append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Simulationsbeginn(dat+Zeit); Simulationsende; Konfigurationsdatei mit Pfad\n" );
-    b.append( "2 " + projectPath.getAbsolutePath() + " " + system + " " + zustand + "  "
-        + startDate + " " + endDate + " " + "start" + File.separator + startFile.getName()+"\n" );
+    //    b.append( "2 " + projectPath.getAbsolutePath() + " " + system + " " +
+    // zustand + " "
+    //        + startDate + " " + endDate + " " + "start" + File.separator +
+    // startFile.getName()+"\n" );
+    b.append( "2 .. " + system + " " + zustand + "  " + startDate + " " + endDate + " " + "start"
+        + File.separator + startFile.getName() + "\n" );
   }
 
   private static String getBoolean( Object object )
