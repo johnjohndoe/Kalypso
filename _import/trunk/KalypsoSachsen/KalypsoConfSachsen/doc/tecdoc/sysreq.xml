@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<chapter id="tecdoc:sysreq">
+	<title>Systemvoraussetzungen</title>
+	
+	<para>
+		Die diesem Kapitel werden die Systemvoraussetzungen für den Betrieb der
+		&fhs; beschrieben.
+	</para>
+	
+	<section id="tecdoc:sysreq:hardware">
+		<title>Hardware</title>
+		
+		<para>
+			Die Software wurde auf einem PC mit folgender Austattung getestet:
+			
+			<itemizedlist>
+				<listitem><para>Betriebssystem Windows NT4 (SP6a) und 2000 (SP2)</para></listitem>
+				<listitem><para>CPU Pentium II 500 MHZ und bessere</para></listitem>
+				<listitem><para>512 MB RAM</para></listitem>
+			</itemizedlist>
+			
+			Auf allen Systemen die diese Spezifikation erfüllen oder übertreffen kann die 
+			&fhs; eingesetzt werden.
+		</para>
+	</section>
+	
+	<section id="tecdoc:sysreq:software">
+		<title>Software</title>
+		
+		<para>
+			Aufgrund der Programmierung der &fhs; in der Programmiersprache &java;, kann die
+			Software prinzipiell auf allen System eingesetzt werden, für welche ein
+			JavaRuntimeEnvironment, Version 1.4 vorhanden ist. Aufgrund einiger weniger
+			Plattformabhängigen Funktionen (siehe <xref linkend="tecdoc:port"/>) müssen Teile 
+			der Software auf die entsprechende Zielplatform portiert werden. Dies betrifft 
+			insbesondere den Rechenkern kwert.exe, welcher ein Windows-Betriebssystem voraussetzt, 
+			sowie das Installationsskript, welches für Windows NT, 2000, XP ausgelegt ist.
+		</para>
+	</section>
+</chapter>	

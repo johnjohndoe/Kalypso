@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<chapter id="tecdoc:port">
+	<title>Plattformunabhängigkeit</title>
+	
+	<para>
+		In diesem Kapitel erfolgt eine Auflistung der Programmstellen, welche
+		plattformabhängigen Code enthalten, sowie einer Bewertung des 
+		Programmieraufwandes zum Erreichen einer vollständigen Plattformunabhängigkeit.
+	</para>
+
+	<section id="tecdoc:port:workspace">
+		<title>Arbeitsbereich</title>
+		
+		<para>
+			Der Arbeitsbereich verwendet die Bibliothek Activation.jar (siehe 
+				<xref linkend="tecdoc:libs:activation"/>)
+			zur Anzeige der Dateiendungsabhängigen Icons sowie zum Öffnen einer Datei im eingestellten 
+			Systemeditor.
+		</para>
+		
+		<para>
+			Um eine vollständige Plattformunabhängigkeit zu erreichen, könnte bei nicht Windows-Systemen 
+			auf das Anzeigen der Dateiicons und auf das Öffnen mittels Systemeditor verzichtet werden.
+		</para>
+		
+		<para>
+			Vermuteter Aufwand: gering (&lt; 1 Woche).
+		</para>
+	</section>
+	
+	<section id="tecdoc:port:pegelinfo">
+		<title>Pegelinfo im WINFO-Plugin</title>
+		
+		<para>
+			Zur Anzeige zusätzlicher HTML-basierter Pegelinformation wird der Windows-Systembrowser
+			gestartet.
+		</para>
+		
+		<para>
+			Für jede zusätzliche zu unterstützende Platform muß das Programm um den 
+			Plattformspezifischen Mechanismus zur Darstellung von HTML-Dokumenten erweitert werden.
+			Bereits testweise implementiert ist der Aufruf unter Linux, dort wird zur Zeit stets
+			versucht den Browser 'Netscape' zu starten.
+		</para>
+		
+		<para>
+			Zur weiteren Anpassung wäre es zum Beispiel möglich, den zu verwendenden Browser in einem
+			Dialog von Benutzer abzufragen.
+		</para>
+		
+		<para>Vermuteter Aufwand: je nach Plattform vermutlich gering</para>
+	</section>
+	
+	<section id="tecdoc:port:kwert">
+		<title>Rechenkern KWERT</title>
+		
+		<para>
+			Der Rechenkern kwert.exe wurde in der vorliegenden Version für die Windows-Plattform
+			entwickelt und nur dort getestet.
+		</para>
+		
+		<para>
+			Da die kwert.exe in der jetzigen Form eine reine Konsolenanwendung ist, ist eine Portierung
+			ohne Wechsel der Programmiersprache &fortran; denkbar. Vermutlich muss aber das gesammte Programm
+			überarbeitet werden. Erfahrungsgemäss bereiten dabei vor allem die Verwendung 
+			systemspezifischer Dateipfade die meisten Probleme.
+		</para>
+		
+		<para>
+			Vermuteter Aufwand: eine konkrete Aussage lässt sich nur nach intensiver Analyse und Test des
+			Quellcodes machen. ... TODO Frage GROHMANN ...
+		</para>
+	</section>
+	
+	<section id="tecdoc:port:files">
+		<title>ASCII-Dateien</title>
+		
+		<para>
+			Alle verwendeten Dateien liegen im ASCII-Format vor. Dadurch ist ein Portierung der
+			verscheidenen Datenformaten gewährleistet.
+		</para>
+		
+		<para>
+			Zur Portierung der Daten auf ein anderes Systrm ist 
+			vermutlich lediglich ein einmaliges Konvertieren des Zeilenende-Zeichens aller 
+			Dateien nötig. Alternativ könnten die Lese- Schreibroutinen des Programmes dahingehend 
+			geändert werden, dass stets die Windows-Konvention eingehalten wird
+		</para>
+		
+		<para>Vermuteter Aufwand: gering</para>
+	</section>
+	
+	<section id="tecdoc:port:install">
+		<title>Installation des Programmes</title>
+		
+		<para>Die Installation des Programmes ist Plattformabhängig. Da sie aber im wesentlichen aus
+			dem Kopieren der Dateien besteht ist der Aufwand zum Erstellen eines Installationsskriptes
+			als gering einzuschätzen.
+		</para>
+	</section>
+</chapter>	

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<chapter id="tecdoc:source">
+	<title>Quellcode</title>
+	
+	<para>
+		Der &java;-Quellcode wurde mit dem Versionierungssystem 
+		&cvs;&cvs_ftn; verwaltet. Die Dokumentation des Quellcodes wurde anhand von
+		Javadoc gemacht. Sie können durch diese Dokumentation mit einem Webbrowser
+		navigieren.
+	</para>
+	
+	<section>
+		<title>Organisation</title>
+		<para> Der Quellcode ist in verschiedenen Projekte unterteilt. Jedes 
+			Projekt deckt definierte Anforderungen bzw. Funktionen ab und ist 
+			mit einer Code-Lizenz verwiesen. Projekte können von anderen 
+			Projekte abhängig sein. Projekte können über sog. Libraries 
+			(Code-Bibliotheken) verfügen, die jeweils ihre eigene Lizenz haben.</para>
+			
+			<!-- TODO include overview-schema from 20040913_Kalypso-Projekte-Übersicht.doc 
+				in KalypsoDoc project -->
+	</section>
+	
+	
+</chapter>

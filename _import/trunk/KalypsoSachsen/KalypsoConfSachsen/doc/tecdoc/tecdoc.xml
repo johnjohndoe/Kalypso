@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+	"file:////bcenas01/J/hyd5309/Publishing/docbook/docbookxml42/docbookx.dtd" [
+	<!ENTITY file_posindex SYSTEM "posindex.xml">
+
+	<!ENTITY bce '<ulink url="http://www.bjoernsen.de">Björnsen Beratende Ingenieure GmbH</ulink>'>
+	<!ENTITY tuhh '<ulink url="http://www.tuhh.de">Technische Universität Hamburg-Harburg</ulink>'>
+	<!ENTITY kalypso "Kalypso">
+	<!ENTITY tecdoc "Technische Dokumentation">
+	<!ENTITY version "1.0">
+	<!ENTITY theyear "2004">
+	<!ENTITY themonth "Dezember">
+	
+	<!ENTITY java '<application><ulink url="http://java.sun.com/">Java</ulink></application>'>
+	<!ENTITY java_ftn '<footnote><para>
+						Java(TM) von Sun, siehe <ulink url="http://java.sun.com/"/>. Verwendet wurde die
+						J2SE 1.4.2
+					  </para></footnote>'>
+	
+	<!ENTITY lgpl '<ulink url="http://www.gnu.org/licenses/lgpl.html">LGPL</ulink>'>
+	<!ENTITY lgpl_ftn '
+		<footnote><para>
+			Die GNU Lesser General Public License, Version 2.1. Siehe <ulink url="http://www.gnu.org/licenses/lgpl.html"/>.
+		</para></footnote>'>
+		
+	<!ENTITY cvs '<application><ulink url="http://www.cvshome.org">CVS</ulink></application>'>
+	<!ENTITY cvs_ftn '
+		<footnote><para>
+			Concurrent Versioning System CVS, Version 1.11.5. Siehe <ulink url="http://www.cvshome.org/"/>.
+		</para></footnote>'>
+
+	<!ENTITY eclipse '<application><ulink url="http://www.eclipse.org">Eclipse</ulink></application>'>
+	<!ENTITY eclipse_ftn '
+		<footnote><para>
+			Open Source Entwicklungsumgebung Eclipse, Version 3.0.1. Siehe <ulink url="http://www.eclipse.org/"/>.
+		</para></footnote>'>
+	
+	<!ENTITY platform '<application><ulink url="http://www.eclipse.org/platform/index.html">Eclipse Platform</ulink></application>'>
+	<!ENTITY platform_ftn '
+		<footnote><para>
+			Open Source Eclipse Platform, Version 3.0.1. Siehe <ulink url="http://www.eclipse.org/platform/index.html"/>.
+		</para></footnote>'>
+	
+	<!ENTITY ant '<application><ulink url="http://ant.apache.org/">Ant</ulink></application>'>
+	<!ENTITY ant_ftn 
+			'<footnote><para>
+				Ant Builder, von der Apache Software Foundation.
+				Siehe <ulink url="http://ant.apache.org/"/>.
+			 </para></footnote>'>
+	
+	<!ENTITY docbook '<application><ulink url="http://www.docbook.org/">DocBook</ulink></application>'>
+	<!ENTITY docbook_ftn
+			'<footnote><para>
+				DocBook XML-Dokumententypdefinition (Version 4.2) und DocBook XSL Stylesheets (Version 1.65.1). 
+				Siehe <ulink url="http://www.docbook.org/"/> und 
+				<ulink url="http://docbook.sourceforge.net/projects/xsl/"/>. 
+			 </para></footnote>'>
+	
+	<!ENTITY db2latex '<application><ulink url="http://db2latex.sourceforge.net/">DB2Latex</ulink></application>'>
+	<!ENTITY db2latex_ftn
+			'<footnote><para>
+				DocBook XSL Stylesheets (Version 0.7) zur Transformation nach LaTeX. 
+				Siehe <ulink url="http://db2latex.sourceforge.net/"/>. 
+			 </para></footnote>'>
+
+	<!ENTITY miktex '<application><ulink url="http://www.miktex.org/">MiKTeX</ulink></application>'>
+	<!ENTITY miktex_ftn
+			'<footnote><para>
+				Die Windows-Distribution von LaTeX, Version 2.2. Frei erhältlich unter 
+				<ulink url="http://www.miktex.org/"/>.
+			 </para></footnote>'>
+	
+	<!ENTITY xsltproc '<application><ulink url="http://www.xsltproc.org">XsltProc</ulink></application>'>
+	<!ENTITY xsltproc_ftn 
+			'<footnote><para>
+				XSL-Prozessor erhältich von <ulink url="http://www.zlatkovic.com/projects/libxml/"/>.
+			 </para></footnote>'>
+	
+	<!ENTITY latex '<application>LaTeX</application>'>
+	
+	<!ENTITY xml '<application>XML</application>'>
+	<!ENTITY xsl '<application>XML</application>'>
+	<!ENTITY html '<application>HTML</application>'>
+	<!ENTITY pdf '<application>PDF</application>'>
+	<!ENTITY pdf_ftn '<footnote><para>Protable Dokument Format der Firma Adobe. 
+					Siehe <ulink url="http://www.adobe.com/"/>.</para></footnote>'>
+	
+	<!ENTITY file_lang SYSTEM "lang.xml">
+	<!ENTITY file_tools SYSTEM "tools.xml">
+	<!ENTITY file_libs SYSTEM "libs.xml">
+	<!ENTITY file_compile SYSTEM "compile.xml">
+	<!ENTITY file_source SYSTEM "source.xml">
+	<!ENTITY file_port SYSTEM "port.xml">
+	<!ENTITY file_install SYSTEM "install.xml">
+	<!ENTITY file_sysreq SYSTEM "sysreq.xml">
+]>
+
+<book lang="de">
+	<bookinfo>
+		<title>&kalypso;</title>
+		<subtitle>&tecdoc;</subtitle>
+		<authorgroup>
+			<author><firstname>Gernot</firstname><surname>Belger</surname></author>
+			<author><firstname>Marc</firstname><surname>Schlienger</surname></author>
+			<author>
+			<affiliation>
+				<orgname> <ulink url="http://www.bjoernsen.de">&bce;</ulink>, Koblenz</orgname>
+			</affiliation>
+			</author>
+		</authorgroup>
+		<authorgroup>
+			<author><firstname>Andreas</firstname><surname>von Dömming</surname></author>
+			<author>
+			<affiliation>
+				<orgname> <ulink url="http://www.tuhh.de">&tuhh;</ulink>, Hamburg</orgname>
+			</affiliation>
+			</author>
+		</authorgroup>
+		
+		<edition>&tecdoc; Handbuch Version &version;</edition>
+		<pubdate>&themonth; &theyear;</pubdate>
+		<copyright>
+			<year>&theyear;</year>
+			<holder>&bce;</holder>
+			<holder>&tuhh;</holder>
+		</copyright>
+	</bookinfo>
+	
+	<toc/>
+	
+	<chapter id="about">
+		<title>Worum geht es?</title>
+		
+		<para>
+			In der technischen Dokumentation zu &kalypso; werden alle technischen Details behandelt, die
+			zur Weiterentwicklung und Wartung der Software benötigt werden.
+		</para>
+
+		<para>
+			Dies umfasst unter anderem Informationen zur Programmierung, den verwendeten Tools und der
+			Installation (Deploy) der Software.
+		</para>
+		
+		<para>
+			&kalypso; wird unter die &lgpl;-Lizenz freigegeben &lgpl_ftn;. Mehr Information finden Sie
+			in <xref linkend="tecdoc:source"/>.
+		</para>
+	</chapter>
+
+	&file_lang;
+	&file_source;
+	&file_tools;
+	&file_libs;
+	&file_compile;
+	&file_install;
+	&file_sysreq;
+	&file_port;
+
+	<!-- Keine Tabellen/Abbildungen vorhanden <lot/> -->
+
+</book>

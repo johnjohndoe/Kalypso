@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<chapter id="tecdoc:compile">
+	<title>Kompilation</title>
+	
+	<para>
+		Ausser der Kompilation des Quellcodes aus der Entwicklungsumgebung &eclipse; heraus (was nur zum 
+		Programmieren benötigt wurde), wird der gesamte Build-Prozess über ein Ant-Skript
+		gesteuert.
+	</para>
+	
+	<para>
+		Sämtliche Quellen, d.h. auch die Quelldateien für die Kompilation, Installationsskripte, 
+		Bibliotheken, etc., liegen im Quellecode vor. Das build.xml Ant-Skript - welches ebenfalls 
+		im Quellcode zu finden ist - greift direkt auf diese Quellen zu.
+	</para>
+	
+	<para>
+		Einzige Ausnahme sind die beiden Dokumentationen <emphasis>Grobkonzept</emphasis> 
+		und <emphasis>Feinkonzept</emphasis>, welche jeweils
+		einen eigenen Quellcode-Baum sowie ein dazugehörendes Ant-Skript besitzen.
+	</para>
+	
+	<para>
+		Die einzelnen Ant-Targets (d.h. ausführbare Skript-Funktionen) sind im jeweiligen Ant-Skript
+		beschrieben. Zur Kompilation des Program ist das Target <emphasis>compile</emphasis> vorgesehen. Nur
+		bei BCE relevante Ant-Targets sind deploy_cd und deploy_web weil sie die Lieferung
+		der FLYS-Software betreffen.
+	</para>
+
+</chapter>
