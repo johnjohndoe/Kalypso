@@ -18,9 +18,9 @@ public abstract class AbstractParser implements IParser
    */
   public String toString( Object obj ) throws ParserException
   {
-    if( ( obj != null ) && !getObjectClass().isAssignableFrom( obj.getClass() ) )
-      throw new ParserException( "Object " + obj.toString() + " (type: " + obj.getClass().getName()
-          + ") is not of the type " + getObjectClass().getName() );
+//    if( ( obj != null ) && !getObjectClass().isAssignableFrom( obj.getClass() ) )
+//      throw new ParserException( "Object " + obj.toString() + " (type: " + obj.getClass().getName()
+//          + ") is not of the type " + getObjectClass().getName() );
 
     if( obj == null )
       return "null";
