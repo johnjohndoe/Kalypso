@@ -85,7 +85,7 @@ public class TableViewPart extends ViewPart implements
     {
       public void run( )
       {
-        m_template.removeAllColumns();
+        m_template.removeAllThemes();
 
         final StructuredSelection selection = (StructuredSelection) event
             .getSelection();

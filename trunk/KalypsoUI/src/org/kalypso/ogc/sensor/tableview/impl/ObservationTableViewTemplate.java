@@ -29,8 +29,21 @@ public class ObservationTableViewTemplate extends DefaultTableViewTemplate
   public void setObservation( final IObservation obs,
       final boolean editableColumns, final IVariableArguments args )
   {
-    removeAllColumns();
+    removeAllThemes();
 
+    addObservation( obs, editableColumns, args );
+  }
+
+  /**
+   * Adds an observation and its values as columns to this template.
+   * 
+   * @param obs
+   * @param editableColumns
+   * @param args
+   */
+  public void addObservation( final IObservation obs,
+      final boolean editableColumns, final IVariableArguments args )
+  {
     final IAxis[] axes = obs.getAxisList();
 
     // do not even continue if there are no axes
@@ -44,20 +57,28 @@ public class ObservationTableViewTemplate extends DefaultTableViewTemplate
     if( keyAxes.length != 1 )
       return;
 
+    final DefaultTableViewTheme theme = new DefaultTableViewTheme();
+    theme.setObservation( obs );
+    theme.setArguments( args );
+
     for( int i = 0; i < axes.length; i++ )
     {
       // ignore axis if it is a kalypso status axis
       if( !KalypsoStatusUtils.isStatusAxis( axes[i] )
           && !axes[i].equals( keyAxes[0] ) )
       {
+        final IAxis valueAxis = ObservationUtilities.findAxisByName( axes,
+            axes[i].getName() );
+
         final DefaultTableViewColumn col = new DefaultTableViewColumn( axes[i]
             .getName()
-            + " - " + axes[i].getUnit(), editableColumns, 50, axes[i].getName(), obs );
-        
-        col.setArguments( args );
+            + " - " + axes[i].getUnit(), editableColumns, 50, keyAxes[0],
+            valueAxis, theme );
 
-        addColumn( col );
+        theme.addColumn( col );
       }
     }
+
+    addTheme( theme );
   }
 }

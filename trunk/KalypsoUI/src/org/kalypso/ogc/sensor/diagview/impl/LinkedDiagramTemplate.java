@@ -3,16 +3,13 @@ package org.kalypso.ogc.sensor.diagview.impl;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 import java.util.TreeMap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.template.TemplateEvent;
+import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxis;
-import org.kalypso.template.obsdiagview.TypeAxisMapping;
-import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
@@ -72,34 +69,9 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
     for( final Iterator it = list.iterator(); it.hasNext(); )
     {
       final TypeObservation tobs = (TypeObservation) it.next();
-      final List tcurves = tobs.getCurve();
 
       // no observation yet, will be updated once loaded
-      final DefaultDiagramTemplateTheme theme = new DefaultDiagramTemplateTheme(
-          null );
-
-      for( final Iterator itcurves = tcurves.iterator(); itcurves.hasNext(); )
-      {
-        final TypeCurve tcurve = (TypeCurve) itcurves.next();
-
-        final Properties mappings = new Properties();
-
-        final List tmaps = tcurve.getMapping();
-        for( final Iterator itm = tmaps.iterator(); itm.hasNext(); )
-        {
-          final TypeAxisMapping mapping = (TypeAxisMapping) itm.next();
-
-          mappings.setProperty( mapping.getObservationAxis(), mapping
-              .getDiagramAxis() );
-        }
-
-        // create curve and add it to theme
-        final DiagramCurve curve = new DiagramCurve( tcurve.getName(), theme,
-            mappings, this );
-        theme.addCurve( curve );
-      }
-
-      addTheme( theme );
+      final LinkedDiagramTemplateTheme theme = new LinkedDiagramTemplateTheme( this, tobs );
 
       // create key according to observation link
       final PoolableObjectType key = new PoolableObjectType(
@@ -126,6 +98,30 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
   }
 
   /**
+   * Convenienve method for adding an observation to this template.
+   *
+   * TODO: use themeName as name for the curve of the observation...
+   *  
+   * @param themeName
+   * @param context
+   * @param href
+   * @param linktype
+   * @param args
+   */
+  public void addObservation( final String themeName, final URL context, final String href, final String linktype, final IVariableArguments args )
+  {
+    // create key according to observation link
+    final PoolableObjectType key = new PoolableObjectType( linktype, href, context );
+
+    // fake theme because it won't be added directly to this template
+    final DefaultDiagramTemplateTheme fakeTheme = new DefaultDiagramTemplateTheme();
+    fakeTheme.setArguments( args );
+    
+    // use load mechanism
+    startLoading( key, fakeTheme );
+  }
+  
+  /**
    * @see org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate#removeAllThemes()
    */
   public void removeAllThemes( )
@@ -133,6 +129,29 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
     m_key2themes.clear();
 
     super.removeAllThemes();
+  }
+  
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate#removeTheme(org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme)
+   */
+  public void removeTheme( IDiagramTemplateTheme theme )
+  {
+    if( m_key2themes.containsValue( theme ) )
+    {
+      final Iterator it = m_key2themes.keySet().iterator();
+      while( it.hasNext() )
+      {
+        Object key = it.next();
+        
+        if( m_key2themes.get( key ) == theme )
+        {
+          m_key2themes.remove( key );
+          break;
+        }
+      }
+    }
+    
+    super.removeTheme( theme );
   }
 
   /**
@@ -158,12 +177,15 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
       final DefaultDiagramTemplateTheme theme = (DefaultDiagramTemplateTheme) m_key2themes
           .get( key );
 
-      if( theme == null )
-        return;
+      final IObservation obs = (IObservation) newValue;
 
-      theme.setObservation( (IObservation) newValue );
-
-      fireTemplateChanged( new TemplateEvent( this, theme, TemplateEvent.TYPE_LOADED ) );
+      theme.setObservation( obs );
+      
+      // tricky: fake theme if no curves
+      if( theme.getCurves().size() == 0 )
+        addObservation( obs, theme.getArguments() );
+      else
+        addTheme( theme );
     }
   }
 
@@ -174,10 +196,5 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
   public void objectInvalid( IPoolableObjectType key, Object oldValue )
   {
     // TODO Auto-generated method stub
-  }
-
-  public void addObservation( final String name, final URL context, final String href, final String linktype, final IVariableArguments args )
-  {
-    // TODO: Marc
   }
 }

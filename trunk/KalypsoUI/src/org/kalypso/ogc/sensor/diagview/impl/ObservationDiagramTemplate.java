@@ -52,7 +52,8 @@ public class ObservationDiagramTemplate extends DefaultDiagramTemplate
     
     final IAxis dateAxis = keyAxes[0];
     
-    final DefaultDiagramTemplateTheme theme = new DefaultDiagramTemplateTheme( obs );
+    final DefaultDiagramTemplateTheme theme = new DefaultDiagramTemplateTheme( );
+    theme.setObservation( obs );
     theme.setArguments( args );
     
     for( int i = 0; i < valueAxis.length; i++ )
@@ -79,7 +80,7 @@ public class ObservationDiagramTemplate extends DefaultDiagramTemplate
         }
         mappings[1] = new AxisMapping( valueAxis[i], daValue );
 
-        final DiagramCurve curve = new DiagramCurve( valueAxis[i].getName(), theme, AxisMapping.saveAsProperties( mappings ), this );
+        final DiagramCurve curve = new DiagramCurve( valueAxis[i].getName(), theme, mappings, this );
         theme.addCurve( curve );
       }
     }

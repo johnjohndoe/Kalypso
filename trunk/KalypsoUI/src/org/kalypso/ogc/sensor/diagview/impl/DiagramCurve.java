@@ -1,14 +1,6 @@
 package org.kalypso.ogc.sensor.diagview.impl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
-import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
@@ -21,8 +13,8 @@ import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
 public class DiagramCurve implements IDiagramCurve
 {
   private final String m_name;
-  private final Properties m_mappings;
   private final IDiagramTemplate m_template;
+  private final IAxisMapping[] m_mappings;
   private IDiagramTemplateTheme m_theme;
 
   /**
@@ -33,7 +25,7 @@ public class DiagramCurve implements IDiagramCurve
    * @param mappings
    * @param template
    */
-  public DiagramCurve( final String name, final IDiagramTemplateTheme theme, final Properties mappings,
+  public DiagramCurve( final String name, final IDiagramTemplateTheme theme, final IAxisMapping[] mappings,
       final IDiagramTemplate template )
   {
     m_name = name;
@@ -63,22 +55,23 @@ public class DiagramCurve implements IDiagramCurve
    */
   public IAxisMapping[] getMappings()
   {
-    final List ms = new ArrayList();
-
-    final IAxis[] obsAxes = m_theme.getObservation().getAxisList();
-    
-    for( final Iterator it = m_mappings.keySet().iterator(); it.hasNext(); )
-    {
-      final String strObsAxis = (String)it.next();
-      final String strDiagAxis = m_mappings.getProperty( strObsAxis );
-
-      final IAxis obsAxis = ObservationUtilities.findAxisByName( obsAxes , strObsAxis );
-      final IDiagramAxis diagAxis = m_template.getDiagramAxis( strDiagAxis );
-
-      ms.add( new AxisMapping( obsAxis, diagAxis ) );
-    }
-
-    return (IAxisMapping[])ms.toArray( new IAxisMapping[0] );
+//    final List ms = new ArrayList();
+//
+//    final IAxis[] obsAxes = m_theme.getObservation().getAxisList();
+//    
+//    for( final Iterator it = m_mappings.keySet().iterator(); it.hasNext(); )
+//    {
+//      final String strObsAxis = (String)it.next();
+//      final String strDiagAxis = m_mappings.getProperty( strObsAxis );
+//
+//      final IAxis obsAxis = ObservationUtilities.findAxisByName( obsAxes , strObsAxis );
+//      final IDiagramAxis diagAxis = m_template.getDiagramAxis( strDiagAxis );
+//
+//      ms.add( new AxisMapping( obsAxis, diagAxis ) );
+//    }
+//
+//    return (IAxisMapping[])ms.toArray( new IAxisMapping[0] );
+    return m_mappings;
   }
 
   /**

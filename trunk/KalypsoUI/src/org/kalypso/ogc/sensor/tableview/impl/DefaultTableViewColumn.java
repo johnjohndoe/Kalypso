@@ -1,10 +1,8 @@
 package org.kalypso.ogc.sensor.tableview.impl;
 
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
-import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
 
 /**
  * Default implementation of the <code>ITableViewColumn</code> interface
@@ -19,17 +17,13 @@ public class DefaultTableViewColumn implements ITableViewColumn
 
   private int m_width = 50;
 
+  private final IAxis m_keyAxis;
+
+  private final IAxis m_valueAxis;
+
+  private ITableViewTheme m_theme;
+
   private boolean m_dirty = false;
-
-  private IObservation m_obs = null;
-
-  private String m_axisName = "";
-
-  private IAxis m_keyAxis = null;
-
-  private IAxis m_valueAxis = null;
-
-  private IVariableArguments m_args;
 
   /**
    * Constructor
@@ -37,23 +31,26 @@ public class DefaultTableViewColumn implements ITableViewColumn
    * @param name
    * @param isEditable
    * @param width
-   * @param axisName
-   * @param obs [optional] setObservation( obs ) can be called later to set the observation
+   * @param keyAxis
+   * @param valueAxis
+   * @param theme
    */
   public DefaultTableViewColumn( final String name, final boolean isEditable,
-      final int width, final String axisName, final IObservation obs )
+      final int width, final IAxis keyAxis, final IAxis valueAxis,
+      final ITableViewTheme theme )
   {
     m_name = name;
     m_isEditable = isEditable;
     m_width = width;
-    m_axisName = axisName;
-    setObservation( obs );
+    m_keyAxis = keyAxis;
+    m_valueAxis = valueAxis;
+    m_theme = theme;
   }
 
   /**
    * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_name;
   }
@@ -61,7 +58,7 @@ public class DefaultTableViewColumn implements ITableViewColumn
   /**
    * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#isEditable()
    */
-  public boolean isEditable()
+  public boolean isEditable( )
   {
     return m_isEditable;
   }
@@ -69,7 +66,7 @@ public class DefaultTableViewColumn implements ITableViewColumn
   /**
    * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getWidth()
    */
-  public int getWidth()
+  public int getWidth( )
   {
     return m_width;
   }
@@ -89,9 +86,10 @@ public class DefaultTableViewColumn implements ITableViewColumn
   {
     return m_dirty;
   }
-  
+
   /**
-   * @param dirty The dirty to set.
+   * @param dirty
+   *          The dirty to set.
    */
   public void setDirty( boolean dirty )
   {
@@ -99,47 +97,11 @@ public class DefaultTableViewColumn implements ITableViewColumn
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getObservation()
-   */
-  public IObservation getObservation( )
-  {
-    return m_obs;
-  }
-
-  /**
-   * Method called from constructor so is declared final.
-   * 
-   * @param observation The obs to set.
-   */
-  public final void setObservation( final IObservation observation )
-  {
-    m_obs = observation;
-
-    // reset
-    m_keyAxis = null;
-    m_valueAxis = null;
-
-    if( m_obs != null )
-    {
-      final IAxis[] axes = m_obs.getAxisList();
-
-      final IAxis[] keys = ObservationUtilities.findAxisByKey( axes );
-      if( keys.length != 0 )
-        m_keyAxis = keys[0];
-      
-      m_valueAxis = ObservationUtilities.findAxisByName( axes, m_axisName );
-    }
-  }
-
-  /**
    * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getColumnClass()
    */
   public Class getColumnClass( )
   {
-    if( m_valueAxis != null )
-      return m_valueAxis.getDataClass();
-    
-    return Object.class;
+    return m_valueAxis.getDataClass();
   }
 
   /**
@@ -159,15 +121,10 @@ public class DefaultTableViewColumn implements ITableViewColumn
   }
 
   /**
-   * @param args
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getTheme()
    */
-  public void setArguments( IVariableArguments args )
+  public ITableViewTheme getTheme( )
   {
-    m_args = args;
-  }
-  
-  public IVariableArguments getArguments( )
-  {
-    return m_args;
+    return m_theme;
   }
 }
