@@ -54,10 +54,10 @@ public class ObservationDiagramTemplate extends DefaultDiagramTemplate
       if( !KalypsoStatusUtils.isStatusAxis( valueAxis[i] ) )
       {
         final Properties mappings = new Properties();
-        mappings.setProperty( dateAxis.getLabel(), "d" );
-        mappings.setProperty( valueAxis[i].getLabel(), "v" );
+        mappings.setProperty( dateAxis.getName(), "d" );
+        mappings.setProperty( valueAxis[i].getName(), "v" );
 
-        final DiagramCurve curve = new DiagramCurve( valueAxis[i].getLabel(), obs, mappings, this );
+        final DiagramCurve curve = new DiagramCurve( valueAxis[i].getName(), obs, mappings, this );
 
         addCurve( curve );
       }

@@ -34,7 +34,7 @@ public class ObservationTimeSeries extends TimeSeriesCollection
       {
         if( !KalypsoStatusUtils.isStatusAxis( valueAxis[i] ) )
         {
-          TimeSeries s = new TimeSeries( valueAxis[i].getLabel(), FixedMillisecond.class );
+          TimeSeries s = new TimeSeries( valueAxis[i].getName(), FixedMillisecond.class );
   
           ITuppleModel model = obs.getValues( args );
   

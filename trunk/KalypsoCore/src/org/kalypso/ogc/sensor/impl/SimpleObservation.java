@@ -146,7 +146,7 @@ public class SimpleObservation implements IObservation
 
       try
       {
-        final IAxis A = ObservationUtilities.findAxisByName( otherAxes, myA.getLabel() );
+        final IAxis A = ObservationUtilities.findAxisByName( otherAxes, myA.getName() );
 
         map.put( myA, A );
       }

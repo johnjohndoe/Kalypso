@@ -83,7 +83,7 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
         final TypeColumn tcol = (TypeColumn) itCols.next();
 
         final DefaultTableViewColumn col = new DefaultTableViewColumn( tcol
-            .getAxis(), tcol.isEditable(), tcol.getWidth(), null );
+            .getAxis(), tcol.isEditable(), tcol.getWidth(), tcol.getAxis(), null );
 
         cols.add( col );
       }

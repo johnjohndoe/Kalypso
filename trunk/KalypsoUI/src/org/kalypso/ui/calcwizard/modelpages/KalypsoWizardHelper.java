@@ -146,7 +146,7 @@ public class KalypsoWizardHelper
           final String colName = name + " (" + props[i].getLinkColumn() + ')';
           
           // no observation yet
-          final DefaultTableViewColumn col = new DefaultTableViewColumn( colName, true, 50, null );
+          final DefaultTableViewColumn col = new DefaultTableViewColumn( colName, true, 50, props[i].getDiagValueAxis(), null );
 
           final PoolableObjectType key = new PoolableObjectType( obsLink.getLinktype(), obsLink.getHref(), context );
           
