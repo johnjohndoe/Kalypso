@@ -133,18 +133,20 @@
             id="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor">
       </editor>
       <editor
+            launcher="org.kalypso.ui.editorLauncher.GisTemplateLauncher"
+            icon="icons/sample.gif"
             default="true"
             name="Gis Vorlagenauswahl"
-            extensions="gml,shp"
-            launcher="org.kalypso.ui.editorLauncher.GisTemplateLauncher"
-            id="org.kalypso.ui.editor.GisEditor">
+            id="org.kalypso.ui.editor.GisEditor"
+            extensions="gml,shp">
       </editor>
       <editor
+            launcher="org.kalypso.ui.editorLauncher.ObsTemplateLauncher"
+            icon="icons/sample.gif"
             default="false"
             name="Zeitreihen Vorlagenauswahl"
-            extensions="zml"
-            launcher="org.kalypso.ui.editorLauncher.ObsTemplateLauncher"
-            id="org.kalypso.ui.editor.ObsEditor">
+            id="org.kalypso.ui.editor.ObsEditor"
+            extensions="zml">
       </editor>
       <editor
             default="true"
@@ -415,39 +417,43 @@
             targetID="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
             id="org.kalypso.ui.editor.obstableeditor.EditorContribution">
          <action
+               toolbarPath="table"
                label="Zeile hinzufügen"
+               class="org.kalypso.ui.editor.obstableeditor.actions.AddRowAction"
+               tooltip="Fügt eine Zeile hinzu. Öffnet Eingabedialog."
                icon="icons/obstable/add_row.gif"
                style="push"
-               tooltip="Fügt eine Zeile hinzu. Öffnet Eingabedialog."
-               class="org.kalypso.ui.editor.obstableeditor.actions.AddRowAction"
-               toolbarPath="table"
+               menubarPath="zml-table/edit"
                id="org.kalypso.ui.editor.obstableeditor.actions.AddRowAction">
          </action>
          <action
+               toolbarPath="table"
                label="Zeile entfernen"
+               class="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction"
+               tooltip="Entfernt die ausgewählte Zeile"
                icon="icons/obstable/rem_row.gif"
                style="push"
-               tooltip="Entfernt die ausgewählte Zeile"
-               class="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction"
-               toolbarPath="table"
+               menubarPath="zml-table/edit"
                id="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction">
          </action>
          <action
+               toolbarPath="table"
                label="Daten speichern"
+               class="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction"
+               tooltip="Speichert die grundliegende Daten"
                icon="icons/gistable/save_edit.gif"
                style="push"
-               tooltip="Speichert die grundliegende Daten"
-               class="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction"
-               toolbarPath="table"
+               menubarPath="zml-table/edit"
                id="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction">
          </action>
          <action
+               toolbarPath="table_export"
                label="Tabelle exportieren"
+               tooltip="Exportiert die Tabelle in das Berichtswesen"
+               class="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate"
                icon="icons/util/bericht.gif"
                style="push"
-               class="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate"
-               tooltip="Exportiert die Tabelle in das Berichtswesen"
-               toolbarPath="table_export"
+               menubarPath="zml-table/tools"
                id="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate">
          </action>
       </editorContribution>
@@ -455,20 +461,22 @@
             targetID="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"
             id="org.kalypso.ui.editor.diagrameditor.EditorContribution">
          <action
-               label="Im Grafikprogramm öffnen"
-               icon="icons/observation/grafik-icon.gif"
-               tooltip="Öffnet das aktuelle Diagramm im Grafikprogramm"
-               class="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction"
                toolbarPath="diagram"
+               label="Im Grafikprogramm öffnen"
+               class="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction"
+               tooltip="Öffnet das aktuelle Diagramm im Grafikprogramm"
+               icon="icons/observation/grafik-icon.gif"
+               menubarPath="zml-diag/tools"
                id="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction">
          </action>
          <action
+               toolbarPath="diagram"
                label="Diagramm exportieren"
+               tooltip="Exportiert das Diagramm in das Berichtswesen."
+               class="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate"
                icon="icons/util/bericht.gif"
                style="push"
-               class="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate"
-               tooltip="Exportiert das Diagramm in das Berichtswesen."
-               toolbarPath="diagram"
+               menubarPath="zml-diag/tools"
                id="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate">
          </action>
       </editorContribution>
