@@ -55,11 +55,11 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.deegree.xml.XMLTools;
+import org.kalypso.java.xml.XMLUtilities;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 
 /**
  * Utilities to transform parameters of a data model. (for example to optimize
@@ -134,7 +134,7 @@ public class OptimizeModelUtils
       for( int i = 0; i < nl.getLength(); i++ )
       {
         Node node = nl.item( i );
-        setTextNode( myDom, node, value );
+        XMLUtilities.setTextNode( myDom, node, value );
       }
     }
   }
@@ -153,7 +153,7 @@ public class OptimizeModelUtils
       {
         String nodeValue = XMLTools.getStringValue( nl.item( i ) );
         double setValue = value * Double.parseDouble( nodeValue );
-        setTextNode( myDom, nl.item( i ), Double.toString( setValue ) );
+        XMLUtilities.setTextNode( myDom, nl.item( i ), Double.toString( setValue ) );
       }
     }
   }
@@ -172,7 +172,7 @@ public class OptimizeModelUtils
       {
         String nodeValue = XMLTools.getStringValue( nl.item( i ) );
         double setValue = value + Double.parseDouble( nodeValue );
-        setTextNode( myDom, nl.item( i ), Double.toString( setValue ) );
+        XMLUtilities.setTextNode( myDom, nl.item( i ), Double.toString( setValue ) );
       }
     }
   }
@@ -211,24 +211,6 @@ public class OptimizeModelUtils
     DocumentBuilder docuBuilder = factory.newDocumentBuilder();
     Document dom = docuBuilder.parse( inputStream );
     return dom;
-  }
-
-  private static void setTextNode( Document dom, Node node, String value )
-  {
-    NodeList cn = node.getChildNodes();
-    for( int _n = 0; _n < cn.getLength(); _n++ )
-    {
-      Node cnode = cn.item( _n );
-      short nodeType = cnode.getNodeType();
-      if( nodeType == Node.TEXT_NODE )
-        cnode.setNodeValue( value );
-    }
-    if( cn.getLength() == 0 ) // text node does not exist
-    {
-      Text text = dom.createTextNode( value );
-      node.appendChild( text );
-    }
-
   }
 
   //method writes a document(node) to a file
