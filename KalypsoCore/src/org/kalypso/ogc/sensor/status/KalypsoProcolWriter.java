@@ -81,14 +81,15 @@ public class KalypsoProcolWriter
             {
               final Number nb = (Number) models[i].getElement( ix,
                   statusAxes[iAxes] );
-              if( !KalypsoStatusUtils.checkMask( nb.intValue(),
+              final int nbValue = nb == null ? 0 : nb.intValue();
+              if( !KalypsoStatusUtils.checkMask( nbValue,
                   KalypsoStati.BIT_OK ) )
               {
                 bError = true;
 
                 bf.append( "["
                     + KalypsoStatusUtils.getAxisLabelFor( statusAxes[iAxes] )
-                    + " - " + KalypsoStatusUtils.getTooltipFor( nb.intValue() )
+                    + " - " + KalypsoStatusUtils.getTooltipFor( nbValue )
                     + "]\n" );
               }
             }

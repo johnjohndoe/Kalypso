@@ -125,7 +125,7 @@ public class KalypsoObservationServiceTest extends TestCase
     }
   }
   
-  public void testFindItem() throws RemoteException, MalformedURLException
+  public void testFindItem() throws RemoteException
   {
     final ItemBean b1 = m_srv.findItem( "Spree://2004/PA_GROEDI.zml" );
     assertNotNull( b1 );

@@ -2,7 +2,6 @@ package org.kalypso.ui.wizard.ocs;
 
 import java.util.List;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -16,14 +15,11 @@ import org.kalypso.ui.wizard.ocs.idtable.IdTableViewer;
  */
 public class OcsExportWizardIdentifiersPage extends WizardPage
 {
-  private IStructuredSelection m_selection;
   private IdTableViewer m_tableViewer;
 
-  public OcsExportWizardIdentifiersPage( final IStructuredSelection selection )
+  public OcsExportWizardIdentifiersPage( )
   {
     super( "Zeitreihen Zuordnung", "Zeitreihen Zuordnung", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
-    
-    m_selection = selection;
     
     setTitle( "Zeitreihen Zuordnung" );
     setDescription( "Überprüfen Sie die Zuordnung der Zeitreihen mit dem Server" );

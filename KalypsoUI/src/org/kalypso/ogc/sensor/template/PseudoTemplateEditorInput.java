@@ -1,7 +1,6 @@
 package org.kalypso.ogc.sensor.template;
 
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IStorageEditorInput;
@@ -37,7 +36,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IStorageEditorInput#getStorage()
    */
-  public IStorage getStorage( ) throws CoreException
+  public IStorage getStorage( ) 
   {
     return m_storage;
   }

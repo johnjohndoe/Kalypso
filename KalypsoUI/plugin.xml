@@ -616,7 +616,7 @@
                label="Vom Server laden..."
                icon="icons/util/copy_l_co.gif"
                helpContextId="org.kalypso.manual.menu_modell"
-               class="org.kalypso.ui.action.LoadServerModelDelegate"
+               class="org.kalypso.ui.action.GetModelDelegate"
                tooltip="lädt ein Modell vom Sever, falls es nicht bereits vorhanden ist"
                menubarPath="org.kalypso.menu.model/modelStart"
                id="org.kalypso.action.model.checkoutModel">

@@ -3,11 +3,8 @@ package org.kalypso.ogc.sensor.tableview.swing.marker;
 import java.awt.Color;
 import java.util.Date;
 
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.util.runtime.args.DateRangeArgument;

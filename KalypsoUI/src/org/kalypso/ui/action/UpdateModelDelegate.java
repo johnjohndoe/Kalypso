@@ -10,13 +10,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.synchronize.ModelSynchronizer;
 
 /**
@@ -47,66 +45,53 @@ public class UpdateModelDelegate implements IWorkbenchWindowActionDelegate
    */
   public void run( final IAction action )
   {
-    final ISelection selection = m_window.getSelectionService().getSelection(
-        IPageLayout.ID_RES_NAV );
-
-    final IProject[] projects = ResourceUtilities.findeProjectsFromSelection( selection );
-
-    if( projects == null || projects.length != 1 )
+    try
     {
-      MessageDialog.openInformation( m_window.getShell(), "Modell aktualisieren",
-          "Bitte wählen Sie genau ein Projekt im Navigator aus" );
-      return;
-    }
+      final File serverRoot = ModelActionHelper.getServerRoot();
+      final IProject project = ModelActionHelper.chooseOneProject( m_window );
+      final File serverProject = ModelActionHelper.checkIsSeverMirrored( serverRoot, project );
 
-    final IProject project = projects[0];
+      if( !MessageDialog.openConfirm( m_window.getShell(), "Modell aktualisieren",
+          "Soll das Projekt '" + project.getName()
+              + "' aktualisiert werden?\nLokale Änderungen gehen dadurch verloren." ) )
+        return;
 
-    final String name = project.getName();
-    final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
-    final File serverProject = new File( serverRoot, name );
-    if( !serverProject.exists() )
-    {
-      MessageDialog.openWarning( m_window.getShell(), "Modell aktualisieren", "Sie haben kein Server-gespeichertes Projekt gewählt.\nNur Server-gespeicherte Projekt können aktualisiert werden." );
-      return;
-    }
-    
-    if( !MessageDialog.openConfirm( m_window.getShell(), "Modell aktualisieren",
-        "Soll das Projekt '" + project.getName()
-            + "' aktualisiert werden?\nLokale Änderungen gehen dadurch verloren." ) )
-      return;
-
-    final Job job = new Job( "Modelle aktualisieren" )
-    {
-      protected IStatus run( final IProgressMonitor monitor )
+      final Job job = new Job( "Modelle aktualisieren" )
       {
-        monitor.beginTask( "Modelle vom Server laden", 1000 );
-
-        if( monitor.isCanceled() )
-          return Status.CANCEL_STATUS;
-
-        try
+        protected IStatus run( final IProgressMonitor monitor )
         {
+          monitor.beginTask( "Modelle vom Server laden", 1000 );
 
-          final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
+          if( monitor.isCanceled() )
+            return Status.CANCEL_STATUS;
 
-          synchronizer.updateLocal( new SubProgressMonitor( monitor, 1000 ) );
+          try
+          {
+            final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
+
+            synchronizer.updateLocal( new SubProgressMonitor( monitor, 1000 ) );
+          }
+          catch( final CoreException e )
+          {
+            e.printStackTrace();
+
+            return e.getStatus();
+          }
+          finally
+          {
+            monitor.done();
+          }
+
+          return Status.OK_STATUS;
         }
-        catch( final CoreException e )
-        {
-          e.printStackTrace();
-
-          return e.getStatus();
-        }
-        finally
-        {
-          monitor.done();
-        }
-
-        return Status.OK_STATUS;
-      }
-    };
-    job.setUser( true );
-    job.schedule();
+      };
+      job.setUser( true );
+      job.schedule();
+    }
+    catch( final CoreException ce )
+    {
+      ErrorDialog.openError( m_window.getShell(), "Modell aktualisieren", "Modell konnte nicht aktualisiert werden", ce.getStatus() );
+    }
   }
 
   /**

@@ -17,6 +17,7 @@ import org.kalypso.java.io.DeleteObsoleteFilesVisitor;
 import org.kalypso.java.io.FileCopyVisitor;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.nature.CalcDirCollector;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
@@ -66,7 +67,6 @@ public class ModelSynchronizer
     {
       monitor.done();
     }
-    
   }
 
   private void synchronizeProject( final File from, final File to, final IProgressMonitor monitor )
@@ -87,19 +87,29 @@ public class ModelSynchronizer
     }
   }
 
-  private void copyAll( final File from, final File to )
+  private void copyAll( final File from, final File to, final IProgressMonitor monitor )
   {
-    final FileCopyVisitor copyVisitor = new FileCopyVisitor( from, to, true );
-    FileUtilities.accept( from, copyVisitor );
+    monitor.beginTask( "Dateien kopieren", 1000 );
+    
+    try
+    {
+      final FileCopyVisitor copyVisitor = new FileCopyVisitor( from, to, true );
+      FileUtilities.accept( from, copyVisitor );
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 
   /**
    * Schreibt ein einzelnes Verzeichnis innerhalb des lokalen Projekts zurück
    * zum server Das Verzeichnis darf Serverseitig noch nicht existieren
+   * @param monitor
    * 
    * @throws CoreException
    */
-  public void commitFolder( final IFolder folder ) throws CoreException
+  public void commitFolder( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
     final String projectRelativePath = folder.getProjectRelativePath().toString();
 
@@ -110,7 +120,7 @@ public class ModelSynchronizer
           "Das Verzeichnis existiert bereits auf dem Server: " + projectRelativePath, null ) );
 
     final File localDir = new File( m_resourceRootFile, projectRelativePath );
-    copyAll( localDir, serverDir );
+    copyAll( localDir, serverDir, monitor );
   }
 
   public File getServerRoot()
@@ -121,11 +131,14 @@ public class ModelSynchronizer
   /**
    * Lädt einen Remote Folder vom Server und legt in local ab überschreibt, ist
    * lokal bereits etwas vorhanden, gibts ne Fehlermeldung
+   * @param monitor
    * 
    * @throws CoreException
    */
-  public void getFolder( final File dir, final String localName ) throws CoreException
+  public void getFolder( final File dir, final String localName, final IProgressMonitor monitor ) throws CoreException
   {
+    monitor.beginTask( "Verzeichnis vom Server laden", 2000 );
+    
     final String relativePath = FileUtilities.getRelativePathTo( m_serverRoot, dir );
     final IFile file = m_resourceRoot.getFile( localName );
     if( file.exists() )
@@ -133,9 +146,9 @@ public class ModelSynchronizer
           "Verzeichnis exisitert lokal bereits: " + relativePath, null ) );
 
     final File localDir = new File( m_resourceRootFile, localName );
-    copyAll( dir, localDir );
+    copyAll( dir, localDir, new SubProgressMonitor( monitor, 1000 ) );
 
-    file.getParent().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+    file.getParent().refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 1000 ) );
   }
 
   public void commitProject() throws CoreException
@@ -179,5 +192,12 @@ public class ModelSynchronizer
       lockFile.delete();
     }
   }
-
+  
+  public File[] getRemoteCalcCases()
+  {
+    final CalcDirCollector collector = new CalcDirCollector();
+    FileUtilities.accept( getServerRoot(), collector );
+    
+    return collector.getCalcDirs();
+  }
 }

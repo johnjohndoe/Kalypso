@@ -16,6 +16,7 @@ import javax.xml.bind.JAXBException;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureList;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree.model.geometry.GM_Envelope;
@@ -120,6 +121,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   /** Pfad auf Vorlage für die Karte (.gmt Datei) */
   private final static String PROP_SELECTIONID = "selectionID";
+
+  /**
+   * Falls gesetzt, wird das Feature mit dieser ID selektiert, nachdem die Karte
+   * geladen wurde. Ansonsten das erste Feature
+   */
+  private static final String PROP_FEATURE_TO_SELECT_ID = "selectFeatureID";
 
   private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget(
       new DefaultCommandManager(), null );
@@ -482,7 +489,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_table.setVisible( true );
       m_tableFrame.add( pane );
 
-//      refreshZMLTable();
+      //      refreshZMLTable();
 
       return composite;
     }
@@ -502,7 +509,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     final IRunnableWithProgress rwp = new SetValuesForDirtyColumnsRunnable( m_tableTemplate,
         m_tableModel );
-    m_listener = new ObservationModelChangeListener( "Daten synchronisieren (Zml)", rwp );
+    m_listener = new ObservationModelChangeListener( rwp );
 
     m_tableModel.addTableModelListener( m_listener );
   }
@@ -670,7 +677,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     if( ignoreType1 == null || ignoreType2 == null )
       return panel;
-    
+
     final Label label = new Label( panel, SWT.NONE );
     label.setText( "Diagrammanzeige:" );
     final GridData gridData = new GridData();
@@ -836,9 +843,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
           {
             final IWizardPage page = pages[i];
             if( page instanceof AbstractCalcWizardPage )
-              ( (AbstractCalcWizardPage)page ).onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
-          }          
-          
+              ( (AbstractCalcWizardPage)page ).onModellChange( new ModellEvent( null,
+                  ModellEvent.SELECTION_CHANGED ) );
+          }
+
           if( status != Status.OK_STATUS )
             throw new CoreException( status );
         }
@@ -854,7 +862,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void postCreateControl()
   {
-    new GisTemplateLoadedThread( m_mapModell, new Runnable() {
+    new GisTemplateLoadedThread( m_mapModell, new Runnable()
+    {
       public void run()
       {
         // erstes feature des aktiven themas selektieren
@@ -862,17 +871,24 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         if( activeTheme instanceof IKalypsoFeatureTheme )
         {
           final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
-          
+          final GMLWorkspace workspace = kft.getWorkspace();
+
           final FeatureList featureList = kft.getFeatureList();
           if( featureList != null && featureList.size() != 0 )
           {
             featureList.accept( new UnselectFeatureVisitor( getSelectionID() ) );
-            ((Feature)featureList.get( 0 )).select( getSelectionID() );
+
+            final String fid = getArguments().getProperty( PROP_FEATURE_TO_SELECT_ID, null );
+
+            final Feature feature = fid == null ? (Feature)featureList.get( 0 ) : workspace.getFeature(fid); 
+            if( feature != null )
+              feature.select( getSelectionID() );
           }
         }
-        
+
         refreshDiagram();
         refreshZMLTable();
-      }} ).start(); 
+      }
+    } ).start();
   }
 }

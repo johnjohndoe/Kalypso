@@ -23,67 +23,98 @@ public class NOperationTupplemodel extends AbstractTuppleModel
     m_operation = operation;
   }
 
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxisList()
   {
     return m_baseModels[0].getAxisList();
   }
 
-  public int getCount( ) throws SensorException
+  public int getCount() throws SensorException
   {
     return m_baseModels[0].getCount();
   }
 
-  public int hashCode( )
+  public int hashCode()
   {
     return m_baseModels[0].hashCode();
   }
 
   public Object getElement( int index, IAxis axis ) throws SensorException
   {
-    String axisName = axis.getName();
-    Class dataClass = axis.getDataClass();
+    //    final String axisName = axis.getName();
+    final String axisType = axis.getType();
+
+    final Class dataClass = axis.getDataClass();
     if( dataClass.equals( Date.class ) )
     {
-      IAxis a = ObservationUtilities.findAxisByName( m_baseModels[0].getAxisList(), axisName );
+      final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxisList(), axisType );
+      //      final IAxis a = ObservationUtilities.findAxisByName(
+      // m_baseModels[0].getAxisList(), axisName );
       return m_baseModels[0].getElement( index, a );
     }
+
     if( dataClass.equals( Double.class ) )
     {
-      IAxis a = ObservationUtilities.findAxisByName( m_baseModels[0].getAxisList(), axisName );
-      if(index>=m_baseModels[0].getCount())
-          return null;
-      double value = ((Number) m_baseModels[0].getElement( index, a ))
-          .doubleValue();
+      //      final IAxis a = ObservationUtilities.findAxisByName(
+      // m_baseModels[0].getAxisList(), axisName );
+      final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxisList(), axisType );
+      if( index >= m_baseModels[0].getCount() )
+        return null;
+      double value = ( (Number)m_baseModels[0].getElement( index, a ) ).doubleValue();
       for( int i = 1; i < m_baseModels.length; i++ )
       {
         ITuppleModel model = m_baseModels[i];
-        if(index>=model.getCount())
+        if( index >= model.getCount() )
           continue;
-        IAxis a2 = ObservationUtilities.findAxisByName( m_baseModels[i].getAxisList(), axisName );
-        double nextValue = ((Number) model.getElement( index, a2 ))
-            .doubleValue();
+        
+//        final IAxis a2 = ObservationUtilities.findAxisByName( m_baseModels[i].getAxisList(), axisName );
+        final IAxis a2 = ObservationUtilities.findAxisByType( m_baseModels[i].getAxisList(), axisType );
+        
+        double nextValue = ( (Number)model.getElement( index, a2 ) ).doubleValue();
         switch( m_operation )
         {
-          case OperationFilter.OPERATION_PLUS:
-            value += nextValue;
-            break;
-          case OperationFilter.OPERATION_MINUS:
-            value -= nextValue;
-            break;
-          case OperationFilter.OPERATION_MAL:
-            value *= nextValue;
-            break;
-          case OperationFilter.OPERATION_DURCH: // macht das sinn, bei mehr als
-                                                // zwei ?
-            value /= nextValue;
-            break;
+        case OperationFilter.OPERATION_PLUS:
+          value += nextValue;
+          break;
+        case OperationFilter.OPERATION_MINUS:
+          value -= nextValue;
+          break;
+        case OperationFilter.OPERATION_MAL:
+          value *= nextValue;
+          break;
+        case OperationFilter.OPERATION_DURCH: // macht das sinn, bei mehr als
+          // zwei ?
+          value /= nextValue;
+          break;
         }
       }
       return new Double( value );
     }
-    throw new UnsupportedOperationException( getClass().getName()
-        + " unterstuetzt den datentyp " + axis.getDataClass().getName()
-        + " nicht." );
+
+    // Integer: vermutlich eine Status-Achse!
+    if( dataClass.equals( Integer.class ) )
+    {
+      final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxisList(), axisType );
+      if( index >= m_baseModels[0].getCount() )
+        return null;
+
+      int value = ( (Number)m_baseModels[0].getElement( index, a ) ).intValue();
+      for( int i = 1; i < m_baseModels.length; i++ )
+      {
+        ITuppleModel model = m_baseModels[i];
+        if( index >= model.getCount() )
+          continue;
+        
+        final IAxis a2 = ObservationUtilities.findAxisByType( m_baseModels[i].getAxisList(), axisType );
+        
+        int nextValue = ( (Number)model.getElement( index, a2 ) ).intValue();
+        value |= nextValue;
+      }
+      
+      return new Integer( value );
+    }
+    
+    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt den Datentyp "
+        + axis.getDataClass().getName() + " nicht." );
   }
 
   public void setElement( int index, Object element, IAxis axis )

@@ -52,7 +52,7 @@ public class OcsExportWizard extends Wizard implements IExportWizard
     super.addPages();
 
     m_resPage = new OcsExportWizardResourcesPage( m_selection );
-    m_idPage = new OcsExportWizardIdentifiersPage( m_selection );
+    m_idPage = new OcsExportWizardIdentifiersPage(  );
     
     addPage( m_resPage );
     addPage( m_idPage );

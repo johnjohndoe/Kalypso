@@ -31,8 +31,8 @@ public class KalypsoStatusUtils
   private final static Icon ICON_WARNING = new ImageIcon(
       KalypsoStatusUtils.class.getResource( "resource/warning.gif" ) );
 
-  private final static Icon ICON_ERROR = new ImageIcon(
-      KalypsoStatusUtils.class.getResource( "resource/error.gif" ) );
+//  private final static Icon ICON_ERROR = new ImageIcon(
+//      KalypsoStatusUtils.class.getResource( "resource/error.gif" ) );
 
   private final static Icon ICON_WRITE = new ImageIcon(
       KalypsoStatusUtils.class.getResource( "resource/write.gif" ) );

@@ -1,6 +1,5 @@
 package org.kalypso.ogc.sensor.tableview;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import javax.xml.bind.JAXBException;
@@ -30,9 +29,8 @@ public class ObservationTableTemplateFactory
    * @param ins
    * @return table view template
    * @throws JAXBException
-   * @throws IOException
    */
-  public static ObstableviewType loadTableTemplateXML( final InputStream ins ) throws JAXBException, IOException
+  public static ObstableviewType loadTableTemplateXML( final InputStream ins ) throws JAXBException
   {
     try
     {

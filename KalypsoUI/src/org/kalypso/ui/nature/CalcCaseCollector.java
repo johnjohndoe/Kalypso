@@ -7,7 +7,10 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 
-
+/**
+ * Collects CalcCases in the Workspace
+ * @author tgu
+ */
 public class CalcCaseCollector implements IResourceVisitor
 {
   private Collection m_calcCases = new ArrayList();

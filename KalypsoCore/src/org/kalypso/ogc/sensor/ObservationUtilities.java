@@ -123,7 +123,7 @@ public class ObservationUtilities
   public static IAxis[] findAxisByClass( final IAxis[] axes, final Class desired, final boolean excludeStatusAxes )
       throws NoSuchElementException
   {
-    final ArrayList list = new ArrayList( axes.length );
+    final ArrayList list = new ArrayList( axes == null ? 0 : axes.length );
 
     for( int i = 0; i < axes.length; i++ )
     {
