@@ -16,7 +16,7 @@ public class HeadlessVirtualRepositoryFactory extends AbstractRepositoryFactory
   /**
    * @see org.kalypso.repository.IRepositoryFactory#configureRepository()
    */
-  public boolean configureRepository( ) throws RepositoryException
+  public boolean configureRepository( )
   {
     return true;
   }

@@ -10,7 +10,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -34,8 +33,6 @@ public class DiagramTemplateUtils
   public final static String ODT_FILE_EXTENSION = "odt";
 
   private final static ObjectFactory ODT_OF = new ObjectFactory();
-
-  private final static org.kalypso.zml.ObjectFactory ZML_OF = new org.kalypso.zml.ObjectFactory();
 
   private DiagramTemplateUtils( )
   {
@@ -91,11 +88,10 @@ public class DiagramTemplateUtils
    * 
    * @param ins
    * @return diagram template object parsed from the file
-   * @throws CoreException
    * @throws JAXBException
    */
   public static ObsdiagviewType loadDiagramTemplateXML( final InputStream ins )
-      throws CoreException, JAXBException
+      throws JAXBException
   {
     try
     {

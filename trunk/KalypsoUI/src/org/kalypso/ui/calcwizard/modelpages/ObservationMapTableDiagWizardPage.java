@@ -109,24 +109,9 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
 
   private void createTablePanel( final Composite parent )
   {
-//    final Composite panel = new Composite( parent, SWT.NONE );
-//    panel.setLayout( new GridLayout( ) );
-//    panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    
     final Control diagramControl = initZmlTable( parent );
     diagramControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-//    final Button btnSave = new Button( panel, SWT.PUSH );
-//    btnSave.setText( "Daten speichern" );
-//    btnSave.setToolTipText( "Speichert die grundliegende Dateien" );
-//    btnSave.addSelectionListener( new SelectionAdapter()
-//    {
-//      public void widgetSelected( final SelectionEvent e )
-//      {
-//        saveTimeseriesPressed( true );
-//      }
-//    } );
-    
     registerObservationTableModelChangeListener();
   }
 

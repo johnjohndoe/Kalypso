@@ -17,12 +17,8 @@ public class ObservationModelChangeListener implements TableModelListener
 {
   private final IRunnableWithProgress m_rwp;
 
-  private final String m_message;
-
-  public ObservationModelChangeListener( final String message,
-      final IRunnableWithProgress rwp )
+  public ObservationModelChangeListener( final IRunnableWithProgress rwp )
   {
-    m_message = message;
     m_rwp = rwp;
   }
 

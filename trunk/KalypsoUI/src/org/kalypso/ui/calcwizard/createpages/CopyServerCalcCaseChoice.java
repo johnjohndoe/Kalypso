@@ -195,7 +195,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
           "Es muss eine vorhandene Berechnung ausgewählt werden", null ) );
 
     // quellverzeichnis holen
-    m_synchronizer.getFolder( m_dir, ModelNature.PROGNOSE_FOLDER + "/" + m_name );
+    m_synchronizer.getFolder( m_dir, ModelNature.PROGNOSE_FOLDER + "/" + m_name, monitor );
 
     return calcCaseFolder;
   }

@@ -15,16 +15,19 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.eclipse.swt.graphics.FontUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.CalcWizard;
 import org.kalypso.ui.calcwizard.CalcWizardDialog;
@@ -38,16 +41,20 @@ public class PrognoseView extends ViewPart
   private Button m_button;
 
   private final PrognosePanel m_panel;
-  
+
+  private final FontUtilities m_fontUtils = new FontUtilities();
+
   public PrognoseView()
   {
     final URL location = KalypsoGisPlugin.getDefault().getModellistLocation();
-    m_panel = new PrognosePanel( location );
+    m_panel = location == null ? null : new PrognosePanel( location );
   }
-  
+
   public void dispose()
   {
-    m_panel.dispose();
+    if( m_panel != null )
+      m_panel.dispose();
+    m_fontUtils.dispose();
   }
 
   /**
@@ -71,21 +78,40 @@ public class PrognoseView extends ViewPart
     final GridData formGridData = new GridData( GridData.FILL_BOTH );
     formGridData.horizontalAlignment = GridData.CENTER;
     form.setLayoutData( formGridData );
-    
-    final Composite panelControl = m_panel.createControl( form.getBody() );
-    panelControl.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
-    panelControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    m_button = toolkit.createButton( form.getBody(), "Hochwasser Vorhersage starten", SWT.PUSH );
-
-    final PrognosePanel panel = m_panel;
-    m_button.addSelectionListener( new SelectionAdapter()
+    if( m_panel == null )
     {
-      public void widgetSelected( final SelectionEvent e )
+      final Label label = toolkit.createLabel( form.getBody(),
+          "Es konnte kein Kontakt zum Server hergestellt werden.\n"
+              + "Hochwasser-Vorhersage nicht möglich.\n" );
+
+      label.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
+
+      final GridData labelData = new GridData( GridData.FILL_BOTH );
+      labelData.horizontalAlignment = GridData.CENTER;
+      label.setLayoutData( labelData );
+
+      final Font headingFont = m_fontUtils.createChangedFontData( label.getFont().getFontData(), 8,
+          SWT.NONE, label.getDisplay() );
+      label.setFont( headingFont );
+    }
+    else
+    {
+      final Composite panelControl = m_panel.createControl( form.getBody() );
+      panelControl.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
+      panelControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+      m_button = toolkit.createButton( form.getBody(), "Hochwasser Vorhersage starten", SWT.PUSH );
+
+      final PrognosePanel panel = m_panel;
+      m_button.addSelectionListener( new SelectionAdapter()
       {
-        startModel( panel.getModel() );
-      }
-    } );
+        public void widgetSelected( final SelectionEvent e )
+        {
+          startModel( panel.getModel() );
+        }
+      } );
+    }
   }
 
   /**
@@ -93,36 +119,32 @@ public class PrognoseView extends ViewPart
    */
   public void setFocus()
   {
-    // mir doch egal
+  // mir doch egal
   }
 
   protected void startModel( final String projectName )
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    
+
     // Projekt updaten
     final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
 
     if( serverRoot == null )
     {
-      // TODO: error handling
+      // todo: error handling
       return;
     }
-
-    // TODO: progress monitor
-    // am besten busyCursorWhile
 
     final IProject project = root.getProject( projectName );
     final File serverProject = new File( serverRoot, projectName );
-    
+
     if( !serverProject.exists() )
     {
-      // TODO: error message
+      // todo: error message
       System.out.println( "Servermodel does not exist! Cannot start Prognose." );
       return;
     }
-    
-    
+
     final IRunnableWithProgress op = new IRunnableWithProgress()
     {
       public void run( IProgressMonitor monitor ) throws InvocationTargetException
@@ -139,7 +161,7 @@ public class PrognoseView extends ViewPart
         }
       }
     };
-    
+
     final IWorkbench workbench = PlatformUI.getWorkbench();
     try
     {
@@ -148,17 +170,19 @@ public class PrognoseView extends ViewPart
     catch( final InvocationTargetException e )
     {
       e.printStackTrace();
-      
+
       final CoreException ce = (CoreException)e.getTargetException();
-      ErrorDialog.openError( workbench.getDisplay().getActiveShell(), "Vorhersage starten", "Modell konnte nicht aktualisiert werden", ce.getStatus() );
+      ErrorDialog.openError( workbench.getDisplay().getActiveShell(), "Vorhersage starten",
+          "Modell konnte nicht aktualisiert werden", ce.getStatus() );
     }
     catch( final InterruptedException e )
     {
       e.printStackTrace();
     }
-    
+
     final CalcWizard wizard = new CalcWizard( project );
 
-    final WizardDialog dialog = new CalcWizardDialog( getSite().getShell(), wizard ); 
+    final WizardDialog dialog = new CalcWizardDialog( getSite().getShell(), wizard );
     dialog.open();
-  }}
+  }
+}

@@ -6,7 +6,6 @@ import java.net.URL;
 import javax.swing.JScrollPane;
 
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
@@ -89,8 +88,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
 
     final IRunnableWithProgress rwp = new SetValuesForDirtyColumnsRunnable(
         m_template, m_model );
-    m_listener = new ObservationModelChangeListener(
-        "Daten synchronisieren (Zml)", rwp );
+    m_listener = new ObservationModelChangeListener( rwp );
     m_model.addTableModelListener( m_listener );
 
     m_template.addTemplateEventListener( m_table );
@@ -155,7 +153,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
    *      org.eclipse.ui.IFileEditorInput)
    */
   protected void doSaveInternal( IProgressMonitor monitor,
-      IFileEditorInput input ) throws CoreException
+      IFileEditorInput input ) 
   {
     // TODO Vorlage speichern
     System.out.println( "TODO: Vorlage auch speichern..." );

@@ -24,10 +24,11 @@ public class ValueFilter extends AbstractObservationFilter
   private final Map m_axisMap = new Hashtable();
 
   /**
+   * @throws SensorException
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#initFilter(java.lang.Object,
    *      org.kalypso.ogc.sensor.IObservation)
    */
-  public void initFilter( final Object conf, final IObservation obs ) throws SensorException
+  public void initFilter( final Object conf, final IObservation obs ) throws SensorException 
   {
     super.initFilter( conf, obs );
 

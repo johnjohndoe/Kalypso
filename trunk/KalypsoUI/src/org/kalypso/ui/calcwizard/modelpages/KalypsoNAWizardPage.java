@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.ogc.gml.util.GisTemplateLoadedThread;
 
 /**
  * @author Belger
@@ -73,7 +74,6 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
   private void createRightPanel( final SashForm sashForm ) throws NumberFormatException
   {
     final Composite rightPanel = new Composite( sashForm, SWT.NONE );
-
     final GridLayout gridLayout = new GridLayout();
     rightPanel.setLayout( gridLayout );
     rightPanel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -83,8 +83,7 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
     createTablePanel( rightSash );
     createDiagramPanel( rightSash );
 
-    final Button button = new Button( rightPanel, SWT.NONE | SWT.PUSH );
-    button.setText( "Berechnung durchführen" );
+    createButtonPanel( rightPanel );
 
     final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
     final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
@@ -107,14 +106,25 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
         maximizeMap();
       }
     } );
+  }
 
+  private void createButtonPanel( final Composite parent )
+  {
+    final Composite panel = new Composite( parent, SWT.NONE );
+    panel.setLayout( new GridLayout( 2, false ) );
+    
+    final Button button = new Button( panel, SWT.NONE | SWT.PUSH );
+    button.setText( "Berechnung durchführen" );
+    
     button.addSelectionListener( new SelectionAdapter()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        runCalculation();
-      }
-    } );
+        {
+          public void widgetSelected( SelectionEvent e )
+          {
+            runCalculation();
+          }
+        } );
+    
+    createIgnoreButtonPanel( panel );
   }
 
   private void createDiagramPanel( final Composite parent )
@@ -145,4 +155,39 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
   {
     return getObservationsFromMap( true, onlySelected );
   }
+  
+  protected void postCreateControl()
+  {
+    new GisTemplateLoadedThread( m_mapModell, new Runnable()
+    {
+      public void run()
+      {
+//        // erstes feature des aktiven themas selektieren
+//        final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
+//        if( activeTheme instanceof IKalypsoFeatureTheme )
+//        {
+//          final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
+//          final GMLWorkspace workspace = kft.getWorkspace();
+//
+//          final FeatureList featureList = kft.getFeatureList();
+//          if( featureList != null && featureList.size() != 0 )
+//          {
+//            featureList.accept( new UnselectFeatureVisitor( getSelectionID() ) );
+//
+//            final String fid = getArguments().getProperty( PROP_FEATURE_TO_SELECT_ID, null );
+//
+//            final Feature feature = fid == null ? (Feature)featureList.get( 0 ) : workspace.getFeature(fid); 
+//            if( feature != null )
+//              feature.select( getSelectionID() );
+//          }
+//        }
+        
+        // TODO: das eine Feature in der Tabelle selektieren und im diagramm anzeigen!
+
+        refreshDiagram();
+        refreshZMLTable();
+      }
+    } ).start();
+  }
+
 }

@@ -3,10 +3,7 @@ package org.kalypso.ui.view.prognose;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -45,9 +42,8 @@ public class PrognosePanel
 
   private final ModelLabelProvider m_labelProvider = new ModelLabelProvider();
 
-  /** Alle Fonts in dieser Collection werden in der dispose Methode auch disposed */
-  private final Collection m_disposeFonts = new LinkedList();
-
+  private final FontUtilities m_fontUtils = new FontUtilities();
+  
   private final URL m_location;
 
   private Label m_imageLabel;
@@ -62,10 +58,8 @@ public class PrognosePanel
 
     try
     {
-
       final InputSource inputSource = new InputSource( modellistLocation.openStream() );
       m_modellist = (Modellist)new ObjectFactory().createUnmarshaller().unmarshal( inputSource );
-
     }
     catch( final Exception e )
     {
@@ -78,9 +72,7 @@ public class PrognosePanel
   public void dispose()
   {
     m_labelProvider.dispose();
-    
-    for( final Iterator iter = m_disposeFonts.iterator(); iter.hasNext(); )
-      ((Font)iter.next()).dispose();
+    m_fontUtils.dispose();
   }
 
   public Composite createControl( final Composite parent )
@@ -136,21 +128,19 @@ public class PrognosePanel
     final GridData headingGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false,
         false, 2, 2 );
     headingLabel.setLayoutData( headingGridData );
-    final Font headingFont = FontUtilities.createChangedFontData( headingLabel.getFont()
+    final Font headingFont = m_fontUtils.createChangedFontData( headingLabel.getFont()
         .getFontData(), 10, SWT.BOLD, headingLabel.getDisplay() );
     headingLabel.setFont( headingFont );
     headingLabel.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
-    m_disposeFonts.add( headingFont );
     headingLabel.setText( "Bitte wählen Sie das Einzugsgebiet" );
 
     final List list = new List( m_control, SWT.SINGLE );
     final GridData listGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false,
         false );
     list.setLayoutData( listGridData );
-    final Font listfont = FontUtilities.createChangedFontData( list.getFont().getFontData(), 10,
+    final Font listfont = m_fontUtils.createChangedFontData( list.getFont().getFontData(), 10,
         SWT.NONE, list.getDisplay() );
     list.setFont( listfont );
-    m_disposeFonts.add( listfont );
 
     final ListViewer viewer = new ListViewer( list );
     viewer.setContentProvider( new ArrayContentProvider() );

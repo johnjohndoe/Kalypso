@@ -42,7 +42,7 @@ public class KalypsoApplication implements IPlatformRunnable
     final String[] rights = chooseRight( userRights );
 
     if( rights == null )
-      return null;
+      return IPlatformRunnable.EXIT_OK;
 
     final StringBuffer chooseMsg = new StringBuffer( "Chosen rights:" );
     for( int i = 0; i < rights.length; i++ )
@@ -52,10 +52,7 @@ public class KalypsoApplication implements IPlatformRunnable
     return startWorkbench( new KalypsoWorkbenchAdvisor( rights ) );
   }
 
-  private String[] chooseRight( final String[] givenrights /*
-                                                            * , final String
-                                                            * username
-                                                            */)
+  private String[] chooseRight( final String[] givenrights )
   {
     final List rights = new ArrayList();
 

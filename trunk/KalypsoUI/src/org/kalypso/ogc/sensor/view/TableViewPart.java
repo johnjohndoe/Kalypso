@@ -4,7 +4,6 @@ import java.awt.Frame;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;

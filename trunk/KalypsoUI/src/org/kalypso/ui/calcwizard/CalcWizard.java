@@ -186,14 +186,12 @@ public class CalcWizard implements IWizard, IProjectProvider
     {
       protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( "Rechenvarianten werden archiviert", calcCases.size() );
+        monitor.beginTask( "Rechenvarianten werden archiviert", calcCases.size() * 1000 );
         for( int i = 0; i < saveCases.length; i++ )
         {
           final IFolder calcCase = (IFolder)saveCases[i];
 
-          synchronizer.commitFolder( calcCase );
-          
-          monitor.worked( 1 );
+          synchronizer.commitFolder( calcCase, new SubProgressMonitor( monitor, 1000 ) );
         }
 
         monitor.done();

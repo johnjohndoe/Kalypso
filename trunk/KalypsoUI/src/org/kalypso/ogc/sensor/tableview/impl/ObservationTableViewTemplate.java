@@ -55,7 +55,7 @@ public class ObservationTableViewTemplate extends DefaultTableViewTemplate
     final IAxis[] axes = obs.getAxisList();
 
     // do not even continue if there are no axes
-    if( axes.length == 0 )
+    if( axes == null || axes.length == 0 )
       return;
 
     // actually just the first key axis is relevant in our case

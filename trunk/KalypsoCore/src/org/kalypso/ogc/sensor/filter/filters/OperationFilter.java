@@ -43,7 +43,7 @@ public class OperationFilter extends AbstractObservationFilter
       throw new IllegalArgumentException( "unknown operator '" + operator + "' in filter" );
   }
 
-  public void initFilter( Object dummy, IObservation baseObs ) throws SensorException
+  public void initFilter( Object dummy, IObservation baseObs ) throws SensorException 
   {
     m_baseobservation = baseObs;
     super.initFilter( dummy, baseObs );

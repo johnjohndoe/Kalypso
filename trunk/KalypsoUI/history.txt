@@ -142,3 +142,7 @@ Version ...
 	- Datum jetzt über Datumseditor editierbar
 	- Autor wird mit username vorbelegt
 	- UI im Wizard fertig
+	
+- Bugfix: Login-Abfrage bei fehlenden Rechten (Programmstart):bei Druck auf Cancel ist der Splash nicht verschwunden
+
+- Hochwasser-Perspective: bei fehlendem Server bessere Meldung
