@@ -417,7 +417,7 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 
 	
 
-	if(action.equals("showSingeObjectView"))
+	if(action.equals("showSingeObjectView") && selectedRows.length>0 )
 
 	    {
 
@@ -447,7 +447,7 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 
 	
 
-	if(action.equals("showVectorSetView") && tableModel.hasVectorSets())
+	if(action.equals("showVectorSetView") && tableModel.hasVectorSets() && selectedRows.length>0)
 
 	    {
 
@@ -455,7 +455,7 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 
 		//		    {
 
-			int row=selectedRows[0];
+		int row=selectedRows[0];
 
 			Object eId=tableModel.getElementId(row);
 
@@ -660,7 +660,6 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
     public void mousePressed(MouseEvent e)
 
     {
-
 	maybeShowPopup(e);
 
     }
@@ -742,7 +741,7 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 	open.add(mi);
 
 
-
+	/*
 	mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_detail"));
 
 	mi.setActionCommand("showSingeObjectView");
@@ -750,9 +749,9 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 	mi.addActionListener(this);
 
 	open.add(mi);
+	*/
 
-
-
+	/*
 	mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_vectorSets"));
 
 	mi.setActionCommand("showVectorSetView");
@@ -760,7 +759,7 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 	mi.addActionListener(this);
 
 	open.add(mi);
-
+	*/
 	
 
 	JMenu colProfile = new JMenu (I18n.get("TV_GTV_jMenu_profile"));
@@ -856,21 +855,14 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 	//selectedCol=table.columnAtPoint(selectedPoint);
 
 	selectedRow=table.rowAtPoint(selectedPoint);
-
-	if(selectedRow>=0 && selectedCol>=0)
-
-	    {selectedValue=tableModel.getValueAt(selectedRow,selectedCol);
-
+	if(table.getSelectedRow()<0 && selectedRow>=0) // no Row Selected
+	    table.setRowSelectionInterval(selectedRow,selectedRow);
 	
-
-		}
-
+	if(selectedRow>=0 && selectedCol>=0)
+	    selectedValue=tableModel.getValueAt(selectedRow,selectedCol);
 	else
-
 	    selectedValue=null;
-
-
-
+	
         if (e.isPopupTrigger() && selectedRow>=0 && selectedCol>=0)
 
 	    {
@@ -892,44 +884,28 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 		mi.addActionListener(this);
 
 		popup.add(mi);
-
-
-
-		mi = new JMenuItem(I18n.get("TV_GTV_PopMen_Remove"));
-
-		mi.setActionCommand("remove");
-
-		mi.addActionListener(this);
-
-		popup.add(mi);
-
-
-
-		mi = new JMenuItem(I18n.get("TV_GTV_PopMen_Detail"));
-
-		mi.setActionCommand("showSingeObjectView");
-
-		mi.addActionListener(this);
-
-		popup.add(mi);
-
 		
-
-		if(tableModel.hasVectorSets())
-
+		if(table.getSelectedRow()>=0)
 		    {
-
-			mi = new JMenuItem(I18n.get("TV_GTV_PopMen_VectorSets"));
-
-			mi.setActionCommand("showVectorSetView");
-
+			mi = new JMenuItem(I18n.get("TV_GTV_PopMen_Remove"));
+			mi.setActionCommand("remove");
 			mi.addActionListener(this);
-
 			popup.add(mi);
-
+			
+			mi = new JMenuItem(I18n.get("TV_GTV_PopMen_Detail"));
+			mi.setActionCommand("showSingeObjectView");
+			mi.addActionListener(this);
+			popup.add(mi);
+		
+			if(tableModel.hasVectorSets())
+			    {
+				mi = new JMenuItem(I18n.get("TV_GTV_PopMen_VectorSets"));
+				mi.setActionCommand("showVectorSetView");
+				mi.addActionListener(this);
+				popup.add(mi);
+			    }
 		    }
-
-
+		
 
 		mi = new JMenuItem(I18n.get("TV_GTV_PopMen_orderC"));
 

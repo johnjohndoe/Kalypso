@@ -86,6 +86,8 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
     {
 	desktop.add(frame);
     }
+
+    
     public ViewManager()
     {
 	JOptionPane.setRootFrame(this);

@@ -82,8 +82,6 @@ public class GisSingleObjectView extends JInternalFrame implements InternalFrame
 
     private static GisSingleObjectView instance=null;
 
-
-
     private GisSingleObjectView(String frameName)
     {
 	super(frameName,true,true,true,true);
@@ -93,8 +91,8 @@ public class GisSingleObjectView extends JInternalFrame implements InternalFrame
     
     public static void load(String title,GisElement gisElement)
     {
-	//	if(instance!=null && instance.isClosed())
-	//	    instance=null;
+	if(instance!=null && instance.isClosed())
+	    instance=null;
 	if(instance==null)
 	    instance=new GisSingleObjectView("Kalypso detailed View");
 	/*
@@ -111,11 +109,11 @@ public class GisSingleObjectView extends JInternalFrame implements InternalFrame
 	instance.setVisible(true);
 	instance.moveToFront();
 	instance.show();
+	instance.pack();
     }
     
     private void rebuildView()
     {
-
 	getContentPane().removeAll();
 	setTitle(myGisElement.getLabel());
 	GridLayout layout=new GridLayout();
@@ -155,8 +153,8 @@ public class GisSingleObjectView extends JInternalFrame implements InternalFrame
     //          Invoked when an internal frame has been closed.
 
     public void internalFrameClosed(InternalFrameEvent e)
-
-    {}
+    {
+    }
 
 
 

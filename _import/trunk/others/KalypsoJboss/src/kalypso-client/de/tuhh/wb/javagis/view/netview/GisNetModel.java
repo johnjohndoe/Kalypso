@@ -507,7 +507,7 @@ public class GisNetModel implements ActionListener,ElementClassListener
 		if(gisElement!=null)
 		    {
 			GisSingleObjectView.load("detailedView",gisElement);
-			System.out.println("jaha");
+			//			System.out.println("jaha");
 		    }
 	    }
 	

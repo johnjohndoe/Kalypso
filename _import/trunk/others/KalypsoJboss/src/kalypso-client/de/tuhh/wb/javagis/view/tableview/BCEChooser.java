@@ -51,17 +51,16 @@ public class BCEChooser
     }
 	
 	
+    private static CSelectTSFrame tsFrameDialog = new CSelectTSFrame();
+
     public static void setUpBCEEditor(final TableCellEditorBCE bceEditor, final JButton button) {
-
-
-		final CSelectTSFrame tsFrameDialog = new CSelectTSFrame();
-
-        ActionListener okListener = new ActionListener() {
+	
+	ActionListener okListener = new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
 
 			bceEditor.selectedLink=tsFrameDialog.getSelectedNode();
-		    bceEditor.stopCellEditing();
+			bceEditor.stopCellEditing();
 			System.out.println("selectedNode: "+bceEditor.selectedLink.toString());
             }
 
