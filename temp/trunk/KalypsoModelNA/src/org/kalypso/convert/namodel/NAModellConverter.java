@@ -82,10 +82,9 @@ public class NAModellConverter
     //            Configuration conf = new Configuration(new File("test"));
     final File gmlBaseDir = FileUtilities.createNewTempDir( "NA_gmlBaseDir" );
     NAConfiguration conf = NAConfiguration.getAscii2GmlConfiguration( new File(
-        "/home/doemming/weisseElster" ), gmlBaseDir );
+        "/home/doemming/weisseElsterUpdate" ), gmlBaseDir );
     Feature fe = asciiToFeature( conf );
     insertGeometries( fe, "/home/doemming/weisseElster/shapes" );
-
     File gmlFile = new File( gmlBaseDir, "naModel.gml" );
     GmlSerializer.serializeFeature( new FileWriter( gmlFile ), fe, null );
 
