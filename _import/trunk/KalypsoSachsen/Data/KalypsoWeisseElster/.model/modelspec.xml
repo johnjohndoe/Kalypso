@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="spree">
+    <input id="Modell" path="calcCase.gml" relativeToCalcCase="true"/>
+    <input id="Control" path="nacontrol.gml" relativeToCalcCase="true"/>
+<!-- Zeitreihen als Verzeichnisse -->
+    <input id="NiederschlagDir" path="zml" relativeToCalcCase="true"/>
+    <input id="ZuflussDir" path="zufluss" relativeToCalcCase="true"/>
+    <input id="PegelDir" path="pegel" relativeToCalcCase="true"/>
+ 
+</modelspec>
