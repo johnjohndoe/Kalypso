@@ -38,13 +38,15 @@ GUI:
 * dokument annotations aus schema als tabellenueberschriften benutzen
   standard CRS als property in kalypso-preferences uebernehmen
 
+ 
+ Editor f?r Verknuepfungen zur zeitreihenDB
  tabellen besser editieren
  elemente hinzufuegen
  elemente in tabelle importieren (z.B. aus shapefile)
  multi-feature-editor 
  gml-tree-editor implementieren (Friedemann)
  
- editor für association-topologie-visualisierung 
+ editor fuer association-topologie-visualisierung 
  association-topologien visualisieren (z.B. mit virtuellen properties)
  GTT: showcolumn, parameter zwischen (true|fase|user-true|user-false) unterscheiden,
       "user-*" heisst: user darf umschalten.
@@ -76,5 +78,5 @@ Projektmanagement:
   als Opensourceprojekt veroeffentlichen
   
 Testen testen testen
- ein projekt KalypsoQM anlegen mit großer junit-test-suite ??
+ ein projekt KalypsoQM anlegen mit gro?er junit-test-suite ??
 
