@@ -42,7 +42,9 @@
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="WISKI_Name" type="string" minOccurs="0"/>
+					<!-- WISKI_Name ist auch gleichzeitig die offizielle Messstellennummer-->
+					<element name="WISKI_Name" type="string" minOccurs="1"/>
+					<element name="Kurz_Name" type="string" minOccurs="1"/>
 					<!-- Server-Daten-->
 					<element name="Niederschlag_gemessenEingang" type="bodecommon:TimeseriesLinkType" minOccurs="0"/>
 					<!-- lokal,  *.vns, nur zum Gucken!!!-->

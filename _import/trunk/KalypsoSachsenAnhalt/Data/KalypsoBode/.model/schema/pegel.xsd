@@ -3,14 +3,13 @@
 	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="gml/bce/obslink.xsd"/>
 	<import namespace="org.kalypso.bode.common" schemaLocation="common.xsd"/>
-
 	<element name="PegelCollectionAssociation" type="bodepegel:PegelCollectionAssociationType"/>
 	<complexType name="PegelCollectionAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
 					<element ref="bodepegel:PegelCollection"/>
-				</sequence>
+				</sequence> 
 			</restriction>
 		</complexContent>
 	</complexType>
@@ -42,7 +41,9 @@
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="WISKI_Name" type="string" minOccurs="0"/>
+					<!-- WISKI_Name ist auch gleichzeitig die offizielle Messstellennummer-->
+					<element name="WISKI_Name" type="string" minOccurs="1"/>
+					<element name="Kurz_Name" type="string" minOccurs="1"/>
 					<element name="istEingabePegel" type="boolean"/>
 					<element name="istErgebnisPegel" type="boolean"/>
 					<!-- Server-Daten-->
@@ -88,7 +89,7 @@
 					<element name="NN1" type="double"/>
 					<element name="NN2" type="double"/>
 					<element name="Laufzeit" type="integer"/>
-					<element name="LaufzeitDefault" type="double"/>
+					<element name="LaufzeitDefault" type="integer"/>
 					<element name="DM1" type="double"/>
 					<element name="DM2" type="double"/>
 				</sequence>
