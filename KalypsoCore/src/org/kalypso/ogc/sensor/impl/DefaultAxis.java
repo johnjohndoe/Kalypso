@@ -9,16 +9,34 @@ import org.kalypso.ogc.sensor.IAxis;
  */
 public class DefaultAxis implements IAxis
 {
-  private String m_label;
+  private final String m_label;
 
-  private String m_unit;
+  private final String m_unit;
 
-  private Class m_dataClass;
+  private final Class m_dataClass;
 
-  private String m_type;
+  private final String m_type;
 
-  private boolean m_isKey;
+  private final boolean m_isKey;
+  
+  private final boolean m_persistable;
 
+  /**
+   * Constructor. Calls the full constructor with the persistable argument set
+   * to true.
+   * 
+   * @param label
+   * @param type
+   * @param unit
+   * @param dataClass
+   * @param isKey
+   */
+  public DefaultAxis( final String label, final String type, final String unit,
+      final Class dataClass, final boolean isKey )
+  {
+    this( label, type, unit, dataClass, isKey, true );
+  }
+  
   /**
    * Constructor
    * 
@@ -31,15 +49,17 @@ public class DefaultAxis implements IAxis
    * @param dataClass
    *          className of the data on this axis
    * @param isKey
+   * @param persistable
    */
   public DefaultAxis( final String label, final String type, final String unit,
-      final Class dataClass, final boolean isKey )
+      final Class dataClass, final boolean isKey, final boolean persistable )
   {
     m_label = label;
     m_type = type;
     m_unit = unit;
     m_dataClass = dataClass;
     m_isKey = isKey;
+    m_persistable = persistable;
   }
 
   /**
@@ -50,7 +70,7 @@ public class DefaultAxis implements IAxis
   public DefaultAxis( final IAxis axis )
   {
     this( axis.getName(), axis.getType(), axis.getUnit(), axis.getDataClass(),
-        axis.isKey() );
+        axis.isKey(), axis.isPersistable() );
   }
 
   /**
@@ -135,8 +155,11 @@ public class DefaultAxis implements IAxis
     return m_isKey;
   }
 
-  public void setDataClass( Class dataClass )
+  /**
+   * @see org.kalypso.ogc.sensor.IAxis#isPersistable()
+   */
+  public boolean isPersistable( )
   {
-    m_dataClass = dataClass;
+    return m_persistable;
   }
 }

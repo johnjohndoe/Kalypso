@@ -45,4 +45,16 @@ public interface IAxis
    * @return boolean
    */
   public boolean isKey();
+  
+  /**
+   * Returns true when this axis is persistable when saving the observation
+   * to some medium like a file. Some observations generate new axes depending
+   * on their characteristics. For instance a WQ-ObservationFilter
+   * either simulates a Q or a W axis, depending on the wrapped observation, 
+   * and this simulated axis should not be saved along the others (since
+   * it can be computed at any time).
+   * 
+   * @return boolean
+   */
+  public boolean isPersistable();
 }
