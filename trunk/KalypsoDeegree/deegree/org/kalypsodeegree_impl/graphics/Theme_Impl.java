@@ -43,32 +43,19 @@ E-Mail: jens.fitzke@uni-bonn.de
 package org.deegree_impl.graphics;
 
 import java.awt.Graphics;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-import org.deegree.graphics.FeatureLayer;
-import org.deegree.graphics.Highlighter;
-import org.deegree.graphics.Layer;
-import org.deegree.graphics.MapView;
-import org.deegree.graphics.RasterLayer;
-import org.deegree.graphics.Selector;
-import org.deegree.graphics.Theme;
-import org.deegree.graphics.ThemeEventController;
-import org.deegree.graphics.displayelements.DisplayElement;
-
+import org.deegree.graphics.*;
 import org.deegree.graphics.sld.UserStyle;
-import org.deegree.model.feature.Feature;
-import org.deegree_impl.graphics.displayelements.DisplayElementFactory;
-import org.deegree_impl.model.sort.DisplayContext;
-import org.deegree_impl.model.sort.JMSpatialIndexFactory;
-import org.deegree_impl.tools.Debug;
-
-//import de.tuhh.wb.jm.view.JMMapView;
-
-import java.util.Iterator;
-import org.deegree.model.geometry.GM_Envelope;
+import org.deegree.graphics.sld.Symbolizer;
+import org.deegree.graphics.displayelements.*;
+import org.deegree.model.geometry.*;
 import org.deegree.model.sort.JMSpatialIndex;
+import org.deegree.model.feature.*;
+import org.deegree_impl.model.geometry.*;
+import org.deegree_impl.graphics.transformation.*;
+import org.deegree_impl.graphics.displayelements.*;
+import org.deegree_impl.tools.*;
 
 /**
  * A Theme is for usual a homogenious collection of Features coupled with
@@ -90,7 +77,7 @@ import org.deegree.model.sort.JMSpatialIndex;
  *
  * <p>------------------------------------------------------------------------</p>
  *
- * @author <a href="mailto:poth@lat-lon.de">Andreas Poth</a>
+ * @author <a href="mailto:poth@lat-lon.de>Andreas Poth</a>
  * @version $Revision$ $Date$
  */
 class Theme_Impl implements Theme {
@@ -98,10 +85,8 @@ class Theme_Impl implements Theme {
     private String name 		= null;
     private Layer layer			= null;
     private UserStyle[] styles          = null;
+    private ArrayList displayElements	= null;    
 
-    private JMSpatialIndex indexDE=null;
-    //    private ArrayList displayElements	= null;    
-    
     /**
      * the MapView (map) the theme is associated to
      */
@@ -115,11 +100,11 @@ class Theme_Impl implements Theme {
     private List highlighter		= Collections.synchronizedList( new ArrayList() );
     private List eventController	= Collections.synchronizedList( new ArrayList() );
     
-  public static boolean DEBUG_ENV=false;
         
     Theme_Impl(String name, Layer layer, UserStyle[] styles) {
         this.layer = layer;
         this.name = name;
+        displayElements = new ArrayList(1000);
         setStyles( styles );
     }
     
@@ -142,21 +127,18 @@ class Theme_Impl implements Theme {
      */
     public void paint(Graphics g) {        
         Debug.debugMethodBegin( this, "paint(Graphics)" );
-	System.out.println("DE elements in index: "+indexDE.rsize());
+        
         double scale = parent.getScale();
-	//GM_Envelope env=JMMapView.getMapView().getBoundingBox();
-	List displayElements=new ArrayList();
-	indexDE.query(parent.getBoundingBox(),displayElements);
+        
+        for (int i = 0; i < displayElements.size(); i++) {
+            DisplayElement de = (DisplayElement) displayElements.get (i);
 
-	Iterator it=displayElements.iterator();
-	while(it.hasNext())
-	    {
-		//((DisplayContext)it.next()).paint(g,parent.getProjection(),scale);
-	    }
-	if(DEBUG_ENV)
-	    indexDE.paint(g,parent.getProjection());	
-	        Debug.debugMethodEnd();
-  
+            if (de.doesScaleConstraintApply(scale)){
+                de.paint (g, parent.getProjection ());
+            }
+        }                
+
+        Debug.debugMethodEnd();
     }
     
     /**
@@ -171,7 +153,16 @@ class Theme_Impl implements Theme {
         int height = g.getClipBounds().height;
         
         parent.getProjection ().setDestRect(  x, y, width+x, height+y );
-                
+        
+        for (int k = 0; k < displayElements.size(); k++) {
+            for (int i = 0; i < ids.length; i++) {
+                if ( ((DisplayElement)displayElements.get(k)).getAssociateFeatureId().equals( ids[i] ) ) {
+                    ((DisplayElement)displayElements.get(k)).paint( g, parent.getProjection () );
+                    break;
+                }
+            }
+        }
+        
         Debug.debugMethodEnd();
     }
     
@@ -179,19 +170,15 @@ class Theme_Impl implements Theme {
      * renders the selected display elements of the layer
      */
     public void paintSelected(Graphics g) {
-
         Debug.debugMethodBegin( this, "paintSeleced" );
-
-        double scale = parent.getScale();
-	//GM_Envelope env=JMMapView.getMapView().getBoundingBox();
-	List displayContainer=new ArrayList();
-	indexDE.query(parent.getBoundingBox(),displayContainer);
-
-	Iterator it=displayContainer.iterator();
-	while(it.hasNext())
-	    {
-//		((DisplayContext)it.next()).paintSelected(g,parent.getProjection(),scale);
-	    }
+               
+        for (int i = 0; i < displayElements.size(); i++) {
+            DisplayElement de = ((DisplayElement)displayElements.get(i));
+            if ( de.isSelected() ) {
+                de.paint( g, parent.getProjection () );
+            }
+        }
+        
         Debug.debugMethodEnd();
     }
     
@@ -199,6 +186,16 @@ class Theme_Impl implements Theme {
      * renders the highlighted display elements of the layer
      */
     public void paintHighlighted(Graphics g) {
+        Debug.debugMethodBegin( this, "paintHighlighted" );
+
+        for (int i = 0; i < displayElements.size(); i++) {
+            DisplayElement de = ((DisplayElement)displayElements.get(i));
+            if ( de.isHighlighted() ) {
+                de.paint( g, parent.getProjection () );
+            }
+        }
+        
+        Debug.debugMethodEnd();
     }
     
     /**
@@ -206,7 +203,7 @@ class Theme_Impl implements Theme {
      * deselecting single DisplayElements or groups of DisplayElements.
      * A selector may offers methods like 'select all DisplayElements
      * within a specified bounding box' or 'select all DisplayElements
-     * thats area is larger than 120 km?' etc.
+     * thats area is larger than 120 km²' etc.
      */
     public void addSelector(Selector selector) {
         this.selector.add( selector );
@@ -214,7 +211,7 @@ class Theme_Impl implements Theme {
     }
     
     /**
-     * @see org.deegree_impl.graphics.Theme_Impl#addSelector(Selector)
+     * @see addSelector
      */
     public void removeSelector(Selector selector) {
         this.selector.remove( selector );
@@ -231,7 +228,7 @@ class Theme_Impl implements Theme {
     }
     
     /**
-     * @see org.deegree_impl.graphics.Theme_Impl#addHighlighter(Highlighter)
+     * @see addHighlighter
      */
     public void removeHighlighter(Highlighter highlighter) {
         this.highlighter.remove( highlighter );
@@ -248,59 +245,59 @@ class Theme_Impl implements Theme {
     }
     
     /**
-     * @see org.deegree_impl.graphics.Theme_Impl#addEventController(ThemeEventController)
+     * @see addEventController
      */
     public void removeEventController(ThemeEventController controller) {
         eventController.remove( controller );
         controller.removeTheme( this );
     }
     
+    public UserStyle[] getStyles()
+    {
+	return styles;
+    }
     /**
-     * stes the styles used for this <tt>Theme</tt>. If this method will be 
+     * Sets the styles used for this <tt>Theme</tt>. If this method will be 
      * called all <tt>DisplayElement</tt>s will be recreated to consider the
      * new style definitions.
      */
     public void setStyles(UserStyle[] styles) {
         this.styles = styles;
-	
-        indexDE = JMSpatialIndexFactory.createSpatialIndex(layer.getBoundingBox());
-
+        displayElements.clear();
         DisplayElementFactory fac = new DisplayElementFactory();
         if ( layer instanceof FeatureLayer ) {
+        	// keep LabelDisplayElements separate from the other elements
+        	// and append them to the end of the DisplayElement-list
+        	ArrayList labelDisplayElements = new ArrayList (1000);
             try {
-                for (int i = 0; i < ((FeatureLayer)layer).getSize(); i++) 
-		    {
-			Feature feature = ((FeatureLayer)layer).getFeature (i);
-			indexDE.add(new DisplayContext(feature,styles));
+                // instance of FeatureLayer
+                for (int i = 0; i < ((FeatureLayer)layer).getSize(); i++) {
+                    Feature feature = ((FeatureLayer)layer).getFeature (i);
+                    DisplayElement[] de = fac.createDisplayElement( feature, styles );
+                    for(int k = 0; k < de.length; k++) {
+                    	if (de [k] instanceof LabelDisplayElement) {
+							labelDisplayElements.add (de[k]);
+                    	} else {
+							displayElements.add (de[k]);
+						}
+                    }
                 }
             } catch(Exception e) {
-		e.printStackTrace();
-		System.out.println(e);	
+                System.out.println(e);	
             }
+			displayElements.addAll (labelDisplayElements);
         } else {
             try {
                 // instance of RasterLayer
                 RasterLayer rl = (RasterLayer)layer;
-                DisplayElement[] de = DisplayElementFactory.createDisplayElement( rl.getRaster(), styles );
-		//		GM_Envelope env=rl.getBoundingBox();
-                for(int k = 0; k < de.length; k++) 
-		    { 
-			//			displayElementsIndex.add(env,de[k]);
-		    //		    displayElements.add( de[k] );
+                DisplayElement[] de = fac.createDisplayElement( rl.getRaster(), styles );
+                for(int k = 0; k < de.length; k++) { 
+                        displayElements.add( de[k] );
                     }
             } catch(Exception e) {
-		e.printStackTrace();
-
                 System.out.println(e);	
             }
         }
-    }
-    
-    /**
-     * returns the styles used for this <tt>Theme</tt>. 
-     */
-    public UserStyle[] getStyles() {
-        return styles;
     }
         
     /**
@@ -316,19 +313,15 @@ class Theme_Impl implements Theme {
      * @return <tt>ArrayList</tt> containing <tt>DisplayElements</tt>
      */
     public ArrayList getDisplayElements() {
-	ArrayList result=new ArrayList();
-	indexDE.queryAll(result);
-	System.out.println("  TODO Theme_Impl.getDisplayElements() !!");
-	return result;
+        return displayElements;
     }
     
-    public JMSpatialIndex getSpatialIndex()
-    {
-	return (JMSpatialIndex)indexDE;
-    }
-
     public void setDisplayElements(ArrayList de) {
-        //this.displayElements = de;
+        this.displayElements = de;
+    }
+    
+	public JMSpatialIndex getSpatialIndex() {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
 }

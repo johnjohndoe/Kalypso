@@ -1,6 +1,7 @@
 package org.kalypso.editor.mapeditor;
 
 import org.deegree.graphics.Theme;
+import org.deegree.graphics.sld.UserStyle;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.ogc.MapModell;
@@ -22,8 +23,18 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
   public Object[] getChildren( final Object parentElement )
   {
     if( parentElement instanceof Theme )
-      return ( (Theme)parentElement ).getStyles();
-
+    {
+    	Theme theme = (Theme)parentElement;
+        System.out.println("TreeContentProvider.getChildren("+theme.getName()+")");
+    	UserStyle[] styles=theme.getStyles();
+    	ThemeStyleTreeObject[] result=new ThemeStyleTreeObject[styles.length];
+		for(int i=0;i<styles.length;i++)
+    	{
+    		result[i]=new ThemeStyleTreeObject(theme,styles[i]);
+			
+    	}
+    	return result;//( theme ).getStyles();
+    }
     return null;
   }
 
