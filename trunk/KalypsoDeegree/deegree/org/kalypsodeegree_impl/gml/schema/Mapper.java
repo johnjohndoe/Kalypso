@@ -54,6 +54,9 @@ public class Mapper
     if( "integer".equals( name ) )
       return "java.lang.Integer";
 
+    if( "int".equals( name ) )
+        return "java.lang.Integer";
+
     if( "string".equals( name ) )
       return "java.lang.String";
 
