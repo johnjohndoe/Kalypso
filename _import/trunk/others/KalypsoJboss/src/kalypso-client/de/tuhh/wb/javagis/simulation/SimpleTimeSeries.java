@@ -13,7 +13,9 @@ import java.util.GregorianCalendar;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import datacenter.zeitreihen.TimeserieWrapper;
+import com.bce.datacenter.kalypso.Timeserie;
+
+
 import de.tuhh.wb.javagis.view.LogView;
 
 public abstract class SimpleTimeSeries
@@ -42,7 +44,7 @@ public abstract class SimpleTimeSeries
 	return "yyyy dd MM HH mm";
     }
         
-    public Date loadFromWadas(String tableName,Integer sourceType,Integer sourceId,Integer unitId,Date startDate,Date endDate)
+    public Date loadFromWadas(String tableName,Date startDate,Date endDate)
 	throws Exception
     {
 	System.out.println(" table: "+tableName);
@@ -60,7 +62,7 @@ public abstract class SimpleTimeSeries
 			File input=File.createTempFile("timeseries",".dat");
 			System.out.println("loadfromwadas:"+tableName);
 			
-			TimeserieWrapper timeSerie=new TimeserieWrapper(tableName,"",0,"");
+			Timeserie timeSerie=Timeserie.findTimeserie(tableName);
 			/*
 			  public TimeserieWrapper(	String tableName,
 			  String srcType,
@@ -70,8 +72,8 @@ public abstract class SimpleTimeSeries
 			
 			java.sql.Date sqlStartDate=new java.sql.Date(startDate.getTime());
 			java.sql.Date sqlEndDate=new java.sql.Date(endDate.getTime());
-			java.sql.Date realStart=timeSerie.GetRealBegin();
-			java.sql.Date realEnd=timeSerie.GetRealEnd();
+			java.sql.Date realStart=timeSerie.getRealBegin();
+			java.sql.Date realEnd=timeSerie.getRealEnd();
 			java.util.Date firstDate=new java.util.Date(realStart.getTime());
 			java.util.Date lastDate=new java.util.Date(realEnd.getTime());
 			int i=timeSerie.ExportToFile(input.getPath(), sqlStartDate, sqlEndDate,seperator,datePattern);

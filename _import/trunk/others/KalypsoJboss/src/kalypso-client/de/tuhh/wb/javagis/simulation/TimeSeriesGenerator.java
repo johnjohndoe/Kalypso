@@ -243,7 +243,7 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 				    {
 					System.out.println("dbTableName:"+tableName);
 					System.out.println("load measured");
-					measuredEndDate=sequence.loadFromWadas(tableName,null,null,null,myStartDate,endDate);
+					measuredEndDate=sequence.loadFromWadas(tableName,myStartDate,endDate);
 				    }
 			    }	    
 			if(endDate.after(measuredEndDate))
@@ -258,7 +258,7 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 					    {
 						System.out.println("dbTableName:"+tableName);
 						System.out.println("load synthetic");
-						Date syntheticEndDate=sequence.loadFromWadas(tableName,null,null,null,measuredEndDate,endDate);
+						Date syntheticEndDate=sequence.loadFromWadas(tableName,measuredEndDate,endDate);
 						System.out.println("last synthetic date from wadas: "+syntheticEndDate);
 					    }
 				    }	    
@@ -317,7 +317,7 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 				    {
 					System.out.println("dbTableName:"+tableName);
 					System.out.println("load measured");
-					measuredEndDate=sequence.loadFromWadas(tableName,null,null,null,myStartDate,endDate);
+					measuredEndDate=sequence.loadFromWadas(tableName,myStartDate,endDate);
 				    }
 			    }	    
 			if(endDate.after(measuredEndDate))
@@ -332,7 +332,7 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 					    {
 						System.out.println("dbTableName:"+tableName);
 						System.out.println("load synthetic");
-						Date syntheticEndDate=sequence.loadFromWadas(tableName,null,null,null,measuredEndDate,endDate);
+						Date syntheticEndDate=sequence.loadFromWadas(tableName,measuredEndDate,endDate);
 						System.out.println("last synthetic date from wadas: "+syntheticEndDate);
 					    }
 				    }	    
