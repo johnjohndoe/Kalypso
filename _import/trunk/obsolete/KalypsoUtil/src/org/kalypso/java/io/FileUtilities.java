@@ -387,7 +387,7 @@ public class FileUtilities
   {
     // zuerst die Datei selbst
     boolean recurse = visitor.visit( root );
-    if( recurse == false || !root.isDirectory() )
+    if( !recurse || !root.isDirectory() )
       return;
     
     final File[] files = root.listFiles();

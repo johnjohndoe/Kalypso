@@ -49,14 +49,14 @@ import java.io.File;
  */
 public class DeleteObsoleteFilesVisitor implements FileVisitor
 {
-  private final File m_targetDir;
-  private final File m_sourceDir;
+  private final File m_compareDir;
+  private final File m_adoptDir;
   private final String m_excludeDirWithFile;
 
-  public DeleteObsoleteFilesVisitor( final File sourceDir, final File targetDir, final String excludeDirWithFile )
+  public DeleteObsoleteFilesVisitor( final File adoptFile, final File compareDir, final String excludeDirWithFile )
   {
-    m_sourceDir = sourceDir;
-    m_targetDir = targetDir;
+    m_adoptDir = adoptFile;
+    m_compareDir = compareDir;
     m_excludeDirWithFile = excludeDirWithFile;}
 
   /**
@@ -64,8 +64,8 @@ public class DeleteObsoleteFilesVisitor implements FileVisitor
    */
   public boolean visit( final File file )
   {
-    final String relativePathTo = FileUtilities.getRelativePathTo( m_sourceDir, file );
-    final File targetFile = new File( m_targetDir, relativePathTo );
+    final String relativePathTo = FileUtilities.getRelativePathTo( m_adoptDir, file );
+    final File compareFile = new File( m_compareDir, relativePathTo );
 
     // falls es ein Verzeichnis ist und das Auschlussfile enthält, hier abbrechen
     if( m_excludeDirWithFile != null && file.isDirectory() )
@@ -75,7 +75,7 @@ public class DeleteObsoleteFilesVisitor implements FileVisitor
         return false;
     }
     
-    if( !targetFile.exists() )
+    if( !compareFile.exists() )
     {
       FileUtilities.deleteRecursive( file );
       return false;
