@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Graphics;
@@ -78,18 +78,18 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
   {
     myCoordinatesSystem = crs;
   }
-  
+
   public void dispose()
   {
     for( Iterator iter = myThemes.iterator(); iter.hasNext(); )
-      ((IKalypsoTheme)iter.next()).dispose();
-    
+      ( (IKalypsoTheme)iter.next() ).dispose();
+
     myThemes.clear();
   }
 
   public void activateTheme( final IKalypsoTheme theme )
   {
-    // TODO: check, ob thema überhaupt hier vorhanden? 
+    // TODO: check, ob thema überhaupt hier vorhanden?
     myActiveTheme = theme;
     fireModellEvent( null );
   }
@@ -187,8 +187,8 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
 
     for( int i = 0; i < getThemeSize(); i++ )
     {
-      IKalypsoTheme theme = getTheme(getThemeSize()-i-1);
-      if( isThemeEnabled(theme ) )
+      IKalypsoTheme theme = getTheme( getThemeSize() - i - 1 );
+      if( isThemeEnabled( theme ) )
         theme.paintSelected( g, p, scale, bbox, selectionId );
     }
   }
@@ -280,7 +280,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
     fireModellEvent( null );
   }
 
-public GM_Envelope getFullExtentBoundingBox()
+  public GM_Envelope getFullExtentBoundingBox()
   {
     final IKalypsoTheme[] themes = getAllThemes();
     GM_Envelope result = null;
@@ -293,9 +293,9 @@ public GM_Envelope getFullExtentBoundingBox()
           final GM_Envelope boundingBox = themes[i].getBoundingBox();
 
           if( result == null )
-            result=boundingBox;         
-          else        
-            result=result.getMerged( boundingBox );  
+            result = boundingBox;
+          else
+            result = result.getMerged( boundingBox );
         }
         catch( final Exception e )
         {

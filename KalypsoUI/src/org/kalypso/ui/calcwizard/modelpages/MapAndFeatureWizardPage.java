@@ -120,7 +120,6 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
       setControl( sashForm );
 
       postCreateControl();
-      refreshDiagram();
     }
     catch( final Exception e )
     {
@@ -251,6 +250,45 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
     // TODO: anderes select übergeben
     final Control mapControl = initMap( mapPanel, "null" );
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+  }
+
+  protected void postCreateControl()
+  {
+    final Thread waitForFeature = new Thread()
+    {
+      /**
+       * @see java.lang.Thread#run()
+       */
+      public void run()
+      {
+        super.run();
+        int max = 10;
+        while( true )
+        {
+          System.out.println( "wait for feature" + max );
+          if( m_templateviewer.getFeature() != null )
+          {
+            refreshDiagram();
+            return;
+          }
+          try
+          {
+            sleep( 500 );
+          }
+          catch( InterruptedException e )
+          {
+            e.printStackTrace();
+          }
+          if( max-- < 0 ) // but do not wait for ever
+          {
+            refreshDiagram();
+            return;
+          }
+        }
+      }
+    };
+    waitForFeature.start();
+
   }
 
   /**

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
 import java.io.InputStreamReader;
@@ -64,7 +64,7 @@ public class SldLoader extends AbstractLoader
   public SldLoader()
   {
     m_urlResolver = new UrlResolver();
-  
+
   }
 
   /**
@@ -76,25 +76,26 @@ public class SldLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String,
+   *      java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
-  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
+  protected Object loadIntern( final String source, final URL context,
+      final IProgressMonitor monitor ) throws LoaderException
   {
     try
     {
       monitor.beginTask( "Lade SLD", 1000 );
 
       final URL url = m_urlResolver.resolveURL( context, source );
-      
+
       final Reader reader = new InputStreamReader( url.openStream() );
       final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
       reader.close();
-      
+
       final IResource resource = ResourceUtilities.findFileFromURL( url );
       addResource( resource, styledLayerDescriptor );
 
       monitor.done();
-
       return styledLayerDescriptor;
     }
     catch( final Exception e )

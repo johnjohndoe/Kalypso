@@ -137,7 +137,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
     {
       StyleDisplayMap map = (StyleDisplayMap)iter.next();
-        map.paintSelected( graphics, projection, scale, bbox, selectionId);
+      map.paintSelected( graphics, projection, scale, bbox, selectionId );
     }
   }
 
@@ -297,7 +297,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       }
       for( int i = 0; i < layerList.length; i++ )
         for( Iterator iterator = layerList[i].iterator(); iterator.hasNext(); )
-          ( (DisplayElement)iterator.next() ).paint( g, p );
+  				((DisplayElement)iterator.next()).paint( g, p );
     }
 
     public void restyle( GM_Envelope env )
