@@ -1,6 +1,8 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,6 +10,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import org.jfree.chart.annotations.XYTextAnnotation;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
@@ -30,8 +33,10 @@ import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.util.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.util.factory.FactoryException;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * A plot for IObservation.
@@ -80,14 +85,15 @@ public class ObservationPlot extends XYPlot
 
   /** maps the diagram curve to the data serie */
   private transient final Map m_curve2serie = new HashMap();
-  
+
   /** maps the series to their datasets */
   private transient final Map m_serie2dataset = new HashMap();
-  
+
   private int m_domPos = 0;
 
   private int m_ranPos = 0;
 
+  private Map m_yConsts;
 
   /**
    * Constructor.
@@ -124,10 +130,17 @@ public class ObservationPlot extends XYPlot
       final Object diagramCurve = it.next();
       addCurve( (IDiagramCurve) diagramCurve );
     }
-    
+
     setNoDataMessage( "Keine Daten vorhanden" );
+
+    m_yConsts = new HashMap();
   }
 
+  public void dispose()
+  {
+    clearCurves();
+  }
+  
   /**
    * Adds a diagram axis and configures it for the use in this plot.
    * 
@@ -187,7 +200,7 @@ public class ObservationPlot extends XYPlot
 
     m_serie2dataset.clear();
     m_curve2serie.clear();
-    
+
     m_axes2ds.clear();
 
     m_chartAxes2Pos.clear();
@@ -196,6 +209,9 @@ public class ObservationPlot extends XYPlot
     m_ranPos = 0;
 
     clearDomainMarkers();
+    clearAnnotations();
+    
+    m_yConsts.clear();
   }
 
   /**
@@ -242,7 +258,7 @@ public class ObservationPlot extends XYPlot
         yDiagAxis );
 
     m_curve2serie.put( curve, xyc );
-    
+
     final String key = xDiagAxis.getIdentifier() + "#-#"
         + yDiagAxis.getIdentifier();
 
@@ -268,28 +284,39 @@ public class ObservationPlot extends XYPlot
     cds.addCurveSerie( xyc );
 
     m_serie2dataset.put( xyc, cds );
+
+    final IObservation obs = curve.getTheme()
+        .getObservation();
     
-    // check metadata of the observation for Vorhersage type
-    // and add a marker if the obs is a forecast
-    final IObservation obs = curve.getTheme().getObservation();
-    final MetadataList mdl = obs.getMetadataList();
-    final String range = mdl.getProperty( TimeserieConstants.MD_VORHERSAGE );
-    if( range != null )
+    // add a marker if the obs is a forecast
+    final DateRangeArgument fr = TimeserieUtils.isForecast( obs );
+    if( fr != null )
     {
-      final String[] splits = range.split( ";" );
-      if( splits.length == 2 )
+      long begin = fr.getFrom().getTime();
+      long end = fr.getTo().getTime();
+      addDomainMarker( createMarker( begin, end,
+          TimeserieConstants.MD_VORHERSAGE ), Layer.BACKGROUND );
+    }
+
+    // add a constant Y line if obs has alarmstufen
+    final String[] alarms = TimeserieUtils.findOutMDAlarmstufen( obs );
+    final MetadataList mdl = obs.getMetadataList();
+    for( int i = 0; i < alarms.length; i++ )
+    {
+      final Double value = new Double( mdl.getProperty( alarms[i] ) );
+      if( !m_yConsts.containsKey( value ) )
       {
-        try
-        {
-          long begin = TimeserieConstants.DEFAULT_DF.parse( splits[0] ).getTime();
-          long end = TimeserieConstants.DEFAULT_DF.parse( splits[1] ).getTime();
-          addDomainMarker( createMarker( begin, end, TimeserieConstants.MD_VORHERSAGE ),
-              Layer.BACKGROUND );
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-        }
+        final Color color = TimeserieUtils.getColorFor( alarms[i] );
+        m_yConsts.put( value, new ValueAndColor( alarms[i], value.doubleValue(), color ) );
+        
+        final double x;
+        if( xyc.getItemCount() > 1 )
+          x = xyc.getXValue(1).doubleValue();
+        else
+          x = getDomainAxis().getLowerBound();
+        final XYTextAnnotation ann = new XYTextAnnotation( alarms[i], x, value.doubleValue() );
+        ann.setPaint( color );
+        addAnnotation( ann );
       }
     }
   }
@@ -305,14 +332,14 @@ public class ObservationPlot extends XYPlot
     if( serie != null )
     {
       final CurveDataset ds = (CurveDataset) m_serie2dataset.get( serie );
-      
+
       if( ds != null )
         ds.removeCurveSerie( serie );
-      
+
       m_curve2serie.remove( curve );
     }
   }
-  
+
   /**
    * overriden to return a default axis when no real axes defined yet
    * 
@@ -342,6 +369,22 @@ public class ObservationPlot extends XYPlot
         return new NumberAxis();
 
       return super.getRangeAxis();
+    }
+  }
+
+  /**
+   * @see org.jfree.chart.plot.XYPlot#drawBackground(java.awt.Graphics2D,
+   *      java.awt.geom.Rectangle2D)
+   */
+  public void drawBackground( final Graphics2D g2d, final Rectangle2D rec )
+  {
+    super.drawBackground( g2d, rec );
+
+    for( final Iterator it = m_yConsts.keySet().iterator(); it.hasNext(); )
+    {
+      final ValueAndColor vac = (ValueAndColor) m_yConsts.get( it.next() );
+
+      drawHorizontalLine( g2d, rec, vac.value, g2d.getStroke(), vac.color );
     }
   }
 
@@ -380,8 +423,6 @@ public class ObservationPlot extends XYPlot
   }
 
   /**
-   * TODO: also use the direction to find out best AxisLocation...
-   *  
    * @param diagAxis
    * @return location according to axis
    */
@@ -389,34 +430,55 @@ public class ObservationPlot extends XYPlot
   {
     if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
     {
-      if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_LEFT ) )
-        return AxisLocation.BOTTOM_OR_LEFT;
-      else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_RIGHT ) )
-        return AxisLocation.BOTTOM_OR_RIGHT;
+      //if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_LEFT ) )
+      return AxisLocation.BOTTOM_OR_LEFT;
+      //else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_RIGHT ) )
+      //  return AxisLocation.BOTTOM_OR_RIGHT;
     }
     else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_TOP ) )
     {
-      if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_LEFT ) )
-        return AxisLocation.TOP_OR_LEFT;
-      else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_RIGHT ) )
-        return AxisLocation.TOP_OR_RIGHT;
+      //if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_LEFT ) )
+      return AxisLocation.TOP_OR_LEFT;
+      //else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_RIGHT ) )
+      //  return AxisLocation.TOP_OR_RIGHT;
     }
     else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_LEFT ) )
     {
-      if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
-        return AxisLocation.BOTTOM_OR_LEFT;
-      else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_TOP ) )
-        return AxisLocation.TOP_OR_LEFT;
+      //if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
+      //  return AxisLocation.BOTTOM_OR_LEFT;
+      //else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_TOP ) )
+      return AxisLocation.TOP_OR_LEFT;
     }
     else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_RIGHT ) )
     {
-      if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
-        return AxisLocation.BOTTOM_OR_RIGHT;
-      else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_TOP ) )
-        return AxisLocation.TOP_OR_RIGHT;
+      //if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
+      //  return AxisLocation.BOTTOM_OR_RIGHT;
+      //else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_TOP ) )
+      return AxisLocation.TOP_OR_RIGHT;
     }
 
     // default
     return AxisLocation.BOTTOM_OR_LEFT;
+  }
+
+  /**
+   * mini helper class for storing a value and a color
+   * 
+   * @author schlienger
+   */
+  private final static class ValueAndColor
+  {
+    final double value;
+
+    final Color color;
+
+    final String label;
+
+    public ValueAndColor( final String lbl, final double val, final Color col )
+    {
+      this.label = lbl;
+      this.value = val;
+      this.color = col;
+    }
   }
 }

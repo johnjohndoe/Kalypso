@@ -186,8 +186,9 @@ public class SimpleObservation implements IObservation
         for( final Iterator it = kset.iterator(); it.hasNext(); )
         {
           final IAxis myA = (IAxis)it.next();
-
-          final Object obj = values.getElement( i, (IAxis)map.get( myA ) );
+          final IAxis oA = (IAxis)map.get( myA );
+          
+          final Object obj = values.getElement( i, oA );
           m_tupples.setElement( ixPresent, obj, myA );
         }
       }

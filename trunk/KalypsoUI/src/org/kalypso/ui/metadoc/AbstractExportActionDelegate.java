@@ -17,7 +17,7 @@ import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.proxy.DocBean;
 import org.kalypso.services.proxy.IMetaDocService;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.obstableeditor.actions.AbstractEditorActionDelegate;
+import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 
 /**
  * AbstractExportActionDelegate

@@ -2,17 +2,12 @@ package org.kalypso.ui.editor.obstableeditor;
 
 import java.awt.Frame;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Iterator;
 
 import javax.swing.JScrollPane;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
@@ -20,10 +15,6 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
-import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
 import org.kalypso.ogc.sensor.tableview.ObservationTableTemplateFactory;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
@@ -31,9 +22,7 @@ import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
-import org.kalypso.ogc.sensor.zml.ZmlObservation;
 import org.kalypso.template.obstableview.ObstableviewType;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 
 /**
@@ -69,7 +58,15 @@ public class ObservationTableEditor extends AbstractEditorPart implements
   {
     return m_table;
   }
-
+  
+  /**
+   * @return Returns the template.
+   */
+  public LinkedTableViewTemplate getTemplate( )
+  {
+    return m_template;
+  }
+  
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -80,7 +77,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
         | SWT.EMBEDDED ) );
-    
+
     m_model = new ObservationTableModel();
     m_model.setRules( m_template );
     m_table = new ObservationTable( m_model );
@@ -90,7 +87,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
 
     final JScrollPane pane = new JScrollPane( m_table );
     vFrame.add( pane );
-    
+
     vFrame.setVisible( true );
     //m_table.setVisible( true );
   }
@@ -146,57 +143,8 @@ public class ObservationTableEditor extends AbstractEditorPart implements
   protected void doSaveInternal( IProgressMonitor monitor,
       IFileEditorInput input ) throws CoreException
   {
-    MessageDialog.openConfirm( getSite().getShell(), "Daten speichern?", "Wollen sie auch die grundliegende Daten" );
-    
-    final Collection themes = m_template.getThemes();
-
-    for( final Iterator it = themes.iterator(); it.hasNext(); )
-    {
-      final ITableViewTheme theme = (ITableViewTheme) it.next();
-
-      boolean dirty = false;
-
-      for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
-      {
-        dirty = ((ITableViewColumn) itcol.next()).isDirty();
-
-        // at least one col dirty?
-        if( dirty )
-          break;
-      }
-
-      final IObservation obs = theme.getObservation();
-
-      if( dirty && obs instanceof ZmlObservation )
-      {
-        final String msg = "Sie haben Änderungen in " + obs.getName()
-            + " vorgenommen. Wollen \n" + "Sie die Änderungen übernehmen?";
-
-        final boolean b = MessageDialog.openQuestion( getSite().getShell(),
-            "Änderungen speichern", msg );
-
-        if( b )
-        {
-          for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
-            ((ITableViewColumn) itcol.next()).setDirty( false );
-
-          final ITuppleModel values = m_model.getValues( theme.getColumns() );
-
-          try
-          {
-            obs.setValues( values );
-
-            m_template.saveObservation( obs, monitor );
-          }
-          catch( Exception e )
-          {
-            e.printStackTrace();
-            throw new CoreException( new Status( IStatus.ERROR,
-                KalypsoGisPlugin.getId(), 0, "ZML speichern", e ) );
-          }
-        }
-      }
-    }
+    // TODO Vorlage speichern
+    System.out.println( "TODO: Vorlage auch speichern..." );
   }
 
   /**
@@ -215,7 +163,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
       if( storage instanceof TemplateStorage )
       {
         final TemplateStorage ts = (TemplateStorage) storage;
-        Thread.sleep(500);
+        Thread.sleep( 500 );
         m_template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
             "zml", false, null );
       }

@@ -6,8 +6,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -16,8 +19,8 @@ import org.kalypso.ui.KalypsoGisPlugin;
 /**
  * @author schlienger
  */
-public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage implements
-    ModellEventListener
+public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
+    implements ModellEventListener
 {
   /** Der Titel der Seite */
   public static final String PROP_MAPTITLE = "mapTitle";
@@ -36,7 +39,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
   private SashForm m_sashForm = null;
 
-  public ObservationMapTableDiagWizardPage()
+  public ObservationMapTableDiagWizardPage( )
   {
     super( "<ObservationMapTableDiagWizardPage>" );
   }
@@ -51,14 +54,14 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       m_sashForm = new SashForm( parent, SWT.HORIZONTAL );
       createMapPanel( m_sashForm );
       createRightPanel( m_sashForm );
-      
+
       m_sashForm.addControlListener( getControlAdapter() );
 
       setControl( m_sashForm );
 
       parent.getDisplay().asyncExec( new Runnable()
       {
-        public void run()
+        public void run( )
         {
           maximizeMap();
         }
@@ -70,15 +73,18 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
       IStatus status;
       if( e instanceof CoreException )
-        status = ( (CoreException)e ).getStatus();
+        status = ((CoreException) e).getStatus();
       else
-        status = KalypsoGisPlugin.createErrorStatus( e.getLocalizedMessage(), e );
+        status = KalypsoGisPlugin
+            .createErrorStatus( e.getLocalizedMessage(), e );
 
-      ErrorDialog.openError( null, "Fehler", "Fehler beim Erzeugen der Wizard-Seite", status );
+      ErrorDialog.openError( null, "Fehler",
+          "Fehler beim Erzeugen der Wizard-Seite", status );
     }
   }
 
-  private void createRightPanel( final SashForm sashForm ) throws NumberFormatException
+  private void createRightPanel( final SashForm sashForm )
+      throws NumberFormatException
   {
     final Composite rightPanel = new Composite( sashForm, SWT.NONE );
 
@@ -88,22 +94,18 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
     final SashForm rightSash = new SashForm( rightPanel, SWT.VERTICAL );
     rightSash.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    
+
     createTablePanel( rightSash );
     createDiagramPanel( rightSash );
 
-    final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
-    final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
+    final int mainWeight = Integer.parseInt( getArguments().getProperty(
+        PROP_MAINSASH, "50" ) );
+    final int rightWeight = Integer.parseInt( getArguments().getProperty(
+        PROP_RIGHTSASH, "50" ) );
 
-    sashForm.setWeights( new int[]
-    {
-        mainWeight,
-        100 - mainWeight } );
+    sashForm.setWeights( new int[] { mainWeight, 100 - mainWeight } );
 
-    rightSash.setWeights( new int[]
-    {
-        rightWeight,
-        100 - rightWeight } );
+    rightSash.setWeights( new int[] { rightWeight, 100 - rightWeight } );
 
     // die Karte soll immer maximiert sein
     rightSash.addControlListener( getControlAdapter() );
@@ -117,14 +119,32 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
   private void createTablePanel( final Composite parent )
   {
     initDiagramTable( parent );
+
+    final Button btnSave = new Button( parent, SWT.PUSH );
+    btnSave.setText( "Daten speichern" );
+    btnSave.setToolTipText( "Speichert die grundliegende Dateien" );
+    btnSave.addSelectionListener( new SelectionListener()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        saveDirtyObservations();
+      }
+
+      public void widgetDefaultSelected( SelectionEvent e )
+      {
+        // empty
+      }
+    } );
   }
 
-  private void createMapPanel( final Composite parent ) throws Exception, CoreException
+  private void createMapPanel( final Composite parent ) throws Exception,
+      CoreException
   {
     final Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayout( new GridLayout() );
-    
-    final Control mapControl = initMap( composite, MapPanel.WIDGET_SINGLE_SELECT);
+
+    final Control mapControl = initMap( composite,
+        MapPanel.WIDGET_SINGLE_SELECT );
     final GridData gridData = new GridData( GridData.FILL_BOTH );
     mapControl.setLayoutData( gridData );
   }
@@ -132,7 +152,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
   /**
    * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#performFinish()
    */
-  public boolean performFinish()
+  public boolean performFinish( )
   {
     return true;
   }
@@ -140,8 +160,8 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
   /**
    * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#getObservationsToShow()
    */
-  protected TSLinkWithName[] getObservationsToShow()
+  protected TSLinkWithName[] getObservationsToShow( )
   {
-    return getObservationsFromMap(false);
+    return getObservationsFromMap( false );
   }
 }
