@@ -3,6 +3,9 @@
 <project name="KalypsoCore-binding" default="deploy">
   <description>Erzeugt die Binding-Klassen aus den Schemata</description>
 
+
+  <property environment="ENV"/>
+
   <property name="build" value="${java.io.tmpdir}/KalypsoCoreBindingTmpDir" />
   <property name="build.source" value="${build}/src" />
   <property name="build.compile" value="${build}/compile" />
@@ -10,10 +13,8 @@
   <property name="lib.dir" value="../../lib" />
   <property name="dest.file.name" value="coreBinding.jar" />
 
-  <property name="jwsdp.root" value="/opt/jwsdp-1.4" />
-
   <path id="cpref">
-    <fileset dir="${jwsdp.root}">
+    <fileset dir="${ENV.JWSDP_HOME}">
       <include name="jaxb/lib/*.jar" />
       <include name="jaxp/**/*.jar" />
       <include name="jwsdp-shared/lib/**/*.jar" />
@@ -25,7 +26,18 @@
            classpathref="cpref"
   />
 
-  <target name="init" description="erzeugt die Build-Verzeichnisse">
+  <target name="error-jwsdp"
+          description="Shows an error message, if the JWSDP_HOME environment variable is not set"
+          unless="ENV.JWSDP_HOME"
+  >
+    <echo message="The JWSDP_ENVIRONMENT Variable MUST be set in order to run this script"
+    />
+  </target>
+
+  <target name="init"
+          depends="error-jwsdp"
+          description="erzeugt die Build-Verzeichnisse"
+  >
     <mkdir dir="${build.source}" />
     <mkdir dir="${build.compile}" />
   </target>
@@ -36,11 +48,8 @@
     </delete>
   </target>
 
-  <target name="generate"
-          depends="init"
-          description="erzeugt die sourcen"
-  >
-    <echo message="Generating binding sources..."/>
+  <target name="generate" depends="init" description="erzeugt die sourcen">
+    <echo message="Generating binding sources..." />
     <xjc target="${build.source}">
       <!-- TODO: check if depends/produces really do work - I'm in doubt! (Gernot) -->
       <schema dir=".">
@@ -58,8 +67,11 @@
   </target>
 
   <!-- depends="generate-source" -->
-  <target name="compile" depends="generate" description="compiles the generated sources">
-    <echo message="Compiling binding classes"/>
+  <target name="compile"
+          depends="generate"
+          description="compiles the generated sources"
+  >
+    <echo message="Compiling binding classes" />
     <javac debug="false"
            destdir="${build.compile}"
            optimize="on"
@@ -70,7 +82,7 @@
   </target>
 
   <target name="deploy" depends="compile" description="package jar">
-    <echo message="Packaging binding classes"/>
+    <echo message="Packaging binding classes" />
     <jar destfile="${lib.dir}/${dest.file.name}"
          basedir="${build.compile}"
          includes="**/*"
