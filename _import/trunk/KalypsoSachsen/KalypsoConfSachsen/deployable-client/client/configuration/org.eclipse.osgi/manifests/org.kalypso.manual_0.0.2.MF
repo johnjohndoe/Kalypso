@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Generated-from: 1105712753512;type=2
+Bundle-Name: Kalypso - Manual
+Bundle-SymbolicName: org.kalypso.manual; singleton=true
+Bundle-Version: 0.0.2
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.help
+Eclipse-AutoStart: true

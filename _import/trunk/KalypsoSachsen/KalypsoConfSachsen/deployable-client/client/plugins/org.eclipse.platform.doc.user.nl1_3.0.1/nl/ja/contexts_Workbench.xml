@@ -1,0 +1,1187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+    <!-- Actions -->
+    <context id="add_bookmark_action_context">
+        <description><b>ブックマーク</b>は、ワークベンチ・リソース内の特定の行に「アンカー」を配置します。</description>
+        <topic label="ブックマークの追加" href="tasks/tasks-81.htm"/>
+        <topic label="ブックマーク" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="add_task_action_context">
+        <description><b>タスク</b>はワークベンチ・リソース内の特定の行に「アンカー」を配置します。</description>
+        <topic label="タスクの追加" href="tasks/tasks-77b.htm"/>
+        <topic label="「タスク」ビュー" href="concepts/ctskview.htm"/>
+    </context>
+    <context id="incremental_build_action_context">
+        <description><b>インクリメンタル・ビルド</b>は、選択されたプロジェクト内で、最後のビルド以降に変更されたリソースのみをコンパイルします。</description>
+        <topic label="「ナビゲーター」ビュー - すべて再ビルド" href="reference/ref-27.htm"/>
+        <topic label="ビルド" href="concepts/concepts-22.htm"/>
+        <topic label="リソースのビルド" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="full_build_action_context">
+        <description><b>フル・ビルド</b>は、スクラッチから選択されたプロジェクト内のリソースをコンパイルします。
+この種類のビルドは、手動ビルドが行われたときにのみ実行されます。</description>
+        <topic label="「ナビゲーター」ビュー - すべて再ビルド" href="reference/ref-27.htm"/>
+        <topic label="ビルド" href="concepts/concepts-22.htm"/>
+        <topic label="リソースのビルド" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="global_incremental_build_action_context">
+        <description>インクリメンタル・ビルドは、最後のビルド以降に変更されたリソースのみをコンパイルします。</description>
+        <topic label="ビルド" href="concepts/concepts-22.htm"/>
+        <topic label="リソースのビルド" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="global_full_build_action_context">
+        <description><b>フル・ビルド</b>は、ワークベンチ全体を最初からコンパイルします。
+この種類のビルドは、手動ビルドが行われたときにのみ実行されます。</description>
+        <topic label="ビルド" href="concepts/concepts-22.htm"/>
+        <topic label="リソースのビルド" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="close_resource_action_context">
+        <description>選択されたリソースを閉じます。</description>
+        <topic label="リソースを閉じる" href="tasks/tasks-47.htm"/>
+        <topic label="「ナビゲーター」ビュー - 閉じる" href="reference/ref-27.htm"/>
+    </context>
+    <context id="open_resource_action_context">
+        <description>選択されたリソースを開きます。</description>
+        <topic label="リソースを開く" href="tasks/tasks-46.htm"/>
+        <topic label="「ナビゲーター」ビュー - 開く" href="reference/ref-27.htm"/>
+    </context>
+    <context id="open_file_action_context">
+        <description>選択されたリソースを、エディター・エリアまたは指定された外部エディターで開きます。</description>
+        <topic label="「ナビゲーター」ビュー - アプリケーションから開く..." href="reference/ref-27.htm"/>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="open_system_editor_action_context">
+        <description>選択されたリソースを、このファイル・タイプでデフォルトのシステム・エディターで開きます。
+</description>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+        <topic label="外部でのファイルの編集" href="tasks/tasks-52.htm"/>
+    </context>
+    <context id="refresh_action_context">
+        <description>ビューの内容および表示を最新にします。</description>
+        <topic label="「ナビゲーター」ビュー - 更新" href="reference/ref-27.htm"/>
+    </context>
+    <context id="move_resource_action_context">
+        <description>このコマンドで、あるロケーションから他のロケーションにリソースを移動できます。
+</description>
+        <topic label="リソースの移動" href="tasks/tasks-63.htm"/>
+        <topic label="「ナビゲーター」ビュー - 移動" href="reference/ref-27.htm"/>
+    </context>
+    <context id="copy_resource_action_context">
+        <description>このコマンドで、あるロケーションから他のロケーションにリソースをコピーできます。
+</description>
+        <topic label="「ナビゲーター」ビュー - コピー" href="reference/ref-27.htm"/>
+    </context>
+    <context id="move_project_action_context">
+        <description>このコマンドで、あるロケーションから他のロケーションにプロジェクトを移動できます。
+</description>
+        <topic label="リソースの移動" href="tasks/tasks-63.htm"/>
+        <topic label="「ナビゲーター」ビュー - 移動" href="reference/ref-27.htm"/>
+    </context>
+    <context id="copy_project_action_context">
+        <description>このコマンドで、あるロケーションから他のロケーションにプロジェクトをコピーできます。
+</description>
+        <topic label="「ナビゲーター」ビュー - コピー" href="reference/ref-27.htm"/>
+    </context>
+    <context id="rename_resource_action_context">
+        <description>このコマンドで、選択されたリソースに新しい名前を指定できます。</description>
+        <topic label="リソースの名前変更" href="tasks/tasks-66.htm"/>
+        <topic label="「ナビゲーター」ビュー - 名前変更" href="reference/ref-27.htm"/>
+    </context>
+    <context id="delete_resource_action_context">
+        <description>このコマンドで、選択されたリソースを削除できます。</description>
+        <topic label="リソースの削除" href="tasks/tasks-67.htm"/>
+        <topic label="「ナビゲーター」ビュー - 削除" href="reference/ref-27.htm"/>
+    </context>
+    <context id="delete_retarget_action_context">
+        <description>このコマンドは、選択されたリソースまたはエレメントを削除します。</description>
+        <topic label="リソースの削除" href="tasks/tasks-67.htm"/>
+        <topic label="「ナビゲーター」ビュー - 削除" href="reference/ref-27.htm"/>
+    </context>
+    <context id="property_dialog_action_context">
+        <description>このコマンドは、選択されたリソースのさまざまなプロパティーを表示します。</description>
+        <topic label="リソース・プロパティーの表示" href="tasks/tasks-49.htm"/>
+        <topic label="「ナビゲーター」ビュー - プロパティー" href="reference/ref-27.htm"/>
+    </context>
+    <context id="project_property_dialog_action_context">
+        <description>このコマンドは、選択されたリソースのさまざまなプロジェクト・プロパティーを表示します。</description>
+        <topic label="プロジェクト・メニュー - プロパティー" href="reference/ref-59.htm"/>
+        <topic label="リソース・プロパティーの表示" href="tasks/tasks-49.htm"/>
+    </context>
+    <context id="create_folder_action_context">
+        <description>このコマンドで、新規フォルダー・コンテナーを作成できます。</description>
+        <topic label="リソース" href="concepts/concepts-12.htm"/>
+        <topic label="リソースの作成 - フォルダー" href="tasks/tasks-43.htm"/>
+        <topic label="「新規フォルダー」ウィザード" href="reference/ref-38.htm"/>
+    </context>
+    <context id="create_file_action_context">
+        <description>このコマンドで、新規ファイルを作成できます。</description>
+        <topic label="リソース" href="concepts/concepts-12.htm"/>
+        <topic label="リソースの作成 - ファイル" href="tasks/tasks-44.htm"/>
+        <topic label="「新規ファイル」ウィザード" href="reference/ref-39.htm"/>
+    </context>
+    <context id="new_action_context">
+        <description>このコマンドで、リソースなどの新しい項目を作成できます。
+</description>
+        <topic label="リソース" href="concepts/concepts-12.htm"/>
+        <topic label="ワークベンチの「新規」ウィザード" href="reference/ref-37.htm"/>
+    </context>
+    <context id="import_action_context">
+        <description>このコマンドで、リソースをインポートできます。</description>
+        <topic label="インポート" href="tasks/tasks-53.htm"/>
+        <topic label="ディレクトリーからインポート" href="tasks/tasks-55.htm"/>
+        <topic label="ZIP ファイルからのインポート" href="tasks/tasks-55bg.htm"/>
+        <topic label="「ファイル」メニュー - インポート" href="reference/ref-56.htm"/>
+    </context>
+    <context id="export_action_context">
+        <description>このコマンドで、リソースをエクスポートできます。</description>
+        <topic label="エクスポート" href="tasks/tasks-57.htm"/>
+        <topic label="ファイル・システムへのエクスポート" href="tasks/tasks-59.htm"/>
+        <topic label="ZIP ファイルへのエクスポート" href="tasks/tasks-59ag.htm"/>
+        <topic label="「ファイル」メニュー - エクスポート" href="reference/ref-56.htm"/>
+    </context>
+    <context id="scrub_local_action_context">
+        <description>ワークベンチがビルドを準備しています。</description>
+        <topic label="ビルド" href="concepts/concepts-22.htm"/>
+    </context>
+    <context id="set_page_action_context">
+        <description>このコマンドは、ワークベンチを最新表示します。</description>
+        <topic label="「ナビゲーター」ビュー - 更新" href="reference/ref-27.htm"/>
+    </context>
+    <context id="save_perspective_action_context">
+        <description>このメニュー・オプションで、現行パースペクティブを、定義されたパースペクティブとして保管できます。</description>
+        <topic label="パースペクティブ" href="concepts/concepts-4.htm"/>
+        <topic label="パースペクティブの保管" href="tasks/tasks-9i.htm"/>
+        <topic label="「ウィンドウ」メニュー - パースペクティブの別名保管" href="reference/ref-60.htm"/>
+    </context>
+    <context id="save_as_action_context">
+        <description>このコマンドで、編集中のリソースを他のワークベンチ・ロケーションに保管できます。</description>
+        <topic label="「ファイル」メニュー - 別名保管" href="reference/ref-56.htm"/>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="save_all_action_context">
+        <description>このコマンドで、エディター・エリアで開いているすべてのリソースを一度に保管できます。</description>
+        <topic label="「ファイル」メニュー - すべて保管" href="reference/ref-56.htm"/>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="save_action_context">
+        <description>このコマンドは、エディター・エリアで現在アクティブになっているリソースを保管します。</description>
+        <topic label="「ファイル」メニュー - 保管" href="reference/ref-56.htm"/>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="about_action_context">
+        <description>このコマンドは製品情報を表示します。</description>
+        <topic label="「ヘルプ」メニュー - バージョン情報" href="reference/ref-61.htm"/>
+    </context>
+    <context id="close_all_action_context">
+        <description>このコマンドは、エディター・エリアで現在開いているすべてのエディターを閉じます。</description>
+        <topic label="「ファイル」メニュー - すべて閉じる" href="reference/ref-56.htm"/>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="close_page_action_context">
+        <description>このコマンドはアクティブ・パースペクティブを閉じます。</description>
+        <topic label="パースペクティブ - 概念" href="concepts/concepts-4.htm"/>
+        <topic label="「ウィンドウ」メニュー - パースペクティブを閉じる" href="reference/ref-60.htm"/>
+        <topic label="パースペクティブ - 参照" href="reference/ref-6.htm"/>
+    </context>
+    <context id="close_part_action_context">
+        <description>このコマンドは、現在アクティブとなっているエディターを閉じます。</description>
+        <topic label="「ファイル」メニュー - 閉じる" href="reference/ref-56.htm"/>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="edit_action_sets_action_context">
+        <description>このコマンドで、ワークベンチのメニュー・バーおよびツールバーで選択可能なアクション・セットをカスタマイズできます。</description>
+        <topic label="パースペクティブの構成" href="tasks/tasks-9k.htm"/>
+        <topic label="「ウィンドウ」メニュー - パースペクティブのカスタマイズ" href="reference/ref-60.htm"/>
+    </context>
+    <context id="edit_perspectives_action_context">
+        <description>このコマンドで、定義されたパースペクティブの削除またはリセット、あるいはデフォルトのパースペクティブの定義ができます。</description>
+        <topic label="パースペクティブ - 概念" href="concepts/concepts-4.htm"/>
+        <topic label="パースペクティブを開く場所を変更" href="tasks/tasks-24.htm"/>
+        <topic label="パースペクティブ - 参照" href="reference/ref-6.htm"/>
+    </context>
+    <context id="close_all_pages_action_context">
+        <description>現在開いているすべてのパースペクティブを閉じます。</description>
+        <topic label="パースペクティブ - 概念" href="concepts/concepts-4.htm"/>
+        <topic label="「ウィンドウ」メニュー - すべてのパースペクティブを閉じる" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_new_page_action_context">
+        <description>新しいページを開きます。</description>
+        <topic label="パースペクティブ - 概念" href="concepts/concepts-4.htm"/>
+        <topic label="新規パースペクティブ" href="tasks/tasks-9f.htm"/>
+        <topic label="「ウィンドウ」メニュー - パースペクティブを開く" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_preferences_action_context">
+        <description>設定ダイアログを開きます。</description>
+        <topic label="ワークベンチ - 設定" href="reference/ref-10.htm"/>
+    </context>
+    <context id="open_new_window_action_context">
+        <description>新規ウィンドウを開きます。</description>
+        <topic label="パースペクティブを開く" href="tasks/tasks-9f.htm"/>
+        <topic label="パースペクティブを開く場所を変更" href="tasks/tasks-24.htm"/>
+        <topic label="ワークベンチ" href="concepts/concepts-2.htm"/>
+        <topic label="パースペクティブ" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="open_new_action_context">
+        <description>新規パースペクティブを開きます。</description>
+        <topic label="パースペクティブ - 概念" href="concepts/concepts-4.htm"/>
+        <topic label="新規パースペクティブを開く" href="tasks/tasks-24.htm"/>
+        <topic label="「ウィンドウ」メニュー - パースペクティブを開く" href="reference/ref-60.htm"/>
+    </context>
+    <context id="next_page_action_context">
+        <description>次のオープン・パースペクティブを表示します。</description>
+        <topic label="パースペクティブ - 概念" href="concepts/concepts-4.htm"/>
+        <topic label="パースペクティブを開く場所を変更" href="tasks/tasks-24.htm"/>
+    </context>
+    <context id="quick_start_action_context">
+        <description>「ようこそ」エディターを開きます。</description>
+        <topic label="「ヘルプ」メニュー - ようこそ" href="reference/ref-61.htm"/>
+    </context>
+    <context id="tips_and_tricks_action_context">
+        <description>ヒント・ヘルプ・ページを開きます。</description>
+        <topic label="ヘルプ・メニュー - ヒント" href="reference/ref-61.htm"/>
+    </context>
+    <context id="quit_action_context">
+        <description>ワークスペースを保管して、終了します。</description>
+        <topic label="「ファイル」メニュー - 終了" href="reference/ref-56.htm"/>
+    </context>
+    <context id="reset_perspective_action_context">
+        <description>パースペクティブをオリジナル (デフォルト) のレイアウトにリセットします。</description>
+        <topic label="パースペクティブ" href="concepts/concepts-4.htm"/>
+        <topic label="パースペクティブのリセット" href="tasks/tasks-9j.htm"/>
+        <topic label="「ウィンドウ」メニュー - パースペクティブのリセット" href="reference/ref-60.htm"/>
+    </context>
+    <context id="target_editors_visibility_action_context">
+        <description>エディター・エリアを表示/非表示できます。エディター・エリアを非表示にすることで、他のビューの表示に必要なエリアを拡大できます。</description>
+        <topic label="「ウィンドウ」メニュー - エディターの表示/非表示" href="reference/ref-60.htm"/>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="switch_to_perspective_action_context">
+        <description>ユーザーが選択した新規パースペクティブを開きます。</description>
+        <topic label="パースペクティブ - 概念" href="concepts/concepts-4.htm"/>
+        <topic label="パースペクティブ間の切り替え" href="tasks/tasks-28.htm"/>
+        <topic label="「ウィンドウ」メニュー - パースペクティブを開く" href="reference/ref-60.htm"/>
+        <topic label="パースペクティブ - 参照" href="reference/ref-6.htm"/>
+    </context>
+    <context id="show_view_action_context">
+        <description>ユーザーが選択したビューを表示します。</description>
+        <topic label="ビューの表示" href="tasks/tasks-3.htm"/>
+        <topic label="「ウィンドウ」メニュー - ビューの表示" href="reference/ref-60.htm"/>
+    </context>
+    <context id="show_view_other_action_context">
+        <description>表示するビューを選択するためのダイアログを開きます。</description>
+        <topic label="ビューの表示" href="tasks/tasks-3.htm"/>
+        <topic label="「ウィンドウ」メニュー - ビューの表示" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_perspective_action_context">
+        <description>選択されたパースペクティブを開きます。</description>
+        <topic label="パースペクティブを開く" href="tasks/tasks-9f.htm"/>
+        <topic label="「ウィンドウ」メニュー - パースペクティブを開く" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_perspective_other_action_context">
+        <description>開くパースペクティブを選択するためのダイアログを開きます。</description>
+        <topic label="パースペクティブを開く" href="tasks/tasks-9f.htm"/>
+        <topic label="「ウィンドウ」メニュー - パースペクティブを開く" href="reference/ref-60.htm"/>
+    </context>
+    <context id="remove_bookmark_action_context">
+        <description>ブックマークを除去します。</description>
+        <topic label="ブックマークの削除" href="tasks/tasks-82.htm"/>
+        <topic label="ブックマーク" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="open_bookmark_action_context">
+        <description>ブックマークのあるリソースを開きます。</description>
+        <topic label="ブックマーク" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="select_all_bookmark_action_context">
+        <description>すべてのブックマークを選択します。</description>
+        <topic label="ブックマーク" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="filter_selection_action_context">
+        <description>このコマンドで、リソース・ナビゲーターに表示されている型をフィルターできます。</description>
+        <topic label="「ナビゲーター」ビュー - フィルター" href="reference/ref-27.htm"/>
+    </context>
+    <context id="goto_resource_action_context">
+        <description>選択されたリソースへジャンプします。</description>
+        <topic label="「ナビゲーター」ビュー - ジャンプ" href="reference/ref-27.htm"/>
+    </context>
+    <context id="resource_navigator_move_action_context">
+        <description>選択されたリソースを他のロケーションに移動します。</description>
+        <topic label="リソースの移動" href="tasks/tasks-63.htm"/>
+        <topic label="「ナビゲーター」ビュー - 移動" href="reference/ref-27.htm"/>
+    </context>
+    <context id="resource_navigator_rename_action_context">
+        <description>選択されたリソースの名前を変更します。</description>
+        <topic label="リソースの名前変更" href="tasks/tasks-66.htm"/>
+        <topic label="「ナビゲーター」ビュー - 名前変更" href="reference/ref-27.htm"/>
+    </context>
+    <context id="show_in_navigator_action_context">
+        <description>選択されたリソースを「ナビゲーター」ビューに表示します。</description>
+        <topic label="リソース" href="concepts/concepts-12.htm"/>
+        <topic label="「ナビゲーター」ビュー" href="reference/ref-27.htm"/>
+    </context>
+    <context id="sort_view_action_context">
+        <description>このコマンドは、リソース・ナビゲーターに表示されている型のソート順を変更します。
+</description>
+        <topic label="リソースのソート" href="tasks/tasks-48.htm"/>
+        <topic label="「ナビゲーター」ビュー - ソート" href="reference/ref-27.htm"/>
+    </context>
+    <context id="properties_categories_action_context">
+        <description>カテゴリーに従ってグループ化されたプロパティー値を表示します。</description>
+        <topic label="「プロパティー」ビュー" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="properties_defaults_action_context">
+        <description>選択されたプロパティーの値をデフォルト値に設定します。</description>
+        <topic label="「プロパティー」ビュー" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="properties_filter_action_context">
+        <description>フィルター・プロパティー</description>
+        <topic label="「プロパティー」ビュー" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="purge_completed_task_action_context">
+        <description>すべての完了したタスクをリストから除去します。</description>
+        <topic label="タスクの削除" href="tasks/tasks-78.htm"/>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="new_task_action_context">
+        <description>新規タスクを作成します。</description>
+        <topic label="関連付けられていないタスクの追加" href="tasks/tasks-77.htm"/>
+        <topic label="関連付けられたタスクの追加" href="tasks/tasks-77b.htm"/>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="remove_task_action_context">
+        <description>タスクをこのリストから除去します。</description>
+        <topic label="タスクの削除" href="tasks/tasks-78.htm"/>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="goto_task_action_context">
+        <description>タスクに関連付けられたリソースを開きます。</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="undo_action_context">
+        <description>直前の編集を元に戻します。</description>
+        <topic label="「編集」メニュー - 元に戻す" href="reference/ref-57.htm"/>
+    </context>
+    <context id="redo_action_context">
+        <description>直前の編集をやり直します。</description>
+        <topic label="「編集」メニュー - やり直し" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cut_action_context">
+        <description>選択されたテキストをクリップボードに切り取ります。</description>
+        <topic label="「編集」メニュー - 切り取り" href="reference/ref-57.htm"/>
+    </context>
+    <context id="copy_action_context">
+        <description>選択内容をクリップボードにコピーします。</description>
+        <topic label="「編集」メニュー - コピー" href="reference/ref-57.htm"/>
+    </context>
+    <context id="paste_action_context">
+        <description>クリップボードの内容を現行カーソル位置に貼り付けます。</description>
+        <topic label="「編集」メニュー - 貼り付け" href="reference/ref-57.htm"/>
+    </context>
+    <context id="delete_action_context">
+        <description>選択範囲を削除します。</description>
+        <topic label="「編集」メニュー - 削除" href="reference/ref-57.htm"/>
+    </context>
+    <context id="selectAll_action_context">
+        <description>ファイルのすべての内容を選択します。</description>
+        <topic label="「編集」メニュー - すべて選択" href="reference/ref-57.htm"/>
+    </context>
+    <context id="ShiftLeft_action_context">
+        <description>選択されたテキストを左へシフトし、インデントを縮小します。</description>
+    </context>
+    <context id="ShiftRight_action_context">
+        <description>選択されたテキストを右へシフトし、インデントを拡大します。</description>
+    </context>
+    <context id="find_action_context">
+        <description>エディター内の検索に使うテキストを指定するためのダイアログを表示します。</description>
+        <topic label="「編集」メニュー - 検索/置換" href="reference/ref-57.htm"/>
+    </context>
+    <context id="bookmark_action_context">
+        <description>このリソース上にブックマークを追加します。</description>
+        <topic label="「編集」メニュー - ブックマークの追加" href="reference/ref-57.htm"/>
+    </context>
+    <context id="addTask_action_context">
+        <description>このリソースに関連付けられたタスクを追加します。</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="revert_action_context">
+        <description>保管済みに戻す</description>
+    </context>
+    <context id="GotoLine_action_context">
+        <description>指定された行の先頭にカーソル位置を置きます。</description>
+    </context>
+    <context id="open_workspace_file_action_context">
+        <description>指定されたリソース上にエディターを開きます。</description>
+        <topic label="ナビゲート・メニュー - リソースを開く" href="reference/ref-58.htm"/>
+    </context>
+    <context id="print_action_context">
+        <description>このコマンドは、エディター・エリアで現在アクティブになっているリソースを印刷します。</description>
+    </context>
+    <context id="select_working_set_action_context">
+        <description>リストからアクティブにするワーキング・セットを選択します。</description>
+    </context>
+    <context id="clear_working_set_action_context">
+        <description>アクティブなワーキング・セットを選択解除します。</description>
+    </context>
+    <context id="edit_working_set_action_context">
+        <description>アクティブなワーキング・セットの内容を編集します。</description>
+    </context>
+    <context id="show_in_action_context">
+        <description>指定されたビュー内の現在の選択を表示します。</description>
+    </context>
+    <context id="navigation_history_forward">
+        <description>ナビゲーション・ヒストリー内で前方に移動します。</description>
+        <topic label="ナビゲート・メニュー - 前方" href="reference/ref-58.htm"/>
+    </context>
+    <context id="navigation_history_backward">
+        <description>ナビゲーション・ヒストリー内で後方に移動します。</description>
+        <topic label="ナビゲート・メニュー - 後方" href="reference/ref-58.htm"/>
+    </context>
+    <!-- Dialogs -->
+    <context id="about_dialog_context">
+        <description>このダイアログは製品情報を表示します。</description>
+        <topic label="「ヘルプ」メニュー - バージョン情報" href="reference/ref-61.htm"/>
+    </context>
+    <context id="action_set_selection_dialog_context">
+        <description>各パースペクティブには、メニュー・バーおよびワークベンチ・ツールバーからアクセス可能な、事前定義されたアクション・セットが組み込まれています。関連アクションは、アクション・セットにグループ化されます。</description>
+        <topic label="パースペクティブの構成" href="tasks/tasks-9k.htm"/>
+        <topic label="「ウィンドウ」メニュー - パースペクティブのカスタマイズ" href="reference/ref-60.htm"/>
+    </context>
+    <context id="editor_selection_dialog_context">
+        <description>このダイアログで、組み込みおよび外部のさまざまなエディターを、さまざまな型のワークベンチ・リソースに関連付けることができます。</description>
+        <topic label="設定 - ファイルの関連付け" href="reference/ref-13.htm"/>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="file_extension_dialog_context">
+        <description>このダイアログで、識別するファイル・タイプの拡張子を指示します。</description>
+        <topic label="設定 - ファイルの関連付け" href="reference/ref-13.htm"/>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="preference_dialog_context">
+        <description>このダイアログで、ワークベンチの設定を行うことができます。</description>
+        <topic label="「設定」ダイアログ" href="reference/ref-72.htm"/>
+    </context>
+    <context id="property_dialog_context">
+        <description>このダイアログで、選択されたリソースのプロパティーを表示または変更できます。</description>
+        <topic label="「ナビゲーター」ビュー - プロパティー・ページ" href="reference/ref-27.htm"/>
+        <topic label="リソース・プロパティー" href="tasks/tasks-49.htm"/>
+    </context>
+    <context id="save_perspective_dialog_context">
+        <description>ユーザーが指定したパースペクティブを保管するためのダイアログ。</description>
+        <topic label="パースペクティブ" href="concepts/concepts-4.htm"/>
+        <topic label="パースペクティブの保管" href="tasks/tasks-9i.htm"/>
+    </context>
+    <context id="select_perspective_dialog_context">
+        <description>パースペクティブを選択するためのダイアログ。</description>
+        <topic label="パースペクティブ - 概念" href="concepts/concepts-4.htm"/>
+        <topic label="パースペクティブの保管" href="tasks/tasks-9i.htm"/>
+        <topic label="「ウィンドウ」メニュー" href="reference/ref-60.htm"/>
+    </context>
+    <context id="project_location_selection_dialog_context">
+        <description>プロジェクトのロケーションを選択するためのダイアログ。</description>
+    </context>
+    <context id="show_view_dialog_context">
+        <description>表示するビューを選択するためのダイアログ。</description>
+        <topic label="ビューの表示" href="tasks/tasks-3.htm"/>
+    </context>
+    <context id="save_as_dialog_context">
+        <description>保管するリソースの名前およびロケーションを指定するためのダイアログ。</description>
+    </context>
+    <context id="type_filtering_dialog_context">
+        <description>ダイアログを使用してファイル・タイプをフィルターに掛けます。</description>
+        <topic label="「エクスポート」ウィザード" href="reference/ref-71.htm"/>
+        <topic label="「インポート」ウィザード" href="reference/ref-70.htm"/>
+    </context>
+    <context id="container_selection_dialog_context">
+        <description>フォルダーを選択するためのダイアログ。</description>
+    </context>
+    <context id="file_selection_dialog_context">
+        <description>ファイルを選択するためのダイアログ。</description>
+    </context>
+    <context id="list_selection_dialog_context">
+        <description>リストから項目を選択するためのダイアログ。</description>
+    </context>
+    <context id="yes_no_cancel_list_selection_dialog_context">
+        <description>リストからの選択の受け入れ、拒否、またはキャンセルを行うためのダイアログ。</description>
+    </context>
+    <context id="resource_selection_dialog_context">
+        <description>リソースを選択するためのダイアログ。</description>
+    </context>
+    <context id="goto_resource_dialog_context">
+        <description>ワークスペース内で検索するリソースを選択するためのダイアログ。</description>
+    </context>
+    <context id="task_filters_dialog_context">
+        <description>基準に基づいて、タスクを表示/非表示することができるダイアログ。</description>
+        <topic label="タスク・リストのフィルター操作" href="tasks/tasks-79.htm"/>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="find_replace_dialog_context">
+        <description>指定したテキストの検索および置換を行うためのダイアログ。</description>
+		<topic label="使用可能な正規表現" href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html" />
+    </context>
+    <context id="goto_line_dialog_context">
+        <description>カーソルを置く行を指定するためのダイアログ。</description>
+    </context>
+    <!-- Editors -->
+    <context id="welcome_editor_context">
+        <description>新しいユーザーに基本的なタスクのいくつかを紹介する、シンプルなクイック・ガイド。</description>
+        <topic label="「ヘルプ」メニュー" href="reference/ref-61.htm"/>
+    </context>
+    <context id="text_editor_context">
+        <description>テキスト・エディターはファイルの編集に使用します。</description>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="system_summary_editor_context">
+        <description>製品構成の詳細を表示します。</description>
+    </context>
+    <!-- Preference pages -->
+    <context id="file_editors_preference_page_context">
+        <description>この設定ページで、組み込みおよび外部のさまざまなエディターを、さまざまな型のワークベンチ・リソースに関連付けることができます。</description>
+        <topic label="設定 - ファイルの関連付け" href="reference/ref-13.htm"/>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="build_order_preference_page_context">
+        <description>ワークスペース内のプロジェクトのビルド順序を変更できます。</description>
+        <topic label="ビルド順序の変更" href="tasks/tasks-14.htm"/>
+    </context>
+    <context id="file_states_preference_page_context">
+        <description>この設定ページを使用して、ワークベンチのローカル・ファイル・ヒストリーを構成できます。</description>
+        <topic label="ローカル・ヒストリー" href="concepts/concepts-17a.htm"/>
+        <topic label="設定 - ローカル・ヒストリー" href="reference/ref-14.htm"/>
+        <topic label="ナビゲーター - ローカル・ヒストリー" href="reference/ref-27.htm"/>
+    </context>
+    <context id="perspectives_preference_page_context">
+        <description>既存のパースペクティブの状態を設定できます。</description>
+        <topic label="設定 - パースペクティブ" href="reference/ref-15.htm"/>
+        <topic label="パースペクティブ" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="views_preference_page_context">
+        <description>この設定ページを使用して、ワークベンチ内のビューの外観とレイアウトを設定します。</description>
+        <topic label="設定 - 外観" href="reference/ref-16.htm"/>
+        <topic label="ビュー" href="concepts/concepts-5.htm"/>
+    </context>
+    <context id="workbench_preference_page_context">
+        <description>一般的なワークベンチ設定を行うことができます。</description>
+        <topic label="設定 - ワークベンチ" href="reference/ref-10.htm"/>
+    </context>
+    <context id="font_preference_page_context">
+        <description>この設定ページを使用して、ワークベンチ内で使用するフォントを設定します。
+</description>
+        <topic label="設定 - フォント" href="reference/ref-fonts.htm"/>
+    </context>
+    <context id="workbench_editor_preference_page_context">
+        <description>この設定ページを使用して、ワークベンチ内のエディター・エリアの設定を行います。</description>
+        <topic label="設定 - エディター" href="reference/ref-texteditorprefs.htm"/>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="compare_viewers_preference_page_context">
+        <description>この設定ページを使用して、ワークベンチ内のビューアーの比較を設定します。</description>
+        <topic label="設定 - 比較" href="reference/ref-11.htm"/>
+        <topic label="リソースの比較" href="reference/ref-25.htm"/>
+    </context>
+    <!-- Property pages -->
+    <context id="project_reference_property_page_context">
+        <description>参照するプロジェクトを設定できます。</description>
+        <topic label="「ナビゲーター」ビュー - プロパティー・ページ" href="reference/ref-27.htm"/>
+        <topic label="リソース・プロパティーの表示" href="tasks/tasks-49.htm"/>
+    </context>
+    <context id="resource_info_property_page_context">
+        <description>選択されたリソースについての情報を表示できます。</description>
+        <topic label="「ナビゲーター」ビュー - プロパティー・ページ" href="reference/ref-27.htm"/>
+        <topic label="リソース・プロパティーの表示" href="tasks/tasks-49.htm"/>
+    </context>
+    <!-- Views -->
+    <context id="bookmark_view_context">
+        <description>すべてのブックマークを表示するビュー。</description>
+        <topic label="ビュー" href="concepts/concepts-5.htm"/>
+        <topic label="「ブックマーク」ビュー" href="reference/ref-28.htm"/>
+    </context>
+    <context id="content_outline_context">
+        <description>編集中のリソースのアウトライン (適用できる場合) を表示するビュー。</description>
+        <topic label="ビュー" href="concepts/concepts-5.htm"/>
+        <topic label="「アウトライン」ビュー" href="concepts/coutline.htm"/>
+    </context>
+    <context id="resource_view_context">
+        <description>このビューは、ワークスペース内のすべてのリソースを表示します。</description>
+        <topic label="ビュー" href="concepts/concepts-5.htm"/>
+        <topic label="「ナビゲーター」ビュー" href="reference/ref-27.htm"/>
+    </context>
+    <context id="property_sheet_view_context">
+        <description>このビューは、選択されたリソースのプロパティーを表示します。</description>
+        <topic label="ビュー" href="concepts/concepts-5.htm"/>
+        <topic label="「プロパティー」ビュー" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="task_list_view_context">
+        <description>このビューは、ユーザーが作成した、またはビルド中に自動生成されたタスク (覚え書き)、およびビルドの問題を表示します。</description>
+        <topic label="ビュー" href="concepts/concepts-5.htm"/>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <!-- Property sheet -->
+    <context id="property_sheet_page_help_context">
+        <description>「プロパティー」ビューは、選択されたリソースのプロパティーを表示します。</description>
+        <topic label="ビュー" href="concepts/concepts-5.htm"/>
+        <topic label="「プロパティー」ビュー" href="concepts/cpropview.htm"/>
+    </context>
+    <!-- Windows -->
+    <context id="detached_window_context">
+        <description>ビューは、ワークベンチ・ウィンドウからアンロックでき、またデスクトップの浮動ウィンドウにすることができます。</description>
+        <topic label="ビューの連結" href="tasks/tasks-3e.htm"/>
+        <topic label="ワークベンチ・ウィンドウのレイアウト" href="reference/ref-23.htm"/>
+        <topic label="ビュー" href="concepts/concepts-5.htm"/>
+    </context>
+    <context id="workbench_window_context">
+        <description>各ワークベンチ・ウィンドウには 1 つ以上のパースペクティブがあり、ワークベンチ・ウィンドウはさまざまなビューとエディターで構成されています。</description>
+        <topic label="ワークベンチ" href="concepts/concepts-2.htm"/>
+        <topic label="パースペクティブ" href="concepts/concepts-4.htm"/>
+        <topic label="ワークベンチの管理" href="tasks/tasks-1.htm"/>
+    </context>
+    <!-- Wizard pages -->
+    <context id="new_project_wizard_page_context">
+        <description>このウィザードで、ワークベンチ内に新規プロジェクトを作成できます。</description>
+        <topic label="「新規プロジェクト」ウィザード" href="reference/ref-37.htm"/>
+        <topic label="リソース" href="concepts/concepts-12.htm"/>
+        <topic label="リソースの作成 - プロジェクト" href="tasks/tasks-42.htm"/>
+    </context>
+    <context id="new_project_reference_wizard_page_context">
+        <description>このウィザード・ページで、このプロジェクトが参照する他のプロジェクトを選択できます。</description>
+        <topic label="「参照するプロジェクトの選択」ページ" href="reference/ref-37.htm"/>
+        <topic label="リソース" href="concepts/concepts-12.htm"/>
+    </context>
+    <context id="new_folder_wizard_page_context">
+        <description>新規フォルダー・リソースの作成をガイドするウィザード。</description>
+        <topic label="「新規フォルダー」ウィザード" href="reference/ref-38.htm"/>
+        <topic label="リソース" href="concepts/concepts-12.htm"/>
+        <topic label="リソースの作成 - フォルダー" href="tasks/tasks-43.htm"/>
+    </context>
+    <context id="new_file_wizard_page_context">
+        <description>新規ファイル・リソースの作成をガイドするウィザード。</description>
+        <topic label="「新規ファイル」ウィザード" href="reference/ref-39.htm"/>
+        <topic label="リソース" href="concepts/concepts-12.htm"/>
+        <topic label="リソースの作成 - ファイル" href="tasks/tasks-44.htm"/>
+    </context>
+    <context id="new_wizard_selection_wizard_page_context">
+        <description>作成するリソースのタイプを選択します。</description>
+        <topic label="リソース" href="concepts/concepts-12.htm"/>
+    </context>
+    <context id="export_wizard_selection_wizard_page_context">
+        <description>実行したいエクスポートの型を選択します。</description>
+        <topic label="ファイルのエクスポート" href="tasks/tasks-57.htm"/>
+        <topic label="ファイル・システムへのエクスポート" href="tasks/tasks-59.htm"/>
+        <topic label="ZIP ファイルへのエクスポート" href="tasks/tasks-59ag.htm"/>
+    </context>
+    <context id="import_wizard_selection_wizard_page_context">
+        <description>インポートの型を選択します。</description>
+        <topic label="「インポート」ウィザードの使用" href="tasks/tasks-55.htm"/>
+    </context>
+    <context id="file_system_export_wizard_page">
+        <description>このページで、ファイル・システムにリソースをエクスポートするために必要なすべての情報を指定できます。</description>
+        <topic label="「エクスポート」ウィザードの使用" href="tasks/tasks-59.htm"/>
+        <topic label="「エクスポート」ウィザード" href="reference/ref-71.htm"/>
+    </context>
+    <context id="file_system_import_wizard_page">
+        <description>このページで、ファイル・システムからファイルをインポートするために必要なすべての情報を指定できます。</description>
+        <topic label="ファイル・システムからインポート" href="tasks/tasks-55.htm"/>
+        <topic label="「インポート」ウィザード" href="reference/ref-70.htm"/>
+    </context>
+    <context id="zip_file_export_wizard_page">
+        <description>このページで、ワークスペースからアーカイブ・ファイルにリソースをエクスポートするために必要なすべての情報を指定できます。</description>
+        <topic label="ZIP ファイルへのエクスポート" href="tasks/tasks-59ag.htm"/>
+        <topic label="「エクスポート」ウィザード" href="reference/ref-71.htm"/>
+    </context>
+    <context id="zip_file_import_wizard_page">
+        <description>このページで、アーカイブ・ファイルからワークスペースにファイルをインポートするために必要なすべての情報を指定できます。</description>
+        <topic label="ZIP ファイルからのインポート" href="tasks/tasks-55bg.htm"/>
+        <topic label="「インポート」ウィザード" href="reference/ref-70.htm"/>
+    </context>
+    <!-- Wizards -->
+    <context id="new_wizard_context">
+        <description>これらのウィザードを使用すると、新しいリソースおよび/またはエレメントを作成できます。
+</description>
+        <topic label="リソース" href="concepts/concepts-12.htm"/>
+    </context>
+    <context id="new_wizard_shortcut_context">
+        <description>作成ウィザードを開きます。
+</description>
+    </context>
+    <context id="new_file_wizard_context">
+        <description>新規ファイル・リソースの作成を支援するウィザード。</description>
+        <topic label="「新規ファイル」ウィザード" href="reference/ref-39.htm"/>
+        <topic label="リソース" href="concepts/concepts-12.htm"/>
+        <topic label="リソースの作成 - ファイル" href="tasks/tasks-44.htm"/>
+    </context>
+    <context id="new_folder_wizard_context">
+        <description>新規フォルダー・リソースの作成を支援するウィザード。</description>
+        <topic label="「新規フォルダー」ウィザード" href="reference/ref-38.htm"/>
+        <topic label="リソース" href="concepts/concepts-12.htm"/>
+        <topic label="リソースの作成 - フォルダー" href="tasks/tasks-43.htm"/>
+    </context>
+    <context id="new_project_wizard_context">
+        <description>新規プロジェクトの作成を支援するウィザード。</description>
+        <topic label="「新規プロジェクト」ウィザード" href="reference/ref-37.htm"/>
+        <topic label="リソース" href="concepts/concepts-12.htm"/>
+        <topic label="リソースの作成 - プロジェクト" href="tasks/tasks-42.htm"/>
+    </context>
+    <context id="import_wizard_context">
+        <description>リソースのインポートを支援するウィザード。</description>
+        <topic label="「インポート」ウィザードの使用" href="tasks/tasks-55.htm"/>
+    </context>
+    <context id="export_wizard_context">
+        <description>リソースのエクスポートを支援するウィザード。</description>
+        <topic label="ファイルのエクスポート" href="tasks/tasks-57.htm"/>
+        <topic label="ファイル・システムへのエクスポート" href="tasks/tasks-59.htm"/>
+        <topic label="ZIP ファイルへのエクスポート" href="tasks/tasks-59ag.htm"/>
+        <topic label="「エクスポート」ウィザード" href="reference/ref-71.htm"/>
+    </context>
+    <!-- terminal reference commented out in org.eclipse.ui.internal.WorkbenchActionBuilder, line 301 
+  <context id="close_all_saved_action_context">
+    <description></description>
+  </context>
+  -->
+    <context id="show_view_menu_action_context">
+        <description>アクティブ・ビューのメニューを表示します。
+</description>
+    </context>
+    <context id="workbench_editors_action_context">
+        <description>「エディターに切り替える」ダイアログを表示します。
+</description>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <!-- terminal reference in org.eclipse.ui.internal.IHelpContextIds, line 77
+  <context id="new_wizard_shortcut_action_context">
+    <description></description>
+  </context>
+  -->
+    <context id="text_cut_action_context">
+        <description>選択されたテキストをクリップボードに切り取ります。</description>
+        <topic label="「編集」メニュー - 切り取り" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_copy_action_context">
+        <description>選択内容をクリップボードにコピーします。</description>
+        <topic label="「編集」メニュー - コピー" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_paste_action_context">
+        <description>クリップボードの内容を現行カーソル位置に貼り付けます。</description>
+        <topic label="「編集」メニュー - 貼り付け" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_select_all_action_context">
+        <description>すべての内容を選択します。
+</description>
+        <topic label="「編集」メニュー - すべて選択" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_delete_action_context">
+        <description>選択範囲を削除します。</description>
+        <topic label="「編集」メニュー - 削除" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_cut_action_context">
+        <description>選択されたテキストをクリップボードに切り取ります。</description>
+        <topic label="「編集」メニュー - 切り取り" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_copy_action_context">
+        <description>選択内容をクリップボードにコピーします。</description>
+        <topic label="「編集」メニュー - コピー" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_paste_action_context">
+        <description>クリップボードの内容を現行カーソル位置に貼り付けます。</description>
+        <topic label="「編集」メニュー - 貼り付け" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_delete_action_context">
+        <description>選択範囲を削除します。</description>
+        <topic label="「編集」メニュー - 削除" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_find_action_context">
+        <description>エディター内の検索に使うテキストを指定するためのダイアログを表示します。</description>
+        <topic label="「編集」メニュー - 検索/置換" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_select_all_action_context">
+        <description>すべての内容を選択します。
+</description>
+        <topic label="「編集」メニュー - すべて選択" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_undo_action_context">
+        <description>直前の編集を元に戻します。</description>
+        <topic label="「編集」メニュー - 元に戻す" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_redo_action_context">
+        <description>直前の編集をやり直します。</description>
+        <topic label="「編集」メニュー - やり直し" href="reference/ref-57.htm"/>
+    </context>
+    <context id="working_set_selection_dialog_context">
+        <description>このダイアログを使用すると、ワークベンチ内で使用するワーキング・セットを追加、除去、または構成することができます。ワーキング・セットとは、ワークスペースのサブセットです。</description>
+    </context>
+    <context id="delete_project_dialog_context">
+        <description>このダイアログは、選択されたプロジェクトを削除するかどうかを確認し、削除する場合は、
+このプロジェクトに対応するローカル・ファイル・システムの基本プロジェクト・ファイルも削除するかどうかを確認します。
+</description>
+    </context>
+    <context id="filter_dialog_context">
+        <description>このダイアログを使用すると、フィルターを選択して、ワークスペースの特定のエレメントだけを分離することができます。
+</description>
+    </context>
+    <context id="marker_resolution_selection_dialog_context">
+        <description>このダイアログを使用すると、可能なレゾリューションのリストから選択を行うことができます。</description>
+    </context>
+    <context id="workbench_editors_dialog">
+        <description>このダイアログには、開かれたエディターがすべて表示され、それらのエディターを閉じるか、または保存するかを簡単に選択することができます。
+</description>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="welcome_page_selection_dialog">
+        <description>このダイアログを使用すると、使用可能な「ようこそ」ページの 1 つが表示されます。
+「ようこそ」ページは、ワークベンチの特定部分の使用を開始するときに便利です。
+</description>
+    </context>
+    <context id="decorators_preference_page_context">
+        <description>このページを使用すると、ワークベンチ内の項目に表示するデコレーターを指定できます。
+デコレーターを指定すると、表示は複雑になりますが、項目に関する情報をさらに得ることができます。
+</description>
+        <topic label="設定 - ラベル装飾" href="reference/ref-decorations.htm"/>
+    </context>
+    <context id="startup_preference_page_context">
+        <description>このページには、ワークベンチの開始時にアクティブにされるプラグインがすべて表示されます。</description>
+        <topic label="設定 - 開始" href="reference/ref-startup.htm"/>
+    </context>
+    <context id="working_set_new_wizard_context">
+        <description>このウィザードは、ワーキング・セットの作成プロセスをガイドします。
+</description>
+    </context>
+    <context id="working_set_edit_wizard_context">
+        <description>このウィザードは、ワーキング・セットの編集プロセスをガイドします。
+</description>
+    </context>
+    <context id="filters_action_context">
+        <description>ワークスペースの特定のエレメントだけを分離するフィルターを選択するためのダイアログを表示します。
+</description>
+    </context>
+    <context id="mark_completed_action_context">
+        <description>現在選択されているタスクに「完了」のマークを付けます。</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="resolve_marker_action_context">
+        <description>可能なレゾリューションのリストから選択を行うためのダイアログを表示します。</description>
+    </context>
+    <context id="select_all_tasks_action_context">
+        <description>「タスク」ビューのタスクをすべて選択します。
+</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_properties_action_context">
+        <description>選択されたタスクのプロパティーを設定するためのダイアログを表示します。
+</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="back_action_context">
+        <description>1 フレーム前に戻ります。
+</description>
+        <topic label="「ナビゲーター」ビュー" href="concepts/cnav.htm"/>
+    </context>
+    <context id="forward_action_context">
+        <description>1 フレーム先に進みます。
+</description>
+        <topic label="「ナビゲーター」ビュー" href="concepts/cnav.htm"/>
+    </context>
+    <context id="go_into_action_context">
+        <description>選択されたエレメントにドリルダウンします。
+</description>
+        <topic label="「ナビゲーター」ビュー" href="concepts/cnav.htm"/>
+    </context>
+    <context id="up_action_context">
+        <description>1 フレーム上に移動します。
+</description>
+        <topic label="「ナビゲーター」ビュー" href="concepts/cnav.htm"/>
+    </context>
+    <context id="lock_toolbar_action_context">
+        <description>ワークベンチ内のツールバーをロックします。
+</description>
+    </context>
+    <context id="about_plugins_dialog_context">
+        <description>このダイアログは、インストール済みのすべてのプラグインに関する詳細を表示します。</description>
+    </context>
+    <context id="about_features_plugins_dialog_context">
+        <description>このダイアログは、特定のフィーチャー内のすべてのプラグインに関する詳細を表示します。</description>
+    </context>
+    <context id="about_features_dialog_context">
+        <description>このダイアログは、インストール済みのすべてのフィーチャーに関する詳細を表示します。</description>
+    </context>
+    <context id="working_set_resource_page">
+        <description>このページを使用すると、ワーキング・セットの一部となるリソースを選択できます。
+</description>
+    </context>
+    <context id="working_set_type_page">
+        <description>このページを使用すると、作成したいワーキング・セットの型を選択できます。</description>
+    </context>
+    <context id="copy_bookmark_action_context">
+        <description>選択されたブックマークをクリップボードにコピーします。
+</description>
+        <topic label="「編集」メニュー - コピー" href="reference/ref-57.htm"/>
+        <topic label="ブックマーク" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="paste_bookmark_action_context">
+        <description>ブックマークをクリップボードに貼り付けます。</description>
+        <topic label="「編集」メニュー - 貼り付け" href="reference/ref-57.htm"/>
+        <topic label="ブックマーク" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_properties_action_context">
+        <description>選択されたブックマークのプロパティーを設定するためのダイアログを表示します。</description>
+        <topic label="ブックマーク" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_ascending_action_context">
+        <description>ブックマークを昇順にソートします。</description>
+        <topic label="ブックマーク" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_descending_action_context">
+        <description>ブックマークを降順にソートします。</description>
+        <topic label="ブックマーク" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_description_action_context">
+        <description>ブックマークを記述順でソートします。</description>
+        <topic label="ブックマーク" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_resource_action_context">
+        <description>ブックマークをリソース順でソートします。</description>
+        <topic label="ブックマーク" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_folder_action_context">
+        <description>ブックマークをフォルダー順でソートします。</description>
+        <topic label="ブックマーク" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_location_action_context">
+        <description>ブックマークをロケーション順でソートします。</description>
+        <topic label="ブックマーク" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_creation_time_action_context">
+        <description>ブックマークを作成時刻順でソートします。</description>
+        <topic label="ブックマーク" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="resource_navigator_copy_action_context">
+        <description>選択されたリソースをクリップボードにコピーします。
+</description>
+        <topic label="「編集」メニュー - コピー" href="reference/ref-57.htm"/>
+        <topic label="「ナビゲーター」ビュー" href="concepts/cnav.htm"/>
+    </context>
+    <context id="resource_navigator_paste_action_context">
+        <description>クリップボード上のリソースを選択されているリソースの位置に貼り付けます。
+</description>
+        <topic label="「編集」メニュー - 貼り付け" href="reference/ref-57.htm"/>
+        <topic label="「ナビゲーター」ビュー" href="concepts/cnav.htm"/>
+    </context>
+    <context id="properties_copy_action_context">
+        <description>選択されたプロパティーをクリップボードにコピーします。
+</description>
+        <topic label="「編集」メニュー - コピー" href="reference/ref-57.htm"/>
+    </context>
+    <context id="copy_task_action_context">
+        <description>選択されたタスクをクリップボードにコピーします。
+</description>
+        <topic label="「編集」メニュー - コピー" href="reference/ref-57.htm"/>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="paste_task_action_context">
+        <description>クリップボードの内容を現行カーソル位置に貼り付けます。</description>
+        <topic label="「編集」メニュー - 貼り付け" href="reference/ref-57.htm"/>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_properties_dialog_context">
+        <description>このダイアログを使用すると、選択されたタスクのプロパティーを設定できます。
+</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_type_action_context">
+        <description>タスクをタイプ順でソートします。</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_completed_action_context">
+        <description>タスクを完了順でソートします。</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_priority_action_context">
+        <description>タスクを優先順位順でソートします。</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_description_action_context">
+        <description>タスクを記述順でソートします。</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_resource_action_context">
+        <description>タスクをリソース順でソートします。</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_folder_action_context">
+        <description>タスクをフォルダー順でソートします。</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_location_action_context">
+        <description>タスクをロケーション順でソートします。</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_creation_time_action_context">
+        <description> タスクを作成時刻順でソートします。</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_ascending_action_context">
+        <description>タスクを昇順にソートします。</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_descending_action_context">
+        <description>タスクを降順にソートします。</description>
+        <topic label="「タスク」ビュー" href="reference/ref-31.htm"/>
+    </context>
+    <context id="show_part_pane_menu_action_context">
+        <description>アクティブ・ビューまたはエディターのシステム・メニューを開きます。
+</description>
+    </context>
+    <context id="cycle_part_forward_action_context">
+        <description>開いているビューから順方向にナビゲートするためのメニューを表示します。
+</description>
+    </context>
+    <context id="cycle_part_backward_action_context">
+        <description>開いているビューから逆方向にナビゲートするためのメニューを表示します。
+</description>
+    </context>
+    <context id="cycle_editor_forward_action_context">
+        <description>開いているエディターから順方向にナビゲートするためのメニューを表示します。
+</description>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="cycle_editor_backward_action_context">
+        <description>開いているエディターから逆方向にナビゲートするためのメニューを表示します。
+</description>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="cycle_perspective_forward_action_context">
+        <description>開いているパースペクティブから順方向にナビゲートするためのメニューを表示します。
+</description>
+        <topic label="パースペクティブ" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="cycle_perspective_backward_action_context">
+        <description>開いているパースペクティブから逆方向にナビゲートするためのメニューを表示します。
+</description>
+        <topic label="パースペクティブ" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="activate_editor_action_context">
+        <description>エディター・ペインを活動化します。
+</description>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <!-- part of project capability support. currently unused.
+  <context id="project_capability_property_page_context">
+    <description></description>
+  </context>
+
+  <context id="new_project_capability_wizard_page_context">
+    <description></description>
+  </context>
+
+  <context id="new_project_review_wizard_page_context">
+    <description></description>
+  </context>
+
+  <context id="new_project_configure_wizard_page_context">
+    <description></description>
+  </context>
+
+  <context id="show_project_perspective_dialog_context">
+    <description></description>
+  </context>
+
+  <context id="update_capability_wizard_context">
+    <description></description>
+  </context>
+  -->
+
+    <!--new context ids-->
+    <context id="goto_last_edit_position_action_context">
+        <description>このコマンドは、最後の編集位置に戻るようにナビゲートします。</description>
+    </context>
+    <context id="ConvertLineDelimitersToMAC_action_context">
+        <description>このコマンドは、クラシック MacOS 行区切り文字 (CR) を使用できるようにファイルを変換します。</description>
+    </context>
+    <context id="ConvertLineDelimitersToUNIX_action_context">
+        <description>このコマンドは、Unix/MacOS X 行区切り文字 (LF) を使用できるようにファイルを変換します。</description>
+    </context>
+    <context id="ConvertLineDelimitersToWindows_action_context">
+        <description>このコマンドは、Windows 行区切り文字 (CRLF) を使用できるようにファイルを変換します。</description>
+    </context>
+    <context id="FindIncrementalReverse_action_context">
+        <description>このコマンドを使用すると、「前をインクリメンタル検索」モードに入るか、
+既にインクリメンタル・モードの場合は直前の一致へジャンプします。ESC
+を使用すると、インクリメンタル検索モードが終了されます。</description>
+    </context>
+    <context id="DeleteLineToBeginning_action_context">
+        <description>このコマンドは、現在のキャレットの位置から行の先頭までのテキストを削除します。</description>
+    </context>
+    <context id="DeleteLineToEnd_action_context">
+        <description>このコマンドは、現在のキャレットの位置から行の最後までのテキストを削除します。</description>
+    </context>
+    <context id="SetMark_action_context">
+        <description>このコマンドはエディター内にマークを設定します。</description>
+    </context>
+    <context id="FindNext_action_context">
+        <description>このコマンドは、エディター内で次の一致を検索します。</description>
+    </context>
+    <context id="CutLine_action_context">
+        <description>このコマンドは、行全体をクリップボードに切り取ります。</description>
+    </context>
+    <context id="DeleteLine_action_context">
+        <description>このコマンドは、行全体を削除します。</description>
+    </context>
+    <context id="CutLineToEnd_action_context">
+        <description>このコマンドは、現在のキャレットの位置から行の最後までのテキストをクリップボードに切り取ります。</description>
+    </context>
+    <context id="ClearMark_action_context">
+        <description>このコマンドは、以前にエディター内に設定されたマークをクリアします。</description>
+    </context>
+    <context id="SwapMark_action_context">
+        <description>現在のキャレットの位置を以前に設定されたマークと交換します。</description>
+    </context>
+    <context id="FindIncremental_action_context">
+        <description>このコマンドを使用すると、「インクリメンタル検索」モードに入るか、
+または既にインクリメンタル・モードの場合は次の一致へジャンプします。ESC
+を使用すると、インクリメンタル検索モードが終了されます。</description>
+    </context>
+    <context id="FindPrevious_action_context">
+        <description>このコマンドは、エディター内で直前の一致を検索します。</description>
+    </context>
+    <context id="CutLineToBeginning_action_context">
+        <description>このコマンドは、現在のキャレットの位置から行の先頭までのテキストをクリップボードに切り取ります。</description>
+    </context>
+    <context id="US-ASCII_action_context">
+        <description>このコマンドは、エンコードを US-ASCII に設定します。</description>
+    </context>
+    <context id="ISO-8859-1_action_context">
+        <description>このコマンドは、エンコードを ISO-8859-1 に設定します。</description>
+    </context>
+    <context id="UTF-8_action_context">
+        <description>このコマンドは、エンコードを UTF-8 に設定します。</description>
+    </context>
+    <context id="UTF-16BE_action_context">
+        <description>このコマンドは、エンコードを UTF-16 (ビッグ・エンディアン) に設定します。</description>
+    </context>
+    <context id="UTF-16LE_action_context">
+        <description>このコマンドは、エンコードを UTF-16 (リトル・エンディアン) に設定します。</description>
+    </context>
+    <context id="UTF-16_action_context">
+        <description>このコマンドは、エンコードを UTF-16 に設定します。</description>
+    </context>
+    <context id="System_action_context">
+        <description>このコマンドは、エンコードを現行のシステム・エンコードに設定します。</description>
+    </context>
+    <context id="Default_action_context">
+        <description>このコマンドは、エンコードをデフォルト・エンコードに設定します。</description>
+    </context>
+    <context id="Custom_action_context">
+        <description>このコマンドで、カスタム・エンコードを設定できます。</description>
+    </context>
+    <context id="text_editor_preference_page_context">
+        <description>この設定ページを使用して、テキスト・エディターの設定を変更します。</description>
+        <topic label="設定 - テキスト・エディター" href="reference/ref-texteditorprefs.htm"/>
+        <topic label="エディター" href="concepts/concepts-6.htm"/>
+    </context>
+    <!-- Help Menu: Help Contents -->
+    <context  id="help_contents_action_context" >
+        <description>このコマンドは、「ヘルプ」ビューを表示します。
+
+「ヘルプ」ビューは、ワークベンチとインストール済みコンポーネントに関連した
+ヘルプ・ブック、トピック、および情報を含んでいます。</description>
+        <topic label="オンライン・ヘルプ・システム" href="/org.eclipse.platform.doc.user/concepts/chelpsys.htm"/>
+        <topic label="ヘルプ・メニュー - ヘルプ目次" href="/org.eclipse.platform.doc.user/reference/ref-61.htm"/>
+    </context>
+</contexts>

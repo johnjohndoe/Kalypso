@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+  <context id="file_selection_dialog_context">
+    <description>此对话框允许您在工作空间中选择文件。</description>
+    <topic label="Ant 支持" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="外部工具" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="message_with_toggle_dialog_context">
+    <description>此对话框允许您切换是否对此类型显示特定操作产生的对话框。</description>
+    <topic label="Ant 支持" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="外部工具" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="preference_page_context">
+    <description>在此页面上，可以配置“外部工具”首选项。</description>
+   	<topic label="首选项 － 外部工具" href="reference/ref-exttoolsprefs.htm"/>    
+    <topic label="Ant 支持" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="外部工具" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="builder_property_page_context">
+    <description>在此页面上，可以配置在构建此项目时运行的“外部工具”构建器。</description>
+    <topic label="Ant 支持" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="外部工具" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="builders_tab_context">
+    <description>此选项卡允许您配置将在何时执行此项目构建器。</description>
+    <topic label="Ant 支持" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="外部工具" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="program_main_tab_context">
+    <description>此选项卡允许您配置程序位置和此启动配置的其它属性。</description>
+    <topic label="外部工具" href="concepts/concepts-exttools.htm"/>
+  </context>
+</contexts>

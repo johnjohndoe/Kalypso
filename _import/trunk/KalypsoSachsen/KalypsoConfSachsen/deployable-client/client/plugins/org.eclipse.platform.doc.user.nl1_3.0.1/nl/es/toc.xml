@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<!-- ============================================================================= -->
+<!-- Define the top level topics                                                   -->
+<!-- ============================================================================= -->
+
+<toc label="Guía del usuario del entorno de trabajo">
+	<topic label="Cómo empezar">
+		<link toc="topics_GettingStarted.xml" />
+	</topic>
+	<topic label="Conceptos">
+		<link toc="topics_Concepts.xml" />
+	</topic>
+	<topic label="Tareas">
+		<link toc="topics_Tasks.xml" />
+	</topic>
+	<topic label="Consulta">
+		<link toc="topics_Reference.xml" />
+	</topic>
+	<topic label="Sugerencias y trucos" href="tips/platform_tips.html"/>
+	<topic label="Novedades" href="whatsNew/platform_whatsnew.html"/>
+	<topic label="Legal" href="notices.html"/>
+</toc>

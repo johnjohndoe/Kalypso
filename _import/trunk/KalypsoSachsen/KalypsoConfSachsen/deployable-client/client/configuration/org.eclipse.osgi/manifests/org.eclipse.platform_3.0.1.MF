@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Generated-from: 1095333190000;type=2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.platform; singleton=true
+Bundle-Version: 3.0.1
+Bundle-ClassPath: startup.jar,
+ platform.jar
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Provide-Package: org.eclipse.platform.internal
+Require-Bundle: org.eclipse.ui.intro;optional=true,
+ org.eclipse.ui.cheatsheets;optional=true,
+ org.eclipse.ui.forms;optional=true,
+ org.eclipse.ui;optional=true
+Eclipse-AutoStart: true

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Generated-from: 1092667448000;type=4
+Bundle-Name: Help System UI NL Support
+Bundle-SymbolicName: org.eclipse.help.ui.nl1
+Bundle-Version: 3.0.0
+Bundle-ClassPath: nl1.jar,
+ $nl$/
+Fragment-Host: org.eclipse.help.ui;bundle-version="[3.0.0,4.0.0)"
+Bundle-Localization: plugin

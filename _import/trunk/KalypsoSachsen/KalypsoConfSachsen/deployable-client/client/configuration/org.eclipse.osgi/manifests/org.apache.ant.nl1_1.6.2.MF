@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Generated-from: 1092667444000;type=4
+Bundle-Name: Apache Ant NL Support
+Bundle-SymbolicName: org.apache.ant.nl1
+Bundle-Version: 1.6.2
+Fragment-Host: org.apache.ant;bundle-version="[1.6.2,2.0.0)"
+Bundle-Localization: plugin

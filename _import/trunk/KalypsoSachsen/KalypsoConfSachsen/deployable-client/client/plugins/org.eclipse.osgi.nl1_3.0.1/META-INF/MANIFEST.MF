@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-Name: NL1 Fragment
+Bundle-SymbolicName: org.eclipse.osgi.nl1
+Bundle-Version: 1.0.0
+Bundle-ClassPath: nl1.jar
+Fragment-Host: org.eclipse.core.runtime;bundle-version="[3.0.0,4.0.0)"
+Bundle-Localization: plugin

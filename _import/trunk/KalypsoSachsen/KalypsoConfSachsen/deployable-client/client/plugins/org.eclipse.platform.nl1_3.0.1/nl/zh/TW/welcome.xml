@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<welcomePage 
+	title="Eclipse 平台"
+	format="nowrap">
+	<intro>這個頁面可協助您熟悉 Eclipse 工作台。
+如果要開始作業，請先閱讀下列各節，再按一下相關鏈結。</intro>
+
+<item><b>已安裝的特性</b>
+如果要進一步瞭解已安裝在您工作台中的特性，
+請選取<action pluginId="org.eclipse.ui.ide"  class="org.eclipse.ui.actions.QuickStartAction">說明 > 歡迎使用...</action>，
+並選取您有興趣的特性。</item>
+
+<item><b>視景、視圖與編輯器</b>
+視窗中含有一或多個視景。視景是由一些視圖（如導覽器）及編輯器組成，可用來處理您的資源。
+視窗最左側的捷徑列可讓您開啟新視景以及切換各個已開啟的視景。
+您目前使用的視景會顯示在
+視窗標題中，而且在捷徑列中它是以按下的圖示來顯示。
+</item>
+
+<item><b>配置視景</b>
+您可以拖曳視圖與編輯器的標題列，
+而在工作台中四處移動它們。您也可以使用「視窗 > 顯示視圖」，在您的現行視景中新增更多的視圖。
+如果要將視景重設為其原來的狀態，
+請選擇<action pluginId="org.eclipse.ui"  class="org.eclipse.ui.internal.ResetPerspectiveAction">視窗 > 重設視景</action>。
+
+安排好視景之後，就可以利用「視窗 > 另存新視景...」來儲存它。
+您可以自訂視圖、視景和為視景顯示的「新建」功能表作業。
+其做法是選取<action pluginId="org.eclipse.ui"  class="org.eclipse.ui.internal.EditActionSetsAction">視窗 > 自訂視景...</action>。另外，您還可以將視圖拖曳到捷徑列（位於視窗最左邊），將它轉換成快速視圖。
+</item> 
+
+<item><b>合併 CVS 團隊</b>
+如果要合併 CVS 開發團隊，
+請開啟 <action pluginId="org.eclipse.team.cvs.ui" class="org.eclipse.team.internal.ccvs.ui.actions.ShowCVSPerspectiveAction">「CVS 儲存庫瀏覽」視景</action>。之後，請指定您的 CVS 儲存庫的位置。
+其做法是選擇「CVS 儲存庫」視圖蹦現功能表中的<action pluginId="org.eclipse.team.cvs.ui" class="org.eclipse.team.internal.ccvs.ui.repo.NewCVSRepositoryAction">新建 > 儲存庫位置...</action>。
+當位置精靈開啟時，請填寫 CVS 儲存庫的詳細資料，再按一下「完成」。
+
+
+這時「CVS 儲存庫」視圖中會出現一個儲存庫位置。
+展開位置，然後展開 HEAD 分支。您會看到該儲存庫中的模組清單。請選取一個模組，並選取快速功能表中的<b>移出做為專案</b>。
+如此會將模組從 CVS 儲存庫中移出，
+並以該名稱在您的工作區中建立一個專案。</item>
+
+<item><b>執行 Ant 建置檔案</b>
+如果要執行 Ant 建置檔案，請按一下「執行」>「外部工具」>「外部工具」...。選取「Ant 建置」作為啟動配置類型，
+然後按一下「新建」。識別「位置」欄位中的建置檔案，然後按一下「執行」。</item>
+
+<item><b>進一步資訊</b>
+如果要進一步瞭解，可瀏覽<topic id="/org.eclipse.platform.doc.user/toc.xml">工作台使用手冊</topic>。瀏覽<topic href="/org.eclipse.platform.doc.user/reference/ref-anticons.htm">外部工具及 Ant 圖示</topic>
+章節，以辨識各種外部工具及 Ant 元素。</item>
+
+
+</welcomePage>
