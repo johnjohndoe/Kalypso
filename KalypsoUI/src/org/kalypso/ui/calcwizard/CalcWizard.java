@@ -385,26 +385,34 @@ public class CalcWizard implements IWizard, IProjectProvider
         {
           monitor.beginTask( "aktualisiere Zeitreihen", 3000 );
 
-          IStatus status = null;
-          
-          final IFolder currentCalcCase = m_addCalcCasePage.getCurrentCalcCase();
-          m_controlPage.saveChanges( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
-          if( m_controlPage.isUpdate() )
+          try
           {
-            final ModelNature nature = (ModelNature)currentCalcCase.getProject().getNature(
-                ModelNature.ID );
-            
-            status = nature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
+            IStatus status = null;
+
+            final IFolder currentCalcCase = m_addCalcCasePage.getCurrentCalcCase();
+            m_controlPage.saveChanges( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
+            if( m_controlPage.isUpdate() )
+            {
+              final ModelNature nature = (ModelNature)currentCalcCase.getProject().getNature(
+                  ModelNature.ID );
+
+              status = nature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor,
+                  1000 ) );
+            }
+            else
+              monitor.worked( 1000 );
+
+            addModelPages( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
+
+            resetResultPage( m_addCalcCasePage.getCalcCases() );
+
+            if( status != null && status != org.eclipse.core.runtime.Status.OK_STATUS )
+              throw new CoreException( status );
           }
-          else
-            monitor.worked( 1000 );
-
-          addModelPages( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
-
-          resetResultPage( m_addCalcCasePage.getCalcCases() );
-          
-          if( status != null && status != org.eclipse.core.runtime.Status.OK_STATUS )
-            throw new CoreException( status );
+          finally
+          {
+            monitor.done();
+          }
         }
       }
     };

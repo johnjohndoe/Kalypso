@@ -90,9 +90,6 @@ import org.kalypso.zml.AxisType.ValueArrayType;
 import org.kalypso.zml.AxisType.ValueLinkType;
 import org.xml.sax.InputSource;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-
 /**
  * Factory for ZML-Files. ZML is a flexible format that covers following
  * possibilities:
@@ -568,29 +565,29 @@ public class ZmlFactory
     return unmarshaller;
   }
 
-  /**
-   * @return an apache XMLSerializer configured to handle CDATA correctly
-   */
-  private static XMLSerializer getXMLSerializer( )
-  {
-    // configure an OutputFormat to handle CDATA
-    OutputFormat of = new OutputFormat();
-
-    // specify which of your elements you want to be handled as CDATA.
-    // The use of the '^' between the namespaceURI and the localname
-    // seems to be an implementation detail of the xerces code.
-    of.setCDataElements( new String[] { "data" } );
-
-    // set any other options you'd like
-    of.setPreserveSpace( true );
-    of.setIndenting( true );
-
-    // create the serializer
-    XMLSerializer serializer = new XMLSerializer( of );
-    serializer.setOutputByteStream( System.out );
-
-    return serializer;
-  }
+//  /**
+//   * @return an apache XMLSerializer configured to handle CDATA correctly
+//   */
+//  private static XMLSerializer getXMLSerializer( )
+//  {
+//    // configure an OutputFormat to handle CDATA
+//    OutputFormat of = new OutputFormat();
+//
+//    // specify which of your elements you want to be handled as CDATA.
+//    // The use of the '^' between the namespaceURI and the localname
+//    // seems to be an implementation detail of the xerces code.
+//    of.setCDataElements( new String[] { "data" } );
+//
+//    // set any other options you'd like
+//    of.setPreserveSpace( true );
+//    of.setIndenting( true );
+//
+//    // create the serializer
+//    XMLSerializer serializer = new XMLSerializer( of );
+//    serializer.setOutputByteStream( System.out );
+//
+//    return serializer;
+//  }
 
   /**
    * @param axis

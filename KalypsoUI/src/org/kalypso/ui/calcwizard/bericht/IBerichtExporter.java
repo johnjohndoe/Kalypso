@@ -64,7 +64,6 @@ public interface IBerichtExporter
    * Export feature to Stream
    * @param os
    * 
-   * @param features
    * @throws Exception
    */
   public void export( final Feature feature, final OutputStream os ) throws Exception;

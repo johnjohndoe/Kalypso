@@ -42,7 +42,6 @@ package org.kalypso.ui.calcwizard.bericht;
 
 import java.net.URL;
 
-import org.deegree.model.feature.Feature;
 import org.kalypso.ui.calcwizard.Arguments;
 
 /**
@@ -55,7 +54,7 @@ public abstract class AbstractBerichtExporter implements IBerichtExporter
   private URL m_context = null;
 
   /**
-   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#init(URL, java.util.Arguments)
+   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#init(java.net.URL, org.kalypso.ui.calcwizard.Arguments)
    */
   public void init( final URL context, final Arguments arguments )
   {

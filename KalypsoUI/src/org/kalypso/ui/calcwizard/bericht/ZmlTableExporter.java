@@ -40,22 +40,65 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.bericht;
 
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Properties;
 
 import org.deegree.model.feature.Feature;
+import org.kalypso.java.io.ReaderUtilities;
+import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.TableViewUtils;
+import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
+import org.kalypso.template.obstableview.ObstableviewType;
+import org.kalypso.ui.calcwizard.Arguments;
+import org.kalypso.util.url.UrlResolver;
 
 /**
  * @author belger
  */
 public class ZmlTableExporter extends AbstractBerichtExporter
 {
+  private static final String EXT = ".csv";
+
   /**
    * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.deegree.model.feature.Feature, java.io.OutputStream)
    */
   public void export( Feature feature, OutputStream os ) throws Exception
   {
-    // TODO Auto-generated method stub
+    // parse arguments:
+    final Arguments arguments = getArguments();
+
+    // - templatefile
+    final String templateurl = arguments.getProperty( "template", null );
     
+    // - replacetokens / featureprops
+    final Arguments tokens = arguments.getArguments( "tokens" );
+    final Properties replacetokens = ExporterHelper.createReplaceTokens( feature, tokens );
+    
+    final URL url = new UrlResolver().resolveURL( getContext(), templateurl );
+    final URLConnection connection = url.openConnection();
+    final Reader reader = new InputStreamReader( connection.getInputStream(), "UTF-8" );
+    final Reader reader2 = ReaderUtilities.createTokenReplaceReader( reader, replacetokens, '%', '%' );
+    
+    final ObstableviewType xml = TableViewUtils.loadTableTemplateXML( reader2 );
+
+    final TableViewTemplate tpl = new TableViewTemplate();
+    tpl.setBaseTemplate( xml, getContext() );
+    
+    // TODO: wailt until template is loaded!
+
+    final ObservationTable table = new ObservationTable( tpl );
+    
+    Thread.sleep( 2000 );
+
+    new ExportableObservationTable( table ).exportDocument( os );
+
+    table.dispose();
+    tpl.dispose();
   }
 
   /**
@@ -63,6 +106,6 @@ public class ZmlTableExporter extends AbstractBerichtExporter
    */
   public String getExtension( )
   {
-    return ".csv";
+    return EXT;
   }
 }
