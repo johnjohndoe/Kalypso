@@ -4,7 +4,7 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.ogc.command.ModifyFeatureCommand;
 import org.kalypso.ogc.gml.KalypsoFeature;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -44,7 +44,7 @@ public class LayerTableCellModifier implements ICellModifier
   {
     final TableItem tableItem = (TableItem)element;
     final KalypsoFeature  feature = (KalypsoFeature)tableItem.getData();
-    final KalypsoFeatureLayer layer = m_viewer.getTheme().getLayer();
+    final IKalypsoLayer layer = m_viewer.getTheme().getLayer();
     
     final ICommand command = new ModifyFeatureCommand( layer, feature, property, value );
     m_viewer.postCommand( command, null );

@@ -18,7 +18,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     if( inputElement == null )
       return new Object[] {};
 
-    final KalypsoFeatureLayer layer = ((IKalypsoTheme)inputElement).getLayer();
+    final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)((IKalypsoTheme)inputElement).getLayer();
     return layer == null ? new Object[] {} : layer.getAllFeatures();
   }
 
