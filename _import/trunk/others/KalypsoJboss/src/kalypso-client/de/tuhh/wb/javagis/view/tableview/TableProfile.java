@@ -72,10 +72,10 @@ public class TableProfile
 
     public void removeProfile(String profileName)
     {
-	int n;
-	Object[] options = {I18n.get("Dia_Yes"),I18n.get("Dia_No"),I18n.get("Dia_Cancel")};
+	
 	if(profileName!=null && !"all".equals(profileName)){
-    n = JOptionPane.showOptionDialog(null,I18n.get("ProfileDia_removeW_Question"),I18n.get("ProfileDia_removeW_Title"),JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
+	Object[] options = {I18n.get("Dia_Yes"),I18n.get("Dia_No"),I18n.get("Dia_Cancel")};
+    int n = JOptionPane.showOptionDialog(null,I18n.get("ProfileDia_removeW_Question"),I18n.get("ProfileDia_removeW_Title"),JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
 
                 switch (n)
                     {
@@ -89,7 +89,6 @@ public class TableProfile
                         break ;
 
                     }
-	   
 				}
 	else
 	    JOptionPane.showMessageDialog(null,I18n.get("ProfileDia_removeMS_Message"),I18n.get("ProfileDia_removeW_Title"),JOptionPane.INFORMATION_MESSAGE);
