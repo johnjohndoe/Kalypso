@@ -8,6 +8,7 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
@@ -31,8 +32,12 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   {
     // unregister Modelllistener
     if(m_mapPanel!=null)
-      m_mapPanel.getMapModell().removeModellListener(this);
-    // TODO: register modelllistener?
+    {      
+      IMapModell mapModell = m_mapPanel.getMapModell();
+      if(mapModell!=null)
+        mapModell.removeModellListener(this);
+    }
+      // TODO: register modelllistener?
     m_commandPoster = commandPoster;
     m_mapPanel = mapPanel;
     m_mapPanel.getMapModell().addModellListener(this);

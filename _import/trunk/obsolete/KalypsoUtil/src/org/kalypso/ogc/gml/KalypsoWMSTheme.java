@@ -78,7 +78,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
     try
     {
       wmsParameter.put( "SRS", myLayer.getCoordinatesSystem().getName() );
-      System.out.println( "SRS:" + myLayer.getCoordinatesSystem().getName() );
     }
     catch( Exception err )
     {
@@ -167,13 +166,11 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
    */
   public void write( Object result )
   {
-    System.out.println( "\n\n\n got ogcwebservicerespons: " + result.getClass().toString() );
-
+   
     if( result instanceof OGCWebServiceEvent )
     {
       OGCWebServiceResponse response = ( (OGCWebServiceEvent)result ).getResponse();
-      System.out.println( "response is " + response.getClass().toString() );
-
+      
       if( response instanceof WMSGetMapResponse )
       {
         // is it the response to the last request ?
@@ -181,8 +178,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
           return;
 
         Object map = ( (WMSGetMapResponse)response ).getMap();
-        System.out.println( "ResponseID:" + ( (WMSGetMapResponse)response ).getRequest().getId() );
-
+     
         if( map != null && map instanceof Image )
         {
           myImage = (Image)map;
@@ -191,10 +187,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
         }
         else
         {
-          System.out.println( "no Image :-(" );
           final Document wmsException = ( (WMSGetMapResponse)response ).getException();
           if( wmsException != null )
-            System.out.println( XMLTools.toString( wmsException ) );
+            System.out.println( "OGC_WMS_Exception:" + XMLTools.toString( wmsException ) );
         }
       }
     }

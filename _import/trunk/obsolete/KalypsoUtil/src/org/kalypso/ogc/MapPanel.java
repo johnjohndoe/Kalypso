@@ -4,6 +4,8 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 
 import org.deegree.graphics.RenderException;
@@ -26,7 +28,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author vdoemming
  *  
  */
-public class MapPanel extends Canvas implements IMapModellView
+public class MapPanel extends Canvas implements IMapModellView, ComponentListener
 {
 //  private Image highlightImage = null;
 
@@ -67,7 +69,7 @@ public class MapPanel extends Canvas implements IMapModellView
     myWidgetManager = new WidgetManager( viewCommandTarget, this );
     addMouseListener( myWidgetManager );
     addMouseMotionListener( myWidgetManager );
-
+    addComponentListener(this);
     setVisible( true );
   }
 
@@ -123,8 +125,8 @@ public class MapPanel extends Canvas implements IMapModellView
     { // update dimension
       myHeight = getHeight();
       myWidth = getWidth();
-      setBoundingBox( getBoundingBox() );
-      setValidAll( false );
+      //setBoundingBox( getBoundingBox() );
+      //setValidAll( false );
     }
 
     if( !hasValidMap() || mapImage == null )
@@ -293,11 +295,7 @@ public class MapPanel extends Canvas implements IMapModellView
    * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
-  {
-    // TODO: hack, damit man die geladenen Themen sieht, ist aber nicht so schön
-    if( modellEvent != null && modellEvent.getType() == ModellEvent.THEME_ADDED )
-      setBoundingBox( getMapModell().getFullExtentBoundingBox() );
-    
+  {  
     setValidAll( false );
     clearOffset();
   }
@@ -412,6 +410,10 @@ public class MapPanel extends Canvas implements IMapModellView
       return null;
     
     double ratio = getRatio();
+    // TODO besser loesen
+    if(Double.isNaN(ratio))
+      return env; 
+      
     double minX = env.getMin().getX();
     double minY = env.getMin().getY();
 
@@ -471,6 +473,34 @@ public class MapPanel extends Canvas implements IMapModellView
   public int getSelectionID()
   {
     return m_selectionID;
+  }
+
+  /**
+   * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
+   */
+  public void componentHidden( ComponentEvent e )
+  {}
+
+  /**
+   * @see java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent)
+   */
+  public void componentMoved( ComponentEvent e )
+  {}
+
+  /**
+   * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
+   */
+  public void componentResized( ComponentEvent e )
+  {
+     setBoundingBox(getBoundingBox());
+  }
+
+  /**
+   * @see java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent)
+   */
+  public void componentShown( ComponentEvent e )
+  {
+    setBoundingBox(getBoundingBox());
   }
 
 }
