@@ -6,6 +6,7 @@ import java.awt.Point;
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.IMapModell;
+import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.command.JMMarkSelectCommand;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
@@ -82,8 +83,9 @@ public abstract class AbstractSelectWidget extends AbstractWidget
   {
     // TODO: sollte diese ganze umrechnerei nicht einfach die view machen???
     
-    final IMapModell mapModell = m_mapPanel.getMapModell();
-    GeoTransform transform = m_mapPanel.getProjection();
+    final MapPanel mapPanel = getMapPanel();
+    final IMapModell mapModell = mapPanel.getMapModell();
+    GeoTransform transform = mapPanel.getProjection();
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if(activeTheme==null || activeTheme instanceof KalypsoFeatureTheme)
         return;
@@ -98,7 +100,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         final ICommand command = new JMMarkSelectCommand( activeTheme , GeometryFactory
             .createGM_Position( g1x, g1y ), gisRadius, mySelectionId,getSelectionMode() );
 
-        m_commandPoster.postCommand( command, null );
+        postCommand( command, null );
       }
       else
       // dragged
@@ -120,7 +122,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
           final ICommand command = new JMMarkSelectCommand( activeTheme, GeometryFactory
               .createGM_Envelope( minX, minY, maxX, maxY ), withinStatus, gisRadius, mySelectionId,getSelectionMode() );
 
-          m_commandPoster.postCommand( command, null );
+          postCommand( command, null );
         }
       }
     }

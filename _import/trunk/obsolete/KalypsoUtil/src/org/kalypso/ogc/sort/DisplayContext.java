@@ -37,22 +37,18 @@ public class DisplayContext
   {
     if( isSelected )
       return false;
-    else
-    {
-      isSelected = true;
-      return true;
-    }
+
+    isSelected = true;
+    return true;
   }
 
   public boolean unselect()
   {
     if( !isSelected )
       return false;
-    else
-    {
-      isSelected = false;
-      return true;
-    }
+
+    isSelected = false;
+    return true;
   }
 
   public void toggle()

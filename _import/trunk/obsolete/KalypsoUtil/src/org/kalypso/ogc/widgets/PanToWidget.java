@@ -7,6 +7,7 @@ package org.kalypso.ogc.widgets;
 import java.awt.Point;
 
 import org.deegree.model.geometry.GM_Envelope;
+import org.kalypso.ogc.MapPanel;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -17,7 +18,7 @@ public class PanToWidget extends AbstractWidget
   private Point endPoint = null;
 
   private Point startPoint = null;
-
+  
   public void dragged( Point p )
   {
     if( startPoint != null )
@@ -26,20 +27,20 @@ public class PanToWidget extends AbstractWidget
 
       int dx = (int)( endPoint.getX() - startPoint.getX() );
       int dy = (int)( endPoint.getY() - startPoint.getY() );
-      m_mapPanel.setOffset( dx, dy );
+      getMapPanel().setOffset( dx, dy );
     }
   }
 
   public void finish()
   {
-    m_mapPanel.clearOffset();
+    getMapPanel().clearOffset();
   }
 
   public void leftPressed( Point p )
   {
     startPoint = p;
     endPoint = null;
-    m_mapPanel.clearOffset();
+    getMapPanel().clearOffset();
   }
 
   public void leftReleased( Point p )
@@ -55,16 +56,17 @@ public class PanToWidget extends AbstractWidget
   {
     if( startPoint != null && endPoint != null )
     {
-      final double mx = m_mapPanel.getWidth() / 2d - ( endPoint.getX() - startPoint.getX() );
-      final double my = m_mapPanel.getHeight() / 2d - ( endPoint.getY() - startPoint.getY() );
+      final MapPanel mapPanel = getMapPanel();
+      final double mx = mapPanel.getWidth() / 2d - ( endPoint.getX() - startPoint.getX() );
+      final double my = mapPanel.getHeight() / 2d - ( endPoint.getY() - startPoint.getY() );
 
-      final GM_Envelope panBox = m_mapPanel.getPanToPixelBoundingBox( mx, my );
+      final GM_Envelope panBox = mapPanel.getPanToPixelBoundingBox( mx, my );
 
       startPoint = null;
       endPoint = null;
 
       if( panBox != null )
-        return new ChangeExtentCommand( m_mapPanel, panBox );
+        return new ChangeExtentCommand( mapPanel, panBox );
     }
     return null;
   }

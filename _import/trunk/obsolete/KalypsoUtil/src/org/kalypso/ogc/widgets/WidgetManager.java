@@ -10,6 +10,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import org.kalypso.ogc.MapPanel;
+import org.kalypso.util.command.ICommandTarget;
 
 /**
  * Der Controller fuer die MapView
@@ -23,10 +24,13 @@ public class WidgetManager implements MouseListener, MouseMotionListener
   private IWidget myTemporaryWidget = null;
 
   private final MapPanel myMapPanel;
+  
+  private final ICommandTarget m_commandTarget;
 
-  public WidgetManager( final MapPanel mapPanel )
+  public WidgetManager( final ICommandTarget commandTarget, final MapPanel mapPanel )
   {
     myMapPanel = mapPanel;
+    m_commandTarget = commandTarget;
   }
 
   // MouseAdapter
@@ -231,7 +235,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
         myNormalWidget.finish();
 
       myNormalWidget = newWidget;
-      myNormalWidget.activate( myMapPanel );
+      myNormalWidget.activate( m_commandTarget, myMapPanel );
     }
 
     if( getActualWidget() != null )

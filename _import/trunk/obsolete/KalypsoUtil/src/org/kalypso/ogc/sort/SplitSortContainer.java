@@ -4,27 +4,18 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.model.geometry.GeometryFactory;
 
-import org.deegree.graphics.transformation.GeoTransform;
-
 public class SplitSortContainer
 {
-  private static int no = 0;
-
   private static final int MAX_OBJECTS = 25;
-
-  private static final int RESORT_SIZE = 2 * MAX_OBJECTS;
 
   private SplitSortContainer[] mySubContainer =
   { null, null, null, null };
 
   private GM_Envelope myEnvelope;
-
-  private double myMidX = 0;
-
-  private double myMidY = 0;
 
   private List myObjects = new ArrayList();
 
@@ -35,8 +26,6 @@ public class SplitSortContainer
   private static final int RIGHT_TOP = 2;
 
   private static final int LEFT_TOP = 3;
-
-  private static GeometryFactory geoFac = new GeometryFactory();
 
   public GM_Envelope getEnvelope()
   {
@@ -105,7 +94,9 @@ public class SplitSortContainer
   public void add( GM_Envelope env, Object object )
   {
     if( !myEnvelope.contains( env ) )
-      ;// Debug.println("ERROR: Container.add() does not contain envelope :-(");
+      {
+//    Debug.println("ERROR: Container.add() does not contain envelope :-(");
+      }
     else if( !hasSubContainers() && myObjects.size() < MAX_OBJECTS )
     {
       add( object );

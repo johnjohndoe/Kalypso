@@ -11,25 +11,20 @@ import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 
 /**
- * 
- * 
  * @author bce
  */
 public abstract class AbstractWidget implements IWidget 
 {
-  protected MapPanel m_mapPanel = null;
-  protected ICommandTarget m_commandPoster;
-  
-  public void setCommandPoster( final ICommandTarget commandPoster )
-  {
-    m_commandPoster = commandPoster;
-  }
+  private MapPanel m_mapPanel = null;
+  private ICommandTarget m_commandPoster;
   
   /**
-   * @see org.kalypso.ogc.widgets.IWidget#activate(org.kalypso.ogc.MapPanel)
+   * @see org.kalypso.ogc.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget, org.kalypso.ogc.MapPanel)
    */
-  public final void activate( final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
+    // TODO: register modelllistener?
+    m_commandPoster = commandPoster;
     m_mapPanel = mapPanel;
   }
   
@@ -99,8 +94,6 @@ public abstract class AbstractWidget implements IWidget
   public void finish()
   {
     // not implemented by default
-    System.out.println( "finish" + this );
-
   }
 
   /**
@@ -191,5 +184,15 @@ public abstract class AbstractWidget implements IWidget
   public void paint( Graphics g )
   {
     // not implemented by default
+  }
+
+  protected final MapPanel getMapPanel()
+  {
+    return m_mapPanel;
+  }
+
+  protected final void postCommand( final ICommand command, final Runnable runAfterCommand )
+  {
+    m_commandPoster.postCommand( command, runAfterCommand );
   }
 }

@@ -45,23 +45,13 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
 
   private static final String DEFAULT_STYLE = "default";
 
-  public KalypsoFeatureSort( CS_CoordinateSystem crs )
-  {
-    init( crs, null );
-  }
-
-  public KalypsoFeatureSort( CS_CoordinateSystem crs, GM_Envelope boundingBox )
-  {
-    init( crs, boundingBox );
-  }
-
-  private void init( CS_CoordinateSystem crs, GM_Envelope boundingBox )
+  public KalypsoFeatureSort( final CS_CoordinateSystem crs )
   {
     myStyles = new ArrayList();
     myStylesHash = new Hashtable();
     myIsDirty = true;
     myCrs = crs;
-    mySort = JMSpatialIndexFactory.createSpatialIndex( boundingBox );
+    mySort = JMSpatialIndexFactory.createSpatialIndex();
     myFeatures = new ArrayList();
   }
 

@@ -22,7 +22,7 @@ public class SplitSort implements JMSpatialIndex
   private List myObjects = new ArrayList(); // objects without
                                                            // geometry
 
-  public SplitSort( GM_Envelope env )
+  public SplitSort()
   {
     myRootContainer = null;
   }
@@ -176,11 +176,15 @@ public class SplitSort implements JMSpatialIndex
    * @see org.deegree.model.sort.JMSpatialIndex#resort(org.deegree.model.geometry.GM_Envelope, org.deegree.model.geometry.GM_Envelope, java.lang.Object)
    */
   public void resort( GM_Envelope newEnv, GM_Envelope oldEnv, Object object )
-  {}
+  {
+    // nicht implementiert  
+  }
 
   /**
    * @see org.deegree.model.sort.JMSpatialIndex#resort(org.deegree.model.geometry.GM_Envelope, java.lang.Object)
    */
   public void resort( GM_Envelope newEnv, Object object )
-  {}
+  {
+    // nicht implementiert
+  }
 }

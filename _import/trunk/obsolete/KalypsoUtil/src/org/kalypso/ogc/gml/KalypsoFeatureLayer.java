@@ -4,10 +4,6 @@ import java.util.List;
 
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.event.ModellEventProvider;
@@ -146,8 +142,7 @@ public class KalypsoFeatureLayer implements ModellEventProvider, ModellEventList
   public void optimize()
   {
     final KalypsoFeature[] allFE = getAllFeatures();
-    GM_Envelope env = getBoundingbox( allFE );
-    final KalypsoFeatureSort newSort = new KalypsoFeatureSort( mySort.getCoordinatesSystem(), env );
+    final KalypsoFeatureSort newSort = new KalypsoFeatureSort( mySort.getCoordinatesSystem() );
     for( int i = 0; i < allFE.length; i++ )
     {
       try
@@ -163,66 +158,6 @@ public class KalypsoFeatureLayer implements ModellEventProvider, ModellEventList
     mySort = newSort;
     mySort.addModellListener( this );
     fireModellEvent( null );
-  }
-
-  private GM_Envelope getBoundingbox( KalypsoFeature[] fe )
-  {
-    double minx = 9E99;
-    double maxx = -9E99;
-    double miny = 9E99;
-    double maxy = -9E99;
-
-    for( int i = 0; i < fe.length; i++ )
-    {
-      Object[] prop = fe[i].getProperties();
-      for( int k = 0; k < prop.length; k++ )
-      {
-        if( prop[k] instanceof GM_Object )
-        {
-          if( prop[k] instanceof GM_Point )
-          {
-            GM_Position pos = ( (GM_Point)prop[k] ).getPosition();
-            if( pos.getX() > maxx )
-            {
-              maxx = pos.getX();
-            }
-            else if( pos.getX() < minx )
-            {
-              minx = pos.getX();
-            }
-            if( pos.getY() > maxy )
-            {
-              maxy = pos.getY();
-            }
-            else if( pos.getY() < miny )
-            {
-              miny = pos.getY();
-            }
-          }
-          else
-          {
-            GM_Envelope en = ( (GM_Object)prop[k] ).getEnvelope();
-            if( en.getMax().getX() > maxx )
-            {
-              maxx = en.getMax().getX();
-            }
-            if( en.getMin().getX() < minx )
-            {
-              minx = en.getMin().getX();
-            }
-            if( en.getMax().getY() > maxy )
-            {
-              maxy = en.getMax().getY();
-            }
-            if( en.getMin().getY() < miny )
-            {
-              miny = en.getMin().getY();
-            }
-          }
-        }
-      }
-    }
-    return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy );
   }
 
   public void addModellListener( final ModellEventListener listener )

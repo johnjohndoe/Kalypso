@@ -16,7 +16,9 @@ import org.deegree_impl.model.geometry.GM_Envelope_Impl;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.deegree_impl.tools.Debug;
 import org.kalypso.ogc.event.ModellEvent;
+import org.kalypso.ogc.widgets.IWidget;
 import org.kalypso.ogc.widgets.WidgetManager;
+import org.kalypso.util.command.ICommandTarget;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -54,12 +56,11 @@ public class MapPanel extends Canvas implements IMapModellView
 
   private GM_Envelope myBoundingBox = new GM_Envelope_Impl();
 
-  public MapPanel( final CS_CoordinateSystem crs )
+  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs )
   {
-    super();
     // set empty Modell:
     setMapModell( new MapModell( crs ) );
-    myWidgetManager = new WidgetManager( this );
+    myWidgetManager = new WidgetManager( viewCommandTarget, this );
     addMouseListener( myWidgetManager );
     addMouseMotionListener( myWidgetManager );
 
@@ -259,11 +260,6 @@ public class MapPanel extends Canvas implements IMapModellView
     setValidHighlight( status );
   }
 
-  public WidgetManager getWidgetManager()
-  {
-    return myWidgetManager;
-  }
-
   /**
    * 
    * @see org.kalypso.ogc.IMapModellView#getMapModell()
@@ -327,27 +323,30 @@ public class MapPanel extends Canvas implements IMapModellView
    * 
    * @return scale of the map
    */
-  private double calcScale( int mapWidth, int mapHeight )
+  private double calcScale( final int mapWidth, final int mapHeight )
   {
     try
     {
-      CS_CoordinateSystem epsg4326crs = myModell.getCoordinatesSystem();
+      final CS_CoordinateSystem epsg4326crs = myModell.getCoordinatesSystem();
+      
       GM_Envelope bbox = getBoundingBox();
-
       if( !myModell.getCoordinatesSystem().getName().equalsIgnoreCase( "EPSG:4326" ) )
       {
         // transform the bounding box of the request to EPSG:4326
         final GeoTransformer transformer = new GeoTransformer( "EPSG:4326" );
         bbox = transformer.transformEnvelope( bbox, epsg4326crs );
       }
+      
+      if( bbox == null )
+        return 0.0;
 
       final double dx = bbox.getWidth() / mapWidth;
       final double dy = bbox.getHeight() / mapHeight;
 
       // create a box on the central map pixel to determine its size in meters
-      GM_Position min = GeometryFactory.createGM_Position( bbox.getMin().getX() + dx
+      final GM_Position min = GeometryFactory.createGM_Position( bbox.getMin().getX() + dx
           * ( mapWidth / 2d - 1 ), bbox.getMin().getY() + dy * ( mapHeight / 2d - 1 ) );
-      GM_Position max = GeometryFactory.createGM_Position( bbox.getMin().getX() + dx
+      final GM_Position max = GeometryFactory.createGM_Position( bbox.getMin().getX() + dx
           * ( mapWidth / 2d ), bbox.getMin().getY() + dy * ( mapHeight / 2d ) );
       final double distance = calcDistance( min.getY(), min.getX(), max.getY(), max.getX() );
 
@@ -356,7 +355,7 @@ public class MapPanel extends Canvas implements IMapModellView
 
       return scale;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       Debug.debugException( e, "Exception occured when calculating scale!" );
     }
@@ -449,6 +448,20 @@ public class MapPanel extends Canvas implements IMapModellView
     double gisY2 = gisMY + gisDY;
 
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
+  }
+
+  public void changeWidget( final IWidget m_widget )
+  {
+    if( myWidgetManager != null )
+      myWidgetManager.changeWidget( m_widget );
+  }
+
+  public IWidget getActualWidget()
+  {
+    if( myWidgetManager != null )
+      return myWidgetManager.getActualWidget();
+
+    return null;
   }
 
 }

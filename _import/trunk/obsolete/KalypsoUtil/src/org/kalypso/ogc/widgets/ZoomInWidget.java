@@ -87,7 +87,7 @@ public class ZoomInWidget extends AbstractWidget
       startPoint = null;
       endPoint = null;
 
-      return new ChangeExtentCommand( m_mapPanel, zoomBox );
+      return new ChangeExtentCommand( getMapPanel(), zoomBox );
     }
 
     return null;

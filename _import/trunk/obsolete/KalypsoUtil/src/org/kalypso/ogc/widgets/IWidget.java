@@ -4,18 +4,16 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import org.kalypso.ogc.MapPanel;
+import org.kalypso.util.command.ICommandTarget;
 
 /**
  * @author bce
  */
 public interface IWidget 
 {
-  /**
-   * Called from {@link WidgetManager} when Wdiget is activated
-   */
-  public void activate( final MapPanel mapPanel );
- 
-  public void clickPopup( Point p );
+  public void rightReleased( final Point p );
+
+  public void clickPopup( final Point p );
 
   public void dragged( Point p );
 
@@ -49,5 +47,5 @@ public interface IWidget
 
   public void rightPressed( Point p );
 
-  public void rightReleased( Point p );
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel );
 }
