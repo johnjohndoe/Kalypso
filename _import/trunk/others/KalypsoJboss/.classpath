@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="DEADJOE|bin/|classpath2|client2ps|compile|compile.ps|compile_simple|java2ps|jboss_libs_classpath|kalypso.conf|packages/|run_client.bat|start|start_simple|themeclasspath|working_classpath" kind="src" path="src/kalypso-client"/>
+	<classpathentry kind="src" path="src/kalypso-src"/>
 	<classpathentry kind="src" path="src/kalypso-bce/dc-kalypso2/src"/>
 	<classpathentry kind="src" path="src/kalypso-bce/ZBrowser/src"/>
 	<classpathentry kind="src" path="src/kalypso-filter/Source"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="src/kalypso-client/bin/braju.jar"/>
-	<classpathentry kind="lib" path="src/kalypso-client/bin/edbc.jar"/>
-	<classpathentry kind="lib" path="src/kalypso-client/bin/hwscombination-ejb.jar"/>
-	<classpathentry kind="lib" path="src/kalypso-client/bin/hwslogistics-ejb.jar"/>
-	<classpathentry kind="lib" path="src/kalypso-client/bin/hwssystem-ejb.jar"/>
-	<classpathentry kind="lib" path="src/kalypso-client/bin/hwsszenario-ejb.jar"/>
-	<classpathentry kind="lib" path="src/kalypso-client/bin/javaGis1-ejb.jar"/>
-	<classpathentry kind="lib" path="src/kalypso-client/bin/javaGis2-ejb.jar"/>
-	<classpathentry kind="lib" path="src/kalypso-client/bin/javaGis3-ejb.jar"/>
-	<classpathentry kind="lib" path="src/kalypso-client/bin/jbcl.jar"/>
-	<classpathentry kind="lib" path="src/kalypso-client/bin/jbossall-client.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/braju.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/edbc.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/hwscombination-ejb.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/hwslogistics-ejb.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/hwssystem-ejb.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/hwsszenario-ejb.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/javaGis1-ejb.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/javaGis2-ejb.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/javaGis3-ejb.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/jbcl.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/jbossall-client.jar"/>
 	<classpathentry kind="lib" path="src/kalypso-client/bin/kalypsoSymbols.jar"/>
-	<classpathentry kind="lib" path="src/kalypso-client/bin/log4j.jar"/>
-	<classpathentry kind="lib" path="src/kalypso-client/bin/openroad.jar"/>
-	<classpathentry kind="lib" path="src/kalypso-client/bin/deegree/lib/deegree109.jar"/>
-	<classpathentry kind="lib" path="lib/log4j.jar"/>
-	<classpathentry kind="lib" path="lib/xdoclet.jar"/>
-	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
-	<classpathentry kind="lib" path="lib/xercesSamples.jar"/>
-	<classpathentry kind="lib" path="lib/xmlParserAPIs.jar"/>
-	<classpathentry kind="lib" path="lib/xt.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/log4j.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/openroad.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/deegree/lib/deegree109.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xdoclet.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xercesImpl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xercesSamples.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xmlParserAPIs.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xt.jar"/>
 	<classpathentry kind="output" path="output"/>
 </classpath>
