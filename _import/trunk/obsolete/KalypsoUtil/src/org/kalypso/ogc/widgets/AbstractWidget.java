@@ -4,16 +4,21 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.feature.FeatureType;
 import org.deegree.model.geometry.GM_Envelope;
+import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.MapPanel;
+import org.kalypso.ogc.event.ModellEvent;
+import org.kalypso.ogc.event.ModellEventListener;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 
 /**
  * @author bce
  */
-public abstract class AbstractWidget implements IWidget 
+public abstract class AbstractWidget implements IWidget, ModellEventListener 
 {
   private MapPanel m_mapPanel = null;
   private ICommandTarget m_commandPoster;
@@ -23,9 +28,14 @@ public abstract class AbstractWidget implements IWidget
    */
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
+    // unregister Modelllistener
+    if(m_mapPanel!=null)
+      m_mapPanel.getMapModell().removeModellListener(this);
     // TODO: register modelllistener?
     m_commandPoster = commandPoster;
     m_mapPanel = mapPanel;
+    m_mapPanel.getMapModell().addModellListener(this);
+    // registerModelllistener
   }
   
   /**
@@ -39,6 +49,13 @@ public abstract class AbstractWidget implements IWidget
 
   protected abstract ICommand performIntern();
 
+  protected final GM_Position getPosition(Point pixelPoint)
+  {
+    final GeoTransform transform = m_mapPanel.getProjection();
+    GM_Position pixelPos=GeometryFactory.createGM_Position(pixelPoint.getX(),pixelPoint.getY());
+    return transform.getSourcePoint(pixelPos );    
+  }
+  
   // Helper
   protected final GM_Envelope getDragbox( int mx, int my, int dx )
   {
@@ -194,5 +211,34 @@ public abstract class AbstractWidget implements IWidget
   protected final void postCommand( final ICommand command, final Runnable runAfterCommand )
   {
     m_commandPoster.postCommand( command, runAfterCommand );
+  }
+
+  public void onModellChange( final ModellEvent modellEvent )
+  {
+    //
+  }
+
+  public KalypsoFeatureLayer getActiveLayer()
+  {
+    try
+    {
+      return m_mapPanel.getMapModell().getActiveTheme().getLayer();
+    }
+    catch(Exception e)
+    {
+      return null;
+    }
+    }
+  
+  public FeatureType getActiveFeatureType()
+  {
+    try
+    {
+      return getActiveLayer().getFeatureType();
+    }
+    catch(Exception e)
+    {
+      return null;
+    }
   }
 }

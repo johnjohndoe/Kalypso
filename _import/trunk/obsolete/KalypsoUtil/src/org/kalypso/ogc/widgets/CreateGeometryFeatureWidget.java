@@ -1,0 +1,205 @@
+/**
+ * TODO: license definieren
+ */
+
+package org.kalypso.ogc.widgets;
+
+import java.awt.Graphics;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
+import org.kalypso.ogc.MapPanel;
+import org.kalypso.ogc.event.ModellEvent;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.util.command.ICommand;
+import org.kalypso.util.command.ICommandTarget;
+
+/**
+ * 
+ * @author von Dömming
+ */
+public class CreateGeometryFeatureWidget extends AbstractWidget
+{  
+  private AbstractWidget myWidget=null;
+ 
+  
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget, org.kalypso.ogc.MapPanel)
+   */
+  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  {
+    super.activate( commandPoster, mapPanel );
+    setup();
+  }
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#clickPopup(java.awt.Point)
+   */
+  public void clickPopup( Point p )
+  {
+   if(myWidget!=null)
+    myWidget.clickPopup( p );
+  }
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#dragged(java.awt.Point)
+   */
+  public void dragged( Point p )
+  {
+    if(myWidget!=null)
+      myWidget.dragged( p );
+  }
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#leftClicked(java.awt.Point)
+   */
+  public void leftClicked( Point p )
+  {
+    if(myWidget!=null)
+      myWidget.leftClicked( p );
+  }
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#leftPressed(java.awt.Point)
+   */
+  public void leftPressed( Point p )
+  {
+    if(myWidget!=null)
+      myWidget.leftPressed( p );
+  }
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#leftReleased(java.awt.Point)
+   */
+  public void leftReleased( Point p )
+  {
+    if(myWidget!=null)
+      myWidget.leftReleased( p );
+  }
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#middleClicked(java.awt.Point)
+   */
+  public void middleClicked( Point p )
+  {
+    if(myWidget!=null)
+      myWidget.middleClicked( p );
+  }
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#middlePressed(java.awt.Point)
+   */
+  public void middlePressed( Point p )
+  {
+    if(myWidget!=null)
+      myWidget.middlePressed( p );
+  }
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#middleReleased(java.awt.Point)
+   */
+  public void middleReleased( Point p )
+  {
+    if(myWidget!=null)
+      myWidget.middleReleased( p );
+  }
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#moved(java.awt.Point)
+   */
+  public void moved( Point p )
+  {
+    if(myWidget!=null)
+      myWidget.moved( p );
+  }
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#paint(java.awt.Graphics)
+   */
+  public void paint( Graphics g )
+  {
+    if(myWidget!=null)
+      myWidget.paint( g );
+  }
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#rightClicked(java.awt.Point)
+   */
+  public void rightClicked( Point p )
+  {
+    if(myWidget!=null)
+      myWidget.rightClicked( p );
+  }
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#rightPressed(java.awt.Point)
+   */
+  public void rightPressed( Point p )
+  {
+    if(myWidget!=null)
+      myWidget.rightPressed( p );
+  }
+  /**
+   * @see org.kalypso.ogc.widgets.IWidget#rightReleased(java.awt.Point)
+   */
+  public void rightReleased( Point p )
+  {
+    if(myWidget!=null)
+      myWidget.rightReleased( p );
+  }
+
+  public CreateGeometryFeatureWidget()
+  {
+    setup();
+  }
+
+  private void setup()
+  {
+    KalypsoFeatureLayer layer = getActiveLayer();
+    myWidget=null;
+    if( layer != null )
+    {
+      FeatureType ft = layer.getFeatureType();
+      FeatureTypeProperty[] ftps = ft.getProperties();
+      List geoFtps = new ArrayList();
+      // collect available geometry properties
+      for( int i = 0; i < ftps.length; i++ )
+      {
+        if( ftps[i].getType().startsWith( "org.deegree.model.geometry" ) )
+          geoFtps.add( ftps[i] );
+      }
+      if( geoFtps.size() > 1 )
+        ; // TODO ask for geometry to create
+      if( geoFtps.size() > 0 )
+      {
+        setGeometryWidget( layer, ft, (FeatureTypeProperty)geoFtps.get( 0 ) );
+      }
+    }
+  }
+
+  private void setGeometryWidget( KalypsoFeatureLayer layer, FeatureType ft, FeatureTypeProperty ftp )
+  {
+    if( ftp.getType().equals( "org.deegree.model.geometry.GM_Point" ) )
+      myWidget = new CreatePointFeatureWidget(this,layer,ft,ftp);
+//    else if( ftp.getType().equals( "org.deegree.model.geometry.GM_MultiPoint" ) )
+//      myWidget = new CreateMultipointFeatureWidget();
+//    else if( ftp.getType().equals( "org.deegree.model.geometry.GM_Polygon" ) )
+//      myWidget = new CreatePolygonFeatureWidget();
+//    else if( ftp.getType().equals( "org.deegree.model.geometry.GM_MultiSurface" ) )
+//      myWidget = new CreateMultipolygonFeatureWidget();
+//    else if( ftp.getType().equals( "org.deegree.model.geometry.GM_LineString" ) )
+//      myWidget = new CreateLinestringFeatureWidget();
+//    else if( ftp.getType().equals( "org.deegree.model.geometry.GM_MultiCurve" ) )
+//      myWidget = new CreateMultilinestringFeatureWidget();
+  }
+  
+  /**
+   * @see org.kalypso.ogc.widgets.AbstractWidget#performIntern()
+   */
+  protected ICommand performIntern()
+  {
+    if(myWidget!=null)
+      return myWidget.performIntern();
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
+   */
+  public void onModellChange( ModellEvent modellEvent )
+  {
+    super.onModellChange( modellEvent );
+    setup();
+  }
+}
