@@ -199,9 +199,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
           msg += "Es wird versucht, eine alternative Konfigurationsdatei zu laden.\nNächster Versuch:"
               + locs[i + 1];
 
-        MessageDialog.openWarning(
-            getWorkbench().getDisplay().getActiveShell(),
-            "Konfiguration für Kalypso", msg );
+        System.out.println(msg);
+//        MessageDialog.openWarning(
+//            getWorkbench().getDisplay().getActiveShell(),
+//            "Konfiguration für Kalypso", msg );
       }
       finally
       {
