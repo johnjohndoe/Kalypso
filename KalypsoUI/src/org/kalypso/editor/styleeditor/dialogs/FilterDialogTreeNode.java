@@ -10,65 +10,75 @@ import java.util.ArrayList;
  * @author Administrator
  */
 public class FilterDialogTreeNode {
+	
+	public static final int ROOT_TYPE= 0;
+	public static final int LOGICAL_NODE_TYPE= 1;	
+	public static final int COMPARISON_NODE_TYPE= 2;
+	public static final int FEATUREID_NODE_TYPE= 3;
+	
+	// or PARAMETER_TYPE SUCH AS LITERAL, PROPERTY_NAME
+	public static final int PARAMETER_TYPE = 4;
 
-	public static final String NODE_TYPE = "node";
-
-	public static final String TEXT_TYPE = "text";
-
-	public FilterDialogTreeNode root = null;
+	public FilterDialogTreeNode parent = null;
 
 	public ArrayList children = null;
 
-	private String mTag = null;
+	private String name = null;
 
-	private String mType = null; // node or text
+	private int type = -1; 
 
-	public FilterDialogTreeNode(String string, boolean b) {
-		mTag = string;
-		createRoot();
+	private FilterDialogTreeNode() {}
+	
+	public FilterDialogTreeNode(String string, int type) {		
+		this.name = string;
+		this.type = type;
+		
+		if(type == ROOT_TYPE)
+			createRoot(string);		
 	}
 
-	public FilterDialogTreeNode(String string, String type) {
-		mTag = string;
-		mType = type;
+
+	public String getName()
+	{
+		return name;
 	}
 
-	public String getTag() {
-		return mTag;
-	}
-
-	public void createRoot() {
-		root = new FilterDialogTreeNode("<Html>", "node");
+	private void createRoot(String name) {
+		parent = new FilterDialogTreeNode();
+		parent.name = name;
+		parent.type = ROOT_TYPE;
 		children = new ArrayList();
-		children.add(root);
+		children.add(parent);
 	}
 
 	public void addNode(FilterDialogTreeNode node) {
 		if (children == null) {
 			children = new ArrayList();
 		}
-
+		node.parent = this;
 		children.add(node);
 	}
-
-	public Object[] getChildren() {
-		return getContents().toArray();
+	
+	public void removeNode(FilterDialogTreeNode node)
+	{
+		if(children != null)
+		{
+			children.remove(node);
+		}
 	}
-
-	private ArrayList getContents() {
+	public Object[] getChildren() {
 		if (children == null) {
 			children = new ArrayList();
 		}
-
-		return children;
+		return children.toArray();
 	}
 
-	public String getType() {
-		return mType;
+	public int getType() {
+		return type;
 	}
 
-	public FilterDialogTreeNode getRoot() {
-		return root;
+	public FilterDialogTreeNode getParent() {
+		return parent;
 	}
 }
 
