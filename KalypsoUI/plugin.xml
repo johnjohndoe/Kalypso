@@ -201,19 +201,15 @@
                 menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
                 id="org.kalypso.ui.editor.gistableeditor.ExportAction"/>
          <action
+               enablesFor="+"
                toolbarPath="edit"
                label="Daten speichern"
-               icon="icons/gistable/save_edit.gif"
-               tooltip="Speichert die Daten der Tabelle"
                class="org.kalypso.ui.editor.gistableeditor.actions.SaveDataActionDelagate"
+               tooltip="Speichert die Daten der Tabelle"
+               icon="icons/gistable/save_edit.gif"
                style="push"
                menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
                id="org.kalypso.ui.editor.gistableeditor.SaveDataAction">
-            <enablement>
-               <objectState
-                     value="true"
-                     name="isLayerDirty"/>
-            </enablement>
          </action>
          <menu
                label="Spalten"
