@@ -12,7 +12,7 @@ import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannException;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannFunction;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannSet;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannSets;
+import org.kalypso.ogc.sensor.timeseries.wq.WechmannGroup;
 
 /**
  * @author schlienger
@@ -33,7 +33,7 @@ public class WQTuppleModel implements ITuppleModel
 
   private final List m_values = new Vector();
 
-  private final WechmannSets m_wsets;
+  private final WechmannGroup m_wsets;
 
   /**
    * @param type
@@ -41,7 +41,7 @@ public class WQTuppleModel implements ITuppleModel
    * @param wsets
    * @param model
    */
-  public WQTuppleModel( final String type, final WechmannSets wsets, final ITuppleModel model )
+  public WQTuppleModel( final String type, final WechmannGroup wsets, final ITuppleModel model )
   {
     m_type = type;
     m_model = model;
