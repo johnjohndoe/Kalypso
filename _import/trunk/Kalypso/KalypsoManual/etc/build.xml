@@ -10,6 +10,8 @@
   <property name="build.tex.dir" value="${build.dir}/tex"/>
   <property name="build.eclipse.dir" value="${build.dir}/eclipse"/>
   <property name="doc.name" value="main_driver.xml"/>
+  <property name="css.dir" value="${help.dir}/css"/>
+  <property name="image.dir" value="${help.dir}/img"/>
 
   <!-- Doc properties -->
 <!--  <property name="manual.dir" value="../manual" />
@@ -52,6 +54,15 @@
       <param name="xslproc.xsl" value="${help.dir}/manual-html.xsl" />
       <param name="xslproc.xml" value="${help.dir}/${doc.name}" />
     </antcall>
+    
+    <copy todir="${build.html.dir}">
+      <fileset dir="${css.dir}" includes="*.*"/>
+    </copy>
+
+    <mkdir dir="${build.html.dir}/img"/>
+    <copy todir="${build.html.dir}/img">
+      <fileset dir="${image.dir}" includes="**/*"/>
+    </copy>
   </target>
 
   <target name="eclipse-help"
@@ -66,9 +77,18 @@
       <param name="xslproc.xml" value="${help.dir}/${doc.name}" />
     </antcall>
     
+    <copy todir="${build.eclipse.dir}">
+      <fileset dir="${css.dir}" includes="*.*"/>
+    </copy>
+
+    <mkdir dir="${build.eclipse.dir}/img"/>
+    <copy todir="${build.eclipse.dir}/img">
+      <fileset dir="${image.dir}" includes="**/*"/>
+    </copy>
+    
     <copy todir="." file="${build.eclipse.dir}/toc.xml"/>
     
-    <zip destfile="./doc.zip" basedir="${build.eclipse.dir}" includes="*.html"/>
+    <zip destfile="./doc.zip" basedir="${build.eclipse.dir}" includes="**/*" excludes="*.xml"/>
   </target>
     
   <target name="pdf" description="Erstellt das Handbuch im PDF Format" depends="cleanup,init,valid">
