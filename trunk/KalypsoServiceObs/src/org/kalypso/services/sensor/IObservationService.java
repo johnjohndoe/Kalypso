@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import org.kalypso.ogc.sensor.beans.DateRangeBean;
 import org.kalypso.ogc.sensor.beans.OCSDataBean;
 import org.kalypso.ogc.sensor.beans.ObservationBean;
+import org.kalypso.services.IKalypsoService;
 import org.kalypso.services.repository.IRepositoryService;
 
 /**
@@ -12,17 +13,12 @@ import org.kalypso.services.repository.IRepositoryService;
  * 
  * @author schlienger
  */
-public interface IObservationService extends IRepositoryService
+public interface IObservationService extends IRepositoryService, IKalypsoService
 {
   /**
    * Returns some useful description that will be displayed to the user in order to identify this service.
    */
   public String getDescription() throws RemoteException;
-  
-  /**
-   * Returns the service version
-   */
-  public int getServiceVersion() throws RemoteException;
   
   /**
    * Reads the data out. Does not return the data itself but a descriptor which

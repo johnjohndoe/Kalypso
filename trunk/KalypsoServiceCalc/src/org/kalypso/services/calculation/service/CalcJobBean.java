@@ -2,6 +2,8 @@ package org.kalypso.services.calculation.service;
 
 import java.io.Serializable;
 
+import org.kalypso.services.calculation.common.ICalcServiceConstants;
+
 /**
  * <p>
  * Enthält die aktuellen Daten eines {@link org.kalypso.services.calculation.job.ICalcJob}
@@ -24,7 +26,7 @@ public class CalcJobBean implements Serializable
   private String m_type = null;
 
   /** Status des Jobs */
-  private int m_state = ICalculationService.UNKNOWN;
+  private int m_state = ICalcServiceConstants.UNKNOWN;
 
   /** Fortschritt des Jobs, ziwschen 0 und 100, -1 bedeutet: unbekannt */
   private int m_progress = -1;

@@ -12,7 +12,6 @@ import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -342,8 +341,8 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
 
             final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature(
                 ModelNature.ID );
-            final String jobID = nature.startCalculation( getCalcFolder(), new SubProgressMonitor(
-                monitor, 100 ) );
+//            final String jobID = nature.startCalculation( getCalcFolder(), new SubProgressMonitor(
+//                monitor, 100 ) );
 
             while( !monitor.isCanceled() )
             {
@@ -366,7 +365,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
 
             if( monitor.isCanceled() )
             {
-              nature.stopCalculation( jobID );
+//              nature.stopCalculation( jobID );
               throw new InterruptedException( "Abbruch durch Benutzer" );
             }
             // auf rechnung warten!

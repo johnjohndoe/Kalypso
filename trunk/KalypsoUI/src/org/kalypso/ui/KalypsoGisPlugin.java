@@ -165,7 +165,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
         String msg = "Konnte Konfigurationsdatei nicht laden: " + locs[i] + "\n";
 
         if( i == locs.length - 1 )
-          msg += "Kalypso startet ohne Serverkonfiguration! Stelle Sie sicher dass mindestens ein Server zur Verfügung steht.\nOder prüfen Sie die Liste der Server in die Applikationseinstellungen.";
+          msg += "Kalypso startet ohne Serverkonfiguration! Stelle Sie sicher dass mindestens ein Server zur Verfügung steht.\nOder prüfen Sie die Liste der Server in den Applikationseinstellungen.";
         else
           msg += "Es wird versucht, eine alternative Konfigurationsdatei zu laden.\nNächster Versuch:"
               + locs[i + 1];
@@ -505,11 +505,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     } );
   }
 
-  public static Status createErrorStatus( final String message, final Exception cause )
+  public static Status createErrorStatus( final String message, final Throwable cause )
   {
     String msg = message;
     if( cause != null && cause.getLocalizedMessage() != null )
-      msg += ":\n" + cause.getLocalizedMessage();
+      msg += ":\n\r" + cause.getLocalizedMessage();
     
     return new Status( IStatus.ERROR, getId(), 0, msg, cause );
   }

@@ -378,29 +378,6 @@
             id="org.kalypso.ui.launch.CalcCaseType"/>
    </extension>
    <extension
-         point="org.eclipse.debug.ui.launchShortcuts">
-      <shortcut
-            label="Modellrechnung"
-            class="org.kalypso.ui.launcher.CalcCaseLaunchShortcut"
-            modes="run"
-            id="org.kalypso.ui.launch.CalcCaseLaunchShortcut">
-         <perspective id="org.eclipse.ui.resourcePerspective"/>
-         <contextualLaunch>
-            <contextLabel
-                  label="Modellrechnung"
-                  mode="run"/>
-            <enablement>
-               <with variable="selection">
-                  <count value="1"/>
-                  <iterate >
-                     <instanceof value="org.eclipse.core.resources.IFolder"/>
-                  </iterate>
-               </with>
-            </enablement>
-         </contextualLaunch>
-      </shortcut>
-   </extension>
-   <extension
          point="org.eclipse.ui.viewActions">
       <viewContribution
             targetID="org.eclipse.ui.views.ResourceNavigator"
