@@ -6,6 +6,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.SimpleTimeZone;
 
 import javax.xml.bind.Marshaller;
 
@@ -238,10 +239,8 @@ public class NAZMLGenerator
   private static void createGRAPFile( Writer writer, int type, IObservation observation )
       throws Exception
   {
+    SimpleDateFormat sd=new SimpleDateFormat("yyMMddHH");
     // write standard header
-    writer.write( "\n" );
-    writer.write( "    95090100000  0\n" );
-    writer.write( "grap\n" );
 
     // write data
     IAxis dateAxis = getAxis( observation, getAxisName( 1, type ) );
@@ -252,6 +251,14 @@ public class NAZMLGenerator
     {
       Date date = (Date)values.getElement( i, dateAxis );
       Object value = values.getElement( i, valueAxis );
+      if(i==0)
+      {
+    writer.write( "\n" );
+    writer.write( "    "+sd.format(date)+"000  0\n" );
+//    writer.write( "    95090100000  0\n" );
+    writer.write( "grap\n" );
+        
+      }
       writer.write( m_grapDateFormat.format( date ) + " " + value.toString() + "\n" );
     }
   }

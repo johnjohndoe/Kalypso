@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -182,13 +183,23 @@ public class NaModelCalcJob extends AbstractCalcJob
         "startforecast" ) );
     // TODO add endsimulation in control.xsd and use it here
     // TODO change also in NAControlConverter
-    conf.setSimulationEnd( (Date)metaWorkspace.getRootFeature().getProperty( "startforecast" ) );
+
+    Date startForecastDate=(Date)metaWorkspace.getRootFeature().getProperty( "startforecast" );
+    
+//  , "yyyy MM dd HH",
+//       "notset" );
+   Calendar c=Calendar.getInstance();
+   c.setTime(startForecastDate);
+   c.add(Calendar.DATE,2);
+   Date endDate= c.getTime();
+    conf.setSimulationEnd( endDate );
+//    conf.setSimulationEnd( (Date)metaWorkspace.getRootFeature().getProperty( "startforecast" ) );
     //    conf.setSimulationEnd( (Date)metaWorkspace.getRootFeature().getProperty(
     // "endsimulation" ) );
     conf.setRootNodeID( (String)controlWorkspace.getRootFeature().getProperty( "rootNode" ) );
 
     // generate control files
-    NAControlConverter.featureToASCII( exeDir, metaFE, controlWorkspace, modellWorkspace );
+    NAControlConverter.featureToASCII(conf, exeDir, metaFE, controlWorkspace, modellWorkspace );
 
     // update model with factor values from control
     updateFactorParameter( modellWorkspace );

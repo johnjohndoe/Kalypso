@@ -1,11 +1,17 @@
 package org.kalypso.dwd.raster;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.extension.ITypeRegistry;
@@ -30,20 +36,27 @@ public class ForecastGenerator
     final File baseRasterFile = new File( args[1] );
     final File srcDir = new File( args[2] );
     final File destDir = new File( args[3] );
-  
-    System.out.println("Konvertierung von Rasterdaten zu Zeitreihen");    
-    
+
+    System.out.println( "Konvertierung von Rasterdaten zu Zeitreihen" );
+
     // check existing...
     final File srcRaster = getNewestFileAndRemoveOthers( srcDir );
-    System.out.println(" Raster: "+srcRaster.getName());
-    try
+    if( srcRaster != null )
     {
-      process( modelFile, baseRasterFile, srcRaster, destDir );
+      System.out.println( " Raster: " + srcRaster.getName() );
+      try
+      {
+        process( modelFile, baseRasterFile, srcRaster, destDir );
+        srcRaster.delete();
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
     }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
+    else
+      System.out.println( " keine Rasterdatei gefunden" );
+
   }
 
   private static boolean process( File modell, File baseRasterFile, File srcRaster, File destDir )
@@ -78,31 +91,59 @@ public class ForecastGenerator
 
   private static File getNewestFileAndRemoveOthers( File srcDir )
   {
-    final File[] files = srcDir.listFiles();
+    final FileFilter filter = new PrefixFileFilter( "lm_" );
+    final File[] files = srcDir.listFiles( filter );
     File result = null;
-    long time = 0;
+    Date date=null;
     // search newest...
     for( int i = 0; i < files.length; i++ )
     {
       final File file = files[i];
-      long lastModified = file.lastModified();
-      if( !file.isDirectory() && ( result == null || lastModified > time ) )
+      if( file.isDirectory() )
+        continue;
+      Date testdate=getDateFromRaster(file);
+      if(testdate==null)
+        continue;
+      if( result == null )
       {
         result = file;
-        time = file.lastModified();
+        date=testdate;
+      }
+      else if( testdate.after(date))
+      {
+        result = file;
+        date=testdate;
       }
     }
+    if( result == null )
+      return null;
     // got it
     // remove others
     for( int i = 0; i < files.length; i++ )
     {
       final File file = files[i];
-      if( !file.isDirectory() && ( file!=result))
+      if( !file.isDirectory() && ( file != result ) )
       {
-        System.out.println("remove "+file.getName());
-        // TODO real remove it
+        System.out.println( "remove " + file.getName() );
+        file.delete();
       }
-    } 
+    }
     return result;
+  }
+
+  private static SimpleDateFormat m_lmDateFormat=new SimpleDateFormat("'lm_'yyyy'_'MM'_'dd'_'hh");
+//  lm_2004_11_10_00
+  private static Date getDateFromRaster( File file )
+  {
+    String fileName=file.getName();
+    try
+    {
+      return m_lmDateFormat.parse(fileName);
+    }
+    catch( ParseException e )
+    {
+      System.out.println(" file "+fileName+" is must be in format \"lm_yyyy_MM_dd_hh\"" );
+      return null;
+    }
   }
 }

@@ -48,7 +48,7 @@ public class Raster2ZMLTest extends TestCase
     final String[] a2 = new String[]
     {
         "c:\\\\TMP\\raster\\modell.gml",
-        "c:\\\\TMP\\raster\\base",
+        "c:\\\\TMP\\raster\\base.dwd",
         "c:\\\\TMP\\raster\\in",
         "c:\\\\TMP\\raster\\out",
     };

@@ -3,6 +3,9 @@ package org.kalypso.convert.namodel;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Calendar;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
@@ -29,7 +32,7 @@ public class NAControlConverter
 
   public static final int RIGHT = 1;
 
-  public static void featureToASCII( File projectPath,Feature metaFE, GMLWorkspace controlWorkspace,
+  public static void featureToASCII(NAConfiguration conf, File projectPath,Feature metaFE, GMLWorkspace controlWorkspace,
       GMLWorkspace modellWorkspace ) throws IOException
   {
     final Feature controlFE = controlWorkspace.getRootFeature();
@@ -41,7 +44,7 @@ public class NAControlConverter
 
     // write FalStart
     final StringBuffer b1 = new StringBuffer();
-    writeFalstart( metaFE,startFile, b1 );
+    writeFalstart( conf,metaFE,startFile, b1 );
     //write it
     final FileWriter writer1 = new FileWriter( falStartFile );
     writer1.write( b1.toString() );
@@ -145,20 +148,30 @@ public class NAControlConverter
     b.append( "99999\n" );
   }
 
-  private static void writeFalstart( Feature metaFE,File startFile,
+  private static void writeFalstart(NAConfiguration conf, Feature metaFE,File startFile,
       StringBuffer b )
   {
 
     String system = "we";//"sys";
     String zustand = "nat";
+    SimpleDateFormat format = new SimpleDateFormat("yyyy MM dd HH");
 
-    String startDate = FeatureHelper.getFormatedDate( metaFE, "startsimulation",
-        "yyyy MM dd HH", "notset" );
-    String endDate = FeatureHelper.getFormatedDate( metaFE, "startforecast", "yyyy MM dd HH",
-        "notset" );
+    String startDate=format.format(conf.getSimulationStart());
+//    String startDate = FeatureHelper.getFormatedDate( metaFE, "startsimulation",
+//        "yyyy MM dd HH", "notset" );
+//    String endDate = FeatureHelper.getFormatedDate( metaFE, "startforecast", "yyyy MM dd HH",
+//        "notset" );
+//   Date dateForecast = (Date)metaFE.getProperty("startforecast");
+////   , "yyyy MM dd HH",
+////        "notset" );
+//    Calendar c=Calendar.getInstance();
+//    c.setTime(dateForecast);
+//    c.add(Calendar.DATE,2);
+//    Date endDateDate= c.getTime();
+    String endDate=format.format(conf.getSimulationEnd());
     // TODO set endsimulation, see also NaModellConverter
     //    String endDate = FeatureHelper.getFormatedDate( metaFE, "endsimulation", "yyyy MM dd HH",
-//        "notset" );
+    //        "notset" );
 
     b.append( "xxx\n" );
     b.append( "x einzugsgebiet\n" );
