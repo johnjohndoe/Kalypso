@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor;
+package org.kalypso.ogc.sensor.view.propertySource;
 
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;

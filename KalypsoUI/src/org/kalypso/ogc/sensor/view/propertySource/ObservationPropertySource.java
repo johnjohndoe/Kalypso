@@ -1,10 +1,10 @@
-package org.kalypso.ogc.sensor;
-
-import java.util.Arrays;
+package org.kalypso.ogc.sensor.view.propertySource;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.Metadata;
 
 /**
  * PropertySource for the Metadata of an IObservation.
@@ -41,7 +41,7 @@ public class ObservationPropertySource implements IPropertySource
       m_descriptors = new IPropertyDescriptor[ md.size() ];
       
       Object[] keys = md.keySet().toArray();
-      Arrays.sort( keys );
+      //Arrays.sort( keys );
       
       for( int i = 0; i < keys.length; i++ )
       {
