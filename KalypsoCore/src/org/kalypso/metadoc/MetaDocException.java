@@ -1,4 +1,4 @@
-package org.kalypso.services.metadoc;
+package org.kalypso.metadoc;
 
 /**
  * MetaDocException

@@ -1,8 +1,7 @@
-package org.kalypso.ogc.gml.table.wizard;
+package org.kalypso.ui.metadoc.table;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,10 +18,9 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.internal.UIPlugin;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
-import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.services.proxy.DocBean;
+import org.kalypso.ui.metadoc.IExportableTableDocument;
 import org.kalypso.ui.wizard.metadata.FeaturePage;
-import org.kalypso.util.io.CSV;
 
 /**
  * @author belger
@@ -36,10 +34,14 @@ public class ExportTableBerichtWizard extends Wizard
 
   private final Feature m_feature;
 
-  private LayerTableViewer m_layerTable;
+  private final IExportableTableDocument m_document2export;
+
   
-  public ExportTableBerichtWizard( final LayerTableViewer layerTable, final DocBean doc )
+  public ExportTableBerichtWizard( final IExportableTableDocument document2export, final DocBean doc )
   {
+    m_document2export = document2export;
+    m_docBean = doc;
+    
     final IDialogSettings workbenchSettings = UIPlugin.getDefault().getDialogSettings();
     IDialogSettings section = workbenchSettings.getSection( "ExportTableWizard" );//$NON-NLS-1$
     if( section == null )
@@ -48,8 +50,6 @@ public class ExportTableBerichtWizard extends Wizard
     
     setWindowTitle( "Berichtsablage" );
 
-    m_layerTable = layerTable;
-    m_docBean = doc;
     
     // create featuretype from bean
     final Collection ftpColl = new ArrayList();
@@ -62,7 +62,13 @@ public class ExportTableBerichtWizard extends Wizard
       final Map.Entry entry = (Entry)iter.next();
       
       final String name = entry.getKey().toString();
-      final String xmltype = entry.getValue().toString();
+      
+      final String[] splits = entry.getValue().toString().split(";");
+      
+      final String xmltype = splits[0];
+      
+      final String value = splits.length >= 2 ? splits[1] : null;
+      
       String typename = null;
       try
       {
@@ -74,7 +80,7 @@ public class ExportTableBerichtWizard extends Wizard
         typename = "java.lang.String";
       }
       ftpColl.add( FeatureFactory.createFeatureTypeProperty( name, typename, false ) );
-      fpColl.add( FeatureFactory.createFeatureProperty( name, null ) );
+      fpColl.add( FeatureFactory.createFeatureProperty( name, value ) );
       
       ints[count++] = 1;
     }
@@ -118,23 +124,19 @@ public class ExportTableBerichtWizard extends Wizard
         metadata.put( fc.property, newValue );
       }
 
-      final LayerTableViewer layerTable = m_layerTable;
-
       // das Dokument erzeugen
       final File destinationFile = new File( m_docBean.getLocation() );
-      final String[][] csv = layerTable.exportTable( m_optionPage.getOnlySelected() );
-      final PrintWriter pw = new PrintWriter( new FileWriter( destinationFile ) );
-      CSV.writeCSV( csv, pw );
-      pw.close();
-      
+
+      // export
+      m_document2export.setOnlySelectedRows( m_optionPage.getOnlySelected() );
+      m_document2export.exportDocument( new FileWriter( destinationFile) );
+
       m_optionPage.saveWidgetValues();
     }
     catch( final Exception e )
     {
       // TODO: errormessage
-      
       e.printStackTrace();
-      
       return false;
     }
 

@@ -12,11 +12,12 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.kalypso.java.lang.reflect.ClassUtilities;
-import org.kalypso.ogc.gml.table.wizard.ExportTableBerichtWizard;
+import org.kalypso.ogc.gml.table.wizard.ExportableLayerTable;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.proxy.DocBean;
 import org.kalypso.services.proxy.IMetaDocService;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.metadoc.table.ExportTableBerichtWizard;
 
 /**
  * @author Belger
@@ -34,7 +35,9 @@ public class ExportBerichtActionDelegate extends GisTableAbstractActionDelagate
     {
       final DocBean doc = prepareService();
 
-      final Wizard exportWizard = new ExportTableBerichtWizard( getEditor().getLayerTable(), doc );
+      final ExportableLayerTable exp = new ExportableLayerTable( getEditor().getLayerTable() );
+      
+      final Wizard exportWizard = new ExportTableBerichtWizard( exp , doc );
 
       final WizardDialog dialog = new WizardDialog( getEditor().getSite().getShell(), exportWizard );
       if( dialog.open() == Window.OK )
