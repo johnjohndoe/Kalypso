@@ -46,6 +46,9 @@ public class LayerTableLabelProvider implements ITableLabelProvider
     final KalypsoFeature kalypsoFeature = (KalypsoFeature)element;
 
     final AbstractFeatureCellEditor cellEditor = (AbstractFeatureCellEditor)m_viewer.getCellEditors()[columnIndex];
+    // Debug
+    if(cellEditor==null)
+      System.out.println("no celleditor for property "+m_viewer.getPropertyName(columnIndex));
     return cellEditor.renderLabel( kalypsoFeature );
   }
 

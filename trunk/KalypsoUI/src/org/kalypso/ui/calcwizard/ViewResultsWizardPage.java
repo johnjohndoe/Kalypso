@@ -139,7 +139,7 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
 
     final Button button = new Button( parent, SWT.PUSH );
     button.setText( "Zeitreihe bearbeiten" );
-    button.addSelectionListener( new GrafikToolStarter() );
+    button.addSelectionListener( new GraficToolStarter() );
     button.setVisible( true );
     //composite.setVisible(true);
     //button.setEnabled(true);
@@ -151,7 +151,7 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
     {
       final String templateFileName = getArguments().getProperty( PROP_TABLETEMPLATE );
       final IFile templateFile = (IFile)getProject().findMember( templateFileName );
-      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile );
+      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,   getReplaceProperties()  );
 
       m_viewer = new LayerTableViewer( parent, getProject(), KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), SELECTION_ID );
@@ -175,7 +175,7 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile );
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile,   getReplaceProperties()  );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
     m_mapModell = new GisTemplateMapModell( gisview, getProject(), crs );
     m_mapModell.addModellListener( this );
@@ -240,7 +240,7 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
     //
   }
 
-  private class GrafikToolStarter implements SelectionListener
+  private class GraficToolStarter implements SelectionListener
   {
 
     /**
@@ -265,6 +265,7 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
          
           for( int j = 0; j < timeNames.length; j++ )
           {
+            System.out.println(timeNames[j]);
             Object observation = allFeatures[i].getProperty( timeNames[j] );
             if( observation == null )
               System.out.println( "observation is null" );

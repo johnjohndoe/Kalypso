@@ -187,15 +187,6 @@
                style="radio"
                id="org.kalypso.editor.mapeditor.action.ZoomInAction"/>
           <!-- zoomInByRect with start and endpoint bounds -->     
-          <action
-               disabledIcon="icons/full/elcl16/kde_14_rectangle.gif"
-               toolbarPath="karte"
-               label="zoomin"
-               class="org.kalypso.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
-               tooltip="zoomin"
-               icon="icons/full/elcl16/kde_viewmag+.gif"
-               style="radio"
-               id="org.kalypso.editor.mapeditor.action.ZoomInByRectAction"/>      
          <!-- EOF -->      
          <action
                toolbarPath="karte"
