@@ -41,7 +41,6 @@
          <export name="*"/>
       </library>
       <library name="lib/coreBinding.jar">
-         <export name="*"/>
       </library>
       <library name="kalypsocore.jar">
          <export name="*"/>
@@ -56,7 +55,7 @@
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.kalypso.deegree"/>
-      <import plugin="org.kalypso.util"/>
+      <import plugin="org.kalypso.util" optional="true"/>
       <import plugin="org.kalypso.repository"/>
    </requires>
 
