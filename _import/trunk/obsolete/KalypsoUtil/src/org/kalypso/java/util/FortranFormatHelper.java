@@ -1,5 +1,7 @@
 package org.kalypso.java.util;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +67,18 @@ public class FortranFormatHelper
   final static String decimalPoint = "[ \\.]";
 
   final static String decimalValue = "[0-9 ]";
+
+  final static DecimalFormat decimalFormat;
+  static
+  {
+  // TODO remove this dirty hack with java 1.5 and use java printf instead
+    DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+    dfs.setDecimalSeparator( '.' );
+    decimalFormat = new DecimalFormat(
+        "#################################0.0###########################################" );
+    decimalFormat.setDecimalSeparatorAlwaysShown( true );
+    decimalFormat.setDecimalFormatSymbols( dfs );
+  }
 
   /**
    * @param formatLine
@@ -180,6 +194,19 @@ public class FortranFormatHelper
       }
     }
     return b.toString();
+  }
+
+  /**
+   * @param format
+   *          fortran format
+   * @param value
+   *          to print
+   * @return formated String according to format
+   */
+  public static String printf( Double value, String format )
+  {
+    // TODO remove this dirty hack with java 1.5 and use java printf instead
+    return printf( decimalFormat.format( value.doubleValue() ), format );
   }
 
   /**
