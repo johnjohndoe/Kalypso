@@ -12,11 +12,11 @@ public interface ITuppleModel
    * @return axis list for which this model delivers elements
    */
   public IAxis[] getAxisList();
-
-  /**
-  * @return axis by name
-  */
   
+  /**
+   * @return amount of items in this observation's model
+   * @throws SensorException
+   */
   public int getCount() throws SensorException;
 
   /**
