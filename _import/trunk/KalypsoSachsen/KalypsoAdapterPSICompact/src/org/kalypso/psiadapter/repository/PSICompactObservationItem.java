@@ -13,8 +13,6 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
-import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
-import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
 import org.kalypso.psiadapter.PSICompactFactory;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
@@ -25,7 +23,6 @@ import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.ArchiveData;
 import de.psi.go.lhwz.PSICompact.ObjectInfo;
 import de.psi.go.lhwz.PSICompact.ObjectMetaData;
-import de.psi.go.lhwz.PSICompact.WQData;
 import de.psi.go.lhwz.PSICompact.WQParamSet;
 
 /**
@@ -148,7 +145,7 @@ public class PSICompactObservationItem implements IObservation
     {
       if( m_psicWQParamSet != null )
       {
-        final WechmannGroup group = readWQParams( m_psicWQParamSet );
+        final WechmannGroup group = PSICompactRepositoryFactory.readWQParams( m_psicWQParamSet );
         final String xml = WechmannFactory.createXMLString( group );
         
         m_metadata.put( TimeserieConstants.MD_WQ, xml );
@@ -339,31 +336,5 @@ public class PSICompactObservationItem implements IObservation
   {
     // only editable when it represents a forecast
     return m_valueType == PSICompact.TYPE_VALUE;
-  }
-
-  /**
-   * Helper that converts PSICompact WQParamSet objects to a WechmannSets
-   * object.
-   * 
-   * @param pset
-   * @return WechmannGroup constructed from the WQParamSet array
-   * 
-   */
-  public static WechmannGroup readWQParams( final WQParamSet[] pset )
-  {
-    final WechmannSet[] wsets = new WechmannSet[pset.length];
-    for( int i = 0; i < pset.length; i++ )
-    {
-      final WQData[] ds = pset[i].getWqData();
-      final WechmannParams[] wps = new WechmannParams[ds.length];
-
-      for( int j = 0; j < ds.length; j++ )
-        wps[j] = new WechmannParams( ds[j].getW1(), ds[j].getLNK1(), ds[j]
-            .getK2(), ds[j].getWGR() );
-
-      wsets[i] = new WechmannSet( pset[i].getValidFrom(), wps );
-    }
-
-    return new WechmannGroup( wsets );
   }
 }

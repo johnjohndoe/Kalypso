@@ -5,23 +5,30 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.swing.JOptionPane;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.proxy.ArgsObservationProxy;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.xml.sax.InputSource;
 
@@ -36,11 +43,11 @@ public class PSICompactImpl implements PSICompact
 
   private final Map m_id2zml;
 
+  private final Map m_id2zmlObs;
+
   private final Map m_id2wq;
 
   private final Map m_id2values;
-
-  private final Map m_id2measType;
 
   private boolean m_init = false;
 
@@ -52,9 +59,9 @@ public class PSICompactImpl implements PSICompact
 
     m_id2values = new HashMap();
     m_id2obj = new HashMap();
-    m_id2measType = new HashMap();
     m_id2wq = new HashMap();
     m_id2zml = new HashMap();
+    m_id2zmlObs = new HashMap();
   }
 
   /**
@@ -82,8 +89,8 @@ public class PSICompactImpl implements PSICompact
 
           if( splitsLine.length >= 1 )
           {
-            String id = splitsLine[0].replaceAll(";", "");
-            
+            String id = splitsLine[0].replaceAll( ";", "" );
+
             String zml = splitsLine.length >= 2 ? splitsLine[1] : "";
             String desc = splitsLine.length >= 3 ? splitsLine[2] : "";
 
@@ -167,7 +174,7 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    JOptionPane.showMessageDialog( JOptionPane.getRootFrame(), message );
+    System.out.println( "PSICompact.writeProtocol: " + message );
 
     return true;
   }
@@ -212,28 +219,61 @@ public class PSICompactImpl implements PSICompact
   }
 
   /**
+   * Helper for lazy loading the zml observation
+   * 
    * @param id
-   * @param from
-   * @param to
-   * @return data
+   * @return
+   * @throws ECommException
    */
-  private ArchiveData[] readFromZml( String id, Date from, Date to )
+  private IObservation getZmlObs( final String id ) throws ECommException
   {
+    // already loaded?
+    IObservation obs = (IObservation) m_id2zmlObs.get( id );
+    if( obs != null )
+      return obs;
+
     final String fname = (String) m_id2zml.get( id );
 
     final InputStream stream = getClass().getResourceAsStream( "fake/" + fname );
     InputSource ins = new InputSource( stream );
 
-    final DateRangeArgument dra = new DateRangeArgument( from, to );
-    final String strUrl = ZmlURL.insertDateRange( getClass().getResource(
-        "fake/" + fname ).toExternalForm(), dra );
     try
     {
-      final URL url = new URL( strUrl );
+      final URL url = getClass().getResource( "fake/" + fname );
 
-      final IObservation obs = ZmlFactory.parseXML( ins, fname, url );
+      obs = ZmlFactory.parseXML( ins, fname, url );
 
-      final ITuppleModel values = obs.getValues( dra );
+      m_id2zmlObs.put( id, obs );
+
+      return obs;
+    }
+    catch( Exception e )
+    {
+      throw new ECommException( e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( stream );
+    }
+  }
+
+  /**
+   * Reads the data from the underlying zml
+   * 
+   * @param id
+   * @param from
+   * @param to
+   * @return data
+   * @throws ECommException
+   */
+  private ArchiveData[] readFromZml( String id, Date from, Date to ) throws ECommException
+  {
+    try
+    {
+      final ArgsObservationProxy obs = new ArgsObservationProxy(
+          new DateRangeArgument( from, to ), getZmlObs( id ) );
+
+      final ITuppleModel values = obs.getValues( null );
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( obs
           .getAxisList(), Date.class )[0];
       final IAxis valueAxis = ObservationUtilities.findAxisByClass( obs
@@ -252,13 +292,7 @@ public class PSICompactImpl implements PSICompact
     }
     catch( Exception e )
     {
-      e.printStackTrace();
-
-      return null;
-    }
-    finally
-    {
-      IOUtils.closeQuietly( stream );
+      throw new ECommException( e );
     }
   }
 
@@ -285,13 +319,52 @@ public class PSICompactImpl implements PSICompact
     testInitDone();
 
     WQParamSet[] pset = (WQParamSet[]) m_id2wq.get( id );
-    if( pset == null )
+    if( pset != null )
+      return pset;
+    
+    // try to get the info from the underlying zml, if any
+    if( m_id2zml.containsKey( id ) )
     {
-      pset = new WQParamSet[] { new WQParamSet( new Date(),
-          new WQData[] { new WQData( Math.random(), Math.random(), Math
-              .random(), Math.random() ) } ) };
-
-      m_id2wq.put( id, pset );
+      final String wqParam = getZmlObs( id ).getMetadataList().getProperty( TimeserieConstants.MD_WQ );
+      
+      if( wqParam != null )
+      {
+        StringReader sr = new StringReader( wqParam );
+        final InputSource src = new InputSource( sr );
+        
+        final WechmannGroup group;
+        try
+        {
+          group = WechmannFactory.parse( src );
+        }
+        catch( WechmannException e )
+        {
+          e.printStackTrace();
+          throw new ECommException( e );
+        }
+        
+        final ArrayList wqps = new ArrayList();
+        
+        final Iterator its = group.iterator();
+        while( its.hasNext() )
+        {
+          final WechmannSet ws = (WechmannSet) its.next();
+          
+          final ArrayList wqds = new ArrayList();
+          final Iterator itp = ws.iterator();
+          while( itp.hasNext() )
+          {
+            final WechmannParams params = (WechmannParams) itp.next();
+            final WQData data = new WQData(params.getWGR(), params.getW1(), params.getLNK1(), params.getK2() );
+            wqds.add( data );
+          }
+          
+          wqps.add( new WQParamSet( ws.getValidity(), (WQData[])wqds.toArray( new WQData[wqds.size()] ) ) );
+        }
+        
+        pset = (WQParamSet[]) wqps.toArray( new WQParamSet[wqps.size()] );
+        m_id2wq.put( id, pset );
+      }
     }
 
     return pset;
@@ -304,23 +377,90 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    ObjectMetaData omd = new ObjectMetaData();
+    // try to get the info from the underlying zml, if any
+    if( m_id2zml.containsKey( id ) )
+    {
+      final IObservation obs = getZmlObs( id );
+      final MetadataList mdl = obs.getMetadataList();
+      
+      final ObjectMetaData omd = new ObjectMetaData();
+      omd.setId( id );
+      
+      String p = null;
+      p = mdl.getProperty( TimeserieConstants.MD_ALARM_1 );
+      if( p != null )
+        omd.setAlarm1( Integer.valueOf( p ).doubleValue() );
+        
+      p = mdl.getProperty( TimeserieConstants.MD_ALARM_2 );
+      if( p != null )
+        omd.setAlarm2( Integer.valueOf( p ).doubleValue() );
 
-    omd.setAlarm1( 1.0 );
-    omd.setAlarm2( 2.0 );
-    omd.setAlarm3( 3.0 );
-    omd.setAlarm4( 4.0 );
-    omd.setHeight( 34 );
-    omd.setId( id );
-    omd.setLevel( 56.8 );
-    omd.setLevelUnit( "Etwas..." );
-    omd.setMapNo( 7 );
-    omd.setRight( 987654321 );
-    omd.setRiver( "Fluss..." );
-    omd.setRiversystem( "Flussgebiet..." );
-    omd.setUnit( SI_NO_UNIT );
+      p = mdl.getProperty( TimeserieConstants.MD_ALARM_3 );
+      if( p != null )
+        omd.setAlarm3( Integer.valueOf( p ).doubleValue() );
 
-    return omd;
+      p = mdl.getProperty( TimeserieConstants.MD_ALARM_4 );
+      if( p != null )
+        omd.setAlarm4( Integer.valueOf( p ).doubleValue() );
+
+      p = mdl.getProperty( TimeserieConstants.MD_FLUSS );
+      if( p != null )
+        omd.setRiver( p );
+
+      p = mdl.getProperty( TimeserieConstants.MD_FLUSSGEBIET );
+      if( p != null )
+        omd.setRiversystem( p );
+
+      p = mdl.getProperty( TimeserieConstants.MD_GKH );
+      if( p != null )
+        omd.setHeight( Integer.valueOf( p ).intValue() );
+
+      p = mdl.getProperty( TimeserieConstants.MD_GKR );
+      if( p != null )
+        omd.setRight( Integer.valueOf( p ).intValue() );
+
+      p = mdl.getProperty( TimeserieConstants.MD_HOEHENANGABEART );
+      if( p != null )
+        omd.setLevelUnit( p );
+
+      p = mdl.getProperty( TimeserieConstants.MD_MESSTISCHBLATT );
+      if( p != null )
+        omd.setMapNo( Integer.valueOf( p ).intValue() );
+
+      p = mdl.getProperty( TimeserieConstants.MD_PEGELNULLPUNKT );
+      if( p != null )
+        omd.setLevel( Integer.valueOf( p ).doubleValue() );
+
+      final IAxis nba = ObservationUtilities.findAxisByClass( obs.getAxisList(), Number.class )[0];
+      
+      omd.setUnit( whichUnit( nba.getUnit() ) );
+      
+      return omd;
+    }
+
+    return null;
+  }
+  
+  /**
+   * Helper that returns the PSI unit according to a unit string
+   * 
+   * @param unit
+   * @return psi unit
+   */
+  private int whichUnit( final String unit )
+  {
+    if( unit.equals( "m") )
+      return PSICompact.SI_METER;
+    if( unit.equals( "m³/s") )
+      return PSICompact.SI_CUBIC_METER_PER_SECOND;
+    if( unit.equals( "K") )
+      return PSICompact.SI_KELVIN;
+    if( unit.equals( "") )
+      return PSICompact.SI_NO_UNIT;
+    if( unit.equals( "m³") )
+      return PSICompact.SI_QUBIC_METER;
+
+    return PSICompact.SI_UNDEF;
   }
 
   /**
@@ -381,29 +521,8 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    Integer intObj = (Integer) m_id2measType.get( id );
-
-    if( intObj == null )
-    {
-      double d = Math.random();
-
-      int enumMeas = 4;
-      double interval = 1.0 / enumMeas;
-
-      for( int i = 0; i < enumMeas; i++ )
-        if( d <= i * interval )
-        {
-          intObj = new Integer( i );
-          break;
-        }
-
-      if( intObj == null )
-        intObj = new Integer( PSICompact.MEAS_UNDEF );
-
-      m_id2measType.put( id, intObj );
-    }
-
-    return intObj.intValue();
+    // always measurement, not important for this fake implementation
+    return PSICompact.TYPE_MEASUREMENT;
   }
 
   /**

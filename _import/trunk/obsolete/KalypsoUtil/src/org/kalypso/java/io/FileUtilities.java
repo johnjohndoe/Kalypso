@@ -289,7 +289,7 @@ public class FileUtilities
    */
   public static String getSuffix( final String name )
   {
-    final String[] strings = name.split( "." );
+    final String[] strings = name.split( "\\." );
     if( strings.length != 0 )
       return strings[strings.length - 1];
     return null;
