@@ -30,13 +30,12 @@
               <Size>15.0</Size>
             </Graphic>
           </PointSymbolizer>
-<!--
           <TextSymbolizer>
             <Geometry>
               <ogc:PropertyName>GEOM</ogc:PropertyName>
             </Geometry>
             <Label>
-              <ogc:PropertyName>Name</ogc:PropertyName>
+              <ogc:PropertyName>PEGELNAME</ogc:PropertyName>
             </Label>
             <Font>
               <CssParameter name="font-family"/>
@@ -67,7 +66,6 @@
               </Stroke>
             </Halo>            
           </TextSymbolizer>
--->          
         </Rule>
       </FeatureTypeStyle>
     </UserStyle>
