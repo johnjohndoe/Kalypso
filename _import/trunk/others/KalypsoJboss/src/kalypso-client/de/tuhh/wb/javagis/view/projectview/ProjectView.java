@@ -129,7 +129,7 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
     private void reloadProjectTree()
     {
 	// server access is allowed only for local users
-	String host="localhost";
+	String host="elbe.wb.tu-harburg.de";
 	String port="";
 	String user="kalypso-user";
 	String pass="";

@@ -256,14 +256,6 @@ public class VersionAccessImpl implements VersionAccess
 	myVersionClass.importFromXml(themeKey,vId,importFile);
     }
 
-    /*
-      public void xmlExport(int pos)
-      {
-      Object vId=myIdList.getIdAt(pos);
-      String themeKey=myIdList.getKeyAt(pos);
-      myVersionClass.exportToXml(themeKey,vId);
-      }
-    */
     public void xmlExport(String themeKey,Object vId,File exportFile)
     {
 	myVersionClass.exportToXml(themeKey,vId,exportFile);

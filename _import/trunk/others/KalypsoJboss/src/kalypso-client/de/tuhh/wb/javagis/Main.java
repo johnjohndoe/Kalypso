@@ -15,7 +15,9 @@ import java.util.Properties;
 import datacenter.persistent.Database;
 import timeserieSelection.CSelectTSFrame;
 import timeserieSelection.CTSStruct;
-    
+
+import ejb.util.Lookup;
+
 public class Main
 {
     public static ViewManager viewManager=null;
@@ -31,6 +33,7 @@ public class Main
 	try
 	    {
 		props.load(new FileInputStream(configFile));
+		Lookup.useHost(props.getProperty("jboss_host"));
 	    }
 	catch(Exception e)
 	    {

@@ -20,11 +20,12 @@ public class I18n
 	getInstance().setLangFile();
 	getInstance().load();
     }
-	public static String getLanguage()
-	{
-		return I18n.lang;
-	}
 
+    public static String getLanguage()
+    {
+	return I18n.lang;
+    }
+    
     private I18n()
     {
 	setLangFile();
@@ -39,22 +40,24 @@ public class I18n
     }
 
 	
-	public static String get(String key)
-	{
-		String html=getHTML(key);
-		StringBuffer stBuff1=new StringBuffer(html);
-		int index1 = html.indexOf("<br>");
-		if(index1!=-1){
-			stBuff1.replace(index1,index1+4,"\n");
-			int index2 = html.indexOf("<br>",(index1+4));
-				if(index2!=-1){
-					stBuff1.replace(index2-3,index2+1,"\n");
-				}
-		}
-		return stBuff1.toString();
-	}
-	
-	public static String getHTML(String key)
+    public static String get(String key)
+    {
+	String html=getHTML(key);
+	StringBuffer stBuff1=new StringBuffer(html);
+	int index1 = html.indexOf("<br>");
+	if(index1!=-1)
+	    {
+		stBuff1.replace(index1,index1+4,"\n");
+		int index2 = html.indexOf("<br>",(index1+4));
+		if(index2!=-1)
+		    {
+			stBuff1.replace(index2-3,index2+1,"\n");
+		    }
+	    }
+	return stBuff1.toString();
+    }
+    
+    public static String getHTML(String key)
     {
 	I18n instance=getInstance();
 	String prop=instance.props.getProperty(key);
@@ -67,14 +70,14 @@ public class I18n
 		return value;
 	    }
 	else
-		{
-            StringBuffer stBuff = new StringBuffer(prop);
-			stBuff.deleteCharAt(0);
-			stBuff.deleteCharAt((stBuff.length()-1));
-			return stBuff.toString();
-		}
+	    {
+		StringBuffer stBuff = new StringBuffer(prop);
+		stBuff.deleteCharAt(0);
+		stBuff.deleteCharAt((stBuff.length()-1));
+		return stBuff.toString();
+	    }
     }
-
+    
     private void load()
     {
         props=new Properties();
@@ -101,14 +104,14 @@ public class I18n
             }
     }
 
-	private void setLangFile()
-	{
+    private void setLangFile()
+    {
 	if(lang!=null)
-	    langFile=new File("D:/Nadja/cvs/kalypso/src/kalypso-client/de/tuhh/wb/javagis/tools","jm-i18n-"+lang+".conf");
+	    langFile=new File("i18n/","jm-i18n-"+lang+".conf");
 	else
-	    langFile=new File("D:/Nadja/cvs/kalypso/src/kalypso-client/de/tuhh/wb/javagis/tools","jm-i18n-"+Prefs.getString("LangDefault")+".conf");
-	}
-	
+	    langFile=new File("i18n/","jm-i18n-"+Prefs.getString("LangDefault")+".conf");
+    }
+    
     private void save()
     {
 	try

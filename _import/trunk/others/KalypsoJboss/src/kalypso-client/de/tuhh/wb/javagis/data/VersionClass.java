@@ -50,6 +50,7 @@ public class VersionClass implements EJBEventListener
 	this.eventManager=EJBEventManager.getInstance();
 	
 	this.env=new Hashtable();
+	System.out.println("JBOSS_HOST: "+host);
 	env.put("java.naming.factory.initial","org.jnp.interfaces.NamingContextFactory");
 	env.put("java.naming.factory.url.pkgs","org.jboss.naming:org.jnp.interfaces");
 	env.put("java.naming.provider.url",host);

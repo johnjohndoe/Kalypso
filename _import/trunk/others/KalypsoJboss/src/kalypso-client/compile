@@ -12,7 +12,7 @@ CLASSPATH=$CLASSPATH:bin/javaGis1-ejb.jar:bin/javaGis2-ejb.jar:bin/javaGis3-ejb.
 
 echo CLASSPATH=$CLASSPATH
 export CLASSPATH
-javac -d bin de/tuhh/wb/javagis/Main.java 2>javac.out 
+javac -deprecation -d bin de/tuhh/wb/javagis/Main.java 2>javac.out 
 #javac Test.java 2>javac.out 
 echo -e "fertig\n\a";
 less javac.out
