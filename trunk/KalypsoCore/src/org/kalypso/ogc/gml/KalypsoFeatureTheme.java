@@ -99,7 +99,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       {
         final DisplayContext context = (DisplayContext)it.next();
         if( selectionId == -1 || context.getFeature().isSelected( selectionId ) )
-          context.paint( g, p, i );
+          context.paint( g, p, i,scale );
       }
     }
   }
