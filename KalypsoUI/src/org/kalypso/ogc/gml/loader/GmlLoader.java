@@ -113,7 +113,7 @@ public class GmlLoader extends AbstractLoader
         {
           protected void write( final Writer writer ) throws Throwable
           {
-            GmlSerializer.serializeWorkspace( writer, workspace, new NullProgressMonitor() );            
+            GmlSerializer.serializeWorkspace( writer, workspace);            
           }
         };
         thread.start();
@@ -130,7 +130,7 @@ public class GmlLoader extends AbstractLoader
       else if( file == null && gmlURL.getProtocol().equals( "file" ) )
       {
         final Writer w = new FileWriter( new File( gmlURL.getFile() ) );
-        GmlSerializer.serializeWorkspace( w, workspace, monitor );
+        GmlSerializer.serializeWorkspace( w, workspace);
       }
       else
         throw new LoaderException( "Die URL kann nicht beschrieben werden: " + gmlURL );

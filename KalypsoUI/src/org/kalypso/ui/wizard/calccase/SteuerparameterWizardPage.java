@@ -160,7 +160,7 @@ public class SteuerparameterWizardPage extends WizardPage
     {
       public void write( final Writer w ) throws Throwable
       {
-        GmlSerializer.serializeWorkspace( w, workspace, new NullProgressMonitor() );
+        GmlSerializer.serializeWorkspace( w, workspace);
       }
     };
     thread.start();
