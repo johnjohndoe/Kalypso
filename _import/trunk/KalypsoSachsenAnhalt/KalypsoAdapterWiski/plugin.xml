@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin
-   id="org.kalypso.repository.wiski"
+   id="org.kalypso.wiskiadapter"
    name="KalypsoWiskiAdapter Plug-in"
    version="0.0.1"
-   provider-name="kalypso.org">
+   provider-name="org.kalypso">
 
    <runtime>
       <library name="KalypsoWiskiAdapter.jar">
@@ -14,5 +14,19 @@
          <export name="*"/>
       </library>
    </runtime>
+   <requires>
+      <import plugin="org.kalypso.core"/>
+      <import plugin="org.kalypso.repository"/>
+      <import plugin="org.kalypso.util"/>
+   </requires>
+   <extension
+         id="org.kalypso.repository.factories"
+         name="Wiski Repository Factories"
+         point="org.kalypso.repository.factories">
+      <repository
+            conf="rmi://193.23.163.115:10991/KiWWDataProvider#-#em#123abc#de"
+            name="Wiski Data Provider"
+            factory="org.kalypso.wiskiadapter.WiskiRepositoryFactory"/>
+   </extension>
 
 </plugin>

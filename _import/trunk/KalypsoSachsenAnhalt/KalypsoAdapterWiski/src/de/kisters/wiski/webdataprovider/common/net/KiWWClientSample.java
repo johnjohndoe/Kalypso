@@ -158,7 +158,7 @@ public final class KiWWClientSample
     }
 
   }
-
+  
   /**
    * extract timeseries data from HashMap
    * 
