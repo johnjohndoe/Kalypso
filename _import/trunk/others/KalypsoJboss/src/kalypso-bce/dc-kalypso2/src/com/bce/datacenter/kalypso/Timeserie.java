@@ -267,28 +267,19 @@ public class Timeserie extends Persistent {
 				}
 
 				FileWriter fw = new FileWriter(filename);
-				//TODO  TimeZone fixed - to handle the time shift between DataCenter and ASCII-Files 
-				TimeZone srcTZ  = TimeZone.getTimeZone("GMT-1");
-				TimeZone destTZ = TimeZone.getTimeZone("GMT+1");
-				Calendar srcCal = Calendar.getInstance(srcTZ ,Locale.GERMAN);
-				Calendar destCal= Calendar.getInstance(destTZ,Locale.GERMAN);
 				
 				SimpleDateFormat sdf = null;
 				
 				if (dateFormatPattern != null) {					
 				sdf = new SimpleDateFormat(dateFormatPattern);
-				sdf.setTimeZone(destTZ);
 				}
 				else {
 					sdf = new SimpleDateFormat();
 				}
             	       
 				while (set.next()) {					
-					Date datum=new Date(set.getTime(1,srcCal).getTime()
-					+
-					set.getDate(1,srcCal).getTime());
-				//TODO TimeZone fixed - destination: implement in a better/global way	
-					fw.write(sdf.format(datum));
+					
+					fw.write(sdf.format(set.getTimestamp(1)));
 					fw.write(separator);
 					fw.write(set.getString(2));
 					fw.write(separator);
