@@ -309,7 +309,7 @@ class Theme_Impl implements Theme
         for( int i = 0; i < ( (FeatureLayer)layer ).getSize(); i++ )
         {
           Feature feature = ( (FeatureLayer)layer ).getFeature( i );
-          DisplayElement[] de = fac.createDisplayElement( feature, styles );
+          DisplayElement[] de = DisplayElementFactory.createDisplayElement( feature, styles );
           for( int k = 0; k < de.length; k++ )
           {
             if( de[k] instanceof LabelDisplayElement )
@@ -335,7 +335,7 @@ class Theme_Impl implements Theme
       {
         // instance of RasterLayer
         RasterLayer rl = (RasterLayer)layer;
-        DisplayElement[] de = fac.createDisplayElement( rl.getRaster(), styles );
+        DisplayElement[] de = DisplayElementFactory.createDisplayElement( rl.getRaster(), styles );
         for( int k = 0; k < de.length; k++ )
         {
           displayElements.add( de[k] );

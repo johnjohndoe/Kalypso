@@ -1,6 +1,7 @@
 package org.kalypso.ogc.sensor.jface;
 
 import java.awt.Frame;
+import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
@@ -20,7 +21,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.jfree.chart.ChartPanel;
-import org.kalypso.eclipse.core.resources.IProjectProvider;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
@@ -59,7 +59,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
   
   
   public ObservationLinkDialog( final Shell parentShell, final TimeseriesLink obslink,
-      final IProjectProvider projectProvider )
+      final URL context )
   {
     super( parentShell );
 
@@ -68,7 +68,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
     m_timeserie = obslink;
 
     if( obslink != null )
-      m_key = new PoolableObjectType( obslink.getLinktype(), obslink.getHref(), projectProvider.getProject() );
+      m_key = new PoolableObjectType( obslink.getLinktype(), obslink.getHref(), context );
     startLoadTimeserie();
   }
 

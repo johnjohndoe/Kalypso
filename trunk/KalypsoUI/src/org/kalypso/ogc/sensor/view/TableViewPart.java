@@ -1,7 +1,6 @@
 package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
-import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
@@ -88,7 +87,6 @@ public class TableViewPart extends ViewPart implements
     final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
       public void run( IProgressMonitor monitor )
-          throws InvocationTargetException, InterruptedException
       {
         monitor.beginTask( "TableView Update", 2 );
 

@@ -311,9 +311,8 @@ public class KalypsoObservationService implements IObservationService
 
       return rep.findItem( obean.getId() );
     }
-    else
-    {
-      // last chance: go through repositories and use findItem()
+
+    // last chance: go through repositories and use findItem()
       for( final Iterator it = m_repositories.iterator(); it.hasNext(); )
       {
         final IRepository rep = (IRepository)it.next();
@@ -332,7 +331,6 @@ public class KalypsoObservationService implements IObservationService
       final RemoteException e = new RemoteException( "Unknonwn Repository: " + obean.getRepId() );
       m_logger.throwing( "KalypsoObservationService", "itemFromBean", e );
       throw e;
-    }
   }
 
   /**

@@ -51,7 +51,6 @@ package org.deegree_impl.model.resources;
 
 // Collections
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 /**
  * A set of miscellaneous methods.

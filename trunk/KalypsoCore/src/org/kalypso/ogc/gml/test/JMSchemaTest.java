@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
-import java.io.Writer;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
@@ -22,13 +21,9 @@ import org.deegree_impl.extension.TypeRegistryException;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.gml.schema.EnumerationFeatureTypeProperty;
 import org.deegree_impl.gml.schema.GMLSchema;
-import org.deegree_impl.model.cs.Adapters;
-import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.deegree_impl.model.feature.XLinkFeatureTypeProperty;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author doemming
@@ -126,25 +121,25 @@ public class JMSchemaTest extends TestCase
   //  }
   //  
 
-  private void loadAndWriteGML( final String xsdFile, final String gmlFile ) throws Exception
-  {
-    //    InputSource schemaSource = new InputSource(
-    // getClass().getResourceAsStream( xsdFile ) );
-    //    InputSource gmlSource = new InputSource(
-    // getClass().getResourceAsStream( gmlFile ) );
-    ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    CS_CoordinateSystem crs = Adapters.getDefault().export( csFac.getCSByName( "EPSG:4326" ) );
-
-    KalypsoFeatureLayer[] layers = GmlSerializer.deserialize( getClass().getResource( xsdFile ),
-        getClass().getResource( gmlFile ), crs, null );
-
-    System.out.println( "GML loaded" );
-    File outFile = File.createTempFile( "test_parse", "gml" );
-    final Writer writer = new FileWriter( outFile );
-
-    GmlSerializer.serialize( writer, layers, null );
-    System.out.println( "GML saved in " + outFile.getPath() );
-  }
+//  private void loadAndWriteGML( final String xsdFile, final String gmlFile ) throws Exception
+//  {
+//    //    InputSource schemaSource = new InputSource(
+//    // getClass().getResourceAsStream( xsdFile ) );
+//    //    InputSource gmlSource = new InputSource(
+//    // getClass().getResourceAsStream( gmlFile ) );
+//    ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
+//    CS_CoordinateSystem crs = Adapters.getDefault().export( csFac.getCSByName( "EPSG:4326" ) );
+//
+//    KalypsoFeatureLayer[] layers = GmlSerializer.deserialize( getClass().getResource( xsdFile ),
+//        getClass().getResource( gmlFile ), crs, null );
+//
+//    System.out.println( "GML loaded" );
+//    File outFile = File.createTempFile( "test_parse", "gml" );
+//    final Writer writer = new FileWriter( outFile );
+//
+//    GmlSerializer.serialize( writer, layers, null );
+//    System.out.println( "GML saved in " + outFile.getPath() );
+//  }
 
   private String toString( int indent, FeatureType[] fts )
   {

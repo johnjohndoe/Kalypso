@@ -74,7 +74,6 @@ public class ShapeLoader extends AbstractLoader
       
 
       // Workspace laden
-      
       final String sourceSrs = source.getProperty( "SRS", "" );
       final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
 

@@ -110,10 +110,7 @@ public class GmlLoader extends AbstractLoader
   }
 
   /**
-   * @throws LoaderException
-   * @see org.kalypso.loader.AbstractLoader#save(java.util.Properties,
-   *      org.eclipse.core.resources.IProject,
-   *      org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
+   * @see org.kalypso.loader.ILoader#save(java.util.Properties, java.net.URL, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
   public void save( final Properties source, final URL context,
       final IProgressMonitor monitor, final Object data ) throws LoaderException

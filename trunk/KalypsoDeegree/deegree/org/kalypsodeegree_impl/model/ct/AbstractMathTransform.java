@@ -54,10 +54,8 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.IllegalPathStateException;
-import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
-import java.awt.geom.QuadCurve2D;
 import java.util.Locale;
 
 import javax.vecmath.SingularMatrixException;

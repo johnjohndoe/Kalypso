@@ -26,10 +26,11 @@ public class FeatureviewHelper
 {
   private FeatureviewHelper()
   {
-    // wird nicht instantiiert
+  // wird nicht instantiiert
   }
 
   public static final ObjectFactory FACTORY = new ObjectFactory();
+
   public static Unmarshaller UNMARSHALLER;
 
   static
@@ -44,34 +45,35 @@ public class FeatureviewHelper
     }
   }
 
-  private static ControlType createDefaultFeatureControlTypeForProperty( final FeatureTypeProperty ftp ) throws JAXBException
+  private static ControlType createDefaultFeatureControlTypeForProperty(
+      final FeatureTypeProperty ftp ) throws JAXBException
   {
     final GridDataType griddata = FACTORY.createGridData();
-    
+
     final String typename = ftp.getType();
-    if( "java.lang.String|java.lang.Integer|java.lang.Long|java.lang.Float|java.lang.Double|java.util.Date".indexOf( typename ) != -1 )
+    if( "java.lang.String|java.lang.Integer|java.lang.Long|java.lang.Float|java.lang.Double|java.util.Date"
+        .indexOf( typename ) != -1 )
     {
       final TextType editor = FACTORY.createText();
       editor.setStyle( SWT.BORDER );
       editor.setEditable( true );
       editor.setProperty( ftp.getName() );
-  
+
       griddata.setHorizontalAlignment( GridData.BEGINNING );
       griddata.setWidthHint( 100 );
       editor.setLayoutData( griddata );
-      
+
       return editor;
     }
-//    else if( typename != null && typename.startsWith( GM_Object.class.getPackage().getName() ) )
-//    {
-      final ButtonType button = FACTORY.createButton();
-      button.setStyle( SWT.PUSH );
-      button.setProperty( ftp.getName() );
-  
-      griddata.setHorizontalAlignment( GridData.BEGINNING );
-      button.setLayoutData( griddata );
-      
-      return button;
+
+    final ButtonType button = FACTORY.createButton();
+    button.setStyle( SWT.PUSH );
+    button.setProperty( ftp.getName() );
+
+    griddata.setHorizontalAlignment( GridData.BEGINNING );
+    button.setLayoutData( griddata );
+
+    return button;
   }
 
   /** Standardview erzeugen */
@@ -81,8 +83,8 @@ public class FeatureviewHelper
     {
       final Featureview featureview = FACTORY.createFeatureview();
       featureview.setTypename( type.getName() );
-      featureview.setStyle( SWT.BORDER );
-  
+      featureview.setStyle( SWT.NONE );
+
       final GridLayoutType gridLayout = FACTORY.createGridLayout();
       gridLayout.setNumColumns( 2 );
       featureview.setLayout( gridLayout );
@@ -90,44 +92,42 @@ public class FeatureviewHelper
       griddata.setGrabExcessHorizontalSpace( true );
       griddata.setHorizontalAlignment( GridData.FILL );
       featureview.setLayoutData( griddata );
-  
+
       final List controlList = featureview.getControl();
-  
+
       final FeatureTypeProperty[] properties = type.getProperties();
       for( int i = 0; i < properties.length; i++ )
       {
         final FeatureTypeProperty ftp = properties[i];
-  
+
         final LabelType label = FACTORY.createLabel();
         label.setStyle( SWT.NONE );
         label.setText( ftp.getName() );
         label.setVisible( true );
-  
+
         final GridDataType labelGridData = FACTORY.createGridData();
         labelGridData.setGrabExcessHorizontalSpace( false );
         labelGridData.setHorizontalAlignment( GridData.BEGINNING );
         label.setLayoutData( labelGridData );
-  
+
         controlList.add( label );
-  
+
         final ControlType cc = createDefaultFeatureControlTypeForProperty( ftp );
         if( cc != null )
           controlList.add( cc );
       }
-  
+
       final Validator validator = FACTORY.createValidator();
       validator.validate( featureview );
-  
+
       return featureview;
     }
     catch( final JAXBException e )
     {
       e.printStackTrace();
-  
+
       return null;
     }
   }
-  
-  
 
 }

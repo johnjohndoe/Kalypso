@@ -15,13 +15,16 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.internal.UIPlugin;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.util.io.CSV;
 
 /**
  * @author belger
  */
 public class ExportTableWizard extends Wizard
 {
-  private final ExportTableWizardPage m_exportTableWizardPage = new ExportTableWizardPage(
+  private final ExportTableOptionsPage m_optionPage = new ExportTableOptionsPage(
+      "tableExport", "Tabelle exportieren", ImageProvider.IMAGE_ICON_GTT );
+  private final ExportTableFilePage m_filePage = new ExportTableFilePage(
       "tableExport", "Tabelle exportieren", ImageProvider.IMAGE_ICON_GTT );
 
   private final LayerTableViewer m_layerTable;
@@ -45,13 +48,16 @@ public class ExportTableWizard extends Wizard
   public void addPages()
   {
     super.addPages();
-
-    addPage( m_exportTableWizardPage );
+    
+    addPage( m_filePage );
+    addPage( m_optionPage );
   }
 
   public boolean performFinish()
   {
-    final ExportTableWizardPage exportTableWizardPage = m_exportTableWizardPage;
+    final ExportTableFilePage filePage = m_filePage;
+    final ExportTableOptionsPage optionPage = m_optionPage;
+    
     final LayerTableViewer layerTable = m_layerTable;
 
     final IRunnableWithProgress runnable = new IRunnableWithProgress()
@@ -60,30 +66,12 @@ public class ExportTableWizard extends Wizard
       {
         try
         {
-          final File destinationFile = new File( exportTableWizardPage.getDestinationValue() );
-          final boolean onlySelected = exportTableWizardPage.getOnlySelected();
+          final File destinationFile = new File( filePage.getDestinationValue() );
+          final boolean onlySelected = optionPage.getOnlySelected();
 
           final String[][] csv = layerTable.exportTable( onlySelected );
-
           final PrintWriter pw = new PrintWriter( new FileWriter( destinationFile ) );
-
-          for( int i = 0; i < csv.length; i++ )
-          {
-            final String[] line = csv[i];
-
-            for( int j = 0; j < line.length; j++ )
-            {
-              if( j != 0 )
-                pw.print( "," );
-
-              pw.print( "\"" );
-              pw.print( line[j] );
-              pw.print( "\"" );
-            }
-
-            pw.println();
-          }
-
+          CSV.writeCSV(csv, pw);
           pw.close();
         }
         catch( final IOException e )
@@ -96,7 +84,9 @@ public class ExportTableWizard extends Wizard
     try
     {
       getContainer().run( false, false, runnable );
-      m_exportTableWizardPage.saveWidgetValues();
+      
+      m_filePage.saveWidgetValues();
+      m_optionPage.saveWidgetValues();
     }
     catch( final InvocationTargetException e )
     {

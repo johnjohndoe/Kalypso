@@ -3,7 +3,6 @@ package org.kalypso.loader;
 import java.net.URL;
 import java.util.Properties;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
@@ -24,14 +23,6 @@ public interface ILoader
    */
   public Object load( final Properties source, final URL context, final IProgressMonitor monitor ) throws LoaderException;
   
-  
-  /**
-   * TODO: check if possible to use an URL instead of IProject here
-   * 
-   * @deprecated
-   */
-  public void save( final Properties source, final IProject project, final IProgressMonitor monitor, final Object data ) throws LoaderException;
-
   public void save( final Properties source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException;
 
   /**

@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -119,20 +118,11 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   }
 
   /**
-   * @throws LoaderException
-   * @see org.kalypso.loader.ILoader#save(java.util.Properties,
-   *      org.eclipse.core.resources.IProject,
-   *      org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
+   * @see org.kalypso.loader.ILoader#save(java.util.Properties, java.net.URL, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
-  public void save( final Properties source, final IProject project,
-      final IProgressMonitor monitor, final Object data ) throws LoaderException
+  public void save( final Properties source, final URL context, final IProgressMonitor monitor,
+      final Object data ) throws LoaderException
   {
     throw new LoaderException( "Operation not supported" );
-  }
-  
-  public void save( final Properties source, final URL context,
-      final IProgressMonitor monitor, final Object data ) throws LoaderException
-  {
-    throw new UnsupportedOperationException();
   }
 }

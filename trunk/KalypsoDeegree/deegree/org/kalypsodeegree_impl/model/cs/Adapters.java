@@ -59,8 +59,6 @@ import javax.media.jai.ParameterListDescriptorImpl;
 import javax.media.jai.ParameterListImpl;
 import javax.units.Unit;
 
-import org.deegree_impl.model.cs.Info.AngularUnit;
-import org.deegree_impl.model.cs.Info.LinearUnit;
 import org.deegree_impl.model.resources.XArray;
 import org.deegree_impl.model.resources.css.ResourceKeys;
 import org.deegree_impl.model.resources.css.Resources;
