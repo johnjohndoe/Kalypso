@@ -26,6 +26,7 @@ import org.kalypso.eclipse.swt.custom.ExcelLikeTableCursor;
 import org.kalypso.editor.tableeditor.actions.ColumnAction;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
+import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
@@ -108,7 +109,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     if( theme == null )
       return;
 
-    final KalypsoFeatureLayer layer = theme.getLayer();
+    final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)theme.getLayer();
     if( layer == null )
       return;
 
@@ -296,8 +297,9 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final IKalypsoTheme theme = (IKalypsoTheme)getInput();
     if( theme == null || theme.getLayer() == null )
       return editors;
-
-    final FeatureType featureType = theme.getLayer().getFeatureType();
+    
+    final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)theme.getLayer();
+    final FeatureType featureType = layer.getFeatureType();
     for( int i = 0; i < editors.length; i++ )
     {
       final String propName = columns[i].getData( COLUMN_PROP_NAME ).toString();

@@ -8,6 +8,7 @@ import org.kalypso.editor.tableeditor.layerTable.LayerTableViewer;
 import org.kalypso.ogc.command.AddFeatureCommand;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeature;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -24,7 +25,8 @@ public class AddRowActionDelagate extends GisTableAbstractActionDelagate
 
     final IKalypsoTheme theme = layerTable.getTheme();
     
-    final FeatureType featureType = theme.getLayer().getFeatureType();
+    KalypsoFeatureLayer layer = (KalypsoFeatureLayer)theme.getLayer();
+    final FeatureType featureType = layer.getFeatureType();
     final Object[] properties = new Object[featureType.getProperties().length];
 
     final KalypsoFeature feature = new KalypsoFeature( FeatureFactory.createFeature( "x",
@@ -38,7 +40,7 @@ public class AddRowActionDelagate extends GisTableAbstractActionDelagate
       }
     };
 
-    final ICommand command = new AddFeatureCommand( theme.getLayer(), feature );
+    final ICommand command = new AddFeatureCommand( layer, feature );
     layerTable.postCommand( command, r );
   }
 

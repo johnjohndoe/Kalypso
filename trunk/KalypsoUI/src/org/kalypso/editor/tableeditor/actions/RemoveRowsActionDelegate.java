@@ -8,6 +8,7 @@ import org.kalypso.editor.tableeditor.layerTable.LayerTableViewer;
 import org.kalypso.java.util.Arrays;
 import org.kalypso.ogc.command.RemoveFeaturesCommand;
 import org.kalypso.ogc.gml.KalypsoFeature;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -24,7 +25,8 @@ public class RemoveRowsActionDelegate extends GisTableAbstractActionDelagate
     final KalypsoFeature[] features = (KalypsoFeature[])Arrays.castArray( selection.toArray(),
         new KalypsoFeature[selection.size()] );
 
-    final ICommand command = new RemoveFeaturesCommand( layerTable.getTheme().getLayer(), features );
+    KalypsoFeatureLayer layer = (KalypsoFeatureLayer)layerTable.getTheme().getLayer();
+    final ICommand command = new RemoveFeaturesCommand( layer, features );
     editor.getLayerTable().getTheme().postCommand( command, null );
   }
 

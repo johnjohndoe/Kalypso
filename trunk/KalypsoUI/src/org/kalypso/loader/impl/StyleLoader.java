@@ -11,7 +11,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
@@ -104,7 +104,7 @@ public class StyleLoader extends AbstractLoader implements IPoolListener
   public void onObjectInvalid( final ResourcePool pool, final IPoolableObjectType key, final Object oldValue, final boolean bCannotReload )
       throws Exception
   {
-    final KalypsoFeatureLayer[] layers = (KalypsoFeatureLayer[])oldValue;
+    final IKalypsoLayer[] layers = (IKalypsoLayer[])oldValue;
     for( int i = 0; i < layers.length; i++ )
     {
       if( hasObject( layers[i] ) )

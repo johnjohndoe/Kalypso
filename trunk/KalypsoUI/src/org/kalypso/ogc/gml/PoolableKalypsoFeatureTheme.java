@@ -152,7 +152,7 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
         
         // diesmal gehts vermutlich schnell, deshalb keinen job oder
         // progress-monitor
-        final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)m_layerPool.getObject( key,
+        final IKalypsoLayer layer = (IKalypsoLayer)m_layerPool.getObject( key,
             new NullProgressMonitor() );
 
         m_theme = new KalypsoFeatureTheme( layer, getName() );
@@ -260,7 +260,7 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getLayer()
    */
-  public KalypsoFeatureLayer getLayer()
+  public IKalypsoLayer getLayer()
   {
     if( m_theme == null )
       return null;

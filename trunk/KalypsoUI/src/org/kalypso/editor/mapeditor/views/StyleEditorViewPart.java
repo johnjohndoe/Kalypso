@@ -8,6 +8,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.editor.styleeditor.SLDEditorGuiBuilder;
+import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
@@ -74,11 +75,15 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
     Object o = ( (IStructuredSelection)event.getSelection() ).getFirstElement();
     if( o instanceof ThemeStyleTreeObject )
     {
-      KalypsoFeatureLayer layer = ( (ThemeStyleTreeObject)o ).getTheme().getLayer();
-
-      FeatureType ft = layer.getFeatureType();
-      KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
-      initStyleEditor( kalypsoStyle, ft );
+      IKalypsoLayer layer = ( (ThemeStyleTreeObject)o ).getTheme().getLayer();
+      if( !( layer instanceof KalypsoFeatureLayer ) )
+        initStyleEditor( null, null );
+      else
+      {
+        FeatureType ft = ( (KalypsoFeatureLayer)layer ).getFeatureType();
+        KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
+        initStyleEditor( kalypsoStyle, ft );
+      }
     }
     else if( o instanceof IKalypsoTheme )
       initStyleEditor( null, null );

@@ -10,7 +10,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.pool.ResourcePool;
 
@@ -22,7 +22,7 @@ import org.kalypso.util.pool.ResourcePool;
 public class WMSLoader extends AbstractLoader //implements IPoolListener
 {
     private final ResourcePool m_Pool = KalypsoGisPlugin.getDefault().getPool(
-      KalypsoFeatureLayer[].class );
+      IKalypsoLayer[].class );
 
   public WMSLoader()
   {

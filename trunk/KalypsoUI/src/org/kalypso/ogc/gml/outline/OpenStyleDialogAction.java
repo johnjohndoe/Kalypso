@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
 import org.kalypso.editor.mapeditor.views.StyleEditorViewPart;
+import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
@@ -44,12 +45,14 @@ public class OpenStyleDialogAction extends AbstractOutlineAction
       // if UserStyle selected path that on to styleeditor
       if( o instanceof ThemeStyleTreeObject )
       {
-        KalypsoFeatureLayer layer = ( (ThemeStyleTreeObject)o ).getTheme().getLayer();
+        IKalypsoLayer layer = ( (ThemeStyleTreeObject)o ).getTheme().getLayer();
 
-        FeatureType ft = layer.getFeatureType();
-        KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
-        if( part != null )
+        if( part != null && layer instanceof KalypsoFeatureLayer )
+        {
+          FeatureType ft = ( (KalypsoFeatureLayer)layer ).getFeatureType();
+          KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
           part.initStyleEditor( kalypsoStyle, ft );
+        }
         else
           part.initStyleEditor( null, null );
       }
