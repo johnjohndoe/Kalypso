@@ -133,8 +133,6 @@ public interface DeegreeFeature
 
   /**
    * returns the envelope / boundingbox of the feature
-   * 
-   * @return
    */
   GM_Envelope getEnvelope();
 

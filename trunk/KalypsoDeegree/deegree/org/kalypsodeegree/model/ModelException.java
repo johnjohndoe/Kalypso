@@ -78,7 +78,9 @@ public class ModelException extends java.lang.Exception
    * message.
    */
   public ModelException()
-  {}
+  {
+   //  
+  }
 
   /**
    * Constructs an instance of <code>ModelException</code> with the specified

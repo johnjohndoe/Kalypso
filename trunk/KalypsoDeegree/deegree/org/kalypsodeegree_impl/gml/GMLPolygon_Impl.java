@@ -60,7 +60,6 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
-import org.kalypsodeegree.gml.GMLException;
 import org.kalypsodeegree.gml.GMLLinearRing;
 import org.kalypsodeegree.gml.GMLPolygon;
 import org.kalypsodeegree.ogcbasic.CommonNamespaces;
@@ -108,11 +107,6 @@ public class GMLPolygon_Impl extends GMLGeometry_Impl implements GMLPolygon
     return poly;
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public Element getAsElement()
   {
     return element;
@@ -194,7 +188,7 @@ public class GMLPolygon_Impl extends GMLGeometry_Impl implements GMLPolygon
    * adds a interior ring to the polygon. if the submitted ring isn't not
    * completly contained within the exterior ring an exception should be thrown.
    */
-  public void addInteriorRing( GMLLinearRing interiorRing ) throws GMLException
+  public void addInteriorRing( GMLLinearRing interiorRing )
   {
     Debug.debugMethodBegin( this, "addInteriorRing" );
 
@@ -217,6 +211,9 @@ public class GMLPolygon_Impl extends GMLGeometry_Impl implements GMLPolygon
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2005/03/15 10:49:34  belger
+ * *** empty log message ***
+ *
  * Revision 1.5  2005/03/08 11:01:04  doemming
  * *** empty log message ***
  *

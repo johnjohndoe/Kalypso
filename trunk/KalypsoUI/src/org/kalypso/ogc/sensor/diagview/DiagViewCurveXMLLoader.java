@@ -52,7 +52,6 @@ import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.kalypso.ogc.sensor.template.NameUtils;
 import org.kalypso.ogc.sensor.template.PooledObsProvider;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
