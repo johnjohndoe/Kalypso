@@ -7,6 +7,7 @@ package org.kalypso.editor.styleeditor;
 import org.deegree.graphics.sld.Rule;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.model.feature.FeatureType;
+import org.deegree.services.wfs.filterencoding.Filter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -18,6 +19,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.kalypso.editor.styleeditor.dialogs.FilterDialog;
 import org.kalypso.editor.styleeditor.panels.AddSymbolizerPanel;
 import org.kalypso.editor.styleeditor.panels.EditSymbolizerPanel;
 import org.kalypso.editor.styleeditor.panels.LegendLabel;
@@ -137,13 +139,7 @@ public class RuleTabItemBuilder {
 					for(int i=0; i<symbolizers.length; i++){
 						symbolizers[i].setMaxScaleDenominator(max);
 					}					
-					focusedRuleItem = ruleTabFolder.getSelectionIndex();
-					
-//					PropertyIsLikeOperation operation = new PropertyIsLikeOperation(new PropertyName("NAME"),new Literal("E*"),'*','?','/');
-//					ComplexFilter filter = new ComplexFilter(operation);
-//					rule.setFilter(filter);					
-//					System.out.println(((Rule_Impl)rule).exportAsXML());
-					
+					focusedRuleItem = ruleTabFolder.getSelectionIndex();										
 					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));						
 				}
 			});
@@ -236,19 +232,29 @@ public class RuleTabItemBuilder {
 				}
 			});
 				
-//			Button button = new Button(composite,SWT.NULL);
-//			final FilterDialog filterDialog = new FilterDialog(composite.getShell());
-//			button.addSelectionListener(new SelectionListener() {
-//				public void widgetSelected(SelectionEvent e) {
-//					filterDialog.open();			
-//				}
-//				public void widgetDefaultSelected(SelectionEvent e) {
-//					widgetSelected(e);
-//				}
-//			});
+			// ***** Button Composite
+			Composite buttonComposite = new Composite(composite, SWT.NULL);
+			buttonComposite.setLayout(new GridLayout(2,true));
+			Button button = new Button(buttonComposite,SWT.NULL);
+			button.setText("Edit Filter");			
+			final FilterDialog filterDialog = new FilterDialog(composite.getShell(),featureType,rule.getFilter()); 
+			button.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent e) {
+					int returnCode = filterDialog.open();						
+					if(returnCode == 0)
+					{
+						Filter filter = filterDialog.getFilter();						
+						rule.setFilter(filter);
+						userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));											
+					}					
+				}
+				public void widgetDefaultSelected(SelectionEvent e) {
+					widgetSelected(e);
+				}
+			});
 			
 			// ******* SAVING THE SLD-STYLE
-			final Button saveButton = new Button(composite,SWT.NULL);			
+			final Button saveButton = new Button(buttonComposite,SWT.NULL);			
 			saveButton.setText("Save");						
 			saveButton.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {						 
