@@ -362,17 +362,14 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  public void putCalcCaseOutputData( final IFolder folder, final String[] results ) throws CoreException
+  public IStatus putCalcCaseOutputData( final IFolder folder, final String[] results ) throws CoreException
   {
     final Modelspec modelspec = getModelspec();
     
     final List outputList = modelspec.getOutput();
     int count = 0;
-    if( results.length != outputList.size() )
-    {
-      System.out.println( "Modelspec und Ergebnisdaten passen nicht" );
-      return;
-    }
+    if( results == null || results.length != outputList.size() )
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Ergebnisdaten passen nicht zur Modellspezifikation", null );
     
     final IFolder resultsFolder = folder.getFolder( CALC_RESULT_FOLDER );
     resultsFolder.create( false, true, null );
@@ -386,6 +383,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       
       file.create( new StringInputStream( results[count++] ), false, null );
     }
+    
+    return Status.OK_STATUS;
   }
 
 }
