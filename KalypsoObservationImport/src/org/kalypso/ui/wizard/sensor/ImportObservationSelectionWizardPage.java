@@ -6,6 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -33,9 +39,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.internal.dialogs.ListContentProvider;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter;
-import org.kalypso.ogc.sensor.adapter.NativeObservationAdapter;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -81,27 +85,14 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 /**
  * @author doemming
  */
-public class ImportObservationSelectionWizardPage extends WizardPage implements FocusListener,
-    ISelectionProvider, ISelectionChangedListener
+public class ImportObservationSelectionWizardPage extends WizardPage implements
+    FocusListener, ISelectionProvider, ISelectionChangedListener
 {
-  private final static List m_adapter = new ArrayList();
-  static
-  {
-    m_adapter.add( new NativeObservationGrapAdapter( "Niederschlag (grap)",
-        TimeserieConstants.TYPE_RAINFALL ) );
-    m_adapter.add( new NativeObservationGrapAdapter( "Abfluss (grap)", TimeserieConstants.TYPE_RUNOFF ) );
-    m_adapter.add( new NativeObservationGrapAdapter( "Temperatur (grap)",
-        TimeserieConstants.TYPE_TEMPERATURE ) );
-    m_adapter.add( new NativeObservationGrapAdapter( "Volumen (grap)", TimeserieConstants.TYPE_VOLUME ) );
-    m_adapter.add( new NativeObservationGrapAdapter( "Wasserstand (grap)",
-        TimeserieConstants.TYPE_WATERLEVEL ) );
-    m_adapter.add( new NativeObservationGrapAdapter( "Verdunstung (grap)",
-        TimeserieConstants.TYPE_EVAPORATION ) );
-  }
+  private static final String DEFAUL_FILE_LABEL = "";
+
+  private final List m_adapter;
 
   final List m_selectionListener = new ArrayList();
-
-  private static final String DEFAUL_FILE_LABEL = "";
 
   private Composite m_topLevel = null;
 
@@ -123,21 +114,62 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   public ImportObservationSelectionWizardPage( String pageName )
   {
-    super( pageName );
-    init();
+    this( pageName, null, null );
   }
 
-  public ImportObservationSelectionWizardPage( String pageName, String title, ImageDescriptor titleImage )
+  public ImportObservationSelectionWizardPage( String pageName, String title,
+      ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-    init();
-  }
 
-  public void init()
-  {
     setDescription( "Auswahl Observation" );
     setTitle( "Titel Auswahl der zu importierenden Observation" );
     setPageComplete( false );
+
+    m_adapter = createNativeAdapters();
+  }
+
+  /**
+   * @return
+   */
+  private List createNativeAdapters( )
+  {
+    final List adapters = new ArrayList();
+
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    final IExtensionPoint extensionPoint = registry
+        .getExtensionPoint( "org.kalypso.core.nativeObsAdapter" );
+
+    if( extensionPoint == null )
+      return adapters;
+
+    final IExtension[] extensions = extensionPoint.getExtensions();
+    for( int i = 0; i < extensions.length; i++ )
+    {
+      final IExtension extension = extensions[i];
+      final IConfigurationElement[] elements = extension
+          .getConfigurationElements();
+
+      for( int j = 0; j < elements.length; j++ )
+      {
+        final IConfigurationElement element = elements[j];
+
+        try
+        {
+          final INativeObservationAdapter adapter = (INativeObservationAdapter) element
+              .createExecutableExtension( "class" );
+          adapters.add( adapter );
+        }
+        catch( final CoreException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    }
+
+    return adapters;
   }
 
   /**
@@ -227,12 +259,12 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
       public void addListener( ILabelProviderListener listener )
       {
-      // nothing as labelprovider will not change
+        // nothing as labelprovider will not change
       }
 
-      public void dispose()
+      public void dispose( )
       {
-      // nothing as labelprovider will not change
+        // nothing as labelprovider will not change
       }
 
       public boolean isLabelProperty( Object element, String property )
@@ -242,15 +274,15 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
       public void removeListener( ILabelProviderListener listener )
       {
-      //nothing
+        //nothing
       }
     } );
 
     m_formatCombo.setInput( m_adapter );
     m_formatCombo.addSelectionChangedListener( this );
-    //    m_formatCombo.addf
-    m_formatCombo.setSelection( new StructuredSelection( m_adapter.get( 0 ) ) );
 
+    if( m_adapter.size() > 0 )
+      m_formatCombo.setSelection( new StructuredSelection( m_adapter.get( 0 ) ) );
   }
 
   public void createControlTarget( Composite parent )
@@ -335,7 +367,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * validates the page
    */
-  void validate()
+  void validate( )
   {
     setErrorMessage( null );
     setMessage( null );
@@ -377,7 +409,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
    * 
    * @see org.eclipse.jface.wizard.IWizardPage#canFlipToNextPage()
    */
-  public boolean canFlipToNextPage()
+  public boolean canFlipToNextPage( )
   {
     return isPageComplete();
   }
@@ -386,7 +418,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
    * 
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     super.dispose();
     if( m_topLevel != null && !m_topLevel.isDisposed() )
@@ -401,7 +433,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
    */
   public void focusGained( FocusEvent e )
   {
-  // nothing
+    // nothing
   }
 
   /**
@@ -409,23 +441,27 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
    */
   public void focusLost( FocusEvent e )
   {
-    if( m_sourceFile != null && !m_sourceFile.getName().equals( m_textFileSource.getText() ) )
+    if( m_sourceFile != null
+        && !m_sourceFile.getName().equals( m_textFileSource.getText() ) )
     {
-      m_sourceFile = new File( m_sourceFile.getParentFile(), m_textFileSource.getText() );
+      m_sourceFile = new File( m_sourceFile.getParentFile(), m_textFileSource
+          .getText() );
     }
-    if( m_targetFile != null && !m_targetFile.getName().equals( m_textFileTarget.getText() ) )
+    if( m_targetFile != null
+        && !m_targetFile.getName().equals( m_textFileTarget.getText() ) )
     {
-      m_targetFile = new File( m_targetFile.getParentFile(), m_textFileTarget.getText() );
+      m_targetFile = new File( m_targetFile.getParentFile(), m_textFileTarget
+          .getText() );
     }
     validate();
   }
 
-  private void fireSelectionChanged()
+  private void fireSelectionChanged( )
   {
     for( Iterator iter = m_selectionListener.iterator(); iter.hasNext(); )
     {
-      ( (ISelectionChangedListener)iter.next() ).selectionChanged( new SelectionChangedEvent( this,
-          getSelection() ) );
+      ((ISelectionChangedListener) iter.next())
+          .selectionChanged( new SelectionChangedEvent( this, getSelection() ) );
     }
   }
 
@@ -440,19 +476,21 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection()
+  public ISelection getSelection( )
   {
-    final IStructuredSelection formatSelection = (IStructuredSelection)m_formatCombo.getSelection();
+    final IStructuredSelection formatSelection = (IStructuredSelection) m_formatCombo
+        .getSelection();
     if( !m_controlFinished )
       return new ISelection()
       {
-        public boolean isEmpty()
+        public boolean isEmpty( )
         {
           return true;
         }
       };
-    return new ObservationImportSelection( m_sourceFile, m_targetFile, (NativeObservationAdapter)formatSelection
-        .getFirstElement(), m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection() );
+    return new ObservationImportSelection( m_sourceFile, m_targetFile,
+        (INativeObservationAdapter) formatSelection.getFirstElement(),
+        m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection() );
   }
 
   /**
@@ -470,9 +508,10 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   {
     if( selection instanceof ObservationImportSelection )
     {
-      ObservationImportSelection s = ( (ObservationImportSelection)selection );
+      ObservationImportSelection s = ((ObservationImportSelection) selection);
       if( m_formatCombo != null )
-        m_formatCombo.setSelection( new StructuredSelection( s.getNativeAdapter() ) );
+        m_formatCombo.setSelection( new StructuredSelection( s
+            .getNativeAdapter() ) );
       m_sourceFile = s.getFileSource();
       m_targetFile = s.getFileTarget();
       if( m_buttonAppend != null )
@@ -482,10 +521,11 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     }
     else if( selection instanceof IStructuredSelection )
     {
-      Object firstElement = ( (StructuredSelection)selection ).getFirstElement();
+      Object firstElement = ((StructuredSelection) selection).getFirstElement();
       if( firstElement instanceof IFile )
       {
-        m_targetFile = ResourceUtilities.makeFileFromPath( ( (IFile)firstElement ).getFullPath() );
+        m_targetFile = ResourceUtilities
+            .makeFileFromPath( ((IFile) firstElement).getFullPath() );
       }
     }
     // nothing

@@ -60,4 +60,38 @@
       <import plugin="org.kalypso.repository"/>
    </requires>
 
+   <extension-point id="nativeObsAdapter" name="Adapter für native Zeitreihen" schema="schema/nativeObsAdapter.exsd"/>
+
+   <extension
+         point="org.kalypso.core.nativeObsAdapter">
+      <adapter
+            label="Niederschlag (grap)"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
+            axisType="N"/>
+      <adapter
+            label="Niederschlag (grap)"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
+            axisType="N"/>
+      <adapter
+            label="Abfluss (grap)"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
+            axisType="Q"/>
+      <adapter
+            label="Temperatur (grap)"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
+            axisType="T"/>
+      <adapter
+            label="Volumen (grap)"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
+            axisType="V"/>
+      <adapter
+            label="Wasserstand (grap)"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
+            axisType="W"/>
+      <adapter
+            label="Verdunstung (grap)"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
+            axisType="E"/>
+   </extension>
+
 </plugin>

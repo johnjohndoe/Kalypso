@@ -2,6 +2,7 @@ package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
 
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 
@@ -46,9 +47,9 @@ import org.kalypso.ogc.sensor.IObservation;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public interface NativeObservationAdapter
+public interface INativeObservationAdapter extends IExecutableExtension
 {
-  /*
+  /**
    * 
    * @author doemming
    */

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -63,31 +65,28 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class NativeObservationGrapAdapter implements NativeObservationAdapter
+/**
+ * 
+ * @author doemming
+ */
+public class NativeObservationGrapAdapter implements INativeObservationAdapter
 {
-
-  /*
-   * 
-   * @author doemming
-   */
-
   private DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
 
   public static Pattern m_grapPattern = Pattern
       .compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}.[0-9 ]{1,2}).+?([0-9\\.]+)" );
 
-  private final String m_title;
+  private String m_title;
 
-  private final String m_axisTypeValue;
+  private String m_axisTypeValue;
 
-  /*
-   * 
-   * @author doemming
+  /**
+   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
    */
-  public NativeObservationGrapAdapter( String title, String axisTypeValue )
+  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
   {
-    m_title = title;
-    m_axisTypeValue = axisTypeValue;
+    m_title = config.getAttribute( "label" );
+    m_axisTypeValue = config.getAttribute( "axisType" );
   }
 
   public IObservation createObservationFromSource( File source ) throws Exception

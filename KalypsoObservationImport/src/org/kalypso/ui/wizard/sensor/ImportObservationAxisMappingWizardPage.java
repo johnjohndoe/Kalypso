@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.adapter.NativeObservationAdapter;
+import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -71,7 +71,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
 
   private final List m_widgetLines = new ArrayList();
 
-  private NativeObservationAdapter m_nativeAdapter;
+  private INativeObservationAdapter m_nativeAdapter;
 
   private File m_fileTarget;
 
@@ -155,7 +155,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     if( !( eventSelection instanceof ObservationImportSelection ) )
       return;
     final ObservationImportSelection selection = (ObservationImportSelection)eventSelection;
-    NativeObservationAdapter nativeAdapter = selection.getNativeAdapter();
+    INativeObservationAdapter nativeAdapter = selection.getNativeAdapter();
     if( nativeAdapter != m_nativeAdapter )
       m_nativeAdapter = nativeAdapter;
 
@@ -168,7 +168,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
       try
       {
         
-        axisDest = createMappedAxis( axisSrc, getTargetObservation( m_fileTarget.toURL(), true )
+        axisDest = createMappedAxis( axisSrc, getTargetObservation( m_fileTarget.toURL() )
             .getAxisList() );
       }
       catch( Exception e )
@@ -217,7 +217,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
    * @throws SensorException
    *  
    */
-  public IObservation getTargetObservation( URL url, boolean guessWQ ) throws SensorException
+  public IObservation getTargetObservation( final URL url ) throws SensorException
   {
     final IObservation observation = ZmlFactory.parseXML( url, "targetFile" );
     return observation;
