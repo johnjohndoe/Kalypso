@@ -26,17 +26,17 @@ public interface ICommandManager
   /**
    * Fügt ein Kommando zum Manager hinzu. Ruft {@link ICommand#process()}auf.
    */
-  public void postCommand( final ICommand command, final Runnable r );
+  public void postCommand( final ICommand command, final Runnable r ) throws Exception;
 
   public boolean canUndo();
 
-  public void undo();
+  public void undo() throws Exception;
 
   public String getUndoDescription();
 
   public boolean canRedo();
 
-  public void redo();
+  public void redo() throws Exception;
 
   public String getRedoDescription();
 

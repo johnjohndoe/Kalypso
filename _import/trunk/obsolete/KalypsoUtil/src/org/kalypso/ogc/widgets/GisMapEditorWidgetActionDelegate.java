@@ -96,7 +96,16 @@ public abstract class GisMapEditorWidgetActionDelegate implements IEditorActionD
   {
     final ICommand command = performIntern();
     if( command != null && myEditor != null )
-      ( (ICommandManager)myEditor ).postCommand( command, null );
+    {
+      try
+      {
+        ( (ICommandManager)myEditor ).postCommand( command, null );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
   }
 
   protected abstract ICommand performIntern();

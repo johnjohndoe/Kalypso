@@ -26,6 +26,13 @@ public class FullExtentAction extends GisMapEditorActionDelegate
       if(modell==null)
         return;
       GM_Envelope fullExtent = modell.getFullExtentBoundingBox();
-     ((ICommandManager)myEditor).postCommand( new ChangeExtentCommand(modell,fullExtent),null);     
+     try
+    {
+      ((ICommandManager)myEditor).postCommand( new ChangeExtentCommand(modell,fullExtent),null);
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }     
     }
 }

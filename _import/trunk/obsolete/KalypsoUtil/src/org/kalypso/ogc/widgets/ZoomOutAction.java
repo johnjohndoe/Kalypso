@@ -24,6 +24,13 @@ public class ZoomOutAction extends GisMapEditorActionDelegate
       return;
     GM_Envelope zoomBox = modell.getZoomOutBoundingBox();
 
-    ( (ICommandManager)myEditor ).postCommand( new ChangeExtentCommand( modell, zoomBox ), null );
+    try
+    {
+      ( (ICommandManager)myEditor ).postCommand( new ChangeExtentCommand( modell, zoomBox ), null );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 }

@@ -92,7 +92,14 @@ public abstract class AbstractSelectWidget extends GisMapEditorWidgetActionDeleg
         ICommand command = new JMMarkSelectCommand( mapModell.getActiveTheme(), GeometryFactory
             .createGM_Position( g1x, g1y ), gisRadius, mySelectionId,getSelectionMode() );
 
-        ( (ICommandManager)myEditor ).postCommand( command, null );
+        try
+        {
+          ( (ICommandManager)myEditor ).postCommand( command, null );
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
       }
       else
       // dragged
@@ -114,7 +121,14 @@ public abstract class AbstractSelectWidget extends GisMapEditorWidgetActionDeleg
           ICommand command = new JMMarkSelectCommand( mapModell.getActiveTheme(), GeometryFactory
               .createGM_Envelope( minX, minY, maxX, maxY ), withinStatus, gisRadius, mySelectionId,getSelectionMode() );
 
-          ( (ICommandManager)myEditor ).postCommand( command, null );
+          try
+          {
+            ( (ICommandManager)myEditor ).postCommand( command, null );
+          }
+          catch( Exception e )
+          {
+            e.printStackTrace();
+          }
         }
       }
     }

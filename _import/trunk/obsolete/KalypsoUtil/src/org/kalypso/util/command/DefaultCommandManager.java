@@ -22,10 +22,8 @@ public class DefaultCommandManager implements ICommandManager
   /** points to last processed command */
   private int stackPos = -1;
 
-  public void postCommand( final ICommand command, final Runnable r )
+  public void postCommand( final ICommand command, final Runnable r ) throws Exception
   {
-    try
-    {
       command.process();
       if( r != null )
         r.run();
@@ -43,16 +41,11 @@ public class DefaultCommandManager implements ICommandManager
         stack.clear();
         stackPos = -1;
       }
-    }
-    catch( Exception e )
-    {
-     // e.printStackTrace();
-    }
 
     checkStatus();
   }
 
-  public void redo()
+  public void redo() throws Exception
   {
     if( stackPos < stack.size() - 1 )
     {
@@ -62,37 +55,24 @@ public class DefaultCommandManager implements ICommandManager
       {
         ( (ICommand)stack.elementAt( stackPos ) ).redo();
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         stackPos--;
 
-        // TODO: errorMessage
-        e.printStackTrace();
-
-        //nothing
+        throw e;
       }
     }
 
     checkStatus();
   }
 
-  public void undo()
+  public void undo() throws Exception
   {
     if( stackPos >= 0 )
     {
-      try
-      {
         ( (ICommand)stack.elementAt( stackPos ) ).undo();
 
         stackPos--;
-      }
-      catch( Exception e )
-      {
-        // TODO: errorMessage
-        e.printStackTrace();
-
-        //nothing
-      }
     }
 
     checkStatus();
