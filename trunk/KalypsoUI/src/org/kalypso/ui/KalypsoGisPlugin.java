@@ -358,7 +358,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   {
     super.stop( context );
     
-    ObservationCache.dispose();
+    ObservationCache.clear();
   }
 
   public static String getId()
