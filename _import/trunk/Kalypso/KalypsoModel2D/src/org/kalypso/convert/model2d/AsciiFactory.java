@@ -73,18 +73,18 @@ public class AsciiFactory {
      */
     public void createAsciiFile(StringBuffer sbFP, StringBuffer sbAR, StringBuffer sbFE, StringBuffer sbRK){
         try{
-		    StringBuffer sbALL = new StringBuffer();
+            StringBuffer sbALL = new StringBuffer();
             sbALL.append(sbFP.toString());
             sbALL.append(sbAR.toString());
             sbALL.append(sbFE.toString());
             sbALL.append(sbRK.toString());
+                
+    	      OutputStreamWriter writer =
+    	            new OutputStreamWriter( new FileOutputStream
+                            ("C:\\Programme\\eclipse\\workspace\\Kalypso2d\\sim\\start\\model.2d"), "UTF-8" );
+    	      writer.write(sbALL.toString());
+    	      writer.close();
             
-	        OutputStreamWriter writer =
-//				new OutputStreamWriter( new FileOutputStream("d:\\projekte_tu\\test\\test.2d"), "UTF-8" );
-//				new OutputStreamWriter( new FileOutputStream("C:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\istTest.2d"), "UTF-8" );
-				new OutputStreamWriter( new FileOutputStream("C:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\test\\back2Ascii.2d"), "UTF-8" );
-	        writer.write(sbALL.toString());
-			writer.close();
       }catch(Exception ex){
           System.out.println("error occurred in creating test file ");
       }
@@ -111,7 +111,8 @@ public class AsciiFactory {
             sbALL.append(sbDyn.toString());
 
             OutputStreamWriter writer =
-				new OutputStreamWriter( new FileOutputStream("C:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\testBC050305.txt"), "UTF-8" );
+//				new OutputStreamWriter( new FileOutputStream("C:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\testBC050305.txt"), "UTF-8" );
+				new OutputStreamWriter( new FileOutputStream("C:\\Programme\\eclipse\\workspace\\Kalypso2d\\sim\\start2\\bc.txt"), "UTF-8" );
 	        writer.write(sbALL.toString());
 			writer.close();
       }catch(Exception ex){

@@ -117,6 +117,45 @@ public class ConvertGML2Asci {
         
     }
 
+    
+    public void convertGML2Asci(String inputFile, String schema2d) {
+        try {
+            URL gmlURL = new File(inputFile).toURL();
+//            URL schemaUrl = new URL((String) argsmap2.get("SchemaLocation"));
+            URL schemaUrl = new File(schema2d).toURL();
+            System.out.println("gml: "+gmlURL);
+            System.out.println("gmlSchema: "+schemaUrl);
+            GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL, schemaUrl);
+
+            final Feature rootFeature = ws.getRootFeature();
+            
+            //getting parameters defined in the nodeProperties
+            FEMNodes nodes = new FEMNodes();
+            nodes.createNodeProperties(ws, rootFeature);
+            StringBuffer sb_fp = nodes.getSB_FP();
+            ArrayList nodeList = nodes.getNodeList();
+            
+            //getting parameters defined in the meshProperties
+            FEMMesh femMesh = new FEMMesh(nodeList);
+            femMesh.getMeshProperties(ws, rootFeature);
+            StringBuffer sb_rk = femMesh.getSB_RK();
+            StringBuffer sb_fe = femMesh.getSB_FE();
+            StringBuffer sb_ar = femMesh.getSB_AR();
+            
+	        //writing to .2d file in <AsciiFactory>
+            AsciiFactory ascii = new AsciiFactory();
+	        ascii.createAsciiFile(sb_fp, sb_ar, sb_fe, sb_rk);
+      
+        } catch (MalformedURLException urlEx) {
+            System.out.println("MalformedURLException");
+            urlEx.printStackTrace();
+        } catch (Exception ex) {
+            System.out.println("Exception in ConvertingGML2Asci");
+            ex.printStackTrace();
+        }
+        
+    }
+
     /**
      * prints out helping information
      * 

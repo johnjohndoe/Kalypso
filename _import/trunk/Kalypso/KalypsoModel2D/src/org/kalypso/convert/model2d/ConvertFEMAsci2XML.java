@@ -66,6 +66,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.kalypso.convert.util.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -778,7 +779,7 @@ public class ConvertFEMAsci2XML {
         
         Document doc = XMLHelper.createDocument();
        try{
-            Element e = doc.createElement("simulation2d");
+            Element e = doc.createElement("org.kalypso.convert.simulation2d");
             e.setAttributeNode(	XMLHelper.createAttribute( doc, "xmlns", NS));
             e.setAttributeNode(	XMLHelper.createAttribute( doc, "xmlns:gml", GML_NS));
             e.setAttributeNode(	XMLHelper.createAttribute( doc, "xmlns:xlink", XLINK_NS));
@@ -842,20 +843,39 @@ public class ConvertFEMAsci2XML {
             StringBuffer sb = readAsciFile(inFile);
             
             int pos = sb.indexOf("AR");
-            String fp = sb.substring(0, pos);
-            setFirstParamBlock(fp);
-            
             int pos2 = sb.indexOf("FE");
-            String ar = "";
-            if( (sb.indexOf("FE")-pos) < 0 )ar = sb.substring(pos2, pos);
-            if( (sb.indexOf("FE")-pos) >= 0 )ar = sb.substring(pos, pos2);
-            setAR(ar);
-             
-            pos = sb.indexOf("RK");
-            String fe = sb.substring(pos2, pos);
-            setFE(fe);
+            int pos3 = sb.indexOf("RK");
             
-            String rk = sb.substring(pos, sb.length());
+            if (pos < pos2) {
+                System.out.println("pos < pos2 : "+pos+","+pos2);
+                
+                String fp = sb.substring(0, pos);
+                setFirstParamBlock(fp);
+                
+                String ar = "";
+                if( (sb.indexOf("FE")-pos) < 0 )ar = sb.substring(pos2, pos);
+                if( (sb.indexOf("FE")-pos) >= 0 )ar = sb.substring(pos, pos2);
+                
+                setAR(ar);
+                
+                String fe = sb.substring(pos2, pos3);
+                setFE(fe);
+            } else {
+                System.out.println("pos2 < pos : "+pos2+","+pos);
+                
+                String fp = sb.substring(0, pos2);
+                setFirstParamBlock(fp);
+                
+                String ar = sb.substring(pos, pos3);
+                setAR(ar);
+                
+                String fe = sb.substring(pos2, pos);
+                setFE(fe);
+            }
+            
+             
+            
+            String rk = sb.substring(pos3, sb.length());
             setRK(rk);
             
             setXML(outFile);

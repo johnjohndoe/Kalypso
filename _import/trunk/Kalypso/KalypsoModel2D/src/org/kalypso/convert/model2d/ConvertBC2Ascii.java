@@ -74,6 +74,53 @@ public class ConvertBC2Ascii {
     private static String gml2dFile = "./data/test/myMesh.gml";
     private static String gml2dSchema = "http://elbe.wb.tu-harburg.de/2dModel c:/Programme/eclipse/workspace/Kalypso2d/data/schema/bc_gml2.xsd";
     
+    public void convertBC2Ascii(String inputFile, String schemaBC){
+        try{
+	        URL gmlURL = new File(inputFile).toURL();
+	        URL schemaUrl = new File(schemaBC).toURL();
+	        System.out.println(gmlURL+", "+ schemaUrl);
+	        GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL, schemaUrl);
+	        
+	        final Feature rootFeature = ws.getRootFeature();
+	        
+	        GeneralBC generalBC = new GeneralBC();
+	        StringBuffer generalSB = generalBC.createGeneralBC(ws, rootFeature);
+	        
+	        GeneralBC general2BC = new GeneralBC();
+	        StringBuffer general2SB = general2BC.createGeneral2BC(ws, rootFeature);
+	        
+	        BCGeom geom = new BCGeom();
+	        StringBuffer bcGeomSB = geom.createBCGeom(ws, rootFeature);
+	        
+	        IterationBC iteration = new IterationBC();
+	        StringBuffer iterationSB = iteration.createIterationProp(ws, rootFeature);
+	        
+	        Viscosity viscosity = new Viscosity();
+	        StringBuffer viscSB = viscosity.createViscosity(ws, rootFeature);
+	        
+	        LineBC line = new LineBC();
+	        StringBuffer lineSB = line.createLineBC(ws, rootFeature, gml2dFile, gml2dSchema);
+	        
+	        DischargeBC discharge = new DischargeBC();
+	        StringBuffer sbDis = discharge.createDischarge(ws, rootFeature);
+	        
+	        DynamicBC dynBC = new DynamicBC();
+	        StringBuffer sbDyn = dynBC.createDynamicBC(ws, rootFeature);
+	        
+	        AsciiFactory fac = new AsciiFactory();
+	        fac.createBCAsciiFile(generalSB, general2SB, bcGeomSB, iterationSB, viscSB, lineSB,
+	                			sbDis, sbDyn);
+	        
+	    } catch (MalformedURLException urlEx) {
+	        System.out.println("MalformedURLException");
+	        urlEx.printStackTrace();
+	    } catch (Exception ex) {
+	        System.out.println("Exception in Inserting2dGML");
+	        ex.printStackTrace();
+	    }
+
+    }
+    
     public static void convertBC2Ascii(HashMap map){
         try{
 	        URL gmlURL = new File((String)map.get("InputFile")).toURL();

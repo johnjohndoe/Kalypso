@@ -56,7 +56,7 @@ package org.kalypso.convert.model2d;
 import java.util.HashMap;
 
 /**
- * @author Katharina <a href="mailto:k.lupp@web.de>Katharina Lupp</a>
+ * @author Katharina Lupp <a href="mailto:k.lupp@web.de>Katharina Lupp</a>
  *
  */
 public class ConvertAsci2GML {
@@ -143,7 +143,7 @@ public class ConvertAsci2GML {
 		        System.out.println("exists: " + exists);
 		        gmlInFile = outFile;
 		        ConvertXML2GML gmlFile = new ConvertXML2GML();
-		        gmlFile.startXML2GML(gmlInFile, gmlOutFile, ns, slGML, exists);
+		        gmlFile.startXML2GML(gmlInFile, gmlOutFile, exists);
 		        System.out.println("EOF ConvertAsci2GML");
 	        }catch(Exception ex){
 	            System.out.println("Error occurred in ConvertAsci2GML: ");

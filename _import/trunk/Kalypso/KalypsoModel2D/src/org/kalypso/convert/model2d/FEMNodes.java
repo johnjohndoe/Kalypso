@@ -55,13 +55,13 @@
 package org.kalypso.convert.model2d;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.kalypso.java.io.PrintWriter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -122,14 +122,20 @@ public class FEMNodes {
                     							 +"   "+fpFE.getProperty("yVelocity")
                     							 +"   "+fpFE.getProperty("riverDepth")
                     							 +"   "+fpFE.getProperty("waterLevel")+"\n";
-                    sbNode.append(va);
+
+                    if ( !(""+fpFE.getProperty("xVelocity")).equalsIgnoreCase("0") &&
+                         !(""+fpFE.getProperty("yVelocity")).equalsIgnoreCase("0")) {
+                        System.out.println("000000000000000000000");
+                        sbNode.append(va);
+
+                        this.addFPInfo(fpFE, "GA","timeGradient1", "timeGradient2","timeGradient3", sbNode, countNode);
+                        this.addFPInfo(fpFE, "VO","degreeOfFreedomOfOldTimeGradient1", "degreeOfFreedomOfOldTimeGradient2",
+                                		"degreeOfFreedomOfOldTimeGradient3", sbNode, countNode);
+                        this.addFPInfo(fpFE, "GO","TimeGradientOfFormerTimeWarps1", "TimeGradientOfFormerTimeWarps2",
+                                		"TimeGradientOfFormerTimeWarps3", sbNode, countNode);
+                    }
                 }
 
-                this.addFPInfo(fpFE, "GA","timeGradient1", "timeGradient2","timeGradient3", sbNode, countNode);
-                this.addFPInfo(fpFE, "VO","degreeOfFreedomOfOldTimeGradient1", "degreeOfFreedomOfOldTimeGradient2",
-                        		"degreeOfFreedomOfOldTimeGradient3", sbNode, countNode);
-                this.addFPInfo(fpFE, "GO","TimeGradientOfFormerTimeWarps1", "TimeGradientOfFormerTimeWarps2",
-                        		"TimeGradientOfFormerTimeWarps3", sbNode, countNode);
                 countNode++;
                 
             }catch(Exception ex){

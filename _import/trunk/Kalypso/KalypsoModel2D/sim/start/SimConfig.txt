@@ -1,0 +1,4 @@
+bc.txt
+model.2d
+2d
+0

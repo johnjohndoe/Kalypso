@@ -46,77 +46,76 @@
 
  E-Mail:
  katharina.lupp@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.model2d;
 
-import org.kalypso.util.geom.GeometryHelper;
+import java.io.File;
+
+import org.kalypso.calc2d.CalcJob2dModel;
+import org.kalypso.calc2d.Constants2D;
+import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
  * this class converts the femXMLFile...
  * 
  * Created on 30.08.2004
  * 
- * @author Katharina Lupp<a href="mailto:k.lupp@web.de>Katharina Lupp </a>
+ * @author Katharina Lupp <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
  */
-public class Test {
-    
-    
-    public static void main(String[] args) {
-        MeshPoint mp1 = new MeshPoint(143, 3586257.8984375, 5936190.1484375, 63.89112854003906);
-//        MeshPoint mp2 = new MeshPoint(144, 3586342.0546875, 5936223.4296875, 63.74031066894531);
-        MeshPoint mp3 = new MeshPoint(298, 3586248.7890625, 5936184.33984375, 64.0420150756836);
-        MeshPoint mp4 = new MeshPoint(299, 3586256.203125, 5936158.1875, 63.40810012817383);
-        
-//        Edge edge1 = new Edge(518, 299, 298, 226, 225);
-//        Edge edge2 = new Edge(521, 298, 143, 226, 521);
-//        Edge edge3 = new Edge(246, 143, 144, 226, 105);
-//        Edge edge4 = new Edge(522, 144, 299, 226, 293);
-            
-        double[]a = new double[]{
-            mp4.getX()-mp3.getX(),
-	        mp4.getY()-mp3.getY(),
-	        0d
-        };
-        double[]b = new double[]{
-	        mp1.getX()-mp3.getX(),
-	        mp1.getY()-mp3.getY(),
-	        0d
-        };
-        
-        //test2
-//        double[]c = new double[]{
-//            mp4.getX()-mp2.getX(),
-//	        mp4.getY()-mp2.getY(),
-//	        0d
-//        };
-//        double[]d = new double[]{
-//	        mp1.getX()-mp2.getX(),
-//	        mp1.getY()-mp2.getY(),
-//	        0d
-//        };
-        
-        boolean existsClockwise = GeometryHelper.isAngleClockwise(a, b);
-        System.out.println("test "+ existsClockwise);
-        boolean existsClockwise2 = GeometryHelper.isAngleClockwise(b, a);
-        System.out.println("test "+ existsClockwise2);
-//            boolean existsNotClockwise = edge.existEdgeNotClockwise(this.edgesList,idFE);
-    }
+public class Test
+{
+
+  public static void main( String[] args ) throws CalcJobServiceException
+  {
+
+//    File baseDir = new File( "C:/Programme/eclipse/workspace/Kalypso2d" );
+    File baseDir = new File( Constants2D.BASE_DIR_NAME );
+    System.out.println("baseDir: " + baseDir);
+
+    CalcJob2dModel calc = new CalcJob2dModel();
+    calc.run( baseDir, null );
+
+  }
+
+  /*
+   * public static void main(String[] args) { MeshPoint mp1 = new MeshPoint(143,
+   * 3586257.8984375, 5936190.1484375, 63.89112854003906); // MeshPoint mp2 =
+   * new MeshPoint(144, 3586342.0546875, 5936223.4296875, 63.74031066894531);
+   * MeshPoint mp3 = new MeshPoint(298, 3586248.7890625, 5936184.33984375,
+   * 64.0420150756836); MeshPoint mp4 = new MeshPoint(299, 3586256.203125,
+   * 5936158.1875, 63.40810012817383);
+   *  // Edge edge1 = new Edge(518, 299, 298, 226, 225); // Edge edge2 = new
+   * Edge(521, 298, 143, 226, 521); // Edge edge3 = new Edge(246, 143, 144, 226,
+   * 105); // Edge edge4 = new Edge(522, 144, 299, 226, 293);
+   * 
+   * double[]a = new double[]{ mp4.getX()-mp3.getX(), mp4.getY()-mp3.getY(), 0d };
+   * double[]b = new double[]{ mp1.getX()-mp3.getX(), mp1.getY()-mp3.getY(), 0d };
+   * 
+   * //test2 // double[]c = new double[]{ // mp4.getX()-mp2.getX(), //
+   * mp4.getY()-mp2.getY(), // 0d // }; // double[]d = new double[]{ //
+   * mp1.getX()-mp2.getX(), // mp1.getY()-mp2.getY(), // 0d // };
+   * 
+   * boolean existsClockwise = GeometryHelper.isAngleClockwise(a, b);
+   * System.out.println("test "+ existsClockwise); boolean existsClockwise2 =
+   * GeometryHelper.isAngleClockwise(b, a); System.out.println("test "+
+   * existsClockwise2); // boolean existsNotClockwise =
+   * edge.existEdgeNotClockwise(this.edgesList,idFE); }
+   */
 }
 
-
-    /**
-     * @param args
-     * @throws MalformedURLException
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws UnsupportedEncodingException
-     * @throws SAXException
-     *             main: this is the starting point. reads out the arguments
-     *             form the command-line
-     * @param args
-     *            the command-line arguments
-     */
+/**
+ * @param args
+ * @throws MalformedURLException
+ * @throws FileNotFoundException
+ * @throws IOException
+ * @throws UnsupportedEncodingException
+ * @throws SAXException
+ *           main: this is the starting point. reads out the arguments form the
+ *           command-line
+ * @param args
+ *          the command-line arguments
+ */
 //    public static void main(String[] args) {
 //
 //        HashMap argsmap = null;
@@ -149,7 +148,7 @@ public class Test {
 //            try {
 //                
 //                /*//MyObject o = // get JAXB content tree
-//                JAXBContext jc = JAXBContext.newInstance( "com.acme.foo:com.acme.bar" );  
+//                JAXBContext jc = JAXBContext.newInstance( "com.acme.foo:com.acme.bar" );
 //                
 //                // jaxbContext is a JAXBContext object from which 'o' is created.
 //                JAXBSource source = new JAXBSource( jaxbContext, o );
@@ -163,16 +162,16 @@ public class Test {
 //             */
 //                
 //                
-////                SAXParserFactory spf = SAXParserFactory.newInstance();
-////                spf.setNamespaceAware(true);
-////                XMLReader xmlReader = spf.newSAXParser().getXMLReader();
+//// SAXParserFactory spf = SAXParserFactory.newInstance();
+//// spf.setNamespaceAware(true);
+//// XMLReader xmlReader = spf.newSAXParser().getXMLReader();
 ////
-////                xmlReader.setContentHandler(new MyContentHandler());
+//// xmlReader.setContentHandler(new MyContentHandler());
 ////
-////                //instream = new FileInputStream("books.xml");
-////                instream = new FileInputStream(inputFile);
-////                is = new InputSource(instream);
-////                xmlReader.parse(is);
+//// //instream = new FileInputStream("books.xml");
+//// instream = new FileInputStream(inputFile);
+//// is = new InputSource(instream);
+//// xmlReader.parse(is);
 //                
 //                MeshPolygon meshPolygon = new MeshPolygon();
 //                meshPolygon.setPoint(1);
@@ -187,18 +186,17 @@ public class Test {
 //                ex.printStackTrace();
 //            }
 //                
-////            } catch (IOException e) {
-////                e.printStackTrace();
-////                System.exit(0);
-////            } catch (SAXException e) {
-////                e.printStackTrace();
-////                System.exit(0);
-////            } catch (ParserConfigurationException e) {
-////                e.printStackTrace();
-////                System.exit(0);
-////            }
+//// } catch (IOException e) {
+//// e.printStackTrace();
+//// System.exit(0);
+//// } catch (SAXException e) {
+//// e.printStackTrace();
+//// System.exit(0);
+//// } catch (ParserConfigurationException e) {
+//// e.printStackTrace();
+//// System.exit(0);
+//// }
 //
 //        }
 //    }
 //}
-
