@@ -45,7 +45,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   {
     try
     {
-      return m_srv.getChildrenCount( m_bean ) > 0;
+      return m_srv.hasChildren( m_bean );
     }
     catch( RemoteException e )
     {

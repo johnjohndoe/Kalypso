@@ -13,8 +13,9 @@ import javax.xml.rpc.Stub;
 
 import org.kalypso.java.lang.reflect.ClassUtilities;
 
+
 /**
- * 
+ * Factory for Kalypso WebService proxies.
  * 
  * @author schlienger
  */
@@ -22,12 +23,12 @@ public class ProxyFactory
 {
   /** property containing the base classpath of all kalypso service proxies */
   public final static String KALYPSO_PROXY_BASE = "KALYPSO_PROXY_BASE";
-
+  
   /** used to represent no arguments when invoking a method using reflection */
-  private final static Object[] NO_ARGS = new Object[0];
+  protected final static Object[] NO_ARGS = new Object[0];
 
   /** used to represent no types arguments when getting a method using reflection */
-  private final static Class[] NO_TYPES = new Class[0];
+  protected final static Class[] NO_TYPES = new Class[0];
 
   /** contains the proxies that were already created */
   private final Map m_proxies;
@@ -41,7 +42,7 @@ public class ProxyFactory
    * the proxy classes are created.
    * <p>
    * <service_name>_URL = for each service that this factory should create. It
-   * contains the location of the servers that can deliver the desired service. 
+   * contains the location of the servers that can deliver the desired service.
    */
   private Properties m_conf;
 
@@ -67,12 +68,13 @@ public class ProxyFactory
    *           if stub or server unavailable
    */
   public Stub getProxy( final String serviceName, final String intfName ) throws ServiceException
-  { 
-    /** contains the list of Kalypso-Servers that are configured. When asking
-     * for a proxy, this method will go through the list until it finds one
+  {
+    /**
+     * contains the list of Kalypso-Servers that are configured. When asking for
+     * a proxy, this method will go through the list until it finds one
      * available server that can deliver the corresponding service.
      */
-    final List m_servers = Arrays.asList( m_conf.getProperty( serviceName + "_URL" ).split(";") );
+    final List m_servers = Arrays.asList( m_conf.getProperty( serviceName + "_URL" ).split( ";" ) );
 
     // used as key in the proxies map
     final String key = serviceName + "-" + intfName;
@@ -85,14 +87,19 @@ public class ProxyFactory
 
     if( !m_proxies.containsKey( key ) )
     {
-      final String strProxyClass = m_conf.getProperty( KALYPSO_PROXY_BASE ) + "." + serviceName + "_Impl";
+      // TODO TRICKY: we set the classloader because of a problem using jaxrpc at runtime
+      // under Eclipse. It seems that the system class loader is explicitely used
+      // by the jaxrpc jars and that's bad because it doesn't find the plugins runtime libs.
+      if( Thread.currentThread().getContextClassLoader() != getClass().getClassLoader() )
+        Thread.currentThread().setContextClassLoader( getClass().getClassLoader() );
+      
+      final String strProxyClass = m_conf.getProperty( KALYPSO_PROXY_BASE ) + "." + serviceName
+          + "_Impl";
 
       try
       {
-        Class c = Class.forName("javax.activation.DataSource");
-        System.out.println( c );
-        
-        final Object proxyImpl = ClassUtilities.newInstance( strProxyClass, Object.class, getClass().getClassLoader() );
+        final Object proxyImpl = ClassUtilities.newInstance( strProxyClass, Object.class, getClass()
+            .getClassLoader() );
 
         final Method method = proxyImpl.getClass().getMethod( "get" + intfName + "Port", NO_TYPES );
 
@@ -103,7 +110,7 @@ public class ProxyFactory
         final String strEndPoint = serverUrl + "/" + serviceName + "/" + intfName;
         proxy._setProperty( javax.xml.rpc.Stub.ENDPOINT_ADDRESS_PROPERTY, strEndPoint );
       }
-      catch( Exception e ) // generic Exception caught for simplicity
+      catch( Exception e ) // generic exception caught for simplicity
       {
         throw new ServiceException( "Service " + key + " not available. Could not create stub.", e );
       }
@@ -138,7 +145,7 @@ public class ProxyFactory
         }
         else
           throw new ServiceException( "Service " + key
-              + " not available. Could not find an servicing server." );
+              + " not available. Could not find an servicing server.", e );
       }
     }
 

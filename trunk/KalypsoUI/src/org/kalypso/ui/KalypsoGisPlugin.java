@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.xml.bind.JAXBException;
 import javax.xml.rpc.ServiceException;
-import javax.xml.rpc.Stub;
 
 import org.deegree.tools.IURLConnectionFactory;
 import org.deegree_impl.extension.ITypeRegistry;
@@ -30,7 +29,6 @@ import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.repository.DefaultRepositoryContainer;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.proxy.IObservationService;
-import org.kalypso.services.proxy.Kalypso_ObservationService_Impl;
 import org.kalypso.ui.repository.RepositorySpecification;
 import org.kalypso.util.pool.ResourcePool;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -273,12 +271,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
    */
   public IObservationService getObservationServiceProxy() throws ServiceException
   {
-    final Kalypso_ObservationService_Impl koi = new Kalypso_ObservationService_Impl();
-    final IObservationService port = koi.getIObservationServicePort();
-    final String strEndPoint = "http://pc242:8080/Kalypso_ObservationService/IObservationServicePort";
-    ((Stub)port)._setProperty( javax.xml.rpc.Stub.ENDPOINT_ADDRESS_PROPERTY, strEndPoint );
-    return port;
-    //return (IObservationService)m_proxyFactory.getProxy( "Kalypso_ObservationService", "IObservationService" );
+    return (IObservationService)m_proxyFactory.getProxy( "Kalypso_ObservationService", "IObservationService" );
   }
 
   //  TODO public OutputLogger getOutputLogger()
