@@ -27,8 +27,6 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
 
   private final Double[] m_values;
 
-  //  private final String[] m_psiStati;
-
   private final Integer[] m_kalypsoStati;
 
   private final IAxis[] m_axes;
@@ -60,7 +58,6 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     m_vc = vc;
 
     m_values = new Double[m_data.length];
-    //    m_psiStati = new String[m_data.length];
     m_kalypsoStati = new Integer[m_data.length];
   }
 
@@ -148,15 +145,6 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     return m_values[index];
   }
 
-  //  private String getStatus( int index )
-  //  {
-  //    if( m_psiStati[index] == null )
-  //      m_psiStati[index] = PSICompactFactory.statusToString(
-  // m_data[index].getStatus() );
-  //
-  //    return m_psiStati[index];
-  //  }
-  //
   private Integer getKalypsoStatus( int index )
   {
     if( m_kalypsoStati[index] == null )
@@ -165,14 +153,6 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
 
     return m_kalypsoStati[index];
   }
-
-  //
-  //  private void setStatus( int index, String status )
-  //  {
-  //    m_psiStati[index] = status;
-  //
-  //    m_data[index].setStatus( Integer.valueOf( status ).intValue() );
-  //  }
 
   private void setValue( int index, Double value )
   {
@@ -231,8 +211,6 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
         return m_data[index].getTimestamp();
       case 1:
         return getValue( index );
-      //    case 2:
-      //      return getStatus( index );
       case 2:
         return getKalypsoStatus( index );
       default:
@@ -253,8 +231,6 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
         m_data[index].setTimestamp( (Date) element );
       case 1:
         setValue( index, (Double) element );
-      //    case 2:
-      //      setStatus( index, (String)element );
       case 2:
         m_kalypsoStati[index] = (Integer) element;
       default:
