@@ -1,6 +1,7 @@
 package de.tuhh.wb.javagis.data;
 
 import javax.swing.table.AbstractTableModel;
+import javax.swing.*;
 /*
 import de.tuhh.wb.javagis.model.ElementSession;
 import de.tuhh.wb.javagis.model.ObjectSession;
@@ -86,6 +87,11 @@ public abstract class GisElementClass implements TableListener
 	return myVersion.getLabel()+"/"+getName();
     }
 
+    public ImageIcon getIcon()
+    {
+	return new ImageIcon(getSymbol());
+    }
+    
     public Image getSymbol()
     {
 	if(symbol==null)

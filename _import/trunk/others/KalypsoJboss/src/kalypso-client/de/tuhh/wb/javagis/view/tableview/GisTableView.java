@@ -92,7 +92,14 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 		JPanel jPanel=new JPanel(new BorderLayout());
 		jPanel.add(scroller);
 		jPanel.add(new GisTableFilter(this,tableModel), BorderLayout.SOUTH);
-		tabbedPane.addTab(tableModel.getName(),jPanel);
+		//		tabbedPane.addTab(tableModel.getName(),jPanel);
+
+		tabbedPane.addTab(tableModel.getName(),
+				  tableModel.getIcon(),
+				  jPanel,
+				  tableModel.getDescription());
+		    
+
 		
 		//		tabbedPane.addTab(tableModel.getName(),scroller);
 		//		tabbedPane.setToolTipTextAt(index,"<html>m<sup>2</sup></html>");

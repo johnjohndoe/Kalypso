@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.Comparator;
 
 import javax.ejb.ObjectNotFoundException;
+import javax.swing.*;
 
 public class GisTableModel extends AbstractTableModel implements GisInterfaceTableModel, ElementClassListener
 {
@@ -27,6 +28,11 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
     private GisElementClass myGisElementClass;
     private GisView myGisView;
     
+    public Icon getIcon()
+    {
+	return myGisElementClass.getIcon();
+    }
+
     public GisTableModel(GisElementClass gisElementClass)
     {
 	super();
