@@ -2,8 +2,8 @@
 <project name="KalypsoCoreBuild" default="deploy">
 
   <!-- Pfad zum Workspace -->
-  <property name="workspace" value="D:\Kalypso" />
-
+  <property file="../KalypsoBuild/projectbuild.properties" />
+  
   <!-- eclipse Abhaenigkeiten -->
   <property name="eclipse.path" value="C:\Programme/eclipse3" />
   <property name="eclipse.plugins" value="${eclipse.path}/plugins" />
