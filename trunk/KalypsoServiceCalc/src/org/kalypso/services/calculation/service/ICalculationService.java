@@ -1,6 +1,8 @@
-package org.kalypso.services.calculation;
+package org.kalypso.services.calculation.service;
 
 import java.rmi.Remote;
+
+import org.kalypso.services.calculation.job.ICalcJob;
 
 
 /**
@@ -30,10 +32,17 @@ public interface ICalculationService extends Remote
   public CalcJobBean[] getJobs() throws CalcJobServiceException;
 	
 	/**
-	 * Erzeugt einen neuen Auftrag. Der Auftrag wird in die Liste gestellt und
-	 * je nach Implementation abgearbeitet.
+	 * Erzeugt einen neuen Auftrag. 
+   * Der Auftrag wartet erstmal auf die Daten.
 	 */  
-  public String createJob( final String typeID, final String description, final String[] inputURLs ) throws CalcJobServiceException;
+  public CalcJobBean createJob( final String typeID, final String description, final CalcJobDataBean[] input ) throws CalcJobServiceException;
+
+  /**
+   * Teilt dem Job mit, dass jetzt alle Daten dem Server übergeben wurden.
+   * Der Auftrag wird jetzt in die Liste gestellt und (abhängig von der Imlpementation)
+   * baldmöglichst abgearbeitet.
+   */
+  public void readyJob( final String jobID ) throws CalcJobServiceException;
   
   /**
    * Stoppt einen Auftrag

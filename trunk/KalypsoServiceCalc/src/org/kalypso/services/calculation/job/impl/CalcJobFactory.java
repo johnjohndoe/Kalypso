@@ -1,10 +1,13 @@
-package org.kalypso.services.calculation.impl.jobs;
+package org.kalypso.services.calculation.job.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.kalypso.services.calculation.ICalcJob;
-import org.kalypso.services.calculation.CalcJobServiceException;
+import org.kalypso.services.calculation.job.ICalcJob;
+import org.kalypso.services.calculation.service.CalcJobDataBean;
+import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
  * @author belger
@@ -13,11 +16,11 @@ public class CalcJobFactory
 {
   private static final Properties m_jobTypes = new Properties();
 
-  public CalcJobFactory()
+  public CalcJobFactory( final File typeFile )
   {
     try
     {
-      m_jobTypes.load( CalcJobFactory.class.getResourceAsStream( "jobtypes.properties" ) );
+      m_jobTypes.load( new FileInputStream( typeFile ) );
     }
     catch( final IOException e )
     {
@@ -30,7 +33,7 @@ public class CalcJobFactory
     return (String[])m_jobTypes.keySet().toArray( new String[0] );
   }
 
-  public ICalcJob createJob( final String id, final String description, final String[] arguments, final String typeID ) throws CalcJobServiceException
+  public ICalcJob createJob( final String id, final String typeID, final String description, final CalcJobDataBean[] input ) throws CalcJobServiceException
   {
     try
     {
@@ -38,7 +41,7 @@ public class CalcJobFactory
 
       final ICalcJob job = (ICalcJob)Class.forName( className ).newInstance();
 
-      job.init( id, description, arguments, typeID );
+      job.init( id, typeID, description, input );
 
       return job;
     }

@@ -8,11 +8,11 @@
 	<classpathentry exported="true" kind="lib" path="lib/jaxp-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jax-qname.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxrpc-api.jar"/>
-	<classpathentry exported="true" sourcepath="C:/Programme/Java/jwsdp-1.4/_source/jaxrpc-si" kind="lib" path="lib/jaxrpc-impl.jar"/>
+	<classpathentry exported="true" sourcepath="J:/hyd5309/Development/Java/jwsdp/jaxrpc-src_1.3_new.zip" kind="lib" path="lib/jaxrpc-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxrpc-spi.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/kalypsoservice_observation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/saaj-api.jar"/>
+	<classpathentry exported="true" sourcepath="J:/hyd5309/Development/Java/jwsdp/jaxm-1_1-scsl.zip" kind="lib" path="lib/saaj-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/saaj-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
