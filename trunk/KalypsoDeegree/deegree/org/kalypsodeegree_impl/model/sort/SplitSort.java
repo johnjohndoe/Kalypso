@@ -26,8 +26,10 @@ public class SplitSort implements FeatureList
   private List m_objects = new ArrayList();
 
   public SplitSort()
-  {}
-
+  {
+    //
+  }
+  
   public SplitSort( final GM_Envelope env )
   {
     myRootContainer = new SplitSortContainer( null, env );
@@ -378,7 +380,7 @@ public class SplitSort implements FeatureList
   /**
    * @see org.deegree.model.feature.FeatureList#accept(org.deegree.model.feature.FeatureVisitor)
    */
-  public void accept( final FeatureVisitor visitor ) throws Throwable
+  public void accept( final FeatureVisitor visitor )
   {
     for( final Iterator iter = m_objects.iterator(); iter.hasNext(); )
     {

@@ -20,6 +20,9 @@ public interface IFeatureControl
   
   public void setFeature( final Feature feature );
   
+  /** Render this control as string */
+  public String toString();
+  
   /** Update Control from Feature  */
   public void updateControl();
 

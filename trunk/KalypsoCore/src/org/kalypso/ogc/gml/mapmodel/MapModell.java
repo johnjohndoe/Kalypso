@@ -288,8 +288,6 @@ public GM_Envelope getFullExtentBoundingBox()
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    // TODO: invalidate myself??
-
     fireModellEvent( modellEvent );
   }
 }

@@ -1,6 +1,7 @@
 package org.kalypso.ogc.gml.featureview.control;
 
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.kalypso.ogc.gml.featureview.IFeatureControl;
 
 /**
@@ -10,21 +11,28 @@ public abstract class AbstractFeatureControl implements IFeatureControl
 {
   private Feature m_feature;
 
-  private final String m_propertyName;
+  private final FeatureTypeProperty m_ftp;
   
-  public AbstractFeatureControl( final Feature feature, final String propertyName )
+  public AbstractFeatureControl(  )
+  {
+    this( null, null );
+  }
+
+  public AbstractFeatureControl( final FeatureTypeProperty ftp )
+  {
+    this( null, ftp );
+  }
+
+  public AbstractFeatureControl( final Feature feature, final FeatureTypeProperty ftp )
   {
     m_feature = feature;
-    m_propertyName = propertyName;
+    m_ftp = ftp;
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
    */
-  public void dispose()
-  {
-    // nix tun
-  }
+  public abstract void dispose();
 
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getFeature()
@@ -39,10 +47,8 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     m_feature = feature;
   }
   
-  public String getPropertyName()
+  public FeatureTypeProperty getFeatureTypeProperty()
   {
-    return m_propertyName;
+    return m_ftp;
   }
-  
-  
 }

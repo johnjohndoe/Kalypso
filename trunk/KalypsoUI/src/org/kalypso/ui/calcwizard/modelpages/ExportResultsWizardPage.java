@@ -199,7 +199,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,
           getReplaceProperties() );
 
-      m_viewer = new LayerTableViewer( parent, this, getProject(), KalypsoGisPlugin.getDefault()
+      m_viewer = new LayerTableViewer( parent, this, KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), SELECTION_ID, true );
       m_viewer.applyTableTemplate( template, getContext() );
     }

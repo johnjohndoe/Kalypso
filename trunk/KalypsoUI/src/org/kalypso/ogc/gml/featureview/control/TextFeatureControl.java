@@ -1,10 +1,9 @@
 package org.kalypso.ogc.gml.featureview.control;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.swt.SWT;
@@ -16,23 +15,32 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.featureview.IFeatureModifier;
+import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 
 /**
  * @author belger
  */
 public class TextFeatureControl extends AbstractFeatureControl implements ModellEventListener
 {
-  private static final DateFormat DATE_FORMATTER = new SimpleDateFormat();
-
   private final Color m_errorColor = Display.getCurrent().getSystemColor( SWT.COLOR_RED );
 
   private Text m_text = null;
 
   private boolean m_isValid = false;
 
-  public TextFeatureControl( final Feature feature, final String propertyName )
+  private final IFeatureModifier m_modifier;
+
+  public TextFeatureControl( final FeatureTypeProperty ftp )
   {
-    super( feature, propertyName );
+    this( null, ftp );
+  }
+
+  public TextFeatureControl( final Feature feature, final FeatureTypeProperty ftp )
+  {
+    super( feature, ftp );
+    
+    m_modifier = new StringModifier( ftp );
   }
 
   /**
@@ -100,12 +108,12 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
     final Feature feature = getFeature();
 
-    if( feature == null || getPropertyName() == null )
+    if( feature == null || getFeatureTypeProperty() == null )
       m_text.setText( "<no data>" );
     else
     {
       // compare with old to prevent loop
-      final String newText = getTextFromFeature();
+      final String newText = toString();
       final String oldText = m_text.getText();
       if( newText.compareTo( oldText ) != 0 )
         m_text.setText( newText );
@@ -114,19 +122,9 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     setValid( true );
   }
 
-  private String getTextFromFeature()
+  public String toString()
   {
-    final Feature feature = getFeature();
-    final String type = feature.getFeatureType().getProperty( getPropertyName() ).getType();
-    final Object data = feature.getProperty( getPropertyName() );
-
-    if( data == null )
-      return "";
-
-    if( "java.util.Date".equals( type ) )
-      return DATE_FORMATTER.format( data );
-
-    return data.toString();
+    return m_modifier.getValue( getFeature() ).toString(); 
   }
 
   /**
@@ -142,55 +140,19 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
     final String text = m_text.getText();
 
-    Object newData = null;
-    try
-    {
-      newData = parseData( text );
-    }
-    catch( final Exception nfe )
-    {
-      nfe.printStackTrace();
-    }
+    final Object newData = m_modifier.parseInput( getFeature(), text );
 
-    final Object oldData = feature.getProperty( getPropertyName() );
+    final String name = getFeatureTypeProperty().getName();
+    final Object oldData = feature.getProperty( name );
 
     // nur ändern, wenn sich wirklich was geändert hat
     if( ( newData == null && oldData != null ) || ( newData != null && !newData.equals( oldData ) ) )
-      c.add( new FeatureChange( feature, getPropertyName(), newData ) );
-  }
-
-  private Object parseData( final String text ) throws Exception
-  {
-    final String typeName = getFeature().getFeatureType().getProperty( getPropertyName() ).getType();
-    if( typeName.equals( "java.lang.Double" ) )
-      return new Double( text );
-    if( typeName.equals( "java.lang.Integer" ) )
-      return new Integer( text );
-    if( typeName.equals( "java.lang.Float" ) )
-      return new Float( text );
-    if( typeName.equals( "java.lang.Long" ) )
-      return new Long( text );
-    if( typeName.equals( "java.lang.Boolean" ) )
-      return new Boolean( text );
-    if( typeName.equals( "java.util.Date" ) )
-      return DATE_FORMATTER.parse( text );
-
-    if( text.length() == 0 )
-      return null;
-    return text;
+      c.add( new FeatureChange( feature, name, newData ) );
   }
 
   protected void updateValid()
   {
-    try
-    {
-      parseData( m_text.getText() );
-      setValid( true );
-    }
-    catch( final Exception e )
-    {
-      setValid( false );
-    }
+    setValid( m_modifier.isValid( m_text.getText() ) == null );
   }
 
   /**

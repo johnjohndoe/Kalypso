@@ -23,9 +23,14 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 {
   private Button m_button;
 
-  public ButtonFeatureControl( final Feature feature, final String propertyName )
+  public ButtonFeatureControl( final FeatureTypeProperty ftp )
   {
-    super( feature, propertyName );
+    this( null, ftp );
+  }
+
+  public ButtonFeatureControl( final Feature feature, final FeatureTypeProperty ftp )
+  {
+    super( feature, ftp );
   }
 
   /**
@@ -33,7 +38,8 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
    */
   public void dispose()
   {
-    //
+    if( !( m_button.isDisposed() ) )
+        m_button.dispose();
   }
 
   /**
@@ -43,8 +49,6 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   public Control createControl( final Composite parent, final int style )
   {
     m_button = new Button( parent, style );
-    
-    m_button.setText( getDefaultText() );
     
     m_button.addSelectionListener( new SelectionAdapter()
     {
@@ -60,9 +64,9 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     return m_button;
   }
 
-  private String getDefaultText()
+  public String toString()
   {
-    final FeatureTypeProperty ftp = getFeature().getFeatureType().getProperty( getPropertyName() );
+    final FeatureTypeProperty ftp = getFeatureTypeProperty();
     final String typename = ftp.getType();
     
     if( typename.startsWith( GM_Object.class.getPackage().getName() ) )
@@ -129,6 +133,6 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
    */
   public void updateControl()
   {
-  //
+    m_button.setText( toString() );
   }
 }

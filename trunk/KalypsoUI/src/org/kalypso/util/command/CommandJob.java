@@ -78,6 +78,9 @@ public final class CommandJob extends Job
               + ": " + description, e );
     }
 
+    if( description == null )
+      System.out.print(false);
+    
     LOGGER.info( "Finished " + m_type + ": " + description );
 
     return Status.OK_STATUS;

@@ -137,11 +137,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-//      if( modellEvent.getType() == ModellEvent.STYLE_CHANGE )
-//        setDirty( true );
-      
-//      if( modellEvent.getType() == ModellEvent.FEATURE_CHANGE )
-        setDirty( true );
+      setDirty( true );
 
       fireModellEvent( modellEvent );
   }

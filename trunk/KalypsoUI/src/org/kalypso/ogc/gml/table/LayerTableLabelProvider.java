@@ -4,7 +4,7 @@ import org.deegree.model.feature.Feature;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor;
+import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 
 /**
  * @author Belger
@@ -45,11 +45,8 @@ public class LayerTableLabelProvider implements ITableLabelProvider
     
     final Feature feature = (Feature)element;
 
-    final AbstractFeatureCellEditor cellEditor = (AbstractFeatureCellEditor)m_viewer.getCellEditors()[columnIndex];
-    if( cellEditor == null )
-      return "<kein Renderer vorhanden>";
-    
-    return cellEditor.renderLabel( feature );
+    final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
+    return modifier.getValue( feature ).toString();
   }
 
   /**
@@ -75,5 +72,4 @@ public class LayerTableLabelProvider implements ITableLabelProvider
   {
     //  TODO
   }
-
 }

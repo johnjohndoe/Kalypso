@@ -11,7 +11,6 @@ import javax.xml.bind.Marshaller;
 
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IMenuListener;
@@ -28,7 +27,7 @@ import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
-import org.kalypso.ogc.gml.table.celleditors.ICellEditorFactory;
+import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -56,7 +55,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   private final Marshaller m_marshaller;
 
   private LayerTableViewer m_layerTable = null;
-
+  
   public GisTableEditor()
   {
     try
@@ -127,11 +126,9 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   {
     super.createPartControl( parent );
 
-    final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
-
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-    final ICellEditorFactory factory = plugin.createFeatureTypeCellEditorFactory();
-    m_layerTable = new LayerTableViewer( parent, this, project, factory, plugin
+    final IFeatureModifierFactory factory = plugin.createFeatureTypeCellEditorFactory();
+    m_layerTable = new LayerTableViewer( parent, this, factory, plugin
         .getDefaultMapSelectionID(), false );
 
     final MenuManager menuMgr = createSpaltenMenu( "spalten" );

@@ -8,7 +8,6 @@ import javax.xml.rpc.ServiceException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -27,22 +26,6 @@ public class ExportBerichtActionDelegate extends GisTableAbstractActionDelagate
   private IMetaDocService m_service;
 
   /**
-   * @see org.kalypso.ui.editor.gistableeditor.actions.GisTableAbstractActionDelagate#isEnabled(org.eclipse.jface.viewers.ISelection)
-   */
-  protected boolean isEnabled( final ISelection selection )
-  {
-    return true;
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.gistableeditor.actions.GisTableAbstractActionDelagate#isChecked()
-   */
-  protected boolean isChecked()
-  {
-    return false;
-  }
-
-  /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   public void run( final IAction action )
@@ -58,7 +41,7 @@ public class ExportBerichtActionDelegate extends GisTableAbstractActionDelagate
         saveData( doc );
       else
       {
-        cancelData( doc ); 
+        cancelData( doc );
       }
     }
     catch( final CoreException e )
@@ -74,12 +57,13 @@ public class ExportBerichtActionDelegate extends GisTableAbstractActionDelagate
   {
     try
     {
-    m_service.rollbackNewDocument( doc );
+      m_service.rollbackNewDocument( doc );
     }
     catch( final RemoteException e )
     {
       e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Löschen der Berichtsvorlage auf dem Server gescheitert", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "Löschen der Berichtsvorlage auf dem Server gescheitert", e ) );
     }
   }
 
@@ -119,5 +103,13 @@ public class ExportBerichtActionDelegate extends GisTableAbstractActionDelagate
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Rechendienst konnte nicht initialisiert werden", e ) );
     }
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.gistableeditor.actions.GisTableAbstractActionDelagate#refreshAction()
+   */
+  protected void refreshAction()
+  {
+    // nix tun, immer Aktiv
   }
 }

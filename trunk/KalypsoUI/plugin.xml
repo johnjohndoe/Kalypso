@@ -182,6 +182,12 @@
             <separator name="spalten"/>
             <separator name="edit"/>
          </menu>
+		 <menu
+               label="Spalten"
+               path="org.kalypso.ui.editors.tableeditor.menu/spalten"
+               id="org.kalypso.ui.editors.tableeditor.columnmenu">
+            <separator name="spaltenMenu"/>
+         </menu>
          <action
                toolbarPath="tabelle"
                label="Berichtsablage..."
@@ -204,19 +210,31 @@
                enablesFor="+"
                toolbarPath="edit"
                label="Daten speichern"
-               class="org.kalypso.ui.editor.gistableeditor.actions.SaveDataActionDelagate"
+               class="org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate"
                tooltip="Speichert die Daten der Tabelle"
                icon="icons/gistable/save_edit.gif"
                style="push"
                menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
                id="org.kalypso.ui.editor.gistableeditor.SaveDataAction">
          </action>
-         <menu
-               label="Spalten"
-               path="org.kalypso.ui.editors.tableeditor.menu/spalten"
-               id="org.kalypso.ui.editors.tableeditor.columnmenu">
-            <separator name="spaltenMenu"/>
-         </menu>
+         <action
+               toolbarPath="edit"
+               label="Rückgängig"
+               tooltip="Die letzte Änderung der Daten Rückgängig machen"
+               icon="icons/gistable/undo_edit.gif"
+               class="org.kalypso.ui.editor.gistableeditor.actions.UndoDelegate"
+               style="push"
+               menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
+               id="org.kalypso.ui.editor.gistableeditor.UndoActionDelegate"/>
+         <action
+               toolbarPath="edit"
+               label="Wiederherstellen"
+               tooltip="Die letzte Korrektur wiederherstellen"
+               icon="icons/gistable/redo_edit.gif"
+               class="org.kalypso.ui.editor.gistableeditor.actions.RedoDelegate"
+               style="push"
+               menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
+               id="org.kalypso.ui.editor.gistableeditor.RedoActionDelegate"/>
       </editorContribution>
       <editorContribution
             targetID="org.kalypso.ui.editor.mapeditor.GisMapEditor"

@@ -3,7 +3,7 @@ package org.kalypso.ogc.gml.table.celleditors;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 
 /**
- * @author gernot
+ * @author belger
  */
 public class DefaultCellValidators
 {

@@ -14,9 +14,7 @@ import org.deegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * DOCUMENT ME!
- * 
- * @author von D?mming
+ * @author von Dömming
  */
 public class JMSelector
 {

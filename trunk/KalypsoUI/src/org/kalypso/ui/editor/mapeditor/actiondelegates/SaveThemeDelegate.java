@@ -77,7 +77,7 @@ public class SaveThemeDelegate extends AbstractThemeDelegate implements ModellEv
     refreshAction();
   }
 
-  protected void refreshAction()
+  protected void refreshAction( )
   {
     boolean bEnabled = false;
 
