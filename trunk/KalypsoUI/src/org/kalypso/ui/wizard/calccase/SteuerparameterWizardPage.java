@@ -155,7 +155,7 @@ public class SteuerparameterWizardPage extends WizardPage
         GmlSerializer.serializeWorkspace( w, workspace );
       }
     };
-    
+
     try
     {
       thread.setFileContents(controlFile, false, false, new NullProgressMonitor());

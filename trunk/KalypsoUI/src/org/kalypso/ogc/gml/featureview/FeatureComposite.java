@@ -69,6 +69,7 @@ import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.CheckboxType;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
+import org.kalypso.template.featureview.FeaturetemplateType;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayoutType;
@@ -272,11 +273,19 @@ public class FeatureComposite implements IFeatureControl
       if( propertyName != null && propertyName.length() > 0 )
       {
         final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
-        final Annotation annotation = ftp.getAnnotation( Locale.getDefault().getLanguage() );
-        if( annotation != null )
+        try
         {
-          label.setText( annotation.getLabel() );
-          label.setToolTipText( annotation.getTooltip() );
+          final Annotation annotation = ftp.getAnnotation( Locale.getDefault().getLanguage() );
+          if( annotation != null )
+          {
+            label.setText( annotation.getLabel() );
+            label.setToolTipText( annotation.getTooltip() );
+          }
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+          // TODO: handle exception
         }
       }
 
@@ -476,8 +485,18 @@ public class FeatureComposite implements IFeatureControl
   {
     try
     {
-      final FeatureviewType view = (FeatureviewType)FeatureviewHelper.UNMARSHALLER.unmarshal( url );
-      addView( view );
+      final Object unmarshal = FeatureviewHelper.UNMARSHALLER.unmarshal( url );
+      if( unmarshal instanceof FeatureviewType ) 
+        addView( (FeatureviewType)unmarshal );
+      else if( unmarshal instanceof FeaturetemplateType )
+      {
+        final FeaturetemplateType ftt = (FeaturetemplateType)unmarshal;
+        final List view = ftt.getView();
+        for( final Iterator vIt = view.iterator(); vIt.hasNext(); )
+          addView( (FeatureviewType)vIt.next() );
+      }
+      else
+        System.out.println( getClass().getName() + ": Unsupported type: " + unmarshal.getClass().getName() + " in " + url.toString() );
     }
     catch( final JAXBException e )
     {

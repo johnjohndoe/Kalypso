@@ -262,7 +262,14 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     m_panel = new Composite( scrolledComposite, SWT.NONE );
     m_panel.setLayout( new GridLayout() );
 
-    updateControls();
+    try
+    {
+      updateControls();
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
     scrolledComposite.setContent( m_panel );
   }
 

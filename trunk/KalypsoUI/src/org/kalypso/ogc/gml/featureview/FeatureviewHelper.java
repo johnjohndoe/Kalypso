@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.featureview;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -58,6 +59,7 @@ import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Subcomposite;
 import org.kalypso.template.featureview.TableType;
 import org.kalypso.template.featureview.TextType;
+import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
@@ -161,8 +163,14 @@ public class FeatureviewHelper
         groupdata.setVerticalAlignment( "GridData.FILL" );
         groupdata.setHorizontalSpan( 2 );
 
+        final String lang = Locale.getDefault().getLanguage();
+        final Annotation annotation = ftp.getAnnotation( lang );
+        final String text = annotation == null ? ftp.getName() : annotation.getLabel();
+        final String tooltip = annotation == null ? null : annotation.getTooltip();
+        
         group.setLayoutData( groupdata );
-        group.setText( ftp.getName() );
+        group.setText( text );
+        group.setTooltip( tooltip );
         group.setStyle( "SWT.NONE" );
 
         final GridLayoutType gridLayout = FACTORY.createGridLayout();
@@ -189,11 +197,21 @@ public class FeatureviewHelper
       type = button;
     }
 
+    final String lang = Locale.getDefault().getLanguage();
+    final Annotation annotation = ftp.getAnnotation( lang );
+    final String text = annotation == null ? ftp.getName() : annotation.getLabel();
+    final String tooltip = annotation == null ? null : annotation.getTooltip();
+
+    if( type != null )
+      type.setTooltip( tooltip );
+    
     if( addLabel )
     {
       final LabelType label = FACTORY.createLabel();
       label.setStyle( "SWT.NONE" );
-      label.setText( ftp.getName() );
+      
+      label.setText( text );
+      label.setTooltip( tooltip );
       label.setVisible( true );
 
       final GridDataType labelGridData = FACTORY.createGridData();
