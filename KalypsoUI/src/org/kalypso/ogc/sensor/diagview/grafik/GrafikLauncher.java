@@ -48,6 +48,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -110,7 +111,14 @@ public class GrafikLauncher
   /** date format understood by the grafik tool */
   protected final static DateFormat GRAFIK_DF = new SimpleDateFormat(
       "dd.MM.yyyy HH:mm:ss" );
+  
+  private final static NumberFormat GRAFIK_NF_W = NumberFormat.getIntegerInstance();
 
+  static
+  {
+    GRAFIK_NF_W.setMaximumFractionDigits( 0 );
+  }
+  
   private GrafikLauncher( )
   {
     // no instanciation
@@ -462,7 +470,7 @@ public class GrafikLauncher
         {
           final Double value = new Double( mdl.getProperty( mds[j] ) );
           yLines.put( value, new ValueAndColor( mds[j] + " ("
-              + mdl.getProperty( mds[j] ) + ")", value.doubleValue(), null ) );
+              + GRAFIK_NF_W.format( value ) + ")", value.doubleValue(), null ) );
         }
       }
       catch( NoSuchElementException e )
@@ -492,7 +500,7 @@ public class GrafikLauncher
     for( final Iterator it = yLines.keySet().iterator(); it.hasNext(); )
     {
       final ValueAndColor vac = (ValueAndColor) yLines.get( it.next() );
-      writer.write( "yKonst: " + vac.value + " " + vac.label + '\n' );
+      writer.write( "yKonst: " + GRAFIK_NF_W.format( vac.value ) + " " + vac.label + '\n' );
     }
     yLines.clear();
 

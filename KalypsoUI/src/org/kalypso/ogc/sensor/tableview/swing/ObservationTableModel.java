@@ -429,6 +429,12 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public void setValueAt( Object aValue, int rowIndex, int columnIndex )
   {
+    // TRICKY: if value is null, do nothing (NOTE: the DoubleCellEditor used
+    // within our ObservationTable returns null when editing has been cancelled
+    // and in our case this means: don't modify the status)
+    if( aValue == null )
+      return;
+    
     final TableViewColumn col = (TableViewColumn)m_columns.get( columnIndex - 1 );
     col.setDirty( true );
 
@@ -440,7 +446,7 @@ public class ObservationTableModel extends AbstractTableModel
       final IStatus status = saveDirtyObservations( new NullProgressMonitor(), false );
       // TODO: error handling according to status
       if( !status.isOK() )
-        m_logger.severe( "Fehler beim Speichern der Zeitreihen" );
+        m_logger.severe( "Fehler beim Speichern der Zeitreihen: " + status.getMessage() );
     }
   }
 

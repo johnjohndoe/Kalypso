@@ -143,7 +143,7 @@ public class DoubleCellEditor extends DefaultCellEditor
 
     try
     {
-      m_value = m_nf.parse( s );
+      m_value = new Double( m_nf.parse( s ).doubleValue() );
     }
     catch( Exception e )
     {
@@ -154,6 +154,20 @@ public class DoubleCellEditor extends DefaultCellEditor
     return super.stopCellEditing();
   }
 
+  /**
+   * Overriden to set the editor's value to null. This is used as an indication
+   * that editing has been cancelled. Our ObservationTableModel will ignore
+   * this value and won't change the status associated to it.
+   * 
+   * @see javax.swing.DefaultCellEditor#cancelCellEditing()
+   */
+  public void cancelCellEditing( )
+  {
+    super.cancelCellEditing();
+    
+    m_value = null;
+  }
+  
   public Object getCellEditorValue( )
   {
     return m_value;

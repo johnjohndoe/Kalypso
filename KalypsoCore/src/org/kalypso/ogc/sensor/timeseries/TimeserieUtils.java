@@ -52,6 +52,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.java.awt.ColorUtilities;
 import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IObservation;
@@ -89,7 +90,7 @@ public class TimeserieUtils
   public final static String[] findOutMDBeginningWith( final IObservation obs, final String mdPrefix )
   {
     if( obs == null )
-      return null;
+      return ArrayUtils.EMPTY_STRING_ARRAY;
     
     final MetadataList mdl = obs.getMetadataList();
 
