@@ -118,8 +118,8 @@
 			<argument name="output" value=":calcdir:expertControl.gml"/>
 		</transformation>
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/calcCase/expertControl.gtt"/>
-			<argument name="output" value=":calcdir:expertControl.gtt"/>
+			<argument name="input" value=":project:.templates/calcCase/expertControl.gft"/>
+			<argument name="output" value=":calcdir:expertControl.gft"/>
 		</transformation>
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.templates/calcCase/expertKarte.gmt"/>
@@ -286,8 +286,8 @@
 			<argument name="ignoreError" value="true"/>
 		</transformation>
 		<transformation className="org.kalypso.util.transformation.MoveTransformation">
-			<argument name="input" value=":calcdir:Ergebnisse/calc/expertControl.gtt"/>
-			<argument name="output" value=":calcdir:expertControl.gtt"/>
+			<argument name="input" value=":calcdir:Ergebnisse/calc/expertControl.gml"/>
+			<argument name="output" value=":calcdir:expertControl.gml"/>
 			<argument name="ignoreError" value="true"/>
 		</transformation>
 	</afterCalcTransformations>
