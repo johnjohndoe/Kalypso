@@ -58,10 +58,6 @@ import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.TransformationConfig;
 import org.kalypso.model.xml.TransformationType;
 import org.kalypso.model.xml.CalcwizardType.PageType.ArgType;
-import org.kalypso.services.calcjob.CalcJobDescription;
-import org.kalypso.services.calcjob.CalcJobService;
-import org.kalypso.services.calcjob.CalcJobServiceException;
-import org.kalypso.services.calcjob.CalcJobStatus;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.CalcWizard;
@@ -568,8 +564,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public String startCalculation( final IFolder calcFolder, final IProgressMonitor monitor )
       throws InvocationTargetException
   {
-    try
-    {
+//    try
+//    {
       if( m_calcJobMap.containsValue( calcFolder ) )
         throw new InvocationTargetException( null,
             "Dieser Rechenfall wird zur Zeit bereits gerechnet" );
@@ -580,92 +576,94 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final URL[] input = getCalcCaseInputData( calcFolder, new SubProgressMonitor( monitor, 1000 ) );
 
       // start job
-      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
-      final String jobID = calcService.createJob( getCalcType(), calcFolder.getName(), input );
-
-      monitor.worked( 1000 );
-
-      m_calcJobMap.put( jobID, calcFolder );
-
-      return jobID;
-    }
-    catch( final CalcJobServiceException e )
-    {
-      e.printStackTrace();
-
-      throw new InvocationTargetException( e, "Rechenlauf konnte nicht gestartet werden" );
-    }
+      // TODO
+//      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
+//      final String jobID = calcService.createJob( getCalcType(), calcFolder.getName(), input );
+//
+//      monitor.worked( 1000 );
+//
+//      m_calcJobMap.put( jobID, calcFolder );
+//
+//      return jobID;
+      return "";
+//    }
+//    catch( final CalcJobServiceException e )
+//    {
+//      e.printStackTrace();
+//
+//      throw new InvocationTargetException( e, "Rechenlauf konnte nicht gestartet werden" );
+//    }
   }
 
   public void stopCalculation( final String jobID )
   {
-    final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
-
-    try
-    {
-      calcService.cancelJob( jobID );
-      calcService.removeJob( jobID );
-    }
-    catch( final CalcJobServiceException e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-      m_calcJobMap.remove( jobID );
-    }
+//    final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
+//
+//    try
+//    {
+//      calcService.cancelJob( jobID );
+//      calcService.removeJob( jobID );
+//    }
+//    catch( final CalcJobServiceException e )
+//    {
+//      e.printStackTrace();
+//    }
+//    finally
+//    {
+//      m_calcJobMap.remove( jobID );
+//    }
   }
 
-  public synchronized CalcJobDescription checkCalculation( final String jobID )
-      throws CoreException
-  {
-    try
-    {
-      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
-
-      final CalcJobDescription description = calcService.getJobDescription( jobID );
-
-      return description;
-    }
-    catch( final CalcJobServiceException cse )
-    {
-      m_calcJobMap.remove( jobID );
-
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Fehler beim Prüfen des Rechenstatus: ID=" + jobID, cse ) );
-    }
-  }
+//  public synchronized CalcJobDescription checkCalculation( final String jobID )
+//      throws CoreException
+//  {
+//    try
+//    {
+//      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
+//
+//      final CalcJobDescription description = calcService.getJobDescription( jobID );
+//
+//      return description;
+//    }
+//    catch( final CalcJobServiceException cse )
+//    {
+//      m_calcJobMap.remove( jobID );
+//
+//      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+//          "Fehler beim Prüfen des Rechenstatus: ID=" + jobID, cse ) );
+//    }
+//  }
 
   public void retrieveCalculation( final String jobID ) throws CoreException
   {
-    try
-    {
-      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
-      final CalcJobDescription description = calcService.getJobDescription( jobID );
-
-      if( description.getState() != CalcJobStatus.FINISHED )
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-            "Berechnung nicht beendet: ID=" + jobID, null ) );
-
-      final IFolder folder = (IFolder)m_calcJobMap.get( jobID );
-
-      final URL[] results = calcService.retrieveResults( jobID );
-
-      putCalcCaseOutputData( folder, results, new NullProgressMonitor() );
-
-      calcService.removeJob( jobID );
-    }
-    catch( CalcJobServiceException e )
-    {
-      e.printStackTrace();
-
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Fehler beim Prüfen des Rechenstatus: ID=" + jobID, null ) );
-    }
-    finally
-    {
-      m_calcJobMap.remove( jobID );
-    }
+//    try
+//    {
+//      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
+//      final CalcJobDescription description = calcService.getJobDescription( jobID );
+//
+//      if( description.getState() != CalcJobStatus.FINISHED )
+//        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+//            "Berechnung nicht beendet: ID=" + jobID, null ) );
+//
+//      final IFolder folder = (IFolder)m_calcJobMap.get( jobID );
+//
+//      final URL[] results = calcService.retrieveResults( jobID );
+//
+//      putCalcCaseOutputData( folder, results, new NullProgressMonitor() );
+//
+//      calcService.removeJob( jobID );
+//    }
+//    catch( CalcJobServiceException e )
+//    {
+//      e.printStackTrace();
+//
+//      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+//          "Fehler beim Prüfen des Rechenstatus: ID=" + jobID, null ) );
+//    }
+//    finally
+//    {
+//      m_calcJobMap.remove( jobID );
+//    }
   }
 
 }

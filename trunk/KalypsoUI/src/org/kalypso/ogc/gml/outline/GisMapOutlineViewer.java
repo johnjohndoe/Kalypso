@@ -85,7 +85,7 @@ public class GisMapOutlineViewer implements ISelectionProvider,
   }
 
   /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.IMapModell)
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
   public void setMapModell( final IMapModell modell )
   {
@@ -112,7 +112,7 @@ public class GisMapOutlineViewer implements ISelectionProvider,
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
+   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {

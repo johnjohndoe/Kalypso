@@ -86,6 +86,9 @@
       <library name="lib/servlet/servlet.jar">
          <export name="*"/>
       </library>
+      <library name="lib/junit/junit.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
 </plugin>

@@ -42,8 +42,6 @@ import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.diagview.template.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.template.ObservationTemplateHelper;
-import org.kalypso.services.calcjob.CalcJobDescription;
-import org.kalypso.services.calcjob.CalcJobStatus;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -291,7 +289,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
+   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
@@ -350,19 +348,20 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
             while( !monitor.isCanceled() )
             {
               // check if job is ready!
-              final CalcJobDescription description = nature.checkCalculation( jobID );
-              switch( description.getState() )
-              {
-              case CalcJobStatus.ERROR:
-                setErrorMessage( description.getMessage() );
-                return;
-
-              case CalcJobStatus.FINISHED:
-                return;
-              }
-
-              Thread.sleep( 100 );
-              monitor.worked( 10 );
+              // TODO
+//              final CalcJobDescription description = nature.checkCalculation( jobID );
+//              switch( description.getState() )
+//              {
+//              case CalcJobStatus.ERROR:
+//                setErrorMessage( description.getMessage() );
+//                return;
+//
+//              case CalcJobStatus.FINISHED:
+//                return;
+//              }
+//
+//              Thread.sleep( 100 );
+//              monitor.worked( 10 );
             }
 
             if( monitor.isCanceled() )
