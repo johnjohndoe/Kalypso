@@ -1,4 +1,4 @@
-package org.kalypso.editor.mapeditor;
+package org.kalypso.ogc.gml.outline;
 
 
 import org.deegree.graphics.sld.UserStyle;

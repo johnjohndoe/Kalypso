@@ -9,14 +9,8 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TableTreeViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableTree;
-import org.eclipse.swt.custom.TableTreeItem;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -26,33 +20,30 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.editor.mapeditor.actions.AddThemeAction;
-import org.kalypso.editor.mapeditor.actions.MoveThemeDownAction;
-import org.kalypso.editor.mapeditor.actions.MoveThemeUpAction;
-import org.kalypso.editor.mapeditor.actions.OpenStyleDialogAction;
-import org.kalypso.editor.mapeditor.actions.RemoveThemeAction;
 import org.kalypso.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.IMapModellView;
-import org.kalypso.ogc.command.EnableThemeCommand;
 import org.kalypso.ogc.command.MoveThemeDownCommand;
 import org.kalypso.ogc.command.MoveThemeUpCommand;
 import org.kalypso.ogc.command.RemoveThemeCommand;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
+import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.ogc.gml.outline.MoveThemeDownAction;
+import org.kalypso.ogc.gml.outline.MoveThemeUpAction;
+import org.kalypso.ogc.gml.outline.OpenStyleDialogAction;
+import org.kalypso.ogc.gml.outline.RemoveThemeAction;
 import org.kalypso.plugin.ImageProvider;
-import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.list.IListManipulator;
 
 /**
- * OutlinePage f?r das MapView-Template
+ * OutlinePage für das MapView-Template
  * 
  * @author gernot
  */
 public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListener,
-    IMapModellView, SelectionListener, IListManipulator
+    IMapModellView, IListManipulator, ISelectionChangedListener
 {
   protected MoveThemeDownAction m_moveOneDownAction = null;
 
@@ -60,23 +51,16 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
   protected RemoveThemeAction m_removeAction = null;
 
-  protected AddThemeAction m_addAction = null;
-
   protected OpenStyleDialogAction m_openStyleDialogAction = null;
-
-  protected TableTreeViewer m_viewer;
-
-  private final MapModellTreeContentProvider m_contentProvider = new MapModellTreeContentProvider();
-
-  private final MapModellLabelProvider m_labelProvider = new MapModellLabelProvider();
 
   private final JobExclusiveCommandTarget m_commandTarget;
 
-  private IMapModell m_mapModell;
+  private final GisMapOutlineViewer m_modellView;
 
   public GisMapOutlinePage( final JobExclusiveCommandTarget commandTarget )
   {
     m_commandTarget = commandTarget;
+    m_modellView = new GisMapOutlineViewer( m_commandTarget, null );
   }
 
   /**
@@ -84,32 +68,25 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void createControl( final Composite parent )
   {
-    final TableTree tree = new TableTree( parent, SWT.SINGLE | SWT.CHECK );
-    tree.addSelectionListener( this );
-
-    m_viewer = new TableTreeViewer( tree );
-    m_viewer.setContentProvider( m_contentProvider );
-    m_viewer.setLabelProvider( m_labelProvider );
-
-    m_viewer.addDoubleClickListener( this );
-
-    m_viewer.setInput( m_mapModell );
-
+    m_modellView.createControl( parent );
+    
+    m_modellView.addDoubleClickListener( this );
+    
     m_moveOneDownAction = new MoveThemeDownAction( "Thema nach unten verschieben",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_DOWN, "Thema eins nach unten verschieben", m_viewer,
+        ImageProvider.IMAGE_MAPVIEW_OUTLINE_DOWN, "Thema eins nach unten verschieben", m_modellView,
         this );
 
     m_moveOneUpAction = new MoveThemeUpAction( "Thema nach oben verschieben",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_UP, "Thema eins nach oben verschieben", m_viewer, this );
+        ImageProvider.IMAGE_MAPVIEW_OUTLINE_UP, "Thema eins nach oben verschieben", m_modellView, this );
 
-    m_removeAction = new RemoveThemeAction( "Thema l?schen",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, "Thema l?schen", m_viewer, this );
+    m_removeAction = new RemoveThemeAction( "Thema löschen",
+        ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, "Thema löschen", m_modellView, this );
 
-    m_addAction = new AddThemeAction( "Thema hinzuf?gen", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD,
-        "Thema hinzuf?gen", m_viewer, this );
+//    m_addAction = new AddThemeAction( "Thema hinzuf?gen", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD,
+//        "Thema hinzuf?gen", m_modellView, this );
 
-    m_openStyleDialogAction = new OpenStyleDialogAction( "Style ver?ndern",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Style ?ndern", m_viewer, this );
+    m_openStyleDialogAction = new OpenStyleDialogAction( "Style verändern",
+        ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Style ändern", m_modellView );
 
     onModellChange( null );
   }
@@ -119,19 +96,12 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void dispose()
   {
-    if( m_mapModell != null )
-      m_mapModell.removeModellListener( this );
-
-    if( m_viewer != null )
+    if( m_modellView != null )
     {
-      m_viewer.removeDoubleClickListener( this );
-
-      // tabeltree already disposed! (probably released its listeners itself)
-      // m_viewer.getTableTree().removeSelectionListener(this);
+      m_modellView.removeDoubleClickListener( this );
+      
+      m_modellView.dispose();
     }
-
-    m_contentProvider.dispose();
-    m_labelProvider.dispose();
 
     if( m_moveOneDownAction != null )
       m_moveOneDownAction.dispose();
@@ -146,7 +116,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public Control getControl()
   {
-    return m_viewer.getControl();
+    return m_modellView.getControl();
   }
 
   /**
@@ -158,7 +128,6 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
 
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
-    toolBarManager.add( m_addAction );
     toolBarManager.add( m_moveOneDownAction );
     toolBarManager.add( m_moveOneUpAction );
     toolBarManager.add( m_moveOneDownAction );
@@ -172,7 +141,6 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     {
       public void menuAboutToShow( IMenuManager manager )
       {
-        manager.add( m_addAction );
         manager.add( m_moveOneDownAction );
         manager.add( m_moveOneUpAction );
         manager.add( m_removeAction );
@@ -181,8 +149,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
         manager.add( m_openStyleDialogAction );
       }
     } );
-    final Menu menu = menuMgr.createContextMenu( m_viewer.getControl() );
-    m_viewer.getControl().setMenu( menu );
+    final Menu menu = menuMgr.createContextMenu( m_modellView.getControl() );
+    m_modellView.getControl().setMenu( menu );
   }
 
   /**
@@ -204,7 +172,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
-    m_viewer.addSelectionChangedListener( listener );
+    m_modellView.addSelectionChangedListener( listener );
   }
 
   /**
@@ -212,7 +180,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public ISelection getSelection()
   {
-    return m_viewer.getSelection();
+    return m_modellView.getSelection();
   }
 
   /**
@@ -220,7 +188,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void removeSelectionChangedListener( ISelectionChangedListener listener )
   {
-    m_viewer.removeSelectionChangedListener( listener );
+    m_modellView.removeSelectionChangedListener( listener );
   }
 
   /**
@@ -228,7 +196,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void setSelection( ISelection selection )
   {
-    m_viewer.setSelection( selection );
+    m_modellView.setSelection( selection );
   }
 
   /**
@@ -249,7 +217,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public IMapModell getMapModell()
   {
-    return m_mapModell;
+    return m_modellView.getMapModell();
   }
 
   /**
@@ -257,89 +225,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void setMapModell( final IMapModell modell )
   {
-    if( m_mapModell != null )
-      m_mapModell.removeModellListener( this );
-
-    m_mapModell = modell;
-
-    if( m_mapModell != null )
-      m_mapModell.addModellListener( this );
-
-    if( m_viewer != null && m_viewer.getContentProvider() != null )
-    {
-      m_viewer.getControl().getDisplay().asyncExec( new Runnable()
-      {
-        public void run()
-        {
-          m_viewer.setInput( modell );
-        }
-      } );
-    }
-
-    onModellChange( null );
-  }
-
-  /**
-   * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
-   */
-  public void onModellChange( final ModellEvent modellEvent )
-  {
-    // den Checkstate setzen!
-    if( m_viewer != null )
-    {
-      final StructuredViewer viewer = m_viewer;
-      final TableTree tt = (TableTree)m_viewer.getControl();
-      if( tt.isDisposed() )
-        return;
-      
-      final TableTreeItem[] items = tt.getItems();
-      final IMapModell mm = getMapModell();
-
-      tt.getDisplay().asyncExec( new Runnable()
-      {
-        public void run()
-        {
-
-          for( int i = 0; i < items.length; i++ )
-          {
-            final TableTreeItem item = items[i];
-
-            if( !item.isDisposed() )
-              item.setChecked( mm.isThemeEnabled( (IKalypsoTheme)item.getData() ) );
-          }
-
-          // und die ganze view refreshen!
-          viewer.refresh();
-        }
-
-      } );
-    }
-  }
-
-  /**
-   * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-   */
-  public void widgetSelected( final SelectionEvent e )
-  {
-    if( ( e.detail & SWT.CHECK ) != 0 )
-    {
-      final TableTreeItem ti = (TableTreeItem)e.item;
-      final Object data = ti.getData();
-      if( data instanceof KalypsoFeatureTheme )
-      {
-        final ICommand command = new EnableThemeCommand( m_mapModell, (IKalypsoTheme)data, ti
-            .getChecked() );
-        m_commandTarget.postCommand( command, null );
-      }
-    }
-  }
-
-  /**
-   * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
-   */
-  public void widgetDefaultSelected( SelectionEvent e )
-  {
-  //
+    m_modellView.setMapModell( modell );
   }
 
   /**
@@ -348,7 +234,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void moveElementDown( final Object element )
   {
-    final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( m_mapModell,
+    final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( getMapModell(),
         (IKalypsoTheme)element );
     m_commandTarget
         .postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme)element ) );
@@ -359,7 +245,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void moveElementUp( final Object element )
   {
-    m_commandTarget.postCommand( new MoveThemeDownCommand( m_mapModell, (IKalypsoTheme)element ),
+    m_commandTarget.postCommand( new MoveThemeDownCommand( getMapModell(), (IKalypsoTheme)element ),
         new SelectThemeRunner( (IKalypsoTheme)element ) );
   }
 
@@ -368,7 +254,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void removeElement( final Object element )
   {
-    m_commandTarget.postCommand( new RemoveThemeCommand( m_mapModell, (IKalypsoTheme)element ),
+    m_commandTarget.postCommand( new RemoveThemeCommand( getMapModell(), (IKalypsoTheme)element ),
         new SelectThemeRunner( (IKalypsoTheme)element ) );
   }
 
@@ -402,5 +288,21 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
         }
       } );
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
+   */
+  public void onModellChange( ModellEvent modellEvent )
+  {
+    // nix tun
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   */
+  public void selectionChanged( SelectionChangedEvent event )
+  {
+    // TODO: setactivetheme
   }
 }

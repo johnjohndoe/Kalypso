@@ -1,4 +1,4 @@
-package org.kalypso.editor.mapeditor.actions;
+package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
