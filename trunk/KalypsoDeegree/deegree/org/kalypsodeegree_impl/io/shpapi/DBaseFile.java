@@ -630,10 +630,11 @@ final int m_defaultFileShapeType;
   /**
    * returns a row of the dBase-file as Feature containing a place holder (field
    * name = "GEOM") for a geometry.
+   * 
+   * @param allowNull if true, everything wich cannot read or parsed gets 'null' instead of ""
    */
-  public Feature getFRow( int rowNo ) throws DBaseException
+  public Feature getFRow( int rowNo, boolean allowNull ) throws DBaseException
   {
-
     goTop();
 
     record_number += rowNo;
@@ -684,7 +685,7 @@ final int m_defaultFileShapeType;
           }
           catch( Exception ex )
           {
-            fp[i] = new Double( "0" );
+            fp[i] = allowNull ? null : new Double( "0" );
           }
         }
         else if( column.type.equalsIgnoreCase( "M" ) )
@@ -721,7 +722,7 @@ final int m_defaultFileShapeType;
       }
       else
       {
-        fp[i] = "";
+        fp[i] = allowNull ? null : "";
       }
     }
 

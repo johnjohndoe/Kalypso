@@ -596,6 +596,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public void runCalculation( final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
   {
+    monitor.beginTask( "Modellrechnung wird durchgeführt", 4000  );
+    
     final CoreException cancelException = new CoreException( new Status( IStatus.CANCEL,
         KalypsoGisPlugin.getId(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) );
 
@@ -607,7 +609,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     final Modelspec modelspec = getModelspec();
 
-    monitor.beginTask( "Berechnung wird vorbereitet", 4000 );
+    final SubProgressMonitor subMonitor1 = new SubProgressMonitor( monitor, 1000 );
+    subMonitor1.beginTask( "Rechendienst wird initialisiert", 1000 );
 
     final CalcJobBean job;
     final ICalculationService calcService;
@@ -638,9 +641,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           "Rechendienst konnte nicht initialisiert werden", e ) );
     }
 
-    monitor.worked( 1000 );
+    subMonitor1.done();
 
-    monitor.setTaskName( "Berechnungseingabe wird zum Server kopiert" );
     try
     {
       final String jobID = job.getId();
@@ -659,7 +661,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         throw cancelException;
 
       final SubProgressMonitor calcMonitor = new SubProgressMonitor( monitor, 1000 );
-      monitor.setTaskName( "Berechnung wird durchgeführt" );
       calcMonitor.beginTask( "Berechnung wird durchgeführt", 100 );
       int oldProgess = 0;
       while( true )
@@ -712,7 +713,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       {
       case ICalcServiceConstants.FINISHED:
         // Ergebniss abholen
-        monitor.setTaskName( "Berechnungsergebnisse werden vom Server gelesen" );
         final CalcJobDataBean[] results = jobBean.getResults();
         final IFolder outputfolder = folder.getFolder( "Ergebnisse" );
         if( outputfolder.exists() )
@@ -749,17 +749,17 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
     finally
     {
-      //      try
-      //      {
-      //        calcService.disposeJob( job.getId() );
-      //      }
-      //      catch( final RemoteException e1 )
-      //      {
-      //        e1.printStackTrace();
-      //
-      //        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-      //            "Kritischer Fehler bei Löschen des Rechen-Jobs", e1 ) );
-      //      }
+            try
+            {
+              calcService.disposeJob( job.getId() );
+            }
+            catch( final RemoteException e1 )
+            {
+              e1.printStackTrace();
+      
+              throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+                  "Kritischer Fehler bei Löschen des Rechen-Jobs", e1 ) );
+            }
     }
   }
 

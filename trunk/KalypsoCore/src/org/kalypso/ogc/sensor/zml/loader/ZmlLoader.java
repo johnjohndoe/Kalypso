@@ -12,7 +12,7 @@ import java.util.Properties;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.java.net.test.UrlUtilities;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;

@@ -21,11 +21,11 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentThread;
-import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.util.url.UrlResolver;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
@@ -154,7 +154,7 @@ public class ObservationResolver extends AbstractTransformation
       {
         final String sourceref = StringUtilities.replaceAll( sourcelink.getHref(), replaceProperties );
         
-        final URL sourceURL = UrlUtilities.resolveURL( baseURL, sourceref );
+        final URL sourceURL = UrlResolver.resolveURL( baseURL, sourceref );
 
         final IObservation obs = ZmlFactory.parseXML( sourceURL, targetName );
 

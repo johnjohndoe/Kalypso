@@ -10,9 +10,10 @@ import org.deegree_impl.graphics.sld.SLDFactory;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.java.net.test.UrlUtilities;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
+import org.kalypso.util.url.UrlResolver;
 
 /**
  * @author schlienger
@@ -38,7 +39,7 @@ public class SldLoader extends AbstractLoader
       monitor.beginTask( "Lade SLD", 1000 );
       final String sourcePath = source.getProperty( "PATH", "" );
       
-      final URL url = UrlUtilities.resolveURL( context, sourcePath );
+      final URL url = UrlResolver.resolveURL( context, sourcePath );
       
 
       final Reader reader = new InputStreamReader( url.openStream() );
