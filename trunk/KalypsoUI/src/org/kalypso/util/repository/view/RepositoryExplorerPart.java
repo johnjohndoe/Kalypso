@@ -30,7 +30,7 @@ import org.kalypso.util.repository.action.RemoveRepositoryAction;
 public class RepositoryExplorerPart extends ViewPart implements IRepositoryContainerListener,
     ISelectionProvider, ISelectionChangedListener
 {
-  private TreeViewer m_repViewer = null;
+  protected TreeViewer m_repViewer = null;
 
   private Label m_metaViewer = null;
 
@@ -93,7 +93,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
    */
   public void setFocus()
   {
-  // TODO
+  // noch nix
   }
 
   /**
