@@ -717,6 +717,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
        */
       public void widgetSelected( final SelectionEvent e )
       {
+        if( radioQ.getSelection() )
           setObsIgnoreType( ignoreType1 );
       }
     } );
@@ -728,6 +729,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
        */
       public void widgetSelected( SelectionEvent e )
       {
+        if( radioW.getSelection() )
           setObsIgnoreType( ignoreType2 );
       }
     } );

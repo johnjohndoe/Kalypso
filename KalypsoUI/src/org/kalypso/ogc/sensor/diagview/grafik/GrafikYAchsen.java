@@ -45,6 +45,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.kalypso.ogc.sensor.diagview.DiagramAxis;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.template.obsdiagview.TypeAxis;
 
@@ -57,28 +58,44 @@ public class GrafikYAchsen
 
   private final Map name2ga = new HashMap();
 
+  private String m_leftLabel = "";
+
+  private String m_rightLabel = "";
+
   public GrafikYAchsen( List taxList )
   {
     for( final Iterator ita = taxList.iterator(); ita.hasNext(); )
     {
       final TypeAxis ta = (TypeAxis) ita.next();
 
-      name2ta.put( ta.getId(), ta );
+      if( ta.getDirection().equals( DiagramAxis.DIRECTION_VERTICAL ) )
+      {
+        name2ta.put( ta.getId(), ta );
+        
+        if( !ta.isInverted() )
+        {
+          if( ta.getPosition().equals( DiagramAxis.POSITION_LEFT ) )
+            m_leftLabel = ta.getLabel() + " [" + ta.getUnit() + "]";
+          else if( ta.getPosition().equals( DiagramAxis.POSITION_LEFT ) )
+            m_rightLabel = ta.getLabel() + " [" + ta.getUnit() + "]";
+        }
+      }
     }
   }
 
-  public String getLabelAt( final int pos )
+  public String getRightLabel()
   {
-    Object[] objs = name2ga.keySet().toArray();
-    if( objs.length == 0 || pos >= objs.length )
-      return "";
-    
-    return objs[pos].toString();
+    return m_rightLabel;
+  }
+  
+  public String getLeftLabel()
+  {
+    return m_leftLabel;
   }
   
   /**
    * @param axisID
-   * @return corresponding X-Achse for the Grafik tool or null if not possible
+   * @return corresponding Achse for the Grafik tool or null if not possible
    */
   public GrafikAchse getFor( final String axisID )
   {
@@ -97,7 +114,7 @@ public class GrafikYAchsen
     if( ta == null )
       return null;
 
-    ga = new GrafikAchse( name2ga.size() + 1, ta.getLabel() );
+    ga = new GrafikAchse( name2ga.size() + 1, ta.getLabel() + " [" + ta.getUnit() + "]" );
     name2ga.put( axisID, ga );
 
     return ga;

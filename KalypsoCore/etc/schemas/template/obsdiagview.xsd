@@ -52,6 +52,7 @@
 		<xs:attribute name="id" type="xs:string" use="required"/>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="color" type="xs:string" use="optional"/>
+		<xs:attribute name="shown" type="xs:boolean" use="optional" default="true" />
 	</xs:complexType>
 	
 	<!-- typeObservation -->

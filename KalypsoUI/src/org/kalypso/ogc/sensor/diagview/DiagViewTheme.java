@@ -50,8 +50,6 @@ import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.proxy.IProxyFactory;
 import org.kalypso.ogc.sensor.template.AbstractObservationTheme;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
@@ -105,28 +103,6 @@ public class DiagViewTheme extends AbstractObservationTheme
     super.dispose();
 
     m_curves.clear();
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.template.AbstractObservationTheme#beforeObservationSet(org.kalypso.ogc.sensor.IObservation)
-   */
-  protected IObservation beforeObservationSet( final IObservation observation )
-  {
-    final IProxyFactory pf = m_template.getProxyFactory();
-    
-    if( pf != null )
-    {
-      try
-      {
-        return pf.proxyObservation( observation );
-      }
-      catch( SensorException e )
-      {
-        e.printStackTrace();
-      }
-    }
-    
-    return observation;
   }
 
   /**
@@ -191,6 +167,7 @@ public class DiagViewTheme extends AbstractObservationTheme
         final DiagViewCurve curve = new DiagViewCurve( tcurve.getName(), color,
             this, (AxisMapping[]) mappings.toArray( new AxisMapping[0] ),
             m_template );
+        curve.setShown( tcurve.isShown() );
 
         addCurve( curve );
       }

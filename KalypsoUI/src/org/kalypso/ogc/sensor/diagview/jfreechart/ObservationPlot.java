@@ -509,7 +509,7 @@ public class ObservationPlot extends XYPlot
     final IntervalMarker marker = new IntervalMarker( start, end );
     marker.setPaint( color );
     marker.setLabel( label );
-    marker.setLabelAnchor( RectangleAnchor.BOTTOM );
+    marker.setLabelAnchor( RectangleAnchor.CENTER );
     marker.setLabelTextAnchor( TextAnchor.CENTER );
 
     return marker;

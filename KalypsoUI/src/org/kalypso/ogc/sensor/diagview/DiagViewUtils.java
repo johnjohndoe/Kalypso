@@ -211,7 +211,8 @@ public class DiagViewUtils
         xmlCurve.setId( "C" + ixCurve++ );
         xmlCurve.setName( curve.getName() );
         xmlCurve.setColor( StringUtilities.colorToString( curve.getColor() ) );
-
+        xmlCurve.setShown( curve.isShown() );
+        
         final List xmlMappings = xmlCurve.getMapping();
 
         final AxisMapping[] mappings = curve.getMappings();

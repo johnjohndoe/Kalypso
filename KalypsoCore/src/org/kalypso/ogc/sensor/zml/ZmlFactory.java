@@ -67,6 +67,7 @@ import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.proxy.ArgsObservationProxy;
+import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlArrayValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlLinkValues;
@@ -328,10 +329,13 @@ public class ZmlFactory
     final IObservation filteredObs = FilterFactory.createFilterFrom( context,
         zmlObs );
 
-    // tricky: first check if a proxy has been specified in the url
+    // tricky: check if a proxy has been specified in the url
     final IObservation proxyObs = createProxyFrom( context, filteredObs );
 
-    return proxyObs;
+    // tricky: check if the observation is auto-proxyable using its own metadata (for instance WQ)
+    final IObservation autoProxyObs = AutoProxyFactory.getInstance().proxyObservation( proxyObs );
+
+    return autoProxyObs;
   }
 
   /**
