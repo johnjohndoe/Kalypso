@@ -19,19 +19,21 @@ import de.tuhh.wb.javagis.data.VersionAccessImpl;
 import de.tuhh.wb.javagis.data.event.VersionListener;
 import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
 import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.view.ViewManager;
 import ejb.event.EJBEvent;
 import javax.swing.*;
 //import java.awt.*;
 import java.lang.ClassLoader;
 import java.awt.Component;
 import java.awt.Color;
+import javax.swing.event.InternalFrameListener;
 import javax.swing.event.InternalFrameEvent;
 
 import de.tuhh.wb.javagis.view.trafoview.TrafoView;
 
 public class ProjectView
 	extends JInternalFrame
-	implements ActionListener, MouseListener, VersionListener {
+	implements ActionListener, MouseListener, VersionListener,InternalFrameListener {
 	VersionAccess versionAccess;
 	int selectedVersion;
 	Hashtable versionHash;
@@ -44,19 +46,17 @@ public class ProjectView
 
 	JFileChooser fileChooser;
 
-	private static JComboBox comboBox;
-	private static boolean processingFlag = true;
-
 	//JMenuItem menuItem_ObjectTableView = new JMenuItem(I18n.get("PV_PopMen_TblObj"));
 	//JMenuItem menuItem_RelationTableView = new JMenuItem(I18n.get("PV_PopMen_TblRel"));
 	//JMenuItem menuItem_NetView = new JMenuItem(I18n.get("PV_PopMen_NetView"));
 
-	public ProjectView() {
-		super(I18n.get("windowTitlePV"), true, false, true, true);
+	public ProjectView(String title) {
+		super(title, true, false, true, true);
 		this.selectedVersion = -1;
 		this.versionAccess = null;
 		this.versionHash = new Hashtable();
 		this.fileChooser = new JFileChooser();
+		this.addInternalFrameListener(this);
 		KalypsoEventManager.getInstance().addVersionListener(this);
 		initMask();
 	}
@@ -82,11 +82,8 @@ public class ProjectView
 		JMenu view = new JMenu(I18n.get("PVJMenuView"));
 		//Vector dummy = new Vector();
 		//dummy.addElement("");
-		comboBox = new JComboBox();
-		comboBox.setRenderer(new MyCellRenderer());
 		edit.addActionListener(this);
 		view.addActionListener(this);
-		comboBox.addActionListener(this);
 		// edit.setActionCommand("Zoom In");
 		edit.setIcon((new ImageIcon(cl.getResource("symbols/Edit16.gif"))));
 		JMenuItem mi;
@@ -144,7 +141,6 @@ public class ProjectView
 		// JMenuBar menubar= new JMenuBar();
 
 		menubar.add(edit);
-		menubar.add(comboBox);
 		//    menubar.add(view);
 		//    menubar.add(connect);
 		//    menubar.add(createV);
@@ -275,18 +271,30 @@ public class ProjectView
 				menuItem.addActionListener(this);
 				popup.add(menuItem);
 
-				menuItem = new JMenuItem(I18n.get("PV_PopMen_TblObj"));
+				/*menuItem = new JMenuItem(I18n.get("PV_PopMen_TblObj"));
 				menuItem.setActionCommand(
 					"openObjectTableViewFromSelectedVersion");
 				menuItem.addActionListener(this);
-				popup.add(menuItem);
+				popup.add(menuItem);*/
 
 				if ("Modell".equals(theme)) {
+					menuItem = new JMenuItem(I18n.get("PV_PopMen_TblObj"));
+									menuItem.setActionCommand(
+										"openObjectTableViewFromSelectedVersion");
+									menuItem.addActionListener(this);
+									popup.add(menuItem);
+									
 					menuItem = new JMenuItem(I18n.get("PV_PopMen_TblRel"));
 					menuItem.setActionCommand(
 						"openRelationTableViewFromSelectedVersion");
 					menuItem.addActionListener(this);
 					popup.add(menuItem);
+				}else{
+					menuItem = new JMenuItem(I18n.get("PV_PopMen_Tbl"));
+									menuItem.setActionCommand(
+										"openObjectTableViewFromSelectedVersion");
+									menuItem.addActionListener(this);
+									popup.add(menuItem);
 				}
 
 				if ("Modell".equals(theme)) {
@@ -520,25 +528,6 @@ public class ProjectView
 				//	new SimulationDialog(versionAccess,themeKey,vId);
 			}
 		}
-		if ("comboBoxChanged".equals(e.getActionCommand())) {
-			if (processingFlag) {
-				int index = comboBox.getItemCount();
-				//System.out.println("Number of items: "+index);
-				if (index > 0) {
-					JInternalFrame frame =
-						(JInternalFrame) comboBox.getSelectedItem();
-					//System.out.println("Selcted item: "+frame.getTitle());
-					frame.moveToFront();
-				}
-				if ((comboBox.getItemCount()) == 0) {
-					System.out.println("Set selected Item null");
-					//comboBox.addItem(null);
-					//ComboBoxModel boxModel = comboBox.getModel();
-					comboBox.setSelectedItem(null);
-					//comboBox.setSelectedIndex(-1);
-				}
-			}
-		}
 
 	}
 
@@ -547,82 +536,34 @@ public class ProjectView
 		reloadProjectTree();
 	}
 
-	public static void addViewToList(InternalFrameEvent e) {
-		processingFlag = false;
-		JInternalFrame frame = e.getInternalFrame();
-		//System.out.println("Event: " + e + ", Title: " + frame.getTitle());
-		comboBox.addItem(frame);
-		processingFlag = true;
+	//InternalFrameListener
+
+	public void internalFrameActivated(InternalFrameEvent e) {
+
 	}
 
-	public static void removeViewFromList(InternalFrameEvent e) {
-		processingFlag = false;
-		int index = -1;
-		JInternalFrame frame = e.getInternalFrame();
-		String closedFrame = frame.getTitle();
-		//System.out.println("Event: " + e + ", Title: " + frame.getTitle());
-		//System.out.println("Title: " + closedFrame);
-		for (int i = 0; i < comboBox.getItemCount(); i++) {
-			Object comboItemObject = comboBox.getItemAt(i);
-			String comboItemString =
-				((JInternalFrame) comboItemObject).getTitle();
-			//System.out.println("Actual Title: "+comboItemString);
-			if (closedFrame.equals(comboItemString)) {
-				index = i;
-			}
-		}
-		//ProjectView.comboBox.removeItem(frame);
-		if (index > -1) {
-			comboBox.removeItemAt(index);
-			//System.out.println("Number of items (remove): "+comboBox.getItemCount());
-		}
-		processingFlag = true;
+	public void internalFrameClosed(InternalFrameEvent e) {
+		ViewManager.removeViewFromList(e);
 	}
 
-	public static boolean isViewOpen(String title) {
-		int itemCount = comboBox.getItemCount();
-		System.out.println("itemCount: "+itemCount);
-		System.out.println("search title: "+title);
-		boolean flag = false;
-		for (int i = 0; i < itemCount; i++) {
-			Object comboItemObject = comboBox.getItemAt(i);
-			String comboItemString =
-				((JInternalFrame) comboItemObject).getTitle();
-			System.out.println("Actual Title: "+comboItemString);
-			if (title.equals(comboItemString)) {
-				((JInternalFrame) comboItemObject).moveToFront();
-				flag = true;
-			} 
-		}
-		System.out.println("Flag: "+flag);
-		return flag;
+	public void internalFrameClosing(InternalFrameEvent e) {
+	}
+
+	public void internalFrameDeactivated(InternalFrameEvent e) {
+
+	}
+
+	public void internalFrameDeiconified(InternalFrameEvent e) {
+
+	}
+
+	public void internalFrameIconified(InternalFrameEvent e) {
+
+	}
+
+	public void internalFrameOpened(InternalFrameEvent e) {
+		ViewManager.addViewToList(e);
 	}
 
 }
 
-class MyCellRenderer extends JLabel implements ListCellRenderer {
-	public MyCellRenderer() {
-		setOpaque(true);
-	}
-	public Component getListCellRendererComponent(
-		JList list,
-		Object value,
-		int index,
-		boolean isSelected,
-		boolean cellHasFocus) {
-		if (value != null) {
-			JInternalFrame frame = (JInternalFrame) value;
-			setText(frame.getTitle());
-			//System.out.println("Class: "+value.getClass().toString());
-			//setText(value.toString());
-			setBackground(isSelected ? Color.red : Color.white);
-			setForeground(isSelected ? Color.white : Color.black);
-		} else {
-			setText("");
-			setBackground(isSelected ? Color.red : Color.white);
-			setForeground(isSelected ? Color.white : Color.black);
-		}
-		return this;
-
-	}
-}

@@ -1,32 +1,32 @@
 package de.tuhh.wb.javagis.view;
 
-import java.util.Vector;
+//import java.util.Vector;
 
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.InternalFrameListener;
+//import javax.swing.event.InternalFrameListener;
 import javax.swing.event.InternalFrameEvent;
 
 import java.io.File;
-import java.util.Vector;
-import java.lang.Math;
+//import java.util.Vector;
+//import java.lang.Math;
 
 import de.tuhh.wb.javagis.data.VersionClass;
 import de.tuhh.wb.javagis.Main;
 import de.tuhh.wb.javagis.data.VersionAccess;
-import de.tuhh.wb.javagis.data.VersionAccessImpl;
-import de.tuhh.wb.javagis.view.JobRequest;
-import de.tuhh.wb.javagis.data.event.VersionListener;
-import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
+//import de.tuhh.wb.javagis.data.VersionAccessImpl;
+//import de.tuhh.wb.javagis.view.JobRequest;
+//import de.tuhh.wb.javagis.data.event.VersionListener;
+//import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
 import de.tuhh.wb.javagis.tools.I18n;
-import ejb.event.EJBEvent;
+//import ejb.event.EJBEvent;
 import javax.swing.*;
 import java.awt.*;
 import de.tuhh.wb.javagis.data.Version;
 import de.tuhh.wb.javagis.view.tableview.GisTableView;
 import de.tuhh.wb.javagis.view.netview.GisNetView;
 import de.tuhh.wb.javagis.view.projectview.ProjectView;
-import de.tuhh.wb.javagis.view.projectview.SimulationDialog;
+//import de.tuhh.wb.javagis.view.projectview.SimulationDialog;
 import de.tuhh.wb.javagis.view.Tutorial;
 import de.tuhh.wb.javagis.AutomateCalibration.SCE_KALYPSO;
 
@@ -87,6 +87,9 @@ public class ViewManager
 	private JButton xmlIButton = new JButton();
 	private JButton calibrationButton = new JButton();
 
+	private static JComboBox comboBox;
+	private static boolean processingFlag = true;
+
 	public static JDesktopPane desktop = new JDesktopPane();
 	//    KalypsoInterface kalypsoInterface;
 
@@ -113,12 +116,6 @@ public class ViewManager
 		defaults.put("OptionPane.okButtonText", I18n.get("Dia_OK"));
 		setTitle(I18n.get("windowTitle"));
 		setVisible(true);
-
-		ProjectView projectView = new ProjectView();
-		projectView.setVisible(true);
-		projectView.setSize(400, 300);
-		//     desktop.add(projectView);
-		//    projectView.moveToFront();
 
 		try {
 			Main.connectBCE();
@@ -147,7 +144,8 @@ public class ViewManager
 	}
 
 	public ViewManager(JDesktopPane desktopPane) {
-		this.desktop = desktopPane;
+		//this.desktop = desktopPane;
+		desktop = desktopPane;
 	}
 
 	public void showObjectTableView(Version version) {
@@ -156,11 +154,29 @@ public class ViewManager
 		repaint();
 
 		//GisTableView gisTableView = new GisTableView("TestVersion",version.getGisTableModels(),null,0,null,GisTableView.IS_GISELEMENTLIST);
-		String title = I18n.get("windowTitleTV_Objects") + version.getLabel();
-		boolean open = ProjectView.isViewOpen(title);
+		String beginTitle = null;
+		if (version.getThemeKey().equals("Modell")) {
+			beginTitle = I18n.get("windowTitleTV_Objects");
+		} else {
+			beginTitle = I18n.get("windowTitleTV");
+		}
+		String title =
+			beginTitle
+				+ version.getVersionProject()
+				+ "/"
+				+ version.getThemeKey()
+				+ "/"
+				+ version.getVersionState()
+				+ "/"
+				+ version.getVersionName()
+				+ " (#"
+				+ version.getVersionId()
+				+ ")";
+		boolean open = isViewOpen(title);
 		if (!open) {
 			GisTableView gisTableView =
 				new GisTableView(title, version.getGisObjectTableModels());
+			//System.out.println("Version: "+version.getVersionId());
 			//System.out.println("Table: "+I18n.get("windowTitleTV")+version.getLabel()+" geöffnet");
 			gisTableView.setVisible(true);
 			gisTableView.setSize(670, 300);
@@ -177,8 +193,19 @@ public class ViewManager
 		repaint();
 
 		// 	GisTableView gisTableView = new GisTableView("TestVersion",version.getGisTableModels(),null,0,null,GisTableView.IS_GISELEMENTLIST);
-		String title = I18n.get("windowTitleTV_Relations") + version.getLabel();
-		boolean open = ProjectView.isViewOpen(title);
+		String title =
+			I18n.get("windowTitleTV_Relations")
+				+ version.getVersionProject()
+				+ "/"
+				+ version.getThemeKey()
+				+ "/"
+				+ version.getVersionState()
+				+ "/"
+				+ version.getVersionName()
+				+ " (#"
+				+ version.getVersionId()
+				+ ")";
+		boolean open = isViewOpen(title);
 		if (!open) {
 			GisTableView gisTableView =
 				new GisTableView(title, version.getGisRelationTableModels());
@@ -197,8 +224,19 @@ public class ViewManager
 		Toolkit.getDefaultToolkit().sync();
 		repaint();
 
-		String title = I18n.get("windowTitleNV") + version.getLabel();
-		boolean open = ProjectView.isViewOpen(title);
+		String title =
+			I18n.get("windowTitleNV")
+				+ version.getVersionProject()
+				+ "/"
+				+ version.getThemeKey()
+				+ "/"
+				+ version.getVersionState()
+				+ "/"
+				+ version.getVersionName()
+				+ " (#"
+				+ version.getVersionId()
+				+ ")";
+		boolean open = isViewOpen(title);
 		if (!open) {
 			GisNetView gisNetView =
 				new GisNetView(title, version.getGisNetModel());
@@ -222,10 +260,15 @@ public class ViewManager
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		repaint();
 
-		ProjectView projectView = new ProjectView();
+		String title = I18n.get("windowTitlePV");
+		boolean open = isViewOpen(title);
+				if (!open) {
+		ProjectView projectView = new ProjectView(title);
 		projectView.setVisible(true);
 		projectView.setSize(400, 300);
 		desktop.add(projectView);
+		projectView.moveToFront();
+				}
 
 		setCursor(Cursor.getDefaultCursor());
 		repaint();
@@ -286,6 +329,31 @@ public class ViewManager
 		if (action.equals("automateCalibration")) {
 			System.out.println("start AutomateCalibration");
 			SCE_KALYPSO.openSCEView();
+		}
+		
+		if ("comboBoxChanged".equals(e.getActionCommand())) {
+			if (processingFlag) {
+				int index = comboBox.getItemCount();
+				//System.out.println("Number of items: "+index);
+				if (index > 0) {
+					JInternalFrame frame =
+						(JInternalFrame) comboBox.getSelectedItem();
+					//System.out.println("Selcted item: "+frame.getTitle());
+					try{
+					frame.setIcon(false);
+					}catch(Exception exception){
+						System.out.println("Cannot de-iconify frame!");
+					}
+					frame.moveToFront();
+				}
+				if ((comboBox.getItemCount()) == 0) {
+					System.out.println("Set selected Item null");
+					//comboBox.addItem(null);
+					//ComboBoxModel boxModel = comboBox.getModel();
+					comboBox.setSelectedItem(null);
+					//comboBox.setSelectedIndex(-1);
+				}
+			}
 		}
 	}
 
@@ -528,11 +596,17 @@ public class ViewManager
 			(new ImageIcon(cl.getResource("symbols/calibration.gif"))));
 		calibrationButton.addActionListener(this);
 		calibrationButton.setActionCommand("automateCalibration");
+
+		comboBox = new JComboBox();
+		comboBox.setRenderer(new MyCellRenderer());
+		comboBox.addActionListener(this);
+
 		menubar.add(jMenu_ProjectManager);
 		menubar.add(jMenu_Preprocessing);
 		menubar.add(jMenu_Postprocessing);
 		menubar.add(jMenu_Post);
 		menubar.add(jMenu_Help);
+		menubar.add(comboBox);
 		jMenu_ProjectManager.add(jMenuItem_OpenProject);
 		jMenu_ProjectManager.add(jMenuItem_openConfView);
 		jMenu_ProjectManager.add(jMenuItem_Close);
@@ -585,5 +659,89 @@ public class ViewManager
 	void removeButton_actionPerformed(ActionEvent e) {
 
 	}
+	
+	public static void addViewToList(InternalFrameEvent e) {
+		processingFlag = false;
+		JInternalFrame frame = e.getInternalFrame();
+		//System.out.println("Event: " + e + ", Title: " + frame.getTitle());
+		comboBox.addItem(frame);
+		processingFlag = true;
+	}
 
+	public static void removeViewFromList(InternalFrameEvent e) {
+		processingFlag = false;
+		int index = -1;
+		JInternalFrame frame = e.getInternalFrame();
+		String closedFrame = frame.getTitle();
+		//System.out.println("Event: " + e + ", Title: " + frame.getTitle());
+		//System.out.println("Title: " + closedFrame);
+		for (int i = 0; i < comboBox.getItemCount(); i++) {
+			Object comboItemObject = comboBox.getItemAt(i);
+			String comboItemString =
+				((JInternalFrame) comboItemObject).getTitle();
+			//System.out.println("Actual Title: "+comboItemString);
+			if (closedFrame.equals(comboItemString)) {
+				index = i;
+			}
+		}
+		//ProjectView.comboBox.removeItem(frame);
+		if (index > -1) {
+			comboBox.removeItemAt(index);
+			//System.out.println("Number of items (remove): "+comboBox.getItemCount());
+		}
+		processingFlag = true;
+	}
+
+	public static boolean isViewOpen(String title) {
+		int itemCount = comboBox.getItemCount();
+		//System.out.println("itemCount: "+itemCount);
+		//System.out.println("search title: "+title);
+		boolean flag = false;
+		for (int i = 0; i < itemCount; i++) {
+			Object comboItemObject = comboBox.getItemAt(i);
+			String comboItemString =
+				((JInternalFrame) comboItemObject).getTitle();
+			//System.out.println("Actual Title: "+comboItemString);
+			if (title.equals(comboItemString)) {
+				JInternalFrame frame = (JInternalFrame) comboItemObject;
+				try{
+				frame.setIcon(false);
+				}catch(Exception exception){
+					System.out.println("Cannot de-iconify frame!");
+				}
+				frame.moveToFront();
+				flag = true;
+			} 
+		}
+		//System.out.println("Flag: "+flag);
+		return flag;
+	}
+
+}
+
+class MyCellRenderer extends JLabel implements ListCellRenderer {
+	public MyCellRenderer() {
+		setOpaque(true);
+	}
+	public Component getListCellRendererComponent(
+		JList list,
+		Object value,
+		int index,
+		boolean isSelected,
+		boolean cellHasFocus) {
+		if (value != null) {
+			JInternalFrame frame = (JInternalFrame) value;
+			setText(frame.getTitle());
+			//System.out.println("Class: "+value.getClass().toString());
+			//setText(value.toString());
+			setBackground(isSelected ? Color.red : Color.white);
+			setForeground(isSelected ? Color.white : Color.black);
+		} else {
+			setText("");
+			setBackground(isSelected ? Color.red : Color.white);
+			setForeground(isSelected ? Color.white : Color.black);
+		}
+		return this;
+
+	}
 }

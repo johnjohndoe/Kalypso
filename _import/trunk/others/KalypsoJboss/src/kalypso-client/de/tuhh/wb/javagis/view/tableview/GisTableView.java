@@ -35,6 +35,7 @@ import javax.swing.JToolBar;
 import javax.swing.JMenu;
 
 import javax.swing.JMenuItem;
+import javax.swing.JCheckBoxMenuItem;
 
 import javax.swing.JMenuBar;
 
@@ -73,6 +74,7 @@ import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
 import de.tuhh.wb.javagis.data.GisElement;
 
 import de.tuhh.wb.javagis.data.GisElementClass;
+import de.tuhh.wb.javagis.data.GisObjectClass;
 
 import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
 
@@ -89,7 +91,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.ejb.ObjectNotFoundException;
-import de.tuhh.wb.javagis.view.projectview.ProjectView;
 
 public class GisTableView
 	extends JInternalFrame
@@ -115,6 +116,12 @@ public class GisTableView
 	private Object selectedValue = null;
 
 	public static JComboBox jcombo = null;
+	private JCheckBoxMenuItem cbMenuItem;
+	private JMenuItem mi_new1;
+	private JMenuItem mi_new2;
+	//private JMenuItem mi_remove1;
+	private JMenuItem mi_remove2;
+	private boolean isEditable = true;
 
 	// starting with default profile "all"
 
@@ -137,6 +144,7 @@ public class GisTableView
 		this.tableModels = tableModels;
 
 		this.tabbedPane = new JTabbedPane();
+		this.isEditable = true;
 
 		for (int index = 0; index < tableModels.size(); index++) {
 
@@ -144,6 +152,7 @@ public class GisTableView
 				(GisTableModel) tableModels.elementAt(index);
 
 			String tableKey = tableModel.getKey();
+			tableModel.setEditable(true);
 
 			JTable jTable = new JTable((TableModel) tableModel, null);
 
@@ -400,7 +409,7 @@ public class GisTableView
 					+ eId.toString()
 					+ "/VectorSet";
 
-			boolean open = ProjectView.isViewOpen(frameName);
+			boolean open = ViewManager.isViewOpen(frameName);
 			if (!open) {
 				GisVectorSetTableView gisVectorSetTableView =
 					new GisVectorSetTableView(
@@ -570,12 +579,13 @@ public class GisTableView
 	}
 
 	public void mousePressed(MouseEvent e) {
+		//System.out.println("Mouse Pressed");
 		maybeShowPopup(e);
 
 	}
 
 	public void mouseReleased(MouseEvent e) {
-
+		//System.out.println("Mouse released");
 		maybeShowPopup(e);
 
 	}
@@ -593,36 +603,37 @@ public class GisTableView
 		JMenu edit = new JMenu(I18n.get("TV_GTV_jMenu_edit"));
 
 		JMenuItem mi;
+		GisElementClass myGisElementClass =
+			((GisTableModel) tableModels.elementAt(0)).getGisElementClass();
+		//System.out.println("GisElementClass: " + myGisElementClass);
+		if (myGisElementClass instanceof GisObjectClass) {
+			mi_new1 = new JMenuItem(I18n.get("TV_GTV_jMenuItem_new"));
+			mi_new1.setActionCommand("new");
+			mi_new1.addActionListener(this);
+			mi_new1.setEnabled(true);
+			edit.add(mi_new1);
 
-		mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_new"));
-
-		mi.setActionCommand("new");
-
-		mi.addActionListener(this);
-
-		edit.add(mi);
-
-		mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_remove"));
-
-		mi.setActionCommand("remove");
-
-		mi.addActionListener(this);
-
-		edit.add(mi);
-
-		//create.addSeparator();
+			/*mi_remove1 = new JMenuItem(I18n.get("TV_GTV_jMenuItem_remove"));
+			mi_remove1.setActionCommand("remove");
+			mi_remove1.addActionListener(this);
+			mi_remove1.setEnabled(true);
+			edit.add(mi_remove1);*/
+		}
 
 		edit.addSeparator();
 
 		JMenu open = new JMenu(I18n.get("TV_GTV_jMenu_view"));
 
 		mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_refresh"));
-
 		mi.setActionCommand("getAllElements");
-
 		mi.addActionListener(this);
-
 		open.add(mi);
+
+		cbMenuItem =
+			new JCheckBoxMenuItem(I18n.get("TV_GTV_jMenuItem_editable"));
+		cbMenuItem.setSelected(true);
+		cbMenuItem.addItemListener(this);
+		open.add(cbMenuItem);
 
 		/*
 		mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_detail"));
@@ -647,19 +658,13 @@ public class GisTableView
 		JMenu colProfile = new JMenu(I18n.get("TV_GTV_jMenu_profile"));
 
 		mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_pNew"));
-
 		mi.setActionCommand("newColumnProfile");
-
 		mi.addActionListener(this);
-
 		colProfile.add(mi);
 
 		mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_pRemove"));
-
 		mi.setActionCommand("removeColumnProfile");
-
 		mi.addActionListener(this);
-
 		colProfile.add(mi);
 
 		/*
@@ -675,35 +680,24 @@ public class GisTableView
 		*/
 
 		mi = new JMenuItem(I18n.get("TV_GTV_jMenuItem_pSave"));
-
 		mi.setActionCommand("saveColumnProfile");
-
 		mi.addActionListener(this);
-
 		colProfile.add(mi);
 
 		JMenuBar menubar = new JMenuBar();
 
-		//menubar.add(create);
-
 		menubar.add(edit);
-
 		menubar.add(open);
 
 		jcombo = new JComboBox(TableProfile.getInstance().getProfiles());
-
 		jcombo.addItemListener(this);
-
 		jcombo.setSize(100, 20);
-
 		menubar.add(jcombo);
 
 		menubar.add(colProfile);
 
 		//	menubar.add(new JComboBox(tableProfiles.getProfiles()));
-
 		this.setJMenuBar(menubar);
-
 	}
 
 	private void maybeShowPopup(MouseEvent e) {
@@ -731,25 +725,47 @@ public class GisTableView
 		else
 			selectedValue = null;
 
+		JPopupMenu popup = new JPopupMenu();
+		/*if (e.isPopupTrigger()) {
+			GisElementClass myGisElementClass = tableModel.getGisElementClass();
+			if (myGisElementClass instanceof GisObjectClass) {
+				mi_new2 = new JMenuItem(I18n.get("TV_GTV_PopMen_New"));
+				mi_new2.setActionCommand("new");
+				mi_new2.addActionListener(this);
+				popup.add(mi_new2);
+			}
+		}*/
+
 		if (e.isPopupTrigger() && selectedRow >= 0 && selectedCol >= 0) {
 
 			JMenuItem mi;
 
-			JPopupMenu popup = new JPopupMenu();
-
-			mi = new JMenuItem(I18n.get("TV_GTV_PopMen_New"));
-
-			mi.setActionCommand("new");
-
-			mi.addActionListener(this);
-
-			popup.add(mi);
+			//JPopupMenu popup = new JPopupMenu();
 
 			if (table.getSelectedRow() >= 0) {
-				mi = new JMenuItem(I18n.get("TV_GTV_PopMen_Remove"));
-				mi.setActionCommand("remove");
-				mi.addActionListener(this);
-				popup.add(mi);
+				GisElementClass myGisElementClass =
+					tableModel.getGisElementClass();
+				//System.out.println("GisElementClass: " + myGisElementClass);
+				if (myGisElementClass instanceof GisObjectClass) {
+					mi_new2 = new JMenuItem(I18n.get("TV_GTV_PopMen_New"));
+					mi_new2.setActionCommand("new");
+					mi_new2.addActionListener(this);
+					popup.add(mi_new2);
+
+					mi_remove2 =
+						new JMenuItem(I18n.get("TV_GTV_PopMen_Remove"));
+					mi_remove2.setActionCommand("remove");
+					mi_remove2.addActionListener(this);
+					popup.add(mi_remove2);
+
+					if (isEditable) {
+						mi_new2.setEnabled(true);
+						mi_remove2.setEnabled(true);
+					} else {
+						mi_new2.setEnabled(false);
+						mi_remove2.setEnabled(false);
+					}
+				}
 
 				mi = new JMenuItem(I18n.get("TV_GTV_PopMen_Detail"));
 				mi.setActionCommand("showSingeObjectView");
@@ -869,7 +885,7 @@ public class GisTableView
 			tableModel.close();
 
 		}
-		ProjectView.removeViewFromList(e);
+		ViewManager.removeViewFromList(e);
 	}
 
 	//          Invoked when an internal frame is in the process of being closed.
@@ -896,21 +912,52 @@ public class GisTableView
 	}
 
 	public void internalFrameOpened(InternalFrameEvent e) {
-		ProjectView.addViewToList(e);
+		ViewManager.addViewToList(e);
 	}
 
 	// ItemListener
 
 	public void itemStateChanged(ItemEvent e) {
 
-		String newProfileName = (String) jcombo.getSelectedItem();
+		Object source = e.getItemSelectable();
 
-		if (!myProfileName.equals(newProfileName)) {
+		if (source == jcombo) {
+			String newProfileName = (String) jcombo.getSelectedItem();
+			if (!myProfileName.equals(newProfileName)) {
+				myProfileName = newProfileName;
+				updateColProfile();
+			}
+		}
 
-			myProfileName = newProfileName;
-
-			updateColProfile();
-
+		if (source == cbMenuItem) {
+			if (e.getStateChange() == ItemEvent.DESELECTED) {
+				for (int i = 0; i < tableModels.size(); i++) {
+					GisTableModel tableModel =
+						(GisTableModel) tableModels.elementAt(i);
+					tableModel.setEditable(false);
+					GisElementClass myGisElementClass =
+						tableModel.getGisElementClass();
+					if (myGisElementClass instanceof GisObjectClass) {
+						mi_new1.setEnabled(false);
+						//mi_remove1.setEnabled(false);
+						isEditable = false;
+					}
+				}
+			}
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				for (int i = 0; i < tableModels.size(); i++) {
+					GisTableModel tableModel =
+						(GisTableModel) tableModels.elementAt(i);
+					tableModel.setEditable(true);
+					GisElementClass myGisElementClass =
+						tableModel.getGisElementClass();
+					if (myGisElementClass instanceof GisObjectClass) {
+						mi_new1.setEnabled(true);
+						//mi_remove1.setEnabled(true);
+						isEditable = true;
+					}
+				}
+			}
 		}
 
 	}

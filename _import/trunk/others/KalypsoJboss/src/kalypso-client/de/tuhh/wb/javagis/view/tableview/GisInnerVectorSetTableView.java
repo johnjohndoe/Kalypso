@@ -37,7 +37,6 @@ import de.tuhh.wb.javagis.data.GisElement;
 import de.tuhh.wb.javagis.data.GisElementClass;
 import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
 import de.tuhh.wb.javagis.tools.I18n;
-import de.tuhh.wb.javagis.view.projectview.ProjectView;
 
 public class GisInnerVectorSetTableView extends JInternalFrame implements InternalFrameListener,ActionListener,MouseListener
 {
@@ -242,7 +241,7 @@ public class GisInnerVectorSetTableView extends JInternalFrame implements Intern
     //          Invoked when an internal frame has been closed.
     public void internalFrameClosed(InternalFrameEvent e)
     {
-		ProjectView.removeViewFromList(e);
+		ViewManager.removeViewFromList(e);
 	//	myGisElementClass.unRegister(this);
     }
 
@@ -266,7 +265,7 @@ public class GisInnerVectorSetTableView extends JInternalFrame implements Intern
     
     public void internalFrameOpened(InternalFrameEvent e)
     {
-		ProjectView.addViewToList(e);
+		ViewManager.addViewToList(e);
     }
 
     /*

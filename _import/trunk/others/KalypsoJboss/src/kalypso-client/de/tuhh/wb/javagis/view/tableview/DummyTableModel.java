@@ -2,13 +2,13 @@ package de.tuhh.wb.javagis.view.tableview;
 
 import javax.swing.table.AbstractTableModel;
 
-import java.util.Hashtable;
+//import java.util.Hashtable;
 
 import java.util.Vector;
 
-import java.util.Enumeration;
+//import java.util.Enumeration;
 
-import javax.swing.table.AbstractTableModel;
+//import javax.swing.table.AbstractTableModel;
 
 import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
 
@@ -23,8 +23,7 @@ public class DummyTableModel extends AbstractTableModel implements GisInterfaceT
     private GisInterfaceTableModel model;
 
 //	String language = I18n.getLanguage();
-
-
+	private boolean isEditable = true;
 
     public DummyTableModel(GisInterfaceTableModel model)
 
@@ -83,9 +82,24 @@ public class DummyTableModel extends AbstractTableModel implements GisInterfaceT
 
     {
 
-	return model.isCellEditable(row, col);
+	//return model.isCellEditable(row, col);
+	if(col==0){
+		return false;
+	}
+	else{
+		if(isEditable){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 
     }
+    
+	public void setEditable(boolean editable){
+			isEditable = editable;
+		}
 
     public Object getValueAt(int row,int col)
 

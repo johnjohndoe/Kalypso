@@ -3,20 +3,20 @@ package de.tuhh.wb.javagis.view.tableview;
 import javax.swing.table.AbstractTableModel;
 
 //import de.tuhh.wb.javagis.model.ElementSession;
-import java.util.Hashtable;
+//import java.util.Hashtable;
 import java.util.Vector;
-import java.util.Enumeration;
+//import java.util.Enumeration;
 import de.tuhh.wb.javagis.view.GisView;
 import de.tuhh.wb.javagis.tools.I18n;
 
 import de.tuhh.wb.javagis.data.*;
 import de.tuhh.wb.javagis.data.event.ElementClassListener;
-import javax.swing.JButton;
+//import javax.swing.JButton;
 import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
-import java.util.Date;
+//import java.text.ParseException;
+//import java.text.SimpleDateFormat;
+//import java.text.DateFormat;
+//import java.util.Date;
 import java.util.Comparator;
 
 import javax.ejb.ObjectNotFoundException;
@@ -27,6 +27,7 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
     private Vector myIdList;
     private GisElementClass myGisElementClass;
     private GisView myGisView;
+    private boolean isEditable = true;
     
     public Icon getIcon()
     {
@@ -244,12 +245,22 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 
     public boolean isCellEditable(int row,int col)
     {
-	if(col==0)
+	if(col==0){
 	    return false;
-	else
-	    return true;
+	}
+	else{
+		if(isEditable){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
     }
-
+    
+    public void setEditable(boolean editable){
+    	isEditable = editable;
+    }
     public Object getId(int row)
     {
 	return myIdList.elementAt(row);
