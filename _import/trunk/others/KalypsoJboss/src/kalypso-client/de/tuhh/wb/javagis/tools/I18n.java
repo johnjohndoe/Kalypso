@@ -10,6 +10,8 @@ import java.util.Properties;
 
 import javax.swing.JOptionPane;
 
+import de.tuhh.wb.javagis.Main;
+
 public class I18n
 {
     private static boolean SHOWKEY=false;
@@ -52,9 +54,15 @@ public class I18n
     
     private static I18n getInstance()
     {
+		String user = Main.props.getProperty("user");
+    	
 		if(instance==null)
 	    {
 			//	String langKey;
+			if(user!=null && user.equals("Ingenieurbuero")){
+			instance = new I18n("de");
+			return instance;
+			} else {
 			File parentFile=new File("i18n");
 			String[] fileNames = parentFile.list();
 			String[] possibilities = new String[fileNames.length];
@@ -126,6 +134,7 @@ public class I18n
 				return instance;
 			}
 			System.exit(0);
+			}
 		}
 		return instance;
 	}
