@@ -6,13 +6,17 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 
 ###############################################################################
 
-
 - Bugfix: Scrollbar bei Feature-Edit in Karte, Dialog grössenveränderbar
 - Bugfix: Refresh der Tabelle beim Rechnen im Wizard, Knöpfe können trotzdem nicht gedrückt werden
 - Extension Points (Repository-Factory und ZML-Import) verbessert, dass die basedOn-property gesetzt ist ->
 unterstüzung der Eingabe 
 - Bugfix: bei 'Modell aktualisieren' (d.h. insbesonder in der Start-Seite) wurden lokale Rechenvairanten immer gelöscht,
 wenn sie nicht auch auf dem Server waren.
+- Fake-PSICompact: jetzt sind alle Spree-W-Zmls eindeutig definiert (Achseneinheit).
+- Bug #79
+- Bug #80
+- Bug #83
+- Bug #84
 
 ----------------
 Version 0.0.5 (Deploy vom 23.02.2005)
