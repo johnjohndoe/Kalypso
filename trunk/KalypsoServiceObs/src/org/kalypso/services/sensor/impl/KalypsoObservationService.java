@@ -21,7 +21,6 @@ import org.kalypso.ogc.sensor.beans.DateRangeBean;
 import org.kalypso.ogc.sensor.beans.OCSDataBean;
 import org.kalypso.ogc.sensor.beans.ObservationBean;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ogc.sensor.zml.ZmlObservation;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.IRepositoryItem;
@@ -196,7 +195,7 @@ public class KalypsoObservationService implements IObservationService
       if( obs == null )
         throw new RemoteException( "No observation for " + obean.getId() );
       
-      ZmlObservation zml = new ZmlObservation( new URL( odb.getLocation() ), odb.getObsId() );
+      final IObservation zml = ZmlFactory.parseXML( new URL( odb.getLocation() ), odb.getObsId() );
       
       obs.setValues( zml.getValues( null ) );
     }

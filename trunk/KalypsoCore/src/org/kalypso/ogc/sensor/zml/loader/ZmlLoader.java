@@ -17,7 +17,6 @@ import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ogc.sensor.zml.ZmlObservation;
 import org.kalypso.zml.ObservationType;
 
 /**
@@ -32,11 +31,11 @@ public class ZmlLoader extends AbstractLoader
    *      org.eclipse.core.resources.IProject,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  protected Object loadIntern( Properties source, IProject project, IProgressMonitor monitor )
-      throws LoaderException
+  protected Object loadIntern( final Properties source, final IProject project,
+      final IProgressMonitor monitor ) throws LoaderException
   {
-    String type = source.getProperty( "TYPE" );
-    String location = source.getProperty( "LOCATION" );
+    final String type = source.getProperty( "TYPE" );
+    final String location = source.getProperty( "LOCATION" );
 
     monitor.beginTask( "Laden von ZML-Datei von " + location, 1 );
 
@@ -44,15 +43,16 @@ public class ZmlLoader extends AbstractLoader
 
     try
     {
-      
+
       if( type.equals( "relative" ) )
       {
         final IResource m = project.findMember( location );
-        
+
         if( m != null )
           url = m.getLocation().toFile().toURL();
         else
-          throw new LoaderException( "Location <" + location + "> could not be found in project:" + project );
+          throw new LoaderException( "Location <" + location + "> could not be found in project:"
+              + project );
       }
       else if( type.equals( "absolute" ) )
         url = new URL( location );
@@ -74,7 +74,7 @@ public class ZmlLoader extends AbstractLoader
 
     try
     {
-      ZmlObservation obs = new ZmlObservation( url, url.getFile() );
+      final IObservation obs = ZmlFactory.parseXML( url, url.getFile() );
 
       monitor.worked( 1 );
 
@@ -87,26 +87,30 @@ public class ZmlLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.AbstractLoader#save(java.util.Properties, org.eclipse.core.resources.IProject, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
+   * @see org.kalypso.loader.AbstractLoader#save(java.util.Properties,
+   *      org.eclipse.core.resources.IProject,
+   *      org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
   public void save( Properties source, IProject project, IProgressMonitor monitor, Object data )
       throws LoaderException
   {
+    PipedInputStream pis = null;
+
     try
     {
       final String location = source.getProperty( "LOCATION" );
-  
+
       monitor.beginTask( "ZML Speichern: " + location, 2 );
-  
+
       final IFile file = project.getFile( location );
-  
+
       final ObservationType xmlObs = ZmlFactory.createXML( (IObservation)data, null );
-      
-      monitor.worked(1);
-      
+
+      monitor.worked( 1 );
+
       final PipedOutputStream pos = new PipedOutputStream();
-      final PipedInputStream pis = new PipedInputStream( pos );
-      
+      pis = new PipedInputStream( pos );
+
       final Runnable runnable = new Runnable()
       {
         public void run()
@@ -134,21 +138,33 @@ public class ZmlLoader extends AbstractLoader
           }
         }
       };
-      
+
       final Thread thread = new Thread( runnable, "ZML Save Thread" );
       thread.start();
 
       file.setContents( pis, false, true, monitor );
-      pis.close(); 
-      
-      monitor.worked(1);
+      pis.close();
+
+      monitor.worked( 1 );
     }
-    catch( Exception e )
+    catch( Exception e ) // generic exception caught for simplicity
     {
-      throw new LoaderException(e);
+      throw new LoaderException( e );
+    }
+    finally
+    {
+      if( pis != null )
+        try
+        {
+          pis.close();
+        }
+        catch( IOException e1 )
+        {
+          e1.printStackTrace();
+        }
     }
   }
-  
+
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */

@@ -1,10 +1,12 @@
 package org.kalypso.ogc.sensor.zml;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -13,22 +15,35 @@ import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
+import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.zml.values.IZmlValuesLoader;
-import org.kalypso.ogc.sensor.zml.values.ValueArray;
-import org.kalypso.ogc.sensor.zml.values.ValueLink;
+import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.zml.values.IZmlValues;
+import org.kalypso.ogc.sensor.zml.values.ZmlArrayValues;
+import org.kalypso.ogc.sensor.zml.values.ZmlLinkValues;
+import org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel;
 import org.kalypso.util.factory.FactoryException;
+import org.kalypso.util.parser.IParser;
+import org.kalypso.util.parser.ParserException;
 import org.kalypso.util.parser.ParserFactory;
 import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.util.xml.xlink.JAXBXLink;
 import org.kalypso.zml.AxisType;
 import org.kalypso.zml.MetadataListType;
 import org.kalypso.zml.MetadataType;
 import org.kalypso.zml.ObjectFactory;
+import org.kalypso.zml.Observation;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.AxisType.ValueArrayType;
+import org.kalypso.zml.AxisType.ValueLinkType;
+import org.xml.sax.InputSource;
 
 /**
  * @author schlienger
@@ -45,6 +60,10 @@ public class ZmlFactory
 
   private static Properties m_props = null;
 
+  private static Marshaller m_marsh = null;
+
+  private static Unmarshaller m_unmarsh = null;
+
   private ZmlFactory()
   {
   // not to be instanciated
@@ -58,7 +77,7 @@ public class ZmlFactory
 
       try
       {
-        m_props.load( ZmlAxis.class.getResourceAsStream( "resource/types2parser.properties" ) );
+        m_props.load( ZmlFactory.class.getResourceAsStream( "resource/types2parser.properties" ) );
 
         return m_props;
       }
@@ -75,10 +94,10 @@ public class ZmlFactory
   /**
    * Helper, man sollte es benutzen um auf die ParserFactory zugreifen zu können
    */
-  public static synchronized ParserFactory getParserFactory()
+  private static synchronized ParserFactory getParserFactory()
   {
     if( m_parserFactory == null )
-      m_parserFactory = new ParserFactory( getProperties(), ZmlAxis.class.getClassLoader() );
+      m_parserFactory = new ParserFactory( getProperties(), ZmlFactory.class.getClassLoader() );
 
     return m_parserFactory;
   }
@@ -93,20 +112,117 @@ public class ZmlFactory
   }
 
   /**
-   * ValueFactory um die entsprechende ValuesLoader zu erzeugen.
+   * Parses the XML and creates a IObservation object.
+   * 
+   * @throws SensorException
    */
-  public static IZmlValuesLoader createValueLoader( final URL baseUrl, final AxisType axisType,
-      final ZmlAxis axis ) throws MalformedURLException
+  public static IObservation parseXML( final URL url, final String identifier )
+      throws SensorException
   {
-    // loader for inline values, no need to specify where base location is
-    Object va = axisType.getValueArray();
+    InputStream inputStream = null;
+    Observation obs = null;
+
+    try
+    {
+      // stream is closed in finally
+      inputStream = url.openStream();
+
+      final Unmarshaller u = getUnmarshaller();
+
+      obs = (Observation)u.unmarshal( new InputSource( inputStream ) );
+    }
+    catch( Exception e ) // generic exception caught for simplicity
+    {
+      throw new SensorException( "Error while unmarshalling: " + url.toExternalForm(), e );
+    }
+    finally
+    {
+      if( inputStream != null )
+        try
+        {
+          inputStream.close();
+        }
+        catch( IOException e1 )
+        {
+          e1.printStackTrace();
+        }
+    }
+
+    // metadata
+    final MetadataList metadata = new MetadataList();
+    metadata.put( MetadataList.MD_NAME, obs.getName() );
+
+    if( obs.getMetadataList() != null )
+    {
+      final List mdList = obs.getMetadataList().getMetadata();
+
+      for( final Iterator it = mdList.iterator(); it.hasNext(); )
+      {
+        final MetadataType md = (MetadataType)it.next();
+
+        metadata.put( md.getName(), md.getValue() );
+      }
+    }
+
+    // axes and values
+    final List tmpList = obs.getAxis();
+    final Map valuesMap = new HashMap( tmpList.size() );
+
+    for( int i = 0; i < tmpList.size(); i++ )
+    {
+      final AxisType tmpAxis = (AxisType)tmpList.get( i );
+
+      final Properties props = PropertiesHelper.parseFromString( tmpAxis.getDatatype(), '#' );
+      final String type = props.getProperty( "TYPE" );
+      final String format = props.getProperty( "FORMAT" );
+
+      final IParser parser;
+      final IZmlValues values;
+      try
+      {
+        parser = getParserFactory().createParser( type, format );
+
+        values = createValues( url, tmpAxis, parser );
+      }
+      catch( Exception e ) // generic exception caught for simplicity
+      {
+        throw new SensorException( e );
+      }
+
+      final IAxis axis = new DefaultAxis( tmpAxis.getName(), tmpAxis.getType(), tmpAxis.getUnit(),
+          parser.getObjectClass(), i, tmpAxis.isKey() );
+
+      valuesMap.put( axis, values );
+    }
+
+    final IAxis[] axes = (IAxis[])valuesMap.keySet().toArray( new IAxis[valuesMap.size()] );
+
+    final ZmlTuppleModel model = new ZmlTuppleModel( axes, valuesMap );
+    
+    final IObservation zmlObs = new SimpleObservation( identifier, obs.getName(), obs.isEditable(),
+        new JAXBXLink( obs.getTarget() ), metadata, axes, model );
+    
+    return zmlObs;
+  }
+
+  /**
+   * Parses the values and create the corresponding objects.
+   * 
+   * @throws ParserException
+   * @throws MalformedURLException
+   * @throws IOException
+   */
+  private static IZmlValues createValues( final URL context, final AxisType axisType,
+      final IParser parser ) throws ParserException, MalformedURLException, IOException
+  {
+    final ValueArrayType va = axisType.getValueArray();
     if( va != null )
-      return new ValueArray( (AxisType.ValueArrayType)va, axis );
+      return new ZmlArrayValues( va, parser );
 
     // loader for linked values, here we specify where base location is
-    Object vl = axisType.getValueLink();
+    final ValueLinkType vl = axisType.getValueLink();
     if( vl != null )
-      return new ValueLink( baseUrl, (AxisType.ValueLinkType)vl, axis );
+      return new ZmlLinkValues( vl, parser, context );
 
     throw new IllegalArgumentException( "AxisType is not supported: " + axisType.toString() );
   }
@@ -118,7 +234,8 @@ public class ZmlFactory
    * 
    * @throws FactoryException
    */
-  public static ObservationType createXML( final IObservation obs, final IVariableArguments args ) throws FactoryException
+  public static ObservationType createXML( final IObservation obs, final IVariableArguments args )
+      throws FactoryException
   {
     try
     {
@@ -127,14 +244,15 @@ public class ZmlFactory
       obsType.setEditable( obs.isEditable() );
 
       final MetadataListType metadataListType = m_objectFactory.createMetadataListType();
-      obsType.setMetadataList(metadataListType);
+      obsType.setMetadataList( metadataListType );
       final List metadataList = metadataListType.getMetadata();
       for( final Iterator it = obs.getMetadataList().entrySet().iterator(); it.hasNext(); )
       {
         final Map.Entry entry = (Entry)it.next();
-        
-        final String mdKey = (String)entry.getKey();  //(String)it.next();
-        final String mdValue = (String)entry.getValue(); //obs.getMetadata().getProperty( mdKey );
+
+        final String mdKey = (String)entry.getKey(); //(String)it.next();
+        final String mdValue = (String)entry.getValue(); //obs.getMetadata().getProperty(
+        // mdKey );
 
         final MetadataType mdType = m_objectFactory.createMetadataType();
         mdType.setName( mdKey );
@@ -163,7 +281,7 @@ public class ZmlFactory
         valueArrayType.setValue( buildValueString( values, axes[i] ) );
 
         axisType.setValueArray( valueArrayType );
-        
+
         axisList.add( axisType );
       }
 
@@ -179,6 +297,7 @@ public class ZmlFactory
    * TODO: verbessern
    */
   private static String buildValueString( final ITuppleModel model, final IAxis axis )
+      throws SensorException
   {
     StringBuffer sb = new StringBuffer();
 
@@ -189,45 +308,57 @@ public class ZmlFactory
     else if( String.class.isAssignableFrom( axis.getDataClass() ) )
       buildStringAxis( model, axis, sb );
     else
-     throw new IllegalArgumentException( "Data type currently not supported" );
+      throw new IllegalArgumentException( "Data type currently not supported" );
 
     return sb.toString();
   }
 
   private static void buildStringAxis( ITuppleModel model, IAxis axis, StringBuffer sb )
+      throws SensorException
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
-      sb.append( model.getElement( i, axis.getPosition() ) ).append( ";" );
+      sb.append( model.getElement( i, axis ) ).append( ";" );
 
     if( amount > 0 )
-      sb.append( model.getElement( amount, axis.getPosition() ) );
+      sb.append( model.getElement( amount, axis ) );
   }
 
   private static void buildStringDateAxis( final ITuppleModel model, final IAxis axis,
-      final StringBuffer sb )
+      final StringBuffer sb ) throws SensorException
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
-      sb.append( m_df.format( model.getElement( i, axis.getPosition() ) ) ).append( ";" );
+      sb.append( m_df.format( model.getElement( i, axis ) ) ).append( ";" );
 
     if( amount > 0 )
-      sb.append( m_df.format( model.getElement( amount, axis.getPosition() ) ) );
+      sb.append( m_df.format( model.getElement( amount, axis ) ) );
   }
 
   private static void buildStringNumberAxis( final ITuppleModel model, final IAxis axis,
-      final StringBuffer sb )
+      final StringBuffer sb ) throws SensorException
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
-      sb.append( m_nf.format( model.getElement( i, axis.getPosition() ) ) ).append( ";" );
+      sb.append( m_nf.format( model.getElement( i, axis ) ) ).append( ";" );
 
     if( amount > 0 )
-      sb.append( m_nf.format( model.getElement( amount, axis.getPosition() ) ) );
+      sb.append( m_nf.format( model.getElement( amount, axis ) ) );
   }
-  
+
   public static Marshaller getMarshaller() throws JAXBException
   {
-    return m_objectFactory.createMarshaller();
+    if( m_marsh == null )
+      m_marsh = m_objectFactory.createMarshaller();
+
+    return m_marsh;
+  }
+
+  private static Unmarshaller getUnmarshaller() throws JAXBException
+  {
+    if( m_unmarsh == null )
+      m_unmarsh = m_objectFactory.createUnmarshaller();
+
+    return m_unmarsh;
   }
 }

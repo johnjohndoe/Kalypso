@@ -21,7 +21,7 @@
 	</xs:complexType>
 	<xs:complexType name="MetadataListType">
 		<xs:sequence>
-			<xs:element name="metadata" type="MetadataType" maxOccurs="unbounded"/>
+			<xs:element name="metadata" type="MetadataType"  minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AxisType">
@@ -48,6 +48,7 @@
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="type" type="xs:string" use="required"/>
 		<xs:attribute name="unit" type="xs:string" use="required"/>
+		<xs:attribute name="key" type="xs:boolean" use="optional" default="false"/>
 		<xs:attribute name="datatype" type="xs:string" use="required"/>
 	</xs:complexType>
 </xs:schema>

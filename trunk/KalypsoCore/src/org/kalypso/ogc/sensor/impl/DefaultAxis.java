@@ -9,15 +9,17 @@ import org.kalypso.ogc.sensor.IAxis;
  */
 public class DefaultAxis implements IAxis
 {
-  protected String m_label;
+  private String m_label;
 
-  protected String m_unit;
+  private String m_unit;
 
-  protected Class m_dataClass;
+  private Class m_dataClass;
 
-  protected int m_position;
+  private int m_position;
 
-  protected String m_type;
+  private String m_type;
+
+  private boolean m_isKey;
 
   /**
    * Constructor
@@ -34,13 +36,14 @@ public class DefaultAxis implements IAxis
    *          position of this axis in regards to the tupple of data
    */
   public DefaultAxis( final String label, final String type, final String unit,
-      final Class dataClass, final int position )
+      final Class dataClass, final int position, final boolean isKey )
   {
     m_label = label;
     m_type = type;
     m_unit = unit;
     m_dataClass = dataClass;
     m_position = position;
+    m_isKey = isKey;
   }
 
   /**
@@ -48,7 +51,7 @@ public class DefaultAxis implements IAxis
    */
   public DefaultAxis( final IAxis axis )
   {
-    this( axis.getLabel(), axis.getType(), axis.getUnit(), axis.getDataClass(), axis.getPosition() );
+    this( axis.getLabel(), axis.getType(), axis.getUnit(), axis.getDataClass(), axis.getPosition(), axis.isKey() );
   }
 
   /**
@@ -97,5 +100,18 @@ public class DefaultAxis implements IAxis
   public String getType()
   {
     return m_type;
+  }
+  
+  /**
+   * @see org.kalypso.ogc.sensor.IAxis#isKey()
+   */
+  public boolean isKey()
+  {
+    return m_isKey;
+  }
+  
+  public void setDataClass( Class dataClass )
+  {
+    m_dataClass = dataClass;
   }
 }

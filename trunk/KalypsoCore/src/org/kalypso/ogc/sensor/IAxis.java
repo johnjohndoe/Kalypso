@@ -21,6 +21,14 @@ public interface IAxis
   /** returns the label of this axis */
   public String getLabel();
   
-  /** returns the position of this axis in the tupple */
+  /** 
+   * Returns the position of this axis in the tupple
+   */
   public int getPosition();
+  
+  /**
+   * Returns true when this axis is part of the key of the TuppleModel. Key can be used 
+   * to avoid duplicate entries in the model.
+   */
+  public boolean isKey();
 }
