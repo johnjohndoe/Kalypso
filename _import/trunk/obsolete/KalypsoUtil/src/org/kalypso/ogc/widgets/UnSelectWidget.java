@@ -2,11 +2,11 @@ package org.kalypso.ogc.widgets;
 
 import org.kalypso.ogc.command.JMSelector;
 
-public class SelectWidget extends AbstractSelectWidget
+public class UnSelectWidget extends AbstractSelectWidget
 {
 
   protected int getSelectionMode()
   {
-     return JMSelector.MODE_SELECT;        
+     return JMSelector.MODE_UNSELECT;        
   }  
 }

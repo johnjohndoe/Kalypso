@@ -5,6 +5,7 @@ package org.kalypso.util.xml;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -365,6 +366,7 @@ public class XMLTools
         return xslTransform( new DOMSource( xmlDOM ), new DOMSource( xslDOM ) );
     }
 
+   
     /*    public static Image getMapRequest(URL url) throws Exception
     {
         BufferedImage result = null;

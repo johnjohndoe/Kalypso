@@ -28,24 +28,24 @@ public class JMMarkSelectCommand implements ICommand
     private int mySelectionMode = -1;
     private int mySelectionId;
   
-    public JMMarkSelectCommand(KalypsoTheme theme, GM_Envelope selectEnv, boolean selectWithinStatus,double gisSelectionRadius, int selectionId )
+    public JMMarkSelectCommand(KalypsoTheme theme, GM_Envelope selectEnv, boolean selectWithinStatus,double gisSelectionRadius, int selectionId ,int selectionMode)
     { 
         mySelectEnv = selectEnv;
         myRadius = gisSelectionRadius;
         mySelectWithinStatus = selectWithinStatus;
-        init(theme,selectionId);
+        init(theme,selectionId,selectionMode);
     }
 
-    public JMMarkSelectCommand(KalypsoTheme theme, GM_Position selectPos,double gisSelectionRadius,int selectionId )
+    public JMMarkSelectCommand(KalypsoTheme theme, GM_Position selectPos,double gisSelectionRadius,int selectionId, int selectionMode )
     {
         mySelectPos = selectPos;
         myRadius = gisSelectionRadius;
-        init(theme,selectionId  );
+        init(theme,selectionId,selectionMode  );
     }
 
-    private void init(KalypsoTheme theme,int selectionId  )
+    private void init(KalypsoTheme theme,int selectionId,int selectionMode  )
     {
-        mySelectionMode=JMSelector.MODE_TOGGLE;
+        mySelectionMode=selectionMode;
         myTheme =theme;
         mySelectionId=selectionId;
     }
