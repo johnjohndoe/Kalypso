@@ -2,6 +2,7 @@ package org.kalypso.ui.calcwizard.modelpages;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.event.ModellEventListener;
@@ -32,6 +34,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -64,6 +67,9 @@ import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.calcwizard.bericht.ExportWizardBerichtWizard;
+import org.kalypso.ui.metadoc.IExportableDocument;
+import org.kalypso.ui.metadoc.MetadocServiceWrapper;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.url.UrlResolver;
 
@@ -313,7 +319,45 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       return;
     }
 
-    chooseSelectedFeatures( selectedCalcCase );
+    final FeatureList features = getFeatures( false );
+    final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
+    final List selectedFeatures = getSelectedFeatures( false );
+
+    final IExportableDocument dummyDoc = new IExportableDocument()
+    {
+      public void exportDocument( final OutputStream outs ) throws Exception
+      {
+      // ignore
+      }
+
+      public String getDocumentExtension()
+      {
+        return ".dummy";
+      }
+    };
+
+    MetadocServiceWrapper metadocService = null;
+    
+    try
+    {
+      metadocService = new MetadocServiceWrapper( dummyDoc
+          .getDocumentExtension() );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      
+      ErrorDialog.openError( shell, "Berichtsablage", "Berichtsablagedienst konnte nicht initialisiert werden.", e.getStatus() );
+      return;
+    }
+
+    final ExportWizardBerichtWizard wizard = new ExportWizardBerichtWizard( features, nameProperty, dummyDoc, metadocService.getDoc() );
+    final WizardDialog dialog = new WizardDialog( getContainer().getShell(), wizard );
+    dialog.open();
+
+    // die Metadaten Abfragen
+
+    // jeden gewünschten Typ exportieren
 
     // doit
   }

@@ -1,4 +1,4 @@
-package org.kalypso.ui.wizard.metadata;
+package org.kalypso.ui.wizard.feature;
 
 import java.net.URL;
 import java.util.Collection;

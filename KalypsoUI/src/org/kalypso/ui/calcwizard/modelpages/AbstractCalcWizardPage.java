@@ -19,6 +19,7 @@ import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree.model.geometry.GM_Envelope;
+import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.visitors.GetSelectionVisitor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -573,11 +574,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     return m_tsProps;
   }
 
-  protected List getFeatures( boolean useTable )
+  protected FeatureList getFeatures( boolean useTable )
   {
     final IMapModell mapModell = getMapModell();
     if( mapModell == null )
-      return new ArrayList();
+      return FeatureFactory.createFeatureList();
 
     final IKalypsoTheme activeTheme;
     if( useTable )
@@ -586,12 +587,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
       activeTheme = mapModell.getActiveTheme();
 
     if( activeTheme == null )
-      return new ArrayList();
+      return FeatureFactory.createFeatureList();
 
     final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) activeTheme;
     final FeatureList featureList = kft.getFeatureList();
     if( featureList == null )
-      return new ArrayList();
+      return FeatureFactory.createFeatureList();
 
     return featureList;
   }

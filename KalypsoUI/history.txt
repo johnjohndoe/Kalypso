@@ -31,3 +31,7 @@ Version ...
 
 - PSICompactImlp: unsere Fake Implementation basiert jetzt auf ZMLs die in der Jar
 	über die PSICompact ID-Liste verknüpft sind.
+	
+- GIS Darstellung:
+	Koordinatensystem aller Karten ist jetzt Gauss-Krüger 5
+	Die fehlenden Gewässer der Spree wurden in der Überishctskarte ergänzt
