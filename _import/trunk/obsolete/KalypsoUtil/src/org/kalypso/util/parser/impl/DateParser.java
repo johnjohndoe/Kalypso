@@ -85,7 +85,7 @@ public class DateParser extends AbstractParser
    * @see org.kalypso.util.parser.IParser#compare(java.lang.Object,
    *      java.lang.Object)
    */
-  public int compare( Object value1, Object value2 ) throws ParserException
+  public int compare( Object value1, Object value2 )
   {
     Date d1 = (Date) value1;
     Date d2 = (Date) value2;

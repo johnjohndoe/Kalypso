@@ -80,7 +80,7 @@ public class IntegerParser extends AbstractParser
    * @see org.kalypso.util.parser.IParser#compare(java.lang.Object,
    *      java.lang.Object)
    */
-  public int compare( Object value1, Object value2 ) throws ParserException
+  public int compare( Object value1, Object value2 )
   {
     int n1 = ((Number) value1).intValue();
     int n2 = ((Number) value2).intValue();

@@ -1,7 +1,6 @@
 package org.kalypso.util.parser.impl;
 
 import org.kalypso.util.parser.AbstractParser;
-import org.kalypso.util.parser.ParserException;
 
 /**
  * StringParser
@@ -37,7 +36,7 @@ public class StringParser extends AbstractParser
   /**
    * @see org.kalypso.util.parser.IParser#parse(java.lang.String)
    */
-  public Object parse( String text ) throws ParserException
+  public Object parse( String text ) 
   {
     return text;
   }
@@ -45,7 +44,7 @@ public class StringParser extends AbstractParser
   /**
    * @see org.kalypso.util.parser.IParser#compare(java.lang.String, java.lang.String)
    */
-  public int compare( String value1, String value2 ) throws ParserException
+  public int compare( String value1, String value2 ) 
   {
     if( value1.compareTo( value2 ) == 0 )
       return 0;
@@ -59,7 +58,7 @@ public class StringParser extends AbstractParser
   /**
    * @see org.kalypso.util.parser.IParser#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( Object value1, Object value2 ) throws ParserException
+  public int compare( Object value1, Object value2 ) 
   {
     return compare( value1.toString(), value2.toString() );
   }
