@@ -31,6 +31,20 @@ public interface IDiagramAxis
   public String getIdentifier();
   
   /**
+   * The lower margin is expressed in percent of the whole axis range.
+   * 
+   * @return the lower margin in percent (for instance 0.07 for 7%) or null if not set
+   */
+  public Double getLowerMargin();
+
+  /**
+   * The upper margin is expressed in percent of the whole axis range.
+   * 
+   * @return the upper margin in percent (for instance 0.07 for 7%) or null if not set
+   */
+  public Double getUpperMaring();
+  
+  /**
    * @return complete Label of this axis (concatenates the label and the unit)
    */
   public String toFullString();

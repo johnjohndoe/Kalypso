@@ -1,14 +1,14 @@
 package org.kalypso.ogc.sensor.diagview.impl;
 
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.template.obsdiagview.TypeAxis;
 
 /**
  * Default implementation of <code>IDiagramAxis</code>. This class overrides
  * equals and hashcode. Two instance of IDiagramAxis are considered to be equal
  * if they have the same id.
+ * 
+ * TODO extended the binding to contain the lower and upper margin elements
  * 
  * @author schlienger
  */
@@ -28,6 +28,10 @@ public class DiagramAxis implements IDiagramAxis
 
   private final String m_dataType;
 
+  private final Double m_lowerMargin;
+
+  private final Double m_upperMargin;
+
   public DiagramAxis( final TypeAxis axis )
   {
     this( axis.getId(), axis.getDatatype(), axis.getLabel(), axis.getUnit(),
@@ -38,6 +42,15 @@ public class DiagramAxis implements IDiagramAxis
       final String label, final String unit, final String direction,
       final String position, final boolean isInverted )
   {
+    this( id, dataType, label, unit, direction, position, isInverted, null,
+        null );
+  }
+
+  public DiagramAxis( final String id, final String dataType,
+      final String label, final String unit, final String direction,
+      final String position, final boolean isInverted,
+      final Double lowerMargin, final Double upperMargin )
+  {
     m_id = id;
     m_dataType = dataType;
     m_label = label;
@@ -45,6 +58,8 @@ public class DiagramAxis implements IDiagramAxis
     m_direction = direction;
     m_position = position;
     m_isInverted = isInverted;
+    m_lowerMargin = lowerMargin;
+    m_upperMargin = upperMargin;
   }
 
   /**
@@ -144,50 +159,18 @@ public class DiagramAxis implements IDiagramAxis
   }
 
   /**
-   * Creates a diagram axis according to the given IObservation axis
-   * 
-   * @param axis
-   * @return diagram axis
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#getLowerMargin()
    */
-  public static DiagramAxis createAxisFor( final IAxis axis )
+  public Double getLowerMargin( )
   {
-    return createAxisFor( axis.getType(), axis.getName(), axis.getUnit() );
+    return m_lowerMargin;
   }
 
   /**
-   * Creates a diagram axis according to the given IObservation axis
-   * 
-   * @param axisType
-   * @param label
-   * @param unit
-   * @return diagram axis
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#getUpperMaring()
    */
-  public static DiagramAxis createAxisFor( final String axisType,
-      final String label, final String unit )
+  public Double getUpperMaring( )
   {
-    if( axisType.equals( TimeserieConstants.TYPE_DATE ) )
-      return new DiagramAxis( axisType, "date", label, unit,
-          IDiagramAxis.DIRECTION_HORIZONTAL, IDiagramAxis.POSITION_BOTTOM,
-          false );
-
-    if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-      return new DiagramAxis( axisType, "double", label, unit,
-          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_LEFT, false );
-
-    if( axisType.equals( TimeserieConstants.TYPE_RUNOFF ) )
-      return new DiagramAxis( axisType, "double", label, unit,
-          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_LEFT, false );
-
-    if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
-      return new DiagramAxis( axisType, "double", label, unit,
-          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_RIGHT, true );
-
-    if( axisType.equals( TimeserieConstants.TYPE_TEMPERATURE ) )
-      return new DiagramAxis( axisType, "double", label, unit,
-          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_RIGHT, false );
-
-    // default axis
-    return new DiagramAxis( axisType, "double", label, unit,
-        IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_LEFT, false );
+    return m_upperMargin;
   }
 }

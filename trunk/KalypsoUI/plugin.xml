@@ -148,7 +148,7 @@
             id="Kalypso"/>
       <view
             class="org.kalypso.ui.repository.view.RepositoryExplorerPart"
-            icon="icons/observation_repository.gif"
+            icon="icons/repository/repository.gif"
             category="Kalypso"
             name="Zeitreihen Repository"
             id="org.kalypso.ui.repository.view.RepositoryExplorerPart"/>
@@ -363,7 +363,7 @@
                label="Tabelle exportieren"
                class="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate"
                icon="icons/gistable/export_wiz.gif"
-               tooltip="Exportiert die Tabelle"
+               tooltip="Exportiert die Tabelle als CSV-Datei"
                style="push"
                id="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate"/>
       </editorContribution>
@@ -375,7 +375,7 @@
                label="Diagramm exportieren"
                class="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate"
                icon="icons/gistable/export_wiz.gif"
-               tooltip="Exportiert den aktuellen Diagramm als Bild"
+               tooltip="Exportiert der aktuelle Diagramm als Bild"
                style="push"
                id="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate"/>
       </editorContribution>
@@ -416,7 +416,7 @@
                id="org.kalypso.ui.navigator.GrafikViewActionDelegate"
                menubarPath="additions"
 	           toolbarPath="additions" 
-               icon="icons/grafik-icon.gif" 
+               icon="icons/observation/grafik-icon.gif" 
                tooltip="Grafik-Tool anhand einer Vorlage starten" 
                class="org.kalypso.ui.navigator.GrafikViewActionDelegate" 
                enablesFor="1"> 
@@ -433,13 +433,13 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            icon="icons/observation_repository.gif"
+            icon="icons/perspective/zml_browser.gif"
             class="org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"
-            name="Kalypso Observation Repositories"
+            name="Kalypso Zeitreihenbrowser"
             id="org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"/>
       <perspective
             class="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"
-            icon="icons/modeler.gif"
+            icon="icons/perspective/expert.gif"
             fixed="false"
             name="Kalypso Modeler"
             id="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"/>
@@ -584,7 +584,7 @@
    <extension
          point="org.eclipse.ui.exportWizards">
       <wizard
-            icon="icons/observation_repository.gif"
+            icon="icons/repository/zml_upload.gif"
             class="org.kalypso.ui.wizard.ocs.OcsExportWizard"
             name="Export über Kalypso Zeitreihendienst"
             id="org.kalypso.ui.wizard.ocs.OcsExportWizard"/>

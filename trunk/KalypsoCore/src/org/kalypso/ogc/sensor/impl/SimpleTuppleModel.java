@@ -208,9 +208,12 @@ public class SimpleTuppleModel extends AbstractTuppleModel
    */
   public int indexOf( final Object element, final IAxis axis )
   {
+    if( element == null )
+      return -1;
+    
     for( int i = 0; i < m_tupples.getRowCount(); i++ )
     {
-      if( m_tupples.getValueAt( i, axis.getPosition() ).equals( element ) )
+      if( element.equals( m_tupples.getValueAt( i, axis.getPosition() ) ) )
         return i;
     }
 

@@ -60,7 +60,7 @@ import org.kalypso.ogc.gml.util.FeatureLabelProvider;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
+import org.kalypso.ogc.sensor.diagview.DiagramTemplateUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -164,7 +164,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       final IFile diagFile = (IFile)getProject().findMember( diagFileName );
       try
       {
-        m_obsdiagviewType = ObservationTemplateHelper.loadDiagramTemplateXML( diagFile
+        m_obsdiagviewType = DiagramTemplateUtils.loadDiagramTemplateXML( diagFile
             .getContents() );
       }
       catch( final Exception e )
@@ -584,7 +584,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         file.deleteOnExit();
 
         fos = new FileOutputStream( file );
-        ObservationTemplateHelper.saveDiagramTemplateXML( m_obsdiagviewType, fos );
+        DiagramTemplateUtils.saveDiagramTemplateXML( m_obsdiagviewType, fos );
 
         // TODO
         // ObservationTemplateHelper.openGrafik4odt( file, getProject() );

@@ -177,11 +177,11 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
     toolBarManager.add( new AddRepositoryAction( this ) );
 
-    toolBarManager.add( new Separator() );
-
     m_removeAction = new RemoveRepositoryAction( this );
     toolBarManager.add( m_removeAction );
 
+    toolBarManager.add( new Separator() );
+    
     m_confAction = new ConfigurePreviewAction( this );
     toolBarManager.add( m_confAction );
 
