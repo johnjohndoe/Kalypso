@@ -12,8 +12,8 @@ Version ...
 				Rechenfall vom Server laden
 				Rechenfall: Zeitreihen aktualisieren
 - Rechenfall neu: 
-	- 'Weiter' Knopf ist automatisch selektiert
-	- Bugfix: Fehler, falls im Navigator nichts selektiert war
+	* 'Weiter' Knopf ist automatisch selektiert
+	* Bugfix: Fehler, falls im Navigator nichts selektiert war
 - Modeler Perspective: Standardeinstellungen für Menüs 'Neu' und 'Sicht anzeigen' überarbeitet
 
 - ZmlObservation: wenn eine Zml vom Server geholt wird, wird ihre ID als Metadata-Eintrag
@@ -24,17 +24,38 @@ Version ...
 	zwischen Kalypso und PSICompact konvertiert.
 	* Der ArchivTyp wird abhängig vom Datentyp genutzt. Z.B. Niederschläge
 	übernehmen Werte aus dem Stundenarchiv lesen.
+	* Der PSI-Status wird folgendermassen in der Kalypso-Status umgewandelt:
+	- STATUS_AUTO 		--> BIT_OK (Wert ist korrekt)
+	- STATUS_ERSALLG 	--> BIT_CHECK (Wert muss geprüft werden)
+	- STATUS_MANKOR		--> BIT_USER_MODIFIED (Durch Benutzer geändert)
+	- STATUS_NACH 		--> BIT_CHECK (Wert muss geprüft werden)
+	- STATUS_NORM 		--> BIT_CHECK (Wert muss geprüft werden)
+	- STATUS_NORMALLG 	--> BIT_CHECK (Wert muss geprüft werden)
+	- STATUS_OK 		--> BIT_OK (Wert ist korrekt)
+	- STATUS_UNDEF 		--> BIT_CHECK (Wert muss geprüft werden)
+	* In die andere Richtung (von Kalypso nach PSI) wird keine Konvertierung
+	durchgeführt weil PSI automatisch der Status auf STATUS_REKO setzt
+	( Siehe Kommentar von PSI in PSICompact.java ).
+	
+- CalcWizard: eine Protokollierung wird automatisch durchgeführt wenn Zeitreihe
+	ausgelöst werden. Dabei bekommt der Benutzer eine Warnungmeldung durch ein
+	ErrorDialog. Die Meldung fasst die Fehler zusammen. Gleichzeitig wird eine
+	Logdatei erstellt mit umfassender Information.
 
 - InterpolationFilter: wenn die grundliegende Observation keine Werte liefert aber
 	fill ist gesetzt, dann werden lauter 'default' Werte im angegebenen Datumsbereich
-	erzeugt.
+	erzeugt. Der Status wird nicht interpoliert, sondern es wird ein bitwise
+	OR Operator benutzt. Der default Status (für default Werte) kann auch angegeben
+	werden.
+
+- DataHoleFilter: TODO testen. Der DataHoleFilter kann angewendet werden bei
+	Zeitreihen die möglicherweise 'Löcher' in die Daten haben. Diese Löcher
+	werden üblicherweise mit -999 o.ä. markiert. Der DataHoleFilter setzt
+	dabei ein konfigurierbare Wert und ein entsprechende Status (Wert muss
+	kontrolliert werden).
 
 - PSICompactImpl: unsere Fake Implementation basiert jetzt auf ZMLs die in der Jar
 	über die PSICompact ID-Liste verknüpft sind.
-	
-- Diagramm und Grafik-Tool:
-	* N wird transparent dargestellt
-	* Alarmstufen, Prognosestart werden dargestellt
 	
 - Zeitreihen Repository Browser:
 	* Neue Aktion: 'Export als' - Exportiert die ausgewählte Zeitreihe als lokale Datei.
@@ -42,11 +63,20 @@ Version ...
 	* Jetzt mit Icons
 	* Wenn die Einstellungen für Datum Von-Bis geändert wurden, dann wird der Observation
 	cache gelöscht.
+
+- Observation Diagramm und Grafik-Tool:
+	* N wird mit transparency dargestellt (nur Diagramm, Grafik: N wird auf einem 
+	separaten Achse dargestellt)
+	* Darstellung von Alarmstufen
+	* Markierung von Prognosewerte (mit transparente Hintergrundmarker)
+	* Bessere Verwaltung der Farben der unterschiedlichen Kurven
+	* Diagrammvorlage: Farben können direkt in der Vorlage spezifiziert werden
+	* Bug bei der (mehrfachige) Darstellung der Diagrammachsen ist behoben
 	
 - Observation Table Viewer:
-	* Dauer der Vorhersage wird markiert (Einstellbar, Siehe properties)
-	* Status wird angezeigt. Wenn der Benutzer ein Wert ändert, wird der
-	Status auch geändert.
+	* Vorhersagebreich wird markiert
+	* Status wird anhand unterschiedlicher Icons angezeigt. Wenn der Benutzer
+	ein Wert ändert, ändert sich der Status automatisch auf BIT_USER_MODIFIED.
 	
 - Synchronisation zwischen Observation Tabelle und Diagramm
 	* Die Synchronisation findet statt anhand einer Helper runnable namens
@@ -54,6 +84,9 @@ Version ...
 	* In abgeleitete Klassen von AbstractCalcWizardPage kann dieses Vorgehen über ein Aufrauf von
 	'registerObservationTableModelChangeListener()'.
 	* Im ObservationTableEditor wird dies auch eingestellt.
+	
+- Dokument Export: Dokumentbausteine für jeder Editorart können exportiert werden.
+	TODO: Integration im PrognoseWizard?
 	
 - GIS Darstellung:
 	Koordinatensystem aller Karten ist jetzt Gauss-Krüger 5
@@ -83,7 +116,10 @@ Version ...
   Pegel berechnen, verbunden mit einer optimierung, die bisher auch noch fehlt.
   Dann wuerden für alle WizzardSeiten zu Beginn (optimierte)Ergebnisse vorliegen.
  
- - Spree-Modell:
- 	- die Zeitreihen einer Art werden jetzt im Wizard jeweils gemeinsam in einer Tabelle dargestellt
+- Spree-Modell:
+ 	* die Zeitreihen einer Art werden jetzt im Wizard jeweils gemeinsam in 
+ 	einer Tabelle dargestellt
  	
- 
+- Diverse korrigierte Bugs:
+	* SetContentThread: bessere handhabung der Thread. Die Klasse heisst jetzt
+	SetContentHelper.
