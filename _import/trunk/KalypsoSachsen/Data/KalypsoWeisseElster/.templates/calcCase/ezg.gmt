@@ -8,9 +8,11 @@
         <layer name="KMGewaesser" visible="true" featurePath="ChannelCollectionMember/channelMember[KMChannel]" id="ID_2" linktype="gml" ns3:actuate="onRequest" ns3:href="calcCase.gml" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
             <ns4:style linktype="sld" style="KMChannel" ns3:actuate="onRequest" ns3:href="project:/.styles/KMChannel.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
         </layer>
-        <layer name="Teilgebiete" visible="true" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_3" linktype="gml" ns5:actuate="onRequest" ns5:href="calcCase.gml" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
-            <ns6:style linktype="sld" style="Teilgebiete" ns5:actuate="onRequest" ns5:href="project:/.styles/teilgebiete.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
-        </layer>
+				<layer name="Teilgebiete" visible="true" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_3" linktype="gml" 
+					ns5:actuate="onRequest" ns5:href="calcCase.gml" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
+					<ns6:style linktype="sld" style="Teilgebiete" ns5:actuate="onRequest" ns5:href="project:/.styles/teilgebieteNiederschlag.sld" 
+						ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
+				</layer>
     </layers>
 </gismapview>
 
