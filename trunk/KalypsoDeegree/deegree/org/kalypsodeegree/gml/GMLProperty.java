@@ -44,6 +44,9 @@ E-Mail: jens.fitzke@uni-bonn.de
 
 package org.deegree.gml;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 
 /**
  *
@@ -97,12 +100,16 @@ public interface GMLProperty {
     public void setPropertyValue(String value);
 
     public Object getAttributeValue( String nameSpace, String attributeValue);
-    
+
+    public Element getElement();
 }
 /*
  * Changes to this class. What the people haven been up to:
  *
  * $Log$
+ * Revision 1.3  2004/08/18 20:27:32  belger
+ * *** empty log message ***
+ *
  * Revision 1.2  2004/08/11 11:20:16  doemming
  * *** empty log message ***
  *

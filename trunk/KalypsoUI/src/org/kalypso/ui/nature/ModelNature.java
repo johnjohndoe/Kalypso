@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -55,6 +54,8 @@ import org.kalypso.model.xml.TransformationType;
 import org.kalypso.model.xml.CalcwizardType.PageType.ArgType;
 import org.kalypso.plugin.ImageProvider;
 import org.kalypso.plugin.KalypsoGisPlugin;
+import org.kalypso.ui.calcwizard.CalcWizard;
+import org.kalypso.ui.calcwizard.ICalcWizardPage;
 import org.xml.sax.InputSource;
 
 import com.sun.xml.bind.StringInputStream;
@@ -428,14 +429,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       final IProject project = (IProject)ResourcesPlugin.getWorkspace().getRoot().findMember( name );
 
-      final Wizard wizard = new Wizard()
-      {
-        public boolean performFinish()
-        {
-          // TODO: start calculation and show results
-          return false;
-        }
-      };
+      final Wizard wizard = new CalcWizard();
+      wizard.setNeedsProgressMonitor( true );
       wizard.setWindowTitle( "Prognoserechnung für " + project.getName() );
 
       // wizard seiten hinzufügen!
@@ -463,7 +458,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         final String imageLocation = page.getImageLocation();
         final ImageDescriptor imageDesc = imageLocation == null ? null : ImageProvider.id( imageLocation );
 
-        final IWizardPage wizardPage = (IWizardPage)ClassUtilities.newInstance( className, IWizardPage.class, ModelNature.class.getClassLoader(), new Class[] { IProject.class, String.class, ImageDescriptor.class, Properties.class }, new Object[] { project, pageTitle, imageDesc, props } );
+        final ICalcWizardPage wizardPage = (ICalcWizardPage)ClassUtilities.newInstance( className, ICalcWizardPage.class, ModelNature.class.getClassLoader(), null, null );
+        wizardPage.init( project, pageTitle, imageDesc, props );
         wizard.addPage( wizardPage );
       }
 

@@ -409,12 +409,23 @@ public class GMLProperty_Impl implements GMLProperty {
     {
      return element.getAttributeNS(nameSpace, attributeValue);
     }
+
+    /**
+     * @see org.deegree.gml.GMLProperty#getValueNode()
+     */
+    public Element getElement()
+    {
+      return element;
+    }
 }
 
 /*
  * Changes to this class. What the people haven been up to:
  *
  * $Log$
+ * Revision 1.3  2004/08/18 20:27:32  belger
+ * *** empty log message ***
+ *
  * Revision 1.2  2004/08/11 11:20:16  doemming
  * *** empty log message ***
  *

@@ -18,6 +18,7 @@ public class TypeRegistry_impl implements ITypeRegistry
 
   /**
    * Falls TypeName oder ClassName bereits belegt sind
+   * 
    * @throws TypeRegistryException
    * 
    * @see org.deegree_impl.extension.ITypeRegistry#registerTypeHandler(org.deegree_impl.extension.ITypeHandler)
@@ -32,7 +33,7 @@ public class TypeRegistry_impl implements ITypeRegistry
 
     if( m_classMap.containsKey( className ) )
       throw new TypeRegistryException( "Classname wurde bereits registriert: " + className );
-    
+
     m_typeMap.put( typeName, typeHandler );
     m_classMap.put( className, typeHandler );
   }
@@ -41,23 +42,23 @@ public class TypeRegistry_impl implements ITypeRegistry
    * @throws TypeRegistryException
    * @see org.deegree_impl.extension.ITypeRegistry#getTypeHandlerForTypeName(java.lang.String)
    */
-  public ITypeHandler getTypeHandlerForTypeName( final String typeName ) throws TypeRegistryException
+  public ITypeHandler getTypeHandlerForTypeName( final String typeName )
   {
-    if( !m_typeMap.containsKey( typeName ) )
-      throw new TypeRegistryException( "Typname nicht bekannt: " + typeName );
-    
+    if( !hasTypeName( typeName ) )
+      return null;
     return (ITypeHandler)m_typeMap.get( typeName );
   }
 
   /**
-   * @throws TypeRegistryException falls className nicht bekannt ist
+   * @throws TypeRegistryException
+   *           falls className nicht bekannt ist
    * @see org.deegree_impl.extension.ITypeRegistry#getTypeHandlerForClassName(java.lang.String)
    */
-  public ITypeHandler getTypeHandlerForClassName( final String className ) throws TypeRegistryException
+  public ITypeHandler getTypeHandlerForClassName( final String className )
   {
-    if( !m_classMap.containsKey( className ) )
-      throw new TypeRegistryException( "Classname nicht bekannt: " + className );
-    
+    if( !hasClassName( className ) )
+      return null;
+
     return (ITypeHandler)m_classMap.get( className );
   }
 
@@ -67,6 +68,22 @@ public class TypeRegistry_impl implements ITypeRegistry
   public void unregisterTypeHandler( ITypeHandler typeHandler )
   {
     m_typeMap.remove( typeHandler.getTypeName() );
-    m_classMap.remove(typeHandler.getClassName() );
+    m_classMap.remove( typeHandler.getClassName() );
+  }
+
+  /**
+   * @see org.deegree_impl.extension.ITypeRegistry#hasTypeName(java.lang.String)
+   */
+  public boolean hasTypeName( final String typeName )
+  {
+    return m_typeMap.containsKey( typeName );
+  }
+
+  /**
+   * @see org.deegree_impl.extension.ITypeRegistry#hasClassName(java.lang.String)
+   */
+  public boolean hasClassName( final String className )
+  {
+    return m_classMap.containsKey( className );
   }
 }
