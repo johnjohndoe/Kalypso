@@ -46,12 +46,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.deegree.gml.GMLFeature;
-import org.deegree.gml.GMLFeatureCollection;
 import org.deegree.gml.GMLGeometry;
 import org.deegree.gml.GMLProperty;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureAssociationTypeProperty;
-import org.deegree.model.feature.FeatureCollection;
 import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
@@ -60,8 +58,6 @@ import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.extension.ITypeHandler;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.gml.schema.Mapper;
-import org.deegree_impl.model.feature.xlink.XLinkArc;
-import org.deegree_impl.model.feature.xlink.XLinkResource;
 import org.deegree_impl.model.geometry.GMLAdapter;
 import org.deegree_impl.model.sort.SplitSort;
 import org.deegree_impl.tools.Debug;
@@ -99,24 +95,20 @@ public class FeatureFactory
   public static FeatureTypeProperty createFeatureTypeProperty( String name, String type,
       boolean nullable )
   {
-    return createFeatureTypeProperty( name, DEFAULTNAMESPACE, type, nullable,null );
+    return createFeatureTypeProperty( name, DEFAULTNAMESPACE, type, nullable, null );
     // return new FeatureTypeProperty_Impl( name, type, nullable );
   }
 
   public static FeatureTypeProperty createFeatureTypeProperty( String name, String namespace,
       String type, boolean nullable, Map annotationMap )
   {
-    return new FeatureTypeProperty_Impl( name, namespace, type, nullable,annotationMap );
+    return new FeatureTypeProperty_Impl( name, namespace, type, nullable, annotationMap );
   }
 
   /**
    * creates an instance of a FeatureType from an array of
    * FeatureTypeProperties, its parents and childs and its name.
-   * @deprecated
-   * @param parents
-   *          parents of the <CODE>FeatureType</CODE>
-   * @param children
-   *          known children of the <CODE>FeatureType</CODE>
+   * 
    * @param name
    *          name of the <CODE>FeatureType</CODE>
    * @param properties
@@ -125,21 +117,21 @@ public class FeatureFactory
    * 
    *  
    */
-  public static FeatureType createFeatureType( FeatureType[] parents, FeatureType[] children,
-      String name, FeatureTypeProperty[] properties )
+  public static FeatureType createFeatureType( String name, FeatureTypeProperty[] properties )
   {
     final int[] defaultOccurs = new int[properties.length];
     for( int i = 0; i < defaultOccurs.length; i++ )
       defaultOccurs[i] = 1;
     return createFeatureType( name, DEFAULTNAMESPACE, properties, defaultOccurs, defaultOccurs,
-        null,null );
+        null, null );
   }
 
   public static FeatureType createFeatureType( String name, String namespace,
-      FeatureTypeProperty[] properties, int[] minOccurs, int[] maxOccurs, String substitutionGroup, Map annotationMap )
+      FeatureTypeProperty[] properties, int[] minOccurs, int[] maxOccurs, String substitutionGroup,
+      Map annotationMap )
   {
     return new FeatureType_Impl( name, namespace, properties, minOccurs, maxOccurs,
-        substitutionGroup,annotationMap );
+        substitutionGroup, annotationMap );
   }
 
   /**
@@ -256,7 +248,7 @@ public class FeatureFactory
 
       fp[j] = createFeatureProperty( props[j].getName(), o );
     }
-    FeatureType featureType = createFeatureType( null, null, gmlFeature.getName(), ftp );
+    FeatureType featureType = createFeatureType( gmlFeature.getName(), ftp );
 
     String id = gmlFeature.getId();
 
@@ -291,7 +283,7 @@ public class FeatureFactory
     // every gmlProp must fit to a featurePropertyType
     for( int p = 0; p < gmlProps.length; p++ )
     {
-      // TODO: compare properties by namespace 
+      // TODO: compare properties by namespace
       GMLProperty gmlProp = gmlProps[p];
       final String propName = gmlProp.getName();
       int propertyPosition = featureType.getPropertyPosition( propName );
@@ -317,7 +309,7 @@ public class FeatureFactory
 
   private static Object wrap( FeatureTypeProperty ftp, GMLProperty gmlProperty ) throws Exception
   {
-    if( ftp instanceof XLinkFeatureTypeProperty || ftp instanceof FeatureAssociationTypeProperty )
+    if( ftp instanceof FeatureAssociationTypeProperty )
       return wrapXLink( ftp, gmlProperty );
     return wrapNOXLink( ftp, gmlProperty );
   }
@@ -326,33 +318,7 @@ public class FeatureFactory
   {
     final Object value = gmlProperty.getPropertyValue();
     Object result = null;
-    //      Object value = null;
-    // TODO support xlink:actuate=onLoad
-    if( ftp instanceof XLinkFeatureTypeProperty )
-    {
-      XLinkFeatureTypeProperty xlinkFTP = (XLinkFeatureTypeProperty)ftp;
-      switch( xlinkFTP.getXLinkType() )
-      {
-      case XLinkFeatureTypeProperty.XLINK_SIMPLE:
-      case XLinkFeatureTypeProperty.XLINK_LOCATOR:
-        //
-        result = gmlProperty.getAttributeValue( "http://www.w3.org/1999/xlink", "href" );
-        break;
-      case XLinkFeatureTypeProperty.XLINK_EXTENDED:
-        //TODO
-        break;
-      case XLinkFeatureTypeProperty.XLINK_RESOURCE:
-        result = new XLinkResource();
-        //TODO
-        break;
-      case XLinkFeatureTypeProperty.XLINK_ARC:
-        result = new XLinkArc( xlinkFTP.getLabelFrom(), xlinkFTP.getLabelTo() );
-        break;
-      default:
-        break;
-      }
-    }
-    else if( ftp instanceof FeatureAssociationTypeProperty )
+    if( ftp instanceof FeatureAssociationTypeProperty )
     {
       if( value != null && value instanceof GMLFeature )
       {
@@ -469,106 +435,14 @@ public class FeatureFactory
     return type;
   }
 
-  /**
-   * creates an instance of a FeatureCollection with an initial capacity and a
-   * defined featuretype.
-   * 
-   * @param id
-   *          unique id of the <CODE>FeatureCollection</CODE>
-   * @param featureType
-   *          <CODE>FeatureType</CODE> of the <CODE>Feature</CODE>
-   * @param properties
-   *          properties (content) of the <CODE>Feature</CODE>
-   * @param initialCapacity
-   *          initial capacity of the <CODE>FeatureCollection</CODE>
-   * @return instance of an empty <CODE>FeatureCollection</CODE>
-   */
-  public static FeatureCollection createFeatureCollection( String id, FeatureType featureType,
-      FeatureProperty[] properties, int initialCapacity )
-  {
-    return new FeatureCollection_Impl( id, featureType, properties, initialCapacity );
-  }
-
-  /**
-   * creates an instance of a FeatureCollection with an initial capacity. The
-   * returned FeatureCollection doesn't have a FeatureType nor properties. It is
-   * just a collection of Features.
-   * 
-   * @param id
-   *          unique id of the <CODE>FeatureCollection</CODE>
-   * @param initialCapacity
-   *          initial capacity of the <CODE>FeatureCollection</CODE>
-   * @return instance of an empty <CODE>FeatureCollection</CODE>
-   */
-  public static FeatureCollection createFeatureCollection( String id, int initialCapacity )
-  {
-    return new FeatureCollection_Impl( id, initialCapacity );
-  }
-
-  /**
-   * creates an instance of a FeatureCollection from an array of Features. The
-   * returned FeatureCollection doesn't have a FeatureType nor properties. It is
-   * just a collection of Features.
-   * 
-   * @param id
-   *          unique id of the <CODE>FeatureCollection</CODE> instance
-   * @param features
-   *          <CODE>Feature</CODE> s to fill in into the <CODE>
-   *          FeatureCollection</CODE>
-   * @return instance of a <CODE>FeatureCollection</CODE> containing the
-   *         submitted features
-   */
-  public static FeatureCollection createFeatureCollection( String id, Feature[] features )
-  {
-    return new FeatureCollection_Impl( id, features );
-  }
-
-  /**
-   * creates an instance of a FeatureCollection from a GMLFeatureCollection
-   * 
-   * @param gmlFc
-   *          <CODE>GMLFeatureCollection</CODE> to create the <CODE>
-   *          FeatureCollection</CODE> instance from
-   * @throws Exception -
-   * @return instance of a <CODE>FeatureCollection</CODE>
-   */
-  public static FeatureCollection createFeatureCollection( GMLFeatureCollection gmlFc )
-      throws Exception
-  {
-    Debug.debugMethodBegin();
-
-    String id = gmlFc.getId();
-
-    GMLFeature[] gmlFeat = gmlFc.getFeatures();
-    FeatureCollection fc = null;
-    if( gmlFeat != null )
-    {
-      fc = createFeatureCollection( id, gmlFeat.length );
-
-      for( int i = 0; i < gmlFeat.length; i++ )
-      {
-        Feature feature = createFeature( gmlFeat[i] );
-        fc.appendFeature( feature );
-      }
-    }
-    else
-    {
-      fc = createFeatureCollection( id, 100 );
-    }
-
-    Debug.debugMethodEnd();
-    return fc;
-  }
-  
   public static FeatureList createFeatureList()
   {
     return new SplitSort();
   }
-  
+
   public static FeatureList createFeatureList( final GM_Envelope env )
   {
     return new SplitSort( env );
   }
-
 
 }

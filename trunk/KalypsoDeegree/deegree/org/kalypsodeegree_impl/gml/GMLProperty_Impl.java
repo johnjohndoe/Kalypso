@@ -49,7 +49,6 @@ import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.DOMPrinter;
 import org.deegree.xml.XMLTools;
-import org.deegree_impl.model.feature.XLinkFeatureTypeProperty;
 import org.deegree_impl.tools.Debug;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -429,8 +428,7 @@ public class GMLProperty_Impl implements GMLProperty
   {
     Debug.debugMethodBegin( this, "setPropertyValue" );
 
-    if( myFeatureTypeProperty instanceof XLinkFeatureTypeProperty
-        || myFeatureTypeProperty instanceof FeatureAssociationTypeProperty )
+    if( myFeatureTypeProperty instanceof FeatureAssociationTypeProperty )
     {
       setAttributeValue( "#" + value );
       return;
@@ -517,10 +515,11 @@ public class GMLProperty_Impl implements GMLProperty
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.8  2004/11/23 10:37:57  doemming
+ * Revision 1.9  2005/01/12 10:40:53  doemming
  * *** empty log message ***
- * Revision 1.7 2004/11/22 01:29:50 doemming ***
- * empty log message ***
+ * Revision 1.8 2004/11/23 10:37:57 doemming ***
+ * empty log message *** Revision 1.7 2004/11/22 01:29:50 doemming *** empty log
+ * message ***
  * 
  * Revision 1.6 2004/11/16 10:44:16 doemming *** empty log message ***
  * 

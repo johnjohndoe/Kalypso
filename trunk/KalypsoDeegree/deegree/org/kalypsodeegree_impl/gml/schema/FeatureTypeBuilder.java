@@ -12,7 +12,6 @@ import org.deegree_impl.extension.ITypeHandler;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.model.feature.FeatureAssociationTypeProperty_Impl;
 import org.deegree_impl.model.feature.FeatureFactory;
-import org.deegree_impl.model.feature.XLinkFeatureTypeProperty;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -38,8 +37,6 @@ public class FeatureTypeBuilder
   private final String m_namespace;
 
   private String m_typeName = null;
-
-  private XLinkFeatureTypeProperty m_XLinkProp = null;
 
   private final HashMap m_minOccurs;
 
@@ -287,12 +284,8 @@ public class FeatureTypeBuilder
       return new EnumerationFeatureTypeProperty( m_name, m_namespace, m_typeName, true,
           m_enumeration.toArray(), m_annotationMap );
 
-    if( isXLink() )
-    {
-      return m_XLinkProp;
-    }
-//    if( m_typeName == null )
-//      System.out.println( "debug" );
+    //    if( m_typeName == null )
+    //      System.out.println( "debug" );
 
     if( m_isCutoumType )
       return new CustoumFeatureTypeProperty( m_name, m_namespace, m_typeName, true, m_annotationMap );
@@ -359,42 +352,7 @@ public class FeatureTypeBuilder
     //    return m_featureProtoTypes.size() > 0;
   }
 
-  private boolean isXLink()
-  {
-    return m_XLinkProp != null;
-  }
-
-  public void setXLinkType( int xlink_type )
-  {
-    switch( xlink_type )
-    {
-    case GMLSchemaFactory.XLINK_TYPE_SIMPLE:
-    {
-      //        <attributeGroup name="simpleLink">
-      //        <attribute name="type" type="string" fixed="simple"
-      // form="qualified"/>
-      m_XLinkProp = new XLinkFeatureTypeProperty( m_name, m_namespace,
-          XLinkFeatureTypeProperty.XLINK_SIMPLE, true, m_annotationMap );
-
-      //        <attribute ref="xlink:href" use="optional"/>
-      //        <attribute ref="xlink:role" use="optional"/>
-      //        <attribute ref="xlink:arcrole" use="optional"/>
-      //        <attribute ref="xlink:title" use="optional"/>
-      //        <attribute ref="xlink:show" use="optional"/>
-      //        <attribute ref="xlink:actuate" use="optional"/>
-      break;
-    }
-    default:
-      break;
-    }
-  }
-
-  public void setFeatureAssociation()
-  {
-  }
-
   /**
-   * @return
    */
   public boolean isCustoumType()
   {

@@ -46,7 +46,6 @@ import org.deegree.filterencoding.Expression;
 import org.deegree.filterencoding.FilterConstructionException;
 import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureCollection;
 import org.deegree.xml.XMLTools;
 import org.w3c.dom.Element;
 
@@ -179,69 +178,7 @@ public class PropertyName extends Expression_Impl
     {
       return feature.getProperty( value );
     }
-
-    Feature found = findFeature( feature, value );
-    System.out.println( "Feature" + found ); //MMDEBUG
-
-    if( found != null )
-    {
-      return found.getProperty( value );
-    }
-    else
-    {
-      throw new FilterEvaluationException( "FeatureType '" + feature.getFeatureType().getName()
-          + "' has no property with name '" + value + "'!" );
-    }
-  }
-
-  /**
-   * Method getNames
-   * 
-   * @param rootfeat
-   *          feature where starting the search
-   * @param name
-   *          name of the feature to search for
-   * 
-   * @return ArrayList <String>
-   */
-  private Feature findFeature( Feature rootfeat, String name )
-  {
-    Object[] fp = rootfeat.getProperties();
-
-    // find out subcollections
-    for( int i = 0; i < fp.length; i++ )
-    {
-      Object o = fp[i];
-
-      if( o instanceof FeatureCollection )
-      {
-        FeatureCollection fc = (FeatureCollection)o;
-        Feature[] feats = fc.getAllFeatures();
-
-        for( int j = 0; j < feats.length; j++ ) // foreach feature in the
-        // collection
-        {
-          if( feats[j].getFeatureType().getProperty( name ) != null ) // if
-          // it's
-          // ok,
-          // return
-          // it
-
-          {
-            return feats[j];
-          }
-
-          // else perform a subsearch
-          Feature find = findFeature( feats[j], name );
-
-          if( find != null )
-          {
-            return find;
-          }
-        }
-      }
-    }
-
-    return null;
+    throw new FilterEvaluationException( "FeatureType '" + feature.getFeatureType().getName()
+        + "' has no property with name '" + value + "'!" );
   }
 }

@@ -49,7 +49,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureCollection;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
@@ -297,20 +296,25 @@ public class ShapeFile
     return GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax );
   }
 
-  /** Same as {@link #getFeatureByRecNo(int, boolean) getFeatureByRecNo(int, true)} */
+  /**
+   * Same as
+   * {@link #getFeatureByRecNo(int, boolean) getFeatureByRecNo(int, true)}
+   */
   public Feature getFeatureByRecNo( int RecNo ) throws IOException, GM_Exception,
-  HasNoDBaseFileException, DBaseException
+      HasNoDBaseFileException, DBaseException
   {
     return getFeatureByRecNo( RecNo, false );
   }
-  
+
   /**
    * returns the RecNo'th entry of the shape file as Feature. This contains the
    * geometry as well as the attributes stored into the dbase file.
-   * @param allowNull if true, everything wich cannot parsed gets 'null' instaed of ""
+   * 
+   * @param allowNull
+   *          if true, everything wich cannot parsed gets 'null' instaed of ""
    */
-  public Feature getFeatureByRecNo( int RecNo, boolean allowNull ) throws IOException, GM_Exception,
-      HasNoDBaseFileException, DBaseException
+  public Feature getFeatureByRecNo( int RecNo, boolean allowNull ) throws IOException,
+      GM_Exception, HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
     {
@@ -572,8 +576,8 @@ public class ShapeFile
   /**
    * 
    * 
-   * @return @throws
-   *         HasNoDBaseFileException
+   * @return
+   * @throws HasNoDBaseFileException
    * @throws DBaseException
    */
   public int[] getDataLengths() throws HasNoDBaseFileException, DBaseException
@@ -782,7 +786,7 @@ public class ShapeFile
     Debug.debugMethodBegin( this, "writeShape" );
 
     // TODO: check length 0
-    
+
     int nbyte = 0;
     int geotype = -1;
     byte shptype = -1;
@@ -1014,15 +1018,6 @@ public class ShapeFile
     shp.writeHeader( offset, shptype, shpmbr );
 
     Debug.debugMethodEnd();
-    
-  }
-  
-  /**
-   * writes a OGC FeatureCollection to a ESRI shape file. <BR>
-   * all features in the collection must have the same properties. <BR>
-   */
-  public void writeShape( FeatureCollection fc ) throws Exception
-  {
-    writeShape( fc.getAllFeatures() );
+
   }
 }

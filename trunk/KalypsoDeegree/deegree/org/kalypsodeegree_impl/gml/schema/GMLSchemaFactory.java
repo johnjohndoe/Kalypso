@@ -170,13 +170,6 @@ public class GMLSchemaFactory
     {
     case COMPLEX_TYPE:
       //<complexType name="FeatureAssociationType">
-      Node nameNode = XMLHelper.getAttributeNode( node, "name" );
-      SchemaAttribute nameAttribute = new SchemaAttribute( schema, nameNode );
-      if(
-      //          XMLHelper.GMLSCHEMA_NS.equals(nameAttribute.getValueNS())
-      //          &&
-      "FeatureAssociationType".equals( nameAttribute.getValue() ) )
-        collector.setFeatureAssociation();
       break;
 
     case COMPLEX_CONTENT:
@@ -269,24 +262,10 @@ public class GMLSchemaFactory
 
     case NAMED_ELEMENT:
       FeatureTypeBuilder childCollector = new FeatureTypeBuilder( schema, node );
-      map(schema,node.getChildNodes(),childCollector);
+      map( schema, node.getChildNodes(), childCollector );
       collector.setOccurency( childCollector.getName(), childCollector.getNamespace(), node );
       collector.add( childCollector );
       return;
-    case XLINK_TYPE_SIMPLE:
-    {
-      //          <attributeGroup name="simpleLink">
-      //          <attribute name="type" type="string" fixed="simple" form="qualified"/>
-      //          <attribute ref="xlink:href" use="optional"/>
-      //          <attribute ref="xlink:role" use="optional"/>
-      //          <attribute ref="xlink:arcrole" use="optional"/>
-      //          <attribute ref="xlink:title" use="optional"/>
-      //          <attribute ref="xlink:show" use="optional"/>
-      //          <attribute ref="xlink:actuate" use="optional"/>
-      //        </attributeGroup>
-      collector.setXLinkType( XLINK_TYPE_SIMPLE );
-      break;
-    }
 
     //    case EXTENSION:
     //
@@ -345,7 +324,7 @@ public class GMLSchemaFactory
         System.out.println( "TODO annotation" );
       // TODO support annotations
       break;
-    case DOCUMENTATION_TYPE:     
+    case DOCUMENTATION_TYPE:
       collector.addAnnotation( createAnnotation( (Element)node ) );
       return;
     // TODO support doucumentations
@@ -382,9 +361,12 @@ public class GMLSchemaFactory
   private static Annotation createAnnotation( Element element )
   {
     String lang = element.getAttributeNS( "http://www.w3.org/XML/1998/namespace", "lang" );
-    final String tooltip = XMLHelper.getStringFromChildElement( element, "http://www.w3.org/2001/XMLSchema", "tooltip" );
-    final String label = XMLHelper.getStringFromChildElement( element, "http://www.w3.org/2001/XMLSchema", "label" );
-    final String description = XMLHelper.getStringFromChildElement( element, "http://www.w3.org/2001/XMLSchema", "description" );
+    final String tooltip = XMLHelper.getStringFromChildElement( element,
+        "http://www.w3.org/2001/XMLSchema", "tooltip" );
+    final String label = XMLHelper.getStringFromChildElement( element,
+        "http://www.w3.org/2001/XMLSchema", "label" );
+    final String description = XMLHelper.getStringFromChildElement( element,
+        "http://www.w3.org/2001/XMLSchema", "description" );
 
     return new Annotation( lang, label, tooltip, description );
   }
