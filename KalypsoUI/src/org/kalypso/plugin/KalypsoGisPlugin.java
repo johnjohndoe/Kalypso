@@ -11,6 +11,8 @@ import org.apache.commons.pool.impl.StackKeyedObjectPool;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.eclipse.jface.viewers.DefaultCellEditorFactory;
+import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
 import org.kalypso.util.loader.DefaultLoaderFactory;
 import org.kalypso.util.loader.ILoaderFactory;
 import org.kalypso.util.pool.TypedKeyedPoolableObjectFactory;
@@ -50,7 +52,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   private final Properties m_zmlRepositoriesProperties = new Properties();
   private static final String ZML_REPOSITORIES_PROPERTIES = "resources/zml_repositories.properties";
 
-  private RepositorySpecification[] m_repositoriesSpecification = null; 
+  private RepositorySpecification[] m_repositoriesSpecification = null;
+
+  private ICellEditorFactory m_featureTypeCellEditorFactory; 
 
   
   /**
@@ -143,7 +147,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
         e.printStackTrace();
       }
       
-      loaderFactory = new DefaultLoaderFactory( props );
+      loaderFactory = new DefaultLoaderFactory( props, this.getClass().getClassLoader() );
       
       myLoaderFactories.put( valueClass, loaderFactory);
     }
@@ -156,7 +160,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     KeyedObjectPool pool = (KeyedObjectPool)myPools.get( valueClass );
     if( pool == null )
     {
-      pool = new StackKeyedObjectPool( new TypedKeyedPoolableObjectFactory( getLoaderFactory( valueClass ), KalypsoGisPlugin.class.getClassLoader() ) );
+      pool = new StackKeyedObjectPool( new TypedKeyedPoolableObjectFactory( getLoaderFactory( valueClass ) ) );
       myPools.put(valueClass, pool);
     }
     
@@ -233,7 +237,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     return m_tsRepositoryContainer;
   }
   
-  public Properties getFeatureTypeCellEditorProperties()
+  private Properties getFeatureTypeCellEditorProperties()
   {
     if( m_ftpProperties == null )
     {
@@ -250,5 +254,13 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     }
     
     return m_ftpProperties;
+  }
+
+  public ICellEditorFactory getFeatureTypeCellEditorFactory()
+  {
+    if( m_featureTypeCellEditorFactory == null )
+      m_featureTypeCellEditorFactory = new DefaultCellEditorFactory( getFeatureTypeCellEditorProperties(), this.getClass().getClassLoader() );
+    
+    return m_featureTypeCellEditorFactory;
   }
 }

@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
+import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
 import org.kalypso.editor.AbstractEditorPart;
 import org.kalypso.editor.tableeditor.layerTable.LayerTable;
 import org.kalypso.editor.tableeditor.layerTable.LayerTableModel;
@@ -147,7 +148,8 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   {
     super.createPartControl( parent );
     
-    m_layerTable = new LayerTable( parent, this );
+    final ICellEditorFactory factory = KalypsoGisPlugin.getDefault().getFeatureTypeCellEditorFactory();
+    m_layerTable = new LayerTable( parent, this, factory );
 
     load();
   }
