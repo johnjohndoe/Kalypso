@@ -119,7 +119,8 @@ public class UpdateModellKollau
     final Feature[] catchmentFEs = workspace.getFeatures( catchmentFT );
     //    updateCatchments( catchmentFEs );
     //    updateGebNiederschlagZR( catchmentFEs );
-    updateNiederschlagZR( catchmentFEs );
+    updateLZNiederschlagZR( catchmentFEs );
+//    updateNiederschlagZR( catchmentFEs );
     // Nodes
     final FeatureType nodeFT = workspace.getFeatureType( "Node" );
     final Feature[] nodeFEs = workspace.getFeatures( nodeFT );
@@ -163,7 +164,8 @@ public class UpdateModellKollau
         setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
         TimeseriesLink linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator
             .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "wasserwerk.zml" );
-        setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepositoryVorhersage );
+        setTSLink( feature, "niederschlagZRRepositoryVorhersage",
+            linkNiederschlagZRRepositoryVorhersage );
         TimeseriesLink linkNiederschlagZRRepository = NAZMLGenerator
             .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "wasserwerk.zml" );
         setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
@@ -175,7 +177,8 @@ public class UpdateModellKollau
         setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
         TimeseriesLink linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator
             .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Desy.zml" );
-        setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepositoryVorhersage );
+        setTSLink( feature, "niederschlagZRRepositoryVorhersage",
+            linkNiederschlagZRRepositoryVorhersage );
         TimeseriesLink linkNiederschlagZRRepository = NAZMLGenerator
             .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Desy.zml" );
         setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
@@ -188,7 +191,8 @@ public class UpdateModellKollau
         setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
         TimeseriesLink linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator
             .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "DB.zml" );
-        setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepositoryVorhersage );
+        setTSLink( feature, "niederschlagZRRepositoryVorhersage",
+            linkNiederschlagZRRepositoryVorhersage );
         TimeseriesLink linkNiederschlagZRRepository = NAZMLGenerator
             .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "DB.zml" );
         setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
@@ -203,7 +207,8 @@ public class UpdateModellKollau
         setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
         TimeseriesLink linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator
             .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Bauhof.zml" );
-        setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepositoryVorhersage );
+        setTSLink( feature, "niederschlagZRRepositoryVorhersage",
+            linkNiederschlagZRRepositoryVorhersage );
         TimeseriesLink linkNiederschlagZRRepository = NAZMLGenerator
             .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Bauhof.zml" );
         setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
@@ -229,6 +234,27 @@ public class UpdateModellKollau
               + ".zml" );
       setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
       setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepository );
+    }
+  }
+
+  private static void updateLZNiederschlagZR( Feature[] features ) throws Exception
+  {
+
+    for( int i = 0; i < features.length; i++ )
+    {
+      final Feature feature = features[i];
+
+      // Niederschlag Lokale Langzeitniederschlagszeitreihen setzen
+      TimeseriesLink linkNiederschlagZR = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_LOKAL
+          + "Fuhlsbuettel.zml" );
+      setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
+      TimeseriesLink linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator
+          .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Fuhlsbuettel.zml" );
+      setTSLink( feature, "niederschlagZRRepositoryVorhersage",
+          linkNiederschlagZRRepositoryVorhersage );
+      TimeseriesLink linkNiederschlagZRRepository = NAZMLGenerator
+          .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Fuhlsbuettel.zml" );
+      setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
     }
   }
 
