@@ -25,12 +25,15 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
       final LayerTable layerTable = gisTableEditor.getLayerTable();
       
       final IMenuManager menu = layerTable.getMenu();
-      final IContributionItem[] items = menu.getItems();
-      for( int i = 0; i < items.length; i++ )
+      if( menu != null )
       {
-        final IContributionItem item = items[i];
-        if( item instanceof ActionContributionItem )
-          spaltenManager.appendToGroup( "spalten", ((ActionContributionItem)item).getAction() );
+        final IContributionItem[] items = menu.getItems();
+        for( int i = 0; i < items.length; i++ )
+        {
+          final IContributionItem item = items[i];
+          if( item instanceof ActionContributionItem )
+            spaltenManager.appendToGroup( "spalten", ((ActionContributionItem)item).getAction() );
+        }
       }
     }
   }

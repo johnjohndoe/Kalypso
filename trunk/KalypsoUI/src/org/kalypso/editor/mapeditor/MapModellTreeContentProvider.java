@@ -83,7 +83,7 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
   /**
    * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
    */
-  public void onModellChange( ModellEvent modellEvent )
+  public void onModellChange( final ModellEvent modellEvent )
   {
     if( m_viewer != null )
     {
@@ -91,7 +91,8 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
 
         public void run()
         {
-          m_viewer.refresh();
+          if( !m_viewer.getControl().isDisposed() )
+            m_viewer.refresh();
         }} );
     }
   }

@@ -3,13 +3,14 @@ package org.kalypso.editor.tableeditor.layerTable;
 import java.util.Properties;
 
 import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree_impl.model.feature.FeatureFactory;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
+import org.kalypso.ogc.command.ModifyFeatureCommand;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.plugin.KalypsoGisPlugin;
+import org.kalypso.util.command.ICommandManager;
 
 /**
  * Property ist die Nummer der Spalte = Index in den FeatureTypeProperties
@@ -21,9 +22,15 @@ public class LayerTableCellModifier implements ICellModifier
   private final FeatureType m_type;
   
   private final Properties m_props = KalypsoGisPlugin.getDefault().getFeatureTypeCellEditorProperties();
+
+  private final LayerTableModel m_modell;
+
+  private final ICommandManager m_commandManager;
   
-  public LayerTableCellModifier( final FeatureType type )
+  public LayerTableCellModifier( final ICommandManager commandManager, final LayerTableModel modell, final FeatureType type )
   {
+    m_modell = modell;
+    m_commandManager = commandManager;
     m_type = type;
   }
   
@@ -57,10 +64,10 @@ public class LayerTableCellModifier implements ICellModifier
    */
   public void modify( final Object element, final String property, final Object value )
   {
-    final FeatureProperty fp = FeatureFactory.createFeatureProperty( getFeatureTypeProperty(property).getName(), value );
-    
-    // TODO: post Command and send event to Layer -> TODO: react to event in LayerTable or wherever
-    ((Feature)((TableItem)element).getData()).setProperty( fp );
+    final String name = getFeatureTypeProperty( property ).getName();
+    final Feature feature = (Feature)((TableItem)element).getData();
+    final KalypsoFeatureLayer layer = m_modell.getLayer();
+    m_commandManager.postCommand( new ModifyFeatureCommand( layer, feature, name, value ), null );
   }
 
 }

@@ -94,6 +94,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
     m_addAction = new AddThemeAction( "Thema hinzufügen", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD,
         "Thema hinzufügen", m_viewer, this );
+    
+    onModellChange(null);
   }
 
   /**
@@ -251,7 +253,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
         {
           public void run()
           {
-            item.setChecked( mm.isThemeEnabled( (Theme)item.getData() ) );
+            if( !item.isDisposed() )
+              item.setChecked( mm.isThemeEnabled( (Theme)item.getData() ) );
           }
         } );
       }
