@@ -26,6 +26,8 @@ public class ObservationServiceRepository extends AbstractRepository
 
   /**
    * Constructor
+   * @param factory
+   * @param readOnly
    * 
    * @throws ServiceException when the underlying service is not available
    */
@@ -112,9 +114,6 @@ public class ObservationServiceRepository extends AbstractRepository
   {
     final IRepositoryItem item = findItemRecursive( id, this );
     
-    if( item == null )
-      throw new RepositoryException( "Coult not find item: " + id );
-    
     return item;
   }
 
@@ -122,6 +121,10 @@ public class ObservationServiceRepository extends AbstractRepository
    * Helper: finds item using recursion
    * TODO: better performance by caching items that were already found? do not forget
    * to clear the cache in reload()
+   * @param id
+   * @param item
+   * @return item if found, otherwise null.
+   * @throws RepositoryException
    */
   private IRepositoryItem findItemRecursive( final String id, final IRepositoryItem item ) throws RepositoryException
   {

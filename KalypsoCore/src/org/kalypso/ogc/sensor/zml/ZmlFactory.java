@@ -76,14 +76,15 @@ public class ZmlFactory
   {
     if( m_props == null )
     {
-      InputStream ins = null; 
+      InputStream ins = null;
 
       try
       {
         m_props = new Properties();
-        
-        ins = ZmlFactory.class.getResourceAsStream( "resource/types2parser.properties" );
-        
+
+        ins = ZmlFactory.class
+            .getResourceAsStream( "resource/types2parser.properties" );
+
         m_props.load( ins );
 
         return m_props;
@@ -144,9 +145,19 @@ public class ZmlFactory
 
     try
     {
-      // stream is closed in finally
-      inputStream = url.openStream();
+      // Eclipse Platform's URLStreamHandler cannot deal with
+      // URLs that contain a fragment part (begining with '?').
+      // WORKAROUND: we remove it here
+      // TODO: check if Eclipse can deal with fragments that begin with '#'
+      String strUrl = url.toExternalForm();
+      int ix = strUrl.lastIndexOf( '?' );
+      if( ix != -1 )
+        strUrl = strUrl.substring( 0, ix );
+      final URL tmpUrl = new URL( strUrl );
       
+      // stream is closed in finally
+      inputStream = tmpUrl.openStream();
+
       return parseXML( new InputSource( inputStream ), identifier, url );
     }
     catch( IOException e )
@@ -174,7 +185,7 @@ public class ZmlFactory
       final String identifier, final URL context ) throws SensorException
   {
     final Observation obs;
-    
+
     try
     {
       final Unmarshaller u = getUnmarshaller();
@@ -245,13 +256,14 @@ public class ZmlFactory
 
     final IObservation zmlObs = new SimpleObservation( identifier, obs
         .getName(), obs.isEditable(), target, metadata, axes, model );
-    
+
     // tricky: maybe make a filtered observation out of this one
     return FilterFactory.createFilterFrom( context, zmlObs );
   }
 
   /**
    * Parses the values and create the corresponding objects.
+   * 
    * @param context
    * @param axisType
    * @param parser

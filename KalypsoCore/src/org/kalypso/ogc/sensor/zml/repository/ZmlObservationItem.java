@@ -43,6 +43,7 @@ public class ZmlObservationItem extends FileItem
 
   /**
    * Helper, lazy loading.
+   * @return observation object read from the file
    * 
    * @throws SensorException
    */
