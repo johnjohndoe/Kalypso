@@ -1,14 +1,7 @@
 package org.kalypso.ui.calcwizard.modelpages;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -18,10 +11,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.table.LayerTableViewer;
-import org.kalypso.ui.nature.ModelNature;
 
 /**
  * @author Belger
@@ -143,76 +133,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
 
     final Control mapControl = initMap( composite, MapPanel.WIDGET_SINGLE_SELECT );
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-  }
-
-  /**
-   * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#performFinish()
-   */
-  public boolean performFinish()
-  {
-    //    try
-    //    {
-    //      m_viewer.saveData( new NullProgressMonitor() );
-    //    }
-    //    catch( CoreException e )
-    //    {
-    //      e.printStackTrace();
-    //    }
-    //
-    return true;
-  }
-
-  protected void runCalculation()
-  {
-    final LayerTableViewer viewer = getLayerTable();
-
-    final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
-    {
-      public void execute( final IProgressMonitor monitor ) throws CoreException
-      {
-        monitor.beginTask( "Berechnung wird durchgeführt", 2000 );
-
-        // TODO: alle Modelpages speichern
-        // auch die Zeitreihen
-        viewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
-
-        final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature(
-            ModelNature.ID );
-        nature.runCalculation( getCalcFolder(), new SubProgressMonitor( monitor, 1000 ) );
-      }
-    };
-
-    try
-    {
-      getContainer().run( true, true, op );
-    }
-    catch( final InterruptedException e )
-    {
-      // canceled
-      // todo: error message?
-      return;
-    }
-    catch( final InvocationTargetException e )
-    {
-      e.printStackTrace();
-
-      final Throwable te = e.getTargetException();
-      if( te instanceof CoreException )
-      {
-        ErrorDialog.openError( getContainer().getShell(), "Fehler",
-            "Fehler beim Aufruf der nächsten Wizard-Seite",
-            ( (CoreException)e.getTargetException() ).getStatus() );
-      }
-      else
-      {
-        // CoreExceptions are handled above, but unexpected runtime exceptions
-        // and errors may still occur.
-        MessageDialog.openError( getContainer().getShell(), "Interner Fehler",
-            "Fehler beim Aufruf der nächsten Wizard-Seite: " + te.getLocalizedMessage() );
-      }
-    }
-
-    onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
   }
 
   /**

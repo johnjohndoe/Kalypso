@@ -550,14 +550,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
-  /**
-   * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#performFinish()
-   */
-  public boolean performFinish()
-  {
-    return true;
-  }
-
   private class GraficToolStarter implements SelectionListener
   {
     // TODO: use getObservations instead
@@ -731,5 +723,4 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       m_selected = (IFolder)( selection.isEmpty() ? null : selection.getFirstElement() );
     }
   }
-
 }

@@ -90,7 +90,7 @@ public class JMSelector
     {
       final List testFE = new ArrayList();
       
-      final List features = list.query( env, new ArrayList() );
+      final List features = list == null ? new ArrayList() : list.query( env, new ArrayList() );
       final Iterator containerIterator = features.iterator();
 
       while( containerIterator.hasNext() )

@@ -59,5 +59,4 @@ public class CopyTransformation extends AbstractTransformation
       throw new TransformationException( e );
     }
   }
-
 }

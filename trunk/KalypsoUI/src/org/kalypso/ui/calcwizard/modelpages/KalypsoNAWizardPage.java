@@ -1,14 +1,7 @@
 package org.kalypso.ui.calcwizard.modelpages;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
@@ -20,10 +13,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
-import org.kalypso.ui.nature.ModelNature;
 
 /**
  * @author Belger
@@ -39,15 +30,9 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
   /** Position des rechten Sash: Integer von 0 bis 100 */
   public final static String PROP_RIGHTSASH = "rightSash";
 
-  /** name der modelspec datei, die verwendet wird */
-  public final static String PROP_MODELSPEC = "modelspec";
-
-  /** Ergebnisordner vor Berechnung loeschen ? ["true"|"false"] */
-  public final static String PROP_CLEAR_RESULTS = "clearResultFolder";
-
   /**
    * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen
-   * geben-Property geben: eine f?r jede Kurventyp.
+   * geben-Property geben: eine für jede Kurventyp.
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
@@ -157,80 +142,6 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
 
     final Control mapControl = initMap( mapPanel, MapPanel.WIDGET_SINGLE_SELECT );
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-  }
-
-  /**
-   * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#performFinish()
-   */
-  public boolean performFinish()
-  {
-    //    try
-    //    {
-    //      // TODO: error handling?
-    //      getLayerTable().saveData( new NullProgressMonitor() );
-    //    }
-    //    catch( CoreException e )
-    //    {
-    //      e.printStackTrace();
-    //    }
-
-    return true;
-  }
-
-  protected void runCalculation()
-  {
-    final LayerTableViewer viewer = getLayerTable();
-
-    final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
-    {
-      public void execute( final IProgressMonitor monitor ) throws CoreException
-      {
-        monitor.beginTask( "Berechnung wird durchgeführt", 2000 );
-        viewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
-
-        final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature(
-            ModelNature.ID );
-        final String modelspec = getArguments().getProperty( PROP_MODELSPEC, null );
-        final String clearResults = getArguments().getProperty( PROP_CLEAR_RESULTS, "true" );
-        boolean doClearResults = true;
-        if( "false".equals( clearResults ) )
-          doClearResults = false;
-        nature.runCalculation( getCalcFolder(), new SubProgressMonitor( monitor, 1000 ), modelspec,
-            doClearResults );
-      }
-    };
-
-    try
-    {
-      getContainer().run( true, true, op );
-    }
-    catch( final InterruptedException e )
-    {
-      // canceled
-      // TODO error message?
-      return;
-    }
-    catch( final InvocationTargetException e )
-    {
-      e.printStackTrace();
-
-      final Throwable te = e.getTargetException();
-      if( te instanceof CoreException )
-      {
-        ErrorDialog.openError( getContainer().getShell(), "Fehler",
-            "Fehler beim Aufruf der nächsten Wizard-Seite",
-            ( (CoreException)e.getTargetException() ).getStatus() );
-      }
-      else
-      {
-        // CoreExceptions are handled above, but unexpected runtime exceptions
-        // and errors may still occur.
-        MessageDialog.openError( getContainer().getShell(), "Interner Fehler",
-            "Fehler beim Aufruf der nächsten Wizard-Seite: " + te.getLocalizedMessage() );
-      }
-    }
-
-    onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
   }
 
   /**

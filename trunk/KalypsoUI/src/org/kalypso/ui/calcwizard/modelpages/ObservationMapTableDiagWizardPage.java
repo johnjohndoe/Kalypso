@@ -6,11 +6,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -118,23 +115,23 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
 
   private void createTablePanel( final Composite parent )
   {
-    final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new GridLayout( ) );
-    panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+//    final Composite panel = new Composite( parent, SWT.NONE );
+//    panel.setLayout( new GridLayout( ) );
+//    panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     
-    final Control diagramControl = initDiagramTable( panel );
+    final Control diagramControl = initDiagramTable( parent );
     diagramControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    final Button btnSave = new Button( panel, SWT.PUSH );
-    btnSave.setText( "Daten speichern" );
-    btnSave.setToolTipText( "Speichert die grundliegende Dateien" );
-    btnSave.addSelectionListener( new SelectionAdapter()
-    {
-      public void widgetSelected( final SelectionEvent e )
-      {
-        saveTimeseriesPressed( true );
-      }
-    } );
+//    final Button btnSave = new Button( panel, SWT.PUSH );
+//    btnSave.setText( "Daten speichern" );
+//    btnSave.setToolTipText( "Speichert die grundliegende Dateien" );
+//    btnSave.addSelectionListener( new SelectionAdapter()
+//    {
+//      public void widgetSelected( final SelectionEvent e )
+//      {
+//        saveTimeseriesPressed( true );
+//      }
+//    } );
     
     registerObservationTableModelChangeListener();
   }
@@ -149,14 +146,6 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
         MapPanel.WIDGET_SINGLE_SELECT );
     final GridData gridData = new GridData( GridData.FILL_BOTH );
     mapControl.setLayoutData( gridData );
-  }
-
-  /**
-   * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#performFinish()
-   */
-  public boolean performFinish( )
-  {
-    return true;
   }
 
   /**

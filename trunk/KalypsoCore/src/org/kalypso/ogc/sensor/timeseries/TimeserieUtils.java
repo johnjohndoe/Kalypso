@@ -91,7 +91,7 @@ public class TimeserieUtils
    */
   private static Properties getProperties( )
   {
-    if( m_config == null )
+    if( m_config == null )  
     {
       m_config = new Properties();
      

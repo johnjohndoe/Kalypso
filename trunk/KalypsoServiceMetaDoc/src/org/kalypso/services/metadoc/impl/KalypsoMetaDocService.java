@@ -23,7 +23,6 @@ import org.kalypso.services.metadoc.IMetaDocService;
  */
 public class KalypsoMetaDocService implements IMetaDocService
 {
-  private final static String PROP_PUBLISH_DIR = "PUBLISH_DIR";
   private final static String PROP_COMMITER = "COMMITER";
 
   private final File m_tmpDir;
