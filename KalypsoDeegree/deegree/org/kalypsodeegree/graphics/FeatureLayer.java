@@ -44,6 +44,7 @@ package org.deegree.graphics;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureCollection;
+import org.deegree.model.feature.FeatureType;
 
 
 /**
@@ -106,6 +107,4 @@ public interface FeatureLayer extends Layer {
      */
     int getSize();
 
-
- 
 }

@@ -390,8 +390,6 @@ class MapView_Impl implements MapView {
         projection.setDestRect( x-2, y-2, w+x, h+y );
         
         scale = calcScale (g.getClipBounds().width, g.getClipBounds().height);
-        
-        System.out.println("OGC SLD scale denominator " + scale);
 
 		// call all Optimizers
 		optimize (g);
