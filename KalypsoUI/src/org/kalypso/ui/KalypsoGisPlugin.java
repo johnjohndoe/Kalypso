@@ -20,6 +20,8 @@ import javax.xml.rpc.ServiceException;
 import org.deegree_impl.extension.ITypeRegistry;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.loader.DefaultLoaderFactory;
@@ -501,6 +503,15 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
             IKalypsoPreferences.HTTP_PROXY_PASS ).toCharArray() );
       }
     } );
+  }
+
+  public static Status createErrorStatus( final String message, final Exception cause )
+  {
+    String msg = message;
+    if( cause != null && cause.getLocalizedMessage() != null )
+      msg += ":\n" + cause.getLocalizedMessage();
+    
+    return new Status( IStatus.ERROR, getId(), 0, msg, cause );
   }
 
 }

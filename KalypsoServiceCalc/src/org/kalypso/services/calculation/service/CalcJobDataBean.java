@@ -13,6 +13,11 @@ public class CalcJobDataBean implements Serializable
   private String m_name;
   private String m_id;
 
+  public CalcJobDataBean()
+  {
+    // nur für wspcompile
+  }
+  
   public CalcJobDataBean( final String id, final String name, final String path )
   {
     m_id = id;

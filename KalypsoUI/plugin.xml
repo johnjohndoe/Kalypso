@@ -52,6 +52,9 @@
       <library name="lib/activation.jar">
          <export name="*"/>
       </library>
+      <library name="lib/kalypsoservice_calculation.jar">
+         <export name="*"/>
+      </library>
    </runtime>
    <requires>
       <import plugin="org.eclipse.ui.workbench" export="true"/>
@@ -495,6 +498,8 @@
          </menu>
          <action
                label="Berechnung durchführen"
+               class="org.kalypso.ui.action.StartCalculationActionDelegate"
+               icon="icons/rechne.gif"
                tooltip="führt die Berechnung der selektierten Rechenvariante aus, bereits vorhandene Ergebnisdaten werden überschrieben"
                menubarPath="org.kalypso.menu.model/calcCaseStart"
                id="org.kalypso.action.model.runCalcCase"/>

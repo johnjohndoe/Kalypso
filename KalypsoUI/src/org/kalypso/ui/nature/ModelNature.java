@@ -2,6 +2,7 @@ package org.kalypso.ui.nature;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -9,7 +10,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,6 +31,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -55,7 +56,9 @@ import org.kalypso.model.xml.Modelspec;
 import org.kalypso.model.xml.ModelspecType;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.CalcwizardType.PageType.ArgType;
+import org.kalypso.model.xml.ModelspecType.InputType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.services.proxy.CalcJobDataBean;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.CalcWizard;
@@ -82,7 +85,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public static final String CALCULATION_FILE = ".calculation";
 
-  public static final String CONTROL_VIEW_FILE = MODELLTYP_FOLDER + "/control.template";
+  public static final String CALCULATION_TEMPLATE = ".calculation.template";
+
+  public static final String CALCULATION_VIEW = MODELLTYP_FOLDER + "/.calculation.view";
 
   private static final String MODELLTYP_CALCWIZARD_XML = MODELLTYP_FOLDER + "/" + "calcWizard.xml";
 
@@ -94,7 +99,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   private Map m_calcJobMap = new HashMap();
 
-  public static final String CONTROL_TEMPLATE_GML = MODELLTYP_FOLDER + "/" + CALCULATION_FILE;
+  public static final String CONTROL_TEMPLATE_GML = MODELLTYP_FOLDER + "/" + CALCULATION_TEMPLATE;
 
   public static final String CONTROL_TEMPLATE_XSD = MODELLTYP_FOLDER + "/schema/control.xsd";
 
@@ -347,7 +352,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     replaceTokens.addConfiguredToken( projectToken );
   }
 
-  public String getCalcType()
+  public String getCalcType() throws CoreException
   {
     final Modelspec modelspec = getModelspec();
 
@@ -400,50 +405,87 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  public URL[] getCalcCaseInputData( final IFolder folder, final IProgressMonitor monitor )
+  private CalcJobDataBean[] prepareCalcCaseInput( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
     // modelspec holen
     final Modelspec modelspec = getModelspec();
-    if( modelspec == null )
-      return new URL[] {};
 
-    final Collection inputURLs = new ArrayList();
-    try
+//    final Collection inputURLs = new ArrayList();
+//    try
+//    {
+//      // anhand der modelspec die dateien rausfinden
+//      final List inputList = modelspec.getInput();
+//
+//      monitor.beginTask( "Eingabedateien werden gelesen", inputList.size() );
+//
+//      // immer erst mal die .calculation Datei
+//      final IFile calcFile = folder.getFile( CALCULATION_FILE );
+//      //inputURLs.add( loadFileIntoString( calcFile ) );
+//      inputURLs.add( calcFile.getRawLocation().toFile().toURL() );
+//
+//      for( final Iterator iter = inputList.iterator(); iter.hasNext(); )
+//      {
+//        final ModelspecType.InputType input = (ModelspecType.InputType)iter.next();
+//        final String path = input.getPath();
+//
+//        final IFile file = input.isRelativeToCalcCase() ? folder.getFile( path ) : m_project
+//            .getFile( path );
+//
+//        inputURLs.add( file.getRawLocation().toFile().toURL() );
+//
+//        monitor.worked( 1 );
+//      }
+//    }
+//    catch( final IOException e )
+//    {
+//      e.printStackTrace();
+//    }
+//
+//    monitor.done();
+//
+//    return (URL[])inputURLs.toArray( new URL[inputURLs.size()] );
+
+    // TODO: setzen!
+    final File targetDir = null;
+    final File serverCalcDir = new File( targetDir, "input" );
+    final File serverBaseDir = new File( targetDir, "base" );
+    
+    final IProject project = folder.getProject();
+    
+    final List inputList = modelspec.getInput();
+    
+    final List inputBeanList = new ArrayList();
+    for( final Iterator iter = inputList.iterator(); iter.hasNext(); )
     {
-      // anhand der modelspec die dateien rausfinden
-      final List inputList = modelspec.getInput();
+      final ModelspecType.InputType input = (InputType)iter.next();
+      final String inputPath = input.getPath();
 
-      monitor.beginTask( "Eingabedateien werden gelesen", inputList.size() );
+      final IResource inputResource = ( input.isRelativeToCalcCase() ? folder.findMember( inputPath ) : project.findMember( inputPath ) );
+      
+      final File dir = input.isRelativeToCalcCase() ? serverCalcDir : serverBaseDir;
+      final File inputfile = new File( dir, inputPath );
 
-      // immer erst mal die .calculation Datei
-      final IFile calcFile = folder.getFile( CALCULATION_FILE );
-      //inputURLs.add( loadFileIntoString( calcFile ) );
-      inputURLs.add( calcFile.getRawLocation().toFile().toURL() );
+      // visit over resource
+      final IResourceVisitor copyVisitor = new CopyVisitor( inputfile );
+      inputResource.accept( copyVisitor );
 
-      for( final Iterator iter = inputList.iterator(); iter.hasNext(); )
-      {
-        final ModelspecType.InputType input = (ModelspecType.InputType)iter.next();
-        final String path = input.getPath();
+      // move to visitor
+      // problem: visitor sagen wies mit den relativen Pfaden geht
+      //      inputfile.getParentFile().mkdirs();
+//      
+//      FileUtilities.makeFileFromStream( false, inputfile, getClass().getResourceAsStream(
+//          inputresource ) );
 
-        final IFile file = input.isRelativeToCalcCase() ? folder.getFile( path ) : m_project
-            .getFile( path );
-
-        inputURLs.add( file.getRawLocation().toFile().toURL() );
-
-        monitor.worked( 1 );
-      }
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
+      // TODO wieder einbinden
+//      inputBeanList.add( new CalcJobDataBean( input.getId(), input.getDescription(), path ) );
     }
 
-    monitor.done();
+    final CalcJobDataBean[] input = (CalcJobDataBean[])inputBeanList.toArray( new CalcJobDataBean[inputBeanList.size()]  );
+    return input;
 
-    return (URL[])inputURLs.toArray( new URL[inputURLs.size()] );
   }
 
-  private Modelspec getModelspec()
+  private Modelspec getModelspec() throws CoreException
   {
     try
     {
@@ -456,12 +498,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     catch( final JAXBException e )
     {
       e.printStackTrace();
-      return null;
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      return null;
+      
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Laden der Modell-Spezifikation", e ) );
     }
   }
 
@@ -779,6 +817,22 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
           "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
     }
+  }
+
+  public void runCalculation( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( "Berechnung durchführen" , 1000 );
+
+    if( !isCalcCalseFolder( folder ) )
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Verzeichnis ist kein Rechenfall :" + folder.getName(), null ) );
+    
+    // Dateen zum Service schieben
+    
+    // Job starten
+    
+    // auf Job warten
+    
+    // Ergebnisse abholen
   }
 
 }
