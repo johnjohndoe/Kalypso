@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
@@ -44,7 +45,7 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
 
   private final TreeMap m_key2cols;
 
-  private final TreeMap m_col2key;
+  private final Hashtable m_col2key;
 
   /**
    * Constructor
@@ -59,7 +60,7 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
 
     m_pool = KalypsoGisPlugin.getDefault().getPool();
     m_key2cols = new TreeMap( m_pool.getKeyComparator() );
-    m_col2key = new TreeMap();
+    m_col2key = new Hashtable();
 
     final RulesType trules = obsTableView.getRules();
     if( trules != null )
@@ -70,13 +71,12 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
             .next() ) );
     }
 
-    final List cols = new ArrayList();
-
     final List list = obsTableView.getObservation();
     for( final Iterator it = list.iterator(); it.hasNext(); )
     {
       final TypeObservation tobs = (TypeObservation) it.next();
 
+      final List cols = new ArrayList();
       final List tcols = tobs.getColumn();
       for( Iterator itCols = tcols.iterator(); itCols.hasNext(); )
       {
@@ -171,8 +171,11 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
         final DefaultTableViewColumn col = (DefaultTableViewColumn) itCols
             .next();
         col.setObservation( (IObservation) newValue );
-
-        addColumn( col );
+      }
+      
+      for( final Iterator itCols = cols.iterator(); itCols.hasNext(); )
+      {
+        addColumn( (ITableViewColumn) itCols.next() );
       }
     }
   }
