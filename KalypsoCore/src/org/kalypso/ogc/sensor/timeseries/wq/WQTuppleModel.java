@@ -99,7 +99,9 @@ public class WQTuppleModel implements ITuppleModel
         final Date d = (Date) m_model.getElement( index, m_dateAxis );
 
         final WechmannSet set = m_wsets.getFor( d );
-
+         
+        if( set != null )
+        {
         if( axis.getType().equals( TimeserieConstants.TYPE_RUNOFF ) )
         {
           final double w = ((Number) m_model.getElement( index, m_srcAxis ))
@@ -118,6 +120,7 @@ public class WQTuppleModel implements ITuppleModel
           {
             value = new Double( Double.NaN );
           }
+        }
         }
 
         m_values.put( objIndex, value );
