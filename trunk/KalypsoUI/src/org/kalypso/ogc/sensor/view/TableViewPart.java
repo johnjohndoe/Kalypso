@@ -32,7 +32,6 @@ import org.kalypso.ogc.sensor.tableview.template.Rules;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.adapter.IAdaptable;
 import org.kalypso.util.repository.view.RepositoryExplorerPart;
-import org.kalypso.util.status.MaskedNumber;
 
 /**
  * Table QuickView.
@@ -50,7 +49,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   {
     final JTable table = new JTable( m_model );
     table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
-    table.setDefaultRenderer( MaskedNumber.class, new MaskedNumberTableCellRenderer() );
+    table.setDefaultRenderer( Number.class, new MaskedNumberTableCellRenderer() );
     
     // TODO: als Testzweck hier, später komplett entfernen?
     m_model.setRules( new Rules() );
