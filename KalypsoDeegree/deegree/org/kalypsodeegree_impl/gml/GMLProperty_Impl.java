@@ -43,8 +43,10 @@ E-Mail: jens.fitzke@uni-bonn.de
 package org.deegree_impl.gml;
 
 import org.deegree.gml.*;
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.xml.*;
 
+import org.deegree_impl.model.feature.XLinkFeatureTypeProperty;
 import org.deegree_impl.tools.*;
 
 import org.w3c.dom.*;
@@ -61,6 +63,7 @@ import org.w3c.dom.*;
  */
 public class GMLProperty_Impl implements GMLProperty {
     protected Element element = null;
+    private FeatureTypeProperty myFeatureTypeProperty=null;
 
     /**
      * Creates a new GMLProperty_Impl object.
@@ -69,8 +72,14 @@ public class GMLProperty_Impl implements GMLProperty {
      */
     public GMLProperty_Impl( Element element ) {
         this.element = element;
+      
     }
 
+    public GMLProperty_Impl(FeatureTypeProperty ftp, Element element ) {
+     myFeatureTypeProperty=ftp;
+      this.element = element;
+    
+  }
     /**
      * factory method to create a GMLProperty. the property that
      * will be return doesn't contain a value.
@@ -98,6 +107,17 @@ public class GMLProperty_Impl implements GMLProperty {
         Debug.debugMethodEnd();
         return ls;
     }
+    
+    public static GMLProperty createGMLProperty( Document doc, FeatureTypeProperty ftp, String attributeValue)
+    {
+      Element element = doc.createElement( ftp.getName());
+      GMLProperty gmlProp = new GMLProperty_Impl(ftp,element);
+      gmlProp.setPropertyValue(attributeValue);
+      
+      Debug.debugMethodEnd();
+      return gmlProp;
+}
+    
 
     /**
      *
@@ -334,6 +354,11 @@ public class GMLProperty_Impl implements GMLProperty {
     public void setPropertyValue( String value ) {
         Debug.debugMethodBegin( this, "setPropertyValue" );
 
+        if(myFeatureTypeProperty instanceof XLinkFeatureTypeProperty)
+        {
+          setAttributeValue(value);
+          return; 
+        }
         Node node = element.getFirstChild();
 
         // remove the propetry value if it already exist
@@ -360,6 +385,14 @@ public class GMLProperty_Impl implements GMLProperty {
         Debug.debugMethodEnd();
     }
 
+    
+    private void setAttributeValue( String value )
+    {      
+    //  element.setAttribute("xmlns:xlink","http://www.w3.org/1999/xlink");      
+      element.setAttribute("xlink:href", value);
+      // TODO use full qualified namespace-name
+    }
+
     /**
      *
      *
@@ -368,14 +401,25 @@ public class GMLProperty_Impl implements GMLProperty {
     public String toString() {
         return DOMPrinter.nodeToString( element, "" );
     }
+
+    /**
+     * @see org.deegree.gml.GMLProperty#getAttributeValue(java.lang.String, java.lang.String)
+     */
+    public Object getAttributeValue( String nameSpace, String attributeValue )
+    {
+     return element.getAttributeNS(nameSpace, attributeValue);
+    }
 }
 
 /*
  * Changes to this class. What the people haven been up to:
  *
  * $Log$
- * Revision 1.1  2004/05/11 16:43:24  doemming
- * Initial revision
+ * Revision 1.2  2004/08/11 11:20:16  doemming
+ * *** empty log message ***
+ *
+ * Revision 1.1.1.1  2004/05/11 16:43:24  doemming
+ * backup of local modified deegree sources
  *
  * Revision 1.6  2004/03/02 07:38:14  poth
  * no message

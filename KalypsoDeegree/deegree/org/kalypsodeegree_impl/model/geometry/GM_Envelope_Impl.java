@@ -295,11 +295,14 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable {
      * @see org.deegree.model.geometry.GM_Envelope#merge(org.deegree.model.geometry.GM_Envelope)
      */
     public GM_Envelope merge(GM_Envelope envelope) {
-    	double minx = min.getX();
+    	
+      double minx = min.getX();
     	double miny = min.getY();
     	double maxx = max.getX();
     	double maxy = max.getY();
-    	if ( envelope.getMin().getX() < minx ) {
+   if(envelope!=null)
+   {
+      if ( envelope.getMin().getX() < minx ) {
     		minx = envelope.getMin().getX(); 
     	}
     	if ( envelope.getMin().getY() < miny ) {
@@ -311,6 +314,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable {
     	if ( envelope.getMax().getY() > maxy ) {
     		maxy = envelope.getMax().getY(); 
     	}
+   }
     	return GeometryFactory.createGM_Envelope(minx, miny, maxx, maxy);
     }
 
@@ -333,8 +337,11 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable {
  * Changes to this class. What the people haven been up to:
  *
  * $Log$
- * Revision 1.1  2004/05/11 16:43:25  doemming
- * Initial revision
+ * Revision 1.2  2004/08/11 11:20:16  doemming
+ * *** empty log message ***
+ *
+ * Revision 1.1.1.1  2004/05/11 16:43:25  doemming
+ * backup of local modified deegree sources
  *
  * Revision 1.13  2004/03/02 07:38:14  poth
  * no message

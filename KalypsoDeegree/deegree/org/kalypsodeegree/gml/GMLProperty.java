@@ -95,14 +95,19 @@ public interface GMLProperty {
      * define additional set-methods.</p>
      */
     public void setPropertyValue(String value);
+
+    public Object getAttributeValue( String nameSpace, String attributeValue);
     
 }
 /*
  * Changes to this class. What the people haven been up to:
  *
  * $Log$
- * Revision 1.1  2004/05/11 16:43:22  doemming
- * Initial revision
+ * Revision 1.2  2004/08/11 11:20:16  doemming
+ * *** empty log message ***
+ *
+ * Revision 1.1.1.1  2004/05/11 16:43:22  doemming
+ * backup of local modified deegree sources
  *
  * Revision 1.2  2004/01/26 08:15:36  poth
  * no message
