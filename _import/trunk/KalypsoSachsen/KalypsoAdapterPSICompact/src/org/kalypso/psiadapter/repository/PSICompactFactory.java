@@ -1,12 +1,10 @@
 package org.kalypso.psiadapter.repository;
 
 import java.text.SimpleDateFormat;
-import java.util.Hashtable;
-import java.util.Map;
 import java.util.Properties;
 
 import org.kalypso.java.lang.reflect.ClassUtilities;
-import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.repository.RepositoryException;
 
 import de.psi.go.lhwz.PSICompact;
@@ -33,8 +31,6 @@ public final class PSICompactFactory
   private static VersionChecker m_threadVersionChecker = null;
 
   private static Properties m_factoryProperties = null;
-
-  private final static Map m_axes = new Hashtable();
 
   private final static Integer m_zero = new Integer( 0 );
 
@@ -165,37 +161,37 @@ public final class PSICompactFactory
     }
   }
 
-  /**
-   * Helper für die Übersetzung des 'Status' (ArchiveData) in eine leesbare
-   * String
-   */
-  public final static String statusToString( int status )
-  {
-    switch( status )
-    {
-    case PSICompact.STATUS_AUTO:
-      return m_factoryProperties.getProperty( "STATUS_AUTO" );
-    case PSICompact.STATUS_ERSALLG:
-      return m_factoryProperties.getProperty( "STATUS_ERSALLG" );
-    case PSICompact.STATUS_MANKOR:
-      return m_factoryProperties.getProperty( "STATUS_MANKOR" );
-    case PSICompact.STATUS_NACH:
-      return m_factoryProperties.getProperty( "STATUS_NACH" );
-    case PSICompact.STATUS_NORM:
-      return m_factoryProperties.getProperty( "STATUS_NORM" );
-    case PSICompact.STATUS_NORMALLG:
-      return m_factoryProperties.getProperty( "STATUS_NORMALLG" );
-    case PSICompact.STATUS_OK:
-      return m_factoryProperties.getProperty( "STATUS_OK" );
-    case PSICompact.STATUS_REKO:
-      return m_factoryProperties.getProperty( "STATUS_REKO" );
-    case PSICompact.STATUS_UNDEF:
-      return m_factoryProperties.getProperty( "STATUS_UNDEF" );
-
-    default:
-      return m_factoryProperties.getProperty( "UNKNOWN" );
-    }
-  }
+//  /**
+//   * Helper für die Übersetzung des 'Status' (ArchiveData) in eine leesbare
+//   * String
+//   */
+//  public final static String statusToString( int status )
+//  {
+//    switch( status )
+//    {
+//    case PSICompact.STATUS_AUTO:
+//      return m_factoryProperties.getProperty( "STATUS_AUTO" );
+//    case PSICompact.STATUS_ERSALLG:
+//      return m_factoryProperties.getProperty( "STATUS_ERSALLG" );
+//    case PSICompact.STATUS_MANKOR:
+//      return m_factoryProperties.getProperty( "STATUS_MANKOR" );
+//    case PSICompact.STATUS_NACH:
+//      return m_factoryProperties.getProperty( "STATUS_NACH" );
+//    case PSICompact.STATUS_NORM:
+//      return m_factoryProperties.getProperty( "STATUS_NORM" );
+//    case PSICompact.STATUS_NORMALLG:
+//      return m_factoryProperties.getProperty( "STATUS_NORMALLG" );
+//    case PSICompact.STATUS_OK:
+//      return m_factoryProperties.getProperty( "STATUS_OK" );
+//    case PSICompact.STATUS_REKO:
+//      return m_factoryProperties.getProperty( "STATUS_REKO" );
+//    case PSICompact.STATUS_UNDEF:
+//      return m_factoryProperties.getProperty( "STATUS_UNDEF" );
+//
+//    default:
+//      return m_factoryProperties.getProperty( "UNKNOWN" );
+//    }
+//  }
 
   /**
    * Converts the PSICompact-Status to the Kalypso internal BitMask.
@@ -204,7 +200,7 @@ public final class PSICompactFactory
    *          as delivered by PSICompact
    * @return an integer representing a bitmask.
    */
-  public final static Integer statusToMask( int status )
+  public final static Integer psiStatusToMask( int status )
   {
     switch( status )
     {
@@ -233,29 +229,40 @@ public final class PSICompactFactory
   }
 
   /**
-   * Helper that translates the status string back to an integer
+   * Converts bitMask (Kalypso Status) to PSI-Status
    */
-  public static int statusTranslate( String status )
+  public final static int maskToPsiStatus( int mask )
   {
-    if( status.equals( m_factoryProperties.getProperty( "STATUS_AUTO" ) ) )
-      return PSICompact.STATUS_AUTO;
-    else if( status.equals( m_factoryProperties.getProperty( "STATUS_ERSALLG" ) ) )
-      return PSICompact.STATUS_ERSALLG;
-    else if( status.equals( m_factoryProperties.getProperty( "STATUS_MANKOR" ) ) )
+    if( KalypsoStatusUtils.checkMask( mask, KalypsoStatusUtils.BIT_USER_MODIFIED ) )
       return PSICompact.STATUS_MANKOR;
-    else if( status.equals( m_factoryProperties.getProperty( "STATUS_NACH" ) ) )
-      return PSICompact.STATUS_NACH;
-    else if( status.equals( m_factoryProperties.getProperty( "STATUS_NORM" ) ) )
-      return PSICompact.STATUS_NORM;
-    else if( status.equals( m_factoryProperties.getProperty( "STATUS_NORMALLG" ) ) )
-      return PSICompact.STATUS_NORMALLG;
-    else if( status.equals( m_factoryProperties.getProperty( "STATUS_OK" ) ) )
-      return PSICompact.STATUS_OK;
-    else if( status.equals( m_factoryProperties.getProperty( "STATUS_REKO" ) ) )
-      return PSICompact.STATUS_REKO;
-    else
-      return PSICompact.STATUS_UNDEF;
+    
+    return PSICompact.STATUS_AUTO;
   }
+
+//  /**
+//   * Helper that translates the status string back to an integer
+//   */
+//  public static int statusTranslate( final String status )
+//  {
+//    if( status.equals( m_factoryProperties.getProperty( "STATUS_AUTO" ) ) )
+//      return PSICompact.STATUS_AUTO;
+//    else if( status.equals( m_factoryProperties.getProperty( "STATUS_ERSALLG" ) ) )
+//      return PSICompact.STATUS_ERSALLG;
+//    else if( status.equals( m_factoryProperties.getProperty( "STATUS_MANKOR" ) ) )
+//      return PSICompact.STATUS_MANKOR;
+//    else if( status.equals( m_factoryProperties.getProperty( "STATUS_NACH" ) ) )
+//      return PSICompact.STATUS_NACH;
+//    else if( status.equals( m_factoryProperties.getProperty( "STATUS_NORM" ) ) )
+//      return PSICompact.STATUS_NORM;
+//    else if( status.equals( m_factoryProperties.getProperty( "STATUS_NORMALLG" ) ) )
+//      return PSICompact.STATUS_NORMALLG;
+//    else if( status.equals( m_factoryProperties.getProperty( "STATUS_OK" ) ) )
+//      return PSICompact.STATUS_OK;
+//    else if( status.equals( m_factoryProperties.getProperty( "STATUS_REKO" ) ) )
+//      return PSICompact.STATUS_REKO;
+//    else
+//      return PSICompact.STATUS_UNDEF;
+//  }
 
   /**
    * TODO: vielleicht kein Thread, dafür aber auf jede Struktur Abfrage. Jede
@@ -307,27 +314,6 @@ public final class PSICompactFactory
         e.printStackTrace();
       }
     }
-  }
-
-  /**
-   * Factory method um Achsen zu erzeugen.
-   * <p>
-   */
-  public static IAxis getAxis( final String label, final String type, final String unit, final Class dataClass,
-      final int position )
-  {
-    final String key = label + unit + dataClass.getName();
-
-    IAxis axis = (IAxis)m_axes.get( key );
-
-    if( axis == null )
-    {
-      axis = new PSICompactAxis( label, type, unit, dataClass, position );
-
-      m_axes.put( key, axis );
-    }
-
-    return axis;
   }
 
   /**

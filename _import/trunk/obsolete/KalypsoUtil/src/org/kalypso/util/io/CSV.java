@@ -46,26 +46,40 @@ public class CSV
    */
   private void fetchFile() throws IOException
   {
-    BufferedReader r = new BufferedReader( m_reader );
-
-    String line = r.readLine();
-
-    // steps over the lines until start-line-number is reached
-    int lineNR = 1;
-    while( lineNR < m_line && line != null )
-    {
-      line = r.readLine();
-      lineNR++;
-    }
+    BufferedReader r = null;
     
-    while( line != null )
+    try
     {
-      m_lines.add( line.split( m_split ) );
+      r = new BufferedReader( m_reader );
 
-      line = r.readLine();
+      String line = r.readLine();
+
+      // steps over the lines until start-line-number is reached
+      int lineNR = 1;
+      while( lineNR < m_line && line != null )
+      {
+        line = r.readLine();
+        lineNR++;
+      }
+      
+      while( line != null )
+      {
+        m_lines.add( line.split( m_split ) );
+
+        line = r.readLine();
+      }
+
+      r.close();
     }
-
-    r.close();
+    catch( IOException e )
+    {
+      throw e;
+    }
+    finally
+    {
+      if( r != null )
+        r.close();
+    }
   }
 
   /**

@@ -7,6 +7,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
@@ -196,21 +197,21 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   {
     if( m_axes == null )
     {
-      m_axes = new IAxis[4];
+      m_axes = new IAxis[3];
 
       // immer Datum Axis
-      m_axes[0] = PSICompactFactory.getAxis( "Datum", "datum", "", Date.class, 0 );
+      m_axes[0] = new DefaultAxis( "Datum", "datum", "", Date.class, 0, true ); 
 
       // Wert (Einheit abfragen)
       String label = toString();
       String unit = PSICompactFactory.unitToString( m_psicMetaData.getUnit() );
-      m_axes[1] = PSICompactFactory.getAxis( label, "pegel", unit, Double.class, 1 );
+      m_axes[1] = new DefaultAxis( label, "pegel", unit, Double.class, 1, false );
 
       // PSI-Status
-      m_axes[2] = PSICompactFactory.getAxis( "Status", "", "", String.class, 2 );
+      //m_axes[2] = PSICompactFactory.getAxis( "Status", "", "", String.class, 2 );
       
-      // Kalypso internal status
-      m_axes[3] = PSICompactFactory.getAxis( KalypsoStatusUtils.getStatusAxisLabelFor( m_axes[1] ), "kalypso_status", "", Integer.class, 3 );
+      // Status
+      m_axes[2] = new DefaultAxis( KalypsoStatusUtils.getStatusAxisLabelFor( m_axes[1] ), "kalypso_status", "", Integer.class, 2, false );
     }
 
     return m_axes;
@@ -221,7 +222,6 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
    */
   public synchronized ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {
-    // TODO: I'm lazy here: I could create default from and to dates
     if( !( args instanceof DateRangeArgument ) )
       throw new SensorException( "Brauche DateRange as Argument. Kann sonst die PSICompact Schnittstelle nicht abfragen" );
     
@@ -238,7 +238,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
       final ArchiveData[] data = PSICompactFactory.getConnection().getArchiveData( m_objectInfo.getId(),
           PSICompact.ARC_MIN15, m_from, m_to );
 
-      m_values = new PSICompactTuppleModel( data );
+      m_values = new PSICompactTuppleModel( data, getAxisList() );
       return m_values;
     }
     catch( ECommException e )
@@ -257,7 +257,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
     if( values instanceof PSICompactTuppleModel )
       model = (PSICompactTuppleModel)values;
     else
-      model = new PSICompactTuppleModel( values );
+      model = PSICompactTuppleModel.copyModel( values );
     
     if( model.getCount() > 0 )
     {

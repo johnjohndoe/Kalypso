@@ -2,9 +2,13 @@ package org.kalypso.psiadapter.repository;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.NoSuchElementException;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.psiadapter.util.ArchiveDataDateComparator;
 
 import de.psi.go.lhwz.PSICompact.ArchiveData;
@@ -20,41 +24,58 @@ public class PSICompactTuppleModel implements ITuppleModel
 
   private final Double[] m_values;
 
-  private final String[] m_psiStati;
+//  private final String[] m_psiStati;
 
   private final Integer[] m_kalypsoStati;
+
+  private final IAxis[] m_axes;
 
   /**
    * Constructor with ArchiveData[]
    */
-  public PSICompactTuppleModel( final ArchiveData[] data )
+  public PSICompactTuppleModel( final ArchiveData[] data, final IAxis[] axes )
   {
     m_data = data;
+    m_axes = axes;
+    
     m_values = new Double[m_data.length];
-    m_psiStati = new String[m_data.length];
+//    m_psiStati = new String[m_data.length];
     m_kalypsoStati = new Integer[m_data.length];
   }
 
   /**
-   * Constructor with another ITuppleModel
+   * Create a new model based on an existing one.
+   * 
+   * @throws NoSuchElementException when axis was not found
+   * @throws SensorException
    */
-  public PSICompactTuppleModel( final ITuppleModel model )
+  public static PSICompactTuppleModel copyModel( final ITuppleModel model ) throws NoSuchElementException, SensorException
   {
-    this( constructData( model ) );
+    final IAxis[] axes = model.getAxisList();
+    
+    final IAxis dateAxis = ObservationUtilities.findAxis( axes, Date.class )[0];
+    final IAxis valueAxis = ObservationUtilities.findAxis( axes, Number.class )[0];
+    final IAxis statusAxis = KalypsoStatusUtils.findStatusAxis( axes );
+  
+    final ArchiveData[] data = constructData( model, dateAxis, valueAxis, statusAxis );
+    
+    return new PSICompactTuppleModel( data, new IAxis[] { dateAxis, valueAxis, statusAxis } );
   }
 
   /**
    * Helper that creates ArchiveData[] having a ITuppleModel
+   * 
+   * @throws SensorException
    */
-  private final static ArchiveData[] constructData( ITuppleModel model )
+  private final static ArchiveData[] constructData( final ITuppleModel model, final IAxis dateAxis, final IAxis valueAxis, final IAxis statusAxis ) throws SensorException
   {
-    ArchiveData[] data = new ArchiveData[model.getCount()];
+    final ArchiveData[] data = new ArchiveData[model.getCount()];
 
     for( int i = 0; i < data.length; i++ )
     {
-      data[i] = new ArchiveData( (Date)model.getElement( i, PSICompactAxis.TYPE_DATE ),
-          PSICompactFactory.statusTranslate( model.getElement( i, PSICompactAxis.TYPE_STATUS )
-              .toString() ), ( (Double)model.getElement( i, PSICompactAxis.TYPE_VALUE ) )
+      data[i] = new ArchiveData( (Date)model.getElement( i, dateAxis ),
+              PSICompactFactory.maskToPsiStatus( ((Number)model.getElement( i, statusAxis )).intValue() )
+              , ( (Number)model.getElement( i, valueAxis ) )
               .doubleValue() );
     }
 
@@ -74,75 +95,34 @@ public class PSICompactTuppleModel implements ITuppleModel
     return m_values[index];
   }
 
-  private String getStatus( int index )
-  {
-    if( m_psiStati[index] == null )
-      m_psiStati[index] = PSICompactFactory.statusToString( m_data[index].getStatus() );
-
-    return m_psiStati[index];
-  }
-
+//  private String getStatus( int index )
+//  {
+//    if( m_psiStati[index] == null )
+//      m_psiStati[index] = PSICompactFactory.statusToString( m_data[index].getStatus() );
+//
+//    return m_psiStati[index];
+//  }
+//
   private Integer getKalypsoStatus( int index )
   {
     if( m_kalypsoStati[index] == null )
-      m_kalypsoStati[index] = PSICompactFactory.statusToMask( m_data[index].getStatus() );
+      m_kalypsoStati[index] = PSICompactFactory.psiStatusToMask( m_data[index].getStatus() );
 
     return m_kalypsoStati[index];
   }
-
-  private void setStatus( int index, String status )
-  {
-    m_psiStati[index] = status;
-
-    m_data[index].setStatus( Integer.valueOf( status ).intValue() );
-  }
+//
+//  private void setStatus( int index, String status )
+//  {
+//    m_psiStati[index] = status;
+//
+//    m_data[index].setStatus( Integer.valueOf( status ).intValue() );
+//  }
 
   private void setValue( int index, Double value )
   {
     m_values[index] = value;
 
     m_data[index].setValue( value.doubleValue() );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, int)
-   */
-  public Object getElement( int index, int position )
-  {
-    switch( position )
-    {
-    case 0:
-      return m_data[index].getTimestamp();
-    case 1:
-      return getValue( index );
-    case 2:
-      return getStatus( index );
-    case 3:
-      return getKalypsoStatus( index );
-    default:
-      throw new IllegalArgumentException( "Position " + position + " ist ungültig" );
-    }
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
-   *      int)
-   */
-  public void setElement( int index, Object element, int position )
-  {
-    switch( position )
-    {
-    case 0:
-      m_data[index].setTimestamp( (Date)element );
-    case 1:
-      setValue( index, (Double)element );
-    case 2:
-      setStatus( index, (String)element );
-    case 3:
-      m_kalypsoStati[index] = (Integer)element;
-    default:
-      throw new IllegalArgumentException( "Position " + position + " ist ungültig" );
-    }
   }
 
   /**
@@ -163,5 +143,53 @@ public class PSICompactTuppleModel implements ITuppleModel
     // sein da es sich um eine Zeitreihe handelt.
 
     return Arrays.binarySearch( m_data, element, new ArchiveDataDateComparator() );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
+   */
+  public IAxis[] getAxisList()
+  {
+    return m_axes;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
+   */
+  public Object getElement( int index, IAxis axis )
+  {
+    switch( axis.getPosition() )
+    {
+    case 0:
+      return m_data[index].getTimestamp();
+    case 1:
+      return getValue( index );
+//    case 2:
+//      return getStatus( index );
+    case 2:
+      return getKalypsoStatus( index );
+    default:
+      throw new IllegalArgumentException( "Position von Axis " + axis + " ist ungültig" );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
+   */
+  public void setElement( int index, Object element, IAxis axis )
+  {
+    switch( axis.getPosition() )
+    {
+    case 0:
+      m_data[index].setTimestamp( (Date)element );
+    case 1:
+      setValue( index, (Double)element );
+//    case 2:
+//      setStatus( index, (String)element );
+    case 2:
+      m_kalypsoStati[index] = (Integer)element;
+    default:
+      throw new IllegalArgumentException( "Position von Achse " + axis + " ist ungültig" );
+    }
   }
 }
