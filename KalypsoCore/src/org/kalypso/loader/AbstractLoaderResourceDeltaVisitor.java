@@ -62,7 +62,8 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
     {
       try
       {
-        final Object oldValue = m_resourceMap.get( delta.getResource() );
+        final IResource resource = delta.getResource();
+        final Object oldValue = m_resourceMap.get( resource );
         if( oldValue != null )
           m_loader.fireLoaderObjectInvalid( oldValue, delta.getKind() == IResourceDelta.REMOVED );
       }

@@ -30,7 +30,6 @@ public class ZmlLoader extends AbstractLoader
   public ZmlLoader()
   {
     m_urlResolver = new UrlResolver();
-  
   }
 
   /**
@@ -51,7 +50,6 @@ public class ZmlLoader extends AbstractLoader
       IFile file = ResourceUtilities.findFileFromURL( url );
       if( file != null )
         addResource( file, obs );
-
       return obs;
     }
     catch( Exception e ) // generic exception caught for simplicity
