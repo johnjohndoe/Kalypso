@@ -45,7 +45,6 @@ package org.deegree_impl.model.gc;
 import java.io.Serializable;
 
 import org.opengis.gc.GC_Parameter;
-import org.opengis.gc.GC_ParameterInfo;
 
 /**
  * The parameter required for a grid coverage processing operation. This

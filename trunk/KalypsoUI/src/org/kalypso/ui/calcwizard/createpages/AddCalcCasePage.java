@@ -1,5 +1,6 @@
 package org.kalypso.ui.calcwizard.createpages;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,6 +9,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -44,18 +46,28 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
 
   private ListViewer m_caseViewer;
 
-  public AddCalcCasePage()
-  {
-    super( "addPrognoseWizardPage", "Vorhersage hinzufügen", null );
+  private Collection m_choiceListener = new LinkedList();
 
-    setTitle( "Vorhersage hinzufügen" );
+  public AddCalcCasePage( final String pagename, final String title, final ImageDescriptor image )
+  {
+    super( pagename, title, image );
+  }
+  
+  /**
+   * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
+   */
+  public void dispose()
+  {
+    m_choiceListener.clear();
+  
+    super.dispose();
   }
   
   public void addChoice( final IAddCalcCaseChoice choice )
   {
     m_choices.add( choice );
   }
-
+  
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
@@ -71,8 +83,7 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
 
     m_chooserViewer = new ComboViewer( panel, SWT.READ_ONLY | SWT.DROP_DOWN );
     m_chooserViewer.getControl().setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    //m_chooserViewer.add( m_choices );
-    
+
     m_chooserViewer.setContentProvider( new ArrayContentProvider( ) );
     m_chooserViewer.setInput( m_choices );
 
@@ -110,15 +121,22 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
 
   protected void setChoice( final IAddCalcCaseChoice choice )
   {
-    m_choice = choice;
+    if( m_choice != choice )
+    {
+      m_choice = choice;
+  
+      m_choice.validateChoice();
+      
+      fireChoiceChanged( choice );
+    }
   }
-
+  
   public IFolder getCurrentCalcCase()
   {
     return m_currentCalcCase;
   }
 
-  public IAddCalcCaseChoice getChoosen( final ISelection selection )
+  protected IAddCalcCaseChoice getChoosen( final ISelection selection )
   {
     return (IAddCalcCaseChoice)( (IStructuredSelection)selection ).getFirstElement();
   }
@@ -191,5 +209,21 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
   public List getCalcCases()
   {
     return m_calcCases;
+  }
+  
+  public void addChoiceListener( final IChoiceListener l )
+  {
+    m_choiceListener.add( l );
+  }
+  
+  public void removeChoiceListener( final IChoiceListener l )
+  {
+    m_choiceListener.remove( l );
+  }
+  
+  public void fireChoiceChanged( final IAddCalcCaseChoice newChoice )
+  {
+    for( final  Iterator iter = m_choiceListener.iterator(); iter.hasNext(); )
+      ((IChoiceListener)iter.next()).onChoiceChanged( newChoice );
   }
 }

@@ -18,6 +18,7 @@ public class ExpandAllAction extends AbstractRepositoryExplorerAction
    */
   public void run()
   {
+    // Marc TODO: this operation blocks! do it in a job!
     getExplorer().getViewer().expandAll();
   }
 }

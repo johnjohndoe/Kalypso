@@ -101,6 +101,8 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
   protected void setFolder( final IFolder folder )
   {
     m_folder = folder;
+    
+    validateChoice();
   }
   
   public void refresh( final IProgressMonitor monitor ) throws CoreException
@@ -138,7 +140,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     final Viewer viewer = m_viewer;
     if( viewer != null )
     {
-      viewer.getControl().getDisplay().asyncExec( new Runnable()
+      viewer.getControl().getDisplay().syncExec( new Runnable()
       {
         public void run()
         {
@@ -152,7 +154,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
       } );
     }
     
-    m_page.getWizard().getContainer().updateButtons();
+//    m_page.getWizard().getContainer().updateButtons();
   }
 
   /**
@@ -191,4 +193,22 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     return false;
   }
 
+  /**
+   * @see org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice#validateChoice()
+   */
+  public void validateChoice()
+  {
+    if( m_folder == null )
+    {
+      m_page.setErrorMessage( "Es muss ein vorhandener Rechenfall ausgewählt werden." );
+      m_page.setMessage( null );
+      m_page.setPageComplete( false );
+    }
+    else
+    {
+      m_page.setErrorMessage( null );
+      m_page.setMessage( null );
+      m_page.setPageComplete( true );
+    }
+  }
 }

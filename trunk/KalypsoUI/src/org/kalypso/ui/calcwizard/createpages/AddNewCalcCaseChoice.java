@@ -40,7 +40,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
   public static final String TOOLTIP = "Geben Sie hier die Bezeichnung des Rechenfalls ein";
 
-  private SimpleDateFormat m_format = new SimpleDateFormat( "dd-MM-yyyy_hh:mm" );
+  private SimpleDateFormat m_format = new SimpleDateFormat( "dd-MM-yyyy_HH'h'mm" );
 
   protected String m_name;
 
@@ -98,16 +98,25 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
   protected void setName( final String text )
   {
-    final IStatus status = m_project.getWorkspace().validateName( text, IResource.FILE );
+    m_name = text;
+    
+    validateChoice();
+  }
+  
+  public void validateChoice()
+  {
+    final IStatus status = m_project.getWorkspace().validateName( m_name, IResource.FOLDER );
     if( status.getSeverity() == IStatus.OK )
     {
       m_page.setErrorMessage( null );
       m_page.setMessage( null );
+      m_page.setPageComplete( true );
     }
     else
     {
-      m_page.setMessage( null );
       m_page.setErrorMessage( status.getMessage() );
+      m_page.setMessage( null );
+      m_page.setPageComplete( false );
     }
   }
 
@@ -158,24 +167,22 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
     buffer.append( m_format.format( new Date() ) );
 
-    final int count = createNewName( buffer.toString() );
-    if( count != 0 )
-      buffer.append( "_#" + count );
+    final String newName = createNewName( buffer.toString() );
 
     final Text edit = m_edit;
     if( !edit.isDisposed() )
     {
-      edit.getDisplay().asyncExec( new Runnable()
+      edit.getDisplay().syncExec( new Runnable()
       {
         public void run()
         {
-          edit.setText( buffer.toString() );
+          edit.setText( newName );
         }
       } );
     }
   }
 
-  private int createNewName( final String dateString ) throws CoreException
+  private String createNewName( final String dateString ) throws CoreException
   {
     final ModelNature nature = (ModelNature)m_project.getNature( ModelNature.ID );
     final IFolder prognoseFolder = nature.getPrognoseFolder();
@@ -184,10 +191,12 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
     int count = 0;
     while( true )
     {
+      final String newName = count == 0 ? dateString : ( dateString  + "_#" + count );
+      
       boolean bFound = false;
       for( int i = 0; i < resources.length; i++ )
       {
-        if( resources[i].getName().equals( dateString ) )
+        if( resources[i].getName().equals( newName ) )
         {
           bFound = true;
           break;
@@ -195,7 +204,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
       }
 
       if( !bFound )
-        return count;
+        return newName;
 
       count++;
     }

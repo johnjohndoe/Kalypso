@@ -55,7 +55,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 import javax.media.jai.ParameterList;
-import javax.media.jai.PerspectiveTransform;
 import javax.media.jai.util.Range;
 import javax.vecmath.GMatrix;
 import javax.vecmath.SingularMatrixException;

@@ -170,9 +170,10 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
   {
     boolean valid = true;
 
-    IWorkspace workspace = IDEWorkbenchPlugin.getPluginWorkspace();
+    final IWorkspace workspace = IDEWorkbenchPlugin.getPluginWorkspace();
+    final String folderName = resourceGroup.getResource();
+
     IStatus nameStatus = null;
-    String folderName = resourceGroup.getResource();
     if( folderName.indexOf( IPath.SEPARATOR ) != -1 )
     {
       StringTokenizer tok = new StringTokenizer( folderName, String.valueOf( IPath.SEPARATOR ) );

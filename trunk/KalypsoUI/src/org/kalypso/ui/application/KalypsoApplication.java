@@ -2,12 +2,8 @@ package org.kalypso.ui.application;
 
 import javax.xml.rpc.ServiceException;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPlatformRunnable;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
@@ -16,7 +12,6 @@ import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.proxy.IUserService;
 import org.kalypso.services.user.common.IUserServiceConstants;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.calcwizard.CalcWizard;
 
 /**
  * @author belger
@@ -115,15 +110,16 @@ public class KalypsoApplication implements IPlatformRunnable
 
   private Object startPrognose()
   {
-    final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+//    final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 
-    final Display display = new Display();
-    final Shell shell = new Shell( display );
+//    final Display display = new Display();
+//    final Shell shell = new Shell( display );
 
-    final CalcWizard wizard = new CalcWizard( projects[0] );
-
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
-    dialog.open();
+    // TODO!
+//    final CalcWizard wizard = new CalcWizard( projects[0] );
+//
+//    final WizardDialog dialog = new WizardDialog( shell, wizard );
+//    dialog.open();
 
     return null;
   }

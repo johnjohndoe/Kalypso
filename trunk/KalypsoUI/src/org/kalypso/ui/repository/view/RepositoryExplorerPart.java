@@ -399,6 +399,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     {
       try
       {
+        // TODO: Marc: bei neuer Workbench gibts hier ne NullPointerException (.getTextData() ) gibt nul zurück glaube ich)
         final RepositoryConfigItem item = RepositoryConfigItem.restore( repMem[i].getTextData() );
 
         m_repContainer.addRepository( item.createFactory( getClass().getClassLoader() ).createRepository(), KalypsoGisPlugin.getDefault().getDefaultRepositoryProperties() );

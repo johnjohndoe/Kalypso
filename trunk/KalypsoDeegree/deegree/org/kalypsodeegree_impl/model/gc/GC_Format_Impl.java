@@ -15,7 +15,6 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 import org.opengis.gc.GC_Format;
-import org.opengis.gc.GC_GridCoverageExchange;
 import org.opengis.gc.GC_ParameterInfo;
 
 /**

@@ -14,7 +14,6 @@ package org.deegree_impl.model.gc;
 import java.io.Serializable;
 
 import org.opengis.gc.GC_ByteInValuePacking;
-import org.opengis.gc.GC_GridCoverage;
 import org.opengis.gc.GC_GridPacking;
 import org.opengis.gc.GC_ValueInBytePacking;
 

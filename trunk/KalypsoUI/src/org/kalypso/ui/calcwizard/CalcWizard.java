@@ -64,7 +64,7 @@ public class CalcWizard implements IWizard, IProjectProvider
    */
   public void addPages()
   {
-    m_addCalcCasePage = new AddCalcCasePage();
+    m_addCalcCasePage = new AddCalcCasePage( "addCalcCasePage", "Vorhersagen erzeugen", ImageProvider.IMAGE_ICON_GTT );
     m_controlPage = new SteuerparameterWizardPage( this, true );
     
     m_addCalcCasePage.addChoice( new AddNewCalcCaseChoice( "einen neuen Rechenfall erzeugen", m_project, m_addCalcCasePage ) );
