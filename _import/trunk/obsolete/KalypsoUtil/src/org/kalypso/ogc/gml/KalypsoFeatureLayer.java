@@ -60,6 +60,17 @@ public class KalypsoFeatureLayer implements FeatureLayer, ModellEventProvider, M
     
     fireModellEvent(null);
   }
+  
+  public DisplayContext createDisplayContext(Feature fe)
+  {
+      return mySort.createDisplayContext(fe);
+  }
+  public void add(final DisplayContext dc)
+  {
+      mySort.add(dc);
+
+      fireModellEvent(null);
+    }
 
   /**
    * @see org.deegree.graphics.FeatureLayer#addFeatureCollection(org.deegree.model.feature.FeatureCollection)
@@ -82,6 +93,12 @@ public class KalypsoFeatureLayer implements FeatureLayer, ModellEventProvider, M
     return (Feature[])result.toArray( new Feature[result.size()] );
   }
 
+  public DisplayContext[] getAllDisplayContexts()
+  {
+    final List result = new ArrayList();
+    mySort.queryAll(result);
+    return (DisplayContext[])result.toArray( new DisplayContext[result.size()] );    
+  }
   /**
    * @see org.deegree.graphics.FeatureLayer#getFeature(int)
    */
@@ -142,7 +159,13 @@ public class KalypsoFeatureLayer implements FeatureLayer, ModellEventProvider, M
     fireModellEvent(null);
   }
 
-  /**
+  public void remove( DisplayContext dc) throws Exception
+  {
+    mySort.remove( dc );
+    
+    fireModellEvent(null);
+  }
+ /**
    * @see org.deegree.graphics.FeatureLayer#removeFeature(int)
    */
   public void removeFeature( int index ) throws Exception

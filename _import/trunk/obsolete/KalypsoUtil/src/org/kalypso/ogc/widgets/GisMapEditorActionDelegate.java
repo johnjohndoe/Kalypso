@@ -19,8 +19,7 @@ public abstract class GisMapEditorActionDelegate implements IEditorActionDelegat
    */
   public void setActiveEditor( IAction action, IEditorPart targetEditor )
   {
-    System.out.println("setActiveEditor... wenn der Editor wechselt...");
-    myEditor= (IMapModellProvider)targetEditor;
+   myEditor= (IMapModellProvider)targetEditor;
   }
 
   /**
@@ -28,8 +27,7 @@ public abstract class GisMapEditorActionDelegate implements IEditorActionDelegat
    */
   public void selectionChanged( IWorkbenchPart part, ISelection selection )
   {
-    System.out.println("selectionChanged(IWorkbenchpart,ISelection...");
-     
+    //
   }
 
   /**
@@ -37,8 +35,7 @@ public abstract class GisMapEditorActionDelegate implements IEditorActionDelegat
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    System.out.println("selectionChanged(IAction,ISelection...");
-      
+  //    
   }
 
 }

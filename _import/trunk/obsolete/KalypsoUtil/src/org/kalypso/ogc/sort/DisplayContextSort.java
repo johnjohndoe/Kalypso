@@ -53,7 +53,7 @@ public class DisplayContextSort implements ModellEventListener, ModellEventProvi
     init( crs, boundingBox );
   }
 
-  public void init( CS_CoordinateSystem crs, GM_Envelope boundingBox )
+  private void init( CS_CoordinateSystem crs, GM_Envelope boundingBox )
   {
     myStyles = new ArrayList();
     myStylesHash = new Hashtable();
@@ -71,22 +71,36 @@ public class DisplayContextSort implements ModellEventListener, ModellEventProvi
   public void setCoordinatesSystem( CS_CoordinateSystem crs ) throws Exception
   {
     if( !myCrs.equals( crs ) )
-      throw new Exception( "not supported" );
+      throw new UnsupportedOperationException();
   }
 
   public DisplayContext add( Feature fe ) throws Exception
   {
     transformFeature( fe );
-    DisplayContext dc = new DisplayContext( fe, getStyles() );
+    DisplayContext dc =createDisplayContext(fe); 
     mySort.add( dc );
     myFeatures.add( fe );
+    return dc;
+  }
+  
+  public DisplayContext createDisplayContext(Feature fe)
+  {
+    return new DisplayContext( fe, getStyles() );
+  }
+
+  public DisplayContext add( DisplayContext dc )
+  {
+//    transformFeature( fe );
+//    DisplayContext dc = new DisplayContext( fe, getStyles() );
+    mySort.add( dc );
+    myFeatures.add( dc.getFeature());
     return dc;
   }
 
   public void remove( Feature fe )
   {
     remove( new DisplayContext( fe ) );
-  }
+   }
 
   public void remove( DisplayContext dc )
   {
@@ -97,6 +111,16 @@ public class DisplayContextSort implements ModellEventListener, ModellEventProvi
   public List getAllFeatures()
   {
     return myFeatures;
+  }
+  
+  public List queryAll(List list)
+  {
+    return mySort.queryAll(list);
+  }
+
+  public List query(GM_Envelope env,List list)
+  {
+    return mySort.query(env,list);
   }
 
   public void paint( Graphics g, GeoTransform projection, UserStyle style, double scale,
