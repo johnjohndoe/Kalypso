@@ -20,23 +20,30 @@ import org.kalypso.repository.beans.ItemBean;
 public interface IRepositoryService extends Remote
 {
   /**
-   * Returns true if the given parent has children.
+   * @param parent
+   * @return true if the given parent has children.
+   * @throws RemoteException
    */
   public boolean hasChildren( final ItemBean parent ) throws RemoteException;
   
   /**
-   * Returns the children of the given item (parent node). Returns an empty array
+   * @param parent
+   * @return the children of the given item (parent node). Returns an empty array
    * when the parent has no children.
+   * @throws RemoteException
    */
   public ItemBean[] getChildren( final ItemBean parent ) throws RemoteException;
   
   /**
-   * Returns ItemBean if found, else throws exception. 
+   * @param id
+   * @return ItemBean if found, else null.
+   * @throws RemoteException
    */
   public ItemBean findItem( final String id ) throws RemoteException;
   
   /**
    * Forces the refresh of the remote repository.
+   * @throws RemoteException
    */
   public void reload() throws RemoteException;
 }
