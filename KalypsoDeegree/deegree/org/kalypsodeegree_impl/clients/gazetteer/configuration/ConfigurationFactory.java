@@ -1,6 +1,6 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/clients/gazetteer/configuration/ConfigurationFactory.java,v
-// 1.1.1.1 2004/05/11 16:43:27 doemming Exp $
+// /cvsroot/deegree/deegree/org/deegree_impl/clients/gazetteer/configuration/ConfigurationFactory.java,v
+// 1.3 2004/07/09 07:16:18 poth Exp $
 
 /*----------------    FILE HEADER  ------------------------------------------
 
@@ -137,7 +137,7 @@ public class ConfigurationFactory
 
     for( int i = 0; i < nl.getLength(); i++ )
     {
-      Element element = (Element)nl.item( i );
+      Element element = nl.item( i );
       Node node = element.getElementsByTagNameNS( GZNS, "name" ).item( 0 );
       String name = node.getFirstChild().getNodeValue();
       node = element.getElementsByTagNameNS( GZNS, "onlineResource" ).item( 0 );
@@ -153,8 +153,8 @@ public class ConfigurationFactory
 }
 /*******************************************************************************
  * Changes to this class. What the people have been up to: $Log:
- * ConfigurationFactory.java,v $ Revision 1.1.1.1 2004/05/11 16:43:27 doemming
- * backup of local modified deegree sources
+ * ConfigurationFactory.java,v $ Revision 1.3 2004/07/09 07:16:18 poth no
+ * message
  * 
  * Revision 1.2 2004/03/24 12:36:22 poth no message
  * 

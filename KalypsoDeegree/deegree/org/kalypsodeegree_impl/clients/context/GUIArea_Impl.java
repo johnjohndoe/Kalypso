@@ -42,7 +42,9 @@
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.clients.context;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.deegree.clients.context.GUIArea;
 import org.deegree.clients.context.Module;
@@ -63,6 +65,8 @@ public class GUIArea_Impl implements GUIArea, Marshallable
   private boolean hidden = false;
 
   private int area = 0;
+
+  private List list = new ArrayList();
 
   /**
    * Creates a new GUIArea_Impl object.
@@ -137,8 +141,9 @@ public class GUIArea_Impl implements GUIArea, Marshallable
    */
   public Module[] getModules()
   {
-    Module[] mo = new Module[modules.size()];
-    return (Module[])modules.values().toArray( mo );
+    Module[] cl = new Module[list.size()];
+    return (Module[])list.toArray( cl );
+
   }
 
   /**
@@ -149,12 +154,14 @@ public class GUIArea_Impl implements GUIArea, Marshallable
   public void setModules( Module[] modules )
   {
     this.modules.clear();
+    this.list.clear();
 
     if( modules != null )
     {
       for( int i = 0; i < modules.length; i++ )
       {
         this.modules.put( modules[i].getName(), modules[i] );
+        list.add( modules[i] );
       }
     }
   }
@@ -167,6 +174,7 @@ public class GUIArea_Impl implements GUIArea, Marshallable
   public void addModul( Module module )
   {
     modules.put( module.getName(), module );
+    list.add( module );
   }
 
   /**
@@ -178,9 +186,14 @@ public class GUIArea_Impl implements GUIArea, Marshallable
    */
   public Module removeModule( String name )
   {
-    return (Module)modules.remove( name );
+    Module module = (Module)modules.remove( name );
+    list.remove( module );
+    return module;
   }
 
+  /**
+   * @see org.deegree.xml.Marshallable#exportAsXML()
+   */
   public String exportAsXML()
   {
     return null;

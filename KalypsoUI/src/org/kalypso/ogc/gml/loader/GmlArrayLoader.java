@@ -5,6 +5,7 @@ import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
@@ -17,7 +18,6 @@ import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.xml.sax.InputSource;
 
 /**
  * @author schlienger
@@ -46,15 +46,18 @@ public final class GmlArrayLoader extends AbstractLoader
       final String schemaPath = source.getProperty( "XSD", "" );
       final IFile schemaFile = project.getFile( schemaPath );
   
-      final InputSource schemaSource = new InputSource( schemaFile.getContents() );
-      schemaSource.setEncoding( schemaFile.getCharset() );
+      final URL schemaURL = new URL( "platform:/resource/" + schemaFile.getFullPath().toOSString() );
+      
+//      final InputSource schemaSource = new InputSource( schemaFile.getContents() );
+//      schemaSource.setEncoding( schemaFile.getCharset() );
       
       final String gmlPath = source.getProperty( "PATH", "" );
       final IFile gmlFile = project.getFile( gmlPath );
-      final InputSource gmlSource = new InputSource( gmlFile.getContents() );
-      gmlSource.setEncoding( gmlFile.getCharset() );
+      final URL gmlURL = new URL( "platform:/resource/" + gmlFile.getFullPath().toOSString() );
+//      final InputSource gmlSource = new InputSource( gmlFile.getContents() );
+//      gmlSource.setEncoding( gmlFile.getCharset() );
   
-      return GmlSerializer.deserialize( schemaSource, gmlSource, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), monitor );
+      return GmlSerializer.deserialize( schemaURL, gmlURL, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), monitor );
     }
     catch( final Exception e )
     {
@@ -67,7 +70,7 @@ public final class GmlArrayLoader extends AbstractLoader
    *      org.eclipse.core.resources.IProject,
    *      org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    * 
-   * TODO: besseres error-handling: am besten IStatus zurückgeben lassen
+   * TODO: besseres error-handling: am besten IStatus zur?ckgeben lassen
    */
   public void save( final Properties source, final IProject project,
       final IProgressMonitor monitor, final Object data ) throws LoaderException

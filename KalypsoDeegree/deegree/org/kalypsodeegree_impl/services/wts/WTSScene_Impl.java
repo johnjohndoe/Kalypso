@@ -302,7 +302,7 @@ public class WTSScene_Impl implements WTSScene
    * sets the features that shall be rendered. the first feature of the array
    * shall be the digital elevation model
    * 
-   * @param feature
+   * @param features
    *          features to publish into the scene
    */
   public void setFeatures( Group[] features )
@@ -398,7 +398,6 @@ public class WTSScene_Impl implements WTSScene
    * adds a atmospheric condition to the scene.
    * <p>
    * 
-   * @see setAtmosphericConditions(AtmosphericCondition[])
    * @param condition
    *          atmospheric conditions of the scene like fog, rain etc.
    */

@@ -201,12 +201,12 @@ public interface WCSGetCoverageRequest extends OGCWebServiceRequest
   int getWidth();
 
   /**
-   * @see getWidth
+   * @see #getWidth()
    */
   int getHeight();
 
   /**
-   * @see getWidth
+   * @see #getWidth()
    */
   int getDepth();
 
@@ -234,12 +234,12 @@ public interface WCSGetCoverageRequest extends OGCWebServiceRequest
   double getResX();
 
   /**
-   * @see getResX
+   * @see #getResX()
    */
   double getResY();
 
   /**
-   * @see getResX
+   * @see #getResX()
    */
   double getResZ();
 

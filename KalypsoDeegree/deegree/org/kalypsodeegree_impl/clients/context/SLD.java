@@ -276,9 +276,7 @@ public class SLD implements Marshallable
     this.styledLayerDescriptor = styledLayerDescriptor;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.deegree.xml.Marshallable#exportAsXML()
    */
   public String exportAsXML()

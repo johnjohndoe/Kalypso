@@ -45,10 +45,15 @@ package org.deegree_impl.services.wfs.protocol;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.deegree.gml.GMLFeature;
+import org.deegree.model.geometry.GM_Envelope;
+import org.deegree.services.InconsistentRequestException;
 import org.deegree.services.OGCWebServiceException;
 import org.deegree.services.OGCWebServiceRequest;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
@@ -75,8 +80,10 @@ import org.deegree.xml.Marshallable;
 import org.deegree.xml.XMLParsingException;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.gml.GMLFeature_Impl;
+import org.deegree_impl.model.geometry.GeometryFactory;
 import org.deegree_impl.services.wfs.filterencoding.AbstractFilter;
 import org.deegree_impl.tools.Debug;
+import org.deegree_impl.tools.StringExtend;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -93,8 +100,6 @@ import org.w3c.dom.NodeList;
  */
 public class WFSProtocolFactory
 {
-
-  private static String gmlNS = "http://www.opengis.net/gml";
 
   private static String wfsNS = "http://www.opengis.net/wfs";
 
@@ -204,12 +209,8 @@ public class WFSProtocolFactory
    *          a copy of the request that leads to this response
    * @param exception
    *          a describtion of an excetion (only if raised)
-   * @param native_
-   *          is intended to allow access to vendor specific capabilities
    * @param affectedFeatureTypes
    *          names of the feature types affected by the response
-   * @param featureTypeSchemas
-   *          schemas of the feature types which describtion has been requested.
    */
   public static WFSDescribeFeatureTypeResponse createWFSDescribeFeatureTypeResponse(
       OGCWebServiceRequest request, String[] affectedFeatureTypes,
@@ -240,6 +241,213 @@ public class WFSProtocolFactory
   }
 
   /**
+   * creates a GetFeature request from a key-value-pair encoding of the
+   * parameters contained in the passed varialble 'request'
+   * 
+   * @param id
+   *          id of the request
+   * @param request
+   *          key-value-pair encoded GetFeature request
+   */
+  public static WFSGetFeatureRequest createWFSGetFeatureRequest( String id, String request )
+      throws InconsistentRequestException
+  {
+    Debug.debugMethodBegin();
+
+    Map model = toMap( request );
+
+    // WFS version
+    String version = (String)model.remove( "VERSION" );
+    if( version == null )
+    {
+      throw new InconsistentRequestException( "version parameter must be set" );
+    }
+
+    // requested feature types or featureIds
+    String tmp = (String)model.remove( "TYPENAME" );
+    String[] typenames = null;
+    String[] featureIds = null;
+    if( tmp == null && model.get( "FEATUREID" ) == null )
+    {
+      throw new InconsistentRequestException( "typename or featureid parameter must be set" );
+    }
+    else if( tmp != null )
+    {
+      typenames = StringExtend.toArray( tmp, ",", false );
+    }
+    else
+    {
+      tmp = (String)model.remove( "FEATUREID" );
+      featureIds = StringExtend.toArray( tmp, ",", false );
+    }
+
+    tmp = (String)model.remove( "PROPERTYNAME" );
+    Map typeProp = new HashMap();
+    // assign properties to feature types
+    if( tmp != null )
+    {
+      String[] tmpa = StringExtend.toArray( tmp, ")", false );
+      if( typenames != null )
+      {
+        if( tmpa.length != typenames.length )
+        {
+          throw new InconsistentRequestException( "if properties are defined "
+              + "it must be done for each featuretype" );
+        }
+        for( int i = 0; i < tmpa.length; i++ )
+        {
+          if( tmpa[i].length() > 1 )
+          {
+            typeProp.put( typenames[i], tmpa[i].substring( 1 ) );
+          }
+          else
+          {
+            typeProp.put( typenames[i], null );
+          }
+        }
+      }
+      else
+      {
+        if( tmpa.length != featureIds.length )
+        {
+          throw new InconsistentRequestException( "if properties are defined "
+              + "it must be done for each featureID" );
+        }
+        for( int i = 0; i < tmpa.length; i++ )
+        {
+          if( tmpa[i].length() > 1 )
+          {
+            typeProp.put( featureIds[i], tmpa[i].substring( 1 ) );
+          }
+          else
+          {
+            typeProp.put( featureIds[i], null );
+          }
+        }
+      }
+    }
+    else
+    {
+      if( typenames != null )
+      {
+        for( int i = 0; i < typenames.length; i++ )
+        {
+          typeProp.put( typenames[i], null );
+        }
+      }
+      else
+      {
+        for( int i = 0; i < featureIds.length; i++ )
+        {
+          typeProp.put( featureIds[i], null );
+        }
+      }
+    }
+
+    // max features
+    tmp = (String)model.remove( "MAXFEATURES" );
+    int maxFeatures = -1;
+    if( tmp != null )
+    {
+      try
+      {
+        maxFeatures = Integer.parseInt( tmp );
+        if( maxFeatures < 1 )
+          throw new Exception();
+      }
+      catch( Exception e )
+      {
+        throw new InconsistentRequestException( "if maxFeatures is defined "
+            + "it must be an integer > 0" );
+      }
+    }
+
+    // Filters
+    Map typeFilter = new HashMap();
+    tmp = (String)model.remove( "FILTER" );
+    if( tmp != null && featureIds == null )
+    {
+      String[] tmpa = StringExtend.toArray( tmp, ")", false );
+      if( tmpa.length != typenames.length )
+      {
+        throw new InconsistentRequestException( "if filters are defined "
+            + "it must be done for each featuretype" );
+      }
+      for( int i = 0; i < tmpa.length; i++ )
+      {
+        if( tmpa[i].length() > 1 )
+        {
+          Filter filter = null;
+          try
+          {
+            String s = URLDecoder.decode( tmpa[i].substring( 1 ), "UTF-8" );
+            StringReader sr = new StringReader( s );
+            Document doc = XMLTools.parse( sr );
+            filter = AbstractFilter.buildFromDOM( doc.getDocumentElement() );
+          }
+          catch( Exception e )
+          {}
+          typeFilter.put( typenames[i], filter );
+        }
+        else
+        {
+          typeFilter.put( typenames[i], null );
+        }
+      }
+    }
+    else
+    {
+      throw new InconsistentRequestException( "A Filter can't be defined with a FeatureId" );
+    }
+
+    // BBOX
+    tmp = (String)model.remove( "BBOX" );
+    if( tmp != null && featureIds == null )
+    {
+      Filter filter = null;
+      try
+      {
+        double[] tempa = StringExtend.toArrayDouble( tmp, "," );
+        GM_Envelope bbox = GeometryFactory.createGM_Envelope( tempa[0], tempa[1], tempa[2],
+            tempa[3] );
+      }
+      catch( Exception e )
+      {}
+    }
+    else
+    {
+      throw new InconsistentRequestException( "A BBOX can't be defined with a FeatureId" );
+    }
+
+    // outputFormat
+    String outputFormat = (String)model.remove( "OUTPUTFORMAT" );
+    if( outputFormat == null )
+    {
+      outputFormat = "GML2";
+    }
+
+    WFSQuery[] queries = null;
+    if( typenames != null )
+    {
+      queries = new WFSQuery[typenames.length];
+      for( int i = 0; i < typenames.length; i++ )
+      {
+        queries[i] = createQuery( (String[])typeProp.get( typenames[i] ), null, version,
+            typenames[i], (Filter)typeFilter.get( typenames[i] ) );
+      }
+    }
+    else
+    {}
+    //createQuery(String[] propertyNames, String handle, String version, String
+    // typeName, Filter filter)
+    // TODO create WFSGetFeatureRequest
+    WFSGetFeatureRequest gfRequest = null;
+
+    Debug.debugMethodEnd();
+    return gfRequest;
+  }
+
+  /**
    * creates a <tt>WFSGetFeatureRequest</tt> object.
    * 
    * @param id
@@ -250,8 +458,6 @@ public class WFSProtocolFactory
    *          is intended to allow access to vendor specific capabilities
    * @param outputFormat
    *          indicates the format the result shall be formated
-   * @param mnemonic
-   *          name to the <Query>request
    * @param filter
    *          filter expression that describes the 'global' limitations of the
    *          query.
@@ -371,8 +577,11 @@ public class WFSProtocolFactory
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
-        if( nl.item( i ) instanceof Element && nl.item( i ).getLocalName().equals( "Query" ) )
+        if( nl.item( i ) instanceof Element
+            && XMLTools.toLocalName( nl.item( i ).getNodeName() ).equals( "Query" ) )
         {
+          //if (nl.item(i) instanceof Element &&
+          // nl.item(i).getLocalName().equals("Query")) {
           Element elem = (Element)nl.item( i );
           String[] propertyNames = getPropertyNames( elem );
           String handle = XMLTools.getAttrValue( elem, "handle" );
@@ -454,8 +663,6 @@ public class WFSProtocolFactory
    *          a copy of the request that leads to this response
    * @param exception
    *          a describtion of an excetion (only if raised)
-   * @param native_
-   *          is intended to allow access to vendor specific capabilities
    * @param affectedFeatureTypes
    *          names of the feature types affected by the response
    * @param response
@@ -517,10 +724,6 @@ public class WFSProtocolFactory
    *          a copy of the request that leads to this response
    * @param exception
    *          a describtion of an excetion (only if raised)
-   * @param native_
-   *          is intended to allow access to vendor specific capabilities
-   * @param affectedFeatureTypes
-   *          names of the feature types affected by the response
    * @param response
    *          the response to the request
    */
@@ -860,16 +1063,53 @@ public class WFSProtocolFactory
     Debug.debugMethodEnd();
     return result;
   }
+
+  /**
+   * puts a http-GET request to a <tt>HashMap</tt>
+   */
+  private static Map toMap( String request )
+  {
+    StringTokenizer st = new StringTokenizer( request, "&?" );
+    HashMap map = new HashMap();
+
+    while( st.hasMoreTokens() )
+    {
+      String s = st.nextToken();
+
+      if( s != null )
+      {
+        int pos = s.indexOf( '=' );
+
+        if( pos > -1 )
+        {
+          String s1 = s.substring( 0, pos );
+          String s2 = s.substring( pos + 1, s.length() );
+          map.put( s1.toUpperCase(), s2 );
+        }
+      }
+    }
+
+    return map;
+  }
 }
 
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:56  doemming
+ * Revision 1.3  2004/10/07 14:09:12  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:25
- * doemming backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:53:32 doemming
+ * *** empty log message *** Revision 1.29 2004/06/24 14:23:04 poth no message
+ * 
+ * Revision 1.28 2004/04/27 15:40:38 poth no message
+ * 
+ * Revision 1.27 2004/04/07 06:43:50 poth no message
+ * 
+ * Revision 1.26 2004/04/05 07:36:39 poth no message
  * 
  * Revision 1.25 2004/03/26 11:19:32 poth no message
  * 
@@ -902,48 +1142,4 @@ public class WFSProtocolFactory
  * 
  * Revision 1.10 2003/05/15 15:55:12 mrsnyder Implemented WFSUpdate. Fixed some
  * WFSInsert problems.
- * 
- * Revision 1.9 2003/05/14 16:07:10 mrsnyder Implemented WFSDelete and WFSUpdate
- * functionality.
- * 
- * Revision 1.8 2003/05/09 13:43:25 mrsnyder Added support for WFS-Delete
- * Requests.
- * 
- * Revision 1.7 2003/04/23 07:27:42 poth no message
- * 
- * Revision 1.6 2003/04/07 07:26:56 poth no message
- * 
- * Revision 1.5 2003/02/14 11:02:40 poth no message
- * 
- * Revision 1.4 2002/12/03 16:55:59 poth no message
- * 
- * Revision 1.3 2002/12/02 09:48:13 poth no message
- * 
- * Revision 1.2 2002/11/25 09:32:42 poth no message
- * 
- * Revision 1.1.1.1 2002/09/25 16:01:25 poth no message
- * 
- * Revision 1.11 2002/08/20 15:56:36 ap no message
- * 
- * Revision 1.10 2002/08/15 10:01:40 ap no message
- * 
- * Revision 1.9 2002/08/09 15:36:30 ap no message
- * 
- * Revision 1.8 2002/07/11 06:47:21 ap no message
- * 
- * Revision 1.7 2002/07/10 14:18:26 ap no message
- * 
- * Revision 1.6 2002/07/09 15:10:11 ap no message
- * 
- * Revision 1.5 2002/06/03 16:03:05 ap no message
- * 
- * Revision 1.4 2002/05/29 16:09:38 ap no message
- * 
- * Revision 1.3 2002/05/17 15:58:18 ap no message
- * 
- * Revision 1.2 2002/05/14 14:39:51 ap no message
- * 
- * Revision 1.1 2002/05/13 16:11:02 ap no message
- * 
- *  
  */

@@ -55,10 +55,19 @@ import org.deegree.model.geometry.GM_Envelope;
 public class SelectionEntry
 {
 
+  /**
+   * Comment for <code>UNKNOWN</code>
+   */
   public static int UNKNOWN = -1;
 
+  /**
+   * Comment for <code>VIEW</code>
+   */
   public static int VIEW = 0;
 
+  /**
+   * Comment for <code>DOWNLOAD</code>
+   */
   public static int DOWNLOAD = 1;
 
   private GM_Envelope bbox = null;

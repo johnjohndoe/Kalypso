@@ -49,6 +49,7 @@ import org.deegree.gml.GMLException;
 import org.deegree.gml.GMLFeature;
 import org.deegree.gml.GMLGeoProperty;
 import org.deegree.gml.GMLProperty;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.DOMPrinter;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.tools.Debug;
@@ -219,7 +220,7 @@ public class GMLFeature_Impl implements GMLFeature
     }
 
     // create new description
-    Element elem = element.getOwnerDocument().createElementNS( GMLGeometricMapping.GMLNS,
+    Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
         "gml:description" );
     Text text = element.getOwnerDocument().createTextNode( description );
     elem.appendChild( text );
@@ -233,20 +234,24 @@ public class GMLFeature_Impl implements GMLFeature
    */
   public String getName()
   {
-    Debug.debugMethodBegin( this, "getName" );
-
-    String name = element.getTagName();
-
-    NodeList nl = element.getElementsByTagName( "gml:name" );
-
-    if( ( nl != null ) && ( nl.getLength() > 0 ) )
-    {
-      Element elem = (Element)nl.item( 0 );
-      name = elem.getFirstChild().getNodeValue();
-    }
-
-    Debug.debugMethodEnd();
-    return name;
+    return element.getNodeName();
+// FIXED v.doemming@tuhh.de property gml:name should appear as a property 
+//
+//    Debug.debugMethodBegin( this, "getName" );
+//
+//    String name = null;
+//
+//    NodeList nl = element.getElementsByTagName( "gml:name" );
+//
+//    if( ( nl != null ) && ( nl.getLength() > 0 ) )
+//    {
+//      Element elem = (Element)nl.item( 0 );
+//      name = elem.getFirstChild().getNodeValue();
+//    }
+//
+//    Debug.debugMethodEnd();
+//   
+//    return name;
   }
 
   /**
@@ -265,8 +270,7 @@ public class GMLFeature_Impl implements GMLFeature
     }
 
     // create new description
-    Element elem = element.getOwnerDocument().createElementNS( GMLGeometricMapping.GMLNS,
-        "gml:name" );
+    Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS, "gml:name" );
     Text text = element.getOwnerDocument().createTextNode( name );
     elem.appendChild( text );
     element.appendChild( elem );
@@ -291,7 +295,7 @@ public class GMLFeature_Impl implements GMLFeature
 
     GMLBox box = null;
 
-    NodeList nl = element.getElementsByTagNameNS( GMLGeometricMapping.GMLNS, "boundedBy" );
+    NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "boundedBy" );
 
     if( ( nl != null ) && ( nl.getLength() > 0 ) )
     {
@@ -482,10 +486,7 @@ public class GMLFeature_Impl implements GMLFeature
     {
       return null;
     }
-    else
-    {
-      return (GMLProperty[])list.toArray( new GMLProperty[list.size()] );
-    }
+    return (GMLProperty[])list.toArray( new GMLProperty[list.size()] );
   }
 
   /**
@@ -582,10 +583,7 @@ public class GMLFeature_Impl implements GMLFeature
 
       return s.length() > 0;
     }
-    else
-    {
-      return false;
-    }
+    return false;
   }
 
   /**
@@ -627,10 +625,15 @@ public class GMLFeature_Impl implements GMLFeature
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:58  doemming
+ * Revision 1.3  2004/10/07 14:09:14  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:24 doemming
- * backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 13:03:30 doemming ***
+ * empty log message *** Revision 1.14 2004/07/09 07:16:56 poth no message
+ * 
+ * Revision 1.13 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.12 2004/03/02 07:38:14 poth no message
  * 

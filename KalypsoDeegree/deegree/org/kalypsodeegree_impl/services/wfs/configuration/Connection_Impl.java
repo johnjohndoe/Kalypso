@@ -64,8 +64,6 @@ public class Connection_Impl implements Connection
 
   private String sdeDatabase = null;
 
-  private String spatialVersion = null;
-
   private String user = null;
 
   /**
@@ -93,7 +91,7 @@ public class Connection_Impl implements Connection
   }
 
   /**
-   * @see getDriver
+   * @see Connection_Impl#getDriver()
    */
   public void setDriver( String driver )
   {
@@ -109,7 +107,7 @@ public class Connection_Impl implements Connection
   }
 
   /**
-   * @see getLogon
+   * @see Connection_Impl#getLogon()
    */
   public void setLogon( String logon )
   {
@@ -127,7 +125,7 @@ public class Connection_Impl implements Connection
   }
 
   /**
-   * @see getUser
+   * @see Connection_Impl#getUser()
    */
   public void setUser( String user )
   {
@@ -152,7 +150,7 @@ public class Connection_Impl implements Connection
   }
 
   /**
-   * @see getPassword
+   * @see Connection_Impl#getPassword()
    */
   public void setPassword( String password )
   {
@@ -167,24 +165,6 @@ public class Connection_Impl implements Connection
   }
 
   /**
-   * returns the version number of the spatial extension if an Oracle Spatial
-   * database is used.
-   *  
-   */
-  public String getSpatialVersion()
-  {
-    return spatialVersion;
-  }
-
-  /**
-   * @see getSpatialVersion
-   */
-  public void setSpatialVersion( String spatialVersion )
-  {
-    this.spatialVersion = spatialVersion;
-  }
-
-  /**
    * returns the name of the sde database that is assigned to a SDE connection.
    *  
    */
@@ -194,7 +174,7 @@ public class Connection_Impl implements Connection
   }
 
   /**
-   * @see getSDEDatabase
+   * @see Connection_Impl#getSDEDatabase()
    */
   public void setSDEDatabase( String sdeDatabase )
   {

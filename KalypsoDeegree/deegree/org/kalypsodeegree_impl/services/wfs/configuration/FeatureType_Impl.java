@@ -151,7 +151,7 @@ public class FeatureType_Impl implements FeatureType
   }
 
   /**
-   * @see getName
+   * @see FeatureType_Impl#getName()
    */
   public void setName( String name )
   {
@@ -189,7 +189,7 @@ public class FeatureType_Impl implements FeatureType
   }
 
   /**
-   * @see getOutputFormat
+   * @see FeatureType_Impl#getOutputFormat(String)
    */
   public void setOutputFormat( OutputFormat[] outputFormat )
   {
@@ -205,7 +205,7 @@ public class FeatureType_Impl implements FeatureType
   }
 
   /**
-   * @see getOutputFormat
+   * @see FeatureType_Impl#getOutputFormat()
    */
   public void addOutputFormat( OutputFormat outputFormat )
   {
@@ -242,7 +242,7 @@ public class FeatureType_Impl implements FeatureType
   }
 
   /**
-   * @see getDatastoreField
+   * @see FeatureType_Impl#getDatastoreField(String)
    */
   public void setDatastoreFields( HashMap properties )
   {
@@ -250,7 +250,7 @@ public class FeatureType_Impl implements FeatureType
   }
 
   /**
-   * @see getDatastoreField
+   * @see FeatureType_Impl#getDatastoreField(String)
    */
   public void addDatastoreField( String property, String[] datastoreFields )
   {
@@ -301,7 +301,7 @@ public class FeatureType_Impl implements FeatureType
   }
 
   /**
-   * @see getDatastoreFieldType
+   * @see FeatureType_Impl#getDatastoreFieldType(String)
    */
   public void setDatastoreFieldTypes( HashMap datastoreFieldTypes )
   {
@@ -309,7 +309,7 @@ public class FeatureType_Impl implements FeatureType
   }
 
   /**
-   * @see getDatastoreField
+   * @see FeatureType_Impl#getDatastoreField(String)
    */
   public void addDatastoreFieldType( String datastoreField, int datastoreFieldType )
   {
@@ -363,7 +363,7 @@ public class FeatureType_Impl implements FeatureType
   }
 
   /**
-   * @see getProperty
+   * @see FeatureType_Impl#getProperty(String)
    */
   public void setPropertyTypes( HashMap propertyTypes )
   {
@@ -371,7 +371,7 @@ public class FeatureType_Impl implements FeatureType
   }
 
   /**
-   * @see getProperty
+   * @see FeatureType_Impl#getProperty(String)
    */
   public void addPropertyType( String property, int propertyType )
   {
@@ -387,7 +387,7 @@ public class FeatureType_Impl implements FeatureType
   }
 
   /**
-   * @see getMasterTable
+   * @see FeatureType_Impl#getMasterTable()
    */
   public void setMasterTable( MasterTable masterTable )
   {
@@ -415,7 +415,7 @@ public class FeatureType_Impl implements FeatureType
   }
 
   /**
-   * @see getRelatedTables
+   * @see FeatureType_Impl#getRelatedTables()
    */
   public void setRelatedTables( RelatedTable[] relatedTables )
   {
@@ -431,7 +431,7 @@ public class FeatureType_Impl implements FeatureType
   }
 
   /**
-   * @see getRelatedTables
+   * @see FeatureType_Impl#getRelatedTables()
    */
   public void addRelatedTable( RelatedTable relatedTable )
   {
@@ -478,7 +478,7 @@ public class FeatureType_Impl implements FeatureType
   }
 
   /**
-   * @see getCRS
+   * @see FeatureType_Impl#getCRS()
    */
   public void setCRS( String crs )
   {
@@ -496,7 +496,7 @@ public class FeatureType_Impl implements FeatureType
   }
 
   /**
-   * @see getCRS
+   * @see FeatureType_Impl#getCRS()
    */
   public void setInternalCRS( String icrs )
   {

@@ -184,12 +184,14 @@ public class OGCWebServiceException_Impl implements OGCWebServiceException, Mars
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:56  doemming
+ * Revision 1.3  2004/10/07 14:09:11  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11
- * 16:43:25 doemming backup of local modified deegree sources
- * 
- * Revision 1.10 2004/03/11 16:28:45 poth no message
+ *
+ * Revision 1.1  2004/09/02 23:56:55  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:53:32
+ * doemming *** empty log message *** Revision 1.10 2004/03/11 16:28:45 poth no
+ * message
  * 
  * Revision 1.9 2004/01/08 09:50:23 poth no message
  * 

@@ -76,7 +76,7 @@ public class WMSGetScaleBarRequest_Impl extends OGCWebServiceRequest_Impl implem
 
   private double scale;
 
-  private double scaleDenominator;
+  private int scaleDenominator;
 
   private int barSize;
 
@@ -99,7 +99,7 @@ public class WMSGetScaleBarRequest_Impl extends OGCWebServiceRequest_Impl implem
    * @param barColor
    * @param bgColor
    * @param barStyle
-   * @param barFont
+   * @param font
    */
   public WMSGetScaleBarRequest_Impl( String version, String id, HashMap vendorSpecificParameter,
       String units, int topLabel, int bottomLabel, Color labelColor, Font font, String barStyle,
@@ -125,7 +125,7 @@ public class WMSGetScaleBarRequest_Impl extends OGCWebServiceRequest_Impl implem
    * values are WMSGetScaleBarRequest.L_SCALE, WMSGetScaleBarRequest.L_SIZE
    * WMSGetScaleBarRequest.and L_NONE.
    * 
-   * @param tLabel
+   * @param topLabel
    *          type of label to display above the scale bar
    */
   public void setTopLabel( int topLabel )
@@ -195,7 +195,7 @@ public class WMSGetScaleBarRequest_Impl extends OGCWebServiceRequest_Impl implem
    * 
    * @param sd
    */
-  public void setScaleDenominator( double sd )
+  public void setScaleDenominator( int sd )
   {
     scaleDenominator = sd;
   }
@@ -205,7 +205,7 @@ public class WMSGetScaleBarRequest_Impl extends OGCWebServiceRequest_Impl implem
    * 
    * @return
    */
-  public double getScaleDenominator()
+  public int getScaleDenominator()
   {
     return scaleDenominator;
   }
@@ -354,7 +354,7 @@ public class WMSGetScaleBarRequest_Impl extends OGCWebServiceRequest_Impl implem
   /**
    * sets the image format (MIME Type) the scale bar will be produced in.
    * 
-   * @param
+   * @param format
    */
   public void setFormat( String format )
   {

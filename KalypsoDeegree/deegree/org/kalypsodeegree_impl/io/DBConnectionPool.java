@@ -107,11 +107,8 @@ public class DBConnectionPool
       pools.put( q, pool );
       return (Connection)pool.acuireObject();
     }
-    else
-    {
-      DBPool pool = (DBPool)pools.get( q );
-      return (Connection)pool.acuireObject();
-    }
+    DBPool pool = (DBPool)pools.get( q );
+    return (Connection)pool.acuireObject();
   }
 
   /**
@@ -128,11 +125,8 @@ public class DBConnectionPool
       pools.put( q, pool );
       return (Connection)pool.acuireObject();
     }
-    else
-    {
-      DBPool pool = (DBPool)pools.get( q );
-      return (Connection)pool.acuireObject();
-    }
+    DBPool pool = (DBPool)pools.get( q );
+    return (Connection)pool.acuireObject();
   }
 
   /**

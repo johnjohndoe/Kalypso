@@ -149,7 +149,7 @@ class IsTransformableHandler implements Handler
   {}
 
   /**
-   * @see registerHandler
+   * @see #registerHandler(Handler)
    */
   public void removeHandler( Handler handler )
   {}

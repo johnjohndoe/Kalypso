@@ -53,7 +53,7 @@ import org.deegree.services.OGCWebServiceRequest;
  * @version $Revision$
  * @author $author$
  */
-public interface WMSFeatureInfoRequest extends OGCWebServiceRequest
+public interface WMSGetFeatureInfoRequest extends OGCWebServiceRequest
 {
   /**
    * <map request copy> is not a name/value pair like the other parameters.

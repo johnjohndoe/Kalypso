@@ -93,7 +93,7 @@ public class CitedResponsibleParty_Impl implements CitedResponsibleParty
   }
 
   /**
-   * @see getContactInfo
+   * @see CitedResponsibleParty_Impl#getContactInfo()
    */
   public void addContactInfo( ContactInfo contactinfo )
   {
@@ -101,7 +101,7 @@ public class CitedResponsibleParty_Impl implements CitedResponsibleParty
   }
 
   /**
-   * @see getContactInfo
+   * @see CitedResponsibleParty_Impl#getContactInfo()
    */
   public void setContactInfo( ContactInfo[] contactinfo )
   {
@@ -124,7 +124,7 @@ public class CitedResponsibleParty_Impl implements CitedResponsibleParty
   }
 
   /**
-   * @see getIndividualName
+   * @see CitedResponsibleParty_Impl#getIndividualName()
    */
   public void addIndividualName( String individualname )
   {
@@ -132,7 +132,7 @@ public class CitedResponsibleParty_Impl implements CitedResponsibleParty
   }
 
   /**
-   * @see getIndividualName
+   * @see CitedResponsibleParty_Impl#getIndividualName()
    */
   public void setIndividualName( String[] individualname )
   {
@@ -154,7 +154,7 @@ public class CitedResponsibleParty_Impl implements CitedResponsibleParty
   }
 
   /**
-   * @see getOrganisationName
+   * @see CitedResponsibleParty_Impl#getOrganisationName()
    */
   public void addOrganisationName( String organisationname )
   {
@@ -162,7 +162,7 @@ public class CitedResponsibleParty_Impl implements CitedResponsibleParty
   }
 
   /**
-   * @see getOrganisationName
+   * @see CitedResponsibleParty_Impl#getOrganisationName()
    */
   public void setOrganisationName( String[] organisationname )
   {
@@ -185,7 +185,7 @@ public class CitedResponsibleParty_Impl implements CitedResponsibleParty
   }
 
   /**
-   * @see getPositionName
+   * @see CitedResponsibleParty_Impl#getPositionName()
    */
   public void addPositionName( String positionname )
   {
@@ -193,7 +193,7 @@ public class CitedResponsibleParty_Impl implements CitedResponsibleParty
   }
 
   /**
-   * @see getPositionName
+   * @see CitedResponsibleParty_Impl#getPositionName()
    */
   public void setPositionName( String[] positionname )
   {
@@ -216,7 +216,7 @@ public class CitedResponsibleParty_Impl implements CitedResponsibleParty
   }
 
   /**
-   * @see getRoleCode
+   * @see CitedResponsibleParty_Impl#getRoleCode()
    */
   public void addRoleCode( RoleCode rolecode )
   {
@@ -224,7 +224,7 @@ public class CitedResponsibleParty_Impl implements CitedResponsibleParty
   }
 
   /**
-   * @see getRoleCode
+   * @see CitedResponsibleParty_Impl#getRoleCode()
    */
   public void setRoleCode( RoleCode[] rolecode )
   {

@@ -163,7 +163,7 @@ public class ThesaurusListener extends AbstractDBListener
     {
       String thesaurus = (String)iterator.next();
       URL url = conf.getThesaurusAddress( thesaurus );
-      NetWorker nw = new NetWorker( url, (String)req.get( thesaurus ) );
+      NetWorker nw = new NetWorker( "ISO-8859-1", url, (String)req.get( thesaurus ) );
       try
       {
         Reader reader = new InputStreamReader( nw.getInputStream(), "UTF-8" );
@@ -175,7 +175,8 @@ public class ThesaurusListener extends AbstractDBListener
         }
         reader.close();
         reader = new StringReader( sb.toString() );
-        result.put( thesaurus, XMLTools.parse( reader ) );
+        Document doc = XMLTools.parse( reader );
+        result.put( thesaurus, doc );
       }
       catch( Exception e )
       {

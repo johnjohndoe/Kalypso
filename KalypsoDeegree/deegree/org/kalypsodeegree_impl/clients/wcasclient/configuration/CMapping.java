@@ -93,7 +93,7 @@ public class CMapping
     {
       Object o = iterator.next();
       ArrayList list = (ArrayList)mappingsF.get( o );
-      mappingsF.put( o, (String[])list.toArray( new String[3] ) );
+      mappingsF.put( o, list.toArray( new String[3] ) );
     }
   }
 

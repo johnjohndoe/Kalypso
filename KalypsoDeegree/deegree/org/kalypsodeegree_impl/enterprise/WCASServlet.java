@@ -80,6 +80,7 @@ import org.deegree_impl.services.wcas.capabilities.WCASCapabilitiesFactory;
 import org.deegree_impl.services.wcas.protocol.CASProtocolFactory;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
 import org.deegree_impl.tools.Debug;
+import org.deegree_impl.tools.IDGenerator;
 import org.deegree_impl.tools.StringExtend;
 import org.w3c.dom.Document;
 
@@ -283,6 +284,8 @@ public class WCASServlet extends HttpServlet
       }
       catch( Exception ex )
       {
+        System.out.println( param );
+        ex.printStackTrace();
         handleError( ex, response );
       }
     }
@@ -296,7 +299,7 @@ public class WCASServlet extends HttpServlet
    */
   private void handleError( Exception ex, HttpServletResponse response )
   {
-    String tmp = StringExtend.stackTraceToString( ex.getStackTrace() );
+    String tmp = StringExtend.stackTraceToString( ex );
     getServletContext().log( tmp );
     OGCWebServiceException wex = new OGCWebServiceException_Impl( this.getClass().getName(), tmp );
     try
@@ -321,16 +324,13 @@ public class WCASServlet extends HttpServlet
   private synchronized HashMap toModel( HttpServletRequest request )
   {
     HashMap param = new HashMap();
-
     Enumeration enum = request.getParameterNames();
-
     while( enum.hasMoreElements() )
     {
       String name = (String)enum.nextElement();
       String value = request.getParameter( name );
       param.put( name.toUpperCase(), value );
     }
-
     return param;
   }
 
@@ -406,6 +406,16 @@ public class WCASServlet extends HttpServlet
         sb.append( "\"" + model.get( "VERSION" ) + "\"/>" );
         request = sb.toString();
       }
+      else if( req.equals( "GetRecords" ) )
+      {
+        long id = IDGenerator.getInstance().generateUniqueID();
+        request = CASProtocolFactory.createGetRecordRequest( "" + id, model );
+        System.out.println( request );
+      }
+      else
+      {
+        throw new Exception( "unknown request: " + req );
+      }
     }
 
     /**
@@ -467,8 +477,11 @@ public class WCASServlet extends HttpServlet
           try
           {
             OutputStream os = servletResponse.getOutputStream();
-            os.write( sb.toString().getBytes() );
-            os.close();
+            OutputStreamWriter osw = new OutputStreamWriter( os, "UTF-8" );
+            osw.write( sb.toString() );
+            //os.write( sb.toString().getBytes() );
+            //os.close();
+            osw.close();
           }
           catch( Exception e )
           {}
@@ -561,8 +574,7 @@ public class WCASServlet extends HttpServlet
           }
           else if( res instanceof CASTransactionResponse )
           {
-            //CASTransactionResponse resp =
-            // (CASTransactionResponse)res;
+            //CASTransactionResponse resp = (CASTransactionResponse)res;
 
             // TODO: change against real implementation
             String dummyResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<WCAS_Response>"

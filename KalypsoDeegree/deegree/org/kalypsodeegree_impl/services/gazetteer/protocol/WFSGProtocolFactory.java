@@ -85,8 +85,6 @@ public class WFSGProtocolFactory
 
   // TODO Exception Handling
 
-  private static final String gmlNS = "http://www.opengis.net/gml";
-
   private static final String wfsNS = "http://www.opengis.net/wfs";
 
   private static final String ogcNS = "http://www.opengis.net/ogc";
@@ -471,8 +469,6 @@ public class WFSGProtocolFactory
    *          a copy of the request that leads to this response
    * @param exception
    *          a describtion of an excetion (only if raised)
-   * @param native_
-   *          is intended to allow access to vendor specific capabilities
    * @param affectedFeatureTypes
    *          names of the feature types affected by the response
    * @param response

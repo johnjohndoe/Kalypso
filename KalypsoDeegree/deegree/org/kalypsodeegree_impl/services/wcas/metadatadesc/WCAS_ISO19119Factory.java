@@ -1764,7 +1764,7 @@ public final class WCAS_ISO19119Factory
   /**
    * returns an instance of the element &lt;maximumValue&gt; <br>
    * 
-   * @see getMinimumValue
+   * @see #getMinimumValue(Element)
    */
   private static MaximumValue getMaximumValue( Element maxElement ) throws Exception
   {

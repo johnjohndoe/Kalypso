@@ -56,6 +56,7 @@ import org.deegree.graphics.sld.FeatureTypeStyle;
 import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.deegree.model.geometry.GM_Point;
 import org.deegree.ogcbasic.BaseURL;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.ogcbasic.ContactAddress;
 import org.deegree.ogcbasic.ContactInformation;
 import org.deegree.ogcbasic.ContactPersonPrimary;
@@ -83,6 +84,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 /**
@@ -95,13 +97,6 @@ import org.xml.sax.SAXException;
  */
 public class WebMapContextFactory
 {
-  private static String CNTXTNS = "http://www.opengis.net/context";
-
-  private static String SLDNS = "http://www.opengis.net/sld";
-
-  private static String XLINKNS = "http://www.w3.org/1999/xlink";
-
-  private static String DGCNTXTNS = "http://www.deegree.org/context";
 
   /**
    * creates an instance of a ViewContext from the web map context document read
@@ -156,11 +151,11 @@ public class WebMapContextFactory
     Node root = doc.getDocumentElement();
 
     // general section
-    Element element = XMLTools.getRequiredChildByName( "General", CNTXTNS, root );
+    Element element = XMLTools.getRequiredChildByName( "General", CommonNamespaces.CNTXTNS, root );
     General general = createGeneral( element );
 
     //Layer (List) section
-    element = XMLTools.getRequiredChildByName( "LayerList", CNTXTNS, root );
+    element = XMLTools.getRequiredChildByName( "LayerList", CommonNamespaces.CNTXTNS, root );
 
     LayerList layerList = createLayerList( element );
 
@@ -186,37 +181,38 @@ public class WebMapContextFactory
     Debug.debugMethodBegin();
 
     // <Window>
-    Element elem = XMLTools.getChildByName( "Window", CNTXTNS, element );
+    Element elem = XMLTools.getChildByName( "Window", CommonNamespaces.CNTXTNS, element );
     Rectangle rect = createWindow( elem );
 
     // <BoundingBox>
-    elem = XMLTools.getRequiredChildByName( "BoundingBox", CNTXTNS, element );
+    elem = XMLTools.getRequiredChildByName( "BoundingBox", CommonNamespaces.CNTXTNS, element );
     GM_Point[] bbox = createBoundingBox( elem );
 
     // <Title>
-    String title = XMLTools.getRequiredStringValue( "Title", CNTXTNS, element );
+    String title = XMLTools.getRequiredStringValue( "Title", CommonNamespaces.CNTXTNS, element );
 
     // <KeywordList>
-    elem = XMLTools.getChildByName( "KeywordList", CNTXTNS, element );
+    elem = XMLTools.getChildByName( "KeywordList", CommonNamespaces.CNTXTNS, element );
     String[] keywords = createKeywords( elem );
 
     //<Abstract>
-    String abstract_ = XMLTools.getStringValue( "Abstract", CNTXTNS, element, null );
+    String abstract_ = XMLTools
+        .getStringValue( "Abstract", CommonNamespaces.CNTXTNS, element, null );
 
     //<LogoURL>
-    elem = XMLTools.getChildByName( "LogoURL", CNTXTNS, element );
+    elem = XMLTools.getChildByName( "LogoURL", CommonNamespaces.CNTXTNS, element );
     ImageURL logoURL = createImageURL( elem );
 
     //<DescriptionURL>
-    elem = XMLTools.getChildByName( "DescriptionURL", CNTXTNS, element );
+    elem = XMLTools.getChildByName( "DescriptionURL", CommonNamespaces.CNTXTNS, element );
     BaseURL descriptionURL = createBaseURL( elem );
 
     // <ContactInformation>
-    elem = XMLTools.getChildByName( "ContactInformation", CNTXTNS, element );
+    elem = XMLTools.getChildByName( "ContactInformation", CommonNamespaces.CNTXTNS, element );
     ContactInformation contact = createContactInformation( elem );
 
     // <Extension>
-    elem = XMLTools.getChildByName( "Extension", CNTXTNS, element );
+    elem = XMLTools.getChildByName( "Extension", CommonNamespaces.CNTXTNS, element );
     GeneralExtension extension = createGeneralExtension( elem );
 
     General general = null;
@@ -315,7 +311,7 @@ public class WebMapContextFactory
   {
     Debug.debugMethodBegin();
 
-    ElementList el = XMLTools.getChildElementsByName( "Keyword", CNTXTNS, element );
+    ElementList el = XMLTools.getChildElementsByName( "Keyword", CommonNamespaces.CNTXTNS, element );
     String[] keywords = new String[el.getLength()];
 
     for( int i = 0; i < keywords.length; i++ )
@@ -359,7 +355,8 @@ public class WebMapContextFactory
       }
       String format = XMLTools.getAttrValue( element, "format" );
 
-      Element elem = XMLTools.getRequiredChildByName( "OnlineResource", CNTXTNS, element );
+      Element elem = XMLTools.getRequiredChildByName( "OnlineResource", CommonNamespaces.CNTXTNS,
+          element );
       URL onlineResource = createOnlineResource( elem );
 
       imageURL = new ImageURL( width, height, format, onlineResource );
@@ -391,7 +388,7 @@ public class WebMapContextFactory
 
       if( type == null )
       {
-        type = XMLTools.getAttrValue( element, XLINKNS, "type" );
+        type = XMLTools.getAttrValue( element, CommonNamespaces.XLNNS, "type" );
       }
 
       if( ( type != null ) && !type.equals( "simple" ) )
@@ -403,7 +400,7 @@ public class WebMapContextFactory
 
       if( tmp == null )
       {
-        tmp = XMLTools.getAttrValue( element, XLINKNS, "href" );
+        tmp = XMLTools.getAttrValue( element, CommonNamespaces.XLNNS, "href" );
       }
 
       try
@@ -440,7 +437,8 @@ public class WebMapContextFactory
     {
       String format = XMLTools.getAttrValue( element, "format" );
 
-      Element elem = XMLTools.getRequiredChildByName( "OnlineResource", CNTXTNS, element );
+      Element elem = XMLTools.getRequiredChildByName( "OnlineResource", CommonNamespaces.CNTXTNS,
+          element );
       URL onlineResource = createOnlineResource( elem );
 
       baseURL = new BaseURL_Impl( format, onlineResource );
@@ -475,7 +473,7 @@ public class WebMapContextFactory
       // optional: <ContactPersonPrimary>
       ContactPersonPrimary contactPersonPrimary = null;
       Element contactPersonPrimaryElement = XMLTools.getChildByName( "ContactPersonPrimary",
-          CNTXTNS, element );
+          CommonNamespaces.CNTXTNS, element );
 
       if( contactPersonPrimaryElement != null )
       {
@@ -483,11 +481,13 @@ public class WebMapContextFactory
       }
 
       // optional: <ContactPosition>
-      String contactPosition = XMLTools.getStringValue( "ContactPosition", CNTXTNS, element, null );
+      String contactPosition = XMLTools.getStringValue( "ContactPosition",
+          CommonNamespaces.CNTXTNS, element, null );
 
       // optional: <ContactAddress>
       ContactAddress contactAddress = null;
-      Element contactAddressElement = XMLTools.getChildByName( "ContactAddress", CNTXTNS, element );
+      Element contactAddressElement = XMLTools.getChildByName( "ContactAddress",
+          CommonNamespaces.CNTXTNS, element );
 
       if( contactAddressElement != null )
       {
@@ -495,16 +495,16 @@ public class WebMapContextFactory
       }
 
       // optional: <ContactVoiceTelephone>
-      String contactVoiceTelephone = XMLTools.getStringValue( "ContactVoiceTelephone", CNTXTNS,
-          element, null );
+      String contactVoiceTelephone = XMLTools.getStringValue( "ContactVoiceTelephone",
+          CommonNamespaces.CNTXTNS, element, null );
 
       // optional: <ContactFacsimileTelephone>
       String contactFacsimileTelephone = XMLTools.getStringValue( "ContactFacsimileTelephone",
-          CNTXTNS, element, null );
+          CommonNamespaces.CNTXTNS, element, null );
 
       // optional: <ContactElectronicMailAddress>
       String contactElectronicMailAddress = XMLTools.getStringValue(
-          "ContactElectronicMailAddress", CNTXTNS, element, null );
+          "ContactElectronicMailAddress", CommonNamespaces.CNTXTNS, element, null );
 
       contact = new ContactInformation_Impl( contactPosition, contactVoiceTelephone,
           contactFacsimileTelephone, contactElectronicMailAddress, contactPersonPrimary,
@@ -533,11 +533,12 @@ public class WebMapContextFactory
   {
     Debug.debugMethodBegin();
     // required: <ContactPerson>
-    String contactPerson = XMLTools.getRequiredStringValue( "ContactPerson", CNTXTNS, element );
+    String contactPerson = XMLTools.getRequiredStringValue( "ContactPerson",
+        CommonNamespaces.CNTXTNS, element );
 
     // required: <ContactOrganization>
-    String contactOrganization = XMLTools.getRequiredStringValue( "ContactOrganization", CNTXTNS,
-        element );
+    String contactOrganization = XMLTools.getRequiredStringValue( "ContactOrganization",
+        CommonNamespaces.CNTXTNS, element );
 
     Debug.debugMethodEnd();
     return new ContactPersonPrimary_Impl( contactPerson, contactOrganization );
@@ -559,22 +560,25 @@ public class WebMapContextFactory
   {
     Debug.debugMethodBegin();
     // required: <AddressType>
-    String addressType = XMLTools.getRequiredStringValue( "AddressType", CNTXTNS, element );
+    String addressType = XMLTools.getRequiredStringValue( "AddressType", CommonNamespaces.CNTXTNS,
+        element );
 
     // required: <Address>
-    String address = XMLTools.getRequiredStringValue( "Address", CNTXTNS, element );
+    String address = XMLTools.getRequiredStringValue( "Address", CommonNamespaces.CNTXTNS, element );
 
     // required: <City>
-    String city = XMLTools.getRequiredStringValue( "City", CNTXTNS, element );
+    String city = XMLTools.getRequiredStringValue( "City", CommonNamespaces.CNTXTNS, element );
 
     // required: <StateOrProvince>
-    String stateOrProvince = XMLTools.getRequiredStringValue( "StateOrProvince", CNTXTNS, element );
+    String stateOrProvince = XMLTools.getRequiredStringValue( "StateOrProvince",
+        CommonNamespaces.CNTXTNS, element );
 
     // required: <PostCode>
-    String postCode = XMLTools.getRequiredStringValue( "PostCode", CNTXTNS, element );
+    String postCode = XMLTools.getRequiredStringValue( "PostCode", CommonNamespaces.CNTXTNS,
+        element );
 
     // required: <Country>
-    String country = XMLTools.getRequiredStringValue( "Country", CNTXTNS, element );
+    String country = XMLTools.getRequiredStringValue( "Country", CommonNamespaces.CNTXTNS, element );
 
     Debug.debugMethodEnd();
     return new ContactAddress_Impl( addressType, address, city, stateOrProvince, postCode, country );
@@ -601,13 +605,14 @@ public class WebMapContextFactory
     if( element != null )
     {
       // <IOSetiings>
-      Element elem = XMLTools.getRequiredChildByName( "IOSettings", DGCNTXTNS, element );
+      Element elem = XMLTools.getRequiredChildByName( "IOSettings", CommonNamespaces.DGCNTXTNS,
+          element );
       IOSettings ioSettings = createIOSettings( elem );
       // <Frontend>
-      elem = XMLTools.getRequiredChildByName( "Frontend", DGCNTXTNS, element );
+      elem = XMLTools.getRequiredChildByName( "Frontend", CommonNamespaces.DGCNTXTNS, element );
       Frontend frontend = createFrontend( elem );
       // <MapParameter>
-      elem = XMLTools.getRequiredChildByName( "MapParameter", DGCNTXTNS, element );
+      elem = XMLTools.getRequiredChildByName( "MapParameter", CommonNamespaces.DGCNTXTNS, element );
       MapParameter mapParameter = createMapParameter( elem );
 
       ge = new GeneralExtension( ioSettings, frontend, mapParameter );
@@ -634,33 +639,34 @@ public class WebMapContextFactory
 
     String scope = XMLTools.getRequiredAttrValue( "scope", null, element );
     // <Controller>
-    String controller = XMLTools.getRequiredStringValue( "Controller", DGCNTXTNS, element );
+    String controller = XMLTools.getRequiredStringValue( "Controller", CommonNamespaces.DGCNTXTNS,
+        element );
     // <Style>
-    String style = XMLTools.getStringValue( "Style", DGCNTXTNS, element, null );
+    String style = XMLTools.getStringValue( "Style", CommonNamespaces.DGCNTXTNS, element, null );
     // <Buttons>
-    String buttons = XMLTools.getStringValue( "Buttons", DGCNTXTNS, element, null );
+    String buttons = XMLTools.getStringValue( "Buttons", CommonNamespaces.DGCNTXTNS, element, null );
     // <CommonJS>
-    Element elem = XMLTools.getChildByName( "CommonJS", DGCNTXTNS, element );
+    Element elem = XMLTools.getChildByName( "CommonJS", CommonNamespaces.DGCNTXTNS, element );
     String[] commonJS = createCommonJS( elem );
     // <West>
-    elem = XMLTools.getChildByName( "West", DGCNTXTNS, element );
+    elem = XMLTools.getChildByName( "West", CommonNamespaces.DGCNTXTNS, element );
     GUIArea west = createGUIArea( elem );
     // <East>
-    elem = XMLTools.getChildByName( "East", DGCNTXTNS, element );
+    elem = XMLTools.getChildByName( "East", CommonNamespaces.DGCNTXTNS, element );
     GUIArea east = createGUIArea( elem );
     // <North>
-    elem = XMLTools.getChildByName( "North", DGCNTXTNS, element );
+    elem = XMLTools.getChildByName( "North", CommonNamespaces.DGCNTXTNS, element );
     GUIArea north = createGUIArea( elem );
     // <South>
-    elem = XMLTools.getChildByName( "South", DGCNTXTNS, element );
+    elem = XMLTools.getChildByName( "South", CommonNamespaces.DGCNTXTNS, element );
     GUIArea south = createGUIArea( elem );
     // <Center>
-    elem = XMLTools.getChildByName( "Center", DGCNTXTNS, element );
+    elem = XMLTools.getChildByName( "Center", CommonNamespaces.DGCNTXTNS, element );
     GUIArea center = createGUIArea( elem );
     // <Header>
-    String header = XMLTools.getStringValue( "Header", DGCNTXTNS, element, null );
+    String header = XMLTools.getStringValue( "Header", CommonNamespaces.DGCNTXTNS, element, null );
     // <Footer>
-    String footer = XMLTools.getStringValue( "Footer", DGCNTXTNS, element, null );
+    String footer = XMLTools.getStringValue( "Footer", CommonNamespaces.DGCNTXTNS, element, null );
 
     Frontend frontend = new JSPFrontend( controller, west, east, south, north, center, style,
         buttons, commonJS, header, footer );
@@ -687,7 +693,8 @@ public class WebMapContextFactory
     String[] commonJS = null;
     if( element != null )
     {
-      ElementList el = XMLTools.getChildElementsByName( "Name", DGCNTXTNS, element );
+      ElementList el = XMLTools
+          .getChildElementsByName( "Name", CommonNamespaces.DGCNTXTNS, element );
       commonJS = new String[el.getLength()];
       for( int i = 0; i < commonJS.length; i++ )
       {
@@ -744,7 +751,8 @@ public class WebMapContextFactory
       tmp = XMLTools.getAttrValue( element, "hidden" );
       boolean hidden = "1".equals( tmp ) || "true".equals( tmp );
       // <Module>
-      ElementList el = XMLTools.getChildElementsByName( "Module", DGCNTXTNS, element );
+      ElementList el = XMLTools.getChildElementsByName( "Module", CommonNamespaces.DGCNTXTNS,
+          element );
       Module[] modules = new Module[el.getLength()];
       for( int i = 0; i < modules.length; i++ )
       {
@@ -775,17 +783,44 @@ public class WebMapContextFactory
     String tmp = XMLTools.getAttrValue( element, "hidden" );
     boolean hidden = tmp.equals( "1" ) || tmp.equals( "true" );
     // <Name>
-    String name = XMLTools.getRequiredStringValue( "Name", DGCNTXTNS, element );
+    String name = XMLTools.getRequiredStringValue( "Name", CommonNamespaces.DGCNTXTNS, element );
     // <Content>
-    String content = XMLTools.getRequiredStringValue( "Content", DGCNTXTNS, element );
+    String content = XMLTools.getRequiredStringValue( "Content", CommonNamespaces.DGCNTXTNS,
+        element );
     // <ModuleConfiguration>
-    Element elem = XMLTools.getChildByName( "ModuleConfiguration", DGCNTXTNS, element );
+    Element elem = XMLTools.getChildByName( "ModuleConfiguration", CommonNamespaces.DGCNTXTNS,
+        element );
     ModuleConfiguration mc = createModuleConfiguration( elem );
     // <ParameterList>
-    elem = XMLTools.getChildByName( "ParameterList", DGCNTXTNS, element );
+    elem = XMLTools.getChildByName( "ParameterList", CommonNamespaces.DGCNTXTNS, element );
     ParameterList paramList = createParameterList( elem );
 
-    Module module = new Module_Impl( name, content, hidden, mc, paramList );
+    String type = XMLTools.getAttrValue( element, "type" );
+
+    // width and height of a Module are optional
+    // if not set '0' will be used instead
+    tmp = XMLTools.getAttrValue( element, "width" );
+    int w = 0;
+    try
+    {
+      w = Integer.parseInt( tmp );
+    }
+    catch( Exception e )
+    {}
+    tmp = XMLTools.getAttrValue( element, "height" );
+    int h = 0;
+    try
+    {
+      h = Integer.parseInt( tmp );
+    }
+    catch( Exception e )
+    {}
+
+    String scrollable = XMLTools.getAttrValue( element, "scrolling" );
+
+    String[] moduleJS = createModuleJSList( element );
+    Module module = new Module_Impl( name, content, hidden, type, w, h, scrollable, moduleJS, mc,
+        paramList );
 
     Debug.debugMethodEnd();
     return module;
@@ -810,7 +845,8 @@ public class WebMapContextFactory
     ModuleConfiguration mc = null;
     if( element != null )
     {
-      Element elem = XMLTools.getRequiredChildByName( "OnlineResource", DGCNTXTNS, element );
+      Element elem = XMLTools.getRequiredChildByName( "OnlineResource", CommonNamespaces.DGCNTXTNS,
+          element );
       URL onlineResource = createOnlineResource( elem );
       mc = new ModuleConfiguration_Impl( onlineResource );
     }
@@ -836,14 +872,14 @@ public class WebMapContextFactory
     ParameterList parameterList = new ParameterList_Impl();
     if( element != null )
     {
-      ElementList el = XMLTools.getChildElementsByName( "Parameter", DGCNTXTNS, element );
+      ElementList el = XMLTools.getChildElementsByName( "Parameter", CommonNamespaces.DGCNTXTNS,
+          element );
       for( int i = 0; i < el.getLength(); i++ )
       {
         Parameter parameter = createParameter( el.item( i ) );
         parameterList.addParameter( parameter );
       }
     }
-
     Debug.debugMethodEnd();
     return parameterList;
   }
@@ -863,8 +899,9 @@ public class WebMapContextFactory
   {
     Debug.debugMethodBegin();
 
-    String name = XMLTools.getRequiredStringValue( "Name", DGCNTXTNS, element );
-    String value = XMLTools.getRequiredStringValue( "Value", DGCNTXTNS, element );
+    String name = XMLTools.getRequiredStringValue( "Name", CommonNamespaces.DGCNTXTNS, element );
+    String value = XMLTools.getRequiredStringValue( "Value", CommonNamespaces.DGCNTXTNS, element );
+    //Parameter param = new Parameter_Impl( name+":"+value, value );
     Parameter param = new Parameter_Impl( name, value );
 
     Debug.debugMethodEnd();
@@ -887,19 +924,22 @@ public class WebMapContextFactory
     Debug.debugMethodBegin();
 
     //<OfferedInfoFormats>
-    Element elem = XMLTools.getRequiredChildByName( "OfferedInfoFormats", DGCNTXTNS, element );
+    Element elem = XMLTools.getRequiredChildByName( "OfferedInfoFormats",
+        CommonNamespaces.DGCNTXTNS, element );
     Format[] infoFormats = createOfferedInfoFormats( elem );
     //<OfferedZoomFactor>
-    elem = XMLTools.getRequiredChildByName( "OfferedZoomFactor", DGCNTXTNS, element );
+    elem = XMLTools.getRequiredChildByName( "OfferedZoomFactor", CommonNamespaces.DGCNTXTNS,
+        element );
     MapOperationFactor[] zoomFactors = createOfferedMapOperationFactors( elem );
     //<OfferedPanFactor>
-    elem = XMLTools.getRequiredChildByName( "OfferedPanFactor", DGCNTXTNS, element );
+    elem = XMLTools
+        .getRequiredChildByName( "OfferedPanFactor", CommonNamespaces.DGCNTXTNS, element );
     MapOperationFactor[] panFactors = createOfferedMapOperationFactors( elem );
     // <MinScale>
-    String tmp = XMLTools.getRequiredStringValue( "MinScale", DGCNTXTNS, element );
+    String tmp = XMLTools.getRequiredStringValue( "MinScale", CommonNamespaces.DGCNTXTNS, element );
     double minScale = Double.parseDouble( tmp );
     // <MaxScale>
-    tmp = XMLTools.getRequiredStringValue( "MaxScale", DGCNTXTNS, element );
+    tmp = XMLTools.getRequiredStringValue( "MaxScale", CommonNamespaces.DGCNTXTNS, element );
     double maxScale = Double.parseDouble( tmp );
 
     MapParameter mp = new MapParameter( infoFormats, panFactors, zoomFactors, minScale, maxScale );
@@ -925,7 +965,8 @@ public class WebMapContextFactory
     Format[] format = null;
 
     // get list of offered feature info formats
-    ElementList el = XMLTools.getChildElementsByName( "Format", DGCNTXTNS, element );
+    ElementList el = XMLTools
+        .getChildElementsByName( "Format", CommonNamespaces.DGCNTXTNS, element );
 
     format = new Format[el.getLength()];
 
@@ -966,7 +1007,8 @@ public class WebMapContextFactory
     Debug.debugMethodBegin();
 
     // get list of offered factors
-    ElementList el = XMLTools.getChildElementsByName( "Factor", DGCNTXTNS, element );
+    ElementList el = XMLTools
+        .getChildElementsByName( "Factor", CommonNamespaces.DGCNTXTNS, element );
 
     MapOperationFactor[] mof = new MapOperationFactor[el.getLength()];
 
@@ -1002,16 +1044,17 @@ public class WebMapContextFactory
   {
     Debug.debugMethodBegin();
 
-    String root = XMLTools.getRequiredStringValue( "RootDirectory", DGCNTXTNS, element );
+    String root = XMLTools.getRequiredStringValue( "RootDirectory", CommonNamespaces.DGCNTXTNS,
+        element );
     // temp directory
-    Element elem = XMLTools.getChildByName( "TempDirectory", DGCNTXTNS, element );
+    Element elem = XMLTools.getChildByName( "TempDirectory", CommonNamespaces.DGCNTXTNS, element );
     DirectoryAccess temp = null;
     if( elem != null )
     {
       temp = createDirectoryAccess( elem, null );
     }
     // download directory
-    elem = XMLTools.getChildByName( "DownloadDirectory", DGCNTXTNS, element );
+    elem = XMLTools.getChildByName( "DownloadDirectory", CommonNamespaces.DGCNTXTNS, element );
     DirectoryAccess download = null;
     if( elem != null )
     {
@@ -1023,7 +1066,7 @@ public class WebMapContextFactory
           + "downloaddirectory must be set!" );
     }
     // SLD directory
-    elem = XMLTools.getChildByName( "SLDDirectory", DGCNTXTNS, element );
+    elem = XMLTools.getChildByName( "SLDDirectory", CommonNamespaces.DGCNTXTNS, element );
     DirectoryAccess sld = null;
     if( elem != null )
     {
@@ -1034,7 +1077,7 @@ public class WebMapContextFactory
       throw new XMLParsingException( "If <TempDirectory> isn't set, " + "slddirectory must be set!" );
     }
     // Print directory
-    elem = XMLTools.getChildByName( "PrintDirectory", DGCNTXTNS, element );
+    elem = XMLTools.getChildByName( "PrintDirectory", CommonNamespaces.DGCNTXTNS, element );
     DirectoryAccess print = null;
     if( elem != null )
     {
@@ -1064,14 +1107,22 @@ public class WebMapContextFactory
     Debug.debugMethodBegin();
 
     // 	directory name
-    String name = XMLTools.getStringValue( "Name", DGCNTXTNS, element, null );
+    String name = XMLTools.getStringValue( "Name", CommonNamespaces.DGCNTXTNS, element, null );
 
     URL url = null;
-    Element elem = XMLTools.getRequiredChildByName( "Access", DGCNTXTNS, element );
-    elem = XMLTools.getRequiredChildByName( "OnlineResource", CNTXTNS, elem );
-    url = createOnlineResource( elem );
+    Element elem = XMLTools.getChildByName( "Access", CommonNamespaces.DGCNTXTNS, element );
+    if( elem != null )
+    {
+      elem = XMLTools.getRequiredChildByName( "OnlineResource", CommonNamespaces.CNTXTNS, elem );
+      url = createOnlineResource( elem );
+    }
 
-    DirectoryAccess da = new DirectoryAccess( name, url );
+    DirectoryAccess da = null;
+    if( name == null || url == null )
+    {
+      da = tempDir;
+    }
+    da = new DirectoryAccess( name, url );
 
     Debug.debugMethodEnd();
     return da;
@@ -1092,7 +1143,7 @@ public class WebMapContextFactory
   {
     Debug.debugMethodBegin();
 
-    ElementList el = XMLTools.getChildElementsByName( "Layer", CNTXTNS, element );
+    ElementList el = XMLTools.getChildElementsByName( "Layer", CommonNamespaces.CNTXTNS, element );
     Layer[] layers = new Layer[el.getLength()];
     for( int i = 0; i < layers.length; i++ )
     {
@@ -1124,31 +1175,32 @@ public class WebMapContextFactory
     tmp = XMLTools.getRequiredAttrValue( "hidden", element );
     boolean hidden = "1".equals( tmp ) || "true".equals( tmp );
     // <Server>
-    Element elem = XMLTools.getRequiredChildByName( "Server", CNTXTNS, element );
+    Element elem = XMLTools.getRequiredChildByName( "Server", CommonNamespaces.CNTXTNS, element );
     Server server = createServer( elem );
     // <Name>
-    String name = XMLTools.getRequiredStringValue( "Name", CNTXTNS, element );
+    String name = XMLTools.getRequiredStringValue( "Name", CommonNamespaces.CNTXTNS, element );
     // <Title>
-    String title = XMLTools.getRequiredStringValue( "Title", CNTXTNS, element );
+    String title = XMLTools.getRequiredStringValue( "Title", CommonNamespaces.CNTXTNS, element );
     // <Abstract>
-    String abstract_ = XMLTools.getStringValue( "Abstract", CNTXTNS, element, null );
+    String abstract_ = XMLTools
+        .getStringValue( "Abstract", CommonNamespaces.CNTXTNS, element, null );
     // <DataURL>
-    elem = XMLTools.getChildByName( "DataURL", CNTXTNS, element );
+    elem = XMLTools.getChildByName( "DataURL", CommonNamespaces.CNTXTNS, element );
     BaseURL dataURL = createBaseURL( elem );
     // <MetaDataURL>
-    elem = XMLTools.getChildByName( "MetaDataURL", CNTXTNS, element );
+    elem = XMLTools.getChildByName( "MetaDataURL", CommonNamespaces.CNTXTNS, element );
     BaseURL metadataURL = createBaseURL( elem );
     // <SRS>
-    tmp = XMLTools.getStringValue( "SRS", CNTXTNS, element, null );
+    tmp = XMLTools.getStringValue( "SRS", CommonNamespaces.CNTXTNS, element, null );
     String[] srs = StringExtend.toArray( tmp, ",; ", true );
     // <FormatList>
-    elem = XMLTools.getChildByName( "FormatList", CNTXTNS, element );
+    elem = XMLTools.getChildByName( "FormatList", CommonNamespaces.CNTXTNS, element );
     FormatList formatList = createFormatList( elem );
     // <StyleList>
-    elem = XMLTools.getChildByName( "StyleList", CNTXTNS, element );
+    elem = XMLTools.getChildByName( "StyleList", CommonNamespaces.CNTXTNS, element );
     StyleList styleList = createStyleList( elem );
     // <Extension>
-    elem = XMLTools.getChildByName( "Extension", CNTXTNS, element );
+    elem = XMLTools.getChildByName( "Extension", CommonNamespaces.CNTXTNS, element );
     LayerExtension extension = createLayerExtension( elem );
 
     Layer layer = null;
@@ -1185,7 +1237,8 @@ public class WebMapContextFactory
     String version = XMLTools.getRequiredAttrValue( "version", element );
     String title = XMLTools.getRequiredAttrValue( "title", element );
     // <OnlineResource>
-    Element elem = XMLTools.getRequiredChildByName( "OnlineResource", CNTXTNS, element );
+    Element elem = XMLTools.getRequiredChildByName( "OnlineResource", CommonNamespaces.CNTXTNS,
+        element );
     URL onlineResource = createOnlineResource( elem );
 
     Server server = null;
@@ -1217,7 +1270,7 @@ public class WebMapContextFactory
   {
     Debug.debugMethodBegin();
 
-    ElementList el = XMLTools.getChildElementsByName( "Format", CNTXTNS, element );
+    ElementList el = XMLTools.getChildElementsByName( "Format", CommonNamespaces.CNTXTNS, element );
     Format[] formats = new Format[el.getLength()];
     for( int i = 0; i < formats.length; i++ )
     {
@@ -1263,7 +1316,7 @@ public class WebMapContextFactory
   {
     Debug.debugMethodBegin();
 
-    ElementList el = XMLTools.getChildElementsByName( "Style", CNTXTNS, element );
+    ElementList el = XMLTools.getChildElementsByName( "Style", CommonNamespaces.CNTXTNS, element );
     Style[] styles = new Style[el.getLength()];
     for( int i = 0; i < styles.length; i++ )
     {
@@ -1302,7 +1355,7 @@ public class WebMapContextFactory
     String tmp = XMLTools.getAttrValue( element, "current" );
     boolean current = "1".equals( tmp ) || "true".equals( tmp );
 
-    Element elem = XMLTools.getChildByName( "SLD", CNTXTNS, element );
+    Element elem = XMLTools.getChildByName( "SLD", CommonNamespaces.CNTXTNS, element );
     if( elem != null )
     {
       SLD sld = createSLD( elem );
@@ -1317,11 +1370,12 @@ public class WebMapContextFactory
     }
     else
     {
-      String name = XMLTools.getRequiredStringValue( "Name", CNTXTNS, element );
-      String title = XMLTools.getRequiredStringValue( "Title", CNTXTNS, element );
-      String abstract_ = XMLTools.getStringValue( "Abstract", CNTXTNS, element, null );
+      String name = XMLTools.getRequiredStringValue( "Name", CommonNamespaces.CNTXTNS, element );
+      String title = XMLTools.getRequiredStringValue( "Title", CommonNamespaces.CNTXTNS, element );
+      String abstract_ = XMLTools.getStringValue( "Abstract", CommonNamespaces.CNTXTNS, element,
+          null );
       // <LegendURL>
-      elem = XMLTools.getChildByName( "LegendURL", CNTXTNS, element );
+      elem = XMLTools.getChildByName( "LegendURL", CommonNamespaces.CNTXTNS, element );
       ImageURL legendURL = createImageURL( elem );
       try
       {
@@ -1354,10 +1408,10 @@ public class WebMapContextFactory
 
     SLD sld = null;
 
-    String name = XMLTools.getRequiredStringValue( "Name", CNTXTNS, element );
-    String title = XMLTools.getStringValue( "Title", CNTXTNS, element, null );
+    String name = XMLTools.getRequiredStringValue( "Name", CommonNamespaces.CNTXTNS, element );
+    String title = XMLTools.getStringValue( "Title", CommonNamespaces.CNTXTNS, element, null );
 
-    Element elem = XMLTools.getChildByName( "OnlineResource", CNTXTNS, element );
+    Element elem = XMLTools.getChildByName( "OnlineResource", CommonNamespaces.CNTXTNS, element );
     try
     {
       if( elem != null )
@@ -1367,16 +1421,16 @@ public class WebMapContextFactory
       }
       else
       {
-        SLDFactory fac = new SLDFactory();
-        elem = XMLTools.getChildByName( "StyledLayerDescriptor", SLDNS, element );
+        elem = XMLTools.getChildByName( "StyledLayerDescriptor", CommonNamespaces.SLDNS, element );
         if( elem != null )
         {
-          StyledLayerDescriptor styledLayerDescriptor = fac.createStyledLayerDescriptor( elem );
+          StyledLayerDescriptor styledLayerDescriptor = SLDFactory
+              .createStyledLayerDescriptor( elem );
           sld = new SLD( name, title, styledLayerDescriptor );
         }
         else
         {
-          FeatureTypeStyle fts = fac.createFeatureTypeStyle( elem );
+          FeatureTypeStyle fts = SLDFactory.createFeatureTypeStyle( elem );
           sld = new SLD( name, title, fts );
         }
       }
@@ -1410,17 +1464,19 @@ public class WebMapContextFactory
     {
 
       DataService dataService = null;
-      Element elem = XMLTools.getChildByName( "DataService", DGCNTXTNS, element );
+      Element elem = XMLTools.getChildByName( "DataService", CommonNamespaces.DGCNTXTNS, element );
       if( elem != null )
       {
-        Element el = XMLTools.getRequiredChildByName( "Server", CNTXTNS, elem );
+        Element el = XMLTools.getRequiredChildByName( "Server", CommonNamespaces.CNTXTNS, elem );
         Server server = createServer( el );
-        String geoType = XMLTools.getStringValue( "GeometryType", DGCNTXTNS, elem, null );
-        String featureType = XMLTools.getStringValue( "FeatureType", DGCNTXTNS, elem, null );
+        String geoType = XMLTools.getStringValue( "GeometryType", CommonNamespaces.DGCNTXTNS, elem,
+            null );
+        String featureType = XMLTools.getStringValue( "FeatureType", CommonNamespaces.DGCNTXTNS,
+            elem, null );
         dataService = new DataService( server, featureType, geoType );
       }
       boolean masterLayer = false;
-      elem = XMLTools.getChildByName( "MasterLayer", DGCNTXTNS, element );
+      elem = XMLTools.getChildByName( "MasterLayer", CommonNamespaces.DGCNTXTNS, element );
       if( elem != null )
       {
         String s = XMLTools.getStringValue( elem );
@@ -1431,6 +1487,37 @@ public class WebMapContextFactory
 
     Debug.debugMethodEnd();
     return le;
+  }
+
+  /**
+   * creates a list (String[]) containing the name of the JavaScript files used
+   * by the moudle
+   * 
+   * @param element
+   *          <Module>
+   * 
+   * @return instance of <tt>String[]</tt>
+   * 
+   * @throws XMLParsingException
+   */
+  private static String[] createModuleJSList( Element element ) throws XMLParsingException
+  {
+    Debug.debugMethodBegin();
+
+    String[] moduleJS = null;
+    if( element != null )
+    {
+      ElementList el = XMLTools.getChildElementsByName( "ModuleJS", CommonNamespaces.DGCNTXTNS,
+          element );
+      moduleJS = new String[el.getLength()];
+      for( int i = 0; i < el.getLength(); i++ )
+      {
+        moduleJS[i] = ( (Text)el.item( i ).getFirstChild() ).getData();
+      }
+    }
+
+    Debug.debugMethodEnd();
+    return moduleJS;
   }
 
 }

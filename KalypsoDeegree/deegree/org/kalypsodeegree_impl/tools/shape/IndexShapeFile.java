@@ -58,8 +58,7 @@ public class IndexShapeFile
 {
   public static void main( String[] args ) throws Exception
   {
-    JFileChooser fileChooser = new JFileChooser(
-        "C:/java/projekte/huis/produktionssystem/daten/flurstuecke" );
+    JFileChooser fileChooser = new JFileChooser( "C:/temp/wupper" );
     fileChooser.setFileFilter( new ShapeFilter() );
     fileChooser.setFileView( new ShapeView() );
     if( fileChooser.showOpenDialog( null ) == JFileChooser.APPROVE_OPTION )

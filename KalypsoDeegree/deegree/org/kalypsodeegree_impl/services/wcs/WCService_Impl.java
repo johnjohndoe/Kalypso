@@ -44,8 +44,7 @@ package org.deegree_impl.services.wcs;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.DataOutputStream;
 import java.net.URL;
 import java.util.HashMap;
 
@@ -67,6 +66,10 @@ import org.deegree.services.wcs.protocol.WCSGetCapabilitiesRequest;
 import org.deegree.services.wcs.protocol.WCSGetCoverageRequest;
 import org.deegree.services.wcs.protocol.WCSGetCoverageResponse;
 import org.deegree.xml.XMLParsingException;
+import org.deegree_impl.io.geotiff.GeoTiffWriter;
+import org.deegree_impl.model.cs.Adapters;
+import org.deegree_impl.model.cs.ConvenienceCSFactory;
+import org.deegree_impl.model.cs.CoordinateSystem;
 import org.deegree_impl.model.cv.CVDescriptorDirFactory;
 import org.deegree_impl.model.cv.CVDescriptorFactory;
 import org.deegree_impl.model.gc.GC_GridCoverage_Impl;
@@ -76,6 +79,7 @@ import org.deegree_impl.services.OGCWebServiceException_Impl;
 import org.deegree_impl.services.OGCWebService_Impl;
 import org.deegree_impl.services.wcs.protocol.WCSProtocolFactory;
 import org.deegree_impl.tools.Debug;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * 
@@ -298,7 +302,7 @@ public class WCService_Impl extends OGCWebService_Impl implements Handler
     }
     else if( format.equals( "TIF" ) || format.equalsIgnoreCase( "TIFF" ) )
     {
-      type = BufferedImage.TYPE_INT_ARGB;
+      type = BufferedImage.TYPE_3BYTE_BGR;
     }
     else if( format.equals( "JPG" ) || format.equalsIgnoreCase( "JPEG" ) )
     {
@@ -313,21 +317,10 @@ public class WCService_Impl extends OGCWebService_Impl implements Handler
 
     // get image from a GC_GridCoverage object
     Object image = null;
-
     try
     {
       GC_GridCoverage_Impl gc = new GC_GridCoverage_Impl( desc, false );
       image = gc.getRaster( env, width, height, type, ranges );
-    }
-    catch( java.rmi.RemoteException re )
-    {
-      re.printStackTrace();
-      response = createErrorResponse( event.getRequest(), re, "handleGetCoverageRequest" );
-    }
-    catch( IOException ioe )
-    {
-      ioe.printStackTrace();
-      response = createErrorResponse( event.getRequest(), ioe, "handleGetCoverageRequest" );
     }
     catch( Exception e )
     {
@@ -340,13 +333,12 @@ public class WCService_Impl extends OGCWebService_Impl implements Handler
     {
       if( image != null )
       {
-        Object out = getSerializedImage( image, gcr.getFormat().toUpperCase() );
+        String srs = gcr.getSRS();
+        CoordinateSystem cs = ConvenienceCSFactory.getInstance().getCSByName( srs );
+        CS_CoordinateSystem crs = Adapters.getDefault().export( cs );
+        Object out = getSerializedImage( image, gcr.getFormat().toUpperCase(), env, crs );
         response = WCSProtocolFactory.createGetCoverageResponse( event.getRequest(), out );
       }
-      //        } catch ( NotSupportedFormatException nsfe ) {
-      //            System.out.println( nsfe );
-      //            response = createErrorResponse( event.getRequest(), nsfe,
-      // "handleGetCoverageRequest" );
     }
     catch( Exception e )
     {
@@ -379,8 +371,8 @@ public class WCService_Impl extends OGCWebService_Impl implements Handler
    * serialization depends on the also submitted format. at the moment gif,
    * jpeg, tiff, png and bmp are supported.
    */
-  private Object getSerializedImage( Object image, String format )
-      throws NotSupportedFormatException, Exception
+  private Object getSerializedImage( Object image, String format, GM_Envelope env,
+      CS_CoordinateSystem crs ) throws NotSupportedFormatException, Exception
   {
     Debug.debugMethodBegin();
 
@@ -389,16 +381,7 @@ public class WCService_Impl extends OGCWebService_Impl implements Handler
 
     if( format.equals( "BMP" ) )
     {
-      BufferedImage bi = null;
-
-      try
-      {
-        bi = (BufferedImage)image;
-      }
-      catch( Exception e )
-      {
-        bi = new BufferedImage( 2, 2, BufferedImage.TYPE_INT_RGB );
-      }
+      BufferedImage bi = (BufferedImage)image;
 
       bos = new ByteArrayOutputStream( bi.getWidth() * bi.getHeight() * 3 );
       Encoders.encodeBmp( bos, bi );
@@ -407,16 +390,8 @@ public class WCService_Impl extends OGCWebService_Impl implements Handler
     }
     else if( format.equals( "PNG" ) )
     {
-      BufferedImage bi = null;
+      BufferedImage bi = (BufferedImage)image;
 
-      try
-      {
-        bi = (BufferedImage)image;
-      }
-      catch( Exception e )
-      {
-        bi = new BufferedImage( 2, 2, BufferedImage.TYPE_INT_ARGB );
-      }
       bos = new ByteArrayOutputStream( bi.getWidth() * bi.getHeight() * 4 );
       Encoders.encodePng( bos, bi );
       out = bos.toByteArray();
@@ -425,16 +400,7 @@ public class WCService_Impl extends OGCWebService_Impl implements Handler
     }
     else if( format.equals( "GIF" ) )
     {
-      BufferedImage bi = null;
-
-      try
-      {
-        bi = (BufferedImage)image;
-      }
-      catch( Exception e )
-      {
-        bi = new BufferedImage( 2, 2, BufferedImage.TYPE_INT_ARGB );
-      }
+      BufferedImage bi = (BufferedImage)image;
 
       bos = new ByteArrayOutputStream( bi.getWidth() * bi.getHeight() );
       Encoders.encodeGif( bos, bi );
@@ -443,34 +409,20 @@ public class WCService_Impl extends OGCWebService_Impl implements Handler
     }
     else if( format.equalsIgnoreCase( "TIF" ) || format.equalsIgnoreCase( "TIFF" ) )
     {
-      BufferedImage bi = null;
-
-      try
-      {
-        bi = (BufferedImage)image;
-      }
-      catch( Exception e )
-      {
-        bi = new BufferedImage( 2, 2, BufferedImage.TYPE_INT_RGB );
-      }
+      BufferedImage bi = (BufferedImage)image;
 
       bos = new ByteArrayOutputStream( bi.getWidth() * bi.getHeight() * 4 );
-      Encoders.encodeTiff( bos, bi );
+      GeoTiffWriter gw = new GeoTiffWriter( bi, env, env.getWidth() / bi.getWidth(), env
+          .getHeight()
+          / bi.getHeight(), crs );
+      gw.write( bos );
+      //Encoders.encodeTiff( bos, bi );
       out = bos.toByteArray();
       bos.close();
     }
     else if( format.equals( "JPG" ) || format.equals( "JPEG" ) )
     {
-      BufferedImage bi = null;
-
-      try
-      {
-        bi = (BufferedImage)image;
-      }
-      catch( Exception e )
-      {
-        bi = new BufferedImage( 2, 2, BufferedImage.TYPE_INT_RGB );
-      }
+      BufferedImage bi = (BufferedImage)image;
 
       bos = new ByteArrayOutputStream( bi.getWidth() * bi.getHeight() * 3 );
       Encoders.encodeJpeg( bos, bi, 0.95f );
@@ -496,8 +448,14 @@ public class WCService_Impl extends OGCWebService_Impl implements Handler
         bos = new ByteArrayOutputStream( 40 + 1 );
       }
 
-      ObjectOutputStream os = new ObjectOutputStream( bos );
-      os.writeObject( data );
+      DataOutputStream os = new DataOutputStream( bos );
+      for( int i = 0; i < data.length; i++ )
+      {
+        for( int j = 0; j < data[i].length; j++ )
+        {
+          os.writeFloat( data[i][j] );
+        }
+      }
       out = bos.toByteArray();
       os.close();
       bos.close();
@@ -550,7 +508,7 @@ public class WCService_Impl extends OGCWebService_Impl implements Handler
   }
 
   /**
-   * @see registerHandler
+   * @see #registerHandler(Handler)
    *  
    */
   public void removeHandler( Handler handler )

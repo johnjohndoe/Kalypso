@@ -650,7 +650,7 @@ public class BNADataStore extends AbstractDataStore
       // Add the geometry data
       prov.add( getGMObject( bnafeature, crs ) );
       FeatureTypeProperty ftp = FeatureFactory.createFeatureTypeProperty( "GEOM",
-          "org.deegree.model.geometry.GM_Object", true );
+          "org.deegree.model.spatialschema.GM_Object", true );
       ftpv.add( ftp );
 
       // Pack all together into a new Feature

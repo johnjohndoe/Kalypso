@@ -79,7 +79,7 @@ public class InstanceValue_Impl implements InstanceValue
   }
 
   /**
-   * @see getValue
+   * @see #getValue()
    */
   public void setValue( Value value )
   {
@@ -97,7 +97,7 @@ public class InstanceValue_Impl implements InstanceValue
   }
 
   /**
-   * @see getValueDescription
+   * @see #getValueDescription()
    */
   public void setValueDescription( String valuedescription )
   {
@@ -115,7 +115,7 @@ public class InstanceValue_Impl implements InstanceValue
   }
 
   /**
-   * @see getValueOnlineResource
+   * @see #getValueOnlineResource()
    */
   public void setValueOnlineResource( ValueOnLineResource valueonlineresource )
   {
@@ -133,7 +133,7 @@ public class InstanceValue_Impl implements InstanceValue
   }
 
   /**
-   * @see getValueTitle
+   * @see #getValueTitle()
    */
   public void setValueTitle( String valuetitle )
   {

@@ -125,12 +125,13 @@ public class InitListener extends AbstractListener
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:40  doemming
+ * Revision 1.3  2004/10/07 14:09:00  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:27 doemming
- * backup of local modified deegree sources
- * 
- * Revision 1.6 2004/02/23 07:47:47 poth no message
+ *
+ * Revision 1.1  2004/09/02 23:57:02  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:45:46 doemming ***
+ * empty log message *** Revision 1.6 2004/02/23 07:47:47 poth no message
  * 
  * Revision 1.5 2004/02/19 10:08:56 poth no message
  * 

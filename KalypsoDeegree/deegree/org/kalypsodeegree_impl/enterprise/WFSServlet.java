@@ -327,8 +327,9 @@ public class WFSServlet extends AbstractOGCServlet
       {
         // create an xml-encoding of the DescribeFeatureType request
         StringBuffer sb = new StringBuffer( 500 );
-        sb.append( "<DescribeFeatureType outputFormat=" );
-        sb.append( "\"" + model.get( "OUTPUTFORMAT" ) + "\">" );
+        sb.append( "<wfs:DescribeFeatureType outputFormat=" );
+        sb.append( "'" + model.get( "OUTPUTFORMAT" ) + "' " );
+        sb.append( "xmlns:wfs='http://www.opengis.net/wfs'>" );
 
         String tmp = (String)model.get( "TYPENAME" );
 
@@ -337,8 +338,8 @@ public class WFSServlet extends AbstractOGCServlet
           String[] typeNames = StringExtend.toArray( tmp, ",;", true );
           for( int i = 0; i < typeNames.length; i++ )
           {
-            sb.append( "<TypeName>" ).append( typeNames[i] );
-            sb.append( "</TypeName>" );
+            sb.append( "<wfs:TypeName>" ).append( typeNames[i] );
+            sb.append( "</wfs:TypeName>" );
           }
         }
         else
@@ -352,8 +353,9 @@ public class WFSServlet extends AbstractOGCServlet
           }
         }
 
-        sb.append( "</DescribeFeatureType>" );
+        sb.append( "</wfs:DescribeFeatureType>" );
         request = sb.toString();
+
       }
       else if( req.equals( "GetCapabilities" ) )
       {
@@ -378,21 +380,27 @@ public class WFSServlet extends AbstractOGCServlet
     private String getPostContent( HttpServletRequest request ) throws IllegalArgumentException,
         IOException
     {
-      Debug.debugMethodBegin( this, "getPostContent" );
+      Debug.debugMethodBegin();
 
       BufferedReader br = request.getReader();
-
       StringBuffer sb = new StringBuffer( 2000 );
       String line = null;
 
       while( ( line = br.readLine() ) != null )
       {
-        sb.append( line );
+        sb.append( line + "\n" );
       }
 
       br.close();
+      String s = sb.toString();
+
+      //            s = URLDecoder.decode(s);
+      //            int k = s.indexOf("<");
+      //            int d = s.lastIndexOf(">");
+      //            s = s.substring(k,d+1);
+      //            System.out.println(s);
       Debug.debugMethodEnd();
-      return sb.toString();
+      return s;
     }
 
     /**
@@ -452,7 +460,7 @@ public class WFSServlet extends AbstractOGCServlet
      */
     private boolean waitForFinish( int minute )
     {
-      Debug.debugMethodBegin( this, "waitForFinish" );
+      Debug.debugMethodBegin();
 
       boolean ok = true;
       long start = System.currentTimeMillis();

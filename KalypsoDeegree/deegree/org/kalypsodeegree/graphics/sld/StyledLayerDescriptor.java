@@ -64,7 +64,7 @@ public interface StyledLayerDescriptor
   /**
    * Sets Layers
    * 
-   * @param Layers
+   * @param layers
    *          the Layers as Array
    */
   void setLayers( Layer[] layers );

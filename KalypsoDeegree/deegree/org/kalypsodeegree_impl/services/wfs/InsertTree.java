@@ -252,6 +252,19 @@ public class InsertTree
     // these are all properties of the feature (flat and complex)
     GMLProperty[] gmlProperties = gmlFeature.getProperties();
 
+    String[] gmlName = ft.getDatastoreField( "gml:name" );
+    if( gmlName != null )
+    {
+      String[] parts = splitString( gmlName[0] );
+      addField( gmlFeature.getName(), parts[0].toUpperCase(), parts[1].toUpperCase() );
+    }
+    String[] gmlDescription = ft.getDatastoreField( "gml:description" );
+    if( gmlDescription != null )
+    {
+      String[] parts = splitString( gmlDescription[0] );
+      addField( gmlFeature.getDescription(), parts[0].toUpperCase(), parts[1].toUpperCase() );
+    }
+
     for( int i = 0; i < gmlProperties.length; i++ )
     {
       GMLProperty gmlProperty = gmlProperties[i];

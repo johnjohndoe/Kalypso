@@ -1,6 +1,6 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/clients/gazetteer/control/TakeListener.java,v
-// 1.1.1.1 2004/05/11 16:43:27 doemming Exp $
+// /cvsroot/deegree/deegree/org/deegree_impl/clients/gazetteer/control/TakeListener.java,v
+// 1.7 2004/07/09 07:16:19 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.
@@ -251,18 +251,14 @@ public final class TakeListener extends AbstractListener
     {
       return null;
     }
-    else
-    {
-      return fc.getFeature( 0 );
-    }
+    return fc.getFeature( 0 );
 
   }
 
 }
 /*******************************************************************************
  * Changes to this class. What the people have been up to: $Log:
- * TakeListener.java,v $ Revision 1.1.1.1 2004/05/11 16:43:27 doemming backup of
- * local modified deegree sources
+ * TakeListener.java,v $ Revision 1.7 2004/07/09 07:16:19 poth no message
  * 
  * Revision 1.6 2004/03/29 10:36:39 poth no message
  * 

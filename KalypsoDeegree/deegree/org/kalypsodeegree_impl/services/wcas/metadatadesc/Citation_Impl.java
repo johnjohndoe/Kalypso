@@ -130,7 +130,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getAlternateTitle
+   * @see Citation_Impl#getAlternateTitle()
    */
   public void addAlternateTitle( String alternatetitle )
   {
@@ -138,7 +138,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getAlternateTitle
+   * @see Citation_Impl#getAlternateTitle()
    */
   public void setAlternateTitle( String[] alternatetitle )
   {
@@ -161,7 +161,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getCitedResponsibleParty
+   * @see Citation_Impl#getCitedResponsibleParty()
    */
   public void addCitedResponsibleParty( CitedResponsibleParty citedresponsibleparty )
   {
@@ -169,7 +169,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getCitedResponsibleParty
+   * @see Citation_Impl#getCitedResponsibleParty()
    */
   public void setCitedResponsibleParty( CitedResponsibleParty[] citedresponsibleparty )
   {
@@ -191,7 +191,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getCollectionTitle
+   * @see Citation_Impl#getCollectionTitle()
    */
   public void setCollectionTitle( String collectiontitle )
   {
@@ -209,7 +209,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getDate
+   * @see Citation_Impl#getDate()
    */
   public void addDate( Date date )
   {
@@ -217,7 +217,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getDate
+   * @see Citation_Impl#getDate()
    */
   public void setDate( Date[] date )
   {
@@ -239,7 +239,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getEdition
+   * @see Citation_Impl#getEdition()
    */
   public void setEdition( String edition )
   {
@@ -257,7 +257,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getEditionDate
+   * @see Citation_Impl#getEditionDate()
    */
   public void setEditionDate( String editiondate )
   {
@@ -275,7 +275,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getIdentifier
+   * @see Citation_Impl#getIdentifier()
    */
   public void addIdentifier( String identifier )
   {
@@ -283,7 +283,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getIdentifier
+   * @see Citation_Impl#getIdentifier()
    */
   public void setIdentifier( String[] identifier )
   {
@@ -305,7 +305,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getIdentifierType
+   * @see Citation_Impl#getIdentifierType()
    */
   public void addIdentifierType( String identifiertype )
   {
@@ -313,7 +313,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getIdentifierType
+   * @see Citation_Impl#getIdentifierType()
    */
   public void setIdentifierType( String[] identifiertype )
   {
@@ -335,7 +335,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getIsbn
+   * @see Citation_Impl#getIsbn()
    */
   public void setIsbn( String isbn )
   {
@@ -353,7 +353,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getIssn
+   * @see Citation_Impl#getIssn()
    */
   public void setIssn( String issn )
   {
@@ -371,7 +371,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getIssueIdentification
+   * @see Citation_Impl#getIssueIdentification()
    */
   public void setIssueIdentification( String issueidentification )
   {
@@ -389,7 +389,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getOtherCitationDetails
+   * @see Citation_Impl#getOtherCitationDetails()
    */
   public void setOtherCitationDetails( String othercitationdtails )
   {
@@ -407,7 +407,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getPage
+   * @see Citation_Impl#getPage()
    */
   public void setPage( String page )
   {
@@ -426,7 +426,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getPresentationFormCode
+   * @see Citation_Impl#getPresentationFormCode()
    */
   public void addPresentationFormCode( PresentationFormCode presentationformcode )
   {
@@ -434,7 +434,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getPresentationFormCode
+   * @see Citation_Impl#getPresentationFormCode()
    */
   public void setPresentationFormCode( PresentationFormCode[] presentationformcode )
   {
@@ -456,7 +456,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getSeriesName
+   * @see Citation_Impl#getSeriesName()
    */
   public void setSeriesName( String seriesname )
   {
@@ -472,7 +472,7 @@ public class Citation_Impl implements Citation
   }
 
   /**
-   * @see getTitle
+   * @see Citation_Impl#getTitle()
    */
   public void setTitle( String title )
   {

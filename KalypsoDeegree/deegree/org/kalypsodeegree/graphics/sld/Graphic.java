@@ -176,7 +176,7 @@ public interface Graphic
   double getSize( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see getSize
+   * @see #getSize(Feature)
    *      <p>
    * @param size
    *          size to be set for the graphic
@@ -200,7 +200,7 @@ public interface Graphic
   double getRotation( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see getRotation
+   * @see #getRotation(Feature)
    *      <p>
    * @param rotation
    *          rotation to be set for the graphic

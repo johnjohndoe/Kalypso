@@ -626,6 +626,8 @@ public class TileImageTree
 
     }
     Debug.debugMethodEnd();
+
+    System.out.println( xmin + " " + ymin + " " + xmax + " " + ymax );
   }
 
   /**

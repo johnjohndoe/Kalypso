@@ -1,50 +1,7 @@
-/*----------------    FILE HEADER  ------------------------------------------
-
- This file is part of deegree.
- Copyright (C) 2001 by:
- EXSE, Department of Geography, University of Bonn
- http://www.giub.uni-bonn.de/exse/
- lat/lon Fitzke/Fretter/Poth GbR
- http://www.lat-lon.de
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
- Contact:
-
- Andreas Poth
- lat/lon Fitzke/Fretter/Poth GbR
- Meckenheimer Allee 176
- 53115 Bonn
- Germany
- E-Mail: poth@lat-lon.de
-
- Jens Fitzke
- Department of Geography
- University of Bonn
- Meckenheimer Allee 166
- 53115 Bonn
- Germany
- E-Mail: jens.fitzke@uni-bonn.de
-
-
- ---------------------------------------------------------------------------*/
 package org.deegree_impl.model.feature;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
@@ -53,255 +10,309 @@ import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Point;
+import org.deegree.model.geometry.GM_Position;
+import org.deegree_impl.model.geometry.GM_Envelope_Impl;
 import org.deegree_impl.model.geometry.GeometryFactory;
-import org.opengis.gc.GC_GridCoverage;
 
 /**
- * Features are, according to the Abstract Specification, digital
- * representations of real world entities. Feature Identity thus refers to
- * mechanisms to identify such representations: not to identify the real world
- * entities that are the subject of a representation. Thus two different
- * representations of a real world entity (say the Mississippi River) will be
- * two different features with distinct identities. Real world identification
- * systems, such as title numbers, while possibly forming a sound basis for an
- * implementation of a feature identity mechanism, are not of themselves such a
- * mechanism.
- * <p>
- * -----------------------------------------------------------------------
- * </p>
+ * @author doemming
  * 
- * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
- * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
- * @version $Revision$ $Date$
+ * implementation of ogc feature that supports different cardinalities of
+ * properties, but not "unbound" cardinalities (use FeatureCollections for
+ * unbound cardinalities)
  */
-public class Feature_Impl implements Feature, Serializable
+public class Feature_Impl implements Feature
 {
 
-  protected String id = "";
+  private final static GM_Envelope INVALID_ENV = new GM_Envelope_Impl();
 
-  protected FeatureType featureType = null;
-
-  protected ArrayList geoProps = new ArrayList();
-
-  protected HashMap properties = new HashMap();
-
-  protected Object[] propRef = null;
-
-  protected GM_Envelope envelope = null;
+  private GM_Envelope m_envelope = INVALID_ENV;
 
   /**
-   * initializes a feature with its id its FeatureType and an array of
-   * properties. It is assumed that the properties are in the same order then
-   * the property definition within the FeatureType.
+   * all property-values are stored here in sequencial order (as defined in
+   * applicationschema) properties with maxOccurency = 1 are stored direct
+   * properties with maxOccurency > 1 are stored in a list properties with
+   * maxOccurency = "unbounded" should use FeatureCollections
    */
-  Feature_Impl( String id, FeatureType featureType, Object[] properties )
+  private final Object[] m_properties;
+
+  private final FeatureType m_featureType;
+
+  private final String m_id;
+
+  protected Feature_Impl( FeatureType ft, String id )
   {
-    this.id = id;
-    this.featureType = featureType;
-    //	System.out.println("Feature_Impl() id "+id);
-    if( featureType != null && properties != null )
+    if( ft == null )
+      throw new UnsupportedOperationException( "must provide a featuretype" );
+    m_featureType = ft;
+    m_id = id;
+    // initialize
+    FeatureTypeProperty[] ftp = ft.getProperties();
+    m_properties = new Object[ftp.length];
+    for( int i = 0; i < ftp.length; i++ )
     {
-      FeatureTypeProperty[] ftp = featureType.getProperties();
-      propRef = properties;
-      for( int i = 0; i < ftp.length; i++ )
-      {
-        this.properties.put( ftp[i].getName(), new int[]
-        { i } );
-        if( properties[i] != null
-            && ( properties[i] instanceof GM_Object || properties[i] instanceof GC_GridCoverage ) )
-        {
-          geoProps.add( properties[i] );
-        }
-      }
+      if( m_featureType.getMaxOccurs( i ) != 1 )
+        m_properties[i] = new ArrayList();
     }
   }
 
-  /**
-   * initializes a feature with its id its FeatureType and an array of
-   * properties. It is assumed that the properties are in the same order then
-   * the property definition within the FeatureType.
-   */
-  protected Feature_Impl( String id, FeatureType featureType, FeatureProperty[] properties )
+  protected Feature_Impl( FeatureType ft, String id, Object[] propValues )
   {
-    this.id = id;
-    this.featureType = featureType;
+    if( ft == null )
+      throw new UnsupportedOperationException( "must provide a featuretype" );
 
-    if( featureType != null && properties != null )
+    m_featureType = ft;
+    m_id = id;
+    m_properties = propValues;
+  }
+
+  protected Feature_Impl( FeatureType ft, String id, FeatureProperty[] featureProperties )
+  {
+    if( ft == null )
+      throw new UnsupportedOperationException( "must provide a featuretype" );
+    m_featureType = ft;
+    m_id = id;
+    // initialize
+    FeatureTypeProperty[] ftp = ft.getProperties();
+    m_properties = new Object[ftp.length];
+    for( int i = 0; i < ftp.length; i++ )
     {
-      propRef = new Object[properties.length];
-      for( int i = 0; i < properties.length; i++ )
-      {
-        this.properties.put( properties[i].getName(), new int[]
-        { i } );
-        Object o = properties[i].getValue();
-        if( o != null && ( o instanceof GM_Object || o instanceof GC_GridCoverage ) )
-        {
-          geoProps.add( o );
-        }
-        propRef[i] = o;
-      }
+      if( m_featureType.getMaxOccurs( i ) != 1 )
+        m_properties[i] = new ArrayList();
     }
+    // setproperties
+    for( int i = 0; i < featureProperties.length; i++ )
+      setProperty( featureProperties[i] );
   }
 
   /**
-   * returns the id of the Feature. the id has to be a name space that must be
-   * unique for each feature. use the adress of the datasource in addition to a
-   * number for example .
+   * @see org.deegree.model.feature.Feature#getId()
    */
   public String getId()
   {
-    return id;
+    return m_id;
   }
 
   /**
-   * returns the FeatureType of this Feature
+   * @see org.deegree.model.feature.Feature#getFeatureType()
    */
   public FeatureType getFeatureType()
   {
-    return featureType;
+    return m_featureType;
   }
 
   /**
-   * returns the properties of the feature as array of Objects
+   * @return array of properties, properties with maxoccurency>0 (as defined in
+   *         applicationschema) will be embedded in java.util.List-objects
+   * @see org.deegree.model.feature.Feature#getProperties()
    */
   public Object[] getProperties()
   {
-    return propRef;
+    return m_properties;
   }
 
   /**
-   * returns the property of the feature that matches the submitted name TODO
-   * --> throw ModelException
+   * format of name if "namespace:name" or just "name" - both will work
+   * 
+   * @return array of properties, properties with maxoccurency>0 (as defined in
+   *         applicationschema) will be embedded in java.util.List-objects
+   * 
+   * @see org.deegree.model.feature.Feature#getProperty(java.lang.String)
    */
   public Object getProperty( String name )
   {
-    int[] i = (int[])properties.get( name );
-    if( i == null )
-    {
-      return null;
-    }
-    return propRef[i[0]];
+    int pos = m_featureType.getPropertyPosition( name );
+    return m_properties[pos];
   }
 
   /**
-   * returns the property of the feature that matches the submitted index
+   * 
+   * @see org.deegree.model.feature.Feature#getProperty(int)
+   * @return array of properties, properties with maxoccurency>0 (as defined in
+   *         applicationschema) will be embedded in java.util.List-objects
    */
   public Object getProperty( int index )
   {
-    return propRef[index];
+    return m_properties[index];
   }
 
   /**
-   * returns all geometry properties of the feature. If no geometry could be
-   * found an <tt>GM_Object[]</tt> with zero length will be returned.
+   * @see org.deegree.model.feature.Feature#getGeometryProperties()
    */
   public GM_Object[] getGeometryProperties()
   {
-    return (GM_Object[])geoProps.toArray( new GM_Object[geoProps.size()] );
+    List result = new ArrayList();
+    FeatureTypeProperty[] ftp = m_featureType.getProperties();
+    for( int p = 0; p < ftp.length; p++ )
+    {
+      if( ftp[p].isGeometryProperty() )
+      {
+        Object o = getProperty( p );
+        if( o == null )
+          continue;
+        if( o instanceof List )
+        {
+          result.addAll( (List)o );
+        }
+        else
+          result.add( o );
+      }
+    }
+    return (GM_Object[])result.toArray( new GM_Object[result.size()] );
   }
 
   /**
-   * Returns the default geometry of the <tt>Feature</tt>. If there are no
-   * geometry properties at all, or the default geometry is null (which is
-   * possible when using ESRI-Shapefiles), null is returned.
-   * <p>
-   * 
-   * @return default geometry or null, if the <tt>Feature</tt> has none
+   * @see org.deegree.model.feature.Feature#getDefaultGeometryProperty()
    */
   public GM_Object getDefaultGeometryProperty()
   {
-    if( geoProps.size() < 1 )
-      return null;
-    return (GM_Object)geoProps.get( 0 );
+    int pos = m_featureType.getDefaultGeometryPropertyPosition();
+    if(pos<0)
+    	return null;
+    Object prop = m_properties[pos];
+    if( prop instanceof List )
+    {
+      List props = (List)prop;
+      return (GM_Object)( props.size() > 0 ? props.get( 0 ) : null );
+    }
+    if( !( prop == null || prop instanceof GM_Object ) )
+      throw new UnsupportedOperationException( "wrong geometry type" );
+    return (GM_Object)prop;
   }
 
   /**
-   * the value for the submitted property. if no property with the submitted
-   * name exists the property will be added
+   * set defaulproperty (occurenceposition=0)
+   * 
+   * @see org.deegree.model.feature.Feature#setProperty(org.deegree.model.feature.FeatureProperty)
    */
   public void setProperty( FeatureProperty property )
   {
-
-    Object o = null;
-    int[] index = (int[])properties.get( property.getName() );
-    // index zeigt auf positionen von property in propref
-    if( index == null ) // existiert noch nicht
+    if( property == null )
+      return;
+    FeatureType ft = getFeatureType();
+    if( ft == null )
+      return;
+    FeatureTypeProperty ftp = ft.getProperty( property.getName() );
+    if( ftp == null )
     {
-      Object[] tmp = new Object[propRef.length + 1];
-      for( int i = 0; i < propRef.length; i++ )
+      return;
+    }
+    if( ftp.isGeometryProperty() )
+      invalidEnvelope();
+
+    int pos = m_featureType.getPropertyPosition( property.getName() );
+    m_properties[pos] = property.getValue();
+  }
+
+  /**
+   * 
+   * @see org.deegree.model.feature.Feature#addProperty(org.deegree.model.feature.FeatureProperty)
+   */
+  public void addProperty( FeatureProperty property )
+  {
+    // to handle boundingbox if geometryproperty
+    int pos = m_featureType.getPropertyPosition( property.getName() );
+    Object newValue = property.getValue();
+    Object oldValue = m_properties[pos];
+    if( oldValue instanceof List )
+    {
+      if( newValue instanceof List )
       {
-        tmp[i] = propRef[i];
+        ( (List)oldValue ).addAll( (List)newValue );
       }
-      tmp[tmp.length - 1] = property.getValue();
-      properties.put( property.getName(), new int[]
-      { tmp.length - 1 } );
-      propRef = tmp;
+      else
+      {
+        ( (List)oldValue ).add( newValue );
+      }
     }
     else
     {
-      o = propRef[index[0]];
-      propRef[index[0]] = property.getValue();
-    }
-
-    if( property.getValue() instanceof GM_Object || property.getValue() instanceof GC_GridCoverage )
-    {
-      if( o != null )
-      {
-        geoProps.remove( o );
-      }
-      geoProps.add( property.getValue() );
-      envelope = null;
+      m_properties[pos] = newValue;
     }
   }
 
   /**
-   * returns the envelope / boundingbox of the feature
+   * @see org.deegree.model.feature.Feature#getEnvelope()
    */
   public GM_Envelope getEnvelope()
   {
-    if( envelope == null )
+    if( m_envelope == INVALID_ENV )
+      calculateEnv();
+    return m_envelope;
+  }
+
+  private void calculateEnv()
+  {
+    GM_Envelope env = null;
+    GM_Object[] geoms = getGeometryProperties();
+    for( int i = 0; i < geoms.length; i++ )
     {
-      if( geoProps.size() > 0 )
+      if( !( geoms[i] instanceof GM_Point ) )
       {
-        GM_Object geo = (GM_Object)geoProps.get( 0 );
-        GM_Envelope env = null;
-        if( !( geo instanceof GM_Point ) )
-        {
-          env = geo.getEnvelope();
-        }
+        if( env == null )
+          env = geoms[i].getEnvelope();
         else
-        {
-          env = GeometryFactory.createGM_Envelope( ( (GM_Point)geo ).getPosition(),
-              ( (GM_Point)geo ).getPosition() );
-        }
-        for( int i = 1; i < geoProps.size(); i++ )
-        {
-          GM_Envelope env2 = null;
-          if( !( geo instanceof GM_Point ) )
-          {
-            env2 = geo.getEnvelope();
-          }
-          else
-          {
-            env2 = GeometryFactory.createGM_Envelope( ( (GM_Point)geo ).getPosition(),
-                ( (GM_Point)geo ).getPosition() );
-          }
+          env = env.merge( geoms[i].getEnvelope() );
+      }
+      else
+      {
+        GM_Position pos = ( (GM_Point)geoms[i] ).getPosition();
+        GM_Envelope env2 = GeometryFactory.createGM_Envelope( pos, pos );
+        if( env == null )
+          env = env2;
+        else
           env = env.merge( env2 );
-        }
-        envelope = env;
       }
     }
-    return envelope;
+    m_envelope = env;
   }
 
-  public String toString()
+  private void invalidEnvelope()
   {
-    String ret = getClass().getName() + "\n";
-    ret = "id = " + id + "\n";
-    ret += "featureType = " + featureType + "\n";
-    ret += "geoProps = " + geoProps + "\n";
-    ret += "properties = " + properties + "\n";
-    return ret;
+    m_envelope = INVALID_ENV;
   }
 
+  public void debugOut( int indent )
+  {
+    System.out.println( getIndent( indent ) + "Name:      " + m_featureType.getName() );
+    System.out.println( getIndent( indent ) + "NameSpace: " + m_featureType.getNamespace() );
+    System.out.println( getIndent( indent ) + " TYPE:      Feature" );
+    System.out.println( getIndent( indent ) + " props:" );
+    final FeatureTypeProperty[] ftps = m_featureType.getProperties();
+    indent++;
+    for( int i = 0; i < ftps.length; i++ )
+    {
+      System.out.println( getIndent( indent ) + "Name:      " + ftps[i].getName() );
+      System.out.println( getIndent( indent ) + "NameSpace: " + ftps[i].getNamespace() );
+      System.out.println( getIndent( indent ) + " TYPE:     " + ftps[i].getType() );
+      Object value = m_properties[i];
+      if( value == null )
+        System.out.println( getIndent( indent ) + "null" );
+      else if( value instanceof List )
+      {
+        List vList = (List)value;
+        for( int j = 0; j < vList.size(); j++ )
+        {
+          Object lValue = vList.get( j );
+          debugOutProperty( indent, lValue );
+        }
+      }
+      else
+        debugOutProperty( indent, value );
+
+    }
+  }
+
+  private void debugOutProperty( int indent, Object value )
+  {
+    if( value instanceof Feature )
+      ( (Feature_Impl)value ).debugOut( indent + 1 );
+    else
+      System.out.println( getIndent( indent ) + value.toString() );
+  }
+
+  private String getIndent( int indent )
+  {
+    return "                                                  ".substring( 0, indent * 4 );
+  }
 }

@@ -73,7 +73,7 @@ public interface GUIArea
   /**
    * sets the name of a module
    * 
-   * @param name
+   * @param area
    */
   void setArea( int area );
 

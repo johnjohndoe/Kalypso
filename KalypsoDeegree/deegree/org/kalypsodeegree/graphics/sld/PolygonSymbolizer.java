@@ -92,8 +92,8 @@ public interface PolygonSymbolizer extends Symbolizer
   /**
    * Sets the Stroke
    * 
-   * @param the
-   *          stroke of the polygon
+   * @param stroke
+   *          the stroke of the polygon
    */
   void setStroke( Stroke stroke );
 }

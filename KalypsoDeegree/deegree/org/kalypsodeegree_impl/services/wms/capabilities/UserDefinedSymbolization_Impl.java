@@ -56,7 +56,7 @@ import org.deegree.xml.Marshallable;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$
  */
-class UserDefinedSymbolization_Impl implements UserDefinedSymbolization, Marshallable
+public class UserDefinedSymbolization_Impl implements UserDefinedSymbolization, Marshallable
 {
   private boolean remoteWFSEnabled = false;
 

@@ -373,11 +373,17 @@ public class DetailedMetadata extends BaseMetadata
     this.onlineTransferOptions = onlineTransferOptions;
   }
 
+  /**
+   * @see org.deegree_impl.clients.wcasclient.model.BaseMetadata#getMetadataStandardName()
+   */
   public String getMetadataStandardName()
   {
     return metadataStandardName;
   }
 
+  /**
+   * @see org.deegree_impl.clients.wcasclient.model.BaseMetadata#setMetadataStandardName(java.lang.String)
+   */
   public void setMetadataStandardName( String metadataStandardName )
   {
     this.metadataStandardName = metadataStandardName;

@@ -46,7 +46,6 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 import org.deegree.graphics.sld.UserStyle;
-import org.deegree.model.sort.JMSpatialIndex;
 
 /**
  * 
@@ -144,8 +143,6 @@ public interface Theme
    * new style definitions.
    */
   void setStyles( UserStyle[] styles );
-
-  JMSpatialIndex getSpatialIndex();
 
   /**
    * returns the styles used for this <tt>Theme</tt>.

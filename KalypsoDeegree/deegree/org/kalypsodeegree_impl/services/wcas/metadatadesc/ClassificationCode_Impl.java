@@ -79,7 +79,7 @@ public class ClassificationCode_Impl implements ClassificationCode
   }
 
   /**
-   * @see getClassification
+   * @see ClassificationCode_Impl#getClassification()
    */
   public void setClassification( String classification )
   {

@@ -132,7 +132,7 @@ public interface Stroke extends Drawing
   Color getStroke( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see getStroke
+   * @see #getStroke(Feature)
    *      <p>
    * @param stroke
    *          the stroke to be set
@@ -158,7 +158,7 @@ public interface Stroke extends Drawing
   double getOpacity( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see getOpacity
+   * @see #getOpacity(Feature)
    *      <p>
    * @param opacity
    *          the opacity to be set for the stroke
@@ -183,7 +183,7 @@ public interface Stroke extends Drawing
   double getWidth( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see getWidth
+   * @see #getWidth(Feature)
    *      <p>
    * @param width
    *          the width to be set for the stroke
@@ -207,7 +207,7 @@ public interface Stroke extends Drawing
   int getLineJoin( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see getLineJoin
+   * @see #getLineJoin(Feature)
    *      <p>
    * @param lineJoin
    *          the lineJoin to be set for the stroke
@@ -231,7 +231,7 @@ public interface Stroke extends Drawing
   int getLineCap( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see getLineCap
+   * @see #getLineCap(Feature)
    *      <p>
    * @param lineCap
    *          lineCap to be set for the stroke
@@ -259,7 +259,7 @@ public interface Stroke extends Drawing
   float[] getDashArray( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see getDashArray
+   * @see #getDashArray(Feature)
    *      <p>
    * @param dashArray
    *          the dashArray to be set for the Stroke

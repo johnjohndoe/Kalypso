@@ -42,6 +42,9 @@
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.gml;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.deegree.gml.GMLCoordinates;
 import org.deegree.gml.GMLException;
 import org.deegree.gml.GMLFeature;
@@ -55,7 +58,9 @@ import org.deegree.gml.GMLMultiPolygon;
 import org.deegree.gml.GMLPoint;
 import org.deegree.gml.GMLPolygon;
 import org.deegree.gml.GMLProperty;
+import org.deegree.model.feature.DeegreeFeature;
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureAssociationTypeProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.geometry.GM_Curve;
@@ -67,11 +72,11 @@ import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Point;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.geometry.GM_Surface;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.extension.ITypeHandler;
-import org.deegree_impl.extension.ITypeRegistry;
+import org.deegree_impl.extension.TypeRegistryException;
 import org.deegree_impl.extension.TypeRegistrySingleton;
-import org.deegree_impl.model.feature.XLinkFeatureTypeProperty;
 import org.deegree_impl.tools.Debug;
 import org.deegree_impl.tools.StringExtend;
 import org.w3c.dom.Document;
@@ -197,8 +202,7 @@ public class GMLFactory
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLPoint" );
 
-    Element coord = doc.getDocument()
-        .createElementNS( GMLGeometricMapping.GMLNS, "gml:coordinates" );
+    Element coord = doc.getDocument().createElementNS( CommonNamespaces.GMLNS, "gml:coordinates" );
 
     GMLCoordinates gmlCo = new GMLCoordinates_Impl( coord );
     gmlCo.setCoordinates( geo.getX() + "," + geo.getY()
@@ -237,8 +241,7 @@ public class GMLFactory
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLLineString" );
 
-    Element coord = doc.getDocument()
-        .createElementNS( GMLGeometricMapping.GMLNS, "gml:coordinates" );
+    Element coord = doc.getDocument().createElementNS( CommonNamespaces.GMLNS, "gml:coordinates" );
 
     GMLCoordinates gmlCo = new GMLCoordinates_Impl( coord );
 
@@ -311,8 +314,7 @@ public class GMLFactory
     }
 
     // exterior ring
-    Element coord = doc.getDocument()
-        .createElementNS( GMLGeometricMapping.GMLNS, "gml:coordinates" );
+    Element coord = doc.getDocument().createElementNS( CommonNamespaces.GMLNS, "gml:coordinates" );
     GMLCoordinates gmlCo = new GMLCoordinates_Impl( coord );
 
     StringBuffer sb = null;
@@ -357,7 +359,7 @@ public class GMLFactory
     {
       for( int i = 0; i < in.length; i++ )
       {
-        coord = doc.getDocument().createElementNS( GMLGeometricMapping.GMLNS, "gml:coordinates" );
+        coord = doc.getDocument().createElementNS( CommonNamespaces.GMLNS, "gml:coordinates" );
         gmlCo = new GMLCoordinates_Impl( coord );
 
         try
@@ -556,7 +558,7 @@ public class GMLFactory
   /**
    * creates a GMLFeature from a XML Element
    */
-  public static GMLFeature createGMLFeature( Document doc, Feature feature ) throws GMLException
+  public static GMLFeature createGMLFeature( Document doc, DeegreeFeature feature ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLFeature(Feature)" );
 
@@ -579,21 +581,8 @@ public class GMLFactory
       {
         if( properties[i] != null )
         {
-          if( ftp[i] instanceof XLinkFeatureTypeProperty )
-            prop = GMLProperty_Impl.createGMLProperty( doc, ftp[i], properties[i].toString() );
-          else
-          {
-            final String type = ftp[i].getType();
-            final ITypeRegistry typeRegistry = TypeRegistrySingleton.getTypeRegistry();
-            if( typeRegistry.hasClassName( type ) )
-            {
-              final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForClassName( type );
-              prop = GMLCustomProperty_Impl.createGMLProperty( doc, ftp[i], properties[i] );
-            }
-            else
-              prop = GMLProperty_Impl.createGMLProperty( doc, ftp[i].getName(), properties[i]
-                  .toString() );
-          }
+          prop = GMLProperty_Impl.createGMLProperty( doc, ftp[i].getName(), properties[i]
+              .toString() );
         }
         else
         {
@@ -624,19 +613,101 @@ public class GMLFactory
   {
     return null;
   }
+
+  public static GMLFeature createGMLFeature( Document doc, Feature feature ) throws GMLException
+  {
+    Debug.debugMethodBegin( "GMLFactory", "createGMLFeature(Feature)" );
+
+    GMLFeature gmlFeature = GMLFeature_Impl.createGMLFeature( doc, feature.getFeatureType()
+        .getName() );
+
+    FeatureType ft = feature.getFeatureType();
+
+    FeatureTypeProperty[] ftp = ft.getProperties();
+    Object[] properties = feature.getProperties();
+
+    for( int i = 0; i < ftp.length; i++ )
+    {
+      addGMLProperties( doc, gmlFeature, properties[i], ftp[i], ft.getMinOccurs( i ) );
+    }
+    String id = feature.getId();
+    if(id!=null)
+      gmlFeature.setId(id);
+    return gmlFeature;
+  }
+
+  private static void addGMLProperties( Document doc, GMLFeature gmlFeature, Object value,
+      FeatureTypeProperty ftp, int min ) throws GMLException
+  {
+  	
+    // marshalling
+      final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
+          .getTypeHandlerForClassName( ftp.getType() );
+      
+    GMLProperty prop = null;
+    // TODO
+    if( value instanceof List )
+    {
+      Iterator iterator = ( (List)value ).iterator();
+      while( iterator.hasNext() )
+        addGMLProperties( doc, gmlFeature, iterator.next(), ftp, min );
+    }
+    else if( value == null )
+    {
+      // TODO test cardinality
+      if( min > 0 )
+        prop = GMLProperty_Impl.createGMLProperty( doc, ftp.getName(), "" );
+    }
+    else if(typeHandler!=null)
+    {
+		final Element element = doc.createElement( ftp.getName() );
+      try
+	  {
+		typeHandler.marshall( value, element );
+      	}
+      catch (TypeRegistryException e) 
+	  {
+		e.printStackTrace();
+	  }
+      prop = new GMLCustomProperty_Impl( ftp, element );
+ 	  }
+    else if( value instanceof GM_Object )
+    {
+      GMLGeometry geom = createGMLGeometry( (GM_Object)value );
+      prop = GMLGeoProperty_Impl.createGMLGeoProperty( ftp.getName(), geom );
+    }
+    else if( value instanceof Feature )
+    {
+      Feature fe = (Feature)value;
+      GMLFeature gmlFe = createGMLFeature( doc, fe );
+      prop = GMLProperty_Impl.createGMLProperty( doc, ftp.getName(), gmlFe.getAsElement() );
+    }
+ else if(value instanceof String
+        && ftp instanceof FeatureAssociationTypeProperty)
+    {
+     // gmlproperty of featureassociation must be created with featuretype
+     String href=value.toString();
+     prop = GMLProperty_Impl.createGMLProperty(doc, ftp, href);
+      }
+    else
+    {
+      prop = GMLProperty_Impl.createGMLProperty( doc, ftp.getName(), value.toString() );
+    }
+    // TODO integrate typehandler ??
+    if( prop != null )
+      gmlFeature.addProperty( prop );
+  }
 }
 
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.4  2004/08/30 00:36:58  doemming
+ * Revision 1.5  2004/10/07 14:09:13  doemming
  * *** empty log message ***
- * Revision 1.3 2004/08/18 20:27:32 belger *** empty
- * log message ***
- * 
- * Revision 1.2 2004/08/11 11:20:16 doemming *** empty log message *** Revision
- * 1.1.1.1 2004/05/11 16:43:24 doemming backup of local modified deegree sources
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty
+ * log message *** Revision 1.3 2004/08/31 13:03:31 doemming *** empty log
+ * message *** Revision 1.9 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.8 2004/03/29 10:37:13 poth no message
  * 

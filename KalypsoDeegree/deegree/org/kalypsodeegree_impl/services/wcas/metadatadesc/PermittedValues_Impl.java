@@ -88,7 +88,7 @@ public class PermittedValues_Impl implements PermittedValues
   }
 
   /**
-   * @see getDataType
+   * @see #getDataType()
    */
   public void addDataType( DataType datatype )
   {
@@ -96,7 +96,7 @@ public class PermittedValues_Impl implements PermittedValues
   }
 
   /**
-   * @see getDataType
+   * @see #getDataType()
    */
   public void setDataType( DataType[] datatype )
   {
@@ -118,7 +118,7 @@ public class PermittedValues_Impl implements PermittedValues
   }
 
   /**
-   * @see getEnumValues
+   * @see #getEnumValues()
    */
   public void addEnumValue( EnumValues enumvalue )
   {
@@ -126,7 +126,7 @@ public class PermittedValues_Impl implements PermittedValues
   }
 
   /**
-   * @see getEnumValues
+   * @see #getEnumValues()
    */
   public void setEnumValues( EnumValues[] enumvalues )
   {
@@ -148,7 +148,7 @@ public class PermittedValues_Impl implements PermittedValues
   }
 
   /**
-   * @see getInstanceValue
+   * @see #getInstanceValue()
    */
   public void addInstanceValues( InstanceValue instancevalue )
   {
@@ -156,7 +156,7 @@ public class PermittedValues_Impl implements PermittedValues
   }
 
   /**
-   * @see getInstanceValue
+   * @see #getInstanceValue()
    */
   public void setInstanceValues( InstanceValue[] instancevalue )
   {
@@ -178,7 +178,7 @@ public class PermittedValues_Impl implements PermittedValues
   }
 
   /**
-   * @see getOnLineResource
+   * @see #getOnLineResource()
    */
   public void setOnLineResource( OnLineResource onlineresource )
   {
@@ -196,7 +196,7 @@ public class PermittedValues_Impl implements PermittedValues
   }
 
   /**
-   * @see getRange
+   * @see #getRange()
    */
   public void addRange( Range range )
   {
@@ -204,7 +204,7 @@ public class PermittedValues_Impl implements PermittedValues
   }
 
   /**
-   * @see getRange
+   * @see #getRange()
    */
   public void setRange( Range[] range )
   {

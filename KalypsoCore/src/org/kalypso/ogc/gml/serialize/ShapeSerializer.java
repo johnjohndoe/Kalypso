@@ -97,6 +97,7 @@ public class ShapeSerializer
   {
     try
     {
+    	if(monitor!=null)
       monitor.beginTask( "Shape wird geladen", 100 );
 
       final ShapeFile sf = new ShapeFile( fileBase );
@@ -119,7 +120,8 @@ public class ShapeSerializer
 
       layer.optimize();
 
-      monitor.done();
+   	if(monitor!=null)
+   		monitor.done();
 
       return layer;
     }

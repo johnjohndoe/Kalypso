@@ -1,6 +1,6 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/clients/gazetteer/Constants.java,v
-// 1.1.1.1 2004/05/11 16:43:27 doemming Exp $
+// /cvsroot/deegree/deegree/org/deegree_impl/clients/gazetteer/Constants.java,v
+// 1.5 2004/07/09 07:16:18 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.
@@ -60,31 +60,60 @@ package org.deegree_impl.clients.gazetteer;
 public interface Constants
 {
 
+  /**
+   * Comment for <code>GAZETTEER</code>
+   */
   String GAZETTEER = "gazetteer";
 
+  /**
+   * Comment for <code>TERM</code>
+   */
   String TERM = "TERM";
 
+  /**
+   * Comment for <code>SOURCETYPE</code>
+   */
   String SOURCETYPE = "sourceType";
 
+  /**
+   * Comment for <code>SOURCEVALUE</code>
+   */
   String SOURCEVALUE = "sourceValue";
 
+  /**
+   * Comment for <code>TARGETTYPE</code>
+   */
   String TARGETTYPE = "targetType";
 
+  /**
+   * Comment for <code>TARGETVALUE</code>
+   */
   String TARGETVALUE = "targetValue";
 
+  /**
+   * Comment for <code>RELATIONTYPE</code>
+   */
   String RELATIONTYPE = "relationType";
 
+  /**
+   * Comment for <code>TERMSRESULTSET</code>
+   */
   String TERMSRESULTSET = "TERMSRESULTSET";
 
+  /**
+   * Comment for <code>GEOGRAPHICIDENTIFIER</code>
+   */
   String GEOGRAPHICIDENTIFIER = "geographicIdentifier";
 
+  /**
+   * Comment for <code>IDENTIFIER</code>
+   */
   String IDENTIFIER = "identifier";
 
 }
 /*******************************************************************************
  * Changes to this class. What the people have been up to: $Log:
- * Constants.java,v $ Revision 1.1.1.1 2004/05/11 16:43:27 doemming backup of
- * local modified deegree sources
+ * Constants.java,v $ Revision 1.5 2004/07/09 07:16:18 poth no message
  * 
  * Revision 1.4 2004/03/26 16:42:18 poth no message
  * 

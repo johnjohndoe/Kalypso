@@ -159,4 +159,47 @@ public class ClientHelper
     }
     return list;
   }
+
+  public static String getLayersAsTree( Layer root )
+  {
+    StringBuffer sb = new StringBuffer( 10000 );
+    sb.append( "<h3>" ).append( root.getTitle() ).append( ":</h3>" );
+    Layer[] layers = root.getLayer();
+    int indent = 0;
+    for( int i = 0; i < layers.length; i++ )
+    {
+      appendLayer( layers[i], indent, sb );
+    }
+    return sb.toString();
+  }
+
+  private static void appendLayer( Layer layer, int indent, StringBuffer target )
+  {
+    indent++;
+    String s = "";
+    for( int i = 0; i < indent; i++ )
+    {
+      s = s + "&nbsp;";
+    }
+    target.append( s );
+    if( layer.getName() != null )
+    {
+      target.append( s ).append( "<input type='checkbox' " ).append( "value='" ).append(
+          layer.getName() ).append( '|' ).append( layer.getTitle() ).append( '|' ).append(
+          layer.isQueryable() ).append( "' checked='checked'>" ).append( layer.getTitle() ).append(
+          "</input><BR/>\n" );
+    }
+    else
+    {
+      target.append( "<b>" ).append( layer.getTitle().concat( "<BR/>" ) ).append( "</b>" );
+      Layer[] layers = layer.getLayer();
+      for( int i = 0; i < layers.length; i++ )
+      {
+        appendLayer( layers[i], indent, target );
+      }
+      target.append( "<br/>" );
+    }
+
+  }
+
 }

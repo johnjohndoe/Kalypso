@@ -132,7 +132,10 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public GM_Point_Impl( GM_Point gmo )
   {
-    this( gmo.getX(), gmo.getY(), gmo.getCoordinateSystem() );
+    super( gmo.getCoordinateSystem() );
+    position = new GM_Position_Impl( gmo.getAsArray() );
+    empty = false;
+    centroid = this;
   }
 
   /**
@@ -145,7 +148,10 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public GM_Point_Impl( GM_Position gmo, CS_CoordinateSystem crs )
   {
-    this( gmo.getX(), gmo.getY(), crs );
+    super( crs );
+    position = gmo;
+    empty = false;
+    centroid = this;
   }
 
   /**

@@ -34,6 +34,7 @@ import org.kalypso.util.pool.ResourcePool;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 
 /**
  * @author belger
@@ -60,7 +61,7 @@ public class ObservationResolver extends AbstractTransformation
   protected void transformIntern( final Properties properties, final IProgressMonitor monitor )
       throws TransformationException
   {
-    monitor.beginTask( "Zeitreihen auflösen", 3000 );
+    monitor.beginTask( "Zeitreihen aufl?sen", 3000 );
 
     // PROPS parsen
     final String projectName = properties.getProperty( PROP_PROJECT, "" );
@@ -120,7 +121,7 @@ public class ObservationResolver extends AbstractTransformation
 
     final KalypsoFeature[] allFeatures = layer.getAllFeatures();
 
-    monitor.beginTask( "Zeitreihen auslösen", allFeatures.length * 2 );
+    monitor.beginTask( "Zeitreihen ausl?sen", allFeatures.length * 2 );
 
     for( int i = 0; i < allFeatures.length; i++ )
     {
@@ -145,7 +146,7 @@ public class ObservationResolver extends AbstractTransformation
         newSourceProps.setProperty( "TYPE", "relative" );
         newSourceProps.setProperty( "LOCATION", newZmlFile.getProjectRelativePath().toString() );
 
-        final TimeseriesLink newLink = factory.createTimeseriesLink();
+        final TimeseriesLinkType newLink = factory.createTimeseriesLinkType();
         newLink.setLinktype( "zml" );
         newLink.setActuate( "onRequest" );
         newLink.setType( "simple" );

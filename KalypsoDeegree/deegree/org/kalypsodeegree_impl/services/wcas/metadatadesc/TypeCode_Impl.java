@@ -70,7 +70,7 @@ public class TypeCode_Impl implements TypeCode
   }
 
   /**
-   * @see getKeyType
+   * @see #getKeyType()
    */
   public void setKeyType( String keytype )
   {

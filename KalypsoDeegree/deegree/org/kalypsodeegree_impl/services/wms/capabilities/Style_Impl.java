@@ -81,7 +81,7 @@ import org.deegree_impl.graphics.sld.SLDFactory;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$
  */
-class Style_Impl implements Style, Marshallable
+public class Style_Impl implements Style, Marshallable
 {
   static HashMap styles = null;
 
@@ -156,9 +156,9 @@ class Style_Impl implements Style, Marshallable
    * 
    * @param styleResource
    *          resource of the style defintions
-   * @exception thrown
-   *              if the resource doesn't hold the style definitions in a SLD
-   *              conform document
+   * @exception XMLParsingException
+   *              thrown if the resource doesn't hold the style definitions in a
+   *              SLD conform document
    */
   private static synchronized void loadStyles( URL styleResource ) throws XMLParsingException
   {

@@ -149,4 +149,82 @@ public interface Module
    * @param configuration
    */
   void setModuleConfiguration( ModuleConfiguration configuration );
+
+  /**
+   * returns a string representing the module type. Possible types are
+   * "content", "menu" or "toolbar".
+   * 
+   * @return type
+   */
+  String getType();
+
+  /**
+   * sets the module type. Possible types are are "content", "menu" or
+   * "toolbar". Should the <code>type</code> not match any of those, the
+   * default type (content) should be set. type can also be <tt>null</tt>
+   * 
+   * @param type
+   *          the string representing the module type
+   */
+  void setType( String type );
+
+  /**
+   * returns the width of the module in the GUI. If '0' will be returned the GUI
+   * can set the with like it is best
+   * 
+   * @return
+   */
+  int getWidth();
+
+  /**
+   * sets the desired width of the module in the GUI. If '0' ist passed the GUI
+   * can set the with like it is best
+   * 
+   * @param width
+   *          desired width of the module
+   */
+  void setWidth( int width );
+
+  /**
+   * returns the height of the module in the GUI. If '0' will be returned the
+   * GUI can set the with like it is best
+   * 
+   * @return
+   */
+  int getHeight();
+
+  /**
+   * sets the desired height of the module in the GUI. If '0' ist passed the GUI
+   * can set the with like it is best
+   * 
+   * @param height
+   *          desired width of the module
+   */
+  void setHeight( int height );
+
+  String[] getModuleJSList();
+
+  void setModuleJSList( String[] list );
+
+  /**
+   * return true is the module should has scrollbars in the GUI <br>
+   * possible values are
+   * <UL>
+   * <li>no
+   * <li>yes
+   * <li>auto
+   * </UL>
+   * default is auto
+   * 
+   * @return
+   */
+  String getScrolling();
+
+  /**
+   * @see #getScrolling()
+   * @param scroll
+   *  
+   */
+  void setScrolling( String scroll );
+
 }

@@ -146,6 +146,9 @@ public class WMSClientConfiguration implements Marshallable
     this.wmsCapabilities = wmsCapabilities;
   }
 
+  /**
+   * @see java.lang.Object#clone()
+   */
   public Object clone()
   {
 
@@ -214,10 +217,7 @@ public class WMSClientConfiguration implements Marshallable
       WMSCapabilities[] capa = new WMSCapabilities[wmsCapabilities.size()];
       return (WMSCapabilities[])wmsCapabilities.values().toArray( capa );
     }
-    else
-    {
-      return defaultConfig.getWMSCapabilities();
-    }
+    return defaultConfig.getWMSCapabilities();
   }
 
   /**

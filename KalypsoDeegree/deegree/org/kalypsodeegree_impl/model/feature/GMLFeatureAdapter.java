@@ -55,6 +55,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.deegree.model.feature.DeegreeFeature;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureCollection;
 import org.deegree.model.feature.FeatureException;
@@ -72,6 +73,7 @@ import org.deegree.model.geometry.GM_Point;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.geometry.GM_Surface;
 import org.deegree.model.geometry.GM_SurfaceInterpolation;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.ElementList;
 import org.deegree.xml.XMLParsingException;
 import org.deegree.xml.XMLTools;
@@ -97,7 +99,6 @@ import org.w3c.dom.Element;
  */
 public class GMLFeatureAdapter
 {
-  private static String GMLNS = "http://www.opengis.net/gml";
 
   private static HashMap crsMap = new HashMap( 100 );
 
@@ -309,6 +310,8 @@ public class GMLFeatureAdapter
       // replace invalid chars for XML elements
       name = name.replace( ' ', '_' );
       name = name.replace( '/', '.' );
+      name = name.replace( '\\', '.' );
+      name = name.replace( ':', '_' );
       if( prefix == null )
       {
         pw.print( "</" + name + ">" );
@@ -345,7 +348,7 @@ public class GMLFeatureAdapter
    * @throws IOException
    * @throws FeatureException
    */
-  private static void openRootElement( Feature feature, Map namespaces, Map prefixes,
+  private static void openRootElement( DeegreeFeature feature, Map namespaces, Map prefixes,
       Map schemaRef, PrintWriter pw ) throws IOException, FeatureException
   {
     Debug.debugMethodBegin();
@@ -362,6 +365,8 @@ public class GMLFeatureAdapter
       // replace invalid chars for XML elements
       name = name.replace( ' ', '_' );
       name = name.replace( '/', '.' );
+      name = name.replace( '\\', '.' );
+      name = name.replace( ':', '_' );
     }
     pw.print( '<' + prefix + name );
     // add namespace declarations to the root element
@@ -432,7 +437,10 @@ public class GMLFeatureAdapter
     // replace invalid chars for XML elements
     featName = featName.replace( ' ', '_' );
     featName = featName.replace( '/', '.' );
-    pw.print( "<" + prefix + featName + ">" );
+    featName = featName.replace( '\\', '.' );
+    featName = featName.replace( ':', '_' );
+    String id = feature.getId();
+    pw.print( "<" + prefix + featName + " fid=\"" + id + "\">" );
 
     FeatureTypeProperty[] ftp = feature.getFeatureType().getProperties();
     for( int i = 0; i < ftp.length; i++ )
@@ -493,6 +501,8 @@ public class GMLFeatureAdapter
       }
       name = name.replace( ' ', '_' );
       name = name.replace( '/', '.' );
+      name = name.replace( '\\', '.' );
+      name = name.replace( ':', '_' );
     }
     pw.print( '<' + prefix + name + '>' );
 
@@ -549,7 +559,7 @@ public class GMLFeatureAdapter
     Debug.debugMethodBegin();
 
     // <boundedBy>
-    Element elem = XMLTools.getChildByName( "boundedBy", GMLNS, element );
+    Element elem = XMLTools.getChildByName( "boundedBy", CommonNamespaces.GMLNS, element );
     //        GM_Envelope bbox = null;
 
     //        if ( elem != null ) {
@@ -790,8 +800,8 @@ public class GMLFeatureAdapter
     Debug.debugMethodBegin();
 
     GM_Position[] bb = null;
-    Element elem = XMLTools.getRequiredChildByName( "Box", GMLNS, element );
-    ElementList el = XMLTools.getChildElementsByName( "coord", GMLNS, elem );
+    Element elem = XMLTools.getRequiredChildByName( "Box", CommonNamespaces.GMLNS, element );
+    ElementList el = XMLTools.getChildElementsByName( "coord", CommonNamespaces.GMLNS, elem );
 
     if( el != null )
     {
@@ -801,7 +811,7 @@ public class GMLFeatureAdapter
     }
     else
     {
-      Element elem_ = XMLTools.getChildByName( "coordinates", GMLNS, elem );
+      Element elem_ = XMLTools.getChildByName( "coordinates", CommonNamespaces.GMLNS, elem );
 
       if( elem_ != null )
       {
@@ -887,11 +897,11 @@ public class GMLFeatureAdapter
     Debug.debugMethodBegin();
 
     GM_Position pos = null;
-    Element elem = XMLTools.getRequiredChildByName( "X", GMLNS, element );
+    Element elem = XMLTools.getRequiredChildByName( "X", CommonNamespaces.GMLNS, element );
     double x = Double.parseDouble( XMLTools.getStringValue( elem ) );
-    elem = XMLTools.getRequiredChildByName( "Y", GMLNS, element );
+    elem = XMLTools.getRequiredChildByName( "Y", CommonNamespaces.GMLNS, element );
     double y = Double.parseDouble( XMLTools.getStringValue( elem ) );
-    elem = XMLTools.getChildByName( "Z", GMLNS, element );
+    elem = XMLTools.getChildByName( "Z", CommonNamespaces.GMLNS, element );
 
     if( elem != null )
     {
@@ -1042,7 +1052,7 @@ public class GMLFeatureAdapter
       crs = getCRS( srs );
     }
 
-    Element elem = XMLTools.getChildByName( "coord", GMLNS, element );
+    Element elem = XMLTools.getChildByName( "coord", CommonNamespaces.GMLNS, element );
 
     GM_Position[] pos = null;
 
@@ -1053,7 +1063,7 @@ public class GMLFeatureAdapter
     }
     else
     {
-      elem = XMLTools.getChildByName( "coordinates", GMLNS, element );
+      elem = XMLTools.getChildByName( "coordinates", CommonNamespaces.GMLNS, element );
 
       if( elem != null )
       {
@@ -1089,7 +1099,7 @@ public class GMLFeatureAdapter
       crs = getCRS( srs );
     }
 
-    Element elem = XMLTools.getChildByName( "coordinates", GMLNS, element );
+    Element elem = XMLTools.getChildByName( "coordinates", CommonNamespaces.GMLNS, element );
     GM_Position[] pos = createPositionFromCoordinates( elem );
 
     GM_Curve curve = GeometryFactory.createGM_Curve( pos, crs );
@@ -1120,20 +1130,23 @@ public class GMLFeatureAdapter
       crs = getCRS( srs );
     }
 
-    Element outs = XMLTools.getRequiredChildByName( "outerBoundaryIs", GMLNS, element );
-    Element ring = XMLTools.getRequiredChildByName( "LinearRing", GMLNS, outs );
-    Element elem = XMLTools.getChildByName( "coordinates", GMLNS, ring );
+    Element outs = XMLTools.getRequiredChildByName( "outerBoundaryIs", CommonNamespaces.GMLNS,
+        element );
+    Element ring = XMLTools.getRequiredChildByName( "LinearRing", CommonNamespaces.GMLNS, outs );
+    Element elem = XMLTools.getChildByName( "coordinates", CommonNamespaces.GMLNS, ring );
     GM_Position[] outterRing = createPositionFromCoordinates( elem );
 
     GM_Position[][] innerRings = null;
-    ElementList inns = XMLTools.getChildElementsByName( "innerBoundaryIs", GMLNS, element );
+    ElementList inns = XMLTools.getChildElementsByName( "innerBoundaryIs", CommonNamespaces.GMLNS,
+        element );
     if( inns != null && inns.getLength() > 0 )
     {
       innerRings = new GM_Position[inns.getLength()][];
       for( int i = 0; i < innerRings.length; i++ )
       {
-        ring = XMLTools.getRequiredChildByName( "LinearRing", GMLNS, inns.item( i ) );
-        elem = XMLTools.getChildByName( "coordinates", GMLNS, ring );
+        ring = XMLTools
+            .getRequiredChildByName( "LinearRing", CommonNamespaces.GMLNS, inns.item( i ) );
+        elem = XMLTools.getChildByName( "coordinates", CommonNamespaces.GMLNS, ring );
         innerRings[i] = createPositionFromCoordinates( elem );
       }
     }
@@ -1168,7 +1181,8 @@ public class GMLFeatureAdapter
       crs = getCRS( srs );
     }
 
-    ElementList el = XMLTools.getChildElementsByName( "geometryMember", GMLNS, element );
+    ElementList el = XMLTools.getChildElementsByName( "geometryMember", CommonNamespaces.GMLNS,
+        element );
     GM_Point[] points = new GM_Point[el.getLength()];
     for( int i = 0; i < points.length; i++ )
     {
@@ -1205,7 +1219,8 @@ public class GMLFeatureAdapter
       crs = getCRS( srs );
     }
 
-    ElementList el = XMLTools.getChildElementsByName( "geometryMember", GMLNS, element );
+    ElementList el = XMLTools.getChildElementsByName( "geometryMember", CommonNamespaces.GMLNS,
+        element );
     GM_Curve[] curves = new GM_Curve[el.getLength()];
     for( int i = 0; i < curves.length; i++ )
     {
@@ -1242,7 +1257,8 @@ public class GMLFeatureAdapter
       crs = getCRS( srs );
     }
 
-    ElementList el = XMLTools.getChildElementsByName( "geometryMember", GMLNS, element );
+    ElementList el = XMLTools.getChildElementsByName( "geometryMember", CommonNamespaces.GMLNS,
+        element );
     GM_Surface[] surfaces = new GM_Surface[el.getLength()];
     for( int i = 0; i < surfaces.length; i++ )
     {

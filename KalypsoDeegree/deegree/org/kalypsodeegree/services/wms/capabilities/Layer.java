@@ -293,6 +293,15 @@ public interface Layer
   Layer[] getLayer();
 
   /**
+   * removes a Layer identified by its name from the parent Layer. A reference
+   * to the removed layer will be returned. If no Layer matching the passed name
+   * can be found nothing happens and <tt>null</tt> will be returned.
+   * 
+   * @return removerd Layer
+   */
+  Layer removeLayer( String name );
+
+  /**
    * source where the WMS can find the data of a layer.
    * 
    * @return

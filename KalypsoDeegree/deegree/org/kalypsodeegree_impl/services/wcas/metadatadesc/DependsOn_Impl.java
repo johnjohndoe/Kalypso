@@ -76,7 +76,7 @@ public class DependsOn_Impl implements DependsOn
   }
 
   /**
-   * @see getOperationName
+   * @see #getOperationName()
    */
   public void addOperationName( OperationName operationname )
   {
@@ -84,7 +84,7 @@ public class DependsOn_Impl implements DependsOn
   }
 
   /**
-   * @see getOperationName
+   * @see #getOperationName()
    */
   public void setOperationName( OperationName[] operationname )
   {

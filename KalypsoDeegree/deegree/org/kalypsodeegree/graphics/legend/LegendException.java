@@ -46,9 +46,8 @@ package org.deegree.graphics.legend;
 /**
  * This Exception is thrown, if an error occured in creating the legend of the
  * map.
+ * <hr>
  * 
- * @see LegendThumbnail
- *      <hr>
  * @author <a href="mailto:schaefer@lat-lon.de">Axel Schaefer </a>
  */
 public class LegendException extends Exception

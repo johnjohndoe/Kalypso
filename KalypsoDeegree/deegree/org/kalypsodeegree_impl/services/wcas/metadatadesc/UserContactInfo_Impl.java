@@ -92,7 +92,7 @@ public class UserContactInfo_Impl implements UserContactInfo
   }
 
   /**
-   * @see getContactInfo
+   * @see #getContactInfo()
    */
   public void addContactInfo( ContactInfo contactinfo )
   {
@@ -100,7 +100,7 @@ public class UserContactInfo_Impl implements UserContactInfo
   }
 
   /**
-   * @see getContactInfo
+   * @see #getContactInfo()
    */
   public void setContactInfo( ContactInfo[] contactinfo )
   {
@@ -123,7 +123,7 @@ public class UserContactInfo_Impl implements UserContactInfo
   }
 
   /**
-   * @see getIndividualName
+   * @see #getIndividualName()
    */
   public void addIndividualName( String individualname )
   {
@@ -131,7 +131,7 @@ public class UserContactInfo_Impl implements UserContactInfo
   }
 
   /**
-   * @see getIndividualName
+   * @see #getIndividualName()
    */
   public void setIndividualName( String[] individualname )
   {
@@ -153,7 +153,7 @@ public class UserContactInfo_Impl implements UserContactInfo
   }
 
   /**
-   * @see getOrganisationName
+   * @see #getOrganisationName()
    */
   public void addOrganisationName( String organisationname )
   {
@@ -161,7 +161,7 @@ public class UserContactInfo_Impl implements UserContactInfo
   }
 
   /**
-   * @see getOrganisationName
+   * @see #getOrganisationName()
    */
   public void setOrganisationName( String[] organisationname )
   {
@@ -184,7 +184,7 @@ public class UserContactInfo_Impl implements UserContactInfo
   }
 
   /**
-   * @see getPositionName
+   * @see #getPositionName()
    */
   public void addPositionName( String positionname )
   {
@@ -192,7 +192,7 @@ public class UserContactInfo_Impl implements UserContactInfo
   }
 
   /**
-   * @see getPositionName
+   * @see #getPositionName()
    */
   public void setPositionName( String[] positionname )
   {
@@ -215,7 +215,7 @@ public class UserContactInfo_Impl implements UserContactInfo
   }
 
   /**
-   * @see getRoleCode
+   * @see #getRoleCode()
    */
   public void addRoleCode( RoleCode rolecode )
   {
@@ -223,7 +223,7 @@ public class UserContactInfo_Impl implements UserContactInfo
   }
 
   /**
-   * @see getRoleCode
+   * @see #getRoleCode()
    */
   public void setRoleCode( RoleCode[] rolecode )
   {

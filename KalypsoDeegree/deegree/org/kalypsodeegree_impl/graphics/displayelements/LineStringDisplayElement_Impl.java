@@ -46,7 +46,11 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.geom.AffineTransform;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.deegree.graphics.displayelements.LineStringDisplayElement;
 import org.deegree.graphics.sld.LineSymbolizer;
@@ -65,6 +69,8 @@ import org.deegree_impl.tools.Debug;
  * DisplayElement that encapsulates a linestring (<tt>GM_Curve</tt>) or
  * multi-linestring geometry (<tt>GM_MultiCurve</tt>) and a
  * <tt>LineStringSymbolizer</tt>.
+ * <p>
+ * It can be rendered using a solid stroke or a graphics stroke.
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -131,6 +137,25 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
     super( feature, geometry, symbolizer );
   }
 
+  public void paintImage( Image image, Graphics2D g, int x, int y, double rotation )
+  {
+
+    // get the current transform
+    AffineTransform saveAT = g.getTransform();
+
+    // translation parameters (rotation)
+    AffineTransform transform = new AffineTransform();
+    transform.rotate( rotation, x, y );
+    transform.translate( -image.getWidth( null ), -image.getHeight( null ) / 2.0 );
+    g.setTransform( transform );
+
+    // render the image
+    g.drawImage( image, x, y, null );
+
+    // restore original transform
+    g.setTransform( saveAT );
+  }
+
   /**
    * renders the DisplayElement to the submitted graphic context
    */
@@ -138,38 +163,83 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
   {
     Debug.debugMethodBegin( this, "paint" );
 
-    try
-    {
-      int[][] pos = null;
-      if( DEBUG_PaintEnv )
-        paint( g, geometry.getEnvelope(), projection );
-      if( geometry instanceof GM_Curve )
-      {
-        pos = calcTargetCoordinates( projection, (GM_Curve)geometry );
-        drawLine( g, pos );
-      }
-      else
-      {
-        GM_MultiCurve mc = (GM_MultiCurve)geometry;
+    LineSymbolizer sym = (LineSymbolizer)symbolizer;
+    org.deegree.graphics.sld.Stroke stroke = sym.getStroke();
 
-        for( int i = 0; i < mc.getSize(); i++ )
+    // no stroke defined -> don't draw anything
+    if( stroke == null )
+    {
+      return;
+    }
+
+    // GraphicStroke label
+    if( stroke.getGraphicStroke() != null )
+    {
+      try
+      {
+        Image image = stroke.getGraphicStroke().getGraphic().getAsImage( feature );
+        CurveWalker walker = new CurveWalker( g.getClipBounds() );
+
+        if( geometry instanceof GM_Curve )
         {
-          pos = calcTargetCoordinates( projection, mc.getCurveAt( i ) );
-          drawLine( g, pos );
+          int[][] pos = LabelFactory.calcScreenCoordinates( projection, (GM_Curve)geometry );
+          ArrayList positions = walker.createPositions( pos, image.getWidth( null ) );
+          Iterator it = positions.iterator();
+          while( it.hasNext() )
+          {
+            double[] label = (double[])it.next();
+            int x = (int)( label[0] + 0.5 );
+            int y = (int)( label[1] + 0.5 );
+            paintImage( image, (Graphics2D)g, x, y, label[2] );
+          }
         }
       }
-    }
-    catch( Exception e )
-    {
-      System.out.println( e );
-    }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
 
+      // solid color label
+    }
+    else
+    {
+      try
+      {
+        int[][] pos = null;
+        Graphics2D g2 = (Graphics2D)g;
+
+        if( geometry instanceof GM_Curve )
+        {
+          pos = calcTargetCoordinates( projection, (GM_Curve)geometry );
+          drawLine( g2, pos, stroke );
+        }
+        else
+        {
+          GM_MultiCurve mc = (GM_MultiCurve)geometry;
+          for( int i = 0; i < mc.getSize(); i++ )
+          {
+            pos = calcTargetCoordinates( projection, mc.getCurveAt( i ) );
+            drawLine( g2, pos, stroke );
+          }
+        }
+      }
+      catch( Exception e )
+      {
+        System.out.println( e );
+      }
+    }
     Debug.debugMethodEnd();
   }
 
+  public double getDistance( double x1, double y1, double x2, double y2 )
+  {
+    double dx = x2 - x1;
+    double dy = y2 - y1;
+    return Math.sqrt( dx * dx + dy * dy );
+  }
+
   /**
-   * calculates the coordintes (image or screen coordinates) where to draw the
-   * curve.
+   * Calculates the screen coordinates of the curve.
    */
   private int[][] calcTargetCoordinates( GeoTransform projection, GM_Curve curve ) throws Exception
   {
@@ -208,20 +278,13 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
   }
 
   /**
-   * Renders one curve to the submitted graphic context.
+   * Renders a curve to the submitted graphic context.
    * 
    * TODO: Calculate miterlimit.
    */
-  private void drawLine( Graphics g, int[][] pos ) throws FilterEvaluationException
+  private void drawLine( Graphics g, int[][] pos, org.deegree.graphics.sld.Stroke stroke )
+      throws FilterEvaluationException
   {
-    LineSymbolizer sym = (LineSymbolizer)symbolizer;
-    org.deegree.graphics.sld.Stroke stroke = sym.getStroke();
-
-    // no stroke defined -> don't draw anything
-    if( stroke == null )
-    {
-      return;
-    }
 
     // Color & Opacity
     Graphics2D g2 = (Graphics2D)g;

@@ -148,9 +148,7 @@ public class IOSettings implements Marshallable
     sLDDirectory = directory;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.deegree.xml.Marshallable#exportAsXML()
    */
   public String exportAsXML()

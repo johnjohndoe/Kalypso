@@ -50,7 +50,7 @@ import org.deegree.services.InconsistentRequestException;
 import org.deegree.services.wms.capabilities.Capability;
 import org.deegree.services.wms.capabilities.Layer;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
-import org.deegree.services.wms.protocol.WMSFeatureInfoRequest;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoRequest;
 import org.deegree.xml.XMLParsingException;
 import org.deegree_impl.clients.wmsclient.configuration.Format;
 import org.deegree_impl.clients.wmsclient.configuration.MapSize;
@@ -87,7 +87,7 @@ public class InfoListener extends AbstractMapListener
     HashMap model = this.toModel();
 
     // modify the GetMap Request
-    WMSFeatureInfoRequest fir = null;
+    WMSGetFeatureInfoRequest fir = null;
 
     try
     {
@@ -110,7 +110,7 @@ public class InfoListener extends AbstractMapListener
   /**
    *  
    */
-  private WMSFeatureInfoRequest modifyModel( WMSClientConfiguration config, HashMap model )
+  private WMSGetFeatureInfoRequest modifyModel( WMSClientConfiguration config, HashMap model )
       throws InconsistentRequestException, XMLParsingException, MalformedURLException
   {
     // get GetMap request

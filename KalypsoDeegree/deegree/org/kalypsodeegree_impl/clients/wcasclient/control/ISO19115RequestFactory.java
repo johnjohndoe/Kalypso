@@ -117,11 +117,8 @@ public class ISO19115RequestFactory
       Debug.debugMethodEnd();
       return buildRequest( filter );
     }
-    else
-    {
-      Debug.debugMethodEnd();
-      throw new CatalogClientException( "filter creation fails" );
-    }
+    Debug.debugMethodEnd();
+    throw new CatalogClientException( "filter creation fails" );
   }
 
   /**

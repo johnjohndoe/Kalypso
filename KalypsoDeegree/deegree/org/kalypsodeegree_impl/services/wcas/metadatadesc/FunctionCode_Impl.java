@@ -76,7 +76,7 @@ public class FunctionCode_Impl implements FunctionCode
   }
 
   /**
-   * @see getValue
+   * @see #getValue()
    */
   public void setValue( String value )
   {

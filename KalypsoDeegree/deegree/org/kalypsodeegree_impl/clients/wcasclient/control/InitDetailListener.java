@@ -1,3 +1,6 @@
+// $Header:
+// /cvsroot/deegree/deegree/org/deegree_impl/clients/wcasclient/control/InitDetailListener.java,v
+// 1.11 2004/04/16 07:15:20 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.
@@ -57,11 +60,18 @@ import org.deegree_impl.enterprise.control.RPCWebEvent;
 import org.deegree_impl.tools.Debug;
 
 /**
- *  
+ * 
+ * 
+ * @version $Revision$
+ * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
+ * @author last edited by: $Author$
+ * 
+ * @version 1.0. $Revision$, $Date$
+ * 
+ * @since 1.1
  */
 public class InitDetailListener extends AbstractListener
 {
-
   /**
    *  
    */
@@ -110,6 +120,7 @@ public class InitDetailListener extends AbstractListener
   protected void validateRequest( RPCWebEvent event ) throws CatalogClientException
   {
     Debug.debugMethodBegin();
+
     // TODO
     Debug.debugMethodEnd();
   }
@@ -127,6 +138,7 @@ public class InitDetailListener extends AbstractListener
     HttpSession session = ( (HttpServletRequest)this.getRequest() ).getSession( true );
     RPCParameter[] detailedsearchParams = (RPCParameter[])session
         .getAttribute( Constants.SESSION_DETAILEDSEARCHPARAM );
+
     if( detailedsearchParams != null )
     {
       try
@@ -139,8 +151,14 @@ public class InitDetailListener extends AbstractListener
         e.printStackTrace();
       }
     }
+
     Debug.debugMethodEnd();
   }
-
 }
-
+/*******************************************************************************
+ * Changes to this class. What the people have been up to: $Log:
+ * InitDetailListener.java,v $ Revision 1.11 2004/04/16 07:15:20 poth no message
+ * 
+ * 
+ *  
+ ******************************************************************************/

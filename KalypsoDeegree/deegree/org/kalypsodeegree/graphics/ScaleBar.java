@@ -120,12 +120,17 @@ public interface ScaleBar
   /**
    * sets the front color of the scale bar
    */
-  void setColor( Color color );
+  void setBarColor( Color color );
 
   /**
    * sets the label color of the scale bar
    */
   void setLabelColor( Color color );
+
+  /**
+   * sets the background color of the scale bar
+   */
+  void setBackgroundColor( Color color );
 
   /**
    * sets the style of the scale bar. default style is |--------| the list of

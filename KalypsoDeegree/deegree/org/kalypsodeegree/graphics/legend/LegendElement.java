@@ -143,7 +143,7 @@ public interface LegendElement
    * 
    * An implementation of the interface may not supoort all positions.
    * 
-   * @param lablePlacement
+   * @param lablePosition
    */
   void setLabelPlacement( int lablePosition );
 

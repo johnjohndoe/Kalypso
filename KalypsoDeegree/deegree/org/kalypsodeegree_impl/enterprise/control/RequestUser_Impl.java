@@ -62,7 +62,7 @@ import org.deegree.enterprise.control.RequestUser;
  * 
  * @version $Revision$ $Date$
  */
-class RequestUser_Impl implements RequestUser
+public class RequestUser_Impl implements RequestUser
 {
   private Properties userData;
 
@@ -198,10 +198,7 @@ class RequestUser_Impl implements RequestUser
       {
         return _result;
       }
-      else
-      {
-        return defaultValue;
-      }
+      return defaultValue;
     }
 
     return null;

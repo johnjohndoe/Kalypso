@@ -47,12 +47,16 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.deegree.gml.GMLFeature;
 import org.deegree.services.OGCWebServiceException;
 import org.deegree.services.OGCWebServiceRequest;
+import org.deegree.services.WebServiceException;
 import org.deegree.services.wcas.protocol.CASDescribeRecordTypeRequest;
 import org.deegree.services.wcas.protocol.CASDescribeRecordTypeResponse;
 import org.deegree.services.wcas.protocol.CASGetCapabilitiesRequest;
@@ -126,6 +130,111 @@ public class CASProtocolFactory
 
     Debug.debugMethodEnd();
     return request;
+  }
+
+  /**
+   * creates a <tt>CASGetRecordRequest</tt> from a KVP encoded request like it
+   * is used by HTTP Get. The request is stored in a <tt>Map</tt>
+   * 
+   * @param id
+   *          unique ID of the request
+   * @param httpget
+   *          KVP encoded request
+   * @return
+   */
+  public static String createGetRecordRequest( String id, Map map ) throws WebServiceException,
+      Exception
+  {
+    String version = (String)map.get( "VERSION" );
+    if( version == null )
+    {
+      throw new WebServiceException( "version parameter must be set" );
+    }
+    String service = (String)map.get( "SERVICE" );
+    if( service == null )
+    {
+      throw new WebServiceException( "service parameter must be set" );
+    }
+    if( !service.equals( "WCAS" ) && !service.equals( "CSW" ) )
+    {
+      throw new WebServiceException( "service must be WCAS or CSW" );
+    }
+    String queryLanguage = (String)map.get( "CONSTRAINTLANGUAGE" );
+
+    if( !queryLanguage.equals( "Filter" ) )
+    {
+      throw new WebServiceException( "queryLanguage must be 'Filter'" );
+    }
+    int maxrec = 10;
+    if( map.get( "MAXRECORDS" ) != null )
+    {
+      maxrec = Integer.parseInt( map.get( "MAXRECORDS" ).toString() );
+    }
+    String format = "text/XML";
+    if( map.get( "OUTPUTFORMAT" ) != null )
+    {
+      format = map.get( "OUTPUTFORMAT" ).toString();
+    }
+    String rectype = "ISO19115";
+    if( map.get( "OUTPUTSCHEMA" ) != null )
+    {
+      rectype = map.get( "OUTPUTSCHEMA" ).toString();
+    }
+    String setName = "Full";
+    if( map.get( "ELEMENTSETNAME" ) != null )
+    {
+      setName = map.get( "ELEMENTSETNAME" ).toString();
+    }
+    if( !setName.equals( "Full" ) && !setName.equals( "Summary" ) && !setName.equals( "Brief" )
+        && !setName.equals( "Hits" ) )
+    {
+      throw new WebServiceException( "ElementSetName must be either"
+          + "'Full', 'Summary', 'Brief' or 'Hits'" );
+    }
+    int startpos = -1;
+    if( map.get( "STARTPOSITION" ) != null )
+    {
+      startpos = Integer.parseInt( map.get( "STARTPOSITION" ).toString() );
+    }
+    String typeName = (String)map.get( "TYPENAMES" );
+    if( rectype.equals( "ISO19119" ) && !typeName.equals( "Service" ) )
+    {
+      throw new WebServiceException( "invalid combination of typeNames and outputSchema" );
+    }
+    if( rectype.equals( "ISO19115" ) && typeName.equals( "Service" ) )
+    {
+      throw new WebServiceException( "invalid combination of typeNames and outputSchema" );
+    }
+    if( typeName == null )
+    {
+      throw new WebServiceException( "typeName parameter must be set" );
+    }
+    String querySpec = (String)map.get( "CONSTRAINT" );
+    if( querySpec != null && queryLanguage == null )
+    {
+      throw new WebServiceException( "CONSTRAINTLANGUAGE parameter must be set" );
+    }
+
+    StringBuffer sb = new StringBuffer( 2000 );
+    sb.append( "<GetRecord xmlns='http://www.opengis.net/wfs' " );
+    sb.append( "xmlns:ogc='http://www.opengis.net/ogc' " );
+    sb.append( "xmlns:gml='http://www.opengis.net/gml' " );
+    sb.append( "maxRecords='" ).append( maxrec ).append( "' " );
+    sb.append( "outputFormat='" ).append( format ).append( "' " );
+    sb.append( "outputRecType='" ).append( rectype ).append( "' queryScope='0' " );
+    sb.append( "startPosition='" ).append( startpos ).append( "'>" );
+    sb.append( "<Query typeName='" ).append( typeName ).append( "'>" );
+    sb.append( "<PropertySet setName='" ).append( setName ).append( "'/>" );
+
+    if( querySpec != null )
+    {
+      sb.append( URLDecoder.decode( querySpec ) );
+    }
+
+    sb.append( "</Query>" );
+    sb.append( "</GetRecord>" );
+
+    return sb.toString();
   }
 
   /**
@@ -884,16 +993,50 @@ public class CASProtocolFactory
     return rsr;
   }
 
+  /**
+   * puts a http-GET request to a <tt>HashMap</tt>
+   */
+  private static Map toMap( String request )
+  {
+    StringTokenizer st = new StringTokenizer( request, "&?" );
+    HashMap map = new HashMap();
+
+    while( st.hasMoreTokens() )
+    {
+      String s = st.nextToken();
+
+      if( s != null )
+      {
+        int pos = s.indexOf( '=' );
+
+        if( pos > -1 )
+        {
+          String s1 = s.substring( 0, pos );
+          String s2 = s.substring( pos + 1, s.length() );
+          map.put( s1.toUpperCase(), s2 );
+        }
+      }
+    }
+
+    return map;
+  }
+
 }
 
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:48  doemming
+ * Revision 1.3  2004/10/07 14:09:04  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:26
- * doemming backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:51  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:53:32 doemming
+ * *** empty log message *** Revision 1.18 2004/08/13 07:01:46 poth HTTP Get
+ * added for WCAS GetRecord
+ * 
+ * Revision 1.17 2004/08/10 16:19:31 poth no message
  * 
  * Revision 1.16 2004/03/29 10:39:04 poth no message
  * 

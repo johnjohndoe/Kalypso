@@ -67,7 +67,7 @@ public class TypeProperty_Impl implements TypeProperty
   }
 
   /**
-   * @see getTypeName
+   * @see #getTypeName()
    */
   public void setTypeName( TypeName typename )
   {
@@ -84,7 +84,7 @@ public class TypeProperty_Impl implements TypeProperty
   }
 
   /**
-   * @see getTypeValue
+   * @see #getTypeValue()
    */
   public void setTypeValue( TypeValue typevalue )
   {

@@ -43,6 +43,7 @@
 package org.deegree_impl.gml;
 
 import org.deegree.gml.GMLGeometry;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.DOMPrinter;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.tools.Debug;
@@ -156,7 +157,6 @@ public class GMLGeometry_Impl implements GMLGeometry
         }
       }
     }
-
     Debug.debugMethodEnd();
     return s;
   }
@@ -186,7 +186,7 @@ public class GMLGeometry_Impl implements GMLGeometry
       s = s.substring( 0, s.indexOf( ':' ) );
       if( XMLTools.getAttrValue( element, "xmlns:" + s ) == null )
       {
-        element.setAttribute( "xmlns:gml", "http://www.opengis.net/gml" );
+        element.setAttribute( "xmlns:gml", CommonNamespaces.GMLNS );
       }
     }
     return DOMPrinter.nodeToString( element, "" );
@@ -197,10 +197,17 @@ public class GMLGeometry_Impl implements GMLGeometry
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:58  doemming
+ * Revision 1.3  2004/10/07 14:09:14  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:24 doemming
- * backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 13:02:55 doemming ***
+ * empty log message *** Revision 1.10 2004/06/01 15:54:23 poth no message
+ * 
+ * Revision 1.9 2004/04/27 06:40:43 poth no message
+ * 
+ * Revision 1.8 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.7 2004/03/02 07:38:14 poth no message
  * 

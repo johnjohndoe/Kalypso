@@ -92,7 +92,7 @@ public final class WCTS_ProtocolFactory
    * factory method for creating a Request where the type of the Request is
    * chosen and initialized.
    * 
-   * @param Reader
+   * @param reader
    *          the post-request
    */
   public static synchronized OGCWebServiceRequest createRequest( String id, Reader reader )
@@ -162,7 +162,8 @@ public final class WCTS_ProtocolFactory
   }
 
   /**
-   * @see createGetCapabilitiesResponse
+   * @see #createGetCapabilitiesResponse(OGCWebServiceRequest,
+   *      OGCWebServiceException, String)
    */
   public static GetCapabilitiesResponse createGetCapabilitiesResponse(
       OGCWebServiceRequest request, OGCWebServiceException exception, String capabilities )

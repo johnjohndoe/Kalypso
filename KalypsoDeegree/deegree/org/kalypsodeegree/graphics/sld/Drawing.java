@@ -118,7 +118,7 @@ public interface Drawing
    * </p>
    * This method removes a CssParameter from a given set of CssParameters.
    * 
-   * @param key
+   * @param value
    *          the key of the object to remove
    */
   void removeCssParameter( Object value );

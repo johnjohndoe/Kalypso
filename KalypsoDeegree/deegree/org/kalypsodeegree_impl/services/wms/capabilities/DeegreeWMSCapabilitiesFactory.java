@@ -397,7 +397,7 @@ public class DeegreeWMSCapabilitiesFactory extends OGCWMSCapabilitiesFactory
       if( name.equals( "GetCapabilities" ) || name.equals( "GetMap" )
           || name.equals( "GetFeatureInfo" ) || name.equals( "DescribeLayer" )
           || name.equals( "GetLegendGraphic" ) || name.equals( "GetStyles" )
-          || name.equals( "PutStyles" ) )
+          || name.equals( "PutStyles" ) || name.equals( "GetScaleBar" ) )
       {
         operationList.add( createOperation( operationElement ) );
       }
@@ -537,7 +537,7 @@ public class DeegreeWMSCapabilitiesFactory extends OGCWMSCapabilitiesFactory
   {
 
     // use node name as name of the Operation to be defined
-    XMLTools.getAttrValue( "responsibleClass", element );
+    String responsibleClass = XMLTools.getAttrValue( "responsibleClass", element );
     String name = element.getNodeName();
 
     // optional: <Format>(s)
@@ -585,7 +585,15 @@ public class DeegreeWMSCapabilitiesFactory extends OGCWMSCapabilitiesFactory
       dcpTypes[i] = createDCPType( nodelist.item( i ) );
     }
 
-    return new Operation_Impl( name, formats, dcpTypes );
+    if( responsibleClass == null )
+    {
+      return new Operation_Impl( name, formats, dcpTypes );
+    }
+    else
+    {
+      return new Operation_Impl( name, formats, dcpTypes, responsibleClass );
+    }
+
   }
 
   /**

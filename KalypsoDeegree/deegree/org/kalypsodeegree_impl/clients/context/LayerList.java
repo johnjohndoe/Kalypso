@@ -137,7 +137,7 @@ public class LayerList implements Marshallable
   public Layer removeLayer( String name )
   {
     Layer layer = (Layer)this.layers.remove( name );
-    list.add( layer );
+    list.remove( layer );
     return layer;
   }
 
@@ -150,6 +150,9 @@ public class LayerList implements Marshallable
     list.clear();
   }
 
+  /**
+   * @see org.deegree.xml.Marshallable#exportAsXML()
+   */
   public String exportAsXML()
   {
 

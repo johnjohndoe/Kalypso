@@ -319,6 +319,9 @@ public class General implements Marshallable
     return extension;
   }
 
+  /**
+   * @see org.deegree.xml.Marshallable#exportAsXML()
+   */
   public String exportAsXML()
   {
     StringBuffer sb = new StringBuffer( 5000 );

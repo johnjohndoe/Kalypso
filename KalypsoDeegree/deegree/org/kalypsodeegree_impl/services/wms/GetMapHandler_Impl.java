@@ -88,6 +88,7 @@ import org.deegree.services.wfs.filterencoding.Filter;
 import org.deegree.services.wfs.protocol.WFSGetFeatureRequest;
 import org.deegree.services.wfs.protocol.WFSGetFeatureResponse;
 import org.deegree.services.wfs.protocol.WFSQuery;
+import org.deegree.services.wms.GetMapHandler;
 import org.deegree.services.wms.InvalidSRSException;
 import org.deegree.services.wms.LayerNotDefinedException;
 import org.deegree.services.wms.StyleNotDefinedException;
@@ -137,7 +138,7 @@ import com.sun.media.jai.codec.MemoryCacheSeekableStream;
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
-class GetMapHandler
+public class GetMapHandler_Impl implements GetMapHandler
 {
   protected WMSGetMapRequest request = null;
 
@@ -154,10 +155,10 @@ class GetMapHandler
   /**
    * Creates a new GetMapHandler object.
    * 
-   * @param GetMap
+   * @param request
    *          request to perform
    */
-  public GetMapHandler( WMSCapabilities capabilities, WMSGetMapRequest request )
+  public GetMapHandler_Impl( WMSCapabilities capabilities, WMSGetMapRequest request )
       throws WebServiceException
   {
     this.request = request;
@@ -278,7 +279,7 @@ class GetMapHandler
    * 
    * @return response to the GetMap response
    */
-  public WMSGetMapResponse performGetMap() throws WebServiceException
+  public OGCWebServiceResponse performGetMap() throws WebServiceException
   {
     Debug.debugMethodBegin( this, "performGetMap" );
 
@@ -328,28 +329,33 @@ class GetMapHandler
       }
     }
 
-    // waits until the requested layers are available as
-    // <tt>DisplayElements</tt>
-    // or the time limit has been reached.
-    try
+    if( count < themes.length )
     {
-      // must be synchronized to own the objects monitor
-      synchronized( this )
+      // waits until the requested layers are available as
+      // <tt>DisplayElements</tt>
+      // or the time limit has been reached.
+      // if count == themes.length then no request must be performed
+      try
       {
-        long timeStamp = System.currentTimeMillis();
-        // subtract 1 second for architecture overhead and image creation
-        long timeLimit = 1000 * ( capabilities.getDeegreeParam().getRequestTimeLimit() - 1 );
-        wait( timeLimit );
-        if( System.currentTimeMillis() - timeStamp >= timeLimit )
+        // must be synchronized to own the objects monitor
+        synchronized( this )
         {
-          throw new WebServiceException( "Processing of the GetMap request " + "exceeds timelimit" );
+          long timeStamp = System.currentTimeMillis();
+          // subtract 1 second for architecture overhead and image creation
+          long timeLimit = 1000 * ( capabilities.getDeegreeParam().getRequestTimeLimit() - 1 );
+          wait( timeLimit );
+          if( System.currentTimeMillis() - timeStamp >= timeLimit )
+          {
+            throw new WebServiceException( "Processing of the GetMap request "
+                + "exceeds timelimit" );
+          }
         }
       }
-    }
-    catch( Exception e )
-    {
-      Debug.debugException( e, " - " );
-      return createResponse( e );
+      catch( Exception e )
+      {
+        Debug.debugException( e, " - " );
+        return createResponse( e );
+      }
     }
 
     WMSGetMapResponse res = renderMap();
@@ -362,7 +368,7 @@ class GetMapHandler
   /**
    * returns the <tt>UserStyle</tt> s assigned to a named layer
    * 
-   * @param namedLayer
+   * @param sldLayer
    *          layer to get the styles for
    */
   private UserStyle[] getStyles( NamedLayer sldLayer ) throws WebServiceException
@@ -509,10 +515,10 @@ class GetMapHandler
     else
     {
       // default --> application/vnd.ogc.se_xml
-      exce = new OGCWebServiceException_Impl( "GetMapHandler", e.getMessage() );
+      exce = new OGCWebServiceException_Impl( "GetMapHandler_Impl", e.getMessage() );
     }
 
-    WMSGetMapResponse res = WMSProtocolFactory.createWMSGetMapResponse( request, exce, content );
+    WMSGetMapResponse res = WMSProtocolFactory.createGetMapResponse( request, exce, content );
 
     return res;
   }
@@ -542,7 +548,8 @@ class GetMapHandler
     {
       if( themes[i] instanceof Exception )
       {
-        exce = new OGCWebServiceException_Impl( "GetMapHandler: renderMap", themes[i].toString() );
+        exce = new OGCWebServiceException_Impl( "GetMapHandler_Impl: renderMap", themes[i]
+            .toString() );
         break;
       }
       if( themes[i] instanceof OGCWebServiceException )
@@ -602,21 +609,21 @@ class GetMapHandler
       catch( Exception e )
       {
         Debug.debugException( e, " - " );
-        exce = new OGCWebServiceException_Impl( "GetMapHandler: renderMap", e.toString() );
+        exce = new OGCWebServiceException_Impl( "GetMapHandler_Impl: renderMap", e.toString() );
       }
     }
 
     // print a copyright note at the left lower corner of the map
     printCopyright( g, request.getHeight() );
 
-    if( mime.equals( "image/svg+xml" ) )
+    if( mime.equals( "image/svg+xml" ) || mime.equals( "image/svg xml" ) )
     {
-      response = WMSProtocolFactory.createWMSGetMapResponse( request, exce, ( (SVGGraphics2D)g )
+      response = WMSProtocolFactory.createGetMapResponse( request, exce, ( (SVGGraphics2D)g )
           .getRoot() );
     }
     else
     {
-      response = WMSProtocolFactory.createWMSGetMapResponse( request, exce, target );
+      response = WMSProtocolFactory.createGetMapResponse( request, exce, target );
     }
     g.dispose();
 
@@ -633,7 +640,7 @@ class GetMapHandler
    * @param heigth
    *          height of the map in pixel
    */
-  private void printCopyright( Graphics g, int height )
+  private void printCopyright( Graphics g, int heigth )
   {
     DeegreeParam dp = capabilities.getDeegreeParam();
     String copyright = dp.getCopyRight();
@@ -641,13 +648,13 @@ class GetMapHandler
     {
       g.setFont( new Font( "SANSSERIF", Font.PLAIN, 14 ) );
       g.setColor( Color.BLACK );
-      g.drawString( copyright, 8, height - 15 );
-      g.drawString( copyright, 10, height - 15 );
-      g.drawString( copyright, 8, height - 13 );
-      g.drawString( copyright, 10, height - 13 );
+      g.drawString( copyright, 8, heigth - 15 );
+      g.drawString( copyright, 10, heigth - 15 );
+      g.drawString( copyright, 8, heigth - 13 );
+      g.drawString( copyright, 10, heigth - 13 );
       g.setColor( Color.WHITE );
       g.setFont( new Font( "SANSSERIF", Font.PLAIN, 14 ) );
-      g.drawString( copyright, 9, height - 14 );
+      g.drawString( copyright, 9, heigth - 14 );
       //g.dispose();
     }
   }
@@ -729,7 +736,8 @@ class GetMapHandler
         {
           Debug.debugException( e, " - " );
           OGCWebServiceException exce = new OGCWebServiceException_Impl( "ServiceInvokerForNL: "
-              + layer.getName(), "Couldn't create query!" + e.toString() );
+              + layer.getName(), "Couldn't create query!"
+              + StringExtend.stackTraceToString( e.getStackTrace() ) );
           putTheme( index, exce );
           increaseCounter();
           Debug.debugMethodEnd();
@@ -744,7 +752,8 @@ class GetMapHandler
         {
           Debug.debugException( e, " - " );
           OGCWebServiceException exce = new OGCWebServiceException_Impl( "ServiceInvokerForNL: "
-              + layer.getName(), "Couldn't perform doService()!" + e.toString() );
+              + layer.getName(), "Couldn't perform doService()!"
+              + StringExtend.stackTraceToString( e.getStackTrace() ) );
           putTheme( index, exce );
           increaseCounter();
           Debug.debugMethodEnd();
@@ -914,7 +923,7 @@ class GetMapHandler
     private OGCWebServiceEvent createGetCoverageRequest( DataSource ds )
         throws InconsistentRequestException
     {
-      Debug.debugMethodBegin( this, "createGetCoverageRequest" );
+      Debug.debugMethodBegin();
 
       GM_Envelope bbox = request.getBoundingBox();
 
@@ -932,6 +941,10 @@ class GetMapHandler
         format = gcr.getFormat();
       }
       format = format.substring( format.indexOf( '/' ) + 1, format.length() );
+      if( format.indexOf( "svg" ) > -1 )
+      {
+        format = "jpeg";
+      }
 
       String version = "1.0.0";
       if( gcr != null && gcr.getVersion() != null )
@@ -1080,7 +1093,7 @@ class GetMapHandler
      * deegree OWS implementation accessed by this class is able to return the
      * result of a request by calling the write-method.
      * 
-     * @param response
+     * @param result
      *          to a GetXXX request
      */
     public void write( Object result )

@@ -42,7 +42,6 @@
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.services.wfs.postgis;
 
-import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -63,7 +62,6 @@ import org.deegree_impl.model.cs.Adapters;
 import org.deegree_impl.model.cs.ConvenienceCSFactory;
 import org.deegree_impl.model.cs.CoordinateSystem;
 import org.deegree_impl.model.feature.FeatureFactory;
-import org.deegree_impl.model.feature.GMLFeatureAdapter;
 import org.deegree_impl.model.geometry.GM_Object_Impl;
 import org.deegree_impl.tools.Debug;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -97,10 +95,6 @@ public class PostgisDataStoreOutputFC implements DataStoreOutputFormat
       fc.appendFeatures( (FeatureCollection)pl.getParameter( WFSConstants.FEATURECOLLECTION )
           .getValue() );
     }
-
-    FileOutputStream fos = new FileOutputStream( "c:/temp/temp" + fc.getSize() + ".xml" );
-    GMLFeatureAdapter.export( fc, fos );
-    fos.close();
 
     return fc;
   }

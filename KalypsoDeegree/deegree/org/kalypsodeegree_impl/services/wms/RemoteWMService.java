@@ -64,10 +64,10 @@ import org.deegree.services.wms.capabilities.Operation;
 import org.deegree.services.wms.capabilities.Request;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
 import org.deegree.services.wms.protocol.WMSDescribeLayerRequest;
-import org.deegree.services.wms.protocol.WMSFeatureInfoRequest;
-import org.deegree.services.wms.protocol.WMSFeatureInfoResponse;
 import org.deegree.services.wms.protocol.WMSGetCapabilitiesRequest;
 import org.deegree.services.wms.protocol.WMSGetCapabilitiesResponse;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoRequest;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoResponse;
 import org.deegree.services.wms.protocol.WMSGetLegendGraphicRequest;
 import org.deegree.services.wms.protocol.WMSGetMapRequest;
 import org.deegree.services.wms.protocol.WMSGetMapResponse;
@@ -208,7 +208,7 @@ public class RemoteWMService extends OGCWebService_Impl
   /**
    * 
    * 
-   * @param request
+   * @param event
    *          request to be performed
    */
   public synchronized void doService( OGCWebServiceEvent event ) throws WebServiceException
@@ -222,9 +222,9 @@ public class RemoteWMService extends OGCWebService_Impl
     {
       handleGetMap( (WMSGetMapRequest)request, client );
     }
-    else if( request instanceof WMSFeatureInfoRequest )
+    else if( request instanceof WMSGetFeatureInfoRequest )
     {
-      handleFeatureInfo( (WMSFeatureInfoRequest)request, client );
+      handleFeatureInfo( (WMSGetFeatureInfoRequest)request, client );
     }
     else if( request instanceof WMSGetCapabilitiesRequest )
     {
@@ -272,7 +272,6 @@ public class RemoteWMService extends OGCWebService_Impl
    * 
    * @param request
    *          GetMap request
-   * @return map (image) in the desired format as byte array
    */
   protected void handleGetMap( WMSGetMapRequest request, OGCWebServiceClient client )
       throws WebServiceException
@@ -292,8 +291,7 @@ public class RemoteWMService extends OGCWebService_Impl
 
     String remoteAddress = NetWorker.url2String( url );
     String param = request.getRequestParameter();
-
-    String us = remoteAddress + "?" + url.getQuery() + param;
+    String us = remoteAddress + "?" + param;
     Debug.debugObject( "remote wms getmap", us );
 
     if( capabilities.getVersion().compareTo( "1.0.0" ) <= 0 )
@@ -315,7 +313,6 @@ public class RemoteWMService extends OGCWebService_Impl
           URL ur = new URL( laddress );
           // get map from the remote service
           NetWorker nw = new NetWorker( ur );
-
           InputStream is = nw.getInputStream();
 
           String contentType = nw.getContentType();
@@ -360,13 +357,12 @@ public class RemoteWMService extends OGCWebService_Impl
         }
         catch( Exception e )
         {
-          e.printStackTrace();
           exce = new OGCWebServiceException_Impl( "RemoteWMS:handleGetMap",
               "Could not get map from RemoteWMS: " + capabilities.getService().getName() + "; "
                   + "request: " + lparam + " " + e.toString() );
         }
 
-        WMSGetMapResponse response = WMSProtocolFactory.createWMSGetMapResponse( lrequest, exce,
+        WMSGetMapResponse response = WMSProtocolFactory.createGetMapResponse( lrequest, exce,
             result );
         OGCWebServiceEvent event = new OGCWebServiceEvent_Impl( this, response, "" );
         lclient.write( event );
@@ -384,9 +380,8 @@ public class RemoteWMService extends OGCWebService_Impl
    * 
    * @param request
    *          feature info request
-   * @return feaure info(s) decoded in the requested fromat
    */
-  protected void handleFeatureInfo( WMSFeatureInfoRequest request, OGCWebServiceClient client )
+  protected void handleFeatureInfo( WMSGetFeatureInfoRequest request, OGCWebServiceClient client )
       throws WebServiceException
   {
     Debug.debugMethodBegin( this, "handleFeatureInfo" );
@@ -445,7 +440,7 @@ public class RemoteWMService extends OGCWebService_Impl
                   + "; request: " + lparam + "; " + e.toString() );
         }
 
-        WMSFeatureInfoResponse response = WMSProtocolFactory.createWMSFeatureInfoResponse(
+        WMSGetFeatureInfoResponse response = WMSProtocolFactory.createGetFeatureInfoResponse(
             lrequest, exce, result );
         OGCWebServiceEvent event = new OGCWebServiceEvent_Impl( this, response, "" );
         lclient.write( event );
@@ -518,7 +513,7 @@ public class RemoteWMService extends OGCWebService_Impl
                   + "; request: " + lparam + "; " + e.toString() );
         }
 
-        WMSGetCapabilitiesResponse response = WMSProtocolFactory.createWMSGetCapabilitiesResponse(
+        WMSGetCapabilitiesResponse response = WMSProtocolFactory.createGetCapabilitiesResponse(
             lrequest, exce, result );
         OGCWebServiceEvent event = new OGCWebServiceEvent_Impl( this, response, "" );
         lclient.write( event );

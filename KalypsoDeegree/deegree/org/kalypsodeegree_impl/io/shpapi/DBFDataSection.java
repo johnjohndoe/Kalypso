@@ -148,15 +148,21 @@ public class DBFDataSection
     {
 
       byte[] fddata = this.fieldDesc[i].getFieldDescriptor();
-
       switch( fddata[11] )
       {
 
       // if data type is character
       case (byte)'C':
-        if( !( recData.get( i ) instanceof String ) )
+        if( recData.get( i ) != null && !( recData.get( i ) instanceof String ) )
           throw new DBaseException( "invalid data type at field: " + i );
-        b = ( (String)recData.get( i ) ).getBytes();
+        if( recData.get( i ) == null )
+        {
+          b = new byte[0];
+        }
+        else
+        {
+          b = ( (String)recData.get( i ) ).getBytes();
+        }
         if( b.length > fddata[16] )
           throw new DBaseException( "string contains too many characters "
               + (String)recData.get( i ) );
@@ -166,9 +172,16 @@ public class DBFDataSection
           datasec.data[offset + j] = 0x20;
         break;
       case (byte)'N':
-        if( !( recData.get( i ) instanceof Double ) )
+        if( recData.get( i ) != null && !( recData.get( i ) instanceof Number ) )
           throw new DBaseException( "invalid data type at field: " + i );
-        b = ( (Double)recData.get( i ) ).toString().getBytes();
+        if( recData.get( i ) == null )
+        {
+          b = new byte[0];
+        }
+        else
+        {
+          b = ( (Number)recData.get( i ) ).toString().getBytes();
+        }
         if( b.length > fddata[16] )
           throw new DBaseException( "string contains too many characters "
               + (String)recData.get( i ) );

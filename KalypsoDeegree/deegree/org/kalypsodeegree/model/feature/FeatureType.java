@@ -43,6 +43,7 @@
 
 package org.deegree.model.feature;
 
+
 /**
  * The FeatureType interface is intended to provide details of the type of a
  * Feature that are described as Feature Schema in the Abstract Specification's
@@ -57,7 +58,8 @@ package org.deegree.model.feature;
  */
 public interface FeatureType
 {
-
+  public static final int UNBOUND_OCCURENCY = -1;
+  
   /**
    * returns the direct parents of the FeatureType. If it hasn't a parent null
    * should be returned
@@ -66,6 +68,7 @@ public interface FeatureType
 
   /**
    * returns the direct children of the FeatureType
+   * @deprecated Don't use it!
    */
   public FeatureType[] getChildren();
 
@@ -84,9 +87,16 @@ public interface FeatureType
    */
   public FeatureTypeProperty getProperty( String name );
 
+  public String getNamespace();
+  public int getMinOccurs(int pos);
+  public int getMaxOccurs(int pos);
+ 
+
+  public int getPropertyPosition( String name );
+  public int getDefaultGeometryPropertyPosition();
   /**
    * @link aggregationByValue
    * @clientCardinality 0..*
    */
-  /* #FeatureTypeProperty lnkFeatureTypeProperty; */
+  
 }

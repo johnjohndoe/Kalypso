@@ -67,7 +67,7 @@ public interface GMLMultiLineString extends GMLGeometryCollection
   public GMLLineString[] getLineStrings();
 
   /**
-   * @see #getLineStrings
+   * @see #getLineStrings()
    */
   public void addLineString( GMLLineString lineString );
 
@@ -76,10 +76,13 @@ public interface GMLMultiLineString extends GMLGeometryCollection
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:40  doemming
+ * Revision 1.3  2004/10/07 14:09:01  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:22
- * doemming backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:51  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:45:01 doemming
+ * *** empty log message *** Revision 1.2 2004/04/27 15:40:15 poth no message
  * 
  * Revision 1.1.1.1 2002/09/25 16:01:46 poth no message
  * 

@@ -42,15 +42,16 @@
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.io.shpapi;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureCollection;
 import org.deegree.model.feature.FeatureProperty;
+import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.geometry.ByteUtils;
 import org.deegree.model.geometry.GM_Curve;
@@ -126,7 +127,6 @@ public class ShapeFile
   {
     this.url = url;
 
-    //System.out.println("open: " + url);
     /*
      * initialize the MainFile
      */
@@ -189,9 +189,6 @@ public class ShapeFile
   {
     this.url = url;
 
-    /*
-     * initialize the MainFile
-     */
     shp = new MainFile( url, rwflag );
 
     //TODO: initialize dbf, rti
@@ -236,7 +233,7 @@ public class ShapeFile
       catch( Exception ex )
       {}
     }
-    //System.out.println("close: " + url);
+
   }
 
   /**
@@ -727,41 +724,13 @@ public class ShapeFile
 
     // count regular fields
     int cnt = 0;
-
+    FeatureType featT = fc.getFeature( 0 ).getFeatureType();
+    FeatureTypeProperty[] ftp = featT.getProperties();
     for( int i = 0; i < pairs.length; i++ )
     {
-      if( pairs[i].getValue() instanceof Integer )
-      {
+      if( !( pairs[i].getValue() instanceof ByteArrayInputStream )
+          && !( pairs[i].getValue() instanceof GM_Object ) )
         cnt++;
-      }
-      else if( pairs[i].getValue() instanceof Byte )
-      {
-        cnt++;
-      }
-      else if( pairs[i].getValue() instanceof Character )
-      {
-        cnt++;
-      }
-      else if( pairs[i].getValue() instanceof Float )
-      {
-        cnt++;
-      }
-      else if( pairs[i].getValue() instanceof Double )
-      {
-        cnt++;
-      }
-      else if( pairs[i].getValue() instanceof java.math.BigDecimal )
-      {
-        cnt++;
-      }
-      else if( pairs[i].getValue() instanceof String )
-      {
-        cnt++;
-      }
-      else if( pairs[i].getValue() instanceof Date )
-      {
-        cnt++;
-      }
     }
 
     // allocate memory for fielddescriptors
@@ -770,52 +739,45 @@ public class ShapeFile
     // get properties names and types and create a FieldDescriptor
     // for each properties except the geometry-property
     cnt = 0;
-
-    for( int i = 0; i < pairs.length; i++ )
+    for( int i = 0; i < ftp.length; i++ )
     {
-      final String name = pairs[i].getName();
-      final int pos = name.lastIndexOf( '.' );
-      final String s = pos == -1 ? name : name.substring( pos + 1 );
-
-      if( pairs[i].getValue() instanceof Integer )
+      int pos = ftp[i].getName().lastIndexOf( '.' );
+      if( pos < 0 )
       {
-        fieldDesc[cnt] = new FieldDescriptor( s, "N", (byte)20, (byte)0 );
-        cnt++;
+        pos = -1;
       }
-      else if( pairs[i].getValue() instanceof Byte )
+      String s = ftp[i].getName().substring( pos + 1 );
+      if( ftp[i].getType().endsWith( "Integer" ) )
       {
-        fieldDesc[cnt] = new FieldDescriptor( s, "N", (byte)4, (byte)0 );
-        cnt++;
+        fieldDesc[cnt++] = new FieldDescriptor( s, "N", (byte)20, (byte)0 );
       }
-      else if( pairs[i].getValue() instanceof Character )
+      else if( ftp[i].getType().endsWith( "Byte" ) )
       {
-        fieldDesc[cnt] = new FieldDescriptor( s, "C", (byte)1, (byte)0 );
-        cnt++;
+        fieldDesc[cnt++] = new FieldDescriptor( s, "N", (byte)4, (byte)0 );
       }
-      else if( pairs[i].getValue() instanceof Float )
+      else if( ftp[i].getType().endsWith( "Character" ) )
       {
-        fieldDesc[cnt] = new FieldDescriptor( s, "N", (byte)30, (byte)10 );
-        cnt++;
+        fieldDesc[cnt++] = new FieldDescriptor( s, "C", (byte)1, (byte)0 );
       }
-      else if( pairs[i].getValue() instanceof Double )
+      else if( ftp[i].getType().endsWith( "Float" ) )
       {
-        fieldDesc[cnt] = new FieldDescriptor( s, "N", (byte)30, (byte)10 );
-        cnt++;
+        fieldDesc[cnt++] = new FieldDescriptor( s, "N", (byte)30, (byte)10 );
       }
-      else if( pairs[i].getValue() instanceof java.math.BigDecimal )
+      else if( ftp[i].getType().endsWith( "Double" ) || ftp[i].getType().endsWith( "Number" ) )
       {
-        fieldDesc[cnt] = new FieldDescriptor( s, "N", (byte)30, (byte)10 );
-        cnt++;
+        fieldDesc[cnt++] = new FieldDescriptor( s, "N", (byte)30, (byte)10 );
       }
-      else if( pairs[i].getValue() instanceof String )
+      else if( ftp[i].getType().endsWith( "BigDecimal" ) )
       {
-        fieldDesc[cnt] = new FieldDescriptor( s, "C", (byte)127, (byte)0 );
-        cnt++;
+        fieldDesc[cnt++] = new FieldDescriptor( s, "N", (byte)30, (byte)10 );
       }
-      else if( pairs[i].getValue() instanceof Date )
+      else if( ftp[i].getType().endsWith( "String" ) )
       {
-        fieldDesc[cnt] = new FieldDescriptor( s, "D", (byte)12, (byte)0 );
-        cnt++;
+        fieldDesc[cnt++] = new FieldDescriptor( s, "C", (byte)127, (byte)0 );
+      }
+      else if( ftp[i].getType().endsWith( "Date" ) )
+      {
+        fieldDesc[cnt++] = new FieldDescriptor( s, "D", (byte)12, (byte)0 );
       }
     }
 
@@ -864,17 +826,18 @@ public class ShapeFile
 
       // write i'th features properties to a ArrayList
       ArrayList vec = new ArrayList();
-
+      FeatureTypeProperty[] ftp = fc.getFeature( 0 ).getFeatureType().getProperties();
       for( int j = 0; j < pairs.length; j++ )
       {
-        if( ( pairs[j].getValue() instanceof Integer ) || ( pairs[j].getValue() instanceof Byte )
-            || ( pairs[j].getValue() instanceof Character )
-            || ( pairs[j].getValue() instanceof Float ) || ( pairs[j].getValue() instanceof Double )
-            || ( pairs[j].getValue() instanceof String ) || ( pairs[j].getValue() instanceof Date ) )
+        if( ( ftp[j].getType().endsWith( "Integer" ) ) || ( ftp[j].getType().endsWith( "Byte" ) )
+            || ( ftp[j].getType().endsWith( "Character" ) )
+            || ( ftp[j].getType().endsWith( "Float" ) ) || ( ftp[j].getType().endsWith( "Double" ) )
+            || ( ftp[j].getType().endsWith( "Number" ) )
+            || ( ftp[j].getType().endsWith( "String" ) ) || ( ftp[j].getType().endsWith( "Date" ) ) )
         {
           vec.add( pairs[j].getValue() );
         }
-        else if( pairs[j].getValue() instanceof java.math.BigDecimal )
+        else if( ftp[j].getType().endsWith( "BigDecimal" ) )
         {
           vec.add( new Double( ( (java.math.BigDecimal)pairs[j].getValue() ).doubleValue() ) );
         }
@@ -887,6 +850,7 @@ public class ShapeFile
       }
       catch( DBaseException db )
       {
+        db.printStackTrace();
         throw new Exception( db.toString() );
       }
 

@@ -106,7 +106,7 @@ public interface GMLProperty
   public Object getPropertyValue();
 
   /**
-   * @see #getPropertyValue
+   * @see #getPropertyValue()
    *      <p>
    *      This set-method only supports text propetries. More complex property
    *      types must be inherited from this interface and define additional
@@ -114,6 +114,7 @@ public interface GMLProperty
    *      </p>
    */
   public void setPropertyValue( String value );
+  public void setPropertyValue( Element value );
 
   public Object getAttributeValue( String nameSpace, String attributeValue );
 
@@ -123,15 +124,13 @@ public interface GMLProperty
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.4  2004/08/30 00:36:41  doemming
+ * Revision 1.5  2004/10/07 14:09:01  doemming
  * *** empty log message ***
- * Revision 1.3 2004/08/18 20:27:32 belger *** empty
- * log message ***
- * 
- * Revision 1.2 2004/08/11 11:20:16 doemming *** empty log message ***
- * 
- * Revision 1.1.1.1 2004/05/11 16:43:22 doemming backup of local modified
- * deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:51  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:45:01 doemming ***
+ * empty log message *** Revision 1.3 2004/04/27 15:40:15 poth no message
  * 
  * Revision 1.2 2004/01/26 08:15:36 poth no message
  * 

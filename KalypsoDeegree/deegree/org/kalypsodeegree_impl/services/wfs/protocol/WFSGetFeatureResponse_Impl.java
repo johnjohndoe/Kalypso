@@ -111,12 +111,14 @@ public class WFSGetFeatureResponse_Impl extends WFSBasicResponse_Impl implements
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:56  doemming
+ * Revision 1.3  2004/10/07 14:09:12  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11
- * 16:43:25 doemming backup of local modified deegree sources
- * 
- * Revision 1.4 2004/03/26 11:19:32 poth no message
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:53:32
+ * doemming *** empty log message *** Revision 1.4 2004/03/26 11:19:32 poth no
+ * message
  * 
  * Revision 1.3 2004/02/09 08:00:21 poth no message
  * 

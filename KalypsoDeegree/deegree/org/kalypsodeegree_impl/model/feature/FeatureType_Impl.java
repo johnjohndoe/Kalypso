@@ -44,6 +44,7 @@
 package org.deegree_impl.model.feature;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
@@ -61,22 +62,48 @@ import org.deegree.model.feature.FeatureTypeProperty;
  */
 class FeatureType_Impl implements FeatureType, Serializable
 {
+  private final String m_namespace;
 
-  private FeatureType[] parents = null;
+  // private final FeatureType[] children;
+  // es werden keine children gebraucht, da keine featuretypes direkt unterhalb
+  // eines featuretypes sein kann, es können höchstens featureassociationtypes
+  // unterhalb von featuretype sein, diese werden
+  // jedoch von featuretypeproperty abgeleitet
 
-  private FeatureType[] children = null;
+  private final String m_name;
 
-  private String name = "";
+  private final FeatureTypeProperty[] m_properties;
 
-  private FeatureTypeProperty[] properties = null;
+  private final int[] m_minOccurs;
 
-  public FeatureType_Impl( FeatureType[] parents, FeatureType[] children, String name,
-      FeatureTypeProperty[] properties )
+  private final int[] m_maxOccurs;
+
+  private final HashMap m_posOfFTP;
+
+  private int m_defaultGeometryPropPos = -1;
+
+  public FeatureType_Impl( String name, String namespace, FeatureTypeProperty[] properties,
+      int[] minOccurs, int[] maxOccurs )
   {
-    this.parents = parents;
-    this.children = children;
-    this.name = name;
-    this.properties = properties;
+    this.m_name = name;
+    m_namespace = namespace;
+    this.m_properties = properties;
+    m_minOccurs = minOccurs;
+    m_maxOccurs = maxOccurs;
+    m_posOfFTP = new HashMap();
+    for( int i = 0; i < properties.length; i++ )
+    {
+      // set default geoemtry
+      if( m_defaultGeometryPropPos < 0 && properties[i].isGeometryProperty() )
+        m_defaultGeometryPropPos = i;
+
+      // this supports qualified and unqualified position questions
+
+      m_posOfFTP.put( properties[i].getName(), new int[]
+      { i } );
+      m_posOfFTP.put( properties[i].getNamespace() + ":" + properties[i].getName(), new int[]
+      { i } );
+    }
   }
 
   /**
@@ -85,7 +112,7 @@ class FeatureType_Impl implements FeatureType, Serializable
    */
   public FeatureType[] getParents()
   {
-    return parents;
+    return null;
   }
 
   /**
@@ -93,7 +120,7 @@ class FeatureType_Impl implements FeatureType, Serializable
    */
   public FeatureType[] getChildren()
   {
-    return children;
+    return null;
   }
 
   /**
@@ -101,7 +128,7 @@ class FeatureType_Impl implements FeatureType, Serializable
    */
   public String getName()
   {
-    return name;
+    return m_name;
   }
 
   /**
@@ -109,7 +136,7 @@ class FeatureType_Impl implements FeatureType, Serializable
    */
   public FeatureTypeProperty[] getProperties()
   {
-    return properties;
+    return m_properties;
   }
 
   /**
@@ -117,35 +144,55 @@ class FeatureType_Impl implements FeatureType, Serializable
    */
   public FeatureTypeProperty getProperty( String name )
   {
-    FeatureTypeProperty ftp = null;
-    for( int i = 0; i < properties.length; i++ )
+    try
     {
-      if( properties[i].getName().equals( name ) )
-      {
-        ftp = properties[i];
-        break;
-      }
+      return m_properties[getPropertyPosition( name )];
     }
-    return ftp;
+    catch( Exception e )
+    {
+      return null;
+    }
   }
 
   public String toString()
   {
     String ret = null;
-    ret = "parents = " + parents + "\n";
-    ret += "children = " + children + "\n";
-    ret += "name = " + name + "\n";
+    // ret = "parents = " + parents + "\n";
+    // ret += "children = " + children + "\n";
+    ret += "name = " + m_name + "\n";
     ret += "properties = ";
-    for( int i = 0; i < properties.length; i++ )
+    for( int i = 0; i < m_properties.length; i++ )
     {
-      ret += properties[i] + "\n";
+      ret += m_properties[i] + "\n";
     }
     return ret;
   }
 
+  public String getNamespace()
+  {
+    return m_namespace;
+  }
+
+  public int getMinOccurs( int pos )
+  {
+    return m_minOccurs[pos];
+  }
+
+  public int getMaxOccurs( int pos )
+  {
+    return m_maxOccurs[pos];
+  }
+
+  public int getPropertyPosition( String name ) 
+  {
+    return ( (int[])m_posOfFTP.get( name ) )[0];
+  }
+
   /**
-   * @link aggregationByValue
-   * @clientCardinality 0..*
+   * @see org.deegree.model.feature.FeatureType#getDefaultGeometryPropertyPosition()
    */
-  /* # public final static FeatureTypeProperty_Impl lnkFeatureTypeProperty; */
+  public int getDefaultGeometryPropertyPosition()
+  {
+    return m_defaultGeometryPropPos;
+  }
 }

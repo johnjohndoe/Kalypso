@@ -88,7 +88,7 @@ import org.deegree.xml.XMLTools;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version 2002-03-01
  */
-class Layer_Impl implements Layer, Marshallable
+public class Layer_Impl implements Layer, Marshallable
 {
   private ArrayList authorityURL = null;
 
@@ -1000,6 +1000,27 @@ class Layer_Impl implements Layer, Marshallable
   public Layer[] getLayer()
   {
     return (Layer[])layer.toArray( new Layer[layer.size()] );
+  }
+
+  /**
+   * removes a Layer identified by its name from the parent Layer. A reference
+   * to the removed layer will be returned. If no Layer matching the passed name
+   * can be found nothing happens and <tt>null</tt> will be returned.
+   * 
+   * @return removerd Layer
+   */
+  public Layer removeLayer( String name )
+  {
+    for( int i = 0; i < layer.size(); i++ )
+    {
+      Layer ly = (Layer)layer.get( i );
+      if( ly.getName().equals( name ) )
+      {
+        layer.remove( i );
+        return ly;
+      }
+    }
+    return null;
   }
 
   /**

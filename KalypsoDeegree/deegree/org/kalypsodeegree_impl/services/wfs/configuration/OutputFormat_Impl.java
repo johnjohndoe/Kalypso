@@ -95,7 +95,7 @@ public class OutputFormat_Impl implements OutputFormat
   }
 
   /**
-   * @see getName
+   * @see #getName()
    */
   public void setName( String name )
   {
@@ -112,7 +112,7 @@ public class OutputFormat_Impl implements OutputFormat
   }
 
   /**
-   * @see getResponsibleClass
+   * @see #getResponsibleClass()
    */
   public void setResponsibleClass( String responsibleClass )
   {
@@ -129,7 +129,7 @@ public class OutputFormat_Impl implements OutputFormat
   }
 
   /**
-   * @see getParameter
+   * @see #getParameter()
    */
   public void setParameter( ParameterList parameter )
   {
@@ -137,7 +137,7 @@ public class OutputFormat_Impl implements OutputFormat
   }
 
   /**
-   * @see getParameter
+   * @see #getParameter()
    */
   public void addParameter( Parameter parameter )
   {
@@ -154,7 +154,7 @@ public class OutputFormat_Impl implements OutputFormat
   }
 
   /**
-   * @see getSchemaLocation
+   * @see #getSchemaLocation()
    */
   public void setSchemaLocation( URL schemaLocation )
   {

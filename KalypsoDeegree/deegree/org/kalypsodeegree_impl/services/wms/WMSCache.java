@@ -46,8 +46,10 @@ import java.awt.Image;
 
 import org.deegree.services.OGCWebServiceRequest;
 import org.deegree.services.OGCWebServiceResponse;
-import org.deegree.services.wms.protocol.WMSFeatureInfoRequest;
-import org.deegree.services.wms.protocol.WMSFeatureInfoResponse;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoRequest;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoResponse;
+import org.deegree.services.wms.protocol.WMSGetLegendGraphicRequest;
+import org.deegree.services.wms.protocol.WMSGetLegendGraphicResponse;
 import org.deegree.services.wms.protocol.WMSGetMapRequest;
 import org.deegree.services.wms.protocol.WMSGetMapResponse;
 import org.deegree_impl.services.wms.protocol.WMSProtocolFactory;
@@ -131,7 +133,7 @@ public class WMSCache extends Cache_Impl
     WMSGetMapResponse res = null;
     if( o != null )
     {
-      res = WMSProtocolFactory.createWMSGetMapResponse( identifier, null, o );
+      res = WMSProtocolFactory.createGetMapResponse( identifier, null, o );
     }
 
     Debug.debugMethodEnd();
@@ -146,15 +148,52 @@ public class WMSCache extends Cache_Impl
    * @param identifier
    *          key of a entry of the cache
    */
-  public OGCWebServiceResponse get( WMSFeatureInfoRequest identifier )
+  public OGCWebServiceResponse get( WMSGetLegendGraphicRequest identifier )
+  {
+    Debug.debugMethodBegin();
+
+    String s = "SLD=";
+    try
+    {
+      s = identifier.getRequestParameter();
+    }
+    catch( Exception e )
+    {}
+
+    // if the request contains a SLD reference avoid accessing data from
+    // the cache
+    if( s.toUpperCase().indexOf( "SLD=" ) >= 0 )
+    {
+      return null;
+    }
+    Object o = super.get( s );
+    WMSGetLegendGraphicResponse res = null;
+    if( o != null )
+    {
+      res = WMSProtocolFactory.createGetLegendGraphicResponse( identifier, o );
+    }
+
+    Debug.debugMethodEnd();
+    return res;
+  }
+
+  /**
+   * gets an entry from the cache. The entry that shall be returned will be
+   * identified by the passed identifier. If no entry for a passed identifier
+   * can be found within the cache the method shall return <tt>null</tt>.
+   * 
+   * @param identifier
+   *          key of a entry of the cache
+   */
+  public OGCWebServiceResponse get( WMSGetFeatureInfoRequest identifier )
   {
     Debug.debugMethodBegin( this, "get" );
 
     Object o = super.get( identifier.toString() );
-    WMSFeatureInfoResponse res = null;
+    WMSGetFeatureInfoResponse res = null;
     if( o != null )
     {
-      res = WMSProtocolFactory.createWMSFeatureInfoResponse( identifier, null, (String)o );
+      res = WMSProtocolFactory.createGetFeatureInfoResponse( identifier, null, (String)o );
     }
 
     Debug.debugMethodEnd();

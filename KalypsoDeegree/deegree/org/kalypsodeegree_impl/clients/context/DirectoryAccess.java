@@ -104,9 +104,7 @@ public class DirectoryAccess implements Marshallable
     this.onlineResource = onlineResource;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.deegree.xml.Marshallable#exportAsXML()
    */
   public String exportAsXML()

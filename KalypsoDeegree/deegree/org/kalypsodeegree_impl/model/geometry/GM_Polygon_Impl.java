@@ -127,6 +127,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     {
       return false;
     }
+
     return true;
   }
 

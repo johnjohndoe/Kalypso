@@ -387,10 +387,7 @@ class FeatureLayer_Impl extends Layer_Impl implements FeatureLayer
   {
     Debug.debugMethodBegin();
 
-    for( int i = 0; i < featureCollection.getSize(); i++ )
-    {
-      fc.appendFeature( featureCollection.getFeature( i ) );
-    }
+    fc.appendFeature( featureCollection );
 
     recalculateBoundingbox();
 
@@ -407,18 +404,7 @@ class FeatureLayer_Impl extends Layer_Impl implements FeatureLayer
     fc.removeFeature( feature );
 
     recalculateBoundingbox();
-  }
 
-  public void removeFeatureCollection( FeatureCollection featureCollection ) throws Exception
-  {
-    Debug.debugMethodBegin( this, "removeFeature(Feature)" );
-
-    for( int i = 0; i < featureCollection.getSize(); i++ )
-      fc.removeFeature( featureCollection.getFeature( i ) );
-
-    // re-initializes the bounding box
-    //        init( fc);
-    recalculateBoundingbox();
     Debug.debugMethodEnd();
   }
 

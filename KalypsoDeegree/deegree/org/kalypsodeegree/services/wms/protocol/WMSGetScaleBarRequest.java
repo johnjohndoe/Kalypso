@@ -92,7 +92,9 @@ public interface WMSGetScaleBarRequest extends OGCWebServiceRequest
    */
   int getBottomLabel();
 
-  double getScaleDenominator();
+  int getScaleDenominator();
+
+  double getScale();
 
   /**
    * returns the name of the style the scale bar should be drawed. beside

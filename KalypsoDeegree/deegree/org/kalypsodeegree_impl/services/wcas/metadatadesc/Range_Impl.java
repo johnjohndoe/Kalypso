@@ -65,7 +65,7 @@ public class Range_Impl implements Range
   }
 
   /**
-   * @see getMaximumValue
+   * @see #getMaximumValue()
    */
   public void setMaximumValue( MaximumValue maximumvalue )
   {
@@ -81,7 +81,7 @@ public class Range_Impl implements Range
   }
 
   /**
-   * @see getMinimumValue
+   * @see #getMinimumValue()
    */
   public void setMinimumValue( MinimumValue minimumvalue )
   {

@@ -86,6 +86,7 @@ import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.graphics.sld.TextSymbolizer;
 import org.deegree.graphics.sld.UserLayer;
 import org.deegree.graphics.sld.UserStyle;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.services.wfs.filterencoding.Expression;
 import org.deegree.services.wfs.filterencoding.Filter;
 import org.deegree.xml.ElementList;
@@ -118,8 +119,6 @@ import org.xml.sax.SAXException;
  */
 public class SLDFactory
 {
-
-  private static String sldNS = "http://www.opengis.net/sld";
 
   private static String ogcNS = "http://www.opengis.net/ogc";
 
@@ -161,7 +160,7 @@ public class SLDFactory
 
     try
     {
-      Document doc = XMLTools.parse( reader );      
+      Document doc = XMLTools.parse( reader );
       sld = createStyledLayerDescriptor( doc.getDocumentElement() );
     }
     catch( IOException e )
@@ -176,6 +175,30 @@ public class SLDFactory
     }
 
     return sld;
+  }
+
+  /**
+   * @param name
+   * @param title
+   * @param version
+   * @param abstract_
+   * @param layers
+   * @return
+   */
+  public static StyledLayerDescriptor createStyledLayerDescriptor( String name, String title,
+      String version, String abstract_, Layer[] layers )
+  {
+    return new StyledLayerDescriptor_Impl( name, title, version, abstract_, layers );
+  }
+
+  /**
+   * @param layers
+   * @param version
+   * @return
+   */
+  public static StyledLayerDescriptor createStyledLayerDescriptor( Layer[] layers, String version )
+  {
+    return new StyledLayerDescriptor_Impl( layers, version );
   }
 
   /**
@@ -212,7 +235,7 @@ public class SLDFactory
 
     // optional: <Geometry>
     Geometry geometry = null;
-    Element geometryElement = XMLTools.getChildByName( "Geometry", sldNS, element );
+    Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS, element );
 
     if( geometryElement != null )
     {
@@ -221,7 +244,7 @@ public class SLDFactory
 
     // optional: <Label>
     ParameterValueType label = null;
-    Element labelElement = XMLTools.getChildByName( "Label", sldNS, element );
+    Element labelElement = XMLTools.getChildByName( "Label", CommonNamespaces.SLDNS, element );
 
     if( labelElement != null )
     {
@@ -230,7 +253,7 @@ public class SLDFactory
 
     // optional: <Font>
     Font font = null;
-    Element fontElement = XMLTools.getChildByName( "Font", sldNS, element );
+    Element fontElement = XMLTools.getChildByName( "Font", CommonNamespaces.SLDNS, element );
 
     if( fontElement != null )
     {
@@ -239,7 +262,7 @@ public class SLDFactory
 
     // optional: <LabelPlacement>
     LabelPlacement labelPlacement = null;
-    Element lpElement = XMLTools.getChildByName( "LabelPlacement", sldNS, element );
+    Element lpElement = XMLTools.getChildByName( "LabelPlacement", CommonNamespaces.SLDNS, element );
 
     if( lpElement != null )
     {
@@ -248,7 +271,7 @@ public class SLDFactory
 
     // optional: <Halo>
     Halo halo = null;
-    Element haloElement = XMLTools.getChildByName( "Halo", sldNS, element );
+    Element haloElement = XMLTools.getChildByName( "Halo", CommonNamespaces.SLDNS, element );
 
     if( haloElement != null )
     {
@@ -277,7 +300,7 @@ public class SLDFactory
   {
     // optional: <Radius>
     ParameterValueType radius = null;
-    Element radiusElement = XMLTools.getChildByName( "Radius", sldNS, element );
+    Element radiusElement = XMLTools.getChildByName( "Radius", CommonNamespaces.SLDNS, element );
 
     if( radiusElement != null )
     {
@@ -286,7 +309,7 @@ public class SLDFactory
 
     // optional: <Fill>
     Fill fill = null;
-    Element fillElement = XMLTools.getChildByName( "Fill", sldNS, element );
+    Element fillElement = XMLTools.getChildByName( "Fill", CommonNamespaces.SLDNS, element );
 
     if( fillElement != null )
     {
@@ -295,7 +318,7 @@ public class SLDFactory
 
     // optional: <Stroke>
     Stroke stroke = null;
-    Element strokeElement = XMLTools.getChildByName( "Stroke", sldNS, element );
+    Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS, element );
 
     if( strokeElement != null )
     {
@@ -333,7 +356,7 @@ public class SLDFactory
         Element child = (Element)nodelist.item( i );
         String namespace = child.getNamespaceURI();
 
-        if( !sldNS.equals( namespace ) )
+        if( !CommonNamespaces.SLDNS.equals( namespace ) )
         {
           continue;
         }
@@ -394,14 +417,16 @@ public class SLDFactory
 
     // optional: <AnchorPoint>
     ParameterValueType[] anchorPoint = null;
-    Element apElement = XMLTools.getChildByName( "AnchorPoint", sldNS, element );
+    Element apElement = XMLTools.getChildByName( "AnchorPoint", CommonNamespaces.SLDNS, element );
 
     if( apElement != null )
     {
       anchorPoint = new ParameterValueType[2];
 
-      Element apXElement = XMLTools.getChildByName( "AnchorPointX", sldNS, apElement );
-      Element apYElement = XMLTools.getChildByName( "AnchorPointY", sldNS, apElement );
+      Element apXElement = XMLTools.getChildByName( "AnchorPointX", CommonNamespaces.SLDNS,
+          apElement );
+      Element apYElement = XMLTools.getChildByName( "AnchorPointY", CommonNamespaces.SLDNS,
+          apElement );
 
       if( ( apXElement == null ) || ( apYElement == null ) )
       {
@@ -415,14 +440,16 @@ public class SLDFactory
 
     // optional: <Displacement>
     ParameterValueType[] displacement = null;
-    Element dElement = XMLTools.getChildByName( "Displacement", sldNS, element );
+    Element dElement = XMLTools.getChildByName( "Displacement", CommonNamespaces.SLDNS, element );
 
     if( dElement != null )
     {
       displacement = new ParameterValueType[2];
 
-      Element dXElement = XMLTools.getChildByName( "DisplacementX", sldNS, dElement );
-      Element dYElement = XMLTools.getChildByName( "DisplacementY", sldNS, dElement );
+      Element dXElement = XMLTools.getChildByName( "DisplacementX", CommonNamespaces.SLDNS,
+          dElement );
+      Element dYElement = XMLTools.getChildByName( "DisplacementY", CommonNamespaces.SLDNS,
+          dElement );
 
       if( ( dXElement == null ) || ( dYElement == null ) )
       {
@@ -436,7 +463,7 @@ public class SLDFactory
 
     // optional: <Rotation>
     ParameterValueType rotation = null;
-    Element rElement = XMLTools.getChildByName( "Rotation", sldNS, element );
+    Element rElement = XMLTools.getChildByName( "Rotation", CommonNamespaces.SLDNS, element );
 
     if( rElement != null )
     {
@@ -463,7 +490,8 @@ public class SLDFactory
 
     // optional: <PerpendicularOffset>
     ParameterValueType pOffset = null;
-    Element pOffsetElement = XMLTools.getChildByName( "PerpendicularOffset", sldNS, element );
+    Element pOffsetElement = XMLTools.getChildByName( "PerpendicularOffset",
+        CommonNamespaces.SLDNS, element );
 
     if( pOffsetElement != null )
     {
@@ -472,7 +500,7 @@ public class SLDFactory
 
     // optional: <Gap> (this is deegree-specific)
     ParameterValueType gap = null;
-    Element gapElement = XMLTools.getChildByName( "Gap", sldNS, element );
+    Element gapElement = XMLTools.getChildByName( "Gap", CommonNamespaces.SLDNS, element );
 
     if( gapElement != null )
     {
@@ -481,7 +509,8 @@ public class SLDFactory
 
     // optional: <LineWidth> (this is deegree-specific)
     ParameterValueType lineWidth = null;
-    Element lineWidthElement = XMLTools.getChildByName( "LineWidth", sldNS, element );
+    Element lineWidthElement = XMLTools.getChildByName( "LineWidth", CommonNamespaces.SLDNS,
+        element );
 
     if( lineWidthElement != null )
     {
@@ -507,7 +536,8 @@ public class SLDFactory
   {
 
     // optional: <CssParameter>s
-    ElementList nl = XMLTools.getChildElementsByName( "CssParameter", sldNS, element );
+    ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS,
+        element );
     HashMap cssParams = new HashMap( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
@@ -583,12 +613,12 @@ public class SLDFactory
       throws XMLParsingException
   {
     // optional: <Name>
-    String name = XMLTools.getStringValue( "Name", sldNS, element, null );
+    String name = XMLTools.getStringValue( "Name", CommonNamespaces.SLDNS, element, null );
 
     // optional: <Title>
-    String title = XMLTools.getStringValue( "Title", sldNS, element, null );
+    String title = XMLTools.getStringValue( "Title", CommonNamespaces.SLDNS, element, null );
     // optional: <Abstract>
-    String abstract_ = XMLTools.getStringValue( "Abstract", sldNS, element, null );
+    String abstract_ = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS, element, null );
     // required: version-Attribute
     String version = XMLTools.getRequiredAttrValue( "version", element );
 
@@ -603,7 +633,7 @@ public class SLDFactory
         Element child = (Element)nodelist.item( i );
         String namespace = child.getNamespaceURI();
 
-        if( !sldNS.equals( namespace ) )
+        if( !CommonNamespaces.SLDNS.equals( namespace ) )
         {
           continue;
         }
@@ -641,7 +671,7 @@ public class SLDFactory
   private static NamedStyle createNamedStyle( Element element ) throws XMLParsingException
   {
     // required: <Name>
-    String name = XMLTools.getRequiredStringValue( "Name", sldNS, element );
+    String name = XMLTools.getRequiredStringValue( "Name", CommonNamespaces.SLDNS, element );
 
     return new NamedStyle_Impl( name );
   }
@@ -669,7 +699,7 @@ public class SLDFactory
   private static RemoteOWS createRemoteOWS( Element element ) throws XMLParsingException
   {
     // required: <Service>
-    String service = XMLTools.getRequiredStringValue( "Service", sldNS, element );
+    String service = XMLTools.getRequiredStringValue( "Service", CommonNamespaces.SLDNS, element );
 
     if( !( service.equals( "WFS" ) || service.equals( "WCS" ) ) )
     {
@@ -678,8 +708,8 @@ public class SLDFactory
     }
 
     // required: <OnlineResource>
-    Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource", sldNS,
-        element );
+    Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource",
+        CommonNamespaces.SLDNS, element );
     String href = XMLTools.getRequiredAttrValue( "xlink:href", onlineResourceElement );
     URL url = null;
 
@@ -711,11 +741,12 @@ public class SLDFactory
   private static NamedLayer createNamedLayer( Element element ) throws XMLParsingException
   {
     // required: <Name>
-    String name = XMLTools.getRequiredStringValue( "Name", sldNS, element );
+    String name = XMLTools.getRequiredStringValue( "Name", CommonNamespaces.SLDNS, element );
 
     // optional: <LayerFeatureConstraints>
     LayerFeatureConstraints lfc = null;
-    Element lfcElement = XMLTools.getChildByName( "LayerFeatureConstraints", sldNS, element );
+    Element lfcElement = XMLTools.getChildByName( "LayerFeatureConstraints",
+        CommonNamespaces.SLDNS, element );
 
     if( lfcElement != null )
     {
@@ -733,7 +764,7 @@ public class SLDFactory
         Element child = (Element)nodelist.item( i );
         String namespace = child.getNamespaceURI();
 
-        if( !sldNS.equals( namespace ) )
+        if( !CommonNamespaces.SLDNS.equals( namespace ) )
         {
           continue;
         }
@@ -780,11 +811,12 @@ public class SLDFactory
   private static UserLayer createUserLayer( Element element ) throws XMLParsingException
   {
     // optional: <Name>
-    String name = XMLTools.getStringValue( "Name", sldNS, element, null );
+    String name = XMLTools.getStringValue( "Name", CommonNamespaces.SLDNS, element, null );
 
     // optional: <RemoteOWS>
     RemoteOWS remoteOWS = null;
-    Element remoteOWSElement = XMLTools.getChildByName( "RemoteOWS", sldNS, element );
+    Element remoteOWSElement = XMLTools.getChildByName( "RemoteOWS", CommonNamespaces.SLDNS,
+        element );
 
     if( remoteOWSElement != null )
     {
@@ -793,12 +825,13 @@ public class SLDFactory
 
     // required: <LayerFeatureConstraints>
     LayerFeatureConstraints lfc = null;
-    Element lfcElement = XMLTools
-        .getRequiredChildByName( "LayerFeatureConstraints", sldNS, element );
+    Element lfcElement = XMLTools.getRequiredChildByName( "LayerFeatureConstraints",
+        CommonNamespaces.SLDNS, element );
     lfc = createLayerFeatureConstraints( lfcElement );
 
     // optional: <UserStyle>(s)
-    ElementList nodelist = XMLTools.getChildElementsByName( "UserStyle", sldNS, element );
+    ElementList nodelist = XMLTools.getChildElementsByName( "UserStyle", CommonNamespaces.SLDNS,
+        element );
     UserStyle[] styles = new UserStyle[nodelist.getLength()];
 
     for( int i = 0; i < nodelist.getLength(); i++ )
@@ -826,7 +859,8 @@ public class SLDFactory
       throws XMLParsingException
   {
     // optional: <Name>
-    String name = XMLTools.getStringValue( "FeatureTypeName", sldNS, element, null );
+    String name = XMLTools
+        .getStringValue( "FeatureTypeName", CommonNamespaces.SLDNS, element, null );
 
     // optional: <Filter>
     Filter filter = null;
@@ -838,7 +872,8 @@ public class SLDFactory
     }
 
     // optional: <Extent>(s)
-    ElementList nodelist = XMLTools.getChildElementsByName( "Extent", sldNS, element );
+    ElementList nodelist = XMLTools.getChildElementsByName( "Extent", CommonNamespaces.SLDNS,
+        element );
     Extent[] extents = new Extent[nodelist.getLength()];
 
     for( int i = 0; i < nodelist.getLength(); i++ )
@@ -864,9 +899,9 @@ public class SLDFactory
   private static Extent createExtent( Element element ) throws XMLParsingException
   {
     // required: <Name>
-    String name = XMLTools.getRequiredStringValue( "Name", sldNS, element );
+    String name = XMLTools.getRequiredStringValue( "Name", CommonNamespaces.SLDNS, element );
     // required: <Value>
-    String value = XMLTools.getRequiredStringValue( "Value", sldNS, element );
+    String value = XMLTools.getRequiredStringValue( "Value", CommonNamespaces.SLDNS, element );
 
     return new Extent_Impl( name, value );
   }
@@ -888,8 +923,8 @@ public class SLDFactory
       throws XMLParsingException
   {
     // required: <FeatureTypeConstraint>(s)
-    ElementList nodelist = XMLTools
-        .getChildElementsByName( "FeatureTypeConstraint", sldNS, element );
+    ElementList nodelist = XMLTools.getChildElementsByName( "FeatureTypeConstraint",
+        CommonNamespaces.SLDNS, element );
     FeatureTypeConstraint[] ftcs = new FeatureTypeConstraint[nodelist.getLength()];
 
     for( int i = 0; i < nodelist.getLength(); i++ )
@@ -915,14 +950,15 @@ public class SLDFactory
   private static UserStyle createUserStyle( Element element ) throws XMLParsingException
   {
     // optional: <Name>
-    String name = XMLTools.getStringValue( "Name", sldNS, element, null );
+    String name = XMLTools.getStringValue( "Name", CommonNamespaces.SLDNS, element, null );
     // optional: <Title>
-    String title = XMLTools.getStringValue( "Title", sldNS, element, null );
+    String title = XMLTools.getStringValue( "Title", CommonNamespaces.SLDNS, element, null );
     // optional: <Abstract>
-    String abstract_ = XMLTools.getStringValue( "Abstract", sldNS, element, null );
+    String abstract_ = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS, element, null );
 
     // optional: <IsDefault>
-    String defaultString = XMLTools.getStringValue( "IsDefault", sldNS, element, null );
+    String defaultString = XMLTools.getStringValue( "IsDefault", CommonNamespaces.SLDNS, element,
+        null );
     boolean isDefault = false;
 
     if( defaultString != null )
@@ -934,7 +970,8 @@ public class SLDFactory
     }
 
     // required: <FeatureTypeStyle> (s)
-    ElementList nl = XMLTools.getChildElementsByName( "FeatureTypeStyle", sldNS, element );
+    ElementList nl = XMLTools.getChildElementsByName( "FeatureTypeStyle", CommonNamespaces.SLDNS,
+        element );
     FeatureTypeStyle[] styles = new FeatureTypeStyle[nl.getLength()];
 
     if( styles.length == 0 )
@@ -970,13 +1007,14 @@ public class SLDFactory
       throws XMLParsingException
   {
     // optional: <Name>
-    String name = XMLTools.getStringValue( "Name", sldNS, element, null );
+    String name = XMLTools.getStringValue( "Name", CommonNamespaces.SLDNS, element, null );
     // optional: <Title>
-    String title = XMLTools.getStringValue( "Title", sldNS, element, null );
+    String title = XMLTools.getStringValue( "Title", CommonNamespaces.SLDNS, element, null );
     // optional: <Abstract>
-    String abstract_ = XMLTools.getStringValue( "Abstract", sldNS, element, null );
+    String abstract_ = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS, element, null );
     // optional: <FeatureTypeName>
-    String featureTypeName = XMLTools.getStringValue( "FeatureTypeName", sldNS, element, null );
+    String featureTypeName = XMLTools.getStringValue( "FeatureTypeName", CommonNamespaces.SLDNS,
+        element, null );
 
     // optional: several <Rule> / <SemanticTypeIdentifier>
     NodeList nodelist = element.getChildNodes();
@@ -995,7 +1033,7 @@ public class SLDFactory
         Element child = (Element)nodelist.item( i );
         String namespace = child.getNamespaceURI();
 
-        if( !sldNS.equals( namespace ) )
+        if( !CommonNamespaces.SLDNS.equals( namespace ) )
         {
           continue;
         }
@@ -1081,15 +1119,16 @@ public class SLDFactory
   private static Rule createRule( Element element ) throws XMLParsingException
   {
     // optional: <Name>
-    String name = XMLTools.getStringValue( "Name", sldNS, element, null );
+    String name = XMLTools.getStringValue( "Name", CommonNamespaces.SLDNS, element, null );
     // optional: <Title>
-    String title = XMLTools.getStringValue( "Title", sldNS, element, null );
+    String title = XMLTools.getStringValue( "Title", CommonNamespaces.SLDNS, element, null );
     // optional: <Abstract>
-    String abstract_ = XMLTools.getStringValue( "Abstract", sldNS, element, null );
+    String abstract_ = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS, element, null );
 
     // optional: <LegendGraphic>
     LegendGraphic legendGraphic = null;
-    Element legendGraphicElement = XMLTools.getChildByName( "LegendGraphic", sldNS, element );
+    Element legendGraphicElement = XMLTools.getChildByName( "LegendGraphic",
+        CommonNamespaces.SLDNS, element );
 
     if( legendGraphicElement != null )
     {
@@ -1106,7 +1145,8 @@ public class SLDFactory
     }
 
     // optional: <ElseFilter>
-    Element elseFilterElement = XMLTools.getChildByName( "ElseFilter", sldNS, element );
+    Element elseFilterElement = XMLTools.getChildByName( "ElseFilter", CommonNamespaces.SLDNS,
+        element );
     if( elseFilterElement != null )
     {
       isAnElseFilter = true;
@@ -1119,9 +1159,11 @@ public class SLDFactory
     }
 
     // optional: <MinScaleDenominator>
-    double min = XMLTools.getDoubleValue( "MinScaleDenominator", sldNS, element, 0.0 );
+    double min = XMLTools.getDoubleValue( "MinScaleDenominator", CommonNamespaces.SLDNS, element,
+        0.0 );
     // optional: <MaxScaleDenominator>
-    double max = XMLTools.getDoubleValue( "MaxScaleDenominator", sldNS, element, 9E99 );
+    double max = XMLTools.getDoubleValue( "MaxScaleDenominator", CommonNamespaces.SLDNS, element,
+        9E99 );
 
     // optional: different Symbolizer-elements
     NodeList symbolizerNL = element.getChildNodes();
@@ -1134,7 +1176,7 @@ public class SLDFactory
         Element symbolizerElement = (Element)symbolizerNL.item( i );
         String namespace = symbolizerElement.getNamespaceURI();
 
-        if( !sldNS.equals( namespace ) )
+        if( !CommonNamespaces.SLDNS.equals( namespace ) )
         {
           continue;
         }
@@ -1193,7 +1235,7 @@ public class SLDFactory
 
     // optional: <Geometry>
     Geometry geometry = null;
-    Element geometryElement = XMLTools.getChildByName( "Geometry", sldNS, element );
+    Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS, element );
 
     if( geometryElement != null )
     {
@@ -1202,7 +1244,7 @@ public class SLDFactory
 
     // optional: <Graphic>
     Graphic graphic = null;
-    Element graphicElement = XMLTools.getChildByName( "Graphic", sldNS, element );
+    Element graphicElement = XMLTools.getChildByName( "Graphic", CommonNamespaces.SLDNS, element );
 
     if( graphicElement != null )
     {
@@ -1234,7 +1276,7 @@ public class SLDFactory
 
     // optional: <Geometry>
     Geometry geometry = null;
-    Element geometryElement = XMLTools.getChildByName( "Geometry", sldNS, element );
+    Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS, element );
 
     if( geometryElement != null )
     {
@@ -1243,7 +1285,7 @@ public class SLDFactory
 
     // optional: <Stroke>
     Stroke stroke = null;
-    Element strokeElement = XMLTools.getChildByName( "Stroke", sldNS, element );
+    Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS, element );
 
     if( strokeElement != null )
     {
@@ -1275,7 +1317,7 @@ public class SLDFactory
   {
     // optional: <Geometry>
     Geometry geometry = null;
-    Element geometryElement = XMLTools.getChildByName( "Geometry", sldNS, element );
+    Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS, element );
 
     if( geometryElement != null )
     {
@@ -1284,7 +1326,7 @@ public class SLDFactory
 
     // optional: <Fill>
     Fill fill = null;
-    Element fillElement = XMLTools.getChildByName( "Fill", sldNS, element );
+    Element fillElement = XMLTools.getChildByName( "Fill", CommonNamespaces.SLDNS, element );
 
     if( fillElement != null )
     {
@@ -1293,7 +1335,7 @@ public class SLDFactory
 
     // optional: <Stroke>
     Stroke stroke = null;
-    Element strokeElement = XMLTools.getChildByName( "Stroke", sldNS, element );
+    Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS, element );
 
     if( strokeElement != null )
     {
@@ -1358,7 +1400,8 @@ public class SLDFactory
   {
     // optional: <GraphicFill>
     GraphicFill graphicFill = null;
-    Element graphicFillElement = XMLTools.getChildByName( "GraphicFill", sldNS, element );
+    Element graphicFillElement = XMLTools.getChildByName( "GraphicFill", CommonNamespaces.SLDNS,
+        element );
 
     if( graphicFillElement != null )
     {
@@ -1366,7 +1409,8 @@ public class SLDFactory
     }
 
     // optional: <CssParameter>s
-    ElementList nl = XMLTools.getChildElementsByName( "CssParameter", sldNS, element );
+    ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS,
+        element );
     HashMap cssParams = new HashMap( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
@@ -1393,7 +1437,8 @@ public class SLDFactory
   private static LegendGraphic createLegendGraphic( Element element ) throws XMLParsingException
   {
     // required: <Graphic>
-    Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", sldNS, element );
+    Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS,
+        element );
     Graphic graphic = createGraphic( graphicElement );
 
     return new LegendGraphic_Impl( graphic );
@@ -1416,8 +1461,8 @@ public class SLDFactory
       throws XMLParsingException
   {
     // required: <OnlineResource>
-    Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource", sldNS,
-        element );
+    Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource",
+        CommonNamespaces.SLDNS, element );
 
     // required: href-Attribute (in <OnlineResource>)
     String href = XMLTools.getRequiredAttrValue( "href", xlnNS, onlineResourceElement );
@@ -1434,7 +1479,7 @@ public class SLDFactory
     }
 
     // required: <Format> (in <OnlineResource>)
-    String format = XMLTools.getRequiredStringValue( "Format", sldNS, element );
+    String format = XMLTools.getRequiredStringValue( "Format", CommonNamespaces.SLDNS, element );
 
     return new ExternalGraphic_Impl( format, url );
   }
@@ -1457,10 +1502,10 @@ public class SLDFactory
     Fill fill = null;
 
     // optional: <WellKnownName>
-    String wkn = XMLTools.getStringValue( "WellKnownName", sldNS, element, null );
+    String wkn = XMLTools.getStringValue( "WellKnownName", CommonNamespaces.SLDNS, element, null );
 
     // optional: <Stroke>
-    Element strokeElement = XMLTools.getChildByName( "Stroke", sldNS, element );
+    Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS, element );
 
     if( strokeElement != null )
     {
@@ -1468,7 +1513,7 @@ public class SLDFactory
     }
 
     // optional: <Fill>
-    Element fillElement = XMLTools.getChildByName( "Fill", sldNS, element );
+    Element fillElement = XMLTools.getChildByName( "Fill", CommonNamespaces.SLDNS, element );
 
     if( fillElement != null )
     {
@@ -1496,7 +1541,7 @@ public class SLDFactory
     GraphicStroke gs = null;
 
     // optional: <GraphicFill>
-    Element gfElement = XMLTools.getChildByName( "GraphicFill", sldNS, element );
+    Element gfElement = XMLTools.getChildByName( "GraphicFill", CommonNamespaces.SLDNS, element );
 
     if( gfElement != null )
     {
@@ -1504,7 +1549,7 @@ public class SLDFactory
     }
 
     // optional: <GraphicStroke>
-    Element gsElement = XMLTools.getChildByName( "GraphicStroke", sldNS, element );
+    Element gsElement = XMLTools.getChildByName( "GraphicStroke", CommonNamespaces.SLDNS, element );
 
     if( gsElement != null )
     {
@@ -1512,7 +1557,8 @@ public class SLDFactory
     }
 
     // optional: <CssParameter>s
-    ElementList nl = XMLTools.getChildElementsByName( "CssParameter", sldNS, element );
+    ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS,
+        element );
     HashMap cssParams = new HashMap( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
@@ -1539,7 +1585,8 @@ public class SLDFactory
   private static GraphicFill createGraphicFill( Element element ) throws XMLParsingException
   {
     // required: <Graphic>
-    Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", sldNS, element );
+    Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS,
+        element );
     Graphic graphic = createGraphic( graphicElement );
 
     return new GraphicFill_Impl( graphic );
@@ -1560,7 +1607,8 @@ public class SLDFactory
   private static GraphicStroke createGraphicStroke( Element element ) throws XMLParsingException
   {
     // required: <Graphic>
-    Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", sldNS, element );
+    Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS,
+        element );
     Graphic graphic = createGraphic( graphicElement );
 
     return new GraphicStroke_Impl( graphic );
@@ -1599,7 +1647,7 @@ public class SLDFactory
         Element child = (Element)nodelist.item( i );
         String namespace = child.getNamespaceURI();
 
-        if( !sldNS.equals( namespace ) )
+        if( !CommonNamespaces.SLDNS.equals( namespace ) )
         {
           continue;
         }

@@ -81,7 +81,7 @@ public class TransformationSequence_Impl implements TransformationSequence
   }
 
   /**
-   * @see getCode
+   * @see #getCode()
    */
   public void setCode( String code )
   {
@@ -97,7 +97,7 @@ public class TransformationSequence_Impl implements TransformationSequence
   }
 
   /**
-   * @see getCodeSpace
+   * @see #getCodeSpace()
    */
   public void setCodeSpace( String codespace )
   {

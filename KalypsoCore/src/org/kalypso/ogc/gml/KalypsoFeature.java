@@ -23,12 +23,12 @@ public class KalypsoFeature extends Feature_Impl
   
   public KalypsoFeature(Feature feature)
   {
-    super(feature.getId(),feature.getFeatureType(),getFeatureProperties(feature));
+    super(feature.getFeatureType(),feature.getId(),getFeatureProperties(feature));
   }
   
   public KalypsoFeature(Feature feature,UserStyle[] styles)
   {
-    super(feature.getId(),feature.getFeatureType(),getFeatureProperties(feature));
+    super(feature.getFeatureType(),feature.getId(),getFeatureProperties(feature));
     setDisplayElements(styles);
   }
   

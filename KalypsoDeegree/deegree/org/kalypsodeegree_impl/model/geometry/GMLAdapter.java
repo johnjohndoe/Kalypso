@@ -174,7 +174,7 @@ public class GMLAdapter
    */
   public static GM_Object wrap( String gml ) throws GM_Exception
   {
-    Debug.debugMethodBegin();
+    Debug.debugMethodBegin( "GMLAdapter", "wrap(String)" );
 
     GMLGeometry gmlGeo = null;
     try
@@ -363,7 +363,7 @@ public class GMLAdapter
    */
   private static StringBuffer createSurface( GM_Surface sur ) throws RemoteException, GM_Exception
   {
-    Debug.debugMethodBegin( "GMLAdapter", "createSurfaces" );
+    Debug.debugMethodBegin();
 
     StringBuffer sb = new StringBuffer( 5000 );
 
@@ -682,12 +682,30 @@ public class GMLAdapter
   private static GM_Point wrap( GMLPoint gml ) throws GM_Exception
   {
     Debug.debugMethodBegin( "GMLAdapter", "wrap(GMLPoint)" );
+    Debug.debugMethodEnd();
+    return wrap( gml, null );
+  }
+
+  /**
+   * creates a GM_Point from a gml.
+   * 
+   * @param gml
+   *          a GMLPoint
+   */
+  private static GM_Point wrap( GMLPoint gml, String multipointSRS ) throws GM_Exception
+  {
+    Debug.debugMethodBegin( "GMLAdapter", "wrap(GMLPoint)" );
 
     CS_CoordinateSystem crs = null;
     GM_Position[] pointarray = null;
     GM_Point point = null;
 
     String srs = gml.getSrs();
+
+    if( srs == null )
+    {
+      srs = multipointSRS;
+    } // (if)
 
     if( srs != null )
     {
@@ -721,6 +739,20 @@ public class GMLAdapter
    */
   private static GM_Curve wrap( GMLLineString linestring ) throws GM_Exception
   {
+    Debug.debugMethodBegin( "GMLAdapter", "wrap(GMLLineString)" );
+
+    Debug.debugMethodEnd();
+    return wrap( linestring, null );
+  }
+
+  /**
+   * creates a GM_CurveSegment from an array of GML-points.
+   * 
+   * @param linestring
+   *          a GMLLineString
+   */
+  private static GM_Curve wrap( GMLLineString linestring, String multilineSRS ) throws GM_Exception
+  {
     Debug.debugMethodBegin();
 
     GM_Curve curve = null;
@@ -728,6 +760,12 @@ public class GMLAdapter
     GM_Position[] pointarray = null;
 
     String srs = linestring.getSrs();
+
+    // Check, if SRS is missing, then inherit SRS from multilineSttring
+    if( srs == null )
+    {
+      srs = multilineSRS;
+    } // (if)
 
     if( srs != null )
     {
@@ -771,6 +809,19 @@ public class GMLAdapter
   private static GM_Surface wrap( GMLPolygon polygon ) throws GM_Exception
   {
     Debug.debugMethodBegin( "GMLAdapter", "wrap(GMLPolygon)" );
+    Debug.debugMethodEnd();
+    return wrap( polygon, null );
+  }
+
+  /**
+   * creates a GM_Surface
+   * 
+   * @param polygon
+   *          GMLPolygon
+   */
+  private static GM_Surface wrap( GMLPolygon polygon, String multipolygonSRS ) throws GM_Exception
+  {
+    Debug.debugMethodBegin( "GMLAdapter", "wrap(GMLPolygon)" );
 
     GM_Position[] ext = null;
     GM_Position[][] inner = null;
@@ -778,6 +829,10 @@ public class GMLAdapter
     CS_CoordinateSystem crs = null;
 
     String srs = polygon.getSrs();
+    if( srs == null )
+    {
+      srs = multipolygonSRS;
+    }
 
     if( srs != null )
     {
@@ -872,9 +927,12 @@ public class GMLAdapter
     GM_MultiPoint gmmp = null;
     GMLPoint[] points = multipoint.getPoints();
     GM_Point[] point = new GM_Point[points.length];
+
+    String srs = multipoint.getSrs();
+
     for( int i = 0; i < points.length; i++ )
     {
-      point[i] = wrap( points[i] );
+      point[i] = wrap( points[i], srs );
     }
 
     if( points.length > 0 )
@@ -904,9 +962,11 @@ public class GMLAdapter
     GMLLineString[] lsarray = multilinestring.getLineStrings();
     GM_Curve[] curvearray = new GM_Curve[lsarray.length];
 
+    String srs = multilinestring.getSrs();
+
     for( int i = 0; i < lsarray.length; i++ )
     {
-      curvearray[i] = wrap( lsarray[i] );
+      curvearray[i] = wrap( lsarray[i], srs );
     }
 
     if( curvearray.length > 0 )
@@ -932,12 +992,13 @@ public class GMLAdapter
     Debug.debugMethodBegin( "", "createGM_MultiSurface()" );
 
     GMLPolygon[] polygonarray = multipolygon.getPolygons();
-
     GM_Surface[] surfaces = new GM_Surface[polygonarray.length];
+
+    String srs = multipolygon.getSrs();
 
     for( int i = 0; i < polygonarray.length; i++ )
     {
-      surfaces[i] = wrap( polygonarray[i] );
+      surfaces[i] = wrap( polygonarray[i], srs );
     }
 
     GM_MultiSurface multisurface = null;

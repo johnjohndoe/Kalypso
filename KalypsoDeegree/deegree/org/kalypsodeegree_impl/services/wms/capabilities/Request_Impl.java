@@ -61,7 +61,7 @@ import org.deegree.xml.Marshallable;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$
  */
-class Request_Impl implements Request, Marshallable
+public class Request_Impl implements Request, Marshallable
 {
   private HashMap operations = null;
 

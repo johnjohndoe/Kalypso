@@ -67,7 +67,7 @@ import org.deegree.xml.Marshallable;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$
  */
-class ScaleHint_Impl implements ScaleHint, Marshallable
+public class ScaleHint_Impl implements ScaleHint, Marshallable
 {
   private double max = Double.MAX_VALUE;
 

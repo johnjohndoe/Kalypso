@@ -1,6 +1,6 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/services/gazetteer/configuration/Relation.java,v
-// 1.1.1.1 2004/05/11 16:43:27 doemming Exp $
+// /cvsroot/deegree/deegree/org/deegree_impl/services/gazetteer/configuration/Relation.java,v
+// 1.1 2004/03/24 12:36:22 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.
@@ -139,13 +139,16 @@ public class Relation
 }
 /*******************************************************************************
  * Changes to this class. What the people have been up to: $Log$
- * Changes to this class. What the people have been up to: Revision 1.2  2004/08/30 00:37:08  doemming
+ * Changes to this class. What the people have been up to: Revision 1.3  2004/10/07 14:09:23  doemming
  * Changes to this class. What the people have been up to: *** empty log message ***
  * Changes to this class. What the people have been up to:
- * Revision 1.1.1.1 2004/05/11 16:43:27 doemming backup of local modified
- * deegree sources
- * 
- * Revision 1.1 2004/03/24 12:36:22 poth no message
+ * Changes to this class. What the people have been up to: Revision 1.1  2004/09/02 23:57:14  doemming
+ * Changes to this class. What the people have been up to: *** empty log message ***
+ * Changes to this class. What the people have been up to:
+ * Changes to this class. What the people have been up to: Revision 1.2
+ * 2004/08/31 12:53:32 doemming Changes to this class. What the people have been
+ * up to: *** empty log message *** Changes to this class. What the people have
+ * been up to: Revision 1.1 2004/03/24 12:36:22 poth no message
  * 
  * 
  *  

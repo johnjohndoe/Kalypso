@@ -180,7 +180,6 @@ public class ApplicationHandler implements WebListener
     Debug.debugMethodBegin( this, "getMethodCall" );
 
     String s = request.getParameter( "rpc" );
-    System.out.println( s );
     try
     {
       if( s == null )
@@ -321,10 +320,13 @@ public class ApplicationHandler implements WebListener
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:37:04  doemming
+ * Revision 1.3  2004/10/07 14:09:19  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:24
- * doemming backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:59  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:54:14 doemming
+ * *** empty log message *** Revision 1.13 2004/04/27 06:40:43 poth no message
  * 
  * Revision 1.12 2004/02/27 15:56:58 mrsnyder Removed hard-coded catalog name.
  * 

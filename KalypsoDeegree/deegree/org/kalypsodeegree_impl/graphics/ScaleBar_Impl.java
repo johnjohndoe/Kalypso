@@ -60,6 +60,8 @@ public class ScaleBar_Impl implements ScaleBar
 
   private Color labelColor;
 
+  private Color bgColor;
+
   private Font barFont;
 
   private String barStyle;
@@ -94,7 +96,7 @@ public class ScaleBar_Impl implements ScaleBar
    * @param labelColor
    *          the Color the label has to be in (and of course the text below and
    *          above)
-   * @param allgColor
+   * @param bgColor
    *          not used so far
    * @param barStyle
    *          the style the bar appears in. Currently just "default" is
@@ -104,13 +106,13 @@ public class ScaleBar_Impl implements ScaleBar
    *  
    */
   public ScaleBar_Impl( int topLabel, int bottomLabel, double scale, int scaleDenominator,
-      String units, Color labelColor, Color barColor, Color allgColor, String barStyle, Font barFont )
+      String units, Color labelColor, Color barColor, Color bgColor, String barStyle, Font barFont )
   {
     setTopLabel( topLabel );
     setBottomLabel( bottomLabel );
     setScale( scale );
     setScaleDenominator( scaleDenominator );
-    setColor( allgColor );
+    setBackgroundColor( bgColor );
     setBarColor( barColor );
     setLabelColor( labelColor );
     setStyle( barStyle );
@@ -138,10 +140,12 @@ public class ScaleBar_Impl implements ScaleBar
   public void paint( Graphics g )
   { //throws Exception {
     // if ( toplabel + bottomlabel < 1 ) throw Exception
-    g.setColor( barColor );
-
+    g.setColor( bgColor );
     int width = g.getClipBounds().width;
     int height = g.getClipBounds().height;
+    g.fillRect( 0, 0, width, height );
+
+    g.setColor( barColor );
     g.setFont( barFont );
 
     int laenge;
@@ -151,8 +155,11 @@ public class ScaleBar_Impl implements ScaleBar
       g.drawLine( 0, ( height / 2 ) + 1, width - 1, ( height / 2 ) + 1 );
       g.drawLine( 0, height / 2, width - 1, height / 2 );
       g.drawLine( 0, ( height / 2 ) - 1, width - 1, ( height / 2 ) - 1 );
+
+      g.drawLine( 1, ( height / 2 ) + 10, 1, ( height / 2 ) - 10 );
       g.drawLine( 0, ( height / 2 ) + 10, 0, ( height / 2 ) - 10 );
       g.drawLine( width - 1, ( height / 2 ) + 10, width - 1, ( height / 2 ) - 10 );
+      g.drawLine( width - 2, ( height / 2 ) + 10, width - 2, ( height / 2 ) - 10 );
     }
 
     g.setColor( labelColor );
@@ -175,14 +182,16 @@ public class ScaleBar_Impl implements ScaleBar
     case -1:
       break;
     case 0:
-      laenge = g.getFontMetrics().stringWidth( scale + " " + unit );
-      g.drawString( scale + " " + unit, ( width - laenge ) / 2, ( height / 2 ) + 1
-          + barFont.getSize() );
+      laenge = g.getFontMetrics().stringWidth( Math.round( scale ) + " " + unit );
+      g.drawString( Math.round( scale ) + " " + unit, ( width - laenge ) / 2,
+      //( height / 2 ) + 1 + barFont.getSize() );
+          ( height / 2 ) + 1 + 12 );
       break;
     case 1:
       laenge = g.getFontMetrics().stringWidth( "1 : " + scaleDenominator );
-      g.drawString( "1 : " + scaleDenominator, ( width - laenge ) / 2, ( height / 2 ) + 1
-          + barFont.getSize() );
+      g.drawString( "1 : " + scaleDenominator, ( width - laenge ) / 2,
+      // ( height / 2 ) + 1 + barFont.getSize() );
+          ( height / 2 ) + 1 + 12 );
       break;
     }
   }
@@ -275,9 +284,9 @@ public class ScaleBar_Impl implements ScaleBar
   /**
    * sets the front color of the scale bar
    */
-  public void setColor( Color color )
+  public void setBackgroundColor( Color color )
   {
-    barColor = color;
+    bgColor = color;
   }
 
   /**
@@ -318,4 +327,5 @@ public class ScaleBar_Impl implements ScaleBar
   {
     barFont = font;
   }
+
 }

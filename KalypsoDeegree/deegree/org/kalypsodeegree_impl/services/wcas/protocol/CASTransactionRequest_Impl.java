@@ -97,7 +97,7 @@ final public class CASTransactionRequest_Impl extends OGCWebServiceRequest_Impl 
   }
 
   /**
-   * @see getLockId
+   * @see #getLockId()
    */
   public void setLockId( String lockId )
   {
@@ -113,7 +113,7 @@ final public class CASTransactionRequest_Impl extends OGCWebServiceRequest_Impl 
   }
 
   /**
-   * @see getHandle
+   * @see #getHandle()
    */
   public void setHandle( String handle )
   {
@@ -136,7 +136,7 @@ final public class CASTransactionRequest_Impl extends OGCWebServiceRequest_Impl 
   }
 
   /**
-   * @see getOperations
+   * @see #getOperations()
    */
   public void setOperations( CASOperation[] operations )
   {
@@ -152,7 +152,7 @@ final public class CASTransactionRequest_Impl extends OGCWebServiceRequest_Impl 
   }
 
   /**
-   * @see getOperations
+   * @see #getOperations()
    */
   public void addOperation( CASOperation operation )
   {

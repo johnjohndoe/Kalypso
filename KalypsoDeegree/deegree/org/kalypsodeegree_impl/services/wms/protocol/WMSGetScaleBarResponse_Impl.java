@@ -65,7 +65,6 @@ public class WMSGetScaleBarResponse_Impl extends OGCWebServiceResponse_Impl impl
    * 
    * @param request
    * @param exception
-   * @param scaleBar
    */
   WMSGetScaleBarResponse_Impl( WMSGetScaleBarRequest request, Document exception )
   {
@@ -76,7 +75,6 @@ public class WMSGetScaleBarResponse_Impl extends OGCWebServiceResponse_Impl impl
    * Constructor for this Response
    * 
    * @param request
-   * @param exception
    * @param scaleBar
    */
   WMSGetScaleBarResponse_Impl( WMSGetScaleBarRequest request, Object scaleBar )
@@ -88,7 +86,7 @@ public class WMSGetScaleBarResponse_Impl extends OGCWebServiceResponse_Impl impl
   /**
    * sets the graphic representation of the requested scale bar.
    * 
-   * @param sBar
+   * @param scaleBar
    *          scale bar Object
    */
   public void setScaleBar( Object scaleBar )

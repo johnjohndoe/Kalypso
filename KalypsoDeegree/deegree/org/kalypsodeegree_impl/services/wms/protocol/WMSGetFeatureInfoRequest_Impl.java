@@ -48,7 +48,7 @@ import java.util.HashMap;
 
 import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.deegree.services.WebServiceException;
-import org.deegree.services.wms.protocol.WMSFeatureInfoRequest;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoRequest;
 import org.deegree.services.wms.protocol.WMSGetMapRequest;
 import org.deegree.xml.Marshallable;
 import org.deegree_impl.services.OGCWebServiceRequest_Impl;
@@ -63,8 +63,8 @@ import org.deegree_impl.services.OGCWebServiceRequest_Impl;
  * @author Katharina Lupp <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
-public class WMSFeatureInfoRequest_Impl extends OGCWebServiceRequest_Impl implements
-    WMSFeatureInfoRequest, Marshallable
+public class WMSGetFeatureInfoRequest_Impl extends OGCWebServiceRequest_Impl implements
+    WMSGetFeatureInfoRequest, Marshallable
 {
   private ArrayList queryLayers = null;
 
@@ -94,7 +94,7 @@ public class WMSFeatureInfoRequest_Impl extends OGCWebServiceRequest_Impl implem
    * @param sld
    * @param vendorSpecificParameter
    */
-  WMSFeatureInfoRequest_Impl( String version, String id, String[] queryLayers,
+  WMSGetFeatureInfoRequest_Impl( String version, String id, String[] queryLayers,
       WMSGetMapRequest getMapRequestCopy, String infoFormat, int featureCount, Point clickPoint,
       String exceptions, StyledLayerDescriptor sld, HashMap vendorSpecificParameter )
   {

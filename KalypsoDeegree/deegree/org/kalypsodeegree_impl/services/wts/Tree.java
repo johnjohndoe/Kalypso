@@ -81,13 +81,13 @@ public class Tree extends Group
     }
     Texture texture = new TextureLoader( bi ).getTexture();
 
-    //The Appearance object defines all rendering state that can be set as
-    // a component object of a Shape3D node.
+    //The Appearance object defines all rendering state that can be set as a
+    // component object of a Shape3D node.
     Appearance app = new Appearance();
     app.setTexture( texture );
     app.setMaterial( material );
-    //ALLOW_TEXTURE_WRITE: Specifies that this Appearance object allows
-    // writing its texture component information.
+    //ALLOW_TEXTURE_WRITE: Specifies that this Appearance object allows writing
+    // its texture component information.
     app.setCapability( Appearance.ALLOW_TEXTURE_WRITE );
     //TextureAttributes object defines attributes that apply to texture
     // mapping.
@@ -150,8 +150,8 @@ public class Tree extends Group
 
     //A generalized transform object represented internally as a 4x4
     // double-precision floating point matrix.
-    //A Transform3D is used to perform translations, rotations, and scaling
-    // and shear effects.
+    //A Transform3D is used to perform translations, rotations, and scaling and
+    // shear effects.
     Transform3D trans = new Transform3D();
     //positions the object
     trans.setTranslation( new Vector3d( x, base + height / 2d, z ) );

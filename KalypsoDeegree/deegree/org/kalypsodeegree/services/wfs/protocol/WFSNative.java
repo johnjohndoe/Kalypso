@@ -80,12 +80,13 @@ public interface WFSNative
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:51  doemming
+ * Revision 1.3  2004/10/07 14:09:07  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:22 doemming backup
- * of local modified deegree sources
- * 
- * Revision 1.3 2004/02/09 07:57:02 poth no message
+ *
+ * Revision 1.1  2004/09/02 23:56:55  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:45:01 doemming *** empty
+ * log message *** Revision 1.3 2004/02/09 07:57:02 poth no message
  * 
  * Revision 1.2 2003/04/23 07:23:15 poth no message
  * 

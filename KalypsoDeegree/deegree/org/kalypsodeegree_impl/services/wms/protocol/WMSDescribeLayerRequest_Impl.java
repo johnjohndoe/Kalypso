@@ -64,7 +64,6 @@ public class WMSDescribeLayerRequest_Impl extends OGCWebServiceRequest_Impl impl
    * Creates a new WMSDescribeLayerRequest_Impl object.
    * 
    * @param version
-   * @param request
    * @param id
    * @param vendorSpecificParameter
    */

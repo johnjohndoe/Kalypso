@@ -97,8 +97,6 @@ public interface FeatureLayer extends Layer
    */
   void removeFeature( Feature feature ) throws Exception;
 
-  void removeFeatureCollection( FeatureCollection featureCollection ) throws Exception;
-
   /**
    * removes the display Element from the layer that matches the submitted id
    */

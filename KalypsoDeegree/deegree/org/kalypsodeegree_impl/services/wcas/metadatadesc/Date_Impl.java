@@ -73,7 +73,7 @@ public class Date_Impl implements Date
   }
 
   /**
-   * @see getDateType
+   * @see #getDateType()
    */
   public void setDateType( String datetype )
   {

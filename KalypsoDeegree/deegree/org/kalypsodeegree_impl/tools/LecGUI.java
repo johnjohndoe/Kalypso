@@ -44,6 +44,7 @@
 package org.deegree_impl.tools;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -52,7 +53,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -71,10 +71,15 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
+/**
+ * @version @author This GUI is for creating Legend Element, which are small
+ *          thumbnails with textlabel and title showing the defined styles from
+ *          a SLD.
+ */
 public class LecGUI extends JPanel
 {
 
-  private static String TITLE = "LEC LegendElementCreator GUI-Version 1.0.0";
+  private static String TITLE = "LEC LegendElementCreator GUI - v1.0.1";
 
   private String lastDir = ".";
 
@@ -134,7 +139,7 @@ public class LecGUI extends JPanel
 
   private JTextArea debugTextArea;
 
-  protected static final String FILEMENU = "File";
+  private static final String FILEMENU = "File";
 
   protected static final String OPENSOURCEMENUITEM = "Open Source SLD";
 
@@ -144,7 +149,7 @@ public class LecGUI extends JPanel
 
   protected static final String EXITMENUITEM = "Exit";
 
-  protected static final String HELPMENU = "Help";
+  private static final String HELPMENU = "Help";
 
   protected static final String INFOMENUITEM = "Info";
 
@@ -157,7 +162,7 @@ public class LecGUI extends JPanel
    * Creates new form LecGUI
    *  
    */
-  protected LecGUI()
+  private LecGUI()
   {
 
     bel = new LecGUIButtonHandler( this );
@@ -168,17 +173,17 @@ public class LecGUI extends JPanel
   /**
    * initializes the GUI. Calls several methods, which inits the several
    * gui-elements.
-   *  
    */
   private void initComponents()
   {
     setLayout( new BorderLayout() );
 
-    JPanel menuPanel = new JPanel( new BorderLayout() );
+    JPanel northPanel = new JPanel( new BorderLayout() );
 
+    JPanel menuPanel = new JPanel( new BorderLayout() );
     JMenuBar menubar = initMenuBar();
     menuPanel.add( menubar, BorderLayout.BEFORE_FIRST_LINE );
-    add( menuPanel, BorderLayout.NORTH );
+    northPanel.add( menuPanel, BorderLayout.NORTH );
 
     JPanel mainPanel = new JPanel( new BorderLayout() );
 
@@ -194,12 +199,13 @@ public class LecGUI extends JPanel
     buttonPanel.setBorder( new javax.swing.border.EmptyBorder( new Insets( 10, 10, 10, 10 ) ) );
     mainPanel.add( buttonPanel, BorderLayout.EAST );
 
+    northPanel.add( mainPanel, BorderLayout.CENTER );
+    add( northPanel, BorderLayout.NORTH );
+
     debugPanel = initDebugPanel();
     debugPanel.setBorder( new TitledBorder( null, "Debug", TitledBorder.DEFAULT_JUSTIFICATION,
         TitledBorder.DEFAULT_POSITION, new java.awt.Font( "Dialog", 0, 10 ) ) );
-    add( debugPanel, BorderLayout.SOUTH );
-
-    add( mainPanel, BorderLayout.CENTER );
+    add( debugPanel, BorderLayout.CENTER );
   }
 
   /**
@@ -214,8 +220,10 @@ public class LecGUI extends JPanel
     jScrollPane1.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS );
     jScrollPane1.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS );
     this.debugTextArea = new JTextArea();
+    this.debugTextArea.setFont( new java.awt.Font( "Monospaced", 0, 11 ) );
     this.debugTextArea.setEditable( false );
-    this.debugTextArea.setText( "debugging information will be printed here." );
+    this.debugTextArea.setText( "You can mark this debug-output (per mouse or STRG + A)\n"
+        + "and copy it (STRG + C) to the clipboard.\n" );
 
     panel.setLayout( new java.awt.BorderLayout() );
 
@@ -482,17 +490,17 @@ public class LecGUI extends JPanel
    * 
    * @return content of the source-textfield
    */
-  protected String getSourceTextfieldContent()
+  private String getSourceTextfieldContent()
   {
     return this.sourcesld_tf.getText();
   }
 
   /**
-   * @see getSourceTextfieldContent()
-   * @param field
+   * @see #getSourceTextfieldContent()
+   * @param content
    *          the text in the source-textfield
    */
-  protected void setSourceTextfieldContent( String content )
+  private void setSourceTextfieldContent( String content )
   {
     this.sourcesld_tf.setText( content );
   }
@@ -501,19 +509,18 @@ public class LecGUI extends JPanel
    * returns the content of the open dialog destination/target-textfield
    * 
    * @return content of the targetdir-textfield
-   * @return
    */
-  protected String getDestDirTextfieldContent()
+  private String getDestDirTextfieldContent()
   {
     return this.targetdir_tf.getText();
   }
 
   /**
-   * @see getDestDirTextfieldContent()
-   * @param field
+   * @see #getDestDirTextfieldContent()
+   * @param content
    *          the text in the targetdir-textfield
    */
-  protected void setDestdirTextfieldContent( String content )
+  private void setDestdirTextfieldContent( String content )
   {
     this.targetdir_tf.setText( content );
   }
@@ -522,7 +529,7 @@ public class LecGUI extends JPanel
    * 
    * @return
    */
-  protected String getSelectedFormat()
+  private String getSelectedFormat()
   {
     return (String)this.formatCBox.getSelectedItem();
   }
@@ -531,7 +538,7 @@ public class LecGUI extends JPanel
    * 
    * @return
    */
-  protected String getSelectedColor()
+  private String getSelectedColor()
   {
     return (String)this.colorCBox.getSelectedItem();
   }
@@ -540,7 +547,7 @@ public class LecGUI extends JPanel
    * 
    * @return
    */
-  protected String getSelectedWidth()
+  private String getSelectedWidth()
   {
     return this.widthspinner.getValue().toString();
   }
@@ -549,7 +556,7 @@ public class LecGUI extends JPanel
    * 
    * @return
    */
-  protected String getSelectedHeight()
+  private String getSelectedHeight()
   {
     return this.heightspinner.getValue().toString();
   }
@@ -558,7 +565,7 @@ public class LecGUI extends JPanel
    * 
    * @return
    */
-  protected String getSelectedTitle()
+  private String getSelectedTitle()
   {
     return this.titletextfield.getText();
   }
@@ -600,7 +607,6 @@ public class LecGUI extends JPanel
   /**
    * the funcionality of the program. parses the input from the gui-elements and
    * passes them to the LegendElementCreator class.
-   *  
    */
   protected void doStart()
   {
@@ -616,39 +622,17 @@ public class LecGUI extends JPanel
     }
     else
     {
-      String f = getSourceTextfieldContent();
-      String d = getDestDirTextfieldContent();
-      String g = getSelectedFormat();
-      String c = getSelectedColor();
-      String w = getSelectedWidth();
-      String h = getSelectedHeight();
-      String t = getSelectedTitle();
-
-      // a very ugly hack follows:
-      HashMap argsmap = new HashMap();
-      if( t != null && t.length() > 0 )
-      {
-        argsmap.put( "-f", f );
-        argsmap.put( "-d", d );
-        argsmap.put( "-g", g );
-        argsmap.put( "-c", c );
-        argsmap.put( "-w", w );
-        argsmap.put( "-h", h );
-        argsmap.put( "-t", t );
-      }
-      else
-      {
-        argsmap.put( "-f", f );
-        argsmap.put( "-d", d );
-        argsmap.put( "-g", g );
-        argsmap.put( "-c", c );
-        argsmap.put( "-w", w );
-        argsmap.put( "-h", h );
-      }
-      LegendElementCreator lec = null;
+      String sldfile = getSourceTextfieldContent();
+      String directory = getDestDirTextfieldContent();
+      String format = getSelectedFormat();
+      Color color = getColorFromString( getSelectedColor() );
+      int width = Integer.parseInt( getSelectedWidth() );
+      int height = Integer.parseInt( getSelectedHeight() );
+      String title = getSelectedTitle();
       try
       {
-        lec = new LegendElementCreator( argsmap );
+        LegendElementCreator lec = new LegendElementCreator( sldfile, directory, format, color,
+            width, height, title, this );
         if( lec.getVerboseOutput() != null && lec.getVerboseOutput().length() > 0 )
         {
           addDebugInformation( "Finished!" + "\n" + lec.getVerboseOutput() );
@@ -665,6 +649,55 @@ public class LecGUI extends JPanel
       }
 
     }
+  }
+
+  /**
+   * reads out the color from the string and returns the corresponding color.
+   * 
+   * @param colorstring
+   *          the color as string
+   * @return the color
+   */
+  private Color getColorFromString( String colorstring )
+  {
+    Color color = Color.WHITE;
+    // BLACK, BLUE, CYAN, DARK_GRAY, GRAY, GREEN, LIGHT_GRAY, MAGENTA, ORANGE,
+    // PINK, RED, WHITE, YELLOW
+    System.out.println( colorstring );
+    if( colorstring.equalsIgnoreCase( "BLACK" ) )
+      color = Color.BLACK;
+    else if( colorstring.equalsIgnoreCase( "BLUE" ) )
+      color = Color.BLUE;
+    else if( colorstring.equalsIgnoreCase( "CYAN" ) )
+      color = Color.CYAN;
+    else if( colorstring.equalsIgnoreCase( "DARK_GRAY" ) )
+      color = Color.DARK_GRAY;
+    else if( colorstring.equalsIgnoreCase( "GRAY" ) )
+      color = Color.GRAY;
+    else if( colorstring.equalsIgnoreCase( "GREEN" ) )
+      color = Color.GREEN;
+    else if( colorstring.equalsIgnoreCase( "LIGHT_GRAY" ) )
+      color = Color.LIGHT_GRAY;
+    else if( colorstring.equalsIgnoreCase( "MAGENTA" ) )
+      color = Color.MAGENTA;
+    else if( colorstring.equalsIgnoreCase( "ORANGE" ) )
+      color = Color.ORANGE;
+    else if( colorstring.equalsIgnoreCase( "PINK" ) )
+      color = Color.PINK;
+    else if( colorstring.equalsIgnoreCase( "RED" ) )
+      color = Color.RED;
+    else if( colorstring.equalsIgnoreCase( "WHITE" ) )
+      color = Color.WHITE;
+    else if( colorstring.equalsIgnoreCase( "YELLOW" ) )
+      color = Color.YELLOW;
+    else if( colorstring.equalsIgnoreCase( "TRANSP." ) )
+      color = null;
+    else
+    {
+      //try {
+      color = Color.decode( colorstring );
+    }
+    return color;
   }
 
   /**
@@ -742,7 +775,7 @@ class LecGUIButtonHandler implements ActionListener
   /**
    * constructor
    * 
-   * @param dagui
+   * @param lecgui
    *          the DeegreeDemoInstallerGUI uses this Button
    */
   protected LecGUIButtonHandler( LecGUI lecgui )
@@ -796,7 +829,7 @@ class LecGUIMenuHandler implements ActionListener
   /**
    * constructor
    * 
-   * @param dagui
+   * @param lecgui
    *          the DeegreeDemoInstallerGUI uses this Button
    */
   protected LecGUIMenuHandler( LecGUI lecgui )
@@ -834,3 +867,23 @@ class LecGUIMenuHandler implements ActionListener
     }
   }
 }
+
+/*******************************************************************************
+ * ****************************************************************************
+ * Changes to this class. What the people have been up to: $Log$
+ * Changes to this class. What the people have been up to: Revision 1.3  2004/10/07 14:08:59  doemming
+ * Changes to this class. What the people have been up to: *** empty log message ***
+ * Changes to this class. What the people have been up to:
+ * Changes to this class. What the people have been up to: Revision 1.1  2004/09/02 23:57:03  doemming
+ * Changes to this class. What the people have been up to: *** empty log message ***
+ * Changes to this class. What the people have been up to:
+ * Changes to this class. What the people have been up to: Revision 1.3
+ * 2004/08/31 12:46:56 doemming Changes to this class. What the people have been
+ * up to: *** empty log message *** Changes to this class. What the people have
+ * been up to: Revision 1.8 2004/04/27 15:40:39 poth no message
+ * 
+ * Revision 1.7 2004/04/07 10:58:29 axel_schaefer bugfix
+ * 
+ * 
+ *  
+ ******************************************************************************/

@@ -60,29 +60,21 @@ public interface LegalConstraints
 
   /**
    * minOccurs="0" maxOccurs="unbounded"
-   * 
-   * @param Stringarray
    */
   String[] getUseLimitation();
 
   /**
    * minOccurs="0" maxOccurs="unbounded"
-   * 
-   * @param
    */
   PropertyRightsCode[] getPropertyRightsCode();
 
   /**
    * minOccurs="0" maxOccurs="unbounded"
-   * 
-   * @param
    */
   UseConstraintsCode[] getUseConstraintsCode();
 
   /**
    * minOccurs="0" maxOccurs="unbounded"
-   * 
-   * @param
    */
   String[] getOtherConstraints();
 }

@@ -1,7 +1,5 @@
 package org.kalypso.ogc.gml.loader.test;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import junit.framework.TestCase;
@@ -14,11 +12,11 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.gml.GMLDocument_Impl;
 import org.deegree_impl.gml.schema.GMLSchema;
+import org.deegree_impl.gml.schema.XMLHelper;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.ogc.gml.GMLHelper;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.util.xml.XMLTools;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -29,12 +27,9 @@ public class GMLArrayLoaderTest extends TestCase
 
   public void testLoad()
   {
-    final InputStream schemaInputStream = getClass().getResourceAsStream( "point.xsd" );
-
-    final InputStream gmlInputStream = getClass().getResourceAsStream( "point.gml" );
     try
     {
-      final GMLSchema schema = new GMLSchema( XMLTools.getAsDOM( schemaInputStream ) );
+      final GMLSchema schema = new GMLSchema( getClass().getResource( "point.xsd" )  );
       final HashMap layerMap = new HashMap();
       final FeatureType[] types = schema.getFeatureTypes();
 
@@ -50,9 +45,7 @@ public class GMLArrayLoaderTest extends TestCase
       //final InputStreamReader reader = new InputStreamReader(
       // file.getContents(), file.getCharset() );
 
-      final InputStreamReader reader = new InputStreamReader( gmlInputStream );
-      GMLDocument gml = new GMLDocument_Impl( reader );
-      reader.close();
+      GMLDocument gml = new GMLDocument_Impl( XMLHelper.getAsDOM( getClass().getResource( "point.gml" ) ) );
 
       GMLFeatureCollection gmlFC = gml.getRoot();
       GMLFeature[] gmlFeatures = gmlFC.getFeatures();

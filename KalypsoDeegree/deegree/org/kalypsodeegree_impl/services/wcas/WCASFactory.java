@@ -116,8 +116,7 @@ public class WCASFactory
         String name = ft[i].getName();
         String resClass = ft[i].getResponsibleClassName();
         URL config = ft[i].getConfigURL();
-
-        if( stores.get( resClass ) == null )
+        if( stores.get( resClass ) == null || !datastore.isKnownFeatureType( name ) )
         {
           datastore = WFSFactory.createDataStrore( resClass, config );
           stores.put( resClass, datastore );

@@ -173,7 +173,7 @@ public interface MapView
   /**
    * returns the amount of themes within the MapView.
    */
-  int getThemeSize();
+  int getSize();
 
   /**
    * adds an eventcontroller to the MapView that's reponsible for handling

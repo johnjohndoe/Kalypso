@@ -1,6 +1,6 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/services/gazetteer/GazetteerFactory.java,v
-// 1.1.1.1 2004/05/11 16:43:27 doemming Exp $
+// /cvsroot/deegree/deegree/org/deegree_impl/services/gazetteer/GazetteerFactory.java,v
+// 1.8 2004/04/07 06:43:49 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.
@@ -50,6 +50,7 @@ import java.util.HashMap;
 
 import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Point;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.services.gazetteer.GazetteerException;
 import org.deegree.services.gazetteer.SI_LocationInstance;
 import org.deegree.services.gazetteer.SI_LocationType;
@@ -77,10 +78,6 @@ public class GazetteerFactory
 
   private static String LINS = null;//"http://www.opengis.net/wfs-g";
 
-  private static String WFSNS = "http://www.opengis.net/wfs";
-
-  private static String GMLNS = "http://www.opengis.net/gml";
-
   /**
    * creates an array of <tt>SI_LocationInstance</tt> s from the passed
    * <tt>Document</tt>
@@ -96,7 +93,8 @@ public class GazetteerFactory
   {
     Debug.debugMethodBegin();
 
-    ElementList el = XMLTools.getChildElementsByName( "featureMember", GMLNS, root );
+    ElementList el = XMLTools
+        .getChildElementsByName( "featureMember", CommonNamespaces.GMLNS, root );
 
     SI_LocationInstance[] lis = new SI_LocationInstance[el.getLength()];
     for( int i = 0; i < lis.length; i++ )
@@ -208,8 +206,9 @@ public class GazetteerFactory
 }
 /*******************************************************************************
  * Changes to this class. What the people have been up to: $Log:
- * GazetteerFactory.java,v $ Revision 1.1.1.1 2004/05/11 16:43:27 doemming
- * backup of local modified deegree sources
+ * GazetteerFactory.java,v $ Revision 1.8 2004/04/07 06:43:49 poth no message
+ * 
+ * Revision 1.7 2004/04/02 06:41:56 poth no message
  * 
  * Revision 1.6 2004/03/26 16:42:18 poth no message
  * 

@@ -127,13 +127,13 @@ public class ECWReader
       //Remember: cellIncrementX & -Y can be different
       if( ecwFile.cellIncrementX / viewIncrX > ecwFile.cellIncrementY / viewIncrY )
       {
-        viewWidth = (int)( ( dWorldBRX - dWorldTLX ) / (double)ecwFile.cellIncrementX );
-        viewHeight = (int)(double)( viewWidth / dImgAspect );
+        viewWidth = (int)( ( dWorldBRX - dWorldTLX ) / ecwFile.cellIncrementX );
+        viewHeight = (int)( viewWidth / dImgAspect );
       }
       else
       {
-        viewHeight = (int)( ( dWorldTLY - dWorldBRY ) / (double)ecwFile.cellIncrementY * -1.0 );
-        viewWidth = (int)( (double)viewHeight * dImgAspect );
+        viewHeight = (int)( ( dWorldTLY - dWorldBRY ) / ecwFile.cellIncrementY * -1.0 );
+        viewWidth = (int)( viewHeight * dImgAspect );
       }
     }
 

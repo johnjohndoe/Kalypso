@@ -1,52 +1,7 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/enterprise/WMSServlet.java,v
-// 1.1.1.1 2004/05/11 16:43:24 doemming Exp $
-/*----------------    FILE HEADER  ------------------------------------------
+// /cvsroot/deegree/deegree/org/deegree_impl/enterprise/WMSServlet.java,v 1.57
+// 2004/08/20 08:43:18 poth Exp $
 
- This file is part of deegree.
- Copyright (C) 2001 by:
- EXSE, Department of Geography, University of Bonn
- http://www.giub.uni-bonn.de/exse/
- lat/lon Fitzke/Fretter/Poth GbR
- http://www.lat-lon.de
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
- Contact:
-
- Andreas Poth
- lat/lon Fitzke/Fretter/Poth GbR
- Meckenheimer Allee 176
- 53115 Bonn
- Germany
- E-Mail: poth@lat-lon.de
-
- Jens Fitzke
- Department of Geography
- University of Bonn
- Meckenheimer Allee 166
- 53115 Bonn
- Germany
- E-Mail: jens.fitzke@uni-bonn.de
-
- 
- ---------------------------------------------------------------------------*/
-
-// $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/enterprise/WMSServlet.java,v
-// 1.1.1.1 2004/05/11 16:43:24 doemming Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.
@@ -94,6 +49,8 @@ package org.deegree_impl.enterprise;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -134,11 +91,15 @@ import org.deegree.services.wms.capabilities.Operation;
 import org.deegree.services.wms.capabilities.Request;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
 import org.deegree.services.wms.protocol.WMSDescribeLayerResponse;
-import org.deegree.services.wms.protocol.WMSFeatureInfoRequest;
-import org.deegree.services.wms.protocol.WMSFeatureInfoResponse;
 import org.deegree.services.wms.protocol.WMSGetCapabilitiesResponse;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoRequest;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoResponse;
+import org.deegree.services.wms.protocol.WMSGetLegendGraphicRequest;
+import org.deegree.services.wms.protocol.WMSGetLegendGraphicResponse;
 import org.deegree.services.wms.protocol.WMSGetMapRequest;
 import org.deegree.services.wms.protocol.WMSGetMapResponse;
+import org.deegree.services.wms.protocol.WMSGetScaleBarRequest;
+import org.deegree.services.wms.protocol.WMSGetScaleBarResponse;
 import org.deegree.services.wms.protocol.WMSGetStylesResponse;
 import org.deegree.services.wms.protocol.WMSPutStylesResponse;
 import org.deegree.xml.DOMPrinter;
@@ -216,9 +177,16 @@ public class WMSServlet extends AbstractOGCServlet
    */
   public void doPost( HttpServletRequest req, HttpServletResponse resp )
   {
-    Debug.debugMethodBegin( this, "doGet" );
+    Debug.debugMethodBegin();
 
-    doGet( req, resp );
+    if( initException != null )
+    {
+      handleError( initException, resp );
+    }
+    else
+    {
+      new WMS( req, resp );
+    }
 
     Debug.debugMethodEnd();
   }
@@ -371,7 +339,78 @@ public class WMSServlet extends AbstractOGCServlet
      * <p>
      * If the request can't be performed an exception will be written to the
      * output stream to the client. The exception format is taken from the
-     * request (default: application/vnd.ogc.se_xml).
+     * request (default: application/vnd.ogc.se_xml). This constructor will be
+     * called if the request is received by the servlet with HTTP POST
+     */
+    private WMS( HttpServletRequest srequest, HttpServletResponse resp )
+    {
+
+      Debug.debugMethodBegin();
+      this.resp = resp;
+
+      String service = null;
+      Document doc = null;
+      try
+      {
+        String content = getPostContent( srequest );
+        doc = XMLTools.parse( new StringReader( content ) );
+        service = XMLTools.getRequiredAttrValue( "service", doc.getDocumentElement() );
+      }
+      catch( Exception e )
+      {
+        writeException( "WMS:WMS", "could not parse incomming post-requestn"
+            + StringExtend.stackTraceToString( e.getStackTrace() ) );
+        return;
+      }
+
+      if( !( "WMS".equalsIgnoreCase( service ) ) )
+      {
+        writeException( "WMS:WMS", "wrong service requested: " + service );
+        return;
+      }
+
+      // create request object
+      try
+      {
+        long id = IDGenerator.getInstance().generateUniqueID();
+        request = WMSProtocolFactory.createGetMapRequest( "id-" + id, doc.getDocumentElement() );
+      }
+      catch( MalformedURLException ex )
+      {
+        writeException( "WMS:WMS", "MalformedURLException "
+            + "for creating Request in WMSServlet: " + ex.getMessage() );
+        return;
+      }
+      catch( XMLParsingException pe )
+      {
+        writeException( "WMS:WMS XMLParsingException", pe.toString() );
+        return;
+      }
+      catch( InvalidFormatException ie )
+      {
+        writeServiceExceptionReport( "InvalidFormat", ie.toString() );
+        return;
+      }
+      catch( InconsistentRequestException ie )
+      {
+        writeException( "WMS:WMS InconsistentRequestException", ie.toString() );
+        return;
+      }
+
+      performRequest( request );
+
+      Debug.debugMethodEnd();
+    }
+
+    /**
+     * Constructor of the inner class WMS. The constructor accesses a
+     * <tt>WMService</tt> instance from the <tt>WMServicePool</tt> an calls
+     * it doService(..) method.
+     * <p>
+     * If the request can't be performed an exception will be written to the
+     * output stream to the client. The exception format is taken from the
+     * request (default: application/vnd.ogc.se_xml). This constructor will be
+     * called if the request is received by the servlet with HTTP GET
      */
     private WMS( HashMap paramMap, HttpServletResponse resp )
     {
@@ -455,6 +494,15 @@ public class WMSServlet extends AbstractOGCServlet
         return;
       }
 
+      performRequest( request );
+    }
+
+    /**
+     * performs the passed OGCWebServiceRequest by accessing service from the
+     * pool and passing the request to it
+     */
+    private void performRequest( OGCWebServiceRequest request )
+    {
       OGCWebServiceEvent event = new OGCWebServiceEvent_Impl( this, request, null, this );
 
       OGCWebService service = null;
@@ -538,6 +586,29 @@ public class WMSServlet extends AbstractOGCServlet
     }
 
     /**
+     * returns the content of the http post request without its header
+     */
+    private String getPostContent( HttpServletRequest request ) throws IllegalArgumentException,
+        IOException
+    {
+      Debug.debugMethodBegin();
+
+      BufferedReader br = request.getReader();
+
+      StringBuffer sb = new StringBuffer( 2000 );
+      String line = null;
+
+      while( ( line = br.readLine() ) != null )
+      {
+        sb.append( line );
+      }
+
+      br.close();
+      Debug.debugMethodEnd();
+      return sb.toString();
+    }
+
+    /**
      * 
      * 
      * @param result
@@ -584,9 +655,9 @@ public class WMSServlet extends AbstractOGCServlet
           {
             handleGetMapResponse( (WMSGetMapResponse)response );
           }
-          else if( response instanceof WMSFeatureInfoResponse )
+          else if( response instanceof WMSGetFeatureInfoResponse )
           {
-            handleFeatureInfoResponse( (WMSFeatureInfoResponse)response );
+            handleFeatureInfoResponse( (WMSGetFeatureInfoResponse)response );
           }
           else if( response instanceof WMSGetStylesResponse )
           {
@@ -599,6 +670,14 @@ public class WMSServlet extends AbstractOGCServlet
           else if( response instanceof WMSDescribeLayerResponse )
           {
             handleDescribeLayerResponse( (WMSDescribeLayerResponse)response );
+          }
+          else if( response instanceof WMSGetScaleBarResponse )
+          {
+            handleGetScaleBarResponse( (WMSGetScaleBarResponse)response );
+          }
+          else if( response instanceof WMSGetLegendGraphicResponse )
+          {
+            handleGetLegendGraphicResponse( (WMSGetLegendGraphicResponse)response );
           }
         }
       }
@@ -671,7 +750,7 @@ public class WMSServlet extends AbstractOGCServlet
      */
     private void handleGetMapResponse( WMSGetMapResponse response ) throws InvalidFormatException
     {
-      Debug.debugMethodBegin( this, "handleGetMapResponse" );
+      Debug.debugMethodBegin();
 
       String mime = MimeTypeMapper.toMimeType( ( (WMSGetMapRequest)request ).getFormat() );
 
@@ -690,11 +769,11 @@ public class WMSServlet extends AbstractOGCServlet
      * 
      * @param response
      */
-    private void handleFeatureInfoResponse( WMSFeatureInfoResponse response ) throws Exception
+    private void handleFeatureInfoResponse( WMSGetFeatureInfoResponse response ) throws Exception
     {
-      Debug.debugMethodBegin( this, "handleFeatureInfoResponse" );
+      Debug.debugMethodBegin();
 
-      String s = ( (WMSFeatureInfoRequest)request ).getInfoFormat();
+      String s = ( (WMSGetFeatureInfoRequest)request ).getInfoFormat();
       String mime = MimeTypeMapper.toMimeType( s );
       resp.setContentType( mime );
 
@@ -731,7 +810,7 @@ public class WMSServlet extends AbstractOGCServlet
      */
     private void handleGetStylesResponse( WMSGetStylesResponse response )
     {
-      Debug.debugMethodBegin( this, "handleGetStylesResponse" );
+      Debug.debugMethodBegin();
       Debug.debugMethodEnd();
     }
 
@@ -747,13 +826,56 @@ public class WMSServlet extends AbstractOGCServlet
     }
 
     /**
-     * handles the response to a describ layer request
+     * handles the response to a describe layer request
      * 
      * @param response
      */
     private void handleDescribeLayerResponse( WMSDescribeLayerResponse response )
     {
       Debug.debugMethodBegin( this, "handleDescribeLayerResponse" );
+      Debug.debugMethodEnd();
+    }
+
+    /**
+     * handles the response to a get legend graphic request
+     * 
+     * @param response
+     */
+    private void handleGetLegendGraphicResponse( WMSGetLegendGraphicResponse response )
+        throws Exception
+    {
+      Debug.debugMethodBegin();
+
+      String mime = MimeTypeMapper.toMimeType( ( (WMSGetLegendGraphicRequest)request ).getFormat() );
+
+      if( !MimeTypeMapper.isImageType( mime ) )
+      {
+        throw new InvalidFormatException( mime + " is not a known image format" );
+      }
+
+      writeImage( response.getLegendGraphic(), mime );
+
+      Debug.debugMethodEnd();
+    }
+
+    /**
+     * handles the response to a get scalebar request
+     * 
+     * @param response
+     */
+    private void handleGetScaleBarResponse( WMSGetScaleBarResponse response ) throws Exception
+    {
+      Debug.debugMethodBegin();
+
+      String mime = MimeTypeMapper.toMimeType( ( (WMSGetScaleBarRequest)request ).getFormat() );
+
+      if( !MimeTypeMapper.isImageType( mime ) )
+      {
+        throw new InvalidFormatException( mime + " is not a known image format" );
+      }
+
+      writeImage( response.getScaleBar(), mime );
+
       Debug.debugMethodEnd();
     }
 
@@ -923,7 +1045,8 @@ public class WMSServlet extends AbstractOGCServlet
           os = resp.getOutputStream();
           Encoders.encodeBmp( os, (BufferedImage)output );
         }
-        else if( mime.equalsIgnoreCase( "image/svg+xml" ) )
+        else if( mime.equalsIgnoreCase( "image/svg+xml" )
+            || mime.equalsIgnoreCase( "image/svg xml" ) )
         {
           os = resp.getOutputStream();
           PrintWriter pw = new PrintWriter( os );
@@ -953,7 +1076,7 @@ public class WMSServlet extends AbstractOGCServlet
      */
     private String xsltTransformGetFeature( String capa, URL xslt )
     {
-      Debug.debugMethodBegin( this, "xsltTransformGetFeature" );
+      Debug.debugMethodBegin();
 
       String out = null;
 
@@ -996,8 +1119,17 @@ public class WMSServlet extends AbstractOGCServlet
 /*******************************************************************************
  * ****************************************************************************
  * Changes to this class. What the people have been up to: $Log:
- * WMSServlet.java,v $ Revision 1.1.1.1 2004/05/11 16:43:24 doemming backup of
- * local modified deegree sources
+ * WMSServlet.java,v $ Revision 1.57 2004/08/20 08:43:18 poth no message
+ * 
+ * Revision 1.56 2004/06/24 14:20:27 poth no message
+ * 
+ * Revision 1.55 2004/04/13 11:37:43 poth no message
+ * 
+ * Revision 1.54 2004/04/05 08:34:44 poth no message
+ * 
+ * Revision 1.53 2004/04/02 06:41:41 poth no message
+ * 
+ * Revision 1.52 2004/03/31 15:40:20 poth no message
  * 
  * Revision 1.51 2004/03/12 15:56:47 poth no message
  * 

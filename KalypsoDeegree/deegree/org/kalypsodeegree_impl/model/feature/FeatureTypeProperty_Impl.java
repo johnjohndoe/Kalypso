@@ -59,26 +59,30 @@ import org.deegree.model.feature.FeatureTypeProperty;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializable
+public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializable
 {
 
-  private String name = "";
+  private final String m_namespace;
+  
+  private final String name;
 
-  private String type = "";
+  private final String type;
 
-  private boolean nullable = false;
+  private final boolean nullable;
 
   /**
    * initializes a FeatureTypeProperty with its name its associated type and a
    * boolean variable that says if the propetry maybe <tt>null</tt>
    */
-  FeatureTypeProperty_Impl( String name, String type, boolean nullable )
+  protected FeatureTypeProperty_Impl( String name,String namespace, String type, boolean nullable)
   {
     this.name = name;
+    m_namespace=namespace;
     this.type = type;
     this.nullable = nullable;
+  
   }
-
+  
   /**
    * returns the name of the property
    */
@@ -111,17 +115,33 @@ class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializable
     ret += "nullable = " + nullable + "\n";
     return ret;
   }
+  
+  public String getNamespace()
+  {
+    return m_namespace;
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureTypeProperty#isGeometryProperty()
+   */
+  public boolean isGeometryProperty()
+  {
+    return type.startsWith("org.deegree.model.geometry.") && !type.endsWith("Envelope");
+  }
+ 
 }
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:37:00  doemming
+ * Revision 1.3  2004/10/07 14:09:16  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:25
- * doemming backup of local modified deegree sources
- * 
- * Revision 1.3 2004/02/09 07:59:57 poth no message
+ *
+ * Revision 1.1  2004/09/02 23:57:07  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 14:07:12
+ * doemming *** empty log message *** Revision 1.3 2004/02/09 07:59:57 poth no
+ * message
  * 
  * Revision 1.2 2002/11/25 09:32:41 poth no message
  * 

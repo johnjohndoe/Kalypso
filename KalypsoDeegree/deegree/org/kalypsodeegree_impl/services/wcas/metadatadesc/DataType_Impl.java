@@ -74,7 +74,7 @@ public class DataType_Impl implements DataType
   }
 
   /**
-   * @see getType
+   * @see #getType()
    */
   public void setType( String type )
   {

@@ -204,7 +204,7 @@ public class ContactAddress_Impl implements ContactAddress, Marshallable
         .append( XMLTools.validateCDATA( address ) ).append( "</Address>" ).append( "<City>" )
         .append( XMLTools.validateCDATA( city ) ).append( "</City>" ).append( "<StateOrProvince>" )
         .append( XMLTools.validateCDATA( stateOrProvince ) ).append( "</StateOrProvince>" ).append(
-            "<Postcode>" ).append( XMLTools.validateCDATA( postCode ) ).append( "</Postcode>" )
+            "<PostCode>" ).append( XMLTools.validateCDATA( postCode ) ).append( "</PostCode>" )
         .append( "<Country>" ).append( XMLTools.validateCDATA( country ) ).append( "</Country>" )
         .append( "</ContactAddress>" );
 

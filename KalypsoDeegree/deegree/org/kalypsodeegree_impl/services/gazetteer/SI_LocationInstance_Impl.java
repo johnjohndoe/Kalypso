@@ -1,6 +1,6 @@
 // $Header:
-// /var/lib/cvs/backupdeegree/deegree/org/deegree_impl/services/gazetteer/SI_LocationInstance_Impl.java,v
-// 1.1.1.1 2004/05/11 16:43:27 doemming Exp $
+// /cvsroot/deegree/deegree/org/deegree_impl/services/gazetteer/SI_LocationInstance_Impl.java,v
+// 1.10 2004/07/09 07:19:53 poth Exp $
 /*----------------    FILE HEADER  ------------------------------------------
 
  This file is part of deegree.
@@ -115,7 +115,7 @@ public class SI_LocationInstance_Impl extends Feature_Impl implements SI_Locatio
       SI_LocationInstance[] child, SI_LocationType locationType )
   {
 
-    super( geographicIdentifier, ft, fp );
+    super(ft, geographicIdentifier,  fp );
     setGeographicIdentifier( geographicIdentifier );
     setAlternativeGeographicIdentifier( alternativeGeographicIdentifier );
     if( identifier == null )
@@ -140,7 +140,7 @@ public class SI_LocationInstance_Impl extends Feature_Impl implements SI_Locatio
   }
 
   /**
-   * @param names
+   * @param name
    */
   public void setAlternativeGeographicIdentifier( String name )
   {
@@ -413,6 +413,12 @@ public class SI_LocationInstance_Impl extends Feature_Impl implements SI_Locatio
     setProperty( prop );
   }
 
+  public int compareTo( Object o )
+  {
+    SI_LocationInstance li = (SI_LocationInstance)o;
+    return li.getGeographicIdentifier().compareTo( this.getGeographicIdentifier() );
+  }
+
   private static FeatureType initLIFeatureType()
   {
     FeatureTypeProperty[] ftp = new FeatureTypeProperty[12];
@@ -463,8 +469,10 @@ public class SI_LocationInstance_Impl extends Feature_Impl implements SI_Locatio
 }
 /*******************************************************************************
  * Changes to this class. What the people have been up to: $Log:
- * SI_LocationInstance_Impl.java,v $ Revision 1.1.1.1 2004/05/11 16:43:27
- * doemming backup of local modified deegree sources
+ * SI_LocationInstance_Impl.java,v $ Revision 1.10 2004/07/09 07:19:53 poth no
+ * message
+ * 
+ * Revision 1.9 2004/04/07 06:43:49 poth no message
  * 
  * Revision 1.8 2004/03/26 16:42:18 poth no message
  * 

@@ -87,7 +87,7 @@ public class PointOfContact_Impl implements PointOfContact
   }
 
   /**
-   * @see getContactInfo
+   * @see #getContactInfo()
    */
   public void addContactInfo( ContactInfo contactinfo )
   {
@@ -95,7 +95,7 @@ public class PointOfContact_Impl implements PointOfContact
   }
 
   /**
-   * @see getContactInfo
+   * @see #getContactInfo()
    */
   public void setContactInfo( ContactInfo[] contactinfo )
   {
@@ -118,7 +118,7 @@ public class PointOfContact_Impl implements PointOfContact
   }
 
   /**
-   * @see getIndividualName
+   * @see #getIndividualName()
    */
   public void addIndividualName( String individualname )
   {
@@ -126,7 +126,7 @@ public class PointOfContact_Impl implements PointOfContact
   }
 
   /**
-   * @see getIndividualName
+   * @see #getIndividualName()
    */
   public void setIndividualName( String[] individualname )
   {
@@ -148,7 +148,7 @@ public class PointOfContact_Impl implements PointOfContact
   }
 
   /**
-   * @see getOrganisationName
+   * @see #getOrganisationName()
    */
   public void addOrganisationName( String organisationname )
   {
@@ -156,7 +156,7 @@ public class PointOfContact_Impl implements PointOfContact
   }
 
   /**
-   * @see getOrganisationName
+   * @see #getOrganisationName()
    */
   public void setOrganisationName( String[] organisationname )
   {
@@ -179,7 +179,7 @@ public class PointOfContact_Impl implements PointOfContact
   }
 
   /**
-   * @see getPositionName
+   * @see #getPositionName()
    */
   public void addPositionName( String positionname )
   {
@@ -187,7 +187,7 @@ public class PointOfContact_Impl implements PointOfContact
   }
 
   /**
-   * @see getPositionName
+   * @see #getPositionName()
    */
   public void setPositionName( String[] positionname )
   {
@@ -210,7 +210,7 @@ public class PointOfContact_Impl implements PointOfContact
   }
 
   /**
-   * @see getRoleCode
+   * @see #getRoleCode()
    */
   public void addRoleCode( RoleCode rolecode )
   {
@@ -218,7 +218,7 @@ public class PointOfContact_Impl implements PointOfContact
   }
 
   /**
-   * @see getRoleCode
+   * @see #getRoleCode()
    */
   public void setRoleCode( RoleCode[] rolecode )
   {

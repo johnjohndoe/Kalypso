@@ -66,7 +66,7 @@ public class Quality_Impl implements Quality
   }
 
   /**
-   * @see getTBD_ServiceQuality
+   * @see #getTBD_ServiceQuality()
    */
   public void addTBD_ServiceQuality( String tbd_serviceQuality )
   {
@@ -74,7 +74,7 @@ public class Quality_Impl implements Quality
   }
 
   /**
-   * @see getTBD_ServiceQuality
+   * @see #getTBD_ServiceQuality()
    */
   public void setTBD_ServiceQuality( String[] tbd_serviceQuality )
   {

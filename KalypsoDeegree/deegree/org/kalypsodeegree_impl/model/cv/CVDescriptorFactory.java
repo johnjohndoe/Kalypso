@@ -97,8 +97,7 @@ import com.sun.media.jai.codec.ByteArraySeekableStream;
  * </p>
  * 
  * @author Andreas Poth
- * @version $Id: CVDescriptorFactory.java,v 1.1.1.1 2004/05/11 16:43:24 doemming
- *          Exp $
+ * @version $Id$
  */
 public class CVDescriptorFactory
 {

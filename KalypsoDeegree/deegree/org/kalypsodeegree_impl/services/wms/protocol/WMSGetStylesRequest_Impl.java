@@ -65,7 +65,6 @@ public class WMSGetStylesRequest_Impl extends OGCWebServiceRequest_Impl implemen
    * Creates a new WMSGetStyleRequest_Impl object.
    * 
    * @param version
-   * @param request
    * @param id
    * @param vendorSpecificParameter
    */

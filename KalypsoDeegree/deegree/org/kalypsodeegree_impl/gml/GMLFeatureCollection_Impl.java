@@ -48,6 +48,7 @@ import org.deegree.gml.GMLBox;
 import org.deegree.gml.GMLCoord;
 import org.deegree.gml.GMLFeature;
 import org.deegree.gml.GMLFeatureCollection;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.DOMPrinter;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.tools.Debug;
@@ -78,9 +79,9 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
   {
     Document doc = XMLTools.create();
     Element elem = doc.createElement( name );
-    elem.setAttribute( "xmlns:gml", GMLGeometricMapping.GMLNS );
+    elem.setAttribute( "xmlns:gml", CommonNamespaces.GMLNS );
 
-    Element el = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:boundedBy" );
+    Element el = doc.createElementNS( CommonNamespaces.GMLNS, "gml:boundedBy" );
     elem.appendChild( el );
     doc.appendChild( elem );
     setElement( elem );
@@ -99,12 +100,12 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
     Element elem = doc.createElementNS( nameSpace, prefix + ":" + name );
     elem.setAttribute( "xmlns:" + prefix, nameSpace );
 
-    if( !nameSpace.equals( GMLGeometricMapping.GMLNS ) )
+    if( !nameSpace.equals( CommonNamespaces.GMLNS ) )
     {
-      elem.setAttribute( "xmlns:gml", GMLGeometricMapping.GMLNS );
+      elem.setAttribute( "xmlns:gml", CommonNamespaces.GMLNS );
     }
 
-    Element el = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:boundedBy" );
+    Element el = doc.createElementNS( CommonNamespaces.GMLNS, "gml:boundedBy" );
     elem.appendChild( el );
     doc.appendChild( elem );
     setElement( elem );
@@ -136,12 +137,12 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
    */
   public static GMLFeatureCollection createGMLFeatureCollection( Document doc, String collectionName )
   {
-    Debug.debugMethodBegin( "GMLFeatureCollection_Impl", "createGMLFeatureCollection" );
+    Debug.debugMethodBegin();
 
     Element elem = doc.createElement( collectionName );
-    elem.setAttribute( "xmlns:gml", "http://www.opengis.net/gml" );
+    elem.setAttribute( "xmlns:gml", CommonNamespaces.GMLNS );
 
-    Element el = doc.createElementNS( GMLGeometricMapping.GMLNS, "gml:boundedBy" );
+    Element el = doc.createElementNS( CommonNamespaces.GMLNS, "gml:boundedBy" );
     elem.appendChild( el );
 
     GMLFeatureCollection feature = new GMLFeatureCollection_Impl( elem );
@@ -187,10 +188,7 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
     {
       return null;
     }
-    else
-    {
-      return (GMLFeature[])list.toArray( new GMLFeature[list.size()] );
-    }
+    return (GMLFeature[])list.toArray( new GMLFeature[list.size()] );
   }
 
   /**
@@ -290,10 +288,7 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
     {
       return null;
     }
-    else
-    {
-      return (GMLFeature[])list.toArray( new GMLFeature[list.size()] );
-    }
+    return (GMLFeature[])list.toArray( new GMLFeature[list.size()] );
   }
 
   /**
@@ -306,8 +301,7 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
     //    	if ( feature.getId() != null ) {
     //    		removeFeature( feature.getId() );
     //    	}
-
-    Element elem = element.getOwnerDocument().createElementNS( GMLGeometricMapping.GMLNS,
+    Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
         "gml:featureMember" );
     element.appendChild( elem );
 
@@ -384,7 +378,7 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
   {
     Debug.debugMethodBegin( this, "setBoundingBox(GMLBox)" );
 
-    Element elem = XMLTools.getNamedChild( element, GMLGeometricMapping.GMLNS, "boundedBy" );
+    Element elem = XMLTools.getNamedChild( element, CommonNamespaces.GMLNS, "boundedBy" );
     Element el = XMLTools.getFirstElement( elem );
 
     if( el != null )
@@ -412,13 +406,16 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.3  2004/08/30 00:36:58  doemming
+ * Revision 1.4  2004/10/07 14:09:13  doemming
  * *** empty log message ***
- * Revision 1.2 2004/08/11 11:20:16
- * doemming *** empty log message ***
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 13:03:30
+ * doemming *** empty log message *** Revision 1.8 2004/07/09 07:16:56 poth no
+ * message
  * 
- * Revision 1.1.1.1 2004/05/11 16:43:24 doemming backup of local modified
- * deegree sources
+ * Revision 1.7 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.6 2004/02/23 07:47:48 poth no message
  * 

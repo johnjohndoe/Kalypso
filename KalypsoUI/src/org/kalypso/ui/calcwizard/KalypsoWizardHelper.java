@@ -25,7 +25,7 @@ import org.kalypso.ogc.sensor.tableview.template.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.zml.loader.ZmlLoader;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.util.xml.xlink.JAXBXLink;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
  * Provides some convenience methods for dealing with the stuff in Kalypso
@@ -84,7 +84,7 @@ public class KalypsoWizardHelper
       for( int i = 0; i < props.length; i++ )
       {
         final String name = (String)kf.getProperty( props[i]._nameColumn );
-        final TimeseriesLinkType obsLink = (TimeseriesLinkType)kf
+        final TimeseriesLink obsLink = (TimeseriesLink)kf
             .getProperty( props[i]._linkColumn );
 
         if( obsLink != null )
@@ -139,7 +139,7 @@ public class KalypsoWizardHelper
       for( int i = 0; i < props.length; i++ )
       {
         final String name = (String)kf.getProperty( props[i]._nameColumn );
-        final TimeseriesLinkType obsLink = (TimeseriesLinkType)kf
+        final TimeseriesLink obsLink = (TimeseriesLink)kf
             .getProperty( props[i]._linkColumn );
 
         if( obsLink != null )
@@ -193,7 +193,7 @@ public class KalypsoWizardHelper
       for( int i = 0; i < props.length; i++ )
       {
         final String name = (String)kf.getProperty( props[i]._nameColumn );
-        final TimeseriesLinkType obsLink = (TimeseriesLinkType)kf
+        final TimeseriesLink obsLink = (TimeseriesLink)kf
             .getProperty( props[i]._linkColumn );
 
         if( obsLink != null )

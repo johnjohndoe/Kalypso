@@ -48,6 +48,8 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -97,13 +99,28 @@ public class DefaultDataStoreOutputFormat implements DataStoreOutputFormat
       fc.appendFeatures( tfc );
     }
 
+    p = paramList.getParameter( WFSConstants.NAMESPACE );
+    String sr = "";
+
+    Map namesp = new HashMap();
+    Map pref = new HashMap();
+    if( p != null )
+    {
+      sr = (String)p.getValue();
+      StringTokenizer st = new StringTokenizer( sr, ":=" );
+      st.nextToken();
+      String pre = st.nextToken();
+      String ns = st.nextToken();
+      namesp.put( fc.getFeature( 0 ).getFeatureType().getName(), ns );
+      pref.put( fc.getFeature( 0 ).getFeatureType().getName(), pre );
+    }
+
     ByteArrayOutputStream bos = new ByteArrayOutputStream( fc.getSize() * 1000 );
-    GMLFeatureAdapter.export( fc, bos );
-    String s = new String( bos.toByteArray() );
+    GMLFeatureAdapter.export( fc, namesp, pref, new HashMap(), bos );
+    String s = new String( bos.toByteArray(), "UTF-8" );
 
     Document doc = null;
     p = paramList.getParameter( WFSConstants.FILTER );
-
     if( p != null )
     {
       doc = xsltTransformGetFeature( s, (String)p.getValue() );

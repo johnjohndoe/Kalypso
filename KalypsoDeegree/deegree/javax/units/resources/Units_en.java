@@ -56,7 +56,7 @@ public class Units_en extends Units
       "dyn", "dyne", "P", "poise", "St", "stokes", "G", "gauss", "Oe", "oersted", "Mx", "maxwell",
       "sb", "stilb", "ph", "phot", "Gal", "gal", "Ci", "curie", "R", "röntgen", "rd", "rad", "rem",
       "rem", "Jy", "jansky", "Torr", "torr", "atm", "standard atmosphere", "pound", "pound", // Symbole
-      // non-standard
+                                                                                             // non-standard
       "onze", "onze", // Symbole non-standard
       "°C", "Celcius degree", "°F", "fahrenheit" // Symbole non-standard
   };

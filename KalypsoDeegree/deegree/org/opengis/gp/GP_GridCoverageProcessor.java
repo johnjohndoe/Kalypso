@@ -62,7 +62,7 @@ public interface GP_GridCoverageProcessor extends Remote
    * <br>
    * <br>
    * 
-   * @param Index
+   * @param index
    *          Index for which to retrieve the operation information.
    * @return a grid processing operation information.
    * @throws RemoteException

@@ -1,8 +1,8 @@
 /*
  * Map and oceanographical data visualisation Copyright (C) 1998 University
  * Corporation for Atmospheric Research (Unidata) 1998 Bill Hibbard & al.
- * (VisAD) 1999 P?ches et Oc?ans Canada 2000 Institut de Recherche pour le
- * D?veloppement
+ * (VisAD) 1999 Pêches et Océans Canada 2000 Institut de Recherche pour le
+ * Développement
  * 
  * 
  * This library is free software; you can redistribute it and/or modify it under
@@ -16,8 +16,8 @@
  * details (http://www.gnu.org/).
  * 
  * 
- * Contacts: FRANCE: Surveillance de l'Environnement Assist?e par Satellite
- * Institut de Recherche pour le D?veloppement / US-Espace
+ * Contacts: FRANCE: Surveillance de l'Environnement Assistée par Satellite
+ * Institut de Recherche pour le Développement / US-Espace
  * mailto:seasnet@teledetection.fr
  * 
  * CANADA: Observatoire du Saint-Laurent Institut Maurice-Lamontagne
@@ -35,7 +35,7 @@
  */
 package javax.units;
 
-// Entr?s/sorties
+// Entrés/sorties
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -43,9 +43,9 @@ import java.util.Arrays;
 import org.deegree_impl.model.resources.WeakHashSet;
 
 /**
- * Ensemble de pr?fix. Cette classe maintient une liste d'objets {@link Prefix}
- * en ordre croissant et sans doublons, c'est-?-dire qu'elle garanti qu'il n'y
- * aura pas deux pr?fix repr?sentant la m?me quantit? {@link Prefix#amount}.
+ * Ensemble de préfix. Cette classe maintient une liste d'objets {@link Prefix}
+ * en ordre croissant et sans doublons, c'est-à-dire qu'elle garanti qu'il n'y
+ * aura pas deux préfix représentant la même quantité {@link Prefix#amount}.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -53,21 +53,21 @@ import org.deegree_impl.model.resources.WeakHashSet;
 /* public */final class PrefixSet implements Serializable
 {
   /**
-   * Banque des objets qui ont ?t? pr?c?demment cr??s et enregistr?s par un
-   * appel ? la m?thode {@link #intern}.
+   * Banque des objets qui ont été précédemment créés et enregistrés par un
+   * appel à la méthode {@link #intern}.
    */
   private static final WeakHashSet pool = Prefix.pool;
 
   /**
-   * Ensemble de pr?fix. Les pr?fix de cet ensemble doivent obligatoirement ?tre
+   * Ensemble de préfix. Les préfix de cet ensemble doivent obligatoirement être
    * un ordre croissant et sans doublons.
    */
   private final Prefix[] prefix;
 
   /**
-   * Construit un ensemble de pr?fix. Le tableau <code>p</code> sera copi?,
-   * puis class?. Les ?ventuels doublons seront ?limin?s. Le tableau
-   * <code>p</code> original ne sera pas affect? par ces traitements.
+   * Construit un ensemble de préfix. Le tableau <code>p</code> sera copié,
+   * puis classé. Les éventuels doublons seront éliminés. Le tableau
+   * <code>p</code> original ne sera pas affecté par ces traitements.
    */
   private PrefixSet( final Prefix[] p )
   {
@@ -94,9 +94,9 @@ import org.deegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Construit un ensemble de pr?fix. Le tableau <code>p</code> sera copi?,
-   * puis class?. Les ?ventuels doublons seront ?limin?s. Le tableau
-   * <code>p</code> original ne sera pas affect? par ces traitements.
+   * Construit un ensemble de préfix. Le tableau <code>p</code> sera copié,
+   * puis classé. Les éventuels doublons seront éliminés. Le tableau
+   * <code>p</code> original ne sera pas affecté par ces traitements.
    */
   public static PrefixSet getPrefixSet( final Prefix[] p )
   {
@@ -104,12 +104,12 @@ import org.deegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Retourne le pr?fix repr?sent? par le symbole sp?fifi?. Si aucun pr?fix ne
-   * correspond ? ce symbole, retourne <code>null</code>.
+   * Retourne le préfix représenté par le symbole spéfifié. Si aucun préfix ne
+   * correspond à ce symbole, retourne <code>null</code>.
    * 
    * @param symbol
-   *          Symbole du pr?fix recherch?.
-   * @return Pr?fix d?sign? par le symbole <code>symbol</code>.
+   *          Symbole du préfix recherché.
+   * @return Préfix désigné par le symbole <code>symbol</code>.
    */
   public Prefix getPrefix( final String symbol )
   {
@@ -123,15 +123,15 @@ import org.deegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Retourne le pr?fix repr?sentant une quantit? ?gale ou inf?rieure ? la
-   * quantit? sp?cifi?e. Si <code>amount</code> est inf?rieur ? la plus petite
-   * quantit? pouvant ?tre repr?sent? par un pr?fix, alors cette m?thode
+   * Retourne le préfix représentant une quantité égale ou inférieure à la
+   * quantité spécifiée. Si <code>amount</code> est inférieur à la plus petite
+   * quantité pouvant être représenté par un préfix, alors cette méthode
    * retourne <code>null</code>.
    */
   public Prefix getPrefix( double amount )
   {
-    amount += 1E-8 * Math.abs( amount ); // Pour ?viter d'?ventuelles erreurs
-    // d'arrondissements.
+    amount += 1E-8 * Math.abs( amount ); // Pour éviter d'éventuelles erreurs
+                                         // d'arrondissements.
     int index = Arrays.binarySearch( prefix, new Prefix( amount ) );
     if( index < 0 )
     {
@@ -146,9 +146,9 @@ import org.deegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Retourne une cha?ne de caract?res qui ?num?re tous les pr?fix contenu dans
-   * cet ensemble. La cha?ne sera de la forme
-   * "milli(m),centi(c),d?ci(d),kilo(k)" par exemple.
+   * Retourne une chaîne de caractères qui énumère tous les préfix contenu dans
+   * cet ensemble. La chaîne sera de la forme
+   * "milli(m),centi(c),déci(d),kilo(k)" par exemple.
    */
   public String toString()
   {
@@ -177,9 +177,9 @@ import org.deegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * V?rifie si cet ensemble est identique ? l'objet <code>other</code>
-   * sp?cifi?. Deux ensembles sont consid?r?s identiques s'ils contienent les
-   * m?mes pr?fix.
+   * Vérifie si cet ensemble est identique à l'objet <code>other</code>
+   * spécifié. Deux ensembles sont considérés identiques s'ils contienent les
+   * mêmes préfix.
    */
   public boolean equals( final Object other )
   {
@@ -200,7 +200,7 @@ import org.deegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Retourne un code repr?sentant cet ensemble de pr?fix.
+   * Retourne un code représentant cet ensemble de préfix.
    */
   public int hashCode()
   {
@@ -211,17 +211,17 @@ import org.deegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Retourne un exemplaire unique de cet ensemble de pr?fix. Une banque de
-   * pr?fix, initialement vide, est maintenue de fa?on interne par la classe
-   * <code>PrefixSet</code>. Lorsque la m?thode <code>intern</code> est
-   * appel?e, elle recherchera des pr?fix ?gaux ?<code>this</code> au sens de
-   * la m?thode {@link #equals}. Si de tels pr?fix sont trouv?s, ils seront
-   * retourn?s. Sinon, les pr?fix <code>this</code> seront ajout?s ? la banque
-   * de donn?es en utilisant une
-   * {@link java.lang.ref.WeakReference r?f?rence faible}et cette m?thode
+   * Retourne un exemplaire unique de cet ensemble de préfix. Une banque de
+   * préfix, initialement vide, est maintenue de façon interne par la classe
+   * <code>PrefixSet</code>. Lorsque la méthode <code>intern</code> est
+   * appelée, elle recherchera des préfix égaux à <code>this</code> au sens de
+   * la méthode {@link #equals}. Si de tels préfix sont trouvés, ils seront
+   * retournés. Sinon, les préfix <code>this</code> seront ajoutés à la banque
+   * de données en utilisant une
+   * {@link java.lang.ref.WeakReference référence faible}et cette méthode
    * retournera <code>this</code>.<br>
    * <br>
-   * De cette m?thode il s'ensuit que pour deux ensembles de pr?fix <var>u
+   * De cette méthode il s'ensuit que pour deux ensembles de préfix <var>u
    * </var> et <var>v </var>, la condition <code>u.intern()==v.intern()</code>
    * sera vrai si et seulement si <code>u.equals(v)</code> est vrai.
    */
@@ -231,9 +231,9 @@ import org.deegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Apr?s la lecture d'une unit?, v?rifie si ce pr?fix appara?t d?j? dans la
-   * banque des pr?fix {@link #PREFIX}. Si oui, l'exemplaire de la banque sera
-   * retourn? plut?t que de garder inutilement le pr?fix courant comme copie.
+   * Après la lecture d'une unité, vérifie si ce préfix apparaît déjà dans la
+   * banque des préfix {@link #PREFIX}. Si oui, l'exemplaire de la banque sera
+   * retourné plutôt que de garder inutilement le préfix courant comme copie.
    */
   private Object readResolve() throws ObjectStreamException
   {

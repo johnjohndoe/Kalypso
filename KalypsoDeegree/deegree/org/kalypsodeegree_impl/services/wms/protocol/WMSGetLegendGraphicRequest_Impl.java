@@ -42,6 +42,7 @@
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.services.wms.protocol;
 
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
@@ -49,6 +50,7 @@ import org.deegree.services.WebServiceException;
 import org.deegree.services.wms.protocol.WMSGetLegendGraphicRequest;
 import org.deegree_impl.services.OGCWebServiceRequest_Impl;
 import org.deegree_impl.tools.Debug;
+import org.deegree_impl.tools.NetWorker;
 
 /**
  * 
@@ -73,7 +75,7 @@ public class WMSGetLegendGraphicRequest_Impl extends OGCWebServiceRequest_Impl i
 
   private String layer = null;
 
-  private String sLD = null;
+  private URL sLD = null;
 
   private String style = null;
 
@@ -101,7 +103,7 @@ public class WMSGetLegendGraphicRequest_Impl extends OGCWebServiceRequest_Impl i
    * @param vendorSpecificParameter
    */
   WMSGetLegendGraphicRequest_Impl( String id, String version, String layer, String style,
-      String featureType, String rule, double scale, String sLD, String sLD_Body, String format,
+      String featureType, String rule, double scale, URL sLD, String sLD_Body, String format,
       int width, int height, String exceptions, HashMap vendorSpecificParameter )
   {
     super( "GetLegendGraphicRequest", "WMS", version, id, vendorSpecificParameter );
@@ -208,23 +210,24 @@ public class WMSGetLegendGraphicRequest_Impl extends OGCWebServiceRequest_Impl i
   }
 
   /**
-   *  
+   * returns a reference (URL) to a SLD document
    */
-  public String getSLD()
+  public URL getSLD()
   {
     return sLD;
   }
 
   /**
-   *  
+   * sets a reference (URL) to a SLD document
    */
-  public void setSLD( String sLD )
+  public void setSLD( URL sLD )
   {
     this.sLD = sLD;
   }
 
   /**
-   *  
+   * returns the body of a SLD document. If SLD_BODY parameter is set, the SLD
+   * parameter isn't set and vice versa
    */
   public String getSLD_Body()
   {
@@ -232,7 +235,8 @@ public class WMSGetLegendGraphicRequest_Impl extends OGCWebServiceRequest_Impl i
   }
 
   /**
-   *  
+   * sets the body of a SLD document. If SLD_BODY parameter is set, the SLD
+   * parameter isn't set and vice versa
    */
   public void setSLD_Body( String sLD_Body )
   {
@@ -240,7 +244,7 @@ public class WMSGetLegendGraphicRequest_Impl extends OGCWebServiceRequest_Impl i
   }
 
   /**
-   *  
+   * returns the name of the image format the legend graphics shall have
    */
   public String getFormat()
   {
@@ -248,7 +252,7 @@ public class WMSGetLegendGraphicRequest_Impl extends OGCWebServiceRequest_Impl i
   }
 
   /**
-   *  
+   * sets the name of the image format the legend graphics shall have
    */
   public void setFormat( String format )
   {
@@ -267,6 +271,7 @@ public class WMSGetLegendGraphicRequest_Impl extends OGCWebServiceRequest_Impl i
   }
 
   /**
+   * @see WMSGetLegendGraphicRequest_Impl#getHeight()
    * @param height
    */
   public void setHeight( int height )
@@ -286,6 +291,7 @@ public class WMSGetLegendGraphicRequest_Impl extends OGCWebServiceRequest_Impl i
   }
 
   /**
+   * @see WMSGetLegendGraphicRequest_Impl#getWidth()
    * @param width
    */
   public void setWidth( int width )
@@ -305,6 +311,7 @@ public class WMSGetLegendGraphicRequest_Impl extends OGCWebServiceRequest_Impl i
   }
 
   /**
+   * @see WMSGetLegendGraphicRequest_Impl#getExceptions()
    * @param exceptions
    */
   public void setExceptions( String exceptions )
@@ -333,12 +340,11 @@ public class WMSGetLegendGraphicRequest_Impl extends OGCWebServiceRequest_Impl i
       url.append( "&FEATURETYPE=" + getFeatureType() );
     }
 
-    if( getSLD() != null && getSLD().length() > 0 )
+    if( getSLD() != null )
     {
-      url.append( "&SLD=" + getSLD() );
+      url.append( "&SLD=" + NetWorker.url2String( getSLD() ) );
     }
-
-    if( getSLD_Body() != null )
+    else if( getSLD_Body() != null )
     {
       String tmp = null;
       try
@@ -349,7 +355,7 @@ public class WMSGetLegendGraphicRequest_Impl extends OGCWebServiceRequest_Impl i
       {
         throw new WebServiceException( e.toString() );
       }
-      url.append( "&SLDBODY=" + tmp );
+      url.append( "&SLD_BODY=" + tmp );
     }
 
     url.append( "&FORMAT=" + getFormat() );

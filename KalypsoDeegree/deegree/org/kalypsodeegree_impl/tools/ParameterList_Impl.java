@@ -99,7 +99,7 @@ final public class ParameterList_Impl implements ParameterList
    */
   public Parameter[] getParameters()
   {
-    Parameter[] p = new Parameter[params.size()];
+    Parameter[] p = new Parameter[keys.size()];
     for( int i = 0; i < keys.size(); i++ )
     {
       p[i] = (Parameter)params.get( keys.get( i ) );

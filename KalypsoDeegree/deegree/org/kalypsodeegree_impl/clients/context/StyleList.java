@@ -163,6 +163,9 @@ public class StyleList implements Marshallable
     styles.clear();
   }
 
+  /**
+   * @see org.deegree.xml.Marshallable#exportAsXML()
+   */
   public String exportAsXML()
   {
 

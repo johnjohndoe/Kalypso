@@ -97,12 +97,19 @@ public class WFSServicePool extends ObjectPool
     return instance;
   }
 
+  /**
+   *  
+   */
   public void destroy()
   {
     clear();
     instance = null;
   }
 
+  /**
+   * @return @throws
+   *         Exception
+   */
   public synchronized Object acuireObject() throws Exception
   {
 
@@ -144,26 +151,21 @@ public class WFSServicePool extends ObjectPool
       return o;
 
     }
-    else
-    // else instatiate a new object
-    {
-      // create a new class instance
-      Object o = WFSFactory.createWFSService( capa, dispatcher );
+    // create a new class instance
+    Object o = WFSFactory.createWFSService( capa, dispatcher );
 
-      existingInstances++;
+    existingInstances++;
 
-      // add it to 'in use' container
-      in_use.add( o );
-      // set the start of its life time
-      startLifeTime.put( o, new Long( System.currentTimeMillis() ) );
-      // set the start of its usage
-      startUsageTime.put( o, new Long( System.currentTimeMillis() ) );
+    // add it to 'in use' container
+    in_use.add( o );
+    // set the start of its life time
+    startLifeTime.put( o, new Long( System.currentTimeMillis() ) );
+    // set the start of its usage
+    startUsageTime.put( o, new Long( System.currentTimeMillis() ) );
 
-      Debug.debugMethodEnd();
-      // return the object
-      return o;
-
-    }
+    Debug.debugMethodEnd();
+    // return the object
+    return o;
 
   }
 
@@ -189,6 +191,9 @@ public class WFSServicePool extends ObjectPool
   public void onObjectKill( Object o )
   {}
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   public String toString()
   {
     String ret = "super: \n" + super.toString() + "\n";

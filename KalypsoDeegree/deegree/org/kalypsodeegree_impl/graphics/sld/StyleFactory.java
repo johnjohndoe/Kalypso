@@ -79,6 +79,7 @@ import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.graphics.sld.TextSymbolizer;
 import org.deegree.services.wfs.filterencoding.Expression;
 import org.deegree.services.wfs.filterencoding.Filter;
+import org.deegree_impl.tools.StringExtend;
 
 /**
  * An utility class designed to easy creation of style by convinience methods.
@@ -1085,11 +1086,11 @@ public class StyleFactory
   public static LineSymbolizer createLineSymbolizer( Stroke stroke, String geometryPropertyName,
       double min, double max )
   {
-    Geometry geom = null;    
+    Geometry geom = null;
     if( geometryPropertyName != null )
     {
-    	geom = new Geometry_Impl( geometryPropertyName, null );
-    }   
+      geom = new Geometry_Impl( geometryPropertyName, null );
+    }
     return new LineSymbolizer_Impl( stroke, geom, min, max );
   }
 
@@ -1248,7 +1249,7 @@ public class StyleFactory
   public static PointSymbolizer createPointSymbolizer( Graphic graphic, String geometryPropertyName )
   {
     // TODO evaluate geometry from geometryPropertyName
-    return createPointSymbolizer( graphic, geometryPropertyName, 0, Double.MAX_VALUE );
+    return createPointSymbolizer( graphic, null, 0, Double.MAX_VALUE );
   }
 
   /**
@@ -1268,10 +1269,10 @@ public class StyleFactory
   public static PointSymbolizer createPointSymbolizer( Graphic graphic,
       String geometryPropertyName, double min, double max )
   {
-    Geometry geom = null;    
+    Geometry geom = null;
     if( geometryPropertyName != null )
     {
-    	geom = new Geometry_Impl( geometryPropertyName, null );    	
+      geom = new Geometry_Impl( geometryPropertyName, null );
     }
     return new PointSymbolizer_Impl( graphic, geom, min, max );
   }
@@ -1751,6 +1752,8 @@ public class StyleFactory
       String abstract_, String featureTypeName, Rule[] rules )
   {
 
+    featureTypeStyleName = StringExtend.toUTF8( featureTypeStyleName );
+    title = StringExtend.toUTF8( title );
     return new FeatureTypeStyle_Impl( featureTypeStyleName, title, abstract_, featureTypeName,
         null, rules );
   }

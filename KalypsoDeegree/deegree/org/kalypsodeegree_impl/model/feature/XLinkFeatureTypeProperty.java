@@ -42,13 +42,14 @@ public class XLinkFeatureTypeProperty implements FeatureTypeProperty
 
   public final static int USE_NOT_FIXED = 9;
 
-  public final int myXLinkType;
+  public final int m_xlinkType;
 
-  private final String myName;
+  private final String m_name;
+  private final String m_namespace;
 
-  private final String myType;
+  private final String m_type;
 
-  private final boolean myIsNullable;
+  private final boolean m_isNullable;
 
   private int myActuate = ACTUATE_NOT_FIXED;
 
@@ -56,12 +57,13 @@ public class XLinkFeatureTypeProperty implements FeatureTypeProperty
 
   private String myLabelTo = null;
 
-  public XLinkFeatureTypeProperty( String name, int type, boolean isNullable )
+  public XLinkFeatureTypeProperty( String name,String namespace, int type, boolean isNullable)
   {
-    myXLinkType = type;
-    myName = name;
-    myType = "java.lang.Object"; // TODO Type aus Schemadefinition lesen
-    myIsNullable = isNullable;
+    m_xlinkType = type;
+    m_name = name;
+    m_namespace=namespace;
+    m_type = "java.lang.Object"; // TODO Type aus Schemadefinition lesen
+    m_isNullable = isNullable;
   }
 
   /*
@@ -71,7 +73,7 @@ public class XLinkFeatureTypeProperty implements FeatureTypeProperty
    */
   public String getName()
   {
-    return myName;
+    return m_name;
   }
 
   /*
@@ -81,7 +83,7 @@ public class XLinkFeatureTypeProperty implements FeatureTypeProperty
    */
   public boolean isNullable()
   {
-    return myIsNullable;
+    return m_isNullable;
   }
 
   /*
@@ -91,12 +93,12 @@ public class XLinkFeatureTypeProperty implements FeatureTypeProperty
    */
   public final String getType()
   {
-    return myType;
+    return m_type;
   }
 
   public final int getXLinkType()
   {
-    return myXLinkType;
+    return m_xlinkType;
   }
 
   public final int getActuate()
@@ -135,5 +137,21 @@ public class XLinkFeatureTypeProperty implements FeatureTypeProperty
       break;
     }
     return result.toString();
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureTypeProperty#getNamespace()
+   */
+  public String getNamespace()
+  {
+    return m_namespace;
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureTypeProperty#isGeometryProperty()
+   */
+  public boolean isGeometryProperty()
+  {
+    return false;
   }
 }

@@ -92,7 +92,7 @@ class WFSInsertResult_Impl implements WFSInsertResult, Marshallable
   }
 
   /**
-   * @see getHandle
+   * @see #getHandle()
    */
   public void setHandle( String handle )
   {
@@ -108,7 +108,7 @@ class WFSInsertResult_Impl implements WFSInsertResult, Marshallable
   }
 
   /**
-   * @see getFeatureIds
+   * @see #getFeatureIds()
    */
   public void addFeatureId( String featureId )
   {
@@ -116,7 +116,7 @@ class WFSInsertResult_Impl implements WFSInsertResult, Marshallable
   }
 
   /**
-   * @see getFeatureIds
+   * @see #getFeatureIds()
    */
   public void setFeatureIds( String[] featureIds )
   {
@@ -156,10 +156,13 @@ class WFSInsertResult_Impl implements WFSInsertResult, Marshallable
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:56  doemming
+ * Revision 1.3  2004/10/07 14:09:12  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:25
- * doemming backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:53:32 doemming
+ * *** empty log message *** Revision 1.5 2004/05/10 08:41:07 poth no message
  * 
  * Revision 1.4 2004/02/09 08:00:22 poth no message
  * 

@@ -83,7 +83,7 @@ public class GeoFieldIdentifier_Impl implements GeoFieldIdentifier
   }
 
   /**
-   * @see getDatastoreFieldBaseName
+   * @see #getDatastoreFieldBaseName()
    */
   public void setDatastoreFieldBaseName( String datastoreFieldBaseName )
   {
@@ -100,7 +100,7 @@ public class GeoFieldIdentifier_Impl implements GeoFieldIdentifier
   }
 
   /**
-   * @see getDimension
+   * @see #getDimension()
    */
   public void setDimension( int dimension )
   {

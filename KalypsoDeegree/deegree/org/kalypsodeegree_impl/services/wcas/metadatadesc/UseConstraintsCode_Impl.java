@@ -69,7 +69,7 @@ public class UseConstraintsCode_Impl implements UseConstraintsCode
   }
 
   /**
-   * @see getRestrict
+   * @see #getRestrict()
    */
   public void setRestrict( String restrict )
   {

@@ -59,7 +59,6 @@ import org.deegree.graphics.displayelements.DisplayElement;
 import org.deegree.graphics.displayelements.LabelDisplayElement;
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.model.feature.Feature;
-import org.deegree.model.sort.JMSpatialIndex;
 import org.deegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.deegree_impl.tools.Debug;
 
@@ -88,7 +87,7 @@ import org.deegree_impl.tools.Debug;
  * ------------------------------------------------------------------------
  * </p>
  * 
- * @author <a href="mailto:poth@lat-lon.de>Andreas Poth </a>
+ * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
 class Theme_Impl implements Theme
@@ -243,7 +242,7 @@ class Theme_Impl implements Theme
   }
 
   /**
-   * @see addSelector
+   * @see org.deegree_impl.graphics.Theme_Impl#addSelector(Selector)
    */
   public void removeSelector( Selector selector )
   {
@@ -262,7 +261,7 @@ class Theme_Impl implements Theme
   }
 
   /**
-   * @see addHighlighter
+   * @see org.deegree_impl.graphics.Theme_Impl#addHighlighter(Highlighter)
    */
   public void removeHighlighter( Highlighter highlighter )
   {
@@ -281,17 +280,12 @@ class Theme_Impl implements Theme
   }
 
   /**
-   * @see addEventController
+   * @see org.deegree_impl.graphics.Theme_Impl#addEventController(ThemeEventController)
    */
   public void removeEventController( ThemeEventController controller )
   {
     eventController.remove( controller );
     controller.removeTheme( this );
-  }
-
-  public UserStyle[] getStyles()
-  {
-    return styles;
   }
 
   /**
@@ -355,6 +349,14 @@ class Theme_Impl implements Theme
   }
 
   /**
+   * returns the styles used for this <tt>Theme</tt>.
+   */
+  public UserStyle[] getStyles()
+  {
+    return styles;
+  }
+
+  /**
    * returns the layer that holds the data of the theme
    */
   public Layer getLayer()
@@ -373,14 +375,12 @@ class Theme_Impl implements Theme
     return displayElements;
   }
 
+  /**
+   * returns the <tt>DisplayElements</tt> of the Theme
+   */
   public void setDisplayElements( ArrayList de )
   {
     this.displayElements = de;
   }
 
-  public JMSpatialIndex getSpatialIndex()
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
 }

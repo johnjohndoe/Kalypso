@@ -68,9 +68,21 @@ public class WMSClientConfigurationFactory
 {
   private String CNS = null;
 
+  /**
+   * 
+   * 
+   * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
+   * @version 2.11.2002
+   */
   public WMSClientConfigurationFactory()
   {}
 
+  /**
+   * 
+   * 
+   * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
+   * @version 2.11.2002
+   */
   public WMSClientConfigurationFactory( String namespace )
   {
     CNS = namespace;
@@ -256,6 +268,7 @@ public class WMSClientConfigurationFactory
       }
       catch( Exception e )
       {
+        e.printStackTrace();
         throw new XMLParsingException( "not a valid URL for WMS: " + id + "\n" + tmp + "\n"
             + e.toString() );
       }
@@ -339,7 +352,7 @@ public class WMSClientConfigurationFactory
 
   /**
    * Creates a list of the map/images formats offered by the client. If no
-   * format is given in the configuration document 'image/jpg' will be used as
+   * format is given in the configuration document 'image/jpeg' will be used as
    * default
    * 
    * @param mapFormats
@@ -351,7 +364,7 @@ public class WMSClientConfigurationFactory
    */
   private Format[] createOfferedMapFormats( Element mapFormats ) throws XMLParsingException
   {
-    Debug.debugMethodBegin( this, "createOfferedMapFormats" );
+    Debug.debugMethodBegin();
 
     if( mapFormats == null )
       return new Format[0];
@@ -366,7 +379,7 @@ public class WMSClientConfigurationFactory
       // create available default format if no one was defined in
       // the configuration
       format = new Format[1];
-      format[0] = new Format( "image/jpg", true );
+      format[0] = new Format( "image/jpeg", true );
     }
     else
     {
@@ -575,21 +588,18 @@ public class WMSClientConfigurationFactory
     return project;
   }
 
-  public static void main( String[] args )
-  {
-
-    try
-    {
-      URL url = new URL( "file:///c:/temp/configuration.xml" );
-      WMSClientConfigurationFactory fac = new WMSClientConfigurationFactory();
-      WMSClientConfiguration conf = fac.createWMSClientConfiguration( url, null );
-      conf.clone();
-    }
-    catch( Exception e )
-    {
-      System.out.println( e );
-    }
-
-  }
+  //    public static void main(String[] args) {
+  //        
+  //        try {
+  //            URL url = new URL( "file:///c:/temp/configuration.xml" );
+  //            WMSClientConfigurationFactory fac = new WMSClientConfigurationFactory();
+  //            WMSClientConfiguration conf = fac.createWMSClientConfiguration( url, null
+  // );
+  //            conf.clone();
+  //        } catch(Exception e) {
+  //            System.out.println(e);
+  //        }
+  //        
+  //    }
 
 }

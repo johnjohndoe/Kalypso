@@ -58,7 +58,7 @@ import org.deegree.xml.ElementList;
 import org.deegree.xml.XMLParsingException;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.clients.wcasclient.configuration.CSWClientConfiguration;
-import org.deegree_impl.enterprise.control.AbstractSecuredListener;
+import org.deegree_impl.enterprise.control.AbstractListener;
 import org.deegree_impl.enterprise.control.RPCWebEvent;
 import org.deegree_impl.tools.Debug;
 import org.deegree_impl.tools.NetWorker;
@@ -67,16 +67,19 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
- * This <tt>Listener</tt> reacts on 'initServiceAdministration' - events,
+ * This <code>Listener</code> reacts on 'initServiceAdministration' - events,
  * queries the WCAS and passes the service data on to be displayed by the JSP.
  * <p>
  * 
  * @author <a href="mschneider@lat-lon.de">Markus Schneider </a>
  */
-public class InitServiceAdministrationListener extends AbstractSecuredListener
+public class InitServiceAdministrationListener extends AbstractListener
 {
 
-  public void performPrivilegedOperation( FormEvent event )
+  /**
+   * @see org.deegree.enterprise.control.WebListener#actionPerformed(org.deegree.enterprise.control.FormEvent)
+   */
+  public void actionPerformed( FormEvent event )
   {
     Debug.debugMethodBegin();
 
@@ -107,7 +110,13 @@ public class InitServiceAdministrationListener extends AbstractSecuredListener
       }
       else
       {
-        throw new Exception( "Es wurde kein gültiger RPC-event empfangen." );
+        throw new Exception( "No valid RPC event received." );
+      }
+
+      // check access constraints
+      if( !performAccessCheck( event ) )
+      {
+        return;
       }
 
       Set allServices = getBriefDescriptions( catalogURL );
@@ -129,6 +138,7 @@ public class InitServiceAdministrationListener extends AbstractSecuredListener
       {
         serviceDetails = getFullDescription( catalogURL, serviceId );
       }
+
       getRequest().setAttribute( "ALL_SERVICES", allServices );
       getRequest().setAttribute( "SERVICE_DETAILS", serviceDetails );
     }
@@ -137,13 +147,23 @@ public class InitServiceAdministrationListener extends AbstractSecuredListener
       getRequest().setAttribute( "SOURCE", this.getClass().getName() );
       getRequest().setAttribute(
           "MESSAGE",
-          "Die Serviceadministration konnte nicht "
-              + "initialisiert werden, da ein Fehler augetreten ist.<br><br>"
-              + "Die Fehlermeldung lautet: <code>" + e.getMessage() + "</code>" );
+          "Service administration could not be initialized.<br><br>"
+              + "The error message is: <code>" + e.getMessage() + "</code>" );
       setNextPage( "admin_error.jsp" );
     }
 
     Debug.debugMethodEnd();
+  }
+
+  /**
+   * Dummy access check. Can be overwritten by a specialized implementation.
+   * <p>
+   * 
+   * @return
+   */
+  protected boolean performAccessCheck( FormEvent event )
+  {
+    return true;
   }
 
   /**
@@ -188,6 +208,7 @@ public class InitServiceAdministrationListener extends AbstractSecuredListener
 
     // server response -> DOM
     InputStreamReader reader = new InputStreamReader( netWorker.getInputStream(), "UTF-8" );
+
     Document doc = XMLTools.parse( reader );
     reader.close();
 
@@ -254,9 +275,8 @@ public class InitServiceAdministrationListener extends AbstractSecuredListener
         searchResultElement );
     if( serviceElements.getLength() != 1 )
     {
-      throw new XMLParsingException(
-          "Fehler in WCAS-Antwort zur Detailanfrage. Unerwartete Anzahl ("
-              + serviceElements.getLength() + ") an ISO19119-Elementen." );
+      throw new XMLParsingException( "Error in WCAS-response. Unexpected number ("
+          + serviceElements.getLength() + ") of ISO19119 elements." );
     }
     Element serviceElement = serviceElements.item( 0 );
 

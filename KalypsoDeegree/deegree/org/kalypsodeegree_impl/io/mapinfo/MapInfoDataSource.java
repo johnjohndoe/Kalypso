@@ -53,6 +53,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.deegree.model.feature.Feature;
@@ -280,7 +281,6 @@ public class MapInfoDataSource
   {
     // Go through each column name, and set up an attribute for each one
     ArrayList colAttribs = new ArrayList( hColumnsNames.size() );
-
     // Add attributes for each column
     //Iterator it = hColumns.keySet().iterator();
     for( int i = 0; i < hColumnsNames.size(); i++ )
@@ -508,8 +508,8 @@ public class MapInfoDataSource
             line = readMifLine( mifReader );
 
             //StringTokenizer st = new
-            // StringTokenizer(line.trim().substring(line.trim().indexOf('
-            // ')), " ");
+            // StringTokenizer(line.trim().substring(line.trim().indexOf(' ')),
+            // " ");
             String name = clause( line );
             String value = remainder( line );
 
@@ -558,10 +558,7 @@ public class MapInfoDataSource
     {
       return line;
     }
-    else
-    {
-      return line.substring( 0, index ).trim();
-    }
+    return line.substring( 0, index ).trim();
   }
 
   /**
@@ -594,10 +591,7 @@ public class MapInfoDataSource
     {
       return "";
     }
-    else
-    {
-      return line.substring( index ).trim();
-    }
+    return line.substring( index ).trim();
   }
 
   /**
@@ -720,8 +714,8 @@ public class MapInfoDataSource
       readMifLine( mifReader );
 
       //Hashtable shading = readShading(mifReader);
-      // Shading is not included, as null feature attributes are not
-      // supported yet
+      // Shading is not included, as null feature attributes are not supported
+      // yet
       ArrayList midValues = readMid( midReader );
 
       //			midValues.putAll(shading);
@@ -776,8 +770,8 @@ public class MapInfoDataSource
       readMifLine( mifReader );
 
       //Hashtable shading = readShading(mifReader);
-      // Shading is not included, as null feature attributes are not
-      // supported yet
+      // Shading is not included, as null feature attributes are not supported
+      // yet
       ArrayList midValues = readMid( midReader );
 
       //			midValues.putAll(shading);
@@ -811,26 +805,29 @@ public class MapInfoDataSource
       throws Exception
   {
     Feature feature = null;
-
-    StringTokenizer st = new StringTokenizer( line.substring( line.indexOf( " " ) ) );
-
+    StringTokenizer st = new StringTokenizer( line, " " );
     try
     {
       int numsections = 1;
-
-      if( st.hasMoreTokens() && st.nextToken().trim().equalsIgnoreCase( "MULTIPLE" ) )
+      int numpoints = 2;
+      String s = st.nextToken().trim();
+      if( st.hasMoreTokens() && s.equalsIgnoreCase( "MULTIPLE" ) )
       {
         numsections = Integer.parseInt( st.nextToken() );
       }
+      else if( st.hasMoreTokens() && s.equalsIgnoreCase( "PLINE" ) )
+      {
+        numpoints = Integer.parseInt( st.nextToken() );
+      }
 
-      // A ArrayList of coordinates
-      ArrayList coords = new ArrayList( numsections );
+      // A vector of coordinates
+      List coords = new ArrayList();
 
       // Read each polygon
       for( int i = 0; i < numsections; i++ )
       {
         // Read line (number of points
-        int numpoints = Integer.parseInt( readMifLine( mifReader ) );
+        //int numpoints = 2;//Integer.parseInt(readMifLine(mifReader));
 
         // Read each point
         for( int p = 0; p < numpoints; p++ )
@@ -849,18 +846,18 @@ public class MapInfoDataSource
       readMifLine( mifReader );
 
       //Hashtable shading = readShading(mifReader);
-      // Shading is not included, as null feature attributes are not
-      // supported yet
+      // Shading is not included, as null feature attributes are not supported
+      // yet
       ArrayList midValues = readMid( midReader );
 
-      //			midValues.putAll(shading);
+      // midValues.putAll(shading);
       // Create Feature
       feature = buildFeature( lineType, plineGeom, midValues );
 
-      Debug.debugSimpleMessage( "Read polyline (" + coords.size() + ")" );
     }
     catch( NumberFormatException nfexp )
     {
+      nfexp.printStackTrace();
       throw new Exception( "Exception reading Point data from MIF file : " + nfexp.getMessage() );
     }
     catch( IOException ioexp )
@@ -936,8 +933,8 @@ public class MapInfoDataSource
       readMifLine( mifReader );
 
       //Hashtable shading = readShading(mifReader);
-      // Shading is not included, as null feature attributes are not
-      // supported yet
+      // Shading is not included, as null feature attributes are not supported
+      // yet
       ArrayList midValues = readMid( midReader );
 
       //			midValues.putAll(shading);
@@ -1032,30 +1029,14 @@ public class MapInfoDataSource
 
     // read MID tokens
     int col = 0;
-    StringTokenizer quotes = new StringTokenizer( midLine, "\"" );
-
+    StringTokenizer quotes = new StringTokenizer( midLine, hDelimeter + "\0" );
     while( quotes.hasMoreTokens() )
     {
-      StringTokenizer delimeters = new StringTokenizer( quotes.nextToken(), hDelimeter + "\0" );
-
-      // Read each delimited value into the ArrayList
-      while( delimeters.hasMoreTokens() )
-      {
-        String token = delimeters.nextToken();
-        String type = (String)hColumnsTypes.get( col++ );
-        addAttribute( type, token, midValues );
-      }
-
-      // Store the whole of the next bit (it's a quoted string)
-      if( quotes.hasMoreTokens() )
-      {
-        String token = quotes.nextToken();
-        String type = (String)hColumnsTypes.get( col++ );
-        addAttribute( type, token, midValues );
-        //Debug.debugSimpleMessage("adding " + token);
-      }
+      String token = quotes.nextToken();
+      token = StringExtend.validateString( token, "\"" );
+      String type = (String)hColumnsTypes.get( col++ );
+      addAttribute( type, token, midValues );
     }
-
     return midValues;
   }
 

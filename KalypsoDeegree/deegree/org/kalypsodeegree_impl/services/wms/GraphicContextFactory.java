@@ -56,7 +56,7 @@ import org.w3c.dom.Document;
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
-final class GraphicContextFactory
+public class GraphicContextFactory
 {
 
   /**
@@ -73,7 +73,7 @@ final class GraphicContextFactory
    * 
    * @return object to render to
    */
-  static synchronized Object createGraphicTarget( String mimeType, int width, int height )
+  public static synchronized Object createGraphicTarget( String mimeType, int width, int height )
   {
     Object o = null;
     if( mimeType.equals( "image/jpg" ) || mimeType.equals( "image/jpeg" )
@@ -86,7 +86,7 @@ final class GraphicContextFactory
     {
       o = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
     }
-    else if( mimeType.equals( "image/svg+xml" ) )
+    else if( mimeType.equals( "image/svg+xml" ) || mimeType.equals( "image/svg xml" ) )
     {
       // Get a DOMImplementation
       DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
@@ -109,7 +109,7 @@ final class GraphicContextFactory
    * 
    * @return graphic context of the target
    */
-  static synchronized Graphics createGraphicContext( String mimeType, Object target )
+  public static synchronized Graphics createGraphicContext( String mimeType, Object target )
   {
     Graphics g = null;
 
@@ -120,7 +120,7 @@ final class GraphicContextFactory
     {
       g = ( (BufferedImage)target ).getGraphics();
     }
-    else if( mimeType.equals( "image/svg+xml" ) )
+    else if( mimeType.equals( "image/svg+xml" ) || mimeType.equals( "image/svg xml" ) )
     {
       // Create an instance of the SVG Generator
       g = new SVGGraphics2D( (Document)target );

@@ -98,7 +98,7 @@ public class IsTransformableRequest_Impl extends OGCWebServiceRequest_Impl imple
   }
 
   /**
-   * @see getSourceCRS
+   * @see #getSourceCRS()
    */
   public void setSourceCRS( CS_CoordinateSystem sourceCRS )
   {
@@ -114,7 +114,7 @@ public class IsTransformableRequest_Impl extends OGCWebServiceRequest_Impl imple
   }
 
   /**
-   * @see getDestinationCRS
+   * @see #getDestinationCRS()
    */
   public void setDestinationCRS( CS_CoordinateSystem destinationCRS )
   {

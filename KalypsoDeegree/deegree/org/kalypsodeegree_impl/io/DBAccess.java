@@ -240,7 +240,7 @@ public class DBAccess
       throws SQLException, Exception
   {
 
-    Debug.debugMethodBegin( this, "performQuery(String, int)" );
+    Debug.debugMethodBegin();
 
     query = escape( query );
     Table tm = null;
@@ -255,7 +255,6 @@ public class DBAccess
     {
       stmt.setMaxRows( maxFeatures + startFeature );
     }
-
     // execute query against the database
     ResultSet ors = stmt.executeQuery( query );
 
@@ -419,7 +418,7 @@ public class DBAccess
       throws Exception
   {
 
-    Debug.debugMethodBegin( this, "performTableQuery(String, int)" );
+    Debug.debugMethodBegin();
     Table table = (Table)performQuery( query, startFeature, maxFeatures );
     Debug.debugMethodEnd();
 
@@ -519,7 +518,7 @@ public class DBAccess
    */
   public HashMap getColumnTypes( String table, String[] columns )
   {
-    Debug.debugMethodBegin( this, "getColumnTypes" );
+    Debug.debugMethodBegin();
 
     HashMap map = null;
     try

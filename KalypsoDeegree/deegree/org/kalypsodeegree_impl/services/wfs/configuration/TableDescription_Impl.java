@@ -126,7 +126,7 @@ public class TableDescription_Impl implements TableDescription
   }
 
   /**
-   * @see getName
+   * @see #getName()
    */
   public void setName( String name )
   {
@@ -142,7 +142,7 @@ public class TableDescription_Impl implements TableDescription
   }
 
   /**
-   * @see getTargetName
+   * @see #getTargetName()
    */
   public void setTargetName( String targetName )
   {
@@ -158,7 +158,7 @@ public class TableDescription_Impl implements TableDescription
   }
 
   /**
-   * @see getIdField
+   * @see #getIdField()
    */
   public void setIdField( String idField )
   {
@@ -174,7 +174,7 @@ public class TableDescription_Impl implements TableDescription
   }
 
   /**
-   * @see isNumber
+   * @see #isNumber
    */
   public void setIsNumber( boolean isNumber )
   {
@@ -190,7 +190,7 @@ public class TableDescription_Impl implements TableDescription
   }
 
   /**
-   * @see isIdFieldAutoIncremented
+   * @see #isIdFieldAutoIncremented()
    */
   public void setIdFieldIsAutoIncremented( boolean isAutoIncremented )
   {
@@ -246,7 +246,7 @@ public class TableDescription_Impl implements TableDescription
   }
 
   /**
-   * @see getReferences
+   * @see #getReferences()
    */
   public void setReferences( HashMap references )
   {
@@ -254,7 +254,7 @@ public class TableDescription_Impl implements TableDescription
   }
 
   /**
-   * @see getReferences
+   * @see #getReferences()
    */
   public void addReference( String field, Reference reference )
   {
@@ -306,7 +306,7 @@ public class TableDescription_Impl implements TableDescription
   }
 
   /**
-   * @see getGeoFieldIdentifier
+   * @see #getGeoFieldIdentifier()
    */
   public void setGeoFieldIdentifiers( HashMap geoFields )
   {
@@ -314,7 +314,7 @@ public class TableDescription_Impl implements TableDescription
   }
 
   /**
-   * @see getGeoFieldIdentifier
+   * @see #getGeoFieldIdentifier()
    */
   public void addGeoFieldIdentifier( String field, GeoFieldIdentifier geoFieldId )
   {

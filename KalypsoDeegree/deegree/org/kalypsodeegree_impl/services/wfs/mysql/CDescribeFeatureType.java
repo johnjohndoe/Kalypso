@@ -185,7 +185,7 @@ class CDescribeFeatureType extends AbstractDescribeFeatureType
     }
     else if( oType.equalsIgnoreCase( "SDO_Geometry" ) )
     {
-      return "org.deegree.model.geometry.GM_Object";
+      return "org.deegree.model.spatialschema.Geometry";
     }
 
     return "java.lang.Object";

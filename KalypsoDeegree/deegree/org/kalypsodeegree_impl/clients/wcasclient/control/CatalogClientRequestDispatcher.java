@@ -64,6 +64,9 @@ public class CatalogClientRequestDispatcher extends
     org.deegree_impl.enterprise.control.RequestDispatcher
 {
 
+  /**
+   * Comment for <code>ERROR_PAGE</code>
+   */
   public static String ERROR_PAGE = "error.jsp";
 
   /**

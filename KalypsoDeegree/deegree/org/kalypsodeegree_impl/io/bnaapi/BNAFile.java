@@ -129,8 +129,8 @@ public class BNAFile
       //if(heads == null)
       // head = getHeaderByXXXX(header);
       //...
-      // End of delimiters check. Cant' parse any further. Maybe there is
-      // only garbage left.
+      // End of delimiters check. Cant' parse any further. Maybe there is only
+      // garbage left.
       if( heads == null )
       {
         // Check to see if remaining chars can be safely skipped
@@ -186,8 +186,7 @@ public class BNAFile
     //for (int i = 0; i < heads.length; i++)
     //	System.out.print(i+") "+heads[i] + " --- ");
     //System.out.println();
-    if( ( heads.length >= 5 ) && // we need at least 2 header fields +
-        // numpoint
+    if( ( heads.length >= 5 ) && // we need at least 2 header fields + numpoint
         ( ( heads.length % 2 ) == 1 ) ) // it must be an odd number: i.e:
     // 1"2"3"4"5
     {
@@ -231,10 +230,7 @@ public class BNAFile
     {
       return heads; // FIXME Maybe we have to remove bounding quotes
     }
-    else
-    {
-      return null;
-    }
+    return null;
   }
 
   /**
@@ -257,10 +253,7 @@ public class BNAFile
     {
       return heads; // FIXME Maybe we have to remove bounding quotes
     }
-    else
-    {
-      return null;
-    }
+    return null;
   }
 
   /**

@@ -79,7 +79,7 @@ public class EnumValues_Impl implements EnumValues
   }
 
   /**
-   * @see getValue
+   * @see #getValue()
    */
   public void setValue( Value value )
   {
@@ -97,7 +97,7 @@ public class EnumValues_Impl implements EnumValues
   }
 
   /**
-   * @see getValueDescription
+   * @see #getValueDescription()
    */
   public void setValueDescription( String valuedescription )
   {
@@ -115,7 +115,7 @@ public class EnumValues_Impl implements EnumValues
   }
 
   /**
-   * @see getValueOnLineResource
+   * @see #getValueOnLineResource()
    */
   public void setValueOnLineResource( ValueOnLineResource valueonlineresource )
   {
@@ -133,7 +133,7 @@ public class EnumValues_Impl implements EnumValues
   }
 
   /**
-   * @see getValueTitle
+   * @see #getValueTitle()
    */
   public void setValueTitle( String valuetitle )
   {

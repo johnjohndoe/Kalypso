@@ -106,6 +106,9 @@ public class FormatList implements Marshallable
     }
   }
 
+  /**
+   * @return
+   */
   public Format getCurrentFormat()
   {
     return current;
@@ -158,6 +161,9 @@ public class FormatList implements Marshallable
     formats.clear();
   }
 
+  /**
+   * @see org.deegree.xml.Marshallable#exportAsXML()
+   */
   public String exportAsXML()
   {
 

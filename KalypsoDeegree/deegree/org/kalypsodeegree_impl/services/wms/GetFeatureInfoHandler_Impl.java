@@ -65,14 +65,15 @@ import org.deegree.services.wfs.filterencoding.Filter;
 import org.deegree.services.wfs.protocol.WFSGetFeatureRequest;
 import org.deegree.services.wfs.protocol.WFSGetFeatureResponse;
 import org.deegree.services.wfs.protocol.WFSQuery;
+import org.deegree.services.wms.GetFeatureInfoHandler;
 import org.deegree.services.wms.InvalidSRSException;
 import org.deegree.services.wms.LayerNotDefinedException;
 import org.deegree.services.wms.LayerNotQueryableException;
 import org.deegree.services.wms.capabilities.DataSource;
 import org.deegree.services.wms.capabilities.Layer;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
-import org.deegree.services.wms.protocol.WMSFeatureInfoRequest;
-import org.deegree.services.wms.protocol.WMSFeatureInfoResponse;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoRequest;
+import org.deegree.services.wms.protocol.WMSGetFeatureInfoResponse;
 import org.deegree.services.wms.protocol.WMSGetMapRequest;
 import org.deegree.services.wms.protocol.WMSGetMapResponse;
 import org.deegree.xml.XMLParsingException;
@@ -103,9 +104,9 @@ import org.w3c.dom.Node;
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
-class GetFeatureInfoHandler
+class GetFeatureInfoHandler_Impl implements GetFeatureInfoHandler
 {
-  protected WMSFeatureInfoRequest request = null;
+  protected WMSGetFeatureInfoRequest request = null;
 
   protected WMSGetMapRequest getMapRequest = null;
 
@@ -126,10 +127,10 @@ class GetFeatureInfoHandler
   /**
    * Creates a new GetMapHandler object.
    * 
-   * @param GetMap
+   * @param request
    *          request to perform
    */
-  public GetFeatureInfoHandler( WMSCapabilities capabilities, WMSFeatureInfoRequest request )
+  public GetFeatureInfoHandler_Impl( WMSCapabilities capabilities, WMSGetFeatureInfoRequest request )
       throws WebServiceException
   {
     this.request = request;
@@ -243,7 +244,7 @@ class GetFeatureInfoHandler
    * 
    * @return response to the GetFeatureInfo response
    */
-  public WMSFeatureInfoResponse performGetFeatureInfo() throws WebServiceException
+  public WMSGetFeatureInfoResponse performGetFeatureInfo() throws WebServiceException
   {
     Debug.debugMethodBegin( this, "performGetMap" );
 
@@ -308,7 +309,7 @@ class GetFeatureInfoHandler
       return createExceptionResponse( e );
     }
 
-    WMSFeatureInfoResponse res = createFeatureInfoResponse();
+    WMSGetFeatureInfoResponse res = createFeatureInfoResponse();
 
     Debug.debugMethodEnd();
 
@@ -394,15 +395,15 @@ class GetFeatureInfoHandler
    * @param e
    *          exception to encapsulate into the response
    */
-  private WMSFeatureInfoResponse createExceptionResponse( Exception e )
+  private WMSGetFeatureInfoResponse createExceptionResponse( Exception e )
   {
 
     OGCWebServiceException exce = null;
 
     // default --> application/vnd.ogc.se_xml
-    exce = new OGCWebServiceException_Impl( "GetFeatureInfoHandler", e.getMessage() );
+    exce = new OGCWebServiceException_Impl( "GetFeatureInfoHandler_Impl", e.getMessage() );
 
-    WMSFeatureInfoResponse res = WMSProtocolFactory.createWMSFeatureInfoResponse( request, exce,
+    WMSGetFeatureInfoResponse res = WMSProtocolFactory.createGetFeatureInfoResponse( request, exce,
         null );
 
     return res;
@@ -463,7 +464,7 @@ class GetFeatureInfoHandler
   /**
    * generates the desired output from the GMLs
    */
-  private WMSFeatureInfoResponse createFeatureInfoResponse()
+  private WMSGetFeatureInfoResponse createFeatureInfoResponse()
   {
     Debug.debugMethodBegin( this, "createFeatureInfoResponse" );
 
@@ -521,7 +522,7 @@ class GetFeatureInfoHandler
     }
     sb.append( "</ll:FeatureCollection>" );
 
-    WMSFeatureInfoResponse response = WMSProtocolFactory.createWMSFeatureInfoResponse( request,
+    WMSGetFeatureInfoResponse response = WMSProtocolFactory.createGetFeatureInfoResponse( request,
         null, sb.toString() );
 
     Debug.debugMethodEnd();
@@ -887,7 +888,7 @@ class GetFeatureInfoHandler
       // create GetFeatureInfo request for cascaded/remote WMS
       String[] queryLayers = new String[]
       { layer.getName() };
-      WMSFeatureInfoRequest req = WMSProtocolFactory.createGetFeatureInfoRequest( "1.1.0", this
+      WMSGetFeatureInfoRequest req = WMSProtocolFactory.createGetFeatureInfoRequest( "1.1.0", this
           .toString(), queryLayers, gmr, request.getInfoFormat(), request.getFeatureCount(),
           request.getClickPoint(), request.getExceptions(), null, request
               .getVendorSpecificParameters() );
@@ -903,7 +904,7 @@ class GetFeatureInfoHandler
      * deegree OWS implementation accessed by this class is able to return the
      * result of a request by calling the write-method.
      * 
-     * @param response
+     * @param result
      *          to a GetXXX request
      */
     public void write( Object result )

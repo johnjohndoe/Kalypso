@@ -88,6 +88,24 @@ import org.deegree_impl.tools.Debug;
 public class LabelFactory
 {
 
+  /**
+   * @param caption
+   * @param font
+   * @param color
+   * @param metrics
+   * @param feature
+   * @param halo
+   * @param x
+   * @param y
+   * @param w
+   * @param h
+   * @param rotation
+   * @param anchorPointX
+   * @param anchorPointY
+   * @param displacementX
+   * @param displacementY
+   * @return
+   */
   public static Label createLabel( String caption, Font font, Color color, LineMetrics metrics,
       Feature feature, Halo halo, int x, int y, int w, int h, double rotation, double anchorPointX,
       double anchorPointY, double displacementX, double displacementY )
@@ -99,15 +117,28 @@ public class LabelFactory
           { anchorPointX, anchorPointY }, new double[]
           { displacementX, displacementY } );
     }
-    else
-    {
-      return new RotatedLabel( caption, font, color, metrics, feature, halo, x, y, w, h, rotation,
-          new double[]
-          { anchorPointX, anchorPointY }, new double[]
-          { displacementX, displacementY } );
-    }
+    return new RotatedLabel( caption, font, color, metrics, feature, halo, x, y, w, h, rotation,
+        new double[]
+        { anchorPointX, anchorPointY }, new double[]
+        { displacementX, displacementY } );
   }
 
+  /**
+   * @param caption
+   * @param font
+   * @param color
+   * @param metrics
+   * @param feature
+   * @param halo
+   * @param x
+   * @param y
+   * @param w
+   * @param h
+   * @param rotation
+   * @param anchorPoint
+   * @param displacement
+   * @return
+   */
   public static Label createLabel( String caption, Font font, Color color, LineMetrics metrics,
       Feature feature, Halo halo, int x, int y, int w, int h, double rotation,
       double[] anchorPoint, double[] displacement )
@@ -117,11 +148,8 @@ public class LabelFactory
       return new HorizontalLabel( caption, font, color, metrics, feature, halo, x, y, w, h,
           anchorPoint, displacement );
     }
-    else
-    {
-      return new RotatedLabel( caption, font, color, metrics, feature, halo, x, y, w, h, rotation,
-          anchorPoint, displacement );
-    }
+    return new RotatedLabel( caption, font, color, metrics, feature, halo, x, y, w, h, rotation,
+        anchorPoint, displacement );
   }
 
   /**
@@ -673,6 +701,13 @@ public class LabelFactory
     { (int)( x + 0.5 ), (int)( y + 0.5 ) };
   }
 
+  /**
+   * @param x1
+   * @param y1
+   * @param x2
+   * @param y2
+   * @return
+   */
   public static double getRotation( double x1, double y1, double x2, double y2 )
   {
     double dx = x2 - x1;
@@ -681,6 +716,11 @@ public class LabelFactory
     return Math.atan( dy / dx );
   }
 
+  /**
+   * @param p1
+   * @param p2
+   * @return
+   */
   public static double getDistance( int[] p1, int[] p2 )
   {
     double dx = p1[0] - p2[0];
@@ -688,6 +728,13 @@ public class LabelFactory
     return Math.sqrt( dx * dx + dy * dy );
   }
 
+  /**
+   * @param x1
+   * @param y1
+   * @param x2
+   * @param y2
+   * @return
+   */
   public static double getDistance( double x1, double y1, double x2, double y2 )
   {
     double dx = x2 - x1;

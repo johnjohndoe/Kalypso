@@ -74,7 +74,6 @@ public interface FeatureTypeConstraint
   /**
    * returns a feature-filter as defined in WFS specifications.
    * 
-   * @see org.deegree.sevices.wfs.filterencoding.Filter
    * @return the filter of the FeatureTypeConstraints
    */
   Filter getFilter();
@@ -82,7 +81,6 @@ public interface FeatureTypeConstraint
   /**
    * sets a feature-filter as defined in WFS specifications.
    * 
-   * @see org.deegree.sevices.wfs.filterencoding.Filter
    * @param filter
    *          the filter of the FeatureTypeConstraints
    */

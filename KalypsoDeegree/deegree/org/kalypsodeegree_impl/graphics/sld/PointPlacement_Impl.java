@@ -281,9 +281,9 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
     if( displacement != null && displacement.length > 1 )
     {
       sb.append( "<Displacement>" ).append( "<DisplacementX>" );
-      sb.append( ( (Marshallable)displacement[0] ).exportAsXML() );
+      sb.append( ( (Marshallable)anchorPoint[0] ).exportAsXML() );
       sb.append( "</DisplacementX>" ).append( "<DisplacementY>" );
-      sb.append( ( (Marshallable)displacement[1] ).exportAsXML() );
+      sb.append( ( (Marshallable)anchorPoint[1] ).exportAsXML() );
       sb.append( "</DisplacementY>" ).append( "</Displacement>" );
     }
     if( rotation != null )

@@ -9,7 +9,7 @@ import org.kalypso.template.obsdiagview.ObjectFactory;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.ObsdiagviewType.CurveType;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
  * @author schlienger
@@ -23,7 +23,7 @@ public class DiagramTemplateFactory
     // not to be instanciated
   }
 
-  public static void addTimeseriesLink( final ObsdiagviewType tpl, final TimeseriesLinkType lnk, final String name, final String diagDateAxis, final String diagValueAxis ) throws JAXBException
+  public static void addTimeseriesLink( final ObsdiagviewType tpl, final TimeseriesLink lnk, final String name, final String diagDateAxis, final String diagValueAxis ) throws JAXBException
   {
     final CurveType c = m_objectFactory.createObsdiagviewTypeCurveType();
 

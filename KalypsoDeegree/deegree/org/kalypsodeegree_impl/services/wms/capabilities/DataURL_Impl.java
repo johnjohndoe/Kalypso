@@ -63,7 +63,7 @@ import org.deegree_impl.tools.NetWorker;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$
  */
-class DataURL_Impl extends BaseURL_Impl implements DataURL, Marshallable
+public class DataURL_Impl extends BaseURL_Impl implements DataURL, Marshallable
 {
 
   /**

@@ -43,6 +43,7 @@
 
 package org.deegree_impl.graphics.transformation;
 
+import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.model.geometry.GeometryFactory;
@@ -59,7 +60,7 @@ import org.deegree_impl.model.geometry.GeometryFactory;
  * @version 28.12.2000
  */
 
-public class WorldToScreenTransform implements org.deegree.graphics.transformation.GeoTransform
+public class WorldToScreenTransform implements GeoTransform
 {
 
   private double qx = 0;

@@ -137,7 +137,8 @@ public class MainFile
 
     // delet file if it exists
     File file = new File( url + _shp );
-    if( file.exists() )
+
+    if( rwflag.indexOf( 'w' ) > -1 && file.exists() )
       file.delete();
     file = null;
 

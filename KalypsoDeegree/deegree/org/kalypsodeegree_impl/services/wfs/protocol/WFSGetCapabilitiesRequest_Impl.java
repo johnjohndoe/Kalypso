@@ -71,7 +71,7 @@ public class WFSGetCapabilitiesRequest_Impl extends WFSBasicRequest_Impl impleme
   public WFSGetCapabilitiesRequest_Impl( String version, String id,
       HashMap vendorSpecificParameter, WFSNative native_ )
   {
-    super( "GetCapabilities", version, id, vendorSpecificParameter, native_ );
+    super( version, "GetCapabilities", id, vendorSpecificParameter, native_ );
   }
 
   /**
@@ -89,10 +89,14 @@ public class WFSGetCapabilitiesRequest_Impl extends WFSBasicRequest_Impl impleme
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:56  doemming
+ * Revision 1.3  2004/10/07 14:09:12  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11
- * 16:43:25 doemming backup of local modified deegree sources
+ *
+ * Revision 1.1  2004/09/02 23:56:58  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31
+ * 12:53:32 doemming *** empty log message *** Revision 1.6 2004/05/14 07:48:22
+ * poth no message
  * 
  * Revision 1.5 2004/03/12 15:56:49 poth no message
  * 

@@ -146,26 +146,7 @@ public class DisplayElementFactory
                     {
                       if( !filter.evaluate( feature ) )
                       {
-                        Object[] props = feature.getProperties();
-
-                        for( int m = 0; m < props.length; m++ )
-                        {
-                          if( !( props[m] instanceof String ) )
-                          {
-                            continue;
-                          }
-                        }
                         continue;
-                      }
-
-                      Object[] props = feature.getProperties();
-
-                      for( int m = 0; m < props.length; m++ )
-                      {
-                        if( !( props[m] instanceof String ) )
-                        {
-                          continue;
-                        }
                       }
                     }
                     catch( FilterEvaluationException e )
@@ -324,7 +305,6 @@ public class DisplayElementFactory
       // if the geometry property is null, do not build a DisplayElement
       if( geoProperty == null )
       {
-        System.out.println( "no displayelement, cause geoProperty of feature is null" );
         return null;
       }
 

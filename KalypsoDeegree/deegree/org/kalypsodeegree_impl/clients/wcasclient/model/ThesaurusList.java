@@ -137,10 +137,7 @@ public class ThesaurusList
       {
         return s1.compareTo( s2 );
       }
-      else
-      {
-        return c;
-      }
+      return c;
     }
   }
 }

@@ -69,12 +69,14 @@ public class GetCapabilities_Impl extends RequestType_Impl implements GetCapabil
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/30 00:36:42  doemming
+ * Revision 1.3  2004/10/07 14:09:04  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:26
- * doemming backup of local modified deegree sources
- * 
- * Revision 1.1.1.1 2002/09/25 16:01:30 poth no message
+ *
+ * Revision 1.1  2004/09/02 23:57:01  doemming
+ * *** empty log message ***
+ * Revision 1.3 2004/08/31 12:53:31 doemming
+ * *** empty log message *** Revision 1.1.1.1 2002/09/25 16:01:30 poth no
+ * message
  * 
  * Revision 1.1 2002/08/19 15:58:38 ap no message
  * 

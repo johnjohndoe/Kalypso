@@ -98,7 +98,7 @@ public class Parameter_Impl implements Parameter
   }
 
   /**
-   * @see getDirection
+   * @see #getDirection()
    */
   public void setDirection( String direction )
   {
@@ -121,7 +121,7 @@ public class Parameter_Impl implements Parameter
   }
 
   /**
-   * @see getOptional
+   * @see #getOptional()
    */
   public void setOptional( String optional )
   {
@@ -139,7 +139,7 @@ public class Parameter_Impl implements Parameter
   }
 
   /**
-   * @see getParameterDescription
+   * @see #getParameterDescription()
    */
   public void setParameterDescription( String parameterdescription )
   {
@@ -156,7 +156,7 @@ public class Parameter_Impl implements Parameter
   }
 
   /**
-   * @see getParameterName
+   * @see #getParameterName()
    */
   public void setParameterName( ParameterName parametername )
   {
@@ -173,7 +173,7 @@ public class Parameter_Impl implements Parameter
   }
 
   /**
-   * @see getParameterType
+   * @see #getParameterType()
    */
   public void setParameterType( ParameterType parametertype )
   {
@@ -190,7 +190,7 @@ public class Parameter_Impl implements Parameter
   }
 
   /**
-   * @see getPermittedValues
+   * @see #getPermittedValues()
    */
   public void setPermittedValues( PermittedValues permittedvalues )
   {
@@ -213,7 +213,7 @@ public class Parameter_Impl implements Parameter
   }
 
   /**
-   * @see getRepeatable
+   * @see #getRepeatable()
    */
   public void setRepeatable( String repeatable )
   {

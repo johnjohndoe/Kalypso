@@ -408,7 +408,7 @@ public class Graphic_Impl implements Graphic, Marshallable
     image = new BufferedImage( intSize, intSize, BufferedImage.TYPE_INT_ARGB );
 
     Graphics2D g = (Graphics2D)image.getGraphics();
-    g.rotate( 2 * Math.PI * getRotation( feature ), intSize >> 1, intSize >> 1 );
+    g.rotate( Math.toRadians( getRotation( feature ) ), intSize >> 1, intSize >> 1 );
 
     for( int i = 0; i < marksAndExtGraphics.size(); i++ )
     {

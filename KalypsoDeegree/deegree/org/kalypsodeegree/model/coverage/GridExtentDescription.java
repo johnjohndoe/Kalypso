@@ -67,7 +67,7 @@ public interface GridExtentDescription extends DomainSetExtentDescription
   /**
    * GridSpacing is required for rectified grids, but undefined for other grids.
    * It provides the ground resolution (pixel size or post spacing) along each
-   * dimension of the grid, expressed in the units of the (rectified) grid?s
+   * dimension of the grid, expressed in the units of the (rectified) grid’s
    * Coordinate Reference System
    */
   GridSpacing getGridSpacing();
@@ -75,7 +75,7 @@ public interface GridExtentDescription extends DomainSetExtentDescription
   /**
    * Either Grid or RectifiedGrid is required. Both elements list the upper and
    * lower bounds of the grid coordinates along each of the grid axes. (These
-   * are integer pixel or post coordinates, expressed in the grid?s internal
+   * are integer pixel or post coordinates, expressed in the grid’s internal
    * coordinate reference system. The lower bounds are commonly defined as
    * zero.)
    */
@@ -84,7 +84,7 @@ public interface GridExtentDescription extends DomainSetExtentDescription
   /**
    * Either Grid or RectifiedGrid is required. Both elements list the upper and
    * lower bounds of the grid coordinates along each of the grid axes. (These
-   * are integer pixel or post coordinates, expressed in the grid?s internal
+   * are integer pixel or post coordinates, expressed in the grid’s internal
    * coordinate reference system. The lower bounds are commonly defined as
    * zero.)
    */

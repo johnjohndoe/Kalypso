@@ -888,7 +888,7 @@ public class XMLTools
 
           String s = element.getNamespaceURI();
 
-          if( namespace.equals( s ) )
+          if( ( namespace == null && s == null ) || namespace.equals( s ) )
           {
             if( element.getLocalName().equals( name ) )
             {

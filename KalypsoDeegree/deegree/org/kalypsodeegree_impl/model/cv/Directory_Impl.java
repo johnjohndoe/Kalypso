@@ -40,11 +40,6 @@
 
  
  ---------------------------------------------------------------------------*/
-/*
- * Directory_Impl.java
- * 
- * Created on 13. Februar 2003, 16:16
- */
 package org.deegree_impl.model.cv;
 
 import java.net.URL;
@@ -80,6 +75,8 @@ class Directory_Impl implements Directory
   private double heightCRS = 0;
 
   private double widthCRS = 0;
+
+  private DecimalFormat fo = new DecimalFormat( "#.0" );
 
   /** Creates a new instance of Directory_Impl */
   Directory_Impl( String resource, GM_Envelope boundingBox, Level level, String[] extensions,
@@ -163,7 +160,6 @@ class Directory_Impl implements Directory
 
     try
     {
-      DecimalFormat fo = new DecimalFormat( "#.0" );
       list = new ArrayList( 1000 );
 
       double x1 = boundingBox.getMin().getX();

@@ -121,8 +121,8 @@ public interface FeatureTypeStyle
   /**
    * sets the name of the affected feature type
    * 
-   * @param the
-   *          name of the FeatureTypeStyle
+   * @param featureTypeName
+   *          the name of the FeatureTypeStyle
    */
   void setFeatureTypeName( String featureTypeName );
 

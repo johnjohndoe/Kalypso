@@ -63,7 +63,6 @@ public class WCSGetCapabilitiesRequest_Impl extends OGCWebServiceRequest_Impl im
    * Creates a new WCSGetCapabilitiesRequest_Impl object.
    * 
    * @param version
-   * @param request
    * @param id
    * @param vendorSpecificParameter
    */

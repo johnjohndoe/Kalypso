@@ -298,7 +298,6 @@ class MapView_Impl implements MapView
   public boolean isThemeEnabled( Theme theme )
   {
     return ( (Boolean)enabled.get( theme.getName() ) ).booleanValue();
-    //return enabled.get( theme.getName() ) != null;
   }
 
   /**
@@ -322,7 +321,7 @@ class MapView_Impl implements MapView
   /**
    * returns the amount of themes within the MapView.
    */
-  public int getThemeSize()
+  public int getSize()
   {
     return themes.size();
   }
@@ -351,7 +350,7 @@ class MapView_Impl implements MapView
    * A selector is a class that offers methods for selecting and deselecting
    * single DisplayElements or groups of DisplayElements. A selector may offers
    * methods like 'select all DisplayElements within a specified bounding box'
-   * or 'select all DisplayElements thats area is larger than 120 km?' etc.
+   * or 'select all DisplayElements thats area is larger than 120 km²' etc.
    */
   public void addSelector( Selector obj )
   {
@@ -424,8 +423,7 @@ class MapView_Impl implements MapView
   public void paint( Graphics g ) throws RenderException
   {
     Debug.debugMethodBegin();
-    if( getThemeSize() == 0 )
-      return;
+
     if( g.getClipBounds() == null )
     {
       throw new RenderException( "no clip bounds defined for graphic context" );
@@ -438,6 +436,8 @@ class MapView_Impl implements MapView
     projection.setDestRect( x - 2, y - 2, w + x, h + y );
 
     scale = calcScale( g.getClipBounds().width, g.getClipBounds().height );
+
+    System.out.println( "OGC SLD scale denominator " + scale );
 
     // call all Optimizers
     optimize( g );
@@ -467,8 +467,7 @@ class MapView_Impl implements MapView
   public void paintSelected( Graphics g ) throws RenderException
   {
     Debug.debugMethodBegin( this, "paintSelected" );
-    if( getThemeSize() == 0 )
-      return;
+
     if( g.getClipBounds() == null )
     {
       throw new RenderException( "no clip bounds defined for graphic context" );
@@ -510,8 +509,7 @@ class MapView_Impl implements MapView
   public void paintHighlighted( Graphics g ) throws RenderException
   {
     Debug.debugMethodBegin( this, "paintHighlighted" );
-    if( getThemeSize() == 0 )
-      return;
+
     if( g.getClipBounds() == null )
     {
       throw new RenderException( "no clip bounds defined for graphic context" );
