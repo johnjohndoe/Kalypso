@@ -22,6 +22,7 @@
 			<xs:sequence>
 				<xs:element name="createTransformations" type="transformationList"/>
 				<xs:element name="updateTransformations" type="transformationList"/>
+				<xs:element name="afterCalcTransformations" type="transformationList" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

@@ -27,7 +27,7 @@ public class CopyTransformation extends AbstractTransformation
   */
   public void transformIntern( final Properties properties, final IProgressMonitor monitor ) throws TransformationException
   {
-    monitor.beginTask( "Transform", 2000 );
+    monitor.beginTask( "Transform", 3000 );
     
     final String input = properties.getProperty( PROP_INPUT );
     final String output = properties.getProperty( "output" );
@@ -47,6 +47,10 @@ public class CopyTransformation extends AbstractTransformation
     try
     {
       FolderUtilities.mkdirs( outputFile.getParent() );
+      if( outputFile.exists() )
+        outputFile.delete( false, true, new SubProgressMonitor( monitor, 1000 ) );
+      else
+        monitor.worked( 1000 );
       inputFile.copy( outputFile.getFullPath(), false, new SubProgressMonitor( monitor, 1000 ) );
       outputFile.setCharset( inputFile.getCharset(), new SubProgressMonitor( monitor, 1000 ) );
     }

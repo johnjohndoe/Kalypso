@@ -76,6 +76,11 @@ public abstract class SetContentThread extends CatchThread
 
   protected abstract void write( final Writer writer ) throws Throwable;
 
+  protected String getCharset()
+  {
+    return m_charset;
+  }
+  
   /** Exceptions, welche beim Schreiben des Files entstehen */
   public CoreException getFileException()
   {
