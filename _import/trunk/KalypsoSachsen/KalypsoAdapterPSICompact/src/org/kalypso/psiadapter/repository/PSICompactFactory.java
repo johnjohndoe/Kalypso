@@ -323,7 +323,7 @@ public final class PSICompactFactory
 
     if( axis == null )
     {
-      axis = new PSICompactAxis( label, type, unit, dataClass, false, position );
+      axis = new PSICompactAxis( label, type, unit, dataClass, position );
 
       m_axes.put( key, axis );
     }
