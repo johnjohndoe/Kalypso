@@ -1,14 +1,14 @@
 package de.psi.go.lhwz;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.swing.JOptionPane;
 
@@ -35,6 +35,8 @@ public class PSICompactImpl implements PSICompact
 
   private boolean m_init = false;
 
+  private Properties m_conf;
+
   public PSICompactImpl( )
   {
     super();
@@ -47,7 +49,7 @@ public class PSICompactImpl implements PSICompact
     m_id2zml = new HashMap();
 
     m_replicationDir = System.getProperty( "java.io.tmpdir" );
-    
+
     prepareObjects( m_id2gemessene, "m" );
     prepareObjects( m_id2vorhergesagte, "v" );
   }
@@ -59,30 +61,13 @@ public class PSICompactImpl implements PSICompact
   {
     m_init = true;
 
-    final InputStream ins = getClass().getResourceAsStream( "lhwz-ids.csv" );
-
+    // load configuration from properties file
+    m_conf = new Properties();
+    final InputStream ins = PSICompactImpl.class
+        .getResourceAsStream( "config.ini" );
     try
     {
-      final BufferedReader reader = new BufferedReader( new InputStreamReader(
-          ins ) );
-
-      int l = 1;
-      String line = reader.readLine();
-
-      while( line != null )
-      {
-        final String[] splits = line.split( ";" );
-
-        if( splits.length < 2 )
-          throw new ECommException(
-              "Konnte Kennzeichendatei nicht vollständig einlesen! Letzte Zeile ist: "
-                  + line + " NR:" + l );
-
-        m_id2zml.put( splits[0], splits[1] );
-
-        line = reader.readLine();
-        l++;
-      }
+      m_conf.load( ins );
     }
     catch( IOException e )
     {
@@ -144,33 +129,18 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    if( m_id2gemessene.containsKey( id ) )
+    if( from == null || to == null )
+      return new ArchiveData[0];
+    
+    if( m_id2gemessene.containsKey( id ) || m_id2vorhergesagte.containsKey( id ) )
     {
-      ArchiveData[] data = (ArchiveData[]) m_id2values.get( id );
+      // overriden?
+      if( m_id2values.containsKey( id ) )
+        return (ArchiveData[]) m_id2values.get( id );
 
-      if( data == null )
-      {
-        data = randomData();
-
-        m_id2values.put( id, data );
-      }
-
-      return data;
+      // generate random data
+      return randomData( from, to );
     }
-    else if( m_id2vorhergesagte.containsKey( id ) )
-    {
-      ArchiveData[] data = (ArchiveData[]) m_id2values.get( id );
-
-      if( data == null )
-      {
-        data = new ArchiveData[0];
-
-        m_id2values.put( id, data );
-      }
-
-      return data;
-    }
-
     else
       return new ArchiveData[0];
   }
@@ -197,7 +167,6 @@ public class PSICompactImpl implements PSICompact
     testInitDone();
 
     WQParamSet[] pset = (WQParamSet[]) m_id2wq.get( id );
-
     if( pset == null )
     {
       pset = new WQParamSet[] { new WQParamSet( new Date(),
@@ -243,7 +212,7 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    return null;
+    return m_conf.getProperty( userId, "" ).split( "," );
   }
 
   /**
@@ -255,36 +224,39 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    return null;
+    return m_conf.getProperty( userId, "" ).split( "," );
   }
 
   /**
-   * Helper: erzeugt eine Zeitreihe
+   * Helper: erzeugt eine Zeitreihe mit random Werte
+   * 
+   * @param from
+   * @param to
    * 
    * @return random data
    */
-  private final ArchiveData[] randomData( )
+  private final ArchiveData[] randomData( final Date from, final Date to )
   {
-    int size = 200;
+    final Calendar cal = Calendar.getInstance();
+    cal.setTime( from );
 
-    ArchiveData[] data = new ArchiveData[size];
-
-    Calendar cal = Calendar.getInstance();
-    cal.set( Calendar.YEAR, 1998 );
-
-    for( int i = 0; i < data.length; i++ )
+    final ArrayList data = new ArrayList();
+    while( cal.getTime().compareTo( to ) < 0 )
     {
-      data[i] = new ArchiveData( cal.getTime(), PSICompact.STATUS_AUTO, Math
-          .random() * 100 );
+      data.add( new ArchiveData( cal.getTime(), PSICompact.STATUS_AUTO, Math
+          .random() * 100 ) );
 
-      cal.add( Calendar.DAY_OF_YEAR, 1 );
+      cal.add( Calendar.MINUTE, 15 );
     }
 
-    return data;
+    return (ArchiveData[]) data.toArray( new ArchiveData[data.size()] );
   }
 
   /**
    * simuliert einer Liste von PSI Objekte
+   * 
+   * @param map
+   * @param suffix
    */
   private final void prepareObjects( Map map, String suffix )
   {
@@ -362,6 +334,18 @@ public class PSICompactImpl implements PSICompact
   }
 
   /**
+   * @see de.psi.go.lhwz.PSICompact#copyanddistributeFile(java.io.File,
+   *      java.lang.String)
+   */
+  public boolean copyanddistributeFile( File source, String destination )
+      throws ECommException
+  {
+    testInitDone();
+
+    return false;
+  }
+  
+  /**
    * @see de.psi.go.lhwz.PSICompact#removeFile(java.lang.String)
    */
   public boolean removeFile( String filename ) throws ECommException
@@ -378,7 +362,7 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    return 1;
+    return 0;
   }
 
   /**
@@ -388,7 +372,7 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    return new String[] { "User1", "User2", "User3", "User4" };
+    return m_conf.getProperty( userClass, "" ).split(",");
   }
 
   /**
@@ -402,25 +386,13 @@ public class PSICompactImpl implements PSICompact
   }
 
   /**
-   * @see de.psi.go.lhwz.PSICompact#copyanddistributeFile(java.io.File,
-   *      java.lang.String)
-   */
-  public boolean copyanddistributeFile( File source, String destination )
-      throws ECommException
-  {
-    testInitDone();
-
-    return false;
-  }
-
-  /**
    * @see de.psi.go.lhwz.PSICompact#getComment(java.lang.String)
    */
   public String getComment( String Pegelkennziffer ) throws ECommException
   {
     testInitDone();
 
-    return "Kommentar...";
+    return "Kommentar für " + Pegelkennziffer;
   }
 
   /**
@@ -430,7 +402,7 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    return "Gewaesser" + Math.random();
+    return "Gewaesser von " + Pegelkennziffer;
   }
 
   /**
@@ -440,6 +412,6 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    return "Flussgebiet" + Math.random();
+    return "Flussgebiet von " + Pegelkennziffer;
   }
 }

@@ -17,6 +17,11 @@ public class DateRangeArgument implements IVariableArguments
 
   private final Date m_to;
 
+  public DateRangeArgument( final long from, final long to )
+  {
+    this( new Date(from), new Date(to) );
+  }
+  
   public DateRangeArgument( final Date from, final Date to )
   {
     m_from = from;
@@ -34,6 +39,14 @@ public class DateRangeArgument implements IVariableArguments
   }
 
   /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString()
+  {
+    return getClass().getName() + ": " + m_from + " - " + m_to;
+  }
+  
+  /**
    * Creates a <code>DateRangeArgument</code> containing the range:
    * 
    * <pre>[now - pastDays, now]</pre>.
@@ -45,6 +58,9 @@ public class DateRangeArgument implements IVariableArguments
    * for a Calendar instance which was set like:
    * 
    * <pre>cal.set( 0,0,0,0,0,0 );</pre>
+   * 
+   * @param pastDays
+   * @return new argument
    */
   public static DateRangeArgument createFromPastDays( final int pastDays )
   {
