@@ -1,7 +1,5 @@
 package org.kalypso.ui.navigator;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -59,8 +57,7 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation(
         null )
     {
-      protected void execute( IProgressMonitor monitor ) throws CoreException,
-          InvocationTargetException, InterruptedException
+      protected void execute( IProgressMonitor monitor ) throws CoreException
       {
         monitor.beginTask( "Grafik öffnen", IProgressMonitor.UNKNOWN );
         try

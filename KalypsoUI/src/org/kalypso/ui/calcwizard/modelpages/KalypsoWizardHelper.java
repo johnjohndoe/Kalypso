@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import javax.xml.bind.JAXBException;
-
 import org.deegree.model.feature.Feature;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
@@ -115,11 +113,10 @@ public class KalypsoWizardHelper
    * @param props
    * @param features
    * @param template
-   * @throws JAXBException
    */
   public static void updateXMLDiagramTemplate(
       final TimeserieFeatureProps[] props, final List features,
-      final ObsdiagviewType template ) throws JAXBException
+      final ObsdiagviewType template )
   {
     for( Iterator it = features.iterator(); it.hasNext(); )
     {

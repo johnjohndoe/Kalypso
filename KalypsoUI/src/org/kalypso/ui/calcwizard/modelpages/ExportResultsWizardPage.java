@@ -2,6 +2,7 @@ package org.kalypso.ui.calcwizard.modelpages;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,12 +20,16 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -39,6 +44,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
@@ -51,13 +57,13 @@ import org.kalypso.ogc.gml.util.FeatureLabelProvider;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.url.UrlResolver;
 
@@ -182,7 +188,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     button.setText( "Zeitreihe(n) bearbeiten" );
     button.setToolTipText( "Öffnet die im Diagram dargestellten Zeitreihen zur Bearbeitung" );
     button.addSelectionListener( new GraficToolStarter() );
-    
+
     final Label label = new Label( buttonPanel, SWT.NONE );
     label.setText( "Diagrammanzeige:" );
     final GridData gridData = new GridData();
@@ -232,6 +238,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     m_checklist.setContentProvider( new ArrayContentProvider() );
     m_checklist.setLabelProvider( new WorkbenchLabelProvider() );
     m_checklist.setInput( m_calcCaseFolder );
+    m_checklist.setSelection( new StructuredSelection( getCalcFolder() ), true );
+    m_checklist.setChecked( getCalcFolder(), true );
 
     m_checklist.addCheckStateListener( new ICheckStateListener()
     {
@@ -296,28 +304,25 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
    */
   protected void exportSelectedDocuments()
   {
-  //    final List selectedFeatures = getSelectedFeatures( false );
-  //    final Object[] checkedCalcCases = getCheckedCalcCases();
+    final IFolder selectedCalcCase = getSelectedCalcCase();
 
-  // welche exporte
+    final Shell shell = getContainer().getShell();
+    if( selectedCalcCase == null )
+    {
+      MessageDialog.openWarning( shell, "Berichte exportieren", "Keine Rechenvariante selektiert" );
+      return;
+    }
 
-  // doit
+    chooseSelectedFeatures( selectedCalcCase );
+
+    // doit
   }
 
-  /**
-   * Allows user to export selected timeseries into repository. Handles UI
-   * selection and delegates call to performPrognoseExport.
-   */
-  protected void exportPrognoseTimeseries()
+  private List chooseSelectedFeatures( final IFolder calcCase )
   {
     // Timeserie-Links holen
     final List features = getFeatures( false );
     final List selectedFeatures = getSelectedFeatures( false );
-    final IFolder selectedCalcCase = getSelectedCalcCase();
-    
-    if( selectedCalcCase == null )
-      // TODO: error handling
-      return;
 
     // view it!
     final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
@@ -326,46 +331,74 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     final FeatureTypeProperty ftp = featureType.getProperty( nameProperty );
     if( ftp == null )
     {
-      // TODO error handling
       System.out.println( "No FeatureType for Property: " + nameProperty );
-      return;
+      return null;
     }
-    
+
     final ILabelProvider labelProvider = new FeatureLabelProvider( new StringModifier( ftp ) );
     final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(),
         features, new ArrayContentProvider(), labelProvider,
-        "Bitte wählen Sie diejenigen Pegel, deren Zeitreihen exportiert werden sollen:" );
+        "Die Daten folgender Pegel werden exportiert:" );
     dialog.setInitialElementSelections( selectedFeatures );
-    dialog.setTitle( "Export Prognose-Zeitreihen: Rechenfall " + selectedCalcCase.getName() );
+    dialog.setTitle( "Export Pegel: Rechenvariante " + calcCase.getName() );
     if( dialog.open() != Window.OK )
+      return null;
+
+    return Arrays.asList( dialog.getResult() );
+  }
+
+  /**
+   * Allows user to export selected timeseries into repository. Handles UI
+   * selection and delegates call to performPrognoseExport.
+   */
+  protected void exportPrognoseTimeseries()
+  {
+    final IFolder selectedCalcCase = getSelectedCalcCase();
+
+    final Shell shell = getContainer().getShell();
+    if( selectedCalcCase == null )
+    {
+      MessageDialog.openWarning( shell, "Prognose Zeitreihen exportieren",
+          "Keine Rechenvariante selektiert" );
+      return;
+    }
+
+    final List featureList = chooseSelectedFeatures( selectedCalcCase );
+    if( featureList == null )
       return;
 
     final String resultTsName = getArguments().getProperty( PROP_RESULT_TS_NAME );
     final String prognoseTsName = getArguments().getProperty( PROP_PROGNOSE_TS_NAME );
 
-    // TODO: eventuell noch mal filtern (letztes argument != null)
-    final TSLinkWithName[] resultTss = getTimeseriesForProperty( "", Arrays.asList( dialog
-        .getResult() ), resultTsName, null );
-    final TSLinkWithName[] prognoseTss = getTimeseriesForProperty( "", Arrays.asList( dialog
-        .getResult() ), prognoseTsName, null );
+    final TSLinkWithName[] resultTss = getTimeseriesForProperty( "", featureList, resultTsName,
+        null );
+    final TSLinkWithName[] prognoseTss = getTimeseriesForProperty( "", featureList, prognoseTsName,
+        null );
+
+    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
+    {
+      protected void execute( IProgressMonitor monitor ) throws CoreException
+      {
+        performPrognoseExport( resultTss, prognoseTss, selectedCalcCase, monitor );
+      }
+    };
 
     try
     {
-      final URL context = ResourceUtilities.createURL( selectedCalcCase );
-
-      final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
-      {
-        protected void execute( IProgressMonitor monitor )
-        {
-          performPrognoseExport( resultTss, prognoseTss, context, monitor );
-        }
-      };
-
       getContainer().run( false, true, op );
     }
-    catch( final Exception e )
+    catch( final InvocationTargetException e )
     {
-      // TODO handling
+      e.printStackTrace();
+
+      IStatus status = null;
+      if( e.getTargetException() instanceof CoreException )
+        status = ( (CoreException)e.getTargetException() ).getStatus();
+      ErrorDialog.openError( shell, "Export Prognose Zeitreihen",
+          "Fehler beim Export der Zeitreihen", status );
+    }
+    catch( InterruptedException e )
+    {
       e.printStackTrace();
     }
   }
@@ -375,11 +408,12 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
    * 
    * @param resultTss
    * @param prognoseTss
-   * @param context
    * @param monitor
+   * @throws CoreException
    */
   protected void performPrognoseExport( final TSLinkWithName[] resultTss,
-      final TSLinkWithName[] prognoseTss, final URL context, final IProgressMonitor monitor )
+      final TSLinkWithName[] prognoseTss, final IFolder calcCase, final IProgressMonitor monitor )
+      throws CoreException
   {
     if( resultTss.length != prognoseTss.length )
       throw new IllegalArgumentException( "Timeseries links not same length" );
@@ -388,33 +422,37 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     {
       monitor.beginTask( "Prognosen zurück speichern", prognoseTss.length );
 
-      final UrlResolver resolver = new UrlResolver();
-
-      for( int i = 0; i < prognoseTss.length; i++ )
+      try
       {
-        if( monitor.isCanceled() )
-          return;
+        final URL context = ResourceUtilities.createURL( calcCase );
 
-        final TSLinkWithName lnkRS = resultTss[i];
-        final TSLinkWithName lnkPG = prognoseTss[i];
+        final UrlResolver resolver = new UrlResolver();
 
-        try
+        for( int i = 0; i < prognoseTss.length; i++ )
         {
+          if( monitor.isCanceled() )
+            return;
+
+          final TSLinkWithName lnkRS = resultTss[i];
+          final TSLinkWithName lnkPG = prognoseTss[i];
+
           final URL urlRS = resolver.resolveURL( context, lnkRS.href );
           final IObservation source = ZmlFactory.parseXML( urlRS, lnkRS.href );
 
-          final String destRef = ZmlURL.insertDateRange( lnkPG.href, new DateRangeArgument( new Date(), new Date() ) );
+          final String destRef = ZmlURL.insertDateRange( lnkPG.href, new DateRangeArgument(
+              new Date(), new Date() ) );
           final URL urlPG = resolver.resolveURL( context, destRef );
-          
+
           final IObservation dest = ZmlFactory.parseXML( urlPG, destRef );
 
           // let's hope that it works
           //dest.setValues( source.getValues( null ) );
-          final ITuppleModel values = ObservationUtilities.optimisticValuesCopy( source, dest, null );
-          
-          // TODO: maybe inform when nothing happened during copy
+          final ITuppleModel values = ObservationUtilities
+              .optimisticValuesCopy( source, dest, null );
+
+          // todo: maybe inform when nothing happened during copy
           if( values == null )
-            System.out.println( "Nohting to copy for " + source.getName() );
+            System.out.println( "Nothing to copy for " + source.getName() );
           else
           {
             // save observation if it is a server side one
@@ -426,17 +464,16 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
             else
               System.out.println( "! Observation not server side: " + lnkPG.href );
           }
-        }
-        catch( MalformedURLException e )
-        {
-          e.printStackTrace();
-        }
-        catch( SensorException e )
-        {
-          e.printStackTrace();
-        }
 
-        monitor.worked( 1 );
+          monitor.worked( 1 );
+        }
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+
+        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Export Prognose Zeitreihen",
+            e ) );
       }
     }
     finally
@@ -465,7 +502,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     final Composite mapPanel = new Composite( parent, SWT.NONE );
     mapPanel.setLayout( new GridLayout() );
 
-    final Control mapControl = initMap( mapPanel, MapPanel.WIDGET_TOGGLE_SELECT );
+    final Control mapControl = initMap( mapPanel, MapPanel.WIDGET_SINGLE_SELECT );
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
@@ -513,8 +550,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         fos = new FileOutputStream( file );
         ObservationTemplateHelper.saveDiagramTemplateXML( m_obsdiagviewType, fos );
 
-        // TODO 
-       // ObservationTemplateHelper.openGrafik4odt( file, getProject() );
+        // TODO
+        // ObservationTemplateHelper.openGrafik4odt( file, getProject() );
 
         file.delete();
       }

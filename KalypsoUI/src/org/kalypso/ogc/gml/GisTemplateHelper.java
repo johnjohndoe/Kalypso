@@ -166,7 +166,7 @@ public class GisTemplateHelper
 
   public static GM_Envelope getBoundingBox( Gismapview gisview )
   {
-    ExtentType extent = gisview.getExtent();
+    final ExtentType extent = gisview.getExtent();
     return GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent
         .getRight(), extent.getTop() );
   }

@@ -428,7 +428,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     // redraw
     onModellChange( null );
-    //fireModellEvent( null );
   }
 
   private GM_Envelope adjustBoundingBox( GM_Envelope env )

@@ -26,7 +26,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.EditorActionBarContributor;
@@ -57,8 +56,6 @@ public abstract class AbstractEditorPart extends EditorPart implements
       } );
     }
   };
-
-  private boolean m_isSaving = false;
 
   protected JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget(
       new DefaultCommandManager(), m_dirtyRunnable );
@@ -96,7 +93,6 @@ public abstract class AbstractEditorPart extends EditorPart implements
 
     if( input != null )
     {
-      m_isSaving = true;
       try
       {
         doSaveInternal( monitor, input );
@@ -109,10 +105,6 @@ public abstract class AbstractEditorPart extends EditorPart implements
 
         ErrorDialog.openError( getEditorSite().getShell(), "Fehler",
             "Fehler beim Speichern der Ansicht", e.getStatus() );
-      }
-      finally
-      {
-        m_isSaving = false;
       }
     }
   }
@@ -220,7 +212,6 @@ public abstract class AbstractEditorPart extends EditorPart implements
    *      org.eclipse.ui.IEditorInput)
    */
   public void init( IEditorSite site, IEditorInput input )
-      throws PartInitException
   {
     // do not check because we have also string storage...
     // TODO: find a long lasting solution to this problem
