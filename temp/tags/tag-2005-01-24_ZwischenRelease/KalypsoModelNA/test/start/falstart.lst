@@ -1,0 +1,11 @@
+xxx
+xx T=100
+x1 p:\vwe04121\modell\hydrologie\namod we nat mee_all.syn .01 0.5 1 start\we_nat.txt
+xxx
+xxx Langzeit-Test
+x2 p:\vwe04121\modell\hydrologie\namod we nat 1995 01 01 07 2001 01 01 07 start\we_nat.txt
+xxx
+xxx Kurzzeit-Test
+x2 p:\vwe04121\modell\hydrologie\namod we nat 2002 08 10 00 2002 08 18 00 start\we_nat1.txt
+xxx Kurzzeit-Test
+2 p:\vwe04121\modell\hydrologie\namod we nat 1995 08 31 00 1995 09 15 00 start\we_nat1.txt
