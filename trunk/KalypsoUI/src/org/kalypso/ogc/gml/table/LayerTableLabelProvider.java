@@ -1,9 +1,9 @@
 package org.kalypso.ogc.gml.table;
 
+import org.deegree.model.feature.Feature;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor;
 
 /**
@@ -43,7 +43,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider
     if( m_viewer.getColumnCount() == 0 )
       return "";
     
-    final KalypsoFeature kalypsoFeature = (KalypsoFeature)element;
+    final Feature kalypsoFeature = (Feature)element;
 
     final AbstractFeatureCellEditor cellEditor = (AbstractFeatureCellEditor)m_viewer.getCellEditors()[columnIndex];
     if( cellEditor == null )
@@ -57,7 +57,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider
    */
   public void addListener( final ILabelProviderListener listener )
   {
-    // TODO  Listener informieren, wenn sich der Wert eines Features geändert hat?
+    // TODO  Listener informieren, wenn sich der Wert eines Features ge?ndert hat?
   }
 
   /**

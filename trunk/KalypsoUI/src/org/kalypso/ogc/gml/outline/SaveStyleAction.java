@@ -9,6 +9,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.graphics.sld.SLDFactory;

@@ -2,6 +2,7 @@ package org.kalypso.ui.calcwizard;
 
 import java.awt.Frame;
 
+import org.deegree.model.feature.Feature;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.GroupMarker;
@@ -20,7 +21,6 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayer;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.event.ModellEvent;
 import org.kalypso.ogc.gml.event.ModellEventListener;
@@ -58,16 +58,16 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
   //    </page>
   //  
 
-  /** initialer Text für die Ergebnisablage */
+  /** initialer Text f?r die Ergebnisablage */
   public final static String PROP_COMMITTEXTTEMPLATE="CommitTextTemplate";
   
-  /** Pfad auf Vorlage für die Karte (.gmt Datei) */
+  /** Pfad auf Vorlage f?r die Karte (.gmt Datei) */
   public final static String PROP_MAPTEMPLATE = "mapTemplate";
 
   /** Der Titel der Seite */
   public static final String PROP_MAPTITLE = "mapTitle";
 
-  /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
+  /** Pfad auf Vorlage f?r die Gis-Tabell (.gtt Datei) */
   public final static String PROP_TABLETEMPLATE = "tableTemplate";
 
   /** Position des Haupt-Sash: Integer von 0 bis 100 */
@@ -146,7 +146,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
     final Composite composite = new Composite( parent, SWT.RIGHT );
 
     final Button button = new Button(composite,SWT.NONE | SWT.PUSH );
-    button.setText( "ausgewählte Pegel in Ergebnisablage speichern" );
+    button.setText( "ausgew?hlte Pegel in Ergebnisablage speichern" );
     button.addSelectionListener( new CommitResults() );
     button.setVisible( true );
     composite.setVisible(true);
@@ -280,7 +280,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
         return;
 
       final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
-      final KalypsoFeature[] allFeatures = kfl.getAllFeatures();
+      final Feature[] allFeatures = kfl.getAllFeatures();
       for( int i = 0; i < allFeatures.length; i++ )
       {
         if( allFeatures[i].isSelected( SELECTION_ID ) )

@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
+import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.core.resources.IProject;
@@ -38,7 +39,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.eclipse.swt.custom.ExcelLikeTableCursor;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.event.ModellEvent;
@@ -58,7 +58,7 @@ import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.PoolableObjectType;
 
 /**
- * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ändert
+ * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ?ndert
  * 
  * @author Belger
  */
@@ -137,7 +137,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       
       final TableColumn tc = (TableColumn)e.widget;
 
-      // kann nicht rückgängig gemacht werden, sorgt aber dafür, dass der Editor dirty ist
+      // kann nicht r?ckg?ngig gemacht werden, sorgt aber daf?r, dass der Editor dirty ist
       final int width = tc.getWidth();
       if( width != ((Integer)tc.getData( COLUMN_PROP_WIDTH )).intValue() )
       {
@@ -188,17 +188,17 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   {
     // clear selection
     final KalypsoFeatureLayer kalypsoFeatureLayer = (KalypsoFeatureLayer)getTheme().getLayer();
-    final KalypsoFeature[] allFeatures = kalypsoFeatureLayer.getAllFeatures();
+    final Feature[] allFeatures = kalypsoFeatureLayer.getAllFeatures();
     for( int i = 0; i < allFeatures.length; i++ )
     {
-      final KalypsoFeature feature = allFeatures[i];
+      final Feature feature = allFeatures[i];
       feature.unselect( m_selectionID );
     }
 
     final IStructuredSelection sel = (IStructuredSelection)getSelection();
     for( final Iterator selIt = sel.iterator(); selIt.hasNext(); )
     {
-      final KalypsoFeature kf = (KalypsoFeature)selIt.next();
+      final Feature kf = (Feature)selIt.next();
       kf.select( m_selectionID );
     }
 
@@ -354,7 +354,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       return;
     
     // zuerst alle celleditoren neu berechnen
-    // hack, weil man getCellEditors nicht vernünftig überschreiben kann
+    // hack, weil man getCellEditors nicht vern?nftig ?berschreiben kann
     refreshCellEditors();
     setColumnProperties( createColumnProperties() );
 
@@ -365,12 +365,12 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     
     super.refresh();
 
-    // und die tableitems einfärben
+    // und die tableitems einf?rben
     final TableItem[] items = getTable().getItems();
     for( int i = 0; i < items.length; i++ )
     {
       final TableItem item = items[i];
-      final KalypsoFeature kf = (KalypsoFeature)item.getData();
+      final Feature kf = (Feature)item.getData();
       if( kf.isSelected( m_selectionID ) )
         item.setBackground( m_selectColor );
       else
@@ -454,7 +454,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     return properties;
   }
 
-  public void selectRow( final KalypsoFeature feature )
+  public void selectRow( final Feature feature )
   {
     getControl().getDisplay().asyncExec( new Runnable()
     {
@@ -473,12 +473,12 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final List selFeatures = new ArrayList();
     if( m_isFeatureSelectionSynchron )
     {
-      // Feature-Selection auf Selection übertragen
-      final KalypsoFeature[] allFeatures = ( (KalypsoFeatureLayer)getTheme().getLayer() )
+      // Feature-Selection auf Selection ?bertragen
+      final Feature[] allFeatures = ( (KalypsoFeatureLayer)getTheme().getLayer() )
           .getAllFeatures();
       for( int i = 0; i < allFeatures.length; i++ )
       {
-        final KalypsoFeature feature = allFeatures[i];
+        final Feature feature = allFeatures[i];
         if( feature.isSelected( m_selectionID ) )
           selFeatures.add( feature );
       }
@@ -494,7 +494,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       } );
   }
 
-  /** muss im SWT-Event-Thread ausgeführt werden */
+  /** muss im SWT-Event-Thread ausgef?hrt werden */
   protected void handleModelChanged( final List newSelection )
   {
     refresh();

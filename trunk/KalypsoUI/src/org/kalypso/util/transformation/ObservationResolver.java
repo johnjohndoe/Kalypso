@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
+import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.eclipse.core.resources.IFile;
@@ -22,7 +23,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -119,13 +119,13 @@ public class ObservationResolver extends AbstractTransformation
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool( IObservation.class );
     final ObjectFactory factory = new ObjectFactory();
 
-    final KalypsoFeature[] allFeatures = layer.getAllFeatures();
+    final Feature[] allFeatures = layer.getAllFeatures();
 
     monitor.beginTask( "Zeitreihen ausl?sen", allFeatures.length * 2 );
 
     for( int i = 0; i < allFeatures.length; i++ )
     {
-      final KalypsoFeature feature = allFeatures[i];
+      final Feature feature = allFeatures[i];
 
       final TimeseriesLink obslink = (TimeseriesLink)feature.getProperty( sourceName );
       if( obslink == null )

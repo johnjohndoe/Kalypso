@@ -1,11 +1,11 @@
 package org.kalypso.ui.editor.gistableeditor.actions;
 
+import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.command.AddFeatureCommand;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
@@ -27,10 +27,8 @@ public class AddRowActionDelagate extends GisTableAbstractActionDelagate
     
     KalypsoFeatureLayer layer = (KalypsoFeatureLayer)theme.getLayer();
     final FeatureType featureType = layer.getFeatureType();
-    final Object[] properties = new Object[featureType.getProperties().length];
 
-    final KalypsoFeature feature = new KalypsoFeature( FeatureFactory.createFeature( "x",
-        featureType, properties ) );
+    final Feature feature =FeatureFactory.createFeature("x",featureType); 
 
     final Runnable r = new Runnable()
     {

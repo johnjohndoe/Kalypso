@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.deegree.graphics.displayelements.DisplayElement;
 import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.feature.Feature;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.sort.JMSpatialIndex;
 import org.deegree_impl.model.geometry.GeometryFactory;
-import org.kalypso.ogc.gml.KalypsoFeature;
 
 public class SplitSort implements JMSpatialIndex
 {
@@ -130,9 +130,9 @@ public class SplitSort implements JMSpatialIndex
       DisplayElement de = (DisplayElement)object;
       return getEnvelope( de.getFeature() );
     }
-    else if( object instanceof KalypsoFeature )
+    else if( object instanceof Feature )
     {
-      KalypsoFeature fe = (KalypsoFeature)object;
+      Feature fe = (Feature)object;
       GM_Object gmObject = fe.getDefaultGeometryProperty();
       if( gmObject == null )
         return null;

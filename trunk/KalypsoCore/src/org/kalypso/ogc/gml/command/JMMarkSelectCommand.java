@@ -6,7 +6,7 @@ package org.kalypso.ogc.gml.command;
 
 import java.util.List;
 
-import org.kalypso.ogc.gml.KalypsoFeature;
+import org.deegree.model.feature.Feature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
 
@@ -52,7 +52,7 @@ public class JMMarkSelectCommand implements ICommand
       List listFe = myListFe[n];
       for( int i = 0; i < listFe.size(); i++ )
       {
-        KalypsoFeature fe = (KalypsoFeature)listFe.get( i );
+        Feature fe = (Feature)listFe.get( i );
         switch( mySelectionMode )
         {
         case JMSelector.MODE_SELECT:
@@ -79,7 +79,7 @@ public class JMMarkSelectCommand implements ICommand
       List listFe = myListFe[n];
       for( int i = 0; i < listFe.size(); i++ )
       {
-        KalypsoFeature fe = (KalypsoFeature)listFe.get( i );
+        Feature fe = (Feature)listFe.get( i );
         switch( mySelectionMode )
         {
         case JMSelector.MODE_SELECT:

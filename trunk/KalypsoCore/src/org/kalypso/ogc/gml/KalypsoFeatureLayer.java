@@ -2,6 +2,7 @@ package org.kalypso.ogc.gml;
 
 import java.util.List;
 
+import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.gml.event.ModellEvent;
@@ -38,23 +39,23 @@ public class KalypsoFeatureLayer implements IKalypsoLayer
   }
 
  
-  public void addFeature( KalypsoFeature feature ) throws Exception
+  public void addFeature( Feature feature ) throws Exception
   {
     mySort.add( feature );
     fireModellEvent( null );
   }
 
-  public void modifiedFeature(KalypsoFeature feature)
+  public void modifiedFeature(Feature feature)
   {
    mySort.modifiedFeature(feature);
   }
   
-  public void modifiedFeatures(KalypsoFeature[] features)
+  public void modifiedFeatures(Feature[] features)
   {
    mySort.modifiedFeatures(features);
   }
   
-  public void addFeatures( KalypsoFeature[] features ) throws Exception
+  public void addFeatures( Feature[] features ) throws Exception
   {
     for( int i = 0; i < features.length; i++ )
       mySort.add( features[i] );
@@ -62,24 +63,24 @@ public class KalypsoFeatureLayer implements IKalypsoLayer
     fireModellEvent( null );
   }
 
-  public KalypsoFeature[] getAllFeatures()
+  public Feature[] getAllFeatures()
   {
     final List result = mySort.getAllFeatures();
-    return (KalypsoFeature[])result.toArray( new KalypsoFeature[result.size()] );
+    return (Feature[])result.toArray( new Feature[result.size()] );
   }
 
-  public KalypsoFeature getFeature( int index )
+  public Feature getFeature( int index )
   {
-    return (KalypsoFeature)mySort.getAllFeatures().get( index );
+    return (Feature)mySort.getAllFeatures().get( index );
   }
 
-  public KalypsoFeature getFeatureById( String id )
+  public Feature getFeatureById( String id )
   {
     List list = mySort.getAllFeatures();
     for( int i = 0; i < list.size(); i++ )
     {
-      if( id.equals( ( (KalypsoFeature)list.get( i ) ).getId() ) )
-        return ( (KalypsoFeature)list.get( i ) );
+      if( id.equals( ( (Feature)list.get( i ) ).getId() ) )
+        return ( (Feature)list.get( i ) );
     }
     return null;
   }
@@ -94,7 +95,7 @@ public class KalypsoFeatureLayer implements IKalypsoLayer
     return mySort.getAllFeatures().size();
   }
 
-  public void removeFeature( KalypsoFeature feature ) throws Exception
+  public void removeFeature( Feature feature ) throws Exception
   {
     mySort.remove( feature );
     fireModellEvent( null );
@@ -106,11 +107,11 @@ public class KalypsoFeatureLayer implements IKalypsoLayer
   public void removeFeature( int index ) throws Exception
   {
     final List list = mySort.getAllFeatures();
-    mySort.remove( (KalypsoFeature)list.get( index ) );
+    mySort.remove( (Feature)list.get( index ) );
     fireModellEvent( null );
   }
 
-  public void removeFeatures( KalypsoFeature[] features ) throws Exception
+  public void removeFeatures( Feature[] features ) throws Exception
   {
     for( int i = 0; i < features.length; i++ )
       mySort.remove( features[i] );
@@ -140,7 +141,7 @@ public class KalypsoFeatureLayer implements IKalypsoLayer
 
   public void optimize()
   {
-    final KalypsoFeature[] allFE = getAllFeatures();
+    final Feature[] allFE = getAllFeatures();
     final KalypsoFeatureSort newSort = new KalypsoFeatureSort( mySort.getCoordinatesSystem() );
     for( int i = 0; i < allFE.length; i++ )
     {

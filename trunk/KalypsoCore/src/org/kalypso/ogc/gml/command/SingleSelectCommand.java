@@ -4,7 +4,7 @@
 
 package org.kalypso.ogc.gml.command;
 
-import org.kalypso.ogc.gml.KalypsoFeature;
+import org.deegree.model.feature.Feature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.event.ModellEventProvider;
 import org.kalypso.util.command.ICommand;
@@ -17,7 +17,7 @@ import org.kalypso.util.command.ICommand;
 public class SingleSelectCommand implements ICommand
 {
 
-  private final KalypsoFeature m_feature;
+  private final Feature m_feature;
 
   private final int mySelectionId;
 
@@ -25,7 +25,7 @@ public class SingleSelectCommand implements ICommand
 
   private final ICommand m_unselectAllCommand;
 
-  public SingleSelectCommand( final KalypsoFeature feature, int selectionId,
+  public SingleSelectCommand( final Feature feature, int selectionId,
       ModellEventProvider eventProvider, KalypsoFeatureLayer[] layers )
   {
     m_feature = feature;

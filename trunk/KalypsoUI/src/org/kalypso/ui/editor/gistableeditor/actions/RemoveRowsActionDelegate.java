@@ -1,10 +1,10 @@
 package org.kalypso.ui.editor.gistableeditor.actions;
 
+import org.deegree.model.feature.Feature;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.java.util.Arrays;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.command.RemoveFeaturesCommand;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
@@ -22,8 +22,8 @@ public class RemoveRowsActionDelegate extends GisTableAbstractActionDelagate
     final LayerTableViewer layerTable = editor.getLayerTable();
 
     final IStructuredSelection selection = (IStructuredSelection)editor.getSelection();
-    final KalypsoFeature[] features = (KalypsoFeature[])Arrays.castArray( selection.toArray(),
-        new KalypsoFeature[selection.size()] );
+    final Feature[] features = (Feature[])Arrays.castArray( selection.toArray(),
+        new Feature[selection.size()] );
 
     KalypsoFeatureLayer layer = (KalypsoFeatureLayer)layerTable.getTheme().getLayer();
     final ICommand command = new RemoveFeaturesCommand( layer, features );

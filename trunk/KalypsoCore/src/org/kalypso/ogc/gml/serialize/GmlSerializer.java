@@ -25,7 +25,6 @@ import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.GMLWorkspace_Impl;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.ogc.gml.GMLHelper;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
@@ -66,7 +65,7 @@ public final class GmlSerializer
     		{
 				Feature feature = features[j];
 				GMLHelper.checkCrs( feature, targetCrs );
-				featureLayer[i].addFeature(new KalypsoFeature( feature ));
+				featureLayer[i].addFeature(feature);
 				featureLayer[i].optimize();
     		}
     	}
@@ -145,7 +144,7 @@ public final class GmlSerializer
           
           boundingBox.merge(layer.getBoundingBox());
         }
-        final KalypsoFeature[] features = layer.getAllFeatures();
+        final Feature[] features = layer.getAllFeatures();
         for( int j = 0; j < features.length; j++ )
         {
           GMLFeature gmlFeature = GMLFactory.createGMLFeature( gmlDoc.getDocument(), features[j] );

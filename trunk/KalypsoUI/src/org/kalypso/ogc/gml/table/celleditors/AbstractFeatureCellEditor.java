@@ -2,8 +2,8 @@ package org.kalypso.ogc.gml.table.celleditors;
 
 import java.util.Map;
 
+import org.deegree.model.feature.Feature;
 import org.eclipse.core.resources.IProject;
-import org.kalypso.ogc.gml.KalypsoFeature;
 
 /**
  * @author Belger
@@ -35,7 +35,7 @@ public abstract class AbstractFeatureCellEditor extends AbstractDecoratorFeature
   }
 
   /**
-   * Gibt eine map: propertyname -> neuer Wert zurück
+   * Gibt eine map: propertyname -> neuer Wert zur?ck
    * 
    * @see org.eclipse.jface.viewers.CellEditor#doGetValue()
    */
@@ -53,10 +53,10 @@ public abstract class AbstractFeatureCellEditor extends AbstractDecoratorFeature
    */
   protected final void doSetValue( final Object kalypsoFeature )
   {
-    doSetFeature( (KalypsoFeature)kalypsoFeature );
+    doSetFeature( (Feature)kalypsoFeature );
   }
 
-  protected abstract void doSetFeature( final KalypsoFeature feature );
+  protected abstract void doSetFeature( final Feature feature );
 
-  public abstract String renderLabel( final KalypsoFeature feature );
+  public abstract String renderLabel( final Feature feature );
 }

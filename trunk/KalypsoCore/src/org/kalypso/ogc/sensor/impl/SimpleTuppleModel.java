@@ -1,7 +1,5 @@
 package org.kalypso.ogc.sensor.impl;
 
-import java.util.Vector;
-
 import javax.swing.table.DefaultTableModel;
 
 import org.kalypso.ogc.sensor.IAxis;

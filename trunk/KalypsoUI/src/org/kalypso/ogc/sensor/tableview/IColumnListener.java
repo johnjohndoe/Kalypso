@@ -1,6 +1,5 @@
 package org.kalypso.ogc.sensor.tableview;
 
-import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 
 /**
  * A simple listener for column events like load finished.

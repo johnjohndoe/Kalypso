@@ -2,17 +2,17 @@ package org.kalypso.ogc.gml.test;
 
 import junit.framework.TestCase;
 
+import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.feature.FeatureFactory;
-import org.kalypso.ogc.gml.KalypsoFeature;
 
 /**
  * @author sbad0205
  */
 public class KalypsoFeatureTest extends TestCase
 {
-  private KalypsoFeature createFeature()
+  private Feature createFeature()
   {
   try
   {
@@ -20,8 +20,8 @@ public class KalypsoFeatureTest extends TestCase
           KalypsoFeatureTest.class.getResource("point.xsd"));
     final FeatureType featureType = schema.getFeatureTypes()[0];
     
-    final Object[] properties = new Object[featureType.getProperties().length];
-    return new KalypsoFeature(FeatureFactory.createFeature( "x", featureType, properties ));
+    return 
+    FeatureFactory.createFeature("x",featureType);
  }
   catch( Exception e )
   {
@@ -31,7 +31,7 @@ public class KalypsoFeatureTest extends TestCase
   }
   public void testSelect()
   {
-    KalypsoFeature fe=createFeature();
+    Feature fe=createFeature();
     int s1=10;
     fe.select(s1);
     assertEquals(true,fe.isSelected(s1));
@@ -40,7 +40,7 @@ public class KalypsoFeatureTest extends TestCase
 
   public void testUnselect()
   {
-    KalypsoFeature fe=createFeature();
+    Feature fe=createFeature();
     int s1=10;
     fe.select(s1);
     assertEquals(true,fe.isSelected(s1));
@@ -50,7 +50,7 @@ public class KalypsoFeatureTest extends TestCase
 
   public void testToggle()
   {
-    KalypsoFeature fe=createFeature();
+    Feature fe=createFeature();
     int s1=10;
     fe.toggle(s1);
     assertEquals(true,fe.isSelected(s1));

@@ -1,6 +1,6 @@
 package org.kalypso.ogc.gml.command;
 
-import org.kalypso.ogc.gml.KalypsoFeature;
+import org.deegree.model.feature.Feature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
 
@@ -9,10 +9,10 @@ import org.kalypso.util.command.ICommand;
  */
 public class AddFeatureCommand implements ICommand
 {
-  private final KalypsoFeature m_feature;
+  private final org.deegree.model.feature.Feature m_feature;
   private final KalypsoFeatureLayer m_layer;
 
-  public AddFeatureCommand( final KalypsoFeatureLayer layer, final KalypsoFeature fe )
+  public AddFeatureCommand( final KalypsoFeatureLayer layer, final Feature fe )
   {
     m_layer = layer;
     m_feature = fe;
@@ -55,6 +55,6 @@ public class AddFeatureCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Element hinzufügen";
+    return "Element hinzuf?gen";
   }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.geometry.GM_Envelope;
@@ -16,7 +17,6 @@ import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.sort.JMSpatialIndex;
 import org.deegree_impl.model.ct.GeoTransformer;
 import org.deegree_impl.model.feature.FeatureFactory;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.event.ModellEvent;
 import org.kalypso.ogc.gml.event.ModellEventListener;
@@ -66,13 +66,13 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
       throw new UnsupportedOperationException();
   }
 
-  public void modifiedFeature( KalypsoFeature feature )
+  public void modifiedFeature( Feature feature )
   {
     styleFeature( feature, getStyles() );
     fireModellEvent( null );
   }
 
-  public void modifiedFeatures( KalypsoFeature[] feature )
+  public void modifiedFeatures( Feature[] feature )
   {
     UserStyle[] styles = getStyles();
     for( int i = 0; i < feature.length; i++ )
@@ -80,7 +80,7 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
     fireModellEvent( null );
   }
 
-  public void add( KalypsoFeature fe ) throws Exception
+  public void add( Feature fe ) throws Exception
   {
     transformFeature( fe );
     styleFeature( fe, getStyles() );
@@ -88,7 +88,7 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
     myFeatures.add( fe );
   }
 
-  public void remove( KalypsoFeature fe )
+  public void remove( Feature fe )
   {
     mySort.remove( fe );
     myFeatures.remove( fe );
@@ -127,14 +127,14 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
       // int styleNo = getStyleNo( style );
       for( final Iterator it = list.iterator(); it.hasNext(); )
       {
-        final KalypsoFeature kalypsoFeature = (KalypsoFeature)it.next();
+        final Feature kalypsoFeature = (Feature)it.next();
         if( selectionId == -1 || kalypsoFeature.isSelected( selectionId ) )
           kalypsoFeature.paint( g, projection, i, scale );
       }
     }
   }
 
-  private void transformFeature( KalypsoFeature fe ) throws Exception
+  private void transformFeature( Feature fe ) throws Exception
   {
     GeoTransformer transformer = new GeoTransformer( myCrs );
 
@@ -142,8 +142,8 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
     for( int i = 0; i < ftp.length; i++ )
     {
       Object prop = fe.getProperty( ftp[i].getName() );
-      if( prop != null && prop instanceof KalypsoFeature )
-        transformFeature( (KalypsoFeature)prop );
+      if( prop != null && prop instanceof Feature )
+        transformFeature( (Feature)prop );
       else if( prop != null && prop instanceof GM_Object )
       {
         try
@@ -215,7 +215,7 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
     }
   }
 
-  private void styleFeature( KalypsoFeature feature, UserStyle[] styles )
+  private void styleFeature( Feature feature, UserStyle[] styles )
   {
     feature.setDisplayElements( styles );
   }
@@ -227,7 +227,7 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
     UserStyle[] styles = getStyles();
     for( int i = 0; i < list.size(); i++ )
     {
-      KalypsoFeature fe = (KalypsoFeature)list.get( i );
+      Feature fe = (Feature)list.get( i );
       fe.setDisplayElements( styles );
     }
     myIsDirty = false;

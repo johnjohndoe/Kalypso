@@ -15,18 +15,18 @@ import org.deegree_impl.model.feature.Feature_Impl;
 /**
  * @author doemming
  */
-public class KalypsoFeature extends Feature_Impl
+public class Feature extends Feature_Impl
 {
   private int mySelection=0;
   private transient DisplayElement myDE[][] = null;
 
   
-  public KalypsoFeature(Feature feature)
+  public Feature(Feature feature)
   {
     super(feature.getFeatureType(),feature.getId(),getFeatureProperties(feature));
   }
   
-  public KalypsoFeature(Feature feature,UserStyle[] styles)
+  public Feature(Feature feature,UserStyle[] styles)
   {
     super(feature.getFeatureType(),feature.getId(),getFeatureProperties(feature));
     setDisplayElements(styles);

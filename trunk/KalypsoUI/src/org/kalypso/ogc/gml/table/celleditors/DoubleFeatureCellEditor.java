@@ -3,8 +3,8 @@ package org.kalypso.ogc.gml.table.celleditors;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.deegree.model.feature.Feature;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.kalypso.ogc.gml.KalypsoFeature;
 
 /**
  * @author Belger
@@ -31,18 +31,18 @@ public class DoubleFeatureCellEditor extends AbstractFeatureCellEditor
   }
 
   /**
-   * @see org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor#doSetFeature(org.kalypso.ogc.gml.KalypsoFeature)
+   * @see org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor#doSetFeature(org.kalypso.ogc.gml.Feature)
    */
-  protected void doSetFeature( final KalypsoFeature feature )
+  protected void doSetFeature( final Feature feature )
   {
     final Object value = feature.getProperty( getPropertyName() );
     getEditor().setValue( value == null ? "" : value.toString() );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor#renderLabel(org.kalypso.ogc.gml.KalypsoFeature)
+   * @see org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor#renderLabel(org.kalypso.ogc.gml.Feature)
    */
-  public String renderLabel( final KalypsoFeature feature )
+  public String renderLabel( final Feature feature )
   {
     final Object property = feature.getProperty( getPropertyName() );
     return property == null ? "<kein Wert>" :property.toString();
