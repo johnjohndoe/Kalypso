@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;
@@ -48,7 +48,9 @@ import java.util.List;
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.geometry.GM_Envelope;
+import org.deegree.model.geometry.GM_Point;
 import org.deegree.model.geometry.GM_Position;
+import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -60,11 +62,20 @@ import org.kalypso.util.command.ICommand;
 
 public abstract class AbstractSelectWidget extends AbstractWidget
 {
-  private Point myEndPoint = null;
+  /**
+   * pixel coordinates
+   */
+  private Point m_endPoint = null;
 
-  private Point myStartPoint = null;
+  /**
+   * pixel coordinates
+   */
+  private Point m_startPoint = null;
 
-  private int myRadius = 20;
+  /**
+   * radius in pixel
+   */
+  private int m_radius = 20;
 
   abstract int getSelectionMode();
 
@@ -72,40 +83,40 @@ public abstract class AbstractSelectWidget extends AbstractWidget
 
   public void dragged( Point p )
   {
-    if( myStartPoint == null )
+    if( m_startPoint == null )
     {
-      myStartPoint = p;
-      myEndPoint = null;
+      m_startPoint = p;
+      m_endPoint = null;
     }
     else
-      myEndPoint = p;
+      m_endPoint = p;
   }
 
   public void leftPressed( Point p )
   {
-    myStartPoint = p;
-    myEndPoint = null;
+    m_startPoint = p;
+    m_endPoint = null;
   }
 
   public void leftReleased( Point p )
   {
-    if( myEndPoint != null ) // last update of endPoint
-
-      myEndPoint = p;
-
+    if( m_endPoint != null ) // last update of endPoint
+      m_endPoint = p;
+    else
+      m_startPoint = p;
     select();
   }
 
   public void paint( Graphics g )
   {
-    if( myStartPoint != null && myEndPoint != null )
+    if( m_startPoint != null && m_endPoint != null )
     {
-      int px = (int)( myStartPoint.getX() < myEndPoint.getX() ? myStartPoint.getX() : myEndPoint
+      int px = (int)( m_startPoint.getX() < m_endPoint.getX() ? m_startPoint.getX() : m_endPoint
           .getX() );
-      int py = (int)( myStartPoint.getY() < myEndPoint.getY() ? myStartPoint.getY() : myEndPoint
+      int py = (int)( m_startPoint.getY() < m_endPoint.getY() ? m_startPoint.getY() : m_endPoint
           .getY() );
-      int dx = (int)Math.abs( myEndPoint.getX() - myStartPoint.getX() );
-      int dy = (int)Math.abs( myEndPoint.getY() - myStartPoint.getY() );
+      int dx = (int)Math.abs( m_endPoint.getX() - m_startPoint.getX() );
+      int dy = (int)Math.abs( m_endPoint.getY() - m_startPoint.getY() );
 
       if( dx != 0 && dy != 0 )
         g.drawRect( px, py, dx, dy );
@@ -126,28 +137,31 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     final IKalypsoTheme activeTheme = getActiveTheme();
     if( activeTheme == null || !( activeTheme instanceof IKalypsoFeatureTheme ) )
     {
-      myStartPoint = null;
-      myEndPoint = null;
+      m_startPoint = null;
+      m_endPoint = null;
       return;
     }
-    if( myStartPoint != null )
+    if( m_startPoint != null )
     {
-      double g1x = transform.getSourceX( myStartPoint.getX() );
-      double g1y = transform.getSourceY( myStartPoint.getY() );
+      double g1x = transform.getSourceX( m_startPoint.getX() );
+      double g1y = transform.getSourceY( m_startPoint.getY() );
 
-      if( myEndPoint == null ) // not dragged
+      if( m_endPoint == null ) // not dragged
       {
         // TODO depend on featuretype
         // line and point with radius
         // polygon with without radius
-        double gisRadius = transform.getSourceX( myStartPoint.getX() + myRadius ) - g1x;
-        JMSelector selector = new JMSelector( getSelectionMode() );
-        GM_Position pointSelect = GeometryFactory.createGM_Position( g1x, g1y );
-
-        Feature fe = selector.selectNearest( pointSelect, gisRadius,
-            ((IKalypsoFeatureTheme)activeTheme).getFeatureList(), false, mapPanel.getSelectionID() );
+        double gisRadius = Math.abs(transform.getSourceX( m_startPoint.getX() + m_radius ) - g1x);
         
-        List listFe = new ArrayList();
+        JMSelector selector = new JMSelector( getSelectionMode() );
+
+        GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y , mapPanel.getMapModell().getCoordinatesSystem());
+        
+        final Feature fe = selector.selectNearest( pointSelect, gisRadius,
+            ( (IKalypsoFeatureTheme)activeTheme ).getFeatureList(), false, mapPanel
+                .getSelectionID() );
+
+        final List listFe = new ArrayList();
         if( fe != null )
           listFe.add( fe );
         //List listFe = selector.select( pointSelect, activeTheme,
@@ -158,11 +172,11 @@ public abstract class AbstractSelectWidget extends AbstractWidget
       else
       // dragged
       {
-        double g2x = transform.getSourceX( myEndPoint.getX() );
-        double g2y = transform.getSourceY( myEndPoint.getY() );
+        double g2x = transform.getSourceX( m_endPoint.getX() );
+        double g2y = transform.getSourceY( m_endPoint.getY() );
         boolean withinStatus = false;
 
-        if( myEndPoint.getX() > myStartPoint.getX() && myEndPoint.getY() > myStartPoint.getY() )
+        if( m_endPoint.getX() > m_startPoint.getX() && m_endPoint.getY() > m_startPoint.getY() )
           withinStatus = true;
 
         double minX = g1x < g2x ? g1x : g2x;
@@ -174,18 +188,19 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         {
           final JMSelector selector = new JMSelector( getSelectionMode() );
           GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
-          List features = selector.select( envSelect, ((IKalypsoFeatureTheme)activeTheme).getFeatureList(), withinStatus,
-              mapPanel.getSelectionID() );
+          List features = selector.select( envSelect, ( (IKalypsoFeatureTheme)activeTheme )
+              .getFeatureList(), withinStatus, mapPanel.getSelectionID() );
           if( !features.isEmpty() )
             fireCommand( features, (IKalypsoFeatureTheme)activeTheme, mapPanel.getSelectionID() );
         }
       }
     }
-    myStartPoint = null;
-    myEndPoint = null;
+    m_startPoint = null;
+    m_endPoint = null;
   }
 
-  private void fireCommand( final List features, final IKalypsoFeatureTheme activeTheme, final int selectionId )
+  private void fireCommand( final List features, final IKalypsoFeatureTheme activeTheme,
+      final int selectionId )
   {
     ICommand command = null;
     if( allowOnlyOneSelectedFeature() )
@@ -194,7 +209,8 @@ public abstract class AbstractSelectWidget extends AbstractWidget
       command = new SingleSelectCommand( activeTheme.getWorkspace(), fe, selectionId, activeTheme );
     }
     else
-      command = new JMMarkSelectCommand( activeTheme.getWorkspace(), features, selectionId, getSelectionMode() );
+      command = new JMMarkSelectCommand( activeTheme.getWorkspace(), features, selectionId,
+          getSelectionMode() );
 
     postCommand( command, null );
   }
@@ -204,8 +220,8 @@ public abstract class AbstractSelectWidget extends AbstractWidget
    */
   public void finish()
   {
-    myStartPoint = null;
-    myEndPoint = null;
+    m_startPoint = null;
+    m_endPoint = null;
     super.finish();
   }
 }

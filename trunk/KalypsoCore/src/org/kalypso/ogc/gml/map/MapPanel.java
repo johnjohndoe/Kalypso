@@ -98,9 +98,9 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private int yOffset = 0;
 
-  private int myWidth = 0;
+  private int m_width = 0;
 
-  private int myHeight = 0;
+  private int m_height = 0;
 
   private boolean validMap = false;
 
@@ -110,7 +110,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private final GeoTransform m_projection = new WorldToScreenTransform();
 
-  private GM_Envelope myBoundingBox = new GM_Envelope_Impl();
+  private GM_Envelope m_boundingBox = new GM_Envelope_Impl();
 
   private final int m_selectionID;
   private GM_Envelope m_wishBBox;
@@ -182,10 +182,10 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     if( getHeight() == 0 || getWidth() == 0 )
       return;
 
-    if( getHeight() != myHeight || getWidth() != myWidth )
+    if( getHeight() != m_height || getWidth() != m_width )
     { // update dimension
-      myHeight = getHeight();
-      myWidth = getWidth();
+      m_height = getHeight();
+      m_width = getWidth();
       //setBoundingBox( getBoundingBox() );
       //setValidAll( false );
     }
@@ -360,14 +360,14 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   public GM_Envelope getPanToPixelBoundingBox( double mx, double my )
   {
-    double ratio = myHeight / myWidth;
+    double ratio = m_height / m_width;
 
     final GeoTransform transform = getProjection();
 
     double gisMX = transform.getSourceX( mx );
     double gisMY = transform.getSourceY( my );
 
-    double gisDX = ( transform.getSourceX( myWidth / 2 ) - transform.getSourceX( 0 ) );
+    double gisDX = ( transform.getSourceX( m_width / 2 ) - transform.getSourceX( 0 ) );
     double gisDY = gisDX * ratio;
     double gisX1 = gisMX - gisDX;
     double gisX2 = gisMX + gisDX;
@@ -457,15 +457,14 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   public GM_Envelope getBoundingBox()
   {
-    return myBoundingBox;
+    return m_boundingBox;
   }
 
   public void setBoundingBox( GM_Envelope wishBBox )
   {
     m_wishBBox = wishBBox;
-    myBoundingBox = adjustBoundingBox( m_wishBBox );
-    m_projection.setSourceRect( myBoundingBox );
-
+    m_boundingBox = adjustBoundingBox( m_wishBBox );
+    m_projection.setSourceRect( m_boundingBox );
     // redraw
     onModellChange( null );
   }
