@@ -6,7 +6,7 @@ import org.kalypso.ogc.widgets.PanToWidget;
 /**
  * @author belger
  */
-public class PanToWidgetDelegate extends GisMapEditorWidgetActionDelegate
+public class PanToWidgetDelegate extends AbstractWidgetActionDelegate
 {
   public PanToWidgetDelegate(  )
   {

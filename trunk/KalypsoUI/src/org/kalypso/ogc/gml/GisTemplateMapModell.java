@@ -3,6 +3,8 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IProject;
@@ -18,10 +20,13 @@ import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.GismapviewType;
 import org.kalypso.template.gismapview.GismapviewType.LayersType;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
+import org.kalypso.template.types.ExtentType;
+import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.opengis.cs.CS_CoordinateSystem;
 
+import com.sun.rsasign.bb;
 /**
  * 
  * @author Belger
@@ -99,6 +104,49 @@ public class GisTemplateMapModell implements IMapModell
     return new PoolableKalypsoFeatureTheme( layerType, project );
   }
 
+  // Helper
+  public Gismapview createGismapTemplate(GM_Envelope bbox) throws JAXBException 
+  {
+   
+    final org.kalypso.template.gismapview.ObjectFactory maptemplateFactory = new org.kalypso.template.gismapview.ObjectFactory();
+    final org.kalypso.template.types.ObjectFactory extentFac=new org.kalypso.template.types.ObjectFactory();
+    final Gismapview gismapview=maptemplateFactory.createGismapview();
+    final LayersType layersType = maptemplateFactory.createGismapviewTypeLayersType();
+    if(bbox!=null)
+    {
+    final ExtentType extentType = extentFac.createExtentType();
+   
+    extentType.setTop(bbox.getMax().getY());
+    extentType.setBottom(bbox.getMin().getY());
+    extentType.setLeft(bbox.getMin().getX());
+    extentType.setRight(bbox.getMax().getX());
+    gismapview.setExtent(extentType);      
+    }
+    
+    List layerList = layersType.getLayer();
+    
+    gismapview.setLayers(layersType);
+    IKalypsoTheme[] themes = m_modell.getAllThemes();
+    for( int i = 0; i < themes.length; i++ )
+    {
+      if(themes[i]instanceof PoolableKalypsoFeatureTheme)
+      {
+        final Layer layer = maptemplateFactory.createGismapviewTypeLayersTypeLayer();
+        final PoolableKalypsoFeatureTheme theme=(PoolableKalypsoFeatureTheme)themes[i]; 
+        final PoolableObjectType key = theme.getLayerKey();
+        layer.setId(Integer.toString(i));
+        layer.setHref( key.getSourceAsString() );
+        layer.setLinktype( key.getType() );
+        layer.setActuate( "onRequest" );
+        layer.setType( "simple" );
+        layer.setName(theme.getName());
+        layer.setVisible(m_modell.isThemeEnabled(theme));
+        layerList.add(layer);        
+      }      
+    }
+    return null;
+  }
+  
   public void activateTheme( IKalypsoTheme theme )
   {
     m_modell.activateTheme( theme );

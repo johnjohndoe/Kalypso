@@ -67,10 +67,12 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
 
   private PoolableObjectType[] m_styleKeys;
 
+  private final LayerType m_layerType;
+
   public PoolableKalypsoFeatureTheme( final LayerType layerType, final IProject project )
   {
     super( "<no name>" );
-    
+    m_layerType=layerType;
     m_layerPool.addPoolListener( this );
     m_stylePool.addPoolListener( this );
     
@@ -352,5 +354,10 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
   public PoolableObjectType getLayerKey()
   {
     return m_layerKey;
+  }
+  
+  public LayerType getLayertype()
+  {
+      return m_layerType;
   }
 }

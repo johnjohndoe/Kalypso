@@ -1,5 +1,7 @@
 package org.kalypso.template;
 
+import java.io.OutputStream;
+
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
@@ -38,5 +40,13 @@ public class GisTemplateHelper
     is.setEncoding( file.getCharset() );
 
     return (Gistableview)new org.kalypso.template.gistableview.ObjectFactory().createUnmarshaller().unmarshal( is );
+  }
+
+  public static void saveGisMapView( Gismapview modellTemplate,OutputStream outStream ) throws JAXBException
+  {
+    
+    // TODO: create marschaller only once
+    
+    new ObjectFactory().createMarshaller().marshal( modellTemplate,outStream);  
   }
 }

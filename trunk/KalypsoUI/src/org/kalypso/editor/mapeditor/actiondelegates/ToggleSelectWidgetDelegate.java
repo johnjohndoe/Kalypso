@@ -6,7 +6,7 @@ import org.kalypso.ogc.widgets.ToggleSelectWidget;
 /**
  * @author belger
  */
-public class ToggleSelectWidgetDelegate extends GisMapEditorWidgetActionDelegate
+public class ToggleSelectWidgetDelegate extends AbstractWidgetActionDelegate
 {
   public ToggleSelectWidgetDelegate(  )
   {
