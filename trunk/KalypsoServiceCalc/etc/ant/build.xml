@@ -4,7 +4,7 @@
 
   <!-- Propertys aus einer Datei laden -->
   <!-- TODO: Die Datei exisitert nicht!! -->
-  <property file="../projectbuild.properties" />
+  <property file="../KalypsoBuild/projectbuild.properties" />
 
   <!-- Project full path -->
   <property name="project.path" value="${workspace}/KalypsoCalcService" />
@@ -38,7 +38,9 @@
   		- just: CoreServices/lib/build and CoreServices/lib -->
     <!--path refid="full.classpath" /-->
     <fileset dir="${workspace}/KalypsoCoreServices/lib" includes="*.jar" />
-    <fileset dir="${workspace}/KalypsoCoreServices/lib/build" includes="*.jar" />
+    <fileset dir="${workspace}/KalypsoCoreServices/lib/build"
+             includes="*.jar"
+    />
   </path>
 
   <path id="generate.classpath">
@@ -75,7 +77,8 @@
     <mkdir dir="${build.web.inf}/classes" />
     <mkdir dir="${javadoc.dir}" />
     <mkdir dir="${dist.server}" />
-
+	<mkdir dir="${project.path}/build/doc"/>
+    
     <echo message="${project.path}" />
     <echo message="${interface.package}" />
   </target>
@@ -89,6 +92,7 @@
     <delete dir="${build.proxy}" />
     <delete dir="${build}" />
     <delete dir="${dist.server}" />
+    <delete dir="${project.path}/build/doc"/>
   </target>
 
   <target name="build-source" depends="prepare">
@@ -254,18 +258,10 @@
       <param name="aproject_lib" value="KalypsoCoreServices/lib" />
     </antcall>
 
-    <!-- TODO: das package-a-project Target in ein allgemeines Script
-    stecken und die konkreten CalcJobs separat packen -->
     <antcall target="package-a-project">
       <param name="aproject_jar" value="KalypsoSpreePlugin.jar" />
       <param name="aproject_bin" value="KalypsoSpreePlugin/build/bin" />
       <param name="aproject_lib" value="KalypsoSpreePlugin/lib" />
-    </antcall>
-
-    <antcall target="package-a-project">
-      <param name="aproject_jar" value="KalypsoBodePlugin.jar" />
-      <param name="aproject_bin" value="KalypsoBodePlugin/build/bin" />
-      <param name="aproject_lib" value="KalypsoBodePlugin/lib" />
     </antcall>
 
     <antcall target="package-a-project">
@@ -287,7 +283,7 @@
 
   <target name="build-client"
           depends="generate-proxy,compile"
-          description="Erzegt die Bibliothek fuer den Client"
+          description="Erzeugt die Bibliothek fuer den Client"
   >
 
     <tstamp>
@@ -337,7 +333,9 @@
           depends="build,redeploy"
           description="Erzeugt alles und kopiert die Client-Jar zum KalypsoUI Projekt"
   >
-    <copy file="${dist.server}/${client.jar}" todir="${workspace}/KalypsoUI/lib" />
+    <copy file="${dist.server}/${client.jar}"
+          todir="${workspace}/KalypsoUI/lib"
+    />
   </target>
 
   <target name="compile" description="Compiles the sources" depends="prepare">
@@ -349,6 +347,20 @@
 
   <target name="junit-test" description="Runs the Junit-tests of the project">
     <echo message="This Project has no Junit-Tets!" />
+  </target>
+
+
+  <target name="javadoc" depends="prepare" description="Erzeugt die Javadoc">
+    <echo message="Generating Javadoc ..." />
+    <javadoc access="protected"
+             classpathref="full.classpath"
+             destdir="${project.path}/build/doc"
+    >
+      <fileset dir="${project.path}/src" casesensitive="no">
+        <include name="**/*.java" />
+        <exclude name="**/*test*.java" />
+      </fileset>
+    </javadoc>
   </target>
 
   <!--target name="javadoc-client"
