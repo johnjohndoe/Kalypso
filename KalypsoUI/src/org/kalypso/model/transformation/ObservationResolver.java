@@ -103,6 +103,8 @@ public class ObservationResolver extends AbstractTransformation
     checkColumn( layer, sourceName );
     checkColumn( layer, targetName );
 
+    final String zmlPrefix = layer.getName() + "-" + sourceName + "-";
+    
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool( IObservation.class );
     final ObjectFactory factory = new ObjectFactory();
     
@@ -115,6 +117,9 @@ public class ObservationResolver extends AbstractTransformation
       final KalypsoFeature feature = allFeatures[i];
 
       final TimeseriesLink obslink = (TimeseriesLink)feature.getProperty( sourceName );
+      if( obslink == null )
+        continue;
+      
       final IPoolableObjectType key = new PoolableObjectType( obslink.getLinktype(), obslink.getHref(), project );
       
       try
@@ -123,9 +128,9 @@ public class ObservationResolver extends AbstractTransformation
         obs.getClass();
         
         // write timeserie
-        final IFile newZmlFile = targetFolder.getFile( sourceName + "-" + i + ".zml" );
+        // TODO: write it!
+        final IFile newZmlFile = targetFolder.getFile( zmlPrefix + i + ".zml" );
         newZmlFile.create( new ByteArrayInputStream( "<leer/>".getBytes(  ) ), false, new SubProgressMonitor( monitor, 1 ) );
-        // TODO: really write it!
         
         // write property
         final Properties newSourceProps = new Properties();
