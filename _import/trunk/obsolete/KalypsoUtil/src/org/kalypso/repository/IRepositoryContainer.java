@@ -14,12 +14,15 @@ import java.util.Properties;
 public interface IRepositoryContainer
 {
   /**
-   * Returns the list of repositories
+   * @return the list of repositories
    */
   public List getRepositories();
 
   /**
    * Tries to find the item within the repository list.
+   * 
+   * @param id
+   * @return item if found
    * 
    * @throws NoSuchElementException when item could not be found. 
    */
