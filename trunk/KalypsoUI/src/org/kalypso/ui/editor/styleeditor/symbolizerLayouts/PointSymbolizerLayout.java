@@ -75,7 +75,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
 
     final TabFolder markExtGraphicTabFolder = new TabFolder( tabFolderComposite, SWT.NULL );
     FormData markExtGraphicTabFolderData = new FormData();
-    markExtGraphicTabFolderData.height = 160;
+    markExtGraphicTabFolderData.height = 133;
     markExtGraphicTabFolderData.width = 208;
     markExtGraphicTabFolderData.left = new FormAttachment( 10, 1000, 0 );
     markExtGraphicTabFolderData.top = new FormAttachment( 20, 1000, 0 );
@@ -86,7 +86,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     FormLayout formLayout = new FormLayout();
     graphicDetailComposite.setLayout( formLayout );
     FormData labelData = new FormData();
-    labelData.height = 110;
+    labelData.height = 92;
     labelData.width = 198;
     labelData.left = new FormAttachment( 72, 1000, 0 );
     labelData.top = new FormAttachment( 650, 1000, 0 );
@@ -120,17 +120,17 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
       }
     } );
 
-    SliderPanel graphicOpacityPanel = new SliderPanel( graphicDetails, "Opacity:", 0, 1, 1,
-        SliderPanel.DECIMAL, graphic.getOpacity( null ) );
-    graphicOpacityPanel.addPanelListener( new PanelListener()
-    {
-      public void valueChanged( PanelEvent event )
-      {
-        double opacity = ( (SliderPanel)event.getSource() ).getSelection();
-        graphic.setOpacity( opacity );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
-      }
-    } );
+//    SliderPanel graphicOpacityPanel = new SliderPanel( graphicDetails, "Opacity:", 0, 1, 1,
+//        SliderPanel.DECIMAL, graphic.getOpacity( null ) );
+//    graphicOpacityPanel.addPanelListener( new PanelListener()
+//    {
+//      public void valueChanged( PanelEvent event )
+//      {
+//        double opacity = ( (SliderPanel)event.getSource() ).getSelection();
+//        graphic.setOpacity( opacity );
+//        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+//      }
+//    } );
 
     SliderPanel rotationPanel = new SliderPanel( graphicDetails, "Rotation:", 0, 360, 15,
         SliderPanel.INTEGER, graphic.getRotation( null ) * 180 );
@@ -138,8 +138,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     {
       public void valueChanged( PanelEvent event )
       {
-        double rotation = ( (SliderPanel)event.getSource() ).getSelection();
-        rotation = rotation / 180.0;
+        double rotation = ( (SliderPanel)event.getSource() ).getSelection();        
         graphic.setRotation( rotation );
         userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
       }
@@ -341,17 +340,17 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         }
       } );
 
-      SliderPanel strokeWidthPanel = new SliderPanel( group, "width:", 0, 10, 1,
-          SliderPanel.INTEGER, markStroke.getWidth( null ) );
-      strokeWidthPanel.addPanelListener( new PanelListener()
-      {
-        public void valueChanged( PanelEvent event )
-        {
-          double width = ( (SliderPanel)event.getSource() ).getSelection();
-          markStroke.setWidth( width );
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
-        }
-      } );
+//      SliderPanel strokeWidthPanel = new SliderPanel( group, "width:", 0, 10, 1,
+//          SliderPanel.INTEGER, markStroke.getWidth( null ) );
+//      strokeWidthPanel.addPanelListener( new PanelListener()
+//      {
+//        public void valueChanged( PanelEvent event )
+//        {
+//          double width = ( (SliderPanel)event.getSource() ).getSelection();
+//          markStroke.setWidth( width );
+//          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+//        }
+//      } );
 
       SliderPanel strokeOpacityPanel = new SliderPanel( group, "Opacity:", 0, 1, 1,
           SliderPanel.DECIMAL, markStroke.getOpacity( null ) );

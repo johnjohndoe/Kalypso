@@ -69,11 +69,11 @@ public class RuleTabItemBuilder
 
     ruleTabFolder = new TabFolder( innerTabFolderComposite, SWT.NULL );
     FormData RuleTableFolderLData = new FormData();
-    RuleTableFolderLData.height = 557;
+    RuleTableFolderLData.height = 507;
     RuleTableFolderLData.width = 245;
     RuleTableFolderLData.top = new FormAttachment( 10, 1000, 0 );
     ruleTabFolder.setLayoutData( RuleTableFolderLData );
-    ruleTabFolder.setSize( new org.eclipse.swt.graphics.Point( 245, 557 ) );
+    ruleTabFolder.setSize( new org.eclipse.swt.graphics.Point( 245, 507 ) );
 
     ArrayList filteredRules = rulePatternCollection.getFilteredRuleCollection();
     for( int j = 0; j < filteredRules.size(); j++ )

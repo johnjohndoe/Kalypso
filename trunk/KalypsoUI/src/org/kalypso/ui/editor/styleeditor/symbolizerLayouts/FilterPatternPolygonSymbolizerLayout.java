@@ -52,7 +52,7 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayo
     Group group = new Group( composite, SWT.NULL );
     GridData groupData = new GridData();
     groupData.widthHint = 210;
-    groupData.heightHint = 268;
+    groupData.heightHint = 215;
     group.setLayoutData( groupData );
     group.setLayout( compositeLayout );
     group.layout();

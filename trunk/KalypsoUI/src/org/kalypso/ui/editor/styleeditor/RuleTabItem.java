@@ -349,7 +349,7 @@ public class RuleTabItem
             featureType );
       }
       symbolizerTabFolder.pack();
-      symbolizerTabFolder.setSize( 224, 340 );
+      symbolizerTabFolder.setSize( 224, 287 );
       symbolizerTabFolder.setVisible( true );
     }
   }

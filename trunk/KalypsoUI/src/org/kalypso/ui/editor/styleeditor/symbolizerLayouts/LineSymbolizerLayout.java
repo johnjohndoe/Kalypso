@@ -48,7 +48,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     strokeGroup.setText( "Stroke" );
     GridData strokeGroupData = new GridData();
     strokeGroupData.widthHint = 210;
-    strokeGroupData.heightHint = 298;
+    strokeGroupData.heightHint = 244;
     strokeGroup.setLayoutData( strokeGroupData );
     strokeGroup.setLayout( compositeLayout );
     strokeGroup.layout();
