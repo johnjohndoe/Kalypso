@@ -20,22 +20,22 @@ public class DefaultLoaderFactory extends ConfigurableCachedObjectFactory implem
   {
     return (ILoader)getObjectInstance( type, ILoader.class );
   }
-}
 
   /**
    * @see org.kalypso.util.loader.ILoaderFactory#getLoaderControl(java.lang.String)
    */
   public ILoaderUI getLoaderControl( final String type ) throws LoaderException
   {
-    final String className = m_props.getProperty( type + "_ui" );
-    
-    try
-    {
-      return (ILoaderUI)ClassUtilities.newInstance( className, ILoaderUI.class );
-    }
-    catch( ClassUtilityException e )
-    {
-      throw new LoaderException( e );
-    }
+//    TODO GERNOT final String className = m_props.getProperty( type + "_ui" );
+//    
+//    try
+//    {
+//      return (ILoaderUI)ClassUtilities.newInstance( className, ILoaderUI.class );
+//    }
+//    catch( ClassUtilityException e )
+//    {
+//      throw new LoaderException( e );
+//    }
+    return null;
   }
 }
