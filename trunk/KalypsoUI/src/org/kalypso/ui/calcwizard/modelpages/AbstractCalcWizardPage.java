@@ -473,4 +473,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     return m_viewer;
   }
+  
+  /**
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
+   */
+  public final void onModellChange( final ModellEvent modellEvent )
+  {
+    refreshTimeseries();
+  }
 }

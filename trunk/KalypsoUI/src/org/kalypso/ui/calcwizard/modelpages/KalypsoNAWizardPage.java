@@ -170,14 +170,6 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
     return true;
   }
 
-  /**
-   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
-   */
-  public void onModellChange( final ModellEvent modellEvent )
-  {
-    refreshTimeseries();
-  }
-
   protected void runCalculation()
   {
     final LayerTableViewer viewer = m_viewer;
