@@ -29,8 +29,8 @@
 
     <itemizedlist>
       <listitem>
-        <para>einheitliche Verwaltung und Strukturierung hydrologisch
-        hydraulischer Modelle</para>
+        <para>einheitliche Verwaltung und Strukturierung
+        hydrologisch-hydraulischer Modelle</para>
       </listitem>
 
       <listitem>
@@ -63,7 +63,7 @@
     <itemizedlist>
       <listitem>
         <para>TUHH - Arbeitsbereich Wasserbau - Denickestrasse 22 - 21073
-        Hamburg - Tel. 040 / 42878-3761 - www.tuhh/wb.de</para>
+        Hamburg - Tel. 040 / 42878-3761 - www.tuhh.de/wb</para>
       </listitem>
     </itemizedlist>
 
@@ -217,7 +217,7 @@
       </listitem>
     </orderedlist>
 
-    <figure id="anwendungsfaelle">
+    <figure id="pic_anwendungsfaelle">
       <title>KALYPSO Anwendungsfälle LHWZ Sachsen</title>
 
       <mediaobject>

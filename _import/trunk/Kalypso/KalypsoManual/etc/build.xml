@@ -35,16 +35,16 @@
   </target>
   
   <target name="valid">
-    <!--
+
     <antcall target="xmlvalid">
       <param name="xmlvalid.xml" value="${help.dir}/${doc.name}"/>
     </antcall>
-    -->
+
   </target>
 
   <!-- MANUAL (html und pdf) -->
   <target name="html"
-          depends="cleanup,init,valid"
+          depends="init,valid"
           description="Erzeugt das Benutzerhandbuch - HTML-Version"
   >
 
@@ -66,7 +66,7 @@
   </target>
 
   <target name="eclipse-help"
-          depends="cleanup,init,valid"
+          depends="init,valid"
           description="Erzeugt das Benutzerhandbuch - Online-Help für Eclipse"
   >
 
@@ -91,7 +91,7 @@
     <zip destfile="./doc.zip" basedir="${build.eclipse.dir}" includes="**/*" excludes="*.xml"/>
   </target>
     
-  <target name="pdf" description="Erstellt das Handbuch im PDF Format" depends="cleanup,init,valid">
+  <target name="pdf" description="Erstellt das Handbuch im PDF Format" depends="init,valid">
     <copy todir="${build.tex.dir}">
       <fileset dir="${help.dir}"
                casesensitive="no"

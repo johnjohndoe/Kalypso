@@ -26,7 +26,8 @@
       </screenshot>
     </figure>
 
-    <para>Beim Start des Vorhersage-Wizards öffnet sich eine Maske, in der dem
+    <para>Beim Start des Vorhersage-Wizards öffnet sich die Maske zum Erzeugen
+    einer Vorhersage <xref linkend="we_erzeuge_vorhersage" />, in der dem
     Benutzer freigestellt wird, ein neues Hochwasser anzulegen, einen bereits
     angelegten Rechenfall fortzuführen oder einen bereits angelegten
     Rechenfall zu kopieren und neu zu berechnen (bspw. als neue
@@ -36,6 +37,16 @@
     die Möglichkeit, die ermittelten Ergebnisse als Bericht auf dem Server zu
     speichern.</para>
 
+    <figure id="we_erzeuge_vorhersage">
+      <title>Erzeugen einer Vorhersage</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/we_1b.png" scale="30" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
     <section id="weisse_elster_1">
       <title>Neue Hochwasservorhersage anlegen</title>
 
@@ -44,7 +55,8 @@
       Bezeichnung des Rechenfalls ist vom Benutzer frei wählbar und wird unter
       dem angegebenen Namen im lokalen Arbeitsverzeichnis gespeichert. Mit der
       Bestätigung durch Klick auf <guibutton>weiter</guibutton> erfolgt die
-      Aufforderung zur Eingabe der Steuerparameter.</para>
+      Aufforderung zur Eingabe der Steuerparameter <xref
+      linkend="weisse_elster_2" />.</para>
 
       <figure id="we_steuerparameter">
         <title>Steuerparameter</title>
@@ -107,17 +119,17 @@
       <guibutton>weiter</guibutton>.</para>
 
       <para>Es erscheint die Eingabemaske für die Steuerparameter <xref
-      linkend="weisse_elster_1" />, in die bereits die gespeicherten Eingaben
+      linkend="weisse_elster_2" />, in die bereits die gespeicherten Eingaben
       für das gewählte Hochwasser eingetragen sind. Für die Fortführung des
       Rechenlaufs können die Parameter vom Nutzer geändert werden. Es gelten
-      die gleichen Voraussetzungen wie beim anlegen eines neuen
+      die gleichen Voraussetzungen wie beim Anlegen eines neuen
       Rechenfalls.</para>
 
       <para>Zusätzlich ist die Option <guibutton>Zeitreihen
       aktualisieren</guibutton> aktiv, d. h., die Zeitreihen können für die
-      erneute Berechnung des Rechenfalls neu eingelesen werden. Ist das
-      Kästchen deaktiviert, werden die vom Modell gespeicherten Zeitreihen des
-      letzten Rechenlaufs verwendet.</para>
+      erneute Berechnung der Variante neu eingelesen werden. Ist das Kästchen
+      deaktiviert, werden die vom Modell gespeicherten Zeitreihen des letzten
+      Rechenlaufs verwendet.</para>
     </section>
 
     <section>
@@ -129,25 +141,27 @@
       einem gleichnamigen Verzeichnis lokal gespeichert. Dies bietet den
       Vorteil, dass bei einer gewünschten Änderung der Eingangsdaten die
       Originaldateien nicht überschrieben werden. Alle Einstellungen in den
-      Steuerdaten werden übernommen und können ggfs. geändert werden. Die zum
-      Ereignis gehörigen Zeitreihen können aus dem gespeicherten Rechenlauf
-      übernommen oder über Zeitreihen aktualisieren vom Server eingelesen
-      werden. Nach Auswahl des zu kopierenden Rechenfalls wird über
-      Bestätigung durch <guibutton>weiter</guibutton> die Eingabemaske für die
-      Steuerparameter geöffnet.</para>
+      Steuerparametern werden übernommen und können ggfs. geändert werden. Die
+      zum Ereignis gehörigen Zeitreihen können aus dem gespeicherten
+      Rechenlauf übernommen oder über <guibutton>Zeitreihen
+      aktualisieren</guibutton> vom Server eingelesen werden. Nach Auswahl des
+      zu kopierenden Rechenfalls wird über Bestätigung durch
+      <guibutton>weiter</guibutton> die Eingabemaske für die Steuerparameter
+      <xref linkend="weisse_elster_2" /> geöffnet.</para>
     </section>
 
     <section id="weisse_elster_4">
       <title>Kontrolle der Eingangsdaten</title>
 
-      <para>Nach der Eingabe der Steuerdaten erfolgt die Überprüfung der
+      <para>Nach der Eingabe der Steuerparameter erfolgt die Überprüfung der
       Eingansgdaten durch den Benutzer. Die Zeitreihen setzen sich aus
       Messwerten und Prognosewerten zusammen. Der Vorhersage-Wizard ist so
       aufgebaut, dass die Kontrolle der Zeitreihen einem festen Ablauf folgt
       (<xref linkend="we_ndata" />):</para>
 
       <figure id="we_ndata">
-        <title>Eingabe der Niederschlagszeitreihen</title>
+        <title>Kontrolle der Niederschlagszeitreihen
+        (Gebietsniederschläge)</title>
 
         <screenshot>
           <mediaobject>
@@ -161,6 +175,8 @@
       <para><orderedlist>
           <listitem>
             <para>Niederschlagszeitreihen für die einzelnen Teilgebiete</para>
+
+            <para></para>
           </listitem>
 
           <listitem>
@@ -229,18 +245,19 @@
 
       <para>Der Standartwert für alle Parameter beträgt zu Beginn einer neuen
       Prognose 1,0. Durch Änderung eines oder mehrerer Parameter können die
-      Berechnungsergebnisse die vor dem Startzeitpunkt der Prognose liegen,
+      Berechnungsergebnisse die vor dem Startzeitpunkt der Prognose liegen
       anhand von Pegelaufzeichnungen angepasst werden (Nachführung). Bezüglich
       der theoretischen Grundlagen der Wirkung der o. g. Parameter auf die
-      Berechnungsergebnisse wird auf Heft X des KALYPSO-Handbuches verwiesen.
-      Alle in der Tabelle vorgenommenen Änderungen gelten jeweils für die zu
-      einem Pegeleinzugsgebiet gehörigen Teilgebiete. Unterhalb der Tabelle
-      befindet sich das Zeitreihenfenster. Es dient zur Darstellung der
-      Zeitreihen für gemessene und berechnete Abflüsse am Pegel sowie die in
-      der Prognose verwendeten Niederschlagszeitreihen. Die Ansicht im
-      Zeitreihenfenster ist nicht veränderbar; alle Einstellungen sind
-      vordefiniert bzw. ändern sich automatisch in Abhängigkeit der Zeitreihe
-      (Anpassung der Skalierung).</para>
+      Berechnungsergebnisse wird auf die Modellbeschreibung des
+      Vorhersagemodells Weiße Elster verwiesen. Alle in der Tabelle
+      vorgenommenen Änderungen gelten jeweils für die zu einem
+      Pegeleinzugsgebiet gehörigen Teilgebiete. Unterhalb der Tabelle befindet
+      sich das Zeitreihenfenster. Es dient zur Darstellung der Zeitreihen für
+      gemessene und berechnete Abflüsse am Pegel sowie die in der Prognose
+      verwendeten Niederschlagszeitreihen. Die Ansicht im Zeitreihenfenster
+      ist nicht veränderbar; alle Einstellungen sind vordefiniert bzw. ändern
+      sich automatisch in Abhängigkeit der Zeitreihe (Anpassung der
+      Skalierung).</para>
 
       <para>Zum Starten einer Prognoserechnung dient der Button
       <guibutton>Berechnung durchführen</guibutton>. Während einer Berechnung
@@ -253,11 +270,13 @@
       <guibutton>weiter</guibutton> Button zum nächsten Pegel gesprungen
       werden. In der Regel ist dies der nächste Stromabwärts gelegene Pegel.
       Die Abfolge der Vorhersagepegel ist im Programm festgeschrieben und kann
-      auch im Expertenmodus nicht geändert werden. Generell gilt: um an einem
-      Pegel Prognoseberechnungen durchführen zu können, müssen zunächst
-      Ergebnisse für alle oberliegenden Pegel vorliegen. Die berechneten
-      Ergebnisse eines Pegels dienen jeweils als Zuflusszeitreihe für das
-      darunter liegende Pegeleinzugsgebiet. Die Reihenfolge für das
+      auch im Expertenmodus nicht geändert werden. Generell gilt: Die
+      berechneten Ergebnisse eines Pegels dienen jeweils als Zuflusszeitreihe
+      für das darunter liegende Pegeleinzugsgebiet. Es ist allerdings möglich,
+      Berechnungen für einen Pegel durchzuführen, ohne dass Ergebnisse für
+      oberhalb gelegene Pegel vorliegen.</para>
+
+      <para>Die Reihenfolge für die Abarbeitung der Pegel für das
       Einzugsgebiet Weiße Elster ist schematisch in <xref
       linkend="we_schema" /> dargestellt.</para>
 
@@ -277,8 +296,9 @@
 
       <para>Nach Abarbeitung der Kalibrierungs- und Berechnungsschritte (siehe
       Kapitel Berechnung einer Vorhersage) können die ermittelten Ergebnisse
-      im Berichtswesen abgelegt werden. Die dazugehörige Eingabemaske zeigt
-      einen Lageplan mit allen im Modell vorhandenen Vorhersage-Pegeln.</para>
+      im Berichtswesen (auf dem Server) abgelegt werden. Die dazugehörige
+      Eingabemaske zeigt einen Lageplan mit allen im Modell vorhandenen
+      Vorhersage-Pegeln.</para>
 
       <figure>
         <title>Ergebnisbearbeitung</title>
@@ -329,7 +349,7 @@
 
         <listitem>
           <para>Grafische Darstellung der Ergebnisse im Lageplan (farbige
-          Markierung der Pegel)</para>
+          Markierung der Pegel nach Alarmstufen)</para>
         </listitem>
       </itemizedlist>
 
@@ -346,7 +366,7 @@
     <title>Vorhersagemodell Spree</title>
 
     <para>Zur Berechnung von HW-Vorhersagen für das Einzugsgebiet der Spree
-    ist in der Kalypso-Oberfläche ein Wizard implenentiert. In Abhängigkeit
+    ist in der Kalypso-Oberfläche ein Wizard implementiert. In Abhängigkeit
     der zugeordneten Rechte wird der Benutzer entweder direkt bei dem
     Programmstart in den Vorhersagemodus geführt (<xref
     linkend="spree_startbildschirm" />). Für Benutzer mit erweiterten Rechten
@@ -370,15 +390,15 @@
     dem Benutzer zwei verschiedene Möglichkeiten gegeben werden, Vorhersagen
     durchzuführen:</para>
 
-    <section>
+    <section id="spree_1">
       <title>Neues Hochwasser anlegen</title>
 
       <para>Mit der Option <guibutton>einen neuen Rechenfall
       erzeugen</guibutton> wird ein neues Hochwasser angelegt. Die Bezeichnung
       des Rechenfalls ist vom Benutzer frei wählbar und wird unter dem
-      angegebenen Namen in KALIPSO-NA gespeichert. Mit der Bestätigung durch
+      angegebenen Namen in KALYPSO-NA gespeichert. Mit der Bestätigung durch
       Klick auf <guibutton>weiter</guibutton> erfolgt die Aufforderung zur
-      Eingabe der Rechenfall-Parameter (<xref
+      Eingabe der Steuerparameter (<xref
       linkend="spree_steuerparameter" />).</para>
 
       <figure id="spree_steuerparameter">
@@ -393,7 +413,7 @@
         </screenshot>
       </figure>
 
-      <para><emphasis>Steuerparameter</emphasis></para>
+      <para id="spree_2"><emphasis>Steuerparameter</emphasis></para>
 
       <para><emphasis>Start der Simulation</emphasis></para>
 
@@ -429,6 +449,33 @@
     </section>
 
     <section>
+      <title>Fortführen eines Rechenfalls</title>
+
+      <para>Durch die Wahl der Option <emphasis role="bold">einen bereits
+      vorhandenen Rechenfall fortführen</emphasis> wird dem Benutzer die
+      Möglichkeit gegeben, eine zuvor berechnete und gespeicherte
+      Hochwasserprognose erneut zu laden und die Berechnungen zu aktualisieren
+      bzw. fortzuführen (bspw. bei Vorhandensein aktueller Prognosedaten).
+      Nach Auswahl der Option erscheint ein Auswahlfenster, in dem alle
+      gespeicherten Rechenläufe angezeigt werden. Nach markieren des
+      entsprechenden Rechenlaufes erfolgt die Bestätigung der Auswahl durch
+      <guibutton>weiter</guibutton>.</para>
+
+      <para>Es erscheint die Eingabemaske für die Steuerparameter <xref
+      linkend="spree_2" />, in die bereits die gespeicherten Eingaben für das
+      gewählte Hochwasser eingetragen sind. Für die Fortführung des
+      Rechenlaufs können die Parameter vom Nutzer geändert werden. Es gelten
+      die gleichen Voraussetzungen wie beim Anlegen eines neuen
+      Rechenfalls.</para>
+
+      <para>Zusätzlich ist die Option <guibutton>Zeitreihen
+      aktualisieren</guibutton> aktiv, d. h., die Zeitreihen können für die
+      erneute Berechnung der Variante neu eingelesen werden. Ist das Kästchen
+      deaktiviert, werden die vom Modell gespeicherten Zeitreihen des letzten
+      Rechenlaufs verwendet.</para>
+    </section>
+
+    <section>
       <title>Kopieren eines Rechenfalls</title>
 
       <para>Die Wahl dieser Option erfolgt durch Auswahl des <guibutton>einen
@@ -441,7 +488,8 @@
       gespeicherten Rechenläufe. Für die lokale Kopie des Rechenlaufes muss
       vom Benutzer ein Name angegeben werden. Nach Auswahl des zu kopierenden
       Rechenfalls wird durch Bestätigung durch <guibutton>weiter</guibutton>
-      die Eingabemaske für die Steuerparameter geöffnet.</para>
+      die Eingabemaske für die Steuerparameter <xref linkend="spree_2" />
+      geöffnet.</para>
     </section>
 
     <section>
@@ -484,7 +532,7 @@
         </listitem>
 
         <listitem>
-          <para>Ganglinien für die Flutungen aus dem Modell heraus</para>
+          <para>Abflusswerte für die Abzweige / Überleitungen</para>
 
           <para>(Abzweig Kleine Spree, Zuleiter Restloch Bärwalde, Zuleitung
           Restloch Lohsa II, Überleitung Restlochkette)</para>

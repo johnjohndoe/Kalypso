@@ -20,7 +20,7 @@
   Start-Menü -&gt; Programme -&gt; KALYPSO oder über Doppelklick des
   Desktop-Icons KALYPSO.</para>
 
-  <section id="allgemeines_zu_kalypso">
+  <section id="kalypso_startseite">
     <sectioninfo>
       <date><indexterm>
           <primary>KALYPSO-Konzept</primary>
@@ -29,11 +29,11 @@
 
     <title>Startseite</title>
 
-    <para id="para1">Nach dem Programm-Start von KALYPSO öffnet sich die
+    <para id="dummy5">Nach dem Programm-Start von KALYPSO öffnet sich die
     Startseite, die in Anlehnung an die Zugriffsrechte des Benutzers aufgebaut
     wird.</para>
 
-    <figure id="kalypso_startseite">
+    <figure id="pic_kalypso_startseite">
       <title>KALYPSO Startseite LHWZ Sachsen</title>
 
       <mediaobject>
@@ -50,8 +50,8 @@
     Vorhersage bzw. der Wizard mit Drücken des Buttons <guibutton>Hochwasser
     Vorhersage starten</guibutton> gestartet werden.</para>
 
-    <para>Die in <xref linkend="kalypso_startseite" /> dargestellte Startseite
-    identifiziert den Benutzer als Experten, indem oberhalb des
+    <para>Die in <xref linkend="pic_kalypso_startseite" /> dargestellte
+    Startseite identifiziert den Benutzer als Experten, indem oberhalb des
     Ansichtsfensters zwei Buttons zur Ansichtsauswahl zur Verfügung
     stehen:</para>
 

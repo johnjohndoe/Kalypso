@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="zeitreihen_repository">
+  <title>Zeitreihen-Ablage</title>
+
+  <section>
+    <title>Allgemeines</title>
+
+    <para>Zur Verwaltung von Zeitreihen ist in der KALYPSO-Oberfläche eine
+    spezielle Perspektive vorgesehen: Die Zeitreihen-Ablage. Die Perspektive
+    ist standardmäßig in der KALYPSO-Oberfläche enthalten. Sie kann aber auch
+    über das Menü <guimenu>Fenster</guimenu> hinzugefügt werden (siehe auch
+    <xref linkend="arbeiten_mit_ansichten" />).</para>
+
+    <para>In der Zeitreihen-Ablage können lokal bzw. auf dem Server
+    gespeicherte Zeitreihen-Verzeichnisse eingesehen werden. Es besteht
+    allerdings keine Möglichkeit zum Bearbeiten von Daten oder Verschieben von
+    Zeitreihen in andere Verzeichnisse. Beispielsweise können die in der
+    Datenbank des Servers abgelegten Zeitreihen betrachtet und kontrolliert,
+    allerdings nicht verändert oder gespeichert werden. </para>
+
+    <para>Die dargestellten Zeitreihen können nicht exportiert oder unter
+    einem anderen Namen gespeichert werden. Es besteht jedoch die Möglichkeit,
+    die Verknüpfung (Link) auf die Zeitreihe per rechten Mausklick in die
+    Zwischenablage zu speichern und in einer anderen Datei wieder einzufügen.
+    So können beispielsweise Zeitreihen mit Modelldaten verknüpft werden
+    (Zuordnung von Niederschlagsstationen oder Pegeln).</para>
+
+    <para>Bei Anwahl der Perspektive über die entsprechende Schaltfläche
+    öffnet sich die vordefinierte Ablagen-Ansicht (<xref
+    linkend="repository_ansicht" />). Auf der linken Seite befindet sich das
+    Navigator-Fenster, in dem die Zeitreihen-Ablagen als Baumstruktur
+    angezeigt werden. Zur Darstellung der Zeitreihen ist eine Tabellen- und
+    eine Diagramm-Ansicht vorgesehen. Ist im Navigator-Fenster keine Zeitreihe
+    markiert, sind die Tabelle und das Diagramm leer. Die einzelnen Fenster
+    können vom Benutzer beliebig angeordnet und/oder verschoben werden. Es
+    gelten die gleichen Voraussetzungen wie im Expertenmodus (siehe auch <xref
+    linkend="arbeiten_mit_ansichten" />).</para>
+
+    <figure id="repository_ansicht">
+      <title>Ansicht der Zeitreihen-Ablage</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/repository.png" revisionflag="added"
+                     scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section>
+
+  <section>
+    <title>Verwaltung von Zeitreihen-Ablagen</title>
+
+    <para>Die Verwaltung der Zeitreihen-Ablagen erfolgt über die Schaltflächen
+    im Ablagen-Fenster(<xref linkend="repository_buttons" />). Hierdurch kann
+    der Benutzer Anlagen zur Ansicht hinzufügen, Ablagen aus der Ansicht
+    entfernen oder die Einstellungen für eine Ablage ändern. Ein Speichern der
+    Ablagen-Ansicht ist nicht notwendig. Alle Einstellungen werden automatisch
+    beim Schließen von KALYPSO gespeichert und stehen beim nächsten
+    Programmstart wieder zur Verfügung. Im Einzelnen stehen folgende Optionen
+    zur Verfügung:</para>
+
+    <figure id="repository_buttons">
+      <title>Schaltflächen in der Ablagen-Ansicht</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/repository_buttons.png" scale="70" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para><emphasis role="bold">Ablage(n) hinzufügen</emphasis></para>
+
+    <para>Der Benutzer kann beliebig viele Zeitreihen-Ablagen in die
+    Oberfläche einlesen. Nach Auswahl der Schaltfläche erscheint ein
+    Auswahlfenster, in dem zwischen lokalen und auf dem Server gespeicherten
+    Zeitreihen-Verzeichnisse gewählt werden kann. Wird eine lokale Ablage
+    gewählt, muss im nächsten Fenster der Pfad, das Kennzeichen (Name der
+    Ablage) sowie die Dateiendung der Zeitreihen (Standard: *.zml) angegeben
+    werden muss (<xref linkend="repository_import_lokal" />).</para>
+
+    <figure id="repository_import_lokal">
+      <title>Lokale Ablage hinzufügen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/repository_import_lokal.png" scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Wird dagegen der KALYPSO-Obervations-Dienst gewählt, erscheint im
+    Ansichts-Fenster die Verzeichnis-Struktur des Kalypso-Servers mit allen
+    d</para>
+
+    <para>arauf befindlichen Zeitreihen-Verzeichnissen.</para>
+
+    <para><emphasis role="bold">Ablage entfernen</emphasis></para>
+
+    <para>Mit dieser Schaltfläche wird eine Zeitreihen-Ablage aus der
+    aktuellen Ansicht entfernt. Die entsprechenden Verzeichnisse (lokal bzw.
+    auf dem Server) bleiben jedoch unangetastet.</para>
+
+    <para><emphasis role="bold">Einstellungen der Ablage
+    setzen</emphasis></para>
+
+    <para>Mit dieser Option kann der Zeitraum der Zeitreihen der markierten
+    Zeitreihen-Ablage definiert werden. Es erscheint ein Auswahlfenster, in
+    dem der Benutzer den gewünschten Zeitraum eingeben kann(<xref
+    linkend="repository_einstellungen" />). </para>
+
+    <figure id="repository_einstellungen">
+      <title>Definition der Einstellungen einer Ablage</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/repository_einstellungen.png" scale="70" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Die Eingabe erfolgt entweder in Form von Anzahl an Tagen oder durch
+    Angabe des gewünschten Zeitraums. Wird bei der Anzahl der Tage "0"
+    angegeben, werden alle Zeitreihen für den gesamten zur Verügung stehenden
+    Zeitraum eingelesen.</para>
+
+    <para><emphasis role="bold">Ablage aktualisieren</emphasis></para>
+
+    <para>Die Verzeichnisstruktur der in der Ansicht enthaltenen
+    Zeitreihen-Ablagen wird neu eingelesen.</para>
+
+    <para><emphasis role="bold">Alle Zweige des Baums
+    reduzieren</emphasis></para>
+
+    <para>Die Verzeichnisstruktur wird in der Ansicht bis auf die Überschrift
+    reduziert ("Zuklappen")</para>
+
+    <para><emphasis role="bold">Alle Zweige des Baums
+    anzeigen</emphasis></para>
+
+    <para>Die Verzeichnisstruktur der Zeitreihen-Ablage wird vollständig
+    angezeigt ("Aufklappen")</para>
+  </section>
+</chapter>
