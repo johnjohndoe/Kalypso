@@ -2,8 +2,6 @@ package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
 
-import javax.swing.SwingUtilities;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -15,7 +13,6 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.ChartPanel;
-import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
@@ -75,6 +72,9 @@ public class DiagramViewPart extends ViewPart implements
 
     m_template.removeTemplateEventListener( m_chart );
 
+    if( m_chart != null )
+      m_chart.dispose();
+
     super.dispose();
   }
 
@@ -91,36 +91,21 @@ public class DiagramViewPart extends ViewPart implements
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-//    final CatchRunnable runnable = new CatchRunnable()
-//    {
-//      public void runIntern()
-//      {
-        m_template.removeAllThemes();
+    m_template.removeAllThemes();
 
-        final StructuredSelection selection = (StructuredSelection) event
-            .getSelection();
+    final StructuredSelection selection = (StructuredSelection) event
+        .getSelection();
 
-        if( !(selection.getFirstElement() instanceof IRepositoryItem) )
-          return;
+    if( !(selection.getFirstElement() instanceof IRepositoryItem) )
+      return;
 
-        final IRepositoryItem item = (IRepositoryItem) selection
-            .getFirstElement();
+    final IRepositoryItem item = (IRepositoryItem) selection.getFirstElement();
 
-        final IObservation obs = ObservationCache.getInstance().getObservationFor( item );
-        if( obs != null )
-          m_template.setObservation( obs, ObservationViewHelper.makeDateRange( item ) );
-//      }
-//    };
-//
-//    try
-//    {
-//      // execute this in the swing ui thread because we are using a swing component (JFreeChart)
-//      SwingUtilities.invokeLater( runnable );
-//    }
-//    catch( Exception e ) // generic exception caught for simplicity
-//    {
-//      e.printStackTrace();
-//    }
+    final IObservation obs = ObservationCache.getInstance().getObservationFor(
+        item );
+    if( obs != null )
+      m_template.setObservation( obs, ObservationViewHelper
+          .makeDateRange( item ) );
   }
 
   /**

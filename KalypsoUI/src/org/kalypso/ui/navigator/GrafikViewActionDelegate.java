@@ -12,20 +12,23 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
+import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
 
 /**
- * Opens the Grafik tool. Can operate on observation template and grafik template files.
+ * Opens the Grafik tool. Can operate on observation template and grafik
+ * template files.
  * 
  * @author schlienger
  */
 public class GrafikViewActionDelegate implements IViewActionDelegate
 {
   private IFile m_currentFile = null;
+
   private IViewPart m_view;
 
-  public GrafikViewActionDelegate()
+  public GrafikViewActionDelegate( )
   {
-  // empty
+    // empty
   }
 
   /**
@@ -43,29 +46,30 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
   {
     try
     {
-    if( m_currentFile != null )
-    {
-      if( m_currentFile.getFileExtension().equalsIgnoreCase(
-          ObservationTemplateHelper.ODT_FILE_EXTENSION ) )
+      if( m_currentFile != null )
       {
-        final IContainer parent = m_currentFile.getParent();
-        
-        final IFolder folder = parent.getFolder( new Path( ".grafik" ) );
-        if( !folder.exists() )
-          folder.create( true, true, new NullProgressMonitor() );
-        
-        ObservationTemplateHelper.openGrafik4odt( m_currentFile, folder );
+        if( m_currentFile.getFileExtension().equalsIgnoreCase(
+            ObservationTemplateHelper.ODT_FILE_EXTENSION ) )
+        {
+          final IContainer parent = m_currentFile.getParent();
+
+          final IFolder folder = parent.getFolder( new Path( "grafik" ) );
+          if( !folder.exists() )
+            folder.create( true, true, new NullProgressMonitor() );
+
+          GrafikLauncher.startGrafikODT( m_currentFile, folder );
+        }
+        else if( m_currentFile.getFileExtension().equalsIgnoreCase(
+            GrafikLauncher.TPL_FILE_EXTENSION ) )
+        {
+          GrafikLauncher.startGrafikTPL( m_currentFile );
+        }
       }
-      else if( m_currentFile.getFileExtension().equalsIgnoreCase(
-          ObservationTemplateHelper.TPL_FILE_EXTENSION ) )
-      {
-        ObservationTemplateHelper.openGrafik4tpl( m_currentFile );
-      }
-    }
     }
     catch( Exception e )
     {
-      MessageDialog.openError( m_view.getSite().getShell(), "Grafik konnte nicht gestartet werden", e.getLocalizedMessage() );
+      MessageDialog.openError( m_view.getSite().getShell(),
+          "Grafik konnte nicht gestartet werden", e.getLocalizedMessage() );
     }
   }
 
@@ -75,10 +79,10 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    final IStructuredSelection sel = (IStructuredSelection)selection;
+    final IStructuredSelection sel = (IStructuredSelection) selection;
 
     if( sel.getFirstElement() instanceof IFile )
-      m_currentFile = (IFile)sel.getFirstElement();
+      m_currentFile = (IFile) sel.getFirstElement();
     else
       m_currentFile = null;
   }

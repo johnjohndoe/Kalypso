@@ -78,9 +78,16 @@ public class ObservationPlot extends XYPlot
   /** maps the diagram axes (from the template) to a dataset */
   private transient final Map m_axes2ds = new HashMap();
 
+  /** maps the diagram curve to the data serie */
+  private transient final Map m_curve2serie = new HashMap();
+  
+  /** maps the series to their datasets */
+  private transient final Map m_serie2dataset = new HashMap();
+  
   private int m_domPos = 0;
 
   private int m_ranPos = 0;
+
 
   /**
    * Constructor.
@@ -176,6 +183,9 @@ public class ObservationPlot extends XYPlot
     for( int i = 0; i < getDatasetCount(); i++ )
       setDataset( i, null );
 
+    m_serie2dataset.clear();
+    m_curve2serie.clear();
+    
     m_axes2ds.clear();
 
     m_chartAxes2Pos.clear();
@@ -195,7 +205,7 @@ public class ObservationPlot extends XYPlot
   public synchronized void addCurve( final IDiagramCurve curve )
       throws SensorException
   {
-    IAxisMapping[] mings = curve.getMappings();
+    final IAxisMapping[] mings = curve.getMappings();
     IAxis xAxis = null;
     IDiagramAxis xDiagAxis = null;
     IAxis yAxis = null;
@@ -229,6 +239,8 @@ public class ObservationPlot extends XYPlot
     final XYCurveSerie xyc = new XYCurveSerie( curve, xAxis, yAxis, xDiagAxis,
         yDiagAxis );
 
+    m_curve2serie.put( curve, xyc );
+    
     final String key = xDiagAxis.getIdentifier() + "#-#"
         + yDiagAxis.getIdentifier();
 
@@ -253,6 +265,8 @@ public class ObservationPlot extends XYPlot
 
     cds.addCurveSerie( xyc );
 
+    m_serie2dataset.put( xyc, cds );
+    
     // check metadata of the observation for Vorhersage type
     // and add a marker if the obs is a forecast
     final IObservation obs = curve.getTheme().getObservation();
@@ -278,6 +292,25 @@ public class ObservationPlot extends XYPlot
     }
   }
 
+  /**
+   * Removes the curve from the plot
+   * 
+   * @param curve
+   */
+  public void removeCurve( final IDiagramCurve curve )
+  {
+    final XYCurveSerie serie = (XYCurveSerie) m_curve2serie.get( curve );
+    if( serie != null )
+    {
+      final CurveDataset ds = (CurveDataset) m_serie2dataset.get( serie );
+      
+      if( ds != null )
+        ds.removeCurveSerie( serie );
+      
+      m_curve2serie.remove( curve );
+    }
+  }
+  
   /**
    * overriden to return a default axis when no real axes defined yet
    * 
@@ -345,6 +378,8 @@ public class ObservationPlot extends XYPlot
   }
 
   /**
+   * TODO: also use the direction to find out best AxisLocation...
+   *  
    * @param diagAxis
    * @return location according to axis
    */

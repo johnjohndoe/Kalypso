@@ -314,10 +314,10 @@ public abstract class AbstractEditorPart extends EditorPart implements
       if( delta != null && delta.getKind() == IResourceDelta.CHANGED )
       {
         // TODO: ask user?
-        if( !m_isSaving
-            && MessageDialog.openQuestion( getSite().getShell(),
-                "FeatureEditor",
-                "Die Vorlagendatei hat sich geändert. Neu laden?" ) )
+//        if( !m_isSaving
+//            && MessageDialog.openQuestion( getSite().getShell(),
+//                "FeatureEditor",
+//                "Die Vorlagendatei hat sich geändert. Neu laden?" ) )
           load();
       }
     }

@@ -41,6 +41,14 @@ public class ObservationChart extends JFreeChart implements
   }
 
   /**
+   * Disposes the chart.
+   */
+  public void dispose( )
+  {
+    clearChart();
+  }
+
+  /**
    * Clears the curves in the chart
    */
   protected void clearChart( )
@@ -57,10 +65,19 @@ public class ObservationChart extends JFreeChart implements
     {
       protected void runIntern( ) throws Throwable
       {
-        if( evt.getType() == TemplateEvent.TYPE_ADD
+        if( evt.isType( TemplateEvent.TYPE_ADD )
             && evt.getObject() instanceof IDiagramCurve )
+        {
           ((ObservationPlot) getPlot()).addCurve( (IDiagramCurve) evt
               .getObject() );
+        }
+
+        if( evt.isType( TemplateEvent.TYPE_REMOVE )
+            && evt.getObject() instanceof IDiagramCurve )
+        {
+          ((ObservationPlot) getPlot()).removeCurve( (IDiagramCurve) evt
+              .getObject() );
+        }
 
         //          if( evt.getType() == TemplateEvent.TYPE_REFRESH &&
         //              evt.getObject() instanceof Collection )
@@ -87,12 +104,14 @@ public class ObservationChart extends JFreeChart implements
     try
     {
       SwingUtilities.invokeAndWait( runnable );
-      if( runnable.getThrown() != null  )
+      if( runnable.getThrown() != null )
         throw runnable.getThrown();
     }
     catch( Throwable e )
     {
-      MessageDialog.openError( Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Aktualisierungsfehler", e.toString() );
+      MessageDialog.openError( Workbench.getInstance()
+          .getActiveWorkbenchWindow().getShell(), "Aktualisierungsfehler", e
+          .toString() );
     }
   }
 }
