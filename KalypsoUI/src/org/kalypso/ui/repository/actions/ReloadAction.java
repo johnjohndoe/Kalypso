@@ -1,18 +1,16 @@
 package org.kalypso.ui.repository.actions;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 
 /**
@@ -42,48 +40,39 @@ public class ReloadAction extends AbstractRepositoryExplorerAction implements
     if( rep == null )
       return;
 
-    try
+    final Job reloadJob = new Job( "Aktualisieren" )
     {
-      final IProgressService progressService = PlatformUI.getWorkbench()
-          .getProgressService();
-      progressService.busyCursorWhile( new IRunnableWithProgress()
+      protected IStatus run( IProgressMonitor monitor )
       {
-        public void run( IProgressMonitor monitor )
-            throws InvocationTargetException
+        monitor.beginTask( "Repository aktualisieren", 2 );
+
+        ObservationCache.clear();
+
+        try
         {
-          monitor.beginTask( "Repository aktualisieren", 2 );
+          rep.reload();
 
-          ObservationCache.clear();
-          
-          try
-          {
+          monitor.worked( 1 );
 
-            rep.reload();
+          // trick: direct call to update view
+          getExplorer().onRepositoryContainerChanged();
 
-            monitor.worked( 1 );
+          monitor.worked( 1 );
 
-            // trick: direct call to update view
-            getExplorer().onRepositoryContainerChanged();
-
-            monitor.worked( 1 );
-          }
-          catch( RepositoryException e )
-          {
-            MessageDialog.openError( getShell(),
-                "Fehler während Aktualisierung", e.getLocalizedMessage() );
-          }
-          finally
-          {
-            monitor.done();
-          }
+          return Status.OK_STATUS;
         }
-      } );
-    }
-    catch( Exception e ) // generic exception caught for simplicity
-    {
-      MessageDialog.openError( getShell(), "Repository aktualisieren", e
-          .getLocalizedMessage() );
-    }
+        catch( RepositoryException e )
+        {
+          return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, "Fehler während der Aktualisierung", e );
+        }
+        finally
+        {
+          monitor.done();
+        }
+      }
+    };
+
+    reloadJob.schedule();
   }
 
   /**
