@@ -64,7 +64,10 @@ package org.deegree.gml;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * 
@@ -128,12 +131,41 @@ public interface GMLDocument extends Document
    */
   public boolean isValid();
 
+  /**
+   * creates a GMLFeature that doesn't contain a property and that hasn't an id.
+   */
+  public GMLFeature createGMLFeature( final FeatureType featureType );
+  
+  /**
+   * creates a GMLFeature.
+   */
+  public GMLFeature createGMLFeature( final FeatureType featureType, final String id,
+      GMLProperty[] properties ) throws GMLException;
+
+  
+  public GMLFeatureCollection createGMLFeatureCollection( final String collectionName );
+
+  /**
+   * factory method to create a GMLProperty. the property that will be return
+   * doesn't contain a value.
+   */
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp );
+
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final Element propertyValue );
+  
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final String attributeValue );
+
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final Object customObject ) throws GMLException;
+  
   /* #GMLSchema lnkGMLSchema; */
 }
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.9  2005/02/08 18:43:59  belger
+ * *** empty log message ***
+ *
  * Revision 1.8  2005/01/18 12:50:41  doemming
  * *** empty log message ***
  *

@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.deegree.model.feature.FeatureType;
 import org.w3c.dom.Document;
@@ -222,5 +223,11 @@ public class GMLSchema
         return type;
     }
     return null;
+  }
+
+  /** Returns a map xmlns -> namespaceUri */
+  public Map getNamespaceMap()
+  {
+    return m_ns;
   }
 }

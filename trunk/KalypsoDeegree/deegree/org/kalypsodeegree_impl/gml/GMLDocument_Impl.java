@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.deegree_impl.gml;
 
 import java.io.IOException;
@@ -71,11 +71,18 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.deegree.gml.GMLDocument;
+import org.deegree.gml.GMLException;
 import org.deegree.gml.GMLFeature;
 import org.deegree.gml.GMLFeatureCollection;
 import org.deegree.gml.GMLNameSpace;
+import org.deegree.gml.GMLProperty;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.DOMPrinter;
 import org.deegree.xml.XMLTools;
+import org.deegree_impl.extension.ITypeHandler;
+import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.tools.Debug;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -645,5 +652,125 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   public Document getDocument()
   {
     return m_document;
+  }
+
+  public GMLFeature createGMLFeature( final FeatureType featureType )
+  {
+    Debug.debugMethodBegin( "", "createGMLFeature(Document, FeatureType)" );
+
+    final Element elem = createElementWithPrefix( featureType );
+    final GMLFeature feature = new GMLFeature_Impl( elem );
+
+    Debug.debugMethodEnd();
+    return feature;
+  }
+
+  /**
+  * creates a GMLFeatureCollection that doesn't contain a property and that
+  * hasn't an id.
+  */
+  public GMLFeatureCollection createGMLFeatureCollection( final String collectionName )
+  {
+   Debug.debugMethodBegin();
+  
+   final Element elem = createElementWithPrefix( CommonNamespaces.GMLNS, collectionName );
+   final Element el = createElementWithPrefix( CommonNamespaces.GMLNS, "boundedBy" );
+   elem.appendChild( el );
+  
+   final GMLFeatureCollection feature = new GMLFeatureCollection_Impl( elem );
+  
+   Debug.debugMethodEnd();
+   return feature;
+  }
+
+  /**
+   * @see org.deegree.gml.GMLDocument#createGMLFeature(org.deegree.model.feature.FeatureType,
+   *      java.lang.String, org.deegree.gml.GMLProperty[])
+   */
+  public GMLFeature createGMLFeature( final FeatureType featureType, final String id,
+      GMLProperty[] properties ) throws GMLException
+  {
+    Debug.debugMethodBegin( "", "createGMLFeature(Document, String, String, GMLProperty[])" );
+
+    final GMLFeature feature = createGMLFeature( featureType );
+    for( int i = 0; i < properties.length; i++ )
+      feature.addProperty( properties[i] );
+
+    Debug.debugMethodEnd();
+    return feature;
+  }
+  
+  /**
+   * factory method to create a GMLProperty. the property that will be return
+   * doesn't contain a value.
+   */
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp )
+  {
+    final Element elem = createElementWithPrefix( ftp );
+    final GMLProperty ls = new GMLProperty_Impl( elem );
+    return ls;
+  }
+
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final Element propertyValue )
+  {
+    final GMLProperty ls = createGMLProperty( ftp );
+    ls.setPropertyValue( propertyValue );
+    return ls;
+  }
+
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final String attributeValue )
+  {
+    final Element element = createElementWithPrefix( ftp );
+    GMLProperty gmlProp = new GMLProperty_Impl( ftp, element );
+    gmlProp.setPropertyValue( attributeValue );
+    return gmlProp;
+  }
+  
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp,
+      final Object customObject ) throws GMLException
+  {
+    try
+    {
+      final Element element = createElementWithPrefix( ftp );
+      
+      // marshalling
+      final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
+          .getTypeHandlerForClassName( ftp.getType() );
+      typeHandler.marshall( customObject, element );
+
+      GMLCustomProperty_Impl gmlProp = new GMLCustomProperty_Impl( ftp, element );
+
+      Debug.debugMethodEnd();
+      return gmlProp;
+    }
+    catch( final Exception e )
+    {
+      throw new GMLException( e.getLocalizedMessage() );
+    }
+  }
+  
+  private Element createElementWithPrefix( final FeatureType ft )
+  {
+    return createElementWithPrefix( ft.getNamespace(), ft.getName() );
+  }
+
+  private Element createElementWithPrefix( final FeatureTypeProperty ftp )
+  {
+    return createElementWithPrefix( ftp.getNamespace(), ftp.getName() );
+  }
+
+  private Element createElementWithPrefix( final String namespace, final String name )
+  {
+    final Element element = createElementNS( namespace, name );
+    
+//    final GMLNameSpace gmlNS = (GMLNameSpace)m_nameSpaces.get( namespace );
+//    if( gmlNS != null )
+//    {
+//      final String prefix = gmlNS.getSubSpaceName();
+//      element.setPrefix( prefix );
+//    }
+//    
+    return element;
+    
   }
 }

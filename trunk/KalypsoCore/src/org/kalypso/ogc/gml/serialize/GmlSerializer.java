@@ -96,10 +96,21 @@ public final class GmlSerializer
       final String schemaNamespace = workspace.getSchemaNamespace();
       if( schemaNamespace != null )
       {
-        final GMLNameSpace namespace = new GMLNameSpace_Impl(null, schemaNamespace );
+        final GMLNameSpace namespace = new GMLNameSpace_Impl( null, schemaNamespace );
         gmlDoc.addNameSpace( namespace );
       }
       
+      final Map namespaces = workspace.getNamespaceMap();
+      for( final Iterator entryIt = namespaces.entrySet().iterator(); entryIt.hasNext(); )
+      {
+        final Map.Entry entry = (Entry)entryIt.next();
+        final GMLNameSpace_Impl ns = new GMLNameSpace_Impl( (String)entry.getKey(), (String)entry.getValue() );
+        // do not use the xmlns:xmlns namespace, its the LAW!
+        if( !ns.getSubSpaceName().equals( "xmlns" ) )
+          gmlDoc.addNameSpace( ns );
+      }
+
+      // TODO: why aren't those already in the namespace map???
       final GMLNameSpace gmlNameSpace = new GMLNameSpace_Impl(
           "gml","http://www.opengis.net/gml" );
       final GMLNameSpace xlinkNameSpace = new GMLNameSpace_Impl(
@@ -110,7 +121,7 @@ public final class GmlSerializer
       gmlDoc.addNameSpace( xlinkNameSpace );
       gmlDoc.addNameSpace( xsiNameSpace );
 
-      GMLFeature gmlFeature = GMLFactory.createGMLFeature( gmlDoc, workspace
+      final GMLFeature gmlFeature = GMLFactory.createGMLFeature( gmlDoc, workspace
           .getRootFeature() );
       gmlDoc.setRoot( gmlFeature );
 
@@ -153,7 +164,7 @@ public final class GmlSerializer
     // nicht die echte URL der schemaLocation, sondern dass, was im gml steht!
     final String schemaLocationName = gml.getSchemaLocationName();
     
-    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaLocationName, schema.getTargetNS() );
+    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaLocationName, schema.getTargetNS(), schema.getNamespaceMap() );
   }
 
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IUrlResolver urlResolver )
@@ -200,6 +211,6 @@ public final class GmlSerializer
     final FeatureType[] types = schema.getFeatureTypes();
     final Feature feature = FeatureFactory.createFeature( gml.getRootFeature(), types );
 
-    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaLocationName, schema.getTargetNS() );
+    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaLocationName, schema.getTargetNS(), schema.getNamespaceMap() );
   }
 }
