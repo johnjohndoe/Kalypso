@@ -54,7 +54,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IObservation;
@@ -263,10 +262,9 @@ public class TableViewUtils
     return xmlTemplate;
   }
 
-  public static IStatus applyXMLTemplate( final TableView view, final ObstableviewType xml,
-      final URL context, final boolean synchron )
+  public static void applyXMLTemplate( final TableView view, final ObstableviewType xml,
+      final URL context, final boolean synchron, final MultiStatus status )
   {
-    final MultiStatus status = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Fehler beim Laden einer Vorlage", null );
     view.removeAllItems();
 
     final RulesType trules = xml.getRules();
@@ -284,10 +282,20 @@ public class TableViewUtils
     {
       final TypeObservation tobs = (TypeObservation)it.next();
 
-      final TableViewColumnXMLLoader loader = new TableViewColumnXMLLoader( view, tobs, context, synchron );
-      status.add( loader.getResult() );
+      TableViewColumnXMLLoader loader;
+      try
+      {
+        loader = new TableViewColumnXMLLoader( view, tobs, context,
+            synchron );
+        status.add( loader.getResult() );
+      }
+      catch( final Throwable e )
+      {
+        e.printStackTrace();
+        
+        status.add( KalypsoGisPlugin.createErrorStatus( "Zeitreihe konnte nicht geladen werden", e ) );
+      }
+      
     }
-    
-    return status;
   }
 }

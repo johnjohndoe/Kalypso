@@ -414,7 +414,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
           }
         };
         helper.runAndHandleOperation( shell, false, true, "Berichtsablage",
-            "Ein oder mehrere Dokumente konnten nicht exportiert werden." );
+            "Fehler bei der Berichtsablage." );
       }
     }
     catch( final CoreException e )
@@ -452,37 +452,36 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       {
         monitor.setTaskName( "Berichtsablage - " + berichtExporter.toString() );
 
+        final DocBean doc = metadocService.getCopyBean( extension );
+        OutputStream os = null;
         try
         {
-          final DocBean doc = metadocService.getCopyBean( extension );
-          OutputStream os = null;
-          try
-          {
-            os = new FileOutputStream( new File( doc.getLocation() ) );
-            berichtExporter.export( features[j], os );
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-
-            metadocService.cancelBean( doc );
-
-            final String msg = e.getLocalizedMessage();
-            final String message = msg == null ? "Unbekannter Fehler" : msg;
-
-            throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-                message, e ) );
-          }
-          finally
-          {
-            IOUtils.closeQuietly( os );
-          }
-
+          os = new FileOutputStream( new File( doc.getLocation() ) );
+          final IStatus status = berichtExporter.export( features[j], os );
+          if( !status.isOK() )
+            stati.add( status );
+          
           metadocService.commitBean( doc );
         }
-        catch( final CoreException e )
+        catch( final CoreException ce )
         {
-          stati.add( e.getStatus() );
+          stati.add( ce.getStatus() );
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+
+          metadocService.cancelBean( doc );
+
+          final String msg = e.getLocalizedMessage();
+          final String message = msg == null ? "Unbekannter Fehler" : msg;
+
+          stati.add( KalypsoGisPlugin.createErrorStatus(
+              message, e ) );
+        }
+        finally
+        {
+          IOUtils.closeQuietly( os );
         }
 
         monitor.worked( 1 );
@@ -491,13 +490,13 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       }
     }
 
-    if( stati.size() == 0 )
+    if( stati.isEmpty() )
       return;
 
     throw new CoreException( new org.eclipse.core.runtime.MultiStatus(
         KalypsoGisPlugin.getId(), 0, (IStatus[]) stati
             .toArray( new IStatus[stati.size()] ),
-        "Ein oder mehrere Dokumente konnten nicht exportiert werden.", null ) );
+        "Beim Export ein oder mehrerer Dokumente traten Fehler auf.", null ) );
   }
 
   private IBerichtExporter[] createExporters( )

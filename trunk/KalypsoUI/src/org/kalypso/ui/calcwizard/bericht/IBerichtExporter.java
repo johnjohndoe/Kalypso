@@ -43,8 +43,10 @@ package org.kalypso.ui.calcwizard.bericht;
 import java.io.OutputStream;
 import java.net.URL;
 
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ui.calcwizard.Arguments;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author belger
@@ -64,9 +66,9 @@ public interface IBerichtExporter
    * Export feature to Stream
    * @param os
    * 
-   * @throws Exception
+   * @throws CoreException
    */
-  public void export( final Feature feature, final OutputStream os ) throws Exception;
+  public IStatus export( final Feature feature, final OutputStream os ) throws CoreException;
 
   public String getExtension( );
 }

@@ -203,7 +203,8 @@ public class ObservationTableModel extends AbstractTableModel
 
       // values of observation of the column
       final IObservation obs = col.getObservation();
-      if( obs == null )
+      final IAxis axis = col.getAxis();
+      if( obs == null || axis == null )
         return;
 
       if( !m_columns.contains( col ) )
@@ -221,7 +222,7 @@ public class ObservationTableModel extends AbstractTableModel
         tableColumn.setPreferredWidth( col.getWidth() );
 
         // add tablecolumn to status model
-        final IAxis statusAxis = getStatusAxis( col );
+        final IAxis statusAxis = getStatusAxis( obs, axis );
         if( statusAxis != null )
           m_statusModel.addColumn( statusAxis.getName() );
         else
@@ -263,8 +264,9 @@ public class ObservationTableModel extends AbstractTableModel
     {
       final TableViewColumn tCol = (TableViewColumn)itCol.next();
       final IObservation obs = tCol.getObservation();
+      final IAxis axis = tCol.getAxis();
 
-      if( obs == null )
+      if( obs == null || axis == null )
         continue;
 
       final ITuppleModel tupModel = obs.getValues( tCol.getArguments() );
@@ -276,7 +278,7 @@ public class ObservationTableModel extends AbstractTableModel
         continue;
       }
 
-      final IAxis statusAxis = getStatusAxis( tCol );
+      final IAxis statusAxis = getStatusAxis( obs, axis );
       final IAxis keyAxis = tCol.getKeyAxis();
 
       // fill valued column values
@@ -288,7 +290,7 @@ public class ObservationTableModel extends AbstractTableModel
         final int index = tupModel.indexOf( sharedElement, keyAxis );
         if( index != -1 )
         {
-          final Object element = tupModel.getElement( index, tCol.getAxis() );
+          final Object element = tupModel.getElement( index, axis );
           m_valuesModel.setValueAt( element, r, colIndex );
 
           if( statusAxis != null )
@@ -314,13 +316,12 @@ public class ObservationTableModel extends AbstractTableModel
   /**
    * Returns the status axis for the 'normal' axis found in the given column.
    * 
-   * @param col
    * @return status axis or null if not found
    */
-  private IAxis getStatusAxis( final TableViewColumn col )
+  private IAxis getStatusAxis( final IObservation obs, final IAxis axis )
   {
-    final IAxis[] obsAxes = col.getObservation().getAxisList();
-    final String statusAxisLabel = KalypsoStatusUtils.getStatusAxisLabelFor( col.getAxis() );
+    final IAxis[] obsAxes = obs.getAxisList();
+    final String statusAxisLabel = KalypsoStatusUtils.getStatusAxisLabelFor( axis );
     final IAxis statusAxis = ObservationUtilities.findAxisByNameNoEx( obsAxes, statusAxisLabel );
 
     return statusAxis;
@@ -627,9 +628,12 @@ public class ObservationTableModel extends AbstractTableModel
     while( it.hasNext() )
     {
       final TableViewColumn col = (TableViewColumn)it.next();
-      allAxes.add( col.getAxis() );
+      final IObservation obs = col.getObservation();
+      final IAxis axis = col.getAxis();
+      
+      allAxes.add( axis );
 
-      final IAxis statusAxis = getStatusAxis( col );
+      final IAxis statusAxis = getStatusAxis( obs, axis );
       if( statusAxis != null )
       {
         allAxes.add( statusAxis );
@@ -755,10 +759,12 @@ public class ObservationTableModel extends AbstractTableModel
       try
       {
         boolean doIt = false;
+        boolean doItSave = false;
         for( final Iterator iter = columns.iterator(); iter.hasNext(); )
         {
           final TableViewColumn col = (TableViewColumn)iter.next();
           doIt |= col.isDirty();
+          doItSave |= col.isDirtySave();
           
           col.setDirty( false );
           if( saveFiles )
@@ -772,10 +778,10 @@ public class ObservationTableModel extends AbstractTableModel
           m_dontRefreshColumns.addAll( columns );
           obs.setValues( values );
           m_dontRefreshColumns.removeAll( columns );
-  
-          if( saveFiles )
-            KalypsoGisPlugin.getDefault().getPool().saveObject( obs, monitor );
-        }
+        }  
+
+        if( saveFiles && doItSave )
+          KalypsoGisPlugin.getDefault().getPool().saveObject( obs, monitor );
       }
       catch( final Exception e )
       {

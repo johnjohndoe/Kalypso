@@ -64,6 +64,8 @@ import org.kalypso.util.runtime.IVariableArguments;
  */
 public class ObservationUtilities
 {
+  private static final String MSG_ERROR_NOAXISTYPE = "Keine Achse gefunden vom Typ: ";
+
   private ObservationUtilities()
   {
   //  not intended to be instanciated
@@ -89,7 +91,7 @@ public class ObservationUtilities
         return axes[i];
     }
 
-    throw new NoSuchElementException( "No axis found with name: " + axisName );
+    throw new NoSuchElementException( MSG_ERROR_NOAXISTYPE + axisName );
   }
 
   /**
@@ -133,7 +135,7 @@ public class ObservationUtilities
         return axes[i];
     }
 
-    throw new NoSuchElementException( "No axis found with type: " + axisType );
+    throw new NoSuchElementException( MSG_ERROR_NOAXISTYPE + axisType );
   }
 
   /**

@@ -282,8 +282,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     if( m_disposed )
       LOGGER.info( "Theme already disposed: " + this );
     
-    LOGGER.info( "Object loaded: " + key );
-    
     try
     {
       final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
@@ -306,15 +304,15 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
         m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
 
-        // erst jetzt mit dem style laden anfangen!
-        for( int i = 0; i < m_styleKeys.length; i++ )
-          pool.addPoolListener( this, m_styleKeys[i] );
-        
         fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
 
         final FeatureList featureList = m_theme.getFeatureList();
         featureList.accept( new SetSelectionVisitor( m_lastSelectedFeaturesMap ) );
         fireModellEvent( new ModellEvent( this, ModellEvent.SELECTION_CHANGED ) );
+
+        // erst jetzt mit dem style laden anfangen!
+        for( int i = 0; i < m_styleKeys.length; i++ )
+          pool.addPoolListener( this, m_styleKeys[i] );
       }
 
       // styles
@@ -351,8 +349,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
-    LOGGER.info( "Key invalidated for theme: " + key );
-    
     m_loaded = false;
     
     if( m_theme == null )
@@ -363,8 +359,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       // die alte selektion merken, falls das Thema gleich wieder geladen wird!
       final FeatureList featureList = m_theme.getFeatureList();
       featureList.accept( new QuerySelectionVisitor( m_lastSelectedFeaturesMap ) );
-      System.out.println( "selektion for theme: " + this );
-      System.out.println( m_lastSelectedFeaturesMap );
       
       m_theme.removeModellListener( this );
       m_theme.dispose();
