@@ -76,7 +76,7 @@ public final class EditFeatureAction extends Action
    */
   public void run()
   {
-    final FeatureComposite helper = new FeatureComposite( m_feature );
+    final FeatureComposite helper = new FeatureComposite( m_workspace, m_commandTarget, m_feature );
 
     m_shell.getDisplay().asyncExec( new Runnable()
     {

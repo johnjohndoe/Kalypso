@@ -102,7 +102,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private String m_featurePath;
 
-  private FeatureComposite m_featureComposite = new FeatureComposite( null, new URL[] {} );
+  private FeatureComposite m_featureComposite = new FeatureComposite( null, null, null, new URL[] {} );
 
   private Label m_label;
 

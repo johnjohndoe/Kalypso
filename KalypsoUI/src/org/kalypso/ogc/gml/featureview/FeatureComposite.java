@@ -51,10 +51,6 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
-import org.kalypsodeegree.model.feature.Annotation;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
@@ -65,6 +61,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.CheckboxFeatureControl;
+import org.kalypso.ogc.gml.featureview.control.SubFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.TextFeatureControl;
 import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.CheckboxType;
@@ -77,8 +74,15 @@ import org.kalypso.template.featureview.GroupType;
 import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.LayoutType;
+import org.kalypso.template.featureview.SubcompositeType;
 import org.kalypso.template.featureview.TextType;
+import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
+import org.kalypsodeegree.model.feature.Annotation;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * @author belger
@@ -96,21 +100,32 @@ public class FeatureComposite implements IFeatureControl
 
   private Feature m_feature;
 
-  public FeatureComposite( final Feature feature )
+  private final ModellEventProvider m_workspace;
+
+  private final ICommandTarget m_target;
+
+  public FeatureComposite( final ModellEventProvider workspace, final ICommandTarget target,
+      final Feature feature )
   {
-    this( feature, new URL[] {} );
+    this( workspace, target, feature, new URL[] {} );
   }
 
-  public FeatureComposite( final Feature feature, final URL[] templateURL )
+  public FeatureComposite( final ModellEventProvider workspace, final ICommandTarget target,
+      final Feature feature, final URL[] templateURL )
   {
+    m_workspace = workspace;
+    m_target = target;
     m_feature = feature;
 
     for( int i = 0; i < templateURL.length; i++ )
       addView( templateURL[i] );
   }
 
-  public FeatureComposite( final Feature feature, final FeatureviewType[] views )
+  public FeatureComposite( final ModellEventProvider workspace, final ICommandTarget target,
+      final Feature feature, final FeatureviewType[] views )
   {
+    m_workspace = workspace;
+    m_target = target;
     m_feature = feature;
 
     for( int i = 0; i < views.length; i++ )
@@ -132,7 +147,7 @@ public class FeatureComposite implements IFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#collectChanges(java.util.Collection)
    */
-  public void collectChanges( Collection c )
+  public void collectChanges( final Collection c )
   {
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
@@ -266,7 +281,7 @@ public class FeatureComposite implements IFeatureControl
       if( propertyName != null && propertyName.length() > 0 )
       {
         final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
-        final Annotation annotation = ftp.getAnnotation(Locale.getDefault().getLanguage() );
+        final Annotation annotation = ftp.getAnnotation( Locale.getDefault().getLanguage() );
         if( annotation != null )
         {
           label.setText( annotation.getLabel() );
@@ -316,12 +331,30 @@ public class FeatureComposite implements IFeatureControl
 
       final String propertyName = buttonType.getProperty();
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
-      final ButtonFeatureControl bfc = new ButtonFeatureControl( feature, ftp );
+      final ButtonFeatureControl bfc = new ButtonFeatureControl( m_workspace, m_target, feature,
+          ftp );
 
       final Control control = bfc.createControl( parent, SWTUtilities
           .createStyleFromString( buttonType.getStyle() ) );
 
       addFeatureControl( bfc );
+
+      return control;
+    }
+    else if( controlType instanceof SubcompositeType )
+    {
+      final SubcompositeType compoType = (SubcompositeType)controlType;
+
+      final String propertyName = compoType.getProperty();
+      final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
+
+      final SubFeatureControl fc = new SubFeatureControl( m_workspace, m_target, feature, ftp,
+          (FeatureviewType[])m_viewMap.values().toArray( new FeatureviewType[0] ) );
+
+      final Control control = fc.createControl( parent, SWTUtilities
+          .createStyleFromString( compoType.getStyle() ) );
+
+      addFeatureControl( fc );
 
       return control;
     }

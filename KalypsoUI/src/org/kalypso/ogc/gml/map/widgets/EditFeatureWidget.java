@@ -109,7 +109,7 @@ public class EditFeatureWidget extends AbstractWidget
   {
     if( m_shell != null && feature != null )
     {
-      final FeatureComposite helper = new FeatureComposite( feature );
+      final FeatureComposite helper = new FeatureComposite( workspace, commandTarget ,feature );
       
       final Shell shell = m_shell;
       shell.getDisplay().asyncExec( new Runnable()
