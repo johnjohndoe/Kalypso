@@ -133,7 +133,7 @@ public class StatisticView extends JInternalFrame implements ActionListener
           {
             File gridFile = (File)cb_grids.getSelectedItem();
             ArcGridConverter gridConverter = new ArcGridConverter();
-            
+
             int value = JOptionPane.showConfirmDialog( getInstance(),
                 "Do you want to give a template grid?", "", JOptionPane.YES_NO_OPTION );
             RectifiedGridCoverage templateGrid = null;
@@ -246,39 +246,17 @@ public class StatisticView extends JInternalFrame implements ActionListener
       {
         statistics = DamageAnalysis.getStatisticsWithTemplate( damageGrid, landuseGrid,
             templateGrid );
+        interpretStatistics( statistics, landuseTypeList );
       }
       else
       {
         statistics = DamageAnalysis.getStatistics( damageGrid, landuseGrid );
+        interpretStatistics( statistics, landuseTypeList );
       }
     }
     catch( Exception e )
     {
       e.printStackTrace();
-    }
-    Iterator it = statistics.keySet().iterator();
-    while( it.hasNext() )
-    {
-      Integer key = (Integer)it.next();
-      Vector statisticsVector = (Vector)statistics.get( key );
-      Double sum = (Double)statisticsVector.get( 0 );
-      Double min = (Double)statisticsVector.get( 1 );
-      Double max = (Double)statisticsVector.get( 2 );
-      Iterator iterator = landuseTypeList.keySet().iterator();
-      String landuse = null;
-      while( iterator.hasNext() )
-      {
-        landuse = (String)iterator.next();
-        Integer actualKey = (Integer)landuseTypeList.get( landuse );
-        if( actualKey.equals( key ) )
-        {
-          break;
-        }
-      }
-      int mode = BigDecimal.ROUND_HALF_EVEN;
-      logln( landuse + ": Sum=" + Number.round( sum.doubleValue(), 2, mode ) + ", MinValue="
-          + Number.round( min.doubleValue(), 4, mode ) + ", MaxValue="
-          + Number.round( max.doubleValue(), 4, mode ) );
     }
   }
 
@@ -305,16 +283,51 @@ public class StatisticView extends JInternalFrame implements ActionListener
       {
         statistics = DamageAnalysis.getStatisticsWithTemplate( damageGrid, landuseGrid,
             administrationUnitGrid, templateGrid );
+        interpretStatistics( statistics, administrationUnitList, landuseTypeList );
       }
       else
       {
         statistics = DamageAnalysis.getStatistics( damageGrid, landuseGrid, administrationUnitGrid );
+        interpretStatistics( statistics, administrationUnitList, landuseTypeList );
       }
     }
     catch( Exception e )
     {
       e.printStackTrace();
     }
+  }
+
+  void interpretStatistics( Hashtable statistics, Hashtable landuseTypeList )
+  {
+    Iterator it = statistics.keySet().iterator();
+    while( it.hasNext() )
+    {
+      Integer key = (Integer)it.next();
+      Vector statisticsVector = (Vector)statistics.get( key );
+      Double sum = (Double)statisticsVector.get( 0 );
+      Double min = (Double)statisticsVector.get( 1 );
+      Double max = (Double)statisticsVector.get( 2 );
+      Iterator iterator = landuseTypeList.keySet().iterator();
+      String landuse = null;
+      while( iterator.hasNext() )
+      {
+        landuse = (String)iterator.next();
+        Integer actualKey = (Integer)landuseTypeList.get( landuse );
+        if( actualKey.equals( key ) )
+        {
+          break;
+        }
+      }
+      int mode = BigDecimal.ROUND_HALF_EVEN;
+      logln( landuse + ": Sum=" + Number.round( sum.doubleValue(), 2, mode ) + ", MinValue="
+          + Number.round( min.doubleValue(), 4, mode ) + ", MaxValue="
+          + Number.round( max.doubleValue(), 4, mode ) );
+    }
+  }
+
+  void interpretStatistics( Hashtable statistics, Hashtable administrationUnitList,
+      Hashtable landuseTypeList )
+  {
     Iterator it = statistics.keySet().iterator();
     while( it.hasNext() )
     {

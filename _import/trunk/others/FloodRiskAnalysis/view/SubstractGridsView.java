@@ -47,7 +47,7 @@ public class SubstractGridsView extends JInternalFrame implements ActionListener
 
   public SubstractGridsView()
   {
-    super( "StatisticView", true, true, true, true );
+    super( "SubstractGrids", true, true, true, true );
     setBounds( 0, 0, 600, 150 );
     initGUI();
     updateStatus();

@@ -77,7 +77,7 @@ public class MenuHandler implements ActionListener
   private GridRasterView rasterView = null;
 
   private StatisticView statisticView = null;
-  
+
   private SubstractGridsView substractGridsView = null;
 
   //private ResultContext resultContext = null;
@@ -194,12 +194,12 @@ public class MenuHandler implements ActionListener
           try
           {
             convertLanduse();
+            LogView.println( "...finished" );
           }
           catch( Exception e )
           {
             System.out.println( e );
           }
-          LogView.println( "...finished" );
         }
       }.start();
     }
@@ -214,12 +214,12 @@ public class MenuHandler implements ActionListener
           try
           {
             convertAdministrationUnit();
+            LogView.println( "...finished" );
           }
           catch( Exception e )
           {
             System.out.println( e );
           }
-          LogView.println( "...finished" );
         }
       }.start();
     }
@@ -234,12 +234,12 @@ public class MenuHandler implements ActionListener
           try
           {
             calculateDamage();
+            LogView.println( "...finished" );
           }
           catch( Exception e )
           {
             System.out.println( e );
           }
-          LogView.println( "...finished" );
         }
       }.start();
     }
@@ -254,12 +254,12 @@ public class MenuHandler implements ActionListener
           try
           {
             calculateAnnualDamage();
+            LogView.println( "...finished" );
           }
           catch( Exception e )
           {
             System.out.println( e );
           }
-          LogView.println( "...finished" );
         }
       }.start();
     }
@@ -274,12 +274,12 @@ public class MenuHandler implements ActionListener
           try
           {
             calculateRisk();
+            LogView.println( "...finished" );
           }
           catch( Exception e )
           {
             System.out.println( e );
           }
-          LogView.println( "...finished" );
         }
       }.start();
     }
@@ -297,10 +297,11 @@ public class MenuHandler implements ActionListener
       floodRiskFrame.desktop.add( statisticView );
       statisticView.moveToFront();
     }
-    
-    if(ac.equals("substractGrids")){
+
+    if( ac.equals( "substractGrids" ) )
+    {
       substractGridsView = new SubstractGridsView();
-      floodRiskFrame.desktop.add(substractGridsView);
+      floodRiskFrame.desktop.add( substractGridsView );
       substractGridsView.moveToFront();
     }
 
@@ -531,6 +532,20 @@ public class MenuHandler implements ActionListener
    */
   void writeWaterlevelGrids( TreeMap waterlevelGrids ) throws Exception
   {
+    LogView.println("Control WaterlevelGrids...");
+    // control Geometries
+    Object[] keys = waterlevelGrids.keySet().toArray();
+    for( int i = 0; i < keys.length; i++ )
+    {
+      Double key = (Double)keys[i];
+      if( i < keys.length - 1 )
+      {
+        Double nextKey = (Double)keys[i + 1];
+        RectifiedGridCoverage grid = (RectifiedGridCoverage)waterlevelGrids.get( key );
+        RectifiedGridCoverage nextGrid = (RectifiedGridCoverage)waterlevelGrids.get( nextKey );
+        DamageAnalysis.controlGridGeometries( grid.getGridDomain(), nextGrid.getGridDomain() );
+      }
+    }
     File waterlevelDataModelGML = new File( workingDir + "\\Waterlevel\\WaterlevelDataModel.gml" );
     DataModel.writeWaterlevelData( waterlevelDataModelGML, waterlevelGrids );
     hasWaterlevelGML = true;

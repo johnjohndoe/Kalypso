@@ -6,12 +6,27 @@ import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
+import damageAnalysis.DamageAnalysis;
+
 public class RasterTools
 {
 
+  /**
+   * substracts two grids (grid1 - grid2), checks each gridcell, when in a
+   * gridcell of grid1 a value is stored and in the same gridcell of grid2 no
+   * data value is stored, then the value of the result grid for this cell is 1;
+   * otherwise it is 0
+   * 
+   * @param grid1
+   * @param grid2
+   * @return resultGrid Grid with only cellValues 0 or 1
+   */
   public static RectifiedGridCoverage substractGrids( RectifiedGridCoverage grid1,
       RectifiedGridCoverage grid2 ) throws Exception
   {
+    // control Geometries
+    DamageAnalysis.controlGridGeometries( grid1.getGridDomain(), grid2.getGridDomain() );
+
     RectifiedGridDomain resultGridDomain = new RectifiedGridDomain( grid1.getGridDomain()
         .getOrigin( null ), grid1.getGridDomain().getOffset(), grid1.getGridDomain().getGridRange() );
     Vector resultRangeSetData = new Vector();
@@ -26,7 +41,7 @@ public class RasterTools
       {
         if( grid1_rowData.get( j ) != null )
         {
-          if( grid2_rowData.get(j) != null )
+          if( grid2_rowData.get( j ) != null )
           {
             result_rowData.addElement( new Double( 0 ) );
           }
