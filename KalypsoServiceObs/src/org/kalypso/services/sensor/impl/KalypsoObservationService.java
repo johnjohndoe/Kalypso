@@ -246,10 +246,7 @@ public class KalypsoObservationService implements IObservationService
       final File f = (File)m_mapBean2File.get( id );
 
       if( f.delete() )
-      {
         m_mapBean2File.remove( id );
-        m_logger.info( "File deleted: " + f.getAbsolutePath() );
-      }
       else
         m_logger.warning( "Could not delete file: " + f.getAbsolutePath() );
     }
@@ -316,17 +313,20 @@ public class KalypsoObservationService implements IObservationService
     }
     else
     {
-      // last chance: go through repositories and check ids
+      // last chance: go through repositories and use findItem()
       for( final Iterator it = m_repositories.iterator(); it.hasNext(); )
       {
         final IRepository rep = (IRepository)it.next();
         
-        final String repId = rep.getIdentifier();
-        
-        final String cmpId = obean.getRepId().substring(0, repId.length() - 1);
-        
-        if( repId.equalsIgnoreCase( cmpId ) )
+        try
+        {
           return rep.findItem( obean.getId() );
+        }
+        catch( RepositoryException ignored )
+        {
+          // ignored, could not find item
+          m_logger.fine( "Following exception ignored in KalypsoObservationService.itemFromBean(): " + ignored.getLocalizedMessage() );
+        }
       }
       
       final RemoteException e = new RemoteException( "Unknonwn Repository: " + obean.getRepId() );
@@ -502,6 +502,7 @@ public class KalypsoObservationService implements IObservationService
       catch( RepositoryException e )
       {
         // ignored
+        m_logger.fine( "Following exception ignored in KalypsoObservationService.findItem(): " + e.getLocalizedMessage() );
       }
     }
 
