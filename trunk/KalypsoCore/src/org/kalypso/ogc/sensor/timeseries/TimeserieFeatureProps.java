@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.deegree;
+package org.kalypso.ogc.sensor.timeseries;
 
 import java.util.Properties;
 
