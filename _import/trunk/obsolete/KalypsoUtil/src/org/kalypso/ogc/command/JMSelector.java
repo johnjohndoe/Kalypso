@@ -165,14 +165,5 @@ break;
     return resultDE;
   }
 
-  /*
-   * public String[] select(String[] ids) { ArrayList testIds=new
-   * ArrayList(Arrays.asList(ids)); Iterator iterator=themes.iterator();
-   * while(iterator.hasNext()) { Theme theme=(Theme)iterator.next(); ArrayList
-   * dElements=theme.getDisplayElements(); for(int i=0;i <dElements.size();i++) {
-   * DisplayElement element=(DisplayElement)dElements.get(i); String
-   * eId=element.getFeature().getId(); if(testIds.contains(eId))
-   * perform(element); } } return (String[]) selectedIds.toArray(new
-   * String[selectedIds.size()]); }
-   */
+  
 }

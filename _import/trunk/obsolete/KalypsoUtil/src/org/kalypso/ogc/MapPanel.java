@@ -10,6 +10,8 @@ import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.event.ModellEvent;
+import org.kalypso.ogc.widgets.GisMapEditorWidgetActionDelegate;
+import org.kalypso.ogc.widgets.IWidget;
 import org.kalypso.ogc.widgets.WidgetManager;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -48,7 +50,7 @@ public class MapPanel extends Canvas implements IMapModellView
   {
     super();
     // set empty Modell:
-    setMapModell( new MapModell( this,crs) );
+    setMapModell( new MapModell( this, crs ) );
     myWidgetManager = new WidgetManager( this );
     addMouseListener( myWidgetManager );
     addMouseMotionListener( myWidgetManager );
@@ -60,14 +62,14 @@ public class MapPanel extends Canvas implements IMapModellView
   {
     removeMouseListener( myWidgetManager );
     removeMouseMotionListener( myWidgetManager );
-    myModell.removeModellListener(this);
+    myModell.removeModellListener( this );
   }
 
   public void setOffset( int dx, int dy ) // used by pan method
   {
     xOffset = dx;
     yOffset = dy;
-    
+
     repaint();
   }
 
@@ -85,6 +87,7 @@ public class MapPanel extends Canvas implements IMapModellView
   public void paint( Graphics g )
   {
     paintMap( g );
+
     paintWidget( g );
   }
 
@@ -125,8 +128,8 @@ public class MapPanel extends Canvas implements IMapModellView
       try
       {
         myModell.paint( gr );
-        gr.setXORMode(Color.red );
-        myModell.paintSelected( gr,10 );
+        gr.setXORMode( Color.red );
+        myModell.paintSelected( gr, 10 );
         gr.setPaintMode();
       }
       catch( Exception e )
@@ -155,7 +158,7 @@ public class MapPanel extends Canvas implements IMapModellView
       final int right = Math.min( getWidth(), xOffset + getWidth() );
       final int top = Math.max( 0, yOffset );
       final int bottom = Math.min( getHeight(), yOffset + getHeight() );
-      
+
       g.setColor( getBackground() );
       //g.setColor( Color.black );
 
@@ -188,7 +191,12 @@ public class MapPanel extends Canvas implements IMapModellView
     //    Graphics gr = widgetImage.getGraphics();
     g.setColor( Color.red );
     g.setClip( 0, 0, getWidth(), getHeight() );
-    myWidgetManager.paintWidget( g );
+    IWidget actualWidget = myWidgetManager.getActualWidget();
+    if( actualWidget instanceof GisMapEditorWidgetActionDelegate )
+      if( ( (GisMapEditorWidgetActionDelegate)actualWidget ).paintOnView( this ) )
+        myWidgetManager.paintWidget( g );
+      else
+        myWidgetManager.paintWidget( g );
     //    g.drawImage( widgetImage, 0, 0, null );
     //    gr.dispose();
   }
@@ -262,27 +270,27 @@ public class MapPanel extends Canvas implements IMapModellView
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-    setValidAll(false);
+    setValidAll( false );
     clearOffset();
   }
-  
+
   public GM_Envelope getPanToPixelBoundingBox( double mx, double my )
   {
-      double ratio = myHeight / myWidth;
+    double ratio = myHeight / myWidth;
 
-      GeoTransform transform = myModell.getProjection(  );
+    GeoTransform transform = myModell.getProjection();
 
-      double gisMX = transform.getSourceX( mx );
-      double gisMY = transform.getSourceY( my );
+    double gisMX = transform.getSourceX( mx );
+    double gisMY = transform.getSourceY( my );
 
-      double gisDX = ( transform.getSourceX( myWidth / 2 ) - transform.getSourceX( 0 ) );
-      double gisDY = gisDX * ratio;
-      double gisX1 = gisMX - gisDX;
-      double gisX2 = gisMX + gisDX;
-      double gisY1 = gisMY - gisDY;
-      double gisY2 = gisMY + gisDY;
+    double gisDX = ( transform.getSourceX( myWidth / 2 ) - transform.getSourceX( 0 ) );
+    double gisDY = gisDX * ratio;
+    double gisX1 = gisMX - gisDX;
+    double gisX2 = gisMX + gisDX;
+    double gisY1 = gisMY - gisDY;
+    double gisY2 = gisMY + gisDY;
 
-      return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
+    return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
 
 }

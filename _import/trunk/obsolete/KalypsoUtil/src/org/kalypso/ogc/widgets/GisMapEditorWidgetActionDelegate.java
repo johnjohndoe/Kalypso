@@ -33,30 +33,19 @@ public abstract class GisMapEditorWidgetActionDelegate implements IEditorActionD
   {
     // widgets overwrite this methode to paint on the map
   }
-  //  private final IWidget myWidget;
+ 
   private WidgetManager myWidgetManager = null;
 
   protected IMapPanelProvider myEditor = null;
 
-//  public GisMapEditorWidgetActionDelegate( final IWidget widget, final WidgetManager widgetManager,
-//      final String text, final ImageDescriptor image, final String tooltipText )
-//  {
-//    super( text, IAction.AS_RADIO_BUTTON );
-//
-//    setToolTipText( tooltipText );
-//    setImageDescriptor( image );
-//
-//    myWidget = widget;
-//    myWidgetManager = widgetManager;
-//  }
+  private MapPanel myActualMapPanel=null;
+
 
   /**
    * @see org.kalypso.ogc.widgets.IWidget#activate()
    */
   public void activate()
   {
-   // myWidget.activate();
-   // setChecked( true );
   }
 
 
@@ -70,14 +59,20 @@ public abstract class GisMapEditorWidgetActionDelegate implements IEditorActionD
     if( targetEditor != null )
     {
       myEditor = (IMapPanelProvider)targetEditor;
-      MapPanel mapPanel = myEditor.getMapPanel();
-      if( mapPanel != null )
+      myActualMapPanel = myEditor.getMapPanel();
+      if( myActualMapPanel != null )
       {
-        myWidgetManager = mapPanel.getWidgetManager();
+        myWidgetManager = myActualMapPanel.getWidgetManager();
         if(action.isChecked() && myWidgetManager.getActualWidget()!=this)
             myWidgetManager.changeWidget(this);
       }
     }
+  }
+  
+  public boolean paintOnView(MapPanel mapPanel)
+  {
+      return mapPanel==myActualMapPanel;
+        
   }
 
   /**
@@ -85,7 +80,7 @@ public abstract class GisMapEditorWidgetActionDelegate implements IEditorActionD
    */
   public void run( IAction action )
   {
-    // wenn der Button wechselt    
+    // wenn der Button wechselt aber editor gleich bleibt
     System.out.println("WidgetActionDelegate.run(IAction.getID="+action.getId()+" IAction.isChecked="+action.isChecked()+" IAction.isEnabled="+action.isEnabled());
     if(action.isChecked() && myWidgetManager.getActualWidget()!=this)
       myWidgetManager.changeWidget(this);  

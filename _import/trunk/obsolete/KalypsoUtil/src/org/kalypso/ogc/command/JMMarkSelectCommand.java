@@ -23,22 +23,23 @@ public class JMMarkSelectCommand implements ICommand
     private GM_Position mySelectPos = null;
     private List myListFe = null; // list of display elements
     private KalypsoTheme myTheme = null;
-    private boolean selectWithinStatus = false;
-    private double myRadius = 0d;
+    private boolean mySelectWithinStatus = true;
+    private final double myRadius;
     private int mySelectionMode = -1;
     private int mySelectionId;
   
-    public JMMarkSelectCommand(KalypsoTheme theme, GM_Envelope selectEnv, boolean selectWithinStatus, int selectionId )
+    public JMMarkSelectCommand(KalypsoTheme theme, GM_Envelope selectEnv, boolean selectWithinStatus,double gisSelectionRadius, int selectionId )
     { 
-        this.mySelectEnv = selectEnv;
-        this.selectWithinStatus = selectWithinStatus;
+        mySelectEnv = selectEnv;
+        myRadius = gisSelectionRadius;
+        mySelectWithinStatus = selectWithinStatus;
         init(theme,selectionId);
     }
 
-    public JMMarkSelectCommand(KalypsoTheme theme, GM_Position selectPos,int selectionId )
+    public JMMarkSelectCommand(KalypsoTheme theme, GM_Position selectPos,double gisSelectionRadius,int selectionId )
     {
-        this.mySelectPos = selectPos;
-        this.myRadius = 20;//JMSelectOptionPanel.getInstance(  ).getRadius(  );
+        mySelectPos = selectPos;
+        myRadius = gisSelectionRadius;
         init(theme,selectionId  );
     }
 
@@ -46,7 +47,7 @@ public class JMMarkSelectCommand implements ICommand
     {
         mySelectionMode=JMSelector.MODE_TOGGLE;
         myTheme =theme;
-        mySelectionId=selectionId;//  this.selectionMode = JMSelectOptionPanel.getInstance(  ).getSelectionMode(  );
+        mySelectionId=selectionId;
     }
     
     public boolean isUndoable(  )
@@ -57,10 +58,9 @@ public class JMMarkSelectCommand implements ICommand
     public void process(  ) throws Exception
     {
         JMSelector selector = new JMSelector(mySelectionMode);
-        //selector.setSelectionMode( selectionMode );
-
+    
         if( mySelectEnv != null )
-            myListFe = selector.select( mySelectEnv, myTheme, selectWithinStatus,mySelectionId );
+            myListFe = selector.select( mySelectEnv, myTheme, mySelectWithinStatus,mySelectionId );
         else if( mySelectPos != null && myRadius >= 0d )
             myListFe = selector.select( mySelectPos, myRadius, myTheme, false,mySelectionId );
         else 
