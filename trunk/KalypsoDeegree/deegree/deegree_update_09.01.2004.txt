@@ -1,0 +1,306 @@
+? deegree_update_09.01.2004.txt
+? deegree_update_18.12.2003.txt
+? org/deegree_impl/gml/GMLProperty_Impl.java_buggy
+? org/deegree_impl/graphics/Theme_Impl.java_bak
+? org/deegree_impl/model/feature/FeatureCollection_Impl.java_deegree
+? org/deegree_impl/model/feature/FeatureCollection_Impl.java_optimized
+? org/deegree_impl/model/feature/FeatureFactory.java.ps
+U org/deegree/enterprise/control/RPCStruct.java
+U org/deegree/graphics/Encoders.java
+M org/deegree/graphics/FeatureLayer.java
+M org/deegree/graphics/MapView.java
+M org/deegree/graphics/Theme.java
+P org/deegree/model/coverage/CVDescriptor.java
+M org/deegree/model/geometry/GM_Object.java
+U org/deegree/services/DoubleExtent.java
+U org/deegree/services/Extent.java
+U org/deegree/services/RangeParamList.java
+U org/deegree/services/TimeExtent.java
+P org/deegree/services/wcs/protocol/WCSGetCoverageRequest.java
+U org/deegree/services/wms/protocol/WMSGetScaleBarRequest.java
+U org/deegree/xml/XMLParsingException.java
+U org/deegree/xml/XMLTools.java
+U org/deegree_impl/clients/wmsclient/configuration/WMSClientConfigurationFactory.java
+U org/deegree_impl/clients/wmsclient/control/AbstractMapListener.java
+U org/deegree_impl/clients/wmsclient/control/InfoListener.java
+P org/deegree_impl/clients/wmsclient/control/InitListener.java
+U org/deegree_impl/clients/wmsclient/control/MapApplicationHandler.java
+P org/deegree_impl/clients/wmsclient/control/MapRequestDispatcher.java
+U org/deegree_impl/clients/wmsclient/control/PanListener.java
+U org/deegree_impl/clients/wmsclient/control/RecenterListener.java
+U org/deegree_impl/clients/wmsclient/control/RefreshListener.java
+U org/deegree_impl/clients/wmsclient/control/ResetListener.java
+U org/deegree_impl/clients/wmsclient/control/SelectStyleListener.java
+U org/deegree_impl/clients/wmsclient/control/ZoomInListener.java
+U org/deegree_impl/clients/wmsclient/control/ZoomOutListener.java
+U org/deegree_impl/clients/wmsclient/model/ModelModifier.java
+U org/deegree_impl/clients/wmsclient/model/ModelVerify.java
+U org/deegree_impl/clients/wmsclient/tools/ClientHelper.java
+P org/deegree_impl/enterprise/WCASServicePool.java
+U org/deegree_impl/enterprise/WCASServlet.java
+U org/deegree_impl/enterprise/WCSServlet.java
+P org/deegree_impl/enterprise/WCServicePool.java
+P org/deegree_impl/enterprise/WCTSServlet.java
+P org/deegree_impl/enterprise/WFSServicePool.java
+U org/deegree_impl/enterprise/WFSServlet.java
+U org/deegree_impl/enterprise/WMSServlet.java
+P org/deegree_impl/enterprise/WMServicePool.java
+U org/deegree_impl/enterprise/WTSServlet.java
+P org/deegree_impl/enterprise/WTServicePool.java
+U org/deegree_impl/enterprise/control/AbstractListener.java
+P org/deegree_impl/enterprise/control/ApplicationHandler.java
+P org/deegree_impl/enterprise/control/RPCFactory.java
+P org/deegree_impl/enterprise/control/RequestDispatcher.java
+U org/deegree_impl/enterprise/control/RequestUser_Impl.java
+U org/deegree_impl/enterprise/control/WebEvent.java
+P org/deegree_impl/gml/GMLCoordinatesParser_Impl.java
+P org/deegree_impl/gml/GMLCoordinates_Impl.java
+M org/deegree_impl/gml/GMLFeatureCollection_Impl.java
+M org/deegree_impl/gml/GMLFeature_Impl.java
+P org/deegree_impl/gml/GMLGeometry_Impl.java
+P org/deegree_impl/gml/GMLMultiLineString_Impl.java
+P org/deegree_impl/gml/GMLMultiPoint_Impl.java
+P org/deegree_impl/gml/GMLMultiPolygon_Impl.java
+P org/deegree_impl/gml/GMLNameSpace_Impl.java
+U org/deegree_impl/gml/GML_Transformer.java
+U org/deegree_impl/gml/TransformationFactory.java
+RCS file: /cvsroot/deegree/deegree/org/deegree_impl/graphics/FeatureLayer_Impl.java,v
+retrieving revision 1.3
+retrieving revision 1.4
+Merging differences between 1.3 and 1.4 into FeatureLayer_Impl.java
+M org/deegree_impl/graphics/FeatureLayer_Impl.java
+U org/deegree_impl/graphics/Layer_Impl.java
+U org/deegree_impl/graphics/MapFactory.java
+RCS file: /cvsroot/deegree/deegree/org/deegree_impl/graphics/MapView_Impl.java,v
+retrieving revision 1.18
+retrieving revision 1.19
+Merging differences between 1.18 and 1.19 into MapView_Impl.java
+M org/deegree_impl/graphics/MapView_Impl.java
+U org/deegree_impl/graphics/RasterLayer_Impl.java
+U org/deegree_impl/graphics/ScaleBar_Impl.java
+RCS file: /cvsroot/deegree/deegree/org/deegree_impl/graphics/Theme_Impl.java,v
+retrieving revision 1.13
+retrieving revision 1.14
+Merging differences between 1.13 and 1.14 into Theme_Impl.java
+C org/deegree_impl/graphics/Theme_Impl.java
+U org/deegree_impl/graphics/displayelements/LabelDisplayElement_Impl.java
+RCS file: /cvsroot/deegree/deegree/org/deegree_impl/graphics/displayelements/LabelFactory.java,v
+retrieving revision 1.1
+retrieving revision 1.2
+Merging differences between 1.1 and 1.2 into LabelFactory.java
+M org/deegree_impl/graphics/displayelements/LabelFactory.java
+U org/deegree_impl/graphics/displayelements/LineStringDisplayElement_Impl.java
+M org/deegree_impl/graphics/displayelements/PolygonDisplayElement_Impl.java
+U org/deegree_impl/graphics/displayelements/RasterDisplayElement_Impl.java
+U org/deegree_impl/graphics/legend/LegendFactory.java
+P org/deegree_impl/graphics/optimizers/LabelChoice.java
+P org/deegree_impl/graphics/optimizers/OptimizerChain.java
+U org/deegree_impl/graphics/sld/CssParameter_Impl.java
+U org/deegree_impl/graphics/sld/Drawing_Impl.java
+U org/deegree_impl/graphics/sld/ExternalGraphic_Impl.java
+U org/deegree_impl/graphics/sld/LineSymbolizer_Impl.java
+U org/deegree_impl/graphics/sld/NamedStyle_Impl.java
+U org/deegree_impl/graphics/sld/PointSymbolizer_Impl.java
+U org/deegree_impl/graphics/sld/PolygonSymbolizer_Impl.java
+U org/deegree_impl/graphics/sld/SLDFactory.java
+U org/deegree_impl/graphics/sld/StyleFactory.java
+U org/deegree_impl/graphics/sld/StyledLayerDescriptor_Impl.java
+U org/deegree_impl/graphics/sld/TextSymbolizer_Impl.java
+U org/deegree_impl/graphics/sld/UserLayer_Impl.java
+P org/deegree_impl/io/DBPool.java
+U org/deegree_impl/io/MySQLDBAccess.java
+U org/deegree_impl/io/OracleSpatialAccess.java
+U org/deegree_impl/io/PostgisDBAccess.java
+U org/deegree_impl/io/SQLTools.java
+P org/deegree_impl/io/sdeapi/SpatialQuery.java
+P org/deegree_impl/io/sdeapi/Transaction.java
+P org/deegree_impl/io/shpapi/DBFDataSection.java
+P org/deegree_impl/io/shpapi/DBaseFile.java
+P org/deegree_impl/io/shpapi/IndexRecord.java
+P org/deegree_impl/io/shpapi/SHP2WKB.java
+P org/deegree_impl/io/shpapi/SHPEnvelope.java
+P org/deegree_impl/io/shpapi/SHPMultiPoint.java
+P org/deegree_impl/io/shpapi/SHPPoint.java
+P org/deegree_impl/io/shpapi/SHPPolyLine.java
+U org/deegree_impl/io/shpapi/ShapeFile.java
+P org/deegree_impl/io/shpapi/ShapeUtils.java
+P org/deegree_impl/model/cs/Adapters.java
+U org/deegree_impl/model/cs/ConvenienceCSFactory.java
+RCS file: /cvsroot/deegree/deegree/org/deegree_impl/model/cs/ConvenienceCSFactoryFull.java,v
+retrieving revision 1.11
+retrieving revision 1.12
+Merging differences between 1.11 and 1.12 into ConvenienceCSFactoryFull.java
+M org/deegree_impl/model/cs/ConvenienceCSFactoryFull.java
+P org/deegree_impl/model/cs/CoordinateSystemFactory.java
+P org/deegree_impl/model/cs/Datum.java
+P org/deegree_impl/model/cs/DatumType.java
+P org/deegree_impl/model/cs/Info.java
+P org/deegree_impl/model/cs/LocalCoordinateSystem.java
+P org/deegree_impl/model/cs/LocalDatum.java
+P org/deegree_impl/model/cs/ProjectedCoordinateSystem.java
+P org/deegree_impl/model/cs/TemporalCoordinateSystem.java
+P org/deegree_impl/model/cs/TemporalDatum.java
+P org/deegree_impl/model/cs/VerticalCoordinateSystem.java
+P org/deegree_impl/model/cs/VerticalDatum.java
+P org/deegree_impl/model/ct/AbridgedMolodenskiTransform.java
+P org/deegree_impl/model/ct/AbstractMathTransform.java
+P org/deegree_impl/model/ct/Adapters.java
+P org/deegree_impl/model/ct/AffineTransform2D.java
+P org/deegree_impl/model/ct/CannotCreateTransformException.java
+U org/deegree_impl/model/ct/ConcatenedTransform2D.java
+U org/deegree_impl/model/ct/ConvenienceTransformFactory.java
+P org/deegree_impl/model/ct/CoordinateTransformation.java
+P org/deegree_impl/model/ct/CoordinateTransformationFactory.java
+RCS file: /cvsroot/deegree/deegree/org/deegree_impl/model/ct/GeoTransformer.java,v
+retrieving revision 1.7
+retrieving revision 1.8
+Merging differences between 1.7 and 1.8 into GeoTransformer.java
+M org/deegree_impl/model/ct/GeoTransformer.java
+P org/deegree_impl/model/ct/GeocentricTransform.java
+P org/deegree_impl/model/ct/LambertConformalProjection.java
+P org/deegree_impl/model/ct/MapProjection.java
+P org/deegree_impl/model/ct/MathTransform.java
+P org/deegree_impl/model/ct/MathTransform2D.java
+P org/deegree_impl/model/ct/MathTransformAdapter.java
+P org/deegree_impl/model/ct/MathTransformAdapter2D.java
+P org/deegree_impl/model/ct/MathTransformFactory.java
+P org/deegree_impl/model/ct/MathTransformProvider.java
+P org/deegree_impl/model/ct/MatrixTransform.java
+P org/deegree_impl/model/ct/MercatorProjection.java
+P org/deegree_impl/model/ct/PlateCarreeProjection.java
+P org/deegree_impl/model/ct/StereographicProjection.java
+U org/deegree_impl/model/ct/TransverseMercatorProjection.java
+P org/deegree_impl/model/cv/CMYKEntry_Impl.java
+P org/deegree_impl/model/cv/CVDescriptorDirFactory.java
+P org/deegree_impl/model/cv/CVDescriptorFactory.java
+P org/deegree_impl/model/cv/CVDescriptor_Impl.java
+U org/deegree_impl/model/cv/CVRange.java
+U org/deegree_impl/model/cv/CVRangeFactory.java
+U org/deegree_impl/model/cv/CVRangeTime.java
+P org/deegree_impl/model/cv/CV_Coverage_Impl.java
+P org/deegree_impl/model/cv/CV_SampleDimension_Impl.java
+P org/deegree_impl/model/cv/CoverageLayer_Impl.java
+U org/deegree_impl/model/cv/Directory_Impl.java
+P org/deegree_impl/model/cv/ElevationExtent_Impl.java
+P org/deegree_impl/model/cv/GrayEntry_Impl.java
+P org/deegree_impl/model/cv/GridCoverageLayer_Impl.java
+P org/deegree_impl/model/cv/GridExtentDescription_Impl.java
+P org/deegree_impl/model/cv/GridRangeDescription_Impl.java
+P org/deegree_impl/model/cv/HLSEntry_Impl.java
+P org/deegree_impl/model/cv/RGBAEnty_Impl.java
+P org/deegree_impl/model/cv/RangeAxis_Impl.java
+P org/deegree_impl/model/cv/RangeExtent_Impl.java
+P org/deegree_impl/model/cv/TemporalExtent_Impl.java
+P org/deegree_impl/model/cv/Tile_Impl.java
+RCS file: /cvsroot/deegree/deegree/org/deegree_impl/model/feature/FeatureCollection_Impl.java,v
+retrieving revision 1.4
+retrieving revision 1.5
+Merging differences between 1.4 and 1.5 into FeatureCollection_Impl.java
+M org/deegree_impl/model/feature/FeatureCollection_Impl.java
+RCS file: /cvsroot/deegree/deegree/org/deegree_impl/model/feature/FeatureFactory.java,v
+retrieving revision 1.7
+retrieving revision 1.9
+Merging differences between 1.7 and 1.9 into FeatureFactory.java
+M org/deegree_impl/model/feature/FeatureFactory.java
+P org/deegree_impl/model/feature/FeatureType_Impl.java
+RCS file: /cvsroot/deegree/deegree/org/deegree_impl/model/feature/Feature_Impl.java,v
+retrieving revision 1.9
+retrieving revision 1.10
+Merging differences between 1.9 and 1.10 into Feature_Impl.java
+M org/deegree_impl/model/feature/Feature_Impl.java
+P org/deegree_impl/model/gc/GC_Format_Impl.java
+P org/deegree_impl/model/gc/GC_GridCoverageExchange_Impl.java
+P org/deegree_impl/model/gc/GC_GridCoverage_Impl.java
+P org/deegree_impl/model/gc/ImageGridCoverage.java
+U org/deegree_impl/model/geometry/GMLAdapter.java
+U org/deegree_impl/model/geometry/GM_CurveBoundary_Impl.java
+U org/deegree_impl/model/geometry/GM_Curve_Impl.java
+P org/deegree_impl/model/geometry/GM_Envelope_Impl.java
+M org/deegree_impl/model/geometry/GM_Object_Impl.java
+U org/deegree_impl/model/geometry/GM_OrientableCurve_Impl.java
+U org/deegree_impl/model/geometry/GM_OrientablePrimitive_Impl.java
+U org/deegree_impl/model/geometry/GM_OrientableSurface_Impl.java
+M org/deegree_impl/model/geometry/GM_Position_Impl.java
+U org/deegree_impl/model/geometry/GM_PrimitiveBoundary_Impl.java
+U org/deegree_impl/model/geometry/GM_Primitive_Impl.java
+U org/deegree_impl/model/geometry/GM_SurfaceBoundary_Impl.java
+U org/deegree_impl/model/geometry/GM_SurfaceInterpolation_Impl.java
+U org/deegree_impl/model/geometry/GM_Surface_Impl.java
+U org/deegree_impl/model/geometry/GeometryFactory.java
+P org/deegree_impl/model/geometry/JTSAdapter.java
+U org/deegree_impl/model/geometry/OracleAdapter.java
+U org/deegree_impl/model/geometry/SDEAdapter.java
+U org/deegree_impl/model/geometry/WKTAdapter.java
+P org/deegree_impl/model/gp/GP_GridAnalysis_Impl.java
+P org/deegree_impl/model/gp/GP_GridCoverageProcessor_Impl.java
+P org/deegree_impl/model/gp/GP_Operation_Impl.java
+P org/deegree_impl/model/pt/Angle.java
+P org/deegree_impl/model/pt/AngleFormat.java
+P org/deegree_impl/model/pt/Envelope.java
+P org/deegree_impl/model/pt/Matrix.java
+P org/deegree_impl/model/resources/Geometry.java
+P org/deegree_impl/model/resources/OpenGIS.java
+P org/deegree_impl/model/resources/ResourceBundle.java
+P org/deegree_impl/model/resources/ResourceCompiler.java
+P org/deegree_impl/model/resources/Utilities.java
+P org/deegree_impl/model/resources/WeakHashSet.java
+P org/deegree_impl/model/resources/XMath.java
+P org/deegree_impl/model/table/Table_Impl.java
+P org/deegree_impl/services/AbstractHandler.java
+U org/deegree_impl/services/DoubleExtent_Impl.java
+U org/deegree_impl/services/ElevationExtent_Impl.java
+U org/deegree_impl/services/OGCWebServiceEvent_Impl.java
+P org/deegree_impl/services/OGCWebServiceException_Impl.java
+U org/deegree_impl/services/OGCWebServiceRequest_Impl.java
+P org/deegree_impl/services/OGCWebServiceResponse_Impl.java
+U org/deegree_impl/services/RangeParam.java
+U org/deegree_impl/services/RangeParamElevation.java
+U org/deegree_impl/services/RangeParamFactory.java
+U org/deegree_impl/services/RangeParamList_ImpI.java
+U org/deegree_impl/services/RangeParamTime.java
+U org/deegree_impl/services/TimeExtent_Impl.java
+U org/deegree_impl/services/capabilities/BaseURL_Impl.java
+U org/deegree_impl/services/capabilities/HTTP_Impl.java
+U org/deegree_impl/services/gazetteer/GazetteerService_Impl.java
+U org/deegree_impl/services/wcas/WCASFactory.java
+P org/deegree_impl/services/wcas/WCASService_Impl.java
+P org/deegree_impl/services/wcas/capabilities/DescribeRecordType_Impl.java
+P org/deegree_impl/services/wcas/capabilities/GetRecord_Impl.java
+P org/deegree_impl/services/wcas/capabilities/Operation_Impl.java
+P org/deegree_impl/services/wcas/capabilities/Transaction_Impl.java
+P org/deegree_impl/services/wcas/capabilities/WCASCapabilitiesFactory.java
+P org/deegree_impl/services/wcas/capabilities/WCASCapabilities_Impl.java
+P org/deegree_impl/services/wcas/metadatadesc/ConnectPoint_Impl.java
+P org/deegree_impl/services/wcas/metadatadesc/ParameterType_Impl.java
+P org/deegree_impl/services/wcas/metadatadesc/WCAS_ISO19119Factory.java
+U org/deegree_impl/services/wcas/protocol/CASDelete_Impl.java
+U org/deegree_impl/services/wcas/protocol/CASDescribeRecordTypeRequest_Impl.java
+U org/deegree_impl/services/wcas/protocol/CASDescribeRecordTypeResponse_Impl.java
+P org/deegree_impl/services/wcas/protocol/CASGetCapabilitiesRequest_Impl.java
+P org/deegree_impl/services/wcas/protocol/CASGetRecordRequest_Impl.java
+P org/deegree_impl/services/wcas/protocol/CASGetRecordResponse_Impl.java
+P org/deegree_impl/services/wcas/protocol/CASInsertResult_Impl.java
+U org/deegree_impl/services/wcas/protocol/CASInsert_Impl.java
+P org/deegree_impl/services/wcas/protocol/CASProtocolFactory.java
+U org/deegree_impl/services/wcas/protocol/CASRegisterServiceRequest_Impl.java
+P org/deegree_impl/services/wcas/protocol/CASSearchResponse_Impl.java
+U org/deegree_impl/services/wcas/protocol/CASTransactionRequest_Impl.java
+U org/deegree_impl/services/wcas/protocol/CASTransactionResponse_Impl.java
+U org/deegree_impl/services/wcas/protocol/CASUpdate_Impl.java
+U org/deegree_impl/services/wcs/RemoteWCService.java
+U org/deegree_impl/services/wcs/WCSFactory.java
+U org/deegree_impl/services/wcs/WCService_Impl.java
+P org/deegree_impl/services/wcs/capabilities/WCSCapabilitiesFactory.java
+P org/deegree_impl/services/wcs/capabilities/WCSCapabilities_Impl.java
+U org/deegree_impl/services/wcs/protocol/WCSGetCoverageRequest_Impl.java
+U org/deegree_impl/services/wcs/protocol/WCSProtocolFactory.java
+M org/deegree_impl/services/wfs/RemoteWFService.java
+P org/deegree_impl/services/wfs/filterencoding/FeatureId.java
+U org/deegree_impl/services/wfs/sde/SDEDataStore.java
+U org/deegree_impl/services/wms/GetMapHandler.java
+U org/deegree_impl/services/wms/capabilities/DeegreeWMSCapabilitiesFactory.java
+U org/deegree_impl/services/wms/capabilities/OGCWMSCapabilitiesFactory.java
+U org/deegree_impl/services/wms/protocol/WMSProtocolFactory.java
+U org/deegree_impl/services/wts/WTService_Impl.java
+P org/deegree_impl/tools/Debug.java
+U org/deegree_impl/tools/TimeTools.java

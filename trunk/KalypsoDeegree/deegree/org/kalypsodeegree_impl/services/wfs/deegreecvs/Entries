@@ -1,0 +1,33 @@
+D/capabilities////
+D/configuration////
+D/db////
+D/filterencoding////
+D/gml////
+D/mysql////
+D/oracle////
+D/postgis////
+D/protocol////
+D/sde////
+D/shape////
+/RemoteWFService.java/1.14/Result of merge+Thu Mar 25 13:02:46 2004//
+D/bna////
+D/mapinfo////
+/AbstractDataStore.java/1.18/Thu Mar 25 14:24:18 2004//
+/AbstractDescribeFeatureType.java/1.5/Thu Mar 25 14:24:18 2004//
+/AbstractTransaction.java/1.3/Thu Mar 25 14:24:18 2004//
+/DeleteDataset.java/1.3/Thu Mar 25 14:24:18 2004//
+/Dispatcher_Impl.java/1.9/Thu Mar 25 14:24:18 2004//
+/FCResponseHandler.java/1.5/Thu Mar 25 14:24:18 2004//
+/FeatureTypeToSchema.java/1.4/Thu Mar 25 14:24:18 2004//
+/GMLResponseHandler.java/1.8/Thu Mar 25 14:24:18 2004//
+/InsertException.java/1.1/Thu Mar 25 14:24:18 2004//
+/InsertTree.java/1.10/Thu Mar 25 14:24:18 2004//
+/RowSelector.java/1.6/Thu Mar 25 14:24:18 2004//
+/WFSFactory.java/1.15/Thu Mar 25 14:24:18 2004//
+/WFSMainLoop.java/1.4/Thu Mar 25 14:24:18 2004//
+/WFSRequestController.java/1.13/Thu Mar 25 14:24:18 2004//
+/WFSService_Impl.java/1.21/Thu Mar 25 14:24:18 2004//
+/XMLResponseHandler.java/1.4/Thu Mar 25 14:24:18 2004//
+/AbstractGetFeature.java/1.27/Tue Mar 30 07:06:26 2004//
+/DBGetFeature.java/1.22/Tue Mar 30 07:06:26 2004//
+/DefaultDataStoreOutputFormat.java/1.6/Tue Mar 30 07:06:26 2004//
