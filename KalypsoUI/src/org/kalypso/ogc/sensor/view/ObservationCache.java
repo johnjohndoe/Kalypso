@@ -54,7 +54,7 @@ public class ObservationCache
     }
   }
 
-  public static void dispose()
+  public static void clear()
   {
     synchronized( getCache() )
     {
