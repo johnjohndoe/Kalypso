@@ -55,4 +55,13 @@ public interface IObservationService extends IRepositoryService, IKalypsoService
    * @throws RemoteException
    */
   public void writeData( final ObservationBean observation, final OCSDataBean descriptor ) throws RemoteException;
+  
+  /**
+   * Prepares a container on the server side so that client can write data into it.
+   * 
+   * @param obs
+   * @return data bean where client can safely write data into
+   * @throws RemoteException
+   */
+  public OCSDataBean prepareForWrite( final ObservationBean obs ) throws RemoteException;
 }
