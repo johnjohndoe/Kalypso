@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
+import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.impl.CalcJobFactory;
@@ -99,10 +100,10 @@ public class CalcJobService_impl_Queued implements ICalculationService
 
       final ICalcJob job = m_calcJobFactory.createJob( typeID );
 
-      final String baseURL = ServiceConfig.createNewTempDir( "calcJob-" ).getAbsolutePath();
+      final File basedir = FileUtilities.createNewTempDir( "CalcJob-", ServiceConfig.getTempDir() );
 
       final CalcJobBean jobBean = new CalcJobBean( "" + id, description, typeID, WAITING_FOR_DATA,
-          -1, baseURL, null );
+          -1, basedir.getAbsolutePath(), null );
       final CalcJobThread cjt = new CalcJobThread( job, jobBean );
 
       if( id == m_threads.size() )
@@ -225,7 +226,7 @@ public class CalcJobService_impl_Queued implements ICalculationService
 
       try
       {
-        job.run( jobBean.getInputData() );
+        job.run( new File( jobBean.getBasedir() ), jobBean.getInputData() );
 
         if( job.isCanceled() )
           jobBean.setState( CANCELED );

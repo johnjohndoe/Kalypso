@@ -9,15 +9,15 @@ import java.io.Serializable;
  */
 public class CalcJobDataBean implements Serializable
 {
-  private String m_url;
+  private String m_path;
   private String m_name;
   private String m_id;
 
-  public CalcJobDataBean( final String id, final String name, final String url )
+  public CalcJobDataBean( final String id, final String name, final String path )
   {
     m_id = id;
     m_name = name;
-    m_url = url;
+    m_path = path;
   }
   
   public final String getId()
@@ -36,12 +36,12 @@ public class CalcJobDataBean implements Serializable
   {
     m_name = name;
   }
-  public final String getUrl()
+  public final String getPath()
   {
-    return m_url;
+    return m_path;
   }
-  public final void setUrl( String url )
+  public final void setPath( String url )
   {
-    m_url = url;
+    m_path = url;
   }
 }
