@@ -73,8 +73,6 @@ public final class StringUtilities
    *
    * @param s
    *
-   * @return
-   *
    * @throws IllegalArgumentException if s is null
    */
   public static final Color stringToColor( final String s ) throws IllegalArgumentException
@@ -101,8 +99,6 @@ public final class StringUtilities
    * String will have same format as specified in @link StringUtilities#stringToColor(String)
    *
    * @param c
-   *
-   * @return
    *
    * @throws IllegalArgumentException if color is null
    */
@@ -131,8 +127,6 @@ public final class StringUtilities
    *
    * @param s
    *
-   * @return
-   *
    * @throws IllegalArgumentException if s is null
    */
   public static final Font stringToFont( final String s )
@@ -154,8 +148,6 @@ public final class StringUtilities
    * Converts a font to a string. Format is defined in @link StringUtilities#stringToFont(String)
    *
    * @param f
-   *
-   * @return
    *
    * @throws IllegalArgumentException if f is null
    */

@@ -150,17 +150,18 @@
 	<page className="org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage"
 	   pageTitle="Ergebnisbearbeitung und Veröffentlichung"
 	   imageLocation="icons/calcwizard/kalypso32.gif" >
-	   	<arg name="mapTemplate" value="project:.templates/calcCase/pegel.gmt"/>
+	   
+	   	<arg name="mapTemplate" value=".templates/calcCase/pegel.gmt"/>
 	
-	        <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
-	        <arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
-	        <arg name="timeserie3" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
-	        <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage"/>
+        <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
+        <arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
+        <arg name="timeserie3" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
+        <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage"/>
 		
 		<arg name="ignoreType1" value="W"/>
-	        <arg name="ignoreType2" value="Q"/>
-	        <arg name="ignoreLabel1" value="Abfluss"/>
-	        <arg name="ignoreLabel2" value="Wasserstand"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 		
 		<arg name="pegelNameProperty" value="Name"/>
 		<arg name="resultProperty" value="Wasserstand_vorhersage"/>
