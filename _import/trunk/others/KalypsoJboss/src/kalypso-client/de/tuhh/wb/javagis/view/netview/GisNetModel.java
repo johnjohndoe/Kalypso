@@ -47,7 +47,7 @@ public class GisNetModel implements ActionListener, ElementClassListener
     public Vector myGisRelationClasses;
 
     private Vector myRelationIdListVector;
-   
+
     private HashSet hiddenElements = new HashSet();
 
     private HashSet showProperty = new HashSet();
@@ -467,32 +467,22 @@ public class GisNetModel implements ActionListener, ElementClassListener
         if (possibleRelations.size() > 1)
             System.out.println("many possible Relations found :-)");
 
-        int result = 0;
-        
+        /* int result = 0; */
+        Object result = null;
         if (possibleRelations.size() > 1)
         {
-//        	TODO JOptionPane in JComboBox tauschen
-            
-            /*        JComboBox jComboBox_Relations = new JComboBox(possibleRelations);
-                    jComboBox_Relations.setSelectedIndex(0);
-                    jComboBox_Relations.addActionListener(this);
-                    result = jComboBox_Relations.getSelectedIndex();
-            */
-             
-
-    		result = JOptionPane
-            .showOptionDialog(null, "Es gibt mehrere Moeglichkeiten",
-                    "Relationsdialog",
-                    JOptionPane.YES_NO_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null, //Icon icon,
-                    possibleRelations.toArray(), possibleRelations
-                            .elementAt(0)); 
-            if (result == JOptionPane.CLOSED_OPTION)
+            result = JOptionPane
+                    .showInputDialog(null, "Es gibt mehrere Moeglichkeiten",
+                            "Relationsdialog", JOptionPane.QUESTION_MESSAGE,
+                            null, //Icon icon,
+                            possibleRelations.toArray(), possibleRelations
+                                    .elementAt(0));
+            if (result == null)
                 return;
+
         }
-        GisRelationClass gisRelationClass = (GisRelationClass) possibleRelations
-                .elementAt(result);
+
+        GisRelationClass gisRelationClass = (GisRelationClass) result;
         System.out.println("create" + gisRelationClass.toString());
         //Integer gisRelationClassNumber=(Integer)pair.elementAt(1);
         gisRelationClass.createRelation(srcGO, destGO);
