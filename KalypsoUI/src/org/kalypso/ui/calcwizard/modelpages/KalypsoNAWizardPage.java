@@ -6,6 +6,7 @@ import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -54,6 +55,14 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
   public KalypsoNAWizardPage()
   {
     super( "<MapAndTableWizardPage>" );
+  }
+
+  public void dispose()
+  {
+    LayerTableViewer layerTable = getLayerTable();
+    if( layerTable != null )
+      layerTable.removeModellListener( this );
+    super.dispose();
   }
 
   /**
@@ -138,6 +147,8 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
   private void createTablePanel( final Composite parent )
   {
     initFeatureTable( parent );
+    LayerTableViewer layerTable = getLayerTable();
+    layerTable.addModellListener( this );
   }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
@@ -154,22 +165,22 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
    */
   public boolean performFinish()
   {
-//    try
-//    {
-//      // TODO: error handling?
-//      getLayerTable().saveData( new NullProgressMonitor() );
-//    }
-//    catch( CoreException e )
-//    {
-//      e.printStackTrace();
-//    }
+    //    try
+    //    {
+    //      // TODO: error handling?
+    //      getLayerTable().saveData( new NullProgressMonitor() );
+    //    }
+    //    catch( CoreException e )
+    //    {
+    //      e.printStackTrace();
+    //    }
 
     return true;
   }
 
   protected void runCalculation()
   {
-    final LayerTableViewer viewer =  getLayerTable();
+    final LayerTableViewer viewer = getLayerTable();
 
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
     {
@@ -182,10 +193,11 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
             ModelNature.ID );
         final String modelspec = getArguments().getProperty( PROP_MODELSPEC, null );
         final String clearResults = getArguments().getProperty( PROP_CLEAR_RESULTS, "true" );
-        boolean doClearResults=true;
-        if("false".equals(clearResults))
-          doClearResults=false;
-        nature.runCalculation( getCalcFolder(), new SubProgressMonitor( monitor, 1000 ),modelspec,doClearResults);
+        boolean doClearResults = true;
+        if( "false".equals( clearResults ) )
+          doClearResults = false;
+        nature.runCalculation( getCalcFolder(), new SubProgressMonitor( monitor, 1000 ), modelspec,
+            doClearResults );
       }
     };
 
@@ -227,6 +239,6 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
    */
   protected TSLinkWithName[] getObservationsToShow()
   {
-    return getObservationsFromMap(true);
+    return getObservationsFromMap( true );
   }
 }
