@@ -3,6 +3,7 @@ package org.kalypso.psiadapter.repository;
 import java.util.Hashtable;
 
 import org.kalypso.java.util.Arrays;
+import org.kalypso.psiadapter.PSICompactFactory;
 import org.kalypso.psiadapter.util.ObjectInfoLengthComparator;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryFactory;
@@ -32,6 +33,10 @@ public class PSICompactRepository extends AbstractRepository
   /**
    * Helper um die PSICompact ObjectInfos in einer Repository enabled Struktur
    * umzuwandeln.
+   * @param nodes
+   * @param valueType
+   * @return item
+   * @throws ECommException
    */
   private PSICompactItem buildStructure( Hashtable nodes, int valueType ) throws ECommException
   {
@@ -169,6 +174,9 @@ public class PSICompactRepository extends AbstractRepository
 
   /**
    * Helper: finds using recursion. Returns null when not found
+   * @param item
+   * @param id
+   * @return item
    * 
    * @throws RepositoryException
    */

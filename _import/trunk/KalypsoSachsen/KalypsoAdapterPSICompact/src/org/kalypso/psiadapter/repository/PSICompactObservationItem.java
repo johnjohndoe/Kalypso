@@ -15,6 +15,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
+import org.kalypso.psiadapter.PSICompactFactory;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.xlink.IXlink;
@@ -60,7 +61,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
    * @param name
    * @param info
    * @param valueType
-   *          aus PSICompact Sicht
+   *          aus PSICompact Sicht (type 'measurement' or type 'value')
    * 
    * @throws ECommException
    */
@@ -130,7 +131,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   }
 
   /**
-   * @return Messwerttyp dieser Zeitreihe
+   * @return Messwerttyp dieser Zeitreihe (Siehe TimeserieConstants.TYPE_*)
    */
   private String measureTypeToString()
   {
@@ -145,7 +146,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
       e.printStackTrace();
     }
 
-    return PSICompactFactory.measureTypeToString( measType );
+    return PSICompactRepositoryFactory.measureTypeToString( measType );
   }
 
   /**
@@ -153,7 +154,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
    */
   private String valueTypeToString()
   {
-    return PSICompactFactory.valueTypeToString( m_valueType );
+    return PSICompactRepositoryFactory.valueTypeToString( m_valueType );
   }
 
   /**
@@ -190,12 +191,12 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
       m_axes = new IAxis[3];
 
       // immer Datum Axis
-      m_axes[0] = new DefaultAxis( "Datum", "datum", "", Date.class, 0, true );
+      m_axes[0] = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, 0, true );
 
       // Wert (Einheit abfragen)
       String label = toString();
-      String unit = PSICompactFactory.unitToString( m_psicMetaData.getUnit() );
-      m_axes[1] = new DefaultAxis( label, "pegel", unit, Double.class, 1, false );
+      String unit = PSICompactRepositoryFactory.unitToString( m_psicMetaData.getUnit() );
+      m_axes[1] = new DefaultAxis( label, measureTypeToString(), unit, Double.class, 1, false );
 
       // PSI-Status
       //m_axes[2] = PSICompactFactory.getAxis( "Status", "", "", String.class,

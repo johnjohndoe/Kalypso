@@ -41,10 +41,11 @@ public class FileUtilities
    * @throws IOException
    *           there are problems!
    */
-  public static File makeFileFromUrl( boolean charMode, final String prefix, final String suffix,
-      URL url, boolean useCache ) throws IOException
+  public static File makeFileFromUrl( boolean charMode, final String prefix,
+      final String suffix, URL url, boolean useCache ) throws IOException
   {
-    return makeFileFromStream( charMode, prefix, suffix, url.openStream(), useCache );
+    return makeFileFromStream( charMode, prefix, suffix, url.openStream(),
+        useCache );
   }
 
   /**
@@ -69,7 +70,8 @@ public class FileUtilities
    *           problems reading from stream or writing to temp. file
    */
   public static File makeFileFromStream( boolean charMode, final String prefix,
-      final String suffix, InputStream ins, boolean useCache ) throws IOException
+      final String suffix, InputStream ins, boolean useCache )
+      throws IOException
   {
     if( useCache )
     {
@@ -105,8 +107,8 @@ public class FileUtilities
    * @param ins
    * @throws IOException
    */
-  public static void makeFileFromStream( final boolean charMode, final File file,
-      final InputStream ins ) throws IOException
+  public static void makeFileFromStream( final boolean charMode,
+      final File file, final InputStream ins ) throws IOException
   {
     if( charMode )
     {
@@ -118,7 +120,8 @@ public class FileUtilities
     else
     {
       final BufferedInputStream in = new BufferedInputStream( ins );
-      final BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( file ) );
+      final BufferedOutputStream out = new BufferedOutputStream(
+          new FileOutputStream( file ) );
 
       StreamUtilities.streamCopy( in, out );
     }
@@ -158,8 +161,8 @@ public class FileUtilities
         return files[0];
     }
 
-    throw new FileNotFoundException( "File with prefix (" + prefix + ") and suffix (" + suffix
-        + ") was not found in " + path );
+    throw new FileNotFoundException( "File with prefix (" + prefix
+        + ") and suffix (" + suffix + ") was not found in " + path );
   }
 
   /**
@@ -195,7 +198,8 @@ public class FileUtilities
    */
   public static File createNewTempDir( final String prefix )
   {
-    return createNewTempDir( prefix, new File( System.getProperty( "java.io.tmpdir" ) ) );
+    return createNewTempDir( prefix, new File( System
+        .getProperty( "java.io.tmpdir" ) ) );
   }
 
   /**
@@ -212,7 +216,8 @@ public class FileUtilities
   {
     while( true )
     {
-      final File newDir = new File( parentDir, prefix + System.currentTimeMillis() );
+      final File newDir = new File( parentDir, prefix
+          + System.currentTimeMillis() );
       if( newDir.mkdir() )
         return newDir;
     }
@@ -228,7 +233,8 @@ public class FileUtilities
    *         <code>basedir</code> kein Parent-Dir von
    *         <code>absoluteFile</code> ist
    */
-  public static File getRelativeFileTo( final File basedir, final File absoluteFile )
+  public static File getRelativeFileTo( final File basedir,
+      final File absoluteFile )
   {
     final String rel = getRelativePathTo( basedir, absoluteFile );
 
@@ -247,15 +253,16 @@ public class FileUtilities
    * @param absoluteFile
    * @return the relative path from absoluteFile to basedir
    */
-  public static String getRelativePathTo( final File basedir, final File absoluteFile )
+  public static String getRelativePathTo( final File basedir,
+      final File absoluteFile )
   {
     final String baseAbs = basedir.getAbsolutePath();
     final String absAbs = absoluteFile.getAbsolutePath();
     if( !absAbs.startsWith( baseAbs ) )
       return null;
 
-    final String rel = absAbs.length() == baseAbs.length() ? "" : absAbs.substring( baseAbs
-        .length() );
+    final String rel = absAbs.length() == baseAbs.length() ? "" : absAbs
+        .substring( baseAbs.length() );
 
     return rel;
   }
@@ -290,5 +297,27 @@ public class FileUtilities
     if( strings.length != 0 )
       return strings[strings.length - 1];
     return null;
+  }
+
+  /**
+   * Returns only the name part of the given file name removing the extension
+   * part.
+   * <p>
+   * Example:
+   * 
+   * <pre>
+   * 
+   *  test.foo -- test
+   *  robert.tt -- robert
+   *  
+   * </pre>
+   * 
+   * @param fileName
+   * @return fileName without the last '.???' extension part (NOTE: the
+   *         extension part is not limited to 3 chars)
+   */
+  public static String nameWithoutExtension( final String fileName )
+  {
+    return fileName.substring( 0, fileName.lastIndexOf( '.' ) );
   }
 }

@@ -22,6 +22,13 @@ public class PSICompactItem implements IRepositoryItem
   private final List m_children;
   protected final ObjectInfo m_objectInfo;
 
+  /**
+   * Constructor
+   * 
+   * @param parent
+   * @param name
+   * @param info
+   */
   public PSICompactItem( final PSICompactItem parent, final String name, final PSICompact.ObjectInfo info )
   {
     m_parent = parent;
@@ -47,7 +54,10 @@ public class PSICompactItem implements IRepositoryItem
     return getName();
   }
 
-  public void addChild( PSICompactItem item )
+  /**
+   * @param item
+   */
+  public void addChild( final PSICompactItem item )
   {
     m_children.add( item );
   }
@@ -79,7 +89,7 @@ public class PSICompactItem implements IRepositoryItem
   /**
    * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class anotherClass )
+  public Object getAdapter( final Class anotherClass )
   {
     return null;
   }
@@ -91,7 +101,7 @@ public class PSICompactItem implements IRepositoryItem
   {
     try
     {
-      return PSICompactFactory.getRepository(  );
+      return PSICompactRepositoryFactory.getRepository(  );
     }
     catch( RepositoryException e )
     {
