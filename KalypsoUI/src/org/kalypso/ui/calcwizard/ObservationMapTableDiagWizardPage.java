@@ -97,6 +97,8 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
   private GM_Envelope m_boundingBox;
 
+  private ObservationTable m_table;
+
   public ObservationMapTableDiagWizardPage()
   {
     super( "<ObservationMapTableDiagWizardPage>" );
@@ -111,6 +113,9 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
     if( m_diagTemplate != null )
       m_diagTemplate.removeTemplateEventListener( m_obsChart );
+    
+    if( m_tableTemplate != null )
+      m_tableTemplate.removeTemplateEventListener( m_table );
   }
 
   /**
@@ -212,24 +217,25 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       final String templateFileName = getArguments().getProperty( PROP_TABLETEMPLATE );
       final IFile templateFile = (IFile)getProject().findMember( templateFileName );
 
+      m_table = new ObservationTable( m_tableModel );
+      
       m_tableTemplate = ObservationTemplateHelper.loadTableViewTemplate( templateFile );
       m_tableModel.setRules( m_tableTemplate );
-      m_tableTemplate.addTemplateEventListener( m_tableModel );
+      m_tableTemplate.addTemplateEventListener( m_table );
 
       // TODO tricky: to be ameliorated once pool geschichte is better!!!
       m_tableTemplate.setUseResolver( m_useResolver );
 
       final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
       m_tableFrame = SWT_AWT.new_Frame( composite );
+      
+      m_table.setVisible( true );
 
-      final ObservationTable table = new ObservationTable( m_tableModel );
-      table.setVisible( true );
-
-      final JScrollPane pane = new JScrollPane( table );
+      final JScrollPane pane = new JScrollPane( m_table );
       //pane.setBorder( BorderFactory.createEmptyBorder() );
 
       m_tableFrame.setVisible( true );
-      table.setVisible( true );
+      m_table.setVisible( true );
       m_tableFrame.add( pane );
     }
     catch( Exception e )
