@@ -61,8 +61,8 @@ public final class ColumnAction extends Action
     if( annotation != null )
     {
       setText( annotation.getLabel() + " (" + propertyName + ")" );
-      setDescription( annotation.getDescription() );
-      setToolTipText( annotation.getTooltip() );
+//      setDescription( annotation.getDescription() );
+//      setToolTipText( annotation.getTooltip() );
     }
     m_commandTarget = commandTarget;
     m_viewer = viewer;

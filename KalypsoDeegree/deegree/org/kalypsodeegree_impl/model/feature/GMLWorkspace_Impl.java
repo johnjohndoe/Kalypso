@@ -11,6 +11,7 @@ import java.util.Map;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureAssociationTypeProperty;
 import org.deegree.model.feature.FeatureList;
+import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.FeatureVisitor;
@@ -27,7 +28,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   private final Feature m_rootFeature;
 
   private final URL m_context;
-  
+
   private final String m_schemaLocation;
 
   private final String m_schemaNamespace;
@@ -39,8 +40,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   /**
    * 
-   * @see org.deegree.model.feature.GMLWorkspace#getFeature(org.deegree.model.feature.FeatureType,
-   *      java.lang.String)
+   * @see org.deegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
    */
   public Feature getFeature( final String id )
   {
@@ -145,7 +145,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return m_featureTypes;
   }
 
-  /** Findet alle Features eines Typs. Der Typ muss genau stimmen, substitution gilt nicht */
+  /**
+   * Findet alle Features eines Typs. Der Typ muss genau stimmen, substitution
+   * gilt nicht
+   */
   public Feature[] getFeatures( final FeatureType ft )
   {
     final FeatureTypeVisitor visitor = new FeatureTypeVisitor( ft, false );
@@ -233,7 +236,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#getModelUrl()
+   * 
+   * @see org.deegree.model.feature.GMLWorkspace#getContext()
    */
   public URL getContext()
   {
@@ -328,7 +332,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       if( m_indexMap.containsKey( id ) )
         System.out.println( "Workspace already contains a feature with id: " + id );
       m_indexMap.put( id, f );
-
       return true;
     }
   }
@@ -349,14 +352,21 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * <p>Gibt das durch den FeaturPath gegebene Feature zurück.</p>
-   * <p>Syntax des FeaturePath:
+   * <p>
+   * Gibt das durch den FeaturPath gegebene Feature zurück.
+   * </p>
+   * <p>
+   * Syntax des FeaturePath:
    * <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei
    * der featureTypeName optional ist
    * </p>
-   * <p>Es darf innerhalb des Pfads keine (Feature)Liste vorkommen, nur am Ende</p>
-   * <p>Ist der Typ-Name angegeben und wurde eine Liste gefunden, wird eine (neue) FeatureList
-   * zurückgegeben, deren Elemente alle vom angegebenen Typ sind</p> 
+   * <p>
+   * Es darf innerhalb des Pfads keine (Feature)Liste vorkommen, nur am Ende
+   * </p>
+   * <p>
+   * Ist der Typ-Name angegeben und wurde eine Liste gefunden, wird eine (neue)
+   * FeatureList zurückgegeben, deren Elemente alle vom angegebenen Typ sind
+   * </p>
    * 
    * @see org.deegree.model.feature.GMLWorkspace#getFeatureFromPath(java.lang.String)
    */
@@ -397,14 +407,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
           final FeatureList fl = (FeatureList)value;
           fl.accept( visitor );
           final Collection results = visitor.getResults();
-          
+
           final FeatureList newList = FeatureFactory.createFeatureList();
           newList.addAll( results );
-          
+
           return newList;
         }
-        else
-          return null;
+        return null;
       }
     }
 
@@ -467,7 +476,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     return m_schemaLocation;
   }
-  
+
   /**
    * @see org.deegree.model.feature.GMLWorkspace#getSchemaNamespace()
    */
@@ -481,44 +490,44 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public Feature createFeature( FeatureType type )
   {
-    String newId=createFeatureId(type);
-    return FeatureFactory.createFeature(newId, type);
+    String newId = createFeatureId( type );
+    return FeatureFactory.createFeature( newId, type );
   }
 
   private String createFeatureId( FeatureType type )
   {
     String id = type.getName();
-    int no =0; 
-    while(!m_indexMap.containsKey(id+Integer.toString(no)))
+    int no = 0;
+    while( !m_indexMap.containsKey( id + Integer.toString( no ) ) )
       no++;
-    return id+Integer.toString(no);
+    return id + Integer.toString( no );
   }
+
   /*
-   * @param parent null if rootFeature else parent
-   * @param propname 
-   * @param pos if propvalue is list, else ignore   
+   * @param parent null if rootFeature else parent @param propname @param pos if
+   * propvalue is list, else ignore
    */
-  public void addFeature(Feature parent,String propName,int pos,Feature newFeature) throws Exception
+  public void addFeature( Feature parent, String propName, int pos, Feature newFeature )
+      throws Exception
   {
-    Object prop = parent.getProperty( propName );
-        
-    if(prop instanceof List)
+    final Object prop = parent.getProperty( propName );
+    // if maxOccurs > 1
+    if( prop instanceof List )
     {
-      ((List)prop).add(pos, newFeature);
-        m_indexMap.put(newFeature.getId(), newFeature);
-        return;
-    }     
-    else if(prop == null) // element not set
-    {
-      int propPos = parent.getFeatureType().getPropertyPosition( propName);
-      if(propPos != -1)
-      {
-        parent.getProperties()[propPos] = newFeature;      
-        m_indexMap.put(newFeature.getId(), newFeature);
-      }
+      ( (List)prop ).add( pos, newFeature );
+      m_indexMap.put( newFeature.getId(), newFeature );
       return;
     }
-    throw new Exception("New Feature violates maxOccurs");    
+    // if maxOccurs == 1 and property not set
+    else if( prop == null )
+    {
+      FeatureProperty newProp = FeatureFactory.createFeatureProperty( propName, newFeature );
+      parent.setProperty( newProp );
+      m_indexMap.put( newFeature.getId(), newFeature );
+      return;
+    }
+    // TODO design a better exception
+    // we do not overwrite propertiess, so we throw an exception
+    throw new Exception( "New Feature violates maxOccurs" );
   }
-  // TODO eigene exception entwerfen
 }

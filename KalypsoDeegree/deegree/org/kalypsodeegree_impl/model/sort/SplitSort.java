@@ -27,9 +27,9 @@ public class SplitSort implements FeatureList
 
   public SplitSort()
   {
-    //
+  //
   }
-  
+
   public SplitSort( final GM_Envelope env )
   {
     myRootContainer = new SplitSortContainer( null, env );
@@ -38,12 +38,11 @@ public class SplitSort implements FeatureList
   public boolean add( final Object object )
   {
     final GM_Envelope env = getEnvelope( object );
-    add( env, object );
-
+    spacialAdd( env, object );
     return m_objects.add( object );
   }
 
-  private void add( final GM_Envelope env, final Object object )
+  private void spacialAdd( final GM_Envelope env, final Object object )
   {
     if( env == null )
       return;
@@ -187,12 +186,12 @@ public class SplitSort implements FeatureList
       else
         bbox = bbox.merge( envelope );
     }
-    
+
     myRootContainer = new SplitSortContainer( null, bbox );
     for( final Iterator iter = m_objects.iterator(); iter.hasNext(); )
     {
       final Object next = iter.next();
-      add( getEnvelope( next ), next );
+      spacialAdd( getEnvelope( next ), next );
     }
   }
 
@@ -252,9 +251,11 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#add(int, java.lang.Object)
    */
-  public void add( int index, Object element )
+  public void add( int index, Object object )
   {
-    m_objects.add( index, element);    
+    final GM_Envelope env = getEnvelope( object );
+    spacialAdd( env, object );
+    m_objects.add( index, object );
   }
 
   /**
@@ -298,10 +299,10 @@ public class SplitSort implements FeatureList
     for( final Iterator iter = c.iterator(); iter.hasNext(); )
     {
       add( iter.next() );
-      
+
       changed = true;
     }
-    
+
     return changed;
   }
 
