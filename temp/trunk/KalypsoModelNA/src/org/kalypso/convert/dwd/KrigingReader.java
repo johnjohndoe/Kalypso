@@ -12,7 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.geometry.GM_Object;
@@ -37,8 +36,6 @@ public class KrigingReader
 
     private final org.kalypso.zml.repository.virtual.ObjectFactory vRepFac = new org.kalypso.zml.repository.virtual.ObjectFactory();
 
-    private final Marshaller m_marshaller;
-
     private final Pattern BLOCK = Pattern.compile(".*BLOCK:.+?("
             + doublePattern + ").+?(" + doublePattern + ").+");
 
@@ -47,14 +44,13 @@ public class KrigingReader
             + ") +?(" + doublePattern + ") +?(" + doublePattern + ") +(.+?) *");
 
     //    4485832.000 5603328.000 0.420 4234
-    private final List krigingElements;
+    private final List m_krigingElements;
 
     private int m_min = 9999999;
 
-    public KrigingReader(Reader reader) throws IOException, JAXBException
+    public KrigingReader(Reader reader) throws IOException
     {
-        m_marshaller = filterFac.createMarshaller();
-        krigingElements = parse(reader);
+        m_krigingElements = parse(reader);
         reader.close();
     }
 
@@ -139,7 +135,7 @@ public class KrigingReader
     private List getKrigingElementsFor(GM_Object geom)
     {
         List result = new ArrayList();
-        for (Iterator iter = krigingElements.iterator(); iter.hasNext();)
+        for (Iterator iter = m_krigingElements.iterator(); iter.hasNext();)
         {
             KrigingElement ke = (KrigingElement) iter.next();
             if (geom.contains(ke.getCenterPoint()))
@@ -153,7 +149,7 @@ public class KrigingReader
         final List result = new ArrayList();
         try
         {
-            CS_CoordinateSystem srs = ConvenienceCSFactory.getInstance()
+            final CS_CoordinateSystem srs = ConvenienceCSFactory.getInstance()
                     .getOGCCSByName("EPSG:31467");
             final LineNumberReader lineReader = new LineNumberReader(reader);
             String line = null;
