@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<project name="KalypsoMetaDocService" default="build" basedir="../..">
+<project name="KalypsoUserService" default="build" basedir="../..">
 
 	<!-- this Project full path -->
-	<property name="project.path" value="${workspace}/KalypsoMetaDocService" />
+	<property name="project.path" value="${workspace}/KalypsoUserService" />
 
 	<!-- this Project properties -->
 	<property file="${project.path}/etc/ant/service.properties" />
@@ -68,6 +68,11 @@
 	</target>
 
 	<!--  HIER GEHTS LOS -->
+  
+	  <target name="redeploy-all" depends="build,redeploy" description="Erzeugt alles und kopiert die Client-Jar zum KalypsoUI Projekt">
+	    <copy file="${dist}/${client.jar}" todir="${workspace}/KalypsoUI/lib"/>
+	  </target>
+  
 	<target name="build" depends="build-client,build-war" description="Executes the targets needed to build the webservice and the client jar.">
 	</target>
 
@@ -175,11 +180,13 @@
 			<param name="aproject_bin" value="KalypsoPSICompactAdapter/build/bin" />
 			<param name="aproject_lib" value="KalypsoPSICompactAdapter/lib" />
 		</antcall>
-		<antcall target="package-a-project">
+
+	  <antcall target="package-a-project">
 			<param name="aproject_jar" value="KalypsoPSICompactAdapterCore.jar" />
 			<param name="aproject_bin" value="KalypsoPSICompactAdapterCore/build/bin" />
 			<param name="aproject_lib" value="KalypsoPSICompactAdapterCore/lib" />
 		</antcall>
+
 		<antcall target="package-a-project">
 			<param name="aproject_jar" value="KalypsoCoreServices.jar" />
 			<param name="aproject_bin" value="KalypsoCoreServices/build/bin" />

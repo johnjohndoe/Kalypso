@@ -126,6 +126,7 @@ public class KalypsoMetaDocService implements IMetaDocService
     try
     {
       f = File.createTempFile( "doc", extension, m_tmpDir );
+      m_logger.info( "preparing file: " + f.getAbsolutePath() );
 
       final DocBean db = new DocBean( f.getAbsolutePath() );
       
@@ -133,7 +134,7 @@ public class KalypsoMetaDocService implements IMetaDocService
       
       return db;
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( final Exception e ) // generic exception caught for simplicity
     {
       m_logger.throwing( "KalypsoMetaDocService", "prepareNewDocument", e );
 
@@ -144,7 +145,7 @@ public class KalypsoMetaDocService implements IMetaDocService
   /**
    * @see org.kalypso.services.metadoc.IMetaDocService#rollbackNewDocument(org.kalypso.services.metadoc.DocBean)
    */
-  public void rollbackNewDocument( final DocBean mdb ) throws RemoteException
+  public void rollbackNewDocument( final DocBean mdb )
   {
     final File f = new File( mdb.getLocation() );
     
@@ -180,7 +181,7 @@ public class KalypsoMetaDocService implements IMetaDocService
   /**
    * @see org.kalypso.services.IKalypsoService#getServiceVersion()
    */
-  public int getServiceVersion( ) throws RemoteException
+  public int getServiceVersion( )
   {
     return 0;
   }

@@ -1,24 +1,24 @@
 package org.kalypso.ogc.gml.table.celleditors;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.deegree.model.feature.Feature;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.eclipse.core.resources.IProjectProvider;
 import org.kalypso.ogc.sensor.jface.ObservationLinkDialog;
 import org.kalypso.zml.obslink.TimeseriesLink;
-
 
 /**
  * @author Belger
  */
-public class ObservationFeatureCellEditor extends AbstractFeatureCellEditor implements IProjectProvider
+public class ObservationFeatureCellEditor extends AbstractFeatureCellEditor
 {
   public ObservationFeatureCellEditor( )
   {
-    setCellEditor( new ObservationDialogEditor( this ) );
+    // TODO: set context instead of null
+    setCellEditor( new ObservationDialogEditor( null ) );
     setValidator( DefaultCellValidators.DOUBLE_VALIDATOR );
   }
 
@@ -52,36 +52,37 @@ public class ObservationFeatureCellEditor extends AbstractFeatureCellEditor impl
     final TimeseriesLink link = (TimeseriesLink)feature.getProperty( getPropertyName() );
     return link == null ? "<kein Wert>" : "Zeitreihe: " + link.getHref();
   }
-  
+
   private final static class ObservationDialogEditor extends DialogCellEditor
   {
-    private final IProjectProvider m_pp;
+    private final URL m_context;
 
-    public ObservationDialogEditor( final IProjectProvider pp )
+    public ObservationDialogEditor( final URL context )
     {
-     m_pp = pp; 
+      m_context = context;
     }
-    
+
     /**
      * @see org.kalypso.ogc.gml.table.celleditors.DialogCellEditor#openDialog(org.eclipse.swt.widgets.Control)
      */
     protected boolean openDialog( final Control control )
     {
       final TimeseriesLink obslink = (TimeseriesLink)doGetValue();
-      
-      final ObservationLinkDialog dialog = new ObservationLinkDialog( control.getShell(), obslink, m_pp );
-      
+
+      final ObservationLinkDialog dialog = new ObservationLinkDialog( control.getShell(), obslink,
+          m_context );
+
       boolean b = false;
-      
+
       if( dialog.open() == Window.OK )
       {
         doSetValue( dialog.getResult() );
-      
+
         b = true;
       }
 
       dialog.dispose();
-      
+
       return b;
     }
   }

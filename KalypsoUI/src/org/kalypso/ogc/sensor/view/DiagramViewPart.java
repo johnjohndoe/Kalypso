@@ -1,7 +1,6 @@
 package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
-import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -96,7 +95,6 @@ public class DiagramViewPart extends ViewPart implements
     final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
       public void run( IProgressMonitor monitor )
-          throws InvocationTargetException, InterruptedException
       {
         monitor.beginTask( "DiagramView Update", 2 );
         

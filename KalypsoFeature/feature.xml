@@ -39,6 +39,7 @@
       <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.apache.ant"/>
    </requires>
 
    <plugin
@@ -52,12 +53,6 @@
          download-size="0"
          install-size="0"
          version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.psiadapter"
-         download-size="0"
-         install-size="0"
-         version="0.0.1"/>
 
    <plugin
          id="org.kalypso.ui"

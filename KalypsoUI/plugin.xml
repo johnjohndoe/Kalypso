@@ -10,25 +10,25 @@
       <library name="KalypsoUi.jar">
          <export name="*"/>
       </library>
-      <library name="lib/mail.jar">
+      <library name="lib/jfreechart-0.9.20.jar">
          <export name="*"/>
       </library>
-      <library name="lib/saaj-api.jar">
+      <library name="lib/kalypsoservice_observation.jar">
          <export name="*"/>
       </library>
-      <library name="lib/saaj-impl.jar">
+      <library name="lib/kalypsoservice_calculation.jar">
          <export name="*"/>
       </library>
-      <library name="lib/xercesImpl.jar">
+      <library name="lib/kalypsoservice_metadoc.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jcommon-0.9.5.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/activation.jar">
          <export name="*"/>
       </library>
       <library name="lib/dom.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jaxp-api.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jax-qname.jar">
          <export name="*"/>
       </library>
       <library name="lib/jaxrpc-api.jar">
@@ -40,22 +40,25 @@
       <library name="lib/jaxrpc-spi.jar">
          <export name="*"/>
       </library>
-      <library name="lib/jcommon-0.9.5.jar">
+      <library name="lib/saaj-api.jar">
          <export name="*"/>
       </library>
-      <library name="lib/jfreechart-0.9.20.jar">
+      <library name="lib/saaj-impl.jar">
          <export name="*"/>
       </library>
-      <library name="lib/kalypsoservice_observation.jar">
+      <library name="lib/jaxp-api.jar">
          <export name="*"/>
       </library>
-      <library name="lib/activation.jar">
+      <library name="lib/jax-qname.jar">
          <export name="*"/>
       </library>
-      <library name="lib/kalypsoservice_calculation.jar">
+      <library name="lib/mail.jar">
          <export name="*"/>
       </library>
-      <library name="lib/kalypsoservice_metadoc.jar">
+      <library name="lib/xercesImpl.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypsoservice_user.jar">
          <export name="*"/>
       </library>
    </runtime>
@@ -73,8 +76,8 @@
       <import plugin="org.kalypso.deegree" export="true"/>
       <import plugin="org.kalypso.core" export="true"/>
       <import plugin="org.eclipse.ui.forms" export="true"/>
-      <import plugin="org.eclipse.debug.ui"/>
-      <import plugin="org.apache.ant"/>
+      <import plugin="org.eclipse.debug.ui" export="true"/>
+      <import plugin="org.apache.ant" export="true"/>
    </requires>
    <extension point="org.eclipse.core.runtime.preferences">
 	    <initializer class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer"/>
@@ -167,6 +170,20 @@
             <separator name="spalten"/>
          </menu>
          <action
+               label="Berichtsablage..."
+               class="org.kalypso.ui.editor.gistableeditor.actions.ExportBerichtActionDelegate"
+               tooltip="Die Tabelle in das Berichtswesen exportieren..."
+               style="push"
+               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
+               id="org.kalypso.ui.editor.gistableeditor.ExportAction"/>
+          <action
+               label="Exportieren..."
+               class="org.kalypso.ui.editor.gistableeditor.actions.ExportActionDelegate"
+               tooltip="Die Tabelle exportieren"
+               style="push"
+               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
+               id="org.kalypso.ui.editor.gistableeditor.ExportAction"/>
+         <action
                toolbarPath="tabelle"
                label="Zeile hinzufügen"
                tooltip="Fügt eine Zeile am Ende der Tabelle ein"
@@ -219,13 +236,6 @@
                id="org.kalypso.ui.editors.tableeditor.columnmenu">
             <separator name="spaltenMenu"/>
          </menu>
-         <action
-               label="Exportieren..."
-               class="org.kalypso.ui.editor.gistableeditor.actions.ExportActionDelegate"
-               tooltip="Die Tabelle exportieren"
-               style="push"
-               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
-               id="org.kalypso.ui.editor.gistableeditor.ExportAction"/>
       </editorContribution>
       <editorContribution
             targetID="org.kalypso.ui.editor.mapeditor.GisMapEditor"

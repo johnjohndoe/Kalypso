@@ -5,7 +5,6 @@ import java.util.HashMap;
 import org.deegree.model.feature.Annotation;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.xml.XMLTools;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

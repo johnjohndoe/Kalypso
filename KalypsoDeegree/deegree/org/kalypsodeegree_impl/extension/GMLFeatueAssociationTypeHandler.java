@@ -1,7 +1,6 @@
 package org.deegree_impl.extension;
 
 import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Node;
 

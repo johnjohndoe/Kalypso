@@ -51,7 +51,6 @@ package org.deegree_impl.model.ct;
 
 // Miscellaneous
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 import org.deegree_impl.model.pt.Matrix;

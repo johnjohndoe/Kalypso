@@ -150,16 +150,21 @@ public class FeatureComposite implements IFeatureControl
     return newView;
   }
 
+  public Control createControl( final Composite parent, final int style, final FeatureType ft )
+  {
+    final Featureview view = getFeatureview( ft );
+
+    return createControl( parent, style, view );
+  }
+  
   public Control createControl( final Composite parent, final int style )
   {
-    final Featureview view = getFeatureview( getFeature().getFeatureType() );
-
-    return createControl( parent, view );
+    return createControl( parent, style, getFeature().getFeatureType() );
   }
 
-  public Control createControl( final Composite parent, final ControlType controlType )
+  public Control createControl( final Composite parent, final int style, final ControlType controlType )
   {
-    final Control control = createControlFromControlType( parent, controlType );
+    final Control control = createControlFromControlType( parent, style, controlType );
 
     control.setVisible( controlType.isVisible() );
 
@@ -174,7 +179,7 @@ public class FeatureComposite implements IFeatureControl
     return control;
   }
 
-  private Control createControlFromControlType( final Composite parent,
+  private Control createControlFromControlType( final Composite parent, final int style, 
       final ControlType controlType )
   {
     if( controlType instanceof CompositeType )
@@ -190,7 +195,7 @@ public class FeatureComposite implements IFeatureControl
       // die Children einbauen
       final List children = compositeType.getControl();
       for( final Iterator iter = children.iterator(); iter.hasNext(); )
-        createControl( composite, (ControlType)iter.next() );
+        createControl( composite, style, (ControlType)iter.next() );
 
       return composite;
     }

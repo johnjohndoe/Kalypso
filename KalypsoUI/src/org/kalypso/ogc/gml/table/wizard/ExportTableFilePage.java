@@ -31,12 +31,10 @@ import org.eclipse.swt.widgets.Label;
 /**
  * @author belger
  */
-public class ExportTableWizardPage extends WizardPage
+public class ExportTableFilePage extends WizardPage
 {
   // dialog store id constants
   private final static String STORE_DESTINATION_NAMES_ID = "ExportTableWizardPage.STORE_DESTINATION_NAMES_ID"; //$NON-NLS-1$
-
-  private final static String STORE_ONLYSELECTION_ID = "ExportTableWizardPage.STORE_ONLYSELECTION_ID"; //$NON-NLS-1$
 
   protected static final int SIZING_TEXT_FIELD_WIDTH = 250;
 
@@ -44,11 +42,7 @@ public class ExportTableWizardPage extends WizardPage
 
   private Combo m_destinationNameField;
 
-  private Button m_radioSelection;
-
-  private Button m_radioAll;
-
-  public ExportTableWizardPage( final String pageName, final String title,
+  public ExportTableFilePage( final String pageName, final String title,
       final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
@@ -62,12 +56,10 @@ public class ExportTableWizardPage extends WizardPage
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
 
-    panel.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_FILL
-        | GridData.HORIZONTAL_ALIGN_FILL ) );
+    panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     panel.setFont( parent.getFont() );
 
     createExportTargetGroup( panel );
-    createExportOptionsGroup( panel );
 
     setControl( panel );
 
@@ -144,24 +136,6 @@ public class ExportTableWizardPage extends WizardPage
     }
 
     return false;
-  }
-
-  private void createExportOptionsGroup( final Composite parent )
-  {
-    final Group optionsGroup = new Group( parent, SWT.NONE );
-    final GridLayout layout = new GridLayout();
-    optionsGroup.setLayout( layout );
-    optionsGroup.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL
-        | GridData.GRAB_HORIZONTAL ) );
-    optionsGroup.setText( "Export Optionen" );
-    optionsGroup.setFont( parent.getFont() );
-
-    m_radioAll = new Button( optionsGroup, SWT.RADIO );
-    m_radioAll.setText( "&alles exportieren" );
-    m_radioAll.setSelection( true );
-
-    m_radioSelection = new Button( optionsGroup, SWT.RADIO );
-    m_radioSelection.setText( "nur &selektierte Zeilen exportieren" );
   }
 
   private void createExportTargetGroup( final Composite parent )
@@ -244,11 +218,6 @@ public class ExportTableWizardPage extends WizardPage
     return m_destinationNameField.getText().trim();
   }
 
-  public boolean getOnlySelected()
-  {
-    return m_radioSelection.getSelection();
-  }
-
   /**
    * Hook method for restoring widget values to the values that they held last
    * time this wizard was used to completion.
@@ -266,10 +235,6 @@ public class ExportTableWizardPage extends WizardPage
       setDestinationValue( directoryNames[0] );
       for( int i = 0; i < directoryNames.length; i++ )
         addDestinationItem( directoryNames[i] );
-
-      final boolean onlySelection = settings.getBoolean( STORE_ONLYSELECTION_ID );
-      m_radioSelection.setSelection( onlySelection );
-      m_radioAll.setSelection( !onlySelection );
     }
   }
 
@@ -290,9 +255,6 @@ public class ExportTableWizardPage extends WizardPage
 
       settings.put( STORE_DESTINATION_NAMES_ID, (String[])history.toArray( new String[history
           .size()] ) );
-
-      // options
-      settings.put( STORE_ONLYSELECTION_ID, m_radioSelection.getSelection() );
     }
   }
 
