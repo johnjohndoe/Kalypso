@@ -53,6 +53,9 @@ public interface ICalculationService extends Remote, IKalypsoService
    * Teilt dem Job mit, dass jetzt alle Daten dem Server übergeben wurden.
    * Der Auftrag wird jetzt in die Liste gestellt und (abhängig von der Imlpementation)
    * baldmöglichst abgearbeitet.
+   * 
+   * @param input Die Eingabedateien, die der Client zur Verfügung stellt. Alle Pfade der Beans sind realtiv zum
+   * <basedir>/<INPUT_DIR_NAME>/
    */
   public void startJob( final String jobID, final CalcJobDataBean[] input ) throws CalcJobServiceException;
   

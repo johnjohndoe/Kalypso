@@ -47,6 +47,11 @@ public abstract class AbstractCalcJob implements ICalcJob
   {
     return m_message;
   }
+  
+  protected final void setMessage( final String message )
+  {
+    m_message = message;
+  }
 
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getResults()
@@ -58,7 +63,7 @@ public abstract class AbstractCalcJob implements ICalcJob
 
   protected void progress( final int work )
   {
-    m_progress = Math.max( m_progress + work, 100 );
+    m_progress = Math.min( m_progress + work, 100 );
   }
   
   /**
@@ -66,12 +71,11 @@ public abstract class AbstractCalcJob implements ICalcJob
    */
   public void disposeJob()
   {
-    // TODO: alle Results löschen
+    // normalerweise nichts zu tun
   }
 
   protected void addResult( final CalcJobDataBean bean )
   {
-    // TODO: allgemeinen Mechanimus zur Datenablage anlegen?
     m_results.add( bean );
   }
 }

@@ -80,7 +80,6 @@ public class CalcJobService_impl_Queued implements ICalculationService
     final File myConfDir = new File( confDir, ClassUtilities
         .getOnlyClassName( ICalculationService.class ) );
 
-
     // Konfiguration der Modelltypen
     final File typeFile = new File( myConfDir, "modelltypen.properties" );
     if( !typeFile.exists() )
@@ -182,8 +181,6 @@ public class CalcJobService_impl_Queued implements ICalculationService
 
       LOGGER.info( "Job created and waiting for data: " + id );
 
-      startScheduling();
-
       return cjt.getJobBean();
     }
   }
@@ -208,10 +205,13 @@ public class CalcJobService_impl_Queued implements ICalculationService
 
   private void stopScheduling()
   {
-    m_timer.cancel();
-    m_timer = null;
+    if( m_timer != null )
+    {
+      m_timer.cancel();
+      m_timer = null;
 
-    LOGGER.info( "Stopped scheduling" );
+      LOGGER.info( "Stopped scheduling" );
+    }
   }
 
   /**
@@ -281,6 +281,8 @@ public class CalcJobService_impl_Queued implements ICalculationService
 
       LOGGER.info( "Job waiting for scheduling: " + jobID );
 
+      startScheduling();
+      
       return;
     }
 
@@ -293,14 +295,26 @@ public class CalcJobService_impl_Queued implements ICalculationService
     {
       // count running thread
       int runningCount = 0;
+      int waitingCount = 0;
       for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
       {
         final CalcJobThread cjt = (CalcJobThread)jIt.next();
         if( cjt.isAlive() )
           runningCount++;
+        
+        final CalcJobBean jobBean = cjt.getJobBean();
+        if( jobBean.getState() == ICalcServiceConstants.WAITING )
+          waitingCount++;
       }
 
       LOGGER.info( "Scheduler: Running jobs: " + runningCount );
+      LOGGER.info( "Scheduler: Waiting jobs: " + waitingCount );
+
+      if( waitingCount == 0 )
+      {
+        stopScheduling();
+        return;
+      }
 
       // Maximal einen Job auf einmal starten
       if( runningCount >= m_maxThreads )
@@ -319,8 +333,7 @@ public class CalcJobService_impl_Queued implements ICalculationService
         {
           LOGGER.info( "Scheduler: Starting job: " + jobBean.getId() );
           cjt.start();
-
-          runningCount++;
+          return;
         }
       }
     }

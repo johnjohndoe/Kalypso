@@ -16,10 +16,14 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.dialogs.ListSelectionDialog;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
@@ -28,6 +32,7 @@ import org.kalypso.ui.nature.ModelNature;
 public class StartCalculationActionDelegate implements IWorkbenchWindowActionDelegate
 {
   private ISelection m_selection;
+
   private IWorkbenchWindow m_window;
 
   /**
@@ -35,7 +40,7 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
    */
   public void dispose()
   {
-    // nix zu tun?
+  // nix zu tun?
   }
 
   /**
@@ -51,11 +56,11 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
    */
   public void run( final IAction action )
   {
-    // rausfinden, ob selection ok  ist
-    if( !(m_selection instanceof IStructuredSelection ) )
+    // rausfinden, ob selection ok ist
+    if( !( m_selection instanceof IStructuredSelection ) )
       return;
-    
-    final CalcCaseCollector visitor = new CalcCaseCollector( );
+
+    final CalcCaseCollector visitor = new CalcCaseCollector();
     try
     {
       final IStructuredSelection structsel = (IStructuredSelection)m_selection;
@@ -63,41 +68,39 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
       {
         final Object sel = sIt.next();
         if( sel instanceof IContainer )
-          ((IContainer)sel).accept( visitor );
+          ( (IContainer)sel ).accept( visitor );
       }
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
-      
-      ErrorDialog.openError( m_window.getShell(), "Berechnung starten", "Fehler beim Ermitteln der Rechenfälle", e.getStatus() );
+
+      ErrorDialog.openError( m_window.getShell(), "Berechnung starten",
+          "Fehler beim Ermitteln der Rechenfälle", e.getStatus() );
     }
-    
+
     final IFolder[] calcCases = visitor.getCalcCases();
     if( calcCases.length == 0 )
     {
-      MessageDialog.openInformation( m_window.getShell(), "Berechnung starten", "Es sind keine Rechenfälle selektiert." );
+      MessageDialog.openInformation( m_window.getShell(), "Berechnung starten",
+          "Es sind keine Rechenfälle selektiert." );
       return;
     }
-    
-    final StringBuffer message = new StringBuffer( "Folgende Rechenfälle wurden gefunden:\n\n" );
-    for( int i = 0; i < calcCases.length; i++ )
-    {
-      final IFolder folder = calcCases[i];
-      message.append( folder.getName() );
-      message.append( "\n" );
-    }
-    
-    message.append( "\nSoll die Berechnung durchgeführt werden?" );
-    
-    if( !MessageDialog.openConfirm( m_window.getShell(), "Berechnung starten", message.toString() ) )
+
+    final ListSelectionDialog dlg = new ListSelectionDialog( m_window.getShell(), calcCases,
+        new ArrayContentProvider(), new WorkbenchLabelProvider(),
+        "Welche Rechenvarianten sollen berechnet werden?" );
+    dlg.setInitialSelections( calcCases );
+    if( dlg.open() == Window.CANCEL )
       return;
+
+    final Object[] calcCasesToCalc = dlg.getResult();
     
-    for( int i = 0; i < calcCases.length; i++ )
+    for( int i = 0; i < calcCasesToCalc.length; i++ )
     {
-      final IFolder folder = calcCases[i];
-      
-      final Job job = new Job( "Berechne: " + folder.getName() ) 
+      final IFolder folder = (IFolder)calcCasesToCalc[i];
+
+      final Job job = new Job( "Berechne: " + folder.getName() )
       {
         /**
          * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -112,25 +115,27 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
           catch( final CoreException e )
           {
             e.printStackTrace();
-            
+
             return e.getStatus();
           }
 
           return Status.OK_STATUS;
-        }};
-        job.setUser( true );
-        job.schedule();
-    }    
+        }
+      };
+      job.setUser( true );
+      job.schedule();
+    }
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     m_selection = selection;
   }
-  
+
   private class CalcCaseCollector implements IResourceVisitor
   {
     private Collection m_calcCases = new ArrayList();
@@ -140,15 +145,16 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
      */
     public boolean visit( final IResource resource )
     {
-      if( resource.getType() == IResource.FOLDER && ModelNature.isCalcCalseFolder( (IFolder)resource ) )
+      if( resource.getType() == IResource.FOLDER
+          && ModelNature.isCalcCalseFolder( (IFolder)resource ) )
       {
         m_calcCases.add( resource );
         return false;
       }
-      
+
       return true;
     }
-    
+
     public IFolder[] getCalcCases()
     {
       return (IFolder[])m_calcCases.toArray( new IFolder[m_calcCases.size()] );

@@ -13,4 +13,6 @@ public interface ICalcServiceConstants
   public final int WAITING = 3;
   public final int WAITING_FOR_DATA = 5;
 
+  public final String INPUT_DIR_NAME = "input";
+  public final String OUTPUT_DIR_NAME = "output";
 }
