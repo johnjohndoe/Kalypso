@@ -36,17 +36,19 @@ import java.awt.GridLayout;
 
 import de.tuhh.wb.javagis.data.*;
 import javax.ejb.ObjectNotFoundException;
+import java.awt.HeadlessException;
 
 public class GisNetView extends JInternalFrame implements ComponentListener, MouseListener,MouseMotionListener,ActionListener
 {
     private static final int MOVE_MODE=0;
     private static final int CREATE_MODE=1;
     private static final int RELATION_MODE=2;
-    private static final int REMOVE_MODE=3;
-    private static final int ZOOMIN_MODE=4;
-    private static final int ZOOMOUT_MODE=5;
-    private static final int PAN_MODE=6;
-
+    private static final int REMOVE_OBJECT=3;
+    private static final int REMOVE_RELATION=4;
+    private static final int ZOOMIN_MODE=5;
+    private static final int ZOOMOUT_MODE=6;
+    private static final int PAN_MODE=7;
+    
     private static final int DEFAULT_MODE=PAN_MODE;
 
     private int mode;
@@ -54,7 +56,9 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
     private Vector gisObjectClasses;
     private Vector gisRelationClasses;
 
-    private GisObject selectedGisObject;
+    private GisObject selectedGisObject=null;
+    private GisRelation selectedGisRelation=null;
+
     private GisObject movingGisObject;
     private GisPoint movingGisPoint;
     private GisPoint createGisPoint;
@@ -81,6 +85,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	this.movingGisObject=null;
 	this.movingGisPoint=null;
 	this.selectedGisObject=null;
+	this.selectedGisRelation=null;
 	this.createGisPoint=null;
 	this.mode=DEFAULT_MODE;
 	this.netModel=netModel;
@@ -110,8 +115,10 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 		return "create Object";
 	    case RELATION_MODE:
 		return "create Relation";
-	    case REMOVE_MODE:
+	    case REMOVE_OBJECT:
 		return "remove Object";
+	    case REMOVE_RELATION:
+		return "remove Relation";
 	    case ZOOMIN_MODE:
 		return "zoom In";
 	    case ZOOMOUT_MODE:
@@ -198,14 +205,22 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 			movingGisPoint=gisPoint;
 			break;
 		    case RELATION_MODE:
-			/* disabled
-			   if((startRelationGisObject=netModel.snap(gisPoint))!=null)
-			   startRelationGisPoint=startRelationGisObject.getBasePoint();
-			   System.out.println("snaped for Relation..."+startRelationGisObject);
-			*/
+			try
+			    {
+				if((startRelationGisObject=netModel.snap(gisPoint))!=null)
+				    startRelationGisPoint=startRelationGisObject.getBasePoint();
+				System.out.println("snaped for Relation..."+startRelationGisObject);
+			    }
+ 			catch(ObjectNotFoundException ex)
+			    {
+				startRelationGisObject=null;
+			    }
 			break;
-		    case REMOVE_MODE:
-			// disabled			selectedGisObject = netModel.snap(gisPoint);
+		    case REMOVE_OBJECT:
+			selectedGisObject = netModel.snap(gisPoint);
+			break;
+		    case REMOVE_RELATION:
+			selectedGisRelation = netModel.snapRelation(gisPoint);
 			break;
 		    case ZOOMIN_MODE:
 			startZoomGisPoint = gisPoint;
@@ -230,7 +245,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 			GisObject singleObject=netModel.snap(gisPoint);
 			GisSingleObjectView.load("selected Element",singleObject);
 		    }
-		if (mode!=PAN_MODE&&mode!=CREATE_MODE&&mode!=REMOVE_MODE)
+		if (mode!=PAN_MODE&&mode!=CREATE_MODE&&mode!=REMOVE_OBJECT)
 		    {
 			setMode(DEFAULT_MODE);
 		    }
@@ -269,7 +284,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 		if(startRelationGisObject!=null)
 		    {
 			endRelationGisObject=netModel.snap(gisPoint);
-			if(endRelationGisObject!=null && startRelationGisObject!=endRelationGisObject)
+			if(endRelationGisObject!=null && !startRelationGisObject.equals(endRelationGisObject))
 			    {
 				System.out.println("snaped for Relation...(END)"+endRelationGisObject);
 				netModel.createRelation(startRelationGisObject,endRelationGisObject);
@@ -283,11 +298,55 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 		maybeShowPopupCreate(e);
 		clearModes();
 		break;
-	    case REMOVE_MODE:
-		maybeShowPopupRemove(e);
-		clearModes();
+	    case REMOVE_OBJECT:
+		if(selectedGisObject!=null)
+		    {
+			try
+			    {
+				switch(JOptionPane.showConfirmDialog(this,//Component parentComponent,
+								     "remove",//Object message,
+								     "Confirm removal",//String title,
+								     JOptionPane.YES_NO_CANCEL_OPTION,//int optionType,
+								     JOptionPane.QUESTION_MESSAGE))//int messageType)
+				    //Icon icon)
+				    {
+				    case JOptionPane.YES_OPTION:
+					((GisObjectClass)selectedGisObject.getGisElementClass()).remove(selectedGisObject.getId());
+					break;
+				    case JOptionPane.CANCEL_OPTION:
+					break;
+				    }
+			    }
+			catch(HeadlessException ex)
+			    {}
+			clearModes();
+		    }
 		break;
-	    case ZOOMIN_MODE:
+	    case REMOVE_RELATION:
+		if(selectedGisRelation!=null)
+		    {
+			try
+			    {
+				switch(JOptionPane.showConfirmDialog(this,//Component parentComponent,
+								     "remove Realtion "+selectedGisRelation.getName()+"#"+selectedGisRelation.getId(),//Object message,
+								     "Confirm removal",//String title,
+								     JOptionPane.YES_NO_CANCEL_OPTION,//int optionType,
+								     JOptionPane.QUESTION_MESSAGE))//int messageType)
+				    //Icon icon)
+				    {
+				    case JOptionPane.YES_OPTION:
+					((GisRelationClass)selectedGisRelation.getGisElementClass()).remove(selectedGisRelation.getId());
+					break;
+				    case JOptionPane.CANCEL_OPTION:
+					break;
+				    }
+			    }
+			catch(HeadlessException ex)
+			    {}
+			clearModes();
+		    }
+		break;
+		    case ZOOMIN_MODE:
 		if(zoomGisBox!=null)
 		    {
 			gisMap.zoomTo(zoomGisBox);
@@ -328,6 +387,8 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	startZoomGisPoint=null;
 	endZoomGisPoint=null;
 	zoomGisBox=null;
+	selectedGisObject=null;
+	selectedGisRelation=null;
     }
 
     private void maybeShowPopupCreate(MouseEvent e)
@@ -349,19 +410,19 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	    }
     }
 
-    private void maybeShowPopupRemove(MouseEvent e)
-    {
-        if (e.isPopupTrigger())
-	    {
-		JPopupMenu popup = new JPopupMenu();
-		JMenuItem menuItem = new JMenuItem("remove "+selectedGisObject.getName());
-		menuItem.addActionListener(this);
-		popup.add(menuItem);
-		popup.show(e.getComponent(),
-			   e.getX(), e.getY());
-	    }
-    }
-    
+    /*    private void maybeShowPopupRemove(MouseEvent e)
+	  {
+	  if (e.isPopupTrigger())
+	  {
+	  JPopupMenu popup = new JPopupMenu();
+	  JMenuItem menuItem = new JMenuItem("remove "+selectedGisObject.getName());
+	  menuItem.addActionListener(this);
+	  popup.add(menuItem);
+	  popup.show(e.getComponent(),
+	  e.getX(), e.getY());
+	  }
+	  }
+    */
     // MouseMotionListener:
     public void mouseMoved(MouseEvent e)
     {
@@ -382,10 +443,9 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 			try
 			    {
 				GisObject tmpGO=netModel.snap(gisPoint);
-				if(tmpGO!=null && tmpGO!=startRelationGisObject) //ToDo: GisObject: equal-methode implementieren
+				if(tmpGO!=null && !tmpGO.equals(startRelationGisObject))
 				    {
 					if(netModel.isAllowedRelation(startRelationGisObject,tmpGO))
-					    
 					    endRelationGisPoint=tmpGO.getBasePoint();
 					else
 					    endRelationGisPoint=null;
@@ -572,10 +632,10 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	    }
 	if(action.equals("removeRelation"))
 	    {
-		//setMode(REMOVE_MODE);
+		setMode(REMOVE_RELATION);
 	    }
 	if(action.equals("removeObject"))
-	    setMode(REMOVE_MODE);
+	    setMode(REMOVE_OBJECT);
 
 	if(action.equals("zoomIn"))
 	    setMode(ZOOMIN_MODE);

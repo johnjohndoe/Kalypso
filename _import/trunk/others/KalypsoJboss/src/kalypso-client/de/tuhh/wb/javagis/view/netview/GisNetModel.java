@@ -133,6 +133,44 @@ public class GisNetModel implements ActionListener,ElementClassListener
 	    }
 	return result;
     }
+
+
+
+    public GisRelation snapRelation(GisPoint snapPoint)
+    {
+	GisRelation result=null;
+	double distance=1000000d; // radius
+	double testDistance;
+	Transformation trafo=myGisMap.trafo;
+	for(int i=0;i<myGisRelationClasses.size();i++)
+	    {
+		GisRelationClass gisRelationClass=(GisRelationClass)myGisRelationClasses.elementAt(i);
+		Vector idList=(Vector)myRelationIdListVector.elementAt(i);
+		for(int n=0;n<idList.size();n++)
+		    {
+			Object rId=idList.elementAt(n);
+			try
+			    {
+
+				GisPoint gpSrc=gisRelationClass.getBasePointSource(rId);
+				GisPoint gpDest=gisRelationClass.getBasePointDestination(rId);
+				double cx=(gpSrc.getX()+gpDest.getX())/2.0d;
+				double cy=(gpSrc.getY()+gpDest.getY())/2.0d;				
+				testDistance=(new GisPoint(cx,cy)).distanceSq(snapPoint);
+				if(testDistance<distance)
+				    {
+					distance=testDistance;
+					result=gisRelationClass.getGisRelation(rId);
+				    }
+			    }
+			catch(ObjectNotFoundException e)
+			    {
+				//
+			    }
+		    }
+	    }
+	return result;
+    }
     
     public Image getBufferedMap(java.awt.Component component, Transformation trafo,double scale)
     {

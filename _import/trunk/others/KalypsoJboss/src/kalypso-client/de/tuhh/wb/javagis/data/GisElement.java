@@ -87,4 +87,14 @@ public class GisElement
 	//	mySession.remove(myId);
 	//	mySession.remove(this);
     }
+    public boolean equals(Object object)
+    {
+	if(object!=null && object instanceof GisElement)
+	    {
+		GisElement element=(GisElement)object;
+		if(getId().equals(element.getId()) && getKey().equals(element.getKey()))
+		    return true;
+	    }
+	return false;
+    }
 }
