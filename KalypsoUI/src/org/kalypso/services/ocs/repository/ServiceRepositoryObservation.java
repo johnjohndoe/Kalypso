@@ -192,8 +192,6 @@ public class ServiceRepositoryObservation implements IObservation
   }
 
   /**
-   * TODO: das soll zum Server gehen und nicht in der proxy-zml
-   * 
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
   public void setValues( final ITuppleModel values ) throws SensorException
