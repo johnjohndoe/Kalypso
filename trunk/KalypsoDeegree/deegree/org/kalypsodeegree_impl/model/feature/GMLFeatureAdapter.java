@@ -907,12 +907,17 @@ public class GMLFeatureAdapter
     {
       double z = Double.parseDouble( XMLTools.getStringValue( elem ) );
       pos = GeometryFactory.createGM_Position( new double[]
-      { x, y, z } );
+      {
+          x,
+          y,
+          z } );
     }
     else
     {
       pos = GeometryFactory.createGM_Position( new double[]
-      { x, y } );
+      {
+          x,
+          y } );
     }
 
     Debug.debugMethodEnd();

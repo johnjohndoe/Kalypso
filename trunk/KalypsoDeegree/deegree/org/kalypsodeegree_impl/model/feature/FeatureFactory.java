@@ -119,6 +119,8 @@ public class FeatureFactory
    * @param properties
    *          properties containing the <CODE>FeatureType</CODE> s content
    * @return instance of a <CODE>FeatureType</CODE>
+   * 
+   *  
    */
   public static FeatureType createFeatureType( FeatureType[] parents, FeatureType[] children,
       String name, FeatureTypeProperty[] properties )
@@ -126,13 +128,15 @@ public class FeatureFactory
     final int[] defaultOccurs = new int[properties.length];
     for( int i = 0; i < defaultOccurs.length; i++ )
       defaultOccurs[i] = 1;
-    return createFeatureType( name, DEFAULTNAMESPACE, properties, defaultOccurs, defaultOccurs,null );
+    return createFeatureType( name, DEFAULTNAMESPACE, properties, defaultOccurs, defaultOccurs,
+        null,null );
   }
 
   public static FeatureType createFeatureType( String name, String namespace,
-      FeatureTypeProperty[] properties, int[] minOccurs, int[] maxOccurs, Map annotationMap )
+      FeatureTypeProperty[] properties, int[] minOccurs, int[] maxOccurs, String substitutionGroup, Map annotationMap )
   {
-    return new FeatureType_Impl( name, namespace, properties, minOccurs, maxOccurs,annotationMap );
+    return new FeatureType_Impl( name, namespace, properties, minOccurs, maxOccurs,
+        substitutionGroup,annotationMap );
   }
 
   /**
@@ -166,13 +170,14 @@ public class FeatureFactory
    */
   public static Feature createFeature( String id, FeatureType featureType, Object[] properties )
   {
-    return new Feature_Impl( featureType,id, properties );
+    return new Feature_Impl( featureType, id, properties );
   }
 
-  public static Feature createFeature( String id, FeatureType featureType)
+  public static Feature createFeature( String id, FeatureType featureType )
   {
-    return new Feature_Impl( featureType,id );
+    return new Feature_Impl( featureType, id );
   }
+
   /**
    * creates an instance of a Feature from its FeatureType and an array of
    * Objects that represents it properties. It is assumed that the order of the
@@ -348,9 +353,11 @@ public class FeatureFactory
     {
       if( value != null && value instanceof GMLFeature )
       {
-        FeatureType linkFT = ( (FeatureAssociationTypeProperty)ftp ).getAssociationFeatureType();
-        FeatureType[] linkFTs = new FeatureType[]
-        { linkFT };
+        FeatureAssociationTypeProperty featureAssociationTypeProperty = (FeatureAssociationTypeProperty)ftp;
+        FeatureType[] linkFTs = featureAssociationTypeProperty.getAssociationFeatureTypes();
+
+        //        FeatureType[] linkFTs = new FeatureType[]
+        //        { linkFT };
         try
         {
           result = createFeature( (GMLFeature)value, linkFTs );
@@ -368,7 +375,7 @@ public class FeatureFactory
         if( string.startsWith( "#" ) )
           result = string.substring( 1 );
         else
-        result = string;
+          result = string;
       }
     }
     return result;
@@ -377,10 +384,10 @@ public class FeatureFactory
   private static Object wrapNOXLink( FeatureTypeProperty ftp, GMLProperty gmlProperty )
       throws Exception
   {
-  	
+
     final String type = ftp.getType();
-    if(type==null)
-    	System.out.println("no Type");
+    if( type == null )
+      System.out.println( "no Type" );
     final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
         .getTypeHandlerForClassName( type );
     if( typeHandler != null )
@@ -396,12 +403,12 @@ public class FeatureFactory
 
     //		System.out.println("Object"+o.getClass().toString());
     if( o instanceof String )
-    	return Mapper.mapXMLValueToJava((String)o,type);
-    	
+      return Mapper.mapXMLValueToJava( (String)o, type );
+
     if( o instanceof GMLGeometry && type.startsWith( "org.deegree.model.geometry." ) )
       return GMLAdapter.wrap( (GMLGeometry)o );
-    if( o instanceof GMLGeometry)
-    System.out.println(o.getClass().toString());
+    if( o instanceof GMLGeometry )
+      System.out.println( o.getClass().toString() );
     throw new Exception( "could not convert property (" + o.toString() + ") to " + type );
   }
 

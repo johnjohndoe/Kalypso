@@ -48,6 +48,7 @@ public class XLinkFeatureTypeProperty implements FeatureTypeProperty
   public final int m_xlinkType;
 
   private final String m_name;
+
   private final String m_namespace;
 
   private final String m_type;
@@ -62,12 +63,13 @@ public class XLinkFeatureTypeProperty implements FeatureTypeProperty
 
   private final Map m_annotationMap;
 
-  public XLinkFeatureTypeProperty( String name,String namespace, int type, boolean isNullable,Map annotation)
+  public XLinkFeatureTypeProperty( String name, String namespace, int type, boolean isNullable,
+      Map annotation )
   {
-    m_annotationMap=annotation;
+    m_annotationMap = annotation;
     m_xlinkType = type;
     m_name = name;
-    m_namespace=namespace;
+    m_namespace = namespace;
     m_type = "java.lang.Object"; // TODO Type aus Schemadefinition lesen
     m_isNullable = isNullable;
   }
@@ -166,8 +168,9 @@ public class XLinkFeatureTypeProperty implements FeatureTypeProperty
    */
   public Annotation getAnnotation( String lang )
   {
-    return (Annotation)m_annotationMap.get(lang);
+    return (Annotation)m_annotationMap.get( lang );
   }
+
   public Map getAnnotationMap()
   {
     return m_annotationMap;

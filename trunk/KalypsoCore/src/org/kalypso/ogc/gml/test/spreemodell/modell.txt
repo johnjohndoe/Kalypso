@@ -4,6 +4,7 @@
   | +http://www.tuhh.de/kalypsoSpree:ZuflussMember     FeatureAssociationType
   |                                                     -->http://www.tuhh.de/kalypsoSpree:Zufluss [1..1]
 --+http://www.tuhh.de/kalypsoSpree:Flutung FeatureType 
+    substitutiongrup:http://www.opengis.net/gml:_Feature
   |-+props:
   | +http://www.opengis.net/gml:description            java.lang.String [0..1]
   | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
@@ -13,6 +14,7 @@
   | +http://www.tuhh.de/kalypsoSpree:Abgabe_eingang    org.kalypso.zml.obslink.TimeseriesLink [1..1]
   | +http://www.tuhh.de/kalypsoSpree:Abgabe            org.kalypso.zml.obslink.TimeseriesLink [1..1]
 --+http://www.tuhh.de/kalypsoSpree:Zufluss FeatureType 
+    substitutiongrup:http://www.opengis.net/gml:_Feature
   |-+props:
   | +http://www.opengis.net/gml:description            java.lang.String [0..1]
   | +http://www.opengis.net/gml:name                   java.lang.String [0..1]
@@ -63,6 +65,7 @@
   | +http://www.tuhh.de/kalypsoSpree:FlusslaufModellMemFeatureAssociationType
   |                                                     -->http://www.tuhh.de/kalypsoSpree:FlusslaufModell [5..5]
 --+http://www.tuhh.de/kalypsoSpree:Talsperre FeatureType 
+    substitutiongrup:http://www.opengis.net/gml:_Feature
   |-+props:
   | +http://www.opengis.net/gml:description            java.lang.String [0..1]
   | +http://www.opengis.net/gml:name                   java.lang.String [0..1]

@@ -745,7 +745,7 @@ public class GazetteerService_Impl extends OGCWebService_Impl implements OGCWebS
         .toArray( new FeatureTypeProperty[ftpList.size()] );
     FeatureProperty[] fpL = (FeatureProperty[])fpList.toArray( new FeatureProperty[fpList.size()] );
     FeatureType featureType = FeatureFactory.createFeatureType( null, null, feature
-        .getFeatureType().getName(), ftpL );
+        .getFeatureType().getName(), ftpL);
 
     Debug.debugMethodEnd();
 

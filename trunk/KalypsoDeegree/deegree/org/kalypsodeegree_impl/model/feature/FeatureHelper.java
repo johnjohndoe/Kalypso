@@ -12,32 +12,30 @@ import org.deegree.model.feature.Feature;
  */
 public class FeatureHelper
 {
-    public static boolean booleanIsTrue(Feature feature, String propName,
-            boolean defaultStatus)
-    {
-        Object property = feature.getProperty(propName);
-        if (property != null && property instanceof Boolean)
-            return ((Boolean) property).booleanValue();
-        return defaultStatus;
-    }
+  public static boolean booleanIsTrue( Feature feature, String propName, boolean defaultStatus )
+  {
+    Object property = feature.getProperty( propName );
+    if( property != null && property instanceof Boolean )
+      return ( (Boolean)property ).booleanValue();
+    return defaultStatus;
+  }
 
-    /**
-     * @param fe
-     * @param string
-     * @param string2
-     * @return
-     */
-    public static String getFormatedDate(Feature feature, String propName,
-            String simpleDateFormatPattern, String defaultValue)
+  /**
+   * @param fe
+   * @param string
+   * @param string2
+   * @return
+   */
+  public static String getFormatedDate( Feature feature, String propName,
+      String simpleDateFormatPattern, String defaultValue )
+  {
+    Object property = feature.getProperty( propName );
+    if( property != null && property instanceof Date )
     {
-        Object property = feature.getProperty(propName);
-        if (property != null && property instanceof Date)
-        {
-            DateFormat dateFormat = new SimpleDateFormat(
-                    simpleDateFormatPattern);
-            return dateFormat.format((Date)property);
-        }
-        return defaultValue;
-
+      DateFormat dateFormat = new SimpleDateFormat( simpleDateFormatPattern );
+      return dateFormat.format( (Date)property );
     }
+    return defaultValue;
+
+  }
 }

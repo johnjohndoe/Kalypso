@@ -70,7 +70,7 @@ import org.deegree_impl.tools.TimeTools;
  * 
  * @version 12.12.2000
  * @author Andreas Poth
- * @author Markus Müller, email: mm@giub.uni-bonn.de
+ * @author Markus M?ller, email: mm@giub.uni-bonn.de
  *  
  */
 public class DBaseFile
@@ -386,7 +386,7 @@ final int m_defaultFileShapeType;
 
     ftp[ftp.length - 1] = FeatureFactory
     .createFeatureTypeProperty( "GEOM",getGeometryType(), true );
-    return FeatureFactory.createFeatureType( null, null, ftName, ftp );
+    return FeatureFactory.createFeatureType( null, null, ftName, ftp);
   }
 
   private String getGeometryType()
@@ -502,9 +502,9 @@ final int m_defaultFileShapeType;
       {
         int kk = (int)pos + column.position + i;
         /*
-         * if ( dataArray[kk] == -127 ) { sb.append( 'ü' ); } else if (
-         * dataArray[kk] == -108 ) { sb.append( 'ö' ); } else if ( dataArray[kk] ==
-         * -124 ) { sb.append( 'ä' ); } else
+         * if ( dataArray[kk] == -127 ) { sb.append( '?' ); } else if (
+         * dataArray[kk] == -108 ) { sb.append( '?' ); } else if ( dataArray[kk] ==
+         * -124 ) { sb.append( '?' ); } else
          */if( dataArray[kk] != 32 )
         {
           sb.append( (char)dataArray[kk] );
