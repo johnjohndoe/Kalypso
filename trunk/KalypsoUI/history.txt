@@ -9,8 +9,8 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 ----------------
 Version ..... XXXXXXXXXXXXXXXXx
 ----------------
-- Bugfix Wizard: bei den dialogen mit Wechsel zwischen zwei Diagrammansichten (Z-B. W - Q), springt die Ansicht 
-beim durchführen der Berechnung nicht mehr nach Q
+- Bugfix Wizard: bei den Dialogen mit Wechsel zwischen zwei Diagrammansichten (Z-B. W - Q), springt die Ansicht 
+beim Durchführen der Berechnung nicht mehr nach Q (leider musste dafür die Position des Knopfs geändert werden :-( )
 - Bei GIS-Tabellen jetzt auch Eingabe von Dezimahlzahlen mit Komma ',' möglich
 - Bugfix SpreePlugin: Bei Leerstellen in der Bodenfeuchtentabelle gabs ne NullpointerException. 
 Jetzt Behandlung wie bei 0.0: optimaler Wert wird ermittelt und übernommen.

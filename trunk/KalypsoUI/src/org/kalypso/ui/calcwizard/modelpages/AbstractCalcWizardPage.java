@@ -130,8 +130,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 {
   private int m_selectionID = 0x1;
 
-//  private Logger m_logger = Logger.getLogger( this.getClass().getName() );
-
   /** name der modelspec datei, die verwendet wird */
   public final static String PROP_MODELSPEC = "modelspec";
 
@@ -212,16 +210,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private boolean m_showZmlTableOnlySelected = true;
 
-  /**
-   * Hack, um den Button-Event auf dem Ingore-RadioButton zu blocken, wenn auf
-   * den Berechnungsknopf gedrückt wird
-   */
-  protected String m_blockradio = null;
-
-  private Button m_radioQ;
-
-  private Button m_radioW;
-
   public AbstractCalcWizardPage( final String name )
   {
     super( name );
@@ -247,11 +235,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_obsChart.dispose();
     if( m_diagTemplate != null )
       m_diagTemplate.dispose();
-    
-    if( m_radioQ != null )
-      m_radioQ.dispose();
-    if( m_radioW != null )
-      m_radioW.dispose();
   }
 
   public Properties getArguments()
@@ -701,6 +684,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected Composite createIgnoreButtonPanel( final Composite parent )
   {
+    final Composite panel = new Composite( parent, SWT.NONE );
+    panel.setLayout( new GridLayout( 3, false ) );
+    
     // properties lesen
     final String ignoreType1 = m_arguments.getProperty( PROP_IGNORETYPE1, null );
     final String ignoreType2 = m_arguments.getProperty( PROP_IGNORETYPE2, null );
@@ -708,12 +694,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final String ignoreLabel1 = m_arguments.getProperty( PROP_IGNORELABEL1, ignoreType2 );
     final String ignoreLabel2 = m_arguments.getProperty( PROP_IGNORELABEL2, ignoreType1 );
 
-    final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new GridLayout( 3, false ) );
-    panel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-
     if( ignoreType1 == null || ignoreType2 == null )
-      return panel;
+      return null;
 
     final Label label = new Label( panel, SWT.NONE );
     label.setText( "Diagrammanzeige:" );
@@ -723,13 +705,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     label.setLayoutData( gridData );
 
     final Button radioQ = new Button( panel, SWT.RADIO );
-    m_radioQ = radioQ;
     radioQ.setText( ignoreLabel1 );
-    
+
     final Button radioW = new Button( panel, SWT.RADIO );
-    m_radioW = radioW;
     radioW.setText( ignoreLabel2 );
-    
+
     radioQ.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -737,16 +717,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
        */
       public void widgetSelected( final SelectionEvent e )
       {
-       System.out.println( "Q selected: " + m_blockradio ); 
-
-       if( "Q".equals( m_blockradio )  )
-       {
-         if( !radioQ.getSelection() )
-           radioQ.setSelection( true );
-         if( radioW.getSelection() )
-           radioW.setSelection( false );
-       }
-        else if( radioQ.getSelection() )
           setObsIgnoreType( ignoreType1 );
       }
     } );
@@ -758,36 +728,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
        */
       public void widgetSelected( SelectionEvent e )
       {
-       System.out.println( "W selected: " + m_blockradio ); 
-        
-       if( "W".equals( m_blockradio )  )
-       {
-         if( !radioW.getSelection() )
-           radioW.setSelection( true );
-         if( radioQ.getSelection() )
-           radioQ.setSelection( false );
-       }
-        else if( radioW.getSelection() )
           setObsIgnoreType( ignoreType2 );
       }
     } );
 
-    m_radioQ.setSelection( true );
-
+    radioQ.setSelection( true );
+    
     return panel;
-  }
-
-  protected void saveTimeseriesPressed( final boolean saveInFiles )
-  {
-    final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
-    {
-      public void run( final IProgressMonitor monitor )
-      {
-        saveDirtyObservations( saveInFiles, monitor );
-      }
-    };
-
-    op.runAndHandleOperation( getShell(), "Hochwasser Vorhersage", "Zeitreihen speichern" );
   }
 
   /**
@@ -915,21 +862,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     };
 
-    try
-    {
-      // aus irgendeinem Druck loest das Ausführen dieser Operation
-      // einen WdigetSelect Event auf einem der beiden RadioButtons zur Auswahl der Ansicht (W/Q)
-      // aus -> diesen Blocken
-      if( m_radioQ.getSelection() )
-        m_blockradio = "Q";
-      else
-        m_blockradio = "W";
-      op.runAndHandleOperation( getShell(), "Hochwasser Vorhersage", "Berechnung" );
-    }
-    finally
-    {
-      m_blockradio = null;
-    }
+    op.runAndHandleOperation( getShell(), false, true, "Hochwasser Vorhersage", "Berechnung" );
   }
 
   protected void postCreateControl()

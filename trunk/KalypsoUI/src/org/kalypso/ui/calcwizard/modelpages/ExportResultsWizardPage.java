@@ -249,9 +249,13 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     diag.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final Composite buttonPanel = new Composite( panel, SWT.NONE );
-    buttonPanel.setLayout( new GridLayout( 4, false ) );
+    buttonPanel.setLayout( new GridLayout( 2, false ) );
     buttonPanel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
+    final GridData ignoreData = new GridData( GridData.FILL_HORIZONTAL );
+    ignoreData.horizontalAlignment = GridData.BEGINNING;
+    createIgnoreButtonPanel( buttonPanel ).setLayoutData( ignoreData );
+    
     final Button button = new Button( buttonPanel, SWT.PUSH );
     button.setText( "Zeitreihe(n) bearbeiten" );
     button.setToolTipText( "Öffnet die im Diagram dargestellten Zeitreihen zur Bearbeitung" );
@@ -265,8 +269,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         startGrafik();
       }
     } );
-
-    createIgnoreButtonPanel( buttonPanel );
   }
 
   private void createExportPanel( final Composite parent )
@@ -730,7 +732,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       }
     };
 
-    op.runAndHandleOperation( getShell(), "Hochwasser Vorhersage", "Grafik öffnen" );
+    op.runAndHandleOperation( getShell(), true, false, "Hochwasser Vorhersage", "Grafik öffnen" );
   }
 
   /**
