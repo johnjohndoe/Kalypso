@@ -11,29 +11,52 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.plugin.KalypsoGisPlugin;
+import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypso.util.pool.ResourcePool;
 
 /**
  * Loads a single userstyle from a sld
  * 
  * @author bce
  */
-public class StyleLoader extends AbstractLoader
+public class StyleLoader extends AbstractLoader implements IPoolListener
 {
+  private final ResourcePool m_sldPool = KalypsoGisPlugin.getDefault().getPool(
+      StyledLayerDescriptor.class );
+
+  public StyleLoader()
+  {
+    m_sldPool.addPoolListener( this );
+  }
+
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties, org.eclipse.core.resources.IProject, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.AbstractLoader#dispose()
    */
-  protected final Object loadIntern( final Properties source, final IProject project, final IProgressMonitor monitor ) throws LoaderException
+  public void dispose()
+  {
+    super.dispose();
+
+    m_sldPool.removePoolListener( this );
+  }
+
+  /**
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties,
+   *      org.eclipse.core.resources.IProject,
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
+  protected final Object loadIntern( final Properties source, final IProject project,
+      final IProgressMonitor monitor ) throws LoaderException
   {
     try
     {
       final String name = source.getProperty( "STYLE", "" );
 
-     
-      final StyledLayerDescriptor sld = (StyledLayerDescriptor)KalypsoGisPlugin.getDefault()
-          .getPool( StyledLayerDescriptor.class ).getObject( new PoolableObjectType( "sld", source, project ), monitor );
+      final StyledLayerDescriptor sld = (StyledLayerDescriptor)m_sldPool.getObject(
+          new PoolableObjectType( "sld", source, project ), monitor );
       // TODO: move to StyleLoader
 
       final NamedLayer[] namedLayers = sld.getNamedLayers();
@@ -86,5 +109,19 @@ public class StyleLoader extends AbstractLoader
   public String getDescription()
   {
     return null;
+  }
+
+  public void onObjectInvalid( final Object oldValue, final boolean bCannotReload )
+      throws Exception
+  {
+    final KalypsoFeatureLayer[] layers = (KalypsoFeatureLayer[])oldValue;
+    for( int i = 0; i < layers.length; i++ )
+    {
+      if( hasObject( layers[i] ) )
+      {
+        release( layers[i] );
+        fireLoaderObjectInvalid( layers[i], bCannotReload );
+      }
+    }
   }
 }

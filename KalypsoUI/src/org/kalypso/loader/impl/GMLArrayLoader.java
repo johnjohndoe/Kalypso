@@ -14,10 +14,6 @@ import org.deegree_impl.gml.GMLDocument_Impl;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -35,20 +31,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author schlienger
  *  
  */
-public final class GMLArrayLoader extends AbstractLoader implements IResourceChangeListener
+public final class GMLArrayLoader extends AbstractLoader
 {
-  final AbstractLoaderResourceDeltaVisitor m_visitor = new AbstractLoaderResourceDeltaVisitor( this );
-
-  public GMLArrayLoader()
-  {
-    ResourcesPlugin.getWorkspace().addResourceChangeListener( this );
-  }
-
-  public void dispose()
-  {
-    ResourcesPlugin.getWorkspace().removeResourceChangeListener( this );
-  }
-
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
@@ -71,11 +55,11 @@ public final class GMLArrayLoader extends AbstractLoader implements IResourceCha
       final String schemaPath = source.getProperty( "XSD", "" );
 
       final IFile file = project.getFile( sourcePath );
+      final IFile schemaFile = project.getFile( schemaPath );
 
       monitor.beginTask( "Features werden geladen...", 4000 );
 
-      final JMSchema schema = getSchema( project, schemaPath,
-          new SubProgressMonitor( monitor, 1000 ) );
+      final JMSchema schema = getSchema( schemaFile, new SubProgressMonitor( monitor, 1000 ) );
 
       final HashMap layerMap = new HashMap();
       final FeatureType[] types = schema.getFeatureTypes();
@@ -99,7 +83,10 @@ public final class GMLArrayLoader extends AbstractLoader implements IResourceCha
       final Object[] layerArray = layerMap.values().toArray(
           new KalypsoFeatureLayer[layerMap.size()] );
 
-      m_visitor.addResource( file, layerArray );
+      // egal, ob GML oder Schema geändert werden, das LayerArray ist
+      // dann nicht mehr gültig
+      addResource( schemaFile, layerArray );
+      addResource( file, layerArray );
 
       return layerArray;
     }
@@ -113,7 +100,7 @@ public final class GMLArrayLoader extends AbstractLoader implements IResourceCha
 
   private void optimizeLayers( final IProgressMonitor monitor, final HashMap layerMap )
   {
-    monitor.beginTask( "Optimiere layer...", layerMap.size()  );
+    monitor.beginTask( "Optimiere Layer...", layerMap.size()  );
     
     for( final Iterator iter = layerMap.values().iterator(); iter.hasNext(); )
     {
@@ -126,14 +113,14 @@ public final class GMLArrayLoader extends AbstractLoader implements IResourceCha
   private void collectFeatures( final IProgressMonitor monitor, final HashMap layerMap, final FeatureType[] types, final CS_CoordinateSystem layerCrs, final GMLDocument gml ) throws Exception
   {
     final GMLFeatureCollection gmlFC = gml.getRoot();
-    GMLFeature[] gmlFeatures = gmlFC.getFeatures();
+    final GMLFeature[] gmlFeatures = gmlFC.getFeatures();
     //      final int max= gmlFeatures.length < 20 ? gmlFeatures.length:20;
     final int max = gmlFeatures.length;
     if( max < gmlFeatures.length ) // TODO
       System.out.println( "WARNUNG es werden nur " + max + " von " + gmlFeatures.length
           + " Features geladen" );
 
-    monitor.beginTask( "Lade fwatures..." , max );
+    monitor.beginTask( "Lade Geometrien..." , max );
     
     for( int i = 0; i < max; i++ )
     {
@@ -147,26 +134,16 @@ public final class GMLArrayLoader extends AbstractLoader implements IResourceCha
     }
   }
 
-  private JMSchema getSchema( final IProject project, final String schemaPath,
+  private JMSchema getSchema( final IFile schemaFile,
       final IProgressMonitor monitor ) throws Exception, CoreException
   {
     monitor.beginTask( "Schema wird geladen...", 1000 );
-    final JMSchema schema = new JMSchema( XMLTools.getAsDOM( project.getFile( schemaPath )
+    final JMSchema schema = new JMSchema( XMLTools.getAsDOM( schemaFile
         .getContents() ) );
 
     monitor.worked( 1000 );
 
     return schema;
-  }
-
-  /**
-   * @see org.kalypso.loader.ILoader#release(java.lang.Object)
-   */
-  public void release( Object object )
-  {
-    super.release( object );
-
-    m_visitor.releaseResource( object );
   }
 
   /**
@@ -178,24 +155,5 @@ public final class GMLArrayLoader extends AbstractLoader implements IResourceCha
   {
     // TODO: support it
     throw new LoaderException( "Operation not supported" );
-  }
-
-  /**
-   * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-   */
-  public void resourceChanged( final IResourceChangeEvent event )
-  {
-    if( event.getType() == IResourceChangeEvent.POST_CHANGE )
-    {
-      final IResourceDelta delta = event.getDelta();
-      try
-      {
-        delta.accept( m_visitor );
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-      }
-    }
   }
 }
