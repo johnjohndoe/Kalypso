@@ -7,7 +7,7 @@ import javax.xml.rpc.ServiceException;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.services.proxy.IObservationService;
-import org.kalypso.services.proxy.RepositoryBean;
+import org.kalypso.services.proxy.ItemBean;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -15,6 +15,9 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class ObservationServiceRepository extends AbstractRepository
 {
+  /** root item is identified by the null bean */
+  private final ItemBean ROOT_ITEM = null;
+  
   private final IObservationService m_srv;
 
   /**
@@ -36,7 +39,7 @@ public class ObservationServiceRepository extends AbstractRepository
   {
     try
     {
-      return m_srv.hasRepositories();
+      return m_srv.hasChildren( ROOT_ITEM );
     }
     catch( RemoteException e )
     {
@@ -52,7 +55,7 @@ public class ObservationServiceRepository extends AbstractRepository
   {
     try
     {
-      final RepositoryBean[] beans = m_srv.getRepositories();
+      final ItemBean[] beans = m_srv.getChildren( ROOT_ITEM );
       
       final IRepositoryItem[] items = new IRepositoryItem[ beans.length ];
       
