@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transformationConfig xmlns="util.xml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.xml.kalypso.org .\calcCaseConfig.xsd">
+	<transformation className="org.kalypso.util.transformation.CopyTransformation">
+		<arg name="input" value="modell.gml"/>
+		<arg name="output" value="calcCase.gml"/>
+	</transformation>
+</transformationConfig>
