@@ -47,6 +47,7 @@ import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.displayelements.Label;
 import org.deegree.graphics.displayelements.LabelDisplayElement;
 import org.deegree.graphics.sld.LabelPlacement;
@@ -62,7 +63,6 @@ import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Point;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.geometry.GM_Surface;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree_impl.graphics.displayelements.LabelFactory;
 import org.deegree_impl.model.geometry.GeometryFactory;
 

@@ -53,6 +53,7 @@ import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.displayelements.PolygonDisplayElement;
 import org.deegree.graphics.sld.GraphicFill;
 import org.deegree.graphics.sld.PolygonSymbolizer;
@@ -63,7 +64,6 @@ import org.deegree.model.geometry.GM_MultiSurface;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.geometry.GM_Surface;
 import org.deegree.model.geometry.GM_SurfacePatch;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.deegree_impl.tools.Debug;
 

@@ -1,9 +1,10 @@
 package org.kalypso.ui.editor.styleeditor.dialogs.filterpatterndialog;
 
 import javax.swing.event.EventListenerList;
-import org.deegree.services.wfs.filterencoding.Operation;
-import org.deegree_impl.services.wfs.filterencoding.BoundaryExpression;
-import org.deegree_impl.services.wfs.filterencoding.PropertyIsBetweenOperation;
+
+import org.deegree.filterencoding.Operation;
+import org.deegree_impl.filterencoding.BoundaryExpression;
+import org.deegree_impl.filterencoding.PropertyIsBetweenOperation;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;

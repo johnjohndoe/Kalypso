@@ -43,8 +43,8 @@ package org.deegree.graphics.sld;
 
 import java.awt.image.BufferedImage;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.model.feature.Feature;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 
 /**
  * A Mark takes a "shape" and applies coloring to it. The shape can be derived

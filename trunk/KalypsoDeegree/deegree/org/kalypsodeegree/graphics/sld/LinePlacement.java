@@ -41,8 +41,8 @@
  ---------------------------------------------------------------------------*/
 package org.deegree.graphics.sld;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.model.feature.Feature;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 
 /**
  * Incarnation of an sld:LinePlacement-element.

@@ -41,7 +41,7 @@
  ---------------------------------------------------------------------------*/
 package org.deegree.graphics.sld;
 
-import org.deegree.services.wfs.filterencoding.Filter;
+import org.deegree.filterencoding.Filter;
 
 /**
  * A FeatureTypeConstraint element is used to identify a feature type by

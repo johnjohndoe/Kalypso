@@ -49,6 +49,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.displayelements.PointDisplayElement;
 import org.deegree.graphics.sld.PointSymbolizer;
 import org.deegree.graphics.sld.Symbolizer;
@@ -57,7 +58,6 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.geometry.GM_MultiPoint;
 import org.deegree.model.geometry.GM_Point;
 import org.deegree.model.geometry.GM_Position;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.deegree_impl.tools.Debug;
 

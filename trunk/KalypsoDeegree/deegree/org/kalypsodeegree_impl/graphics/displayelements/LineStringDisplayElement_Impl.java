@@ -52,6 +52,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.displayelements.LineStringDisplayElement;
 import org.deegree.graphics.sld.LineSymbolizer;
 import org.deegree.graphics.sld.Symbolizer;
@@ -61,7 +62,6 @@ import org.deegree.model.geometry.GM_Curve;
 import org.deegree.model.geometry.GM_LineString;
 import org.deegree.model.geometry.GM_MultiCurve;
 import org.deegree.model.geometry.GM_Position;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.deegree_impl.tools.Debug;
 

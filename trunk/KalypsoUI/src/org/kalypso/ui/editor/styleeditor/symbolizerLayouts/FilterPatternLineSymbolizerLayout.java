@@ -4,11 +4,11 @@
  */
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.sld.LineSymbolizer;
 import org.deegree.graphics.sld.Stroke;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;

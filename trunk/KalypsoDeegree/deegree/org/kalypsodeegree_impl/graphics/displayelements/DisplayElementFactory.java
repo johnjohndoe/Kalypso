@@ -44,6 +44,8 @@ package org.deegree_impl.graphics.displayelements;
 
 import java.util.ArrayList;
 
+import org.deegree.filterencoding.Filter;
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.displayelements.DisplayElement;
 import org.deegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.deegree.graphics.displayelements.LabelDisplayElement;
@@ -72,8 +74,6 @@ import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Point;
 import org.deegree.model.geometry.GM_Primitive;
 import org.deegree.model.geometry.GM_Surface;
-import org.deegree.services.wfs.filterencoding.Filter;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.deegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.deegree_impl.graphics.sld.PolygonSymbolizer_Impl;
@@ -517,6 +517,6 @@ public class DisplayElementFactory
   public static RasterDisplayElement buildRasterDisplayElement( GC_GridCoverage gc,
       RasterSymbolizer sym )
   {
-    return new RasterDisplayElement_Impl( gc, sym );
+    throw new UnsupportedOperationException( "Rasterelements are not supported" );
   }
 }

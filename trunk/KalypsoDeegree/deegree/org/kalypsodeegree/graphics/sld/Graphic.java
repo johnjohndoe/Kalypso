@@ -43,8 +43,8 @@ package org.deegree.graphics.sld;
 
 import java.awt.image.BufferedImage;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.model.feature.Feature;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 
 /**
  * A Graphic is a "graphic symbol" with an inherent shape, color, and size.

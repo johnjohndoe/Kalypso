@@ -44,8 +44,8 @@ package org.deegree.graphics.sld;
 
 import java.awt.Color;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.model.feature.Feature;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 
 /**
  * A Fill allows area geometries to be filled. There are two types of fills:

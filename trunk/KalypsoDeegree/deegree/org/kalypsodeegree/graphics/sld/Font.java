@@ -43,8 +43,8 @@ package org.deegree.graphics.sld;
 
 import java.awt.Color;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.model.feature.Feature;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 
 /**
  * The Font element identifies a font of a certain family, style, weight, size

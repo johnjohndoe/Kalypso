@@ -5,6 +5,8 @@ package org.kalypso.ui.editor.styleeditor;
 
 import java.util.ArrayList;
 
+import org.deegree.filterencoding.Filter;
+import org.deegree.filterencoding.Operation;
 import org.deegree.graphics.sld.FeatureTypeStyle;
 import org.deegree.graphics.sld.LineSymbolizer;
 import org.deegree.graphics.sld.PointSymbolizer;
@@ -16,14 +18,12 @@ import org.deegree.graphics.sld.UserStyle;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.services.wfs.filterencoding.Filter;
-import org.deegree.services.wfs.filterencoding.Operation;
+import org.deegree_impl.filterencoding.BoundaryExpression;
+import org.deegree_impl.filterencoding.ComplexFilter;
+import org.deegree_impl.filterencoding.OperationDefines;
+import org.deegree_impl.filterencoding.PropertyIsBetweenOperation;
+import org.deegree_impl.filterencoding.PropertyName;
 import org.deegree_impl.graphics.sld.StyleFactory;
-import org.deegree_impl.services.wfs.filterencoding.BoundaryExpression;
-import org.deegree_impl.services.wfs.filterencoding.ComplexFilter;
-import org.deegree_impl.services.wfs.filterencoding.OperationDefines;
-import org.deegree_impl.services.wfs.filterencoding.PropertyIsBetweenOperation;
-import org.deegree_impl.services.wfs.filterencoding.PropertyName;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;

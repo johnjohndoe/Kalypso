@@ -44,9 +44,9 @@ package org.deegree_impl.graphics.sld;
 
 import java.util.ArrayList;
 
+import org.deegree.filterencoding.Filter;
 import org.deegree.graphics.sld.Extent;
 import org.deegree.graphics.sld.FeatureTypeConstraint;
-import org.deegree.services.wfs.filterencoding.Filter;
 import org.deegree.xml.Marshallable;
 import org.deegree_impl.tools.Debug;
 

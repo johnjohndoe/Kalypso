@@ -46,12 +46,12 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.sld.ExternalGraphic;
 import org.deegree.graphics.sld.Graphic;
 import org.deegree.graphics.sld.Mark;
 import org.deegree.graphics.sld.ParameterValueType;
 import org.deegree.model.feature.Feature;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree.xml.Marshallable;
 import org.deegree_impl.tools.Debug;
 

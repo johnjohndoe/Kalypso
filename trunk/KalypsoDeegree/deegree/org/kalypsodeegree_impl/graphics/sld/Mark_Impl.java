@@ -46,11 +46,11 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.sld.Fill;
 import org.deegree.graphics.sld.Mark;
 import org.deegree.graphics.sld.Stroke;
 import org.deegree.model.feature.Feature;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree.xml.Marshallable;
 import org.deegree_impl.tools.Debug;
 

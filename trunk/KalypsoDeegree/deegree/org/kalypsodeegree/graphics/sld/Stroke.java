@@ -43,8 +43,8 @@ package org.deegree.graphics.sld;
 
 import java.awt.Color;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.model.feature.Feature;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 
 /**
  * A Stroke allows a string of line segments (or any linear geometry) to be
