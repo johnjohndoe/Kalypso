@@ -5,8 +5,8 @@ import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.util.command.ICommand;
 
 /**
- * Kommando zum ändern der Spaltenbreite.
- * Es wird davon ausgegangen, dass die Breite der Spalte (d.h. des Widgets) bereits gesetzt wurde.
+ * Kommando zum ändern der Spaltenbreite. Es wird davon ausgegangen, dass die
+ * Breite der Spalte (d.h. des Widgets) bereits gesetzt wurde.
  * 
  * @author Belger
  */
@@ -68,17 +68,18 @@ public class SetColumnWidthCommand implements ICommand
 
   private void setWidth( final int width, final boolean bSetControlWidth )
   {
-    if( !m_tableColumn.isDisposed() )
+    final TableColumn tableColumn = m_tableColumn;
+    if( !tableColumn.isDisposed() )
     {
-    m_tableColumn.getDisplay().asyncExec( new Runnable()
-    {
-      public void run()
+      m_tableColumn.getDisplay().asyncExec( new Runnable()
       {
-        m_tableColumn.setData( LayerTableViewer.COLUMN_PROP_WIDTH, new Integer( width ) );
-        if( bSetControlWidth )
-          m_tableColumn.setWidth( width );
-      }
-    } );
+        public void run()
+        {
+          tableColumn.setData( LayerTableViewer.COLUMN_PROP_WIDTH, new Integer( width ) );
+          if( bSetControlWidth )
+            tableColumn.setWidth( width );
+        }
+      } );
     }
   }
 

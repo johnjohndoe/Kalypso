@@ -108,12 +108,6 @@
             <separator name="spalten"/>
          </menu>
          <action
-               label="Exportieren...."
-               class="org.kalypso.ui.editor.gistableeditor.actions.ExportTableAction"
-               tooltip="Die Tabellenansicht auf verschiedene Weisen exportieren."
-               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
-               id="org.kalypso.ui.editors.tableeditor.Export"/>
-         <action
                toolbarPath="tabelle"
                label="Zeile hinzufügen"
                tooltip="Fügt eine Zeile am Ende der Tabelle ein"
@@ -166,6 +160,13 @@
                id="org.kalypso.ui.editors.tableeditor.columnmenu">
             <separator name="spaltenMenu"/>
          </menu>
+         <action
+               label="Exportieren..."
+               class="org.kalypso.ui.editor.gistableeditor.actions.ExportActionDelegate"
+               tooltip="Die Tabelle exportieren"
+               style="push"
+               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
+               id="org.kalypso.ui.editor.gistableeditor.ExportAction"/>
       </editorContribution>
       <editorContribution
             targetID="org.kalypso.ui.editor.mapeditor.GisMapEditor"
