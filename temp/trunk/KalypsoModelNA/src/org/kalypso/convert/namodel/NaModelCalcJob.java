@@ -471,41 +471,11 @@ public class NaModelCalcJob extends AbstractCalcJob
     // TODO: use it, or REMOVE it
     log.getClass();
     
-    File hiddenDir=new File(outputdir,".ascci");
-    
-    addDirToResults( simDir, "inp.dat", hiddenDir );
-    addDirToResults( simDir, "start", hiddenDir );
-    addDirToResults( simDir, "klima.dat", hiddenDir );
-    addDirToResults( simDir, "out_we.nat", hiddenDir );
-    //    final File inpDir = new File( simDir, "inp.dat" );
-    //    // inputdateien
-    //    final File[] inpDirResults = inpDir.listFiles();
-    //    for( int i = 0; i < inpDirResults.length; i++ )
-    //    {
-    //      final File file = inpDirResults[i];
-    //      copyResult( simDir, file, outputdir, file.getName(), file.getName() );
-    //    }
-
-    //    final File klimaDir = new File( simDir, "klima.dat" );
-    //    // klimadateien
-    //    final File[] klimaDirResults = klimaDir.listFiles();
-    //    for( int i = 0; i < klimaDirResults.length; i++ )
-    //    {
-    //      final File file = klimaDirResults[i];
-    //      copyResult( simDir, file, outputdir, file.getName(), file.getName() );
-    //    }
-
-    //    final File outDir = new File( simDir, "out_we.nat" );
-    //    // outputdateien
-    //    final File[] outDirResults = outDir.listFiles();
-    //    for( int i = 0; i < outDirResults.length; i++ )
-    //    {
-    //      final File file = outDirResults[i];
-    //      copyResult( simDir, file, outputdir, FileUtilities.getSuffix( file ),
-    // file.getName() );
-    //    }
-
-    // log und error dateien:
+    addDirToResults( simDir, "inp.dat", outputdir );
+    addDirToResults( simDir, "start", outputdir );
+    addDirToResults( simDir, "klima.dat", outputdir );
+    addDirToResults( simDir, "out_we.nat", outputdir );
+       // log und error dateien:
     final File logDir = new File( simDir, "start" );
     final File logFile = new File( logDir, "output.res" );
     if( logFile.exists() )
@@ -660,5 +630,4 @@ public class NaModelCalcJob extends AbstractCalcJob
       }
     }
   }
-
 }

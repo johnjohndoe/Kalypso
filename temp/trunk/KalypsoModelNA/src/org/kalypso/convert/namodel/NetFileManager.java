@@ -68,11 +68,6 @@ public class NetFileManager extends AbstractManager
   {
     try
     {
-      // rootNode is what we want to calculate, so do not use existing results
-      // for
-      // this node
-      if( m_conf.getRootNodeId().equals( nodeFE.getId() ) )
-        return false;
       final File resultFile = getResultFile( nodeFE );
       if( resultFile == null )
         return false;
