@@ -2,8 +2,10 @@ package org.kalypso.ogc.sensor.tableview.swing;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 import javax.swing.event.TableModelListener;
@@ -12,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
@@ -30,6 +33,7 @@ public class ObservationTableModel extends AbstractTableModel
   private ITableViewRules m_rules = null;
 
   private final DefaultTableModel m_valuesModel = new DefaultTableModel();
+  private final DefaultTableModel m_statusModel = new DefaultTableModel();
 
   private final TreeSet m_sharedModel = new TreeSet();
 
@@ -101,8 +105,18 @@ public class ObservationTableModel extends AbstractTableModel
       m_valuesModel.addColumn( col.getName() );
       final int colIndex = m_valuesModel.findColumn( col.getName() );
 
+      // add tablecolumn to status model
+      final IAxis statusAxis = getStatusAxis( col );
+      if( statusAxis != null )
+        m_statusModel.addColumn( statusAxis.getName() );
+      else
+        m_statusModel.addColumn( "no-status" );
+      
       if( m_sharedModel.size() > m_valuesModel.getRowCount() )
+      {
         m_valuesModel.setRowCount( m_sharedModel.size() );
+        m_statusModel.setRowCount( m_sharedModel.size() );
+      }
 
       // fill valued column values
       int r = 0;
@@ -115,6 +129,9 @@ public class ObservationTableModel extends AbstractTableModel
         {
           m_valuesModel.setValueAt(
               tupModel.getElement( index, col.getAxis() ), r, colIndex );
+          
+          if( statusAxis != null )
+            m_statusModel.setValueAt( tupModel.getElement( index, statusAxis), r, colIndex );
         }
 
         r++;
@@ -124,6 +141,21 @@ public class ObservationTableModel extends AbstractTableModel
     }
   }
 
+  /**
+   * Returns the status axis for the 'normal' axis found in the given column.
+   * 
+   * @param col
+   * @return status axis or null if not found
+   */
+  private IAxis getStatusAxis( final ITableViewColumn col )
+  {
+    final IAxis[] obsAxes = col.getTheme().getObservation().getAxisList();
+    final String statusAxisLabel = KalypsoStatusUtils.getStatusAxisLabelFor( col.getAxis() );
+    final IAxis statusAxis = ObservationUtilities.findAxisByNameNoEx( obsAxes, statusAxisLabel );
+
+    return statusAxis;
+  }
+  
   /**
    * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
    */
@@ -228,6 +260,8 @@ public class ObservationTableModel extends AbstractTableModel
       m_valuesModel.setValueAt( aValue, rowIndex, columnIndex - 1 );
 
       ((ITableViewColumn) m_columns.get( columnIndex - 1 )).setDirty( true );
+      
+      // TODO user changed the value, so modify statux if available
     }
   }
 
@@ -251,35 +285,11 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public RenderingRule[] findRules( int row, int column )
   {
-    final String kStatusCol = KalypsoStatusUtils
-        .getStatusAxisLabelFor( ((ITableViewColumn) m_columns.get( column - 1 ))
-            .getAxis() );
-
-    final IAxis valueAxis = findValueAxis( kStatusCol );
-    if( valueAxis == null )
+    final Object status = m_statusModel.getValueAt( row, column - 1 );
+    if( status == null )
       return new RenderingRule[0];
 
-    return m_rules.findRules( ((Integer) getValueAt( row, valueAxis
-        .getPosition() + 1 )).intValue() );
-  }
-
-  /**
-   * Finds a value axis with the given name.
-   * 
-   * @param name
-   * @return value axis or null if not found.
-   */
-  private IAxis findValueAxis( final String name )
-  {
-    for( final Iterator it = m_columns.iterator(); it.hasNext(); )
-    {
-      final ITableViewColumn col = (ITableViewColumn) it.next();
-
-      if( col.getAxis().getName().equals( name ) )
-        return col.getAxis();
-    }
-
-    return null;
+    return m_rules.findRules( ((Integer) status ).intValue() );
   }
 
   /**
@@ -289,7 +299,9 @@ public class ObservationTableModel extends AbstractTableModel
   {
     m_columns.clear();
     m_sharedModel.clear();
+    
     m_valuesModel.setColumnCount( 0 );
+    m_statusModel.setColumnCount( 0 );
 
     fireTableStructureChanged();
   }
@@ -311,6 +323,8 @@ public class ObservationTableModel extends AbstractTableModel
           sharedElement );
 
       m_valuesModel.insertRow( index, new Object[m_columns.size()] );
+      
+      m_statusModel.insertRow( index, new Object[m_columns.size()] );
 
       fireTableDataChanged();
 
@@ -366,6 +380,7 @@ public class ObservationTableModel extends AbstractTableModel
       }
 
       m_valuesModel.removeRow( index );
+      m_statusModel.removeRow( index );
       m_sharedModel.remove( row.get( 0 ) );
 
       fireTableDataChanged();
@@ -418,18 +433,26 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public ITuppleModel getValues( final List cols, final int[] rows )
   {
-    final List axes = new ArrayList();
+    final List allAxes = new ArrayList();
+    final Map statusAxes = new HashMap();
 
-    axes.add( m_sharedAxis );
-
+    allAxes.add( m_sharedAxis );
+    
     final Iterator it = cols.iterator();
     while( it.hasNext() )
     {
       final ITableViewColumn col = (ITableViewColumn) it.next();
-      axes.add( col.getAxis() );
+      allAxes.add( col.getAxis() );
+      
+      final IAxis statusAxis = getStatusAxis( col );
+      if( statusAxis != null )
+      {
+        allAxes.add( statusAxis );
+        statusAxes.put( col, statusAxis );
+      }
     }
 
-    final SimpleTuppleModel model = new SimpleTuppleModel( axes );
+    final SimpleTuppleModel model = new SimpleTuppleModel( allAxes );
 
     int rowIndex = 0;
     for( final Iterator ite = m_sharedModel.iterator(); ite.hasNext(); )
@@ -439,7 +462,7 @@ public class ObservationTableModel extends AbstractTableModel
       if( rows == null
           || (rows != null && Arrays.binarySearch( rows, rowIndex ) >= 0) )
       {
-        Object[] tupple = new Object[ axes.size() ];
+        final Object[] tupple = new Object[ allAxes.size() ];
 
         tupple[ m_sharedAxis.getPosition() ] = keyObj;
 
@@ -447,9 +470,14 @@ public class ObservationTableModel extends AbstractTableModel
         {
           final ITableViewColumn col = (ITableViewColumn) ita.next();
 
+          // the col index is the same for the value model and the status model
           final int colIndex = m_valuesModel.findColumn( col.getName() );
 
           tupple[ col.getAxis().getPosition() ] = m_valuesModel.getValueAt( rowIndex, colIndex );
+          
+          final IAxis statusAxis = (IAxis) statusAxes.get( col );
+          if( statusAxis != null )
+            tupple[ statusAxis.getPosition() ] = m_statusModel.getValueAt( rowIndex, colIndex );
         }
 
         model.addTupple( tupple );

@@ -49,6 +49,27 @@ public class ObservationUtilities
 
     throw new NoSuchElementException( "No axis found with name: " + axisName );
   }
+  
+  /**
+   * returns null when no axis found instead of throwing an exception
+   * 
+   * @param axes
+   * @param axisName
+   * @return axis or null if not found
+   * 
+   * @see ObservationUtilities#findAxisByName(IAxis[], String)
+   */
+  public static IAxis findAxisByNameNoEx( final IAxis[] axes, final String axisName )
+  {
+    try
+    {
+      return findAxisByName( axes, axisName );
+    }
+    catch( NoSuchElementException e )
+    {
+      return null;
+    }
+  }
 
   /**
    * Finds the axis of the given observation that has the given type.

@@ -311,8 +311,12 @@ public class GrafikLauncher
       writer.write( "yTitel1:\t" + yAchsen.getLabelAt( 1 ) + "\n" );
       writer.write( "yTitel2:\t" + yAchsen.getLabelAt( 2 ) + "\n" );
       
-      // TODO: find out which command means vertical line in the grafik tool...
-      // writer.write( verticalLines... + '\n' );
+      // constant vertical lines...
+      for( Iterator it = xLines.iterator(); it.hasNext(); )
+      {
+        final String strDate = it.next().toString();
+        writer.write( "Senkrechte: " + strDate + '\n' );
+      }
       
       // constant horizontal lines...
       for( final Iterator it = yLines.keySet().iterator(); it.hasNext(); )

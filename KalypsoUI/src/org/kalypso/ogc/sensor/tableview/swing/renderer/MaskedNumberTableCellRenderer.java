@@ -35,32 +35,33 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
     if( n == null )
       return label;
 
-    final ObservationTableModel otm = (ObservationTableModel) table.getModel();
-    final RenderingRule[] r = otm.findRules( row, column );
+    final RenderingRule[] r = ((ObservationTableModel) table.getModel()).findRules( row, column );
 
     String ttext = "";
 
     for( int i = 0; i < r.length; i++ )
     {
+      // FONT
       final Font f = r[i].getFont();
       if( f != null )
         label.setFont( f );
 
+      // TOOLTIP
       ttext += r[i].getTooltipText();
 
+      // FOREGROUND
       final Color fgc = r[i].getForegroundColor();
       if( fgc != null )
         label.setForeground( fgc );
 
+      // BACKGROUND
       final Color bgc = r[i].getBackgroundColor();
       if( bgc != null )
         label.setBackground( bgc );
     }
 
     label.setToolTipText( ttext );
-
     label.setText( nf.format( n.doubleValue() ) );
-
     return label;
   }
 }

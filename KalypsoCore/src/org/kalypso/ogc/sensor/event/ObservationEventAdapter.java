@@ -1,6 +1,8 @@
 package org.kalypso.ogc.sensor.event;
 
-import org.eclipse.core.internal.runtime.ListenerList;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationEventProvider;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -12,7 +14,7 @@ import org.kalypso.ogc.sensor.IObservationListener;
  */
 public class ObservationEventAdapter implements IObservationEventProvider
 {
-  private final ListenerList m_listeners = new ListenerList();
+  private final List m_listeners = new ArrayList();
   private final IObservation m_obs;
 
   public ObservationEventAdapter( final IObservation obs )
@@ -41,7 +43,7 @@ public class ObservationEventAdapter implements IObservationEventProvider
    */
   public void fireChangedEvent( )
   {
-    final Object[] listeners = m_listeners.getListeners();
+    final Object[] listeners = m_listeners.toArray();
     for( int i = 0; i < listeners.length; i++ )
     {
       final IObservationListener listener = (IObservationListener) listeners[i];
