@@ -1,24 +1,17 @@
 package org.kalypso.editor.mapeditor;
 
 import java.awt.Frame;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.pool.KeyedObjectPool;
 import org.deegree.graphics.sld.UserStyle;
 import org.eclipse.core.internal.resources.ResourceException;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
@@ -31,10 +24,9 @@ import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.plugin.KalypsoGisPlugin;
-import org.kalypso.xml.gisview.Gisview;
-import org.kalypso.xml.gisview.ObjectFactory;
-import org.kalypso.xml.types.GisviewLayerType;
-import org.kalypso.xml.types.LayerType;
+import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.template.gismapview.ObjectFactory;
+import org.kalypso.template.gistableview.GistableviewType.LayerType;
 
 /**
  * <p>
@@ -58,15 +50,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 {
   private final ObjectFactory m_gisviewObjectFactory = new ObjectFactory();
 
-  private final org.kalypso.xml.types.ObjectFactory m_typeObjectFactory = new org.kalypso.xml.types.ObjectFactory();
-
   private final Unmarshaller m_unmarshaller;
 
-  private final Marshaller m_marshaller;
-
   private GisMapOutlinePage m_outlinePage = null;
-
-  private Gisview m_gisview = null;
 
   private final MapPanel myMapPanel;
 
@@ -79,7 +65,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     try
     {
       m_unmarshaller = m_gisviewObjectFactory.createUnmarshaller();
-      m_marshaller = m_gisviewObjectFactory.createMarshaller();
+//      m_marshaller = m_gisviewObjectFactory.createMarshaller();
     }
     catch( JAXBException e )
     {
@@ -118,39 +104,40 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
-    if( m_gisview == null )
-      return;
-
-    try
-    {
-      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      m_marshaller.marshal( m_gisview, bos );
-      bos.close();
-
-      final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
-
-      final IFile file = input.getFile();
-      if( file.exists() )
-        file.setContents( bis, false, true, monitor );
-      else
-        file.create( bis, false, monitor );
-
-      bis.close();
-
-      setDirty( false );
-    }
-    catch( JAXBException e )
-    {
-      e.printStackTrace();
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-    }
-    catch( CoreException e )
-    {
-      e.printStackTrace();
-    }
+    // TODO: do it!
+//    if( m_gisview == null )
+//      return;
+//
+//    try
+//    {
+//      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//      m_marshaller.marshal( m_gisview, bos );
+//      bos.close();
+//
+//      final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+//
+//      final IFile file = input.getFile();
+//      if( file.exists() )
+//        file.setContents( bis, false, true, monitor );
+//      else
+//        file.create( bis, false, monitor );
+//
+//      bis.close();
+//
+//      setDirty( false );
+//    }
+//    catch( JAXBException e )
+//    {
+//      e.printStackTrace();
+//    }
+//    catch( IOException e )
+//    {
+//      e.printStackTrace();
+//    }
+//    catch( CoreException e )
+//    {
+//      e.printStackTrace();
+//    }
   }
 
   /**
@@ -173,11 +160,11 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   {
     final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
-    Gisview gisview = null;
+    Gismapview gisview = null;
 
     try
     {
-      gisview = (Gisview)m_unmarshaller.unmarshal( input.getStorage().getContents() );
+      gisview = (Gismapview)m_unmarshaller.unmarshal( input.getStorage().getContents() );
     }
     catch( final ResourceException re )
     {
@@ -222,44 +209,41 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     layer.getClass();
   }
 
-  /**
-   * @see org.kalypso.xml.types.ILayerlistProvider#getLayerlist()
-   */
-  public List getLayerlist()
-  {
-    return m_gisview == null ? null : m_gisview.getLayers().getLayer();
-  }
+//  public List getLayerlist()
+//  {
+//    return m_gisview == null ? null : m_gisview.getLayers().getLayer();
+//  }
 
-  /**
-   * @see org.kalypso.xml.types.ILayerTypeFactory#createNewLayer()
-   */
-  public LayerType createNewLayer()
-  {
-    try
-    {
-      final GisviewLayerType layer = m_typeObjectFactory.createGisviewLayerType();
-
-      if( new Propsdiag( getEditorSite().getShell(), layer ).open() != Window.OK )
-        return null;
-
-      // hm, wer macht die id?
-      layer.setId( "TODO:" );
-
-      // TODO: should do propsdialog
-      layer.setName( "<neu>" );
-
-      layer.setVisible( false );
-
-      return layer;
-    }
-    catch( JAXBException e )
-    {
-      // sollte nie passieren
-      e.printStackTrace();
-    }
-
-    return null;
-  }
+//  /**
+//   * @see org.kalypso.xml.types.ILayerTypeFactory#createNewLayer()
+//   */
+//  public LayerType createNewLayer()
+//  {
+//    try
+//    {
+//      final GisviewLayerType layer = m_typeObjectFactory.createGisviewLayerType();
+//
+//      if( new Propsdiag( getEditorSite().getShell(), layer ).open() != Window.OK )
+//        return null;
+//
+//      // hm, wer macht die id?
+//      layer.setId( "TODO:" );
+//
+//      // TODO: should do propsdialog
+//      layer.setName( "<neu>" );
+//
+//      layer.setVisible( false );
+//
+//      return layer;
+//    }
+//    catch( JAXBException e )
+//    {
+//      // sollte nie passieren
+//      e.printStackTrace();
+//    }
+//
+//    return null;
+//  }
   
   public MapModell getMapModell()
   {
