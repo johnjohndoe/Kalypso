@@ -57,8 +57,9 @@ public class PSICompactObservationItem implements IObservation
 
   private IValueConverter m_vc;
 
-  private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
-  
+  private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter(
+      this );
+
   /**
    * Constructor
    * 
@@ -99,19 +100,20 @@ public class PSICompactObservationItem implements IObservation
     final IAxis[] axes = new IAxis[3];
 
     // immer Datum Axis
-    axes[0] = new DefaultAxis( TimeserieUtils.getName( TimeserieConstants.TYPE_DATE ), TimeserieConstants.TYPE_DATE, TimeserieUtils.getUnit( TimeserieConstants.TYPE_DATE ),
-        Date.class, true );
+    axes[0] = new DefaultAxis( TimeserieUtils
+        .getName( TimeserieConstants.TYPE_DATE ), TimeserieConstants.TYPE_DATE,
+        TimeserieUtils.getUnit( TimeserieConstants.TYPE_DATE ), Date.class,
+        true );
 
     // Wert (Einheit abfragen)
     final int psiUnit = psiMD.getUnit();
     final String type = measureTypeToString();
     final String unit = TimeserieUtils.getUnit( type );
-    
+
     final String label = TimeserieUtils.getName( type ) + " " + getName();
-    
-    axes[1] = new DefaultAxis( label, type, unit,
-        Double.class, false );
-    
+
+    axes[1] = new DefaultAxis( label, type, unit, Double.class, false );
+
     m_vc = PSICompactRepositoryFactory.getConverter( psiUnit, unit );
 
     // Status
@@ -129,8 +131,8 @@ public class PSICompactObservationItem implements IObservation
    * 
    * @throws ECommException
    */
-  private final MetadataList prepareMetadata( final ObjectMetaData psiMD, final WQParamSet[] psiWQ )
-      throws ECommException
+  private final MetadataList prepareMetadata( final ObjectMetaData psiMD,
+      final WQParamSet[] psiWQ ) throws ECommException
   {
     final MetadataList metadata = new MetadataList();
 
@@ -142,22 +144,28 @@ public class PSICompactObservationItem implements IObservation
     {
       metadata.put( TimeserieConstants.MD_GKH, String.valueOf( psiMD
           .getHeight() ) );
-      metadata.put( TimeserieConstants.MD_GKR, String.valueOf( psiMD
-          .getRight() ) );
-      metadata.put( TimeserieConstants.MD_HOEHENANGABEART, psiMD
-          .getLevelUnit() );
-      metadata.put( TimeserieConstants.MD_PEGELNULLPUNKT, String
-          .valueOf( psiMD.getLevel() ) );
-      metadata.put( TimeserieConstants.MD_MESSTISCHBLATT, String
-          .valueOf( psiMD.getMapNo() ) );
-      metadata.put( TimeserieConstants.MD_ALARM_1, String.valueOf( m_vc
-          .psi2kalypso( psiMD.getAlarm1() ) ) );
-      metadata.put( TimeserieConstants.MD_ALARM_2, String.valueOf( m_vc
-          .psi2kalypso( psiMD.getAlarm2() ) ) );
-      metadata.put( TimeserieConstants.MD_ALARM_3, String.valueOf( m_vc
-          .psi2kalypso( psiMD.getAlarm3() ) ) );
-      metadata.put( TimeserieConstants.MD_ALARM_4, String.valueOf( m_vc
-          .psi2kalypso( psiMD.getAlarm4() ) ) );
+      metadata.put( TimeserieConstants.MD_GKR, String
+          .valueOf( psiMD.getRight() ) );
+      metadata
+          .put( TimeserieConstants.MD_HOEHENANGABEART, psiMD.getLevelUnit() );
+      metadata.put( TimeserieConstants.MD_PEGELNULLPUNKT, String.valueOf( psiMD
+          .getLevel() ) );
+      metadata.put( TimeserieConstants.MD_MESSTISCHBLATT, String.valueOf( psiMD
+          .getMapNo() ) );
+
+      // Bug 80: only waterlevel-timeseries should have alarmlevels
+      if( TimeserieConstants.TYPE_WATERLEVEL.equals( measureTypeToString() ) )
+      {
+        metadata.put( TimeserieConstants.MD_ALARM_1, String.valueOf( m_vc
+            .psi2kalypso( psiMD.getAlarm1() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_2, String.valueOf( m_vc
+            .psi2kalypso( psiMD.getAlarm2() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_3, String.valueOf( m_vc
+            .psi2kalypso( psiMD.getAlarm3() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_4, String.valueOf( m_vc
+            .psi2kalypso( psiMD.getAlarm4() ) ) );
+      }
+      
       metadata.put( TimeserieConstants.MD_FLUSS, psiMD.getRiver() );
       metadata.put( TimeserieConstants.MD_FLUSSGEBIET, psiMD.getRiversystem() );
     }
@@ -179,10 +187,10 @@ public class PSICompactObservationItem implements IObservation
 
       throw new ECommException( e );
     }
-    
+
     return metadata;
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getName()
    */
@@ -338,7 +346,7 @@ public class PSICompactObservationItem implements IObservation
         PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(),
             measureTypeToArchiveType(), model.getData()[0].getTimestamp(),
             model.getData() );
-        
+
         // this observation has changed
         m_evtPrv.fireChangedEvent();
       }
@@ -373,7 +381,7 @@ public class PSICompactObservationItem implements IObservation
   {
     m_evtPrv.removeListener( listener );
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
    */

@@ -4,10 +4,10 @@
     <metadataList>
         <metadata name="Name" value="582090"/>
         <metadata name="Beschreibung" value="Spremberg"/>
-        <metadata name="Alarmstufe 4" value="3"/>
-        <metadata name="Alarmstufe 3" value="3"/>
-        <metadata name="Alarmstufe 2" value="3"/>
-        <metadata name="Alarmstufe 1" value="3"/>
+        <metadata name="Alarmstufe 4" value="300"/>
+        <metadata name="Alarmstufe 3" value="250"/>
+        <metadata name="Alarmstufe 2" value="200"/>
+        <metadata name="Alarmstufe 1" value="150"/>
     </metadataList>
     <axis datatype="TYPE=double" key="false" name="Wasserstand 582090" type="W" unit="cm">
         <valueArray separator=";">0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0</valueArray>
