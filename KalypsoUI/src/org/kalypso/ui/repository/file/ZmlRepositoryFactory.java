@@ -1,13 +1,15 @@
 package org.kalypso.ui.repository.file;
 
-import org.eclipse.swt.SWT;
+import java.io.FileFilter;
+
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.java.io.filter.AcceptAllFileFilter;
 import org.kalypso.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
 import org.kalypso.repository.AbstractRepositoryFactory;
 import org.kalypso.repository.IRepository;
-import org.kalypso.repository.RepositoryException;
 
 /**
  * A GUI oriented ZmlRepository factory.
@@ -25,25 +27,12 @@ public class ZmlRepositoryFactory extends AbstractRepositoryFactory
   public boolean configureRepository(  )
   {
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-    //final DirectoryDialog fileDlg = new DirectoryDialog( shell, SWT.OPEN );
-
-    //if( getConfiguration() != null )
-    //  fileDlg.setFilterPath( getConfiguration() );
-
-    //final String path = fileDlg.open();
-
-    //if( path != null )
-    //{
-    //  MessageDialog.
-//      setConfiguration( path );
-//
-//      return true;
-//    }
-//
-//    return false;
-    
+   
     final ZmlRepositoryConfigDialog dlg = new ZmlRepositoryConfigDialog( shell, "", "" );
-    if( dlg.open() == SWT.OK )
+    
+    final int res = dlg.open();
+    
+    if( res == Window.OK )
     {
       m_location = dlg.getLocation();
       m_filters = dlg.getFilters();
@@ -59,8 +48,15 @@ public class ZmlRepositoryFactory extends AbstractRepositoryFactory
    */
   public IRepository createRepository()
   {
-    final String[] exts = m_filters.split(",");
-    final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( exts, false, true, false );
+    final FileFilter filter;
+    
+    if( m_filters.length() == 0 )
+      filter = new AcceptAllFileFilter();
+    else
+    {
+      final String[] exts = m_filters.split(",");
+      filter = new MultipleWildCardFileFilter( exts, false, true, false );
+    }
 
     return new ZmlObservationRepository( m_location, isReadOnly(), filter );
   }
