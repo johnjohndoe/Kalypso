@@ -171,7 +171,7 @@ public class ObservationResolver extends AbstractTransformation
         // with 'i' the index in the observations array...
         
         // final ForecastFilter fc = new ForecastFilter();
-        // fc.initFilter( new IObservation[] { obs, obs }, null );
+        // fc.initFilter( new IObservation[] { obs, obs }, obs );
         
         final IFile targetfile = targetFolder.getFile( new Path( targetlink.getHref() ) );
         FolderUtilities.mkdirs( targetfile.getParent() );
