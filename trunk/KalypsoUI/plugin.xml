@@ -85,6 +85,12 @@
             category="Kalypso"
             name="Table QuickView"
             id="org.kalypso.ogc.sensor.view.TableViewPart"/>
+      <view
+            icon="icons/full/elcl16/kde_filter.gif"
+            class="org.kalypso.editor.mapeditor.views.StyleEditorViewPart"
+            category="Kalypso"
+            name="Style Editor"
+            id="org.kalypso.editor.mapeditor.views.styleeditor"/>
    </extension>
    <extension
          point="org.eclipse.ui.editorActions">
