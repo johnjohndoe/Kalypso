@@ -1,6 +1,11 @@
-package org.kalypso.ui.calcwizard;
+package org.kalypso.ui.calcwizard.modelpages;
 
 import java.awt.Frame;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.event.ModellEvent;
@@ -14,10 +19,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -26,25 +33,26 @@ import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.map.actions.FullExtentMapAction;
 import org.kalypso.ogc.gml.map.actions.ToggleSingleSelectWidgetAction;
-import org.kalypso.ogc.gml.map.actions.ZoomOutMapAction;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapPanel;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
-import org.kalypso.ogc.gml.widgets.ToggleSelectWidget;
+import org.kalypso.ogc.sensor.diagview.DiagramTemplateFactory;
+import org.kalypso.ogc.sensor.template.ObservationTemplateHelper;
+import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
+import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Belger
  */
-
-public class CommitResultsWizardPage extends AbstractCalcWizardPage implements ModellEventListener
+public class ExportResultsWizardPage extends AbstractCalcWizardPage implements ModellEventListener
 {
   // Beispiel:
-  //   <page className="org.kalypso.ui.calcwizard.CommitResultsWizardPage"
+  //   <page className="org.kalypso.ui.calcwizard.ViewResultsWizardPage"
   // pageTitle="Kontrolle der Ergebnisse"
   // imageLocation="icons/calcwizard/boden.gif" >
   //        <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/karte2.gmt"/>
@@ -54,13 +62,10 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
   // value="Wasserstand#Wasserstand_gerechnet"/>
   //        <arg name="mainSash" value="50"/>
   //        <arg name="rightSash" value="40"/>
-  //        <arg name="CommitTextTemplate" value="Vorhersageergebnis Spreemodell berechnet mit Kalypso"/>
+  //        <arg name="grafikToolTemplate" value=".modellTyp/grafik.exe_"/>
   //    </page>
   //  
 
-  /** initialer Text f?r die Ergebnisablage */
-  public final static String PROP_COMMITTEXTTEMPLATE="CommitTextTemplate";
-  
   /** Pfad auf Vorlage f?r die Karte (.gmt Datei) */
   public final static String PROP_MAPTEMPLATE = "mapTemplate";
 
@@ -76,26 +81,31 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
   /** Position des rechten Sash: Integer von 0 bis 100 */
   public final static String PROP_RIGHTSASH = "rightSash";
 
+  /** Pfad auf die Vorlage f?r das Diagramm (.odt Datei) */
+  public final static String PROP_DIAGTEMPLATE = "diagTemplate";
+
   /**
-   * Property-Names zum Layer in der Tabelle: alle Zeitreihen dieser Spalten
-   * werden im diagram angezeigt
+   * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen
+   * geben-Property geben: eine f?r jede Kurventyp.
    */
-  public final static String PROP_TIMEPROPNAME = "timeseriesPropertyNames";
+  public final static String PROP_TIMEPROPNAME = "timeserie";
 
   private static final int SELECTION_ID = 0x100;
 
   private LayerTableViewer m_viewer;
 
-  private IMapModell m_mapModell;
+  protected IMapModell m_mapModell;
 
-  private MapPanel m_mapPanel; 
-  
-  public CommitResultsWizardPage()
+  protected ObsdiagviewType m_obsdiagviewType;
+
+  protected TimeserieFeatureProps[] m_tsProps;
+
+  public ExportResultsWizardPage()
   {
-    super( "<CommitResultsWizardPage>" );
+    super( "<ViewResultsWizardPage>" );
   }
 
-  public CommitResultsWizardPage( String title )
+  public ExportResultsWizardPage( String title )
   {
     super( title );
   }
@@ -119,19 +129,19 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
       createMapPanel( sashForm );
       final SashForm rightSash = new SashForm( sashForm, SWT.VERTICAL );
       createTablePanel( rightSash );
-      createCommitTextPanel(rightSash);
-      createCommitButton( rightSash );
+      createExportPanel( rightSash );
 
       final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
-      final int rightWeight0 = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH+"0", "50" ) );
-      final int rightWeight1 = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH+"1", "20" ) );
+      final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
+
+      m_tsProps = KalypsoWizardHelper.parseTimeserieFeatureProps( getArguments() );
 
       // TODO: konfigure
       sashForm.setWeights( new int[]
       { mainWeight, 100 - mainWeight } );
 
       rightSash.setWeights( new int[]
-      { rightWeight0,rightWeight0+rightWeight1, 100 - rightWeight0-rightWeight1 } );
+      { rightWeight, 100 - rightWeight } );
 
       setControl( sashForm );
     }
@@ -141,25 +151,50 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
     }
   }
 
-  private void createCommitButton( final Composite parent )
+  private void createExportPanel( final Composite parent )
   {
-    final Composite composite = new Composite( parent, SWT.RIGHT );
+    final String diagFileName = getArguments().getProperty( PROP_DIAGTEMPLATE );
+    final IFile diagFile = (IFile)getProject().findMember( diagFileName );
 
-    final Button button = new Button(composite,SWT.NONE | SWT.PUSH );
-    button.setText( "ausgew?hlte Pegel in Ergebnisablage speichern" );
-    button.addSelectionListener( new CommitResults() );
-    button.setVisible( true );
-    composite.setVisible(true);
-    //button.setEnabled(true);
-  }
-  
-  private void createCommitTextPanel( final Composite parent )
-  {
-   
-    final Text text= new Text(parent,SWT.MULTI);
-    text.setVisible(true);
-    text.setText( getArguments().getProperty( PROP_COMMITTEXTTEMPLATE));
-  
+    try
+    {
+      m_obsdiagviewType = ObservationTemplateHelper.loadDiagramTemplateXML( diagFile );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    final Composite composite = new Composite( parent, SWT.NONE );
+    composite.setLayout( new GridLayout( 2, false ) );
+
+    final Button button = new Button( composite, SWT.PUSH );
+    button.setText( "Zeitreihe bearbeiten" );
+    button.addSelectionListener( new GraficToolStarter() );
+    //button.setLayoutData( new GridData(  ) );
+    
+    final Button doItButton = new Button( composite ,SWT.PUSH );
+    doItButton.setText( "Bericht(e) ablegen" );
+
+    new Label( composite, SWT.NONE );
+    
+    final Button exportQDiagramm = new Button( composite, SWT.CHECK );
+    exportQDiagramm.setText( "Durchflussgrafik" );
+    
+    new Label( composite, SWT.NONE );
+
+    final Button exportWRadio = new Button( composite, SWT.CHECK );
+    exportWRadio.setText( "Wasserstandsgrafik" );
+    
+    new Label( composite, SWT.NONE );
+    
+    final Button exportTableRadio = new Button( composite, SWT.CHECK );
+    exportTableRadio.setText( "Tabelle" );
+    
+    new Label( composite, SWT.NONE );
+
+    final Button exportMap = new Button( composite, SWT.CHECK );
+    exportMap.setText( "Kartenansicht" );
   }
 
   private void createTablePanel( final Composite parent )
@@ -168,7 +203,8 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
     {
       final String templateFileName = getArguments().getProperty( PROP_TABLETEMPLATE );
       final IFile templateFile = (IFile)getProject().findMember( templateFileName );
-      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,   getReplaceProperties()  );
+      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,
+          getReplaceProperties() );
 
       m_viewer = new LayerTableViewer( parent, this, getProject(), KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), SELECTION_ID, true );
@@ -192,7 +228,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile,   getReplaceProperties()  );
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
     m_mapModell = new GisTemplateMapModell( gisview, getProject(), crs );
     m_mapModell.addModellListener( this );
@@ -200,16 +236,16 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
     //////////////
     // MapPanel //
     //////////////
-    m_mapPanel = new MapPanel( this, crs, SELECTION_ID );
+    final MapPanel mapPanel = new MapPanel( this, crs, SELECTION_ID );
     final Composite mapComposite = new Composite( mapView, SWT.RIGHT | SWT.EMBEDDED );
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
 
     virtualFrame.setVisible( true );
-    m_mapPanel.setVisible( true );
-    virtualFrame.add( m_mapPanel );
+    mapPanel.setVisible( true );
+    virtualFrame.add( mapPanel );
 
-    m_mapPanel.setMapModell( m_mapModell );
-    m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
+    mapPanel.setMapModell( m_mapModell );
+    mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
     /////////////
     // Toolbar //
@@ -218,12 +254,11 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
 
     tbm.add( new GroupMarker( "radio_group" ) );
 
-    tbm.appendToGroup( "radio_group", new ToggleSingleSelectWidgetAction( m_mapPanel ) );
+    tbm.appendToGroup( "radio_group", new ToggleSingleSelectWidgetAction( mapPanel ) );
 
     tbm.add( new Separator() );
 
-    tbm.add( new FullExtentMapAction( this, m_mapPanel ) );
-    tbm.add( new ZoomOutMapAction( this, m_mapPanel ) );
+    tbm.add( new FullExtentMapAction( this, mapPanel ) );
 
     final ToolBar toolBar = tbm.createControl( mapView );
 
@@ -236,12 +271,10 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
     mapView.setContent( mapComposite );
     mapView.setTopCenter( toolBar );
     mapView.setTopLeft( outlineViewer.getControl() );
-    m_mapPanel.changeWidget( new ToggleSelectWidget() );
-
   }
 
   /**
-   * @see org.kalypso.ui.calcwizard.ICalcWizardPage#performFinish()
+   * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#performFinish()
    */
   public boolean performFinish()
   {
@@ -258,44 +291,68 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
   {
     //
   }
-  
-  public IMapModell getMapModel()
-  {
-    return m_mapModell;
-  }
 
-  private class CommitResults extends SelectionAdapter
+  private class GraficToolStarter implements SelectionListener
   {
     /**
      * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
      */
     public void widgetSelected( SelectionEvent e )
     {
-      System.out.println( "export Grafics" );
-      final String propNames = getArguments().getProperty( PROP_TIMEPROPNAME, "" );
-      final String[] timeNames = propNames.split( "#" );
-
-      final IKalypsoLayer layer = getMapModel().getActiveTheme().getLayer();
+      final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
       if( !( layer instanceof KalypsoFeatureLayer ) )
         return;
 
-      final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
-      final Feature[] allFeatures = kfl.getAllFeatures();
-      for( int i = 0; i < allFeatures.length; i++ )
+      m_obsdiagviewType.getCurve().clear();
+
+      final List selectedFeatures = new ArrayList();
+      FileOutputStream fos = null;
+
+      try
       {
-        if( allFeatures[i].isSelected( SELECTION_ID ) )
+        final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
+        final Feature[] allFeatures = kfl.getAllFeatures();
+        for( int i = 0; i < allFeatures.length; i++ )
+          if( allFeatures[i].isSelected( SELECTION_ID ) )
+            selectedFeatures.add( allFeatures[i] );
+
+        if( selectedFeatures.size() > 0 )
+          KalypsoWizardHelper.updateXMLDiagramTemplate( m_tsProps, selectedFeatures,
+              m_obsdiagviewType );
+
+        // create tmp odt template
+        final File file = File.createTempFile( "diag", ".odt" );
+        fos = new FileOutputStream( file );
+        DiagramTemplateFactory.writeTemplate( m_obsdiagviewType, fos );
+
+        ObservationTemplateHelper.openGrafik4odt( file, getProject() );
+
+        file.delete();
+      }
+      catch( Exception ex )
+      {
+        ex.printStackTrace();
+      }
+      finally
+      {
+        try
         {
-         
-          for( int j = 0; j < timeNames.length; j++ )
-          {
-            Object observation = allFeatures[i].getProperty( timeNames[j] );
-            if( observation == null )
-              System.out.println( "observation is null" );
-            else
-              System.out.println( "observation is type:" + observation.getClass().toString() );
-          }
+          if( fos != null )
+            fos.close();
+        }
+        catch( IOException e1 )
+        {
+          e1.printStackTrace();
         }
       }
+    }
+
+    /**
+     * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
+     */
+    public void widgetDefaultSelected( SelectionEvent e )
+    {
+      // empty
     }
   }
 }

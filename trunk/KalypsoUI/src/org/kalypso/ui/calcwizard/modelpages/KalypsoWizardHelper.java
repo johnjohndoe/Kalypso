@@ -1,4 +1,4 @@
-package org.kalypso.ui.calcwizard;
+package org.kalypso.ui.calcwizard.modelpages;
 
 import java.util.ArrayList;
 import java.util.Enumeration;

@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
@@ -249,6 +250,13 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
   public ResourceAndContainerGroup getResourceGroup()
   {
     return resourceGroup;
+  }
+
+  public IFolder getFolder()
+  {
+    final IPath containerPath = resourceGroup.getContainerFullPath();
+    final IPath newFolderPath = containerPath.append( resourceGroup.getResource() );
+    return IDEWorkbenchPlugin.getPluginWorkspace().getRoot().getFolder( newFolderPath );
   }
 
 }

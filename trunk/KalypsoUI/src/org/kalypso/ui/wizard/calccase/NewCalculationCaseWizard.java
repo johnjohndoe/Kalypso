@@ -1,23 +1,16 @@
 package org.kalypso.ui.wizard.calccase;
 
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 
-import org.deegree.model.feature.Feature;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -27,15 +20,10 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ContainerGenerator;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
-import org.eclipse.ui.internal.ide.misc.ResourceAndContainerGroup;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
-import org.kalypso.eclipse.util.SetContentThread;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
- * TODO: Bezeichnungen ändern
  * 
  * @author belger
  */
@@ -62,7 +50,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   {
     super.addPages();
     m_createFolderPage = new NewCalculationCaseCreateFolderPage( "Rechenfall", getSelection() );
-    m_createControlPage = new SteuerparameterWizardPage( "Steuerparameter", m_createFolderPage );
+    m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage );
     
     addPage( m_createFolderPage );
     addPage( m_createControlPage );
@@ -86,14 +74,8 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   
   private IFolder createCalculationCase()
   {
-    final ResourceAndContainerGroup resourceGroup = m_createFolderPage.getResourceGroup();
+    final IFolder newFolderHandle = m_createFolderPage.getFolder();
     
-    // create the new folder and cache it if successful
-    final IPath containerPath = resourceGroup.getContainerFullPath();
-    final IPath newFolderPath = containerPath.append( resourceGroup.getResource() );
-    final IFolder newFolderHandle = IDEWorkbenchPlugin.getPluginWorkspace().getRoot().getFolder( newFolderPath );
-    
-    final IFile file = newFolderHandle.getFile( ModelNature.CALCULATION_FILE );
     final SteuerparameterWizardPage controlPage = m_createControlPage;
     
     WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
@@ -104,44 +86,11 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
         {
           monitor.beginTask( IDEWorkbenchMessages
               .getString( "WizardNewFolderCreationPage.progress" ), 5000 ); //$NON-NLS-1$
-          ContainerGenerator generator = new ContainerGenerator( containerPath );
+          final ContainerGenerator generator = new ContainerGenerator( newFolderHandle.getParent().getFullPath() );
           generator.generateContainer( new SubProgressMonitor( monitor, 1000 ) );
           createFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
-
           ModelNature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
-          
-          // .calculation schreiben
-          SetContentThread thread = null;
-          try
-          {
-            final Feature rootFeature = controlPage.getGML().getRootFeature();
-            
-            thread = new SetContentThread( file, true, false, true, new NullProgressMonitor() )
-            {
-              public void writeStream() throws Throwable
-              {
-                final Writer controlWriter = new OutputStreamWriter( getOutputStream() );
-                GmlSerializer.serializeFeature( controlWriter, rootFeature, new NullProgressMonitor() );
-              }
-            };
-            thread.start();
-            thread.join();
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-            throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Schreiben der Kontrolldatei.\n" + e.getLocalizedMessage(), e ) );
-          }
-          
-          final CoreException fileException = thread.getFileException();
-          if( fileException != null )
-            throw fileException;
-          
-          final Throwable throwable = thread.getThrown();
-          if( throwable != null )
-            throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Schreiben der Kontrolldatei.\n" + throwable.getLocalizedMessage(), throwable ) );
-          monitor.worked( 1000 );
-          
+          controlPage.saveChanges( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
           ModelNature.updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
         }
         finally
@@ -250,5 +199,4 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     if( monitor.isCanceled() )
       throw new OperationCanceledException();
   }
-  
 }

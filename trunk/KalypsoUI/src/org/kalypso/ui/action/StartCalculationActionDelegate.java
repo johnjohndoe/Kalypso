@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
@@ -31,8 +32,6 @@ import org.kalypso.ui.nature.ModelNature;
  */
 public class StartCalculationActionDelegate implements IWorkbenchWindowActionDelegate
 {
-  private ISelection m_selection;
-
   private IWorkbenchWindow m_window;
 
   /**
@@ -56,14 +55,16 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
    */
   public void run( final IAction action )
   {
+    final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
+
     // rausfinden, ob selection ok ist
-    if( !( m_selection instanceof IStructuredSelection ) )
+    if( !( selection instanceof IStructuredSelection ) )
       return;
 
     final CalcCaseCollector visitor = new CalcCaseCollector();
     try
     {
-      final IStructuredSelection structsel = (IStructuredSelection)m_selection;
+      final IStructuredSelection structsel = (IStructuredSelection)selection;
       for( final Iterator sIt = structsel.iterator(); sIt.hasNext(); )
       {
         final Object sel = sIt.next();
@@ -133,7 +134,7 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    m_selection = selection;
+    // mir doch egal!
   }
 
   private class CalcCaseCollector implements IResourceVisitor

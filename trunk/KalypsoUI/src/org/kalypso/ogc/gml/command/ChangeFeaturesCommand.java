@@ -79,6 +79,7 @@ public class ChangeFeaturesCommand implements ICommand
       change.feature.setProperty( fp );
     }
     
-    m_eventprovider.fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FEATURE_CHANGE ) );
+    if( m_eventprovider != null )
+      m_eventprovider.fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FEATURE_CHANGE ) );
   }
 }

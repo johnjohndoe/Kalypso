@@ -18,6 +18,8 @@ public interface IFeatureControl
   
   public Feature getFeature();
   
+  public void setFeature( final Feature feature );
+  
   /** Update Control from Feature  */
   public void updateControl();
 

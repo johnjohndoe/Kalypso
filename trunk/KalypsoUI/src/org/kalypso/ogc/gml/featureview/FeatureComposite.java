@@ -46,7 +46,7 @@ public class FeatureComposite implements IFeatureControl
 
   private final Collection m_controls = new ArrayList();
 
-  private final Feature m_feature;
+  private Feature m_feature;
 
   public FeatureComposite( final Feature feature )
   {
@@ -338,7 +338,17 @@ public class FeatureComposite implements IFeatureControl
       final IFeatureControl fc = (IFeatureControl)iter.next();
       fc.removeModifyListener( l );
     }
+  }
 
+  public void setFeature( final Feature feature )
+  {
+    m_feature = feature;
+    
+    for( final Iterator iter = m_controls.iterator(); iter.hasNext(); )
+    {
+      final IFeatureControl fc = (IFeatureControl)iter.next();
+      fc.setFeature( feature );
+    }
   }
 
 }
