@@ -2,6 +2,7 @@ package org.kalypso.ogc.sensor.editor;
 
 import java.awt.Frame;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -14,6 +15,7 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.kalypso.editor.AbstractEditorPart;
 import org.kalypso.ogc.sensor.view.ShowObservationInDiagramJob;
 import org.kalypso.ogc.sensor.zml.ZmlObservation;
+import org.xml.sax.InputSource;
 
 /**
  * @author schlienger
@@ -64,7 +66,11 @@ public class ObservationDiagramEditor extends AbstractEditorPart
 
     try
     {
-      ZmlObservation obs = new ZmlObservation( input.getName(), input.getStorage().getContents() );
+      IFile f = input.getFile();
+      InputSource ins = new InputSource( f.getContents() );
+      ins.setEncoding( f.getCharset() );
+      
+      ZmlObservation obs = new ZmlObservation( f.getProject().getLocation().toOSString(), input.getName(), ins );
 
       setContentDescription( input.getFile().getName() );
       setPartName( input.getFile().getName() );
