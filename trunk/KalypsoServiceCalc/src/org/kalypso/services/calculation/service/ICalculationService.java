@@ -17,7 +17,15 @@ import org.kalypso.services.calculation.job.ICalcJob;
  */
 public interface ICalculationService extends Remote 
 {
-	/**
+	public final static int CANCELED = 2;
+  public final static int ERROR = 4;
+  public final static int FINISHED = 1;
+  public final static int RUNNING = 0;
+  public final static int UNKNOWN = -1;
+  public final static int WAITING = 3;
+  public final static int WAITING_FOR_DATA = 5;
+
+  /**
 	 * Gibt die IDs aller unterstützten JobTypen zurück.
 	 *
 	 * @throws CalcJobServiceException
