@@ -1,5 +1,6 @@
 package org.kalypso.ogc.gml.serialize;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -12,6 +13,8 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.geometry.GM_Envelope;
+import org.deegree_impl.io.shpapi.DBaseException;
+import org.deegree_impl.io.shpapi.DBaseFile;
 import org.deegree_impl.io.shpapi.ShapeFile;
 import org.deegree_impl.model.feature.FeatureAssociationTypeProperty_Impl;
 import org.deegree_impl.model.feature.FeatureFactory;
@@ -219,6 +222,35 @@ public class ShapeSerializer
             FeatureType.UNBOUND_OCCURENCY }, null, null );
 
     return FeatureFactory.createFeature( "root", collectionFT );
+  }
+
+  public static Collection readFeaturesFromDbf( final String basename )
+  {
+    Collection features = null;
+    try
+    {
+      // todo: zur Zeit gehen wird davon aus, dass der Typ immer '1' ist
+      // ist das immer so?
+      final DBaseFile dbf = new DBaseFile( basename, 1 );
+
+      final int recordNum = dbf.getRecordNum();
+      features = new ArrayList( recordNum );
+      for( int i = 0; i < recordNum; i++ )
+      {
+        final Feature feature = dbf.getFRow( i + 1, true );
+        features.add( feature );
+      }
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
+    catch( DBaseException e )
+    {
+      e.printStackTrace();
+    }
+
+    return features;
   }
 
   //  /**

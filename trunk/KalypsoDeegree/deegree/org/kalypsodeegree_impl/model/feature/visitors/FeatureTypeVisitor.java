@@ -19,14 +19,18 @@ public class FeatureTypeVisitor implements FeatureVisitor
   
   private final String m_typename;
 
-  public FeatureTypeVisitor( final FeatureType ft )
+  /** Falls true, werden auch features acceptiert, welche den angegebenen Typ substituieren */
+  private final boolean m_acceptIfSubstituting;
+
+  public FeatureTypeVisitor( final FeatureType ft, final boolean acceptIfSubstituting )
   {
-    this( ft.getName() );
+    this( ft.getName(), acceptIfSubstituting );
   }
 
-  public FeatureTypeVisitor( final String typename )
+  public FeatureTypeVisitor( final String typename, final boolean acceptIfSubstituting )
   {
     m_typename = typename;
+    m_acceptIfSubstituting = acceptIfSubstituting;
   }
 
   /**
@@ -34,7 +38,11 @@ public class FeatureTypeVisitor implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    if( m_typename.equals( f.getFeatureType().getName() ) )
+    final FeatureType featureType = f.getFeatureType();
+
+    final String substName = featureType.getNamespace() + ":" + m_typename;
+    
+    if( m_typename.equals( featureType.getName() ) || ( m_acceptIfSubstituting && substName.equals( featureType.getSubstitutionGroup() ) ) )
       m_results.add( f );
     
     return true;

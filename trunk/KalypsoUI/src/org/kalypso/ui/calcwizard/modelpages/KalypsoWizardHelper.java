@@ -1,6 +1,5 @@
 package org.kalypso.ui.calcwizard.modelpages;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -11,19 +10,12 @@ import java.util.Properties;
 import javax.xml.bind.JAXBException;
 
 import org.deegree.model.feature.Feature;
-import org.eclipse.core.resources.IFile;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
-import org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplateTheme;
-import org.kalypso.ogc.sensor.diagview.impl.DiagramCurve;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
-import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewColumn;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
-import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypso.util.url.UrlResolver;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
@@ -34,9 +26,6 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class KalypsoWizardHelper
 {
-  //  private static final ObjectFactory m_diagObjectFactory = new
-  // ObjectFactory();
-
   private KalypsoWizardHelper()
   {
   // not to be instanciated
@@ -75,103 +64,31 @@ public class KalypsoWizardHelper
   /**
    * Updates the diagram template for the given TimeserieFeatureProps and
    * features
-   * 
-   * @param props
-   * @param features
-   * @param template
-   * 
-   * @param context
    */
-  public static void updateDiagramTemplate( final TimeserieFeatureProps[] props,
-      final List features, final LinkedDiagramTemplate template, final URL context )
+  public static void updateDiagramTemplate( final LinkedDiagramTemplate template,
+      final TSLinkWithName[] links, final URL context )
   {
     template.removeAllThemes();
 
-    for( final Iterator it = features.iterator(); it.hasNext(); )
+    for( int i = 0; i < links.length; i++ )
     {
-      final Feature kf = (Feature)it.next();
-
-      for( int i = 0; i < props.length; i++ )
-      {
-        final String name = (String)kf.getProperty( props[i].getNameColumn() );
-        final TimeseriesLink obsLink = (TimeseriesLink)kf.getProperty( props[i].getLinkColumn() );
-
-        if( obsLink != null )
-        {
-          final Properties mappings = new Properties();
-          mappings.setProperty( obsLink.getTimeaxis(), props[i].getDiagDateAxis() );
-          mappings.setProperty( obsLink.getValueaxis(), props[i].getDiagValueAxis() );
-
-          final String curveName = name + " (" + props[i].getLinkColumn() + ')';
-          final DiagramCurve curve = new DiagramCurve( curveName, null, mappings, template );
-
-          try
-          {
-            final URL url;
-            final UrlResolver resolver = new UrlResolver();
-            url = resolver.resolveURL( context, obsLink.getHref() );
-            final IFile file = ResourceUtilities.findFileFromURL( url );
-            if( file != null && file.exists() )
-            {
-              final PoolableObjectType key = new PoolableObjectType( obsLink.getLinktype(),
-                   obsLink.getHref(), context );
-              
-              final DefaultDiagramTemplateTheme theme = new DefaultDiagramTemplateTheme( null );
-              theme.addCurve( curve );
-              
-              template.startLoading( key, theme );
-            }
-          }
-          catch( MalformedURLException e )
-          {
-            e.printStackTrace();
-          }
-        }
-      }
+      final TSLinkWithName link = links[i];
+      template.addObservation( link.name, context, link.href, link.linktype, null );
     }
   }
 
   /**
    * Updates the table template
-   * 
-   * @param props
-   * @param features
-   * @param template
-   * @param context
    */
-  public static void updateTableTemplate( final TimeserieFeatureProps[] props, final List features,
-      final LinkedTableViewTemplate template, final URL context )
+  public static void updateTableTemplate( final LinkedTableViewTemplate template,
+      final TSLinkWithName[] links, final URL context )
   {
-    for( final Iterator it = features.iterator(); it.hasNext(); )
+    template.removeAllThemes();
+
+    for( int i = 0; i < links.length; i++ )
     {
-      final Feature kf = (Feature)it.next();
-
-      for( int i = 0; i < props.length; i++ )
-      {
-        final String name = (String)kf.getProperty( props[i].getNameColumn() );
-        final TimeseriesLink obsLink = (TimeseriesLink)kf.getProperty( props[i].getLinkColumn() );
-
-        if( obsLink != null )
-        {
-          final String colName = name + " (" + props[i].getLinkColumn() + ')';
-
-          // no observation yet
-          // TODO: Marc: nicht mehr über den Namen der Achse zuordnen d.h. aus der Property der Wizard-Page
-          // sondern besser automatisch anhand der Typen zuordnen!
-          // Nachtrag: komisch: beim Niederschlag funktionierts, wenn Daten da sind, 
-          // obwohl keine der Achsen 'n' heisst!
-          final DefaultTableViewColumn col = new DefaultTableViewColumn( colName, true, 50,
-              props[i].getDiagValueAxis(), null );
-
-          final PoolableObjectType key = new PoolableObjectType( obsLink.getLinktype(), obsLink
-              .getHref(), context );
-
-          final List cols = new ArrayList();
-          cols.add( col );
-
-          template.addObservationTheme( key, cols );
-        }
-      }
+      final TSLinkWithName link = links[i];
+      template.addObservation( link.name, context, link.href, link.linktype, null );
     }
   }
 
