@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/saaj-impl.jar"/>
 	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry kind="src" path="/KalypsoCoreServices"/>
+	<classpathentry kind="src" path="/KalypsoCore"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

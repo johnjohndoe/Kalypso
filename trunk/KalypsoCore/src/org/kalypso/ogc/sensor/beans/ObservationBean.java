@@ -1,6 +1,6 @@
-package org.kalypso.services.sensor.beans;
+package org.kalypso.ogc.sensor.beans;
 
-import org.kalypso.services.repository.beans.ItemBean;
+import org.kalypso.repository.beans.ItemBean;
 
 /**
  * An Observation Bean. For classification only.

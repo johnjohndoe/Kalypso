@@ -3,10 +3,10 @@ package org.kalypso.services.sensor;
 import java.rmi.RemoteException;
 import java.util.Map;
 
+import org.kalypso.ogc.sensor.beans.ObservationBean;
+import org.kalypso.ogc.sensor.beans.ObservationDescriptorBean;
+import org.kalypso.repository.beans.ItemBean;
 import org.kalypso.services.repository.IRepositoryService;
-import org.kalypso.services.repository.beans.ItemBean;
-import org.kalypso.services.sensor.beans.ObservationBean;
-import org.kalypso.services.sensor.beans.ObservationDescriptorBean;
 
 /**
  * WebService interface for the Observation-Service.

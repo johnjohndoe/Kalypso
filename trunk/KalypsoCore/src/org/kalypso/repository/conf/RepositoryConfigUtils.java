@@ -1,5 +1,6 @@
 package org.kalypso.repository.conf;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
@@ -23,7 +24,7 @@ public class RepositoryConfigUtils
   }
 
   /**
-   * Loads the config from an <code>InputStream</code>.
+   * Loads the config from an <code>InputStream</code> and closes the stream once finished.
    *  
    */
   public static RepositoryConfig loadConfig( final InputStream ins ) throws RepositoryException
@@ -53,6 +54,17 @@ public class RepositoryConfigUtils
     catch( JAXBException e )
     {
       throw new RepositoryException( e );
+    }
+    finally
+    {
+      try
+      {
+        ins.close();
+      }
+      catch( IOException e )
+      {
+        throw new RepositoryException( e );
+      }
     }
   }
 }

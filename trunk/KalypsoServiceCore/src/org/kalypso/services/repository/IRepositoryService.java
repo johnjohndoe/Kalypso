@@ -3,8 +3,8 @@ package org.kalypso.services.repository;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.kalypso.services.repository.beans.ItemBean;
-import org.kalypso.services.repository.beans.RepositoryBean;
+import org.kalypso.repository.beans.ItemBean;
+import org.kalypso.repository.beans.RepositoryBean;
 
 
 /**
