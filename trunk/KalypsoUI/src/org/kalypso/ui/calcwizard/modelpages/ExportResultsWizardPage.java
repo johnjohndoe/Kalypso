@@ -49,12 +49,14 @@ import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.util.FeatureLabelProvider;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.url.UrlResolver;
@@ -408,11 +410,22 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
           // let's hope that it works
           //dest.setValues( source.getValues( null ) );
-          final boolean b = ObservationUtilities.optimisticValuesCopy( source, dest, null );
+          final ITuppleModel values = ObservationUtilities.optimisticValuesCopy( source, dest, null );
           
           // TODO: maybe inform when nothing happened during copy
-          if( !b )
+          if( values == null )
             System.out.println( "Nohting to copy for " + source.getName() );
+          else
+          {
+            // save observation if it is a server side one
+            if( ServiceRepositoryObservation.isServerSide( lnkPG.href ) )
+            {
+              ServiceRepositoryObservation.setValuesFor( values, lnkPG.href );
+              System.out.println( "Observation saved on server: " + lnkPG.href );
+            }
+            else
+              System.out.println( "! Observation not server side: " + lnkPG.href );
+          }
         }
         catch( MalformedURLException e )
         {

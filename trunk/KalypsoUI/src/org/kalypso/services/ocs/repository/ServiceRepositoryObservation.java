@@ -1,9 +1,13 @@
 package org.kalypso.services.ocs.repository;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.net.URI;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
+
+import javax.xml.bind.Marshaller;
+import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.sensor.IAxis;
@@ -14,11 +18,11 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.ProxyFactory;
-import org.kalypso.services.ocs.OcsURLStreamHandler;
 import org.kalypso.services.proxy.DateRangeBean;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.OCSDataBean;
 import org.kalypso.services.proxy.ObservationBean;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.xlink.IXlink;
@@ -29,6 +33,9 @@ import org.kalypso.zml.ObservationType;
  */
 public class ServiceRepositoryObservation implements IObservation
 {
+  /** the protocol that identifies the observation service */
+  public final static String SCHEME_OCS = "kalypso-ocs";
+  
   /** Metadata name for the id of the OCS Service Observation */
   public final static String MD_OCS_ID = "KZ Zeitreihendienst";
   
@@ -105,7 +112,7 @@ public class ServiceRepositoryObservation implements IObservation
    */
   public String getIdentifier( )
   {
-    return OcsURLStreamHandler.SCHEME_OCS + ":" + m_ob.getId();
+    return SCHEME_OCS + ":" + m_ob.getId();
   }
 
   /**
@@ -201,8 +208,6 @@ public class ServiceRepositoryObservation implements IObservation
   }
 
   /**
-   * TODO: das soll zum Server gehen und nicht in der proxy-zml
-   * 
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
   public void setValues( final ITuppleModel values ) throws SensorException
@@ -211,7 +216,7 @@ public class ServiceRepositoryObservation implements IObservation
     final IObservation obs = getRemote( new DateRangeArgument() );
     obs.setValues( values );
     
-    FileWriter fw = null;
+    Writer fw = null;
     
     try
     {
@@ -219,8 +224,15 @@ public class ServiceRepositoryObservation implements IObservation
       
       // save zml
       final ObservationType obst = ZmlFactory.createXML( obs, null );
-      fw = new FileWriter( new File( new URI( db.getLocation() ) ) );
-      ZmlFactory.getMarshaller().marshal( obst, fw );
+      final String path = db.getLocation().replaceAll( "file:", "" );
+      
+      final FileOutputStream stream = new FileOutputStream( new File( path ) );
+      final Marshaller marshaller = ZmlFactory.getMarshaller();
+      final String enc = marshaller.getProperty( Marshaller.JAXB_ENCODING ).toString();
+      fw = new OutputStreamWriter( stream , enc );
+      
+      marshaller.marshal( obst, fw );
+      fw.close();
       
       // let server read file and save on its own
       m_srv.writeData( m_ob, db );
@@ -236,5 +248,55 @@ public class ServiceRepositoryObservation implements IObservation
     {
       IOUtils.closeQuietly( fw );
     }
+  }
+  
+  /**
+   * Sets the given values to the server side observation defined
+   * by the given href.
+   *  
+   * @param values
+   * @param href
+   * @throws SensorException
+   */
+  public static void setValuesFor( final ITuppleModel values, final String href ) throws SensorException
+  {
+    try
+    {
+      final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
+      
+      final ServiceRepositoryObservation srvObs = new ServiceRepositoryObservation( srv, getObservationBean( href ) );
+      
+      srvObs.setValues( values );
+    }
+    catch( ServiceException e )
+    {
+      e.printStackTrace();
+      throw new SensorException(e);
+    }
+  }
+
+  /**
+   * Returns true if the given id represents a server side observation
+   * 
+   * @param href
+   * @return true if server side
+   */
+  public static boolean isServerSide( final String href )
+  {
+    return href.startsWith( SCHEME_OCS );
+  }
+
+  /**
+   * Creates an Observation bean for the given observation id.
+   * 
+   * @param href
+   * @return corresponding observation bean
+   */
+  public static ObservationBean getObservationBean( final String href )
+  {
+    // removes the service scheme part, the rest is our id!
+    final String id = href.replaceFirst( SCHEME_OCS + ":", "" );
+    
+    return new ObservationBean( id, "", "", null );
   }
 }

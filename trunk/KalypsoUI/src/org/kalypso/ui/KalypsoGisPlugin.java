@@ -39,6 +39,7 @@ import org.kalypso.repository.DefaultRepositoryContainer;
 import org.kalypso.repository.RepositorySpecification;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.ocs.OcsURLStreamHandler;
+import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.IUserService;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
@@ -307,7 +308,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     // register the observation webservice url stream handler
     final Hashtable properties = new Hashtable( 1 );
     properties.put( URLConstants.URL_HANDLER_PROTOCOL,
-        new String[] { OcsURLStreamHandler.SCHEME_OCS } );
+        new String[] { ServiceRepositoryObservation.SCHEME_OCS } );
     context.registerService( URLStreamHandlerService.class.getName(),
         new OcsURLStreamHandler(), properties );
   }

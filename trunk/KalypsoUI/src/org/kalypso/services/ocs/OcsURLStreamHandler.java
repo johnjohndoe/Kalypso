@@ -4,19 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.DateFormat;
 
 import org.apache.commons.io.FileUtils;
-import org.eclipse.jface.window.Window;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.internal.Workbench;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
 import org.kalypso.services.proxy.DateRangeBean;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.OCSDataBean;
 import org.kalypso.services.proxy.ObservationBean;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.repository.dialogs.DateRangeInputDialog;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
 
@@ -31,16 +27,13 @@ import org.osgi.service.url.AbstractURLStreamHandlerService;
  */
 public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 {
-  /** the protocol that identifies the observation service */
-  public final static String SCHEME_OCS = "kalypso-ocs";
-
   /**
    * @see java.net.URLStreamHandler#openConnection(java.net.URL)
    */
   public URLConnection openConnection( final URL u ) throws IOException
   {
-    // kalypso observation service protocol?
-    if( !u.toExternalForm().startsWith( SCHEME_OCS ) )
+    // is that an observation id of a server side observation?
+    if( !ServiceRepositoryObservation.isServerSide( u.toExternalForm() ) )
       return u.openConnection();
 
     try
@@ -75,8 +68,8 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 //        }
       }
 
-      final String obsId = ZmlURL.getIdentifierPart( u ).replaceFirst( SCHEME_OCS + ":", "" );
-      final ObservationBean ob = new ObservationBean( obsId, "", "", null );
+      final String obsId = ZmlURL.getIdentifierPart( u );
+      final ObservationBean ob = ServiceRepositoryObservation.getObservationBean( obsId );
 
       final IObservationService srv = KalypsoGisPlugin.getDefault()
           .getObservationServiceProxy();
