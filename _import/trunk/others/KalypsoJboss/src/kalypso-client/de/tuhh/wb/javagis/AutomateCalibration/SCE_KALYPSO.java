@@ -37,15 +37,12 @@ import javax.swing.JOptionPane;
 import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.tools.xml.ServiceTools;
 import de.tuhh.wb.javagis.view.ViewManager;
+import de.tuhh.wb.javagis.FileSystemUtils;
 //import de.tuhh.wb.javagis.simulation.BlockTimeSeries;
 
 public class SCE_KALYPSO
 	extends JInternalFrame
 	implements InternalFrameListener, ActionListener {
-
-	//location SCE-Routine
-	private String myCommand_SCE = "kalypsoMain.exe";
-	private File myWorkingDir_SCE = new File("sce_tool");
 
 	//Modeldata,Controldata,SimulationCaseData
 	//private File xmlDir = new File("C://Kalypso//xml_temp");
@@ -54,6 +51,10 @@ public class SCE_KALYPSO
 	//private File simCaseFile = new File(xmlDir, "simulationCase.xml");
 	//results Kalypso
 	private File targetDir = null; //new File("C://Kalypso//simulation1");
+
+	//location SCE-Routine
+	private String myCommand_SCE = "kalypsoMain.exe";
+	private File myWorkingDir_SCE = null;//new File("sce_tool");
 
 	//xml-input File
 	private File inputFile = null; //new File(xmlDir, "input_SCE.xml");
@@ -335,6 +336,7 @@ public class SCE_KALYPSO
 										int lengthBuff =
 											outInp_SCE_buff.length();
 										outInp_SCE_buff.delete(0, lengthBuff);
+										anzSCEstrings = -1;
 									} else {
 										behalteSCEstring = true;
 									}
@@ -437,6 +439,18 @@ public class SCE_KALYPSO
 
 	//method prepares the files kalypsoInp.dat und scein.dat
 	private void makeinputFiles() {
+		//copy sce-tool to targetDir
+		try{
+		if (!targetDir.exists())
+			targetDir.mkdirs();
+		File sceTemplate = new File("sce_tool");
+		System.out.println("copy template from " + sceTemplate.toString());
+		File sceTargetDir = new File(targetDir,"sce_Tool");
+		FileSystemUtils.copyRecursiveDir(sceTemplate, sceTargetDir);
+		myWorkingDir_SCE=sceTargetDir;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		//prepare scein.dat
 		try {
 			Runtime.getRuntime().gc();
@@ -846,9 +860,9 @@ public class SCE_KALYPSO
 
 	//  ActionListener
 	public void actionPerformed(ActionEvent e) {
-		
+
 		String action = e.getActionCommand();
-		
+
 		if ("SCEInp".equals(action)) {
 			int returnVal =
 				sceInpFileChooser.showDialog(
@@ -870,7 +884,7 @@ public class SCE_KALYPSO
 				btModel.setText(modelFile.toString());
 			}
 		}
-		
+
 		if ("control".equals(action)) {
 			int returnVal =
 				controlFileChooser.showDialog(
@@ -882,7 +896,8 @@ public class SCE_KALYPSO
 			}
 		}
 		if ("targetDir".equals(action)) {
-			targetDirFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			targetDirFileChooser.setFileSelectionMode(
+				JFileChooser.DIRECTORIES_ONLY);
 			int returnVal =
 				targetDirFileChooser.showDialog(
 					this,
@@ -897,7 +912,9 @@ public class SCE_KALYPSO
 			instance.readXMLinput();
 			instance.makeinputFiles();
 			instance.startSCE();
-			JOptionPane.showMessageDialog(null,I18n.get("sceView.terminationMassage"));
+			JOptionPane.showMessageDialog(
+				null,
+				I18n.get("sceView.terminationMassage"));
 		}
 		updateStatus();
 	}
