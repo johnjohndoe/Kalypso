@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<project name="KalypsoUtilBuild" default="deploy" basedir="../..">
+
+  <!-- Propertys aus einer Datei laden -->
+  <property file="../KalypsoBuild/projectbuild.properties" />
+
+  <property name="project" value="${workspace}/KalypsoUtil" />
+  <property name="project.build" value="${project}/build" />
+  <property name="project.bin" value="${project.build}/bin" />
+  <property name="project.src" value="${project}/src" />
+  <property name="project.lib" value="${project}/lib" />
+  <property name="project.doc" value="${project.build}/doc" />
+
+  <path id="project.classpath">
+    <fileset dir="${project.lib}" includes="**/*.jar" />
+  </path>
+
+
+  <target name="prepare">
+    <mkdir dir="${project.bin}" />
+  </target>
+
+  <target name="compile" depends="prepare">
+    <echo message="Compiliere Sourcen ..." />
+    <javac srcdir="${project.src}"
+           destdir="${project.bin}"
+           classpathref="project.classpath"
+    >
+      <!--classpath path="${project.classpath}">
+        <fileset dir="${project.classpath}" includes="**/*.jar" />
+      </classpath-->
+    </javac>
+  </target>
+
+  <target name="junit-test"
+          description="Runs the junit-tests of the projekt"
+          depends="prepare,compile"
+  >
+    <junit haltonerror="false" fork="true">
+      <classpath>
+        <path refid="project.classpath" />
+      </classpath>
+
+      <formatter type="xml" />
+
+      <batchtest fork="yes" todir=".">
+        <fileset dir="${project.src}">
+          <include name="**/*Test*.java" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="deploy" depends="compile">
+    <echo message="Erzeuge Jar Files ..." />
+    <jar destfile="${project.build}/KalypsoUtil.jar">
+      <fileset dir="${project.bin}" includes="**/*" />
+    </jar>
+  </target>
+
+  <target name="deploy.plugin">
+    <eclipse.buildScript elements="plugin@org.kalypso.util"
+                         install="${project}"
+                         children="true"
+                         recursivegeneration="true"
+    />
+
+    <ant antfile="${project}/build.xml"
+         inheritall="false"
+         target="zip.plugin"
+    />
+    <move todir="${project.build}">
+      <fileset dir="${project}">
+        <include name="**/org.kalypso*.zip" />
+        <include name="**/kalypso*.zip" />
+        <include name="**/kalypso*.jar" />
+      </fileset>
+    </move>
+    <delete file="${project}/build.xml" />
+  </target>
+
+  <target name="javadoc" depends="prepare">
+    <echo message="Erzeuge die Dokumentation ..." />
+    <javadoc destdir="${project.doc}"
+             failonerror="true"
+             classpathref="project.classpath"
+    >
+      <fileset dir="${project.src}" casesensitive="false">
+        <include name="**/*.java" />
+        <exclude name="**/*test*.java" />
+      </fileset>
+    </javadoc>
+  </target>
+
+  <target name="clean">
+    <echo message="Raeume auf ..." />
+    <delete dir="${project.bin}" />
+  </target>
+
+</project>
+

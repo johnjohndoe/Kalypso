@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<project name="PSICompactAdapterBuild" default="deploy" basedir="../..">
+	<description>
+		Erzeugt den PSICompactAdapter
+    </description>
+
+	<property file="../KalypsoBuild/projectbuild.properties" />
+
+	<property name="project" value="${workspace}/KalypsoPSICompactAdapter" />
+	<property name="project.deploy" value="${project}/build" />
+	<property name="project.bin" value="${project.deploy}/bin" />
+	<property name="project.doc" value="${project.deploy}/doc" />
+	<property name="project.src" value="${project}/src" />
+
+	<property name="project.lib" value="${project}/lib" />
+
+	<path id="project.classpath">
+		<fileset dir="${project.lib}" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoCoreServices/lib" includes="**/*.jar" />
+		<pathelement location="${workspace}/KalypsoCore/build/bin"/>
+		<pathelement location="${workspace}/KalypsoRepository/build/bin"/>
+	</path>
+
+	<target name="prepare">
+		<mkdir dir="${project.deploy}" />
+		<mkdir dir="${project.bin}" />
+		<mkdir dir="${project.doc}" />
+	</target>
+
+	<target name="clean">
+		<echo message="Raeume auf ..." />
+		<delete dir="${project.deploy}" />
+	</target>
+
+	<target name="compile" depends="prepare">
+		<javac classpathref="project.classpath" destdir="${project.bin}" srcdir="${project.src}" />
+	</target>
+
+	<target name="javadoc" depends="prepare">
+		<echo message="Erzeuge die Dokumentation ..." />
+		<javadoc destdir="${project.doc}" failonerror="true" classpathref="project.classpath">
+			<fileset dir="${project.src}" casesensitive="false">
+				<include name="**/*.java" />
+				<exclude name="**/*test*.java" />
+			</fileset>
+		</javadoc>
+	</target>
+
+	<target name="junit-test" description="Runs the junit-tests of the projekt" depends="prepare,compile">
+		<junit haltonerror="false" fork="true">
+			<classpath>
+				<path refid="project.classpath" />
+			</classpath>
+
+			<formatter type="xml" />
+
+			<batchtest fork="yes" todir=".">
+				<fileset dir="${project.src}">
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="deploy" depends="prepare,compile">
+		<jar destfile="${project.deploy}/PSICompactAdapter.jar">
+			<fileset dir="${project.bin}" includes="**/**" />
+		</jar>
+	</target>
+
+</project>
