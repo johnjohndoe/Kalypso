@@ -7,5 +7,5 @@
 	<legend title="Legende" visible="true"/>
 
 	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
-	<axis id="w" datatype="xs:double" label="Wasserstand" unit="cm" direction="vertical" position="left" />
+	<axis id="w" datatype="xs:double" label="Wasserstand" unit="m" direction="vertical" position="left" />
 </obsdiagview>

@@ -1,1 +1,3 @@
-<leer/>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Observation editable="true" xmlns="zml.kalypso.org"><Name>W_SAERI</Name><MetadataList><Metadata name="StartZeit" value="24.4.1941"/><Metadata name="Name" value="W_SAERI"/><Metadata name="Berechnung" value="Beschreibung"/></MetadataList><Axis datatype="TYPE=xs:date#FORMAT=yyyy.MM.dd HH:mm:ss" name="Datum" unit=""><ValueArray separator=";">2004.04.27 01:00:00;2004.04.27 04:00:00;2004.04.27 07:00:00;2004.04.27 10:00:00</ValueArray></Axis><Axis datatype="TYPE=xs:double" name="Pegel" unit="cm"><ValueArray separator=";">55;55;55;55</ValueArray></Axis></Observation>
+

@@ -8,28 +8,43 @@
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
         
-        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_eingabe"/>
     </page>
 
     <page className="org.kalypso.ui.calcwizard.MapAndTableWizardPage" pageTitle="Eingabe NA-Modelle" imageLocation="icons/calcwizard/boden.gif" >
-        <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/karte1.gmt"/>
-        <arg name="tableTemplate" value=".modellTyp/vorlagen/rechenfall/table1.gtt"/>
-        <arg name="diagTemplate" value=".modellTyp/vorlagen/rechenfall/diag2.odt"/>
+        <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/ezg.gmt"/>
+        <arg name="tableTemplate" value=".modellTyp/vorlagen/rechenfall/ezg.gtt"/>
+        <arg name="diagTemplate" value=".modellTyp/vorlagen/rechenfall/ezg.odt"/>
 
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
         
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_eingabe"/>
+        <arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=w2#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
     </page>
-<!--
+
     <page className="org.kalypso.ui.calcwizard.MapAndTableWizardPage" pageTitle="Eingabe Flusslaufmodelle" imageLocation="icons/calcwizard/boden.gif" >
-        <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/karte2.gmt"/>
-        <arg name="tableTemplate" value=".modellTyp/vorlagen/rechenfall/table2.gtt"/>
-        <arg name="timeseriesPropertyNames" value="Wasserstand#Wasserstand_gerechnet"/>
+        <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/talsperren.gmt"/>
+        <arg name="tableTemplate" value=".modellTyp/vorlagen/rechenfall/talsperren.gtt"/>
+        <arg name="diagTemplate" value=".modellTyp/vorlagen/rechenfall/talsperren.odt"/>
+
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe_eingang"/>
+
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="40"/>
     </page>
--->    
+
+    <page className="org.kalypso.ui.calcwizard.MapAndTableWizardPage" pageTitle="Eingabe Flusslaufmodelle" imageLocation="icons/calcwizard/boden.gif" >
+        <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/flusslauf.gmt"/>
+        <arg name="tableTemplate" value=".modellTyp/vorlagen/rechenfall/flusslauf.gtt"/>
+        <arg name="diagTemplate" value=".modellTyp/vorlagen/rechenfall/flusslauf.odt"/>
+
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
+
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="40"/>
+    </page>
+
 
 <!--
     <page className="org.kalypso.ui.calcwizard.MapAndTableWizardPage" pageTitle="Bodenfeuchte" imageLocation="icons/calcwizard/boden.gif" >
