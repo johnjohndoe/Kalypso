@@ -36,4 +36,8 @@ echo -e "copy additional files from $SRC to $INSTALL"
  cd $SRC
  cp -r symbols xsl tutorial i18n *bat *sh *conf $INSTALL
 
+ zip -r /tmp/`date +%Y%b%d_%H`_kalypso.zip $INSTALL
+
 ls -larth $INSTALL
+ls -larth /tmp/*kalypso.zip
+
