@@ -5,7 +5,6 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-pool-1.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/kalypsodeegree.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-libs.jar"/>
@@ -15,5 +14,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/relaxngDatatype.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xsdlib.jar"/>
+	<classpathentry kind="lib" path="lib/kalypsodeegree.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

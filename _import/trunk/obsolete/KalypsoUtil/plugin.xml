@@ -27,9 +27,6 @@
       <library name="lib/jax-qname.jar">
          <export name="*"/>
       </library>
-      <library name="lib/kalypsodeegree.jar">
-         <export name="*"/>
-      </library>
       <library name="lib/namespace.jar">
          <export name="*"/>
       </library>
