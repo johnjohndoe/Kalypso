@@ -132,14 +132,14 @@ public class SCE_KALYPSO
 	private SCE_KALYPSO(String title) {
 		super(title, true, true, true, true);
 
-		/*String autoCal = Main.props.getProperty("automatedCalibration");
+		String autoCal = Main.props.getProperty("automatedCalibration");
 		System.out.println("Automated Calibration: " + autoCal);
 		if (autoCal.equals("enabled1")) {
 			initView();
 		}
 		if (autoCal.equals("enabled2")) {
 			initView2();
-		}*/
+		}
 		updateStatus();
 		pack();
 		this.addInternalFrameListener(this);
@@ -680,7 +680,7 @@ public class SCE_KALYPSO
 			/*String query =
 				"/theme/table[@key=\"rb\"]/o/sp[@m_rbNumber=\"104\" or @m_rbNumber=\"101\"]/@m_retInterflow";*/
 			String query =
-				"/theme/table[@key=\"rb\"]/o/sp[@m_rbNumber=\"104\"]/v/v_row/@v_infiltShortTime";
+				"/theme/table[@key=\"rb\"]/o/sp[@m_rbNumber=\"104\"]/../v/v_row[(position()=2) or (position()=4)]/@v_infiltShortTime";
 			String[] querys = new String[1];
 			System.out.println(xmlServiceTools.getParameter(query, doc));
 			querys[0] = query;
@@ -1237,7 +1237,7 @@ public class SCE_KALYPSO
 		instance.inputFile =
 			new File("C://Kalypso//Test_Meike//input_Meike.xml");
 		//inputFile = new File("C://Kalypso//TestMode//input_neu2.xml");
-		instance.controlFile = new File("C://Kalypso//TestMode//control.xml");
+		/*instance.controlFile = new File("C://Kalypso//TestMode//control.xml");
 		instance.modelFile = new File("C://Kalypso//TestMode//model.xml");
 		instance.targetDir = new File("C://Kalypso//Test_Meike");
 		instance.readXMLinput();
@@ -1256,7 +1256,7 @@ public class SCE_KALYPSO
 				instance.endDate_pegel);
 		for (int i = 0; i < resultData.size(); i++) {
 			System.out.println(i+": "+resultData.get(i));
-		}
+		}*/
 		/*Double[] param =
 			{
 				new Double(10.0),
@@ -1265,7 +1265,7 @@ public class SCE_KALYPSO
 				new Double(40.0),
 				new Double(50.0),
 				new Double(60.0)};
-		instance.makeModelxml(param, true);
-		instance.testInputFile();*/
+		instance.makeModelxml(param, true);*/
+		instance.testInputFile();
 	}
 }
