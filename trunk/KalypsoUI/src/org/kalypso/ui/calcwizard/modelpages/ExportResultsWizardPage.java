@@ -2,6 +2,8 @@ package org.kalypso.ui.calcwizard.modelpages;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -10,9 +12,12 @@ import org.apache.commons.io.IOUtils;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree_impl.model.feature.visitors.GetSelectionVisitor;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -25,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -116,7 +122,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       final IFile diagFile = (IFile)getProject().findMember( diagFileName );
       try
       {
-        m_obsdiagviewType = ObservationTemplateHelper.loadDiagramTemplateXML( diagFile.getContents() );
+        m_obsdiagviewType = ObservationTemplateHelper.loadDiagramTemplateXML( diagFile
+            .getContents() );
       }
       catch( final Exception e )
       {
@@ -140,20 +147,26 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     m_checklist.setContentProvider( new ArrayContentProvider() );
     m_checklist.setLabelProvider( new WorkbenchLabelProvider() );
     m_checklist.setInput( m_calcCaseFolder );
+    
+    m_checklist.addCheckStateListener( new ICheckStateListener() {
+      public void checkStateChanged( CheckStateChangedEvent event )
+      {
+        refreshTimeseries();
+      }} );
 
     final Button button = new Button( topPanel, SWT.PUSH );
-    button.setText( "Zeitreihe bearbeiten" );
+    button.setText( "Zeitreihe(n) bearbeiten" );
     button.setToolTipText( "Öffnet die die selektierten Zeitreihen zur Bearbeitung" );
     button.addSelectionListener( new GraficToolStarter() );
-    final GridData buttonGridData = new GridData(  );
+    final GridData buttonGridData = new GridData();
     buttonGridData.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
     button.setLayoutData( buttonGridData );
-    
+
     final Group exportGroup = new Group( topPanel, SWT.NONE );
     exportGroup.setText( "Berichtsablage" );
     exportGroup.setLayout( new GridLayout() );
     exportGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    
+
     final Button exportQDiagramm = new Button( exportGroup, SWT.CHECK );
     exportQDiagramm.setText( "Durchflussgrafik" );
 
@@ -163,12 +176,16 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     final Button exportTableRadio = new Button( exportGroup, SWT.CHECK );
     exportTableRadio.setText( "Tabelle" );
 
+    final Button exportPrognoseTS = new Button( exportGroup, SWT.CHECK );
+    exportPrognoseTS.setText( "Prognose Zeitreihen" );
+
     final Button exportMap = new Button( exportGroup, SWT.CHECK );
     exportMap.setText( "Kartenansicht" );
-    
-    final Button doItButton = new Button( exportGroup, SWT.PUSH );
+
+    final Button doItButton = new Button( topPanel, SWT.PUSH );
     doItButton.setText( "Bericht(e) ablegen" );
-    doItButton.setToolTipText( "Legt für alle aktivierten Rechenfälle und alle selektierten Pegel die ausgewählten Berichte ab." );
+    doItButton
+        .setToolTipText( "Legt für alle aktivierten Rechenfälle und alle selektierten Pegel die ausgewählten Berichte ab." );
   }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
@@ -176,7 +193,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     final Composite mapPanel = new Composite( parent, SWT.NONE );
     mapPanel.setLayout( new GridLayout() );
 
-    final Control mapControl = initMap( mapPanel, MapPanel.WIDGET_SELECT );
+    final Control mapControl = initMap( mapPanel, MapPanel.WIDGET_SINGLE_SELECT );
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
@@ -192,7 +209,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   {
     // TODO: use getObservations instead
     // and call it with template and those obs'es
-    
+
     /**
      * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
      */
@@ -248,15 +265,60 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   }
 
   /**
+   * Überschrieben, da wir das gleiche für mehrere contexte = mehrere
+   * Rechenfälle ausführen
+   */
+  public void refreshTimeseries()
+  {
+    // erstmal leer, damit das Diagramm gelöscht wird
+    refreshObservationsForContext( new TSLinkWithName[] {}, getContext() );
+
+    final Object[] checkedCalcCases = getCheckedCalcCases();
+    if( checkedCalcCases == null || checkedCalcCases.length == 0 )
+      return;
+
+    // todo: ist ein kliner hack, der davon ausgeht, dass das modell sich nie
+    // ändern wird
+    // es werden einfach die links vom aktuellen Modell gegen alle
+    // selektierten Rechenfälle aufgelöst
+    final TSLinkWithName[] obs = getObservationsToShow();
+
+    for( int i = 0; i < checkedCalcCases.length; i++ )
+    {
+      try
+      {
+        final IFolder calcCase = (IFolder)checkedCalcCases[i];
+        final URL context = ResourceUtilities.createURL( calcCase );
+        refreshObservationsForContext( obs, context );
+      }
+      catch( final MalformedURLException e )
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private Object[] getCheckedCalcCases()
+  {
+    if( m_checklist == null )
+      return new Object[] {};
+
+    final CheckboxTableViewer checklist = m_checklist;
+    final Control checkControl = checklist.getControl();
+    if( checkControl == null || checkControl.isDisposed() )
+      return new Object[] {};
+
+    final CheckListGetter getter = new CheckListGetter( m_checklist );
+    checkControl.getDisplay().syncExec( getter );
+    return getter.getResults();
+  }
+
+  /**
    * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#getObservationsToShow()
    */
   protected TSLinkWithName[] getObservationsToShow()
   {
-    
-    
-    // TODO: implement it!
-
-    return new TSLinkWithName[] {};
+    return getObservationsFromMap( false );
   }
 
   public void setCalcCaseFolder( final Collection folders )
@@ -279,6 +341,27 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         } );
       }
     }
-
   }
+
+  private class CheckListGetter implements Runnable
+  {
+    private Object[] m_results;
+    private CheckboxTableViewer m_cl;
+    
+    public CheckListGetter( final CheckboxTableViewer ctv )
+    {
+      m_cl = ctv;
+    }
+    
+    public Object[] getResults()
+    {
+      return m_results;
+    }
+
+    public void run()
+    {
+      m_results = m_cl.getCheckedElements();
+    }
+  }
+
 }

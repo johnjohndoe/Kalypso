@@ -150,13 +150,12 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     ICommand command = null;
     if( allowOnlyOneSelectedFeature() )
     {
-      Feature fe = (Feature)features.get( 0 );
-      command = new SingleSelectCommand( fe, selectionId, activeTheme );
+      final Feature fe = (Feature)features.get( 0 );
+      command = new SingleSelectCommand( activeTheme.getWorkspace(), fe, selectionId, activeTheme );
     }
     else
-    {
       command = new JMMarkSelectCommand( activeTheme.getWorkspace(), features, selectionId, getSelectionMode() );
-    }
+
     postCommand( command, null );
   }
 

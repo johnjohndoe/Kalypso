@@ -220,7 +220,10 @@ class FeatureType_Impl implements FeatureType, Serializable
 
   public int getPropertyPosition( String name )
   {
-    return ( (int[])m_posOfFTP.get( name ) )[0];
+    final int[] object = (int[])m_posOfFTP.get( name );
+    if( object == null || object.length == 0 )
+      return -1;
+    return object[0];
   }
 
   /**
