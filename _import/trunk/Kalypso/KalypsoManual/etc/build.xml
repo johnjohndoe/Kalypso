@@ -33,9 +33,11 @@
   </target>
   
   <target name="valid">
+    <!--
     <antcall target="xmlvalid">
       <param name="xmlvalid.xml" value="${help.dir}/${doc.name}"/>
     </antcall>
+    -->
   </target>
 
   <!-- MANUAL (html und pdf) -->

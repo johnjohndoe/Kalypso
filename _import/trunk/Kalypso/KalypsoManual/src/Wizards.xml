@@ -29,11 +29,12 @@
     <para>Beim Start des Vorhersage-Wizards öffnet sich eine Maske, in der dem
     Benutzer freigestellt wird, ein neues Hochwasser anzulegen, einen bereits
     angelegten Rechenfall fortzuführen oder einen bereits angelegten
-    Rechenfall zu kopieren und neu zu berechnen (bspw. als neue Variante).
-    Alle Rechenfälle werden zunächst lokal bearbeitet. Auch die dazugehörigen
-    Zeitreihen werden vom Server geladen und im lokalen Arbeitsverzeichnis
-    abgelegt. Erst nach dem Ende der Berechnungen besteht die Möglichkeit, die
-    ermittelten Ergebnisse als Bericht auf dem Server zu speichern.</para>
+    Rechenfall zu kopieren und neu zu berechnen (bspw. als neue
+    Rechenvariante). Alle Rechenfälle werden zunächst lokal bearbeitet. Auch
+    die dazugehörigen Zeitreihen werden vom Server geladen und im lokalen
+    Arbeitsverzeichnis abgelegt. Erst nach dem Ende der Berechnungen besteht
+    die Möglichkeit, die ermittelten Ergebnisse als Bericht auf dem Server zu
+    speichern.</para>
 
     <section id="weisse_elster_1">
       <title>Neue Hochwasservorhersage anlegen</title>
@@ -43,7 +44,7 @@
       Bezeichnung des Rechenfalls ist vom Benutzer frei wählbar und wird unter
       dem angegebenen Namen im lokalen Arbeitsverzeichnis gespeichert. Mit der
       Bestätigung durch Klick auf <guibutton>weiter</guibutton> erfolgt die
-      Aufforderung zur Eingabe der Steuerparameter .</para>
+      Aufforderung zur Eingabe der Steuerparameter.</para>
 
       <figure id="we_steuerparameter">
         <title>Steuerparameter</title>
@@ -68,24 +69,24 @@
       <para><emphasis>Start der Vorhersage</emphasis></para>
 
       <para>Beschreibt den Zeitpunkt an dem das Modell die Vorhersage startet,
-      dieser wird automatisch auf die letzte viertel Stunde der aktuellen
-      Stunde gesetzt und ist nicht editierbar. Der Endzeitpunkt der
+      dieser wird automatisch auf die letzte volle Stunde der aktuellen
+      Uhrzeit gesetzt, ist aber vom Benutze editierbar. Der Endzeitpunkt der
       Vorhersageberechnung wird durch die Dauer des in den Prognosedaten
       enthaltenen Zeitraums bestimmt. Die Berechnung endet im längsten Fall 48
       h nach Beginn der Vorhersage.</para>
 
       <para><emphasis>Metadaten</emphasis></para>
 
-      <para>Sind vom Anwender optional anzuwendende Daten zur Beschreibung und
+      <para>Sind vom Anwender optional einzugebende Daten zur Beschreibung und
       Erläuterung des Rechenfalls. Sie werden beim Speichern des Rechenfalls
-      abgelegt, sind aber nicht notwendig zur Durchführung einer
-      Berechnung.</para>
+      und bei der Berichtsablage verwendet, sind aber nicht notwendig zur
+      Durchführung einer Berechnung.</para>
 
       <para><emphasis>Zeitreihen aktualisieren</emphasis></para>
 
       <para>Bei Aktivierung dieser Option werden die zur Berechnung
       notwendigen Zeitreihen neu in das Programm eingelesen. Dies ist
-      allerdings nur sinnvoll bei Vorführung oder Neuberechnung eines bereits
+      allerdings nur sinnvoll bei Fortführung oder Neuberechnung eines bereits
       angelegten Hochwassers. Beim Anlegen eines neuen Rechenfalls werden die
       Zeitreihen immer neu eingelesen (auch bei deaktiviertem Kästchen). Die
       Bestätigung der getätigten Angaben erfolgt über den Klick auf
