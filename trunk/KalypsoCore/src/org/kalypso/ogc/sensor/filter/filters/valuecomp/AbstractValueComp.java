@@ -34,6 +34,14 @@ public abstract class AbstractValueComp implements IValueComp
 
     m_parser = ParserFactory.createParser( m_axis.getDataClass() );
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.filter.filters.valuecomp.IValueComp#getAxis()
+   */
+  public IAxis getAxis( )
+  {
+    return m_axis;
+  }
   
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.valuecomp.IValueComp#validates(java.lang.Object)
