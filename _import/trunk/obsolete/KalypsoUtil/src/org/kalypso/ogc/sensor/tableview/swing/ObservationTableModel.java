@@ -86,6 +86,9 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
   public void setColumns( final ITableViewColumn[] columns, final IVariableArguments args )
       throws SensorException
   {
+    if( columns == null )
+      throw new IllegalArgumentException("columns null not allowed. (If you want to clear the table: use clearColumns() instead)");
+    
     m_columns = columns;
     m_args = args;
 
@@ -182,7 +185,7 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
       ITuppleModel values = m_columns[columnIndex - 1].getObservation().getValues( m_args );
       int index = values.indexOf( obj, m_columns[columnIndex - 1].getSharedAxis() );
 
-      if( index == -1 )
+      if( index < 0 )
         return null;
 
       // Now we can retrieve the element using value axis
@@ -288,7 +291,10 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
     }
   }
 
-  private void clearColumns()
+  /**
+   * Clears the columns of the model.
+   */
+  public void clearColumns()
   {
     m_columns = EMPTY_COLS;
     fireTableStructureChanged();

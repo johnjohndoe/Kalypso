@@ -1,15 +1,10 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jfree.data.AbstractSeriesDataset;
 import org.jfree.data.XYDataset;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.IAxisMapping;
-import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
-import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 
 /**
  * 
@@ -17,48 +12,18 @@ import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
  */
 class CurveDataset extends AbstractSeriesDataset implements XYDataset
 {
-  private IAxis m_xAxis = null;
+  private final List m_curves = new ArrayList();
 
-  private IDiagramAxis m_xDiagAxis = null;
-
-  private IAxis m_yAxis = null;
-
-  private IDiagramAxis m_yDiagAxis = null;
-
-  private final IDiagramCurve m_curve;
-
-  private final ITuppleModel m_values;
-
-  public CurveDataset( final IDiagramCurve curve ) throws SensorException
+  public CurveDataset()
   {
-    m_curve = curve;
-    m_values = m_curve.getObservation().getValues( null );
-
-    IAxisMapping[] mings = curve.getMappings();
-
-    for( int i = 0; i < mings.length; i++ )
-    {
-      if( mings[i].getDiagramAxis().getDirection().equals( IDiagramAxis.DIRECTION_HORIZONTAL ) )
-      {
-        m_xAxis = mings[i].getObservationAxis();
-        m_xDiagAxis = mings[i].getDiagramAxis();
-      }
-      else
-      {
-        m_yAxis = mings[i].getObservationAxis();
-        m_yDiagAxis = mings[i].getDiagramAxis();
-      }
-    }
+  // empty
   }
-
-  public IDiagramAxis getXDiagAxis()
+  
+  public void addCurveSerie( final XYCurveSerie xyc )
   {
-    return m_xDiagAxis;
-  }
-
-  public IDiagramAxis getYDiagAxis()
-  {
-    return m_yDiagAxis;
+    m_curves.add( xyc );
+    
+    fireDatasetChanged();
   }
 
   /**
@@ -66,7 +31,7 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
    */
   public int getSeriesCount()
   {
-    return 1;
+    return m_curves.size();
   }
 
   /**
@@ -74,7 +39,7 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
    */
   public String getSeriesName( int series )
   {
-    return m_curve.getName();
+    return ( (XYCurveSerie)m_curves.get( series ) ).getName();
   }
 
   /**
@@ -82,7 +47,7 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
    */
   public int getItemCount( int series )
   {
-    return m_values.getCount();
+    return ( (XYCurveSerie)m_curves.get( series ) ).getItemCount();
   }
 
   /**
@@ -90,15 +55,7 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
    */
   public Number getXValue( int series, int item )
   {
-    final Object obj = m_values.getElement( item, m_xAxis.getPosition() );
-
-    if( obj instanceof Number )
-      return (Number)obj;
-    else if( obj instanceof Date )
-      return new Double( ((Date)obj).getTime() );
-
-    //throw new NoSuchElementException();
-    return null;
+    return ( (XYCurveSerie)m_curves.get( series ) ).getXValue( item );
   }
 
   /**
@@ -106,7 +63,8 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
    */
   public double getX( int series, int item )
   {
-    return getXValue( series, item ).doubleValue();
+    Number value = getXValue( series, item );
+    return value == null ? Double.NaN : value.doubleValue();
   }
 
   /**
@@ -114,13 +72,7 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
    */
   public Number getYValue( int series, int item )
   {
-    final Object obj = m_values.getElement( item, m_yAxis.getPosition() );
-
-    if( obj instanceof Number )
-      return (Number)obj;
-
-    //throw new NoSuchElementException();
-    return null;
+    return ( (XYCurveSerie)m_curves.get( series ) ).getYValue( item );
   }
 
   /**
@@ -128,6 +80,7 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
    */
   public double getY( int series, int item )
   {
-    return getYValue( series, item ).doubleValue();
+    Number value = getYValue( series, item );
+    return value == null ? Double.NaN : value.doubleValue();
   }
 }
