@@ -182,7 +182,7 @@ public class ObservationResolver extends AbstractTransformation
     final Date to1 = parseRange( start, middle, stop, rangeMode1, true, middle );
     final Date from2 = parseRange( start, middle, stop, rangeMode2, false, middle );
     final Date to2 = parseRange( start, middle, stop, rangeMode2, true, stop );
-    
+
     for( int i = 0; i < features.length; i++ )
     {
       if( monitor.isCanceled() )
