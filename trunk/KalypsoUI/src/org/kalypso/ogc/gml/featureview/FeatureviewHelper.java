@@ -18,9 +18,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.java.lang.reflect.ClassUtilities.ClassUtilityException;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory;
+import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
+import org.kalypso.ogc.gml.featureview.control.TextFeatureControl;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Editor;
@@ -33,7 +35,6 @@ import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.LayoutType;
 import org.kalypso.template.featureview.ObjectFactory;
-import org.kalypso.util.factory.FactoryException;
 
 /**
  * @author belger
@@ -43,7 +44,7 @@ public class FeatureviewHelper
   // TODO: add mapping from outside
   /** FeatureType -> FeatureView */
   private final Map m_viewMap = new HashMap();
-  
+
   /** Standardview erzeugen */
   public Featureview createFeatureviewFromFeatureType( final FeatureType type )
   {
@@ -62,11 +63,11 @@ public class FeatureviewHelper
       final FeatureTypeProperty[] properties = type.getProperties();
       for( int i = 0; i < properties.length; i++ )
       {
-        final FeatureTypeProperty property = properties[i];
+        final FeatureTypeProperty ftp = properties[i];
         
         final LabelType label = factory.createLabel();
         label.setStyle( SWT.NONE );
-        label.setText( property.getName() );
+        label.setText( ftp.getName() );
         label.setVisible( true );
         
         final GridDataType labelGridData = factory.createGridData();
@@ -79,12 +80,14 @@ public class FeatureviewHelper
         final Editor editor = factory.createEditor();
         editor.setStyle( SWT.BORDER );
         editor.setEditable( true );
-        editor.setProperty( property.getName() );
+        editor.setProperty( ftp.getName() );
 
         final GridDataType editorGridData = factory.createGridData();
+        editorGridData.setHorizontalAlignment( GridData.FILL );
         editorGridData.setGrabExcessHorizontalSpace( true );
-        editorGridData.setHorizontalAlignment( GridData.BEGINNING );
         editor.setLayoutData( editorGridData );
+        
+        editor.setControl( getDefaultControlForType( ftp.getType() ) );
         
         controlList.add( editor );
       }
@@ -102,11 +105,29 @@ public class FeatureviewHelper
     }  
   }
 
-  public Composite createFeatureControl( final Composite parent, final KalypsoFeatureLayer featureLayer, final Feature fe, final IFeatureControlFactory editorFactory )
+  private String getDefaultControlForType( final String typeName )
+  {
+    if( typeName.equals( "java.lang.String" ) )
+      return TextFeatureControl.class.getName();
+    if( typeName.equals( "java.lang.Integer" ) )
+      return TextFeatureControl.class.getName();
+    if( typeName.equals( "java.lang.Long" ) )
+      return TextFeatureControl.class.getName();
+    if( typeName.equals( "java.lang.Float" ) )
+      return TextFeatureControl.class.getName();
+    if( typeName.equals( "java.lang.Double" ) )
+      return TextFeatureControl.class.getName();
+    if( typeName.equals( "java.lang.String" ) )
+      return TextFeatureControl.class.getName();
+
+    return "";
+  }
+
+  public Composite createFeatureControl( final Composite parent, final KalypsoFeatureLayer featureLayer, final Feature fe )
   {
     final Featureview view = getFeatureview( fe.getFeatureType() );    
     
-    return createComposite( parent, view, featureLayer, fe, editorFactory );
+    return createComposite( parent, view, featureLayer, fe );
   }
 
   /** 
@@ -126,7 +147,7 @@ public class FeatureviewHelper
     return newView;
   }
 
-  private Composite createComposite( final Composite parent, final CompositeType compositeType, final KalypsoFeatureLayer featureLayer, final Feature feature, final IFeatureControlFactory editorFeactory )
+  private Composite createComposite( final Composite parent, final CompositeType compositeType, final KalypsoFeatureLayer featureLayer, final Feature feature )
   {
     Composite composite = null;
     if( compositeType instanceof GroupType )
@@ -142,6 +163,9 @@ public class FeatureviewHelper
     final LayoutType layoutType = compositeType.getLayout();
     if( layoutType != null )
       composite.setLayout( createLayout( layoutType ) );
+    final LayoutDataType layoutDataType = compositeType.getLayoutData();
+    if( layoutDataType != null )
+      composite.setLayoutData( createLayoutData( layoutDataType ) );
     
     // die Children einbauen
     final List compositeOrControlList = compositeType.getCompositeOrControl();
@@ -149,21 +173,21 @@ public class FeatureviewHelper
     {
       final Object compositeOrControl = iter.next();
       if( compositeOrControl instanceof CompositeType )
-        createComposite( composite, (CompositeType)compositeOrControl, featureLayer, feature, editorFeactory );
+        createComposite( composite, (CompositeType)compositeOrControl, featureLayer, feature );
       else if( compositeOrControl instanceof ControlType )
       {
         final ControlType controlType = (ControlType)compositeOrControl;
 
-        createControl( parent, featureLayer, feature, editorFeactory, composite, compositeOrControl, controlType );
+        createControl( featureLayer, feature, composite, compositeOrControl, controlType );
       }
     }
     
     return composite;
   }
 
-  private void createControl( final Composite parent, final KalypsoFeatureLayer featureLayer, final Feature feature, final IFeatureControlFactory editorFeactory, Composite composite, final Object compositeOrControl, final ControlType controlType )
+  private void createControl( final KalypsoFeatureLayer featureLayer, final Feature feature, final Composite composite, final Object compositeOrControl, final ControlType controlType )
   {
-    final Control control = createControlInternal( parent, featureLayer, feature, editorFeactory, composite, compositeOrControl );
+    final Control control = createControlInternal( featureLayer, feature, composite, compositeOrControl );
     
     if( control == null )
     {
@@ -180,7 +204,7 @@ public class FeatureviewHelper
     }
   }
 
-  private Control createControlInternal( final Composite parent, final KalypsoFeatureLayer featureLayer, final Feature feature, final IFeatureControlFactory editorFeactory, Composite composite, final Object compositeOrControl )
+  private Control createControlInternal( final KalypsoFeatureLayer featureLayer, final Feature feature, Composite composite, final Object compositeOrControl )
   {
     // control erzeugen!
     if( compositeOrControl instanceof LabelType )
@@ -188,9 +212,6 @@ public class FeatureviewHelper
       final LabelType labelType = (LabelType)compositeOrControl;
       final Label label = new org.eclipse.swt.widgets.Label( composite, labelType.getStyle() );
       label.setText( labelType.getText() );
-      
-      label.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_YELLOW ) );
-      
       return label;
     }
     else if( compositeOrControl instanceof EditorType )
@@ -201,11 +222,21 @@ public class FeatureviewHelper
 
       try
       {
-        final AbstractFeatureControl featureControl = editorFeactory.createFeatureControl( composite, editorType.getStyle(), feature.getFeatureType().getProperty(propertyName) );
+        final String controlClassname = editorType.getControl();
+        if( controlClassname == null || controlClassname.length() == 0 )
+          return null;
+        
+        final IFeatureControl featureControl = (IFeatureControl)ClassUtilities.newInstance( controlClassname, IFeatureControl.class, getClass().getClassLoader() );
+        
         featureControl.setFeature( featureLayer, feature );
+        featureControl.setProperty( propertyName );
+        
+        final Control control = featureControl.createControl( composite, editorType.getStyle() );
         featureControl.setEnabled( editorType.isEditable() );
+        
+        return control;
       }
-      catch( final FactoryException e )
+      catch( final ClassUtilityException e )
       {
         e.printStackTrace();
       }

@@ -50,6 +50,7 @@
 				<xs:extension base="ns1:controlType">
 					<xs:attribute name="editable" type="xs:boolean" use="optional" default="true"/>
 					<xs:attribute name="property" type="xs:string" use="required"/>
+					<xs:attribute name="control" type="xs:string" use="required"/>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>

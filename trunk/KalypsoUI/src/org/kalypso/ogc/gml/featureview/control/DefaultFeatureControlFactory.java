@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.geometry.GM_Object;
-import org.eclipse.swt.widgets.Composite;
 import org.kalypso.util.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.util.factory.FactoryException;
 
@@ -33,15 +32,14 @@ public class DefaultFeatureControlFactory implements IFeatureControlFactory
   }
 
   /**
-   * @throws FactoryException
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.eclipse.swt.widgets.Composite, int, org.deegree.model.feature.FeatureTypeProperty)
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.deegree.model.feature.FeatureTypeProperty)
    */
-  public AbstractFeatureControl createFeatureControl( final Composite parent, final int style, final FeatureTypeProperty ftp ) throws FactoryException
+  public IFeatureControl createFeatureControl( final FeatureTypeProperty ftp ) throws FactoryException
   {
     final String type = ftp.getType();
 
-    final AbstractFeatureControl featureControl = (AbstractFeatureControl)m_factory.getObjectInstance( type,
-          AbstractFeatureControl.class, new Object[] { parent, new Integer( style ) } );
+    final IFeatureControl featureControl = (IFeatureControl)m_factory.getObjectInstance( type,
+        IFeatureControl.class );
 //    else if( ftp.getType().startsWith( GM_Object.class.getPackage().getName() ) )
 //      cellEditor = new GeometryFeatureCellEditor();
 
