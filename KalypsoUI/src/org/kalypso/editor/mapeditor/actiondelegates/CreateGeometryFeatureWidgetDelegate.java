@@ -6,7 +6,7 @@ import org.kalypso.ogc.widgets.CreateGeometryFeatureWidget;
 /**
  * @author belger
  */
-public class CreateGeometryFeatureWidgetDelegate extends GisMapEditorWidgetActionDelegate
+public class CreateGeometryFeatureWidgetDelegate extends AbstractWidgetActionDelegate
 {
   public CreateGeometryFeatureWidgetDelegate(  )
   {

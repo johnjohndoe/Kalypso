@@ -6,7 +6,7 @@ import org.kalypso.ogc.widgets.SelectWidget;
 /**
  * @author belger
  */
-public class SelectWidgetDelegate extends GisMapEditorWidgetActionDelegate
+public class SelectWidgetDelegate extends AbstractWidgetActionDelegate
 {
   public SelectWidgetDelegate()
   {

@@ -6,7 +6,7 @@ import org.kalypso.ogc.widgets.ZoomInWidget;
 /**
  * @author belger
  */
-public class ZoomInWidgetDelegate extends GisMapEditorWidgetActionDelegate
+public class ZoomInWidgetDelegate extends AbstractWidgetActionDelegate
 {
   public ZoomInWidgetDelegate(  )
   {

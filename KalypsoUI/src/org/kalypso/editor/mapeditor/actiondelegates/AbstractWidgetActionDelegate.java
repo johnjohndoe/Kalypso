@@ -14,7 +14,7 @@ import org.kalypso.ogc.widgets.IWidget;
  * 
  * @author bce
  */
-public abstract class GisMapEditorWidgetActionDelegate implements IEditorActionDelegate
+public abstract class AbstractWidgetActionDelegate implements IEditorActionDelegate
 {
   private IWidget m_widget;
 
@@ -22,7 +22,7 @@ public abstract class GisMapEditorWidgetActionDelegate implements IEditorActionD
 
   private MapPanel myActualMapPanel;
 
-  public GisMapEditorWidgetActionDelegate( final AbstractWidget widget )
+  public AbstractWidgetActionDelegate( final AbstractWidget widget )
   {
     m_widget = widget;
   }

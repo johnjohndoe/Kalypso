@@ -305,8 +305,9 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
      * @return 
      */
     public boolean equals( Object other ) {
-        if ( !super.equals( other ) || !( other instanceof GM_Aggregate_Impl ) || 
-                 !envelope.equals( ( (GM_Object)other ).getEnvelope() ) || 
+      // envelope was not valid 
+      if ( !super.equals( other ) || !( other instanceof GM_Aggregate_Impl ) || 
+                 !getEnvelope().equals( ( (GM_Object)other ).getEnvelope() ) || 
                  ( getSize() != ( (GM_Aggregate)other ).getSize() ) ) {
             return false;
         }

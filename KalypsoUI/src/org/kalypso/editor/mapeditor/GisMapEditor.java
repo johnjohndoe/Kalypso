@@ -1,7 +1,13 @@
 package org.kalypso.editor.mapeditor;
 
 import java.awt.Frame;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
+import javax.xml.bind.JAXBException;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -83,42 +89,51 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
-  // TODO: do it!
-  //    if( m_gisview == null )
-  //      return;
-  //
-  //    try
-  //    {
-  //      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-  //      m_marshaller.marshal( m_gisview, bos );
-  //      bos.close();
-  //
-  //      final ByteArrayInputStream bis = new ByteArrayInputStream(
-  // bos.toByteArray()
-  // );
-  //
-  //      final IFile file = input.getFile();
-  //      if( file.exists() )
-  //        file.setContents( bis, false, true, monitor );
-  //      else
-  //        file.create( bis, false, monitor );
-  //
-  //      bis.close();
-  //
-  //      setDirty( false );
-  //    }
-  //    catch( JAXBException e )
-  //    {
-  //      e.printStackTrace();
-  //    }
-  //    catch( IOException e )
-  //    {
-  //      e.printStackTrace();
-  //    }
-  //    catch( CoreException e )
-  //    {
-  //      e.printStackTrace();
-  //    }
+    if(m_mapModell ==null)
+      return;
+    // TODO
+    if(true)
+      return;
+  
+      try
+      {
+        monitor.beginTask( "Kartenvorlage speichern", 2000 );
+        getMapPanel().getBoundingBox();
+        Gismapview modellTemplate = ((GisTemplateMapModell)m_mapModell).createGismapTemplate( getMapPanel().getBoundingBox());
+         
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+              
+        GisTemplateHelper.saveGisMapView( modellTemplate,bos );
+        
+        final ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+        bos.close();
+        monitor.worked( 1000 );
+
+        final IFile file = input.getFile();
+        if( file.exists() )
+          file.setContents( bis, false, true, monitor );
+        else
+          file.create( bis, false, monitor );
+  
+        bis.close();
+          monitor.done();
+  
+        // setDirty( false );
+      }
+      catch( JAXBException e )
+      {
+        e.printStackTrace();
+      }
+      catch( IOException e )
+      {
+        e.printStackTrace();
+      }
+      catch( CoreException e )
+      {
+        e.printStackTrace();
+      }
+      
+      
   }
 
   /**

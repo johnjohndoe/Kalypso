@@ -6,7 +6,7 @@ import org.kalypso.ogc.widgets.UnSelectWidget;
 /**
  * @author belger
  */
-public class UnSelectWidgetDelegate extends GisMapEditorWidgetActionDelegate
+public class UnSelectWidgetDelegate extends AbstractWidgetActionDelegate
 {
   public UnSelectWidgetDelegate(  )
   {
