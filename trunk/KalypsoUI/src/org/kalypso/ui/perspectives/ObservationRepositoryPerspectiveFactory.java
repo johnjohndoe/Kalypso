@@ -39,12 +39,13 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
   }
 
   /**
-   * Sets the intial contents of the "Show View" menu.
+   * Sets the intial contents of the "Show View" menu
+   * @param layout
    */
   protected void setContentsOfShowViewMenu( IPageLayout layout )
   {
     layout.addShowViewShortcut( IPageLayout.ID_OUTLINE );
-    layout.addShowViewShortcut( IPageLayout.ID_RES_NAV );
+    layout.addShowViewShortcut( IKalypsoUIConstants.ID_REPOSITORY_VIEW );
     layout.addShowViewShortcut( IKalypsoUIConstants.ID_OBSDIAGRAM_VIEW );
     layout.addShowViewShortcut( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
   }
