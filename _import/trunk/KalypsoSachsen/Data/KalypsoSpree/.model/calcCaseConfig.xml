@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<calcCaseConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<createTransformations>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:modell.gml"/>
+			<argument name="output" value=":calcdir:calcCase.gml"/>
+		</transformation>
+	</createTransformations>
+	
+	<!-- TODO: Results.xml erzeugen/kopieren? -->
+	
+<!-- Einzugsgebiete -->
+	<updateTransformations>
+	<transformation className="org.kalypso.util.transformation.ObservationResolver">
+		<argument name="project" value=":project:"/>
+		<argument name="type" value="gml"/>
+		<argument name="href" value="PATH=:calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=:project:.modellTyp/modell.xsd"/>
+		<argument name="sourceObservation" value="Niederschlag_eingabeEingang"/>
+		<argument name="targetObservation" value="Niederschlag_eingabe"/>
+		<argument name="targetFolder" value=":calcdir:zeitreihen"/>
+	</transformation>
+
+	<transformation className="org.kalypso.util.transformation.ObservationResolver">
+		<argument name="project" value=":project:"/>
+		<argument name="type" value="gml"/>
+		<argument name="href" value="PATH=:calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=:project:.modellTyp/modell.xsd"/>
+		<argument name="sourceObservation" value="Wasserstand_gemessenEingang"/>
+		<argument name="targetObservation" value="Wasserstand_gemessen"/>
+		<argument name="targetFolder" value=":calcdir:zeitreihen"/>
+	</transformation>
+
+<!-- Flusslaufmodelle -->
+	<transformation className="org.kalypso.util.transformation.ObservationResolver">
+		<argument name="project" value=":project:"/>
+		<argument name="type" value="gml"/>
+		<argument name="href" value="PATH=:calcdir:calcCase.gml#LAYER=Flusslaufmodell#SERVICE=RESOURCE#XSD=:project:.modellTyp/modell.xsd"/>
+		<argument name="sourceObservation" value="Wasserstand_gemessenEingang"/>
+		<argument name="targetObservation" value="Wasserstand_gemessen"/>
+		<argument name="targetFolder" value=":calcdir:zeitreihen"/>
+	</transformation>
+
+<!-- Talsperre -->
+	<transformation className="org.kalypso.util.transformation.ObservationResolver">
+		<argument name="project" value=":project:"/>
+		<argument name="type" value="gml"/>
+		<argument name="href" value="PATH=:calcdir:calcCase.gml#LAYER=Talsperre#SERVICE=RESOURCE#XSD=:project:.modellTyp/modell.xsd"/>
+		<argument name="sourceObservation" value="Abgabe_eingang"/>
+		<argument name="targetObservation" value="Abgabe"/>
+		<argument name="targetFolder" value=":calcdir:zeitreihen"/>
+	</transformation>
+
+<!-- Flutung -->
+	<transformation className="org.kalypso.util.transformation.ObservationResolver">
+		<argument name="project" value=":project:"/>
+		<argument name="type" value="gml"/>
+		<argument name="href" value="PATH=:calcdir:calcCase.gml#LAYER=Flutung#SERVICE=RESOURCE#XSD=:project:.modellTyp/modell.xsd"/>
+		<argument name="sourceObservation" value="Abgabe_eingang"/>
+		<argument name="targetObservation" value="Abgabe"/>
+		<argument name="targetFolder" value=":calcdir:zeitreihen"/>
+	</transformation>
+
+	<transformation className="org.kalypso.util.transformation.ObservationResolver">
+		<argument name="project" value=":project:"/>
+		<argument name="type" value="gml"/>
+		<argument name="href" value="PATH=:calcdir:calcCase.gml#LAYER=Zufluss#SERVICE=RESOURCE#XSD=:project:.modellTyp/modell.xsd"/>
+		<argument name="sourceObservation" value="Zugabe_eingang"/>
+		<argument name="targetObservation" value="Zugabe"/>
+		<argument name="targetFolder" value=":calcdir:zeitreihen"/>
+	</transformation>
+
+	<transformation className="org.kalypso.util.transformation.CopyTransformation">
+		<argument name="input" value=":project:.examples/results.gml"/>
+		<argument name="output" value=":calcdir:results.gml"/>
+	</transformation>
+
+	<transformation className="org.kalypso.util.transformation.ReplaceTransformation">
+		<argument name="protocol0" value="calcdir=:calcdir:"/>
+		<argument name="protocol1" value="localcalc=localcalc:"/>
+		<argument name="file0" value=":calcdir:calcCase.gml"/>
+	</transformation>
+	</updateTransformations>
+</calcCaseConfig>

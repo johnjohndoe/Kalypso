@@ -51,10 +51,17 @@
 			</restriction>
 		</complexContent>
 	</complexType>
+    
+    <complexType name="EmptyFeatureBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
+    
 	<element name="Einzugsgebiet" type="spree:_EinzugsgebietType"/>
 	<complexType name="_EinzugsgebietType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="spree:EmptyFeatureBaseType">
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
@@ -71,6 +78,8 @@
 			</extension>
 		</complexContent>
 	</complexType>
+    
+    
 	<complexType name="FlusslaufModellCollectionAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
@@ -102,7 +111,7 @@
 	<element name="FlusslaufModell" type="spree:_FlusslaufModellType"/>
 	<complexType name="_FlusslaufModellType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="spree:EmptyFeatureBaseType">
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
@@ -148,7 +157,7 @@
 	<element name="Talsperre" type="spree:_TalsperrenType" substitutionGroup="gml:_Feature"/>
 	<complexType name="_TalsperrenType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="spree:EmptyFeatureBaseType">
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Anfangsstauvolumen" type="double"/>
@@ -191,7 +200,7 @@
 	<element name="Flutung" type="spree:_FlutungType" substitutionGroup="gml:_Feature"/>
 	<complexType name="_FlutungType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="spree:EmptyFeatureBaseType">
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
@@ -232,7 +241,7 @@
 	<element name="Zufluss" type="spree:_ZuflussType" substitutionGroup="gml:_Feature"/>
 	<complexType name="_ZuflussType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="spree:EmptyFeatureBaseType">
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>

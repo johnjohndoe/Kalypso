@@ -1,9 +1,13 @@
 package org.kalypso.java.lang;
 
 /**
+ * <p>Helper-Klasse für Runnable's mit geworfenen Exceptions.</p>
+ * <p>Implementierende Klassen müssen die Methode {@link #runIntern()} überschreiben.</p>
+ * <p>Eventuell geworfene Exception könne n dann durch getThrown geholt werden</p>
+ * 
  * @author belger
  */
-public abstract class CatchThread extends Thread
+public abstract class CatchRunnable implements Runnable
 {
   private Throwable m_throwable = null;
 
