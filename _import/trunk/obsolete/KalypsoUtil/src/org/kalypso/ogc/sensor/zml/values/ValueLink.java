@@ -2,14 +2,13 @@ package org.kalypso.ogc.sensor.zml.values;
 
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.Properties;
 
 import org.kalypso.java.properties.PropertiesHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlAxis;
-import org.kalypso.util.factory.ValueObjectFactory;
 import org.kalypso.util.io.CSV;
+import org.kalypso.util.parser.ParserException;
 import org.kalypso.zml.AxisType;
 import org.kalypso.zml.AxisType.ValueLinkType;
 
@@ -88,9 +87,11 @@ public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
   {
     try
     {
-      return m_csv.getItem( index, m_column, m_axis.getDataClass() );
+      String item = m_csv.getItem( index, m_column );
+      
+      return m_axis.getParser().parse( item );
     }
-    catch( ParseException e )
+    catch( ParserException e )
     {
       throw new RuntimeException( e );
     }
@@ -102,6 +103,13 @@ public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
    */
   public void setElement( int index, Object element )
   {
-    m_csv.setItem( index, m_column, ValueObjectFactory.toStringRepresentation( element ) );
+    try
+    {
+      m_csv.setItem( index, m_column, m_axis.getParser().toString( element ) );
+    }
+    catch( ParserException e )
+    {
+      throw new RuntimeException( e );
+    }
   }
 }

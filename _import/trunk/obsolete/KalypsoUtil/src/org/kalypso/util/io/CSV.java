@@ -3,10 +3,7 @@ package org.kalypso.util.io;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.text.ParseException;
 import java.util.Vector;
-
-import org.kalypso.util.factory.ValueObjectFactory;
 
 /**
  * Can parse a CSV file.
@@ -67,19 +64,6 @@ public class CSV
   public String getItem( int line, int col )
   {
     return ( (String[])m_lines.get( line ) )[col];
-  }
-
-  /**
-   * Returns the item as 'value Object' at the given position in the CSV-File.
-   * <p>
-   * Convenience method that returns a value object initialised with the string
-   * value of the item. The possible types of Object that are returned depends
-   * on the availability of their Class in the
-   * ValueObjectFactory.createObjectWithStringValue() method.
-   */
-  public Object getItem( int line, int col, Class c ) throws ParseException
-  {
-    return ValueObjectFactory.createObjectWithStringValue( c, getItem( line, col ) );
   }
 
   /**

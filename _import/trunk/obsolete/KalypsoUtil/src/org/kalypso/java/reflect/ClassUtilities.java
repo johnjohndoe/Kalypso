@@ -1,7 +1,8 @@
 package org.kalypso.java.reflect;
 
-import java.io.IOException;
-import java.util.Properties;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 
 /**
  * Utilities method on Class stuff
@@ -10,8 +11,14 @@ import java.util.Properties;
  */
 public class ClassUtilities
 {
-  private static Properties m_typeToClassProps;
-
+  /**
+   * @see ClassUtilities#newInstance(String, Class, ClassLoader, Object[])
+   */
+  public static Object newInstance( final String classname, final Class target, final ClassLoader cl ) throws ClassUtilityException
+  {
+    return newInstance( classname, target, cl, null );
+  }
+  
   /**
    * creates a new instance using reflection.
    * 
@@ -19,19 +26,33 @@ public class ClassUtilities
    *          Object of this class to create
    * @param target
    *          [optional] classname must be assignable from target
+   * @param cl the ClassLoader to use for instantiating the object
+   * 
+   * @param arguments [optional] can be null, the list of arguments to pass to the constructor
    * 
    * @return new Object
    * 
    * @throws ClassUtilityException
    */
-  public static Object newInstance( final String classname, final Class target, final ClassLoader cl ) throws ClassUtilityException
+  public static Object newInstance( final String classname, final Class target, final ClassLoader cl, final Object[] arguments ) throws ClassUtilityException
   {
     try
     {
       final Class c = Class.forName( classname, true, cl );
 
       if( ( target == null ) || target.isAssignableFrom( c ) )
-        return c.newInstance();
+      {
+        if( arguments == null )
+          return c.newInstance();
+        
+        Class[] argClass = new Class[ arguments.length ];
+        for( int i = 0; i < argClass.length; i++ )
+          argClass[i] = arguments[i].getClass();
+        
+        Constructor cons = c.getConstructor( argClass );
+        
+        return cons.newInstance( arguments );
+      }
 
       throw new ClassUtilityException( "Class " + classname + " not assignable from "
           + target.getName() );
@@ -48,49 +69,24 @@ public class ClassUtilities
     {
       throw new ClassUtilityException( e );
     }
+    catch( SecurityException e )
+    {
+      throw new ClassUtilityException( e );
+    }
+    catch( NoSuchMethodException e )
+    {
+      throw new ClassUtilityException( e );
+    }
+    catch( IllegalArgumentException e )
+    {
+      throw new ClassUtilityException( e );
+    }
+    catch( InvocationTargetException e )
+    {
+      throw new ClassUtilityException( e );
+    }
   }
 
-  /**
-   * Returns the Class that corresponds to the given type. Uses the mapping
-   * defined in the type2class.map.ini file if no mapping is provided.
-   * 
-   * @param type the type to look for
-   * @param mapping [optional] if not null, uses this mapping to resolve class name
-   * @throws ClassNotFoundException
-   */
-  public static Class typeToClass( final String type, final Properties mapping /*, final ClassLoader cl */ ) throws ClassNotFoundException
-  {
-    final Properties typeMapping = mapping == null ? getTypeToClassProperties() : mapping;
-    
-    final String foo = typeMapping.getProperty(type);
-    System.out.println( foo + " - " + type );
-    return Class.forName( foo );//, true, cl );
-  }
-  
-  
-  /**
-   * Helper that loads the properties for type mapping
-   */
-  private static Properties getTypeToClassProperties()
-  {
-    if( m_typeToClassProps == null )
-    {
-      m_typeToClassProps = new Properties();
-      
-      try
-      {
-        m_typeToClassProps.load( ClassUtilities.class.getResourceAsStream( "type2class.map.ini" ) );
-      }
-      catch( IOException e )
-      {
-        e.printStackTrace();
-        throw new RuntimeException( e );
-      }
-    }
-    
-    return m_typeToClassProps;
-  }
-  
   /**
    * An Exception that can occur using the upper class
    * 

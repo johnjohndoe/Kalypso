@@ -1,12 +1,11 @@
 package org.kalypso.ogc.sensor.zml.values;
 
-import java.text.ParseException;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlAxis;
-import org.kalypso.util.factory.ValueObjectFactory;
+import org.kalypso.util.parser.ParserException;
 import org.kalypso.zml.AxisType;
 
 /**
@@ -36,16 +35,14 @@ public class ValueArray implements IZmlValuesLoader, IZmlValuesProvider
 
     m_values = new Vector( stok.countTokens() );
 
-    Class eltClass = m_axis.getDataClass();
-
     try
     {
       while( stok.hasMoreElements() )
-        m_values.add( ValueObjectFactory.createObjectWithStringValue( eltClass, stok.nextToken() ) );
+        m_values.add( m_axis.getParser().parse( stok.nextToken() ) );
 
       return this;
     }
-    catch( ParseException e )
+    catch( ParserException e )
     {
       throw new SensorException( e );
     }

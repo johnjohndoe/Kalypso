@@ -1,12 +1,18 @@
 package org.kalypso.ogc.sensor.zml;
 
-import org.kalypso.java.reflect.ClassUtilities;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.kalypso.java.properties.PropertiesHelper;
 import org.kalypso.ogc.sensor.DefaultAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.values.IZmlValuesLoader;
 import org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider;
 import org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel;
 import org.kalypso.ogc.sensor.zml.values.ZmlValueFactory;
+import org.kalypso.util.factory.FactoryException;
+import org.kalypso.util.parser.IParser;
+import org.kalypso.util.parser.ParserFactory;
 import org.kalypso.zml.AxisType;
 
 /**
@@ -16,46 +22,106 @@ import org.kalypso.zml.AxisType;
  */
 public class ZmlAxis extends DefaultAxis
 {
+  private static ParserFactory m_parserFactory = null;
+
   private final AxisType m_axisType;
+
   private IZmlValuesProvider m_values = null;
 
-  public ZmlAxis( final AxisType axisType, final int position ) throws ClassNotFoundException
+  private IParser m_parser;
+
+  private String m_type;
+
+  private String m_format;
+
+  /**
+   * Constructor
+   * 
+   * @param axisType
+   *          AxisType Instanz aus der JAXB Serialisierung
+   * @param position
+   *          die Position in der Tupple
+   */
+  public ZmlAxis( final AxisType axisType, final int position ) throws SensorException
   {
-    super( axisType.getName(), axisType.getUnit(),
-        getDataClass( axisType.getDatatype() ), false, position );
+    super( axisType.getName(), axisType.getUnit(), null, false, position );
 
     m_axisType = axisType;
-  }
-  
-  private static Class getDataClass( String dataType )
-  {
-    Class c = null;
+
+    // datatype beinhaltet TYPE=...#FORMAT=...
+    Properties props = PropertiesHelper.parseFromString( m_axisType.getDatatype(), '#' );
+    m_type = props.getProperty( "TYPE" );
+    m_format = props.getProperty( "FORMAT" );
+
     try
     {
-      c = ClassUtilities.typeToClass( dataType, null );
+      m_parser = getParserFactory().createParser( m_type, m_format );
     }
-    catch( ClassNotFoundException e )
+    catch( FactoryException e )
     {
-      e.printStackTrace();
+      throw new SensorException( e );
     }
-    
-    return c;
+
+    m_dataClass = m_parser.getObjectClass();
   }
 
   public AxisType getAxisType()
   {
     return m_axisType;
   }
-  
-  public void fetchValues(ZmlTuppleModel model) throws SensorException
+
+  public void fetchValues( ZmlTuppleModel model ) throws SensorException
   {
     IZmlValuesLoader loader = ZmlValueFactory.createLoader( m_axisType, this );
     loader.setModel( model );
-    m_values = loader.load( );
+    m_values = loader.load();
   }
-  
+
   public IZmlValuesProvider getValues()
   {
     return m_values;
+  }
+
+  /**
+   * Liefert den passenden IParser um die Werte der Achse zu parsen
+   * (read/write).
+   * <p>
+   * Die Achsen müssen im XML mit der 'datatype' Tag beschrieben werden. Dieser
+   * Tag beinhaltet die Typ und Format Spezifikation.
+   * <p>
+   * Beispiel:
+   * 
+   * <pre>
+   *  <Axis name="Pegel" unit="m" datatype="TYPE=xs:double#FORMAT=">
+   *  <Axis name="Datum" unit="" datatype="TYPE=xs:date#FORMAT=yyyy MM dd hh:mm">
+   * </pre>
+   */
+  public IParser getParser()
+  {
+    return m_parser;
+  }
+
+  /**
+   * Helper, man sollte es benutzen um auf die ParserFactory zugreifen zu können
+   */
+  private static ParserFactory getParserFactory()
+  {
+    if( m_parserFactory == null )
+    {
+      Properties props = new Properties();
+      try
+      {
+        props.load( ZmlAxis.class.getResourceAsStream( "resource/types2parser.properties" ) );
+      }
+      catch( IOException e )
+      {
+        // TODO: logging oder etwas?
+        throw new RuntimeException( e );
+      }
+
+      m_parserFactory = new ParserFactory( props, ZmlAxis.class.getClassLoader() );
+    }
+
+    return m_parserFactory;
   }
 }

@@ -159,8 +159,9 @@ public class ZmlObservation implements IObservation
         {
           m_axisList[i] = new ZmlAxis( tmpAxis, i );
         }
-        catch( ClassNotFoundException e )
+        catch( SensorException e )
         {
+          // TODO: besseres Handling?
           throw new RuntimeException( e );
         }
       }

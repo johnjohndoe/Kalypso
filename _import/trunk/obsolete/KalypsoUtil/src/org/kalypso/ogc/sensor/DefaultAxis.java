@@ -10,12 +10,12 @@ import java.util.List;
  */
 public class DefaultAxis implements IAxis
 {
-  private final String m_label;
-  private final String m_unit;
-  private final boolean m_restricted;
-  private final Class m_dataClass;
-  private final int m_position;
-  private List m_restrictedValues;
+  protected String m_label;
+  protected String m_unit;
+  protected boolean m_restricted;
+  protected Class m_dataClass;
+  protected int m_position;
+  protected List m_restrictedValues;
 
   /**
    * Constructor
