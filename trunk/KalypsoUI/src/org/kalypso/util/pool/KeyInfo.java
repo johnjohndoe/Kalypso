@@ -48,7 +48,6 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypso.loader.ILoader;
@@ -59,12 +58,6 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public final class KeyInfo extends Job implements ILoaderListener
 {
   protected final static Logger LOGGER = Logger.getLogger( KeyInfo.class.getName() );
-
-  /**
-   * für den BorrowObjectJob, damit alle Objekte des Pools nacheinander geladen
-   * werden
-   */
-  private static final ISchedulingRule MUTEX = new MutexSchedulingRule();
 
   private final List m_listeners = Collections.synchronizedList( new LinkedList() );
 
@@ -86,7 +79,7 @@ public final class KeyInfo extends Job implements ILoaderListener
     setPriority( Job.LONG );
 
     // Jobs auf dem gleichen Pool müssen nacheinander laufen!
-    setRule( MUTEX );
+    setRule( new MutexSchedulingRule() );
   }
 
   public void dispose()
