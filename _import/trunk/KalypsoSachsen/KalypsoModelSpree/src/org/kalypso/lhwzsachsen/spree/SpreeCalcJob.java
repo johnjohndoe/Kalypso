@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -278,6 +280,8 @@ public class SpreeCalcJob extends AbstractCalcJob
 
   private void startCalculation( final File nativedir, final Map m_data ) throws CalcJobServiceException
   {
+    prepareExe();
+    
     InputStreamReader inStream = null;
     InputStreamReader errStream = null;
 
@@ -354,6 +358,24 @@ public class SpreeCalcJob extends AbstractCalcJob
         e1.printStackTrace();
       }
     }
+  }
+
+  private void prepareExe()
+  {
+    try
+    {
+      final URL resource = getClass().getResource( "resources/exe/spree.exe" );
+      final URLConnection connection = resource.openConnection();
+      
+      System.out.println( connection.getDate() ); 
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
+    
+  
+  
   }
 
   /**

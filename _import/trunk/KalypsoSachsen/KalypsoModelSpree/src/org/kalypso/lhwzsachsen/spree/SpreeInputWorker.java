@@ -12,11 +12,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
-
-import javax.xml.bind.JAXBException;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureCollection;
@@ -34,9 +33,11 @@ import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.zml.ZmlObservation;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -200,8 +201,7 @@ public class SpreeInputWorker
     //        .getResourceAsStream( "test/HW040427.shx" ) );
   }
 
-  public static Map createTsData( final File inputdir, final Map inputMap ) throws JAXBException,
-      IOException, SensorException
+  public static Map createTsData( final File inputdir, final Map inputMap ) throws IOException, SensorException
   {
     final Map map = new HashMap();
 
@@ -225,32 +225,23 @@ public class SpreeInputWorker
         continue;
       }
 
-      final ZmlObservation obs = new ZmlObservation( obsFile );
+      final IObservation obs = ZmlFactory.parseXML( obsFile.toURL(), "" );
 
       final IAxis[] axisList = obs.getAxisList();
-      int dateIndex = -1;
-      int valueIndex = -1;
-      for( int j = 0; j < axisList.length; j++ )
-      {
-        if( dateIndex == -1 && axisList[j].getDataClass() == Date.class )
-          dateIndex = j;
-        if( valueIndex == -1 && axisList[j].getDataClass() == Double.class )
-          valueIndex = j;
-
-        if( dateIndex != -1 && valueIndex != -1 )
-          break;
-      }
 
       try
       {
+        final IAxis dateAxis = ObservationUtilities.findAxis( axisList, Date.class )[0];
+        final IAxis valueAxis = ObservationUtilities.findAxis( axisList, Double.class )[0];
+      
         final Map dateToValueMap = new HashMap();
 
         final ITuppleModel model = obs.getValues( null );
 
         for( int j = 0; j < model.getCount(); j++ )
         {
-          final Date date = (Date)model.getElement( j, dateIndex );
-          final Number val = (Number)model.getElement( j, valueIndex );
+          final Date date = (Date)model.getElement( j, dateAxis );
+          final Number val = (Number)model.getElement( j, valueAxis );
           final Double value = val == null ? null : new Double( val.doubleValue() );
 
           dateSet.add( date );
@@ -259,6 +250,13 @@ public class SpreeInputWorker
         }
 
         map.put( tsDesc.id, dateToValueMap );
+      }
+      catch( final NoSuchElementException nse )
+      {
+        // passiert, wenn es keine entsprechende Axen giebt
+        nse.printStackTrace();
+        
+        throw new CalcJobServiceException( "Fehlerhafte Eingabedateien", nse );
       }
       catch( final SensorException se )
       {
