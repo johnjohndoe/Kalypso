@@ -4,12 +4,11 @@
     xmlns:na="http://www.tuhh.de/kalypsoSpree"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:gml="http://www.opengis.net/gml"
-    xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org">
+    xmlns="http://www.w3.org/2001/XMLSchema">
     <import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
     <import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlinks.xsd"/>
-    <import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/> 
 
-    <element name="collection" type="na:_SpreeModellType" substitutionGroup="gml:_FeatureCollection"/>
+    <element name="SpreeModell" type="na:_SpreeModellType" substitutionGroup="gml:_FeatureCollection"/>
     <complexType name="_SpreeModellType">
         <complexContent>
             <extension base="gml:AbstractFeatureCollectionType"/>
@@ -28,13 +27,17 @@
                     <element name="Bodenfeuchte" type="double"/>
                     <element name="BodenfeuchteMax" type="double"/>
                     <element name="Ausdehnung" type="double"/>
-   					<element name="Niederschlag" type="obslink:ObservationLink"/>
                     <element name="Wasserstand" type="string"/>
+                    <element name="Zeitreihe" type="na:_ZeitreihenType"/>
                 </sequence>
             </extension>
         </complexContent>
     </complexType>
-
+    <complexType name="_ZeitreihenType">
+        <complexContent>
+            <attributeGroup ref="xlink:simpleLink"/>
+        </complexContent>
+    </complexType>
     <element name="Flusslaufmodell" type="na:_FlusslaufModellType" substitutionGroup="gml:_Feature"/>
     <complexType name="_FlusslaufModellType">
         <complexContent>

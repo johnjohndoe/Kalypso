@@ -743,7 +743,55 @@
 				</Rule>
 			</FeatureTypeStyle>
 		</UserStyle>
-		
-		
+
+	<UserStyle>
+			<Name>sachsenrivers</Name>
+			<Title>rivers</Title>
+			<IsDefault>1</IsDefault>
+			<FeatureTypeStyle>
+				<Name>StyleName0815</Name>
+				<Rule>
+					<Name>RuleName0815</Name>
+					<LineSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>GEOM</ogc:PropertyName>
+						</Geometry>
+						<Stroke>
+							<CssParameter name="stroke">#000088</CssParameter>
+							<CssParameter name="stroke-width">2</CssParameter>
+						</Stroke>
+					</LineSymbolizer>
+				</Rule>
+<!--				
+				<Rule>
+					<TextSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>GEOM</ogc:PropertyName>
+						</Geometry>
+						<Label>
+							<ogc:PropertyName>NAME</ogc:PropertyName>
+						</Label>
+						<Font>
+							<CssParameter name="font-family">Serif</CssParameter>
+							<CssParameter name="font-style">normal</CssParameter>
+							<CssParameter name="font-weight">normal</CssParameter>
+							<CssParameter name="font-size">12</CssParameter>
+							<CssParameter name="font-color">#000000</CssParameter>
+						</Font>
+						<LabelPlacement>
+							<LinePlacement>
+								<PerpendicularOffset>above</PerpendicularOffset>
+								<LineWidth>1</LineWidth>
+								<Gap>10</Gap>
+							</LinePlacement>
+						</LabelPlacement>
+					</TextSymbolizer>
+				</Rule>
+-->				
+			</FeatureTypeStyle>
+		</UserStyle>
+
+
 	</NamedLayer>
+	
 </StyledLayerDescriptor>

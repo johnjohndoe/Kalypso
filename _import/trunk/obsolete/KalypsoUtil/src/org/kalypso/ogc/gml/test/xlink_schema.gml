@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <collection xmlns:na="http://www.tuhh.de/kalypsoSpree" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tuhh.de/kalypsoSpree
-D:\KalypsoModelle\KalypsoSpree\modellTyp\modell.xsd">
+obslink_schema.xsd">
 	<gml:featureMember>
 		<Zufluss fid="new">
 			<Name>Burgneudorf</Name>
@@ -123,7 +123,6 @@ D:\KalypsoModelle\KalypsoSpree\modellTyp\modell.xsd">
 			<Bodenfeuchte>0.0</Bodenfeuchte>
 			<BodenfeuchteMax>70.0</BodenfeuchteMax>
 			<Ausdehnung/>
-			<Niederschlag/>
 			<Wasserstand/>
 			<Zeitreihe xlink:href="file://zeitreihe.zml#pegel18"/>
 		</Einzugsgebiet>
@@ -140,7 +139,6 @@ D:\KalypsoModelle\KalypsoSpree\modellTyp\modell.xsd">
 			<Bodenfeuchte>0.0</Bodenfeuchte>
 			<BodenfeuchteMax>130.0</BodenfeuchteMax>
 			<Ausdehnung/>
-			<Niederschlag/>
 			<Wasserstand/>
 			<Zeitreihe xlink:href="file://zeitreihe.zml#pegel18"/>
 		</Einzugsgebiet>
@@ -157,7 +155,6 @@ D:\KalypsoModelle\KalypsoSpree\modellTyp\modell.xsd">
 			<Bodenfeuchte>0.0</Bodenfeuchte>
 			<BodenfeuchteMax>70.0</BodenfeuchteMax>
 			<Ausdehnung/>
-			<Niederschlag/>
 			<Wasserstand/>
 			<Zeitreihe xlink:href="file://zeitreihe.zml#pegel18"/>
 		</Einzugsgebiet>
@@ -174,7 +171,6 @@ D:\KalypsoModelle\KalypsoSpree\modellTyp\modell.xsd">
 			<Bodenfeuchte>0.0</Bodenfeuchte>
 			<BodenfeuchteMax>200.0</BodenfeuchteMax>
 			<Ausdehnung/>
-			<Niederschlag/>
 			<Wasserstand/>
 			<Zeitreihe xlink:href="file://zeitreihe.zml#pegel18"/>
 		</Einzugsgebiet>
@@ -191,7 +187,6 @@ D:\KalypsoModelle\KalypsoSpree\modellTyp\modell.xsd">
 			<Bodenfeuchte>0.0</Bodenfeuchte>
 			<BodenfeuchteMax>310.0</BodenfeuchteMax>
 			<Ausdehnung/>
-			<Niederschlag/>
 			<Wasserstand/>
 			<Zeitreihe xlink:href="file://zeitreihe.zml#pegel18"/>
 		</Einzugsgebiet>

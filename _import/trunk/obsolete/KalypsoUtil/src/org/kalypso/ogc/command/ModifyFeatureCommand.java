@@ -1,5 +1,10 @@
 package org.kalypso.ogc.command;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.ogc.gml.KalypsoFeature;
@@ -13,18 +18,21 @@ public class ModifyFeatureCommand implements ICommand
 {
   private final IKalypsoLayer m_layer;
   private final KalypsoFeature m_feature;
-  private final String m_name;
-  private final Object m_newValue;
-  private Object m_oldValue;
+  private final Map m_newMap;
+  private final Map m_oldMap = new HashMap();
+  
 
-  public ModifyFeatureCommand( final IKalypsoLayer layer, final KalypsoFeature feature, final String name, final Object value )
+  public ModifyFeatureCommand( final IKalypsoLayer layer, final KalypsoFeature feature, final Map map )
   {
     m_layer = layer;
     m_feature = feature;
-    m_name = name;
-    m_newValue = value;
+    m_newMap = map;
     
-    m_oldValue = m_feature.getProperty( name );
+    for( Iterator iter = map.keySet().iterator(); iter.hasNext(); )
+    {
+      final String propName = (String)iter.next();
+      m_oldMap.put( propName, feature.getProperty(propName) );
+    }
   }
 
   /**
@@ -40,7 +48,7 @@ public class ModifyFeatureCommand implements ICommand
    */
   public void process() throws Exception
   {
-    setFeatureProperty( m_newValue );
+    setFeatureProperty( m_newMap );
   }
 
   /**
@@ -48,7 +56,7 @@ public class ModifyFeatureCommand implements ICommand
    */
   public void redo() throws Exception
   {
-    setFeatureProperty( m_newValue );  
+    setFeatureProperty( m_newMap );  
   }
 
   /**
@@ -56,7 +64,7 @@ public class ModifyFeatureCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    setFeatureProperty( m_oldValue );  
+    setFeatureProperty( m_oldMap );  
   }
 
   /**
@@ -64,13 +72,19 @@ public class ModifyFeatureCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Wert ?ndern";
+    return "Wert ändern";
   }
 
-  private void setFeatureProperty( final Object value )
+  private void setFeatureProperty( final Map map )
   {
-    final FeatureProperty fp = FeatureFactory.createFeatureProperty( m_name, value );
-    m_feature.setProperty( fp );
+    for( Iterator iter = map.entrySet().iterator(); iter.hasNext(); )
+    {
+      final Map.Entry entry = (Entry)iter.next();
+      
+      final FeatureProperty property = FeatureFactory.createFeatureProperty( (String)entry.getKey(), entry.getValue() );
+      m_feature.setProperty( property );
+    }
+
     m_layer.fireModellEvent( null );
   }
 }

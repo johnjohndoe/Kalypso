@@ -18,9 +18,21 @@
 		<layer name="Zuflüsse" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=modellTyp/modell.xsd#LAYER=Zufluss" linktype="gml">
 			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/styles.sld#STYLE=Zufluesse" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
 		</layer>
-		
+
 		<layer name="Gewässerverlauf" visible="true" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/major_rivers#SRS=EPSG:4326" linktype="shape">
 			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/styles.sld#STYLE=default:europe:major_rivers" linktype="style" />
+		</layer>
+
+		<layer name="Gewässerverlauf" visible="true" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/schoeps_loebauer_wasser#SRS=EPSG:31469" linktype="shape">
+			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/styles.sld#STYLE=sachsenrivers" linktype="style" />
+		</layer>
+
+		<layer name="Gewässer Sachsen" visible="false" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/gew_sachsen#SRS=EPSG:31469" linktype="shape">
+			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/styles.sld#STYLE=sachsenrivers" linktype="style" />
+		</layer>
+
+		<layer name="TK25_02" visible="true" id="layer26" xlink:type="simple" xlink:actuate="onRequest" 
+			xlink:href="SERVICE=http://ibpm.bjoernsen.de/cgi-bin/mapserv401?map=/usr/local/httpd/htdocs/lhwz/mapserver/demo.map&amp;#LAYERS=Topografie" linktype="wms">
 		</layer>
 		
 	</layers>

@@ -6,7 +6,6 @@ FeatureType: Einzugsgebiet
     Bodenfeuchte                         java.lang.Double
     BodenfeuchteMax                      java.lang.Double
     Ausdehnung                           java.lang.Double
-    Niederschlag                         java.lang.String
     Wasserstand                          java.lang.String
     Zeitreihe                            java.lang.Object [xlink:simple]
 FeatureType: Flusslaufmodell

@@ -48,7 +48,7 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
+
 	<element name="Talsperre" type="na:_TalsperrenType" substitutionGroup="gml:_Feature"/>
 	<complexType name="_TalsperrenType">
 		<complexContent>
@@ -63,7 +63,7 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
+
 	<element name="Flutung" type="na:_FlutungType" substitutionGroup="gml:_Feature"/>
 	<complexType name="_FlutungType">
 		<complexContent>

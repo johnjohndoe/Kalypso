@@ -6,7 +6,6 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
-import org.kalypso.ogc.event.ModellEventProvider;
 import org.kalypso.ogc.event.ModellEventProviderAdapter;
 import org.kalypso.ogc.sort.KalypsoFeatureSort;
 import org.opengis.cs.CS_CoordinateSystem;

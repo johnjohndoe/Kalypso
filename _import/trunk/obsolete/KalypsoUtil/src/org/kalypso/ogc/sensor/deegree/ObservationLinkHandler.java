@@ -6,10 +6,11 @@ import javax.xml.bind.Unmarshaller;
 
 import org.deegree_impl.extension.ITypeHandler;
 import org.deegree_impl.extension.TypeRegistryException;
-import org.kalypso.zml.ObjectFactory;
-import org.kalypso.zml.ObservationLink;
+import org.kalypso.zml.obslink.ObjectFactory;
+import org.kalypso.zml.obslink.ObservationLink;
 import org.w3._1999.xlink.XlinkBase;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * @author belger
@@ -40,7 +41,19 @@ public class ObservationLinkHandler implements ITypeHandler
    */
   public String getTypeName()
   {
-    return "ObservationLink";
+    return getNamespaceUri() + ":" + getElementName();
+  }
+  
+  private String getElementName()
+  {
+    final String className = getClassName();
+    final int dotIndex = className.lastIndexOf( '.' );
+    return className.substring( dotIndex + 1 );
+  }
+
+  private String getNamespaceUri()
+  {
+    return "obslink.zml.kalypso.org";
   }
 
   /**
@@ -66,7 +79,17 @@ public class ObservationLinkHandler implements ITypeHandler
   {
     try
     {
-      return m_unmarshaller.unmarshal( node );
+      final NodeList childNodes = node.getChildNodes();
+      for( int i = 0; i < childNodes.getLength(); i++ )
+      {
+        final Node child = childNodes.item( i );
+
+        // child namespace may be null
+        if( getNamespaceUri( ).equals( child.getNamespaceURI() ) && getElementName().equals( child.getLocalName() ) )
+          return m_unmarshaller.unmarshal( child );    
+      }
+      
+      throw new TypeRegistryException( "Could not parse Node" );
     }
     catch( final JAXBException e )
     {

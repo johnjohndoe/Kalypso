@@ -48,6 +48,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
   public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
       int selectionId )
   {
+    // kann keine selektion zeichnen!
+    if( selectionId != -1 )
+      return;
+    
     if( myEnv != null && myEnv.equals( bbox ) && myImage != null )
     {
       g.setPaintMode();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema targetNamespace="zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified"
     xmlns="zml.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../xlink/xlink.xsd"/>
+    <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlink.xsd"/>
     <xs:element name="Observation">
         <xs:annotation>
             <xs:documentation>an observation made by a sensor. This schema is derived from the OGC Draft on SensorML.</xs:documentation>
