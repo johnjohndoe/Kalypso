@@ -1,13 +1,12 @@
 package org.kalypso.repository.file.test;
 
 import java.io.File;
-import java.net.MalformedURLException;
+
+import junit.framework.TestCase;
 
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.file.FileRepository;
-
-import junit.framework.TestCase;
 
 /**
  * @author schlienger
@@ -28,7 +27,7 @@ public class FileRepositoryTest extends TestCase
     m_rep = new FileRepository( null, m_root.getParent(), "test", true );
   }
 
-  public void testFindItem() throws MalformedURLException, RepositoryException
+  public void testFindItem() throws RepositoryException
   {
     final IRepositoryItem item = m_rep.findItem( "test://export/logs.zip" );
     

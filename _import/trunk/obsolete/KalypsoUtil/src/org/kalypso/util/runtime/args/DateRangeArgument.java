@@ -42,7 +42,9 @@ public class DateRangeArgument implements IVariableArguments
    * 
    * <pre>[ cal.getTime() - now]</pre>
    * 
-   * for a Calendar instance which was set like: <pre>cal.set( 0,0,0,0,0,0 );</pre>
+   * for a Calendar instance which was set like:
+   * 
+   * <pre>cal.set( 0,0,0,0,0,0 );</pre>
    */
   public static DateRangeArgument createFromPastDays( final int pastDays )
   {
@@ -50,24 +52,22 @@ public class DateRangeArgument implements IVariableArguments
     {
       final Calendar cal = Calendar.getInstance();
       cal.set( 0, 0, 0, 0, 0, 0 );
-      
+
       final Date d1 = cal.getTime();
-      
+
       final Date d2 = new Date();
-      
-      return new DateRangeArgument( d1, d2 );
-    }
-    else
-    {
-      final Calendar cal = Calendar.getInstance();
-
-      final Date d2 = cal.getTime();
-
-      cal.add( Calendar.DAY_OF_YEAR, -pastDays );
-
-      final Date d1 = cal.getTime();
 
       return new DateRangeArgument( d1, d2 );
     }
+
+    final Calendar cal = Calendar.getInstance();
+
+    final Date d2 = cal.getTime();
+
+    cal.add( Calendar.DAY_OF_YEAR, -pastDays );
+
+    final Date d1 = cal.getTime();
+
+    return new DateRangeArgument( d1, d2 );
   }
 }

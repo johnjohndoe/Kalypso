@@ -547,7 +547,7 @@ public interface PSICompact
     /**
      * Setter for property system.
      * 
-     * @param system
+     * @param riversystem
      *          New value of property system ( Flussgebiet).
      */
     public void setRiversystem( java.lang.String riversystem )
@@ -568,7 +568,7 @@ public interface PSICompact
     /**
      * Setter for property river.
      * 
-     * @param system
+     * @param river
      *          New value of property river ( Fluss / Gewaesser).
      */
     public void setRiver( java.lang.String river )
@@ -831,7 +831,7 @@ public interface PSICompact
   /**
    * Verteilen einer Datei
    * 
-   * @param file
+   * @param filename
    *          relativer Pfad und Dateiname der Datei die verteilt werden soll.
    * @return True falls alles OK, False wenn Fehler aufgetreten ist
    */
@@ -993,9 +993,9 @@ public interface PSICompact
   /**
    * Einstellen einer Datei in die Fileverteilung
    * 
-   * @param lokaler
+   * @param source
    *          Pfad und Dateiname der Datei die verteilt werden soll.
-   * @param relativer
+   * @param destination
    *          Pfad und Dateiname der Datei in der Fileverteilung.
    * @return True falls alles OK, False wenn Fehler aufgetreten ist
    */

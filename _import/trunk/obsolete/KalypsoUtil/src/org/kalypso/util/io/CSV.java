@@ -3,6 +3,7 @@ package org.kalypso.util.io;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
@@ -27,8 +28,10 @@ public class CSV implements ITabledValues
    * Constructor. Fetches the file and closes the reader;
    * 
    * @param reader
-   * @param split the string used for spliting each line into chunks
-   * @param line the line number to start reading the values at
+   * @param split
+   *          the string used for spliting each line into chunks
+   * @param line
+   *          the line number to start reading the values at
    * 
    * @throws IOException
    */
@@ -47,7 +50,7 @@ public class CSV implements ITabledValues
   private void fetchFile() throws IOException
   {
     BufferedReader r = null;
-    
+
     try
     {
       r = new BufferedReader( m_reader );
@@ -61,7 +64,7 @@ public class CSV implements ITabledValues
         line = r.readLine();
         lineNR++;
       }
-      
+
       while( line != null )
       {
         m_lines.add( line.split( m_split ) );
@@ -133,4 +136,29 @@ public class CSV implements ITabledValues
       bw.write( '\n' );
     }
   }
+
+  /**
+   * Writes an two-dimensional Array of Strings as CSV into a writer. The Writer
+   * will NOT be closes after this operation.
+   */
+  public static void writeCSV( final String[][] data, final PrintWriter pw )
+  {
+    for( int i = 0; i < data.length; i++ )
+    {
+      final String[] line = data[i];
+
+      for( int j = 0; j < line.length; j++ )
+      {
+        if( j != 0 )
+          pw.print( "," );
+
+        pw.print( "\"" );
+        pw.print( line[j] );
+        pw.print( "\"" );
+      }
+
+      pw.println();
+    }
+  }
+
 }
