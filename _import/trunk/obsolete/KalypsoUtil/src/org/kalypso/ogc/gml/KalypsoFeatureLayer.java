@@ -137,7 +137,7 @@ public class KalypsoFeatureLayer implements ModellEventProvider, ModellEventList
     return myName;
   }
 
-  public void setCoordinatesSystem( CS_CoordinateSystem crs ) throws Exception
+  public void setCoordinatesSystem( CS_CoordinateSystem crs )
   {
     mySort.setCoordinatesSystem( crs );
     fireModellEvent( null );

@@ -12,6 +12,7 @@ import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.deegree_impl.model.ct.GeoTransformer;
+import org.deegree_impl.model.geometry.GM_Envelope_Impl;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.deegree_impl.tools.Debug;
 import org.kalypso.ogc.event.ModellEvent;
@@ -19,6 +20,7 @@ import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.event.ModellEventProvider;
 import org.kalypso.ogc.event.ModellEventProviderAdapter;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -44,7 +46,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener
 
   private IKalypsoTheme myActiveTheme = null;
 
-  private GM_Envelope myBoundingBox = null;
+  private GM_Envelope myBoundingBox = new GM_Envelope_Impl();
 
   private double myScale = 1;
 
@@ -140,15 +142,22 @@ public class MapModell implements ModellEventProvider, ModellEventListener
     return myActiveTheme;
   }
 
-  public void addTheme( IKalypsoTheme theme ) throws Exception
+  public void addTheme( final IKalypsoTheme theme )
   {
     if( myActiveTheme == null )
       myActiveTheme = theme;
+    
     myThemes.add( theme );
     theme.setParent( this );
-    theme.getLayer().setCoordinatesSystem( myCoordinatesSystem );
+    
+    final KalypsoFeatureLayer layer = theme.getLayer();
+    if( layer != null )
+      layer.setCoordinatesSystem( myCoordinatesSystem );
+    
     myEnabledThemeStatus.put( theme, THEME_ENABLED );
+    
     theme.addModellListener( this );
+    
     fireModellEvent( null );
   }
 
@@ -273,22 +282,22 @@ public class MapModell implements ModellEventProvider, ModellEventListener
       if( !getCoordinatesSystem().getName().equalsIgnoreCase( "EPSG:4326" ) )
       {
         // transform the bounding box of the request to EPSG:4326
-        GeoTransformer transformer = new GeoTransformer( "EPSG:4326" );
+        final GeoTransformer transformer = new GeoTransformer( "EPSG:4326" );
         bbox = transformer.transformEnvelope( bbox, epsg4326crs );
       }
 
-      double dx = bbox.getWidth() / mapWidth;
-      double dy = bbox.getHeight() / mapHeight;
+      final double dx = bbox.getWidth() / mapWidth;
+      final double dy = bbox.getHeight() / mapHeight;
 
       // create a box on the central map pixel to determine its size in meters
       GM_Position min = GeometryFactory.createGM_Position( bbox.getMin().getX() + dx
           * ( mapWidth / 2d - 1 ), bbox.getMin().getY() + dy * ( mapHeight / 2d - 1 ) );
       GM_Position max = GeometryFactory.createGM_Position( bbox.getMin().getX() + dx
           * ( mapWidth / 2d ), bbox.getMin().getY() + dy * ( mapHeight / 2d ) );
-      double distance = calcDistance( min.getY(), min.getX(), max.getY(), max.getX() );
+      final double distance = calcDistance( min.getY(), min.getX(), max.getY(), max.getX() );
 
       // default pixel size defined in SLD specs is 28mm
-      double scale = distance / 0.00028;
+      final double scale = distance / 0.00028;
 
       return scale;
     }
@@ -296,6 +305,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener
     {
       Debug.debugException( e, "Exception occured when calculating scale!" );
     }
+    
     return 0.0;
   }
 
@@ -458,8 +468,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener
 
     for( int i = 0; i < themes.length; i++ )
     {
-
-      if( isThemeEnabled( themes[i] ) )
+      if( isThemeEnabled( themes[i] ) && themes[i].getLayer() != null )
       {
         try
         {
@@ -500,8 +509,9 @@ public class MapModell implements ModellEventProvider, ModellEventListener
             }
           }
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
+          // TODO: das sollte nicht sein, exception einfach weiterwerfen
           e.printStackTrace();
         }
       }
@@ -533,8 +543,10 @@ public class MapModell implements ModellEventProvider, ModellEventListener
    * 
    * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
    */
-  public void onModellChange( ModellEvent modellEvent )
+  public void onModellChange( final ModellEvent modellEvent )
   {
+    // TODO: invalidate myself??
+    
     fireModellEvent( modellEvent );
   }
 }

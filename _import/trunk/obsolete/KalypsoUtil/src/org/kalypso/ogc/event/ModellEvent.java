@@ -1,6 +1,8 @@
 package org.kalypso.ogc.event;
 
 /**
+ * TODO typen überarbeiten und vereinheitlichen, überall verwenden
+ *  
  * @author bce
  */
 public class ModellEvent

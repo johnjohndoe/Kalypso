@@ -124,11 +124,12 @@ public final class GmlSerializer
       for( int i = 0; i < layers.length; i++ )
       {
         final KalypsoFeatureLayer layer = layers[i];
+        final GM_Envelope layerBox = layer.getBoundingBox();
 
         if( boundingBox == null )
           boundingBox = layer.getBoundingBox();
-        else
-          boundingBox.merge( layer.getBoundingBox() );
+        else if( layerBox != null )
+          boundingBox.merge( layerBox );
 
         final KalypsoFeature[] features = layer.getAllFeatures();
         for( int j = 0; j < features.length; j++ )

@@ -251,12 +251,15 @@ public class MapPanel extends Canvas implements IMapModellView
    * 
    * @see org.kalypso.ogc.IMapModellView#setMapModell(org.kalypso.ogc.MapModell)
    */
-  public void setMapModell( MapModell modell )
+  public void setMapModell( final MapModell modell )
   {
     if( myModell != null )
       myModell.removeModellListener( this );
+    
     myModell = modell;
-    myModell.addModellListener( this );
+    
+    if( myModell != null )
+      myModell.addModellListener( this );
   }
 
   /**

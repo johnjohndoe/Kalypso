@@ -22,15 +22,14 @@
 	<xs:complexType name="AxisType">
 		<xs:choice>
 			<xs:element name="ValueLink">
-							<xs:complexType>
-								<xs:complexContent>
-									<xs:extension base="xlink:xlink-base">
-										<xs:attribute name="separator" type="xs:string" use="optional" default=";"/>
-									</xs:extension>
-								</xs:complexContent>
-					</xs:complexType>
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="xlink:xlink-base">
+							<xs:attribute name="separator" type="xs:string" use="optional" default=";"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
 			</xs:element>
-			
 			<xs:element name="ValueArray">
 				<xs:complexType>
 					<xs:simpleContent>
@@ -54,5 +53,10 @@
 		<xs:attribute name="source" type="xs:string" use="required"/>
 		<xs:attribute name="type" type="xs:string" use="required"/>
 		<xs:attribute name="objectid" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ObservationLink">
+		<xs:complexContent>
+			<xs:extension base="xlink:xlink-base"/>
+		</xs:complexContent>
 	</xs:complexType>
 </xs:schema>

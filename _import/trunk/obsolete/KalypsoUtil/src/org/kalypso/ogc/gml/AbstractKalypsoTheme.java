@@ -21,7 +21,7 @@ public abstract class AbstractKalypsoTheme implements IKalypsoTheme
     m_name = name;
   }
 
-  public final String getName()
+  public String getName()
   {
     return m_name;
   }

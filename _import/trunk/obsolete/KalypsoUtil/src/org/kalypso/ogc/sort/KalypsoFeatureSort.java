@@ -70,7 +70,7 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
     return myCrs;
   }
 
-  public void setCoordinatesSystem( CS_CoordinateSystem crs ) throws Exception
+  public void setCoordinatesSystem( CS_CoordinateSystem crs )
   {
     if( !myCrs.equals( crs ) )
       throw new UnsupportedOperationException();
