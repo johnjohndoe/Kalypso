@@ -1,7 +1,5 @@
 package org.kalypso.editor;
 
-import javax.swing.event.EventListenerList;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -10,9 +8,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.GroupMarker;
@@ -32,8 +28,6 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
-import org.kalypso.eclipse.jface.action.FullAction;
-import org.kalypso.editor.mapeditor.IGisviewEditorListener;
 import org.kalypso.editor.mapeditor.WidgetAction;
 import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommand;
@@ -49,33 +43,29 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
 {
   private boolean m_dirty = false;
 
-  private EventListenerList m_listeners = new EventListenerList();
-
-  protected final ICommandManager m_commandManager = new DefaultCommandManager();
+  private final ICommandManager m_commandManager = new DefaultCommandManager();
   
   public final UndoAction m_undoAction = new UndoAction( this );
 
   public final RedoAction m_redoAction = new RedoAction( this );
-
-  /** Jeder Editor hat sein eigenes Mutex, so dass Jobs sch?n hintereinander ausgef?hrt werden */
-  private Mutex myMutexRule = new Mutex();
   
-  /** Used, to update SWT in DisplayThread */
-  private Runnable myUpdater = new Runnable() 
+  private final Runnable m_dirtyRunnable = new Runnable()
   {
     public void run()
     {
-      fireGisviewChanged();
-      }};
+      fireDirty();
+    }
+  };
 
-      
+  /** Jeder Editor hat sein eigenes Mutex, so dass Jobs schön hintereinander ausgeführt werden */
+  private Mutex myMutexRule = new Mutex();
+  
   public AbstractEditorPart()
   {
     ResourcesPlugin.getWorkspace().addResourceChangeListener( this );
   }
- 
-  protected abstract FullAction[] createFullActions(  );
   
+  protected abstract FullAction[] createFullActions(  );
   protected abstract WidgetAction[] createWidgetActions(  );
       
   public void dispose()
@@ -96,7 +86,7 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
   {
     final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
-    if( input == null )
+    if( input != null )
       doSaveInternal( monitor, input );
   }
   
@@ -209,7 +199,7 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
   {
     m_dirty = dirty;
 
-    //firePropertyChange( PROP_DIRTY );
+    getEditorSite().getShell().getDisplay().asyncExec( m_dirtyRunnable );
   }
 
   /**
@@ -235,7 +225,7 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
    */
-  public void resourceChanged( IResourceChangeEvent event )
+  public void resourceChanged( final IResourceChangeEvent event )
   {
     final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
@@ -247,7 +237,7 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
     }
   }
 
-  /**
+ /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   public void createPartControl( final Composite parent )
@@ -272,7 +262,6 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
 
     actionBars.updateActionBars();
   }
-
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
@@ -282,11 +271,11 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandManager#postCommand(org.kalypso.util.command.ICommand)
+   * @see org.kalypso.util.command.ICommandManager#postCommand(org.kalypso.util.command.ICommand, Runnable)
    */
-  public void postCommand( final ICommand c )
+  public void postCommand( final ICommand c, final Runnable runnable )
   {
-    final Job job = new GisviewJob( this, c, m_commandManager, myUpdater );
+    final Job job = new EditorPartJob( this, c, m_commandManager, runnable );
     job.schedule();
   }
 
@@ -296,8 +285,6 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
   public void redo()
   {
     m_commandManager.redo();
-  
-    fireGisviewChanged();
   }
 
   /**
@@ -306,9 +293,6 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
   public void undo()
   {
     m_commandManager.undo();
-  
-    fireGisviewChanged();
-  
     // TODO. geht das?
     //    if( m_commandManager.canUndo() )
     //      setDirty( false );
@@ -364,69 +348,11 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
     m_commandManager.removeCommandManagerListener( l );
   }
   
-  public void addGisMapEditorListener( final IGisviewEditorListener l )
-  {
-    m_listeners.add( IGisviewEditorListener.class, l );
-  }
-
-  public void removeGisMapEditorListener( final IGisviewEditorListener l )
-  {
-    m_listeners.remove( IGisviewEditorListener.class, l );
-  }
-
-  public void fireGisviewChanged()
-  {
-    final IGisviewEditorListener[] listeners = (IGisviewEditorListener[])m_listeners
-        .getListeners( IGisviewEditorListener.class );
-    for( int i = 0; i < listeners.length; i++ )
-      listeners[i].onGisviewChanged();
-  }
-  
   public ISchedulingRule getShedulingRule()
   {
     return myMutexRule;
   }
   
-  private final static class GisviewJob extends Job
-  {
-    private final ICommand myCommand;
-
-    private final AbstractEditorPart myEditor;
-
-    private final ICommandManager myCommandManager;
-    
-    private final Runnable myUpdater;
-
-    public GisviewJob( final AbstractEditorPart editor, final ICommand command,
-        final ICommandManager commandManager, final Runnable updater )
-    {
-      super( command.getDescription() );
-
-      setRule( editor.getShedulingRule() );
-      setUser( true );
-      setPriority( Job.SHORT );
-
-      myCommand = command;
-      myEditor = editor;
-      myCommandManager = commandManager;
-      myUpdater = updater;
-    }
-
-    protected IStatus run( final IProgressMonitor monitor )
-    {
-      // TODO try/catch and set error
-      myEditor.setDirty( true );
-
-      // TODO use monitor
-      myCommandManager.postCommand( myCommand );
-
-      // TODO: this should do the MapView-Modell (by activating a setter)
-      myEditor.getEditorSite().getShell().getDisplay().asyncExec( myUpdater );
-
-      return Status.OK_STATUS;
-    }
-  }
-
   class Mutex implements ISchedulingRule
   {
     public boolean isConflicting( ISchedulingRule rule )
@@ -440,5 +366,8 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
     }
   }
 
-
+  public void fireDirty()
+  {
+    firePropertyChange( PROP_DIRTY );
+  }
 }
