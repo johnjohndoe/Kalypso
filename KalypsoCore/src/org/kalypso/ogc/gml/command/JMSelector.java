@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
 import java.util.ArrayList;
@@ -48,6 +48,7 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureList;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Object;
+import org.deegree.model.geometry.GM_Point;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.geometry.GM_Surface;
 import org.deegree_impl.model.geometry.GeometryFactory;
@@ -129,7 +130,7 @@ public class JMSelector
     try
     {
       final List testFE = new ArrayList();
-      
+
       final List features = list == null ? new ArrayList() : list.query( env, new ArrayList() );
       final Iterator containerIterator = features.iterator();
 
@@ -139,8 +140,8 @@ public class JMSelector
 
         final GM_Object defaultGeometryProperty = fe.getDefaultGeometryProperty();
         final CS_CoordinateSystem coordinateSystem = defaultGeometryProperty.getCoordinateSystem();
-        
-      final GM_Surface bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
+
+        final GM_Surface bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
 
         if( ( selectWithinBoxStatus && bbox.contains( defaultGeometryProperty ) )
             || ( !selectWithinBoxStatus && bbox.intersects( defaultGeometryProperty ) ) )
@@ -164,7 +165,7 @@ public class JMSelector
   {
     final List resultList = new ArrayList();
     final List testFe = new ArrayList();
-    
+
     final List features = list.query( position, new ArrayList() );
     for( final Iterator containerIterator = features.iterator(); containerIterator.hasNext(); )
     {
@@ -193,8 +194,8 @@ public class JMSelector
    * selects all features (display elements) that are located within the circle
    * described by the position and the radius.
    */
-  public List select( GM_Position pos, double r, final FeatureList list,
-      boolean withinStatus, int selectionId )
+  public List select( GM_Position pos, double r, final FeatureList list, boolean withinStatus,
+      int selectionId )
   {
     final List resultDE = select( GeometryFactory.createGM_Envelope( pos.getX() - r,
         pos.getY() - r, pos.getX() + r, pos.getY() + r ), list, withinStatus, selectionId );
@@ -202,22 +203,24 @@ public class JMSelector
     return resultDE;
   }
 
-  public Feature selectNearest( final GM_Position pos, final double r,
-      final FeatureList list, final boolean withinStatus, final int selectionId )
+  public Feature selectNearest( GM_Point pos, final double r, final FeatureList list,
+      final boolean withinStatus, final int selectionId )
   {
     Feature result = null;
     double dist = 0;
-    final List listFE = select( pos, r, list, withinStatus, selectionId );
+    final List listFE = select( pos.getPosition(), r, list, withinStatus, selectionId );
     for( int i = 0; i < listFE.size(); i++ )
     {
       final Feature fe = (Feature)listFE.get( i );
-      
+
       // TODO: ich bin der Meinung das ist bloedsinn, Gernot
       // TODO: nachtrag: es konnte auch bisher nicht richtig funktionierne,
       // weil deegree die distance nicht implementiert hat!
-      if( result == null
-          || result.getDefaultGeometryProperty().distance( fe.getDefaultGeometryProperty() ) < dist )
+      if( result == null || fe.getDefaultGeometryProperty().distance( pos ) < dist )
+      {
         result = fe;
+        dist = result.getDefaultGeometryProperty().distance( pos );
+      }
     }
     return result;
   }

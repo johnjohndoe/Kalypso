@@ -183,7 +183,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private MapPanel m_mapPanel;
 
-  private GM_Envelope m_boundingBox;
+  private GM_Envelope m_wishBoundingBox;
 
   private Frame m_diagFrame = null;
 
@@ -354,7 +354,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_mapPanel = new MapPanel( this, crs, m_selectionID );
     MapPanelHelper.createWidgetsForMapPanel( parent.getShell(), m_mapPanel );
 
-    m_boundingBox = GisTemplateHelper.getBoundingBox( gisview );
+    m_wishBoundingBox = GisTemplateHelper.getBoundingBox( gisview );
     final Composite mapComposite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
 
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
@@ -368,7 +368,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     m_mapPanel.changeWidget( widgetID );
 
-    m_mapPanel.setBoundingBox( m_boundingBox );
+    m_mapPanel.setBoundingBox( m_wishBoundingBox );
 
     return mapComposite;
   }
@@ -380,7 +380,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   public void maximizeMap()
   {
-    m_mapPanel.setBoundingBox( m_boundingBox );
+    m_mapPanel.setBoundingBox( m_wishBoundingBox );
   }
 
   protected Control initDiagram( final Composite parent )

@@ -46,7 +46,7 @@ public class SingleElementSelectWidget extends AbstractSelectWidget
 {
   protected int getSelectionMode()
   {
-    return JMSelector.MODE_SELECT;
+    return JMSelector.MODE_TOGGLE;
   }
 
   protected boolean allowOnlyOneSelectedFeature()
