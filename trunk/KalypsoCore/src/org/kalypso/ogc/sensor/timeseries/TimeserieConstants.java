@@ -63,12 +63,25 @@ public abstract class TimeserieConstants implements ObservationConstants
   public final static String MD_VORHERSAGE = "Vorhersage";
   
   /**
+   * TODO check if the units are correct!
+   * 
    * @param type
    * @return corresponding unit
    */
   public static String getUnit( final String type )
   {
-    // TODO!
+    if( type.equals( TYPE_DATE ) )
+      return "";
+    if( type.equals( TYPE_RAINFALL ) )
+      return "mm";
+    if( type.equals( TYPE_RUNOFF ) )
+      return "m³/s";
+    if( type.equals( TYPE_TEMPERATURE ) )
+      return "°C";
+    if( type.equals( TYPE_VOLUME ) )
+      return "m³";
+    if( type.equals( TYPE_WATERLEVEL ) )
+      return "cm";
     
     return type;
   }
