@@ -32,6 +32,7 @@ import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.outline.MoveThemeDownAction;
 import org.kalypso.ogc.gml.outline.MoveThemeUpAction;
 import org.kalypso.ogc.gml.outline.OpenStyleDialogAction;
+import org.kalypso.ogc.gml.outline.RemoveRuleAction;
 import org.kalypso.ogc.gml.outline.RemoveThemeAction;
 import org.kalypso.ogc.gml.outline.SaveStyleAction;
 import org.kalypso.plugin.ImageProvider;
@@ -53,6 +54,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   protected RemoveThemeAction m_removeAction = null;
 
   protected OpenStyleDialogAction m_openStyleDialogAction = null;
+  
+  protected RemoveRuleAction m_removeRuleAction = null;
   
   protected SaveStyleAction m_saveStyleAction = null;
 
@@ -91,6 +94,9 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     m_openStyleDialogAction = new OpenStyleDialogAction( "Style verändern",
         ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Style ändern", m_modellView );
         
+    m_removeRuleAction = new RemoveRuleAction( "Regel löschen",
+            ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Regel löschen", m_modellView,this );
+	
     m_saveStyleAction = new SaveStyleAction( "Style speichern",
     		ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Style speichern", m_modellView);    
 
@@ -117,6 +123,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
       m_removeAction.dispose();
     if(m_saveStyleAction !=null)
     	m_saveStyleAction.dispose();
+    if(m_removeRuleAction != null)
+    	m_removeRuleAction.dispose();
   }
 
   /**
@@ -156,6 +164,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
         manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
         manager.add( m_openStyleDialogAction );
         manager.add( m_saveStyleAction);
+        manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+        manager.add( m_removeRuleAction);
       }
     } );
     final Menu menu = menuMgr.createContextMenu( m_modellView.getControl() );

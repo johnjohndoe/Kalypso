@@ -58,14 +58,14 @@ public class GisMapOutlineViewer implements ISelectionProvider,
     final TableTree tree = new TableTree( parent, SWT.SINGLE | SWT.CHECK );
     tree.addSelectionListener( this );
 
-    m_viewer = new TableTreeViewer( tree );
+    m_viewer = new TableTreeViewer( tree );    
     m_viewer.setContentProvider( m_contentProvider );
     m_viewer.setLabelProvider( m_labelProvider );
 
     m_viewer.setInput( m_mapModel );
-    
+    m_viewer.refresh();
     // Refresh check state
-    onModellChange( null );
+    //onModellChange( null );
   }
 
   /**

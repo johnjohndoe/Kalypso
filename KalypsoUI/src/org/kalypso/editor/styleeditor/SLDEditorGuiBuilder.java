@@ -43,7 +43,14 @@ public class SLDEditorGuiBuilder {
 	}
 	
 	public void buildSWTGui(final KalypsoUserStyle userStyle, final FeatureType featureType)
+	{
+		buildSWTGui(userStyle, featureType, -1);
+	}
+	
+	public void buildSWTGui(final KalypsoUserStyle userStyle, final FeatureType featureType,final int index)
 	{	
+		if(index != -1)
+			focusedRuleItem = index;
 		if(mainComposite != null)
 			mainComposite.dispose();
 		mainComposite = new Composite(parent, SWT.NULL);
@@ -83,7 +90,7 @@ public class SLDEditorGuiBuilder {
 						addRule(rule, userStyle);
 						focusedRuleItem = rules.length;					
 						buildSWTGui(userStyle, featureType);						
-						userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));												
+						userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));					
 						break;
 					}					
 					case ControlRulePanel.REM_RULE:
@@ -153,7 +160,6 @@ public class SLDEditorGuiBuilder {
 			ruleTabItemBuilder.setSelectedRule(focusedRuleItem);
 		mainComposite.pack(true);				
 	}
-
 	
 	private Rule[] getRules(UserStyle style){
 		FeatureTypeStyle fts[] = style.getFeatureTypeStyles();

@@ -96,7 +96,7 @@ public 	class LegendLabel implements ModellEventListener, DisposeListener
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			LegendElement le = null;
 			
-			if(ruleIndex != -1)
+			if(ruleIndex != -1 && ruleIndex < userStyle.getFeatureTypeStyles()[0].getRules().length)
 			{		
 				// NECESSARY IF TO SHOW STYLE OF ONLY ONE RULE
                 FeatureTypeStyle_Impl fts = new FeatureTypeStyle_Impl();               
@@ -110,6 +110,8 @@ public 	class LegendLabel implements ModellEventListener, DisposeListener
 			else
 				le = factory.createLegendElement(userStyle,40,20,"");
 			
+			if(le == null)
+				return;
 			BufferedImage bi = le.exportAsImage();	
 			BufferedImage outbi = new BufferedImage(40,20, BufferedImage.TYPE_INT_ARGB);				
 			Graphics g = outbi.getGraphics();
