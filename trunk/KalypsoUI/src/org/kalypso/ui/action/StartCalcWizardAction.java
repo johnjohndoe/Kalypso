@@ -1,5 +1,7 @@
 package org.kalypso.ui.action;
 
+import java.util.logging.Logger;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -13,10 +15,14 @@ import org.kalypso.ui.calcwizard.CalcWizard;
 import org.kalypso.ui.calcwizard.CalcWizardDialog;
 
 /**
+ * Action Delegate zum Starten des Berechnungs-Wizards
+ * 
  * @author belger
  */
 public class StartCalcWizardAction implements IWorkbenchWindowActionDelegate
 {
+  protected final Logger m_logger = Logger.getLogger( this.getClass().getName() );
+  
   private IWorkbenchWindow m_window;
 
   /**
@@ -51,10 +57,9 @@ public class StartCalcWizardAction implements IWorkbenchWindowActionDelegate
           "Bitte wählen Sie genau ein Projekt im Navigator aus" );
       return;
     }
-
+    
     final CalcWizard wizard = new CalcWizard( projects[0] );
-
-    final WizardDialog dialog = new CalcWizardDialog( m_window.getShell(), wizard ); 
+    final WizardDialog dialog = new CalcWizardDialog( m_window.getShell(), wizard );
     dialog.open();
   }
 

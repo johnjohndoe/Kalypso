@@ -1,12 +1,16 @@
 package org.kalypso.ui.view.prognose;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -16,6 +20,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
@@ -106,28 +112,49 @@ public class PrognoseView extends ViewPart
     // TODO: progress monitor
     // am besten busyCursorWhile
 
-    final IProject project;
+    final IProject project = root.getProject( projectName );
+    final File serverProject = new File( serverRoot, projectName );
+    
+    if( !serverProject.exists() )
+    {
+      // TODO: error message
+      System.out.println( "Servermodel does not exist! Cannot start Prognose." );
+      return;
+    }
+    
+    
+    final IRunnableWithProgress op = new IRunnableWithProgress()
+    {
+      public void run( IProgressMonitor monitor ) throws InvocationTargetException
+      {
+        try
+        {
+          final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
+          synchronizer.updateLocal( monitor );
+        }
+        catch( final CoreException ce )
+        {
+          ce.printStackTrace();
+          throw new InvocationTargetException( ce );
+        }
+      }
+    };
+    
+    final IWorkbench workbench = PlatformUI.getWorkbench();
     try
     {
-      project = root.getProject( projectName );
-      final File serverProject = new File( serverRoot, projectName );
-      
-      if( !serverProject.exists() )
-      {
-        // TODO: error message
-        System.out.println( "Servermodel does not exist! Cannot start Prognose." );
-        return;
-      }
-      
-      final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
-      synchronizer.updateLocal();
+      workbench.getProgressService().busyCursorWhile( op );
     }
-    catch( final CoreException e )
+    catch( final InvocationTargetException e )
     {
       e.printStackTrace();
-      // TODO: error handling
       
-      return;
+      final CoreException ce = (CoreException)e.getTargetException();
+      ErrorDialog.openError( workbench.getDisplay().getActiveShell(), "Vorhersage starten", "Modell konnte nicht aktualisiert werden", ce.getStatus() );
+    }
+    catch( final InterruptedException e )
+    {
+      e.printStackTrace();
     }
     
     final CalcWizard wizard = new CalcWizard( project );

@@ -10,7 +10,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.java.io.DeleteObsoleteFilesVisitor;
 import org.kalypso.java.io.FileCopyVisitor;
 import org.kalypso.java.io.FileUtilities;
@@ -39,29 +41,50 @@ public class ModelSynchronizer
     m_serverRoot = serverRoot;
   }
 
-  public void updateLocal() throws CoreException
+  public void updateLocal( final IProgressMonitor monitor ) throws CoreException
   {
-    if( !m_resourceRoot.exists() )
+    monitor.beginTask( "Modell aktualisieren", 3000 );
+    
+    try
     {
-      m_resourceRoot.create( new NullProgressMonitor() );
-      m_resourceRoot.open( new NullProgressMonitor() );
+      if( !m_resourceRoot.exists() )
+      {
+        m_resourceRoot.create( new SubProgressMonitor( monitor, 500 ) );
+        m_resourceRoot.open( new SubProgressMonitor( monitor, 500 ) );
+      }
+      else
+        monitor.worked( 1000 );
+
+      // server -> local
+      synchronizeProject( m_serverRoot, m_resourceRootFile, new SubProgressMonitor( monitor, 1000 ) );
+
+      // local refreshen
+      m_resourceRoot
+          .refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 1000 ) );
     }
-
-    // server -> local
-    synchronizeProject( m_serverRoot, m_resourceRootFile );
-
-    // local refreshen
-    m_resourceRoot.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+    finally
+    {
+      monitor.done();
+    }
+    
   }
 
-  private void synchronizeProject( final File from, final File to )
+  private void synchronizeProject( final File from, final File to, final IProgressMonitor monitor )
   {
-    final FileCopyVisitor copyVisitor = new FileCopyVisitor( from, to, true,
-        ModelNature.CONTROL_NAME );
-    FileUtilities.accept( from, copyVisitor );
+    monitor.beginTask( "Projekt synchronizieren", 1000 );
+    try
+    {
+      final FileCopyVisitor copyVisitor = new FileCopyVisitor( from, to, true,
+          ModelNature.CONTROL_NAME );
+      FileUtilities.accept( from, copyVisitor );
 
-    final DeleteObsoleteFilesVisitor deleteVisitor = new DeleteObsoleteFilesVisitor( to, from );
-    FileUtilities.accept( to, deleteVisitor );
+      final DeleteObsoleteFilesVisitor deleteVisitor = new DeleteObsoleteFilesVisitor( to, from );
+      FileUtilities.accept( to, deleteVisitor );
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 
   private void copyAll( final File from, final File to )
@@ -142,7 +165,7 @@ public class ModelSynchronizer
     {
       final String user = System.getProperties().getProperty( "user.name", "<unbekannt>" );
       FileUtils.writeStringToFile( lockFile, user, "UTF-8" );
-      synchronizeProject( m_resourceRootFile, m_serverRoot );
+      synchronizeProject( m_resourceRootFile, m_serverRoot, new NullProgressMonitor() );
     }
     catch( IOException e )
     {
