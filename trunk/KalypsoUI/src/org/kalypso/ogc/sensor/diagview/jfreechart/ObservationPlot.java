@@ -330,12 +330,17 @@ public class ObservationPlot extends XYPlot
           .get( m_diag2chartAxis.get( yDiagAxis ) )).intValue() );
     }
 
+    // This doesnt work!
+    // if a curve gets removed meanwhile, the mapping seriespos -> curvecolor
+    // gets invalid!
     // seriesPos is used for setting the color of the serie in the renderer
     // take it now before we add the serie (0-based index)
-    final int seriePos = cds.getSeriesCount();
-    cds.addCurveSerie( xyc );
-    
-    getRenderer( indexOf( cds ) ).setSeriesPaint( seriePos, curve.getColor() );
+//    final int seriePos = cds.getSeriesCount();
+
+//    getRenderer( indexOf( cds ) ).setSeriesPaint( seriePos, curvecolor );
+    // instead: always reset all colors of all curves
+    cds.addCurveSerie( xyc, curve.getColor() );
+    cds.reconfigureRenderer( getRenderer( indexOf( cds ) ) );
 
     m_serie2dataset.put( xyc, cds );
 
