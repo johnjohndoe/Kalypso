@@ -14,8 +14,13 @@ import java.sql.Statement;
 
 import java.text.SimpleDateFormat;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
+import java.util.TimeZone;
+
+
 
 /**
  * wraps all kind of timeseries that can be owned by a channel or a computation. Channels
@@ -205,6 +210,8 @@ public class Timeserie extends Persistent {
 	 *
 	 * @return amount of lines written if successfull, otherwise -1
 	 */
+	
+	
 	public int ExportToFile(
 		String filename,
 		Date from,
@@ -260,20 +267,27 @@ public class Timeserie extends Persistent {
 				}
 
 				FileWriter fw = new FileWriter(filename);
-
+				//TODO  TimeZone fixed - to handle the time shift between DataCenter and ASCII-Files 
+				TimeZone srcTZ  = TimeZone.getTimeZone("GMT-1");
+				TimeZone destTZ = TimeZone.getTimeZone("GMT+1");
+				Calendar srcCal = Calendar.getInstance(srcTZ ,Locale.GERMAN);
+				Calendar destCal= Calendar.getInstance(destTZ,Locale.GERMAN);
+				
 				SimpleDateFormat sdf = null;
-
+				
 				if (dateFormatPattern != null) {					
 				sdf = new SimpleDateFormat(dateFormatPattern);
-				} else {
+				sdf.setTimeZone(destTZ);
+				}
+				else {
 					sdf = new SimpleDateFormat();
 				}
-
+            	       
 				while (set.next()) {					
-				
-					Date datum=new Date(set.getTime(1).getTime()
+					Date datum=new Date(set.getTime(1,srcCal).getTime()
 					+
-					set.getDate(1).getTime());					
+					set.getDate(1,srcCal).getTime());
+				//TODO TimeZone fixed - destination: implement in a better/global way	
 					fw.write(sdf.format(datum));
 					fw.write(separator);
 					fw.write(set.getString(2));
