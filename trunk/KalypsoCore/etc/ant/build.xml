@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="KalypsoCoreBuild" default="deploy">
+<project name="KalypsoCoreBuild" default="deploy" basedir="../..">
 
   <!-- Pfad zum Workspace -->
   <property file="../KalypsoBuild/projectbuild.properties" />
@@ -17,6 +17,8 @@
     <fileset dir="${project.lib}" includes="**/*.jar" />
     <pathelement path="${workspace}/KalypsoDeegree/build/bin" />
     <pathelement path="${workspace}/KalypsoUtil/build/bin" />
+  	<pathelement path="${workspace}/KalypsoRepository/build/bin" />
+  	<pathelement path="${workspace}/KalypsoCore/build/bin" />
     <pathelement path="${eclipse.plugins}" />
   </path>
 
