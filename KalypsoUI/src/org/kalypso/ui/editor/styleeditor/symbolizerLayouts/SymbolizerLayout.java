@@ -33,7 +33,7 @@ public class SymbolizerLayout extends AbstractSymbolizerLayout
     Group labelGroup = new Group( composite, SWT.NULL );
     GridData labelGroupData = new GridData();
     labelGroupData.widthHint = 210;
-    labelGroupData.heightHint = 298;
+    labelGroupData.heightHint = 244;
     labelGroup.setLayoutData( labelGroupData );
     labelGroup.setLayout( compositeLayout );
     labelGroup.layout();

@@ -550,7 +550,7 @@ public class RulePatternTabItem
             userStyle, ruleCollection, j );
       }
       symbolizerTabFolder.pack();
-      symbolizerTabFolder.setSize( 224, 330 );
+      symbolizerTabFolder.setSize( 224, 259 );
       symbolizerTabFolder.setVisible( true );
     }
   }

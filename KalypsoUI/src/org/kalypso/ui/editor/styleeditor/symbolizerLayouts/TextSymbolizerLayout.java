@@ -81,8 +81,8 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     // ***** Font group
     Group fontGroup = new Group( composite, SWT.NULL );
     GridData fontGroupData = new GridData();
-    fontGroupData.widthHint = 210;
-    fontGroupData.heightHint = 298;
+    fontGroupData.widthHint = 210;    
+    fontGroupData.heightHint = 244;
     fontGroup.setLayoutData( fontGroupData );
     fontGroup.setLayout( compositeLayout );
     fontGroup.layout();

@@ -99,7 +99,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     strokeGroup.setText( "Stroke" );
     GridData strokeGroupData = new GridData();
     strokeGroupData.widthHint = 210;
-    strokeGroupData.heightHint = 233;
+    strokeGroupData.heightHint = 179;
     strokeGroup.setLayoutData( strokeGroupData );
     strokeGroup.setLayout( compositeLayout );
     strokeGroup.layout();
