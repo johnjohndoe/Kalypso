@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.enterprise"
       label="Kalypso Enterprise"
-      version="0.0.5"
+      version="1.0.0"
       provider-name="kalypso.org"
       plugin="org.kalypso.ui"
       image="kalypso32.gif"
@@ -24,62 +24,20 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.help"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.compare"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.debug.ui"/>
       <import plugin="org.apache.ant"/>
-      <import plugin="org.eclipse.ui.editors"/>
    </requires>
-
-   <plugin
-         id="org.kalypso.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.5"/>
-
-   <plugin
-         id="org.kalypso.deegree"
-         download-size="0"
-         install-size="0"
-         version="0.0.5"/>
-
-   <plugin
-         id="org.kalypso.manual"
-         download-size="0"
-         install-size="0"
-         version="0.0.5"/>
-
-   <plugin
-         id="org.kalypso.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.5"/>
-
-   <plugin
-         id="org.kalypso.util"
-         download-size="0"
-         install-size="0"
-         version="0.0.5"/>
-
-   <plugin
-         id="org.kalypso.grafikmanual"
-         download-size="0"
-         install-size="0"
-         version="0.0.5"/>
-
-   <plugin
-         id="org.kalypso.repository"
-         download-size="0"
-         install-size="0"
-         version="0.0.5"/>
 
    <plugin
          id="org.bce.eclipse.platform.contrib"
@@ -88,9 +46,51 @@
          version="0.0.1"/>
 
    <plugin
+         id="org.kalypso.core"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.deegree"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.grafikmanual"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.manual"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.repository"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.ui"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
          id="org.kalypso.ui.observationimport"
          download-size="0"
          install-size="0"
-         version="0.0.5"/>
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.util"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
 
 </feature>
