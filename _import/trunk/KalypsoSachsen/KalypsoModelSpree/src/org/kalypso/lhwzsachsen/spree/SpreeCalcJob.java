@@ -595,8 +595,10 @@ public class SpreeCalcJob extends AbstractCalcJob
       if( tuples.size() > 0 )
       {
         final String valueType = TSMap.getTypeForName( column );
-
-        final IAxis valueAxis = new DefaultAxis( "Wert", valueType, "", Double.class, 1, false );
+        final String unit = TimeserieConstants.getUnit( valueType );
+        final String name = TimeserieConstants.getName( valueType );
+        
+        final IAxis valueAxis = new DefaultAxis( name, valueType, unit, Double.class, 1, false );
         final IAxis[] achsen = new IAxis[]
         {
             dateAxis,

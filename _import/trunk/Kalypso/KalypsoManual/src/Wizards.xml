@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter>
+  <title>Vorhersage-Wizard</title>
+
+  <section>
+    <title>Vorhersagemodell Weiße Elster</title>
+
+    <para>Zur Berechnung von HW-Vorhersagen für das Einzugsgebiet der Weißen
+    Elster ist in der Kalypso-Oberfläche ein Wizard implenentiert. In
+    Abhängigkeit der zugeordneten Rechte wird der Benutzer entweder direkt bei
+    dem Programmstart in den Vorhersagemodus geführt. Für Benutzer mit
+    erweiterten Rechten ist es jederzeit möglich, aus dem Expertenmodus in den
+    Vorhersagemodus zu wechseln (Menü <guimenu>Modell</guimenu> →
+    <guimenu>Hochwasservorhersage durchführen</guimenu>).</para>
+
+    <para>Beim Start des Vorhersage-Wizzards öffnet sich eine Maske, in der
+    der Benutzer drei verschiedene Möglichkeiten gegeben werden, Vorhersagen
+    durchzuführen (Abb. X).</para>
+
+    <para><emphasis>Neues Hochwasser anlegen</emphasis></para>
+
+    <para>Mit der Option <guibutton>einen neuen Rechenfall
+    erzeugen</guibutton> wird ein neues Hochwasser angelegt. Die Bezeichnung
+    des Rechenfalls ist vom Benutzer frei wählbar und wird unter dem
+    angegebenen Namen in KALIPSO-NA gespeichert. Mit der Bestätigung durch
+    Klick auf <guibutton>weiter</guibutton> erfolgt die Aufforderung zur
+    Eingabe der Rechenfall-Parameter.</para>
+
+    <para><emphasis>Steuerparameter</emphasis></para>
+
+    <para><emphasis>Start der Simulation</emphasis> </para>
+
+    <para>Der Startzeitpunkt der Simulation wird vom Programm standardmäßig
+    auf 5 Tage (120 h) vor Beginn der Vorhersage gesetzt (vom Benutzer
+    editierbar).</para>
+
+    <para><emphasis>Start der Vorhersage</emphasis></para>
+
+    <para>Beschreibt den Zeitpunkt an dem das Modell die Vorhersage startet,
+    dieser wird automatisch auf die letzte viertel Stunde der aktuellen Stunde
+    gesetzt und ist nicht editierbar. Der Endzeitpunkt der
+    Vorhersageberechnung wird durch die Dauer des in den Prognosedaten
+    enthaltenen Zeitraums bestimmt. Die Berechnung endet im längsten Fall 48 h
+    nach Beginn der Vorhersage.</para>
+
+    <para><emphasis>Metadaten</emphasis></para>
+
+    <para>Sind vom Anwender optional anzuwendende Daten zur Beschreibung und
+    Erläuterung des Rechenfalls. Sie werden beim Speichern des Rechenfalls
+    abgelegt, sind aber nicht notwendig zur Durchführung einer
+    Berechnung.</para>
+
+    <para><emphasis>Zeitreihen aktualisieren</emphasis></para>
+
+    <para>Bei Aktivierung dieser Option werden die zur Berechnung notwendigen
+    Zeitreihen neu in das Programm eingelesen. Dies ist allerdings nur
+    sinnvoll bei Vorführung oder Neuberechnung eines bereits angelegten
+    Hochwassers. Beim Anlegen eines neuen Rechenfalls werden die Zeitreihen
+    immer neu eingelesen (auch bei deaktiviertem Kästchen). Die Bestätigung
+    der getätigten Angaben erfolgt über den Klick auf
+    <guibutton>weiter</guibutton>.</para>
+
+    <para><emphasis>Fortführen eines Rechenfalls</emphasis></para>
+
+    <para>Durch die Wahl der Option „ einen bereits vorhandenen Rechenfall
+    fortführen“ wird dem Benutzer die Möglichkeit gegeben, eine zuvor
+    berechnete und gespeicherte Hochwasserprognose erneut zu laden und die
+    Berechnungen zu aktualisieren bzw. fortzuführen (bspw. bei Vorhandensein
+    aktueller Prognosedaten). Nach Auswahl der Option erscheint ein
+    Auswahlfenster, in dem alle gespeicherten Rechenläufe angezeigt werden.
+    Nach markieren des entsprechenden Rechenlaufes erfolgt die Bestätigung der
+    Auswahl durch <guibutton>weiter</guibutton>. </para>
+
+    <para>Es erscheint die Eingabemaske für die Steuerparameter, in die
+    bereits die gespeicherten Eingaben für das gewählte Hochwasser eingetragen
+    sind. Für die Fortführung des Rechenlaufs können die Parameter vom Nutzer
+    geändert werden. Es gelten die gleichen Voraussetzungen wie beim anlegen
+    eines neuen Rechenfalls. </para>
+
+    <para>Zusätzlich ist die Option <guibutton>Zeitreihen
+    aktualisieren</guibutton> aktiv, d. h., die Zeitreihen können für die
+    erneute Berechnung des Rechenfalls neu eingelesen werden. Ist das Kästchen
+    deaktiviert, werden die vom Modell gespeicherten Zeitreihen des letzten
+    Rechenlaufs verwendet.</para>
+
+    <para><emphasis>Kopieren eines Rechenfalls</emphasis></para>
+
+    <para>Die Wahl dieser Option erfolgt durch Auswahl des <guibutton>einen
+    bereits vorhandenen Rechenfall kopieren</guibutton> – Feldes. Hierdurch
+    werden die Eingangsdaten eines bereits gespeicherten Hochwassers als neuer
+    Datensatz vom Programm gespeichert. Dies bittet den Vorteil, dass bei
+    einer gewünschten Änderung der Eingangsdaten die Originaldateien nicht
+    überschrieben werden. Nach Auswahl des zu kopierenden Rechenfalls wird
+    durch Bestätigung durch <guibutton>weiter</guibutton> die Eingabemaske für
+    die Steuerparameter geöffnet.</para>
+
+    <para><emphasis>Durchführung einer Prognose</emphasis></para>
+
+    <para>Nach Eingabe der Steuerparameter öffnet sich durch Klick auf
+    <guibutton>weiter</guibutton> das Prognosefenster (Abb. X) im oberen
+    Bereich des Fensters befindet sich die Information über den Pegel, an dem
+    die aktuelle Prognose durchgeführt wird. In der Mitte der Maske werden 3
+    Anzeige-Elemente angezeigt. Am Kartenfenster wird ein Ausschnitt des
+    Einzuggebietes dargestellt, der den aktuell zu berechnenden Pegel anzeigt.
+    Die Tabelle dient zur Angabe der bei der Prognose veränderlichen
+    Modellparameter. Folgende Parameter sind vom Benutzer editierbar:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Anfangsinhalt Bodenspeicher (multiplikativ)</para>
+      </listitem>
+
+      <listitem>
+        <para>Anfangs-Grundwasserstand (multiplikativ)</para>
+      </listitem>
+
+      <listitem>
+        <para>Niederschlagsfaktor (multiplikativ)</para>
+      </listitem>
+
+      <listitem>
+        <para>Retention Oberflächenabfluss und Interflow
+        (multiplikativ)</para>
+      </listitem>
+
+      <listitem>
+        <para>Gerinneparameter (n: Anzahl der Speicher, k: Retentionskonstante
+        der Speicher)</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Der Standartwert für alle Parameter beträgt zu Beginn einer neuen
+    Prognose 1,0. Durch Änderung eines oder mehrerer Parameter können die
+    Berechnungsergebnisse die vor dem Startzeitpunkt der Prognose liegen,
+    anhand von Pegelaufzeichnungen angepasst werden (Nachführung). Bezüglich
+    der theoretischen Grundlagen der Wirkung der o. g. Parameter auf die
+    Berechnungsergebnisse wird auf Heft X des KALYPSO-Handbuches verwiesen.
+    Alle in der Tabelle vorgenommenen Änderungen gelten jeweils für die zu
+    einem Pegeleinzugsgebiet gehörigen Teilgebiete. Unterhalb der Tabelle
+    befindet sich das Zeitreihenfenster. Es dient zur Darstellung der
+    Zeitreihen für gemessene und berechnete Abflüsse am Pegel sowie die in der
+    Prognose verwendeten Niederschlagszeitreihen. Die Ansicht im
+    Zeitreihenfenster ist nicht veränderbar; alle Einstellungen sind
+    vordefiniert bzw. ändern sich automatisch in Abhängigkeit der Zeitreihe
+    (Anpassung der Skalierung).</para>
+
+    <para>Zum Starten einer Prognoserechnung dient der Button „Berechnung
+    durchführen“. Während einer Berechnung wird der Fortschritt durch einen
+    Balken im unteren Teil der Maske angezeigt. Nach einem erfolgreich
+    durchgeführten Rechenlauf wird die berechnete Abflussganglinie zusammen
+    mit den gemessenen Pegelwerten im Zeitreihenfenster dargestellt.</para>
+
+    <para>Ist eine Berechnung beendet kann mit dem
+    <guibutton>weiter</guibutton>-Button zum nächsten Pegel gesprungen werden.
+    In der Regel ist dies der nächste Stromabwärts gelegene Pegel. Die Abfolge
+    der Vorhersagepegel ist im Programm festgeschrieben und kann auch im
+    Expertenmodus nicht geändert werden. Generell gilt: um an einem Pegel
+    Prognoseberechnungen durchführen zu können, müssen zunächst Ergebnisse für
+    alle oberliegenden Pegel vorliegen. Die berechneten Ergebnisse eines
+    Pegels dienen jeweils als Zuflusszeitreihe für das darunter liegende
+    Pegeleinzugsgebiet. Die Reihenfolge für das Einzugsgebiet Weiße Elster ist
+    schematisch in Folgender Abb. XX dargestellt.</para>
+  </section>
+
+  <section>
+    <title>Vorhersagemodell Spree</title>
+
+    <para>Zur Berechnung von HW-Vorhersagen für das Einzugsgebiet der Spree
+    ist in der Kalypso-Oberfläche ein Wizard implenentiert. In Abhängigkeit
+    der zugeordneten Rechte wird der Benutzer entweder direkt bei dem
+    Programmstart in den Vorhersagemodus geführt. Für Benutzer mit erweiterten
+    Rechten ist es jederzeit möglich, aus dem Expertenmodus in den
+    Vorhersagemodus zu wechseln (Menü <guimenu>Modell</guimenu> →
+    <guimenu>Hochwasservorhersage durchführen</guimenu>).</para>
+
+    <para></para>
+  </section>
+</chapter>

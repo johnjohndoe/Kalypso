@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<toc label="Flusshydraulische Software - Anwenderhandbuch" topic="index.html">
-  <topic label="Programmübersicht" href="ch01.html">
-    <topic label="Installation der Software" href="ch01.html#fhs-install"/>
+<toc label="" topic="index.html">
+  <topic label="Grafische Oberfläche allgemein" href="ch01.html">
+    <topic label="Allgemeines" href="ch01.html#inf_intro_oeko1"/>
+    <topic label="Ansichtssteuerung" href="ch01s02.html"/>
+    <topic label="Grundfunktionen" href="ch01s03.html">
+      <topic label="Modellverwaltung" href="ch01s03.html#id337230"/>
+      <topic label="Modellbearbeitung" href="ch01s03.html#id337453"/>
+      <topic label="Modellberechnung" href="ch01s03.html#id327035"/>
+      <topic label="Modellergebnisse" href="ch01s03.html#id327163"/>
+    </topic>
   </topic>
+  <topic label="Vorhersage-Wizard" href="ch02.html">
+    <topic label="Vorhersagemodell Weiße Elster" href="ch02.html#id405704"/>
+    <topic label="Vorhersagemodell Spree" href="ch02s02.html"/>
+  </topic>
+  <topic label="Literaturverzeichnis" href="bi01.html"/>
 </toc>

@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="inf_intro">
+  <?dbhh topicname="Einleitung" topicid="2"us?>
+
+  <chapterinfo>
+    <date><indexterm>
+        <primary>Einführung in INFORM</primary>
+      </indexterm></date>
+  </chapterinfo>
+
+  <title>Grafische Oberfläche allgemein</title>
+
+  <section id="inf_intro_oeko1">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Grafische Oberfläche</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Allgemeines</title>
+
+    <para>bla, bla bla.</para>
+  </section>
+
+  <section id="ansicht">
+    <title>Ansichtssteuerung</title>
+
+    <para>bla, bla bla.</para>
+  </section>
+
+  <section id="inf_intro_oeko2">
+    <title>Grundfunktionen</title>
+
+    <para>bla, bla bla.</para>
+
+    <section>
+      <title>Modellverwaltung</title>
+
+      <para>Im Expertenmodus kann der Benutzer beliebige Modelle in die
+      Programmoberfläche von Kalypso importieren bzw. bestehende Modelle
+      öffnen, neue Modell-Varianten anlegen und Änderungen der Modelldateien
+      bzw. neu angelegte Varianten wieder auf den Server zurückspeichern. Alle
+      geöffneten Modelle werden zunächst in das lokale Arbeitsverzeichnis
+      gespeichert. Gespeicherte Änderungen in den Modelldateien betreffen nur
+      die lokal abgespeicherten Daten.</para>
+
+      <para>Der Austausch von Modelldateien zwischen dem lokal geöffneten
+      Modell und auf dem Server gespeicherten Modellen erfolgt in der
+      Kalypso-Oberfläche. Über das Menü <guimenu>Modell</guimenu> können auf
+      dem Server gespeicherte Modelle importiert bzw. editierte Modelldateien
+      zum Server zurückgeschrieben werden. Im Einzelnen bestehen folgende
+      Möglichkeiten:</para>
+
+      <para><emphasis role="bold">Modell vom Server laden</emphasis></para>
+
+      <para>Auf dem Server gespeicherte Modelle können in die
+      Kalypso-Oberfläche importiert werden. Bei Auswahl des Menü-Punktes
+      erscheint eine Liste der verfügbaren Modelle. Durch Auswahl eines oder
+      mehrerer Modelle werden diese in die Kalypso-Oberfläche geladen. Die
+      dazugehörigen Dateien werden im lokalen Arbeitsverzeichnis gespeichert.
+      Werden Dateien oder Parameter des importierten Modells geändert und
+      gespeichert, erfolgt lediglich eine lokale Speicherung der Änderungen.
+      Die Original-Dateien auf dem Server bleiben hiervon unberührt.</para>
+
+      <para><emphasis role="bold">Modell aktualisieren</emphasis></para>
+
+      <para>Dieser Menüpunkt dient zum Aktualisieren der Dateien eines bereits
+      geladenen Modells. Dabei werden alle vorhandenen (lokal gespeicherten)
+      Dateien mit den auf dem Server befindlichen Dateien überschrieben
+      (<emphasis>alle Änderungen gehen verloren!</emphasis>). Die
+      aktualisierten Dateien werden in das lokale Arbeitsverzeichnis
+      gespeichert.</para>
+
+      <para><emphasis role="bold">Modell zurückspeichern</emphasis></para>
+
+      <para>Mit diesem Menüpunkt werden alle lokal bearbeiteten Modelldateien
+      auf dem Server gespeichert. Dies betrifft sowohl geänderte
+      Modellparameter als auch Zeitreihen (Berechnungsergebnisse). Neu
+      angelegte Varianten werden als solche zu dem Modell auf dem Server
+      hinzugefügt. Bei bestehenden Varianten werden die bestehenden Dateien
+      überschrieben. Diese Option ist daher mit Vorsicht anzuwenden, da auf
+      dem Server gespeicherte Änderungen nicht rückgängig gemacht werden
+      können.</para>
+
+      <para><emphasis role="bold">Modellvariante anlegen</emphasis></para>
+
+      <para>Bei Aktivierung dieses Menüpunktes wird eine neue Variante des
+      bestehenden Modells angelegt. Dabei werden die bereits im Programm
+      vorhandenen Modelldateien unter der neuen Variante im lokalen
+      Arbeitsverzeichnis als Kopie abgespeichert. Änderungen, die in den
+      Dateien einer Modell-Variante vorgenommen werden, haben keine Auswirkung
+      auf die Dateien anderer Varianten. Nach Speichern der Modelldateien kann
+      die Variante optional auf dem Server gespeichert werden (andere
+      Varianten werden nicht überschrieben.</para>
+
+      <para>Eine weitere Möglichkeit zum Öffnen eines bestehenden Projektes
+      besteht über Aktivierung des Menüpunktes <guimenu>Datei -&gt; Neu -&gt;
+      Projekt</guimenu>. Es folgt ein Auswahlfenster mit den zur Verügung
+      stehenden Datenquellen ( Server). Im weiteren Verlauf wird der Benutzer
+      durch die Strukturen des Servers geführt und erhält eine Liste mit den
+      vorhanden Projekten. Diese können durch Bestätigung mit
+      <guibutton>Fertigstellen</guibutton> in die Programmoberfläche geladen
+      werden.</para>
+
+      <para>Zum löschen eines Projektes wird das entsprechende Projekt im
+      Navigator-Fenster markiert und kann über <guimenu>Bearbeiten -&gt;
+      Löschen</guimenu> aus der Programmoberfläche entfernt werden. Beim
+      Löschen des Projektes bestehen zwei Möglichkeiten:</para>
+
+      <para><guimenu>Inhalt unter [Arbeitsverzeichnis] ebenfalls
+      löschen</guimenu>: Es wird nicht nur der Projekt-Eintrag in der
+      Kalypso-Oberfläche, sondern alle zugehörigen Dateien im lokalen
+      Arbeitsverzeichnis endgültig gelöscht.</para>
+
+      <para><guimenu>Inhalt nicht löschen</guimenu>: Es wird lediglich der
+      Projekteintrag aus der Programmoberfläche entfernt. Die lokal
+      gespeicherten Projektdateien bleiben erhalten, so dass das Projekt
+      jederzeit wieder geöffnet werden kann.</para>
+    </section>
+
+    <section>
+      <title>Modellbearbeitung</title>
+
+      <para>Im Expertenmodus können in einem geöffneten Modell eine Vielzahl
+      von Änderungen durchgeführt werden. Dies betrifft sowohl die Änderung
+      einzelner Modellparameter oder Zeitreihen als auch die gesamte
+      Modellstruktur. Empfohlen wird, vor der Bearbeitung von Modellparametern
+      eine neue Variante anzulegen. Dies bietet den Vorteil, dass beim
+      Speichern von Änderungen die Original-Dateien erhalten bleiben. Der
+      ursprüngliche Modellzustand ist somit jederzeit wieder
+      herstellbar.</para>
+
+      <para>Für die Bearbeitung der Modellparameter stehen folgende Funktionen
+      zur Verfügung:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Visualierung von Modelldaten in Tabellen, Karten oder
+          Diagrammen</para>
+
+          <para>Abhängig von der Datenart können die einzelnen Modellparameter
+          in der Oberfläche dargestellt werden. Die Visualisierung der
+          Geo-basierten Modelldaten (Einzugsgebiete, Gewässernetz,
+          Pegelstandorte) kann auf Grundlage von Shape-Dateien in Karten
+          erfolgen. Die Modelldaten selbst (Einzugsgebietsfläche, Name eines
+          Pegels) werden in Form von Tabellen dargestellt. Zur grafischen
+          Darstellung von Zeitreihen ist eine Diagramm-Ansicht in der
+          Oberfläche intergriert.</para>
+        </listitem>
+
+        <listitem>
+          <para>Editierung von Modellparametern in Tabellen oder
+          Eingabemasken</para>
+
+          <para>In Tabellen dargestellte Modellparameter können durch
+          händische Eingabe editiert werden. Dabei stehen dem Benutzer auch
+          die üblichen Funktionen wie kopieren, einfügen oder suchen/ersetzen
+          von Daten zur Verfügung. Einige Parameter werden in Eingabemasken
+          geändert.</para>
+        </listitem>
+
+        <listitem>
+          <para>Zuweisung von Zeitreihen zum Modell</para>
+
+          <para>Auf dem Server befindliche Zeitreihen können in das Modell
+          übernommen werden und bestimmten Elementen zugeordnet werden
+          (Pegelzeitreihen, Talsperrenabgaben).</para>
+        </listitem>
+
+        <listitem>
+          <para>Definition von Rechenfällen</para>
+
+          <para>Innerhalb eines Modells können unterschiedliche Rechenfälle
+          definiert werden, die bspw. unterschiedliche Simualtionräume oder
+          Modellzustände beschreiben.</para>
+        </listitem>
+
+        <listitem>
+          <para>Editierung der Steuerdaten und operativen Daten eines
+          Rechenfalls</para>
+
+          <para>Für definierte Rechenläufe sind die Steuerdaten (Zeitraum der
+          Simulation) sowie die operativen Daten jederzeit änderbar. Die
+          Rechenläufe werden in vordefinierten Verzeichnissen abgelegt, in
+          denen die Parameter über Eingabemasken geändert werden
+          können.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para><guilabel>Karten</guilabel></para>
+
+      <para>Die Darstellungsmöglichkeiten für Karten orientieren sich im
+      Wesentlichen an herkömmlichen GIS-Systemen. Innerhalb einer Karte stehen
+      folgende Navigationsfunktionen zur Verfügung, die über Buttons
+      angesteuert werden können:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Vergößern / Verkleinern der Darstellung (Zoom)</para>
+        </listitem>
+
+        <listitem>
+          <para>Verschieben des Kartenausschnitts (Pan)</para>
+        </listitem>
+
+        <listitem>
+          <para>Anzeigen und Editieren der Daten eines Objektes</para>
+        </listitem>
+
+        <listitem>
+          <para>Speichern der Änderungen eines Themas</para>
+        </listitem>
+      </itemizedlist>
+
+      <para><guilabel>Tabellen</guilabel></para>
+
+      <para>In der Tabellenansicht können die Modelldaten angezeigt und
+      editiert werden. Über das Menü <guimenu>Tabelle -&gt;
+      Spalten</guimenu></para>
+
+      <para>oder über einen Klick mit der rechten Maustaste in der Tabelle
+      können einzelne Spalten an- oder ausgeschaltet werden. Die Werte in den
+      Zellen einer Tabelle können nach Markieren der Zelle editiert werden.
+      Über das Menü Bearbeiten stehen die Funktionen
+      <guimenu>Kopieren</guimenu>, <guimenu>Ausschneiden</guimenu>,
+      <guimenu>Einfügen und Löschen</guimenu> zur Bearbeitung von
+      Tabellenwerten zur Verfügung. Zudem können über Alles Auswählen alle in
+      der Tabelle enthaltenen Werte markiert werden. Bearbeitungsschritte
+      können <guimenu>Rückgängig</guimenu> gemacht werden oder durch
+      <guimenu>Wiederherstellen</guimenu> erneut ausgeführt werden. Geänderte
+      Tabellen können unter Datei -&gt; Speichern gesichert werden. Die
+      Speicherung erfolgt jedoch nur lokal (siehe Abschnitt
+      Modellverwaltung).</para>
+
+      <para>Modelldaten, die in Karten dargestellt werden, sind mit den
+      dazugehörigen Tabellen verknüpft. Durch Auswahl eines Objektes in der
+      Karte wird die dazugehörige Tabellenzeile markiert, in der sich die
+      Modelldaten befinden. Die Vorgehensweise kann ebenso umgekehrt
+      werden.</para>
+
+      <para><guilabel>Diagramme</guilabel></para>
+
+      <para>Im Modell enthaltene Zeitreihen können durch einen in der
+      Kalypso-Oberfläche enthalten Viewer grafisch dargestellt werden. Die
+      Ausrichtung der Diagramm-Achsen erfolgt automatisch je nach Typ der
+      Zeitreihe. In dieser Darstellung besteht allerdings keine Möglichkeit,
+      die Werte einer Zeitreihe zu editieren. Dies ist möglich, wenn die
+      Zeitreihe in einer Tabelle geöffnet wird. Zusätzlich steht ein externes
+      Grafikprogramm zur Verfügung (siehe Abschnitt XX), mit dem neben der
+      Darstellung der Zeitreihen auch eine interaktive Editierung möglich
+      ist.</para>
+    </section>
+
+    <section>
+      <title>Modellberechnung</title>
+
+      <para>Um Modellberechnungen aus dem Expertenmodus heraus zu starten,
+      müssen vom Benutzer Rechenläufe definiert werden. Die Informationen
+      eines Rechenlaufes werden vom Programm in einen zu definierenden Ordner
+      gepeichert. In einem Modell können mehrere Rechenläufe vorhanden sein,
+      die entweder einzeln oder nacheinander abgearbeitet werden. Ferner ist
+      es auch möglich, aus dem Expertenmodus direkt in den Vorhersage-Modus zu
+      wechseln, um mit einem geöffneten Modell Hochwasser-Prognosen
+      durchzuführen. Die Steuerung der Rechenläufe erfolgt über das Menü
+      <guimenu>Modell</guimenu>.</para>
+
+      <para><firstterm>Rechenvariante anlegen</firstterm></para>
+
+      <para>Bei Auswahl dieses Menüpunktes wird ein neuer Rechenfall für das
+      gerade aktive Modell definiert. Es folgt ein Auswahlfenster mit der
+      Aufforderung zur Angabe eines Ordners, in den die Rechenvariante
+      gepeichert werden soll. Empfohlen wird, vor dem Anlegen eines neuen
+      Rechenlaufs einen Ordner anzulegen, in den alle Rechenvarianten in Form
+      von Unterordnern abgelegt werden können. Nach Bestätigung der Angaben
+      durch <guimenu>Fertigstellen</guimenu> werden die für die Berechnung
+      benötigten Modelldateien vom Programm in das angegebene Verzeichnis
+      kopiert.</para>
+
+      <para>Anmerkung: Ein neuer Rechenlauf kann alternativ über das Menü
+      <guimenu>Datei -&gt; Neu -&gt; Rechenfall</guimenu> definiert werden.
+      Die weitere Vorgehensweise verläuft wie oben beschrieben.</para>
+
+      <para><firstterm>Berechnung durchführen</firstterm></para>
+
+      <para>Nach Auswahl des Modells im Navigator-Fenster können
+      Modellberechnungen über diesen Menüpunkt durchgeführt werden. Es
+      erscheint ein Auswahlfenster, in dem alle im Modell definierten
+      Berechnungsvarianten aufgelistet werden. Durch das Häkchen vor dem Namen
+      kann der jeweilige Rechenlauf aktiviert bzw. deaktiviert werden. Dabei
+      können in einem Rechenlauf beliebig viele Varianten berechnet werden.
+      Der aktuelle Fortschritt der Berechnung(en) wird mit Hilfe eines Balkens
+      dargestellt. Nach erfolgreiche durchgeführter Berechnung werden die
+      Ergebnisse in Form von Zeitreihen in das Rechenlauf-Ordner gespeichert.
+      Die Speicherung erfolgt im lokalen Arbeitsverzeichnis. Ggfs. müssen die
+      berechneten Ergebnisse per Hand auf den Server übertragen werden.</para>
+
+      <para><firstterm>Hochwasser-Vorhersage durchführen</firstterm></para>
+
+      <para>Über diesen Menüpunkt wird der Vorhersage-Wizard gestartet. Zur
+      Erläuterung der Vorgehensweise bei der Berechnung einer Vorhersage wird
+      auf Abschnitt XX verwiesen.</para>
+    </section>
+
+    <section>
+      <title>Modellergebnisse</title>
+
+      <para>Ergebnisse aus Modellberechnungen werden in den Unterordner
+      <guimenu>Ergebnisse</guimenu> im jeweiligen Rechenfall-Verzeichnis
+      geschrieben. Es handelt sich hierbei um berechnete Abfluss- und
+      Wasserstandsganglinien, die für alle ausgewählten Modellknoten
+      herausgeschrieben werden. Die ausgegebenen Zeitreihen können in der
+      Programmoberfläche auf verschiedene Weise visualisiert und
+      weiterverarbeitet werden. Nach Doppelklick auf eine Zeitreihe öffnet
+      sich ein Auswahlfenster, in dem der Benutzer verschiedene Möglichkeiten
+      anzeigt bekommt:</para>
+
+      <para><emphasis>Visualisierung im Diagramm</emphasis></para>
+
+      <para>Die Zeitreihe wird grafisch in einem Diagramm dargestellt.
+      Ausrichtung und Beschriftung der Achsen erfolgen automatisch anhand der
+      in der Zeitreihe enthaltenen Informationen. In der Diagramm-Ansicht
+      besteht keine Möglichkeit zur Editierung der Daten. Dies kann durch
+      Einlesen der Zeitreihe in das mitgelieferte Grafik-Tool realisiert
+      werden, in dem eine Vielzahl von Optionen zur Visualierung und
+      Editierung von Zeitreihen gegeben ist (siehe Kapitel
+      <emphasis>Grafikprogramm</emphasis>).</para>
+
+      <para><emphasis>Anzeige in Tabellen</emphasis></para>
+
+      <para>Die Werte einer Zeitreihe werden in Form einer Tabelle ausgegeben.
+      Die Tabelle besteht aus einer Zeitspalte (Datum, Uhrzeit) und dem
+      dazugehörigen Wert (Wasserstand, Abfluss). Alle in der Tabelle
+      enthaltenen Werte können editiert werden. Es gelten die allgemeinen
+      Änderungsoptionen, die im Kapitel Ansichtssteuerung beschrieben werden.
+      Vorgenommene Änderungen werden über <guimenu>Datei -&gt;
+      Speichern</guimenu> in das Projektverzeichnis übernommen. Über
+      <guimenu>Datei -&gt; Speichern unter...</guimenu> kann die Tabelle in
+      einen beliebigen Ordner im Projektverzeichnis gespeichert werden.</para>
+
+      <para><emphasis>Visualisierung im Lageplan</emphasis></para>
+
+      <para>Berechnete Wasserstände können an Pegelstandorten im Lageplan
+      visualiert werden. Der zu einem bestimmten Zeitpunkt berechnete
+      Wasserstand wird entweder in Abhängigkeit der Warnstufen des Pegels
+      farbig oder als Tendenz in Pfeilform dargestellt. Dazu muss vom Benutzer
+      der Zeitpunkt gewählt werden, an dem der Wasserstand berechnet wurde
+      bzw. auf den sich die Tendenz bezieht. </para>
+
+      <para><emphasis>Versenden der Ergebnisse an das
+      Berichtswesen</emphasis></para>
+
+      <para>Dargestellte Diagramme, Lagepläne und Tabellen können zur
+      Dokumentation der Ergebnisse an das Berichtswesen exportiert werden.
+      Dabei werden nicht die Daten als solche, sondern lediglich Bilddateien
+      (Diagramme und Lagepläne) bzw. Komma-getrennte Tabellen (csv-Format)
+      exportiert. Bei Tabellen werden nur die angezeigten Spalten exportiert.
+      Der Aufruf der Funktion erfolgt im jeweiligen Menü-Punkt
+      (<guimenu>Karte</guimenu>, <guimenu>Tabelle</guimenu>,
+      <guimenu>Diagramm</guimenu>) unter <guimenu>Berichtsablage...</guimenu>
+      . Es erfolgt eine Eingabemaske, in der zusätzliche Informationen zu der
+      exportierten Datei eingetragen werden können (Abb. XX). </para>
+    </section>
+  </section>
+</chapter>

@@ -1,90 +1,63 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE book PUBLIC "" "manual.dtd" 
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"
 [
-<!--	<!ENTITY fhs_meta "./fhs/"> -->
-]>
+	<!ENTITY file_allgemeines SYSTEM "allgemeines.xml">
+	<!ENTITY file_grund SYSTEM "Grundfunktionen.xml">
+	<!ENTITY file_gui SYSTEM "gui.xml">
+	<!ENTITY file_Wizards SYSTEM "Wizards.xml">
 
-<book id="book" lang="de">
+	<!ENTITY file_gui SYSTEM "gui.xml">
+]
+>
+<book id="inf" lang="de">
+  <title></title>
 
-	<bookinfo>
-		<title>&theprod; - Anwenderhandbuch</title>
-		<authorgroup>
-			<author><firstname>Thorsten</firstname><surname>Hens</surname></author>
-			<author><firstname>Marc</firstname><surname>Schlienger</surname></author>
-			<author><firstname>Gernot</firstname><surname>Belger</surname></author>
-			<author>
-				<affiliation>
-					<orgname><ulink url="http://www.bjoernsen.de">&bce;</ulink>, Koblenz</orgname>
-					<address>
-						<street>Maria Trost 3</street>
-						<city>56076 Koblenz</city>
-						<email>info@bjoernsen.de</email>
-					</address>
-				</affiliation>
-			</author>
-		</authorgroup>
-		<edition>Anwenderbeschreibung Version &version; für &theprod;</edition>
-		<pubdate>&themonth; &theyear;</pubdate>
-		<copyright>
-			<year>&theyear;</year>
-			<holder>&bce;</holder>
-		</copyright>
-	</bookinfo>
-	
-	<toc></toc>
+  <subtitle></subtitle>
 
-	
-	<chapter id="framework">
-	
-		<title>Programmübersicht</title>
-		    
-		<para>
-			In diesem Kapitel finden Sie die allgmeine Beschreibung der Flusshydraulischen Software. Sie erfahren, 
-			wie die Benutzeroberfläche aufgebaut ist und wie Sie mit dem &abm; umgehen.
-		</para>
-		
-		<para>
-			Die &fhs; ist ein integriertes Programmsystem der &bfg; und dient der 
-			hydraulischen Modellierung.
-		</para>
-		
-		<para>
-			Die &fhs; stellt eine konsequente Weiterentwicklung und Zusammenführung der
-			in den 90er Jahren bei der &bfg; entwickelten Programme KWERT, WINFO, WSPLVIEW, PROPLOT 
-			und WINKTOOLS dar. Die &fhs; umfasst und erweitert die Funktionalitõten dieser Programme
-			und stellt sie dem Benutzer in einer einheitlichen Programmoberflõche
-			zur Verfügung.
-		</para>
-			
-		<para>
-			Die &fhs; ist eine allgemeine Plattform, welche dem Benutzer einen
-			projektbasierten Arbeitsbereich zur Verfügung stellt. In diesen Arbeitsbereich
-			sind verschiedene Plugins integriert, welche die verschiedenen
-			Funktionen der Software zur Verfügung stellen. Zur Zeit stehen die folgenden 
-			Plugins zur Verfügung:
-		</para>	
-		
-		<section id="fhs-install">
-			<title>Installation der Software</title>
-		
-			<para>
-				Die FLYS-CD hat zwei Funktionen:
-				<orderedlist>
-					<listitem><para>Direkt-Start: die FLYS-Software kann direkt von CD gestartet werden. Standardmäßig werden
-						für das WINFO-Plugin, wenn nicht anders in die Benutzereinstellungen spezifiziert,
-						die Daten direkt von der CD eingelesen. In diesem Direkt-Start Modus ist die Software vollständig
-						funktionsfähig.</para>
-					</listitem>
-					<listitem><para>Installation: die FLYS-Software kann von CD installiert werden. Dabei brauchen Sie
-						nur das für Windows-Betriebssysteme erstellte Installprogramm <filename>install_flys.exe</filename> auszuführen.
-						Folgen Sie einfach den Installationsschritten um die Software vollständig zu installieren.</para>
-					</listitem>
-				</orderedlist>
-			</para>
-		</section>
-	
-	</chapter>
+  <bookinfo>
+    <date>29.07.2004</date>
 
-	<lot></lot>
+    <author>
+      <surname>Bundesanstalt fÃ¼r GewÃ¤sserkunde</surname>
 
+      <email>info@bafg.de</email>
+
+      <address>Am Mainzer Tor 1 56068 Koblenz</address>
+    </author>
+
+    <author>
+      <surname>BjÃ¶rnsen Beratende Ingenieure GmbH</surname>
+
+      <email>info@bjoernsen.de</email>
+
+      <address>Maria Trost 3 56076 Koblenz</address>
+    </author>
+  </bookinfo>
+
+  <toc></toc>
+
+<!--
+  &file_allgemeines;
+-->
+
+  &file_grund;
+  &file_Wizards;
+
+  
+  <bibliography>
+    <bibliomixed>Literatur</bibliomixed>
+
+    <biblioentry>
+      <date>2000</date>
+
+      <author>
+        <surname>ILN</surname>
+      </author>
+
+      <title>Kalypso Online-Hilfe</title>
+
+      <address>Maria Trost 3 - Koblenz</address>
+    </biblioentry>
+  </bibliography>
 </book>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <chapter id="inf_intro">
+    <?dbhh topicname="Einleitung" topicid="2"?>
+
+    <chapterinfo>
+      <date><indexterm>
+          <primary>Einführung in INFORM</primary>
+        </indexterm></date>
+    </chapterinfo>
+
+    <title>Einführung in INFORM</title>
+
+    <section id="inf_intro_oeko1">
+      <sectioninfo>
+        <date><indexterm>
+            <primary>Gründe für ökologische Modellierung</primary>
+          </indexterm></date>
+      </sectioninfo>
+
+      <title>Gründe für ökologische Modellierung</title>
+
+      <para>Ein Modell ist eine vereinfachte Darstellung eines komplexen
+      Realsystem. Ein Modell darf so einfach sein, dass die wesentlichen
+      Merkmale eines Systems in Abhängigkeit vom Verwendungszweck erkennbar
+      sind. Wie genau ein Modell das Realsystem letztlich abbildet, wird durch
+      die Güte des Modells bestimmt. Modelle können umfangreiche Sachverhalte
+      vereinfache und zugänglich machen, die aufgrund ihrer Komplexität
+      ansonsten nur schwer gedanklich durchdrungen werden können. In
+      Entscheidungsprozessen bieten Modelle somit für den Menschen eine
+      wesentliche Hilfe. Ein ökologisches Modell ist analog zur allgemeinen
+      Modelldefinition die vereinfachte Darstellung eines Ökosystems. Da
+      Ökosysteme zumeist sehr komplex sind, können oftmals nur Teile davon in
+      Submodellen abgebildet werden. In ökologischen Modellen wird die
+      umfangreiche Datenmenge, welche das Ökosystem beschreibt, auf wenige
+      charakteristische, systemsteuernde und damit modellrelevante Parameter
+      reduziert. Deutlich wird dies am Beispiel der <quote>Liebigtonne</quote>
+      (siehe <xref linkend="_001_001_tonne" />) . Die Gesamtheit aller
+      Fassdauben definiert das <quote>System Tonne</quote>, ihr Inhalt wird
+      jedoch durch nur wenige Dauben gesteuert. In der Ökosystemforschung
+      können beispielsweise aus einerAnforderunge Die Anwendung INFORM
+      benötigt die folgenden Mindestanforderungen Vielzahl von
+      Standortfaktoren mit Hilfe multivariater statistischer Methoden die
+      standort-differenzierenden Umweltparameter selektiert werden, die dann
+      für ökologische Modelle verwendet werden können.</para>
+
+      <figure id="_001_001_tonne">
+        <title>Reales Modell - Ökologisches Modell</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/001_001_tonne.png" scale="50" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="inf_intro_oeko2">
+      <sectioninfo>
+        <date><indexterm>
+            <primary>Grundlagen des ökologischen Modells</primary>
+          </indexterm></date>
+      </sectioninfo>
+
+      <title>Grundlagen des ökologischen Modells</title>
+
+      <para>Das integrierte Flussauenmodell INFORM ist ein in knapp 10
+      Entwicklungsjahren entstandenes Modellsystem zur Bearbeitung
+      ökologischer Fragestellungen in Flussauen. Im Zusammenhang mit der
+      Untersuchung der Austauschvorgänge zwischen Fluss und Grundwasser
+      entstand die Idee, die ökologischen Vorgänge in der Flussaue mit
+      Modellen zu untersuchen. In einer Machbarkeitsstudie (BERTSCH und GIEBEL
+      1992) wurde das Grundkonzept der Vorgehensweise für ökologische
+      Modellierungen entworfen. Daraufhin erfolgte von der Wasser- und
+      Schifffahrtsdirektion West in Münster der Auftrag an die BfG, in einem
+      vierjährigen Pilotprojekt am Niederrhein bei Rees eine einfache
+      Modellmethodik zu entwickeln, mit deren Hilfe aufgrund nur weniger, mit
+      geringem Aufwand zu erhebender Leitparameter die ökologischen
+      Auswirkungen von Flusswasserstandsänderungen beurteilt werden können
+      (FUCHS ET AL. 1995). Die Bearbeitung erfolgte von 1993 bis 1996. In
+      diesen vier Jahren stellte sich heraus, dass unter Vorgabe eines
+      geringen Erhebungsaufwandes und einfacher Modellalgorithmen in der
+      ökologischen Modellierung der sehr komplexen Vorgänge in der Flussaue
+      nur wenig befriedigende Ergebnisse zu erzielen sind. Folglich wurde als
+      neues Ziel die <quote>Erstellung einer leicht anzuwendenden Methodik
+      unter Berücksichtigung der komplexen Grundlagen</quote> definiert. Die
+      Bearbeitungen führten zu einem anwendungsbezogenen und menügeführten
+      Modellsystem, das zu einem wesentlichen Teil auf Regelsätzen, die durch
+      Auswertung von Naturerhebungen, Literaturangaben und eigenen
+      Modelluntersuchungen erstellt wurden, aufbaut (BERTSCH ET AL. 1998). Bei
+      der Aufstellung und Kalibrierung des Modells wird Expertenwissen
+      benötigt, das zur Auswahl von Teilmethoden und Regelsätzen für den zu
+      bearbeitenden Untersuchungsraum herangezogen wird. Erforderlichenfalls
+      ist eine Auswertung von Naturerhebungen im Vergleich zu früheren
+      Erhebungen in anderen Untersuchungsgebieten vonnöten und ggf. sogar eine
+      Anpassung der Regelsätze an die neuen Randbedingungen. Die Bearbeitungen
+      wurden deshalb 1997 als angewandte BfG-Forschung fortgesetzt. Nachdem im
+      Laufe der Jahre immer mehr Teilprogramme entstanden, die umständlich von
+      Hand zu bedienen waren und deren Ergebnisse innerhalb eines Rechenganges
+      jeweils in die für das Folgeprogramm erforderliche Form umgewandelt
+      werden mussten, wurde 1999 die Erstellung einer einheitlichen
+      Benutzerplattform beschlossen. Das zu erstellende System sollte alle
+      vorhandenen Teilprogramme in der erforderlichen Weise miteinander
+      verknüpfen und es sollten die für die jeweilige Problemstellung
+      relevanten Programmteile ausgewählt werden können. Oberstes Prinzip
+      dieser Plattform sollte ein modularer Aufbau sein, damit das System
+      jederzeit erweitert oder auf neuere Versionen der Teilprogramme
+      angepasst werden kann. Das so entstandene Modell erhielt den Namen
+      INFORM (INtegrated FlOodplain Response Model), da mit ihm in Zukunft
+      sämtliche relevanten Fragestellungen in der Flussaue integrierend
+      betrachtet werden können. INFORM liegt derzeit in der Version 2.0
+      vor.</para>
+    </section>
+  </chapter>
