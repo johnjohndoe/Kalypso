@@ -11,8 +11,9 @@ import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.event.ModellEventProvider;
 import org.kalypso.ogc.event.ModellEventProviderAdapter;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoLayer;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoLegendTheme;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**

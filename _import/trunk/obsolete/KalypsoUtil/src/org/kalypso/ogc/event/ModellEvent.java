@@ -18,6 +18,8 @@ public class ModellEvent
 
   public static final int THEME_ADDED = 5;
 
+  public static final int LEGEND_UPDATED = 6;
+
   private final int myType;
 
   private final ModellEventProvider m_eventSource;
