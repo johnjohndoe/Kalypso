@@ -330,7 +330,8 @@ public class CalcWizard implements IWizard, IProjectProvider
     final IWizardPage currentPage = getContainer().getCurrentPage();
     final IWizardPage nextPage = getNextPage( currentPage );
     
-    return ( currentPage instanceof IModelWizardPage && nextPage == null );
+    return ( currentPage instanceof IModelWizardPage );
+//    && nextPage == null );
   }
 
   /**
