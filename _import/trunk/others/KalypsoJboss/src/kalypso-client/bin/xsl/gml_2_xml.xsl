@@ -2,6 +2,7 @@
 <xsl:stylesheet version="1.0"  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:gml="http://www.opengis.net/gml">
   <xsl:import href="xsl/functions.xsl"/>
+
   <xsl:decimal-format name="kalypso" decimal-separator="." grouping-separator=";"/>
 
   <xsl:output method="xml"/>
@@ -134,9 +135,9 @@
                        <xsl:value-of select="(1-$versigGrad)*$areaHYDRO"/>
                      </xsl:attribute>
                      -->
-                <xsl:attribute name="m_sealFactor">
-                  <xsl:value-of select="$versigGrad"/>
-                </xsl:attribute>
+                     <xsl:attribute name="m_sealFactor">
+                       <xsl:value-of select="$versigGrad"/>
+                     </xsl:attribute>
                 <xsl:attribute name="m_sealFactorCor">
                   <xsl:value-of select="$versiegkor"/>
                 </xsl:attribute>
