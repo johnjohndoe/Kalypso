@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<project name="Kalypso-Sachsen: services" default="zip-services-lfug" basedir="..">
+<project name="Kalypso-Sachsen-Anhalt: services" default="zip-services-lfug" basedir="..">
 
-	<property name="project.path" value="${workspace}/KalypsoConfSachsen" />
-	<property name="dist" value="${workspace}/KalypsoConfSachsen/deploy/server" />
+	<property name="project.path" value="${workspace}/KalypsoConfSachsenAnhalt" />
+	<property name="dist" value="${workspace}/KalypsoConfSachsenAnhalt/deploy/server" />
 	<property name="dist.services" value="${dist}/services" />
 
 	<target name="prepare" description="Creates the build directory">
@@ -64,7 +64,7 @@
 	<property name="war.path" value="file:///${dist.services}/${deployable.war}" />
 
 	<property name="core.path" value="${workspace}/KalypsoCoreServices" />
-	<property file="${core.path}/etc/ant/tomcat.properties" />
+	<property file="${project.path}/tomcat.properties" />
 
 	<path id="ant.classpath">
 		<fileset dir="${core.path}/lib" includes="*.jar" />
