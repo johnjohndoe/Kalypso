@@ -148,6 +148,8 @@ public class ObservationTableEditor extends AbstractEditorPart implements
   protected void doSaveInternal( IProgressMonitor monitor,
       IFileEditorInput input ) throws CoreException
   {
+    MessageDialog.openConfirm( getSite().getShell(), "Daten speichern?", "Wollen sie auch die grundliegende Daten" );
+    
     final Collection themes = m_template.getThemes();
 
     for( final Iterator it = themes.iterator(); it.hasNext(); )
