@@ -475,6 +475,12 @@ public class SpreeCalcJob extends AbstractCalcJob
     final File file = new File( exedir, filename );
 
     final URL resource = getClass().getResource( "resources/exe/" + filename );
+    if( resource == null )
+    {
+      System.out.println( "Für Rechnung benötigte Resource nicht gefunden: " + resource.toString() );
+      return;
+    }
+
     final URLConnection connection = resource.openConnection();
 
     FileUtilities.makeFileFromStream( false, file, connection.getInputStream() );
