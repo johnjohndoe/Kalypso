@@ -19,7 +19,8 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
     return Feature.class.getName().toString();
   }
 
-  private static String m_nameSpaceURI=XMLHelper.GMLSCHEMA_NS+":"+"FeatureAssociationType";
+  private static String m_nameSpaceURI = XMLHelper.GMLSCHEMA_NS + ":" + "FeatureAssociationType";
+
   /**
    * @see org.deegree_impl.extension.ITypeHandler#getTypeName()
    */
@@ -29,11 +30,12 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node)
+   * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object,
+   *      org.w3c.dom.Node)
    */
   public void marshall( Object object, Node node ) throws TypeRegistryException
   {
-  throw new UnsupportedOperationException("TODO implement it");  
+    throw new UnsupportedOperationException( "TODO implement it" );
   }
 
   /**
@@ -41,7 +43,15 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
    */
   public Object unmarshall( Node node ) throws TypeRegistryException
   {
-  throw new UnsupportedOperationException("TODO implement it");  
+    throw new UnsupportedOperationException( "TODO implement it" );
+  }
+
+  /**
+   * @see org.deegree_impl.extension.ITypeHandler#getShortname()
+   */
+  public String getShortname()
+  {
+    return "Feature link";
   }
 
 }

@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.Validator;
 
 import org.deegree.model.feature.Annotation;
 import org.deegree.model.feature.Feature;
@@ -24,7 +22,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.TextFeatureControl;
+import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Featureview;
@@ -34,7 +34,6 @@ import org.kalypso.template.featureview.GroupType;
 import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.LayoutType;
-import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.TextType;
 
 /**
@@ -42,25 +41,9 @@ import org.kalypso.template.featureview.TextType;
  */
 public class FeatureComposite implements IFeatureControl
 {
-  private static final ObjectFactory FACTORY = new ObjectFactory();
-
-  private static Unmarshaller UNMARSHALLER;
-
-  static
-  {
-    try
-    {
-      UNMARSHALLER = FACTORY.createUnmarshaller();
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-    }
-  }
-
   /** FeatureType -> FeatureView */
   private final Map m_viewMap = new HashMap();
-  
+
   private final Collection m_controls = new ArrayList();
 
   private final Feature m_feature;
@@ -73,12 +56,13 @@ public class FeatureComposite implements IFeatureControl
   public FeatureComposite( final Feature feature, final URL[] templateURL )
   {
     m_feature = feature;
-    
+
     try
     {
       for( int i = 0; i < templateURL.length; i++ )
       {
-        final Featureview view = (Featureview)UNMARSHALLER.unmarshal( templateURL[i] );
+        final Featureview view = (Featureview)FeatureviewHelper.UNMARSHALLER
+            .unmarshal( templateURL[i] );
         m_viewMap.put( view.getTypename(), view );
       }
     }
@@ -87,7 +71,7 @@ public class FeatureComposite implements IFeatureControl
       e.printStackTrace();
     }
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
@@ -96,10 +80,10 @@ public class FeatureComposite implements IFeatureControl
     for( final Iterator iter = m_controls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
-      fc.updateControl();     
+      fc.updateControl();
     }
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#collectChanges(java.util.Collection)
    */
@@ -108,10 +92,10 @@ public class FeatureComposite implements IFeatureControl
     for( final Iterator iter = m_controls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
-      fc.collectChanges( c );     
+      fc.collectChanges( c );
     }
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
    */
@@ -120,10 +104,10 @@ public class FeatureComposite implements IFeatureControl
     for( final Iterator iter = m_controls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
-      fc.dispose();     
+      fc.dispose();
     }
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getFeature()
    */
@@ -131,6 +115,7 @@ public class FeatureComposite implements IFeatureControl
   {
     return m_feature;
   }
+
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
@@ -143,90 +128,8 @@ public class FeatureComposite implements IFeatureControl
       final IFeatureControl fc = (IFeatureControl)iter.next();
       valid = valid & fc.isValid();
     }
-    
+
     return valid;
-  }
-
-  /** Standardview erzeugen */
-  public static Featureview createFeatureviewFromFeatureType( final FeatureType type )
-  {
-    try
-    {
-      final Featureview featureview = FACTORY.createFeatureview();
-      featureview.setTypename( type.getName() );
-      featureview.setStyle( SWT.BORDER );
-
-      final GridLayoutType gridLayout = FACTORY.createGridLayout();
-      gridLayout.setNumColumns( 2 );
-      featureview.setLayout( gridLayout );
-      final GridDataType griddata = FACTORY.createGridData();
-      griddata.setGrabExcessHorizontalSpace( true );
-      griddata.setHorizontalAlignment( GridData.FILL );
-      featureview.setLayoutData( griddata );
-
-      final List controlList = featureview.getControl();
-
-      final FeatureTypeProperty[] properties = type.getProperties();
-      for( int i = 0; i < properties.length; i++ )
-      {
-        final FeatureTypeProperty ftp = properties[i];
-
-        final LabelType label = FACTORY.createLabel();
-        label.setStyle( SWT.NONE );
-        label.setText( ftp.getName() );
-        label.setVisible( true );
-
-        final GridDataType labelGridData = FACTORY.createGridData();
-        labelGridData.setGrabExcessHorizontalSpace( false );
-        labelGridData.setHorizontalAlignment( GridData.BEGINNING );
-        label.setLayoutData( labelGridData );
-
-        controlList.add( label );
-
-        final ControlType cc = createDefaultFeatureControlTypeForProperty( ftp );
-        if( cc != null )
-          controlList.add( cc );
-      }
-
-      final Validator validator = FACTORY.createValidator();
-      validator.validate( featureview );
-
-      return featureview;
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-
-      return null;
-    }
-  }
-
-  private static ControlType createDefaultFeatureControlTypeForProperty( final FeatureTypeProperty ftp ) throws JAXBException
-  {
-    final GridDataType griddata = FACTORY.createGridData();
-    
-    if( "java.lang.String|java.lang.Integer|java.lang.Long|java.lang.Float|java.lang.Double|java.util.Date".indexOf( ftp.getType() ) != -1 )
-    {
-      final TextType editor = FACTORY.createText();
-      editor.setStyle( SWT.BORDER );
-      editor.setEditable( true );
-      editor.setProperty( ftp.getName() );
-  
-      griddata.setHorizontalAlignment( GridData.BEGINNING );
-      griddata.setWidthHint( 100 );
-      editor.setLayoutData( griddata );
-      
-      return editor;
-    }
-    
-    final LabelType errorlabel = FACTORY.createLabel();
-    errorlabel.setStyle( SWT.NONE );
-    errorlabel.setText( "<No control for type: " + ftp.getType() + ">" );
-
-    griddata.setHorizontalAlignment( GridData.FILL );
-    griddata.setGrabExcessHorizontalSpace( true );
-    errorlabel.setLayoutData(griddata);
-    return errorlabel;
   }
 
   /**
@@ -240,20 +143,19 @@ public class FeatureComposite implements IFeatureControl
     if( view != null )
       return view;
 
-    final Featureview newView = createFeatureviewFromFeatureType( featureType );
+    final Featureview newView = FeatureviewHelper.createFeatureviewFromFeatureType( featureType );
 
     m_viewMap.put( typename, newView );
 
     return newView;
   }
-  
+
   public Control createControl( final Composite parent, final int style )
   {
     final Featureview view = getFeatureview( getFeature().getFeatureType() );
 
     return createControl( parent, view );
- }
-
+  }
 
   public Control createControl( final Composite parent, final ControlType controlType )
   {
@@ -272,13 +174,14 @@ public class FeatureComposite implements IFeatureControl
     return control;
   }
 
-  private Control createControlFromControlType( final Composite parent, final ControlType controlType )
+  private Control createControlFromControlType( final Composite parent,
+      final ControlType controlType )
   {
     if( controlType instanceof CompositeType )
     {
       final CompositeType compositeType = (CompositeType)controlType;
       final Composite composite = createCompositeFromCompositeType( parent, compositeType );
-      
+
       // Layout setzen
       final LayoutType layoutType = compositeType.getLayout();
       if( layoutType != null )
@@ -288,7 +191,7 @@ public class FeatureComposite implements IFeatureControl
       final List children = compositeType.getControl();
       for( final Iterator iter = children.iterator(); iter.hasNext(); )
         createControl( composite, (ControlType)iter.next() );
-      
+
       return composite;
     }
 
@@ -312,7 +215,7 @@ public class FeatureComposite implements IFeatureControl
           label.setToolTipText( annotation.getTooltip() );
         }
       }
-      
+
       return label;
     }
     else if( controlType instanceof TextType )
@@ -327,7 +230,21 @@ public class FeatureComposite implements IFeatureControl
       tfc.setEnabled( editorType.isEditable() );
 
       addControl( tfc );
-      
+
+      return control;
+    }
+    else if( controlType instanceof ButtonType )
+    {
+      final ButtonType buttonType = (ButtonType)controlType;
+
+      final String propertyName = buttonType.getProperty();
+
+      final ButtonFeatureControl bfc = new ButtonFeatureControl( getFeature(), propertyName );
+
+      final Control control = bfc.createControl( parent, buttonType.getStyle() );
+
+      addControl( bfc );
+
       return control;
     }
 
@@ -335,7 +252,7 @@ public class FeatureComposite implements IFeatureControl
     label.setText( "<could not create control>" );
     return label;
   }
-  
+
   private Composite createCompositeFromCompositeType( final Composite parent,
       final CompositeType compositeType )
   {
@@ -393,10 +310,10 @@ public class FeatureComposite implements IFeatureControl
 
     return null;
   }
-  
-  private void addControl( final TextFeatureControl tfc )
+
+  private void addControl( final IFeatureControl fc )
   {
-    m_controls.add( tfc );
+    m_controls.add( fc );
   }
 
   /**
@@ -419,11 +336,9 @@ public class FeatureComposite implements IFeatureControl
     for( final Iterator iter = m_controls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
-      fc.removeModifyListener( l );     
+      fc.removeModifyListener( l );
     }
 
   }
-
-
 
 }

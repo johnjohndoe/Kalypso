@@ -25,4 +25,7 @@ public interface ITypeHandler
    * Erzeugt aus einem XML-Knoten ein Objekt vom Typen {@link #getClassName()}.
    */
   public Object unmarshall( final Node node ) throws TypeRegistryException;
+
+  /** Ein Kurzname des behandelten Typ, wird z.B: für Beschriftungen benutzt */
+  public String getShortname();
 }

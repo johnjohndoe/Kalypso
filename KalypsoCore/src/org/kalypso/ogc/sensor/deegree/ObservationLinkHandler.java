@@ -8,7 +8,6 @@ import org.deegree_impl.extension.ITypeHandler;
 import org.deegree_impl.extension.TypeRegistryException;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -99,20 +98,12 @@ public class ObservationLinkHandler implements ITypeHandler
     }
   }
 
-  public static void main( final String[] args ) throws JAXBException
+  /**
+   * @see org.deegree_impl.extension.ITypeHandler#getShortname()
+   */
+  public String getShortname()
   {
-    new ObservationLinkHandler().test();
-  }
-
-  private void test() throws JAXBException
-  {
-    final TimeseriesLinkType link = m_factory.createTimeseriesLinkType();
-
-    link.setActuate( "onDemand" );
-    link.setHref( "path=blubb" );
-    link.setType( "simple" );
-
-    m_marshaller.marshal( link, System.out );
+    return "Zeitreihen Verknüpfung";
   }
 
 }

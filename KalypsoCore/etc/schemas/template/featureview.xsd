@@ -61,6 +61,15 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="button" substitutionGroup="ns1:control">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ns1:controlType">
+					<xs:attribute name="property" type="xs:string" use="required"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="layout" type="ns1:layoutType" abstract="true"/>
 	<xs:element name="gridLayout" substitutionGroup="ns1:layout">
 		<xs:complexType>

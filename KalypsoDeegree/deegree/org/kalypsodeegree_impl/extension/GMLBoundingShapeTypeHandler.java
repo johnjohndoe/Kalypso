@@ -43,4 +43,12 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
   throw new UnsupportedOperationException("TODO implement it");  
   }
 
+  /**
+   * @see org.deegree_impl.extension.ITypeHandler#getShortname()
+   */
+  public String getShortname()
+  {
+    return "Bounding Shape";
+  }
+
 }

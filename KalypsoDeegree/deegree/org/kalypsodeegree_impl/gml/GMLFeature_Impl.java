@@ -326,11 +326,11 @@ public class GMLFeature_Impl implements GMLFeature
         {
           Element elem = (Element)nl.item( i );
 
-          // make sure that's a property node
-          if( !XMLTools.toLocalName( elem.getNodeName() ).equals( "name" )
-              && !XMLTools.toLocalName( elem.getNodeName() ).equals( "description" )
-              && !XMLTools.toLocalName( elem.getNodeName() ).equals( "boundedBy" ) )
-          {
+//          // make sure that's a property node
+//          if( !XMLTools.toLocalName( elem.getNodeName() ).equals( "name" )
+//              && !XMLTools.toLocalName( elem.getNodeName() ).equals( "description" )
+//              && !XMLTools.toLocalName( elem.getNodeName() ).equals( "boundedBy" ) )
+//          {
             //is it a geometry property
             if( isGeometryProperty( elem ) )
             {
@@ -344,7 +344,7 @@ public class GMLFeature_Impl implements GMLFeature
             {
               list.add( new GMLProperty_Impl( elem ) );
             }
-          }
+//          }
         }
       }
     }
@@ -625,6 +625,9 @@ public class GMLFeature_Impl implements GMLFeature
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.4  2004/10/11 13:19:42  belger
+ * *** empty log message ***
+ *
  * Revision 1.3  2004/10/07 14:09:14  doemming
  * *** empty log message ***
  *
