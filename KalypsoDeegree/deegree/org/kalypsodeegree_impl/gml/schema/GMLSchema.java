@@ -29,7 +29,6 @@ public class GMLSchema
 
   private String m_targetNS = null;
 
-  //  private FeatureType[] m_featureTypes = null;
   private HashMap m_featureTypes = null;
 
   private final HashMap m_nodeFeatureTypeMap;
@@ -68,9 +67,9 @@ public class GMLSchema
         final URI uri = new URI( schemaLocation );
         final URL url = uri.isAbsolute() ? new URL( schemaLocation ) : new URL( m_url, schemaLocation );
         
-        System.out.println( "m_url: " + m_url.toString() );
-        System.out.println( "SchemaLocation: " + schemaLocation );
-        System.out.println( "url: " + url.toString() );
+//        System.out.println( "m_url: " + m_url.toString() );
+//        System.out.println( "SchemaLocation: " + schemaLocation );
+//        System.out.println( "url: " + url.toString() );
 
         final GMLSchema schema = new GMLSchema( url );
         m_importedSchemas.put( schema.getTargetNS(), schema );

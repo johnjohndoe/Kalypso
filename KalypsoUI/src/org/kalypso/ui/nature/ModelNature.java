@@ -390,7 +390,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       }
       catch( final CoreException e )
       {
-        // TODO: error handling? -->> als job absetzen?
+        // todo: error handling? -->> als job absetzen?
         e.printStackTrace();
       }
       break;
@@ -618,6 +618,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
             "Fehler beim Zurückladen der Ergebnisdateien", thrown ) );
 
       monitor.worked( 1 );
+      
+      if( monitor.isCanceled() )
+        throw new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), 0, "Vorgang vom Benutzer abgebrochen", null ) );
     }
 
     monitor.done();
@@ -649,6 +652,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public void runCalculation( final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
   {
+    final CoreException cancelException = new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) );
+    
     if( !isCalcCalseFolder( folder ) )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Verzeichnis ist kein Rechenfall :" + folder.getName(), null ) );
@@ -657,9 +662,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     final Modelspec modelspec = getModelspec();
 
-    monitor.beginTask( "Initialisierung der Berechnung", 4000 );
+    monitor.beginTask( "Berechnung wird vorbereitet", 4000 );
 
-    // todo: description?
     final CalcJobBean job;
     final ICalculationService calcService;
     try
@@ -668,8 +672,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           .getProxy( "Kalypso_CalculationService", ClassUtilities
               .getOnlyClassName( ICalculationService.class ) );
 
-      // todo: check, if service can calculate it
-      job = calcService.prepareJob( modelspec.getTypeID(), "Beschreibung:" );
+      job = calcService.prepareJob( modelspec.getTypeID(), "" );
+      
+      if( monitor.isCanceled() )
+      {
+          calcService.disposeJob( job.getId() );
+          throw cancelException;
+      }
     }
     catch( final RemoteException e )
     {
@@ -686,6 +695,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     monitor.worked( 1000 );
 
+    monitor.setTaskName( "Berechnungseingabe wird zum Server kopiert" );
     try
     {
       final String jobID = job.getId();
@@ -700,8 +710,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           new SubProgressMonitor( monitor, 1000 ) );
       calcService.startJob( jobID, inputBeans );
 
+      if( monitor.isCanceled() )
+        throw cancelException;
+      
+      final SubProgressMonitor calcMonitor = new SubProgressMonitor( monitor, 1000 );
       monitor.setTaskName( "Berechnung wird durchgeführt" );
-      final SubProgressMonitor calcMonitor = new SubProgressMonitor( monitor, 100 );
+      calcMonitor.beginTask( "Berechnung wird durchgeführt", 100 );
       int oldProgess = 0;
       while( true )
       {
@@ -738,23 +752,22 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         calcMonitor.worked( progress - oldProgess );
         oldProgess = progress;
 
+        // ab hier bei cancel nicht mehr zurückkehren, sondern 
+        // erstmal den Job-Canceln und warten bis er zurückkehrt
         if( monitor.isCanceled() )
           calcService.cancelJob( jobID );
-        // trotzdem weiterwarten, der Job muss von selbst zurückkehren
       }
-      
-      final CalcJobBean jobBean = calcService.getJob( jobID );
-      int progress = jobBean.getProgress();
-      calcMonitor.worked( progress - oldProgess );
+
       calcMonitor.done();
-      
-      monitor.setTaskName( "Berechnungsergebnisse vom Server lesen" );
+
+      final CalcJobBean jobBean = calcService.getJob( jobID );
 
       // Abhängig von den Ergebnissen was machen
       switch( jobBean.getState() )
       {
       case ICalcServiceConstants.FINISHED:
-        // einfach stoppen, die Ergebnisse werden abgeholt
+        // Ergebniss abholen
+        monitor.setTaskName( "Berechnungsergebnisse werden vom Server gelesen" );
         final CalcJobDataBean[] results = jobBean.getResults();
         final IFolder outputfolder = folder.getFolder( "Ergebnisse" );
         if( outputfolder.exists() )
@@ -765,8 +778,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         return;
 
       case ICalcServiceConstants.CANCELED:
-        throw new CoreException( new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0,
-            "Rechenvorgang wuurde durch Benutzer abgebrochen.", null ) );
+        throw cancelException;
 
       case ICalcServiceConstants.ERROR:
         throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechenvorgang fehlerhaft:\n"

@@ -36,6 +36,7 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
     layout.addNewWizardShortcut( "org.kalypso.wizard.newGtt" );
     layout.addNewWizardShortcut( "org.kalypso.wizard.newOdt" );
     layout.addNewWizardShortcut( "org.kalypso.wizard.newOtt" );
+    layout.addNewWizardShortcut( "org.kalypso.wizard.newCalcCase" );
     
     layout.setFixed( true );
   }

@@ -15,7 +15,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/jfreechart-0.9.20.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/kalypsoservice_observation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/activation.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/kalypsoservice_calculation.jar"/>
+	<classpathentry exported="true" sourcepath="/KalypsoCalcService/src" kind="lib" path="lib/kalypsoservice_calculation.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="build/bin"/>
