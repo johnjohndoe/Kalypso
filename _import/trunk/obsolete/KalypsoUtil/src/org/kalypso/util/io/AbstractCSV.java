@@ -106,6 +106,14 @@ public abstract class AbstractCSV implements ITabledValues
     return m_lines.size();
   }
 
+  public int getColumns()
+  {
+    if( getLines() == 0 )
+      return 0;
+    
+    return ((String[])m_lines.get(0)).length;
+  }
+  
   /**
    * @see org.kalypso.util.io.ITabledValues#getItem(int, int)
    */
