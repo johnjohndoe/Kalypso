@@ -1,6 +1,7 @@
-#Wed Dec 29 21:03:30 CET 2004
-encoding//src/org/kalypso/ogc/gml/widgets/ZoomInWidget.java=UTF-8
+#Fri Feb 25 17:18:01 CET 2005
+encoding//schema/nativeObsAdapter.exsd=UTF-8
 encoding//src/org/kalypso/ogc/gml/widgets/CreateGeometryFeatureWidget.java=UTF-8
+encoding//src/org/kalypso/ogc/gml/widgets/ZoomInWidget.java=UTF-8
 eclipse.preferences.version=1
 encoding//etc/schemas/zml/beispiel.zml=UTF-8
 encoding//etc/schemas/zml/inline.zml=UTF-8
