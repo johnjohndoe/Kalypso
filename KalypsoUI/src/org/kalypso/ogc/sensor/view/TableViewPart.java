@@ -30,6 +30,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.swing.ObservationTableModel;
 import org.kalypso.plugin.KalypsoGisPlugin;
+import org.kalypso.util.adapter.IAdaptable;
 import org.kalypso.util.repository.view.RepositoryExplorerPart;
 
 /**
@@ -91,11 +92,15 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     m_model.setObservation( null, null );
     
     StructuredSelection selection = (StructuredSelection)event.getSelection();
-
-    if( !( selection.getFirstElement() instanceof IObservation ) )
+    
+    if( !( selection.getFirstElement() instanceof IAdaptable ) )
+      return;
+    
+    IObservation obs = (IObservation)((IAdaptable)selection.getFirstElement()).getAdapter( IObservation.class );
+    if( obs == null )
       return;
 
-    Job job = new ShowObservationJob( (IObservation)selection.getFirstElement() );
+    Job job = new ShowObservationJob( obs );
     job.schedule();
   }
 
