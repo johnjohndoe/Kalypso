@@ -231,7 +231,7 @@ public class DiagViewTemplate extends AbstractViewTemplate
    * @param context
    */
   public void setBaseTemplate( final ObsdiagviewType obsDiagView,
-      final URL context )
+      final URL context, final boolean ignoreexceptions )
   {
     removeAllAxes();
     removeAllThemes();
@@ -262,7 +262,7 @@ public class DiagViewTemplate extends AbstractViewTemplate
       addTheme( theme );
 
       final PoolableObjectType key = new PoolableObjectType(
-          tobs.getLinktype(), tobs.getHref(), context );
+          tobs.getLinktype(), tobs.getHref(), context, ignoreexceptions );
       theme.loadObservation( key );
     }
   }

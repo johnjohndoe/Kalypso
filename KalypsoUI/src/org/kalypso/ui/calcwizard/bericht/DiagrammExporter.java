@@ -91,14 +91,11 @@ public class DiagrammExporter extends AbstractBerichtExporter
     final ObsdiagviewType xml = DiagViewUtils.loadDiagramTemplateXML( reader2 );
     
     final DiagViewTemplate tpl = new DiagViewTemplate();
-    tpl.setBaseTemplate( xml, getContext() );
-    
-    
+    tpl.setBaseTemplate( xml, getContext(), true );
+    tpl.waitUntilLoaded( 100, 100 );
+
     final ObservationChart chart = new ObservationChart( tpl );
     chart.setBackgroundPaint( Color.WHITE );
-    
-    // TODO: wait until template is loaded!
-    Thread.sleep( 2000 );
     
     new ExportableChart( chart, EXT, width, height ).exportDocument( os );
     

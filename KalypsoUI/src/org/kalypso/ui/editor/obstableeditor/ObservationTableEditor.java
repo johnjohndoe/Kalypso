@@ -184,7 +184,7 @@ public class ObservationTableEditor extends AbstractObservationEditor
 
         final String strUrl = ResourceUtilities.createURLSpec( input
             .getStorage().getFullPath() );
-        template.setBaseTemplate( baseTemplate, new URL( strUrl ) );
+        template.setBaseTemplate( baseTemplate, new URL( strUrl ), false );
       }
     }
     catch( Exception e )

@@ -98,9 +98,10 @@ public class TableViewTemplate extends AbstractViewTemplate
    * 
    * @param obsTableView
    * @param context
+   * @param ignoreexceptions
    */
   public void setBaseTemplate( final ObstableviewType obsTableView,
-      final URL context )
+      final URL context, final boolean ignoreexceptions )
   {
     removeAllThemes();
     
@@ -125,7 +126,7 @@ public class TableViewTemplate extends AbstractViewTemplate
       addTheme( theme );
 
       final PoolableObjectType key = new PoolableObjectType(
-          tobs.getLinktype(), tobs.getHref(), context );
+          tobs.getLinktype(), tobs.getHref(), context, ignoreexceptions );
       theme.loadObservation( key );
     }
   }

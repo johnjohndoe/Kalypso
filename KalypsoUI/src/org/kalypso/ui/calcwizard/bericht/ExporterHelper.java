@@ -34,6 +34,8 @@ public class ExporterHelper
         replace = ((TimeseriesLinkType) property).getHref();
       else if( property != null )
         replace = property.toString();
+      else if( property == null )
+        replace = "!Token not found: " + tokenname + "!";
       
       if( replace != null )
         replacetokens.setProperty( tokenname, replace );

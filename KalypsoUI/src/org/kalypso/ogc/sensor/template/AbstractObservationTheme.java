@@ -61,6 +61,14 @@ import org.kalypso.util.runtime.IVariableArguments;
 public abstract class AbstractObservationTheme implements IThemeEventProvider,
     IPoolListener, IObservationListener
 {
+  private static final int STATUS_UNKNOWN = 0;
+  
+  private static final int STATUS_LOADED = 1;
+
+  private static final int STATUS_ERROR = 2;
+
+  private static final int STATUS_LOADING = 3;
+
   private String m_name = null;
 
   private IObservation m_obs = null;
@@ -83,6 +91,9 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
    */
   private boolean m_useDefault = false;
 
+  private int m_loadedStatus = STATUS_UNKNOWN;
+  
+
   private AbstractObservationTheme( final String name )
   {
     m_name = name;
@@ -104,6 +115,8 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
     
     if( m_obs != null )
       m_obs.removeListener( this );
+    
+    m_loadedStatus = STATUS_UNKNOWN;
   }
 
   /**
@@ -167,6 +180,11 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
       m_obs = obs;
       m_obs.addListener( this );
     }
+    
+    if( obs != null )
+      m_loadedStatus = STATUS_LOADED;
+    else
+      m_loadedStatus = STATUS_ERROR;
   }
 
   /**
@@ -212,6 +230,8 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
     if( m_pool == null )
       m_pool = KalypsoGisPlugin.getDefault().getPool();
 
+    m_loadedStatus = STATUS_LOADING;
+    
     m_pool.addPoolListener( this, key );
   }
 
@@ -318,6 +338,11 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
     return bf.toString();
   }
 
+  public boolean isLoading()
+  {
+    return m_loadedStatus == STATUS_LOADING;
+  }
+  
   /** Replace tokens in Format-String
    * 
    * <dl>
@@ -328,7 +353,7 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
    * </dl>
    * 
    * */
-  protected String createCurveName( final String formatString, final IObservation obs, final IAxis axis )
+  protected static String replaceTokens( final String formatString, final IObservation obs, final IAxis axis )
   {
     String result = formatString;
     result = result.replaceAll( "%obsname%", obs.getName() );

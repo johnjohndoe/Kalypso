@@ -87,14 +87,14 @@ public class ZmlTableExporter extends AbstractBerichtExporter
     final ObstableviewType xml = TableViewUtils.loadTableTemplateXML( reader2 );
 
     final TableViewTemplate tpl = new TableViewTemplate();
-    tpl.setBaseTemplate( xml, getContext() );
-    
-    // TODO: wailt until template is loaded!
+    final ObservationTable table = new ObservationTable( tpl, true );
 
-    final ObservationTable table = new ObservationTable( tpl );
-    
-    Thread.sleep( 2000 );
+    tpl.setBaseTemplate( xml, getContext(), false );
+    tpl.waitUntilLoaded( 100, 100 );
 
+    // warte auf table to perform refresh in swing thread
+    Thread.sleep( 1000 );
+    
     new ExportableObservationTable( table ).exportDocument( os );
 
     table.dispose();
