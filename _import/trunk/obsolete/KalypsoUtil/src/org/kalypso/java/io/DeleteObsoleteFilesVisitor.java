@@ -51,11 +51,13 @@ public class DeleteObsoleteFilesVisitor implements FileVisitor
 {
   private final File m_targetDir;
   private final File m_sourceDir;
+  private final String m_excludeDirWithFile;
 
-  public DeleteObsoleteFilesVisitor( final File sourceDir, final File targetDir )
+  public DeleteObsoleteFilesVisitor( final File sourceDir, final File targetDir, final String excludeDirWithFile )
   {
     m_sourceDir = sourceDir;
-    m_targetDir = targetDir;}
+    m_targetDir = targetDir;
+    m_excludeDirWithFile = excludeDirWithFile;}
 
   /**
    * @see org.kalypso.java.io.FileVisitor#visit(java.io.File)
@@ -64,6 +66,14 @@ public class DeleteObsoleteFilesVisitor implements FileVisitor
   {
     final String relativePathTo = FileUtilities.getRelativePathTo( m_sourceDir, file );
     final File targetFile = new File( m_targetDir, relativePathTo );
+
+    // falls es ein Verzeichnis ist und das Auschlussfile enthält, hier abbrechen
+    if( m_excludeDirWithFile != null && file.isDirectory() )
+    {
+      final File excludeFile = new File( file, m_excludeDirWithFile );
+      if( excludeFile.exists() )
+        return false;
+    }
     
     if( !targetFile.exists() )
     {
