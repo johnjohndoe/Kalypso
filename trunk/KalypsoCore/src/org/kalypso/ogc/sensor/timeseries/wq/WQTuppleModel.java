@@ -200,11 +200,13 @@ public class WQTuppleModel extends AbstractTuppleModel
    */
   public void setElement( final int index, final Object element,
       final IAxis axis ) throws SensorException
+
   {
     if( axis.equals( m_destAxis ) )
     {
       final Date d = (Date) m_model.getElement( index, m_dateAxis );
 
+     
       final WechmannSet set = m_wsets.getFor( d );
 
       if( axis.getType().equals( TimeserieConstants.TYPE_RUNOFF ) )
@@ -249,5 +251,23 @@ public class WQTuppleModel extends AbstractTuppleModel
     // since indexOf only makes sensor for key axes
 
     return m_model.indexOf( element, axis );
+  }
+  
+  public IAxis getDestAxis()
+  {
+    return m_destAxis;
+  }
+  public IAxis getSrcAxis()
+  {
+    return m_srcAxis;
+  }
+  public WechmannGroup getWsets()
+  {
+    return m_wsets;
+  }
+
+  public IAxis getDateAxis()
+  {
+    return m_dateAxis;
   }
 }

@@ -480,6 +480,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   private List filterForValidTimeseriesLinks( List featureList, String propertyNameTimeserieslink,
       URL context )
   {
+  // TODO filter auch im berichtsexport benutzen
     final List result = new ArrayList();
 
     final UrlResolver resolver = new UrlResolver();
