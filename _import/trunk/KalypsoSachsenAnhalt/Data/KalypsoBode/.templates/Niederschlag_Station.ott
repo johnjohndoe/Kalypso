@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obstableview xmlns="obstableview.template.kalypso.org">
+    <observation linktype="zml" ns1:href="Zeitreihen/Niederschlag_Station/Weferlingen.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c1" name="N - Weferlingen" width="50"/>
+    </observation>
+    <observation linktype="zml" ns2:href="Zeitreihen/Niederschlag_Station/Hasselfelde.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c2" name="N - Hasselfelde" width="50"/>
+    </observation>
+    <observation linktype="zml" ns3:href="Zeitreihen/Niederschlag_Station/Elend.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c3" name="N - Elend" width="50"/>
+    </observation>
+    <observation linktype="zml" ns4:href="Zeitreihen/Niederschlag_Station/Ditfurt.zml" xmlns:ns4="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c4" name="N - Ditfurt" width="50"/>
+    </observation>
+    <observation linktype="zml" ns5:href="Zeitreihen/Niederschlag_Station/Mahndorf.zml" xmlns:ns5="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c5" name="N - Mahndorf" width="50"/>
+    </observation>
+    <observation linktype="zml" ns6:href="Zeitreihen/Niederschlag_Station/Silberhütte.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c6" name="N - Silberhütte" width="50"/>
+    </observation>
+    <rules>
+        <renderingrule mask="2">
+            <tooltip>Wert auf Gültigkeit prüfen</tooltip>
+        </renderingrule>
+        <renderingrule mask="4">
+            <tooltip>Eingabe erforderlich</tooltip>
+        </renderingrule>
+        <renderingrule mask="8">
+            <tooltip>Vom Benutzer geändert</tooltip>
+        </renderingrule>
+    </rules>
+</obstableview>
+

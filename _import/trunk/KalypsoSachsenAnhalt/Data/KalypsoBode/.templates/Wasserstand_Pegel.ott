@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obstableview xmlns="obstableview.template.kalypso.org">
+    <observation linktype="zml" ns1:href="Zeitreihen/Wasserstand_Pegel/Hasselfelde.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c1" name="W - Hasselfelde" width="50"/>
+    </observation>
+    <observation linktype="zml" ns2:href="Zeitreihen/Wasserstand_Pegel/Silberhütte.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c2" name="W - Silberhütte" width="50"/>
+    </observation>
+    <observation linktype="zml" ns3:href="Zeitreihen/Wasserstand_Pegel/Hausneindorf.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c3" name="W - Hausneindorf" width="50"/>
+    </observation>
+    <observation linktype="zml" ns4:href="Zeitreihen/Wasserstand_Pegel/Nienhagen.zml" xmlns:ns4="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c4" name="W - Nienhagen" width="50"/>
+    </observation>
+    <observation linktype="zml" ns5:href="Zeitreihen/Wasserstand_Pegel/Oschersleben.zml" xmlns:ns5="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c5" name="W - Oschersleben" width="50"/>
+    </observation>
+    <observation linktype="zml" ns6:href="Zeitreihen/Wasserstand_Pegel/Thale.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c6" name="W - Thale" width="50"/>
+    </observation>
+    <observation linktype="zml" ns7:href="Zeitreihen/Wasserstand_Pegel/Ditfurt.zml" xmlns:ns7="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c7" name="W - Ditfurt" width="50"/>
+    </observation>
+    <observation linktype="zml" ns8:href="Zeitreihen/Wasserstand_Pegel/Hadmersleben.zml" xmlns:ns8="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c8" name="W - Hadmersleben" width="50"/>
+    </observation>
+    <observation linktype="zml" ns9:href="Zeitreihen/Wasserstand_Pegel/Mahndorf.zml" xmlns:ns9="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c9" name="W - Mahndorf" width="50"/>
+    </observation>
+    <observation linktype="zml" ns10:href="Zeitreihen/Wasserstand_Pegel/Trautenstein.zml" xmlns:ns10="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c10" name="W - Trautenstein" width="50"/>
+    </observation>
+    <observation linktype="zml" ns11:href="Zeitreihen/Wasserstand_Pegel/Königshütte.zml" xmlns:ns11="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c11" name="W - Königshütte" width="50"/>
+    </observation>
+    <observation linktype="zml" ns12:href="Zeitreihen/Wasserstand_Pegel/Steinerne_Renne.zml" xmlns:ns12="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c12" name="W - Steinerne Renne" width="50"/>
+    </observation>
+    <observation linktype="zml" ns13:href="Zeitreihen/Wasserstand_Pegel/Staßfurt.zml" xmlns:ns13="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c13" name="W - Staßfurt" width="50"/>
+    </observation>
+    <observation linktype="zml" ns14:href="Zeitreihen/Wasserstand_Pegel/Meisdorf.zml" xmlns:ns14="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c14" name="W - Meisdorf" width="50"/>
+    </observation>
+    <observation linktype="zml" ns15:href="Zeitreihen/Wasserstand_Pegel/Wendefurth.zml" xmlns:ns15="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c15" name="W - Wendefurth" width="50"/>
+    </observation>
+    <observation linktype="zml" ns16:href="Zeitreihen/Wasserstand_Pegel/Wegeleben.zml" xmlns:ns16="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c16" name="W - Wegeleben" width="50"/>
+    </observation>
+    <observation linktype="zml" ns17:href="Zeitreihen/Wasserstand_Pegel/Elend.zml" xmlns:ns17="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c17" name="W - Elend" width="50"/>
+    </observation>
+    <rules>
+        <renderingrule mask="2">
+            <tooltip>Wert auf Gültigkeit prüfen</tooltip>
+        </renderingrule>
+        <renderingrule mask="4">
+            <tooltip>Eingabe erforderlich</tooltip>
+        </renderingrule>
+        <renderingrule mask="8">
+            <tooltip>Vom Benutzer geändert</tooltip>
+        </renderingrule>
+    </rules>
+</obstableview>
+
