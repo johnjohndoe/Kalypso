@@ -5,6 +5,7 @@
 package org.kalypso.ogc.widgets;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -26,7 +27,13 @@ public class WidgetManager implements MouseListener, MouseMotionListener
   private final MapPanel myMapPanel;
   
   private final ICommandTarget m_commandTarget;
+  
+  private Point m_lastDragged=null;
 
+  private static final double MINIMUM_MOUSE_DISTANCE = 5;
+  
+  private Point m_lastMoved=null;
+  
   public WidgetManager( final ICommandTarget commandTarget, final MapPanel mapPanel )
   {
     myMapPanel = mapPanel;
@@ -62,14 +69,30 @@ public class WidgetManager implements MouseListener, MouseMotionListener
         break;
       }
   }
+  
+  public void mouseMoved( MouseEvent e )
+  {
+    if( m_lastMoved==null 
+        || m_lastMoved.distance(e.getPoint())>MINIMUM_MOUSE_DISTANCE)        
+      if(  getActualWidget() != null )
+    {
+      m_lastMoved=e.getPoint();
+      getActualWidget().moved( m_lastMoved );
 
+      myMapPanel.repaint();
+    }
+  }
+  
   // MouseMotionAdapter:
   public void mouseDragged( MouseEvent e )
   {
-    if( getActualWidget() != null )
+  if(m_lastDragged==null 
+        || m_lastDragged.distance(e.getPoint())>MINIMUM_MOUSE_DISTANCE)
+    
+        if(getActualWidget() != null )
     {
-      getActualWidget().dragged( e.getPoint() );
-
+      m_lastDragged=e.getPoint();
+      getActualWidget().dragged( m_lastDragged);
       myMapPanel.repaint();
     }
 
@@ -83,17 +106,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener
   public void mouseExited( MouseEvent e )
   {
   //
-  }
-
-  public void mouseMoved( MouseEvent e )
-  {
-    if( getActualWidget() != null )
-    {
-      getActualWidget().moved( e.getPoint() );
-
-      myMapPanel.repaint();
-    }
-
   }
 
   public void mousePressed( MouseEvent e )
@@ -171,45 +183,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
     return myNormalWidget;
   }
-
-  //    private Widget getFeatureCreateWidget( )
-  //    {
-  //        FeatureType ft = null;
-  //        Theme activeTheme = JMThemes.getInstance( ).getActiveTheme( );
-  //        FeatureType[] fts = JMFeatureTypeManager.getInstance( ).getFeatureTypes(
-  // activeTheme );
-  //
-  //        /* if(fts.length<2)
-  //            ft=fts[0];
-  //        else
-  //        */
-  //        {
-  //            ft = Tools.askFeatureType( fts );
-  //        }
-  //
-  //        FeatureTypeProperty[] ftps = ft.getProperties( );
-  //        FeatureTypeProperty ftp = null;
-  //
-  //        for( int p = 0; p < ftps.length; p++ )
-  //        {
-  //            System.out.println( ftps[p].getType( ) );
-  //
-  //            if( ftps[p].getType( ).startsWith( "org.deegree.model.geometry." ) )
-  //            {
-  //                if( ftps[p].getType( ).equals( "org.deegree.model.geometry.GM_Point" ) )
-  //                    return new CreateFeatureWithPointWidget( activeTheme, ft, ftps[p] );
-  //
-  //                if( ftps[p].getType( ).equals( "org.deegree.model.geometry.GM_LineString" )
-  // )
-  //                    return new CreateFeatureWithLineStringWidget( activeTheme, ft, ftps[p] );
-  //
-  //                if( ftps[p].getType( ).equals( "org.deegree.model.geometry.GM_Polygon" ) )
-  //                    return new CreateFeatureWithPolygonWidget( activeTheme, ft, ftps[p] );
-  //            }
-  //        }
-  //
-  //        return new FeatureEditWidget( );
-  //    }
 
   public void changeWidget( final IWidget newWidget )
   {

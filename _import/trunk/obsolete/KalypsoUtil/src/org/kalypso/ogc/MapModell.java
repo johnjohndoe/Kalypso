@@ -141,8 +141,9 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
 
     for( int i = 0; i < getThemeSize(); i++ )
     {
-      if( isThemeEnabled( getTheme( i ) ) )
-        getTheme( i ).paintSelected( g, p, scale, bbox, selectionId );
+      IKalypsoTheme theme = getTheme(getThemeSize()-i-1);
+      if( isThemeEnabled(theme ) )
+        theme.paintSelected( g, p, scale, bbox, selectionId );
     }
   }
 
