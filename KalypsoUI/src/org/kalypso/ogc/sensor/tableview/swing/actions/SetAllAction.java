@@ -13,7 +13,7 @@ public class SetAllAction extends AbstractObservationTableAction
 {
   public SetAllAction( ObservationTable table )
   {
-    super( table, "Alle Werte setzen", "Setzt alle Werte der Spalte auf dem selektierte Wert" );
+    super( table, "Alle Werte setzen", "Setzt alle Werte der Spalte auf den selektierten Wert" );
   }
 
   /**

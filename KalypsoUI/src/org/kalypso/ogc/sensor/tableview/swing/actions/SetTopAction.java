@@ -14,7 +14,7 @@ public class SetTopAction extends AbstractObservationTableAction
   public SetTopAction( ObservationTable table )
   {
     super( table, "Werte oberhalb setzen",
-        "Setzt Werte der Spalte auf dem selektierte Wert, welche oberhalb davon liegen" );
+        "Führt den selektierten Wert für alle vorhergehenden fort" );
   }
 
   /**
