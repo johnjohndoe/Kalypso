@@ -43,7 +43,7 @@ public final class GmlSerializer
 {
   private GmlSerializer()
   {
-  // do not instantiate this class
+    // do not instantiate this class
   }
 
   public static void serializeWorkspace( final Writer writer, final GMLWorkspace workspace )
