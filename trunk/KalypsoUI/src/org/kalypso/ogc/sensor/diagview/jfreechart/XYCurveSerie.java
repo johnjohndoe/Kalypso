@@ -41,9 +41,11 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 import org.jfree.data.general.Series;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
@@ -93,15 +95,17 @@ class XYCurveSerie extends Series
     m_xDiagAxis = xDiagAxis;
     m_yDiagAxis = yDiagAxis;
 
-    try
+    final Logger logger = Logger.getLogger( getClass().getName() );
+    
+    final IObservation obs = m_curve.getObservation();
+    if( obs == null )
+      logger.warning( "!!! No Observation for curve: " + m_curve.getName() );
+    else
     {
-      m_values = m_curve.getObservation().getValues( m_curve.getArguments() );
-    }
-    catch( NullPointerException e )
-    {
-      // TODO von Marc: kommisch, ich habe hier ein Mal eine NullPointerException bekommen
-      // und konnte bisher es nicht nachvollziehen...
-      e.printStackTrace();
+      m_values = obs.getValues( m_curve.getArguments() );
+      
+      if( m_values == null )
+        logger.warning( "!!! Values null for Observation: " + obs );
     }
   }
 

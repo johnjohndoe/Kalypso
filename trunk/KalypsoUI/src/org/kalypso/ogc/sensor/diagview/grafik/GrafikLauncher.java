@@ -496,11 +496,7 @@ public class GrafikLauncher
     }
     yLines.clear();
 
-    // if there are zwischen-status, return them
-    if( multiStatus.hasMessages() )
-      return multiStatus;
-
-    return Status.OK_STATUS;
+    return multiStatus;
   }
 
   /**

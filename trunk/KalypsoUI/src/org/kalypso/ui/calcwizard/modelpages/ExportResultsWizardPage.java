@@ -773,10 +773,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
           monitor.worked( 1 );
         }
 
-        if( multiStatus.hasMessages() )
-          return multiStatus;
-
-        return Status.OK_STATUS;
+        return multiStatus;
       }
       catch( final Exception e )
       {
@@ -874,7 +871,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
   {
     // TODO: sollte nicht diese methode überschreiben sondern besser die methode
     // getObservationsToShow!
-    
+
     // erstmal leer, damit das Diagramm gelöscht wird
     refreshDiagramForContext( new TSLinkWithName[] {}, getContext() );
 
