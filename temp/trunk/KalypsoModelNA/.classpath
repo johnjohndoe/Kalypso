@@ -8,6 +8,6 @@
 	<classpathentry kind="src" path="/KalypsoUtil"/>
 	<classpathentry kind="src" path="/KalypsoDWD"/>
 	<classpathentry kind="src" path="/KalypsoOptimizePlugin"/>
-	<classpathentry kind="lib" path="/KalypsoOptimizePlugin/lib/optimizerBinding.jar"/>
+	<classpathentry exported="true" kind="lib" path="/KalypsoOptimizePlugin/lib/optimizerBinding.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>
