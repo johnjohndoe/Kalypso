@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<tableview xmlns="gisview.xml.kalypso.org" xmlns:kalypso="types.xml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="tableview.xml.kalypso.org
+.\tableview.xsd">
+	
+		<layer id="argls" source="RESOURCE#shapes/example#unknown" type="shape">
+			<kalypso:column name="flaeche"/>
+			<kalypso:column name="featureID"/>
+			
+			<kalypso:filter columnName="flaeche" rule=">100.0"/>
+		</layer>
+</tableview>

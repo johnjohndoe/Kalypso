@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
+<xs:schema targetNamespace="gisview.xml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:kalypso="types.xml.kalypso.org" >
+	
+	<xs:import namespace="types.xml.kalypso.org" schemaLocation="./kalypsoTypes.xsd"/>
+	
+	<xs:element name="gisview">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="extent" type="kalypso:extentType" minOccurs="0"/>
+				<xs:element name="layers">
+					<xs:complexType>
+						<xs:sequence minOccurs="0" maxOccurs="unbounded">
+							<xs:element name="layer" type="kalypso:gisviewLayerType"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

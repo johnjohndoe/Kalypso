@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
+<xs:schema targetNamespace="types.xml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:kalypso="types.xml.kalypso.org">
+	<xs:complexType name="extentType">
+		<xs:attribute name="left" type="xs:double" use="required"/>
+		<xs:attribute name="right" type="xs:double" use="required"/>
+		<xs:attribute name="top" type="xs:double" use="required"/>
+		<xs:attribute name="bottom" type="xs:double" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="layerType">
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="type" type="xs:string" use="required"/>
+		<xs:attribute name="source" type="xs:anyURI" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="gisviewLayerType">
+		<xs:complexContent>
+			<xs:extension base="kalypso:layerType">
+				<xs:sequence>
+					<xs:element name="style" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:attribute name="type" type="xs:string" use="required"/>
+							<xs:attribute name="source" type="xs:string" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="srs" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="name" type="xs:string"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="depends" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:attribute name="layerid" type="xs:IDREF"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="connectedTo" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:attribute name="layerid" type="xs:IDREF"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="name" type="xs:string" use="required"/>
+				<xs:attribute name="visible" type="xs:boolean" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="tableviewLayerType">
+		<xs:complexContent>
+			<xs:extension base="kalypso:layerType">
+				<xs:sequence>
+					<xs:element name="column" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:attribute name="name" type="xs:string" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="filter" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:attribute name="columnName" type="xs:string" use="required"/>
+							<xs:attribute name="rule" type="xs:string" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

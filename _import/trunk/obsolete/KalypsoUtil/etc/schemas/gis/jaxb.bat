@@ -1,0 +1,1 @@
+C:\Programme\jwsdp-1.4\jaxb\bin\xjc.bat -d ../../../build/src *.xsd
