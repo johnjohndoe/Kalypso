@@ -1,7 +1,5 @@
 package org.kalypso.editor.mapeditor.actions;
 
-
-import org.deegree.graphics.Layer;
 import org.deegree.model.feature.FeatureType;
 
 import org.eclipse.jface.resource.ImageDescriptor;
