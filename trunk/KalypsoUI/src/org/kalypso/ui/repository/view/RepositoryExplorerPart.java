@@ -42,7 +42,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == IPropertySheetPage.class )
     {
@@ -53,7 +53,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
         m_propsPage  = new PropertySheetPage();
 
         // eigenes entry mit source provider
-        PropertySheetEntry entry = new PropertySheetEntry();
+        final PropertySheetEntry entry = new PropertySheetEntry();
         entry.setPropertySourceProvider( new ObservationPropertySourceProvider() );
 
         m_propsPage.setRootEntry( entry );
@@ -95,7 +95,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
    */
   public void createPartControl( Composite parent )
   {
-    Splitter split = new Splitter( parent, SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL );
+    final Splitter split = new Splitter( parent, SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL );
 
     m_repViewer = new TreeViewer( split, SWT.H_SCROLL | SWT.V_SCROLL );
     m_repViewer.setContentProvider( new RepositoryTreeContentProvider() );
@@ -165,7 +165,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
     m_repViewer.setSelection( selection );
   }

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src/"/>
+	<classpathentry exported="true" kind="lib" path="lib/jcommon-0.9.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jfreechart-0.9.20.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxp-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-qname.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxrpc-api.jar"/>
+	<classpathentry exported="true" sourcepath="C:/Programme/Java/jwsdp-1.4/_source/jaxrpc-si" kind="lib" path="lib/jaxrpc-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxrpc-spi.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/kalypsoservice_observation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/saaj-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/saaj-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/jcommon-0.9.5.jar"/>
-	<classpathentry kind="lib" path="lib/jfreechart-0.9.20.jar"/>
-	<classpathentry kind="lib" path="lib/activation.jar"/>
-	<classpathentry kind="lib" path="lib/dom.jar"/>
-	<classpathentry kind="lib" path="lib/jaxp-api.jar"/>
-	<classpathentry kind="lib" path="lib/jax-qname.jar"/>
-	<classpathentry kind="lib" path="lib/jaxrpc-api.jar"/>
-	<classpathentry kind="lib" path="lib/jaxrpc-impl.jar"/>
-	<classpathentry kind="lib" path="lib/jaxrpc-spi.jar"/>
-	<classpathentry kind="lib" path="lib/mail.jar"/>
-	<classpathentry kind="lib" path="lib/saaj-api.jar"/>
-	<classpathentry kind="lib" path="lib/saaj-impl.jar"/>
-	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
-	<classpathentry kind="lib" path="lib/kalypsoservice_observation.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

@@ -10,10 +10,46 @@
       <library name="KalypsoUi.jar">
          <export name="*"/>
       </library>
+      <library name="lib/activation.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/mail.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/saaj-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/saaj-impl.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/xercesImpl.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/dom.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jaxp-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jax-qname.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jaxrpc-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jaxrpc-impl.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jaxrpc-spi.jar">
+         <export name="*"/>
+      </library>
       <library name="lib/jcommon-0.9.5.jar">
          <export name="*"/>
       </library>
       <library name="lib/jfreechart-0.9.20.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypsoservice_observation.jar">
          <export name="*"/>
       </library>
    </runtime>
