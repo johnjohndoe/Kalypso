@@ -41,7 +41,7 @@ public class SetColumnVisibleCommand implements ICommand
    */
   public void process() throws Exception
   {
-    doIt( m_viewer, m_propertyName, m_bVisible, 100, false );
+    doIt( m_viewer, m_propertyName, m_bVisible, 100, true );
   }
 
   /**
@@ -49,7 +49,7 @@ public class SetColumnVisibleCommand implements ICommand
    */
   public void redo() throws Exception
   {
-    doIt( m_viewer, m_propertyName, m_bVisible, 100, false );
+    doIt( m_viewer, m_propertyName, m_bVisible, 100, true );
   }
 
   /**
