@@ -13,15 +13,16 @@ import javax.xml.bind.JAXBException;
 import junit.framework.TestCase;
 
 import org.deegree.model.feature.Annotation;
-import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureAssociationTypeProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.extension.TypeRegistryException;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.gml.schema.EnumerationFeatureTypeProperty;
 import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.feature.XLinkFeatureTypeProperty;
+import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 
@@ -99,14 +100,14 @@ public class JMSchemaTest extends TestCase
 
   public void testSpreeModellGML() throws Exception
   {
-    URL modellURL = getClass().getResource( "spreemodell/modell.gml" );
-    URL schemaURL = getClass().getResource( "spreemodell/modell.xsd" );
-    final Feature fe = GmlSerializer.createGMLWorkspace( modellURL, schemaURL ).getRootFeature();
+    final URL modellURL = getClass().getResource( "spreemodell/modell.gml" );
+//    final URL schemaURL = getClass().getResource( "spreemodell/modell.xsd" );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellURL, new UrlUtilities() );
     final File file = File.createTempFile( "mode:out", ".gml" );
     file.deleteOnExit();
 
     final FileWriter writer = new FileWriter( file );
-    GmlSerializer.serializeFeature( writer, fe, null );
+    GmlSerializer.serializeWorkspace( writer, workspace, null );
   }
 
   //  

@@ -41,11 +41,12 @@ public abstract class SetContentThread extends CatchThread
     {
       m_pis = new PipedInputStream( m_pos );
 
-      m_charset = "UTF-8";
+      final String charset;
       if( !create )
-        m_charset = m_file.getCharset();
+        charset = m_file.getCharset();
       else
-        m_charset = m_file.getWorkspace().getRoot().getDefaultCharset();
+        charset = m_file.getParent().getDefaultCharset();
+      m_charset = charset;
 
       final InputStream is = m_pis;
       m_catchRunnable = new CatchRunnable()
@@ -57,6 +58,8 @@ public abstract class SetContentThread extends CatchThread
           else
             file.setContents( is, force, keepHistory, monitor );
           is.close();
+          
+          file.setCharset( charset, monitor );
         }
       };
       new Thread( m_catchRunnable ).start();

@@ -38,7 +38,7 @@ public class ZmlLinkValues implements IZmlValues
     // index begins with 0 internally
     m_column = vl.getColumn() - 1;
 
-    final URL url = UrlUtilities.resolveURL( context, vl.getHref() );
+    final URL url = new UrlUtilities().resolveURL( context, vl.getHref() );
 
     if( vl.getRegexp() == null || vl.getRegexp().length() == 0 )
     {

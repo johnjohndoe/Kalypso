@@ -1,11 +1,10 @@
 package org.kalypso.ogc.gml.loader;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Properties;
 
 import org.deegree.model.feature.FeatureVisitor;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.deegree_impl.model.feature.visitors.ResortVisitor;
 import org.deegree_impl.model.feature.visitors.TransformVisitor;
@@ -37,26 +36,41 @@ public class ShapeLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties,
-   *      java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
-  protected Object loadIntern( final Properties source, final URL context, final IProgressMonitor monitor )
+  protected Object loadIntern( final String location, final URL context, final IProgressMonitor monitor )
       throws LoaderException
   {
     try
     {
+      // eventuelle vorhandenen Information zum CRS abschneiden
+      final int index = location.indexOf( '#' );
+
+      final String sourceSrs;
+      final String shpSource;
+      if( index != - 1 && index + 1 < location.length())
+      {
+        sourceSrs = location.substring( index + 1 );
+        
+        shpSource = location.substring( 0 , index );
+      }
+      else
+      {
+        sourceSrs = "EPSG:4326";
+        shpSource = location;
+      }
+      
       final UrlResolver urlResolver = new UrlResolver();
 
       IResource shpResource = null;
       IResource dbfResource = null;
       IResource shxResource = null;
       
-      final String sourceLocation = source.getProperty( "PATH", "" );
-      final URL sourceURL = urlResolver.resolveURL( context, sourceLocation );
+      final URL sourceURL = urlResolver.resolveURL( context, shpSource );
 
-      final URL shpURL = urlResolver.resolveURL( context, sourceLocation + ".shp" );
-      final URL dbfURL = urlResolver.resolveURL( context, sourceLocation + ".dbf" );
-      final URL shxURL = urlResolver.resolveURL( context, sourceLocation + ".shx" );
+      final URL shpURL = urlResolver.resolveURL( context, shpSource + ".shp" );
+      final URL dbfURL = urlResolver.resolveURL( context, shpSource + ".dbf" );
+      final URL shxURL = urlResolver.resolveURL( context, shpSource + ".shx" );
       
       // leider können Shapes nicht aus URL geladen werden -> protocoll checken
       File sourceFile = null;
@@ -76,22 +90,17 @@ public class ShapeLoader extends AbstractLoader
       }
       
       if( sourceFile == null )
-        throw new LoaderException( "Could not load shape at source: " + sourceLocation );
-      
+        throw new LoaderException( "Could not load shape at source: " + shpSource );
 
       // Workspace laden
-      final String sourceSrs = source.getProperty( "SRS", "" );
       final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-
       final CS_CoordinateSystem sourceCrs = org.deegree_impl.model.cs.Adapters.getDefault().export(
           csFac.getCSByName( sourceSrs ) );
-
-      if( sourceCrs == null )
-        throw new LoaderException( "Kein Koordinaten-System für Shape gefunden: " + sourceSrs );
-
+      
       final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-      final CommandableWorkspace workspace = new CommandableWorkspace( ShapeSerializer.deserialize( sourceFile.getAbsolutePath(),
-          sourceCrs, new EclipseProgressMonitor( monitor ) ) );
+      final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(),
+          sourceCrs, new EclipseProgressMonitor( monitor ) );
+      final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
 
       try
       {
@@ -117,29 +126,5 @@ public class ShapeLoader extends AbstractLoader
       e.printStackTrace();
       throw new LoaderException( e );
     }
-  }
-
-  /**
-   * @see org.kalypso.loader.ILoader#compareKeys(java.util.Properties, java.net.URL, java.util.Properties, java.net.URL)
-   */
-  public int compareKeys( final Properties source1, final URL context1, final Properties source2, final URL context2 )
-  {
-    try
-    {
-      final UrlResolver urlResolver = new UrlResolver();
-      
-      final String sourceLocation1 = source1.getProperty( "PATH", "" );
-      final URL sourceURL1 = urlResolver.resolveURL( context1, sourceLocation1 );
-
-      final String sourceLocation2 = source2.getProperty( "PATH", "" );
-      final URL sourceURL2 = urlResolver.resolveURL( context2, sourceLocation2 );
-
-      return sourceURL1.hashCode() - sourceURL2.hashCode();
-    }
-    catch( MalformedURLException e )
-    {
-      e.printStackTrace();
-    }    
-    return 0;
   }
 }

@@ -2,9 +2,7 @@ package org.kalypso.ogc.sensor.loaders;
 
 import java.io.PipedInputStream;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
@@ -27,17 +25,24 @@ import org.kalypso.zml.ObservationType;
  */
 public class ZmlLoader extends AbstractLoader
 {
+  private final UrlResolver m_urlResolver;
+
+  public ZmlLoader()
+  {
+    m_urlResolver = new UrlResolver();
+  
+  }
+
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties,
-   *      java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
-  protected Object loadIntern( Properties source, URL context,
+  protected Object loadIntern( final String source, URL context,
       IProgressMonitor monitor ) throws LoaderException
   {
     try
     {
-      final URL url = getObservationURL( source, context );
-
+      final URL url = m_urlResolver.resolveURL( context, source );
+      
       monitor.beginTask( "Zml laden aus: " + url, IProgressMonitor.UNKNOWN );
 
       final IObservation obs = ZmlFactory.parseXML( url, url.getFile() );
@@ -60,33 +65,17 @@ public class ZmlLoader extends AbstractLoader
   }
 
   /**
-   * Helper
-   * 
-   * @param source
-   * @param context
-   * @return absolute URL
-   * @throws MalformedURLException
+   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
-  private URL getObservationURL( final Properties source, final URL context )
-      throws MalformedURLException
-  {
-    final String path = source.getProperty( "LOCATION", "" );
-    return new UrlResolver().resolveURL( context, path );
-  }
-
-  /**
-   * @see org.kalypso.loader.AbstractLoader#save(java.util.Properties,
-   *      java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
-   *      java.lang.Object)
-   */
-  public void save( Properties source, URL context, IProgressMonitor monitor,
+  public void save( final String source, URL context, IProgressMonitor monitor,
       Object data ) throws LoaderException
   {
     PipedInputStream pis = null;
 
     try
     {
-      final URL url = getObservationURL( source, context );
+      final URL url = m_urlResolver.resolveURL( context, source );
+      
       monitor.beginTask( "ZML speichern in: " + url, IProgressMonitor.UNKNOWN );
 
       final IFile file = ResourceUtilities.findFileFromURL( url );
@@ -165,30 +154,5 @@ public class ZmlLoader extends AbstractLoader
   public String getDescription( )
   {
     return "ZML";
-  }
-
-  /**
-   * @see org.kalypso.loader.ILoader#compareKeys(java.util.Properties,
-   *      java.net.URL, java.util.Properties, java.net.URL)
-   */
-  public int compareKeys( final Properties source1, final URL context1,
-      final Properties source2, final URL context2 )
-  {
-    try
-    {
-      final int h1 = getObservationURL( source1, context1 ).hashCode();
-      final int h2 = getObservationURL( source2, context2 ).hashCode();
-
-      if( h1 != h2 )
-        return h1 - h2;
-
-      return 0;
-    }
-    catch( MalformedURLException e )
-    {
-      e.printStackTrace();
-      
-      return -1;
-    }
   }
 }

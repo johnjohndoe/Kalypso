@@ -79,6 +79,7 @@ import org.xml.sax.SAXException;
 public class GMLDocument_Impl implements GMLDocument
 {
   private org.w3c.dom.Document document = null;
+  private static final String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
 
   /**
    * Creates a new GMLDocument_Impl object.
@@ -182,7 +183,7 @@ public class GMLDocument_Impl implements GMLDocument
     try
     {
       final String schemaLocation = document.getDocumentElement().getAttributeNS(
-          "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation" );
+          XSI_NS, "schemaLocation" );
       if( schemaLocation == null )
         return null;
 
@@ -207,10 +208,15 @@ public class GMLDocument_Impl implements GMLDocument
    */
   public void setSchemaLocation( URL schema )
   {
+    setSchemaLocation( schema.toString() );
+  }
+  
+  public void setSchemaLocation( final String loc )
+  {
     Debug.debugMethodBegin( this, "setSchemaLocation" );
 
     Element root = document.getDocumentElement();
-    root.setAttribute( "xsi:schemaLocation", schema.toString() );
+    root.setAttribute( "xsi:schemaLocation", loc );
     Debug.debugMethodEnd();
   }
 
@@ -338,6 +344,9 @@ public class GMLDocument_Impl implements GMLDocument
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2004/11/01 15:38:01  belger
+ * *** empty log message ***
+ *
  * Revision 1.5  2004/10/31 18:34:01  belger
  * *** empty log message ***
  * Revision 1.4 2004/10/07 14:09:14 doemming ***

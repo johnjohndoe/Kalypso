@@ -22,7 +22,7 @@ import org.deegree_impl.gml.schema.XMLHelper;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.GMLWorkspace_Impl;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.util.net.IUrlResolver;
+import org.kalypso.java.net.IUrlResolver;
 import org.w3c.dom.Document;
 
 /**
@@ -37,7 +37,7 @@ public final class GmlSerializer
   // do not instantiate this class
   }
 
-  public static void serializeFeature( final Writer writer, final Feature feature,
+  public static void serializeWorkspace( final Writer writer, final GMLWorkspace workspace,
       final IProgressMonitor monitor ) throws GmlSerializeException
   {
     if( monitor != null )
@@ -45,15 +45,25 @@ public final class GmlSerializer
     try
     {
       final GMLDocument gmlDoc = new GMLDocument_Impl();
-      GMLFeature gmlFeature = GMLFactory.createGMLFeature( gmlDoc.getDocument(), feature );
+      GMLFeature gmlFeature = GMLFactory.createGMLFeature( gmlDoc.getDocument(), workspace
+          .getRootFeature() );
       gmlDoc.setRoot( gmlFeature );
 
-      GMLNameSpace gmlNameSpace = new GMLNameSpace_Impl( "xmlns:gml=http://www.opengis.net/gml" );
-      GMLNameSpace xlinkNameSpace = new GMLNameSpace_Impl(
+      final GMLNameSpace gmlNameSpace = new GMLNameSpace_Impl(
+          "xmlns:gml=http://www.opengis.net/gml" );
+      final GMLNameSpace xlinkNameSpace = new GMLNameSpace_Impl(
           "xmlns:xlink=http://www.w3.org/1999/xlink" );
+      final GMLNameSpace xsiNameSpace = new GMLNameSpace_Impl(
+           );
       gmlDoc.addNameSpace( gmlNameSpace );
       gmlDoc.addNameSpace( xlinkNameSpace );
+      gmlDoc.addNameSpace( xsiNameSpace );
 
+      workspace.getContext();
+      final String schemaLoc = workspace.getSchemaLocation();
+      if( schemaLoc != null )
+        gmlDoc.setSchemaLocation( schemaLoc );
+      
       if( monitor != null )
         monitor.worked( 1000 );
 
@@ -66,7 +76,11 @@ public final class GmlSerializer
     {
       throw new GmlSerializeException( "Fehler beim Schreiben des GML Stream", e );
     }
-
+    finally
+    {
+      if( monitor != null )
+        monitor.done();
+    }
   }
 
   /**
@@ -87,7 +101,7 @@ public final class GmlSerializer
     final FeatureType[] types = schema.getFeatureTypes();
     final Feature feature = FeatureFactory.createFeature( gmlFeature, types );
 
-    return new GMLWorkspace_Impl( types, feature, gmlURL );
+    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaURL.toString() );
   }
 
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IUrlResolver urlResolver )
@@ -99,8 +113,8 @@ public final class GmlSerializer
     // load schema
     final String schemaLocationName = gml.getSchemaLocationName();
     if( schemaLocationName == null || schemaLocationName.length() == 0 )
-      throw new Exception( "Keine 'schemaLocation' in gml spezifiziert."  );
-    
+      throw new Exception( "Keine 'schemaLocation' in gml spezifiziert." );
+
     final URL schemaLocation = urlResolver.resolveURL( gmlURL, schemaLocationName );
     final GMLSchema schema = new GMLSchema( schemaLocation );
 
@@ -108,7 +122,7 @@ public final class GmlSerializer
     final FeatureType[] types = schema.getFeatureTypes();
     final Feature feature = FeatureFactory.createFeature( gml.getRootFeature(), types );
 
-    return new GMLWorkspace_Impl( types, feature, gmlURL );
+    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaLocationName );
   }
 
 }

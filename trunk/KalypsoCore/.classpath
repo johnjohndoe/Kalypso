@@ -12,7 +12,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/xsdlib.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/dom.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/junit.jar"/>
-	<classpathentry exported="true" sourcepath="C:/temp/KalypsoCoreBindingTmpDir/src" kind="lib" path="lib/coreBinding.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/coreBinding.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="build/bin"/>

@@ -6,7 +6,7 @@ import java.net.URL;
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.util.net.IUrlResolver;
+import org.kalypso.java.net.IUrlResolver;
 
 /**
  * <p>Erzeugt aus einem String eine URL</p>

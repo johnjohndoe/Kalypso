@@ -7,7 +7,7 @@
       plugin="org.kalypso.ui"
       image="splash.bmp"
       primary="true"
-      application="org.eclipse.ui.ide.workbench">
+      application="org.kalypso.ui.application">
 
    <install-handler/>
 
@@ -24,7 +24,6 @@
    </license>
 
    <url>
-      <update label="BCE local" url="file://bcenas01/Q/lhz04085/work/eclipse_update_site"/>
    </url>
 
    <requires>
@@ -52,7 +51,7 @@
          id="org.kalypso.deegree"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.1"/>
 
    <plugin
          id="org.kalypso.ui"

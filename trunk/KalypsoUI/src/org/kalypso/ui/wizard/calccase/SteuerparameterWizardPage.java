@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.GMLWorkspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -51,6 +50,8 @@ public class SteuerparameterWizardPage extends WizardPage
   private boolean m_update;
 
   private Button m_checkUpdate;
+
+  private GMLWorkspace m_workspace;
 
   public SteuerparameterWizardPage( final IProjectProvider pp,
       final boolean overrideCanFlipToNextPage )
@@ -127,8 +128,8 @@ public class SteuerparameterWizardPage extends WizardPage
     // gibts schon nen GML?
     final ModelNature nature = (ModelNature)m_projectProvider.getProject().getNature(
         ModelNature.ID );
-    final GMLWorkspace gml = nature.loadOrCreateControl( folder );
-    m_featureComposite.setFeature( gml.getRootFeature() );
+    m_workspace = nature.loadOrCreateControl( folder );
+    m_featureComposite.setFeature( m_workspace.getRootFeature() );
     m_featureComposite.updateControl();
   }
 
@@ -157,16 +158,15 @@ public class SteuerparameterWizardPage extends WizardPage
     monitor.worked( 1000 );
 
     // SPEICHERN
-    final Feature rootFeature = m_featureComposite.getFeature();
-
     final IFile controlFile = folder.getFile( ModelNature.CONTROL_NAME );
 
+    final GMLWorkspace workspace = m_workspace;
     final SetContentThread thread = new SetContentThread( controlFile, !controlFile.exists(),
         false, false, new NullProgressMonitor() )
     {
       public void write( final Writer w ) throws Throwable
       {
-        GmlSerializer.serializeFeature( w, rootFeature, new NullProgressMonitor() );
+        GmlSerializer.serializeWorkspace( w, workspace, new NullProgressMonitor() );
       }
     };
     thread.start();

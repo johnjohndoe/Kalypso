@@ -152,5 +152,13 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   {
     return m_workspace.getFeaturepathForFeature(feature);
   }
+
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#getSchemaLocation()
+   */
+  public String getSchemaLocation()
+  {
+    return m_workspace.getSchemaLocation();
+  }
   
 }
