@@ -63,6 +63,7 @@ import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.ogc.sensor.zml.ZmlObservation;
 import org.kalypso.template.gismapview.Gismapview;
@@ -684,6 +685,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 
   /**
    * Saves the dirty observations that were edited in the table.
+   * @param saveFiles
+   * @param monitor
    */
   protected void saveDirtyObservations( final boolean saveFiles, final IProgressMonitor monitor ) 
   {
@@ -722,6 +725,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
           final ITuppleModel values = model.getValues( theme.getColumns() );
           obs.setValues( values );
 
+          // TRICKY: obs data has changed, force refresh of template to update diagram view
+          // might be ameliored...
+          template.fireTemplateChanged( new TemplateEvent( theme, TemplateEvent.TYPE_REFRESH ) );
+          
           if( saveFiles )
             template.saveObservation( obs, monitor );
         }

@@ -324,7 +324,7 @@ public class ObservationPlot extends XYPlot
 	          x = xyc.getXValue(1).doubleValue();
 	        else
 	          x = getDomainAxis().getLowerBound();
-	        final XYTextAnnotation ann = new XYTextAnnotation( alarms[i], x, value.doubleValue() + 0.5 );
+	        final XYTextAnnotation ann = new XYTextAnnotation( alarms[i], x, value.doubleValue() );
 	        ann.setPaint( color );
 	        addAnnotation( ann );
 	      }

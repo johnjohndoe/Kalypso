@@ -22,7 +22,7 @@ public class TemplateEvent extends EventObject
   
   public TemplateEvent( final Object obj, final int type )
   {
-    this( null, obj, type );
+    this( obj, obj, type );
   }
   
   public TemplateEvent( final Object src, final Object obj, final int type )

@@ -1,5 +1,8 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import javax.swing.SwingUtilities;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -10,6 +13,7 @@ import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 
@@ -65,37 +69,57 @@ public class ObservationChart extends JFreeChart implements
     {
       protected void runIntern( ) throws Throwable
       {
+        final ObservationPlot obsPlot = ((ObservationPlot) getPlot());
+        
+        // ADD A CURVE
         if( evt.isType( TemplateEvent.TYPE_ADD )
             && evt.getObject() instanceof IDiagramCurve )
         {
-          ((ObservationPlot) getPlot()).addCurve( (IDiagramCurve) evt
+          obsPlot.addCurve( (IDiagramCurve) evt
               .getObject() );
         }
 
+        // REMOVE A CURVE
         if( evt.isType( TemplateEvent.TYPE_REMOVE )
             && evt.getObject() instanceof IDiagramCurve )
         {
-          ((ObservationPlot) getPlot()).removeCurve( (IDiagramCurve) evt
+          obsPlot.removeCurve( (IDiagramCurve) evt
               .getObject() );
         }
 
-        //          if( evt.getType() == TemplateEvent.TYPE_REFRESH &&
-        //              evt.getObject() instanceof Collection )
-        //          {
-        //            clearChart();
-        //
-        //            final Iterator itThemes = ((Collection) evt.getObject()).iterator();
-        //            while( itThemes.hasNext() )
-        //            {
-        //              final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) itThemes
-        //                  .next();
-        //              final Iterator it = theme.getCurves().iterator();
-        //              while( it.hasNext() )
-        //                ((ObservationPlot) getPlot()).addCurve( (IDiagramCurve) it
-        //                    .next() );
-        //            }
-        //          }
+        // REFRESH LIST OF THEMES
+        if( evt.getType() == TemplateEvent.TYPE_REFRESH
+            && evt.getObject() instanceof Collection )
+        {
+          clearChart();
 
+          final Iterator itThemes = ((Collection) evt.getObject()).iterator();
+          while( itThemes.hasNext() )
+          {
+            final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) itThemes
+                .next();
+            final Iterator it = theme.getCurves().iterator();
+            while( it.hasNext() )
+              obsPlot
+                  .addCurve( (IDiagramCurve) it.next() );
+          }
+        }
+        
+        // REFRESH ONE THEME
+        if( evt.getType() == TemplateEvent.TYPE_REFRESH
+            && evt.getObject() instanceof IDiagramTemplateTheme )
+        {
+          final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) evt.getObject();
+          final Iterator it = theme.getCurves().iterator();
+          while( it.hasNext() )
+          {
+            final IDiagramCurve crv = (IDiagramCurve) it.next();
+            obsPlot.removeCurve( crv );
+            obsPlot.addCurve( crv );
+          }
+        }
+
+        // REMOVE ALL THEMES
         if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
           clearChart();
       }
