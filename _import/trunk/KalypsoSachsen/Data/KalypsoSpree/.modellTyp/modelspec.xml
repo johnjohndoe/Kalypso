@@ -2,5 +2,8 @@
 <modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="spree">
 	<input path=".modellTyp/modell.xsd" relativeToCalcCase="false"/>
 	<input path="calcCase.gml" relativeToCalcCase="true"/>
-	<output path="result.gml"/>
+	<output path="napfile.dbf"/>
+	<output path="vhsfile.dbf"/>
+	<output path="flpfile.dbf"/>
+	<output path="tsfile.dbf"/>
 </modelspec>

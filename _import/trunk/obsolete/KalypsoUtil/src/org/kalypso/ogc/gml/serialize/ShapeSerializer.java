@@ -1,6 +1,5 @@
 package org.kalypso.ogc.gml.serialize;
 
-import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,30 +29,31 @@ public class ShapeSerializer
   }
 
   public final static void serialize( final KalypsoFeatureLayer layer, final Map mapping,
-      final String geometryName, final File file ) throws GmlSerializeException
+      final String geometryName, final String filenameBase ) throws GmlSerializeException
   {
     final FeatureType featureType = layer.getFeatureType();
-    
-    final FeatureTypeProperty geomFeatureType = featureType.getProperty(geometryName);
-    
+
+    final FeatureTypeProperty geomFeatureType = featureType.getProperty( geometryName );
+
     final FeatureTypeProperty[] ftps = new FeatureTypeProperty[mapping.size() + 1];
-    ftps[0] = FeatureFactory.createFeatureTypeProperty( "GEOM", geomFeatureType.getType(), geomFeatureType.isNullable() );
+    ftps[0] = FeatureFactory.createFeatureTypeProperty( "GEOM", geomFeatureType.getType(),
+        geomFeatureType.isNullable() );
     int count = 1;
     for( final Iterator mIt = mapping.entrySet().iterator(); mIt.hasNext(); )
     {
       final Map.Entry entry = (Entry)mIt.next();
-      
+
       final FeatureTypeProperty ftp = featureType.getProperty( (String)entry.getValue() );
-      
-      ftps[count++] = FeatureFactory.createFeatureTypeProperty( (String)entry.getKey(), ftp.getType(), ftp.isNullable() );
-    }    
-    
-    final FeatureType shapeFeatureType = FeatureFactory.createFeatureType( null, null, featureType.getName(), ftps );
-    
+
+      ftps[count++] = FeatureFactory.createFeatureTypeProperty( (String)entry.getKey(), ftp
+          .getType(), ftp.isNullable() );
+    }
+
+    final FeatureType shapeFeatureType = FeatureFactory.createFeatureType( null, null, featureType
+        .getName(), ftps );
+
     try
     {
-      final ShapeFile shapeFile = new ShapeFile( file.toString(), "rw" );
-
       final KalypsoFeature[] features = layer.getAllFeatures();
       final FeatureCollection fc = FeatureFactory.createFeatureCollection( "collection",
           features.length );
@@ -62,25 +62,26 @@ public class ShapeSerializer
       {
         final KalypsoFeature kalypsoFeature = features[i];
 
-        final Object[] data = new Object[mapping.size() + 1];
+        final Object[] data = new Object[ftps.length];
 
         data[0] = kalypsoFeature.getProperty( geometryName );
-        
+
         int datacount = 1;
         for( final Iterator mIt = mapping.entrySet().iterator(); mIt.hasNext(); )
         {
           final Map.Entry entry = (Entry)mIt.next();
-          
+
           data[datacount++] = kalypsoFeature.getProperty( (String)entry.getValue() );
         }
-        
-       final Feature feature = FeatureFactory.createFeature( "" + i, shapeFeatureType, data );
-        
+
+        final Feature feature = FeatureFactory.createFeature( "" + i, shapeFeatureType, data );
+
         // TODO: change CRS to WGS84 als Koordinatensystem ?
 
         fc.appendFeature( feature );
       }
 
+      final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" );
       shapeFile.writeShape( fc );
       shapeFile.close();
     }

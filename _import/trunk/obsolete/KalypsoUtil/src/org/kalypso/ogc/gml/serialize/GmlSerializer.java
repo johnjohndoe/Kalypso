@@ -101,6 +101,8 @@ public final class GmlSerializer
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
+      
       throw new GmlSerializeException( "Fehler beim laden von GML", e );
     }
   }
