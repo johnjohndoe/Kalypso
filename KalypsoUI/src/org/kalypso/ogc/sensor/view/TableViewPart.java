@@ -1,10 +1,13 @@
 package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -31,7 +34,7 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
 public class TableViewPart extends ViewPart implements
     ISelectionChangedListener, IPartListener
 {
-  private final DefaultTableViewTemplate m_template = new DefaultTableViewTemplate();
+  protected final DefaultTableViewTemplate m_template = new DefaultTableViewTemplate();
 
   private ObservationTable m_table;
 
@@ -82,26 +85,51 @@ public class TableViewPart extends ViewPart implements
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    m_template.removeAllColumns();
+    final IRunnableWithProgress runnable = new IRunnableWithProgress()
+    {
+      public void run( IProgressMonitor monitor )
+          throws InvocationTargetException, InterruptedException
+      {
+        monitor.beginTask( "TableView Update", 2 );
 
-    final StructuredSelection selection = (StructuredSelection) event
-        .getSelection();
+        m_template.removeAllColumns();
 
-    if( !(selection.getFirstElement() instanceof IRepositoryItem) )
-      return;
+        monitor.worked( 1 );
 
-    final IRepositoryItem item = (IRepositoryItem) selection.getFirstElement();
+        final StructuredSelection selection = (StructuredSelection) event
+            .getSelection();
 
-    final IObservation obs = ObservationCache.getObservationFor( item );
-    if( obs == null )
-      return;
+        if( !(selection.getFirstElement() instanceof IRepositoryItem) )
+          return;
 
-    final int days = Integer.valueOf(
-        item.getRepository().getProperty( IKalypsoPreferences.NUMBER_OF_DAYS ) )
-        .intValue();
+        final IRepositoryItem item = (IRepositoryItem) selection
+            .getFirstElement();
 
-    m_template.setObservation( obs, false, DateRangeArgument
-        .createFromPastDays( days ) );
+        final IObservation obs = ObservationCache.getObservationFor( item );
+        if( obs != null )
+        {
+          final int days = Integer.valueOf(
+              item.getRepository().getProperty(
+                  IKalypsoPreferences.NUMBER_OF_DAYS ) ).intValue();
+
+          m_template.setObservation( obs, false, DateRangeArgument
+              .createFromPastDays( days ) );
+
+          monitor.worked( 1 );
+        }
+
+        monitor.done();
+      }
+    };
+
+    try
+    {
+      getSite().getWorkbenchWindow().run( false, false, runnable );
+    }
+    catch( Exception e ) // generic exception caught for simplicity
+    {
+      e.printStackTrace();
+    }
   }
 
   /**

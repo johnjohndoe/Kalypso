@@ -1,8 +1,11 @@
 package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
+import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -27,9 +30,10 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  * 
  * @author schlienger
  */
-public class DiagramViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
+public class DiagramViewPart extends ViewPart implements
+    ISelectionChangedListener, IPartListener
 {
-  final protected DefaultDiagramTemplate m_template = new DefaultDiagramTemplate();
+  protected final DefaultDiagramTemplate m_template = new DefaultDiagramTemplate();
 
   private ObservationChart m_chart;
 
@@ -47,14 +51,15 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
       MessageDialog.openError( parent.getShell(), "", e.getLocalizedMessage() );
       return;
     }
-    
+
     m_template.addTemplateEventListener( m_chart );
 
     ChartPanel chartPanel = new ChartPanel( m_chart );
     chartPanel.setMouseZoomable( true, false );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
-    Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
+    Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
+        | SWT.EMBEDDED ) );
 
     vFrame.setVisible( true );
     chartPanel.setVisible( true );
@@ -66,7 +71,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     getSite().getPage().removePartListener( this );
 
@@ -78,9 +83,9 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  public void setFocus()
+  public void setFocus( )
   {
-  // noch nix
+    // noch nix
   }
 
   /**
@@ -88,27 +93,47 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    m_template.removeAllCurves();
-    
-    final StructuredSelection selection = (StructuredSelection)event.getSelection();
+    final IRunnableWithProgress runnable = new IRunnableWithProgress()
+    {
+      public void run( IProgressMonitor monitor )
+          throws InvocationTargetException, InterruptedException
+      {
+        monitor.beginTask( "DiagramView Update", 2 );
+        
+        m_template.removeAllCurves();
 
-    if( !( selection.getFirstElement() instanceof IRepositoryItem ) )
-      return;
+        final StructuredSelection selection = (StructuredSelection) event
+            .getSelection();
 
-    final IRepositoryItem item = (IRepositoryItem)selection.getFirstElement();
+        if( !(selection.getFirstElement() instanceof IRepositoryItem) )
+          return;
 
-    
-//    final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
-    final IObservation obs = ObservationCache.getObservationFor( item );
-    if( obs == null )
-      return;
+        final IRepositoryItem item = (IRepositoryItem) selection
+            .getFirstElement();
 
-    final int days = Integer.valueOf( item.getRepository().getProperty( IKalypsoPreferences.NUMBER_OF_DAYS ) ).intValue();
-    
-//    synchronized( obs )
-//    {
-      m_template.setObservation( obs, DateRangeArgument.createFromPastDays( days ) );
-//    }
+        final IObservation obs = ObservationCache.getObservationFor( item );
+        if( obs != null )
+        {
+          final int days = Integer.valueOf(
+              item.getRepository().getProperty(
+                  IKalypsoPreferences.NUMBER_OF_DAYS ) ).intValue();
+
+          m_template.setObservation( obs, DateRangeArgument
+              .createFromPastDays( days ) );
+        }
+        
+        monitor.done();
+      }
+    };
+
+    try
+    {
+      getSite().getWorkbenchWindow().run( false, false, runnable );
+    }
+    catch( Exception e ) // generic exception caught for simplicity
+    {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -117,7 +142,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   public void partActivated( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ( (RepositoryExplorerPart)part ).addSelectionChangedListener( this );
+      ((RepositoryExplorerPart) part).addSelectionChangedListener( this );
   }
 
   /**
@@ -125,7 +150,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
    */
   public void partBroughtToTop( IWorkbenchPart part )
   {
-  // nada
+    // nada
   }
 
   /**
@@ -134,7 +159,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   public void partClosed( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ( (RepositoryExplorerPart)part ).removeSelectionChangedListener( this );
+      ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
   }
 
   /**
@@ -143,7 +168,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   public void partDeactivated( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ( (RepositoryExplorerPart)part ).removeSelectionChangedListener( this );
+      ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
   }
 
   /**
@@ -151,6 +176,6 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
    */
   public void partOpened( IWorkbenchPart part )
   {
-  // Siehe partActivated...
+    // Siehe partActivated...
   }
 }

@@ -43,7 +43,10 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
     addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_HOST, "Http-Proxy &Hostname:", getFieldEditorParent() ) );
     addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PORT, "Http-Proxy Port&nummer:", getFieldEditorParent() ) );
     addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_USER, "Http-Proxy &Benutzername:", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PASS, "Http-Proxy Pass&wort:", getFieldEditorParent() ) );
+    
+    // set echo char because it is a password field
+    final StringFieldEditor editor = new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PASS, "Http-Proxy Pass&wort:", getFieldEditorParent() );
+    editor.getTextControl( getFieldEditorParent() ).setEchoChar( '*' );
     
 //
 //    addField( new RadioGroupFieldEditor( P_CHOICE, "An example of a multiple-choice preference", 1,
@@ -53,8 +56,22 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
 //        { "C&hoice 2", "choice2" } }, getFieldEditorParent() ) );
   }
 
+  /**
+   * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+   */
   public void init( IWorkbench workbench )
   {
     // empty
+  }
+  
+  /**
+   * @see org.eclipse.jface.preference.IPreferencePage#performOk()
+   */
+  public boolean performOk( )
+  {
+    // even if on shutdown the preferences are saved, we save them in case of a platfrom crash
+    KalypsoGisPlugin.getDefault().savePluginPreferences();
+    
+    return true;
   }
 }

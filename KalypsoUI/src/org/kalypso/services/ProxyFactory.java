@@ -79,7 +79,12 @@ public class ProxyFactory
      * a proxy, this method will go through the list until it finds one
      * available server that can deliver the corresponding service.
      */
-    final List m_servers = Arrays.asList( m_conf.getProperty( serviceName + "_URL" ).split( ";" ) );
+    final String strServers = m_conf.getProperty( serviceName + "_URL" );
+    if( strServers == null )
+      throw new ServiceException( "Keine Serverkonfiguration gefunden. Stellen Sie sicher dass die Einstellungen\n" +
+          " richtig sind, und dass mindestens ein Server zur Verfügung steht.");
+    
+    final List m_servers = Arrays.asList( strServers.split( "," ) );
 
     // used as key in the proxies map
     final String key = serviceName + "-" + intfName;
