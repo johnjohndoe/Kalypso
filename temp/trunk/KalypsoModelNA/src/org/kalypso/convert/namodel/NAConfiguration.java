@@ -1,15 +1,18 @@
 /*
  * Created on Oct 7, 2004
- * 
+ *  
  */
 package org.kalypso.convert.namodel;
 
 import java.io.File;
 import java.net.URL;
 
+import org.deegree.model.feature.FeatureType;
+import org.deegree_impl.gml.schema.GMLSchema;
+
 /**
  * @author doemming
- * 
+ *  
  */
 public class NAConfiguration
 {
@@ -30,24 +33,58 @@ public class NAConfiguration
 
   private final URL m_controlSchemaURL;
 
-  public NAConfiguration( File filePrefix )
-  {
-    // schemas
-    m_schemaURL = getClass().getResource( "schema/namodellV4.xsd" );
-    m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" );
-    //        m_schemaURL = getClass().getResource("schema/namodellV3.xsd");
+  private final URL m_gmlModelURL;
 
-    // formate:
+  private final File m_asciiBaseDir;
+
+  private final File m_gmlBaseDir;
+
+  private final FeatureType m_nodeFT;
+  
+  private final FeatureType m_catchmentFT;
+
+  private final FeatureType m_vChannelFT;
+
+  private final FeatureType m_kmChannelFT;
+   
+  private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
+  {
+    
+    m_asciiBaseDir = asciiBaseDir;
+    m_gmlBaseDir = gmlBaseDir;
+    m_gmlModelURL = modelURL;
+
+    // schemas
+    m_schemaURL = getClass().getResource( "schema/namodellV5.xsd" );
+    final GMLSchema schema=new GMLSchema(m_schemaURL);
+    
+    // featuretypes
+    m_nodeFT = schema.getFeatureType( "Node" );
+    m_vChannelFT = schema.getFeatureType( "VirtualChannel" );
+    m_kmChannelFT = schema.getFeatureType( "KMChannel" );
+    m_catchmentFT = schema.getFeatureType( "Catchment" );m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" );
+
+    // formats:
     m_catchmentFormatURL = getClass().getResource( "formats/WernerCatchment.txt" );
     m_ChannelFormatURL = getClass().getResource( "formats/gerinne.txt" );
-
     m_netFormatURL = getClass().getResource( "formats/netzdatei.txt" );
+    
     // ASCII
-    (new File(filePrefix,"inp.dat")).mkdirs();
-    m_catchmentFile = new File( filePrefix, "inp.dat/we_nat.geb" );
-    m_channelFile = new File( filePrefix, "inp.dat/we_nat.ger" );
-    m_netFile = new File( filePrefix, "inp.dat/we_nat.ntz" );
+    ( new File( asciiBaseDir, "inp.dat" ) ).mkdirs();
+    m_catchmentFile = new File( asciiBaseDir, "inp.dat/we_nat.geb" );
+    m_channelFile = new File( asciiBaseDir, "inp.dat/we_nat.ger" );
+    m_netFile = new File( asciiBaseDir, "inp.dat/we_nat.ntz" );
 
+  }
+
+  public static NAConfiguration getAscii2GmlConfiguration( File asciiBaseDir, File gmlBaseDir ) throws Exception
+  {
+    return new NAConfiguration( asciiBaseDir, gmlBaseDir, null );
+  }
+
+  public static NAConfiguration getGml2AsciiConfiguration( URL modelURL, File asciiBaseDir ) throws Exception
+  {
+    return new NAConfiguration( asciiBaseDir, null, modelURL );
   }
 
   public URL getSchemaURL()
@@ -88,5 +125,40 @@ public class NAConfiguration
   public URL getControlSchemaURL()
   {
     return m_controlSchemaURL;
+  }
+
+  public URL getGMLModelURL()
+  {
+    return m_gmlModelURL;
+  }
+
+  public File getAsciiBaseDir()
+  {
+    return m_asciiBaseDir;
+  }
+
+  public File getGmlBaseDir()
+  {
+    return m_gmlBaseDir;
+  }
+
+  public FeatureType getNodeFT()
+  {
+    return m_nodeFT;
+  }
+
+  public FeatureType getCatchemtFT()
+  {
+    return m_catchmentFT;
+  }
+
+  public FeatureType getKmChannelFT()
+  {
+    return m_kmChannelFT;
+  }
+
+  public FeatureType getVChannelFT()
+  {
+    return m_vChannelFT;
   }
 }

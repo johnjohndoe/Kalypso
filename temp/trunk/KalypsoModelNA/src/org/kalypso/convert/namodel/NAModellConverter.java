@@ -9,180 +9,207 @@ import java.util.List;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.GMLWorkspace;
+import org.deegree_impl.extension.ITypeRegistry;
+import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.deegree_impl.model.feature.FeatureFactory;
+import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
+ * import and export of kalypso rainfall runoff models converts between custom
+ * ascii format and gml format. importing ascii is always processed into a gml
+ * file-structure (includes generating of zml files).
+ * 
+ * export to ascii can be generated from a gml file or from a gml workspace
+ * 
  * @author doemming
  */
 public class NAModellConverter
 {
-    private GMLSchema m_schema;
+  private GMLSchema m_schema;
 
-    private final CatchmentManager m_catchmentManager;
+  private final CatchmentManager m_catchmentManager;
 
-    private final ChannelManager m_gerinneManager;
+  private final ChannelManager m_gerinneManager;
 
-    private final ParseManager m_parseManager;
+  private final ParseManager m_parseManager;
 
-    private final NAConfiguration m_conf;
+  private final NAConfiguration m_conf;
 
-    private final NetFileManager m_nodeManager;
+  private final NetFileManager m_nodeManager;
 
-    public static void main(String[] args)
+  public static void main( String[] args )
+  {
+    try
     {
-        try {
-//            Configuration conf = new Configuration(new File("test"));
-            NAConfiguration conf = new NAConfiguration(new File("/home/doemming/weisseElster"));
-            Feature fe = asciiToFeature(conf);
-//            insertGeometries(fe,"/home/doemming/weisseElster/shapes");
+      // general
+      final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
+      registry.registerTypeHandler( new ObservationLinkHandler() );
 
-            File gmlFile = File.createTempFile("namodell_test", ".gml");
-            GmlSerializer.serializeFeature(new FileWriter(gmlFile), fe, null);
-
-            GMLWorkspace workspace = GmlSerializer.createGMLWorkspace(gmlFile
-                    .toURL(), conf.getSchemaURL());
-            
-//            File gmlFile2 = File.createTempFile("namodell_test", ".gml");
-//            
-//            GmlSerializer.serializeFeature(new FileWriter(gmlFile2),workspace.getRootFeature(),null);
-//            
-            NAConfiguration conf2 = new NAConfiguration(new File("/tmp"));
-            featureToAscii(conf2, workspace);//fe3,schemaLocation);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//      ascii2gml();
+      gml2asciil();
     }
-
-    private static void insertGeometries(Feature modelFeature,String shapeDir)
-            throws GmlSerializeException
+    catch( Exception e )
     {
-        // load ShapeFile
-        ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-        CS_CoordinateSystem cSystem = org.deegree_impl.model.cs.Adapters
-                .getDefault().export(csFac.getCSByName("EPSG:31468"));
-        
-        KalypsoFeatureLayer catchmentLayer = ShapeSerializer.deserialize(shapeDir+"/ezg_agg2", cSystem, cSystem, null);
-        Feature[] catchmentFEs = catchmentLayer.getAllFeatures();
-        KalypsoFeatureLayer channelLayer = ShapeSerializer.deserialize(shapeDir+"/river elements", cSystem, cSystem, null);
-        Feature[] channelFEs = channelLayer.getAllFeatures();
-        KalypsoFeatureLayer nodeLayer = ShapeSerializer.deserialize(shapeDir+"/knoten", cSystem, cSystem, null);
-        Feature[] nodeFEs = nodeLayer.getAllFeatures();
-        // insertGeometries
-        
-        System.out.println("inserting geometries: catchments");
-        Feature catchmentCollection = (Feature) modelFeature
-                .getProperty("CatchmentCollectionMember");
-        List catchmentList = (List) catchmentCollection.getProperty("catchmentMember");
-        copyProperties(catchmentFEs, "GEOM", "TG_KEN", (Feature[]) catchmentList
-                .toArray(new Feature[catchmentList.size()]), "Ort", "inum");
-        
-        System.out.println("inserting geometries: channels"); 
-        Feature channelCollection = (Feature) modelFeature
-        .getProperty("ChannelCollectionMember");
-        List channelList = (List) channelCollection.getProperty("channelMember");
-        copyProperties(channelFEs, "GEOM", "RIVER_NO_", (Feature[]) channelList
-                .toArray(new Feature[channelList.size()]), "Ort", "inum");
-        
-        System.out.println("inserting geometries: nodes");
-        Feature nodeCollection = (Feature) modelFeature
-        .getProperty("NodeCollectionMember");
-        List nodeList = (List) nodeCollection.getProperty("nodeMember");
-        copyProperties(nodeFEs, "GEOM", "KNOTEN_NUM", (Feature[]) nodeList
-                .toArray(new Feature[nodeList.size()]), "Ort", "num");
+      e.printStackTrace();
     }
+  }
 
-    private static void copyProperties(Feature[] orgFE, String orgGeomPropName,
-            String orgIdPropName, Feature[] destFE, String destGeomPropName,
-            String destIdPropName)
+  public static void gml2asciil() throws Exception
+  {
+
+    // export
+    final File gmlFile = new File( "/home/doemming/weisseElsterGML/naModel.gml" );
+    final File asciiBaseDir = FileUtilities.createNewTempDir( "NA_asciiBaseDir" );
+
+    final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( gmlFile.toURL(),
+        asciiBaseDir );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlFile.toURL(), conf
+        .getSchemaURL() );
+    featureToAscii( conf, workspace );
+
+  }
+
+  public static void ascii2gml() throws Exception
+  {
+    //            Configuration conf = new Configuration(new File("test"));
+    final File gmlBaseDir = FileUtilities.createNewTempDir( "NA_gmlBaseDir" );
+    NAConfiguration conf = NAConfiguration.getAscii2GmlConfiguration( new File(
+        "/home/doemming/weisseElster" ), gmlBaseDir );
+    Feature fe = asciiToFeature( conf );
+    //            insertGeometries(fe,"/home/doemming/weisseElster/shapes");
+
+    File gmlFile = new File( gmlBaseDir, "naModel.gml" );
+    GmlSerializer.serializeFeature( new FileWriter( gmlFile ), fe, null );
+
+  }
+
+  private static void insertGeometries( Feature modelFeature, String shapeDir )
+      throws GmlSerializeException
+  {
+    // load ShapeFile
+    ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
+    CS_CoordinateSystem cSystem = org.deegree_impl.model.cs.Adapters.getDefault().export(
+        csFac.getCSByName( "EPSG:31468" ) );
+
+    KalypsoFeatureLayer catchmentLayer = ShapeSerializer.deserialize( shapeDir + "/ezg_agg2",
+        cSystem, cSystem, null );
+    Feature[] catchmentFEs = catchmentLayer.getAllFeatures();
+    KalypsoFeatureLayer channelLayer = ShapeSerializer.deserialize( shapeDir + "/river elements",
+        cSystem, cSystem, null );
+    Feature[] channelFEs = channelLayer.getAllFeatures();
+    KalypsoFeatureLayer nodeLayer = ShapeSerializer.deserialize( shapeDir + "/knoten", cSystem,
+        cSystem, null );
+    Feature[] nodeFEs = nodeLayer.getAllFeatures();
+    // insertGeometries
+
+    System.out.println( "inserting geometries: catchments" );
+    Feature catchmentCollection = (Feature)modelFeature.getProperty( "CatchmentCollectionMember" );
+    List catchmentList = (List)catchmentCollection.getProperty( "catchmentMember" );
+    copyProperties( catchmentFEs, "GEOM", "TG_KEN", (Feature[])catchmentList
+        .toArray( new Feature[catchmentList.size()] ), "Ort", "inum" );
+
+    System.out.println( "inserting geometries: channels" );
+    Feature channelCollection = (Feature)modelFeature.getProperty( "ChannelCollectionMember" );
+    List channelList = (List)channelCollection.getProperty( "channelMember" );
+    copyProperties( channelFEs, "GEOM", "RIVER_NO_", (Feature[])channelList
+        .toArray( new Feature[channelList.size()] ), "Ort", "inum" );
+
+    System.out.println( "inserting geometries: nodes" );
+    Feature nodeCollection = (Feature)modelFeature.getProperty( "NodeCollectionMember" );
+    List nodeList = (List)nodeCollection.getProperty( "nodeMember" );
+    copyProperties( nodeFEs, "GEOM", "KNOTEN_NUM", (Feature[])nodeList
+        .toArray( new Feature[nodeList.size()] ), "Ort", "num" );
+  }
+
+  private static void copyProperties( Feature[] orgFE, String orgGeomPropName,
+      String orgIdPropName, Feature[] destFE, String destGeomPropName, String destIdPropName )
+  {
+    HashMap orgHash = new HashMap();
+    for( int i = 0; i < orgFE.length; i++ )
     {
-        HashMap orgHash = new HashMap();
-        for (int i = 0; i < orgFE.length; i++) {
-            String id = orgFE[i].getProperty(orgIdPropName).toString();
-            orgHash.put(id, orgFE[i]);
-        }
-        for (int i = 0; i < destFE.length; i++) {
-            Feature destFeature = destFE[i];
-            String id = destFeature.getProperty(destIdPropName).toString();
-//            System.out.println("processing id=" + id);
-            Feature orgFeaure = (Feature) orgHash.get(id);
-            if (orgFeaure != null) {
-                Object value = orgFeaure.getProperty(orgGeomPropName);
-                if (value == null)
-                    System.out.println("copyvalue is null: id=" + id);
-                FeatureProperty fProp = FeatureFactory.createFeatureProperty(
-                        destGeomPropName, value);
-                destFeature.setProperty(fProp);
-            } else
-                System.out.println("not found in shapeFile: id=" + id);
-        }
+      String id = orgFE[i].getProperty( orgIdPropName ).toString();
+      orgHash.put( id, orgFE[i] );
     }
-
-    public NAModellConverter(NAConfiguration conf) throws Exception
+    for( int i = 0; i < destFE.length; i++ )
     {
-        m_conf = conf;
-        m_schema = new GMLSchema(conf.getSchemaURL());
-
-        m_catchmentManager = new CatchmentManager(m_schema, m_conf);
-        m_gerinneManager = new ChannelManager(m_schema, m_conf);
-        m_nodeManager= new NetFileManager(m_schema,m_conf);
-        m_parseManager = new ParseManager(m_schema, conf, m_catchmentManager,
-                m_gerinneManager,m_nodeManager);
+      Feature destFeature = destFE[i];
+      String id = destFeature.getProperty( destIdPropName ).toString();
+      //            System.out.println("processing id=" + id);
+      Feature orgFeaure = (Feature)orgHash.get( id );
+      if( orgFeaure != null )
+      {
+        Object value = orgFeaure.getProperty( orgGeomPropName );
+        if( value == null )
+          System.out.println( "copyvalue is null: id=" + id );
+        FeatureProperty fProp = FeatureFactory.createFeatureProperty( destGeomPropName, value );
+        destFeature.setProperty( fProp );
+      }
+      else
+        System.out.println( "not found in shapeFile: id=" + id );
     }
+  }
 
-   
+  public NAModellConverter( NAConfiguration conf ) throws Exception
+  {
+    m_conf = conf;
+    m_schema = new GMLSchema( conf.getSchemaURL() );
 
-    public ParseManager getParseManager()
-    {
-        return m_parseManager;
-    }
+    m_catchmentManager = new CatchmentManager( m_schema, m_conf );
+    m_gerinneManager = new ChannelManager( m_schema, m_conf );
+    m_nodeManager = new NetFileManager( m_schema, m_conf );
+    m_parseManager = new ParseManager( m_schema, conf, m_catchmentManager, m_gerinneManager,
+        m_nodeManager );
+  }
 
-    public void write(GMLWorkspace workspace) throws Exception
-    {
-        
-        Writer writer = new FileWriter(m_conf.getCatchmentFile());
-        m_catchmentManager.writeFile(writer, workspace);
-        writer.close();
-        Writer writer2 = new FileWriter(m_conf.getChannelFile());
-        m_gerinneManager.writeFile(writer2, workspace);
-        writer2.close();
-        
-        Writer writer3 = new FileWriter(m_conf.getNetFile());
-        m_nodeManager.writeFile(writer3, workspace);
-        writer3.close();
-        
-    }
+  public ParseManager getParseManager()
+  {
+    return m_parseManager;
+  }
 
-   
+  public void write( GMLWorkspace workspace ) throws Exception
+  {
 
-    public static Feature asciiToFeature(NAConfiguration conf) throws Exception
-    {
-        NAModellConverter main = new NAModellConverter(conf);
-        return main.getParseManager().asciiToFeature();
-    }
+    Writer writer = new FileWriter( m_conf.getCatchmentFile() );
+    m_catchmentManager.writeFile( writer, workspace );
+    writer.close();
+    Writer writer2 = new FileWriter( m_conf.getChannelFile() );
+    m_gerinneManager.writeFile( writer2, workspace );
+    writer2.close();
 
-    public static void featureToAscii(NAConfiguration conf, GMLWorkspace workspace)
-            throws Exception
-    {
-        NAModellConverter main = new NAModellConverter(conf);
-        main.write(workspace);
-    }
+    Writer writer3 = new FileWriter( m_conf.getNetFile() );
+    m_nodeManager.writeFile( writer3, workspace );
+    writer3.close();
 
-    
-//    public static Writer getWriter(URL url) throws IOException
-//    {
-//        URLConnection connection = url.openConnection();
-//        connection.setDoOutput(true);
-//
-//        connection.getOutputStream();
-//        return new OutputStreamWriter(connection.getOutputStream());
-//
-//    }
+  }
+
+  public static Feature asciiToFeature( NAConfiguration conf ) throws Exception
+  {
+    NAModellConverter main = new NAModellConverter( conf );
+    return main.getParseManager().asciiToFeature();
+  }
+
+  public static void featureToAscii( NAConfiguration conf, GMLWorkspace workspace )
+      throws Exception
+  {
+    NAModellConverter main = new NAModellConverter( conf );
+    main.write( workspace );
+  }
+
+  //    public static Writer getWriter(URL url) throws IOException
+  //    {
+  //        URLConnection connection = url.openConnection();
+  //        connection.setDoOutput(true);
+  //
+  //        connection.getOutputStream();
+  //        return new OutputStreamWriter(connection.getOutputStream());
+  //
+  //    }
 }

@@ -1,5 +1,6 @@
 package org.kalypso.convert.namodel;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
@@ -31,9 +32,12 @@ public class CatchmentManager extends AbstractManager
 
   private final FeatureType m_grundwasserabflussFT;
 
+  private final NAConfiguration m_conf;
+
   public CatchmentManager( GMLSchema schema, NAConfiguration conf ) throws IOException
   {
     super( conf.getCatchmentFormatURL() );
+    m_conf = conf;
     m_featureType = schema.getFeatureType( "Catchment" );
     FeatureTypeProperty ftp1 = m_featureType.getProperty( "bodenkorrekturmember" );
     m_bodenKorrekturFT = ( (FeatureAssociationTypeProperty_Impl)ftp1 ).getAssociationFeatureTypes()[0];
@@ -137,10 +141,24 @@ public class CatchmentManager extends AbstractManager
     System.out.println( 15 + ": " + line );
     createProperties( propCollector, line, 15 );
 
-    // search props:
+    // generate id:
     prop = (FeatureProperty)propCollector.get( "inum" );
     int asciiID = Integer.parseInt( (String)prop.getValue() );
 
+    // handle timeseries: convert to zmllink
+    FeatureProperty ts = (FeatureProperty)propCollector.get( "kurzzeit" );
+    String tsFileString = (String)ts.getValue();
+    String relativeZmlPath="zml/N_C_"+asciiID+".zml";
+    File orgTsFile = new File( m_conf.getAsciiBaseDir(),"klima.dat/"+tsFileString );
+    Object link = NAZMLGenerator
+        .copyToTimeseriesLink( orgTsFile.toURL(), NAZMLGenerator.NA_NIEDERSCHLAG_EINGABE, m_conf
+            .getGmlBaseDir(),relativeZmlPath, true ,false);
+    FeatureProperty niederschlagZRProp = FeatureFactory.createFeatureProperty( "niederschlagZR",
+        link );
+    propCollector.put( "niederschlagZR", niederschlagZRProp );
+    // continue reading
+
+    
     Feature feature = getFeature( asciiID, m_featureType );
     Collection collection = propCollector.values();
     setParsedProperties( feature, collection );
@@ -167,9 +185,18 @@ public class CatchmentManager extends AbstractManager
   private void writeFeature( Writer writer, GMLWorkspace workSpace, Feature feature )
       throws Exception
   {
+    // 0-2
+    for( int i = 0; i <= 2; i++ )
+      writer.write( toAscci( feature, i ) + "\n" );
 
-    // 0-8
-    for( int i = 0; i <= 8; i++ )
+    StringBuffer b = new StringBuffer();
+    b.append( toAscii( (String)feature.getProperty( "pns" ), "a1" ) );
+    b.append( " " + getNiederschlagEingabeDateiString( feature ) );
+    b.append( " " + getNiederschlagEingabeDateiString( feature ) );
+    b.append( " " + toAscii( (String)feature.getProperty( "faktn" ), "f5.2" ) + "\n" );
+    writer.write( b.toString() );
+    // 4-8
+    for( int i = 4; i <= 8; i++ )
       writer.write( toAscci( feature, i ) + "\n" );
 
     // 9
@@ -228,5 +255,10 @@ public class CatchmentManager extends AbstractManager
   public String mapID( int id, FeatureType ft )
   {
     return ft.getName() + id;
+  }
+
+  public static String getNiederschlagEingabeDateiString( Feature feature )
+  {
+    return "C_" + feature.getProperty( "inum" ) + ".niederschlag";
   }
 }

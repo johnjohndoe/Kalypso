@@ -5,9 +5,11 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
 	xmlns:gml="http://www.opengis.net/gml" 
 	xmlns="http://www.w3.org/2001/XMLSchema" 
-	xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified" >
+	xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
 	<import namespace="http://www.opengis.net/gml" 
 		schemaLocation="feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" 
+		schemaLocation="obslink.xsd"/>
 	<!--<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
 	-->
 	
@@ -70,8 +72,9 @@
 					<element name="generateResult" type="boolean"/>
         			<element name="downStreamChannelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="1"/>
 					<!-- Zufluss --> 
-                    <!-- TODO nzufPfad als ZML-Link modellieren  -->
-					<element name="nzufPfad" type="string"/>
+		            <element name="zuflussZR" type="obslink:TimeseriesLink"/>
+            
+        			<element name="nzufPfad" type="string"/>
                     <!-- verzweigung -->
 					<element name="zproz" type="string"/>
 					<element name="verzweigungNodeMember" type="na:NodeAssociationType"/>
@@ -137,8 +140,9 @@
                     <element name="flaech" type="string"/>
                     <element name="pns" type="string"/>
                     <element name="kurzzeit" type="string"/>
+                    <element name="langzeit" type="string"/>                
+                    <element name="niederschlagZR" type="obslink:TimeseriesLink"/>
                     <element name="namfn" type="string"/>
-                    <element name="langzeit" type="string"/>
                     <element name="faktn" type="string"/>
                     <element name="namft" type="string"/>
                     <element name="namept" type="string"/>
@@ -327,8 +331,7 @@ siehe bodenkorrekturmember...
 			</restriction>
 		</complexContent>
 	</complexType>
-	
-   <complexType name="bodenschichtkorrekturAssociationType">
+	<complexType name="bodenschichtkorrekturAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
@@ -337,8 +340,7 @@ siehe bodenkorrekturmember...
 			</restriction>
 		</complexContent>
 	</complexType>
-	
-        <element name="bodenschichtkorrektur" type="na:bodenschichtkorrekturType" 
+	<element name="bodenschichtkorrektur" type="na:bodenschichtkorrekturType" 
 		substitutionGroup="gml:_Feature"/>
 	<!--
  (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)_(evalay,*)

@@ -256,12 +256,17 @@ public abstract class AbstractManager
       return "";
     //        System.out.println(s[0]);
     Object property = feature.getProperty( s[0] );
+    
     if( property == null )
       return "(" + s[0] + "==NULL ?)";
     String value = property.toString(); // PropertyName
 
     final String format = s[1];
-
+    return toAscii(value, format);
+  }
+  
+  public String toAscii(String value,String format)
+  {
     if( "*".equals( format ) || "a".equals( format ) || "A".equals( format ) )
       return value;
     Matcher m = pFortranFormat.matcher( format );

@@ -67,10 +67,10 @@ public class NaModelCalcJob extends AbstractCalcJob
     private void generateASCII(File basedir, CalcJobDataBean[] beans)
             throws Exception
     {
-        final NAConfiguration conf = new NAConfiguration(basedir);
         final CalcJobDataBean modellBean = CalcJobHelper.getBeanForId(
                 MODELL_ID, beans);
         final URL modellURL = new File(modellBean.getPath()).toURL();
+        final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration(modellURL, basedir);
         final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace(
                 modellURL, conf.getSchemaURL());
         NAModellConverter.featureToAscii(conf, modellWorkspace);
