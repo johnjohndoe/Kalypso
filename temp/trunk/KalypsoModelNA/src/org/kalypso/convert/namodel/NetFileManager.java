@@ -21,6 +21,7 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.feature.FeatureFactory;
+import org.deegree_impl.model.feature.FeatureHelper;
 import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -31,7 +32,7 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class NetFileManager extends AbstractManager
 {
-  static boolean DEBUG=false;
+  static boolean DEBUG=true; //TODO auf false setzen
   
   final NAConfiguration m_conf;
 
@@ -120,12 +121,12 @@ public class NetFileManager extends AbstractManager
                 + "/zufluss/" );
         File tsFile = new File( correctedPath );
         TimeseriesLink link1 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(),
-            NAZMLGenerator.NA_ZUFLUSS_EINGABE, m_conf.getGmlBaseDir(), zmlPath, false, false );
+            NAZMLGenerator.NA_ZUFLUSS_EINGABE, m_conf.getGmlBaseDir(), zmlPath, false, false ,m_conf.getTmpDir());
         FeatureProperty linkPropertyRepository = FeatureFactory.createFeatureProperty( "zuflussZRRepository", link1 );
         propCollector.put( "zuflussZRRepository", linkPropertyRepository );
         
         TimeseriesLink link2 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(),
-            NAZMLGenerator.NA_ZUFLUSS_EINGABE, m_conf.getGmlBaseDir(), zmlPath, true, true );
+            NAZMLGenerator.NA_ZUFLUSS_EINGABE, m_conf.getGmlBaseDir(), zmlPath, true, true ,m_conf.getTmpDir());
         FeatureProperty linkProperty = FeatureFactory.createFeatureProperty( "zuflussZR", link2 );
         propCollector.put( "zuflussZR", linkProperty );        
       }
@@ -421,7 +422,7 @@ public class NetFileManager extends AbstractManager
       if( link != null )
         izuf = 5;
 
-      buffer.append( toAscii( (String)nodeFE.getProperty( "num" ), "i5" ) );
+      buffer.append( toAscii( FeatureHelper.getAsString(nodeFE, "num" ), "i5" ) );
       buffer.append( toAscii( String.valueOf( izug ), "i5" ) );
       buffer.append( toAscii( String.valueOf( iabg ), "i5" ) );
       buffer.append( toAscii( String.valueOf( iueb ), "i5" ) );
@@ -430,8 +431,8 @@ public class NetFileManager extends AbstractManager
 
       if( ivzwg != 0 )
       {
-        buffer.append( toAscii( (String)nodeFE.getProperty( "zproz" ), "f10.3" ) );
-        buffer.append( toAscii( (String)linkedNodeFE.getProperty( "num" ), "i8" ) + "\n" );
+        buffer.append( toAscii( FeatureHelper.getAsString(nodeFE, "zproz" ), "f10.3" ) );
+        buffer.append( toAscii( FeatureHelper.getAsString(linkedNodeFE, "num" ), "i8" ) + "\n" );
       }
       if( izuf != 0 )
       {
@@ -456,7 +457,7 @@ public class NetFileManager extends AbstractManager
 
   private String getZuflussEingabeDateiString( Feature nodeFE )
   {
-    return "Q_N_" + nodeFE.getProperty( "num" ) + ".zufluss";
+    return "Q_N_" + FeatureHelper.getAsString(nodeFE,"num" ) + ".zufluss";
   }
 
   public class NetElement

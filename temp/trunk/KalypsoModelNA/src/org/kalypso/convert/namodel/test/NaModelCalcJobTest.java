@@ -1,13 +1,17 @@
 package org.kalypso.convert.namodel.test;
 
 import java.io.File;
+import java.io.FileOutputStream;
 
 import junit.framework.TestCase;
 
 import org.deegree_impl.extension.ITypeRegistry;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.kalypso.convert.namodel.NaModelCalcJob;
+import org.kalypso.java.io.FileUtilities;
+import org.kalypso.java.io.StreamUtilities;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 
 /**
@@ -67,44 +71,37 @@ public class NaModelCalcJobTest extends TestCase
     final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
     registry.registerTypeHandler( new ObservationLinkHandler() );
 
-    final File basedir = new File( "C:/tmp/kalypsonatest" );
-//    final File inputdir = new File( basedir, ICalcServiceConstants.INPUT_DIR_NAME );
+    File baseDir = FileUtilities.createNewTempDir( "NA_Simulation" );
+    baseDir.mkdirs();
 
-    //    final File modellGML = new File( "C:\\simulation\\namodell.gml" );
-    //    final File controlGML = new File( "C:\\simulation\\nacontrol.gml" );
+    final File inputdir = new File( baseDir, ICalcServiceConstants.INPUT_DIR_NAME );
+    inputdir.mkdirs();
+    final File modellGML = new File( inputdir, "calcCase.gml" );
+    final File controlGML = new File( inputdir, "nacontrol.gml" );
 
-    //    StreamUtilities.streamCopy( getClass().getResourceAsStream(
-    // modellGMLResource ),
-    //        new FileOutputStream( modellGML ) );
-    //    StreamUtilities.streamCopy( getClass().getResourceAsStream(
-    // controlGMLResource ),
-    //        new FileOutputStream( controlGML ) );
+    StreamUtilities.streamCopy( getClass().getResourceAsStream( modellGMLResource ),
+        new FileOutputStream( modellGML ) );
+    StreamUtilities.streamCopy( getClass().getResourceAsStream( controlGMLResource ),
+        new FileOutputStream( controlGML ) );
 
-    //    File baseDir = FileUtilities.createNewTempDir( "NA_Simulation" );
-
-    final CalcJobDataBean[] beans = new CalcJobDataBean[]
+    CalcJobDataBean[] beans = new CalcJobDataBean[]
     {
         new CalcJobDataBean( NaModelCalcJob.MODELL_ID, "Modelldaten", "./calcCase.gml" ),
-        new CalcJobDataBean( NaModelCalcJob.CONTROL_ID, "Steuerdaten", "./nacontrol.gml" ), 
-
-        // Andreas TODO: Du hast im Test diese ID nicht gegeben, ich vermute, Du sucht
-        // im Job nach festen Verzeichnissen, das solltest Du aber nicht
-        // sondern immmer im Verzeichnis der Bean suchen
-        new CalcJobDataBean( "NiederschlagDir", "niederschlag", "./zml/" ), 
-        new CalcJobDataBean( "ZuflussDir", "zufluesse", "./zufluss/" ) ,
-        new CalcJobDataBean( "PegelDir", "pegel", "./pegel/" ) ,
-    };
+        new CalcJobDataBean( NaModelCalcJob.CONTROL_ID, "Steuerdaten", "./nacontrol.gml" ),
+        new CalcJobDataBean( "NiederschlagDir", "niederschlag", "./zml/" ),
+        new CalcJobDataBean( "ZuflussDir", "zufluesse", "./zufluss/" ),
+        new CalcJobDataBean( "PegelDir", "pegel", "./pegel/" ), };
 
     try
     {
+      //      File baseDir = new File( "C:\\TMP\\NA_SimulationII" );
       final NaModelCalcJob job = new NaModelCalcJob();
-      job.run( basedir, beans );
+      job.run( baseDir, beans );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
       throw e;
     }
   }
-
 }

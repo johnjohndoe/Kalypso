@@ -52,9 +52,9 @@ public class NAModellConverter
       // general
       final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
       registry.registerTypeHandler( new ObservationLinkHandler() );
-
-      ascii2gml();
-//      gml2asciil();
+      final File tmpDir = new File( "/tmp/na_tmp" );
+      ascii2gml( tmpDir );
+      //      gml2asciil(tmpDir);
     }
     catch( Exception e )
     {
@@ -62,7 +62,7 @@ public class NAModellConverter
     }
   }
 
-  public static void gml2asciil() throws Exception
+  public static void gml2asciil( File tmpDir ) throws Exception
   {
 
     // export
@@ -70,21 +70,21 @@ public class NAModellConverter
     final File asciiBaseDir = FileUtilities.createNewTempDir( "NA_asciiBaseDir" );
 
     final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( gmlFile.toURL(),
-        asciiBaseDir );
+        asciiBaseDir, tmpDir );
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlFile.toURL(), conf
         .getSchemaURL() );
     featureToAscii( conf, workspace );
 
   }
 
-  public static void ascii2gml() throws Exception
+  public static void ascii2gml( File tmpDir ) throws Exception
   {
     //            Configuration conf = new Configuration(new File("test"));
     final File gmlBaseDir = FileUtilities.createNewTempDir( "NA_gmlBaseDir" );
     NAConfiguration conf = NAConfiguration.getAscii2GmlConfiguration( new File(
-        "/home/doemming/weisseElster" ), gmlBaseDir );
+        "/home/doemming/weisseElster" ), gmlBaseDir, tmpDir );
     Feature fe = asciiToFeature( conf );
-                insertGeometries(fe,"/home/doemming/weisseElster/shapes");
+    insertGeometries( fe, "/home/doemming/weisseElster/shapes" );
 
     File gmlFile = new File( gmlBaseDir, "naModel.gml" );
     GmlSerializer.serializeFeature( new FileWriter( gmlFile ), fe, null );

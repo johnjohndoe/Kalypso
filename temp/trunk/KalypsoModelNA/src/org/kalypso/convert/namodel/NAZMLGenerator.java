@@ -9,6 +9,8 @@ import java.util.Date;
 
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.io.FileUtils;
+import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -20,46 +22,28 @@ import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
  * @author doemming
+ *  
  */
 public class NAZMLGenerator
 {
-  private static boolean DEBUG=true;
+  private static boolean DEBUG = true;
+
   final static SimpleDateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
 
   public static final int NA_NIEDERSCHLAG_EINGABE = 1;
 
   public static final int NA_ZUFLUSS_EINGABE = 2;
 
+  public static final int NA_ABFLUSS_BERECHNET = 3;
+
   final static NAZMLGenerator m_singelton = new NAZMLGenerator();
 
-  public static URL m_emptyNiederschlagZmlUrl;
 
   public NAZMLGenerator()
   {
-    m_emptyNiederschlagZmlUrl = getClass().getResource( "zml/NA_NiederschlagEingabe.zml" );
-    //    m_emptyZuflussZmlUrl=getClass().getResource("");
+    // do not instanciate
   }
-
-  public static void main( String[] args )
-  {
-
-    try
-    {
-      // testing it
-      File srcFile = new File( "/home/doemming/weisseElster/klima.dat/test.kz" );
-      TimeseriesLink link = copyToTimeseriesLink( srcFile.toURL(), NA_NIEDERSCHLAG_EINGABE,
-          new File( "/tmp" ), "rz/zr.zml", false, false );
-      final ObjectFactory factory = new ObjectFactory();
-      final Marshaller m_marshaller = factory.createMarshaller();
-      m_marshaller.marshal( link, System.out );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-
-  }
-
+  
   /**
    * generate copy of custom timeseriesfile to zml-format, and returns
    * timeserieslink
@@ -74,15 +58,15 @@ public class NAZMLGenerator
    *          relative path from basedir to store target zml file
    */
   public static TimeseriesLink copyToTimeseriesLink( URL copySource, int srcType,
-      File targetBaseDir, String targetRelativePath, boolean relative, boolean simulateCopy )
+      File targetBaseDir, String targetRelativePath, boolean relative, boolean simulateCopy,File tmpDir )
       throws Exception
   {
     File targetZmlFile = new File( targetBaseDir, targetRelativePath );
     File dir = targetZmlFile.getParentFile();
     if( !dir.exists() )
       dir.mkdirs();
-    if( !simulateCopy && ! DEBUG)
-      convert( copySource, srcType, targetZmlFile );
+    if( !simulateCopy && !DEBUG )
+      convert(tmpDir, copySource, srcType, targetZmlFile);
     if( relative )
       return generateobsLink( targetRelativePath, srcType );
     URL targetURL = UrlUtilities.resolveURL( targetBaseDir.toURL(), targetRelativePath );
@@ -119,18 +103,19 @@ public class NAZMLGenerator
     link.setTimeaxis( getAxisName( 1, type ) );
     link.setValueaxis( getAxisName( 2, type ) );
     link.setType( "simple" );
-    link.setActuate( "onRequest" );
+    //    link.setActuate( "onRequest" );
     link.setHref( location );
-    link.setActuate( "onDemand" );
+    //    link.setActuate( "onDemand" );
     return link;
   }
 
-  public static void convert( URL sourceURL, int sourceType, File targetZmlFile ) throws Exception
+  public static void convert( File tmpDir, URL sourceURL, int sourceType, File targetZmlFile )
+      throws Exception
   {
     StringBuffer buffer = new StringBuffer();
     generateTmpZml( buffer, sourceType, sourceURL );
 
-    File zmlTmpFile = File.createTempFile( "tmp", ".zml" );
+    File zmlTmpFile = File.createTempFile( "tmp", ".zml", tmpDir );
     zmlTmpFile.deleteOnExit();
     Writer tmpWriter = new FileWriter( zmlTmpFile );
     tmpWriter.write( buffer.toString() );
@@ -210,7 +195,7 @@ public class NAZMLGenerator
     {
     case NA_NIEDERSCHLAG_EINGABE:
     case NA_ZUFLUSS_EINGABE:
-       createGRAPFile( writer, type, observation );
+      createGRAPFile( writer, type, observation );
       break;
     default:
       break;

@@ -55,23 +55,26 @@ public class NAConfiguration
   private Date m_simulationEnd;
 
   private String m_rootNodeId;
+
+  private final File m_tmpDir;
    
-  private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
+  private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL,File tmpDir ) throws Exception
   {
-    
+    m_tmpDir=tmpDir;
     m_asciiBaseDir = asciiBaseDir;
     m_gmlBaseDir = gmlBaseDir;
     m_gmlModelURL = modelURL;
 
     // schemas
-    m_schemaURL = getClass().getResource( "schema/namodellV5.xsd" );
+    m_schemaURL = getClass().getResource( "schema/namodellV6.xsd" );
     final GMLSchema schema=new GMLSchema(m_schemaURL);
     
     // featuretypes
     m_nodeFT = schema.getFeatureType( "Node" );
     m_vChannelFT = schema.getFeatureType( "VirtualChannel" );
     m_kmChannelFT = schema.getFeatureType( "KMChannel" );
-    m_catchmentFT = schema.getFeatureType( "Catchment" );m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" );
+    m_catchmentFT = schema.getFeatureType( "Catchment" );
+    m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" );
 
     // formats:
     m_catchmentFormatURL = getClass().getResource( "formats/WernerCatchment.txt" );
@@ -86,14 +89,14 @@ public class NAConfiguration
 
   }
 
-  public static NAConfiguration getAscii2GmlConfiguration( File asciiBaseDir, File gmlBaseDir ) throws Exception
+  public static NAConfiguration getAscii2GmlConfiguration( File asciiBaseDir, File gmlBaseDir,File tmpDir ) throws Exception
   {
-    return new NAConfiguration( asciiBaseDir, gmlBaseDir, null );
+    return new NAConfiguration( asciiBaseDir, gmlBaseDir, null,tmpDir );
   }
 
-  public static NAConfiguration getGml2AsciiConfiguration( URL modelURL, File asciiBaseDir ) throws Exception
+  public static NAConfiguration getGml2AsciiConfiguration( URL modelURL, File asciiBaseDir,File tmpDir ) throws Exception
   {
-    return new NAConfiguration( asciiBaseDir, null, modelURL );
+    return new NAConfiguration( asciiBaseDir, null, modelURL,tmpDir );
   }
 
   public URL getSchemaURL()
@@ -206,5 +209,10 @@ public class NAConfiguration
   public void setRootNodeID( String rootNodeID )
   {
      m_rootNodeId=rootNodeID;
+  }
+
+  public File getTmpDir()
+  {
+    return m_tmpDir;
   }
 }
