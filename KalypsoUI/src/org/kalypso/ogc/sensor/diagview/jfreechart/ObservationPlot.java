@@ -16,6 +16,7 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.Marker;
+import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
@@ -385,17 +386,15 @@ public class ObservationPlot extends XYPlot
   }
 
   /**
-   * @see org.jfree.chart.plot.XYPlot#drawBackground(java.awt.Graphics2D,
-   *      java.awt.geom.Rectangle2D)
+   * @see org.jfree.chart.plot.XYPlot#drawAnnotations(java.awt.Graphics2D, java.awt.geom.Rectangle2D, org.jfree.chart.plot.PlotRenderingInfo)
    */
-  public void drawBackground( final Graphics2D g2d, final Rectangle2D rec )
+  public void drawAnnotations( Graphics2D g2d, Rectangle2D rec, PlotRenderingInfo arg2 )
   {
-    super.drawBackground( g2d, rec );
-
+    super.drawAnnotations( g2d, rec, arg2 );
+    
     for( final Iterator it = m_yConsts.keySet().iterator(); it.hasNext(); )
     {
       final ValueAndColor vac = (ValueAndColor) m_yConsts.get( it.next() );
-
       drawHorizontalLine( g2d, rec, vac.value, g2d.getStroke(), vac.color );
     }
   }

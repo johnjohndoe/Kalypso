@@ -27,9 +27,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -71,6 +74,7 @@ import org.kalypso.ogc.sensor.zml.ZmlObservation;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.nature.ModelNature;
 import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
@@ -86,6 +90,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 {
   private int m_selectionID = 0x1;
 
+  /** name der modelspec datei, die verwendet wird */
+  public final static String PROP_MODELSPEC = "modelspec";
+  
+  /** Ergebnisordner vor Berechnung loeschen ? ["true"|"false"] */
+  public final static String PROP_CLEAR_RESULTS = "clearResultFolder";
+  
   private static final String PROP_IGNORETYPE1 = "ignoreType1";
 
   private static final String PROP_IGNORETYPE2 = "ignoreType2";
@@ -136,7 +146,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 
   private TimeserieFeatureProps[] m_tsProps;
 
-  private LayerTableViewer m_viewer;
+  private LayerTableViewer m_gisTableViewer;
 
   private final ControlAdapter m_controlAdapter = new ControlAdapter()
   {
@@ -428,10 +438,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
       final Gistableview template = GisTemplateHelper.loadGisTableview(
           templateFile, getReplaceProperties() );
 
-      m_viewer = new LayerTableViewer( parent, this, KalypsoGisPlugin
+      m_gisTableViewer = new LayerTableViewer( parent, this, KalypsoGisPlugin
           .getDefault().createFeatureTypeCellEditorFactory(), getSelectionID(),
           false );
-      m_viewer.applyTableTemplate( template, getContext() );
+      m_gisTableViewer.applyTableTemplate( template, getContext() );
 
     }
     catch( final Exception e )
@@ -498,7 +508,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 
     final IKalypsoTheme activeTheme;
     if( useTable )
-      activeTheme = m_viewer.getTheme();
+      activeTheme = m_gisTableViewer.getTheme();
     else
       activeTheme = mapModell.getActiveTheme();
 
@@ -572,7 +582,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 
   protected LayerTableViewer getLayerTable( )
   {
-    return m_viewer;
+    return m_gisTableViewer;
   }
 
   /**
@@ -598,7 +608,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 
     final IKalypsoTheme activeTheme;
     if( useTable )
-      activeTheme = m_viewer.getTheme();
+      activeTheme = m_gisTableViewer.getTheme();
     else
       activeTheme = mapModell.getActiveTheme();
 
@@ -664,7 +674,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
        */
       public void widgetSelected( SelectionEvent e )
       {
-        setObsIgnoreType( ignoreType1 );
+        if( radioQ.getSelection() )
+          setObsIgnoreType( ignoreType1 );
       }
     } );
 
@@ -678,7 +689,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
        */
       public void widgetSelected( SelectionEvent e )
       {
-        setObsIgnoreType( ignoreType2 );
+        if( radioW.getSelection() )
+          setObsIgnoreType( ignoreType2 );
       }
     } );
 
@@ -707,9 +719,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
    */
   protected void saveDirtyObservations( final boolean saveFiles, final IProgressMonitor monitor ) 
   {
+    if( m_tableTemplate == null || m_table == null )
+      return;
+    
     final LinkedTableViewTemplate tableTemplate = m_tableTemplate;
     final ObservationTableModel model = (ObservationTableModel) m_table
         .getModel();
+
 
     final Collection themes = tableTemplate.getThemes();
 
@@ -760,7 +776,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     monitor.done();
   }
   
-  private void runAndHandleOperation( final IRunnableWithProgress op, final String message )
+  protected void runAndHandleOperation( final IRunnableWithProgress op, final String message )
   {
     try
     {
@@ -785,6 +801,66 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     {
       e.printStackTrace();
     }
+  }
+  
+  /**
+   * @throws CoreException
+   * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#saveData(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public void saveData( final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( "Daten speichern", 2000 );
+    
+    try
+    {
+      saveDirtyObservations( true, new SubProgressMonitor( monitor, 1000 ) );
+      if( m_gisTableViewer != null )
+        m_gisTableViewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
+      else
+        monitor.worked( 1000 );
+    }
+    finally
+    {
+      monitor.done();
+    }
+  }
+  
+  protected void runCalculation()
+  {
+    final IWizard wizard = getWizard();
+    
+    final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
+    {
+      public void execute( final IProgressMonitor monitor ) throws CoreException
+      {
+        final IWizardPage[] pages = wizard.getPages();
+
+        monitor.beginTask( "Berechnung wird durchgeführt", 1000 + pages.length * 100 );
+
+        for( int i = 0; i < pages.length; i++ )
+        {
+          final IWizardPage page = pages[i];
+          if( page instanceof IModelWizardPage )
+            ((IModelWizardPage)page).saveData( new SubProgressMonitor( monitor, 100 ) );
+          else
+            monitor.worked( 100 );
+        }
+
+        final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature(
+            ModelNature.ID );
+        final String modelspec = getArguments().getProperty( PROP_MODELSPEC, null );
+        final String clearResults = getArguments().getProperty( PROP_CLEAR_RESULTS, "true" );
+        boolean doClearResults = true;
+        if( "false".equals( clearResults ) )
+          doClearResults = false;
+        nature.runCalculation( getCalcFolder(), new SubProgressMonitor( monitor, 1000 ), modelspec,
+            doClearResults );
+      }
+    };
+
+    runAndHandleOperation( op, "Hochwasser Vorhersage" );
+
+    onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
   }
 
 }
