@@ -45,7 +45,7 @@ package org.deegree_impl.graphics.transformation;
 
 import org.deegree.model.geometry.*;
 import org.deegree_impl.model.geometry.*;
-import org.deegree.graphics.transformation.*;
+//import org.deegree.graphics.transformation.*;
 
 /**
  * the class <code>WorldToScreenTransform</code> implements
@@ -57,7 +57,7 @@ import org.deegree.graphics.transformation.*;
  * @version 28.12.2000
  */
 
-public class WorldToScreenTransform implements GeoTransform {
+public class WorldToScreenTransform implements org.deegree.graphics.transformation.GeoTransform {
      
     private double qx = 0;
     private double qy = 0;

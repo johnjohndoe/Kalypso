@@ -66,7 +66,6 @@ import org.deegree.model.geometry.GM_SurfacePatch;
 import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.deegree_impl.tools.Debug;
-import de.tuhh.wb.jm.tools.Tools;
 
 /**
  * DisplayElement for handling polygons
@@ -137,9 +136,9 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl
         try {
             if ( geometry == null ) return;
             Area area = null;
-	    if(de.tuhh.wb.jm.Debug.showDisplayEnv())
-		Tools.paint(g,geometry.getEnvelope());
-            if ( geometry instanceof GM_Surface ) {                
+			if(DEBUG_PaintEnv)
+				 paint(g,geometry.getEnvelope(),projection);
+	        if ( geometry instanceof GM_Surface ) {                
                 area = calcTargetCoordinates( projection, (GM_Surface)geometry );
                 drawPolygon( g, area );
             } else {
