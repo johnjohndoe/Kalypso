@@ -6,6 +6,8 @@ package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
 import java.util.ArrayList;
 
+import org.deegree.filterencoding.Expression;
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.sld.Font;
 import org.deegree.graphics.sld.Halo;
 import org.deegree.graphics.sld.LabelPlacement;
@@ -15,10 +17,8 @@ import org.deegree.graphics.sld.TextSymbolizer;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.services.wfs.filterencoding.Expression;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
+import org.deegree_impl.filterencoding.PropertyName;
 import org.deegree_impl.graphics.sld.StyleFactory;
-import org.deegree_impl.services.wfs.filterencoding.PropertyName;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;

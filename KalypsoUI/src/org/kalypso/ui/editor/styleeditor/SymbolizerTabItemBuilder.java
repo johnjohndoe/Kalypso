@@ -4,6 +4,7 @@
  */
 package org.kalypso.ui.editor.styleeditor;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.sld.LineSymbolizer;
 import org.deegree.graphics.sld.PointSymbolizer;
 import org.deegree.graphics.sld.PolygonSymbolizer;
@@ -11,7 +12,6 @@ import org.deegree.graphics.sld.RasterSymbolizer;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.graphics.sld.TextSymbolizer;
 import org.deegree.model.feature.FeatureType;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;

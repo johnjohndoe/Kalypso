@@ -47,13 +47,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import org.deegree.filterencoding.Expression;
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.sld.CssParameter;
 import org.deegree.graphics.sld.GraphicFill;
 import org.deegree.graphics.sld.GraphicStroke;
 import org.deegree.graphics.sld.Stroke;
 import org.deegree.model.feature.Feature;
-import org.deegree.services.wfs.filterencoding.Expression;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree.xml.Marshallable;
 import org.deegree_impl.tools.Debug;
 

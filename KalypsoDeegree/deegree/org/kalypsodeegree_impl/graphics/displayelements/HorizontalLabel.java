@@ -50,12 +50,12 @@ import java.awt.TexturePaint;
 import java.awt.font.LineMetrics;
 import java.awt.image.BufferedImage;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.displayelements.Label;
 import org.deegree.graphics.sld.Fill;
 import org.deegree.graphics.sld.GraphicFill;
 import org.deegree.graphics.sld.Halo;
 import org.deegree.model.feature.Feature;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 
 /**
  * This is a horizontal label with style information and screen coordinates,

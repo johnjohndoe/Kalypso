@@ -53,6 +53,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
+import org.deegree.filterencoding.Expression;
+import org.deegree.filterencoding.Filter;
 import org.deegree.graphics.sld.CssParameter;
 import org.deegree.graphics.sld.ExternalGraphic;
 import org.deegree.graphics.sld.FeatureTypeStyle;
@@ -77,8 +79,6 @@ import org.deegree.graphics.sld.Stroke;
 import org.deegree.graphics.sld.Style;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.graphics.sld.TextSymbolizer;
-import org.deegree.services.wfs.filterencoding.Expression;
-import org.deegree.services.wfs.filterencoding.Filter;
 import org.deegree_impl.tools.StringExtend;
 
 /**

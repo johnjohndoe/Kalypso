@@ -6,7 +6,7 @@ package org.kalypso.ui.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
 
-import org.deegree_impl.services.wfs.filterencoding.ComplexFilter;
+import org.deegree_impl.filterencoding.ComplexFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;

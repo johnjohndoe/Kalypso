@@ -46,10 +46,10 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.sld.CssParameter;
 import org.deegree.graphics.sld.Font;
 import org.deegree.model.feature.Feature;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree.xml.Marshallable;
 import org.deegree_impl.tools.Debug;
 

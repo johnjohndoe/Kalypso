@@ -4,12 +4,12 @@
  */
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.sld.Graphic;
 import org.deegree.graphics.sld.Mark;
 import org.deegree.graphics.sld.PointSymbolizer;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;

@@ -52,6 +52,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.displayelements.Label;
 import org.deegree.graphics.displayelements.LabelDisplayElement;
 import org.deegree.graphics.sld.Halo;
@@ -70,7 +71,6 @@ import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Point;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.geometry.GM_Surface;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.deegree_impl.tools.Debug;
 

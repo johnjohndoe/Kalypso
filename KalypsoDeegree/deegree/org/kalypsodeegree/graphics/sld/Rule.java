@@ -41,7 +41,7 @@
  ---------------------------------------------------------------------------*/
 package org.deegree.graphics.sld;
 
-import org.deegree.services.wfs.filterencoding.Filter;
+import org.deegree.filterencoding.Filter;
 
 /**
  * A rule is used to attach a condition to and group the individual symbolizers

@@ -50,6 +50,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.deegree.graphics.displayelements.PolygonDisplayElement;
 import org.deegree.graphics.legend.LegendElement;
@@ -64,7 +65,6 @@ import org.deegree.graphics.sld.TextSymbolizer;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.geometry.GM_Surface;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.deegree_impl.graphics.displayelements.PolygonDisplayElement_Impl;
 import org.deegree_impl.graphics.transformation.WorldToScreenTransform;
