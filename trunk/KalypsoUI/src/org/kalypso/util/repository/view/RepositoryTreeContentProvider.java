@@ -1,68 +1,34 @@
 package org.kalypso.util.repository.view;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
-
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.util.repository.IRepository;
+import org.kalypso.util.repository.IRepositoryContainer;
 import org.kalypso.util.repository.IRepositoryItem;
 
 /**
  * @author schlienger
  *  
  */
-public class RepositoriesContentProvider implements ITreeContentProvider
+public class RepositoryTreeContentProvider implements ITreeContentProvider
 {
-  private final List m_reps = new Vector();
-
-  public RepositoriesContentProvider( )
-  {
-    this( new IRepository[0] );
-  }
-  
-  public RepositoriesContentProvider( IRepository[] repositories )
-  {
-    m_reps.addAll( Arrays.asList( repositories ) );
-  }
-
-  public void addRepository( IRepository rep )
-  {
-    m_reps.add( rep );
-  }
-  
-  public void removeRepository( IRepository rep )
-  {
-    m_reps.remove( rep );
-  }
-  
-  public int getRepositoriesCount()
-  {
-    return m_reps.size();
-  }
-  
   /**
    * helper
    */
   private IRepositoryItem testArg( Object arg )
   {
-    if( ! (arg instanceof IRepositoryItem) )
+    if( !( arg instanceof IRepositoryItem ) )
       throw new IllegalArgumentException();
 
     return (IRepositoryItem)arg;
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   public Object[] getChildren( Object parentElement )
   {
     IRepositoryItem item = testArg( parentElement );
-    
-    if( item == null )
-        return m_reps.toArray( new IRepository[m_reps.size()] );
-    
+
     return item.getChildren();
   }
 
@@ -72,10 +38,10 @@ public class RepositoriesContentProvider implements ITreeContentProvider
   public Object getParent( Object element )
   {
     IRepositoryItem item = testArg( element );
-    
+
     if( item == null )
       return null;
-    
+
     return item.getParent();
   }
 
@@ -85,10 +51,7 @@ public class RepositoriesContentProvider implements ITreeContentProvider
   public boolean hasChildren( Object element )
   {
     IRepositoryItem item = testArg( element );
-    
-    if( item == null )
-      return m_reps.size() != 0;
-    
+
     return item.hasChildren();
   }
 
@@ -97,7 +60,9 @@ public class RepositoriesContentProvider implements ITreeContentProvider
    */
   public Object[] getElements( Object inputElement )
   {
-    return getChildren( inputElement );
+    IRepositoryContainer container = (IRepositoryContainer)inputElement;
+    
+    return container.getRepositories().toArray();
   }
 
   /**
