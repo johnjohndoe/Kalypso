@@ -1,15 +1,14 @@
 package org.kalypso.ui.repository.action;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.eclipse.jface.action.FullAction;
-import org.kalypso.java.lang.reflect.ClassUtilities.ClassUtilityException;
 import org.kalypso.repository.IRepositoryContainer;
 import org.kalypso.repository.IRepositoryFactory;
-import org.kalypso.repository.RepositoryException;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.repository.RepositorySpecification;
 
@@ -52,18 +51,12 @@ public class AddRepositoryAction extends FullAction
     {
       final IRepositoryFactory f = spec.createFactory();
 
-      if( f.configureRepository( null ) )
+      if( f.configureRepository( ) )
         m_cp.addRepository( f.createRepository() );
     }
-    catch( RepositoryException e )
+    catch( Exception e ) // generic exception caught for simplicity
     {
-      // TODO: logging
-      e.printStackTrace();
-    }
-    catch( ClassUtilityException e )
-    {
-      // TODO logging
-      e.printStackTrace();
+      MessageDialog.openError( m_shell, "Repository hinzufügen", e.getLocalizedMessage() );
     }
   }
 }

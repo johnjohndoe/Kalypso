@@ -26,9 +26,9 @@ public class ObservationServiceRepository extends AbstractRepository
    * 
    * @throws ServiceException when the underlying service is not available
    */
-  public ObservationServiceRepository( ) throws ServiceException
+  public ObservationServiceRepository( final boolean readOnly ) throws ServiceException
   {
-    super();
+    super( "", readOnly );
     
     m_srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
     

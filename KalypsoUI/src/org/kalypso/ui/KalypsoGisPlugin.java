@@ -154,7 +154,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   /**
    * Loads the client configuration
    * 
-   * @throws IllegalStateException if no configuration could be loaded
+   * @throws IllegalStateException
+   *           if no configuration could be loaded
    */
   private void configure() throws IllegalStateException
   {
@@ -173,9 +174,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
         stream = url.openStream();
 
         conf.load( stream );
-        
+
         m_mainConf.putAll( conf );
-        
+
         return;
       }
       catch( Exception e ) // generic exception used to simplify processing
@@ -196,6 +197,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
         }
       }
     }
+
+    throw new IllegalStateException( "Could not load client configuration from server!" );
     
     // TODO: Marc: cient sollte auch one config file laufen!?
     //throw new IllegalStateException( "Could not load client configuration from server!" );
@@ -210,19 +213,22 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   }
 
   /**
-   * Sets service proxy factory specific properties and creates the proxy factory object.
+   * Sets service proxy factory specific properties and creates the proxy
+   * factory object.
    */
   private void configureServiceProxyFactory()
   {
-    // this is the base classname (actually just package name) of all the kalypso service proxies
+    // this is the base classname (actually just package name) of all the
+    // kalypso service proxies
     m_mainConf.setProperty( ProxyFactory.KALYPSO_PROXY_BASE, "org.kalypso.services.proxy" );
 
     m_proxyFactory = new ProxyFactory( m_mainConf );
   }
 
   /**
-   * Loads the properties related to the available repositories. For each of these repositories,
-   * it creates a simple wrapper class that contains its specification.
+   * Loads the properties related to the available repositories. For each of
+   * these repositories, it creates a simple wrapper class that contains its
+   * specification.
    */
   private void configureObservationRepositorySpecifications() throws IOException
   {
@@ -236,7 +242,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     for( int i = 0; i < available.length; i++ )
       m_repositoriesSpecification[i] = new RepositorySpecification( available[i],
           m_zmlRepositoriesProperties.getProperty( available[i] ), m_zmlRepositoriesProperties
-              .getProperty( available[i] + "_FACTORY" ) );
+              .getProperty( available[i] + "_FACTORY" ), m_zmlRepositoriesProperties
+              .getProperty( available[i] + "_MAXCARD" ) );
   }
 
   private void configureLogger()
@@ -267,7 +274,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   {
     return m_proxyFactory;
   }
-  
+
   /**
    * Convenience method that returns the observation service proxy
    * 
@@ -275,7 +282,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
    */
   public IObservationService getObservationServiceProxy() throws ServiceException
   {
-    return (IObservationService)m_proxyFactory.getProxy( "Kalypso_ObservationService", "IObservationService" );
+    return (IObservationService)m_proxyFactory.getProxy( "Kalypso_ObservationService",
+        "IObservationService" );
   }
 
   //  TODO public OutputLogger getOutputLogger()
@@ -438,22 +446,21 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
    */
   public IFeatureControlFactory createFeatureControlFactory()
   {
-      final Properties controlProperties = new Properties();
+    final Properties controlProperties = new Properties();
 
-      try
-      {
-        controlProperties.load( KalypsoGisPlugin.class
-            .getResourceAsStream( "resources/featureControls.properties" ) );
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
+    try
+    {
+      controlProperties.load( KalypsoGisPlugin.class
+          .getResourceAsStream( "resources/featureControls.properties" ) );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
 
-    return new DefaultFeatureControlFactory( controlProperties, this.getClass()
-        .getClassLoader() );
+    return new DefaultFeatureControlFactory( controlProperties, this.getClass().getClassLoader() );
   }
-  
+
   public SelectionIdProvider getSelectionIdProvider()
   {
     return mySelectionIdProvider;
