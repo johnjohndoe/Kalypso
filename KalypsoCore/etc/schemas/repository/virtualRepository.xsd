@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="virtual.repository.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:filters="filters.zml.kalypso.org" xmlns:vrep="virtual.repository.zml.kalypso.org">
+
+	<import namespace="filters.zml.kalypso.org" 
+		schemaLocation="../zml/zmlFilters.xsd"/>
+
+	<element name="level" type="vrep:levelType"/>
+
+	<complexType name="levelType">
+	
+		<sequence>
+			<element ref="vrep:level" minOccurs="0" maxOccurs="unbounded"/>
+			<element ref="filters:filter" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	
+		<attribute name="name" type="string"/>		
+	</complexType>
+</schema>
