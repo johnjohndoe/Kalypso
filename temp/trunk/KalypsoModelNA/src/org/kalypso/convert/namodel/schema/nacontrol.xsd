@@ -8,8 +8,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="editor" type="string"/>
-					<element name="description" type="string"/>
+					<element name="editor" type="string"/>			
 					<element name="comment" type="string"/>
 					<element name="calctime" type="dateTime"/>
 					<element name="startsimulation" type="dateTime"/>

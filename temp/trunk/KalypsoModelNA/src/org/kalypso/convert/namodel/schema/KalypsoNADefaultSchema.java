@@ -23,7 +23,7 @@ public class KalypsoNADefaultSchema
 
   public URL getDefaultNaModellSchemaURL()
   {
-    return getClass().getResource( "namodellV6.xsd" );
+    return getClass().getResource( "namodell.xsd" );
   }
 
 }

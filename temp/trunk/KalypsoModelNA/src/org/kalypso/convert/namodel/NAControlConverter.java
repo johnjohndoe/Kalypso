@@ -50,7 +50,7 @@ public class NAControlConverter
     // generate Start
     final StringBuffer b = new StringBuffer();
     appendResultsToGenerate( controlFE, b );
-    appendResultInformation( modellWorkspace, b );
+    appendResultInformation( modellWorkspace,controlWorkspace, b );
     //write it
     final FileWriter writer = new FileWriter( startFile );
     writer.write( b.toString() );
@@ -115,14 +115,20 @@ public class NAControlConverter
         + "       Evaporation                .vep\n" );
   }
 
-  private static void appendResultInformation( GMLWorkspace modellWorkspace, StringBuffer b )
+  private static void appendResultInformation(GMLWorkspace modellWorkspace, GMLWorkspace controlWorkspace, StringBuffer b )
   {
     // knoten
     final FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
     final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
+    boolean onlyRootNodeResult=FeatureHelper.booleanIsTrue(controlWorkspace.getRootFeature(),"resultForRootNodeOnly",true);
+    final String rootNodeID=(String)controlWorkspace.getRootFeature().getProperty("rootNode");
     for( int i = 0; i < nodeFEs.length; i++ )
     {
-      if( FeatureHelper.booleanIsTrue( nodeFEs[i], "generateResult", false ) )
+      // fuer root node immer ein ergebnis generieren
+      if(rootNodeID.equals(nodeFEs[i].getId()))
+        b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
+      // fuer nicht root node nur ergebnisse generieren wenn gewuenscht
+      else if( !onlyRootNodeResult && FeatureHelper.booleanIsTrue( nodeFEs[i], "generateResult", false ) )
         b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
     }
     b.append( "99999\n" );

@@ -30,18 +30,17 @@ public class UpdateModell
   {
     final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
     registry.registerTypeHandler( new ObservationLinkHandler() );
- 
+
     File modell = new File( "C:\\TMP\\modell.gml" );
     URL modellURL = modell.toURL();
     URL schemaURL = KalypsoNADefaultSchema.getInstance().getDefaultNaModellSchemaURL();
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellURL,
-        schemaURL );
+    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellURL, schemaURL );
     updateRepositoryLinks( workspace );
-    File file = File.createTempFile( "model", ".gml" );
+    File file = File.createTempFile( "modellUpdateTSLink", ".gml" );
     Writer writer = new FileWriter( file );
     GmlSerializer.serializeWorkspace( writer, workspace );
     writer.close();
-    System.out.println( " model is written to " + file.getCanonicalPath() );
+    System.out.println( " updated model is written to " + file.getCanonicalPath() );
   }
 
   public static void main( String[] args )
@@ -58,14 +57,57 @@ public class UpdateModell
 
   public static void updateRepositoryLinks( GMLWorkspace workspace )
   {
-    final FeatureType featureType = workspace.getFeatureType( "Catchment" );
-    final Feature[] features = workspace.getFeatures( featureType );
+    // Catchments...
+    final FeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
+    final Feature[] catchmentFEs = workspace.getFeatures( catchmentFT );
+    updateCatchments( catchmentFEs );
+    updateCatchments( catchmentFEs );
+
+    final FeatureType nodeFT = workspace.getFeatureType( "Node" );
+    final Feature[] nodeFEs = workspace.getFeatures( nodeFT );
+    updateNodes( nodeFEs );
+  }
+
+  private static void updateCatchments( Feature[] features )
+  {
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
-      TimeseriesLink tsLink = (TimeseriesLink)feature.getProperty("niederschlagZRRepository");
-      tsLink.setHref( WeisseElsterConstants.PREFIX_LINK_GebietsNiederschlagModell
-          + feature.getId());      
+      TimeseriesLink tsLink = (TimeseriesLink)feature.getProperty( "niederschlagZRRepository" );
+      tsLink
+          .setHref( WeisseElsterConstants.PREFIX_LINK_GebietsNiederschlagModell + feature.getId() );
+      // TODO niederschlagZRRepositoryVorhersage
+      // erstmal auf gemessen gesetzt
+      FeatureProperty property = FeatureFactory.createFeatureProperty(
+          "niederschlagZRRepositoryVorhersage", tsLink );
+      feature.setProperty( property );
     }
   }
+
+  private final static String m_availablePegel = "Node1600 Node1302 Node1401 Node1300";
+
+  private static void updateNodes( Feature[] features )
+  {
+    for( int i = 0; i < features.length; i++ )
+    {
+      //    <pegelZRRepository/>
+      //    "kalypso-ocs:WeisseElster://Pegel/Pegel_Node1600.zml"
+      final Feature feature = features[i];
+      TimeseriesLink messPegel = (TimeseriesLink)feature.getProperty( "pegelZRRepository" );
+      if( messPegel != null )
+      {
+        messPegel.setHref( WeisseElsterConstants.PREFIX_LINK_FLUSSPEGEL + feature.getId() );
+        if( m_availablePegel.indexOf( feature.getId() ) < 0 )
+          feature.setProperty( null );
+      }
+      TimeseriesLink zuflussPegel = (TimeseriesLink)feature.getProperty( "zuflussZRRepository" );
+      if( zuflussPegel != null )
+        zuflussPegel.setHref( WeisseElsterConstants.PREFIX_LINK_ZUFLUSSPEGEL + feature.getId() );
+    }
+  }
+
+  // TODO
+  //    <temperaturZRRepository/>
+  //    <temperaturZRRepositoryVorhersage/>
+  //    <temperaturZR/>
 }

@@ -42,7 +42,8 @@ public class NetFileManager extends AbstractManager
   {
     try
     {
-      // rootNode is what we want to calculate, so do not use existing results for
+      // rootNode is what we want to calculate, so do not use existing results
+      // for
       // this node
       if( m_conf.getRootNodeId().equals( nodeFE.getId() ) )
         return false;
@@ -505,6 +506,8 @@ public class NetFileManager extends AbstractManager
         buffer.append( ".." + File.separator + "zufluss" + File.separator + zuflussFileName + "\n" );
       }
     }
+    // ENDKNOTEN
+    buffer.append( "10000    0    0    0    0    0\n" );
   }
 
   private String getZuflussEingabeDateiString( Feature nodeFE )
@@ -525,6 +528,8 @@ public class NetFileManager extends AbstractManager
     private final Feature m_channelFE;
 
     private static final String ANFANGSKNOTEN = "    9001";
+
+    private static final String ENDKNOTEN = "   10000";
 
     private int m_status = UNCALCULATED;
 
@@ -630,19 +635,30 @@ public class NetFileManager extends AbstractManager
           if( m_channelFE == workspace.resolveLink( Cfeatures[i], "entwaesserungsStrangMember" ) )
             catchmentList.add( Cfeatures[i] );
         }
-        // unterer knoten
+        // oberer knoten
         if( knotO != null )
           buffer.append( toAscci( knotO, 11 ) );
         else
           buffer.append( ANFANGSKNOTEN );
 
-        buffer.append( toAscci( knotU, 11 ) );
-
-        buffer.append( " " + catchmentList.size() + "\n" );
-        for( Iterator iter = catchmentList.iterator(); iter.hasNext(); )
+        // unterhalb des rootnodes letzter strang zum endknoten
+        // ohne teilgebiete
+        if( knotO != null && m_conf.getRootNodeId().equals( knotO.getId() ) )
         {
-          Feature catchmentFE = (Feature)iter.next();
-          buffer.append( toAscci( catchmentFE, 12 ) + "\n" );
+          buffer.append( ENDKNOTEN );
+          buffer.append( " 0\n" ); // no catchments
+        }
+        else
+        {
+          // normaler strang, evt. mit teilgebieten
+          buffer.append( toAscci( knotU, 11 ) );
+
+          buffer.append( " " + catchmentList.size() + "\n" );
+          for( Iterator iter = catchmentList.iterator(); iter.hasNext(); )
+          {
+            Feature catchmentFE = (Feature)iter.next();
+            buffer.append( toAscci( catchmentFE, 12 ) + "\n" );
+          }
         }
         if( knotO != null && !nodeList.contains( knotO ) )
           nodeList.add( knotO );

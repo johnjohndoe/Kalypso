@@ -10,4 +10,7 @@ public class WeisseElsterConstants
     public final static String PREFIX_LINK_GebietsNiederschlagModell = 
       "kalypso-ocs:GebietsNiederschlaege://";// ..+ catchmentFE.ID
     public final static String PREFIX_LINK_NIEDERSCHLAGVORHERSAGE = "kalypso-ocs:GebietsVorhersage://";
+    public final static String PREFIX_LINK_FLUSSPEGEL = "kalypso-ocs:WeisseElster://Pegel/Pegel_";//..nodeFE.ID
+    public final static String PREFIX_LINK_ZUFLUSSPEGEL =  "kalypso-ocs:WeisseElster://Zufluss/Zufluss_"; //..nodeFE.ID
+
 }
