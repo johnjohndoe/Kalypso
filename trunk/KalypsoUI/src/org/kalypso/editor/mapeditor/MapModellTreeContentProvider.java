@@ -7,7 +7,6 @@ import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 
 /**
  * Dieser TreeContentProvider akzeptiert nur MapModell'e als Input.
@@ -25,7 +24,7 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
   {
     if( parentElement instanceof IKalypsoTheme )
     {
-      final KalypsoFeatureTheme theme = (KalypsoFeatureTheme)parentElement;
+      final IKalypsoTheme theme = (IKalypsoTheme)parentElement;
       final UserStyle[] styles = theme.getStyles();
       final ThemeStyleTreeObject[] result = new ThemeStyleTreeObject[styles.length];
       for( int i = 0; i < styles.length; i++ )

@@ -6,7 +6,6 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 
 /**
  * @author bce
@@ -27,7 +26,7 @@ public class MapModellLabelProvider implements ILabelProvider
   public String getText( Object element )
   {
     if( element instanceof IKalypsoTheme )
-      return ((KalypsoFeatureTheme)element).getName();
+      return ((IKalypsoTheme)element).getName();
     
     if( element instanceof ThemeStyleTreeObject )
         return element.toString();

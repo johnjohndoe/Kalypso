@@ -8,31 +8,34 @@ import java.util.Map;
 
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeature;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
+import org.kalypso.util.command.ICommand;
+import org.kalypso.util.command.ICommandTarget;
 
 /**
  * @author bce
  */
-public class LayerTableModel
+public class LayerTableModel implements ICommandTarget
 {
   private final Collection m_listeners = new ArrayList();
   
-  private final KalypsoFeatureLayer myLayer;
+  private final PoolableKalypsoFeatureTheme m_theme;
 
   private final Map m_ftpColumnMap = new LinkedHashMap();
 
-  public LayerTableModel( final KalypsoFeatureLayer layer, final Column[] columns )
+  public LayerTableModel( final PoolableKalypsoFeatureTheme theme, final Column[] columns )
   {
-    myLayer = layer;
+    m_theme = theme;
     
     for( int i = 0; i < columns.length; i++ )
       m_ftpColumnMap.put( columns[i].ftp, columns[i] );
   }
 
-  public KalypsoFeatureLayer getLayer()
+  public IKalypsoTheme getTheme()
   {
-    return myLayer;
+    return m_theme;
   }
   
   public boolean isColumn( final FeatureTypeProperty ftp )
@@ -100,22 +103,22 @@ public class LayerTableModel
       ((ILayerTableModelListener)iter.next()).onColumnsChanged( );
   }
 
-  public void addRow( final KalypsoFeature feature) throws Exception
+  public void addRow( final KalypsoFeature feature ) throws Exception
   {
-      myLayer.addFeature( feature );
+    m_theme.getLayer().addFeature( feature );
       
-      fireRowsChanged( feature );
+    fireRowsChanged( feature );
   }
 
   public FeatureType getFeatureType()
   {
-    return myLayer.getFeatureType();
+    return m_theme.getLayer().getFeatureType();
   }
 
 
   public void removeRow( final KalypsoFeature feature ) throws Exception
   {
-    myLayer.removeFeature( feature );
+    m_theme.getLayer().removeFeature( feature );
 
     fireRowsChanged( feature );
   }
@@ -137,5 +140,13 @@ public class LayerTableModel
   public Column[] getColumns()
   {
     return (Column[])m_ftpColumnMap.values().toArray( new Column[m_ftpColumnMap.size()] );
+  }
+
+  /**
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
+   */
+  public void postCommand( ICommand command, Runnable runnable )
+  {
+    m_theme.postCommand( command, runnable );
   }
 }

@@ -21,9 +21,9 @@ public class ObjectChangeAdapter implements IObjectChangeProvider
     m_listener.remove( l );
   }
   
-  public void fireOnObjectInvalid( final Object oldObject, final boolean bCannotReload ) throws Exception
+  public void fireOnObjectInvalid( final ResourcePool pool, final IPoolableObjectType key, final Object oldObject, final boolean bCannotReload ) throws Exception
   {
     for( Iterator lIt = m_listener.iterator(); lIt.hasNext(); )
-      ((IPoolListener)lIt.next()).onObjectInvalid( oldObject, bCannotReload );
+      ((IPoolListener)lIt.next()).onObjectInvalid( pool, key, oldObject, bCannotReload );
   }
 }

@@ -43,8 +43,6 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
 
   private final ICommandTarget m_columnCommandTarget;
 
-  private final ICommandTarget m_layerCommandTarget;
-
   private IMenuManager m_menu;
 
   private Runnable m_refreshRunner = new Runnable()
@@ -61,13 +59,10 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
 
   private IMenuManager m_spaltenMenu;
 
-
-
-  public LayerTable( final Composite parent, final ICommandTarget columnCommandTarget, final ICommandTarget layerCommandTarget,
+  public LayerTable( final Composite parent, final ICommandTarget columnCommandTarget,
       final ICellEditorFactory cellEditorFactory )
   {
     m_columnCommandTarget = columnCommandTarget;
-    m_layerCommandTarget = layerCommandTarget;
     m_cellEditorFactory = cellEditorFactory;
 
     m_viewer = new TableViewer( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
@@ -76,11 +71,11 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     m_viewer.setLabelProvider( new LayerTableLabelProvider( this ) );
 
     // init table
-    
+
     final Table table = m_viewer.getTable();
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
-    
+
     new ExcelLikeTableCursor( m_viewer, SWT.NONE );
   }
 
@@ -89,7 +84,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     if( m_model != null )
     {
       m_model.removeModelListener( this );
-      m_model.getLayer().removeModellListener( this );
+      m_model.getTheme().removeModellListener( this );
     }
 
     if( m_menu != null )
@@ -110,7 +105,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     if( m_model != null )
     {
       m_model.removeModelListener( this );
-      m_model.getLayer().addModellListener( this );
+      m_model.getTheme().removeModellListener( this );
     }
 
     m_model = model;
@@ -118,7 +113,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     if( model != null )
     {
       m_model.addModelListener( this );
-      m_model.getLayer().addModellListener( this );
+      m_model.getTheme().addModellListener( this );
     }
 
     final IAction[] actions = createActions();
@@ -183,7 +178,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
 
     final Table table = m_viewer.getTable();
 
-    final FeatureType featureType = m_model.getLayer().getFeatureType();
+    final FeatureType featureType = m_model.getTheme().getLayer().getFeatureType();
     final LayerTableModel.Column[] columns = m_model.getColumns();
 
     final String[] colProperties = new String[columns.length];
@@ -196,7 +191,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
         LOGGER.warning( "Column doesnt exist: " + i );
         continue;
       }
-      
+
       final TableColumn tc = new TableColumn( table, SWT.CENTER );
       tc.setWidth( 100 );
 
@@ -225,7 +220,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     m_viewer.setColumnProperties( colProperties );
     m_viewer.setCellEditors( cellEditors );
     m_viewer.setInput( m_model );
-    m_viewer.setCellModifier( new LayerTableCellModifier( m_layerCommandTarget, m_model, featureType ) );
+    m_viewer.setCellModifier( new LayerTableCellModifier( m_model, featureType ) );
   }
 
   /**
@@ -318,7 +313,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
       final Table table = m_viewer.getTable();
       if( columnIndex >= table.getColumnCount() )
         return null;
-      
+
       return (FeatureTypeProperty)table.getColumn( columnIndex ).getData();
     }
 

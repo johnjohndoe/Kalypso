@@ -225,6 +225,8 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
 
   protected final void load()
   {
+    // TODO: mit ProgressMonitor!!! und errorhandling -> Job??
+    
     loadInternal();
     
     m_commandTarget.setDirty( false );

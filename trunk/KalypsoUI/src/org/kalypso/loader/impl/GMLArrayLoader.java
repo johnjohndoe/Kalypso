@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.eclipse.core.runtime.UtilProgressMonitor;
 import org.kalypso.loader.AbstractLoader;
@@ -65,6 +67,8 @@ public final class GMLArrayLoader extends AbstractLoader
    * @see org.kalypso.loader.AbstractLoader#save(java.util.Properties,
    *      org.eclipse.core.resources.IProject,
    *      org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
+   * 
+   * TODO: besseres error-handling: am besten IStatus zurückgeben lassen
    */
   public void save( final Properties source, final IProject project,
       final IProgressMonitor monitor, final Object data ) throws LoaderException
@@ -85,10 +89,19 @@ public final class GMLArrayLoader extends AbstractLoader
         {
           try
           {
-            final OutputStreamWriter osw = new OutputStreamWriter( pos );
+            final OutputStreamWriter osw = new OutputStreamWriter( pos, file.getCharset() );
+
              GmlSerializer.serialize( osw, layers, new UtilProgressMonitor( monitor ) );
           }
-          catch( GmlSerializeException e )
+          catch( final GmlSerializeException e )
+          {
+            e.printStackTrace();
+          }
+          catch( final UnsupportedEncodingException e )
+          {
+            e.printStackTrace();
+          }
+          catch( CoreException e )
           {
             e.printStackTrace();
           }

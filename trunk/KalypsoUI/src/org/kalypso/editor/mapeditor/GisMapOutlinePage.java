@@ -10,6 +10,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
@@ -53,15 +54,15 @@ import org.kalypso.util.list.IListManipulator;
 public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListener,
     IMapModellView, SelectionListener, IListManipulator
 {
-  private MoveThemeDownAction m_moveOneDownAction = null;
+  protected MoveThemeDownAction m_moveOneDownAction = null;
 
-  private MoveThemeUpAction m_moveOneUpAction = null;
+  protected MoveThemeUpAction m_moveOneUpAction = null;
 
-  private RemoveThemeAction m_removeAction = null;
+  protected RemoveThemeAction m_removeAction = null;
 
-  private AddThemeAction m_addAction = null;
+  protected AddThemeAction m_addAction = null;
 
-  private OpenStyleDialogAction m_openStyleDialogAction = null;
+  protected OpenStyleDialogAction m_openStyleDialogAction = null;
 
   private TableTreeViewer m_viewer;
 
@@ -165,7 +166,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     toolBarManager.add( m_openStyleDialogAction );
     actionBars.updateActionBars();
 
-    MenuManager menuMgr = new MenuManager( "#ThemeContextMenu" );
+    final MenuManager menuMgr = new MenuManager( "#ThemeContextMenu" );
     menuMgr.setRemoveAllWhenShown( true );
     menuMgr.addMenuListener( new IMenuListener()
     {
@@ -180,7 +181,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
         manager.add( m_openStyleDialogAction );
       }
     } );
-    Menu menu = menuMgr.createContextMenu( m_viewer.getControl() );
+    final Menu menu = menuMgr.createContextMenu( m_viewer.getControl() );
     m_viewer.getControl().setMenu( menu );
   }
 
@@ -264,7 +265,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     if( m_mapModell != null )
       m_mapModell.addModellListener( this );
 
-    if( m_viewer != null )
+    if( m_viewer != null && m_viewer.getContentProvider() != null )
       m_viewer.setInput( modell );
 
     onModellChange( null );
@@ -278,23 +279,29 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     // den Checkstate setzen!
     if( m_viewer != null )
     {
+      final StructuredViewer viewer = m_viewer;
       final TableTree tt = (TableTree)m_viewer.getControl();
       final TableTreeItem[] items = tt.getItems();
       final MapModell mm = getMapModell();
 
-      for( int i = 0; i < items.length; i++ )
+      tt.getDisplay().asyncExec( new Runnable()
       {
-        final TableTreeItem item = items[i];
-
-        tt.getDisplay().asyncExec( new Runnable()
+        public void run()
         {
-          public void run()
+
+          for( int i = 0; i < items.length; i++ )
           {
+            final TableTreeItem item = items[i];
+
             if( !item.isDisposed() )
               item.setChecked( mm.isThemeEnabled( (IKalypsoTheme)item.getData() ) );
           }
-        } );
-      }
+          
+          // und die ganze view refreshen!
+          viewer.refresh();
+        }
+
+      } );
     }
   }
 
@@ -332,7 +339,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   {
     final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( m_mapModell,
         (IKalypsoTheme)element );
-    m_commandTarget.postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme)element ) );
+    m_commandTarget
+        .postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme)element ) );
   }
 
   /**
@@ -358,7 +366,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void addElement( final Object elementBefore )
   {
-    // TODO
+  // TODO
   }
 
   private final class SelectThemeRunner implements Runnable

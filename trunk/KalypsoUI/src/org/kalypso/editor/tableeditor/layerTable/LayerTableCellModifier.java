@@ -8,7 +8,6 @@ import org.kalypso.ogc.command.ModifyFeatureCommand;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandTarget;
 
 /**
  * Property ist der Name der FeatureTypeProperty der entsprechenden Spalte
@@ -21,13 +20,10 @@ public class LayerTableCellModifier implements ICellModifier
   
   private final LayerTableModel m_modell;
 
-  private ICommandTarget m_commandTarget;
-
-  public LayerTableCellModifier( final ICommandTarget commandTarget, final LayerTableModel modell, final FeatureType type )
+  public LayerTableCellModifier( final LayerTableModel modell, final FeatureType type )
   {
     m_modell = modell;
     m_type = type;
-    m_commandTarget = commandTarget;
   }
   
   /**
@@ -59,10 +55,9 @@ public class LayerTableCellModifier implements ICellModifier
   {
     final TableItem tableItem = (TableItem)element;
     final KalypsoFeature  feature = (KalypsoFeature)tableItem.getData();
-    final KalypsoFeatureLayer layer = m_modell.getLayer();
+    final KalypsoFeatureLayer layer = m_modell.getTheme().getLayer();
     
     final ICommand command = new ModifyFeatureCommand( layer, feature, property, value );
-    m_commandTarget.postCommand( command, null );
+    m_modell.postCommand( command, null );
    }
-
 }
