@@ -72,12 +72,14 @@ public class SteuerparameterWizardPage extends WizardPage
       final IProject project = m_projectProvider.getProject();
       final ModelNature nature = (ModelNature)m_projectProvider.getProject().getNature(
           ModelNature.ID );
-      final GMLWorkspace workspace = nature.loadDefaultControl();
+      
+      
+      m_workspace = nature.loadDefaultControl();
 
       // Vorlage auslesen
       final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/"
           + ModelNature.CONTROL_VIEW_PATH );
-      m_featureComposite = new FeatureComposite( workspace.getRootFeature(), new URL[]
+      m_featureComposite = new FeatureComposite( m_workspace.getRootFeature(), new URL[]
       { viewURL } );
 
       final Composite panel = new Composite( parent, SWT.NONE );
@@ -121,16 +123,6 @@ public class SteuerparameterWizardPage extends WizardPage
       // ERROR handling
       e.printStackTrace();
     }
-  }
-
-  public void setCalcCase( final IFolder folder ) throws CoreException
-  {
-    // gibts schon nen GML?
-    final ModelNature nature = (ModelNature)m_projectProvider.getProject().getNature(
-        ModelNature.ID );
-    m_workspace = nature.loadOrCreateControl( folder );
-    m_featureComposite.setFeature( m_workspace.getRootFeature() );
-    m_featureComposite.updateControl();
   }
 
   public void saveChanges( final IFolder folder, final IProgressMonitor monitor )
