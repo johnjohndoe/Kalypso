@@ -128,8 +128,8 @@
 
   <target name="prepare-java-sources" depends="prepare">
 
-    <exec executable="java"
-	  failonerror="true"
+    <exec executable="/opt/j2sdk1.4.2/bin/java"
+	  failonerror="true" dir=""
 	  output="${xsl-target.dir}/idManagerSource.java">
       <arg line="-Dcom.jclark.xsl.sax.parser=org.apache.xerces.parsers.SAXParser com.jclark.xsl.sax.Driver"/>
       <arg line="${xml.src.dir}/NA_Control.xml"/>

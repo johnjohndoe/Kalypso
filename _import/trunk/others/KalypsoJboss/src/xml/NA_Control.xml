@@ -224,7 +224,7 @@
 	<type>java.lang.Integer</type>
       </simpleProperty>
     </vectorSet>
-<!--
+
   <vectorSet key="m_longTimeSim">
       <name>shorttime-simulation-startdates</name>
       <description>Generate results (initial-values) for shorttime-simulation</description>
@@ -233,6 +233,6 @@
 	<type>java.util.Date</type>
       </simpleProperty>
     </vectorSet>
--->
+
   </objectClass>
 </theme>
