@@ -13,9 +13,9 @@
     <!-- Init -->
     <target name="init">
       <!-- NA-Modell -->
-        <property name="model" value="NA_Modell"/>
-      <!-- <property name="model" value="NA_Control"/> -->
-      <!-- <property name="model" value="NA_SimulationCase"/> -->
+       <!-- <property name="model" value="NA_Modell"/> -->
+       <!-- <property name="model" value="NA_Control"/> --> 
+       <property name="model" value="NA_SimulationCase"/> 
 
       <!-- HWS Timm Ruben -->
      <!--  <property name="model" value="NA_Control"/> -->
@@ -140,7 +140,8 @@
     -->
     </target>
     <target name="seperate" depends="prepare-java-sources">
-        <exec executable="${bin.dir}/extractJavaSource.pl" dir="${bin.dir}" failonerror="true">
+        <exec executable="perl" dir="${bin.dir}" failonerror="true">
+            <arg line="${bin.dir}/extractJavaSource.pl"/>
             <arg line="${java.dir}/"/>
             <arg line="${xsl-target.dir}/idManagerSource.java"/>
             <arg line="${xsl-target.dir}/versionSource.java"/>

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #$target="../src/java/";
-
+print "perl-script\n";
 ($target,@srcFiles)=@ARGV;
 for(@srcFiles)
   {
@@ -38,7 +38,8 @@ sub print2file
   $path =~ s/\./\//g;
 
   print "  save ".$target.$path."/".$file."\n";
-  system("mkdirhier ".$target.$path);
+#  system("mkdirhier ".$target.$path);
+  mkdir($target.$path,O700);
   open(STREAM, ">".$target.$path."/".$file);
   print STREAM $text;
   close(STREAM);
