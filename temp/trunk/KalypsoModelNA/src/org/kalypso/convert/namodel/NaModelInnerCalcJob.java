@@ -378,9 +378,9 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
         }
 
         final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "",
-            Date.class, 0, true );
+            Date.class, true );
         final IAxis qAxis = new DefaultAxis( TimeserieConstants.TYPE_RUNOFF,
-            TimeserieConstants.TYPE_RUNOFF, "qm/s", Double.class, 1, false );
+            TimeserieConstants.TYPE_RUNOFF, "qm/s", Double.class, false );
         IAxis[] axis = new IAxis[]
         {
             dateAxis,
