@@ -16,9 +16,7 @@ import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
 import org.kalypso.ogc.gml.featureview.FeatureviewHelper;
-import org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -27,10 +25,8 @@ import org.kalypso.util.command.ICommand;
 public class EditFeatureWidget extends AbstractWidget
 {
   // todo: replace with customized factory?
-  private final FeatureviewHelper m_featureControlFactory = new FeatureviewHelper();
+  private final FeatureviewHelper m_featureControlHelper = new FeatureviewHelper();
 
-  private final IFeatureControlFactory m_controlFactory = KalypsoGisPlugin.getDefault().createFeatureControlFactory();
-  
   private Point m_point;
 
   private Shell m_shell;
@@ -81,10 +77,9 @@ public class EditFeatureWidget extends AbstractWidget
     if( m_shell != null && feature != null )
     {
       // TODO: uncomment this line
-//      final FeatureviewHelper factory = m_featureControlFactory;
+//      final FeatureviewHelper helper = m_featureControlFactory;
       // nur zu Debug Zwecken jedesmal eine neue Factory machen
-      final FeatureviewHelper factory = new FeatureviewHelper();
-      final IFeatureControlFactory editorFactory = m_controlFactory;
+      final FeatureviewHelper helper = new FeatureviewHelper();
       
       final Shell shell = m_shell;
       shell.getDisplay().asyncExec( new Runnable()
@@ -92,7 +87,7 @@ public class EditFeatureWidget extends AbstractWidget
         public void run()
         {
           final FeatureviewDialog dialog = new FeatureviewDialog( shell, layer, feature, 
-              factory, editorFactory );
+              helper );
           dialog.open();
         }
       } );
