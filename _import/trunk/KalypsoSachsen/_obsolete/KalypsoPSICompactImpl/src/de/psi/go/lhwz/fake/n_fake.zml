@@ -19,7 +19,7 @@
         <metadata name="Rechtswert" value="0"/>
         <metadata name="Höhenangabeart" value=""/>
     </metadataList>
-    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_Niederschlag 425440" type="kalypso-status" unit="">
+    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_Niederschlag" type="kalypso-status" unit="">
         <valueArray separator=";">1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1</valueArray>
     </axis>
     <axis datatype="TYPE=double" key="false" name="Niederschlag" type="N" unit="mm">

@@ -424,12 +424,12 @@ public class PSICompactImpl implements PSICompact
 
       p = mdl.getProperty( TimeserieConstants.MD_GKH );
       if( p != null )
-        omd.setHeight((int) Double.valueOf(p).doubleValue());
+        omd.setHeight( Double.valueOf(p).intValue());
 
       
       p = mdl.getProperty( TimeserieConstants.MD_GKR );
       if( p != null )
-        omd.setRight((int)Double.valueOf(p).doubleValue() );
+        omd.setRight( Double.valueOf(p).intValue() );
 
       p = mdl.getProperty( TimeserieConstants.MD_HOEHENANGABEART );
       if( p != null )
@@ -439,7 +439,7 @@ public class PSICompactImpl implements PSICompact
 
       p = mdl.getProperty( TimeserieConstants.MD_MESSTISCHBLATT );
       if( p != null )
-        omd.setMapNo( (int)Double.valueOf(p).doubleValue() );
+        omd.setMapNo( Double.valueOf(p).intValue() );
 
       p = mdl.getProperty( TimeserieConstants.MD_PEGELNULLPUNKT );
       if( p != null )
