@@ -184,6 +184,9 @@ public class FileUtilities
    */
   public static void deleteRecursive( final File file )
   {
+    if( file == null )
+      return;
+    
     if( file.isDirectory() )
     {
       final File[] files = file.listFiles();
