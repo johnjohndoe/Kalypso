@@ -60,15 +60,7 @@
 	<!-- DEPLOY -->
 	<target name="deploy" depends="jar">
 
-		<copy todir="../KalypsoPSICompactAdapterCore/lib">
-			<fileset dir="${deploy.dir}" includes="*.jar" />
-		</copy>
-
 		<copy todir="../KalypsoPSICompactAdapter/lib">
-			<fileset dir="${deploy.dir}" includes="*.jar" />
-		</copy>
-
-		<copy todir="../PSICompactTest/lib">
 			<fileset dir="${deploy.dir}" includes="*.jar" />
 		</copy>
 	</target>

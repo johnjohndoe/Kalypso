@@ -2,8 +2,6 @@ package org.kalypso.psiadapter.repository;
 
 import java.util.Properties;
 
-import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
@@ -294,62 +292,4 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 
     return new WechmannGroup( wsets );
   }
-  
-  // TODO check if this stuff is still needed.
-  //  /**
-  //   * Helper für die Übersetzung des 'Status' (ArchiveData) in eine leesbare
-  //   * String
-  //   */
-  //  public final static String statusToString( int status )
-  //  {
-  //    switch( status )
-  //    {
-  //    case PSICompact.STATUS_AUTO:
-  //      return props.getProperty( "STATUS_AUTO" );
-  //    case PSICompact.STATUS_ERSALLG:
-  //      return props.getProperty( "STATUS_ERSALLG" );
-  //    case PSICompact.STATUS_MANKOR:
-  //      return props.getProperty( "STATUS_MANKOR" );
-  //    case PSICompact.STATUS_NACH:
-  //      return props.getProperty( "STATUS_NACH" );
-  //    case PSICompact.STATUS_NORM:
-  //      return props.getProperty( "STATUS_NORM" );
-  //    case PSICompact.STATUS_NORMALLG:
-  //      return props.getProperty( "STATUS_NORMALLG" );
-  //    case PSICompact.STATUS_OK:
-  //      return props.getProperty( "STATUS_OK" );
-  //    case PSICompact.STATUS_REKO:
-  //      return props.getProperty( "STATUS_REKO" );
-  //    case PSICompact.STATUS_UNDEF:
-  //      return props.getProperty( "STATUS_UNDEF" );
-  //
-  //    default:
-  //      return props.getProperty( "UNKNOWN" );
-  //    }
-  //  }
-
-  //  /**
-  //   * Helper that translates the status string back to an integer
-  //   */
-  //  public static int statusTranslate( final String status )
-  //  {
-  //    if( status.equals( props.getProperty( "STATUS_AUTO" ) ) )
-  //      return PSICompact.STATUS_AUTO;
-  //    else if( status.equals( props.getProperty( "STATUS_ERSALLG" ) ) )
-  //      return PSICompact.STATUS_ERSALLG;
-  //    else if( status.equals( props.getProperty( "STATUS_MANKOR" ) ) )
-  //      return PSICompact.STATUS_MANKOR;
-  //    else if( status.equals( props.getProperty( "STATUS_NACH" ) ) )
-  //      return PSICompact.STATUS_NACH;
-  //    else if( status.equals( props.getProperty( "STATUS_NORM" ) ) )
-  //      return PSICompact.STATUS_NORM;
-  //    else if( status.equals( props.getProperty( "STATUS_NORMALLG" ) ) )
-  //      return PSICompact.STATUS_NORMALLG;
-  //    else if( status.equals( props.getProperty( "STATUS_OK" ) ) )
-  //      return PSICompact.STATUS_OK;
-  //    else if( status.equals( props.getProperty( "STATUS_REKO" ) ) )
-  //      return PSICompact.STATUS_REKO;
-  //    else
-  //      return PSICompact.STATUS_UNDEF;
-  //  }
 }

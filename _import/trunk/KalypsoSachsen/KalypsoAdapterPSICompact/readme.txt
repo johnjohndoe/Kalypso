@@ -1,3 +1,5 @@
+Kappselt die Grundfunktion der PSICompact Schnittstelle.
+
 Verknüpft die PSICompact Schittstelle mit die IRepository und IObservation interfaces.
 
 Dieses Projekt dient als Adapter, d.h. hier werden die spezielle Eigenschaften
