@@ -396,19 +396,19 @@ public class PSICompactImpl implements PSICompact
       String p = null;
       p = mdl.getProperty( TimeserieConstants.MD_ALARM_1 );
       if( p != null )
-        omd.setAlarm1( Integer.valueOf( p ).doubleValue() );
+        omd.setAlarm1( Double.valueOf(p).doubleValue() );
 
       p = mdl.getProperty( TimeserieConstants.MD_ALARM_2 );
       if( p != null )
-        omd.setAlarm2( Integer.valueOf( p ).doubleValue() );
+        omd.setAlarm2( Double.valueOf(p).doubleValue() );
 
       p = mdl.getProperty( TimeserieConstants.MD_ALARM_3 );
       if( p != null )
-        omd.setAlarm3( Integer.valueOf( p ).doubleValue() );
+        omd.setAlarm3( Double.valueOf(p).doubleValue() );
 
       p = mdl.getProperty( TimeserieConstants.MD_ALARM_4 );
       if( p != null )
-        omd.setAlarm4( Integer.valueOf( p ).doubleValue() );
+        omd.setAlarm4( Double.valueOf(p).doubleValue() );
 
       p = mdl.getProperty( TimeserieConstants.MD_FLUSS );
       if( p != null )
@@ -424,11 +424,12 @@ public class PSICompactImpl implements PSICompact
 
       p = mdl.getProperty( TimeserieConstants.MD_GKH );
       if( p != null )
-        omd.setHeight( Integer.valueOf( p ).intValue() );
+        omd.setHeight((int) Double.valueOf(p).doubleValue());
 
+      
       p = mdl.getProperty( TimeserieConstants.MD_GKR );
       if( p != null )
-        omd.setRight( Integer.valueOf( p ).intValue() );
+        omd.setRight((int)Double.valueOf(p).doubleValue() );
 
       p = mdl.getProperty( TimeserieConstants.MD_HOEHENANGABEART );
       if( p != null )
@@ -438,11 +439,11 @@ public class PSICompactImpl implements PSICompact
 
       p = mdl.getProperty( TimeserieConstants.MD_MESSTISCHBLATT );
       if( p != null )
-        omd.setMapNo( Integer.valueOf( p ).intValue() );
+        omd.setMapNo( (int)Double.valueOf(p).doubleValue() );
 
       p = mdl.getProperty( TimeserieConstants.MD_PEGELNULLPUNKT );
       if( p != null )
-        omd.setLevel( Integer.valueOf( p ).doubleValue() );
+        omd.setLevel( Double.valueOf(p).doubleValue() );
 
       final IAxis nba = ObservationUtilities.findAxisByClass(
           obs.getAxisList(), Number.class, true )[0];
