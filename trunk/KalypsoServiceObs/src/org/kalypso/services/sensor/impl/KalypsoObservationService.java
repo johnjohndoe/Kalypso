@@ -132,7 +132,7 @@ public class KalypsoObservationService implements IObservationService
       final DateRangeArgument args = new DateRangeArgument( drb.getFrom(), drb.getTo() );
       final ObservationType obsType = ZmlFactory.createXML( obs, args );
 
-      final File f = File.createTempFile( obs.getName(), ".zml", m_tmpDir );
+      final File f = File.createTempFile( "___" + obs.getName(), ".zml", m_tmpDir );
 
       // will be closed in finally block
       fos = new FileOutputStream( f );
@@ -303,12 +303,12 @@ public class KalypsoObservationService implements IObservationService
       final IObservation obs = (IObservation)children[i].getAdapter( IObservation.class );
       if( obs != null )
       {
-        beans[i] = new ObservationBean( item.getIdentifier(), obs.getName(), item.getRepository()
+        beans[i] = new ObservationBean( children[i].getIdentifier(), obs.getName(), item.getRepository()
             .getIdentifier(), obs.getMetadataList() );
       }
       else
       {
-        beans[i] = new ItemBean( item.getIdentifier(), children[i].getName(), item.getRepository()
+        beans[i] = new ItemBean( children[i].getIdentifier(), children[i].getName(), item.getRepository()
             .getIdentifier() );
       }
 
