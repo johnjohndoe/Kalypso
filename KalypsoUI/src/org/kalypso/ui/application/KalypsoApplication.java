@@ -1,12 +1,17 @@
 package org.kalypso.ui.application;
 
+import java.net.URL;
+
 import javax.xml.rpc.ServiceException;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -19,6 +24,7 @@ import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.proxy.IUserService;
 import org.kalypso.services.user.common.IUserServiceConstants;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.view.prognose.PrognosePanel;
 
 /**
  * @author belger
@@ -125,17 +131,38 @@ public class KalypsoApplication implements IPlatformRunnable
 
   private Object startPrognose()
   {
-    //    final IProject[] projects =
-    // ResourcesPlugin.getWorkspace().getRoot().getProjects();
+//    final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 
-    //    final Display display = new Display();
-    //    final Shell shell = new Shell( display );
+    final Display display = new Display();
+    final Shell shell = new Shell( display );
 
-    // TODO!
-    //    final CalcWizard wizard = new CalcWizard( projects[0] );
-    //
-    //    final WizardDialog dialog = new WizardDialog( shell, wizard );
-    //    dialog.open();
+    // first, choose project
+    final URL location = KalypsoGisPlugin.getDefault().getModellistLocation();
+    if( location == null )
+    {
+      MessageDialog.openError( shell, "Hochwasser Vorhersage", "Die Liste der Vorhersage Modelle konnten nicht geladen werden. Bitte wenden Sie sich an den System Administrator." );
+      return null;
+    }
+    
+    final PrognosePanel prognosePanel = new PrognosePanel( location );
+    
+    final Dialog dialog = new Dialog( shell ) 
+    {
+      /**
+       * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+       */
+      protected Control createDialogArea( final Composite parent )
+      {
+        return prognosePanel.createControl( parent );
+      }
+    };
+
+    dialog.open();
+    
+    // now start calculation wizard
+//    final CalcWizard wizard = new CalcWizard( projects[0] );
+//    final WizardDialog dialog = new WizardDialog( shell, wizard );
+//    dialog.open();
 
     return null;
   }

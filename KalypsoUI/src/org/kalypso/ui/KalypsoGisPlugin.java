@@ -558,4 +558,28 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       m_defaultFeatureControlFactory = new DefaultFeatureModifierFactory();
     return m_defaultFeatureControlFactory;
   }
+  
+  
+  public URL getModellistLocation()
+  {
+    try
+    {
+      final String location = m_mainConf.getProperty( "PROGNOSE_MODELLIST", null );
+      if( location == null )
+        return null;
+      
+      final String[] locations = location.split( "," );
+      if( locations.length == 0 )
+        return null;
+
+      return new URL( locations[0] );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      
+      return null;
+    }
+  }
+  
 }
