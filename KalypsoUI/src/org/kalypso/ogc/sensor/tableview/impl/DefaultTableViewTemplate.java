@@ -61,9 +61,7 @@ public class DefaultTableViewTemplate extends AbstractTemplateEventProvider impl
    */
   public void removeTheme( ITableViewTheme theme )
   {
-    final Iterator it = theme.getColumns().iterator();
-    while( it.hasNext() )
-      fireTemplateChanged( new TemplateEvent( this, it.next(), TemplateEvent.TYPE_REMOVE ) );
+    fireTemplateChanged( new TemplateEvent( this, theme, TemplateEvent.TYPE_REMOVE ) );
     
     m_themesMap.remove( theme );
   }
