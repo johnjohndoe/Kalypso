@@ -13,6 +13,7 @@ import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.ObservationType;
@@ -186,7 +187,6 @@ public class NAZMLGenerator
     buffer.append( " xlink:href=\"" + location + "\"/>" );
     buffer.append( "</axis>" );
     buffer.append( "</observation>" );
-
   }
 
   private static String getAxisType( int col, int type )
@@ -208,13 +208,13 @@ public class NAZMLGenerator
     switch( type )
     {
     case NA_NIEDERSCHLAG_EINGABE:
-      return col == 1 ? "Datum" : "Niederschlag";
+      return col == 1 ? TimeserieConstants.TYPE_DATE : TimeserieConstants.TYPE_RAINFALL;//"Niederschlag";
     case NA_ZUFLUSS_EINGABE:
-      return col == 1 ? "Datum" : "Abfluss";
+      return col == 1 ? "Datum" : TimeserieConstants.TYPE_RUNOFF;//"Abfluss";
     case NA_ABFLUSS_BERECHNET:
-        return col == 1 ? "Datum" : "Abfluss";
+        return col == 1 ? "Datum" : TimeserieConstants.TYPE_RUNOFF;//"Abfluss";
     case NA_PEGEL_MESSUNG:
-        return col == 1 ? "Datum" : "Abfluss";
+        return col == 1 ? "Datum" : TimeserieConstants.TYPE_RUNOFF;//"Abfluss";
     default:
       break;
     }

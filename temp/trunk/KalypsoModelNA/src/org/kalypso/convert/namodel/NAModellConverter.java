@@ -19,6 +19,7 @@ import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.GMLWorkspace_Impl;
+import org.kalypso.convert.update.UpdateModell;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -95,8 +96,8 @@ public class NAModellConverter
     GMLWorkspace workspace = new GMLWorkspace_Impl( gmlSchema.getFeatureTypes(),rootFeature,
             null, ":project:.model/schema/namodel.gml");
     GmlSerializer.serializeWorkspace(new FileWriter( gmlFile ),workspace);
-    // TODO: use workspace instead of Feature fe
-//    GmlSerializer.serializeFeature( new FileWriter( gmlFile ), fe, null );
+    final UpdateModell updater=new UpdateModell(gmlFile.toURL());
+    updater.updateIt();
   }
 
   private static void insertGeometries( Feature modelFeature, String shapeDir )
