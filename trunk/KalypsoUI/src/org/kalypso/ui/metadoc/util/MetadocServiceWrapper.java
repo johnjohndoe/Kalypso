@@ -1,4 +1,4 @@
-package org.kalypso.ui.metadoc;
+package org.kalypso.ui.metadoc.util;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -22,7 +22,10 @@ public class MetadocServiceWrapper
   private final IMetaDocService m_service;
   private final DocBean m_bean;
   
-  public MetadocServiceWrapper( final String fileExtension ) throws CoreException
+  /**
+   * @param fileExtension Extension with '.' (e.g. '.csv')
+   */
+  public MetadocServiceWrapper( final String fileExtension, final String username ) throws CoreException
   {
     try
     {
@@ -32,7 +35,7 @@ public class MetadocServiceWrapper
           "Kalypso_MetaDocService", ClassUtilities
               .getOnlyClassName( IMetaDocService.class ) );
 
-      m_bean = m_service.prepareNewDocument( fileExtension );
+      m_bean = m_service.prepareNewDocument( fileExtension, username );
     }
     catch( final RemoteException e )
     {

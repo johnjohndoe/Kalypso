@@ -1,6 +1,7 @@
 package org.kalypso.ui.metadoc.table;
 
 import org.kalypso.services.proxy.DocBean;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.metadoc.ExportBerichtWizard;
 import org.kalypso.ui.metadoc.IExportableDocument;
 import org.kalypso.ui.metadoc.IExportableTableDocument;
@@ -26,7 +27,7 @@ public class ExportTableBerichtWizard extends ExportBerichtWizard
     super.addPages();
 
     m_optionPage = new ExportTableOptionsPage( "optionPage", "Export Otionen",
-        null );
+        ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
 
     addPage( m_optionPage );
   }

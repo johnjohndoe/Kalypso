@@ -94,21 +94,22 @@ public class KalypsoMetaDocService implements IMetaDocService
   }
 
   /**
-   * @see org.kalypso.services.metadoc.IMetaDocService#prepareNewDocument(java.lang.String)
+   * @see org.kalypso.services.metadoc.IMetaDocService#prepareNewDocument(java.lang.String, java.lang.String)
    */
-  public DocBean prepareNewDocument( String extension ) throws RemoteException
+  public DocBean prepareNewDocument( final String extension, final String username ) throws RemoteException
   {
-    if( extension == null || extension.length() == 0 )
-      extension = "tmp";
+    final String ext = ( extension == null || extension.length() == 0 ) ? ".tmp" : extension;
+    final String user = ( username == null || username.length() == 0 ) ? "Autor" : username;
     
     final File f;
     try
     {
-      f = File.createTempFile( "doc", extension, m_tmpDir );
+      f = File.createTempFile( "doc", ext, m_tmpDir );
       m_logger.info( "preparing file: " + f.getAbsolutePath() );
 
       final DocBean db = new DocBean( f.getAbsolutePath() );
       
+      m_props.put( IMetaDocCommiter.KEY_AUTOR, user );
       m_commiter.prepareMetainf( m_props, db );
       
       return db;
@@ -139,11 +140,12 @@ public class KalypsoMetaDocService implements IMetaDocService
   {
     try
     {
-      final File docFile = new File( mdb.getLocation() );
-      
       m_commiter.commitDocument( m_props, mdb );
       
       // delete temp file
+      // todo: es wird nur das doc gelöscht, das .xml bleibt im tmp Verzeichnis
+      // sollten nicht beide oder keines gelöscht werden?
+      final File docFile = new File( mdb.getLocation() );
       docFile.delete();
     }
     catch( Exception e ) // generic exception caught for simplicity

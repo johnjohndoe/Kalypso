@@ -60,6 +60,14 @@ public class FeaturePage extends WizardPage
     m_featureComposite.setFeature( feature );
     m_featureComposite.updateControl();
   }
+  
+  /**
+   * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
+   */
+  public boolean isPageComplete()
+  {
+    return m_featureComposite.isValid();
+  }
 
   /**
    * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
@@ -67,7 +75,7 @@ public class FeaturePage extends WizardPage
   public boolean canFlipToNextPage()
   {
     if( m_overrideCanFlipToNextPage )
-      return isPageComplete();
+      return super.canFlipToNextPage() && isPageComplete();
 
     return super.canFlipToNextPage();
   }

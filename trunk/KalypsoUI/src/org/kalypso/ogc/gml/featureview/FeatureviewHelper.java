@@ -70,7 +70,8 @@ public class FeatureviewHelper
     button.setStyle( SWT.PUSH );
     button.setProperty( ftp.getName() );
 
-    griddata.setHorizontalAlignment( GridData.BEGINNING );
+    griddata.setHorizontalAlignment( GridData.CENTER );
+    griddata.setWidthHint( 100 );
     button.setLayoutData( griddata );
 
     return button;

@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizard;
@@ -51,6 +50,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -714,7 +714,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void saveTimeseriesPressed( final boolean saveInFiles )
   {
-    final IRunnableWithProgress op = new IRunnableWithProgress()
+    final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
     {
       public void run( final IProgressMonitor monitor )
       {
@@ -722,7 +722,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     };
 
-    runAndHandleOperation( op, "Zeitreihen speichern" );
+    op.runAndHandleOperation( getShell(), "Hochwasser Vorhersage", "Zeitreihen speichern" );
   }
 
   /**
@@ -775,33 +775,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     monitor.done();
   }
 
-  protected void runAndHandleOperation( final IRunnableWithProgress op, final String message )
-  {
-    try
-    {
-      getContainer().run( true, false, op );
-    }
-    catch( final InvocationTargetException e )
-    {
-      e.printStackTrace();
-
-      IStatus status = null;
-      String msg = message;
-
-      final Throwable targetException = e.getTargetException();
-      if( targetException instanceof CoreException )
-        status = ( (CoreException)targetException ).getStatus();
-      else
-        msg += "\n" + targetException.getLocalizedMessage();
-
-      ErrorDialog.openError( getContainer().getShell(), "Hochwasser Vorhersage", msg, status );
-    }
-    catch( InterruptedException e )
-    {
-      e.printStackTrace();
-    }
-  }
-
   /**
    * @throws CoreException
    * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#saveData(org.eclipse.core.runtime.IProgressMonitor)
@@ -828,7 +801,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     final IWizard wizard = getWizard();
 
-    final IRunnableWithProgress op = new IRunnableWithProgress()
+    final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
     {
       public void run( IProgressMonitor monitor ) throws InvocationTargetException
       {
@@ -876,10 +849,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     };
 
-    runAndHandleOperation( op, "Hochwasser Vorhersage" );
-
-    // alle Seiten sollten einen Refresh machen?!
-//    onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
+    op.runAndHandleOperation( getShell(), "Hochwasser Vorhersage", "Berechnung" );
   }
 
   protected void postCreateControl()

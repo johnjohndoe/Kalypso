@@ -1,31 +1,25 @@
 package org.kalypso.ui.editor.gistableeditor.actions;
 
-import java.io.IOException;
-import java.rmi.RemoteException;
-
-import javax.xml.rpc.ServiceException;
-
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.ogc.gml.table.wizard.ExportableLayerTable;
-import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.proxy.DocBean;
-import org.kalypso.services.proxy.IMetaDocService;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.metadoc.table.ExportTableBerichtWizard;
+import org.kalypso.ui.metadoc.util.MetadocServiceWrapper;
 
 /**
  * @author Belger
  */
 public class ExportBerichtActionDelegate extends GisTableAbstractActionDelagate
 {
-  private IMetaDocService m_service;
-
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
@@ -33,78 +27,43 @@ public class ExportBerichtActionDelegate extends GisTableAbstractActionDelagate
   {
     try
     {
-      final DocBean doc = prepareService();
-
+      final String username = System.getProperty( "user.name" );
+      final MetadocServiceWrapper service = new MetadocServiceWrapper( ".csv", username );
+      final DocBean doc = service.getDoc();
+      
       final ExportableLayerTable exp = new ExportableLayerTable( getEditor().getLayerTable() );
       
       final Wizard exportWizard = new ExportTableBerichtWizard( exp , doc );
 
       final WizardDialog dialog = new WizardDialog( getEditor().getSite().getShell(), exportWizard );
-      if( dialog.open() == Window.OK )
-        saveData( doc );
-      else
-      {
-        cancelData( doc );
-      }
+      final int ok = dialog.open();
+
+      final Job job = new Job( "Berichtsablage" ) {
+        protected IStatus run( IProgressMonitor monitor )
+        { 
+          try
+          {
+            if( ok == Window.OK )
+              service.commitData();
+            else
+              service.cancelData();
+          }
+          catch( CoreException e )
+          {
+            return e.getStatus();
+          }
+          
+          return Status.OK_STATUS;
+        }};
+        job.setUser( true );
+        job.schedule();
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
 
-      ErrorDialog.openError( getEditor().getSite().getShell(), "Fehler",
-          "Bericht konnte nicht exportiert werden", e.getStatus() );
-    }
-  }
-
-  private void cancelData( final DocBean doc ) throws CoreException
-  {
-    try
-    {
-      m_service.rollbackNewDocument( doc );
-    }
-    catch( final RemoteException e )
-    {
-      e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Löschen der Berichtsvorlage auf dem Server gescheitert", e ) );
-    }
-  }
-
-  private void saveData( final DocBean bean ) throws CoreException
-  {
-    try
-    {
-      m_service.commitNewDocument( bean );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Berichtsablage gescheitert", e ) );
-    }
-  }
-
-  private DocBean prepareService() throws CoreException
-  {
-    try
-    {
-      final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault()
-          .getServiceProxyFactory();
-      m_service = (IMetaDocService)serviceProxyFactory.getProxy( "Kalypso_MetaDocService",
-          ClassUtilities.getOnlyClassName( IMetaDocService.class ) );
-
-      return m_service.prepareNewDocument( ".csv" );
-    }
-    catch( final RemoteException e )
-    {
-      e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Aufruf des Rechendienstes", e ) );
-    }
-    catch( final ServiceException e )
-    {
-      e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Rechendienst konnte nicht initialisiert werden", e ) );
+      ErrorDialog.openError( getEditor().getSite().getShell(), "Berichtsablage",
+          "Berichtsablagedienst konnte nicht initialisiert werden", e.getStatus() );
     }
   }
 

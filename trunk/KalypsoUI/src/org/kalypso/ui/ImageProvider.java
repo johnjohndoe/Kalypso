@@ -55,6 +55,9 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_UTIL_UPLOAD_WIZ = id("icons/util/upload_wiz.gif");
   public static final ImageDescriptor IMAGE_UTIL_FILTER = id("icons/util/filter.gif");
   public static final ImageDescriptor IMAGE_UTIL_POINT_GREEN = id("icons/util/point_green.gif");
+
+  public static final ImageDescriptor IMAGE_UTIL_BERICHT_WIZ = id("icons/util/bericht_wiz.gif");
+  public static final ImageDescriptor IMAGE_UTIL_BERICHT_ICON = id("icons/util/bericht.gif");
   
   public static final ImageDescriptor IMAGE_STYLEEDITOR_SAVE = id( "icons/gistable/save_edit.gif" );
   public static final ImageDescriptor IMAGE_STYLEEDITOR_ADD_RULE = id( "icons/obstable/add_row.gif" );

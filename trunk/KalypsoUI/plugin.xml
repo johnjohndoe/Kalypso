@@ -62,6 +62,9 @@
       <library name="lib/kalypsoservice_user.jar">
          <export name="*"/>
       </library>
+      <library name="lib/swtcalendar.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
    <requires>
@@ -99,7 +102,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            name="Kalypso Gisview Editor"
+            name="Karten Editor"
             default="true"
             extensions="gmt"
             icon="icons/kalypso_gmt.gif"
@@ -107,7 +110,7 @@
             id="org.kalypso.ui.editor.mapeditor.GisMapEditor">
       </editor>
       <editor
-            name="Kalypso GisTableEditor"
+            name="Tabellen Editor"
             default="true"
             extensions="gtt"
             icon="icons/kalypso_gtt.gif"
@@ -116,7 +119,7 @@
             id="org.kalypso.ui.editor.gistableeditor.GisTableEditor">
       </editor>
       <editor
-            name="Kalypso Observation DiagramEditor"
+            name="Diagramm Editor"
             default="true"
             extensions="odt"
             icon="icons/kalypso_odt.gif"
@@ -124,7 +127,7 @@
             id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor">
       </editor>
       <editor
-            name="Kalypso Observation TableEditor"
+            name="Zeitreihen Editor"
             default="true"
             extensions="ott"
             icon="icons/kalypso_ott.gif"
@@ -226,9 +229,9 @@
          <action
                label="Berichtsablage..."
                style="push"
-               icon="icons/gistable/export_wiz.gif"
+               icon="icons/util/bericht.gif"
                class="org.kalypso.ui.editor.gistableeditor.actions.ExportBerichtActionDelegate"
-               tooltip="Die Tabelle in das Berichtswesen exportieren..."
+               tooltip="Exportiert die Tabelle in das Berichtswesen."
                menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
                toolbarPath="tabelle"
                id="org.kalypso.ui.editor.gistableeditor.ExportAction">
@@ -303,7 +306,7 @@
                style="push"
                icon="icons/full/elcl16/kde_window_fullscreen.gif"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate"
-               tooltip="maximiert den angezeigten Ausschnitt"
+               tooltip="maximiert den Kartenausschnitt"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/actions"
                toolbarPath="karte/actions"
                id="org.kalypso.ui.editor.mapeditor.action.FullExtentAction">
@@ -335,16 +338,16 @@
                toolbarPath="karte/tools"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate"
                icon="icons/map/pan.gif"
-               label="Kartenausschnitt verschieben"
+               label="Ausschnitt verschieben"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
                tooltip="verschiebt den Kartenausschnitt">
          </action>
          <action
-               label="Edit Feature"
+               label="Objekt editieren"
                style="radio"
                icon="icons/full/elcl16/kde_contexthelp.gif"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureWidgetDelegate"
-               tooltip="die Daten eines Objekts anzeigen"
+               tooltip="die Daten eines Objekts anzeigen/editieren"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
                toolbarPath="karte/tools"
                id="org.kalypso.ui.editor.mapeditor.action.EditFeatureAction">
@@ -413,8 +416,8 @@
          <action
                label="Tabelle exportieren"
                style="push"
-               icon="icons/gistable/export_wiz.gif"
-               tooltip="Exportiert die Tabelle als CSV-Datei"
+               icon="icons/util/bericht.gif"
+               tooltip="Exportiert die Tabelle in das Berichtswesen"
                class="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate"
                toolbarPath="table_export"
                id="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate">
@@ -434,8 +437,8 @@
          <action
                label="Diagramm exportieren"
                style="push"
-               icon="icons/gistable/export_wiz.gif"
-               tooltip="Exportiert der aktuelle Diagramm als Bild"
+               icon="icons/util/bericht.gif"
+               tooltip="Exportiert das Diagramm in das Berichtswesen."
                class="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate"
                toolbarPath="diagram"
                id="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate">

@@ -14,6 +14,11 @@ public class DateWithoutTime extends Date
   {
     super();
   }
+  
+  public DateWithoutTime( final Date date )
+  {
+    this( date.getTime() );
+  }
 
   public DateWithoutTime( int year, int month, int date )
   {
