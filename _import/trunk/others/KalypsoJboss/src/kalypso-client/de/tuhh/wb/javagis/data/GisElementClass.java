@@ -262,8 +262,8 @@ public abstract class GisElementClass implements TableListener
 
     public void setSimplePropertyValue(Object oId,int n, Object value)
     {
-	if("bce_db".equals(this.getSimplePropertyFormat(n)))
-		 value = ((TSLink)value).getString();
+	if("bce_db".equals(this.getSimplePropertyFormat(n))&&value!=null)
+	    value = ((TSLink)value).getString();
 	myVersion.setSimplePropertyValue(met,oId, n, value);
 	simpleProperties.remove(oId);
     }

@@ -509,9 +509,9 @@ public class CSelectTSFrame extends JDialog implements ActionListener
 
 	public void prepareWindow(TSLink tsLink)
 	{
-		m_tree.clearSelection();
-		fillInTree(Level.GetRootLevel(), null);
-		//m_tree.collapsePath(new TreePath(m_model.getPathToRoot(getRootNode())));
+	        m_tree.clearSelection();
+		//		fillInTree(Level.GetRootLevel(), null);
+		m_tree.collapsePath(new TreePath(m_model.getPathToRoot(getRootNode())));
 		if(tsLink==null)
 			return;
 		String code=tsLink.getCode();

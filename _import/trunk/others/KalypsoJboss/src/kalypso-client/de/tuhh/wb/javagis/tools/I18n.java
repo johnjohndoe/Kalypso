@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 public class I18n
 {
     private static boolean SHOWKEY=false;
-    private static boolean LEARN=true;
+    private static boolean LEARN=false;
 
     private static I18n instance=null;
     private Properties props=null;

@@ -3,9 +3,7 @@ package de.tuhh.wb.javagis.view.netview;
 
 
 import javax.swing.table.AbstractTableModel;
-
 import javax.swing.*;
-
 import de.tuhh.wb.javagis.tools.I18n;
 
 
@@ -1623,49 +1621,33 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
     public void showPopupMenu(MouseEvent e)
 
     {
-
 	GisPoint gisPoint=gisMap.trafo.convert(e);
-
 	gisMap.setLastClick(gisPoint);
-
 	if (e.isPopupTrigger())
-
 	    {
-
 		GisObject snapedGisObject=netModel.snap(gisPoint);
-
 		JPopupMenu popup = new JPopupMenu();
-
-
-
 		JMenu subMenu=new JMenu(I18n.get("netViewCreateObject"));
-
-		popup.add(subMenu);
-
-		for(int i=0;i<gisObjectClasses.size();i++)
-
+		if(snapedGisObject!=null)
 		    {
-
-			GisObjectClass gisObjectClass = (GisObjectClass)gisObjectClasses.elementAt(i);
-
-			JMenuItem menuItem = new JMenuItem(gisObjectClass.getName());
-
-			menuItem.setIcon(new ImageIcon(gisObjectClass.getSymbol()));
-
-			menuItem.setActionCommand("createObject_"+gisObjectClass.getKey());
-
+			JMenuItem menuItem=new JMenuItem(I18n.get("netViewOpenDetailedView")+" "+snapedGisObject.getName()+"#"+snapedGisObject.getId());
+			int elementTable=snapedGisObject.getGisElementClass().getElementTable();
+			menuItem.setActionCommand("openDetailedView,"+elementTable+"#"+snapedGisObject.getId());
 			menuItem.addActionListener(netModel);
-
+			popup.add(menuItem);
+		    }
+		popup.add(subMenu);
+		for(int i=0;i<gisObjectClasses.size();i++)
+		    {
+			GisObjectClass gisObjectClass = (GisObjectClass)gisObjectClasses.elementAt(i);
+			JMenuItem menuItem = new JMenuItem(gisObjectClass.getName());
+			menuItem.setIcon(new ImageIcon(gisObjectClass.getSymbol()));
+			menuItem.setActionCommand("createObject_"+gisObjectClass.getKey());
+			menuItem.addActionListener(netModel);
 			subMenu.add(menuItem);
-
 		    }
 
 		/*
-
-		if(snapedGisObject!=null)
-
-		{
-
 		GisElementClass gisElementClass=snapedGisObject.getGisElementClass();
 
 		subMenu=new JMenu(I18n.get("netViewShowElement"));

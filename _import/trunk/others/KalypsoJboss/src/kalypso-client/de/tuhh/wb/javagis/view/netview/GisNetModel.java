@@ -18,6 +18,7 @@ import java.awt.BasicStroke;
 import java.awt.Font;
 import de.tuhh.wb.javagis.data.*;
 import de.tuhh.wb.javagis.data.event.*;
+import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
 import de.tuhh.wb.javagis.view.netview.GisNetView;
 import javax.swing.JCheckBoxMenuItem;
 import java.awt.event.ActionListener;
@@ -485,7 +486,31 @@ public class GisNetModel implements ActionListener,ElementClassListener
 			    hiddenElements.add(action);
 		    }
 	    }
-
+	if(action.startsWith("openDetailedView"))
+	    {                      
+		int elementTable=Integer.parseInt(action.replaceAll(".+,","").replaceAll("#.+",""));
+		Object id=new Integer(action.replaceAll(".+#",""));
+		System.out.println("table,id"+elementTable+","+id.toString());
+		GisElement gisElement=null;
+		for(int i=0;i<myGisObjectClasses.size();i++)
+		    {
+			GisObjectClass gisObjectClass=(GisObjectClass)myGisObjectClasses.elementAt(i);
+			if(gisObjectClass.getElementTable()==elementTable)
+				gisElement=gisObjectClass.getGisElement(id);
+		    }
+		for(int i=0;i<myGisRelationClasses.size();i++)
+		    {		
+			GisRelationClass gisRelationClass=(GisRelationClass)myGisRelationClasses.elementAt(i);	       
+			if(gisRelationClass.getElementTable()==elementTable)
+			    gisElement=gisRelationClass.getGisElement(id);
+			}
+		if(gisElement!=null)
+		    {
+			GisSingleObjectView.load("detailedView",gisElement);
+			System.out.println("jaha");
+		    }
+	    }
+	
 	//String action="show_"+key+"_"+propKey;
 
 	if(action.startsWith("createObject_"))
@@ -555,9 +580,7 @@ public class GisNetModel implements ActionListener,ElementClassListener
 
     public void onSimplePropertyChanged(int elementTable,Object eId)
     {
-	// do nothing in netview
-	/*	if(myGisView!=null)
-	    myGisView.refreshView();
-	*/
+	if(myGisMap!=null)
+	    myGisMap.updateImage();
     }
 }

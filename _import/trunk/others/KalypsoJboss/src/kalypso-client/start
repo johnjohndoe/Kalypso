@@ -1,5 +1,7 @@
 #/bin/bash
-CLASSPATH=`cat jboss_libs_classpath`:.:../deploys/javaGis1-ejb.jar:../deploys/javaGis2-ejb.jar:../deploys/javaGis3-ejb.jar
-echo $CLASSPATH
-java bin/de/tuhh/wb/javagis/Main
-#java Test
+cd bin
+./KalypsoRRM.sh
+#CLASSPATH=`cat jboss_libs_classpath`:.:../deploys/javaGis1-ejb.jar:../deploys/javaGis2-ejb.jar:../deploys/javaGis3-ejb.jar
+#echo $CLASSPATH
+#java bin/de/tuhh/wb/javagis/Main
+##java Test
