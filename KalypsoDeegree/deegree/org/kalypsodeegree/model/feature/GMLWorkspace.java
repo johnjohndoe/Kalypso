@@ -1,8 +1,6 @@
 package org.deegree.model.feature;
 
-import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree.model.feature.event.ModellEventProvider;
-import org.deegree_impl.clients.wcasclient.model.ModelList;
 import org.deegree_impl.gml.schema.GMLSchema;
 
 /**
@@ -17,15 +15,24 @@ public interface GMLWorkspace extends ModellEventProvider
   public FeatureType[] getFeatureTypes();
 
   public Feature[] getFeatures( FeatureType ft );
-/**
- * resolves the associationlink to a feature, maxOccurs =1
- */
+
+  /**
+   * resolves the associationlink to a feature, maxOccurs =1
+   */
   public Feature resolveLink( Feature srcFeature, String linkPropertyName );
+
   /**
    * resolves the associationlink to a feature, maxOccurs >1
    */
   public Feature[] resolveLinks( Feature srcFeature, String linkPropertyName );
 
-  public Feature getFeature( FeatureType ft,String id );
+  /**
+   * returns all Features that that link to the linkTargetFeature, with the
+   * specified linkPropertyname and are type of linkSourceFeatureType or do substitue it
+   */
+  public Feature[] resolveWhoLinksTo( Feature linkTargetfeature, FeatureType linkSrcFeatureType,
+      String linkPropertyName );
+
+  public Feature getFeature( FeatureType ft, String id );
 
 }

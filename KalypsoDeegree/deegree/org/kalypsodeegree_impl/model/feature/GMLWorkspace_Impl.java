@@ -35,18 +35,17 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   /**
    * @see org.deegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
    */
-  public Feature getFeature( FeatureType ft,String id )
+  public Feature getFeature( FeatureType ft, String id )
   {
-    List list=(List)m_featureMap.get(ft);
+    List list = (List)m_featureMap.get( ft );
     for( Iterator iter = list.iterator(); iter.hasNext(); )
     {
       Feature feature = (Feature)iter.next();
-      if(id.equals(feature.getId()))
+      if( id.equals( feature.getId() ) )
         return feature;
     }
     return null;
   }
-  
 
   public Feature resolveLink( Feature srcFeature, String linkPropertyName )
   {
@@ -214,5 +213,43 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       ( (ModellEventListener)iter.next() ).onModellChange( event );
   }
 
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#resolveWhoLinksTo(org.deegree.model.feature.Feature,
+   *      org.deegree.model.feature.FeatureType, java.lang.String)
+   */
+  public Feature[] resolveWhoLinksTo( Feature linkTargetfeature, FeatureType linkSrcFeatureType,
+      String linkPropertyName )
+  {
+    if( linkTargetfeature == null )
+      return new Feature[0];
+
+    final List result = new ArrayList();
+    final Feature[] features = getFeatures( linkSrcFeatureType );
+    for( int i = 0; i < features.length; i++ )
+    {
+      Object prop = features[i].getProperty( linkPropertyName );
+      if( prop == linkTargetfeature )
+        result.add( features[i] );
+      if( linkTargetfeature.getId().equals( prop ) )
+        result.add( features[i] );
+    }
+
+    FeatureType[] substiFTs = m_schema.getResolveSubstitutionGroup( linkSrcFeatureType );
+    for( int _ft = 0; _ft < substiFTs.length; _ft++ )
+    {
+      final Feature[] substiFeatures = getFeatures( substiFTs[_ft] );
+
+      for( int i = 0; i < features.length; i++ )
+      {
+        Object prop = substiFeatures[i].getProperty( linkPropertyName );
+        if( prop == linkTargetfeature )
+          result.add( substiFeatures[i] );
+        if( linkTargetfeature.getId().equals( prop ) )
+          result.add( substiFeatures[i] );
+      }
+    }
+
+    return (Feature[])result.toArray( new Feature[result.size()] );
+  }
 
 }
