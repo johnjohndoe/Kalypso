@@ -14,14 +14,13 @@ public abstract class AbstractRepositoryFactory implements IRepositoryFactory
   /** configuration string, may be used by subclasses */
   protected String m_configuration;
 
-  /**
-   * Constructor with configuration string.
-   * 
-   * @param conf the configuration string. Client implementation of this class will use
-   * this to configure themselves.
-   */
-  public AbstractRepositoryFactory( final String conf )
+  public String getConfiguration()
   {
-    m_configuration = conf;
+    return m_configuration;
+  }
+  
+  public void setConfiguration( String configuration )
+  {
+    m_configuration = configuration;
   }
 }

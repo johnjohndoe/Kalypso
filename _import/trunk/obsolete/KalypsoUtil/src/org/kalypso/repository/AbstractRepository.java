@@ -14,6 +14,11 @@ public abstract class AbstractRepository implements IRepository
 
   private final List m_listeners;
 
+  public AbstractRepository()
+  {
+    this( "" );
+  }
+  
   public AbstractRepository( final String location )
   {
     m_location = location;
