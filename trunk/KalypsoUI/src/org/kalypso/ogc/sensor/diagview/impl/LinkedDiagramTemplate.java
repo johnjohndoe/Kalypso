@@ -180,7 +180,7 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
   public void objectLoaded( final IPoolableObjectType key,
       final Object newValue, final IStatus status )
   {
-    if( status.isOK() )
+    if( status.isOK() && newValue != null )
     {
       final DefaultDiagramTemplateTheme theme = (DefaultDiagramTemplateTheme) m_key2themes
           .get( key );

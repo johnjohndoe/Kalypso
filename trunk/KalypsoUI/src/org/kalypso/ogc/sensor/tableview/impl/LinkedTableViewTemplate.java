@@ -183,7 +183,7 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
   public void objectLoaded( final IPoolableObjectType key,
       final Object newValue, final IStatus status )
   {
-    if( status.isOK() )
+    if( status.isOK() && newValue != null )
     {
       final DefaultTableViewTheme theme = (DefaultTableViewTheme) m_key2themes.get( key );
 
@@ -197,6 +197,8 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
       else
         addTheme( theme );
     }
+    else
+      m_key2themes.remove( key );
   }
 
   /**

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import javax.swing.SwingUtilities;
 import javax.xml.bind.JAXBException;
 
 import org.deegree.model.feature.Feature;
@@ -26,9 +27,9 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class KalypsoWizardHelper
 {
-  private KalypsoWizardHelper()
+  private KalypsoWizardHelper( )
   {
-  // not to be instanciated
+    // not to be instanciated
   }
 
   /**
@@ -37,28 +38,34 @@ public class KalypsoWizardHelper
    * TimeserieFeatureProps is created for each of these elements.
    * 
    * <pre>
-   *       &lt;arg name=&quot;timeserie1&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
-   *       &lt;arg name=&quot;timeserie2&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
+   * 
+   *  
+   *         &lt;arg name=&quot;timeserie1&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
+   *         &lt;arg name=&quot;timeserie2&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
+   *   
+   *  
    * </pre>
    * 
    * @param props
    * @return array of TimeserieFeatureProps
    */
-  public static TimeserieFeatureProps[] parseTimeserieFeatureProps( final Properties props )
+  public static TimeserieFeatureProps[] parseTimeserieFeatureProps(
+      final Properties props )
   {
     ArrayList l = new ArrayList();
 
     Enumeration names = props.propertyNames();
     while( names.hasMoreElements() )
     {
-      String pName = (String)names.nextElement();
+      String pName = (String) names.nextElement();
 
-      if( pName.startsWith( ObservationMapTableDiagWizardPage.PROP_TIMEPROPNAME ) )
-        l.add( new TimeserieFeatureProps( PropertiesHelper.parseFromString( props
-            .getProperty( pName ), '#' ) ) );
+      if( pName
+          .startsWith( ObservationMapTableDiagWizardPage.PROP_TIMEPROPNAME ) )
+        l.add( new TimeserieFeatureProps( PropertiesHelper.parseFromString(
+            props.getProperty( pName ), '#' ) ) );
     }
 
-    return (TimeserieFeatureProps[])l.toArray( new TimeserieFeatureProps[0] );
+    return (TimeserieFeatureProps[]) l.toArray( new TimeserieFeatureProps[0] );
   }
 
   /**
@@ -70,16 +77,34 @@ public class KalypsoWizardHelper
    * @param context
    * @param ignoreExceptions
    */
-  public static void updateDiagramTemplate( final LinkedDiagramTemplate template,
-      final TSLinkWithName[] links, final URL context, final boolean ignoreExceptions )
+  public static void updateDiagramTemplate(
+      final LinkedDiagramTemplate template, final TSLinkWithName[] links,
+      final URL context, final boolean ignoreExceptions )
   {
-    template.removeAllThemes();
+//    final Runnable runnable = new Runnable()
+//    {
+//      public void run( )
+//      {
+        template.removeAllThemes();
 
-    for( int i = 0; i < links.length; i++ )
-    {
-      final TSLinkWithName link = links[i];
-      template.addObservation( link.name, context, link.href, link.linktype, ignoreExceptions, null );
-    }
+        for( int i = 0; i < links.length; i++ )
+        {
+          final TSLinkWithName link = links[i];
+          template.addObservation( link.name, context, link.href,
+              link.linktype, ignoreExceptions, null );
+        }
+//      }
+//    };
+//
+//    try
+//    {
+//      SwingUtilities.invokeAndWait( runnable );
+//    }
+//    catch( Exception e ) // generic exception caught for simplicity
+//    {
+//      // TODO error handling
+//      e.printStackTrace();
+//    }
   }
 
   /**
@@ -90,16 +115,34 @@ public class KalypsoWizardHelper
    * @param context
    * @param ignoreExceptions
    */
-  public static void updateTableTemplate( final LinkedTableViewTemplate template,
-      final TSLinkWithName[] links, final URL context, boolean ignoreExceptions )
+  public static void updateTableTemplate(
+      final LinkedTableViewTemplate template, final TSLinkWithName[] links,
+      final URL context, final boolean ignoreExceptions )
   {
-    template.removeAllThemes();
+//    final Runnable runnable = new Runnable()
+//    {
+//      public void run( )
+//      {
+        template.removeAllThemes();
 
-    for( int i = 0; i < links.length; i++ )
-    {
-      final TSLinkWithName link = links[i];
-      template.addObservation( link.name, context, link.href, link.linktype, ignoreExceptions, null );
-    }
+        for( int i = 0; i < links.length; i++ )
+        {
+          final TSLinkWithName link = links[i];
+          template.addObservation( link.name, context, link.href,
+              link.linktype, ignoreExceptions, null );
+        }
+//      }
+//    };
+//
+//    try
+//    {
+//      SwingUtilities.invokeAndWait( runnable );
+//    }
+//    catch( Exception e ) // generic exception caught for simplicity
+//    {
+//      // TODO error handling
+//      e.printStackTrace();
+//    }
   }
 
   /**
@@ -108,21 +151,23 @@ public class KalypsoWizardHelper
    * @param template
    * @throws JAXBException
    */
-  public static void updateXMLDiagramTemplate( final TimeserieFeatureProps[] props,
-      final List features, final ObsdiagviewType template ) throws JAXBException
+  public static void updateXMLDiagramTemplate(
+      final TimeserieFeatureProps[] props, final List features,
+      final ObsdiagviewType template ) throws JAXBException
   {
     for( Iterator it = features.iterator(); it.hasNext(); )
     {
-      final Feature kf = (Feature)it.next();
+      final Feature kf = (Feature) it.next();
 
       for( int i = 0; i < props.length; i++ )
       {
-        final String name = (String)kf.getProperty( props[i].getNameColumn() );
-        final TimeseriesLink obsLink = (TimeseriesLink)kf.getProperty( props[i].getLinkColumn() );
+        final String name = (String) kf.getProperty( props[i].getNameColumn() );
+        final TimeseriesLink obsLink = (TimeseriesLink) kf
+            .getProperty( props[i].getLinkColumn() );
 
         if( obsLink != null )
-          ObservationTemplateHelper.addTimeseriesLink( template, obsLink, name, props[i]
-              .getDiagDateAxis(), props[i].getDiagValueAxis() );
+          ObservationTemplateHelper.addTimeseriesLink( template, obsLink, name,
+              props[i].getDiagDateAxis(), props[i].getDiagValueAxis() );
       }
     }
   }

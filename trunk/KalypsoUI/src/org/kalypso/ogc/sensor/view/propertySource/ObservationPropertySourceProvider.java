@@ -11,7 +11,8 @@ import org.kalypso.util.adapter.IAdaptable;
  * 
  * @author schlienger
  */
-public class ObservationPropertySourceProvider implements IPropertySourceProvider
+public class ObservationPropertySourceProvider implements
+    IPropertySourceProvider
 {
   /**
    * @see org.eclipse.ui.views.properties.IPropertySourceProvider#getPropertySource(java.lang.Object)
@@ -20,14 +21,14 @@ public class ObservationPropertySourceProvider implements IPropertySourceProvide
   {
     if( object instanceof IAdaptable )
     {
-//      final IObservation obs = (IObservation)((IAdaptable)object).getAdapter( IObservation.class );
-      final IObservation obs = ObservationCache.getObservationFor( (IAdaptable)object );
+      final IObservation obs = ObservationCache.getInstance()
+          .getObservationFor( (IAdaptable) object );
       if( obs == null )
         return null;
-      
+
       return new ObservationPropertySource( obs );
     }
-    
+
     return null;
   }
 }

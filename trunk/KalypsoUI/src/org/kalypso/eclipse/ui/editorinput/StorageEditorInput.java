@@ -46,7 +46,7 @@ public class StorageEditorInput implements IStorageEditorInput
    */
   public String getName()
   {
-    return null;
+    return m_storage.getName();
   }
 
   /**
@@ -72,5 +72,4 @@ public class StorageEditorInput implements IStorageEditorInput
   {
     return null;
   }
-
 }

@@ -7,6 +7,7 @@ import java.net.URL;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.util.ListenerList;
@@ -162,19 +163,29 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
   {
     monitor.beginTask( "Vorlage Laden", IProgressMonitor.UNKNOWN );
 
-    m_template = new LinkedDiagramTemplate();
-
-    final Runnable runnable = new Runnable()
-    {
-      public void run( )
-      {
+//    final Runnable runnable = new Runnable()
+//    {
+//      public void run( )
+//      {
         try
         {
-          final ObsdiagviewType baseTemplate = ObservationTemplateHelper
-              .loadDiagramTemplateXML( input.getStorage().getContents() );
+          final IStorage storage = input.getStorage();
 
-          final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          m_template.setBaseTemplate( baseTemplate, new URL( strUrl ) );
+          if( storage instanceof TemplateStorage )
+          {
+            m_template = ((TemplateStorage) storage).getTemplate();
+          }
+          else
+          {
+            m_template = new LinkedDiagramTemplate();
+
+            final ObsdiagviewType baseTemplate = ObservationTemplateHelper
+                .loadDiagramTemplateXML( storage.getContents() );
+
+            final String strUrl = ResourceUtilities.createURLSpec( input
+                .getStorage().getFullPath() );
+            m_template.setBaseTemplate( baseTemplate, new URL( strUrl ) );
+          }
 
           // call-order is important: first set base template and then create
           // the chart
@@ -191,27 +202,31 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
           m_diagFrame.add( chartPanel );
 
           m_diagFrame.setVisible( true );
+          
+          if( storage instanceof TemplateStorage )
+            m_template.fireTemplateChanged( new TemplateEvent( this, m_template.getThemes(), TemplateEvent.TYPE_REFRESH ) );
         }
         catch( Exception e )
         {
           e.printStackTrace();
         }
-      }
-    };
-
-    try
-    {
-      SwingUtilities.invokeAndWait( runnable );
-    }
-    catch( Exception e ) // generic exception caught for simplicity
-    {
-      e.printStackTrace();
-    }
+//      }
+//    };
+//
+//    try
+//    {
+//      SwingUtilities.invokeAndWait( runnable );
+//    }
+//    catch( Exception e ) // generic exception caught for simplicity
+//    {
+//      e.printStackTrace();
+//    }
     finally
     {
       monitor.done();
     }
 
+    // listener on template in order to set dirty flag when template changes
     m_template.addTemplateEventListener( ObservationDiagramEditor.this );
   }
 

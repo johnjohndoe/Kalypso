@@ -7,6 +7,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.ocs.OcsURLStreamHandler;
@@ -177,13 +178,13 @@ public class ServiceRepositoryObservation implements IObservation
     synchronized( this )
     {
       // tricky: uses the cache
-      ITuppleModel values = ObservationValuesCache.getValues( this );
+      ITuppleModel values = ObservationCache.getInstance().getValues( this );
 
       if( values == null )
       {
         values = getRemote( args ).getValues( null );
 
-        ObservationValuesCache.addValues( this, values );
+        ObservationCache.getInstance().addValues( this, values );
       }
 
       return values;

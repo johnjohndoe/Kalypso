@@ -11,19 +11,16 @@ import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.eclipse.core.resources.StringStorage;
 import org.kalypso.eclipse.ui.editorinput.StorageEditorInput;
-import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
-import org.kalypso.template.obsdiagview.ObsdiagviewType;
+import org.kalypso.ui.editor.diagrameditor.TemplateStorage;
 
 /**
  * DefaultObservationTemplateLauncher
  * 
  * @author schlienger
  */
-public class DefaultObsDiagTemplateLauncher implements
-    IDefaultTemplateLauncher
+public class DefaultObsDiagTemplateLauncher implements IDefaultTemplateLauncher
 {
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
@@ -47,7 +44,7 @@ public class DefaultObsDiagTemplateLauncher implements
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#createInput(org.eclipse.core.resources.IFile)
    */
-  public IEditorInput createInput( IFile file )
+  public IEditorInput createInput( final IFile file )
   {
     StringWriter writer = null;
     try
@@ -55,18 +52,13 @@ public class DefaultObsDiagTemplateLauncher implements
       final IPath projectRelativePath = file.getProjectRelativePath();
 
       final LinkedDiagramTemplate template = new LinkedDiagramTemplate();
-      template.addObservation( file.getName(), ResourceUtilities.createURL( file), "project:/" + projectRelativePath, "zml", false, null );
+      template.setTitle( file.getName() );
+      template.addObservation( file.getName(), ResourceUtilities
+          .createURL( file ), "project:/" + projectRelativePath, "zml", false,
+          null );
 
-      final ObsdiagviewType tType = ObservationTemplateHelper.buildDiagramTemplateXML( template );
-      
-      writer = new StringWriter();
-      ObservationTemplateHelper.saveDiagramTemplateXML( tType, writer );
-
-      final String string = writer.toString();
-
-      // als StorageInput zurückgeben
       final StorageEditorInput input = new StorageEditorInput(
-          new StringStorage( string, file.getFullPath() ) );
+          new TemplateStorage( template, file.getFullPath() ) );
 
       return input;
     }

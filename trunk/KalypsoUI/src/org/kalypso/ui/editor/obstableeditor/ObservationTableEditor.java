@@ -161,7 +161,7 @@ public class ObservationTableEditor extends AbstractEditorPart
    *      org.eclipse.ui.IFileEditorInput)
    */
   protected void loadInternal( final IProgressMonitor monitor,
-      final IStorageEditorInput input )
+      final IStorageEditorInput input ) throws Exception
   {
     if( !(input instanceof IFileEditorInput) )
       throw new IllegalArgumentException( "Kann nur Dateien laden" );
@@ -170,33 +170,40 @@ public class ObservationTableEditor extends AbstractEditorPart
 
     monitor.beginTask( "Laden", IProgressMonitor.UNKNOWN );
 
-    final CatchRunnable runnable = new CatchRunnable()
-    {
-      public void runIntern( ) throws Throwable
-      {
-        final ObstableviewType baseTemplate = ObservationTableTemplateFactory
-            .loadTableTemplateXML( fileInput.getFile().getContents() );
+//    final CatchRunnable runnable = new CatchRunnable()
+//    {
+//      public void runIntern( ) throws Throwable
+//      {
+        try
+        {
+          final ObstableviewType baseTemplate = ObservationTableTemplateFactory
+              .loadTableTemplateXML( fileInput.getFile().getContents() );
 
-        m_template = new LinkedTableViewTemplate();
-        m_template.addTemplateEventListener( m_table );
+          m_template = new LinkedTableViewTemplate();
+          m_template.addTemplateEventListener( m_table );
 
-        m_template.setBaseTemplate( baseTemplate, ResourceUtilities
-            .createURL( fileInput.getFile() ) );
+          m_template.setBaseTemplate( baseTemplate, ResourceUtilities
+              .createURL( fileInput.getFile() ) );
 
-        m_model.setRules( m_template );
-      }
-    };
-
-    try
-    {
-      SwingUtilities.invokeAndWait( runnable );
-      if( runnable.getThrown() != null )
-        throw runnable.getThrown();
-    }
-    catch( Throwable e ) // generic throwable caught for simplicity
-    {
-      e.printStackTrace();
-    }
+          m_model.setRules( m_template );
+        }
+        catch( Exception e )
+        {
+         throw e;
+        }
+//      }
+//    };
+//
+//    try
+//    {
+//      SwingUtilities.invokeAndWait( runnable );
+//      if( runnable.getThrown() != null )
+//        throw runnable.getThrown();
+//    }
+//    catch( Throwable e ) // generic throwable caught for simplicity
+//    {
+//      e.printStackTrace();
+//    }
     finally
     {
       monitor.done();

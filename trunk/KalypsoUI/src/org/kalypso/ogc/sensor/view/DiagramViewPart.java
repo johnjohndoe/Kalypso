@@ -91,10 +91,10 @@ public class DiagramViewPart extends ViewPart implements
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    final CatchRunnable runnable = new CatchRunnable()
-    {
-      public void runIntern()
-      {
+//    final CatchRunnable runnable = new CatchRunnable()
+//    {
+//      public void runIntern()
+//      {
         m_template.removeAllThemes();
 
         final StructuredSelection selection = (StructuredSelection) event
@@ -106,21 +106,21 @@ public class DiagramViewPart extends ViewPart implements
         final IRepositoryItem item = (IRepositoryItem) selection
             .getFirstElement();
 
-        final IObservation obs = ObservationCache.getObservationFor( item );
+        final IObservation obs = ObservationCache.getInstance().getObservationFor( item );
         if( obs != null )
           m_template.setObservation( obs, ObservationViewHelper.makeDateRange( item ) );
-      }
-    };
-
-    try
-    {
-      // execute this in the swing ui thread because we are using a swing component (JFreeChart)
-      SwingUtilities.invokeLater( runnable );
-    }
-    catch( Exception e ) // generic exception caught for simplicity
-    {
-      e.printStackTrace();
-    }
+//      }
+//    };
+//
+//    try
+//    {
+//      // execute this in the swing ui thread because we are using a swing component (JFreeChart)
+//      SwingUtilities.invokeLater( runnable );
+//    }
+//    catch( Exception e ) // generic exception caught for simplicity
+//    {
+//      e.printStackTrace();
+//    }
   }
 
   /**

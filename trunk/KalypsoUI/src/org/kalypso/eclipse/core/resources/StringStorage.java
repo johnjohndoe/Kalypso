@@ -14,11 +14,32 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class StringStorage implements IEncodedStorage
 {
+  private final String m_name;
   private final String m_data;
   private final IPath m_path;
 
+  
+  /**
+   * Constructor
+   * 
+   * @param data
+   * @param path
+   */
   public StringStorage( final String data, final IPath path )
   {
+    this( "<name>", data, path );
+  }
+  
+  /**
+   * Constructor
+   * 
+   * @param name name of the storage
+   * @param data contents
+   * @param path path
+   */
+  public StringStorage( final String name, final String data, final IPath path )
+  {
+    m_name = name;
     m_data = data;
     m_path = path;
   }
@@ -55,7 +76,7 @@ public class StringStorage implements IEncodedStorage
    */
   public String getName()
   {
-    return null;
+    return m_name;
   }
 
   /**
@@ -82,5 +103,4 @@ public class StringStorage implements IEncodedStorage
     // allways Unicode, because wie 
     return "UTF-8";
   }
-
 }
