@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.bericht;
 
 import java.awt.Color;
@@ -48,67 +48,94 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.kalypso.java.io.ReaderUtilities;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.Arguments;
 import org.kalypso.util.url.UrlResolver;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author belger
  */
 public class DiagrammExporter extends AbstractBerichtExporter
 {
-  private static final String EXT = ".jpg";
+  private static final String EXT = ".png";
 
   /**
-   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.kalypsodeegree.model.feature.Feature, java.io.OutputStream)
+   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.kalypsodeegree.model.feature.Feature,
+   *      java.io.OutputStream)
    */
-  public void export( final Feature feature, final OutputStream os ) throws Exception
+  public IStatus export( final Feature feature, final OutputStream os )
   {
-    // parse arguments:
-    final Arguments arguments = getArguments();
+    DiagView tpl = null;
+    ObservationChart chart = null;
+    try
+    {
+      // parse arguments:
+      final Arguments arguments = getArguments();
 
-    // - templatefile
-    final String templateurl = arguments.getProperty( "template", null );
-    
-    final int width = Integer.parseInt( arguments.getProperty( "width" , "800" ) );
-    final int height = Integer.parseInt( arguments.getProperty( "height" , "600" ) );
-    
-    // - replacetokens / featureprops
-    final Arguments tokens = arguments.getArguments( "tokens" );
-    final Properties replacetokens = ExporterHelper.createReplaceTokens( feature, tokens );
-    
-    final URL url = new UrlResolver().resolveURL( getContext(), templateurl );
-    final URLConnection connection = url.openConnection();
-    final Reader reader = new InputStreamReader( connection.getInputStream(), "UTF-8" );
-    final Reader reader2 = ReaderUtilities.createTokenReplaceReader( reader, replacetokens, '%', '%' );
-    
-    final ObsdiagviewType xml = DiagViewUtils.loadDiagramTemplateXML( reader2 );
-    
-    final DiagView tpl = new DiagView();
-    DiagViewUtils.applyXMLTemplate( tpl, xml, getContext(), true );
-    
-    // diagramm refresh may take a while
-    Thread.sleep( 1000 );
+      // - templatefile
+      final String templateurl = arguments.getProperty( "template", null );
 
-    final ObservationChart chart = new ObservationChart( tpl );
-    chart.setBackgroundPaint( Color.WHITE );
-    
-    new ExportableChart( chart, EXT, width, height ).exportDocument( os );
-    
-    chart.dispose();
-    tpl.dispose();
+      final String featurename = arguments.getProperty( "nameproperty", "Name" );
+      final Object nameProp = feature.getProperty( featurename );
+      final String name = nameProp == null ? "<unbekannt>" : nameProp.toString(); 
+      
+      final int width = Integer.parseInt( arguments.getProperty( "width", "800" ) );
+      final int height = Integer.parseInt( arguments.getProperty( "height", "600" ) );
+
+      // - replacetokens / featureprops
+      final Arguments tokens = arguments.getArguments( "tokens" );
+      final Properties replacetokens = ExporterHelper.createReplaceTokens( feature, tokens );
+
+      final URL url = new UrlResolver().resolveURL( getContext(), templateurl );
+      final URLConnection connection = url.openConnection();
+      final Reader reader = new InputStreamReader( connection.getInputStream(), "UTF-8" );
+      final Reader reader2 = ReaderUtilities.createTokenReplaceReader( reader, replacetokens, '%',
+          '%' );
+
+      final ObsdiagviewType xml = DiagViewUtils.loadDiagramTemplateXML( reader2 );
+
+      tpl = new DiagView();
+      
+      final MultiStatus result = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Tabellenexport - " + name + ": ", null );
+      DiagViewUtils.applyXMLTemplate( tpl, xml, getContext(), true, result );
+
+      // diagramm refresh may take a while
+      //      Thread.sleep( 1000 );
+
+      chart = new ObservationChart( tpl );
+      chart.setBackgroundPaint( Color.WHITE );
+
+      new ExportableChart( chart, EXT, width, height ).exportDocument( os );
+
+      return result;
+    }
+    catch( final Exception e )
+    {
+      return KalypsoGisPlugin.createErrorStatus( e.getLocalizedMessage(), e );
+    }
+    finally
+    {
+      if( chart != null )
+        chart.dispose();
+      
+      if( tpl != null )
+        tpl.dispose();
+    }
   }
 
   /**
    * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#getExtension()
    */
-  public String getExtension( )
+  public String getExtension()
   {
     return EXT;
   }

@@ -42,6 +42,8 @@ package org.kalypso.ui.calcwizard.bericht;
 
 import java.io.OutputStream;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -52,10 +54,9 @@ public class MapExporter extends AbstractBerichtExporter
   /**
    * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.kalypsodeegree.model.feature.Feature, java.io.OutputStream)
    */
-  public void export( Feature feature, OutputStream os ) throws Exception
+  public IStatus export( final Feature feature, final OutputStream os )
   {
-    // TODO Auto-generated method stub
-    
+    return Status.OK_STATUS;
   }
 
   /**

@@ -38,12 +38,16 @@ public abstract class PoolableObjectWaiter implements IPoolListener
       try
       {
         value = m_pool.getObject( key );
+        objectLoaded( null, value, m_result );
       }
-      catch( final CoreException e )
+      catch( final CoreException ce )
       {
-        m_result = e.getStatus();
+        m_result = ce.getStatus();
       }
-      objectLoaded( null, value, m_result );
+      catch( final Exception e )
+      {
+        m_result = KalypsoGisPlugin.createErrorStatus( "Fehler beim Laden eines Objektes", e );
+      }
     }
     else
       m_pool.addPoolListener( this, key );
@@ -67,7 +71,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   }
 
   /**
-   * This mehtod may be called in the class constructor, so dont use own
+   * This method may be called in the class constructor, so dont use own
    * member-fields. See
    * {@link #PoolableObjectWaiter(PoolableObjectType, Object[], boolean)}
    */

@@ -56,6 +56,7 @@ import javax.xml.bind.Marshaller;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -69,6 +70,7 @@ import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.template.obsdiagview.ObsdiagviewType.LegendType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.calcwizard.bericht.ExporterHelper;
 import org.xml.sax.InputSource;
 
 /**
@@ -323,11 +325,9 @@ public class DiagViewUtils
         DiagramAxis.POSITION_LEFT, false );
   }
 
-  public static IStatus applyXMLTemplate( final DiagView view, final ObsdiagviewType xml,
-      final URL context, final boolean synchron )
+  public static void applyXMLTemplate( final DiagView view, final ObsdiagviewType xml,
+      final URL context, final boolean synchron, final MultiStatus status )
   {
-    final MultiStatus status = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Fehler beim Laden einer Vorlage", null );
-    
     view.removeAllItems();
 
     view.setTitle( xml.getTitle() );
@@ -349,10 +349,14 @@ public class DiagViewUtils
     for( final Iterator it = list.iterator(); it.hasNext(); )
     {
       final TypeObservation tobs = (TypeObservation)it.next();
+      
+      // check, if href is ok
+      final String href = tobs.getHref();
+      if( href.indexOf( ExporterHelper.MSG_TOKEN_NOT_FOUND ) != -1 )
+        status.add( new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, "Href nicht in Ordnung: " + href, null ) );
+      
       final DiagViewCurveXMLLoader loader = new DiagViewCurveXMLLoader( view, tobs, context, synchron );
       status.add( loader.getResult() );
     }
-    
-    return status;
   }
 }

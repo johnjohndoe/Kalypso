@@ -14,6 +14,8 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
  */
 public class ExporterHelper
 {
+  public static final String MSG_TOKEN_NOT_FOUND = "Token not found";
+
   private ExporterHelper()
   {
     //
@@ -35,7 +37,7 @@ public class ExporterHelper
       else if( property != null )
         replace = property.toString();
       else if( property == null )
-        replace = "!Token not found: " + tokenname + "!";
+        replace = "!" + MSG_TOKEN_NOT_FOUND + ": " + tokenname + "!";
       
       if( replace != null )
         replacetokens.setProperty( tokenname, replace );

@@ -4,6 +4,7 @@ import java.net.URL;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
@@ -16,6 +17,7 @@ import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obstableview.ObstableviewType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 
 /**
@@ -110,7 +112,8 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
               .getContents() );
   
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          DiagViewUtils.applyXMLTemplate( (DiagView)getView(), baseTemplate, new URL( strUrl ), false );
+          final MultiStatus status = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Vorlage: " + storage.getName(), null );
+          DiagViewUtils.applyXMLTemplate( (DiagView)getView(), baseTemplate, new URL( strUrl ), false, status );
         }
         else if( view instanceof TableView )
         {
@@ -118,7 +121,8 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
           .loadTableTemplateXML( storage.getContents() );
   
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ), false );
+          final MultiStatus status = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Vorlage: " + storage.getName(), null );
+          TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ), false, status );
         }
       }
     }

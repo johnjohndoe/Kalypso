@@ -47,6 +47,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypso.java.io.ReaderUtilities;
 import org.kalypso.ogc.sensor.tableview.TableView;
@@ -54,6 +56,7 @@ import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.template.obstableview.ObstableviewType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.Arguments;
 import org.kalypso.util.url.UrlResolver;
 
@@ -67,38 +70,56 @@ public class ZmlTableExporter extends AbstractBerichtExporter
   /**
    * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.kalypsodeegree.model.feature.Feature, java.io.OutputStream)
    */
-  public void export( Feature feature, OutputStream os ) throws Exception
+  public IStatus export( final Feature feature, final OutputStream os )
   {
-    // parse arguments:
-    final Arguments arguments = getArguments();
+    ObservationTable table = null;
+    TableView view = null;
 
-    // - templatefile
-    final String templateurl = arguments.getProperty( "template", null );
-    
-    // - replacetokens / featureprops
-    final Arguments tokens = arguments.getArguments( "tokens" );
-    final Properties replacetokens = ExporterHelper.createReplaceTokens( feature, tokens );
-    
-    final URL url = new UrlResolver().resolveURL( getContext(), templateurl );
-    final URLConnection connection = url.openConnection();
-    final Reader reader = new InputStreamReader( connection.getInputStream(), "UTF-8" );
-    final Reader reader2 = ReaderUtilities.createTokenReplaceReader( reader, replacetokens, '%', '%' );
-    
-    final ObstableviewType xml = TableViewUtils.loadTableTemplateXML( reader2 );
+    try
+    {
+      // parse arguments:
+      final Arguments arguments = getArguments();
 
-    final TableView view = new TableView();
-    final ObservationTable table = new ObservationTable( view, true );
+      // - templatefile
+      final String templateurl = arguments.getProperty( "template", null );
 
-    TableViewUtils.applyXMLTemplate( view, xml, getContext(), true );
+      final String featurename = arguments.getProperty( "nameproperty", "Name" );
+      
+      // - replacetokens / featureprops
+      final Arguments tokens = arguments.getArguments( "tokens" );
+      final Properties replacetokens = ExporterHelper.createReplaceTokens( feature, tokens );
 
-    // warte auf table to perform refresh in swing thread
-    // TODO: still need it?
-    Thread.sleep( 1000 );
-    
-    new ExportableObservationTable( table ).exportDocument( os );
+      final URL url = new UrlResolver().resolveURL( getContext(), templateurl );
+      final URLConnection connection = url.openConnection();
+      final Reader reader = new InputStreamReader( connection.getInputStream(), "UTF-8" );
+      final Reader reader2 = ReaderUtilities.createTokenReplaceReader( reader, replacetokens, '%',
+          '%' );
 
-    table.dispose();
-    view.dispose();
+      final ObstableviewType xml = TableViewUtils.loadTableTemplateXML( reader2 );
+      view = new TableView();
+      table = new ObservationTable( view, true );
+
+      final Object nameProp = feature.getProperty( featurename );
+      final String name = nameProp == null ? "<unbekannt>" : nameProp.toString(); 
+      
+      final MultiStatus result = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Tabellenexport - " + name + ": ", null );
+      TableViewUtils.applyXMLTemplate( view, xml, getContext(), true, result );
+
+      new ExportableObservationTable( table ).exportDocument( os );
+
+      return result;
+    }
+    catch( final Exception e )
+    {
+      return KalypsoGisPlugin.createErrorStatus( e.getLocalizedMessage(), e );
+    }
+    finally
+    {
+      if( table != null )
+        table.dispose();
+      if( view != null )
+        view.dispose();
+    }
   }
 
   /**
