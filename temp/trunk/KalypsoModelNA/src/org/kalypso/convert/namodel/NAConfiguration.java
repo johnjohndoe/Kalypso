@@ -63,7 +63,7 @@ public class NAConfiguration
     m_gmlModelURL = modelURL;
 
     // schemas
-    m_schemaURL = getClass().getResource( "schema/namodellV6.xsd" );
+    m_schemaURL = getClass().getResource( "schema/namodell.xsd" );
     final GMLSchema schema=new GMLSchema(m_schemaURL);
     
     // featuretypes

@@ -4,18 +4,21 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
+import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.extension.ITypeRegistry;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.deegree_impl.model.feature.FeatureFactory;
+import org.deegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -84,10 +87,14 @@ public class NAModellConverter
     final File gmlBaseDir = FileUtilities.createNewTempDir( "NA_gmlBaseDir" );
     NAConfiguration conf = NAConfiguration.getAscii2GmlConfiguration( new File(
         "/home/doemming/weisseElsterUpdate" ), gmlBaseDir );
-    Feature fe = asciiToFeature( conf );
-    insertGeometries( fe, "/home/doemming/weisseElster/shapes" );
+    Feature rootFeature = asciiToFeature( conf );
+    insertGeometries( rootFeature, "/home/doemming/weisseElster/shapes" );
     File gmlFile = new File( gmlBaseDir, "naModel.gml" );
     
+    final GMLSchema gmlSchema=new GMLSchema(conf.getSchemaURL());
+    GMLWorkspace workspace = new GMLWorkspace_Impl( gmlSchema.getFeatureTypes(),rootFeature,
+            null, ":project:.model/schema/namodel.gml");
+    GmlSerializer.serializeWorkspace(new FileWriter( gmlFile ),workspace);
     // TODO: use workspace instead of Feature fe
 //    GmlSerializer.serializeFeature( new FileWriter( gmlFile ), fe, null );
   }
