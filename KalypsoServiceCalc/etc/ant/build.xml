@@ -3,6 +3,7 @@
 <project name="KalypsoCalcservice" default="build" basedir="../..">
 
   <!-- Propertys aus einer Datei laden -->
+  <!-- TODO: Die Datei exisitert nicht!! -->
   <property file="../projectbuild.properties" />
 
   <!-- Project full path -->
@@ -14,6 +15,8 @@
 
   <!-- 2. dann allgemeine eigenschaften -->
   <property file="${core.path}/etc/ant/build.properties" />
+
+  <!-- TODO: Datei existiert nicht mehr -->
   <property file="${core.path}/etc/ant/tomcat.properties" />
 
   <path id="full.classpath">
@@ -251,10 +254,18 @@
       <param name="aproject_lib" value="KalypsoCoreServices/lib" />
     </antcall>
 
+    <!-- TODO: das package-a-project Target in ein allgemeines Script
+    stecken und die konkreten CalcJobs separat packen -->
     <antcall target="package-a-project">
       <param name="aproject_jar" value="KalypsoSpreePlugin.jar" />
       <param name="aproject_bin" value="KalypsoSpreePlugin/build/bin" />
       <param name="aproject_lib" value="KalypsoSpreePlugin/lib" />
+    </antcall>
+
+    <antcall target="package-a-project">
+      <param name="aproject_jar" value="KalypsoBodePlugin.jar" />
+      <param name="aproject_bin" value="KalypsoBodePlugin/build/bin" />
+      <param name="aproject_lib" value="KalypsoBodePlugin/lib" />
     </antcall>
 
     <antcall target="package-a-project">
