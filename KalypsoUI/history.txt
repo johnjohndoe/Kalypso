@@ -6,18 +6,19 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 
 ###############################################################################
 
------------
-Version ...
------------
+----------------
+Version 20050118
+----------------
 - Refactoring in: IAxis und ITuppleModel.
 	Position der Achse nicht mehr in IAxis, sondern ITuppleModel abhängig.
 	Achsen sind gleich wenn dataClass, type, unit, und key gleich sind.
-	
+
 - BUG #26 ok
 - BUG #27 ok - IAxis erweitert um die "isPersistable" Eigenschaft. Bei der
 	WQObservationFilter bekommt der generierte Achse für dieser Eigenschaft
 	den Wert 'false'.
 
+- Optimierung für WeisseEslter Modell implementiert
 
 ----------------
 Version 20050104
