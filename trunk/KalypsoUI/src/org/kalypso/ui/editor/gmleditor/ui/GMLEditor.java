@@ -39,6 +39,8 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
 
   public void dispose()
   {
+    if( gmlReader != null )
+      gmlReader.dispose();
     viewer.dispose();
     super.dispose();
   }

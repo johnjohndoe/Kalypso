@@ -192,4 +192,9 @@ public class GMLReader implements IPoolListener
       }
     }
   }
+
+  public void dispose()
+  {
+    KalypsoGisPlugin.getDefault().getPool().removePoolListener( this );
+  }
 }

@@ -328,10 +328,20 @@ public class FeatureTypeBuilder
     {
       String key = ftProperties[i].getNamespace() + ":" + ftProperties[i].getName();
       //      System.out.println("KEY:"+key);
-      minOccurs[i] = Integer.parseInt( (String)m_minOccurs.get( key ) );
-      String max = (String)m_maxOccurs.get( key );
+      final String min = (String)m_minOccurs.get( key );
+      // TODO: Andreas? warum war das bisher kein Problem??
+      if( min == null )
+        minOccurs[i] = 1;
+      else
+        minOccurs[i] = Integer.parseInt( min );
+      
+      final String max = (String)m_maxOccurs.get( key );
       if( "unbounded".equals( max ) )
         maxOccurs[i] = FeatureType.UNBOUND_OCCURENCY;
+      // TODO: Andreas? warum war das bisher kein Problem??
+      else if( max == null )
+        maxOccurs[i] = 1;
+      // TODO: Andreas? warum war das bisher kein Problem??
       else
         maxOccurs[i] = Integer.parseInt( max );
     }

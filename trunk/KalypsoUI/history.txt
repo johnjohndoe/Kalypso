@@ -9,6 +9,9 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 ----------------
 Version 0.0...
 ----------------
+- Bugfix: über mehrere Schemata-Dateien verstreute Feature-Definitionen liessen sich nicht parsen
+- Bugfix: der Tree-Editor hat die geladenen GMLs im Pool nicht mehr freigegeben, also beim erneuten öffnen
+auch nicht erneut geladen
 - Bugfix: falls beim Laden über den Pool oder beim Informieren der Keylistener eine Exception auftrat, wurde ein
 key als immer noch ladend markiert, und konnte nicht mehr neu geladen werden
 - ZML-Format erweitert: Values können jetzt in einem CDATA-Block im <data/> Element
