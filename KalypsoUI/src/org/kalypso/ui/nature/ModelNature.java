@@ -66,7 +66,7 @@ import com.sun.xml.bind.StringInputStream;
  */
 public class ModelNature implements IProjectNature, IResourceChangeListener
 {
-  private static final String MODELLTYP_FOLDER = "modellTyp";
+  private static final String MODELLTYP_FOLDER = ".modellTyp";
 
   private static final String MODELLTYP_CALCCASECONFIG_XML = MODELLTYP_FOLDER + "/"
       + "calcCaseConfig.xml";
