@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.kalypso.enterprise"
-      label="org.kalypso.enterprise"
+      label="Kalypso Enterprise"
       version="1.0.0"
-      provider-name="kalypso.org">
+      provider-name="kalypso.org"
+      primary="true"
+      application="org.eclipse.ui.ide.workbench">
 
    <install-handler/>
 
@@ -12,20 +14,18 @@
    </description>
 
    <copyright url="copyright.html">
-      
+      Copyright
    </copyright>
 
    <license url="licence.html">
-      
+      Lizenztext
    </license>
 
    <url>
-      <update label="BCE local" url="file://Q:/lhz04085/work/eclipse_update_site"/>
+      <update label="BCE local" url="file://bcenas01/Q/lhz04085/work/eclipse_update_site"/>
    </url>
 
    <requires>
-      <import plugin="org.junit"/>
-      <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="org.eclipse.jface"/>
@@ -34,21 +34,11 @@
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.compare"/>
+      <import plugin="org.junit"/>
       <import plugin="org.eclipse.core.runtime"/>
    </requires>
-
-   <plugin
-         id="org.kalypso.psiadapter"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.util"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
 
    <plugin
          id="org.kalypso.deegree"
@@ -61,5 +51,23 @@
          download-size="0"
          install-size="0"
          version="0.0.1"/>
+
+   <plugin
+         id="org.kalypso.util"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.enterprise"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.psiadapter"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
 
 </feature>
