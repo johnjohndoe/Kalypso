@@ -93,7 +93,16 @@ class XYCurveSerie extends Series
     m_xDiagAxis = xDiagAxis;
     m_yDiagAxis = yDiagAxis;
 
-    m_values = m_curve.getTheme().getObservation().getValues( m_curve.getTheme().getArguments() );
+    try
+    {
+      m_values = m_curve.getTheme().getObservation().getValues( m_curve.getTheme().getArguments() );
+    }
+    catch( NullPointerException e )
+    {
+      // TODO von Marc: kommisch, ich habe hier ein Mal eine NullPointerException bekommen
+      // und konnte bisher es nicht nachvollziehen...
+      e.printStackTrace();
+    }
   }
 
   public DiagramAxis getXDiagAxis()
