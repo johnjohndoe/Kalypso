@@ -136,6 +136,8 @@
 	   	<arg name="tableTemplate"  value="project:.templates/calcCase/pegel.gtt"/>
 		<arg name="diagTemplate" value=".templates/calcCase/results.odt"/>
 	
+		<arg name="exportDiagram" value="template=.templates/export/pegelVorhersage.odt#timeseries=Wasserstand_gemessen;Wasserstand_vorhersage"/>
+	
         <arg name="timeserie1" 
         	value="nameColumn=Name#linkColumn=Niederschlag_rechnung"/>
         <arg name="timeserie2" 

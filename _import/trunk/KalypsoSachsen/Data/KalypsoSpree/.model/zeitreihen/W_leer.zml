@@ -5,10 +5,10 @@
         <metadata name="Beschreibung" value="Platzhalter für fehlende W-Zeitreihen"/>
         <metadata name="Name" value="Virtuelle W-Zeitreihe"/>
     </metadataList>
-    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_582820 (W) Gemessene" type="kalypso_status" unit="">
+    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_000000 (W) Gemessene" type="kalypso-status" unit="">
         <valueArray separator=";"></valueArray>
     </axis>
-    <axis datatype="TYPE=double" key="false" name="582820 (W) Gemessene" type="W" unit="">
+    <axis datatype="TYPE=double" key="false" name="000000 (W) Gemessene" type="W" unit="">
         <valueArray separator=";"></valueArray>
     </axis>
     <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">

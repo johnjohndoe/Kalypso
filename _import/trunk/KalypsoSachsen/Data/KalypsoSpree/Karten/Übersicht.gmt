@@ -20,9 +20,6 @@
         <layer name="Gewässerverlauf" visible="true" featurePath="featureMember" id="ID_6" linktype="shape" ns11:actuate="onRequest" ns11:href="project:/Grunddaten/Shapes/gewässer#EPSG:31469" ns11:type="simple" xmlns:ns11="http://www.w3.org/1999/xlink">
             <ns12:style linktype="sld" style="sachsenrivers" ns11:actuate="onRequest" ns11:href="project:/.styles/styles.sld" ns11:type="simple" xmlns:ns12="types.template.kalypso.org"/>
         </layer>
-        <layer name="Sachsen" visible="true" featurePath="featureMember" id="ID_6" linktype="shape" ns11:actuate="onRequest" ns11:href="project:/Grunddaten/Shapes/sachsen#EPSG:31469" ns11:type="simple" xmlns:ns11="http://www.w3.org/1999/xlink">
-            <ns12:style linktype="sld" style="sachsenrivers" ns11:actuate="onRequest" ns11:href="project:/.styles/styles.sld" ns11:type="simple" xmlns:ns12="types.template.kalypso.org"/>
-        </layer>
     </layers>
 </gismapview>
 
