@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
@@ -46,13 +47,14 @@ public class OperationTupplemodel implements ITuppleModel
 
   public Object getElement( int index, IAxis axis ) throws SensorException
   {
-    IAxis a = FilterHelper.getAxisByName( m_baseModel, axis.getName() );
+    // Andreas: ObservationUtilities already has this function so I removed FilterHelper
+    IAxis a = ObservationUtilities.findAxisByName( m_baseModel.getAxisList(), axis.getName() );
     Object object = m_baseModel.getElement( index, a );
     if( object == null || object instanceof Date )
       return object;
-    if( object instanceof Double )
+    if( object instanceof Number ) // let it be a Number here so we can handle integers and such
     {
-      double value = ( (Double)object ).doubleValue();
+      double value = ( (Number)object ).doubleValue();
       switch( m_operation )
       {
       case OperationFilter.OPERATION_PLUS:
