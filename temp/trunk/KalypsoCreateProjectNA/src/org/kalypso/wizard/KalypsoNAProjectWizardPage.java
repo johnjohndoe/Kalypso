@@ -156,7 +156,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage
   {
     super( pageName );
     setDescription( "Dieser Dialog liest eine ESRI Shape-Datei ein. Der Benutzer muss jedes Attribut in "
-        + "der Shape-Datei einem NA-Modell Attribute zuordnen (Mapping). Bitte die Auswahl mit OK bestätigen." );
+        + "der Shape-Datei einem NA-Modell Attribute zuordnen (Mapping). Bitte die Zuordnung bestätigen." );
     targetFT = featureType;
     setPageComplete( false );
   }
@@ -171,7 +171,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage
   {
     super( pageName, title, titleImage );
     setDescription( "Dieser Dialog liest eine ESRI Shape-Datei ein. Der Benutzer muss jedes Attribut in "
-        + "der Shape-Datei einem NA-Modell Attribute zuordnen. Bitte die Auswahl mit OK bestätigen." );
+        + "der Shape-Datei einem NA-Modell Attribute zuordnen. Bitte die Zuordnung bestätigen." );
     targetFT = featureType;
     setPageComplete( false );
 
@@ -204,9 +204,6 @@ public class KalypsoNAProjectWizardPage extends WizardPage
     topComposite.setFont( parent.getFont() );
 
     initializeDialogUnits( parent );
-
-    //    WorkbenchHelp.setHelp( topComposite,
-    // IHelpContextIds.NEW_PROJECT_WIZARD_PAGE );
 
     topComposite.setLayout( new GridLayout() );
     topComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );

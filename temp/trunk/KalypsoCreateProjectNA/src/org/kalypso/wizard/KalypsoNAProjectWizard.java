@@ -48,8 +48,6 @@ package org.kalypso.wizard;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -60,9 +58,7 @@ import java.util.List;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -154,8 +150,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private URL m_modelSchemaURL = getClass().getResource( "resources/.model/schema/namodell.xsd" );
 
-  //      "../../../resources/.model/schema/namodell.xsd" );
-
   private GMLWorkspace modelWS;
 
   IPath workspacePath;
@@ -208,12 +202,12 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     }
 
     createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE,
-        "Einzugsgebiet einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG,
+        "Teilgebiete einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG,
         getFeatureType( "Catchment" ) );
 
     addPage( createMappingCatchmentPage );
 
-    createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, "Gewässer einlesen",
+    createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, "Stränge einlesen",
         ImageProvider.IMAGE_KALYPSO_ICON_BIG, dummyFeatureType );
     addPage( createMappingRiverPage );
 
@@ -305,7 +299,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       List nodeFeatureList = createMappingNodePage.getFeatureList();
       mapNode( nodeFeatureList, nodeMapping );
     }
-    //		write all new imported features to the modell.gml fiel in the
+    //		write all new imported features to the modell.gml file in the
     // workspace
     try
     {
@@ -441,7 +435,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
     //get resouces as input stream
     final InputStream is1 = getClass().getResourceAsStream( "resources/.model/schema/control.xsd" );
-    //        "../../../resources/.model/schema/control.xsd" );
     final InputStream is2 = getClass().getResourceAsStream( "resources/.model/schema/feature.xsd" );
     final InputStream is3 = getClass().getResourceAsStream( "resources/.model/schema/geometry.xsd" );
     final InputStream is4 = getClass()

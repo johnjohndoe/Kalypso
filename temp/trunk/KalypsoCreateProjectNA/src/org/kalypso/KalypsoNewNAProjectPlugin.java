@@ -41,9 +41,11 @@
 
 package org.kalypso;
 
-import org.eclipse.ui.plugin.*;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import java.util.*;
 
 /**
  * @author kuepfer
@@ -67,9 +69,8 @@ public class KalypsoNewNAProjectPlugin extends AbstractUIPlugin
     plugin = this;
     try
     {
-      //      resourceBundle = ResourceBundle.getBundle(
-      // "kalypso.wizard.KalypsoNewProjectPluginResources" );
-      resourceBundle = ResourceBundle.getBundle( "org.kalypso.wizard.resources.KalypsoNewProjectPluginResources" );
+      resourceBundle = ResourceBundle
+          .getBundle( "org.kalypso.wizard.resources.KalypsoNewProjectPluginResources" );
     }
     catch( MissingResourceException x )
     {
