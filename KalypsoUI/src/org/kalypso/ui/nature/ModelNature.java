@@ -463,7 +463,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         final String imageLocation = page.getImageLocation();
         final ImageDescriptor imageDesc = imageLocation == null ? null : ImageProvider.id( imageLocation );
 
-        final IWizardPage wizardPage = (IWizardPage)ClassUtilities.newInstance( className, IWizardPage.class, ModelNature.class.getClassLoader(), new Object[] { project, pageTitle, imageDesc, props } );
+        final IWizardPage wizardPage = (IWizardPage)ClassUtilities.newInstance( className, IWizardPage.class, ModelNature.class.getClassLoader(), new Class[] { IProject.class, String.class, ImageDescriptor.class, Properties.class }, new Object[] { project, pageTitle, imageDesc, props } );
         wizard.addPage( wizardPage );
       }
 
