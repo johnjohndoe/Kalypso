@@ -36,22 +36,28 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.impl;
 
-import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 import org.kalypso.template.obsdiagview.TypeAxis;
 
 /**
- * Default implementation of <code>IDiagramAxis</code>. This class overrides
- * equals and hashcode. Two instance of IDiagramAxis are considered to be equal
- * if they have the same id.
+ * This class overrides equals and hashcode. Two instance of DiagramAxis are
+ * considered to be equal if they have the same id.
  * 
  * @author schlienger
  */
-public class DiagramAxis implements IDiagramAxis
+public class DiagramAxis
 {
+  public final static String DIRECTION_HORIZONTAL = "horizontal";
+  public final static String DIRECTION_VERTICAL = "vertical";
+  
+  public final static String POSITION_LEFT = "left";
+  public final static String POSITION_RIGHT = "right";
+  public final static String POSITION_BOTTOM = "bottom";
+  public final static String POSITION_TOP = "top";
+  
   private final String m_id;
 
   private final String m_label;
@@ -73,8 +79,8 @@ public class DiagramAxis implements IDiagramAxis
   public DiagramAxis( final TypeAxis axis )
   {
     // TODO currently the binding says that lower and upper margins
-    // are optional, but we could not find out any solution 
-    // to know if the values were specified or not (primivite types, 
+    // are optional, but we could not find out any solution
+    // to know if the values were specified or not (primivite types,
     // for Object types it's not a problem since value is null)
     // So as soon as solution is found, maybe replace the code
     // here that currently simply checks for == 0
@@ -114,57 +120,36 @@ public class DiagramAxis implements IDiagramAxis
     m_upperMargin = upperMargin;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#getLabel()
-   */
   public String getLabel( )
   {
     return m_label;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#getUnit()
-   */
   public String getUnit( )
   {
     return m_unit;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#getDirection()
-   */
   public String getDirection( )
   {
     return m_direction;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#getPosition()
-   */
   public String getPosition( )
   {
     return m_position;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#isInverted()
-   */
   public boolean isInverted( )
   {
     return m_isInverted;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#getDataType()
-   */
   public String getDataType( )
   {
     return m_dataType;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#getIdentifier()
-   */
   public String getIdentifier( )
   {
     return m_id;
@@ -181,12 +166,12 @@ public class DiagramAxis implements IDiagramAxis
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
-    if( !(obj instanceof IDiagramAxis) )
+    if( !(obj instanceof DiagramAxis) )
       return false;
 
-    IDiagramAxis other = (IDiagramAxis) obj;
+    final DiagramAxis other = (DiagramAxis) obj;
 
     return m_id.equals( other.getIdentifier() );
   }
@@ -200,7 +185,7 @@ public class DiagramAxis implements IDiagramAxis
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#toFullString()
+   * @return complete Label of this axis (concatenates the label and the unit)
    */
   public String toFullString( )
   {
@@ -211,7 +196,9 @@ public class DiagramAxis implements IDiagramAxis
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#getLowerMargin()
+   * The lower margin is expressed in percent of the whole axis range.
+   * 
+   * @return the lower margin in percent (for instance 0.07 for 7%) or null if not set
    */
   public Double getLowerMargin( )
   {
@@ -219,7 +206,9 @@ public class DiagramAxis implements IDiagramAxis
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#getUpperMaring()
+   * The upper margin is expressed in percent of the whole axis range.
+   * 
+   * @return the upper margin in percent (for instance 0.07 for 7%) or null if not set
    */
   public Double getUpperMaring( )
   {

@@ -42,7 +42,7 @@ package org.kalypso.ui.editor.diagrameditor;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTheme;
 import org.kalypso.ui.ImageProvider;
 
 /**
@@ -76,7 +76,7 @@ public class ObsDiagTemplateLabelProvider extends LabelProvider
    */
   public Image getImage( Object element )
   {
-    if( element instanceof IDiagramTemplateTheme )
+    if( element instanceof DiagViewTheme )
       return getThemeImage();
     
     return getDefaultImage();

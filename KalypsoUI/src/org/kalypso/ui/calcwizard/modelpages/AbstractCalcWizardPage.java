@@ -72,7 +72,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -104,15 +103,13 @@ import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.util.GisTemplateLoadedThread;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
-import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
-import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
-import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTheme;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.tableview.swing.event.ObservationModelChangeListener;
-import org.kalypso.ogc.sensor.tableview.swing.event.SetValuesForDirtyColumnsRunnable;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
@@ -193,13 +190,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private ObservationChart m_obsChart = null;
 
   // protected so that subclasses can access it
-  protected LinkedDiagramTemplate m_diagTemplate = null;
+  protected DiagViewTemplate m_diagTemplate = null;
 
   private Frame m_tableFrame = null;
 
-  private final ObservationTableModel m_tableModel = new ObservationTableModel();
-
-  private LinkedTableViewTemplate m_tableTemplate = null;
+  private TableViewTemplate m_tableTemplate = null;
 
   private ObservationTable m_table = null;
 
@@ -214,8 +209,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       maximizeMap();
     }
   };
-
-  private ObservationModelChangeListener m_listener;
 
   private boolean m_showZmlTableOnlySelected = true;
 
@@ -241,17 +234,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_diagTemplate.dispose();
     }
 
+    if( m_table != null )
+      m_table.dispose();
+    
     if( m_tableTemplate != null )
     {
       m_tableTemplate.removeTemplateEventListener( m_table );
       m_tableTemplate.dispose();
-    }
-
-    if( m_tableModel != null )
-    {
-      m_logger.info("Removing TableModel Listener");
-      
-      m_tableModel.removeTableModelListener( m_listener );
     }
   }
 
@@ -404,7 +393,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     try
     {
       // actually creates the template
-      m_diagTemplate = new LinkedDiagramTemplate();
+      m_diagTemplate = new DiagViewTemplate();
 
       final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
       m_diagTemplate.setIgnoreType( ignoreType );
@@ -474,7 +463,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void refreshDiagramForContext( final TSLinkWithName[] obs, final URL context )
   {
-    final LinkedDiagramTemplate diagTemplate = m_diagTemplate;
+    final DiagViewTemplate diagTemplate = m_diagTemplate;
 
     if( diagTemplate != null )
       KalypsoWizardHelper.updateDiagramTemplate( diagTemplate, obs, context, true );
@@ -482,7 +471,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void refreshZmlTableForContext( final TSLinkWithName[] obs, final URL context )
   {
-    final LinkedTableViewTemplate tableTemplate = m_tableTemplate;
+    final TableViewTemplate tableTemplate = m_tableTemplate;
 
     if( tableTemplate != null )
       KalypsoWizardHelper.updateTableTemplate( tableTemplate, obs, context, true );
@@ -516,14 +505,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     try
     {
-      m_table = new ObservationTable( m_tableModel );
+      m_tableTemplate = new TableViewTemplate();
+      m_table = new ObservationTable( m_tableTemplate );
 
-      m_tableTemplate = new LinkedTableViewTemplate();
       final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
       m_tableTemplate.setIgnoreType( ignoreType );
-
-      m_tableModel.setRules( m_tableTemplate.getRules() );
-      m_tableTemplate.addTemplateEventListener( m_table );
 
       final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
       m_tableFrame = SWT_AWT.new_Frame( composite );
@@ -550,17 +536,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
       return text;
     }
-  }
-
-  protected void registerObservationTableModelChangeListener()
-  {
-    m_logger.info( "Registering TableModel Listener" );
-    
-    final IRunnableWithProgress rwp = new SetValuesForDirtyColumnsRunnable( m_tableTemplate,
-        m_tableModel );
-    m_listener = new ObservationModelChangeListener( rwp );
-
-    m_tableModel.addTableModelListener( m_listener );
   }
 
   protected List getSelectedFeatures( boolean useTable )
@@ -792,7 +767,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( m_tableTemplate == null || m_table == null )
       return;
 
-    final LinkedTableViewTemplate tableTemplate = m_tableTemplate;
+    final TableViewTemplate tableTemplate = m_tableTemplate;
     final ObservationTableModel model = (ObservationTableModel)m_table.getModel();
 
     final Collection themes = tableTemplate.getThemes();
@@ -803,12 +778,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     {
       try
       {
-        final ITableViewTheme theme = (ITableViewTheme)it.next();
+        final TableViewTheme theme = (TableViewTheme)it.next();
 
         final IObservation obs = theme.getObservation();
-
-        for( final Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
-          ( (ITableViewColumn)itcol.next() ).setDirty( false );
 
         final ITuppleModel values = model.getValues( theme );
 
@@ -816,6 +788,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
         if( saveFiles )
           tableTemplate.saveObservation( obs, monitor );
+        
+        for( final Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
+          ( (TableViewColumn)itcol.next() ).setDirty( false );
       }
       catch( final Exception e )
       {

@@ -47,8 +47,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.eclipse.jface.action.FullAction;
-import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
-import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagramAxis;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.diagrameditor.ObsDiagOutlinePage;
@@ -79,7 +79,7 @@ public class FilterAxesAction extends FullAction
    */
   public void run( )
   {
-    final ObservationDiagramTemplate tpl = m_page.getTemplate();
+    final DiagViewTemplate tpl = m_page.getTemplate();
 
     final Vector elts = new Vector( tpl.getDiagramAxes() );
     elts.add( 0, "(Keiner)" );
@@ -96,8 +96,8 @@ public class FilterAxesAction extends FullAction
     {
       final Object[] res = dlg.getResult();
 
-      if( res.length == 1 && res[0] instanceof IDiagramAxis )
-        tpl.setIgnoreType( ((IDiagramAxis) res[0]).getLabel() );
+      if( res.length == 1 && res[0] instanceof DiagramAxis )
+        tpl.setIgnoreType( ((DiagramAxis) res[0]).getLabel() );
       else
         tpl.setIgnoreType( null );
       

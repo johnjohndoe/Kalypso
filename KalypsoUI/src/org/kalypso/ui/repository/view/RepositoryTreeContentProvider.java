@@ -147,7 +147,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
    */
   public void dispose()
   {
-  // ?
+  // empty
   }
 
   /**

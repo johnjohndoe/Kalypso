@@ -238,11 +238,11 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public ITuppleModel getValues( final IVariableArguments args )
+  public synchronized ITuppleModel getValues( final IVariableArguments args )
       throws SensorException
   {
-    synchronized( this )
-    {
+//    synchronized( this )
+//    {
       // tricky: uses the cache
       ITuppleModel values = ObservationCache.getInstance().getValues( this );
 
@@ -254,7 +254,7 @@ public class ServiceRepositoryObservation implements IObservation
       }
 
       return values;
-    }
+//    }
   }
 
   /**

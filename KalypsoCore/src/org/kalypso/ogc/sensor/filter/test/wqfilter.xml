@@ -4,6 +4,6 @@
 	xmlns:vc="valuecomp.filters.zml.kalypso.org" type="Q">
 	<zmlFilter>
 		<zml 
-			xlink:href="file:/E:/kalypso/data/mirrored/Spree/2004/QV_LOHSA.zml"/>
+			xlink:href="file://lfug-kv-01/d/programme/kalypso/data/mirrored/Spree/2004/QV_LOHSA.zml"/>
 	</zmlFilter>
 </wqFilter>

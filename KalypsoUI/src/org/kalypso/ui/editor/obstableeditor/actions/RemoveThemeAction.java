@@ -44,7 +44,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.eclipse.jface.action.FullAction;
-import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTheme;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.obstableeditor.ObsTableOutlinePage;
 
@@ -78,7 +78,7 @@ public class RemoveThemeAction extends FullAction implements
    */
   public void run( )
   {
-    final ITableViewTheme selectedTheme = m_page.getSelectedTheme();
+    final TableViewTheme selectedTheme = m_page.getSelectedTheme();
 
     if( selectedTheme != null
         && MessageDialog.openConfirm( m_page.getSite().getShell(),

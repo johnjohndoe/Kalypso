@@ -59,6 +59,7 @@ public class FullExtentMapAction extends AbstractCommandAction
   }
 
   /**
+   * @return command
    * @see org.eclipse.jface.action.Action#run()
    */
   public ICommand runInternal()

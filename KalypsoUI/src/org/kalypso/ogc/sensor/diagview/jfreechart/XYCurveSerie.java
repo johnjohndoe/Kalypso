@@ -46,8 +46,8 @@ import org.jfree.data.general.Series;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
-import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewCurve;
+import org.kalypso.ogc.sensor.diagview.impl.DiagramAxis;
 
 /**
  * A CurveSerie.
@@ -58,13 +58,13 @@ class XYCurveSerie extends Series
 {
   private transient final IAxis m_xAxis;
 
-  private transient final IDiagramAxis m_xDiagAxis;
+  private transient final DiagramAxis m_xDiagAxis;
 
   private transient final IAxis m_yAxis;
 
-  private transient final IDiagramAxis m_yDiagAxis;
+  private transient final DiagramAxis m_yDiagAxis;
 
-  private transient final IDiagramCurve m_curve;
+  private transient final DiagViewCurve m_curve;
 
   private transient ITuppleModel m_values = null;
 
@@ -82,8 +82,8 @@ class XYCurveSerie extends Series
    *          the IDiagramAxis mapped to yAxis
    * @throws SensorException
    */
-  public XYCurveSerie( final IDiagramCurve curve, final IAxis xAxis, final IAxis yAxis,
-      final IDiagramAxis xDiagAxis, final IDiagramAxis yDiagAxis ) throws SensorException
+  public XYCurveSerie( final DiagViewCurve curve, final IAxis xAxis, final IAxis yAxis,
+      final DiagramAxis xDiagAxis, final DiagramAxis yDiagAxis ) throws SensorException
   {
     super( curve.getName() );
 
@@ -96,12 +96,12 @@ class XYCurveSerie extends Series
     m_values = m_curve.getTheme().getObservation().getValues( m_curve.getTheme().getArguments() );
   }
 
-  public IDiagramAxis getXDiagAxis()
+  public DiagramAxis getXDiagAxis()
   {
     return m_xDiagAxis;
   }
 
-  public IDiagramAxis getYDiagAxis()
+  public DiagramAxis getYDiagAxis()
   {
     return m_yDiagAxis;
   }

@@ -57,7 +57,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.title.TextTitle;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
@@ -71,7 +71,7 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
 public class DiagramViewPart extends ViewPart implements
     ISelectionChangedListener, IPartListener
 {
-  protected final ObservationDiagramTemplate m_template = new ObservationDiagramTemplate();
+  protected final DiagViewTemplate m_template = new DiagViewTemplate();
 
   private ObservationChart m_chart;
 

@@ -51,10 +51,10 @@ public class FeatureChange
   public final String property;
   public final Object newValue;
 
-  public FeatureChange( final Feature feature, final String property, final Object newValue )
+  public FeatureChange( final Feature featur, final String propert, final Object newValu )
   {
-    this.feature = feature;
-    this.property = property;
-    this.newValue = newValue;
+    this.feature = featur;
+    this.property = propert;
+    this.newValue = newValu;
   }
 }

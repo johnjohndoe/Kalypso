@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gistableeditor;
 
 import java.io.ByteArrayInputStream;
@@ -89,8 +89,8 @@ import org.kalypso.util.command.ICommandTarget;
  * 
  * @author belger
  */
-public class GisTableEditor extends AbstractEditorPart implements ISelectionProvider,
-    ICommandTarget
+public class GisTableEditor extends AbstractEditorPart implements
+    ISelectionProvider, ICommandTarget
 {
   private final ObjectFactory m_gistableviewFactory = new ObjectFactory();
 
@@ -98,7 +98,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
   private LayerTableViewer m_layerTable = null;
 
-  public GisTableEditor()
+  public GisTableEditor( )
   {
     try
     {
@@ -117,15 +117,21 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     m_layerTable.dispose();
 
     super.dispose();
   }
 
-  /** File must exist! */
-  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
+  /**
+   * File must exist!
+   * 
+   * @param monitor
+   * @param input
+   */
+  protected void doSaveInternal( final IProgressMonitor monitor,
+      final IFileEditorInput input )
   {
     if( m_layerTable == null )
       return;
@@ -139,13 +145,15 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       final IFile file = input.getFile();
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      final OutputStreamWriter osw = new OutputStreamWriter( bos, file.getCharset() );
+      final OutputStreamWriter osw = new OutputStreamWriter( bos, file
+          .getCharset() );
       m_marshaller.marshal( tableTemplate, osw );
 
       // TODO close in finally block?
       bos.close();
 
-      final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+      final ByteArrayInputStream bis = new ByteArrayInputStream( bos
+          .toByteArray() );
       file.setContents( bis, false, true, monitor );
 
       // TODO close in finally block?
@@ -173,9 +181,10 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     super.createPartControl( parent );
 
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-    final IFeatureModifierFactory factory = plugin.createFeatureTypeCellEditorFactory();
-    m_layerTable = new LayerTableViewer( parent, this, factory, plugin.getDefaultMapSelectionID(),
-        false );
+    final IFeatureModifierFactory factory = plugin
+        .createFeatureTypeCellEditorFactory();
+    m_layerTable = new LayerTableViewer( parent, this, factory, plugin
+        .getDefaultMapSelectionID(), false );
 
     final MenuManager menuMgr = createSpaltenMenu( "spalten" );
     final Control viewerControl = m_layerTable.getControl();
@@ -185,10 +194,10 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     load();
   }
 
-  protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
-      throws Exception
+  protected final void loadInternal( final IProgressMonitor monitor,
+      final IStorageEditorInput input ) throws Exception
   {
-    if( !( input instanceof IFileEditorInput ) )
+    if( !(input instanceof IFileEditorInput) )
       throw new IllegalArgumentException( "Kann nur Dateien laden" );
 
     if( m_layerTable == null )
@@ -197,15 +206,15 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     monitor.beginTask( "Vorlage laden", 1000 );
 
     final Gistableview tableTemplate = GisTemplateHelper
-        .loadGisTableview( ( (IFileEditorInput)input ).getFile() );
+        .loadGisTableview( ((IFileEditorInput) input).getFile() );
 
-    final IFile inputFile = ( (IFileEditorInput)getEditorInput() ).getFile();
+    final IFile inputFile = ((IFileEditorInput) getEditorInput()).getFile();
     final URL context = ResourceUtilities.createURL( inputFile );
 
     final LayerTableViewer viewer = m_layerTable;
     getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
     {
-      public void run()
+      public void run( )
       {
         viewer.applyTableTemplate( tableTemplate, context );
       }
@@ -214,7 +223,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     monitor.worked( 1000 );
   }
 
-  public LayerTableViewer getLayerTable()
+  public LayerTableViewer getLayerTable( )
   {
     return m_layerTable;
   }
@@ -230,7 +239,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection()
+  public ISelection getSelection( )
   {
     return m_layerTable.getSelection();
   }
@@ -258,10 +267,11 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       return;
 
     final FeatureTypeProperty[] ftps = theme.getFeatureType().getProperties();
-    final String lang=Locale.getDefault().getLanguage();
+    final String lang = Locale.getDefault().getLanguage();
     for( int i = 0; i < ftps.length; i++ )
     {
-      manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName(),ftps[i].getAnnotation(lang) ) );
+      manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName(),
+          ftps[i].getAnnotation( lang ) ) );
     }
   }
 

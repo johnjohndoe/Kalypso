@@ -55,6 +55,8 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
   private final boolean m_isUndo;
 
   /**
+   * @param commandManager
+   * @param rule
    * @param bUndo
    *          falls true is die Undo-Action, sonst die Redo-Action
    */

@@ -61,7 +61,7 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  */
 public class KalypsoObservationServiceTest extends TestCase
 {
-  private final static String KALYPSO_SERVER_BASE = "\\\\pc242\\kalypsotemp";
+  private final static String KALYPSO_SERVER_BASE = "\\\\LFUG-KV-01\\kalypsotemp";
 
   private KalypsoObservationService m_srv;
 

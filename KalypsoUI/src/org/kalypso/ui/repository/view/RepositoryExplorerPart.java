@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.logging.Logger;
 
 import org.eclipse.compare.Splitter;
 import org.eclipse.jface.action.IMenuListener;
@@ -513,13 +512,20 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
       {
         try
         {
-          final String id = elementMem[i].getString( TAG_IDENFITIER );
-          final Object element = m_repContainer.findItem( id );
-          
-          if( element != null )
-            elements.add( element );
-          else
-            Logger.getLogger( getClass().getName() ).warning( "Restoring GUI State for observation explorer part: could not find item " + id );
+          // Marc's Note: commented this out because it is too slow...
+          // Also tried to make it faster using m_srv.findItem() in
+          // ObservationServiceRepository but the problem is once
+          // we got an ItemBean, we still need to make an IRepositoryItem
+          // (in fact a ServiceRepositoryItem) using the constructor
+          // but we are not able to set all arguments in findItem
+          // TODO: try to find a better solution
+//          final String id = elementMem[i].getString( TAG_IDENFITIER );
+//          final Object element = m_repContainer.findItem( id );
+//          
+//          if( element != null )
+//            elements.add( element );
+//          else
+//            Logger.getLogger( getClass().getName() ).warning( "Restoring GUI State for observation explorer part: could not find item " + id );
         }
         catch( NoSuchElementException e )
         {

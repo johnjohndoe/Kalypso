@@ -46,8 +46,8 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import org.kalypso.java.util.PropertiesHelper;
-import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
-import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 
 /**
@@ -107,7 +107,7 @@ public class KalypsoWizardHelper
    * @param ignoreExceptions
    */
   public static void updateDiagramTemplate(
-      final LinkedDiagramTemplate template, final TSLinkWithName[] links,
+      final DiagViewTemplate template, final TSLinkWithName[] links,
       final URL context, final boolean ignoreExceptions )
   {
     template.removeAllThemes();
@@ -129,7 +129,7 @@ public class KalypsoWizardHelper
    * @param ignoreExceptions
    */
   public static void updateTableTemplate(
-      final LinkedTableViewTemplate template, final TSLinkWithName[] links,
+      final TableViewTemplate template, final TSLinkWithName[] links,
       final URL context, final boolean ignoreExceptions )
   {
     template.removeAllThemes();

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.sensor.impl;
 
 import java.io.File;
@@ -327,8 +327,8 @@ public class KalypsoObservationService implements IObservationService
       // clear temp files on shutdown in the case the client forgets it.
       f.deleteOnExit();
 
-      final OCSDataBean oddb = new OCSDataBean( m_lastId++,
-          obs.getId(), f.toURL().toExternalForm() );
+      final OCSDataBean oddb = new OCSDataBean( m_lastId++, obs.getId(), f
+          .toURL().toExternalForm() );
 
       return oddb;
     }
@@ -487,7 +487,7 @@ public class KalypsoObservationService implements IObservationService
         return (ItemBean[]) m_mapItem2Beans.get( item );
 
       final IRepositoryItem[] children = item.getChildren();
-      
+
       // TODO null pointer exception on children. sometimes
       final ItemBean[] beans = new ItemBean[children.length];
 
@@ -565,23 +565,23 @@ public class KalypsoObservationService implements IObservationService
   public void reload( ) throws RemoteException
   {
     init();
-    
-//    m_repositoryBeans = null;
-//
-//    for( Iterator it = m_repositories.iterator(); it.hasNext(); )
-//    {
-//      final IRepository rep = (IRepository) it.next();
-//
-//      try
-//      {
-//        rep.reload();
-//      }
-//      catch( RepositoryException e )
-//      {
-//        m_logger.throwing( getClass().getName(), "reload", e );
-//        throw new RemoteException( "", e );
-//      }
-//    }
+
+    //    m_repositoryBeans = null;
+    //
+    //    for( Iterator it = m_repositories.iterator(); it.hasNext(); )
+    //    {
+    //      final IRepository rep = (IRepository) it.next();
+    //
+    //      try
+    //      {
+    //        rep.reload();
+    //      }
+    //      catch( RepositoryException e )
+    //      {
+    //        m_logger.throwing( getClass().getName(), "reload", e );
+    //        throw new RemoteException( "", e );
+    //      }
+    //    }
   }
 
   /**
@@ -595,14 +595,20 @@ public class KalypsoObservationService implements IObservationService
 
       final IRepositoryItem item;
 
-      try
+      // first check the repository itself, then look into it
+      if( rep.getIdentifier().equals( id ) )
+        item = rep;
+      else
       {
-        item = rep.findItem( id );
-      }
-      catch( RepositoryException e )
-      {
-        m_logger.throwing( getClass().getName(), "findItem", e );
-        throw new RemoteException( "findItem()", e );
+        try
+        {
+          item = rep.findItem( id );
+        }
+        catch( RepositoryException e )
+        {
+          m_logger.throwing( getClass().getName(), "findItem", e );
+          throw new RemoteException( "findItem()", e );
+        }
       }
 
       if( item == null )

@@ -42,9 +42,9 @@ package org.kalypso.ui.editor.diagrameditor;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
-import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
-import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewCurve;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTheme;
 
 /**
  * ObsDiagTemplateContentProvider
@@ -58,16 +58,16 @@ public class ObsDiagTemplateContentProvider implements ITreeContentProvider
    */
   public Object[] getChildren( Object parentElement )
   {
-    if( parentElement instanceof IDiagramTemplate )
+    if( parentElement instanceof DiagViewTemplate )
     {
-      IDiagramTemplate tpl = (IDiagramTemplate) parentElement;
+      DiagViewTemplate tpl = (DiagViewTemplate) parentElement;
       
       return tpl.getThemes().toArray();
     }
     
-    if( parentElement instanceof IDiagramTemplateTheme )
+    if( parentElement instanceof DiagViewTheme )
     {
-      IDiagramTemplateTheme theme = (IDiagramTemplateTheme) parentElement;
+      DiagViewTheme theme = (DiagViewTheme) parentElement;
       
       return theme.getCurves().toArray();
     }
@@ -80,9 +80,9 @@ public class ObsDiagTemplateContentProvider implements ITreeContentProvider
    */
   public Object getParent( Object element )
   {
-    if( element instanceof IDiagramCurve )
+    if( element instanceof DiagViewCurve )
     {
-      IDiagramCurve curve = (IDiagramCurve) element;
+      DiagViewCurve curve = (DiagViewCurve) element;
       
       return curve.getTheme();
     }
@@ -95,16 +95,16 @@ public class ObsDiagTemplateContentProvider implements ITreeContentProvider
    */
   public boolean hasChildren( Object element )
   {
-    if( element instanceof IDiagramTemplate )
+    if( element instanceof DiagViewTemplate )
     {
-      IDiagramTemplate tpl = (IDiagramTemplate) element;
+      DiagViewTemplate tpl = (DiagViewTemplate) element;
       
       return tpl.getThemes().size() > 0;
     }
     
-    if( element instanceof IDiagramTemplateTheme )
+    if( element instanceof DiagViewTheme )
     {
-      IDiagramTemplateTheme theme = (IDiagramTemplateTheme) element;
+      DiagViewTheme theme = (DiagViewTheme) element;
       
       return theme.getCurves().size() > 0;
     }
@@ -117,7 +117,7 @@ public class ObsDiagTemplateContentProvider implements ITreeContentProvider
    */
   public Object[] getElements( Object inputElement )
   {
-    IDiagramTemplate template = (IDiagramTemplate) inputElement;
+    DiagViewTemplate template = (DiagViewTemplate) inputElement;
     
     return template.getThemes().toArray();
   }

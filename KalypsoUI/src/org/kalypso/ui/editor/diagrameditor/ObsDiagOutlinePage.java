@@ -70,10 +70,9 @@ import org.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer2;
 import org.kalypso.eclipse.ui.views.contentouline.ContentOutlinePage2;
-import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
-import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
-import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
-import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewCurve;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTheme;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -87,7 +86,7 @@ import org.kalypso.ui.editor.diagrameditor.actions.RemoveThemeAction;
 public class ObsDiagOutlinePage extends ContentOutlinePage2 implements
     ITemplateEventListener, ICheckStateListener
 {
-  protected LinkedDiagramTemplate m_template;
+  protected DiagViewTemplate m_template;
 
   private RemoveThemeAction m_removeThemeAction;
 
@@ -130,7 +129,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage2 implements
   /**
    * @return the selected theme or null
    */
-  public IDiagramTemplateTheme getSelectedTheme( )
+  public DiagViewTheme getSelectedTheme( )
   {
     final ISelection sel = getSelection();
 
@@ -138,11 +137,11 @@ public class ObsDiagOutlinePage extends ContentOutlinePage2 implements
     {
       final Object element = ((IStructuredSelection) sel).getFirstElement();
 
-      if( element instanceof IDiagramTemplateTheme )
-        return (IDiagramTemplateTheme) element;
+      if( element instanceof DiagViewTheme )
+        return (DiagViewTheme) element;
 
-      if( element instanceof IDiagramCurve )
-        return ((IDiagramCurve) element).getTheme();
+      if( element instanceof DiagViewCurve )
+        return ((DiagViewCurve) element).getTheme();
     }
 
     return null;
@@ -159,7 +158,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage2 implements
     {
       final Object element = ((IStructuredSelection) sel).getFirstElement();
 
-      return element instanceof IDiagramTemplateTheme;
+      return element instanceof DiagViewTheme;
     }
     
     return false;
@@ -168,7 +167,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage2 implements
   /**
    * @return template
    */
-  public ObservationDiagramTemplate getTemplate( )
+  public DiagViewTemplate getTemplate( )
   {
     return m_template;
   }
@@ -222,7 +221,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage2 implements
   /**
    * @param template
    */
-  public void setTemplate( LinkedDiagramTemplate template )
+  public void setTemplate( DiagViewTemplate template )
   {
     if( m_template != null )
       m_template.removeTemplateEventListener( this );
@@ -270,18 +269,18 @@ public class ObsDiagOutlinePage extends ContentOutlinePage2 implements
   {
     final Object element = event.getElement();
 
-    if( element instanceof IDiagramCurve )
+    if( element instanceof DiagViewCurve )
     {
-      final IDiagramCurve curve = (IDiagramCurve) element;
+      final DiagViewCurve curve = (DiagViewCurve) element;
       curve.setShown( event.getChecked() );
     }
-    else if( element instanceof IDiagramTemplateTheme )
+    else if( element instanceof DiagViewTheme )
     {
-      final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) element;
+      final DiagViewTheme theme = (DiagViewTheme) element;
 
       for( final Iterator it = theme.getCurves().iterator(); it.hasNext(); )
       {
-        final IDiagramCurve curve = (IDiagramCurve) it.next();
+        final DiagViewCurve curve = (DiagViewCurve) it.next();
         curve.setShown( event.getChecked() );
       }
     }

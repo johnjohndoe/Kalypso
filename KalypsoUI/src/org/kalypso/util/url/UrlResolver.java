@@ -66,6 +66,9 @@ public class UrlResolver implements IUrlResolver
    * it tries to guess the project from the baseURL (e.g. the baseURL must be of the form platfrom:/resource/).
    * It then replaces project: by 'platform:/resource/<projectname>/
    * </p>
+   * @param baseURL
+   * @param relativeURL
+   * @return
    * @throws MalformedURLException
    */
   public URL resolveURL( final URL baseURL, final String relativeURL ) throws MalformedURLException

@@ -566,6 +566,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       {
         e.printStackTrace();
 
+        // TODO: bessere Fehlermeldung (z.B. die Datei existiert nicht)
+        // taucht sonst in WQObservationFilter.initFilter() als
+        // NoSuchElementException: No axis found with type: Q
+        //
         throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Export Prognose Zeitreihen",
             e ) );
       }

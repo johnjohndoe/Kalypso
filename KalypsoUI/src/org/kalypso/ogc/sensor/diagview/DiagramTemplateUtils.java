@@ -53,6 +53,10 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.diagview.impl.AxisMapping;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewCurve;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTheme;
 import org.kalypso.ogc.sensor.diagview.impl.DiagramAxis;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.template.obsdiagview.ObjectFactory;
@@ -154,7 +158,7 @@ public class DiagramTemplateUtils
    * @throws JAXBException
    */
   public static ObsdiagviewType buildDiagramTemplateXML(
-      final IDiagramTemplate template ) throws JAXBException
+      final DiagViewTemplate template ) throws JAXBException
   {
     final ObsdiagviewType bdgTemplate = ODT_OF.createObsdiagview();
 
@@ -169,7 +173,7 @@ public class DiagramTemplateUtils
     final Iterator itAxes = template.getDiagramAxes().iterator();
     while( itAxes.hasNext() )
     {
-      final IDiagramAxis axis = (IDiagramAxis) itAxes.next();
+      final DiagramAxis axis = (DiagramAxis) itAxes.next();
 
       final TypeAxis bdgAxis = ODT_OF.createTypeAxis();
       bdgAxis.setDatatype( axis.getDataType() );
@@ -189,7 +193,7 @@ public class DiagramTemplateUtils
     final Iterator itThemes = template.getThemes().iterator();
     while( itThemes.hasNext() )
     {
-      final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) itThemes
+      final DiagViewTheme theme = (DiagViewTheme) itThemes
           .next();
 
       final IObservation obs = theme.getObservation();
@@ -203,7 +207,7 @@ public class DiagramTemplateUtils
       final Iterator itCurves = theme.getCurves().iterator();
       while( itCurves.hasNext() )
       {
-        final IDiagramCurve curve = (IDiagramCurve) itCurves.next();
+        final DiagViewCurve curve = (DiagViewCurve) itCurves.next();
 
         final TypeCurve bdgCurve = ODT_OF.createTypeCurve();
         bdgCurve.setId( "C" + ixCurve++ );
@@ -212,7 +216,7 @@ public class DiagramTemplateUtils
 
         final List bdgMappings = bdgCurve.getMapping();
 
-        final IAxisMapping[] mappings = curve.getMappings();
+        final AxisMapping[] mappings = curve.getMappings();
         for( int i = 0; i < mappings.length; i++ )
         {
           final TypeAxisMapping bdgMapping = ODT_OF.createTypeAxisMapping();
@@ -257,27 +261,27 @@ public class DiagramTemplateUtils
   {
     if( axisType.equals( TimeserieConstants.TYPE_DATE ) )
       return new DiagramAxis( axisType, "date", label, unit,
-          IDiagramAxis.DIRECTION_HORIZONTAL, IDiagramAxis.POSITION_BOTTOM,
+          DiagramAxis.DIRECTION_HORIZONTAL, DiagramAxis.POSITION_BOTTOM,
           false );
 
     if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
       return new DiagramAxis( axisType, "double", label, unit,
-          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_LEFT, false );
+          DiagramAxis.DIRECTION_VERTICAL, DiagramAxis.POSITION_LEFT, false );
 
     if( axisType.equals( TimeserieConstants.TYPE_RUNOFF ) )
       return new DiagramAxis( axisType, "double", label, unit,
-          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_LEFT, false );
+          DiagramAxis.DIRECTION_VERTICAL, DiagramAxis.POSITION_LEFT, false );
 
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
       return new DiagramAxis( axisType, "double", label, unit,
-          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_RIGHT, true, null, new Double(0.8) );
+          DiagramAxis.DIRECTION_VERTICAL, DiagramAxis.POSITION_RIGHT, true, null, new Double(0.8) );
 
     if( axisType.equals( TimeserieConstants.TYPE_TEMPERATURE ) )
       return new DiagramAxis( axisType, "double", label, unit,
-          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_RIGHT, false );
+          DiagramAxis.DIRECTION_VERTICAL, DiagramAxis.POSITION_RIGHT, false );
 
     // default axis
     return new DiagramAxis( axisType, "double", label, unit,
-        IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_LEFT, false );
+        DiagramAxis.DIRECTION_VERTICAL, DiagramAxis.POSITION_LEFT, false );
   }
 }

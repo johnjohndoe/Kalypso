@@ -40,11 +40,11 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.obstableeditor;
 
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
-import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
-import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
+import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTheme;
 
 /**
  * ObsDiagTemplateContentProvider
@@ -58,16 +58,16 @@ public class ObsTableTemplateContentProvider implements ITreeContentProvider
    */
   public Object[] getChildren( Object parentElement )
   {
-    if( parentElement instanceof ITableViewTemplate )
+    if( parentElement instanceof TableViewTemplate )
     {
-      ITableViewTemplate tpl = (ITableViewTemplate) parentElement;
+      TableViewTemplate tpl = (TableViewTemplate) parentElement;
       
       return tpl.getThemes().toArray();
     }
     
-    if( parentElement instanceof ITableViewTheme )
+    if( parentElement instanceof TableViewTheme )
     {
-      ITableViewTheme theme = (ITableViewTheme) parentElement;
+      TableViewTheme theme = (TableViewTheme) parentElement;
       
       return theme.getColumns().toArray();
     }
@@ -80,9 +80,9 @@ public class ObsTableTemplateContentProvider implements ITreeContentProvider
    */
   public Object getParent( Object element )
   {
-    if( element instanceof ITableViewColumn )
+    if( element instanceof TableViewColumn )
     {
-      ITableViewColumn col = (ITableViewColumn) element;
+      TableViewColumn col = (TableViewColumn) element;
       
       return col.getTheme();
     }
@@ -95,16 +95,16 @@ public class ObsTableTemplateContentProvider implements ITreeContentProvider
    */
   public boolean hasChildren( Object element )
   {
-    if( element instanceof ITableViewTemplate )
+    if( element instanceof TableViewTemplate )
     {
-      ITableViewTemplate tpl = (ITableViewTemplate) element;
+      TableViewTemplate tpl = (TableViewTemplate) element;
       
       return tpl.getThemes().size() > 0;
     }
     
-    if( element instanceof ITableViewTheme )
+    if( element instanceof TableViewTheme )
     {
-      ITableViewTheme theme = (ITableViewTheme) element;
+      TableViewTheme theme = (TableViewTheme) element;
       
       return theme.getColumns().size() > 0;
     }
@@ -117,7 +117,7 @@ public class ObsTableTemplateContentProvider implements ITreeContentProvider
    */
   public Object[] getElements( Object inputElement )
   {
-    ITableViewTemplate template = (ITableViewTemplate) inputElement;
+    TableViewTemplate template = (TableViewTemplate) inputElement;
     
     return template.getThemes().toArray();
   }

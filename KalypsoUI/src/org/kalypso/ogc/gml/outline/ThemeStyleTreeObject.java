@@ -64,7 +64,8 @@ public class ThemeStyleTreeObject
   }
 
   /**
-   *  
+   * @param theme
+   * @param style
    */
   public ThemeStyleTreeObject( final IKalypsoFeatureTheme theme, KalypsoUserStyle style )
   {

@@ -42,7 +42,7 @@ package org.kalypso.ui.editor.obstableeditor;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTheme;
 import org.kalypso.ui.ImageProvider;
 
 /**
@@ -76,7 +76,7 @@ public class ObsTableTemplateLabelProvider extends LabelProvider
    */
   public Image getImage( Object element )
   {
-    if( element instanceof ITableViewTheme)
+    if( element instanceof TableViewTheme)
       return getThemeImage();
     
     return getDefaultImage();

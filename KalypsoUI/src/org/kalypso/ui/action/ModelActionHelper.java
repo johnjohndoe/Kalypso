@@ -77,6 +77,7 @@ public class ModelActionHelper
    * gibt das Projekt zurück
    * 
    * @param window
+   * @return project
    * @throws CoreException
    */
   public final static IProject chooseOneProject( final IWorkbenchWindow window )

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
@@ -55,9 +55,8 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.tableview.impl.ObservationTableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 
@@ -69,7 +68,7 @@ import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 public class TableViewPart extends ViewPart implements
     ISelectionChangedListener, IPartListener
 {
-  protected final ObservationTableViewTemplate m_template = new ObservationTableViewTemplate();
+  protected final TableViewTemplate m_template = new TableViewTemplate();
 
   private ObservationTable m_table;
 
@@ -78,8 +77,7 @@ public class TableViewPart extends ViewPart implements
    */
   public void createPartControl( final Composite parent )
   {
-    m_table = new ObservationTable( new ObservationTableModel() );
-    m_template.addTemplateEventListener( m_table );
+    m_table = new ObservationTable( m_template );
 
     // SWT-AWT Brücke für die Darstellung von JTable
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
@@ -102,8 +100,8 @@ public class TableViewPart extends ViewPart implements
   {
     getSite().getPage().removePartListener( this );
 
-    m_template.removeTemplateEventListener( m_table );
-
+    m_table.dispose();
+    
     super.dispose();
   }
 
@@ -120,36 +118,21 @@ public class TableViewPart extends ViewPart implements
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-//    final Runnable runnable = new Runnable()
-//    {
-//      public void run( )
-//      {
-        m_template.removeAllThemes();
+    m_template.removeAllThemes();
 
-        final StructuredSelection selection = (StructuredSelection) event
-            .getSelection();
+    final StructuredSelection selection = (StructuredSelection) event
+        .getSelection();
 
-        if( !(selection.getFirstElement() instanceof IRepositoryItem) )
-          return;
+    if( !(selection.getFirstElement() instanceof IRepositoryItem) )
+      return;
 
-        final IRepositoryItem item = (IRepositoryItem) selection
-            .getFirstElement();
+    final IRepositoryItem item = (IRepositoryItem) selection.getFirstElement();
 
-        final IObservation obs = ObservationCache.getInstance().getObservationFor( item );
-        if( obs != null )
-          m_template.setObservation( obs, false, ObservationViewHelper.makeDateRange( item ) );
-//      }
-//    };
-//
-//    try
-//    {
-//      // execute this in the swing ui thread because we are using a swing component (JTable)
-//      SwingUtilities.invokeLater( runnable );
-//    }
-//    catch( Exception e ) // generic exception caught for simplicity
-//    {
-//      e.printStackTrace();
-//    }
+    final IObservation obs = ObservationCache.getInstance().getObservationFor(
+        item );
+    if( obs != null )
+      m_template.setObservation( obs, ObservationViewHelper
+          .makeDateRange( item ) );
   }
 
   /**
