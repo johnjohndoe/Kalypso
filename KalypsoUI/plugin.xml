@@ -106,6 +106,14 @@
                menubarPath="org.kalypso.editors.tableeditor.menu/tabelle"
                id="org.kalypso.editors.tableeditor.RemoveRowsAction">
          </action>
+         <action
+               toolbarPath="tabelle"
+               label="Daten speichern"
+               tooltip="Speichert die Daten der Tabelle"
+               class="org.kalypso.editor.tableeditor.actions.SaveDataActionDelagate"
+               style="push"
+               menubarPath="org.kalypso.editors.tableeditor.menu/tabelle"
+               id="org.kalypso.editor.tableeditor.SaveDataAction"/>
          <menu
                label="Spalten"
                path="org.kalypso.editors.tableeditor.menu/spalten"

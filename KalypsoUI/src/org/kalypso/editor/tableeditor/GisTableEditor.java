@@ -303,4 +303,10 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       
     }
   }
+
+  public void saveData()
+  {
+    // TODO Auto-generated method stub
+    
+  }
 }
