@@ -10,13 +10,15 @@ public class CollapseAllAction extends AbstractRepositoryExplorerAction
 {
   public CollapseAllAction( final RepositoryExplorerPart explorer )
   {
-    super( explorer, "Alles reduzieren", ImageProvider.IMAGE_ZML_REPOSITORY_COLLAPSE, "Reduziert alle Zweige der Baum" );
+    super( explorer, "Alles reduzieren",
+        ImageProvider.IMAGE_ZML_REPOSITORY_COLLAPSE,
+        "Reduziert alle Zweige der Baum" );
   }
 
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  public void run()
+  public void run( )
   {
     getExplorer().getViewer().collapseAll();
   }

@@ -29,6 +29,12 @@ public class PreviewConfigDialog extends TitleAreaDialog
       + "- Tagesanzahl: Anzahl letzte angezeigte Tagen (0 = ganzer Zeitraum)\n"
       + "- Zeitraum: Eingabe-Von und Eingabe-Bis (Beispielformat: 22.01.2000 13:30)";
 
+  private final static String title = "Repository-Vorschau Konfiguration";
+  
+  private final static String errTitle = "Eingabe bitte prufen...";
+  
+  private final static String errMsg = "Fehlerhafte Eingabe, ";
+  
   private PreferenceStore m_store;
 
   private BooleanFieldEditor m_fUseRange;
@@ -54,7 +60,7 @@ public class PreviewConfigDialog extends TitleAreaDialog
   public PreviewConfigDialog( final Shell parentShell, final boolean useRange,
       final Date from, final Date to, final int days, final DateFormat df )
   {
-    super( parentShell );
+    super( parentShell ); //, title, msg, null, null );
 
     m_df = df;
 
@@ -78,22 +84,28 @@ public class PreviewConfigDialog extends TitleAreaDialog
    */
   protected Control createDialogArea( final Composite parent )
   {
-    setTitle( "Repository-Vorschau Konfiguration" );
+    setTitle( title );
     setMessage( msg );
 
     final Composite c = (Composite) super.createDialogArea( parent );
 
     final Composite sub = new Composite( c, SWT.FILL );
 
+    m_fNumberOfDays = new IntegerFieldEditor(
+        IKalypsoPreferences.NUMBER_OF_DAYS, "Anzahl Tagen:", sub );
     m_fUseRange = new BooleanFieldEditor( IKalypsoPreferences.USE_RANGE,
-        "Zeitraum anstatt Tagesanzahl benutzen:", sub );
+        "Zeitraum statt Tagesanzahl benutzen:", sub );
     m_fDateFrom = new StringFieldEditor( IKalypsoPreferences.DATE_FROM,
         "Zeitraum-Von:", sub );
     m_fDateTo = new StringFieldEditor( IKalypsoPreferences.DATE_TO,
         "Zeitraum-Bis:", sub );
-    m_fNumberOfDays = new IntegerFieldEditor(
-        IKalypsoPreferences.NUMBER_OF_DAYS, "Anzahl Tagen:", sub );
 
+    m_fNumberOfDays.setPreferenceStore( m_store );
+    m_fNumberOfDays.loadDefault();
+    m_fNumberOfDays.setEmptyStringAllowed( false );
+    m_fNumberOfDays
+        .setErrorMessage( "Geben Sie einen Zahl im Bereich [0 - N] ein." );
+    
     m_fUseRange.setPreferenceStore( m_store );
     m_fUseRange.loadDefault();
 
@@ -102,20 +114,14 @@ public class PreviewConfigDialog extends TitleAreaDialog
     m_fDateTo.setPreferenceStore( m_store );
     m_fDateTo.loadDefault();
 
-    m_fNumberOfDays.setPreferenceStore( m_store );
-    m_fNumberOfDays.loadDefault();
-    m_fNumberOfDays.setEmptyStringAllowed( false );
-    m_fNumberOfDays
-        .setErrorMessage( "Geben Sie einen Zahl im Bereich [0 - N] ein." );
-
     final GridLayout gridLayout = new GridLayout( 2, true );
     sub.setLayout( gridLayout );
     sub.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
+    m_fNumberOfDays.fillIntoGrid( sub, 2 );
     m_fUseRange.fillIntoGrid( sub, 2 );
     m_fDateFrom.fillIntoGrid( sub, 2 );
     m_fDateTo.fillIntoGrid( sub, 2 );
-    m_fNumberOfDays.fillIntoGrid( sub, 2 );
 
     return c;
   }
@@ -125,87 +131,96 @@ public class PreviewConfigDialog extends TitleAreaDialog
    */
   protected void okPressed( )
   {
-    if( !m_fUseRange.isValid() )
-    {
-      MessageDialog.openInformation( getParentShell(), "Zeitraum benutzen",
-          "Bitte prüfen Sie ihre Eingabe" );
-      return;
-    }
+    m_fUseRange.store();
 
     m_fDateFrom.setEmptyStringAllowed( !isUseRange() );
     m_fDateTo.setEmptyStringAllowed( !isUseRange() );
 
     if( isUseRange() )
     {
-      if( !m_fDateFrom.isValid() || getDateFrom() == null )
+      if( !m_fDateFrom.isValid() || parseForDate( m_fDateFrom.getStringValue() ) == null )
       {
-        MessageDialog.openInformation( getParentShell(), "Zeitraum-Von",
-            "Bitte prüfen Sie ihre Eingabe" );
+        MessageDialog.openInformation( getParentShell(), errTitle,
+            errMsg + m_fDateFrom.getLabelText() + ": " + m_fDateFrom.getStringValue() );
         return;
       }
       
-      if( !m_fDateTo.isValid() || getDateTo() == null )
+      if( !m_fDateTo.isValid() || parseForDate( m_fDateTo.getStringValue() ) == null )
       {
-        MessageDialog.openInformation( getParentShell(), "Zeitraum-Bis",
-            "Bitte prüfen Sie ihre Eingabe" );
+        MessageDialog.openInformation( getParentShell(), errTitle,
+            errMsg + m_fDateTo.getLabelText() + ": " + m_fDateTo.getStringValue() );
         return;
       }
+      
+      m_fDateFrom.store();
+      m_fDateTo.store();
     }
     else
     {
-      if( !m_fNumberOfDays.isValid() || getNumberOfDays() < 0 )
+      if( !m_fNumberOfDays.isValid() || Integer.valueOf( m_fNumberOfDays.getStringValue() ).intValue() < 0 )
       {
-        MessageDialog.openInformation( getParentShell(), "Tagesanzahl",
-            "Bitte prüfen Sie ihre Eingabe" );
+        MessageDialog.openInformation( getParentShell(), errTitle,
+            errMsg + m_fNumberOfDays.getLabelText() + ": " + m_fNumberOfDays.getStringValue() );
         return;
       }
+      
+      m_fNumberOfDays.store();
     }
-
-    m_fUseRange.store();
-    m_fDateFrom.store();
-    m_fDateTo.store();
-    m_fNumberOfDays.store();
 
     super.okPressed();
   }
 
+  /**
+   * @return use-range flag
+   */
   public boolean isUseRange( )
   {
     return m_store.getBoolean( IKalypsoPreferences.USE_RANGE );
   }
 
+  /**
+   * @return from-Date
+   */
   public Date getDateFrom( )
   {
     final String from = m_store.getString( IKalypsoPreferences.DATE_FROM );
 
-    try
-    {
-      return m_df.parse( from );
-    }
-    catch( ParseException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+    return parseForDate( from );
   }
 
+  /**
+   * @return to-Date
+   */
   public Date getDateTo( )
   {
     final String to = m_store.getString( IKalypsoPreferences.DATE_TO );
 
-    try
-    {
-      return m_df.parse( to );
-    }
-    catch( ParseException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+    return parseForDate( to );
   }
 
+  /**
+   * @return number of days
+   */
   public int getNumberOfDays( )
   {
     return m_store.getInt( IKalypsoPreferences.NUMBER_OF_DAYS );
+  }
+  
+  /**
+   * Helper: parses the given string into a date. If a ParseException occurs, it returns null.
+   * 
+   * @param str
+   * @return new Date or null if ParseException occured.
+   */
+  private Date parseForDate( final String str )
+  {
+    try
+    {
+      return m_df.parse( str );
+    }
+    catch( ParseException e )
+    {
+      return null;
+    }
   }
 }

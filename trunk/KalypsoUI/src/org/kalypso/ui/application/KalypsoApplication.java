@@ -30,7 +30,7 @@ public class KalypsoApplication implements IPlatformRunnable
     try
     {
       final String[] fakeRights = service.getFakeRights( username );
-      System.out.println( "Fake rights:" );
+      System.out.println( "Fake rights for " + username );
       for( int i = 0; i < fakeRights.length; i++ )
         System.out.println( fakeRights[i] );
       System.out.println( "Fake rights END" );
@@ -43,7 +43,7 @@ public class KalypsoApplication implements IPlatformRunnable
     try
     {
       final String[] rights = service.getRights( username );
-      System.out.println( "Rights:" );
+      System.out.println( "Rights for " + username );
       for( int i = 0; i < rights.length; i++ )
         System.out.println( rights[i] );
       System.out.println( "Rights END" );
