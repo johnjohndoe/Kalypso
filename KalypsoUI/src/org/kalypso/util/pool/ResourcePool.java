@@ -307,17 +307,31 @@ public class ResourcePool implements ILoaderListener
     return m_schedulingRule;
   }
 
+  /**
+   * BorrowObjectJob borrows the job from the pool and fires event once object is loaded.
+   * 
+   * @author belger
+   */
   private class BorrowObjectJob extends Job
   {
     private final IPoolableObjectType m_key;
 
     protected Object m_object = null;
 
+    /** exceptions that occur when job runs can be ignored. In that case the job is canceled */
+    private boolean m_ignoreExceptions;
+
+    /**
+     * Constructor
+     * 
+     * @param key the key to which this job is associated
+     */
     public BorrowObjectJob( final IPoolableObjectType key )
     {
       super( "Lade Resource: " + key.toString() );
 
       m_key = key;
+      m_ignoreExceptions = key.isIgnoreExceptions();
 
       setPriority( Job.LONG );
 
@@ -358,6 +372,9 @@ public class ResourcePool implements ILoaderListener
       }
       catch( final Exception e )
       {
+        if( m_ignoreExceptions )
+          return Status.CANCEL_STATUS;
+        
         return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
             "Fehler beim Laden einer Resource", e );
       }

@@ -64,31 +64,41 @@ public class KalypsoWizardHelper
   /**
    * Updates the diagram template for the given TimeserieFeatureProps and
    * features
+   * 
+   * @param template
+   * @param links
+   * @param context
+   * @param ignoreExceptions
    */
   public static void updateDiagramTemplate( final LinkedDiagramTemplate template,
-      final TSLinkWithName[] links, final URL context )
+      final TSLinkWithName[] links, final URL context, final boolean ignoreExceptions )
   {
     template.removeAllThemes();
 
     for( int i = 0; i < links.length; i++ )
     {
       final TSLinkWithName link = links[i];
-      template.addObservation( link.name, context, link.href, link.linktype, null );
+      template.addObservation( link.name, context, link.href, link.linktype, ignoreExceptions, null );
     }
   }
 
   /**
    * Updates the table template
+   * 
+   * @param template
+   * @param links
+   * @param context
+   * @param ignoreExceptions
    */
   public static void updateTableTemplate( final LinkedTableViewTemplate template,
-      final TSLinkWithName[] links, final URL context )
+      final TSLinkWithName[] links, final URL context, boolean ignoreExceptions )
   {
     template.removeAllThemes();
 
     for( int i = 0; i < links.length; i++ )
     {
       final TSLinkWithName link = links[i];
-      template.addObservation( link.name, context, link.href, link.linktype, null );
+      template.addObservation( link.name, context, link.href, link.linktype, ignoreExceptions, null );
     }
   }
 

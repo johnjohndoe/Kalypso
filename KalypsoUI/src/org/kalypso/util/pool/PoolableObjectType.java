@@ -13,14 +13,34 @@ public class PoolableObjectType implements IPoolableObjectType
   
   private final String m_source;
 
+  private final boolean m_ignoreExceptions;
+
   /**
-   * Constructor.
+   * Constructor. Defaults ignoreExceptions to false.
+   * 
+   * @param type
+   * @param source
+   * @param context
    */
   public PoolableObjectType( final String type, final String source, final URL context )
+  {
+    this( type, source, context, false );
+  }
+  
+  /**
+   * Constructor.
+   * 
+   * @param type type of object to load
+   * @param source location of the object
+   * @param context context into which object is loaded
+   * @param ignoreExceptions when true, exceptions occuring during load process are ignored, object won't get pooled
+   */
+  public PoolableObjectType( final String type, final String source, final URL context, final boolean ignoreExceptions )
   {
     m_type = type;
     m_source = source;
     m_context = context;
+    m_ignoreExceptions = ignoreExceptions;
   }
 
   /**
@@ -47,6 +67,14 @@ public class PoolableObjectType implements IPoolableObjectType
     return m_context;
   }
 
+  /**
+   * @return Returns the ignoreExceptions.
+   */
+  public boolean isIgnoreExceptions( )
+  {
+    return m_ignoreExceptions;
+  }
+  
   public boolean equals( Object obj )
   {
     if( !( obj instanceof IPoolableObjectType ) )
