@@ -1,7 +1,6 @@
 package org.kalypso.ogc.sensor.tableview.impl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
@@ -12,6 +11,8 @@ import org.kalypso.ogc.sensor.template.AbstractTemplateEventProvider;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 
 /**
+ * Default implementation of the <code>ITableViewColumn</code>.
+ * 
  * @author schlienger
  */
 public class DefaultTableViewTemplate extends AbstractTemplateEventProvider implements ITableViewTemplate
@@ -23,14 +24,11 @@ public class DefaultTableViewTemplate extends AbstractTemplateEventProvider impl
   /**
    * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#getColumns()
    */
-  public ITableViewColumn[] getColumns()
+  public List getColumns()
   {
-    return (ITableViewColumn[])m_columns.toArray( new ITableViewColumn[0] );
+    return m_columns;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#addColumn(org.kalypso.ogc.sensor.tableview.ITableViewColumn)
-   */
   public void addColumn( ITableViewColumn column )
   {
     m_columns.add( column );
@@ -38,14 +36,16 @@ public class DefaultTableViewTemplate extends AbstractTemplateEventProvider impl
     fireTemplateChanged( new TemplateEvent( this, column, TemplateEvent.TYPE_ADD ) );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#removeColumn(org.kalypso.ogc.sensor.tableview.ITableViewColumn)
-   */
   public void removeColumn( ITableViewColumn column )
   {
     m_columns.remove( column );
     
     fireTemplateChanged( new TemplateEvent( this, column, TemplateEvent.TYPE_REMOVE ) );
+  }
+  
+  public void removeAllColumns()
+  {
+    fireTemplateChanged( new TemplateEvent( this, null, TemplateEvent.TYPE_REMOVE_ALL ) );
   }
 
   /**
@@ -73,21 +73,10 @@ public class DefaultTableViewTemplate extends AbstractTemplateEventProvider impl
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#removeAllColumns()
-   */
-  public void removeAllColumns()
-  {
-    fireTemplateChanged( new TemplateEvent( this, null, TemplateEvent.TYPE_REMOVE_ALL ) );
-  }
-
-  /**
    * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#dispose()
    */
   public void dispose( )
   {
-    final Iterator it = m_columns.iterator();
-    
-    while( it.hasNext() )
-      ((ITableViewColumn) it.next()).dispose();
+    m_columns.clear();
   }
 }

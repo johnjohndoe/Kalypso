@@ -1,13 +1,14 @@
 package org.kalypso.ogc.sensor.tableview;
 
-import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.ogc.sensor.IObservation;
+
 
 /**
- * A column of a tableview over IObservation.
+ * A column of a tableview
  * 
  * @author schlienger
  */
-public interface ITableViewColumn extends ITableObservationProvider
+public interface ITableViewColumn
 {
   public String getName( );
 
@@ -15,11 +16,17 @@ public interface ITableViewColumn extends ITableObservationProvider
 
   public int getWidth( );
 
+  /**
+   * @return the observation on which this column is based
+   */
+  public IObservation getObservation();
+  
+  /**
+   * Sets the column width
+   * 
+   * @param width
+   */
   public void setWidth( final int width );
-
-  public void setArguments( IVariableArguments args );
-
-  public IVariableArguments getArguments( );
 
   /**
    * @return true when data hold in the observation hold by this column has
@@ -32,9 +39,4 @@ public interface ITableViewColumn extends ITableObservationProvider
    * @param b
    */
   public void setDirty( boolean b );
-  
-  /**
-   * Clean all possible resources before object is thrown away
-   */
-  public void dispose( );
 }

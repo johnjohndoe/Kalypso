@@ -20,9 +20,7 @@ import org.kalypso.ogc.sensor.tableview.impl.ObservationTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * Table QuickView.
@@ -100,14 +98,7 @@ public class TableViewPart extends ViewPart implements
 
         final IObservation obs = ObservationCache.getObservationFor( item );
         if( obs != null )
-        {
-          final int days = Integer.valueOf(
-              item.getRepository().getProperty(
-                  IKalypsoPreferences.NUMBER_OF_DAYS ) ).intValue();
-
-          m_template.setObservation( obs, false, DateRangeArgument
-              .createFromPastDays( days ) );
-        }
+          m_template.setObservation( obs, false );
       }
     };
 

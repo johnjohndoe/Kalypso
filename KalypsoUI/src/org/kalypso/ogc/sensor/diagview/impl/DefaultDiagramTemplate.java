@@ -12,6 +12,8 @@ import org.kalypso.ogc.sensor.template.AbstractTemplateEventProvider;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 
 /**
+ * Default implementation of the <code>IDiagramTemplate</code> interface.
+ * 
  * @author schlienger
  */
 public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implements IDiagramTemplate
@@ -56,66 +58,48 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
   {
     return m_showLegend;
   }
-
+  
   /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#getAxisList()
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#getDiagramAxes()
    */
-  public IDiagramAxis[] getAxisList()
+  public List getDiagramAxes( )
   {
-    return (IDiagramAxis[])m_axisList.toArray( new IDiagramAxis[0] );
+    return m_axisList;
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#getCurveList()
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#getCurves()
    */
-  public IDiagramCurve[] getCurveList()
+  public List getCurves( )
   {
-    return (IDiagramCurve[])m_curveList.toArray( new IDiagramCurve[0] );
+    return m_curveList;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#setTitle(java.lang.String)
-   */
   public void setTitle( String title )
   {
     m_title = title;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#setLegendName(java.lang.String)
-   */
   public void setLegendName( String name )
   {
     m_legendName = name;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#setShowLegend(boolean)
-   */
   public void setShowLegend( boolean show )
   {
     m_showLegend = show;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#addAxis(org.kalypso.ogc.sensor.diagview.IDiagramAxis)
-   */
   public void addAxis( IDiagramAxis axis )
   {
     m_axisList.add( axis );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#removeAxis(org.kalypso.ogc.sensor.diagview.IDiagramAxis)
-   */
   public void removeAxis( IDiagramAxis axis )
   {
     m_axisList.remove( axis );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#addCurve(org.kalypso.ogc.sensor.diagview.IDiagramCurve)
-   */
   public void addCurve( IDiagramCurve curve )
   {
     m_curveList.add( curve );
@@ -123,9 +107,6 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
     fireTemplateChanged( new TemplateEvent( this, curve, TemplateEvent.TYPE_ADD) );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#removeCurve(org.kalypso.ogc.sensor.diagview.IDiagramCurve)
-   */
   public void removeCurve( IDiagramCurve curve )
   {
     m_curveList.remove( curve );
@@ -133,9 +114,6 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
     fireTemplateChanged( new TemplateEvent( this, curve, TemplateEvent.TYPE_REMOVE ) );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#findAxis(java.lang.String)
-   */
   public IDiagramAxis findAxis( String id )
   {
     for( Iterator it = m_axisList.iterator(); it.hasNext(); )
@@ -149,13 +127,19 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
     throw new NoSuchElementException( "Axis with id not found. ID= " + id );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#removeAllCurves()
-   */
   public void removeAllCurves()
   {
     m_curveList.clear();
     
     fireTemplateChanged( new TemplateEvent( this, null, TemplateEvent.TYPE_REMOVE_ALL) );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#dispose()
+   */
+  public void dispose( )
+  {
+    m_axisList.clear();
+    m_curveList.clear();
   }
 }

@@ -6,7 +6,7 @@ import java.net.URL;
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -27,14 +27,11 @@ import org.kalypso.ogc.sensor.tableview.impl.ObservationTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.factory.FactoryException;
-import org.kalypso.util.pool.BorrowObjectJob;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
@@ -42,20 +39,17 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListener
 {
-  //  private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool(
-  // IObservation.class );
-
-  private IPoolableObjectType m_key;
+//  private IPoolableObjectType m_key;
+  private final ResourcePool m_pool;
 
   private final TimeseriesLink m_timeserie;
 
   private final ObservationDiagramTemplate m_diagTemplate = new ObservationDiagramTemplate();
-
-  private ObservationChart m_chart;
-
   private final ObservationTableViewTemplate m_tableTemplate = new ObservationTableViewTemplate();
 
+  private ObservationChart m_chart;
   private ObservationTable m_table;
+
 
   public ObservationLinkDialog( final Shell parentShell, final TimeseriesLink obslink,
       final URL context )
@@ -66,13 +60,18 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
 
     m_timeserie = obslink;
 
+    m_pool = KalypsoGisPlugin.getDefault().getPool();
+
     if( obslink != null )
-      m_key = new PoolableObjectType( obslink.getLinktype(), obslink.getHref(), context );
-    startLoadTimeserie();
+    {
+      final PoolableObjectType m_key = new PoolableObjectType( obslink.getLinktype(), obslink.getHref(), context );
+      m_pool.addPoolListener( this, m_key );
+    }
   }
 
   public void dispose()
   {
+    m_pool.removePoolListener( this );
     m_diagTemplate.removeTemplateEventListener( m_chart );
     m_tableTemplate.removeTemplateEventListener( m_table );
   }
@@ -85,65 +84,9 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
     return new Point( 500, 400 );
   }
 
-  private void startLoadTimeserie()
-  {
-    if( m_key != null )
-    {
-      final BorrowObjectJob job = new BorrowObjectJob( "Zeitreihe laden", IObservation.class, m_key )
-      {
-        public void onDone( final IJobChangeEvent event )
-        {
-          if( event.getResult().isOK() )
-          {
-            try
-            {
-              final IObservation obs = (IObservation)getBorrowedObject();
-
-              final int days = KalypsoGisPlugin.getDefault().getPluginPreferences().getInt(
-                  IKalypsoPreferences.NUMBER_OF_DAYS );
-
-              //m_diagTemplate.removeAllCurves();
-              m_diagTemplate.setObservation( obs, DateRangeArgument.createFromPastDays( days ) );
-
-              //m_tableTemplate.removeAllColumns();
-              m_tableTemplate.setObservation( obs, false, DateRangeArgument
-                  .createFromPastDays( days ) );
-            }
-            catch( Exception e )
-            {
-              e.printStackTrace();
-            }
-
-          }
-        }
-      };
-
-      job.schedule();
-    }
-  }
-
   public TimeseriesLink getResult()
   {
     return m_timeserie;
-  }
-
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#onObjectInvalid(org.kalypso.util.pool.ResourcePool,
-   *      org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, boolean)
-   */
-  public void onObjectInvalid( final ResourcePool source, final IPoolableObjectType key,
-      final Object oldObject, final boolean bCannotReload ) throws Exception
-  {
-    if( m_key.equals( key ) )
-    {
-      if( bCannotReload )
-      {
-        m_diagTemplate.removeAllCurves();
-        m_tableTemplate.removeAllColumns();
-      }
-      else
-        startLoadTimeserie();
-    }
   }
 
   /**
@@ -214,5 +157,37 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
     final JScrollPane pane = new JScrollPane( m_table );
     pane.setBorder( BorderFactory.createEmptyBorder() );
     vFrame.add( pane );
+  }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
+   */
+  public void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
+  {
+    if( status.isOK() )
+    {
+      try
+      {
+        final IObservation obs = (IObservation) newValue;
+        
+        //m_diagTemplate.removeAllCurves();
+        m_diagTemplate.setObservation( obs );
+
+        //m_tableTemplate.removeAllColumns();
+        m_tableTemplate.setObservation( obs, false );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
+   */
+  public void objectInvalid( IPoolableObjectType key, Object oldValue )
+  {
+    // TODO Auto-generated method stub
   }
 }

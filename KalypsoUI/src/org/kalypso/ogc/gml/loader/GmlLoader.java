@@ -67,8 +67,6 @@ public class GmlLoader extends AbstractLoader
       if( schemaFile != null )
         addResource( schemaFile, workspace );
 
-      monitor.done();
-
       return workspace;
     }
     catch( final LoaderException le )
@@ -82,6 +80,10 @@ public class GmlLoader extends AbstractLoader
       e.printStackTrace();
 
       throw new LoaderException( "Konnte GML nicht laden", e );
+    }
+    finally
+    {
+      monitor.done();
     }
   }
 

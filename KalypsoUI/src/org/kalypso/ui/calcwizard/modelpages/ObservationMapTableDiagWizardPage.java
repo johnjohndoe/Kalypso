@@ -24,18 +24,21 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.jfree.chart.ChartPanel;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.ToggleSelectWidget;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
+import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.tableview.template.LinkedTableViewTemplate;
-import org.kalypso.ogc.sensor.template.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
+import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -71,17 +74,15 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
   private SashForm m_sashForm = null;
 
-  private IDiagramTemplate m_diagTemplate = null;
+  private LinkedDiagramTemplate m_diagTemplate = null;
+  private LinkedTableViewTemplate m_tableTemplate = null;
 
   private ObservationChart m_obsChart = null;
+  private ObservationTable m_table = null;
 
   private final ObservationTableModel m_tableModel = new ObservationTableModel();
 
-  private LinkedTableViewTemplate m_tableTemplate = null;
-
   private TimeserieFeatureProps[] m_tsProps;
-
-  private ObservationTable m_table;
 
   public ObservationMapTableDiagWizardPage()
   {
@@ -94,10 +95,18 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
   public void dispose()
   {
     if( m_diagTemplate != null )
+    {
       m_diagTemplate.removeTemplateEventListener( m_obsChart );
+      m_diagTemplate.dispose();
+    }
 
     if( m_tableTemplate != null )
+    {
       m_tableTemplate.removeTemplateEventListener( m_table );
+      m_tableTemplate.dispose();
+    }
+    
+    super.dispose();
   }
 
   /**
@@ -171,7 +180,9 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     try
     {
       // actually creates the template
-      m_diagTemplate = ObservationTemplateHelper.loadDiagramTemplate( diagFile );
+      // actually creates the template
+      final ObsdiagviewType obsdiagviewType = ObservationTemplateHelper.loadDiagramTemplateXML( diagFile );
+      m_diagTemplate = new LinkedDiagramTemplate( obsdiagviewType, ResourceUtilities.createURL( diagFile ) );
 
       final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
       m_diagFrame = SWT_AWT.new_Frame( composite );
@@ -205,7 +216,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
       m_table = new ObservationTable( m_tableModel );
 
-      m_tableTemplate = ObservationTemplateHelper.loadTableViewTemplate( templateFile );
+      m_tableTemplate = LinkedTableViewTemplate.loadTableViewTemplate( templateFile );
       m_tableModel.setRules( m_tableTemplate );
       m_tableTemplate.addTemplateEventListener( m_table );
 

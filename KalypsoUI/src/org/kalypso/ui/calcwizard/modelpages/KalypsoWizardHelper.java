@@ -12,11 +12,9 @@ import javax.xml.bind.JAXBException;
 import org.deegree.model.feature.Feature;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.DiagramTemplateFactory;
-import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
-import org.kalypso.ogc.sensor.diagview.template.LinkedDiagramCurve;
-import org.kalypso.ogc.sensor.tableview.template.LinkedTableViewColumn;
-import org.kalypso.ogc.sensor.tableview.template.LinkedTableViewTemplate;
+import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
+import org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.util.xml.xlink.JAXBXLink;
@@ -41,10 +39,8 @@ public class KalypsoWizardHelper
    * TimeserieFeatureProps is created for each of these elements.
    * 
    * <pre>
-   * 
-   *    &lt;arg name=&quot;timeserie1&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
-   *    &lt;arg name=&quot;timeserie2&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
-   *  
+   *       &lt;arg name=&quot;timeserie1&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
+   *       &lt;arg name=&quot;timeserie2&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
    * </pre>
    * 
    * @param props
@@ -82,7 +78,7 @@ public class KalypsoWizardHelper
    */
   public static void updateDiagramTemplate(
       final TimeserieFeatureProps[] props, final List features,
-      final IDiagramTemplate template, final URL context )
+      final DefaultDiagramTemplate template, final URL context )
       throws SensorException
   {
     template.removeAllCurves();
@@ -104,34 +100,13 @@ public class KalypsoWizardHelper
           mappings
               .setProperty( obsLink.getValueaxis(), props[i]._diagValueAxis );
 
-          //          if( !useResolver )
-          //          {
-          //            final IObservation obs;
-          //            try
-          //            {
-          //              final URL url = UrlResolver.resolveURL( context, obsLink
-          //                  .getHref() );
-          //
-          //              obs = ZmlFactory.parseXML( url, obsLink.getHref() );
-          //            }
-          //            catch( MalformedURLException e )
-          //            {
-          //              throw new SensorException( e );
-          //            }
-          //
-          //            final DiagramCurve curve = new DiagramCurve( name + " ("
-          //                + props[i]._linkColumn + ')', obs, mappings, template, null );
-          //
-          //            template.addCurve( curve );
-          //          }
-          //          else
-          {
-            final LinkedDiagramCurve curve = new LinkedDiagramCurve( obsLink
-                .getLinktype(), new JAXBXLink( obsLink ), name + " ("
-                + props[i]._linkColumn + ')', mappings, template, context );
+          
+          
+          final LinkedDiagramCurve curve = new LinkedDiagramCurve( obsLink
+              .getLinktype(), new JAXBXLink( obsLink ), name + " ("
+              + props[i]._linkColumn + ')', mappings, template, context );
 
-            template.addCurve( curve );
-          }
+          template.addCurve( curve );
         }
       }
     }
@@ -162,36 +137,12 @@ public class KalypsoWizardHelper
 
         if( obsLink != null )
         {
-          //          if( !useResolver )
-          //          {
-          //            final IObservation obs;
-          //            try
-          //            {
-          //              final URL url = UrlResolver.resolveURL( context, obsLink
-          //                  .getHref() );
-          //
-          //              obs = ZmlFactory.parseXML( url, obsLink.getHref() );
-          //            }
-          //            catch( MalformedURLException e )
-          //            {
-          //              throw new SensorException( e );
-          //            }
-          //
-          //            final DefaultTableViewColumn col = new DefaultTableViewColumn( name + " ("
-          //                + props[i]._linkColumn + ')', obs, true, 50, obsLink
-          //                .getTimeaxis(), obsLink.getValueaxis(), null );
-          //
-          //            template.addColumn( col );
-          //          }
-          //          else
-          {
-            final LinkedTableViewColumn col = new LinkedTableViewColumn( template, name
-                + " (" + props[i]._linkColumn + ')', obsLink.getLinktype(),
-                new JAXBXLink( obsLink ), true, 50, obsLink.getTimeaxis(),
-                obsLink.getValueaxis(), context );
+          final LinkedTableViewColumn col = new LinkedTableViewColumn(
+              template, name + " (" + props[i]._linkColumn + ')', obsLink
+                  .getLinktype(), new JAXBXLink( obsLink ), true, 50, obsLink
+                  .getTimeaxis(), obsLink.getValueaxis(), context );
 
-            template.addColumn( col );
-          }
+          template.addColumn( col );
         }
       }
     }
@@ -218,7 +169,7 @@ public class KalypsoWizardHelper
             .getProperty( props[i]._linkColumn );
 
         if( obsLink != null )
-          DiagramTemplateFactory.addTimeseriesLink( template, obsLink, name,
+          ObservationTemplateHelper.addTimeseriesLink( template, obsLink, name,
               props[i]._diagDateAxis, props[i]._diagValueAxis );
       }
     }

@@ -1,6 +1,8 @@
 package org.kalypso.ui.editor.obstableeditor;
 
 import java.awt.Frame;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -11,11 +13,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.tableview.template.LinkedTableViewTemplate;
-import org.kalypso.ogc.sensor.template.ObservationTemplateHelper;
 import org.kalypso.ui.editor.AbstractEditorPart;
 
 /**
@@ -89,19 +91,25 @@ public class ObservationTableEditor extends AbstractEditorPart
   protected void doSaveInternal( IProgressMonitor monitor,
       IFileEditorInput input )
   {
-    final ITableViewColumn[] columns = m_template.getColumns();
+    final List columns = m_template.getColumns();
     
-    for( int i = 0; i < columns.length; i++ )
+    for( Iterator it = columns.iterator(); it.hasNext(); )
     {
-      if( columns[i].isDirty() )
+      ITableViewColumn column = (ITableViewColumn) it.next();
+      
+      if( column.isDirty() )
       {
-        final String msg = "Sie haben Änderungen in " + columns[i].getName() + " vorgenommen. Wollen \n" +
+        final String msg = "Sie haben Änderungen in " + column.getName() + " vorgenommen. Wollen \n" +
         		"Sie die Änderungen übernehmen und die grundliegende Datei speichern?";
-        final boolean b = MessageDialog.openConfirm( getSite().getShell(), "Änderungen speichern", msg );
+        final boolean b = MessageDialog.openQuestion( getSite().getShell(), "Änderungen speichern", msg );
         
         if( b )
         {
+          final IObservation obs = column.getObservation();
           
+          //m_model.g
+          
+          //obs.setValues(  );
         }
       }
     }
@@ -121,7 +129,7 @@ public class ObservationTableEditor extends AbstractEditorPart
       {
         try
         {
-          m_template = ObservationTemplateHelper.loadTableViewTemplate( input
+          m_template = LinkedTableViewTemplate.loadTableViewTemplate( input
               .getFile() );
           m_template.addTemplateEventListener( m_table );
           m_model.setRules( m_template );

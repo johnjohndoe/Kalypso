@@ -8,7 +8,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.template.ObservationTemplateHelper;
+import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 
 /**
  * Opens the Grafik tool. Can operate on observation template and grafik template files.
