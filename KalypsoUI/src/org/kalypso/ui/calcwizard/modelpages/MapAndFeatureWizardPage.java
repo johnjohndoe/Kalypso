@@ -248,7 +248,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
   protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
   {
     // TODO: not needed?
-    
+    // TODO: return Feature from FeatureView
     return getObservationsFromMap( true, onlySelected );
   }
   
