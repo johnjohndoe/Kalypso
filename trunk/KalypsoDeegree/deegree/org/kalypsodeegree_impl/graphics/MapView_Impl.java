@@ -291,7 +291,7 @@ class MapView_Impl implements MapView {
     /**
      * returns the amount of themes within the MapView.
      */
-    public int getSize() {
+    public int getThemeSize() {
         return themes.size();
     }
     
