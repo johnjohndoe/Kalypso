@@ -71,7 +71,7 @@ public class ResourceUtilities
     
     if( urlpath != null && urlpath.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
     {
-      final String path = urlpath.substring( PlatformURLResourceConnection.RESOURCE_URL_STRING.length() );
+      final String path = urlpath.substring( PlatformURLResourceConnection.RESOURCE_URL_STRING.length() - 1 );
       
       final Path path2 = new Path( path );
       return path2;

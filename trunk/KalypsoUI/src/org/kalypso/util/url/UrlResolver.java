@@ -2,6 +2,8 @@ package org.kalypso.util.url;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.Properties;
 
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IProject;
@@ -16,6 +18,8 @@ import org.kalypso.java.net.IUrlResolver;
  */
 public class UrlResolver implements IUrlResolver
 {
+  private Properties m_replaceTokenMap = new Properties();
+
   /**
    * <p>Löst eine URL relativ zu einer anderen auf.</p>
    * <p>Also handles the pseudo protocol 'project:'. If project: ist specified in relativeURL,
@@ -41,4 +45,19 @@ public class UrlResolver implements IUrlResolver
     return new URL( baseURL, relativeURL );
   }
 
+  /**
+   * @see org.kalypso.java.net.IUrlResolver#getReplaceEntries()
+   */
+  public final Iterator getReplaceEntries()
+  {
+    return m_replaceTokenMap.entrySet().iterator();
+  }
+
+  /**
+   * @see org.kalypso.java.net.IUrlResolver#addReplaceToken(java.lang.String, java.lang.String)
+   */
+  public void addReplaceToken( final String key, final String value )
+  {
+    m_replaceTokenMap.setProperty( key, value );
+  }
 }

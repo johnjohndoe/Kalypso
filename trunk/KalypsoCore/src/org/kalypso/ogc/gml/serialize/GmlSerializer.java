@@ -1,7 +1,13 @@
 package org.kalypso.ogc.gml.serialize;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Writer;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -9,6 +15,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.tools.ant.filters.ReplaceTokens;
+import org.apache.tools.ant.filters.ReplaceTokens.Token;
 import org.deegree.gml.GMLDocument;
 import org.deegree.gml.GMLFeature;
 import org.deegree.gml.GMLNameSpace;
@@ -25,6 +33,7 @@ import org.deegree_impl.model.feature.GMLWorkspace_Impl;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.java.net.IUrlResolver;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 /**
  * Helper - Klasse, um Gml zu lesen und zu schreiben
@@ -110,8 +119,34 @@ public final class GmlSerializer
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IUrlResolver urlResolver )
       throws Exception
   {
+    // Replace tokens
+    final URLConnection connection = gmlURL.openConnection();
+    String contentEncoding = connection.getContentEncoding();
+    if( contentEncoding == null )
+      contentEncoding = "UTF-8";
+
+    final InputStream inputStream = connection.getInputStream();
+    final InputStreamReader isr = new InputStreamReader( inputStream, contentEncoding );
+    
+    final ReplaceTokens rt = new ReplaceTokens( isr );
+    rt.setBeginToken( ':' );
+    rt.setEndToken( ':' );
+    for( final Iterator tokenIt = urlResolver.getReplaceEntries(); tokenIt.hasNext(); )
+    {
+      final Map.Entry entry = (Entry)tokenIt.next();
+
+      final Token token = new ReplaceTokens.Token(  );
+      token.setKey( (String)entry.getKey() );
+      token.setValue( (String)entry.getValue() );
+
+      rt.addConfiguredToken( token );
+    }
+    
     // load gml
-    final GMLDocument_Impl gml = new GMLDocument_Impl( XMLHelper.getAsDOM( gmlURL ) );
+    final InputSource inputSource = new InputSource( rt );
+    final Document gmlAsDOM = XMLHelper.getAsDOM( inputSource );
+    
+    final GMLDocument_Impl gml = new GMLDocument_Impl( gmlAsDOM );
 
     // load schema
     final String schemaLocationName = gml.getSchemaLocationName();
