@@ -54,6 +54,8 @@ public class FeatureHelper
   {
     // TODO use numberformat
     Object value = nodeFE.getProperty(string);
+    if(value==null)
+      return null;
     if(value instanceof String)
       return (String)value;
     return value.toString();
