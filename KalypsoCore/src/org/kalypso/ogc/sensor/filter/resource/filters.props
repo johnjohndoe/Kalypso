@@ -1,1 +1,7 @@
-wq=org.kalypso.ogc.sensor.timeseries.wq.WQObservationFilter
+# mapping between binding types and filter creators
+
+ValueFilterImpl=org.kalypso.ogc.sensor.filter.creators.ValueFilterCreator
+NOperationFilterImpl=org.kalypso.ogc.sensor.filter.creators.NOperationFilterCreator
+OperationFilterImpl=org.kalypso.ogc.sensor.filter.creators.OperationFilterCreator
+WqFilterImpl=org.kalypso.ogc.sensor.filter.creators.WQFilterCreator
+ZmlFilterImpl=org.kalypso.ogc.sensor.filter.creators.ZmlFilterCreator

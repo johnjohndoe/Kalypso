@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wqFilter xmlns="filters.zml.kalypso.org" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:vc="valuecomp.filters.zml.kalypso.org" type="Q">
+	<zmlFilter>
+		<zml 
+			xlink:href="file:/F:/kalypso/data/mirrored/Spree/2004/QV_LOHSA.zml"/>
+	</zmlFilter>
+</wqFilter>

@@ -30,7 +30,7 @@ public class ZmlObservationItem extends FileItem
     try
     {
       if( anotherClass == IObservation.class )
-        return getZmlFileObservation();
+        return parseZmlFile();
     }
     catch( SensorException e )
     {
@@ -47,7 +47,7 @@ public class ZmlObservationItem extends FileItem
    * 
    * @throws SensorException
    */
-  private IObservation getZmlFileObservation() throws SensorException
+  private IObservation parseZmlFile() throws SensorException
   {
     try
     {

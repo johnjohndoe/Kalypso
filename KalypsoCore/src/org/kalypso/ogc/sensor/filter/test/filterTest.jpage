@@ -1,8 +1,0 @@
-String s = "filter\\((\\w+)\\*([\\w-.!~']+)\\)";
-System.out.println( s );
-java.util.regex.Pattern p = java.util.regex.Pattern.compile( s );
-java.util.regex.Matcher m = p.matcher( "filter(wq*w)" );
-m.matches();
-System.out.println( m.group(0) );
-System.out.println( m.group(1) );
-System.out.println( m.group(2) );
