@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,11 +57,12 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.deegree_impl.model.feature;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.deegree.model.feature.Annotation;
@@ -98,7 +99,7 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
   protected FeatureTypeProperty_Impl( String name, String namespace, String type, boolean nullable,
       Map annotationMap )
   {
-    m_annotationMap = annotationMap;
+    m_annotationMap = annotationMap == null ? new HashMap() : annotationMap;
     this.name = name;
     m_namespace = namespace;
     this.type = type;
@@ -173,13 +174,13 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.6  2005/01/18 12:50:42  doemming
+ * Revision 1.7  2005/01/26 17:55:31  doemming
  * *** empty log message ***
- *
- * Revision 1.5  2004/10/11 14:44:28  doemming
- * *** empty log message ***
- * Revision 1.4 2004/10/09 18:41:20
- * belger *** empty log message ***
+ * Revision 1.6 2005/01/18 12:50:42
+ * doemming *** empty log message ***
+ * 
+ * Revision 1.5 2004/10/11 14:44:28 doemming *** empty log message *** Revision
+ * 1.4 2004/10/09 18:41:20 belger *** empty log message ***
  * 
  * Revision 1.3 2004/10/07 14:09:16 doemming *** empty log message ***
  * 
