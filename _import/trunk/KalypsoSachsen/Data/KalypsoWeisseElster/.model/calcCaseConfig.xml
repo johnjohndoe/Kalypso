@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <calcCaseConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<createTransformations>
+	<createTransformations logFile="calcCase.log">
 		<!-- modell kopieren -->
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:modell.gml"/>
@@ -133,7 +133,7 @@
 
 	</createTransformations>
 	
-	<updateTransformations>	
+	<updateTransformations  logFile="calcCase.log">	
 	<!-- Ombrometer -->
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":project:ombrometer.gml"/>
@@ -151,6 +151,7 @@
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
 			<argument name="feature" value="Node"/>
 			<argument name="sourceObservation1" value="zuflussZRRepository"/>
+			<argument name="sourceObservation2" value="zuflussZRRepositoryVorhersage"/>
 			<argument name="targetObservation" value="zuflussZR"/>
 			<argument name="targetFolder" value=":calcdir:"/>
 			<argument name="startsim" value=":startsim:"/>
@@ -189,5 +190,4 @@
 		</transformation>
 -->		
  </updateTransformations>
-	
 </calcCaseConfig>
