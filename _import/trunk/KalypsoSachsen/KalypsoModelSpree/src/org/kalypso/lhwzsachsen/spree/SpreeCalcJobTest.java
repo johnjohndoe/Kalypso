@@ -82,6 +82,12 @@ public class SpreeCalcJobTest extends TestCase
     FileUtilities.deleteRecursive( baseDir );
   }
   
+  public void test041125() throws IOException, TypeRegistryException, JAXBException
+  {
+    final File baseDir = calculateModel( "041125" );
+    FileUtilities.deleteRecursive( baseDir );
+  }
+  
   public File calculateModel( final String testName ) throws IOException, TypeRegistryException, JAXBException
   {
     final SpreeCalcJob cj = new SpreeCalcJob();
@@ -138,7 +144,7 @@ public class SpreeCalcJobTest extends TestCase
 
       final String inputresource = "test/" + testName + "/input/" + path;
       inputfile.getParentFile().mkdirs();
-      
+
       FileUtilities.makeFileFromStream( false, inputfile, getClass().getResourceAsStream(
           inputresource ) );
       

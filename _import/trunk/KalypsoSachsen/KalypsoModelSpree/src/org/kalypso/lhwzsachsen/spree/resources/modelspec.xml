@@ -31,6 +31,12 @@
     <input id="W_SAERI" path="zeitreihen/W_SAERI.zml" relativeToCalcCase="true"/>
     <input id="W_SCHIRG" path="zeitreihen/W_SCHIRG.zml" relativeToCalcCase="true"/>
 
+    <input id="W_BOXBRG" path="zeitreihen/W_BOXBRG.zml" relativeToCalcCase="true"/>
+    <input id="W_LIESKE" path="zeitreihen/W_LIESKE.zml" relativeToCalcCase="true"/>
+    <input id="W_SPREMB" path="zeitreihen/W_SPREMB.zml" relativeToCalcCase="true"/>
+    <input id="W_SPREY" path="zeitreihen/W_SPREY.zml" relativeToCalcCase="true"/>
+    <input id="W_SPWITZ" path="zeitreihen/W_SPWITZ.zml" relativeToCalcCase="true"/>
+
 <!--
     <input id="PA_BAUTZWB" path="zeitreihen/PA_BAUTZWB.zml" relativeToCalcCase="true"/>
     <input id="PA_GROEDI" path="zeitreihen/PA_GROEDI.zml" relativeToCalcCase="true"/>
@@ -120,11 +126,6 @@
     <input id="WV_SPREMB" path="zeitreihen/WV_SPREMB.zml" relativeToCalcCase="true"/>
     <input id="WV_SPREY" path="zeitreihen/WV_SPREY.zml" relativeToCalcCase="true"/>
     <input id="WV_SPWITZ" path="zeitreihen/WV_SPWITZ.zml" relativeToCalcCase="true"/>
-    <input id="W_BOXBRG" path="zeitreihen/W_BOXBRG.zml" relativeToCalcCase="true"/>
-    <input id="W_LIESKE" path="zeitreihen/W_LIESKE.zml" relativeToCalcCase="true"/>
-    <input id="W_SPREMB" path="zeitreihen/W_SPREMB.zml" relativeToCalcCase="true"/>
-    <input id="W_SPREY" path="zeitreihen/W_SPREY.zml" relativeToCalcCase="true"/>
-    <input id="W_SPWITZ" path="zeitreihen/W_SPWITZ.zml" relativeToCalcCase="true"/>
     <input id="ZG_GROEDI" path="zeitreihen/ZG_GROEDI.zml" relativeToCalcCase="true"/>
     <input id="ZG_SAERI" path="zeitreihen/ZG_SAERI.zml" relativeToCalcCase="true"/>
 -->    

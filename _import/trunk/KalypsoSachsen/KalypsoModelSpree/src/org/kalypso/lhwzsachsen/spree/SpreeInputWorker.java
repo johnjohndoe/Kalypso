@@ -117,6 +117,7 @@ public class SpreeInputWorker
 
       logwriter.println( "Erzeuge Zeitreihen-Datei: " + tsFilename );
       readZML( tmpdir, inputMap, tsmap );
+      calcNiederschlagsummen( tsmap );
       createTimeseriesFile( tsFilename, tsmap );
 
       return nativedir;
@@ -126,6 +127,49 @@ public class SpreeInputWorker
       e.printStackTrace();
       throw new CalcJobServiceException(
           "Fehler beim Erzeugen der Inputdateien", e );
+    }
+  }
+
+  private static void calcNiederschlagsummen( final TSMap tsmap )
+  {
+    final Date[] dates = tsmap.getDates();
+    
+    for( int i = 0; i < SpreeCalcJob.TS_DESCRIPTOR.length; i++ )
+    {
+      final String id = SpreeCalcJob.TS_DESCRIPTOR[i].id;
+      if( id.startsWith( "PA_" ) )
+      {
+        final String pgid = "PG" + id.substring( 2 );
+        final String ppid = "PP" + id.substring( 2 );
+        
+        final Map datesToValuesMap = tsmap.getTimeserie( id );
+        
+        Double lastValue = null;
+        for( int j = 0; j < dates.length; j++ )
+        {
+          final Date date = dates[j];
+          
+          // die beiden ersten dürfen nicht gesetzt werden, sonst rechnet das Modell Mist
+          final Double value = ( j == 0 || j == 1 ) ? null : (Double)datesToValuesMap.get( date );
+
+          if( j % 2 == 0 )
+            tsmap.putValue( pgid, date, null );
+          else if( value != null && lastValue != null && j % 2 == 1 )
+          {
+            final double summe = value.doubleValue() + lastValue.doubleValue();
+            tsmap.putValue( pgid, date, new Double( summe ) );
+          }
+          else
+            tsmap.putValue( pgid, date, new Double( -99.9 ) );
+          
+          if( value == null )
+            tsmap.putValue( id, date, new Double( -99.9 ) );
+          
+          tsmap.putValue( ppid, date, new Double( 50.0 ) );
+          
+          lastValue = value;
+        }
+      }
     }
   }
 
@@ -234,7 +278,9 @@ public class SpreeInputWorker
 
       final Date[] dateArray = valuesMap.getDates();
 
-      for( int i = 0; i < dateArray.length; i++ )
+      final int datelength = ( dateArray.length % 2 == 0 ) ? dateArray.length : dateArray.length - 1;
+      
+      for( int i = 0; i < datelength; i++ )
       {
         final Date date = dateArray[i];
 
@@ -257,28 +303,11 @@ public class SpreeInputWorker
           Double outVal = null;
 
           if( datesToValuesMap != null )
-          {
-            final Double value = (Double) datesToValuesMap.get( date );
-
-            if( value == null )
-            {
-              if( id.startsWith( "PA_" ) || id.startsWith( "PG" ) )
-                outVal = new Double( -99.9 );
-              else
-                outVal = null;
-            }
-            else
-              outVal = value;
-          }
+            outVal = ((Double) datesToValuesMap.get( date ));
           
-          if( id.startsWith( "QV_TS" ) && outVal != null && outVal.doubleValue() == 0.0 )
+          // die Erste Zeile darf keine Talsperrenabgabe enthalten
+          if( id.startsWith( "QV_TS" ) && i == 0 )
             outVal = null;
-
-          // Besonderheit des Modells, der Niederschlag darf im ersten
-          // Zeitschritt
-          // keinen Wert besitzen sonst gibts Schrott
-          if( id.startsWith( "PA_" ) && (i == 0 || i == 1) )
-            outVal = new Double( -99.9 );
 
           record.add( outVal );
         }

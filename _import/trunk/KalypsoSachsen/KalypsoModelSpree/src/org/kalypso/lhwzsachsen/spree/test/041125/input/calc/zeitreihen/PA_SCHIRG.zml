@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>PA_SCHIRG</name>
+    <metadataList>
+        <metadata name="StartZeit" value="27.4.2005 12:00"/>
+        <metadata name="Name" value="PA_SCHIRG"/>
+        <metadata name="Vorhersage" value="25.11.2004 13:00:00;27.11.2004 13:00:00"/>
+    </metadataList>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2004-11-23T13:00:00;2004-11-23T16:00:00;2004-11-23T19:00:00;2004-11-23T22:00:00;2004-11-24T01:00:00;2004-11-24T04:00:00;2004-11-24T07:00:00;2004-11-24T10:00:00;2004-11-24T13:00:00;2004-11-24T16:00:00;2004-11-24T19:00:00;2004-11-24T22:00:00;2004-11-25T01:00:00;2004-11-25T04:00:00;2004-11-25T07:00:00;2004-11-25T10:00:00;2004-11-25T13:00:00;2004-11-25T16:00:00;2004-11-25T19:00:00;2004-11-25T22:00:00;2004-11-26T01:00:00;2004-11-26T04:00:00;2004-11-26T07:00:00;2004-11-26T10:00:00;2004-11-26T13:00:00;2004-11-26T16:00:00;2004-11-26T19:00:00;2004-11-26T22:00:00;2004-11-27T01:00:00;2004-11-27T04:00:00;2004-11-27T07:00:00;2004-11-27T10:00:00;2004-11-27T13:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Niederschlag" type="N" unit="mm">
+        <valueArray separator=";">0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0</valueArray>
+    </axis>
+</observation>
+
