@@ -20,16 +20,16 @@ import org.deegree_impl.services.wfs.filterencoding.PropertyIsBetweenOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyName;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.outline.SaveStyleAction;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
 import org.kalypso.ui.editor.styleeditor.panels.ControlRulePanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
@@ -43,7 +43,6 @@ import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
  */
 public class SLDEditorGuiBuilder
 {
-
   private FeatureType featureType = null;
 
   private Composite parent = null;
@@ -89,16 +88,16 @@ public class SLDEditorGuiBuilder
     if( userStyle == null )
     {
       nameLabel = new Label( mainComposite, 0 );
-      nameLabel.setText( "No style found to show in editor" );
+      nameLabel.setText( MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR );
       mainComposite.pack( true );
       return;
     }
 
     titleLabel = new Label( mainComposite, SWT.NULL );
-    titleLabel.setText( "Style Editor v1.0" );
+    titleLabel.setText( MessageBundle.STYLE_EDITOR_EDITOR_TITLE );
     titleLabel.setFont( new Font( null, "Arial", 12, SWT.BOLD ) );
     nameLabel = new Label( mainComposite, 0 );
-    nameLabel.setText( "Style: " + userStyle.getName() );
+    nameLabel.setText( MessageBundle.STYLE_EDITOR_STYLE + userStyle.getName() );
     nameLabel.setFont( new Font( null, "Arial", 8, SWT.BOLD ) );
 
     final Rule[] rules = getRules( userStyle );
@@ -132,7 +131,7 @@ public class SLDEditorGuiBuilder
       else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Short" ) )
         numericFeatureTypePropertylist.add( ftp[i] );
     }
-    ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite, "Rule:",
+    ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite, MessageBundle.STYLE_EDITOR_RULE,
         rulePatternCollection.size(), numericFeatureTypePropertylist.size() );
 
     final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder( mainComposite,
@@ -278,19 +277,23 @@ public class SLDEditorGuiBuilder
     buttonComposite.setLayout( new GridLayout( 2, true ) );
 
     // ******* SAVING THE SLD-STYLE
-    final Button saveButton = new Button( buttonComposite, SWT.NULL );
-    saveButton.setText( "Save" );
-    saveButton.addSelectionListener( new SelectionListener()
+    final Label saveButton = new Label( buttonComposite, SWT.NULL );
+    saveButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_SAVE.createImage() );
+    saveButton.setToolTipText( MessageBundle.STYLE_EDITOR_SAVE_STYLE );
+    saveButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         SaveStyleAction.saveUserStyle( userStyle, buttonComposite.getShell() );
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
     ruleTabItemBuilder.draw();

@@ -74,14 +74,15 @@ public class RuleTabItem
       ruleName = rule.getName();
     else
     {
-      ruleName = "Rule " + ( ++counter );
+      ruleName = MessageBundle.STYLE_EDITOR_RULE + ( ++counter );
       rule.setTitle( ruleName );
     }
     tabItem.setText( ruleName );
 
     final TabFolder symbolizerTabFolder;
 
-    final TextInputPanel titleInputPanel = new TextInputPanel( composite, "Title:", rule.getTitle() );
+    final TextInputPanel titleInputPanel = new TextInputPanel( composite,
+        MessageBundle.STYLE_EDITOR_TITLE, rule.getTitle() );
     titleInputPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -90,7 +91,8 @@ public class RuleTabItem
         if( title == null || title.trim().length() == 0 )
         {
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
-              "Invalid input value", "Title should not be null" );
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+              MessageBundle.STYLE_EDITOR_ERROR_NO_TITLE );
           errorDialog.showError();
           titleInputPanel.setInputText( rule.getTitle() );
         }
@@ -106,7 +108,7 @@ public class RuleTabItem
     } );
 
     final DenominatorInputPanel minDenominatorPanel = new DenominatorInputPanel( composite,
-        "MinDenom:", rule.getMinScaleDenominator() );
+        MessageBundle.STYLE_EDITOR_MIN_DENOM, rule.getMinScaleDenominator() );
     minDenominatorPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -117,8 +119,8 @@ public class RuleTabItem
         if( min > max )
         {
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
-              "Invalid value for MinDenominator",
-              "MinDenominator cannot be larger then MaxDenominator" );
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+              MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
           errorDialog.showError();
           minDenominatorPanel.setDenominator( rule.getMinScaleDenominator() );
         }
@@ -149,7 +151,7 @@ public class RuleTabItem
         rule.setMaxScaleDenominator( Double.MAX_VALUE );
     }
     final DenominatorInputPanel maxDenominatorPanel = new DenominatorInputPanel( composite,
-        "MaxDenom:", rule.getMaxScaleDenominator() );
+        MessageBundle.STYLE_EDITOR_MAX_DENOM, rule.getMaxScaleDenominator() );
     maxDenominatorPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -160,8 +162,8 @@ public class RuleTabItem
         if( min > max )
         {
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
-              "Invalid value for MaxDenominator",
-              "MaxDenominator needs to be larger then MinDenominator" );
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+              MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
           errorDialog.showError();
           maxDenominatorPanel.setDenominator( rule.getMaxScaleDenominator() );
         }
@@ -185,8 +187,8 @@ public class RuleTabItem
       }
     } );
 
-    AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite, "Symbolizer:",
-        featureType );
+    AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite,
+        MessageBundle.STYLE_EDITOR_SYMBOLIZER, featureType );
 
     final EditSymbolizerPanel editSymbolizerPanel = new EditSymbolizerPanel( composite, rule
         .getSymbolizers().length );
@@ -295,7 +297,7 @@ public class RuleTabItem
     Composite buttonComposite = new Composite( composite, SWT.NULL );
     buttonComposite.setLayout( new GridLayout( 1, true ) );
     Button button = new Button( buttonComposite, SWT.NULL );
-    button.setText( "Edit Filter" );
+    button.setText( MessageBundle.STYLE_EDITOR_EDIT_FILTER );
     final FilterDialog filterDialog = new FilterDialog( composite.getShell(), featureType, rule );
     filterDialog.addFilterDialogListener( new FilterDialogListener()
     {
