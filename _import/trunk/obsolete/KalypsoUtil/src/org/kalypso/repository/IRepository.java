@@ -16,6 +16,13 @@ public interface IRepository extends IRepositoryItem
   public String getLocation();
 
   /**
+   * Returns true when this repository is in readonly mode. What this really means, 
+   * depends on the client implementation. Some repositories might only be viewed or
+   * browsed, while some others might be modified.
+   */
+  public boolean isReadOnly();
+  
+  /**
    * Finds the item that has the given id.
    * 
    * @throws RepositoryException

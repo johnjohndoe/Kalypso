@@ -76,17 +76,18 @@ public final class PSICompactFactory
    * 
    * @throws RepositoryException
    */
-  static PSICompactRepository getRepository() throws RepositoryException
+  static PSICompactRepository getRepository( ) throws RepositoryException
   {
     if( m_psiCompactRep == null )
     {
-      m_psiCompactRep = new PSICompactRepository( );
+      // PSICompact Repository is always in read/write mode
+      m_psiCompactRep = new PSICompactRepository( false );
 
       // TODO siehe Kommentar in VersionChecker Klasse
       // m_threadVersionChecker = new VersionChecker();
       // m_threadVersionChecker.start();
     }
-
+    
     return m_psiCompactRep;
   }
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Vector;
 
 /**
+ * Abstract implementation of <code>IRepository</code> to provide basic functionality.
  * 
  * @author schlienger
  */
@@ -14,21 +15,41 @@ public abstract class AbstractRepository implements IRepository
 
   private final List m_listeners;
 
+  private boolean m_readOnly;
+
+  /**
+   * Default constructor, location is empty and readonly is true.
+   */
   public AbstractRepository()
   {
-    this( "" );
+    this( "", true );
   }
   
-  public AbstractRepository( final String location )
+  public AbstractRepository( final String location, final boolean readOnly )
   {
     m_location = location;
+    m_readOnly = readOnly;
+    
     m_listeners = new Vector();
   }
 
   /**
+   * @see org.kalypso.repository.IRepository#isReadOnly()
+   */
+  public boolean isReadOnly()
+  {
+    return m_readOnly;
+  }
+  
+  public void setReadOnly( final boolean ro )
+  {
+    m_readOnly = ro;
+  }
+  
+  /**
    * @see org.kalypso.repository.IRepository#addRepositoryListener(org.kalypso.repository.IRepositoryListener)
    */
-  public void addRepositoryListener( IRepositoryListener l )
+  public void addRepositoryListener( final IRepositoryListener l )
   {
     m_listeners.add( l );
   }
@@ -49,7 +70,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#removeRepositoryListener(org.kalypso.repository.IRepositoryListener)
    */
-  public void removeRepositoryListener( IRepositoryListener l )
+  public void removeRepositoryListener( final IRepositoryListener l )
   {
     m_listeners.remove( l );
   }
@@ -87,9 +108,11 @@ public abstract class AbstractRepository implements IRepository
   }
   
   /**
+   * This default implementation always returns null.
+   * 
    * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class anotherClass )
+  public Object getAdapter( final Class anotherClass )
   {
     return null;
   }

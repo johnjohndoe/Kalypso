@@ -91,7 +91,7 @@ public class PSICompactItem implements IRepositoryItem
   {
     try
     {
-      return PSICompactFactory.getRepository();
+      return PSICompactFactory.getRepository(  );
     }
     catch( RepositoryException e )
     {

@@ -1,22 +1,22 @@
 package org.kalypso.psiadapter.repository;
 
+import org.kalypso.repository.AbstractRepositoryFactory;
 import org.kalypso.repository.IRepository;
-import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.RepositoryException;
 
 /**
  * @author schlienger
  *
  */
-public class PSICompactRepositoryFactory implements IRepositoryFactory
+public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 {
   /**
-   * @see org.kalypso.repository.IRepositoryFactory#configureRepository(org.kalypso.repository.IRepository)
+   * Does nothing.
+   * 
+   * @see org.kalypso.repository.IRepositoryFactory#configureRepository()
    */
-  public boolean configureRepository( final IRepository rep )
+  public boolean configureRepository( )
   {
-    // no specific configuration to perform here
-    
     return true;
   }
 
@@ -26,6 +26,6 @@ public class PSICompactRepositoryFactory implements IRepositoryFactory
    */
   public IRepository createRepository() throws RepositoryException
   {
-    return PSICompactFactory.getRepository();
+    return PSICompactFactory.getRepository( );
   }
 }

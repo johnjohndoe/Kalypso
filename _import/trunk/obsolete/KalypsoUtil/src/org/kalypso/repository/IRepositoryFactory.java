@@ -1,6 +1,5 @@
 package org.kalypso.repository;
 
-
 /**
  * Configurator for a Repository.
  * 
@@ -9,15 +8,25 @@ package org.kalypso.repository;
 public interface IRepositoryFactory
 {
   /**
-   * Konfiguriert das angegebene Repository oder vorbereitet die Konfiguration 
-   * für das erzeugen des Repository.
-   * 
-   * @param rep [optional] wenn null, die Factory soll sich die Konfiguration merken um
-   *  eventuell später bei der Erzeugung des Repository es konfigurieren zu können.
+   * Sets the configuration string for this factory.
+   */
+  public void setConfiguration( final String conf );
+
+  /**
+   * Sets the readOnly flag. When true, the repository is forced in read only
+   * mode.
+   */
+  public void setReadOnly( final boolean ro );
+
+  /**
+   * Vorbereitet die Konfiguration für das erzeugen des Repository.
    * 
    * @return true wenn Benutzer die Konfiguration bestätigt hat.
    */
-  public boolean configureRepository( final IRepository rep );
-  
-  public IRepository createRepository( ) throws RepositoryException;
+  public boolean configureRepository() throws RepositoryException;
+
+  /**
+   * Creates the repository based on the configuration
+   */
+  public IRepository createRepository() throws RepositoryException;
 }

@@ -21,9 +21,9 @@ public class PSICompactRepository extends AbstractRepository
 {
   private PSICompactItem m_psiRoot = null;
 
-  public PSICompactRepository() throws RepositoryException
+  public PSICompactRepository( final boolean readOnly ) throws RepositoryException
   {
-    super( "PSICompact" );
+    super( "PSICompact", readOnly );
 
     reload();
   }

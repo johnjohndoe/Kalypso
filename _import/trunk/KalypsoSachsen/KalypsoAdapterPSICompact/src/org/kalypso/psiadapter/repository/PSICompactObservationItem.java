@@ -24,7 +24,7 @@ import de.psi.go.lhwz.PSICompact.WQParamSet;
  * 
  * @author schlienger
  */
-public class PSICompactObservationItem extends PSICompactItem implements IObservation
+public class PSICompactObservationItem extends PSICompactItem
 {
   private final int m_valueType;
 

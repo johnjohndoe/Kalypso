@@ -20,8 +20,8 @@ public class DoubleComparator implements Comparator
    */
   public int compare( Object o1, Object o2 )
   {
-    double d1 = ( (Double)o1 ).doubleValue(  );
-    double d2 = ( (Double)o2 ).doubleValue(  );
+    double d1 = ( (Number)o1 ).doubleValue(  );
+    double d2 = ( (Number)o2 ).doubleValue(  );
 
     return compare( d1, d2 );
   }
