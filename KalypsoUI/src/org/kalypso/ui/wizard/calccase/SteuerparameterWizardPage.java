@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.GMLWorkspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -70,16 +71,13 @@ public class SteuerparameterWizardPage extends WizardPage
     try
     {
       final IProject project = m_projectProvider.getProject();
-      final ModelNature nature = (ModelNature)m_projectProvider.getProject().getNature(
-          ModelNature.ID );
-      
-      
-      m_workspace = nature.loadDefaultControl();
 
       // Vorlage auslesen
       final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/"
           + ModelNature.CONTROL_VIEW_PATH );
-      m_featureComposite = new FeatureComposite( m_workspace.getRootFeature(), new URL[]
+      
+      final Feature f = m_workspace == null ? null : m_workspace.getRootFeature();
+      m_featureComposite = new FeatureComposite( f, new URL[]
       { viewURL } );
 
       final Composite panel = new Composite( parent, SWT.NONE );
@@ -114,11 +112,6 @@ public class SteuerparameterWizardPage extends WizardPage
       setControl( panel );
     }
     catch( final MalformedURLException e )
-    {
-      // ERROR handling
-      e.printStackTrace();
-    }
-    catch( final CoreException e )
     {
       // ERROR handling
       e.printStackTrace();
@@ -219,4 +212,30 @@ public class SteuerparameterWizardPage extends WizardPage
     }
 
   }
+
+  /**
+   * Setzt dne aktuellen Rechenfall, ist dort schon eine .calculation vorhanden,
+   * wird diese geladen, sonst die default.
+   * @throws CoreException
+   */
+  public void setFolder( final IFolder currentCalcCase ) throws CoreException
+  {
+    final ModelNature nature = (ModelNature)m_projectProvider.getProject().getNature(
+        ModelNature.ID );
+    
+    GMLWorkspace workspace = nature.loadOrCreateControl( currentCalcCase );
+    setWorkspace( workspace );
+  }
+  
+  public void setWorkspace( final GMLWorkspace workspace )
+  {
+    m_workspace = workspace;
+    
+    if( m_featureComposite != null )
+    {
+      m_featureComposite.setFeature( workspace.getRootFeature() );
+      m_featureComposite.updateControl();
+    }
+  }
+
 }
