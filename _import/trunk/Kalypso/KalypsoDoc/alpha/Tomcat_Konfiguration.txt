@@ -41,3 +41,11 @@ Beispiel:
 
 catalina start -security
 
+6. Konfiguration der Services
+
+Die Kalypso Services benötigen verschiedene gesetzte System-Properties (Pfade auf die Datenverzeichnisse)
+-> siehe configuration_server.txt
+
+Zusätzlich muss in der catalina.policy den entsrpechenden Services Zugriff auf genau diese Pfade und Properties gewährt werden.
+
+Das setzen der System-Properties geschieht zur Zeit über eine spezielle kalypso_server_start.bat
