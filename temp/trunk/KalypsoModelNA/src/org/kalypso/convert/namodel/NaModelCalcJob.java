@@ -63,7 +63,10 @@ import org.w3c.dom.Document;
  */
 public class NaModelCalcJob extends AbstractCalcJob
 {
+
   // IDs
+  public static final String META_ID = "MetaSteuerdaten";
+
   public final static String MODELL_ID = "Modell";
 
   public final static String CONTROL_ID = "Control";
@@ -144,6 +147,7 @@ public class NaModelCalcJob extends AbstractCalcJob
       final CalcJobDataBean[] beans, File outDir ) throws Exception
   {
     // input model
+    
     final CalcJobDataBean modellBean = CalcJobHelper.getBeanForId( MODELL_ID, beans );
     final File modelFile = new File( inputDir, modellBean.getPath() );
 
@@ -154,6 +158,10 @@ public class NaModelCalcJob extends AbstractCalcJob
     final URL modellURL = modellFile.toURL();
     final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( modellURL, exeDir );
 
+    final CalcJobDataBean metaBean = CalcJobHelper.getBeanForId( META_ID, beans );
+    final File metaFile = new File( inputDir, metaBean.getPath() );
+    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( metaFile.toURL(), conf.getMetaSchemaURL() );
+    final Feature metaFE=metaWorkspace.getRootFeature();
     // control
     final CalcJobDataBean controlBean = CalcJobHelper.getBeanForId( CONTROL_ID, beans );
     final File controlFile = new File( inputDir, controlBean.getPath() );
@@ -168,15 +176,18 @@ public class NaModelCalcJob extends AbstractCalcJob
 
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL, conf
         .getSchemaURL() );
-    conf.setSimulationStart( (Date)controlWorkspace.getRootFeature()
+    conf.setSimulationStart( (Date)metaWorkspace.getRootFeature()
         .getProperty( "startsimulation" ) );
-    conf.setSimulationForecasetStart( (Date)controlWorkspace.getRootFeature().getProperty(
+    conf.setSimulationForecasetStart( (Date)metaWorkspace.getRootFeature().getProperty(
         "startforecast" ) );
-    conf.setSimulationEnd( (Date)controlWorkspace.getRootFeature().getProperty( "endsimulation" ) );
+    // TODO add endsimulation in control.xsd and use it here
+    // TODO change also in NAControlConverter
+    conf.setSimulationEnd( (Date)metaWorkspace.getRootFeature().getProperty( "startforecast" ) );
+    //    conf.setSimulationEnd( (Date)metaWorkspace.getRootFeature().getProperty( "endsimulation" ) );
     conf.setRootNodeID( (String)controlWorkspace.getRootFeature().getProperty( "rootNode" ) );
 
     // generate control files
-    NAControlConverter.featureToASCII( exeDir, controlWorkspace, modellWorkspace );
+    NAControlConverter.featureToASCII( exeDir,metaFE,controlWorkspace, modellWorkspace );
 
     // update model with factor values from control
     updateFactorParameter( modellWorkspace );
@@ -322,7 +333,7 @@ public class NaModelCalcJob extends AbstractCalcJob
       for( int i = 0; i < nodeFEs.length; i++ )
       {
         final Feature feature = nodeFEs[i];
-        if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
+        if(!FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
           continue; // should not generate results
         final String key = FeatureHelper.getAsString( feature, "num" );
 

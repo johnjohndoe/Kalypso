@@ -56,6 +56,8 @@ public class NAConfiguration
 
   private String m_rootNodeId;
 
+  private final URL m_metaSchemaURL;
+
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL) throws Exception
   {
     m_asciiBaseDir = asciiBaseDir;
@@ -64,6 +66,7 @@ public class NAConfiguration
 
     // schemas
     m_schemaURL = getClass().getResource( "schema/namodell.xsd" );
+    m_metaSchemaURL = getClass().getResource( "schema/control.xsd" );
     final GMLSchema schema=new GMLSchema(m_schemaURL);
     
     // featuretypes
@@ -206,5 +209,10 @@ public class NAConfiguration
   public void setRootNodeID( String rootNodeID )
   {
      m_rootNodeId=rootNodeID;
+  }
+
+  public URL getMetaSchemaURL()
+  {
+    return m_metaSchemaURL;
   }
 }

@@ -41,7 +41,7 @@ public class BlockTimeSeries
 
   private final Hashtable m_blocks;
 
-  private static TimeZone m_timeZone = new SimpleTimeZone( 1000 * 60 * 60 * 24 * 2,
+  private static TimeZone m_timeZone = new SimpleTimeZone( 1000 * 60 * 60 * 2,
       "OmbrometerTimeZone" );
 
   public BlockTimeSeries()

@@ -29,7 +29,7 @@ public class NAControlConverter
 
   public static final int RIGHT = 1;
 
-  public static void featureToASCII( File projectPath, GMLWorkspace controlWorkspace,
+  public static void featureToASCII( File projectPath,Feature metaFE, GMLWorkspace controlWorkspace,
       GMLWorkspace modellWorkspace ) throws IOException
   {
     final Feature controlFE = controlWorkspace.getRootFeature();
@@ -41,7 +41,7 @@ public class NAControlConverter
 
     // write FalStart
     final StringBuffer b1 = new StringBuffer();
-    writeFalstart( controlFE, projectPath, startFile, b1 );
+    writeFalstart( metaFE,startFile, b1 );
     //write it
     final FileWriter writer1 = new FileWriter( falStartFile );
     writer1.write( b1.toString() );
@@ -145,30 +145,24 @@ public class NAControlConverter
     b.append( "99999\n" );
   }
 
-  private static void writeFalstart( Feature controlFE, File projectPath, File startFile,
+  private static void writeFalstart( Feature metaFE,File startFile,
       StringBuffer b )
   {
 
-    //	File dest=new File(FileSystemUtils.getNaWorkDir(),FalstartFileName);
-    //        FileWriter out = new FileWriter(startFile);
     String system = "we";//"sys";
     String zustand = "nat";
 
-    //	String projectPath=FileSystemUtils.getNaWorkDir().getAbsolutePath();
-
-    String startDate = FeatureHelper.getFormatedDate( controlFE, "startsimulation",
+    String startDate = FeatureHelper.getFormatedDate( metaFE, "startsimulation",
         "yyyy MM dd HH", "notset" );
-    String endDate = FeatureHelper.getFormatedDate( controlFE, "endsimulation", "yyyy MM dd HH",
+    String endDate = FeatureHelper.getFormatedDate( metaFE, "startforecast", "yyyy MM dd HH",
         "notset" );
+    // TODO set endsimulation, see also NaModellConverter
+    //    String endDate = FeatureHelper.getFormatedDate( metaFE, "endsimulation", "yyyy MM dd HH",
+//        "notset" );
 
     b.append( "xxx\n" );
     b.append( "x einzugsgebiet\n" );
-    b
-        .append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Simulationsbeginn(dat+Zeit); Simulationsende; Konfigurationsdatei mit Pfad\n" );
-    //    b.append( "2 " + projectPath.getAbsolutePath() + " " + system + " " +
-    // zustand + " "
-    //        + startDate + " " + endDate + " " + "start" + File.separator +
-    // startFile.getName()+"\n" );
+    b.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Simulationsbeginn(dat+Zeit); Simulationsende; Konfigurationsdatei mit Pfad\n" );
     b.append( "2 .. " + system + " " + zustand + "  " + startDate + " " + endDate + " " + "start"
         + File.separator + startFile.getName() + "\n" );
   }

@@ -37,9 +37,12 @@ public class NAZMLGenerator
 
   public static final int NA_ABFLUSS_BERECHNET = 3;
 
+  public static final int NA_PEGEL_MESSUNG = 4;
+  
   final static NAZMLGenerator m_singelton = new NAZMLGenerator();
 
   private static final UrlUtilities urlUtilities = new UrlUtilities();
+
 
   public NAZMLGenerator()
   {
@@ -209,6 +212,8 @@ public class NAZMLGenerator
     case NA_ZUFLUSS_EINGABE:
       return col == 1 ? "Datum" : "Abfluss";
     case NA_ABFLUSS_BERECHNET:
+        return col == 1 ? "Datum" : "Abfluss";
+    case NA_PEGEL_MESSUNG:
         return col == 1 ? "Datum" : "Abfluss";
     default:
       break;

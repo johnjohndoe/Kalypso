@@ -13,6 +13,7 @@ import org.deegree_impl.extension.ITypeRegistry;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.convert.WeisseElsterConstants;
+import org.kalypso.convert.namodel.NAZMLGenerator;
 import org.kalypso.convert.namodel.schema.KalypsoNADefaultSchema;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
@@ -62,7 +63,7 @@ public class UpdateModell
     final Feature[] catchmentFEs = workspace.getFeatures( catchmentFT );
     updateCatchments( catchmentFEs );
     updateCatchments( catchmentFEs );
-
+    updatePegel(workspace);
     final FeatureType nodeFT = workspace.getFeatureType( "Node" );
     final Feature[] nodeFEs = workspace.getFeatures( nodeFT );
     updateNodes( nodeFEs );
@@ -84,22 +85,116 @@ public class UpdateModell
     }
   }
 
-  private final static String m_availablePegel = "Node1600 Node1302 Node1401 Node1300";
 
+  private final static String[][] m_pegel =
+  {
+      // kaputte pegel und noch nicht verfuegbare pegel sind kommentiert
+      //  new String[]{"Bad Elster","Node1800","adorf.zml"},
+      new String[]
+      {
+          "Adorf",
+          "Node1700",
+          "adorf.zml" },
+      new String[]
+      {
+          "Oelsnitz",
+          "Node1600",
+          "oelsnitz.zml" },
+      new String[]
+      {
+          "Strassberg",
+          "Node1401",
+          "strassberg.zml" },
+      new String[]
+      {
+          "Elsterberg",
+          "Node1300",
+          "elsterberg.zml" },
+      //  new String[]{"Rodewisch","Node4200","rodewisch.zml"},
+      new String[]
+      {
+          "Mylau",
+          "Node4100",
+          "mylau.zml" },
+      new String[]
+      {
+          "Greiz",
+          "Node1220",
+          "greiz.zml" },
+      new String[]
+      {
+          "Weida",
+          "Node2002",
+          "weida.zml" },
+      new String[]
+      {
+          "Gera",
+          "Node1210",
+          "gera.zml" },
+      //  new String[]{"Zeitz","Node1110","zeitz.zml"},
+      new String[]
+      {
+          "Kleindalzig",
+          "Node1020",
+          "kleindalzig.zml" },
+      //  new String[]{"Albrechtshain","Node3201","albrechtshain.zml"},
+      new String[]
+      {
+          "Leipzig-Thekla",
+          "Node3100",
+          "leipzig-thekla.zml" },
+      new String[]
+      {
+          "Oberthau",
+          "Node1001",
+          "oberthau.zml" },
+      new String[]
+      {
+          "Neukirchen",
+          "Node7300",
+          "neukirchen.zml" },
+      new String[]
+      {
+          "Goessnitz",
+          "Node7200",
+          "goessnitz.zml" } };
+
+  private static void updatePegel(GMLWorkspace workspace)
+  {
+    for( int i = 0; i < m_pegel.length; i++ )
+    {
+      final String[] pegelContext = m_pegel[i];
+      final String nodeID=pegelContext[1];
+      Feature feature = workspace.getFeature(nodeID);
+      FeatureProperty nameProp = FeatureFactory.createFeatureProperty("name",pegelContext[0]);
+      feature.setProperty(nameProp);
+      try
+      {
+        TimeseriesLink link = NAZMLGenerator.generateobsLink(WeisseElsterConstants.PREFIX_LINK_FLUSSPEGEL+pegelContext[2], NAZMLGenerator.NA_PEGEL_MESSUNG);
+        FeatureProperty linkProp = FeatureFactory.createFeatureProperty("pegelZRRepository", link);
+        feature.setProperty(linkProp);
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+      
+      
+    }
+    
+  }
   private static void updateNodes( Feature[] features )
   {
     for( int i = 0; i < features.length; i++ )
     {
-      //    <pegelZRRepository/>
-      //    "kalypso-ocs:WeisseElster://Pegel/Pegel_Node1600.zml"
       final Feature feature = features[i];
-      TimeseriesLink messPegel = (TimeseriesLink)feature.getProperty( "pegelZRRepository" );
-      if( messPegel != null )
-      {
-        messPegel.setHref( WeisseElsterConstants.PREFIX_LINK_FLUSSPEGEL + feature.getId() );
-        if( m_availablePegel.indexOf( feature.getId() ) < 0 )
-          feature.setProperty( null );
-      }
+//      final TimeseriesLink messPegel = (TimeseriesLink)feature.getProperty( "pegelZRRepository" );
+//      if( messPegel != null )
+//      {
+//        messPegel.setHref( WeisseElsterConstants.PREFIX_LINK_FLUSSPEGEL + feature.getId() );
+//        if( m_availablePegel.indexOf( feature.getId() ) < 0 )
+//          feature.setProperty( null );
+//      }
       TimeseriesLink zuflussPegel = (TimeseriesLink)feature.getProperty( "zuflussZRRepository" );
       if( zuflussPegel != null )
         zuflussPegel.setHref( WeisseElsterConstants.PREFIX_LINK_ZUFLUSSPEGEL + feature.getId() );

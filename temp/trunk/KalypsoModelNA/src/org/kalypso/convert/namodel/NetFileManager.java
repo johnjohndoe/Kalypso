@@ -408,6 +408,10 @@ public class NetFileManager extends AbstractManager
       }
     }
     final Feature rootNodeFE = workspace.getFeature( m_conf.getRootNodeId() );
+    final FeatureProperty createResultProp = FeatureFactory.createFeatureProperty("generateResult", new Boolean(true));
+    // fuer root node soll immer ein result generiert werden und fuer das ergebnis auch in eine zml geschrieben werden.
+    rootNodeFE.setProperty(createResultProp);
+    //    rootNodeFE;
     // select netelement from root element
     final Feature rootChannel = workspace.resolveLink( rootNodeFE, "downStreamChannelMember" );
     final List rootNetElements = new ArrayList();
