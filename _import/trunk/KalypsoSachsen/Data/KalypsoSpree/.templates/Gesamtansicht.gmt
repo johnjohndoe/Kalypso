@@ -2,7 +2,7 @@
 <gismapview xmlns="gismapview.template.kalypso.org">
     <extent bottom="50.94942299963874" left="14.295250914363638" right="14.989163006448784" top="51.58175613785673"/>
     <layers active="ID_1">
-        <layer name="Vorhersagepegel (N-A Modell)" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <layer name="Vorhersagepegel (N-A Modell)" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="calcCase.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="NA-Modelle" ns1:actuate="onRequest" ns1:href="project:/.styles/namodelle.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
         </layer>
         <layer name="Vorhersagepegel (Flußlaufmodell)" visible="true" featurePath="PegelCollectionAssociation/PegelMember[FlusslaufModell]" id="ID_2" linktype="gml" ns3:actuate="onRequest" ns3:href="calcCase.gml" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
