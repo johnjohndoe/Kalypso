@@ -151,7 +151,7 @@ public class ObservationTemplateHelper
       Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V" + tmp.getAbsolutePath() );
       
       // delete the tmp vorlage right away
-      tmp.delete();
+      tmp.deleteOnExit();
     }
     catch( Exception e )
     {
