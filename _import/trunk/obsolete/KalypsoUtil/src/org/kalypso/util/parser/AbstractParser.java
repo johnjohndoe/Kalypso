@@ -24,8 +24,8 @@ public abstract class AbstractParser implements IParser
 
     if( obj == null )
       return "null";
-    else
-      return toStringInternal( obj );
+
+    return toStringInternal( obj );
   }
 
   /**

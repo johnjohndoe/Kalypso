@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<transformationConfig xmlns="util.xml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.xml.kalypso.org .\calcCaseConfig.xsd">
-	<transformation className="org.kalypso.util.transformation.CopyTransformation">
+<transformationConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<transformation className="org.kalypso.model.transformation.CalculationTransformation">
+		<arg name="startTime" value="${time}"/>
+	</transformation>
+
+	<transformation className="org.kalypso.model.transformation.XslTransformation">
 		<arg name="input" value="modell.gml"/>
+		<arg name="xsl" value="modellTyp/calcCaseTrans.xsl"/>
 		<arg name="output" value="calcCase.gml"/>
 	</transformation>
 </transformationConfig>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<collection xmlns:gml="http://www.opengis.net/gml">
+<collection xmlns:na="http://www.tuhh.de/kalypsoSpree" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tuhh.de/kalypsoSpree
+D:\KalypsoModelle\KalypsoSpree\modellTyp\modell.xsd">
 	<gml:featureMember>
 		<Zufluss fid="new">
 			<Name>Burgneudorf</Name>
@@ -12,7 +13,7 @@
 		</Zufluss>
 	</gml:featureMember>
 	<gml:featureMember>
-		<Flutung fid="new">
+		<Flutung fid="neu">
 			<Name>Abzweig Kleine Spree</Name>
 			<Abgabe/>
 			<Ort/>
@@ -122,7 +123,8 @@
 			<Bodenfeuchte>0.0</Bodenfeuchte>
 			<BodenfeuchteMax>70.0</BodenfeuchteMax>
 			<Ausdehnung/>
-			<Niederschlagsprognose/>
+			<Niederschlag/>
+			<Wasserstand/>
 		</Einzugsgebiet>
 	</gml:featureMember>
 	<gml:featureMember>
@@ -137,7 +139,8 @@
 			<Bodenfeuchte>0.0</Bodenfeuchte>
 			<BodenfeuchteMax>130.0</BodenfeuchteMax>
 			<Ausdehnung/>
-			<Niederschlagsprognose/>
+			<Niederschlag/>
+			<Wasserstand/>
 		</Einzugsgebiet>
 	</gml:featureMember>
 	<gml:featureMember>
@@ -152,7 +155,8 @@
 			<Bodenfeuchte>0.0</Bodenfeuchte>
 			<BodenfeuchteMax>70.0</BodenfeuchteMax>
 			<Ausdehnung/>
-			<Niederschlagsprognose/>
+			<Niederschlag/>
+			<Wasserstand/>
 		</Einzugsgebiet>
 	</gml:featureMember>
 	<gml:featureMember>
@@ -167,7 +171,8 @@
 			<Bodenfeuchte>0.0</Bodenfeuchte>
 			<BodenfeuchteMax>200.0</BodenfeuchteMax>
 			<Ausdehnung/>
-			<Niederschlagsprognose/>
+			<Niederschlag/>
+			<Wasserstand/>
 		</Einzugsgebiet>
 	</gml:featureMember>
 	<gml:featureMember>
@@ -182,7 +187,8 @@
 			<Bodenfeuchte>0.0</Bodenfeuchte>
 			<BodenfeuchteMax>310.0</BodenfeuchteMax>
 			<Ausdehnung/>
-			<Niederschlagsprognose/>
+			<Niederschlag/>
+			<Wasserstand/>
 		</Einzugsgebiet>
 	</gml:featureMember>
 	<gml:featureMember>

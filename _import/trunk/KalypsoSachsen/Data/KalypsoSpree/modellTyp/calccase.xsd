@@ -25,6 +25,7 @@
 					<element name="Ausdehnung" type="double"/>
 					<element name="Niederschlag" type="string"/>
 					<element name="Wasserstand" type="string"/>
+					<element name="wasserstand-local" type="string"/>
 					<!-- TODO link auf Zeitreihe-->
 				</sequence>
 			</extension>

@@ -1,4 +1,6 @@
-#Wed Aug 04 16:22:23 CEST 2004
+#Mon Aug 09 16:31:20 CEST 2004
 eclipse.preferences.version=1
-encoding//karten/modell.gmt=UTF-8
+encoding//vorlagen/modelldaten/modell.gmt=UTF-8
+encoding//modellTyp/calcCaseTrans.xsl=UTF-8
+encoding//rechenfaelle/r1/calcCase.gml=UTF-8
 encoding/modell.gml=UTF-8
