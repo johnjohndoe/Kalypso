@@ -9,7 +9,7 @@
 	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
 	<axis id="w" datatype="xs:double" label="Wert" unit="m" direction="vertical" position="left" />
 
-	<observation id="obs1" linktype="zml" xlink:href="beispiel1.zml">
+	<observation linktype="zml" xlink:href="beispiel1.zml">
 
 	   	<curve id="C1" name="Pegel1" >
 		   	<mapping observation-axis="Datum" diagram-axis="d" />
@@ -22,7 +22,7 @@
 	   	</curve>
 	</observation>
 
-	<observation id="obs2" linktype="zml" xlink:href="beispiel2.zml">
+	<observation linktype="zml" xlink:href="beispiel2.zml">
 		<curve id="C3" name="Pegel3" >
 			<mapping observation-axis="Datum" diagram-axis="d" />
 			<mapping observation-axis="Pegel" diagram-axis="w" />

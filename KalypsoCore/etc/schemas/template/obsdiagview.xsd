@@ -43,7 +43,7 @@
 	<!-- typeObservation -->
 	<xs:complexType name="typeObservation">
 		<xs:complexContent>
-			<xs:extension base="kalypso:layerType">
+			<xs:extension base="kalypso:kalypsoLinkType">
 				<xs:sequence>
 					<xs:element name="curve" type="myns:typeCurve" minOccurs="1" maxOccurs="unbounded"/>
 				</xs:sequence>

@@ -8,11 +8,17 @@
 		<xs:attribute name="top" type="xs:double" use="required"/>
 		<xs:attribute name="bottom" type="xs:double" use="required"/>
 	</xs:complexType>
+	<xs:complexType name="kalypsoLinkType">
+			<xs:complexContent>
+			<xs:extension base="xlinkext:SimpleLinkType">
+				<xs:attribute name="linktype" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="layerType">
 		<xs:complexContent>
-			<xs:extension base="xlinkext:SimpleLinkType">
+			<xs:extension base="kalypso:kalypsoLinkType">
 				<xs:attribute name="id" type="xs:ID" use="required"/>
-				<xs:attribute name="linktype" type="xs:string" use="required"/>
 				<xs:attribute name="featurePath" type="xs:string" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
