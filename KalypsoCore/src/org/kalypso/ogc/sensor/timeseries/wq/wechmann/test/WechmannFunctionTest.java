@@ -57,4 +57,13 @@ public class WechmannFunctionTest extends TestCase
     assertTrue( m_dc1.compare( WechmannFunction.computeW( m_wp2, 67.8 ), 173 ) == 0 );
     assertTrue( m_dc1.compare( WechmannFunction.computeW( m_wp2, 144 ), 265 ) == 0 );
   }
+  
+  public void testForSchirgiswalde() throws WechmannException
+  {
+    WechmannParams wp1 = new WechmannParams( 99.96, -8.43382, 2.25920, 230 );
+    WechmannParams wp2 = new WechmannParams( 89.99, -7.49066, 2.03671 );
+
+    assertEquals( 3.21, WechmannFunction.computeQ( wp1, 170 ), 0.01 );
+    assertEquals( 4.59, WechmannFunction.computeQ( wp1, 182 ), 0.01 );
+  }
 }
