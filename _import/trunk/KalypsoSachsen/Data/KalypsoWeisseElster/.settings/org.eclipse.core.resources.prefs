@@ -1,18 +1,23 @@
-#Tue Oct 26 15:29:53 CEST 2004
-encoding//Rechenvarianten/ganzNeu/pegel/.info.txt=UTF-8
-encoding//Rechenvarianten/ganzNeu/zml/.info.txt=UTF-8
+#Wed Oct 27 11:37:57 CEST 2004
+encoding//.styles/Node.sld=UTF-8
+encoding//Modell/weisseElster.gml=UTF-8
+encoding//Rechenvarianten/ganzNeu/zufluss/.info.txt=UTF-8
+encoding//.styles/VChannel.sld=UTF-8
 encoding//Rechenvarianten/ganzNeu/nacontrol.gml=UTF-8
+encoding//Modell_Karten/Karte.gmt=UTF-8
+encoding//.styles/KMChannel.sld=UTF-8
+eclipse.preferences.version=1
+encoding//Rechenvarianten/ganzNeu/zml/.info.txt=UTF-8
+encoding//Rechenfaelle/r1/calcCase.gml=UTF-8
+encoding//Rechenfaelle/r1/nacontrol.gml=UTF-8
 encoding//.templates/calcCase/teilgebiete.ott=UTF-8
 encoding/<project>=UTF-8
+encoding//Rechenfaelle/r1/zufluss/.info.txt=UTF-8
 encoding/modell.gml=UTF-8
-encoding//Rechenvarianten/ganzNeu/calcCase.gml=UTF-8
-encoding//.styles/VChannel.sld=UTF-8
-encoding//Modell_Karten/Karte.gmt=UTF-8
-eclipse.preferences.version=1
-encoding//Modell/weisseElster.gml=UTF-8
-encoding//.templates/calcCase/teilgebiete.odt=UTF-8
 encoding//.styles/teilgebiete.sld=UTF-8
-encoding//.styles/KMChannel.sld=UTF-8
-encoding//.styles/Node.sld=UTF-8
 encoding//.templates/calcCase/teilgebiete.gmt=UTF-8
-encoding//Rechenvarianten/ganzNeu/zufluss/.info.txt=UTF-8
+encoding//Rechenvarianten/ganzNeu/pegel/.info.txt=UTF-8
+encoding//Rechenvarianten/ganzNeu/calcCase.gml=UTF-8
+encoding//Rechenfaelle/r1/pegel/.info.txt=UTF-8
+encoding//Rechenfaelle/r1/zml/.info.txt=UTF-8
+encoding//.templates/calcCase/teilgebiete.odt=UTF-8

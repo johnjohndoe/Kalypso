@@ -13,7 +13,7 @@
 	<startsimulation>1995-09-01T00:00:00-02:00</startsimulation>
 	<startforecast>1995-09-04T12:00:00-02:00</startforecast>
 	<endsimulation>1995-09-15T00:00:00-02:00</endsimulation>
-	<timeStep>24</timeStep>
+	<timeStep>0.25</timeStep>
 	<tmp>true</tmp>
 	<pre>1</pre>
 	<sch>0</sch>

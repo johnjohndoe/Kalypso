@@ -14773,10 +14773,12 @@
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel3002"/>
           <zuflussZRRepository>
-            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="file:/tmp/NA_gmlBaseDir1098777788599/zufluss/Q_N3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
+            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" 
+            linktype="zml" ns1:href="kalypso-ocs:WeißeElster://Andreas/zufluss/Q_N3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
           </zuflussZRRepository>
           <zuflussZR>
-            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="zufluss/Q_N3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
+            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml"
+             ns1:href="zufluss/Q_N3100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
           </zuflussZR>
           <nzufPfad>P:\vwe04121\modell\hydrologie\namod\zufluss\q_leipzig.dat</nzufPfad>
           <pegelZRRepository/>
@@ -15239,7 +15241,7 @@
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel7203"/>
           <zuflussZRRepository>
-            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="file:/tmp/NA_gmlBaseDir1098777788599/zufluss/Q_N7300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
+            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="kalypso-ocs:WeißeElster://Andreas/zufluss/Q_N7300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
           </zuflussZRRepository>
           <zuflussZR>
             <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="zufluss/Q_N7300.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
@@ -15283,7 +15285,7 @@
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel1300"/>
           <zuflussZRRepository>
-            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="file:/tmp/NA_gmlBaseDir1098777788599/zufluss/Q_N1301.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
+            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="kalypso-ocs:WeißeElster://Andreas/zufluss/Q_N1301.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
           </zuflussZRRepository>
           <zuflussZR>
             <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="zufluss/Q_N1301.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
@@ -15327,7 +15329,7 @@
           <generateResult/>
           <downStreamChannelMember xlink:href="#VirtualChannel2099"/>
           <zuflussZRRepository>
-            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="file:/tmp/NA_gmlBaseDir1098777788599/zufluss/Q_N2002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
+            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="kalypso-ocs:WeißeElster://Andreas/zufluss/Q_N2002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
           </zuflussZRRepository>
           <zuflussZR>
             <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="zufluss/Q_N2002.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
@@ -15463,7 +15465,7 @@
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel1211"/>
           <zuflussZRRepository>
-            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="file:/tmp/NA_gmlBaseDir1098777788599/zufluss/Q_N1220.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
+            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="kalypso-ocs:WeißeElster://Andreas/zufluss/Q_N1220.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
           </zuflussZRRepository>
           <zuflussZR>
             <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="zufluss/Q_N1220.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
@@ -15583,7 +15585,7 @@
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel6000"/>
           <zuflussZRRepository>
-            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="file:/tmp/NA_gmlBaseDir1098777788599/zufluss/Q_N6100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
+            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="kalypso-ocs:WeißeElster://Andreas/zufluss/Q_N6100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
           </zuflussZRRepository>
           <zuflussZR>
             <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="zufluss/Q_N6100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
@@ -15838,7 +15840,7 @@
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel7004"/>
           <zuflussZRRepository>
-            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="file:/tmp/NA_gmlBaseDir1098777788599/zufluss/Q_N7100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
+            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="kalypso-ocs:WeißeElster://Andreas/zufluss/Q_N7100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
           </zuflussZRRepository>
           <zuflussZR>
             <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="zufluss/Q_N7100.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
@@ -15942,7 +15944,7 @@
           <generateResult/>
           <downStreamChannelMember xlink:href="#KMChannel1401"/>
           <zuflussZRRepository>
-            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="file:/tmp/NA_gmlBaseDir1098777788599/zufluss/Q_N1500.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
+            <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="kalypso-ocs:WeißeElster://Andreas/zufluss/Q_N1500.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
           </zuflussZRRepository>
           <zuflussZR>
             <TimeseriesLink xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" linktype="zml" ns1:href="zufluss/Q_N1500.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss"/>
