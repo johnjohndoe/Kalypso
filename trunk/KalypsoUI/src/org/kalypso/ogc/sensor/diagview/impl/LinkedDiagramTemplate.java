@@ -7,11 +7,9 @@ import java.util.TreeMap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
 import org.kalypso.ogc.sensor.proxy.IProxyFactory;
-import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxis;
 import org.kalypso.template.obsdiagview.TypeObservation;
@@ -28,7 +26,7 @@ import org.kalypso.util.runtime.IVariableArguments;
  * @author schlienger
  */
 public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
-    IPoolListener, IObservationListener
+    IPoolListener
 {
   private final ResourcePool m_pool;
 
@@ -157,21 +155,7 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
     // TODO: auch für einzelne Themen???
     m_pool.removePoolListener( this );
 
-    clearObsListener();
-
     super.removeAllThemes();
-  }
-
-  /**
-   * Removes this from the listeners for the observations of this' themes
-   */
-  private void clearObsListener( )
-  {
-    for( final Iterator it = getThemes().iterator(); it.hasNext(); )
-    {
-      final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) it.next();
-      theme.getObservation().removeListener( this );
-    }
   }
 
   /**
@@ -207,8 +191,6 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
     m_key2themes.clear();
     m_pool.removePoolListener( this );
 
-    clearObsListener();
-
     super.dispose();
   }
 
@@ -242,8 +224,6 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
         
         theme.setObservation( obs );
 
-        obs.addListener( this );
-
         // tricky: fake theme if no curves
         if( theme.getCurves().size() == 0 )
           addObservation( obs, theme.getArguments() );
@@ -268,37 +248,6 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
       return;
 
     removeTheme( theme );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationListener#observationChanged(org.kalypso.ogc.sensor.IObservation)
-   */
-  public void observationChanged( final IObservation obs )
-  {
-    final IDiagramTemplateTheme theme = findTheme( obs );
-
-    if( theme != null )
-      fireTemplateChanged( new TemplateEvent( theme, TemplateEvent.TYPE_REFRESH ) );
-  }
-
-  /**
-   * Finds a theme for the given observation.
-   * 
-   * @param obs
-   * @return theme or null if not found
-   */
-  public IDiagramTemplateTheme findTheme( final IObservation obs )
-  {
-    final Iterator it = getThemes().iterator();
-    while( it.hasNext() )
-    {
-      final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) it.next();
-
-      if( theme.getObservation().equals( obs ) )
-        return theme;
-    }
-
-    return null;
   }
 
   /**
