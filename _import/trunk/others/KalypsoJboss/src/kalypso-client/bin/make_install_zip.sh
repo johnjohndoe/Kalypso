@@ -21,7 +21,8 @@ echo -e "\n clean jars"
 
 echo -e "\n copy classes from $SRC to $INSTALL"
 cd $SRC
-cp -r symbols com datacenter de timeserieSelection  $INSTALL
+#cp -r symbols com datacenter de timeserieSelection  $INSTALL
+cp -r com datacenter de timeserieSelection  $INSTALL
 
 echo -e "\n generate new jarfile"
 
@@ -34,8 +35,8 @@ cp /tmp/kalypso.jar $INSTALL
 
 echo -e "copy additional files from $SRC to $INSTALL"
  cd $SRC
- cp -r symbols xsl tutorial i18n template deegree KalypsoRRM.bat KalypsoForecast.bat profile.conf kalypsoMain.conf $INSTALL
- cp kalypsoMain_dos.conf $INSTALL/kalypsoMain.conf
+ cp -r sce_tool symbols xsl tutorial i18n template deegree KalypsoRRM.bat KalypsoForecast.bat profile.conf kalypsoMain.conf $INSTALL
+ cp kalypsoMain_dos_na.conf $INSTALL/kalypsoMain.conf
  cp kalypso_dos.conf $INSTALL/kalypso.conf
 
  cd $INSTALL
