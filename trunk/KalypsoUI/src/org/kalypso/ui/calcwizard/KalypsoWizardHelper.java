@@ -73,13 +73,16 @@ public class KalypsoWizardHelper
         final String name = (String)kf.getProperty( props[i]._nameColumn );
         final TimeseriesLinkType obsLink = (TimeseriesLinkType)kf.getProperty( props[i]._linkColumn );
 
-        final Properties mappings = new Properties();
-        mappings.setProperty( obsLink.getTimeaxis(), props[i]._diagDateAxis );
-        mappings.setProperty( obsLink.getValueaxis(), props[i]._diagValueAxis );
-
-        final LinkedDiagramCurve curve = new LinkedDiagramCurve( obsLink.getLinktype(), new JAXBXLink( obsLink ), name, mappings, template );
-        
-        template.addCurve( curve );
+        if( obsLink != null )
+        {
+          final Properties mappings = new Properties();
+          mappings.setProperty( obsLink.getTimeaxis(), props[i]._diagDateAxis );
+          mappings.setProperty( obsLink.getValueaxis(), props[i]._diagValueAxis );
+  
+          final LinkedDiagramCurve curve = new LinkedDiagramCurve( obsLink.getLinktype(), new JAXBXLink( obsLink ), name, mappings, template );
+          
+          template.addCurve( curve );
+        }
       }
     }
   }
@@ -98,9 +101,11 @@ public class KalypsoWizardHelper
         final String name = (String)kf.getProperty( props[i]._nameColumn );
         final TimeseriesLinkType obsLink = (TimeseriesLinkType)kf.getProperty( props[i]._linkColumn );
 
-        final LinkedTableViewColumn col = new LinkedTableViewColumn( name, obsLink.getLinktype(), new JAXBXLink( obsLink ), true, 50, obsLink.getTimeaxis(), obsLink.getValueaxis() );
-        
-        template.addColumn( col );
+        if( obsLink != null )
+        {
+          final LinkedTableViewColumn col = new LinkedTableViewColumn( name, obsLink.getLinktype(), new JAXBXLink( obsLink ), true, 50, obsLink.getTimeaxis(), obsLink.getValueaxis() );
+          template.addColumn( col );
+        }
       }
     } 
   }

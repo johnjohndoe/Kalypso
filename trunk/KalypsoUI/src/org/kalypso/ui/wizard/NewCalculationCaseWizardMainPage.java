@@ -230,6 +230,7 @@ public class NewCalculationCaseWizardMainPage extends WizardPage implements List
           }
           catch( final Exception e )
           {
+            e.printStackTrace();
             final CoreException coreException = new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
                 "Rechenfall konnte nicht erzeugt werden\n" + e.getLocalizedMessage(), e ) );
 
