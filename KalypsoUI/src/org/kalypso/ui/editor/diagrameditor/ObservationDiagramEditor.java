@@ -17,7 +17,7 @@ import org.jfree.chart.ChartPanel;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentThread;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
+import org.kalypso.ogc.sensor.diagview.DiagramTemplateUtils;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
@@ -136,10 +136,10 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
     {
       protected void write( Writer writer ) throws Throwable
       {
-        final ObsdiagviewType type = ObservationTemplateHelper
+        final ObsdiagviewType type = DiagramTemplateUtils
             .buildDiagramTemplateXML( m_template );
 
-        ObservationTemplateHelper.saveDiagramTemplateXML( type, writer );
+        DiagramTemplateUtils.saveDiagramTemplateXML( type, writer );
 
         resetDirty();
       }
@@ -189,7 +189,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
       }
       else
       {
-        final ObsdiagviewType baseTemplate = ObservationTemplateHelper
+        final ObsdiagviewType baseTemplate = DiagramTemplateUtils
             .loadDiagramTemplateXML( storage.getContents() );
 
         final String strUrl = ResourceUtilities.createURLSpec( input

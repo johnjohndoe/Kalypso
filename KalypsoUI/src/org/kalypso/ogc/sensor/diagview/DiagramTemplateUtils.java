@@ -12,7 +12,10 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.diagview.impl.DiagramAxis;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlObservation;
 import org.kalypso.template.obsdiagview.ObjectFactory;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
@@ -28,7 +31,7 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  * 
  * @author schlienger
  */
-public class ObservationTemplateHelper
+public class DiagramTemplateUtils
 {
   public final static String ODT_FILE_EXTENSION = "odt";
 
@@ -36,7 +39,7 @@ public class ObservationTemplateHelper
 
   private final static org.kalypso.zml.ObjectFactory ZML_OF = new org.kalypso.zml.ObjectFactory();
 
-  private ObservationTemplateHelper( )
+  private DiagramTemplateUtils( )
   {
     // not to be instanciated
   }
@@ -238,5 +241,53 @@ public class ObservationTemplateHelper
 
     final List list = tpl.getObservation();
     list.add( tobs );
+  }
+  
+  /**
+   * Creates a diagram axis according to the given IObservation axis
+   * 
+   * @param axis
+   * @return diagram axis
+   */
+  public static DiagramAxis createAxisFor( final IAxis axis )
+  {
+    return createAxisFor( axis.getType(), axis.getName(), axis.getUnit() );
+  }
+  
+  /**
+   * Creates a diagram axis according to the given IObservation axis
+   * 
+   * @param axisType
+   * @param label
+   * @param unit
+   * @return diagram axis
+   */
+  public static DiagramAxis createAxisFor( final String axisType,
+      final String label, final String unit )
+  {
+    if( axisType.equals( TimeserieConstants.TYPE_DATE ) )
+      return new DiagramAxis( axisType, "date", label, unit,
+          IDiagramAxis.DIRECTION_HORIZONTAL, IDiagramAxis.POSITION_BOTTOM,
+          false );
+
+    if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+      return new DiagramAxis( axisType, "double", label, unit,
+          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_LEFT, false );
+
+    if( axisType.equals( TimeserieConstants.TYPE_RUNOFF ) )
+      return new DiagramAxis( axisType, "double", label, unit,
+          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_LEFT, false );
+
+    if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
+      return new DiagramAxis( axisType, "double", label, unit,
+          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_RIGHT, true, null, new Double(0.8) );
+
+    if( axisType.equals( TimeserieConstants.TYPE_TEMPERATURE ) )
+      return new DiagramAxis( axisType, "double", label, unit,
+          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_RIGHT, false );
+
+    // default axis
+    return new DiagramAxis( axisType, "double", label, unit,
+        IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_LEFT, false );
   }
 }

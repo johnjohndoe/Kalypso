@@ -33,7 +33,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
+import org.kalypso.ogc.sensor.diagview.DiagramTemplateUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikYAchsen.GrafikAchse;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -151,7 +151,7 @@ public class GrafikLauncher
               false,
               "grafik",
               ".exe",
-              ObservationTemplateHelper.class
+              DiagramTemplateUtils.class
                   .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ),
               true );
 
@@ -165,7 +165,7 @@ public class GrafikLauncher
                 false,
                 "grafik",
                 ".hlp",
-                ObservationTemplateHelper.class
+                DiagramTemplateUtils.class
                     .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.hlp" ),
                 true );
 
@@ -201,7 +201,7 @@ public class GrafikLauncher
 
     try
     {
-      final ObsdiagviewType odt = ObservationTemplateHelper
+      final ObsdiagviewType odt = DiagramTemplateUtils
           .loadDiagramTemplateXML( odtFile.getContents() );
 
       final UrlResolver urlRes = new UrlResolver();
@@ -249,7 +249,7 @@ public class GrafikLauncher
         {
           final String msg = "Konvertierung nicht möglich, Zml-Datei ist keine lokale Datei: "
               + url.toExternalForm();
-          Logger.getLogger( ObservationTemplateHelper.class.getName() )
+          Logger.getLogger( DiagramTemplateUtils.class.getName() )
               .warning( msg );
           continue;
         }

@@ -6,6 +6,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizard.ocs.idtable.IdTableViewer;
 
 /**
@@ -20,7 +21,7 @@ public class OcsExportWizardIdentifiersPage extends WizardPage
 
   public OcsExportWizardIdentifiersPage( final IStructuredSelection selection )
   {
-    super( "Zeitreihen Zuordnung" );
+    super( "Zeitreihen Zuordnung", "Zeitreihen Zuordnung", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
     
     m_selection = selection;
     

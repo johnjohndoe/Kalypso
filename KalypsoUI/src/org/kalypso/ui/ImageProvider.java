@@ -22,15 +22,18 @@ public class ImageProvider
   
   public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMIN = id( "icons/full/elcl16/kde_viewmag+.gif" );
   
-  public static final ImageDescriptor IMAGE_ZML_FILE = id("icons/zml-icon.gif");
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ADD = id("icons/observation_repository_add.gif");
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_REMOVE = id("icons/observation_repository_rem.gif");
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_CONF = id("icons/observation_repository_conf.gif");
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_RELOAD = id("icons/observation_repository_reload.gif");
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_COLLAPSE = id("icons/observation_repository_collapse.gif");
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_EXPAND = id("icons/observation_repository_expand.gif");
+  public static final ImageDescriptor IMAGE_ZML_FILE = id("icons/observation/zml-icon.gif");
   
-  public static final ImageDescriptor IMAGE_OBSERVATION_LINK = id("icons/observation_link.gif");
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ADD = id("icons/repository/repository_add.gif");
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_REMOVE = id("icons/repository/repository_remove.gif");
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_CONF = id("icons/util/settings.gif");
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_RELOAD = id("icons/repository/repository_reload.gif");
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_COLLAPSE = id("icons/util/tree_collapse_all.gif");
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_EXPAND = id("icons/util/tree_expand_all.gif");
+  public static final ImageDescriptor IMAGE_ZML_UPLOAD = id("icons/repository/zml_upload.gif");
+  public static final ImageDescriptor IMAGE_ZML_DOWNLOAD = id("icons/repository/zml_download.gif");
+  
+  public static final ImageDescriptor IMAGE_OBSERVATION_LINK = id("icons/observation/observation_link.gif");
   
   public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMOUT = id( "icons/full/elcl16/kde_viewmag-.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_PAN = id( "icons/full/elcl16/kde_move.gif" );
@@ -47,6 +50,7 @@ public class ImageProvider
   
   public static final ImageDescriptor IMAGE_UTIL_CHECKED = id( "icons/util/checked.gif" );
   public static final ImageDescriptor IMAGE_UTIL_UNCHECKED = id( "icons/util/unchecked.gif" );
+  public static final ImageDescriptor IMAGE_UTIL_UPLOAD_WIZ = id("icons/util/upload_wiz.gif");
   
   public static final ImageDescriptor IMAGE_STYLEEDITOR_SAVE = id( "icons/gistable/save_edit.gif" );
   public static final ImageDescriptor IMAGE_STYLEEDITOR_ADD_RULE = id( "icons/obstable/add_row.gif" );
@@ -56,7 +60,5 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_STYLEEDITOR_FORWARD = id( "icons/util/forward_nav.gif" );
   public static final ImageDescriptor IMAGE_STYLEEDITOR_OK = id( "icons/util/ok.gif" );
   public static final ImageDescriptor IMAGE_STYLEEDITOR_GET_SCALE = id( "icons/map/redo_edit.gif" );
-  
-  
 }
 

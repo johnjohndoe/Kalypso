@@ -16,7 +16,7 @@ public class ExportAsFileAction extends AbstractRepositoryExplorerAction impleme
 {
   public ExportAsFileAction( final RepositoryExplorerPart explorer )
   {
-    super( explorer, "Als Datei exportieren", ImageProvider.IMAGE_ZML_FILE, "Exportiert die selektierte Zeitreihe als lokale Datei");
+    super( explorer, "Datei herunterladen", ImageProvider.IMAGE_ZML_DOWNLOAD, "Lädt die selektierte Zeitreihe als lokale Datei herunter");
     
     explorer.addSelectionChangedListener( this );
     setEnabled( explorer.isObservationSelected( explorer.getSelection() ) != null );

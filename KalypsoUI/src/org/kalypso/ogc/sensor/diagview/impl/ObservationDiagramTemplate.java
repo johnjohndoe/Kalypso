@@ -3,6 +3,7 @@ package org.kalypso.ogc.sensor.diagview.impl;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.diagview.DiagramTemplateUtils;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
 import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
@@ -86,7 +87,7 @@ public class ObservationDiagramTemplate extends DefaultDiagramTemplate
           IDiagramAxis daDate = getDiagramAxis( dateAxis.getType() );
           if( daDate == null )
           {
-            daDate = DiagramAxis.createAxisFor( dateAxis );
+            daDate = DiagramTemplateUtils.createAxisFor( dateAxis );
             addAxis( daDate );
           }
           mappings[0] = new AxisMapping( dateAxis, daDate );
@@ -95,7 +96,7 @@ public class ObservationDiagramTemplate extends DefaultDiagramTemplate
           IDiagramAxis daValue = getDiagramAxis( type );
           if( daValue == null )
           {
-            daValue = DiagramAxis.createAxisFor( valueAxis[i] );
+            daValue = DiagramTemplateUtils.createAxisFor( valueAxis[i] );
             addAxis( daValue );
           }
           mappings[1] = new AxisMapping( valueAxis[i], daValue );

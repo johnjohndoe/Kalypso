@@ -13,6 +13,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
@@ -94,12 +95,16 @@ public class ObservationTableModel extends AbstractTableModel
       }
 
       // values of observation of the column
-      final ITuppleModel tupModel = col.getTheme().getObservation().getValues(
+      final IObservation obs = col.getTheme().getObservation();
+      final ITuppleModel tupModel = obs.getValues(
           col.getTheme().getArguments() );
 
       // fill shared column values
       for( int r = 0; r < tupModel.getCount(); r++ )
-        m_sharedModel.add( tupModel.getElement( r, keyAxis ) );
+      {
+        final Object elt = tupModel.getElement( r, keyAxis );
+        m_sharedModel.add( elt );
+      }
 
       // add tablecolumn to tablemodel
       m_valuesModel.addColumn( col.getName() );
@@ -299,7 +304,7 @@ public class ObservationTableModel extends AbstractTableModel
   {
     m_columns.clear();
     m_sharedModel.clear();
-    
+    m_sharedAxis = null;
     m_valuesModel.setColumnCount( 0 );
     m_statusModel.setColumnCount( 0 );
 

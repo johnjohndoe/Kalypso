@@ -161,8 +161,12 @@ public class ObservationPlot extends XYPlot
     }
 
     vAxis.setInverted( diagAxis.isInverted() );
-    vAxis.setLowerMargin( 0.02 );
-    vAxis.setUpperMargin( 0.02 );
+    
+    if( diagAxis.getLowerMargin() != null )
+      vAxis.setLowerMargin( diagAxis.getLowerMargin().doubleValue() );
+    
+    if( diagAxis.getUpperMaring() != null )
+      vAxis.setUpperMargin( diagAxis.getUpperMaring().doubleValue() );
 
     AxisLocation loc = getLocation( diagAxis );
 

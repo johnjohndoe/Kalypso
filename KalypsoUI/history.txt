@@ -36,6 +36,9 @@ Version ...
 	* N wird als durchsichtige Balke dargestellt
 	* Alarmstufen, Prognosestart werden dargestellt
 	
+- Zeitreihen Repository Browser:
+	* 
+
 - GIS Darstellung:
 	Koordinatensystem aller Karten ist jetzt Gauss-Krüger 5
 	Die fehlenden Gewässer der Spree wurden in der Überischtskarte ergänzt
