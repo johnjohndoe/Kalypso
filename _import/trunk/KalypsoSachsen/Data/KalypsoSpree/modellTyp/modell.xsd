@@ -28,7 +28,7 @@
                     <element name="Bodenfeuchte" type="double"/>
                     <element name="BodenfeuchteMax" type="double"/>
                     <element name="Ausdehnung" type="double"/>
-   					<element name="Niederschlag" type="obslink:ObservationLink"/>
+   					<element name="Niederschlag" type="obslink:TimeseriesLink"/>
                     <element name="Wasserstand" type="string"/>
                 </sequence>
             </extension>

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ObservationLink xmlns="obslink.zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="obslink.zml.kalypso.org
+obslink.xsd" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="beispiel.zml"/>

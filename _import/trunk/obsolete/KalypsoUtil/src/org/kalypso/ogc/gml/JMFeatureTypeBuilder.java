@@ -94,7 +94,10 @@ public class JMFeatureTypeBuilder
     }
     else
     {
-      final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( valueNS + ":" + typeName );
+      final String typename = valueNS + ":" + typeName;
+      final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( typename );
+      if( typeHandler == null )
+        throw new Exception( "undefined type in schema: " + typename );
       myTypeName = typeHandler.getClassName();
     }
   }

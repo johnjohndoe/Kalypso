@@ -123,9 +123,7 @@
 			<BodenfeuchteMax>70.0</BodenfeuchteMax>
 			<Ausdehnung/>
 			<Niederschlag>
-				<obslink:ObservationLink>
-					<obslink:observation ns1:actuate="onDemand" ns1:href="path=blubb" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-				</obslink:ObservationLink>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Pegel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=absolute#LOCATION=file://PC139/C/tmp/wschirg.zml"/>
 			</Niederschlag>
 			<Wasserstand/>
 		</Einzugsgebiet>
@@ -143,9 +141,7 @@
 			<BodenfeuchteMax>130.0</BodenfeuchteMax>
 			<Ausdehnung/>
 			<Niederschlag>
-				<obslink:ObservationLink>
-					<obslink:observation ns1:actuate="onDemand" ns1:href="path=blubb" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-				</obslink:ObservationLink>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Pegel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=absolute#LOCATION=file://PC139/C/tmp/wschirg.zml"/>
 			</Niederschlag>
 			<Wasserstand/>
 		</Einzugsgebiet>
@@ -163,9 +159,7 @@
 			<BodenfeuchteMax>70.0</BodenfeuchteMax>
 			<Ausdehnung/>
 			<Niederschlag>
-				<obslink:ObservationLink>
-					<obslink:observation ns1:actuate="onDemand" ns1:href="path=blubb" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-				</obslink:ObservationLink>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Pegel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=absolute#LOCATION=file://PC139/C/tmp/wschirg.zml"/>
 			</Niederschlag>
 			<Wasserstand/>
 		</Einzugsgebiet>
@@ -183,9 +177,7 @@
 			<BodenfeuchteMax>200.0</BodenfeuchteMax>
 			<Ausdehnung/>
 			<Niederschlag>
-				<obslink:ObservationLink>
-					<obslink:observation ns1:actuate="onDemand" ns1:href="path=blubb" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-				</obslink:ObservationLink>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Pegel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=absolute#LOCATION=file://PC139/C/tmp/wschirg.zml"/>
 			</Niederschlag>
 			<Wasserstand/>
 		</Einzugsgebiet>
@@ -203,9 +195,7 @@
 			<BodenfeuchteMax>310.0</BodenfeuchteMax>
 			<Ausdehnung/>
 			<Niederschlag>
-				<obslink:ObservationLink>
-					<obslink:observation ns1:actuate="onDemand" ns1:href="path=blubb" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-				</obslink:ObservationLink>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Pegel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=absolute#LOCATION=file://PC139/C/tmp/wschirg.zml"/>
 			</Niederschlag>
 			<Wasserstand/>
 		</Einzugsgebiet>

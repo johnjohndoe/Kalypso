@@ -160,12 +160,13 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
         if( ftps[i].getType().startsWith( "org.deegree.model.geometry" ) )
           geoFtps.add( ftps[i] );
       }
-      if( geoFtps.size() > 1 )
-        ; // TODO ask for geometry to create
+      
+//    TODO ask for geometry to create
+//      if( geoFtps.size() > 1 )
+//        ; 
+      
       if( geoFtps.size() > 0 )
-      {
         setGeometryWidget( (KalypsoFeatureLayer)layer, ft, (FeatureTypeProperty)geoFtps.get( 0 ) );
-      }
     }
   }
 

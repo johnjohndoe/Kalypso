@@ -28,11 +28,11 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class MapPanel extends Canvas implements IMapModellView
 {
-  private Image highlightImage = null;
+//  private Image highlightImage = null;
 
   private Image mapImage = null;
 
-  private Image selectionImage = null;
+//  private Image selectionImage = null;
 
   private int xOffset = 0;
 
@@ -42,11 +42,11 @@ public class MapPanel extends Canvas implements IMapModellView
 
   private int myHeight = 0;
 
-  private boolean validHighlight = false;
+//  private boolean validHighlight = false;
 
   private boolean validMap = false;
 
-  private boolean validSelection = false;
+//  private boolean validSelection = false;
 
   private IMapModell myModell = null;
 
@@ -237,31 +237,31 @@ public class MapPanel extends Canvas implements IMapModellView
     return validMap;
   }
 
-  private void setValidSelection( boolean status )
-  {
-    validSelection = status;
-  }
+//  private void setValidSelection( boolean status )
+//  {
+//    validSelection = status;
+//  }
 
-  private boolean hasValidSelection()
-  {
-    return validSelection;
-  }
+//  private boolean hasValidSelection()
+//  {
+//    return validSelection;
+//  }
 
-  private void setValidHighlight( boolean status )
-  {
-    validHighlight = status;
-  }
+//  private void setValidHighlight( boolean status )
+//  {
+//    validHighlight = status;
+//  }
 
-  private boolean hasValidHighlight()
-  {
-    return validHighlight;
-  }
+//  private boolean hasValidHighlight()
+//  {
+//    return validHighlight;
+//  }
 
   private void setValidAll( boolean status )
   {
     setValidMap( status );
-    setValidSelection( status );
-    setValidHighlight( status );
+//    setValidSelection( status );
+//    setValidHighlight( status );
   }
 
   /**

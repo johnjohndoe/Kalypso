@@ -33,7 +33,7 @@ public class PrefixSuffixFilter implements FilenameFilter
 	{
 		if( name.startsWith(m_prefix) && name.endsWith(m_suffix) )
 			return true;
-		else
-			return false;
+
+    return false;
 	}
 }

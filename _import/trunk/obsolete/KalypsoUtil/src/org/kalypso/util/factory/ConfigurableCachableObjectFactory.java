@@ -34,6 +34,7 @@ public class ConfigurableCachableObjectFactory
 {
   private final Properties m_props = new Properties();
 
+  /** type -> objectinstance */
   private final Map m_objects = new Hashtable();
 
   private final boolean m_cache;
@@ -119,5 +120,10 @@ public class ConfigurableCachableObjectFactory
   public void addProperties( Properties props )
   {
     m_props.putAll( props );
+  }
+
+  public boolean hasInstance( final String type )
+  {
+    return m_objects.containsKey(type);
   }
 }

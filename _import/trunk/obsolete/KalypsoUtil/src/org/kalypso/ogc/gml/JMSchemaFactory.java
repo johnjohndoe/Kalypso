@@ -24,11 +24,11 @@ public class JMSchemaFactory
 
   private static final int ELEMENT_REF = 2;
 
-  private static final int ELEMENT_SIMPLE_SCHEMA_TYPE = 3;
+//  private static final int ELEMENT_SIMPLE_SCHEMA_TYPE = 3;
 
-  private static final int ELEMENT_SIMPLE_TYPEREF = 4;
+//  private static final int ELEMENT_SIMPLE_TYPEREF = 4;
 
-  private static final int ELEMENT_GEOMETRYTYPE = 5;
+//  private static final int ELEMENT_GEOMETRYTYPE = 5;
 
   private static final int COMPLEX_CONTENT = 6;
 
@@ -36,11 +36,11 @@ public class JMSchemaFactory
 
   private static final int SEQUENCE = 8;
 
-  private static final int FEATURETYPE = 9;
+//  private static final int FEATURETYPE = 9;
 
   private static final int IGNORED_TYPE = 10;
 
-  private static final int ELEMENT_SIMPLE_TYPE = 11;
+//  private static final int ELEMENT_SIMPLE_TYPE = 11;
 
   private static final int RESTRICTION_TYPE = 12;
 

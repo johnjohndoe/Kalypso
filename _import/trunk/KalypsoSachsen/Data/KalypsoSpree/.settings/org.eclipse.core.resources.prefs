@@ -1,7 +1,9 @@
-#Wed Aug 18 21:49:35 CEST 2004
+#Thu Aug 19 21:51:20 CEST 2004
 encoding//test/TestModell.gmt=UTF-8
-encoding//rechenfaelle/r2/calcCase.gml=UTF-8
+encoding//oldstuff/calcCaseTrans.xsl=UTF-8
+encoding//oldstuff/modell.gml=UTF-8
 encoding/modell.gml=UTF-8
+encoding//rechenfaelle/r1/calcCase.gml=Cp1252
 encoding//vorlagen/modelldaten/modell.gmt=UTF-8
 eclipse.preferences.version=1
 encoding//modellTyp/vorlagen/rechenfall/table1.gtt=UTF-8

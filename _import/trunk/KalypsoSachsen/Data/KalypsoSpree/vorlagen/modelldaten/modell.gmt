@@ -2,7 +2,6 @@
 <gismapview xmlns="gismapview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<extent bottom="1245.0" left="123.4" right="456.7" top="111.1"/>
 	<layers>
-
 		<layer name="Talsperren" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=modellTyp/modell.xsd#LAYER=Talsperre" linktype="gml">
 			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/styles.sld#STYLE=Talsperren" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
 		</layer>
@@ -19,7 +18,7 @@
 			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/styles.sld#STYLE=Zufluesse" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
 		</layer>
 
-		<layer name="Gewässerverlauf" visible="true" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/major_rivers#SRS=EPSG:4326" linktype="shape">
+		<layer name="Gewässer Europa" visible="false" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/major_rivers#SRS=EPSG:4326" linktype="shape">
 			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/styles.sld#STYLE=default:europe:major_rivers" linktype="style" />
 		</layer>
 
@@ -34,6 +33,5 @@
 		<layer name="TK25_02" visible="true" id="layer26" xlink:type="simple" xlink:actuate="onRequest" 
 			xlink:href="SERVICE=http://ibpm.bjoernsen.de/cgi-bin/mapserv401?map=/usr/local/httpd/htdocs/lhwz/mapserver/demo.map&amp;#LAYERS=Topografie" linktype="wms">
 		</layer>
-		
 	</layers>
 </gismapview>

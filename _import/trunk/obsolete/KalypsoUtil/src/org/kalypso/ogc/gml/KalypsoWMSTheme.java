@@ -33,7 +33,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
   private GM_Envelope my_requestBBox = null;
 
-  public KalypsoWMSTheme( final String name,final KalypsoWMSLayer layer )
+  public KalypsoWMSTheme( final String name, final KalypsoWMSLayer layer )
   {
     super( name );
     myLayer = layer;

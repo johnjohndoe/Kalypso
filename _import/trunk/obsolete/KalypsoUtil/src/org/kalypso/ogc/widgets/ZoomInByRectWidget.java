@@ -6,7 +6,6 @@ package org.kalypso.ogc.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Polygon;
 
 import org.deegree.model.geometry.GM_Envelope;
 import org.kalypso.util.command.ICommand;
@@ -56,8 +55,6 @@ public class ZoomInByRectWidget extends AbstractWidget {
        if (startPoint != null && endPoint != null) {        
             final int x  = (int)Math.round(startPoint.getX());
             final int y  = (int)Math.round(startPoint.getY());
-            final int x2 = (int)Math.round(endPoint.getX());
-            final int y2 = (int)Math.round(endPoint.getY());
 			
 			double dx = Math.abs( endPoint.getX() - startPoint.getX() );
 			double dy = Math.abs( endPoint.getY() - startPoint.getY() );
@@ -83,12 +80,9 @@ public class ZoomInByRectWidget extends AbstractWidget {
             double wi = (x2 - x);
             double he = (y2 - y);
 
-            double fac = wi / he;
-
             double centerx = (x2 + x) / 2.0;
             double centery = (y2 + y) / 2.0;
 
-            double diff = (x2 - x);
             double xmin = centerx - (wi / 2.0);
             double xmax = centerx + (wi / 2.0);
             double ymax = centery + (he / 2.0);

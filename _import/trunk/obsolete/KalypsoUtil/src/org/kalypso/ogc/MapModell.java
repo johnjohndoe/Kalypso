@@ -39,8 +39,9 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
     myCoordinatesSystem = crs;
   }
 
-  public void activateTheme( IKalypsoTheme theme )
+  public void activateTheme( final IKalypsoTheme theme )
   {
+    // TODO: check, ob thema überhaupt hier vorhanden? 
     myActiveTheme = theme;
     fireModellEvent( null );
   }
@@ -79,6 +80,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
 
   public void enableTheme( final IKalypsoTheme theme, final boolean status )
   {
+    // TODO: check if theme is in this model?
     if( status )
       myEnabledThemeStatus.put( theme, THEME_ENABLED );
     else

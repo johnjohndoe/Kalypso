@@ -5,9 +5,17 @@
 		<arg name="startTime" value="${time}"/>
 	</transformation>
 
+	<transformation className="org.kalypso.model.transformation.CopyTransformation">
+		<arg name="input" value="modell.gml"/>
+		<arg name="output" value="calcCase.gml"/>
+	</transformation>
+
+<!--
 	<transformation className="org.kalypso.model.transformation.XslTransformation">
 		<arg name="input" value="modell.gml"/>
 		<arg name="xsl" value="modellTyp/calcCaseTrans.xsl"/>
 		<arg name="output" value="calcCase.gml"/>
 	</transformation>
+-->
+
 </transformationConfig>

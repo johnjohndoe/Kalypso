@@ -7,8 +7,7 @@ import javax.xml.bind.Unmarshaller;
 import org.deegree_impl.extension.ITypeHandler;
 import org.deegree_impl.extension.TypeRegistryException;
 import org.kalypso.zml.obslink.ObjectFactory;
-import org.kalypso.zml.obslink.ObservationLink;
-import org.w3._1999.xlink.XlinkBase;
+import org.kalypso.zml.obslink.TimeseriesLink;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -33,7 +32,7 @@ public class ObservationLinkHandler implements ITypeHandler
    */
   public String getClassName()
   {
-    return ObservationLink.class.getName();
+    return TimeseriesLink.class.getName();
   }
 
   /**
@@ -104,14 +103,11 @@ public class ObservationLinkHandler implements ITypeHandler
 
   private void test() throws JAXBException
   {
-    final ObservationLink link = m_factory.createObservationLink();
+    final TimeseriesLink link = m_factory.createTimeseriesLink();
 
-    final XlinkBase xlinkBase = new org.w3._1999.xlink.ObjectFactory().createXlinkBase();
-    xlinkBase.setActuate( "onDemand" );
-    xlinkBase.setHref( "path=blubb" );
-    xlinkBase.setType( "simple" );
-
-    link.setObservation( xlinkBase );
+    link.setActuate( "onDemand" );
+    link.setHref( "path=blubb" );
+    link.setType( "simple" );
 
     m_marshaller.marshal( link, System.out );
   }
