@@ -14,7 +14,6 @@ import org.deegree.graphics.sld.Geometry;
 import org.deegree.graphics.sld.PolygonSymbolizer;
 import org.deegree.graphics.sld.Rule;
 import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.graphics.sld.TextSymbolizer;
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
@@ -44,7 +43,6 @@ import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
-import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.TextSymbolizerLayout;
 
 /**
  * @author F.Lindemann
@@ -241,15 +239,15 @@ public class SLDEditorGuiBuilder
           // create a pattern-filter for this style
           if( numericFeatureTypePropertylist.size() > 0 )
           {
-            ArrayList ruleList = new ArrayList();
+//            ArrayList ruleList = new ArrayList();
             // set by default first featuretypeproperty
             FeatureTypeProperty prop = (FeatureTypeProperty)numericFeatureTypePropertylist.get( 0 );
-            BoundaryExpression upperBoundary = null;
-            BoundaryExpression lowerBoundary = null;
-            PropertyName propertyName = new PropertyName( prop.getName() );
-            PropertyIsBetweenOperation operation = null;           
+//            BoundaryExpression upperBoundary = null;
+//            BoundaryExpression lowerBoundary = null;
+//            PropertyName propertyName = new PropertyName( prop.getName() );
+//            PropertyIsBetweenOperation operation = null;           
            
-            int geometryType = TextSymbolizerLayout.getFeatureTypeGeometryType(getFeatureType());
+//            int geometryType = TextSymbolizerLayout.getFeatureTypeGeometryType(getFeatureType());
 //            switch(geometryType)
 //            {
 //              case GM_POINT:
@@ -349,25 +347,25 @@ public class SLDEditorGuiBuilder
       public void widgetSelected( SelectionEvent e )
       {
         ArrayList list = new ArrayList();
-        FeatureTypeProperty[] ftp = getFeatureType().getProperties();
-        for( int i = 0; i < ftp.length; i++ )
+        FeatureTypeProperty[] tp = getFeatureType().getProperties();
+        for( int i = 0; i < tp.length; i++ )
         {
-          if( ftp[i].getType().equalsIgnoreCase( "java.lang.Double" ) )
-            list.add( ftp[i] );
-          else if( ftp[i].getType().equalsIgnoreCase( "java.math.BigInteger" ) )
-            list.add( ftp[i] );
-          else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Byte" ) )
-            list.add( ftp[i] );
-          else if( ftp[i].getType().equalsIgnoreCase( "java.math.BigDecimal" ) )
-            list.add( ftp[i] );
-          else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Float" ) )
-            list.add( ftp[i] );
-          else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Integer" ) )
-            list.add( ftp[i] );
-          else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Long" ) )
-            list.add( ftp[i] );
-          else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Short" ) )
-            list.add( ftp[i] );
+          if( tp[i].getType().equalsIgnoreCase( "java.lang.Double" ) )
+            list.add( tp[i] );
+          else if( tp[i].getType().equalsIgnoreCase( "java.math.BigInteger" ) )
+            list.add( tp[i] );
+          else if( tp[i].getType().equalsIgnoreCase( "java.lang.Byte" ) )
+            list.add( tp[i] );
+          else if( tp[i].getType().equalsIgnoreCase( "java.math.BigDecimal" ) )
+            list.add( tp[i] );
+          else if( tp[i].getType().equalsIgnoreCase( "java.lang.Float" ) )
+            list.add( tp[i] );
+          else if( tp[i].getType().equalsIgnoreCase( "java.lang.Integer" ) )
+            list.add( tp[i] );
+          else if( tp[i].getType().equalsIgnoreCase( "java.lang.Long" ) )
+            list.add( tp[i] );
+          else if( tp[i].getType().equalsIgnoreCase( "java.lang.Short" ) )
+            list.add( tp[i] );
         }
 
         if( list.size() > 0 )

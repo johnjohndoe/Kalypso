@@ -487,30 +487,6 @@ public class WeakHashSet extends AbstractSet
   }
 
   /**
-   * Check if this <code>WeakHashSet</code> is valid. This method counts the
-   * number of elements and compare it to {@link #count}. If the check fails,
-   * the number of elements is corrected (if we didn't, an
-   * {@link // assertionError}would be thrown for every operations after the
-   * first error, which make debugging more difficult). The set is otherwise
-   * unchanged, which should help to get similar behaviour as if // assertions
-   * hasn't been turned on.
-   */
-  private boolean valid()
-  {
-    int n = 0;
-    for( int i = 0; i < table.length; i++ )
-      for( WeakElement e = table[i]; e != null; e = e.next )
-        n++;
-    if( n != count )
-    {
-      count = n;
-      return false;
-    }
-    else
-      return true;
-  }
-
-  /**
    * Returns a view of this set as an array. Elements will be in an arbitrary
    * order. Note that this array contains strong reference. Consequently, no
    * object reclamation will occurs as long as a reference to this array is

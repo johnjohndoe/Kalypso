@@ -42,8 +42,6 @@
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.services.wcs;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 import org.deegree.services.OGCWebServiceEvent;
@@ -89,7 +87,7 @@ public class RemoteWCService extends OGCWebService_Impl
     if( request instanceof WCSGetCoverageRequest )
     {
       Object result = handleGetCoverage( (WCSGetCoverageRequest)request );
-      response = WCSProtocolFactory.createGetCoverageResponse( event.getRequest(), (byte[])result );
+      response = WCSProtocolFactory.createGetCoverageResponse( event.getRequest(), result );
     }
     else if( request instanceof WCSDescribeCoverageLayerRequest )
     {
@@ -158,121 +156,6 @@ public class RemoteWCService extends OGCWebService_Impl
       System.out.println( e );
     }
     //TODO create result
-
-    Debug.debugMethodEnd();
-    return null;
-  }
-
-  /**
-   * reads feature infos from the remote WCS by performing a FeatureInfo request
-   * against it. As long the result of a FeatureInfo request is generic (for
-   * usual it is som HTML) it isn't easy to combine the result with that of
-   * other WCS's
-   * 
-   * @param request
-   *          feature info request
-   * @return feaure info(s) decoded in the requested fromat
-   */
-  private OGCWebServiceEvent handleDescribeCoverageLayer( WCSDescribeCoverageLayerRequest request )
-      throws WebServiceException
-  {
-    Debug.debugMethodBegin( this, "handleDescribeCoverageLayer" );
-
-    String param = request.getRequestParameter();
-    String us = remoteAddress + "?" + param;
-    URL url = null;
-    try
-    {
-      url = new URL( us );
-    }
-    catch( Exception e )
-    {
-      throw new WebServiceException( e.getMessage() );
-    }
-
-    // read feature info from stream
-    InputStream is = null;
-    StringBuffer result = new StringBuffer( 10000 );
-    try
-    {
-      NetWorker nw = new NetWorker( url );
-      is = nw.getInputStream();
-      int c = 0;
-      while( ( c = is.read() ) >= 0 )
-      {
-        result.append( (char)c );
-      }
-      is.close();
-    }
-    catch( Exception e )
-    {
-      try
-      {
-        if( is != null )
-          is.close();
-      }
-      catch( IOException ei )
-      {
-        System.out.println( ei );
-      }
-      throw new WebServiceException( e.getMessage() );
-    }
-
-    Debug.debugMethodEnd();
-    return null;
-  }
-
-  /**
-   * reads the capabilities from the remote WCS by performing a GetCapabilities
-   * request against it.
-   * 
-   * @param request
-   *          capabilities request
-   */
-  private OGCWebServiceEvent handleGetCapabilities( WCSGetCapabilitiesRequest request )
-      throws WebServiceException
-  {
-    Debug.debugMethodBegin( this, "handleGetCapabilities" );
-
-    String param = request.getRequestParameter();
-    String us = remoteAddress + "?" + param;
-    URL url = null;
-    try
-    {
-      url = new URL( us );
-    }
-    catch( Exception e )
-    {
-      throw new WebServiceException( e.getMessage() );
-    }
-
-    // read capabilities from stream
-    InputStream is = null;
-    StringBuffer result = new StringBuffer( 10000 );
-    try
-    {
-      NetWorker nw = new NetWorker( url );
-      is = nw.getInputStream();
-      int c = 0;
-      while( ( c = is.read() ) >= 0 )
-      {
-        result.append( (char)c );
-      }
-      is.close();
-    }
-    catch( Exception e )
-    {
-      try
-      {
-        if( is != null )
-          is.close();
-      }
-      catch( IOException ei )
-      {
-        System.out.println( ei );
-      }
-      throw new WebServiceException( e.getMessage() );
-    }
 
     Debug.debugMethodEnd();
     return null;

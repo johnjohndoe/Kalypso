@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -11,11 +13,8 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.wq.WQObservationFilter;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
-import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.xml.sax.InputSource;
-
-import junit.framework.TestCase;
 
 /**
  * WQObservationFilterTest
@@ -50,7 +49,7 @@ public class WQObservationFilterTest extends TestCase
     }
   }
 
-  public void testGetValues( ) throws SensorException, WechmannException
+  public void testGetValues( ) throws SensorException
   {
     final ITuppleModel wqValues = m_obs.getValues( null );
 

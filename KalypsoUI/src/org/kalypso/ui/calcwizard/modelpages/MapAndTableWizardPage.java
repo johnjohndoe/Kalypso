@@ -37,7 +37,6 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
@@ -289,16 +288,8 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
       {
         public void run( )
         {
-          try
-          {
-            KalypsoWizardHelper.updateDiagramTemplate( tsProps,
-                selectedFeatures, diagTemplate, getContext() );
-          }
-          catch( final SensorException e )
-          {
-            // TODO handling
-            e.printStackTrace();
-          }
+          KalypsoWizardHelper.updateDiagramTemplate( tsProps,
+              selectedFeatures, diagTemplate, getContext() );
         }
       };
 

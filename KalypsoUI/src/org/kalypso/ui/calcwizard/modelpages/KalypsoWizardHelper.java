@@ -11,14 +11,12 @@ import javax.xml.bind.JAXBException;
 
 import org.deegree.model.feature.Feature;
 import org.kalypso.java.util.PropertiesHelper;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.diagview.impl.DiagramCurve;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewColumn;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
-import org.kalypso.template.obsdiagview.ObjectFactory;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.zml.obslink.TimeseriesLink;
@@ -31,7 +29,7 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class KalypsoWizardHelper
 {
-  private static final ObjectFactory m_diagObjectFactory = new ObjectFactory();
+//  private static final ObjectFactory m_diagObjectFactory = new ObjectFactory();
   
   private KalypsoWizardHelper( )
   {
@@ -79,12 +77,10 @@ public class KalypsoWizardHelper
    * @param template
    * 
    * @param context
-   * @throws SensorException
    */
   public static void updateDiagramTemplate(
       final TimeserieFeatureProps[] props, final List features,
       final LinkedDiagramTemplate template, final URL context )
-      throws SensorException
   {
     template.removeAllCurves();
 
@@ -125,11 +121,10 @@ public class KalypsoWizardHelper
    * @param features
    * @param template
    * @param context
-   * @throws SensorException
    */
   public static void updateTableTemplate( final TimeserieFeatureProps[] props,
       final List features, final LinkedTableViewTemplate template,
-      final URL context ) throws SensorException
+      final URL context )
   {
     for( final Iterator it = features.iterator(); it.hasNext(); )
     {

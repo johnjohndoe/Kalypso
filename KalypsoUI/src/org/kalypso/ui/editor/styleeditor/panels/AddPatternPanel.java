@@ -7,10 +7,10 @@ package org.kalypso.ui.editor.styleeditor.panels;
 import java.util.ArrayList;
 
 import javax.swing.event.EventListenerList;
+
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree_impl.services.wfs.filterencoding.PropertyName;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.kalypso.ui.editor.styleeditor.dialogs.filterencoding.BoundaryExpression;
 
 /**
  * @author F.Lindemann

@@ -85,8 +85,6 @@ public class WFSGProtocolFactory
 
   // TODO Exception Handling
 
-  private static final String wfsNS = "http://www.opengis.net/wfs";
-
   private static final String ogcNS = "http://www.opengis.net/ogc";
 
   private static final String GETCAPABILITIES = "GetCapabilities";
@@ -127,7 +125,7 @@ public class WFSGProtocolFactory
 
     if( root.equals( GETCAPABILITIES ) )
     {
-      request = (OGCWebServiceRequest)createWFSGGetCapabilitiesRequest( id );
+      request = createWFSGGetCapabilitiesRequest( id );
     }
     else if( root.equals( DESCRIBEFEATURE ) )
     {
@@ -135,7 +133,7 @@ public class WFSGProtocolFactory
     }
     else if( root.equals( GETFEATURE ) )
     {
-      request = (OGCWebServiceRequest)createWFSGGetFeatureRequest( id, doc );
+      request = createWFSGGetFeatureRequest( id, doc );
     }
     else if( root.equals( TRANSACTION ) )
     {

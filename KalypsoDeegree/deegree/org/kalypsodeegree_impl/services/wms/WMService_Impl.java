@@ -360,7 +360,7 @@ public class WMService_Impl extends OGCWebService_Impl
 
     Debug.debugMethodBegin();
     // try retrieving result from the cache
-    OGCWebServiceResponse result = cache.get( (WMSGetLegendGraphicRequest)request );
+    OGCWebServiceResponse result = cache.get( request );
 
     if( result == null )
     {

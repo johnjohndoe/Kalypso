@@ -1,16 +1,15 @@
 package org.kalypso.repository.conf.test;
 
-import org.kalypso.java.xml.DomHelper.DomLoadException;
-import org.kalypso.repository.conf.RepositoryConfigItem;
-
 import junit.framework.TestCase;
+
+import org.kalypso.repository.conf.RepositoryConfigItem;
 
 /**
  * @author schlienger
  */
 public class RepositoryConfigItemTest extends TestCase
 {
-  public void testSaveState() throws DomLoadException
+  public void testSaveState() 
   {
     final RepositoryConfigItem item = new RepositoryConfigItem( "foo", "bar", true );
     

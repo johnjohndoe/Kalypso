@@ -133,6 +133,13 @@
             name="Zeitreihen Vorlagenauswahl"
             id="org.kalypso.ui.editor.ObsEditor"
             extensions="zml"/>
+      <editor
+            icon="icons/kalypso_gtt.gif"
+            class="org.kalypso.ui.editor.featureeditor.FeatureEditor"
+            default="true"
+            name="Feature Editor"
+            id="org.kalypso.ui.editor.FeatureEditor"
+            extensions="gft"/>
    </extension>
    <extension
          point="org.eclipse.ui.views">

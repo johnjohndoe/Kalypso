@@ -544,7 +544,7 @@ public class GazetteerService_Impl extends OGCWebService_Impl implements OGCWebS
     GMLGeometry fid_geometry = null;
     try
     {
-      fid_geometry = GMLFactory.createGMLGeometry( (GM_Object)prop );
+      fid_geometry = GMLFactory.createGMLGeometry( prop );
     }
     catch( Exception e )
     {

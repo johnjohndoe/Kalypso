@@ -68,8 +68,6 @@ public class OracleSQLBuilder extends AbstractSQLBuilder
 
   private String SRID = null;
 
-  private boolean indexed;
-
   /**
    * Creates a new OracleSQLBuilder object.
    * 
@@ -79,7 +77,6 @@ public class OracleSQLBuilder extends AbstractSQLBuilder
   public OracleSQLBuilder( FeatureType ft, boolean indexed )
   {
     super( ft );
-    this.indexed = indexed;
     SRID = ft.getInternalCRS();
   }
 

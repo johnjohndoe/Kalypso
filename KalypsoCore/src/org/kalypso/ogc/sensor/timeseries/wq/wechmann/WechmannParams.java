@@ -39,10 +39,8 @@ public final class WechmannParams
    * @param W1
    * @param LNK1
    * @param K2
-   * 
-   * @throws WechmannException
    */
-  public WechmannParams( double W1, double LNK1, double K2 ) throws WechmannException
+  public WechmannParams( double W1, double LNK1, double K2 ) 
   {
     this( W1, LNK1, K2, Double.MAX_VALUE );
   }
@@ -59,9 +57,8 @@ public final class WechmannParams
    * @param WGR
    *          obere Wasserstandsgrenze in cm
    * 
-   * @throws WechmannException
    */
-  public WechmannParams( double W1, double LNK1, double K2, double WGR ) throws WechmannException
+  public WechmannParams( double W1, double LNK1, double K2, double WGR ) 
   {
     m_W1 = W1;
     m_LNK1 = LNK1;

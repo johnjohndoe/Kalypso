@@ -51,4 +51,6 @@ public interface GMLWorkspace extends ModellEventProvider
   public Object getFeatureFromPath( final String featurePath );
   
   public FeatureType getFeatureTypeFromPath( final String featurePath );
+  
+  public String getFeaturepathForFeature( final Feature feature );
 }

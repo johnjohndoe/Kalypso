@@ -14,7 +14,6 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.java.lang.CatchRunnable;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
@@ -28,11 +27,11 @@ import org.kalypso.ui.editor.AbstractEditorPart;
  */
 public class ObservationTableEditor extends AbstractEditorPart
 {
-  private final ObservationTableModel m_model = new ObservationTableModel();
+  protected final ObservationTableModel m_model = new ObservationTableModel();
 
-  private LinkedTableViewTemplate m_template = null;
+  protected LinkedTableViewTemplate m_template = null;
 
-  private ObservationTable m_table;
+  protected ObservationTable m_table;
 
   /**
    * @return Returns the model.
@@ -109,7 +108,7 @@ public class ObservationTableEditor extends AbstractEditorPart
 
         if( b )
         {
-          final IObservation obs = column.getObservation();
+//          final IObservation obs = column.getObservation();
 
           //m_model.g
 

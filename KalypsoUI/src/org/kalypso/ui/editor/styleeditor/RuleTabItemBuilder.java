@@ -450,7 +450,7 @@ public class RuleTabItemBuilder
     String rulePatternName = tmpRule.getName();
     double rulePatternMinDenom = tmpRule.getMinScaleDenominator();
     double rulePatternMaxDenom = tmpRule.getMaxScaleDenominator();
-    int patternType = -1;
+//    int patternType = -1;
 
     // 2. Begin to draw the first lines
     TabItem tabItem = new TabItem( ruleTabFolder, SWT.NULL );
@@ -464,7 +464,7 @@ public class RuleTabItemBuilder
     tabItem.setControl( composite );
     tabItem.setText( "Pattern:" + rulePatternName );
 
-    final TabFolder symbolizerTabFolder;
+//    final TabFolder symbolizerTabFolder;
 
     TextInputPanel titleInputPanel = new TextInputPanel( composite, "Title:", rulePatternName );
     titleInputPanel.addPanelListener( new PanelListener()
@@ -587,10 +587,10 @@ public class RuleTabItemBuilder
       // if PropertyIsBetween
       if( ( (ComplexFilter)filter ).getOperation().getOperatorId() == OperationDefines.PROPERTYISBETWEEN )
       {
-        patternType = OperationDefines.PROPERTYISBETWEEN;
+//        patternType = OperationDefines.PROPERTYISBETWEEN;
         // find out the settings of the filter - min, max and step values
 
-        boolean valuesHaveChanged = false;
+//        boolean valuesHaveChanged = false;
         for( int j = 0; j < ruleCollection.size(); j++ )
         {
           // verify again that it is a complexFilter and of type PropertyIs
@@ -609,7 +609,7 @@ public class RuleTabItemBuilder
                 maxValue = Double.parseDouble( ( (BoundaryExpression)isBetweenOperation
                     .getUpperBoundary() ).getValue() );
                 step = maxValue - minValue;
-                valuesHaveChanged = true;
+//                valuesHaveChanged = true;
               }
               else
               {

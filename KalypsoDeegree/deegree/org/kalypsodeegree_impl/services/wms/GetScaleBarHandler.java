@@ -74,8 +74,6 @@ import org.deegree_impl.tools.MimeTypeMapper;
 class GetScaleBarHandler
 {
 
-  private WMSCapabilities capabilities = null;
-
   private WMSGetScaleBarRequest request = null;
 
   /**
@@ -87,7 +85,6 @@ class GetScaleBarHandler
   public GetScaleBarHandler( WMSCapabilities capabilities, WMSGetScaleBarRequest request )
       throws WebServiceException
   {
-    this.capabilities = capabilities;
     this.request = request;
   }
 

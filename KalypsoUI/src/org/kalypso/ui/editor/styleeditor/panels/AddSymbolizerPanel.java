@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import javax.swing.event.EventListenerList;
 
 import org.deegree.graphics.sld.Graphic;
-import org.deegree.graphics.sld.LabelPlacement;
 import org.deegree.graphics.sld.Mark;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.graphics.sld.TextSymbolizer;
@@ -166,15 +165,15 @@ public class AddSymbolizerPanel
       textSymbolizer.getHalo().getFill().setOpacity( 0.3 );
       textSymbolizer.setLabel( null );
       textSymbolizer.getFont().setColor( Color.BLACK );
-      LabelPlacement labelPlacement = null;
+//      LabelPlacement labelPlacement = null;
       // check which geometry-type
       // if line than label_placement - line_placement
       if( TextSymbolizerLayout.getFeatureTypeGeometryType( featureType ) == TextSymbolizerLayout.GM_LINESTRING )
-        labelPlacement = StyleFactory.createLabelPlacement( StyleFactory
+        /* labelPlacement = */StyleFactory.createLabelPlacement( StyleFactory
             .createLinePlacement( "above" ) );
       // else label_placement - point_placement
       else
-        labelPlacement = StyleFactory.createLabelPlacement( StyleFactory.createPointPlacement() );
+        /* labelPlacement = */StyleFactory.createLabelPlacement( StyleFactory.createPointPlacement() );
       return textSymbolizer;
     }
     else if( symbolizerString.equals( "Polygon" ) )
