@@ -10,7 +10,7 @@ import java.util.Vector;
  */
 public abstract class AbstractRepository implements IRepository
 {
-  private final String m_location;
+  protected String m_location;
 
   private final List m_listeners;
 

@@ -50,7 +50,7 @@ public final class PSICompactFactory
       {
         m_factoryProperties = new Properties();
         m_factoryProperties.load( PSICompactFactory.class
-            .getResourceAsStream( "resources/config.ini" ) );
+            .getResourceAsStream( "/org/kalypso/psiadapter/resources/config.ini" ) );
 
         // path of class which implements the PSICompact interface
         PSI_CLASS = m_factoryProperties.getProperty( "PSI_CLASS", "de.psi.go.lhwz.PSICompactImpl" );
@@ -85,7 +85,7 @@ public final class PSICompactFactory
     if( m_psiCompactRep == null )
     {
       // TODO: specify location of the service here
-      m_psiCompactRep = new PSICompactRepository( "PSICompact@localhost" );
+      m_psiCompactRep = new PSICompactRepository( "PSICompact" );
 
       // TODO siehe Kommentar in VersionChecker Klasse
       // m_threadVersionChecker = new VersionChecker();
