@@ -1,6 +1,8 @@
 package org.kalypso.ogc.sensor.impl;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -24,6 +26,16 @@ public class SimpleTuppleModel implements ITuppleModel
   /** axes used within this model */
   private final IAxis[] m_axes;
 
+  /**
+   * Constructor with axes, empty data
+   * 
+   * @param axes
+   */
+  public SimpleTuppleModel( final List axes )
+  {
+    this( (IAxis[]) axes.toArray(new IAxis[axes.size()]));
+  }
+  
   /**
    * Constructor with axes, empty data
    * 
@@ -165,6 +177,16 @@ public class SimpleTuppleModel implements ITuppleModel
    *          the 'row' to be added
    */
   public void addTupple( final Object[] tupple )
+  {
+    m_tupples.addRow( tupple );
+  }
+  
+  /**
+   * Adds a tupple at the end of the model
+   * 
+   * @param tupple
+   */
+  public void addTupple( final Vector tupple )
   {
     m_tupples.addRow( tupple );
   }

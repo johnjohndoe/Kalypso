@@ -136,6 +136,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       else
         file.create( bis, false, monitor );
 
+      // TODO close in finally block?
       bis.close();
       monitor.done();
     }
