@@ -319,7 +319,7 @@ public class HydroData
 			String s1 = Printf.format("%8.0d" , String.valueOf( getInToNodeFunctNode().getNodeNr() ) );
 			bw.write( s1 );
 			bw.newLine();
-			String s2 = Printf.format("    %s" , getInToNodeFunctFile().getName() );// Ist vom bcena auf 70 Char im netz.cmn deffiniert
+			String s2 = Printf.format("%s" , getInToNodeFunctFile().getPath() );// Ist vom bcena auf 120 Char im netz.cmn definiert
 			bw.write( s2 );
 		}
 		if( outflowToNodeFunct != null )
@@ -328,7 +328,7 @@ public class HydroData
 			String s1 = Printf.format("%8.0d" , String.valueOf( getOutToNodeFunctNode().getNodeNr() ) );
 			bw.write( s1 );
 			bw.newLine();
-			String s2 = Printf.format("    %s" , getOutToNodeFunctFile().getName() );// Ist vom bcena auf 70 Char im netz.cmn deffiniert
+			String s2 = Printf.format("%s" , getOutToNodeFunctFile().getPath() );// Ist vom bcena auf 70 Char im netz.cmn deffiniert
 			bw.write( s2 );
 		}
 		if( precentExtract != null )
