@@ -28,8 +28,8 @@ public class FileRepository extends AbstractRepository
       m_filter = filter;
 
     m_root = new File( location );
-    if( !m_root.exists() )
-      throw new IllegalArgumentException( "Location existiert nicht! (Location: " + location + ")" );
+//    if( !m_root.exists() )
+//      throw new IllegalArgumentException( "Location existiert nicht! (Location: " + location + ")" );
   }
 
   public FileRepository( final String location )

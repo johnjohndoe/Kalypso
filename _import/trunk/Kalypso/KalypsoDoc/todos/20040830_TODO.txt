@@ -78,6 +78,10 @@ Grafik
 Niederschlagsmessungen
 
 
+Service Projekte:
+- klären: braucht man noch das 'build'-Verzeichnis unterhalb des 'lib'-Verzeichnis???
+
+
 ############################################################
 
 Deploy auf:

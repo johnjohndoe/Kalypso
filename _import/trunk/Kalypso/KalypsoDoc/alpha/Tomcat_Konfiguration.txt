@@ -1,19 +1,43 @@
 Tomcat Konfiguration auf dem Kalypso Server
 
-1. Tomcat 5.0.28 installieren (Install-Programm benutzen)
+1. Java SDK installieren
+
+z.B. unterhalb eines KalypsoServer-Verzeichnis
+
+
+2. Tomcat 5.0.28 installieren (Install-Programm benutzen)
 
 Beispiel Programmpfad:
 C:\programme\KalypsoServer\Tomcat5.0
 
-NB:
-- Java Runtime muss vorhanden sein ( TODO: kann man eine spezielle JRE nur für Tomcat einsetzen,
-  also vielleicht unterhalb des KalypsoServer Verzeichnis?
-  C:\programme\KalypsoServer\jre1.4.2 )
-- Tomcat Service einrichten damit Tomcat as service bei Windows Start gestartet wird.
+
+3. Abhängigkeiten
+
+Die libs (*.jar) aus dem KalypsoCoreServices Projekt in $CATALINA_HOME/common/lib kopieren.
 
 
-2. Abhängigkeiten
+4. Security
 
-Die libs (*.jar) aus dem KalypsoServices Projekt in $CATALINA_HOME/common/lib kopieren.
+FilePermission: Wenn die Services auf das Dateisystem zugreifen (ausserhalb deren eigene
+	Dokument Root), muss es eine entsprechende Berechtigung geben.
+	Dazu die file catalina.policy in %CATALINA_HOME%\conf editieren
+	
+Beispiel --------------------------------------------------------------------
 
+// ACHTUNG: diese Stelle ist Platformabhängig, da hier der echte FileSeparator ('\') übergeben werden muss
+grant {
+	permission java.io.FilePermission "\\\\Pc242\\KalypsoServer\\data\\-", "read";
+};
+
+-----------------------------------------------------------------------------
+
+
+5. Tomcat Startup
+
+Tomcat mit -security starten, damit die Einstellungen die hier unter Punkt 4. Security
+beschrieben worden sind berücksichtigt werden.
+
+Beispiel:
+
+catalina start -security
 
