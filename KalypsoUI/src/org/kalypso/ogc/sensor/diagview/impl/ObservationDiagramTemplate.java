@@ -15,11 +15,21 @@ import org.kalypso.util.runtime.IVariableArguments;
  */
 public class ObservationDiagramTemplate extends DefaultDiagramTemplate
 {
+  /** If set, the Method addObservation ignores all axises with the given type 
+   * Must be one of TimeseriesConstants.TYPE_...
+   * */
+  private String m_ignoreType;
+  
   public ObservationDiagramTemplate()
   {
     super( "", "", true );
   }
-
+  
+  public void setIgnoreType( String ignoreType )
+  {
+    m_ignoreType = ignoreType;
+  }
+  
   /**
    * Sets the observation used by this template. Removes all curves before adding the
    * given observation.
@@ -60,31 +70,36 @@ public class ObservationDiagramTemplate extends DefaultDiagramTemplate
     {
       if( !KalypsoStatusUtils.isStatusAxis( valueAxis[i] ) )
       {
-        final IAxisMapping[] mappings = new IAxisMapping[2];
-        
-        // look for a date diagram axis
-        IDiagramAxis daDate = getDiagramAxis( dateAxis.getType() );
-        if( daDate == null )
+        final String type = valueAxis[i].getType();
+        if( !type.equals( m_ignoreType ) )
         {
-          daDate = DiagramAxis.createAxisFor( dateAxis );
-          addAxis( daDate );
+          final IAxisMapping[] mappings = new IAxisMapping[2];
+          
+          // look for a date diagram axis
+          IDiagramAxis daDate = getDiagramAxis( dateAxis.getType() );
+          if( daDate == null )
+          {
+            daDate = DiagramAxis.createAxisFor( dateAxis );
+            addAxis( daDate );
+          }
+          mappings[0] = new AxisMapping( dateAxis, daDate );
+  
+          // look for a value diagram axis
+          IDiagramAxis daValue = getDiagramAxis( type );
+          if( daValue == null )
+          {
+            daValue = DiagramAxis.createAxisFor( valueAxis[i] );
+            addAxis( daValue );
+          }
+          mappings[1] = new AxisMapping( valueAxis[i], daValue );
+  
+          final DiagramCurve curve = new DiagramCurve( valueAxis[i].getName(), theme, mappings, this );
+          theme.addCurve( curve );
         }
-        mappings[0] = new AxisMapping( dateAxis, daDate );
-
-        // look for a value diagram axis
-        IDiagramAxis daValue = getDiagramAxis( valueAxis[i].getType() );
-        if( daValue == null )
-        {
-          daValue = DiagramAxis.createAxisFor( valueAxis[i] );
-          addAxis( daValue );
-        }
-        mappings[1] = new AxisMapping( valueAxis[i], daValue );
-
-        final DiagramCurve curve = new DiagramCurve( valueAxis[i].getName(), theme, mappings, this );
-        theme.addCurve( curve );
       }
     }
-    
+  
+    // todo: anly add, if not empty?
     addTheme( theme );
   }
 }

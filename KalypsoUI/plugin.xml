@@ -522,10 +522,11 @@
             <groupMarker name="prognoseStart"/>
          </menu>
 		 <action
-               label="Hochwasser Vorhersage durchführen"
-               class="org.kalypso.ui.action.StartCalcWizardAction"
-               menubarPath="org.kalypso.menu.model/prognoseStart"
-               id="org.kalypso.action.model.checkoutModel"/>
+         label="Hochwasser Vorhersage durchführen"
+         icon="etc/kalypso16.gif"
+         class="org.kalypso.ui.action.StartCalcWizardAction"
+         menubarPath="org.kalypso.menu.model/prognoseStart"
+         id="org.kalypso.action.model.checkoutModel"/>
                
          <action
                label="Berechnung durchführen"

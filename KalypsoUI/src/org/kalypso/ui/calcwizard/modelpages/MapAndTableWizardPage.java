@@ -18,16 +18,17 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
  * @author Belger
  */
-public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
-    ModellEventListener
+public class MapAndTableWizardPage extends AbstractCalcWizardPage implements ModellEventListener
 {
   /** Position des Haupt-Sash: Integer von 0 bis 100 */
   public final static String PROP_MAINSASH = "mainSash";
@@ -41,7 +42,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
-  public MapAndTableWizardPage( )
+  public MapAndTableWizardPage()
   {
     super( "<MapAndTableWizardPage>" );
   }
@@ -61,7 +62,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
 
       parent.getDisplay().asyncExec( new Runnable()
       {
-        public void run( )
+        public void run()
         {
           maximizeMap();
         }
@@ -73,8 +74,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
     }
   }
 
-  private void createRightPanel( final SashForm sashForm )
-      throws NumberFormatException
+  private void createRightPanel( final SashForm sashForm ) throws NumberFormatException
   {
     final Composite rightPanel = new Composite( sashForm, SWT.NONE );
 
@@ -87,20 +87,33 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
     createTablePanel( rightSash );
     createDiagramPanel( rightSash );
 
-    final Button button = new Button( rightPanel, SWT.NONE | SWT.PUSH );
-    button.setText( "Berechnung durchführen" );
+    createButtonPanel( rightPanel );
 
-    final int mainWeight = Integer.parseInt( getArguments().getProperty(
-        PROP_MAINSASH, "50" ) );
-    final int rightWeight = Integer.parseInt( getArguments().getProperty(
-        PROP_RIGHTSASH, "50" ) );
+    final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
+    final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
-    sashForm.setWeights( new int[] { mainWeight, 100 - mainWeight } );
+    sashForm.setWeights( new int[]
+    {
+        mainWeight,
+        100 - mainWeight } );
 
-    rightSash.setWeights( new int[] { rightWeight, 100 - rightWeight } );
+    rightSash.setWeights( new int[]
+    {
+        rightWeight,
+        100 - rightWeight } );
 
     // die Karte soll immer maximiert sein
     rightSash.addControlListener( getControlAdapter() );
+  }
+
+  private void createButtonPanel( final Composite parent )
+  {
+    final Composite panel = new Composite( parent, SWT.NONE );
+    panel.setLayout( new GridLayout( 4, false ) );
+    panel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+
+    final Button button = new Button( panel, SWT.NONE | SWT.PUSH );
+    button.setText( "Berechnung durchführen" );
 
     button.addSelectionListener( new SelectionAdapter()
     {
@@ -109,6 +122,42 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
         runCalculation();
       }
     } );
+
+    final Label label = new Label( panel, SWT.NONE );
+    label.setText( "Diagrammanzeige:" );
+    final GridData gridData = new GridData(  );
+    gridData.grabExcessHorizontalSpace = true;
+    gridData.horizontalAlignment = GridData.END;
+    label.setLayoutData( gridData );
+    
+    final Button radioQ = new Button( panel, SWT.RADIO );
+    radioQ.setText( "Abfluss" );
+    radioQ.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      public void widgetSelected( SelectionEvent e )
+      {
+        setObsIngoreType( TimeserieConstants.TYPE_WATERLEVEL );
+      }
+    } );
+
+    final Button radioW = new Button( panel, SWT.RADIO );
+    radioW.setText( "Wasserstand" );
+
+    radioW.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      public void widgetSelected( SelectionEvent e )
+      {
+        setObsIngoreType( TimeserieConstants.TYPE_RUNOFF );
+      }
+    } );
+
+    radioW.setSelection( true );
   }
 
   private void createDiagramPanel( final Composite parent )
@@ -121,52 +170,49 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
     initFeatureTable( parent );
   }
 
-  private void createMapPanel( final Composite parent ) throws Exception,
-      CoreException
+  private void createMapPanel( final Composite parent ) throws Exception, CoreException
   {
     // nötig, fürs schöne Layout (horizontales alignment mit dem right-sash)
     final Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayout( new GridLayout() );
 
-    final Control mapControl = initMap( composite,
-        MapPanel.WIDGET_SINGLE_SELECT );
+    final Control mapControl = initMap( composite, MapPanel.WIDGET_SINGLE_SELECT );
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
   /**
    * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#performFinish()
    */
-  public boolean performFinish( )
+  public boolean performFinish()
   {
-//    try
-//    {
-//      m_viewer.saveData( new NullProgressMonitor() );
-//    }
-//    catch( CoreException e )
-//    {
-//      e.printStackTrace();
-//    }
-//
+    //    try
+    //    {
+    //      m_viewer.saveData( new NullProgressMonitor() );
+    //    }
+    //    catch( CoreException e )
+    //    {
+    //      e.printStackTrace();
+    //    }
+    //
     return true;
   }
 
-  protected void runCalculation( )
+  protected void runCalculation()
   {
     final LayerTableViewer viewer = getLayerTable();
-    
+
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
     {
-      public void execute( final IProgressMonitor monitor )
-          throws CoreException
+      public void execute( final IProgressMonitor monitor ) throws CoreException
       {
         monitor.beginTask( "Berechnung wird durchgeführt", 2000 );
-        
+
         // TODO: alle Modelpages speichern
         // auch die Zeitreihen
         viewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
-        
-        final ModelNature nature = (ModelNature) getCalcFolder().getProject()
-            .getNature( ModelNature.ID );
+
+        final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature(
+            ModelNature.ID );
         nature.runCalculation( getCalcFolder(), new SubProgressMonitor( monitor, 1000 ) );
       }
     };
@@ -189,16 +235,15 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
       if( te instanceof CoreException )
       {
         ErrorDialog.openError( getContainer().getShell(), "Fehler",
-            "Fehler beim Aufruf der nächsten Wizard-Seite", ((CoreException) e
-                .getTargetException()).getStatus() );
+            "Fehler beim Aufruf der nächsten Wizard-Seite",
+            ( (CoreException)e.getTargetException() ).getStatus() );
       }
       else
       {
         // CoreExceptions are handled above, but unexpected runtime exceptions
         // and errors may still occur.
         MessageDialog.openError( getContainer().getShell(), "Interner Fehler",
-            "Fehler beim Aufruf der nächsten Wizard-Seite: "
-                + te.getLocalizedMessage() );
+            "Fehler beim Aufruf der nächsten Wizard-Seite: " + te.getLocalizedMessage() );
       }
     }
 
@@ -210,6 +255,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
    */
   protected TSLinkWithName[] getObservationsToShow()
   {
-    return getObservationsFromMap(false);
+    return getObservationsFromMap( false );
   }
 }
