@@ -60,6 +60,7 @@ public class ErrorFunctionFactory
 {
   public ErrorFunctionFactory()
   {
+    // TODO use transformationconstant in a better way, not as error-divisor !!
   // do not instantiate
   }
 
