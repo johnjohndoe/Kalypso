@@ -99,7 +99,7 @@ public class StringModifier implements IFeatureModifier
    */
   public Object parseInput( final Feature f, final Object value )
   {
-    final String text = value.toString();
+    final String text = value == null ? "" : value.toString();
     if( text.length() == 0 )
       return null;
     
@@ -125,11 +125,11 @@ public class StringModifier implements IFeatureModifier
     if( typeName.equals( "java.lang.String" ) )
       return text;
     if( typeName.equals( "java.lang.Double" ) )
-      return new Double( text );
+      return new Double( text.replace( ',', '.' ) );
     if( typeName.equals( "java.lang.Integer" ) )
       return new Integer( text );
     if( typeName.equals( "java.lang.Float" ) )
-      return new Float( text );
+      return new Float( text.replace( ',', '.' ) );
     if( typeName.equals( "java.lang.Long" ) )
       return new Long( text );
     if( typeName.equals( "java.lang.Boolean" ) )
