@@ -31,19 +31,8 @@ public class UrlUtilities
   {
     try
     {
-      URI uri = new URI( relativeURL );
-      if( !uri.isAbsolute() )
-      {
-        String prefix = baseURL.toString();
-        final int slashIndex = prefix.lastIndexOf( "/" );
-        final int backslashIndex = prefix.lastIndexOf( "\\" );
-        final int index = Math.max( slashIndex, backslashIndex );
-
-        prefix = prefix.substring( 0, index + 1 );
-
-        uri = new URI( prefix + relativeURL );
-      }
-      return new URL( baseURL, uri.getPath() );
+      final URI uri = new URI( relativeURL );
+      return uri.isAbsolute() ? new URL( relativeURL ) : new URL( baseURL, relativeURL );
     }
     catch( final URISyntaxException e )
     {
