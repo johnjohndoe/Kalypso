@@ -2,6 +2,8 @@ package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -46,29 +48,31 @@ public final class ChartFactory
    */
   static Plot createObservationPlot( final IDiagramTemplate template ) throws FactoryException
   {
-    final IDiagramAxis[] diagAxes = template.getAxisList();
+    final List diagAxes = template.getDiagramAxes();
 
-    final Map diag2chartAxis = new HashMap( diagAxes.length );
-    final Map chartAxes2Pos = new HashMap( diagAxes.length );
+    final Map diag2chartAxis = new HashMap( diagAxes.size() );
+    final Map chartAxes2Pos = new HashMap( diagAxes.size() );
     
     final ObservationPlot plot = new ObservationPlot( diag2chartAxis, chartAxes2Pos );
     
     int domPos = 0;
     int ranPos = 0;
 
-    for( int i = 0; i < diagAxes.length; i++ )
+    for( final Iterator it = diagAxes.iterator(); it.hasNext(); )
     {
-      ValueAxis vAxis = (ValueAxis)m_objFactory.getObjectInstance( diagAxes[i].getDataType(),
+      final IDiagramAxis diagAxis= (IDiagramAxis) it.next();
+      
+      ValueAxis vAxis = (ValueAxis)m_objFactory.getObjectInstance( diagAxis.getDataType(),
           ValueAxis.class, new Object[]
-          { diagAxes[i].toFullString() } );
+          { diagAxis.toFullString() } );
 
-      vAxis.setInverted( diagAxes[i].isInverted() );
+      vAxis.setInverted( diagAxis.isInverted() );
       vAxis.setLowerMargin( 0.02 );
       vAxis.setUpperMargin( 0.02 );
 
-      AxisLocation loc = getLocation( diagAxes[i] );
+      AxisLocation loc = getLocation( diagAxis );
 
-      if( diagAxes[i].getDirection().equals( IDiagramAxis.DIRECTION_HORIZONTAL ) )
+      if( diagAxis.getDirection().equals( IDiagramAxis.DIRECTION_HORIZONTAL ) )
       {
         plot.setDomainAxis( domPos, vAxis );
         plot.setDomainAxisLocation( domPos, loc );
@@ -87,14 +91,14 @@ public final class ChartFactory
         ranPos++;
       }
 
-      diag2chartAxis.put( diagAxes[i], vAxis );
+      diag2chartAxis.put( diagAxis, vAxis );
     }
 
     try
     {
-      final IDiagramCurve[] curves = template.getCurveList();
-      for( int i = 0; i < curves.length; i++ )
-        plot.addCurve( curves[i] );
+      final List curves = template.getCurves();
+      for( Iterator it = curves.iterator(); it.hasNext(); )
+        plot.addCurve( (IDiagramCurve) it.next() );
     }
     catch( SensorException e )
     {

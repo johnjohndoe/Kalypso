@@ -12,6 +12,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
@@ -19,7 +20,6 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewRules;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
-import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * TableModel das mit IObservation benutzt werden kann. Kann in eine JTable
@@ -31,9 +31,14 @@ public class ObservationTableModel extends AbstractTableModel
 {
   private final static ITableViewColumn[] EMPTY_COLS = new ITableViewColumn[0];
 
+  // columns used in this model
   private ITableViewColumn[] m_columns = EMPTY_COLS;
-
-  private IVariableArguments m_args = null;
+  
+  // value axes of the observations in the columns
+  private IAxis[] m_valueAxes = null;
+  
+  // shared axes of the observations in the columns
+  private IAxis[] m_sharedAxes = null;
 
   /** common column */
   private Set m_commonColumn = null;
@@ -60,7 +65,7 @@ public class ObservationTableModel extends AbstractTableModel
   public ObservationTableModel( ITableViewColumn[] columns )
       throws SensorException
   {
-    setColumns( columns, null );
+    setColumns( columns );
   }
 
   /**
@@ -78,11 +83,10 @@ public class ObservationTableModel extends AbstractTableModel
     {
       final Set cols = new HashSet( Arrays.asList( m_columns ) );
       cols.add( column );
-      setColumns( (ITableViewColumn[]) cols.toArray( new ITableViewColumn[0] ),
-          column.getArguments() );
+      setColumns( (ITableViewColumn[]) cols.toArray( new ITableViewColumn[0] ) );
     }
     else
-      setColumns( new ITableViewColumn[] { column }, column.getArguments() );
+      setColumns( new ITableViewColumn[] { column } );
     //    }
   }
 
@@ -91,19 +95,16 @@ public class ObservationTableModel extends AbstractTableModel
    * 
    * @param columns
    *          can be null. In that case the table model is empty.
-   * @param args
-   *          the arguments that will be used when fetching the values
    * @throws SensorException
    */
-  public void setColumns( final ITableViewColumn[] columns,
-      final IVariableArguments args ) throws SensorException
+  public void setColumns( final ITableViewColumn[] columns )
+      throws SensorException
   {
     if( columns == null )
       throw new IllegalArgumentException(
           "columns null not allowed. (If you want to clear the table: use clearColumns() instead)" );
 
     m_columns = columns;
-    m_args = args;
 
     // reset
     m_commonColumn = null;
@@ -119,23 +120,30 @@ public class ObservationTableModel extends AbstractTableModel
 
       for( int col = 0; col < m_columns.length; col++ )
       {
-        IAxis sharedAxis = m_columns[col].getSharedAxis();
+        final IAxis[] axes = m_columns[col].getObservation().getAxisList();
+        final IAxis[] keys = ObservationUtilities.findAxisByKey( axes );
+
+        if( keys.length == 0 )
+          continue;
+
+        m_sharedAxes[col] = keys[0];
 
         // create common axis (fake)
         if( m_ccAxis == null )
-          m_ccAxis = new DefaultAxis( sharedAxis );
+          m_ccAxis = new DefaultAxis( m_sharedAxes[col] );
 
         // verify compatibility of the axes
-        if( m_ccAxis.getDataClass() != sharedAxis.getDataClass()
-            || !m_ccAxis.getUnit().equals( sharedAxis.getUnit() ) )
-          throw new SensorException( m_ccAxis + " ist nicht mit " + sharedAxis
+        if( m_ccAxis.getDataClass() != m_sharedAxes[col].getDataClass()
+            || !m_ccAxis.getUnit().equals( m_sharedAxes[col].getUnit() )
+            || !m_ccAxis.getType().equals( m_sharedAxes[col].getType() ) )
+          throw new SensorException( m_ccAxis + " ist nicht mit " + m_sharedAxes[col]
               + " kompatibel." );
 
         tupModels[col] = new SimpleTuppleModel( m_columns[col].getObservation()
-            .getValues( m_args ) );
+            .getValues( null ) );
 
         for( int row = 0; row < tupModels[col].getCount(); row++ )
-          m_commonColumn.add( tupModels[col].getElement( row, sharedAxis ) );
+          m_commonColumn.add( tupModels[col].getElement( row, m_sharedAxes[col] ) );
       }
 
       // the common model, merges all values from all models for the value axes
@@ -151,11 +159,11 @@ public class ObservationTableModel extends AbstractTableModel
         for( int col = 0; col < m_columns.length; col++ )
         {
           final int index = tupModels[col].indexOf( sharedElement,
-              m_columns[col].getSharedAxis() );
+              m_sharedAxes[col] );
 
           if( index != -1 )
             m_valuesModel.setValueAt( tupModels[col].getElement( index,
-                m_columns[col].getValueAxis() ), row, col );
+                m_sharedAxes[col] ), row, col );
         }
 
         row++;
@@ -173,7 +181,7 @@ public class ObservationTableModel extends AbstractTableModel
     if( columnIndex == 0 )
       return m_ccAxis.getDataClass();
 
-    return m_columns[columnIndex - 1].getValueAxis().getDataClass();
+    return m_valueAxes[columnIndex - 1].getDataClass();
   }
 
   /**
@@ -292,7 +300,7 @@ public class ObservationTableModel extends AbstractTableModel
       throws NoSuchElementException
   {
     final String kStatusCol = KalypsoStatusUtils
-        .getStatusAxisLabelFor( m_columns[column - 1].getValueAxis() );
+        .getStatusAxisLabelFor( m_valueAxes[column - 1] );
 
     final IAxis valueAxis = findValueAxis( kStatusCol );
 
@@ -312,10 +320,10 @@ public class ObservationTableModel extends AbstractTableModel
   private IAxis findValueAxis( final String name )
       throws NoSuchElementException
   {
-    for( int i = 0; i < m_columns.length; i++ )
+    for( int i = 0; i < m_valueAxes.length; i++ )
     {
-      if( m_columns[i].getValueAxis().getLabel().equals( name ) )
-        return m_columns[i].getValueAxis();
+      if( m_sharedAxes[i].getLabel().equals( name ) )
+        return m_valueAxes[i];
     }
 
     throw new NoSuchElementException();

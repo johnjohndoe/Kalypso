@@ -3,9 +3,9 @@ package org.kalypso.ui.calcwizard.modelpages;
 import java.awt.Frame;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree_impl.model.feature.visitors.GetSelectionVisitor;
@@ -36,8 +36,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapPanel;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
-import org.kalypso.ogc.sensor.diagview.DiagramTemplateFactory;
-import org.kalypso.ogc.sensor.template.ObservationTemplateHelper;
+import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
@@ -297,7 +296,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       if( !( theme instanceof IKalypsoFeatureTheme ) )
         return;
 
-      m_obsdiagviewType.getCurve().clear();
+      m_obsdiagviewType.getObservation().clear();
 
       FileOutputStream fos = null;
 
@@ -313,8 +312,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
         // create tmp odt template
         final File file = File.createTempFile( "diag", ".odt" );
+        file.deleteOnExit();
+        
         fos = new FileOutputStream( file );
-        DiagramTemplateFactory.writeTemplate( m_obsdiagviewType, fos );
+        ObservationTemplateHelper.saveDiagramTemplateXML( m_obsdiagviewType, fos );
 
         ObservationTemplateHelper.openGrafik4odt( file, getProject() );
 
@@ -326,15 +327,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       }
       finally
       {
-        try
-        {
-          if( fos != null )
-            fos.close();
-        }
-        catch( IOException e1 )
-        {
-          e1.printStackTrace();
-        }
+        IOUtils.closeQuietly( fos );
       }
     }
 

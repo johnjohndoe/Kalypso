@@ -1,7 +1,7 @@
 package org.kalypso.ogc.sensor.diagview;
 
-import org.kalypso.ogc.sensor.IObservationProvider;
-import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.ogc.sensor.IObservation;
+
 
 
 /**
@@ -9,12 +9,20 @@ import org.kalypso.util.runtime.IVariableArguments;
  * 
  * @author schlienger
  */
-public interface IDiagramCurve extends IObservationProvider
+public interface IDiagramCurve
 {
+  /**
+   * @return name of the curve as displayed in the diagram
+   */
   public String getName();
   
+  /**
+   * @return list of mappings between diagram axes and observation axes
+   */
   public IAxisMapping[] getMappings();
   
-  public IVariableArguments getArguments();
-  public void setArguments( IVariableArguments args );
+  /**
+   * @return observation on which this curve is based
+   */
+  public IObservation getObservation();
 }

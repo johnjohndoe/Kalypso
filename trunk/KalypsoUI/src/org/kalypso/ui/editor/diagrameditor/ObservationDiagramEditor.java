@@ -11,9 +11,12 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.jfree.chart.ChartPanel;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
+import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
-import org.kalypso.ogc.sensor.template.ObservationTemplateHelper;
+import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.editor.AbstractEditorPart;
 
 /**
@@ -52,10 +55,13 @@ public class ObservationDiagramEditor extends AbstractEditorPart
    */
   public void dispose( )
   {
-    super.dispose();
-
     if( m_template != null )
+    {
       m_template.removeTemplateEventListener( m_obsChart );
+      m_template.dispose();
+    }
+    
+    super.dispose();
   }
 
   /**
@@ -83,8 +89,8 @@ public class ObservationDiagramEditor extends AbstractEditorPart
       {
         try
         {
-          m_template = ObservationTemplateHelper.loadDiagramTemplate( input
-              .getFile() );
+          final ObsdiagviewType baseTemplate = ObservationTemplateHelper.loadDiagramTemplateXML( input.getFile() );
+          m_template = new LinkedDiagramTemplate( baseTemplate, ResourceUtilities.createURL( input.getFile() ) );
 
           m_obsChart = new ObservationChart( m_template );
           m_template.addTemplateEventListener( m_obsChart );

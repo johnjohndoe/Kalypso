@@ -10,9 +10,10 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
-import org.kalypso.util.runtime.IVariableArguments;
 
 /**
+ * Default implementation of the <code>IDiagramCurve</code> interface.
+ * 
  * @author schlienger
  */
 public class DiagramCurve implements IDiagramCurve
@@ -25,8 +26,6 @@ public class DiagramCurve implements IDiagramCurve
 
   private final IDiagramTemplate m_template;
 
-  private IVariableArguments m_args = null;
-
   /**
    * Constructor
    * 
@@ -34,16 +33,14 @@ public class DiagramCurve implements IDiagramCurve
    * @param obs
    * @param mappings
    * @param template
-   * @param args
    */
   public DiagramCurve( final String name, final IObservation obs, final Properties mappings,
-      final IDiagramTemplate template, final IVariableArguments args )
+      final IDiagramTemplate template )
   {
     m_name = name;
     m_mappings = mappings;
     m_obs = obs;
     m_template = template;
-    m_args = args;
   }
 
   /**
@@ -59,12 +56,12 @@ public class DiagramCurve implements IDiagramCurve
    */
   public IAxisMapping[] getMappings()
   {
-    List ms = new ArrayList();
+    final List ms = new ArrayList();
 
-    for( Iterator it = m_mappings.keySet().iterator(); it.hasNext(); )
+    for( final Iterator it = m_mappings.keySet().iterator(); it.hasNext(); )
     {
-      String obsAxis = (String)it.next();
-      String diagAxis = m_mappings.getProperty( obsAxis );
+      final String obsAxis = (String)it.next();
+      final String diagAxis = m_mappings.getProperty( obsAxis );
 
       ms.add( new AxisMapping( ObservationUtilities.findAxisByName( m_obs.getAxisList(), obsAxis ), m_template
           .findAxis( diagAxis ) ) );
@@ -74,26 +71,10 @@ public class DiagramCurve implements IDiagramCurve
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationProvider#getObservation()
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramCurve#getObservation()
    */
   public IObservation getObservation()
   {
     return m_obs;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramCurve#getArguments()
-   */
-  public IVariableArguments getArguments()
-  {
-    return m_args;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramCurve#setArguments(org.kalypso.util.runtime.IVariableArguments)
-   */
-  public void setArguments( IVariableArguments args )
-  {
-    m_args = args;
   }
 }

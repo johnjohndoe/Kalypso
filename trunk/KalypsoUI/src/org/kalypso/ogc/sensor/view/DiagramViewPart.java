@@ -19,10 +19,8 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 import org.kalypso.util.factory.FactoryException;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * Diagram QuickView.
@@ -109,14 +107,7 @@ public class DiagramViewPart extends ViewPart implements
 
         final IObservation obs = ObservationCache.getObservationFor( item );
         if( obs != null )
-        {
-          final int days = Integer.valueOf(
-              item.getRepository().getProperty(
-                  IKalypsoPreferences.NUMBER_OF_DAYS ) ).intValue();
-
-          m_template.setObservation( obs, DateRangeArgument
-              .createFromPastDays( days ) );
-        }
+          m_template.setObservation( obs );
       }
     };
 
