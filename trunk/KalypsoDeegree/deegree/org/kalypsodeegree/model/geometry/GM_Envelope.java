@@ -119,9 +119,9 @@ public interface GM_Envelope
   /**
    * merges two GM_Envelops and returns the minimum envelope containing both.
    * 
-   * @return
+   * @return merged envelope
    */
-  GM_Envelope merge( GM_Envelope envelope );
+  GM_Envelope getMerged( GM_Envelope envelope );
 
   /**
    * creates a new envelope

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
@@ -273,7 +273,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         }
 
         m_theme = new KalypsoFeatureTheme( (CommandableWorkspace)newValue, m_featurePath, getName() );
-        
+
         m_theme.addModellListener( this );
 
         m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
@@ -281,7 +281,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         // jetzt immer die styles noch mal holen
         // das ist nicht ok! was ist, wenn inzwischen neue styles vom user
         // hinzugefügt wurden?
-        // das ist nicht ok! was ist, wenn inzwischen neue styles vom user hinzugef?gt wurden?
+        // das ist nicht ok! was ist, wenn inzwischen neue styles vom user
+        // hinzugef?gt wurden?
         for( int i = 0; i < m_styleKeys.length; i++ )
           pool.addPoolListener( this, m_styleKeys[i] );
 
@@ -408,5 +409,14 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return m_commandTarget.getSchedulingRule();
   }
 
-  
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.deegree.model.geometry.GM_Envelope)
+   */
+  public FeatureList getFeatureListVisible( GM_Envelope env )
+  {
+    if( m_theme != null )
+      return m_theme.getFeatureListVisible( env );
+    return null;
+  }
+
 }

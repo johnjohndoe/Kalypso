@@ -255,7 +255,7 @@ public class Feature_Impl implements Feature
         if( env == null )
           env = geoms[i].getEnvelope();
         else
-          env = env.merge( geoms[i].getEnvelope() );
+          env = env.getMerged( geoms[i].getEnvelope() );
       }
       else
       {
@@ -264,7 +264,7 @@ public class Feature_Impl implements Feature
         if( env == null )
           env = env2;
         else
-          env = env.merge( env2 );
+          env = env.getMerged( env2 );
       }
     }
     m_envelope = env;
@@ -345,7 +345,8 @@ public class Feature_Impl implements Feature
 
   public boolean isSelected( int selectID )
   {
-    return selectID == ( mySelection & selectID );
+    boolean selected=selectID == ( mySelection & selectID );
+    return selected;
   }
 
   /**

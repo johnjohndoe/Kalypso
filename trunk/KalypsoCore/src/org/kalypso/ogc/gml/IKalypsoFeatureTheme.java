@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml;
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureType;
+import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.util.command.ICommandTarget;
@@ -65,4 +66,6 @@ public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
   public UserStyle[] getStyles();
   
   public FeatureList getFeatureList();
+
+  public FeatureList getFeatureListVisible(GM_Envelope env);
 }

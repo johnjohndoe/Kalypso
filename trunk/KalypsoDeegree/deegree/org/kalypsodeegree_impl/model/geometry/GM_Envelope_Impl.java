@@ -111,8 +111,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
 
   /**
    * 
-   * 
-   * @return
+   * @see java.lang.Object#clone()
    */
   public Object clone()
   {
@@ -270,8 +269,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     GM_Position p3 = new GM_Position_Impl( bb.getMax().getX(), bb.getMin().getY() );
     GM_Position p4 = new GM_Position_Impl( bb.getMax().getX(), bb.getMax().getY() );
 
-    boolean ins = ( this.contains( p1 ) && this.contains( p2 ) && this.contains( p3 ) && this
-        .contains( p4 ) );
+    boolean ins = ( contains( p1 ) && contains( p2 ) && contains( p3 ) && contains( p4 ) );
     return ins;
   }
 
@@ -348,9 +346,9 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   }
 
   /**
-   * @see org.deegree.model.geometry.GM_Envelope#merge(org.deegree.model.geometry.GM_Envelope)
+   * @see org.deegree.model.geometry.GM_Envelope#getMerged(org.deegree.model.geometry.GM_Envelope)
    */
-  public GM_Envelope merge( GM_Envelope envelope )
+  public GM_Envelope getMerged( GM_Envelope envelope )
   {
     double minx = min.getX();
     double miny = min.getY();
@@ -397,6 +395,9 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.7  2005/02/15 17:13:49  doemming
+ * *** empty log message ***
+ *
  * Revision 1.6  2005/01/18 12:50:41  doemming
  * *** empty log message ***
  *
