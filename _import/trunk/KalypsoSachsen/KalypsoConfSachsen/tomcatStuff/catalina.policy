@@ -142,6 +142,9 @@ grant {
 
 	permission java.io.FilePermission "\\\\LFUG-KV-01\\kalypso$\\-", "read,write,delete,execute";
 	permission java.io.FilePermission "\\\\lfug-kv-01\\kalypso$\\-", "read,write,delete,execute";
+
+	// TODO: check if necessary?
+	//permission java.io.FilePermission "\\\\lfug-kv-01\\kalypsotemp$\\-", "read,write,delete,execute";
 	
 	permission java.io.FilePermission "D:\\Programme\\kalypso\\data\\tmp\\-", "read,write,delete,execute";
 	permission java.io.FilePermission "d:\\programme\\kalypso\\data\\tmp\\-", "read,write,delete,execute";
