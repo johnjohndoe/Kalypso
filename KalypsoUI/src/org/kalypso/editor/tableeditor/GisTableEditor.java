@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
+import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.editor.AbstractEditorPart;
 import org.kalypso.editor.mapeditor.WidgetAction;
 import org.kalypso.editor.tableeditor.layerTable.LayerTable;
@@ -80,6 +81,14 @@ public class GisTableEditor extends AbstractEditorPart
 
       throw new RuntimeException( e );
     }
+  }
+  
+  /**
+   * @see org.kalypso.editor.AbstractEditorPart#createFullActions()
+   */
+  protected FullAction[] createFullActions()
+  {
+    return new FullAction[] {};
   }
 
   protected WidgetAction[] createWidgetActions()

@@ -26,7 +26,10 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.editor.AbstractEditorPart;
+import org.kalypso.editor.mapeditor.commands.FullExtentAction;
+import org.kalypso.editor.mapeditor.commands.ZoomOutAction;
 import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.widgets.PanToWidget;
@@ -36,8 +39,6 @@ import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.xml.gisview.Gisview;
 import org.kalypso.xml.gisview.ObjectFactory;
 import org.kalypso.xml.types.GisviewLayerType;
-import org.kalypso.xml.types.ILayerTypeFactory;
-import org.kalypso.xml.types.ILayerlistProvider;
 import org.kalypso.xml.types.LayerType;
 
 /**
@@ -58,8 +59,7 @@ import org.kalypso.xml.types.LayerType;
  * 
  * @author belger
  */
-public class GisMapEditor extends AbstractEditorPart implements ILayerlistProvider,
-    ILayerTypeFactory
+public class GisMapEditor extends AbstractEditorPart
 {
   private final ObjectFactory m_gisviewObjectFactory = new ObjectFactory();
 
@@ -99,8 +99,8 @@ public class GisMapEditor extends AbstractEditorPart implements ILayerlistProvid
    {
      final List list = new ArrayList();
 
-     list.add(new ZoomOutAction("Zoom out",ImageProvider.IMAGE_MAPVIEW_ZOOMOUT,"Kartenausschnitt verkleinern",myMapPanel,m_commandManager));
-     list.add(new FullExtentAction("full Extent",ImageProvider.IMAGE_MAPVIEW_FULLEXTENT,"vollen Kartenausschnitt anzeigen",myMapPanel,m_commandManager));
+     list.add(new ZoomOutAction("Zoom out",ImageProvider.IMAGE_MAPVIEW_ZOOMOUT,"Kartenausschnitt verkleinern",myMapPanel,this));
+     list.add(new FullExtentAction("full Extent",ImageProvider.IMAGE_MAPVIEW_FULLEXTENT,"vollen Kartenausschnitt anzeigen",myMapPanel,this));
 
      return (FullAction[])list.toArray(new FullAction[list.size()]);
    }

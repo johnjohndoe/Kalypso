@@ -30,6 +30,6 @@ public class ZoomOutAction extends FullAction
     {
       GM_Envelope zoomBox = myMapPanel.getMapModell().getZoomOutBoundingBox();
 
-      myCommandManager.postCommand( new ChangeExtentCommand(myMapPanel.getMapModell(),zoomBox));
+      myCommandManager.postCommand( new ChangeExtentCommand(myMapPanel.getMapModell(),zoomBox),null);
     }  
 }

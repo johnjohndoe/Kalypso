@@ -29,6 +29,6 @@ public class FullExtentAction extends FullAction
     public void run()
     {
       GM_Envelope fullExtent = myMapPanel.getMapModell().getFullExtentBoundingBox();
-      myCommandManager.postCommand( new ChangeExtentCommand(myMapPanel.getMapModell(),fullExtent));
+      myCommandManager.postCommand( new ChangeExtentCommand(myMapPanel.getMapModell(),fullExtent),null);
     }  
 }
