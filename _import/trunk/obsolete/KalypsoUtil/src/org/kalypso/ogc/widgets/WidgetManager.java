@@ -12,7 +12,7 @@ import java.awt.event.MouseMotionListener;
 import org.kalypso.ogc.MapPanel;
 
 /**
- * Der Controller fuer die MapView
+ * Der Controller für die MapView
  * 
  * @author vdoemming
  */
@@ -117,9 +117,12 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   public void mouseReleased( MouseEvent e )
   {
+	  if( getActualWidget() == null )
+	  	return;
+	   
     if( e.isPopupTrigger() )
       getActualWidget().clickPopup( e.getPoint() );
-    else if( getActualWidget() != null )
+    else
       switch( e.getButton() )
       {
       case MouseEvent.BUTTON1: // Left
@@ -152,7 +155,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
     }
   }
 
-  public IWidget getActualWidget()
+  private IWidget getActualWidget()
   {
     if( temporaryWidget != null )
       return temporaryWidget;
