@@ -55,9 +55,9 @@ import org.xml.sax.InputSource;
  */
 public class ZmlFactory
 {
-  private final static ObjectFactory m_objectFactory = new ObjectFactory();
+  private final static ObjectFactory OF = new ObjectFactory();
 
-  private final static SimpleDateFormat m_df = new SimpleDateFormat(
+  private final static SimpleDateFormat DF = new SimpleDateFormat(
       "yyyy-MM-dd'T'HH:mm:ss" );
 
   private static ParserFactory m_parserFactory = null;
@@ -313,11 +313,11 @@ public class ZmlFactory
   {
     try
     {
-      final ObservationType obsType = m_objectFactory.createObservation();
+      final ObservationType obsType = OF.createObservation();
       obsType.setName( obs.getName() );
       obsType.setEditable( obs.isEditable() );
 
-      final MetadataListType metadataListType = m_objectFactory
+      final MetadataListType metadataListType = OF
           .createMetadataListType();
       obsType.setMetadataList( metadataListType );
       final List metadataList = metadataListType.getMetadata();
@@ -330,7 +330,7 @@ public class ZmlFactory
         final String mdValue = (String) entry.getValue(); //obs.getMetadata().getProperty(
         // mdKey );
 
-        final MetadataType mdType = m_objectFactory.createMetadataType();
+        final MetadataType mdType = OF.createMetadataType();
         mdType.setName( mdKey );
         mdType.setValue( mdValue );
         metadataList.add( mdType );
@@ -342,7 +342,7 @@ public class ZmlFactory
       final IAxis[] axes = obs.getAxisList();
       for( int i = 0; i < axes.length; i++ )
       {
-        final AxisType axisType = m_objectFactory.createAxisType();
+        final AxisType axisType = OF.createAxisType();
 
         final String xsdType = getXSDTypeFor( axes[i].getDataClass().getName() );
 
@@ -352,7 +352,7 @@ public class ZmlFactory
         axisType.setType( axes[i].getType() );
         axisType.setKey( axes[i].isKey() );
 
-        final ValueArrayType valueArrayType = m_objectFactory
+        final ValueArrayType valueArrayType = OF
             .createAxisTypeValueArrayType();
 
         valueArrayType.setSeparator( ";" );
@@ -416,10 +416,10 @@ public class ZmlFactory
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
-      sb.append( m_df.format( model.getElement( i, axis ) ) ).append( ";" );
+      sb.append( DF.format( model.getElement( i, axis ) ) ).append( ";" );
 
     if( amount > 0 )
-      sb.append( m_df.format( model.getElement( amount, axis ) ) );
+      sb.append( DF.format( model.getElement( amount, axis ) ) );
   }
 
   /**
@@ -439,11 +439,11 @@ public class ZmlFactory
 
   public static Marshaller getMarshaller( ) throws JAXBException
   {
-    return m_objectFactory.createMarshaller();
+    return OF.createMarshaller();
   }
 
   private static Unmarshaller getUnmarshaller( ) throws JAXBException
   {
-    return m_objectFactory.createUnmarshaller();
+    return OF.createUnmarshaller();
   }
 }

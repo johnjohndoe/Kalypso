@@ -2,6 +2,7 @@ package org.kalypso.ogc.sensor.diagview.impl;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -32,7 +33,7 @@ public class LinkedDiagramTemplate extends DefaultDiagramTemplate implements IPo
   private static ObjectFactory m_objectFactory;
   private final ResourcePool m_pool;
   private final TreeMap m_key2curves;
-  private final TreeMap m_curve2key;
+  private final Hashtable m_curve2key;
 
   /**
    * Constructor
@@ -50,7 +51,7 @@ public class LinkedDiagramTemplate extends DefaultDiagramTemplate implements IPo
 
     m_pool = KalypsoGisPlugin.getDefault().getPool( );
     m_key2curves = new TreeMap( m_pool.getKeyComparator() );
-    m_curve2key = new TreeMap();
+    m_curve2key = new Hashtable();
 
     for( final Iterator it = obsDiagView.getAxis().iterator(); it.hasNext(); )
     {
@@ -59,13 +60,12 @@ public class LinkedDiagramTemplate extends DefaultDiagramTemplate implements IPo
       addAxis( new DiagramAxis( baseAxis ) );
     }
     
-    final List curves = new ArrayList();
-    
     final List list = obsDiagView.getObservation();
     for( final Iterator it = list.iterator(); it.hasNext(); )
     {
       final TypeObservation tobs = (TypeObservation) it.next();
 
+      final List curves = new ArrayList();
       final List tcurves = tobs.getCurve();
       for( final Iterator itcurves = tcurves.iterator(); itcurves.hasNext(); )
       {
@@ -170,9 +170,12 @@ public class LinkedDiagramTemplate extends DefaultDiagramTemplate implements IPo
       {
         final DiagramCurve curve = (DiagramCurve) it.next();
         curve.setObservation( (IObservation) newValue );
-        
+      }
+      
+      for( final Iterator it = curves.iterator(); it.hasNext(); )
+      {
         // now add the curve since observation has been loaded
-        addCurve( curve );
+        addCurve( (IDiagramCurve) it.next() );
       }
     }
   }

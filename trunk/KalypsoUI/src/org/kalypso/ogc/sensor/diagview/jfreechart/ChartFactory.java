@@ -22,90 +22,97 @@ import org.kalypso.util.factory.FactoryException;
  */
 public final class ChartFactory
 {
-  private final static ConfigurableCachableObjectFactory m_objFactory;
+  private final static ConfigurableCachableObjectFactory OF;
 
   static
   {
     final Properties props = new Properties();
     try
     {
-      props.load( ChartFactory.class.getResourceAsStream( "resource/type2valueAxis.properties" ) );
+      props.load( ChartFactory.class
+          .getResourceAsStream( "resource/type2valueAxis.properties" ) );
     }
     catch( IOException e )
     {
       e.printStackTrace();
     }
-    m_objFactory = new ConfigurableCachableObjectFactory( props, false, ChartFactory.class
-        .getClassLoader() );
+    OF = new ConfigurableCachableObjectFactory( props, false,
+        ChartFactory.class.getClassLoader() );
   }
 
   /**
    * Creates and returns an observation chart.
+   * 
    * @param template
    * @return plot
    * 
    * @throws FactoryException
    */
-  static Plot createObservationPlot( final IDiagramTemplate template ) throws FactoryException
+  static Plot createObservationPlot( final IDiagramTemplate template )
+      throws FactoryException
   {
-    final List diagAxes = template.getDiagramAxes();
-
-    final Map diag2chartAxis = new HashMap( diagAxes.size() );
-    final Map chartAxes2Pos = new HashMap( diagAxes.size() );
-    
-    final ObservationPlot plot = new ObservationPlot( diag2chartAxis, chartAxes2Pos );
-    
-    int domPos = 0;
-    int ranPos = 0;
-
-    for( final Iterator it = diagAxes.iterator(); it.hasNext(); )
+    synchronized( OF )
     {
-      final IDiagramAxis diagAxis= (IDiagramAxis) it.next();
-      
-      ValueAxis vAxis = (ValueAxis)m_objFactory.getObjectInstance( diagAxis.getDataType(),
-          ValueAxis.class, new Object[]
-          { diagAxis.toFullString() } );
+      final List diagAxes = template.getDiagramAxes();
 
-      vAxis.setInverted( diagAxis.isInverted() );
-      vAxis.setLowerMargin( 0.02 );
-      vAxis.setUpperMargin( 0.02 );
+      final Map diag2chartAxis = new HashMap( diagAxes.size() );
+      final Map chartAxes2Pos = new HashMap( diagAxes.size() );
 
-      AxisLocation loc = getLocation( diagAxis );
+      final ObservationPlot plot = new ObservationPlot( diag2chartAxis,
+          chartAxes2Pos );
 
-      if( diagAxis.getDirection().equals( IDiagramAxis.DIRECTION_HORIZONTAL ) )
+      int domPos = 0;
+      int ranPos = 0;
+
+      for( final Iterator it = diagAxes.iterator(); it.hasNext(); )
       {
-        plot.setDomainAxis( domPos, vAxis );
-        plot.setDomainAxisLocation( domPos, loc );
+        final IDiagramAxis diagAxis = (IDiagramAxis) it.next();
 
-        chartAxes2Pos.put( vAxis, new Integer( domPos ) );
+        ValueAxis vAxis = (ValueAxis) OF.getObjectInstance( diagAxis
+            .getDataType(), ValueAxis.class, new Object[] { diagAxis
+            .toFullString() } );
 
-        domPos++;
+        vAxis.setInverted( diagAxis.isInverted() );
+        vAxis.setLowerMargin( 0.02 );
+        vAxis.setUpperMargin( 0.02 );
+
+        AxisLocation loc = getLocation( diagAxis );
+
+        if( diagAxis.getDirection().equals( IDiagramAxis.DIRECTION_HORIZONTAL ) )
+        {
+          plot.setDomainAxis( domPos, vAxis );
+          plot.setDomainAxisLocation( domPos, loc );
+
+          chartAxes2Pos.put( vAxis, new Integer( domPos ) );
+
+          domPos++;
+        }
+        else
+        {
+          plot.setRangeAxis( ranPos, vAxis );
+          plot.setRangeAxisLocation( ranPos, loc );
+
+          chartAxes2Pos.put( vAxis, new Integer( ranPos ) );
+
+          ranPos++;
+        }
+
+        diag2chartAxis.put( diagAxis, vAxis );
       }
-      else
+
+      try
       {
-        plot.setRangeAxis( ranPos, vAxis );
-        plot.setRangeAxisLocation( ranPos, loc );
-
-        chartAxes2Pos.put( vAxis, new Integer( ranPos ) );
-
-        ranPos++;
+        final List curves = template.getCurves();
+        for( Iterator it = curves.iterator(); it.hasNext(); )
+          plot.addCurve( (IDiagramCurve) it.next() );
+      }
+      catch( SensorException e )
+      {
+        throw new FactoryException( e );
       }
 
-      diag2chartAxis.put( diagAxis, vAxis );
+      return plot;
     }
-
-    try
-    {
-      final List curves = template.getCurves();
-      for( Iterator it = curves.iterator(); it.hasNext(); )
-        plot.addCurve( (IDiagramCurve) it.next() );
-    }
-    catch( SensorException e )
-    {
-      throw new FactoryException( e );
-    }
-
-    return plot;
   }
 
   /**
