@@ -69,9 +69,26 @@ public class InterpolationFilter extends AbstractObservationFilter
         .getAxisList(), Number.class );
 
     SimpleTuppleModel intModel = new SimpleTuppleModel( values.getAxisList() );
+    
+    final Calendar cal = Calendar.getInstance();
 
     if( values.getCount() == 0 )
-      return values;
+    {
+      // no values, and fill is not set, so return
+      if( !m_fill )
+        return values;
+      
+      // no values but fill is set, generate them
+      if( dr != null )
+      {
+        cal.setTime( dr.getFrom() );
+        
+        while( cal.getTime().compareTo( dr.getTo() ) < 0 )
+          fillWithDefault( dateAxis, valueAxes, intModel, cal );
+        
+        return intModel;
+      }
+    }
     
     final Date begin = (Date) values.getElement( 0, dateAxis );
     
@@ -80,7 +97,6 @@ public class InterpolationFilter extends AbstractObservationFilter
     final double[] v1 = new double[ valueAxes.length + 1 ];
     final double[] v2 = new double[ valueAxes.length + 1 ];
     
-    final Calendar cal = Calendar.getInstance();
     
     int startIx = 0;
     

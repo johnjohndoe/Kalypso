@@ -1,4 +1,6 @@
-package org.kalypso.services.ocs.wizard;
+package org.kalypso.ui.wizard.ocs;
+
+import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -52,5 +54,13 @@ public class OcsExportWizardResourcesPage extends WizardExportResourcesPage
   public void handleEvent( Event event )
   {
     // empty
+  }
+  
+  /**
+   * @see org.eclipse.ui.dialogs.WizardExportResourcesPage#getSelectedResources()
+   */
+  public List getSelectedResources()
+  {
+    return super.getSelectedResources();
   }
 }

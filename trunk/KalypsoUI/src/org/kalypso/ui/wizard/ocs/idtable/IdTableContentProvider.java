@@ -1,4 +1,4 @@
-package org.kalypso.services.ocs.wizard.idtable;
+package org.kalypso.ui.wizard.ocs.idtable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 
 
@@ -19,9 +18,9 @@ public class IdTableContentProvider implements IStructuredContentProvider
   {
     final ArrayList ids = new ArrayList( );
     
-    if( inputElement instanceof IStructuredSelection )
+    if( inputElement instanceof List )
     {
-      final List list = ((IStructuredSelection) inputElement).toList();
+      final List list = (List) inputElement;
       
       for( Iterator it = list.iterator(); it.hasNext(); )
       {

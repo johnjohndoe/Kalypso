@@ -1,7 +1,13 @@
 package org.kalypso.ogc.sensor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
+
+import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * Utilities around IObservation.
@@ -118,5 +124,65 @@ public class ObservationUtilities
     }
     
     return bf.toString();
+  }
+
+  /**
+   * Copy the values from source into dest. Only tries to copy the values of axes
+   * that are found in the dest observation.
+   * 
+   * @param source
+   * @param dest
+   * @param args
+   * @return true if some values have been copied, false otherwise
+   * @throws SensorException
+   */
+  public static boolean optimisticValuesCopy( final IObservation source, final IObservation dest, final IVariableArguments args ) throws SensorException
+  {
+    final IAxis[] srcAxes = source.getAxisList();
+    final IAxis[] destAxes = dest.getAxisList();
+    
+    final ITuppleModel values = source.getValues( args );
+    if( values == null )
+      return false;
+
+    final Map map = new HashMap();
+    for( int i = 0; i < destAxes.length; i++ )
+    {
+      try
+      {
+        final IAxis A = ObservationUtilities.findAxisByName( srcAxes, destAxes[i].getName() );
+
+        map.put( destAxes[i], A );
+      }
+      catch( NoSuchElementException e )
+      {
+        // ignored, try with next one
+      }
+    }
+    
+    if( map.size() == 0 || values.getCount() == 0 )
+      return false;
+    
+    SimpleTuppleModel model = new SimpleTuppleModel(destAxes);
+    
+    for( int i = 0; i < values.getCount(); i++ )
+    {
+      final Object[] tupple = new Object[destAxes.length];
+      
+      final Iterator it = map.keySet().iterator();
+      while( it.hasNext() )
+      {
+        final IAxis destAxis = (IAxis) it.next();
+        final IAxis srcAxis = (IAxis) map.get( destAxis );
+        
+        tupple[destAxis.getPosition()] = values.getElement( i, srcAxis );
+      }
+      
+      model.addTupple( tupple );
+    }
+
+    dest.setValues( model );
+    
+    return true;
   }
 }
