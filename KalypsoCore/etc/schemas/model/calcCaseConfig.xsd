@@ -16,6 +16,7 @@
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="transformation" type="transformationType"/>
 		</xs:sequence>
+		<xs:attribute name="logFile" type="xs:string" use="required" />
 	</xs:complexType>
 	<xs:element name="calcCaseConfig">
 		<xs:complexType>

@@ -14,6 +14,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.parser.IParser;
+import org.kalypso.util.parser.ParserException;
 import org.kalypso.util.runtime.IVariableArguments;
 
 /**
@@ -230,7 +231,16 @@ public class ObservationUtilities
         {
           final IAxis axis = axes[j];
 
-          writer.write( parsers[j].toString( model.getElement( i, axis ) ) );
+          try
+          {
+            writer.write( parsers[j].toString( model.getElement( i, axis ) ) );
+          }
+          catch( ParserException e )
+          {
+            e.printStackTrace();
+            
+            writer.write( "Fehler" );
+          }
 
           if( j < axes.length - 1 )
             writer.write( sep );
@@ -244,6 +254,58 @@ public class ObservationUtilities
       e.printStackTrace();
       throw new SensorException( e );
     }
+  }
+  
+  /**
+   * Dumps the tupple at given index using sep as separator.
+   * 
+   * @param model
+   * @param sep
+   * @param index
+   * @param excludeStatusAxes
+   * @return string representation of the given line (tupple)
+   * @throws SensorException
+   */
+  public static String dump( final ITuppleModel model, final String sep, final int index, final boolean excludeStatusAxes ) throws SensorException
+  {
+    IAxis[] axes = model.getAxisList();
+    
+    if( excludeStatusAxes )
+      axes = KalypsoStatusUtils.withoutStatusAxes( axes );
+    
+    // retrieve apropriate parsers for each axis
+    final IParser[] parsers = new IParser[axes.length];
+    try
+    {
+      for( int j = 0; j < axes.length; j++ )
+        parsers[j] = ZmlFactory.createParser( axes[j] );
+    }
+    catch( FactoryException e )
+    {
+      e.printStackTrace();
+      throw new SensorException( e );
+    }
+    
+    final StringBuffer sb = new StringBuffer();
+    
+    for( int i = 0; i < axes.length; i++ )
+    {
+      try
+      {
+        sb.append( parsers[i].toString( model.getElement( index, axes[i] ) ) );
+      }
+      catch( ParserException e )
+      {
+        e.printStackTrace();
+        
+        sb.append( "Fehler" );
+      }
+
+      if( i < axes.length - 1 )
+        sb.append( sep );
+    }
+    
+    return sb.toString();
   }
 
   /**

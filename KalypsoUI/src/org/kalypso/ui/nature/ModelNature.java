@@ -66,6 +66,7 @@ import org.kalypso.services.proxy.CalcJobDataBean;
 import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.transformation.TransformationHelper;
+import org.kalypso.util.transformation.TransformationResult;
 import org.kalypso.util.url.UrlResolver;
 import org.xml.sax.InputSource;
 
@@ -286,12 +287,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    *  
    * @param folder
    * @param monitor
+   * @return status
    * @throws CoreException
    */
-  public void createCalculationCaseInFolder( final IFolder folder,
+  public IStatus createCalculationCaseInFolder( final IFolder folder,
       final IProgressMonitor monitor ) throws CoreException
   {
-    doCalcTransformation( "Rechenfall erzeugen", TRANS_TYPE_CREATE, folder,
+    return doCalcTransformation( "Rechenfall erzeugen", TRANS_TYPE_CREATE, folder,
         monitor );
   }
 
@@ -300,13 +302,14 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * 
    * @param folder
    * @param monitor
+   * @return status
    * 
    * @throws CoreException
    */
-  public void updateCalcCase( final IFolder folder,
+  public IStatus updateCalcCase( final IFolder folder,
       final IProgressMonitor monitor ) throws CoreException
   {
-    doCalcTransformation( "Rechenfall aktualisieren", TRANS_TYPE_UPDTAE,
+    return doCalcTransformation( "Rechenfall aktualisieren", TRANS_TYPE_UPDTAE,
         folder, monitor );
   }
 
@@ -317,10 +320,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * @param type
    * @param folder
    * @param monitor
+   * @return
    * 
    * @throws CoreException
    */
-  private void doCalcTransformation( final String taskName, final int type,
+  private IStatus doCalcTransformation( final String taskName, final int type,
       final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
   {
@@ -354,10 +358,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       }
 
       if( transList == null )
-        return;
+        return Status.OK_STATUS;
 
-      TransformationHelper.doTranformations( transList, new SubProgressMonitor(
+      final TransformationResult res = TransformationHelper.doTranformations( folder, transList, new SubProgressMonitor(
           monitor, 1000 ) );
+      
+      return res.toStatus();
     }
     catch( final CoreException e )
     {
@@ -372,8 +378,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin
           .getId(), 0, taskName + ": " + e.getLocalizedMessage(), e ) );
     }
-
-    monitor.done();
+    finally
+    {
+      monitor.done();
+    }
   }
 
   /**
@@ -775,21 +783,19 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return (" " + validHours + " ").indexOf( " " + hour + " " ) != -1;
   }
 
-  public void runCalculation( final IFolder folder,
+  public IStatus runCalculation( final IFolder folder,
       final IProgressMonitor monitor ) throws CoreException
   {
-    runCalculation( folder, monitor, MODELLTYP_MODELSPEC_XML, true );
+    return runCalculation( folder, monitor, MODELLTYP_MODELSPEC_XML, true );
   }
 
-  public void runCalculation( final IFolder folder,
+  public IStatus runCalculation( final IFolder folder,
       final IProgressMonitor monitor, final String modelSpec,
       boolean clearResults ) throws CoreException
   {
     if( modelSpec == null )
-    {
-      runCalculation( folder, monitor );
-      return;
-    }
+      return runCalculation( folder, monitor );
+    
     monitor.beginTask( "Modellrechnung wird durchgeführt", 5000 );
 
     final CoreException cancelException = new CoreException( new Status(
@@ -922,11 +928,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           retrieveOutput( serveroutputdir, outputfolder, results,
               new SubProgressMonitor( monitor, 1000 ) );
 
-          doCalcTransformation( "Rechenfall aktualisieren",
+          return doCalcTransformation( "Rechenfall aktualisieren",
               TRANS_TYPE_AFTERCALC, folder, new SubProgressMonitor( monitor,
                   1000 ) );
-
-          return;
 
         case ICalcServiceConstants.CANCELED:
           throw cancelException;

@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -884,8 +885,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
         boolean doClearResults = true;
         if( "false".equals( clearResults ) )
           doClearResults = false;
-        nature.runCalculation( getCalcFolder(), new SubProgressMonitor(
+        
+        final IStatus status = nature.runCalculation( getCalcFolder(), new SubProgressMonitor(
             monitor, 1000 ), modelspec, doClearResults );
+        
+        if( status !=  Status.OK_STATUS )
+          throw new CoreException( status );
       }
     };
 
@@ -893,5 +898,4 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 
     onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
   }
-
 }
