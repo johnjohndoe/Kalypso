@@ -138,7 +138,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
         .createFeatureTypeCellEditorFactory();
     m_layerTable = new LayerTableViewer( parent, project, factory, -1 );
 
-    final MenuManager menuMgr = createSpaltenMenu();
+    final MenuManager menuMgr = createSpaltenMenu( "spalten" );
     final Control viewerControl = m_layerTable.getControl();
     final Menu menu = menuMgr.createContextMenu( viewerControl );
     viewerControl.setMenu( menu );
@@ -221,9 +221,9 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName() ) );
   }
 
-  public MenuManager createSpaltenMenu()
+  public MenuManager createSpaltenMenu( final String id )
   {
-    final MenuManager menuMgr = new MenuManager( "Spalten" );
+    final MenuManager menuMgr = new MenuManager( "Spalten", id );
     menuMgr.setRemoveAllWhenShown( true );
     menuMgr.addMenuListener( new IMenuListener()
     {
