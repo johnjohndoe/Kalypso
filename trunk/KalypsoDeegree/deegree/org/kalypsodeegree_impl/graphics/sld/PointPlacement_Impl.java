@@ -258,7 +258,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * exports the content of the PointPlacement as XML formated String
    * 
    * @return xml representation of the PointPlacement
-   */
+   */  
   public String exportAsXML()
   {
     Debug.debugMethodBegin();
@@ -281,9 +281,15 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
     if( displacement != null && displacement.length > 1 )
     {
       sb.append( "<Displacement>" ).append( "<DisplacementX>" );
-      sb.append( ( (Marshallable)anchorPoint[0] ).exportAsXML() );
+      if( anchorPoint == null || anchorPoint[0] == null )
+        sb.append( 0.0 );
+      else
+        sb.append( ( (Marshallable)anchorPoint[0] ).exportAsXML() );
       sb.append( "</DisplacementX>" ).append( "<DisplacementY>" );
-      sb.append( ( (Marshallable)anchorPoint[1] ).exportAsXML() );
+      if( anchorPoint == null || anchorPoint[1] == null )
+        sb.append( 0.5 );
+      else
+        sb.append( ( (Marshallable)anchorPoint[1] ).exportAsXML() );
       sb.append( "</DisplacementY>" ).append( "</Displacement>" );
     }
     if( rotation != null )
@@ -297,5 +303,5 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
 
     Debug.debugMethodEnd();
     return sb.toString();
-  }
+  }  
 }
