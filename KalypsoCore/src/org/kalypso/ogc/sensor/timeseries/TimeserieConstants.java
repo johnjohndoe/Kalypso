@@ -31,7 +31,7 @@ public abstract class TimeserieConstants implements ObservationConstants
   
   /** Füllung (VOLUMEN) */
   public static final String TYPE_VOLUME = "V";
-  
+
   public final static String MD_WQ = "WQ-Parameter";
 
   public final static String MD_GKR = "Rechtswert";
@@ -83,7 +83,7 @@ public abstract class TimeserieConstants implements ObservationConstants
     if( type.equals( TYPE_WATERLEVEL ) )
       return "cm";
     
-    return type;
+    return "";
   }
   
   /**

@@ -83,7 +83,7 @@ public class InterpolationFilter extends AbstractObservationFilter
       {
         cal.setTime( dr.getFrom() );
         
-        while( cal.getTime().compareTo( dr.getTo() ) < 0 )
+        while( cal.getTime().compareTo( dr.getTo() ) <= 0 )
           fillWithDefault( dateAxis, valueAxes, intModel, cal );
         
         return intModel;

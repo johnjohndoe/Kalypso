@@ -2,11 +2,11 @@ package org.kalypso.ogc.sensor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.util.runtime.IVariableArguments;
 
 /**
@@ -133,24 +133,24 @@ public class ObservationUtilities
    * @param source
    * @param dest
    * @param args
-   * @return true if some values have been copied, false otherwise
+   * @return model if some values have been copied, null otherwise
    * @throws SensorException
    */
-  public static boolean optimisticValuesCopy( final IObservation source, final IObservation dest, final IVariableArguments args ) throws SensorException
+  public static ITuppleModel optimisticValuesCopy( final IObservation source, final IObservation dest, final IVariableArguments args ) throws SensorException
   {
     final IAxis[] srcAxes = source.getAxisList();
     final IAxis[] destAxes = dest.getAxisList();
     
     final ITuppleModel values = source.getValues( args );
     if( values == null )
-      return false;
+      return null;
 
     final Map map = new HashMap();
     for( int i = 0; i < destAxes.length; i++ )
     {
       try
       {
-        final IAxis A = ObservationUtilities.findAxisByName( srcAxes, destAxes[i].getName() );
+        final IAxis A = ObservationUtilities.findAxisByType( srcAxes, destAxes[i].getType() );
 
         map.put( destAxes[i], A );
       }
@@ -161,21 +161,22 @@ public class ObservationUtilities
     }
     
     if( map.size() == 0 || values.getCount() == 0 )
-      return false;
+      return null;
     
-    SimpleTuppleModel model = new SimpleTuppleModel(destAxes);
+    final SimpleTuppleModel model = new SimpleTuppleModel( destAxes );
     
     for( int i = 0; i < values.getCount(); i++ )
     {
       final Object[] tupple = new Object[destAxes.length];
       
-      final Iterator it = map.keySet().iterator();
-      while( it.hasNext() )
+      for( int j = 0; j < destAxes.length; j++ )
       {
-        final IAxis destAxis = (IAxis) it.next();
-        final IAxis srcAxis = (IAxis) map.get( destAxis );
+        final IAxis srcAxis = (IAxis) map.get( destAxes[j] );
         
-        tupple[destAxis.getPosition()] = values.getElement( i, srcAxis );
+        if( srcAxis != null )
+          tupple[destAxes[j].getPosition()] = values.getElement( i, srcAxis );
+        else if( KalypsoStatusUtils.isStatusAxis( destAxes[j] ) )
+          tupple[destAxes[j].getPosition()] = new Integer( KalypsoStatusUtils.BIT_OK );
       }
       
       model.addTupple( tupple );
@@ -183,6 +184,6 @@ public class ObservationUtilities
 
     dest.setValues( model );
     
-    return true;
+    return model;
   }
 }
