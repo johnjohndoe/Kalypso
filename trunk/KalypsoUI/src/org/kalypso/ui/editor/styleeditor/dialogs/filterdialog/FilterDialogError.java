@@ -6,13 +6,7 @@ public class FilterDialogError
 
   private String faultCode = null;
 
-  public static final String INCOMPLETE = "Input incomplete!";
-
-  public static final String NUMERIC_VALUE = "needs to be numeric!";
-
-  public static final String LOWERBOUNDARY_EXCEEDS_UPPERBOUNDARY = "Lower boundary cannot exceed upper boundary!";
-
-  public static final String DATA_NULL = "No data input given or possible";
+ 
 
   public FilterDialogError( FilterDialogTreeNode m_node, String m_faultCode )
   {

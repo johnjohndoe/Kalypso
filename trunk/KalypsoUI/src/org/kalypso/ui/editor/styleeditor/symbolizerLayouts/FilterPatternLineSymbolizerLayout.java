@@ -16,6 +16,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.panels.ColorPalettePanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
@@ -59,50 +60,51 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
     group.setLayout( compositeLayout );
     group.layout();
 
-    final LineSymbolizer  lineSymbolizer = (LineSymbolizer)symbolizer;
+    final LineSymbolizer lineSymbolizer = (LineSymbolizer)symbolizer;
     final Stroke stroke = lineSymbolizer.getStroke();
-    
-    SliderPanel strokeWidthPanel = new SliderPanel( group, "Width:", 0, 10, 1,SliderPanel.INTEGER, stroke.getWidth( null ) );
+
+    SliderPanel strokeWidthPanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_WIDTH, 0, 10,
+        1, SliderPanel.INTEGER, stroke.getWidth( null ) );
     for( int i = 0; i < getRuleCollection().size(); i++ )
     {
       Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
       if( symb instanceof LineSymbolizer )
       {
-        ( (LineSymbolizer)symb ).getStroke().setWidth( stroke.getWidth( null));
+        ( (LineSymbolizer)symb ).getStroke().setWidth( stroke.getWidth( null ) );
       }
-    }    
+    }
     strokeWidthPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
         double width = ( (SliderPanel)event.getSource() ).getSelection();
-      for( int i = 0; i < getRuleCollection().size(); i++ )
-      {
-        Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
-        if( symb instanceof LineSymbolizer )
+        for( int i = 0; i < getRuleCollection().size(); i++ )
         {
-          ( (LineSymbolizer)symb ).getStroke().setWidth( width);
+          Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
+          if( symb instanceof LineSymbolizer )
+          {
+            ( (LineSymbolizer)symb ).getStroke().setWidth( width );
+          }
         }
-      }             
         userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
       }
-    } );    
+    } );
 
-    // get all colors for each rule of the pattern for this specific symbolizer    
+    // get all colors for each rule of the pattern for this specific symbolizer
     Color[] colors = new Color[getRuleCollection().size()];
     for( int i = 0; i < getRuleCollection().size(); i++ )
     {
       Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
       if( symb instanceof LineSymbolizer )
       {
-        java.awt.Color color = ( (LineSymbolizer)symb ).getStroke().getStroke(null);
-        colors[i] = new Color( null, color.getRed(), color.getGreen(), color.getBlue() );       
+        java.awt.Color color = ( (LineSymbolizer)symb ).getStroke().getStroke( null );
+        colors[i] = new Color( null, color.getRed(), color.getGreen(), color.getBlue() );
       }
     }
 
     if( colorPalettePanel == null )
     {
-      colorPalettePanel = new ColorPalettePanel( group, colors, getRuleCollection());
+      colorPalettePanel = new ColorPalettePanel( group, colors, getRuleCollection() );
       colorPalettePanel.setType( ColorPalettePanel.CUSTOM_TRANSITION );
       // init colors of LineSymbolizer
       for( int i = 0; i < getRuleCollection().size(); i++ )
@@ -110,9 +112,10 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
         Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
         if( symb instanceof LineSymbolizer )
         {
-          ( (LineSymbolizer)symb ).getStroke().setStroke(new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );         
+          ( (LineSymbolizer)symb ).getStroke().setStroke(
+              new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );
         }
-      }      
+      }
 
       colorPalettePanel.addColorPalettePanelListener( new PanelListener()
       {
@@ -125,7 +128,9 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
             Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
             if( symb instanceof LineSymbolizer )
             {
-              ( (LineSymbolizer)symb ).getStroke().setStroke(new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) );              
+              ( (LineSymbolizer)symb ).getStroke().setStroke(
+                  new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(),
+                      colorArray[i].getBlue() ) );
             }
           }
           userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );

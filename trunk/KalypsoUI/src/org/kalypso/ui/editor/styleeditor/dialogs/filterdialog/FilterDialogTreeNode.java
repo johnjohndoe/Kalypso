@@ -7,6 +7,7 @@ package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 import java.util.ArrayList;
 
 import org.deegree_impl.services.wfs.filterencoding.OperationDefines;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
  * @author F.Lindemann
@@ -132,13 +133,13 @@ public class FilterDialogTreeNode
         if( children != null && children.size() == 1 )
           return true;
         throw new FilterDialogException( new FilterDialogError( this,
-            "needs to have only one child" ) );
+            MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILD ) );
       }
 
       if( children != null && children.size() > 1 )
         return true;
       throw new FilterDialogException( new FilterDialogError( this,
-          "needs to have at least two children" ) );
+          MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILDREN ) );
 
     }
 
@@ -155,7 +156,8 @@ public class FilterDialogTreeNode
       }
     }
 
-    throw new FilterDialogException( new FilterDialogError( this, FilterDialogError.DATA_NULL ) );
+    throw new FilterDialogException( new FilterDialogError( this,
+        MessageBundle.STYLE_EDITOR_FILTER_ERROR_DATA_NULL ) );
 
   }
 

@@ -28,6 +28,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
  * @author F.Lindemann
@@ -64,11 +65,11 @@ public class LegendLabel implements ModellEventListener, DisposeListener
     Label legendLabel = new Label( composite, SWT.NULL );
     FormData legendLabelData = new FormData();
     legendLabelData.height = 15;
-    legendLabelData.width = 35;
+    legendLabelData.width = 46;
     legendLabelData.left = new FormAttachment( 0, 1000, 0 );
     legendLabelData.top = new FormAttachment( 150, 1000, 0 );
     legendLabel.setLayoutData( legendLabelData );
-    legendLabel.setText( "Legend:" );
+    legendLabel.setText( MessageBundle.STYLE_EDITOR_LEGEND );
 
     setLabel( new Label( composite, SWT.NULL ) );
     FormData labelData = new FormData();

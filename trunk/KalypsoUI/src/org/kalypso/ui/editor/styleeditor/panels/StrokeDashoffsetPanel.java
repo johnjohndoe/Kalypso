@@ -3,16 +3,17 @@ package org.kalypso.ui.editor.styleeditor.panels;
 import javax.swing.event.EventListenerList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 
 /**
@@ -66,17 +67,18 @@ public class StrokeDashoffsetPanel
     offsetInput.setLayoutData( offsetInputData );
     offsetInput.setText( "0.0" );
 
-    Button okButton = new Button( composite, SWT.PUSH );
+    Label okButton = new Label( composite, SWT.PUSH );
+    okButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_OK.createImage() );
     FormData okButtonData = new FormData();
     okButtonData.height = 18;
     okButtonData.width = 20;
     okButtonData.left = new FormAttachment( 540, 1000, 0 );
     okButtonData.top = new FormAttachment( 100, 1000, 0 );
     okButton.setLayoutData( okButtonData );
-    okButton.setText( "Ok" );
-    okButton.addSelectionListener( new SelectionListener()
+    okButton.setToolTipText( MessageBundle.STYLE_EDITOR_OK );
+    okButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         Float fl = null;
         try
@@ -87,18 +89,21 @@ public class StrokeDashoffsetPanel
         }
         catch( NumberFormatException nfe )
         {
-          //TODO
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
-              .getShell(), "Input needs to be of type float", "InputError-Stroke-Offset" );
+              .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+              MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           errorDialog.showError();
           getOffsetInput().setText( "" + getValue() );
         }
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
     Label offsetLabel = new Label( composite, SWT.NULL );

@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
  * @author F.Lindemann
@@ -32,12 +33,12 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
     Group labelGroup = new Group( composite, SWT.NULL );
     GridData labelGroupData = new GridData();
     labelGroupData.widthHint = 210;
-    labelGroupData.heightHint = 244;
+    labelGroupData.heightHint = 246;
     labelGroup.setLayoutData( labelGroupData );
     labelGroup.setLayout( compositeLayout );
     labelGroup.layout();
 
     Label label = new Label( labelGroup, SWT.NULL );
-    label.setText( "RasterSymbolizer wurden noch nicht implementiert" );
+    label.setText( MessageBundle.STYLE_EDITOR_ERROR_NO_IMPLEMENTATION );
   }
 }

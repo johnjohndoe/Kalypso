@@ -4,6 +4,8 @@
  */
 package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
+
 public class BinaryComparisonNumericData extends AbstractComparisonData
 {
   private String literal = null;
@@ -22,7 +24,8 @@ public class BinaryComparisonNumericData extends AbstractComparisonData
   {
     if( literal == null || literal.trim().length() == 0 || propertyName == null )
     {
-      throw new FilterDialogException( new FilterDialogError( null, FilterDialogError.INCOMPLETE ) );
+      throw new FilterDialogException( new FilterDialogError( null,
+          MessageBundle.STYLE_EDITOR_FILTER_ERROR_INCOMPLETE ) );
     }
     try
     {
@@ -30,8 +33,8 @@ public class BinaryComparisonNumericData extends AbstractComparisonData
     }
     catch( NumberFormatException e )
     {
-      throw new FilterDialogException( new FilterDialogError( null, "Value "
-          + FilterDialogError.NUMERIC_VALUE ) );
+      throw new FilterDialogException( new FilterDialogError( null,
+          MessageBundle.STYLE_EDITOR_VALUE + MessageBundle.STYLE_EDITOR_ERROR_NUMBER ) );
     }
     return true;
   }

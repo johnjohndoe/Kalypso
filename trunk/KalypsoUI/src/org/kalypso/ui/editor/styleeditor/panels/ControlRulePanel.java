@@ -117,7 +117,7 @@ public class ControlRulePanel
     addPatternRuleButtonData.top = new FormAttachment( 100, 1000, 0 );
     addPatternRuleButton.setLayoutData( addPatternRuleButtonData );
     if( getPossibleNumericFeatureTypeNumber() == 0 )
-      addPatternRuleButton.setEnabled( false );
+      addPatternRuleButton.setVisible(false);   
     addPatternRuleButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD_RULE_PATTERN );
     addPatternRuleButton.addMouseListener( new MouseListener()
     {
@@ -139,7 +139,7 @@ public class ControlRulePanel
     Label removeRuleButton = new Label( composite, SWT.PUSH );
     removeRuleButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
     if( getCanDelete() == 0 )
-      removeRuleButton.setEnabled( false );
+      removeRuleButton.setVisible( false );
     FormData removeRuleButtonData = new FormData();
     removeRuleButtonData.height = 18;
     removeRuleButtonData.width = 18;
@@ -167,7 +167,8 @@ public class ControlRulePanel
     Label moveBackwardRuleButton = new Label( composite, SWT.PUSH );
     moveBackwardRuleButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_BACKWARD.createImage() );
     if( getCanDelete() <= 1 )
-      moveBackwardRuleButton.setEnabled( false );
+      moveBackwardRuleButton.setVisible( false );
+    
     FormData moveBackwardRuleButtonData = new FormData();
     moveBackwardRuleButtonData.height = 18;
     moveBackwardRuleButtonData.width = 18;
@@ -195,7 +196,7 @@ public class ControlRulePanel
     Label moveForwardRuleButton = new Label( composite, SWT.PUSH );
     moveForwardRuleButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
     if( getCanDelete() <= 1 )
-      moveForwardRuleButton.setEnabled( false );
+      moveForwardRuleButton.setVisible( false );
     FormData moveForwardRuleButtonData = new FormData();
     moveForwardRuleButtonData.height = 18;
     moveForwardRuleButtonData.width = 18;

@@ -6,16 +6,17 @@ package org.kalypso.ui.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
  * @author F.Lindemann
@@ -76,26 +77,30 @@ public class AddFilterPropertyPanel
     }
 
     // Symbolizer Add-Button
-    Button symbolizerAddButton = new Button( composite, SWT.PUSH | SWT.CENTER );
+    Label symbolizerAddButton = new Label( composite, SWT.PUSH | SWT.CENTER );
+    symbolizerAddButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_GET_SCALE.createImage() );
     FormData symbolizerAddButtonData = new FormData();
     symbolizerAddButtonData.height = 20;
     symbolizerAddButtonData.width = 30;
     symbolizerAddButtonData.left = new FormAttachment( 860, 1000, 0 );
     symbolizerAddButtonData.top = new FormAttachment( 100, 1000, 0 );
     symbolizerAddButton.setLayoutData( symbolizerAddButtonData );
-    symbolizerAddButton.setText( "Set" );
-    symbolizerAddButton.addSelectionListener( new SelectionListener()
+    symbolizerAddButton.setToolTipText( MessageBundle.STYLE_EDITOR_SET );
+    symbolizerAddButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         setSelection( getGeometryCombo().getSelectionIndex() );
         fire();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
     // ***** Label

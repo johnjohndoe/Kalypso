@@ -4,6 +4,8 @@
  */
 package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
+
 public class LikeComparisonData extends AbstractComparisonData
 {
   private String literal = null;
@@ -28,7 +30,8 @@ public class LikeComparisonData extends AbstractComparisonData
   {
     if( literal == null || literal.trim().length() == 0 || propertyName == null )
     {
-      throw new FilterDialogException( new FilterDialogError( null, FilterDialogError.INCOMPLETE ) );
+      throw new FilterDialogException( new FilterDialogError( null,
+          MessageBundle.STYLE_EDITOR_FILTER_ERROR_INCOMPLETE ) );
     }
 
     return true;
