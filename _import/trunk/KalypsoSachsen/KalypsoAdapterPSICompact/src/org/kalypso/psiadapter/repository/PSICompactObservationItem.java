@@ -31,6 +31,9 @@ import de.psi.go.lhwz.PSICompact.WQParamSet;
 /**
  * Eine Observation aus PSICompact welche auch ein Repository Item ist.
  * 
+ * TODO: SEHR WICHTIG: EINHEITEN RICHTIG BEHANDELN. Je nach Axistyp
+ * sollte ich die PSI Werte dann in die Kalypso Einheit konvertieren.
+ * 
  * @author schlienger
  */
 public class PSICompactObservationItem implements IObservation
