@@ -84,9 +84,9 @@
 					<element name="rootNode" type="string"/>					
 					<element name="resultForRootNodeOnly" type="boolean"/>
 						<!-- link auf den pegel -->
-			            <element name="pegelZR" type="obslink:TimeseriesLink"/>
-					<!-- link auf das simulations -->
-			            <element name="qberechnetZR" type="obslink:TimeseriesLink"/>
+			            <element name="pegelZR" type="obslink:TimeseriesLinkType"/>
+					<!-- link auf das simulationsergebnis -->
+			            <element name="qberechnetZR" type="obslink:TimeseriesLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>

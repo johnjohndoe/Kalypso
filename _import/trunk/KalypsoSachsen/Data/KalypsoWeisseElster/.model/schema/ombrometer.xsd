@@ -31,10 +31,10 @@
 				<sequence>
 					<element name="Ort" type="gml:PointPropertyType"/>
 					<element name="DWDID" type="string"/>
-					<element name="NRepository" type="obslink:TimeseriesLink"/>
-					<element name="N" type="obslink:TimeseriesLink"/>
-					<element name="TRepository" type="obslink:TimeseriesLink"/>
-					<element name="T" type="obslink:TimeseriesLink"/>
+					<element name="NRepository" type="obslink:TimeseriesLinkType"/>
+					<element name="N" type="obslink:TimeseriesLinkType"/>
+					<element name="TRepository" type="obslink:TimeseriesLinkType"/>
+					<element name="T" type="obslink:TimeseriesLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
