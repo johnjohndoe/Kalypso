@@ -203,9 +203,6 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
     m_caseViewer.setLabelProvider( new WorkbenchLabelProvider() );
   }
 
-  /**
-   * @see org.kalypso.ui.calcwizard.ICalcWizardPage#doNext(org.eclipse.core.runtime.IProgressMonitor)
-   */
   public void doNext( final IProgressMonitor monitor ) throws CoreException
   {
     final IFolder folder = m_choice.perform( monitor );
@@ -232,14 +229,6 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
     }
     
     monitor.done();
-  }
-
-  /**
-   * @see org.kalypso.ui.calcwizard.ICalcWizardPage#clean(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  public void clean( final IProgressMonitor monitor )
-  {
-    // todo: neuen Rechenfall wieder löschen?
   }
 
   public boolean shouldUpdate()
