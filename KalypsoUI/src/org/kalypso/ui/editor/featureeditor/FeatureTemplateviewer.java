@@ -59,6 +59,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -321,7 +322,11 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     }
     finally
     {
-      m_panel.setSize( m_panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+      if( m_panel != null && !m_panel.isDisposed() )
+      {
+        final Point computeSize = m_panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+        m_panel.setSize( computeSize );
+      }
     }
   }
 
