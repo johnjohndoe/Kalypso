@@ -8,14 +8,21 @@ import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.java.properties.PropertiesHelper;
+import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.KalypsoFeature;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.deegree.TimeserieFeatureProps;
 import org.kalypso.ogc.sensor.diagview.DiagramTemplateFactory;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagramCurve;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
 import org.kalypso.ogc.sensor.template.LinkedDiagramCurve;
 import org.kalypso.ogc.sensor.template.LinkedTableViewColumn;
 import org.kalypso.ogc.sensor.template.LinkedTableViewTemplate;
+import org.kalypso.ogc.sensor.zml.ZmlLoader;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.util.xml.xlink.JAXBXLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -61,13 +68,15 @@ public class KalypsoWizardHelper
   }
 
   /**
-   * Updates the diagram template for the given TimeserieFeatureProps and features
+   * Updates the diagram template for the given TimeserieFeatureProps and
+   * features
    */
   public static void updateDiagramTemplate( final TimeserieFeatureProps[] props,
-      final List features, final IDiagramTemplate template )
+      final List features, final IDiagramTemplate template, final boolean useResolver,
+      final IProject project )
   {
     template.removeAllCurves();
-    
+
     for( Iterator it = features.iterator(); it.hasNext(); )
     {
       final KalypsoFeature kf = (KalypsoFeature)it.next();
@@ -75,26 +84,52 @@ public class KalypsoWizardHelper
       for( int i = 0; i < props.length; i++ )
       {
         final String name = (String)kf.getProperty( props[i]._nameColumn );
-        final TimeseriesLinkType obsLink = (TimeseriesLinkType)kf.getProperty( props[i]._linkColumn );
+        final TimeseriesLinkType obsLink = (TimeseriesLinkType)kf
+            .getProperty( props[i]._linkColumn );
 
         if( obsLink != null )
         {
           final Properties mappings = new Properties();
           mappings.setProperty( obsLink.getTimeaxis(), props[i]._diagDateAxis );
           mappings.setProperty( obsLink.getValueaxis(), props[i]._diagValueAxis );
-  
-          final LinkedDiagramCurve curve = new LinkedDiagramCurve( obsLink.getLinktype(), new JAXBXLink( obsLink ), name, mappings, template );
-          
-          template.addCurve( curve );
+
+          if( !useResolver )
+          {
+            final Properties loaderProps = PropertiesHelper
+                .parseFromString( obsLink.getHref(), '#' );
+
+            final ZmlLoader loader = new ZmlLoader();
+            try
+            {
+              final IObservation obs = (IObservation)loader.load( loaderProps, project,
+                  new NullProgressMonitor() );
+
+              final DiagramCurve curve = new DiagramCurve( name, obs, mappings, template );
+
+              template.addCurve( curve );
+            }
+            catch( LoaderException e )
+            {
+              // ignored, do nothing...
+              e.printStackTrace();
+            }
+          }
+          else
+          {
+            final LinkedDiagramCurve curve = new LinkedDiagramCurve( obsLink.getLinktype(),
+                new JAXBXLink( obsLink ), name, mappings, template );
+            template.addCurve( curve );
+          }
         }
       }
     }
   }
 
   /**
-   * 
+   *  
    */
-  public static void updateTableTemplate( final TimeserieFeatureProps[] props, final List features, final LinkedTableViewTemplate template )
+  public static void updateTableTemplate( final TimeserieFeatureProps[] props, final List features,
+      final LinkedTableViewTemplate template, final boolean useResolver, final IProject project )
   {
     for( Iterator it = features.iterator(); it.hasNext(); )
     {
@@ -103,34 +138,67 @@ public class KalypsoWizardHelper
       for( int i = 0; i < props.length; i++ )
       {
         final String name = (String)kf.getProperty( props[i]._nameColumn );
-        final TimeseriesLinkType obsLink = (TimeseriesLinkType)kf.getProperty( props[i]._linkColumn );
+        final TimeseriesLinkType obsLink = (TimeseriesLinkType)kf
+            .getProperty( props[i]._linkColumn );
 
         if( obsLink != null )
         {
-          final LinkedTableViewColumn col = new LinkedTableViewColumn( name, obsLink.getLinktype(), new JAXBXLink( obsLink ), true, 50, obsLink.getTimeaxis(), obsLink.getValueaxis() );
-          template.addColumn( col );
+          if( !useResolver )
+          {
+            final Properties loaderProps = PropertiesHelper
+            .parseFromString( obsLink.getHref(), '#' );
+            
+            final ZmlLoader loader = new ZmlLoader();
+            try
+            {
+              final IObservation obs = (IObservation)loader.load( loaderProps, project,
+                  new NullProgressMonitor() );
+
+              final TableViewColumn col = new TableViewColumn( name, obs, true, 50, obsLink.getTimeaxis(), obsLink
+                  .getValueaxis() );
+
+              template.addColumn( col );
+            }
+            catch( LoaderException e )
+            {
+              // ignored, do nothing...
+              e.printStackTrace();
+            }
+
+          }
+          else
+          {
+            final LinkedTableViewColumn col = new LinkedTableViewColumn( name, obsLink
+                .getLinktype(), new JAXBXLink( obsLink ), true, 50, obsLink.getTimeaxis(), obsLink
+                .getValueaxis() );
+            
+            template.addColumn( col );
+          }
         }
       }
-    } 
+    }
   }
-  
+
   /**
    * @throws JAXBException
-   * 
+   *  
    */
-  public static void updateXMLDiagramTemplate( final TimeserieFeatureProps[] props, final List features, final ObsdiagviewType template ) throws JAXBException
+  public static void updateXMLDiagramTemplate( final TimeserieFeatureProps[] props,
+      final List features, final ObsdiagviewType template ) throws JAXBException
   {
     for( Iterator it = features.iterator(); it.hasNext(); )
     {
       final KalypsoFeature kf = (KalypsoFeature)it.next();
-      
+
       for( int i = 0; i < props.length; i++ )
       {
         final String name = (String)kf.getProperty( props[i]._nameColumn );
-        final TimeseriesLinkType obsLink = (TimeseriesLinkType)kf.getProperty( props[i]._linkColumn );
+        final TimeseriesLinkType obsLink = (TimeseriesLinkType)kf
+            .getProperty( props[i]._linkColumn );
 
         if( obsLink != null )
-          DiagramTemplateFactory.addTimeseriesLink( template, obsLink, name, props[i]._diagDateAxis, props[i]._diagValueAxis );
+          DiagramTemplateFactory.addTimeseriesLink( template, obsLink, name,
+              props[i]._diagDateAxis, props[i]._diagValueAxis );
       }
     }
   }

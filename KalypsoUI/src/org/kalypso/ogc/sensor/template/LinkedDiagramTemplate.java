@@ -28,6 +28,8 @@ public class LinkedDiagramTemplate implements IDiagramTemplate, ILinkResolverLis
 
   private final IProject m_project;
 
+  private boolean m_useResolver = true;
+
   public LinkedDiagramTemplate( final ObsdiagviewType obsDiagView, final IProject project )
   {
     m_project = project;
@@ -53,12 +55,18 @@ public class LinkedDiagramTemplate implements IDiagramTemplate, ILinkResolverLis
     {
       final ObsdiagviewType.CurveType baseCurve = (ObsdiagviewType.CurveType)it.next();
 
-      curves.add( ObservationTemplateHelper.createCurve( baseCurve, this ) );
+      if( m_useResolver )
+        curves.add( ObservationTemplateHelper.createCurve( baseCurve, this ) );
+      else
+        addCurve( ObservationTemplateHelper.createCurve( baseCurve, this ) );
     }
 
-    // resolve the links!
-    new LinkResolver( (LinkedDiagramCurve[])curves.toArray( new LinkedDiagramCurve[0] ),
-        IObservation.class, project, this );
+    if( m_useResolver )
+    {
+      // resolve the links!
+      new LinkResolver( (LinkedDiagramCurve[])curves.toArray( new LinkedDiagramCurve[0] ),
+          IObservation.class, project, this );
+    }
   }
 
   public boolean equals( Object obj )
@@ -108,10 +116,14 @@ public class LinkedDiagramTemplate implements IDiagramTemplate, ILinkResolverLis
 
   public void addCurve( IDiagramCurve curve )
   {
-    // resolve link curve before adding curve to template!
-    if( curve instanceof LinkedDiagramCurve )
+    if( curve instanceof LinkedDiagramCurve && m_useResolver )
+    {
+      // resolve link curve before adding curve to template!
       new LinkResolver( new LinkedDiagramCurve[]
-      { (LinkedDiagramCurve)curve }, IObservation.class, m_project, this );
+        { (LinkedDiagramCurve)curve }, IObservation.class, m_project, this );
+    }
+    else
+      m_template.addCurve( curve );
   }
 
   public void removeAxis( IDiagramAxis axis )
@@ -171,5 +183,10 @@ public class LinkedDiagramTemplate implements IDiagramTemplate, ILinkResolverLis
   {
     // now that link is resolved, add curve to template!
     m_template.addCurve( (IDiagramCurve)evt.getLink() );
+  }
+
+  public void setUseResolver( final boolean b )
+  {
+    m_useResolver = b;
   }
 }

@@ -31,6 +31,8 @@ public class LinkedTableViewTemplate implements ITableViewTemplate, ILinkResolve
 
   private int m_toBeResolved = 0;
   private final List m_resolved = new ArrayList();
+  
+  private boolean m_useResolver = true;
 
   /**
    * Constructor
@@ -50,7 +52,10 @@ public class LinkedTableViewTemplate implements ITableViewTemplate, ILinkResolve
     {
       ObstableviewType.ColumnpairType col = (ObstableviewType.ColumnpairType)it.next();
 
-      linkedColumns.add( new LinkedTableViewColumn( col ) );
+      if( m_useResolver )
+        linkedColumns.add( new LinkedTableViewColumn( col ) );
+      else
+        addColumn( new LinkedTableViewColumn( col ) );
     }
 
     final RulesType trules = obsTableView.getRules();
@@ -62,21 +67,26 @@ public class LinkedTableViewTemplate implements ITableViewTemplate, ILinkResolve
 
     m_toBeResolved = linkedColumns.size();
     
-    // resolve the links!
-    new LinkResolver( (LinkedTableViewColumn[])linkedColumns.toArray( new LinkedTableViewColumn[0] ),
-        IObservation.class, project, this );
+    if( m_useResolver )
+    {
+      // resolve the links!
+      new LinkResolver( (LinkedTableViewColumn[])linkedColumns.toArray( new LinkedTableViewColumn[0] ),
+          IObservation.class, project, this );
+    }
   }
 
   public void addColumn( final ITableViewColumn column )
   {
     // resolve link curve before adding column!
-    if( column instanceof LinkedTableViewColumn )
+    if( column instanceof LinkedTableViewColumn && m_useResolver )
     {
       m_toBeResolved++;
       
       new LinkResolver( new LinkedTableViewColumn[]
       { (LinkedTableViewColumn)column }, IObservation.class, m_project, this );
     }
+    else
+      m_template.addColumn( column );
   }
 
   public void addTemplateEventListener( ITemplateEventListener l )
@@ -107,11 +117,6 @@ public class LinkedTableViewTemplate implements ITableViewTemplate, ILinkResolve
   public void removeRule( RenderingRule rule )
   {
     m_template.removeRule( rule );
-  }
-
-  public int hashCode()
-  {
-    return m_template.hashCode();
   }
 
   public void removeColumn( ITableViewColumn column )
@@ -158,5 +163,10 @@ public class LinkedTableViewTemplate implements ITableViewTemplate, ILinkResolve
   public void removeAllColumns()
   {
     m_template.removeAllColumns();
+  }
+
+  public void setUseResolver( final boolean useResolver )
+  {
+    m_useResolver = useResolver;
   }
 }

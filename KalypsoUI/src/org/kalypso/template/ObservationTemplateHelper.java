@@ -2,21 +2,20 @@ package org.kalypso.template;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.util.Iterator;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.java.io.FileUtilities;
-import org.kalypso.ogc.sensor.diagview.DiagramTemplateFactory;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.template.LinkedDiagramCurve;
 import org.kalypso.ogc.sensor.template.LinkedDiagramTemplate;
@@ -66,7 +65,7 @@ public class ObservationTemplateHelper
   public static IDiagramTemplate loadDiagramTemplate( final IFile file ) throws CoreException,
       JAXBException, IOException
   {
-    return new LinkedDiagramTemplate( loadDiagramTemplateXML(file), file.getProject() );
+    return new LinkedDiagramTemplate( loadDiagramTemplateXML( file ), file.getProject() );
   }
 
   /**
@@ -111,12 +110,21 @@ public class ObservationTemplateHelper
    */
   public static void openGrafik4odt( final IFile odtFile )
   {
+    openGrafik4odt( odtFile.getLocation().toFile(), odtFile.getProject() );
+  }
+
+  /**
+   * 
+   */
+  public static void openGrafik4odt( final File file, final IProject project )
+  {
     // TODO: bessere konfigurierbarkeit von der Transformation?
     final InputStream xsl = ObservationTemplateHelper.class
         .getResourceAsStream( "/org/kalypso/plugin/resources/xsl/grafik-vorlage.xsl" );
 
     FileWriter fw = null;
-
+    InputStream ins = null;
+    
     try
     {
       final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe",
@@ -125,22 +133,25 @@ public class ObservationTemplateHelper
 
       // get the file where project resides in order to complete the relative
       // path
-      final String projectDir = odtFile.getProject().getLocation().toString();
+      final String projectDir = project.getLocation().toString();
 
-      final String str = XMLTools.xslTransform( odtFile.getContents(), xsl );
+      ins = new FileInputStream( file );
+      final String str = XMLTools.xslTransform( ins, xsl );
 
       // complete relative path (prepared by the xslt, all relative path are
       // preceded by _XXXX_)
       final String strOk = str.replaceAll( "_XXXX_", projectDir );
 
       // create the template file for the grafik tool
-      final File file = File.createTempFile( "grafik", "vorlage" );
-      file.deleteOnExit();
+      final File tmp = File.createTempFile( "grafik", ".tpl" );
 
-      fw = new FileWriter( file );
+      fw = new FileWriter( tmp );
       fw.write( strOk );
 
-      Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V" + file.getAbsolutePath() );
+      Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V" + tmp.getAbsolutePath() );
+      
+      // delete the tmp vorlage right away
+      tmp.delete();
     }
     catch( Exception e )
     {
@@ -154,6 +165,9 @@ public class ObservationTemplateHelper
 
         if( fw != null )
           fw.close();
+        
+        if( ins != null )
+          ins.close();
       }
       catch( Exception e )
       {
@@ -162,59 +176,67 @@ public class ObservationTemplateHelper
     }
   }
 
-  public static void openGrafik4odt( final ObsdiagviewType tpl ) throws Exception
-  {
-    final InputStream xsl = ObservationTemplateHelper.class
-        .getResourceAsStream( "/org/kalypso/plugin/resources/xsl/grafik-vorlage.xsl" );
-
-    final PipedOutputStream pos = new PipedOutputStream();
-    final PipedInputStream pis = new PipedInputStream( pos );
-
-    final Runnable runnable = new Runnable()
-    {
-      public void run()
-      {
-        try
-        {
-          DiagramTemplateFactory.writeTemplate( tpl, pos );
-        }
-        catch( JAXBException e )
-        {
-          e.printStackTrace();
-        }
-        finally
-        {
-          try
-          {
-            pos.close();
-          }
-          catch( IOException e1 )
-          {
-            e1.printStackTrace();
-          }
-        }
-      }
-    };
-
-    final Thread thread = new Thread( runnable );
-    thread.start();
-
-    final String str = XMLTools.xslTransform( pis, xsl );
-    pis.close();
-
-    final File file = File.createTempFile( "grafik", "vorlage" );
-    file.deleteOnExit();
-
-    FileWriter fw = new FileWriter( file );
-    fw.write( str );
-    fw.close();
-
-    final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe",
-        GrafikViewActionDelegate.class
-            .getResourceAsStream( "/org/kalypso/plugin/resources/exe/grafik.exe_" ), true );
-
-    Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V" + file.getAbsolutePath() );
-  }
+  //  /**
+  //   *
+  //   */
+  //  public static void openGrafik4odt( final ObsdiagviewType tpl ) throws
+  // Exception
+  //  {
+  //    final InputStream xsl = ObservationTemplateHelper.class
+  //        .getResourceAsStream(
+  // "/org/kalypso/plugin/resources/xsl/grafik-vorlage.xsl" );
+  //
+  //    final PipedOutputStream pos = new PipedOutputStream();
+  //    final PipedInputStream pis = new PipedInputStream( pos );
+  //
+  //    final Runnable runnable = new Runnable()
+  //    {
+  //      public void run()
+  //      {
+  //        try
+  //        {
+  //          DiagramTemplateFactory.writeTemplate( tpl, pos );
+  //        }
+  //        catch( JAXBException e )
+  //        {
+  //          e.printStackTrace();
+  //        }
+  //        finally
+  //        {
+  //          try
+  //          {
+  //            pos.close();
+  //          }
+  //          catch( IOException e1 )
+  //          {
+  //            e1.printStackTrace();
+  //          }
+  //        }
+  //      }
+  //    };
+  //
+  //    final Thread thread = new Thread( runnable );
+  //    thread.start();
+  //
+  //    final String str = XMLTools.xslTransform( pis, xsl );
+  //    pis.close();
+  //
+  //    final File file = File.createTempFile( "grafik", "vorlage" );
+  //    file.deleteOnExit();
+  //
+  //    FileWriter fw = new FileWriter( file );
+  //    fw.write( str );
+  //    fw.close();
+  //
+  //    final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik",
+  // ".exe",
+  //        GrafikViewActionDelegate.class
+  //            .getResourceAsStream( "/org/kalypso/plugin/resources/exe/grafik.exe_" ),
+  // true );
+  //
+  //    Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V" +
+  // file.getAbsolutePath() );
+  //  }
 
   /**
    * Starts the grafik.exe on the given grafik-template file.
