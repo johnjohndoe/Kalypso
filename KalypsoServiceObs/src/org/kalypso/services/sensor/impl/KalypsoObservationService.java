@@ -113,9 +113,11 @@ public class KalypsoObservationService implements IObservationService
   }
 
   /**
-   * @see org.kalypso.services.sensor.IObservationService#readData(org.kalypso.ogc.sensor.beans.ObservationBean, org.kalypso.ogc.sensor.beans.DateRangeBean)
+   * @see org.kalypso.services.sensor.IObservationService#readData(org.kalypso.ogc.sensor.beans.ObservationBean,
+   *      org.kalypso.ogc.sensor.beans.DateRangeBean)
    */
-  public OCSDataBean readData( final ObservationBean obean, final DateRangeBean drb ) throws RemoteException
+  public OCSDataBean readData( final ObservationBean obean, final DateRangeBean drb )
+      throws RemoteException
   {
     FileOutputStream fos = null;
 
@@ -124,7 +126,7 @@ public class KalypsoObservationService implements IObservationService
       final IRepositoryItem item = itemFromBean( obean );
 
       final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
-      
+
       if( obs == null )
         throw new RemoteException( "No observation for " + obean.getId() );
 
@@ -137,7 +139,8 @@ public class KalypsoObservationService implements IObservationService
       fos = new FileOutputStream( f );
       ZmlFactory.getMarshaller().marshal( obsType, fos );
 
-      final OCSDataBean oddb = new OCSDataBean( m_lastId++, obean.getId(), f.toURL().toExternalForm() );
+      final OCSDataBean oddb = new OCSDataBean( m_lastId++, obean.getId(), f.toURL()
+          .toExternalForm() );
 
       // DATABEAN --> ZML File
       m_mapBean2File.put( new Integer( oddb.getId() ), f );
@@ -191,12 +194,12 @@ public class KalypsoObservationService implements IObservationService
       final IRepositoryItem item = itemFromBean( obean );
 
       final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
-      
+
       if( obs == null )
         throw new RemoteException( "No observation for " + obean.getId() );
-      
+
       final IObservation zml = ZmlFactory.parseXML( new URL( odb.getLocation() ), odb.getObsId() );
-      
+
       obs.setValues( zml.getValues( null ) );
     }
     catch( Exception e ) // generic exception caught for simplicity
@@ -300,15 +303,16 @@ public class KalypsoObservationService implements IObservationService
     for( int i = 0; i < beans.length; i++ )
     {
       final IObservation obs = (IObservation)children[i].getAdapter( IObservation.class );
+
       if( obs != null )
       {
-        beans[i] = new ObservationBean( children[i].getIdentifier(), obs.getName(), item.getRepository()
-            .getIdentifier(), obs.getMetadataList() );
+        beans[i] = new ObservationBean( children[i].getIdentifier(), obs.getName(), item
+            .getRepository().getIdentifier(), obs.getMetadataList() );
       }
       else
       {
-        beans[i] = new ItemBean( children[i].getIdentifier(), children[i].getName(), item.getRepository()
-            .getIdentifier() );
+        beans[i] = new ItemBean( children[i].getIdentifier(), children[i].getName(), item
+            .getRepository().getIdentifier() );
       }
 
       // store it for future referencing
@@ -377,14 +381,14 @@ public class KalypsoObservationService implements IObservationService
   {
     for( Iterator it = m_repositories.iterator(); it.hasNext(); )
     {
-      final IRepository rep= (IRepository)it.next();
-      
+      final IRepository rep = (IRepository)it.next();
+
       try
       {
         final IRepositoryItem item = rep.findItem( id );
-        
+
         ItemBean bean = null;
-        
+
         final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
         if( obs != null )
         {
@@ -399,7 +403,7 @@ public class KalypsoObservationService implements IObservationService
 
         // store it for future referencing
         m_mapBean2Item.put( bean.getId(), item );
-        
+
         return bean;
       }
       catch( RepositoryException e )
@@ -407,7 +411,7 @@ public class KalypsoObservationService implements IObservationService
         // ignored
       }
     }
-    
+
     throw new RemoteException( "Item not found: " + id );
   }
 }
