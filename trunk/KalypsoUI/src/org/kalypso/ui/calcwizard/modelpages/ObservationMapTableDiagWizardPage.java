@@ -118,23 +118,25 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
 
   private void createTablePanel( final Composite parent )
   {
+    // TODO
+//    Composite comp = new Cop
     initDiagramTable( parent );
 
-    final Button btnSave = new Button( parent, SWT.PUSH );
-    btnSave.setText( "Daten speichern" );
-    btnSave.setToolTipText( "Speichert die grundliegende Dateien" );
-    btnSave.addSelectionListener( new SelectionListener()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        saveDirtyObservations();
-      }
-
-      public void widgetDefaultSelected( SelectionEvent e )
-      {
-        // empty
-      }
-    } );
+//    final Button btnSave = new Button( parent, SWT.PUSH );
+//    btnSave.setText( "Daten speichern" );
+//    btnSave.setToolTipText( "Speichert die grundliegende Dateien" );
+//    btnSave.addSelectionListener( new SelectionListener()
+//    {
+//      public void widgetSelected( SelectionEvent e )
+//      {
+//        saveDirtyObservations();
+//      }
+//
+//      public void widgetDefaultSelected( SelectionEvent e )
+//      {
+//        // empty
+//      }
+//    } );
   }
 
   private void createMapPanel( final Composite parent ) throws Exception,
