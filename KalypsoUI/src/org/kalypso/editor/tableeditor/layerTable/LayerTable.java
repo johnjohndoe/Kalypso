@@ -110,27 +110,28 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
       m_model.getLayer().addModellListener( this );
     }
 
-    createColumns();
-    
     final IAction[] actions = createActions();
-    
+
     m_menu = refillMenu( m_menu, actions );
     m_spaltenMenu = refillMenu( m_spaltenMenu, actions );
-    
-    m_viewer.getTable().setMenu( ((MenuManager)m_menu).createContextMenu( m_viewer.getTable() ) );
+
+    m_viewer.getTable().setMenu( ( (MenuManager)m_menu ).createContextMenu( m_viewer.getTable() ) );
+
+    createColumns();
   }
-  
+
   private IAction[] createActions()
   {
     if( m_model != null )
     {
       final FeatureTypeProperty[] ftps = m_model.getFeatureType().getProperties();
 
-      final IAction[] actions = new IAction[ftps.length]; 
-      
+      final IAction[] actions = new IAction[ftps.length];
+
       for( int i = 0; i < ftps.length; i++ )
-        actions[i] = new ColumnAction( m_commandManager, this, ftps[i], m_model.getInitialWidth( ftps[i] ) != 0 );
-      
+        actions[i] = new ColumnAction( m_commandManager, this, ftps[i], m_model
+            .getInitialWidth( ftps[i] ) != 0 );
+
       return actions;
     }
 
@@ -144,26 +145,20 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
       oldMenu.removeAll();
       oldMenu.dispose();
     }
-    
+
     final IMenuManager menu = new MenuManager( "Spalten" );
-    
+
     // create context menu
     for( int i = 0; i < actions.length; i++ )
       menu.add( actions[i] );
-    
+
     return menu;
   }
 
   protected void clearColumns()
   {
     m_ftp2ColumnMap.clear();
-    if( m_menu != null )
-    {
-      m_menu.removeAll();
-      m_menu.dispose();
-    }
-    m_menu = null;
-    
+
     final Table table = m_viewer.getTable();
     final TableColumn[] columns = table.getColumns();
     for( int i = 0; i < columns.length; i++ )
@@ -172,9 +167,11 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
 
   protected void createColumns()
   {
+    System.out.println( "clear columns" );
+
     if( m_model == null )
       return;
-    
+
     final Table table = m_viewer.getTable();
 
     final FeatureType featureType = m_model.getLayer().getFeatureType();
@@ -195,7 +192,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
       colProperties[i] = ftp.getName();
 
       m_ftp2ColumnMap.put( ftp, tc );
-      
+
       try
       {
         if( m_model.isEditable( ftp ) )
@@ -213,23 +210,24 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     m_viewer.setInput( m_model );
     m_viewer.setCellModifier( new LayerTableCellModifier( m_commandManager, m_model, featureType ) );
   }
-  
+
   /**
    * @see org.kalypso.editor.tableeditor.layerTable.ILayerTableModelListener#onColumnsChanged()
    */
-    public void onColumnsChanged( )
+  public void onColumnsChanged()
+  {
+    System.out.println( "on columns changhed" );
+    m_viewer.getControl().getDisplay().asyncExec( new Runnable()
     {
-      m_viewer.getControl().getDisplay().asyncExec( new Runnable()
+      public void run()
       {
-        public void run()
-        {
-          clearColumns();
-          createColumns();
-        }
-      } );
-    }
+        clearColumns();
+        createColumns();
+      }
+    } );
+  }
 
-  /** 
+  /**
    * 
    * @see org.kalypso.editor.tableeditor.layerTable.ILayerTableModelListener#onRowsChanged(org.kalypso.ogc.gml.KalypsoFeature)
    */
@@ -300,8 +298,8 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
   public FeatureTypeProperty getFeatureTypePropertyFromIndex( final int columnIndex )
   {
     if( m_viewer != null )
-      return (FeatureTypeProperty)m_viewer.getTable().getColumn(columnIndex).getData();
-    
+      return (FeatureTypeProperty)m_viewer.getTable().getColumn( columnIndex ).getData();
+
     return null;
   }
 }
