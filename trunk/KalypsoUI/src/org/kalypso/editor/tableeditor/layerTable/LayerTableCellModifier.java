@@ -1,7 +1,5 @@
 package org.kalypso.editor.tableeditor.layerTable;
 
-import java.util.Properties;
-
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
@@ -9,7 +7,6 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.ogc.command.ModifyFeatureCommand;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.command.ICommandManager;
 
 /**
@@ -21,8 +18,6 @@ public class LayerTableCellModifier implements ICellModifier
 {
   private final FeatureType m_type;
   
-  private final Properties m_props = KalypsoGisPlugin.getDefault().getFeatureTypeCellEditorProperties();
-
   private final LayerTableModel m_modell;
 
   private final ICommandManager m_commandManager;
@@ -40,7 +35,7 @@ public class LayerTableCellModifier implements ICellModifier
   public boolean canModify( final Object element, final String property )
   {
     final FeatureTypeProperty ftp = getFeatureTypeProperty( property );
-    return m_props.containsKey( ftp.getType() );
+    return m_modell.isEditable( ftp );
   }
 
   private FeatureTypeProperty getFeatureTypeProperty( final String property )

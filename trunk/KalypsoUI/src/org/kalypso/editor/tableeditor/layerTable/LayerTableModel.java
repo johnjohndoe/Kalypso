@@ -121,4 +121,10 @@ public class LayerTableModel
 
     fireRowsChanged( feature );
   }
+
+  public boolean isEditable( final FeatureTypeProperty ftp )
+  {
+    // TODO: change xsd
+    return true;
+  }
 }

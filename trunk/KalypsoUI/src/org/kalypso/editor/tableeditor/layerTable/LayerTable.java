@@ -1,5 +1,7 @@
 package org.kalypso.editor.tableeditor.layerTable;
 
+import java.util.logging.Logger;
+
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
@@ -12,22 +14,25 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
 import org.kalypso.editor.tableeditor.actions.ColumnAction;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommandManager;
+import org.kalypso.util.factory.FactoryException;
 
 /**
  * @author bce
  */
 public class LayerTable implements ILayerTableModelListener, ISelectionProvider, ModellEventListener
 {
+  private static Logger LOGGER = Logger.getLogger( LayerTable.class.getName() );
+  
   protected final TableViewer m_viewer;
 
   private LayerTableModel m_model = null;
@@ -44,9 +49,12 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     }
   };
 
-  public LayerTable( final Composite parent, final ICommandManager commandManager )
+  private final ICellEditorFactory m_cellEditorFactory;
+
+  public LayerTable( final Composite parent, final ICommandManager commandManager, final ICellEditorFactory cellEditorFactory )
   {
     m_commandManager = commandManager;
+    m_cellEditorFactory = cellEditorFactory;
 
     m_viewer = new TableViewer( parent, SWT.MULTI /* | SWT.FULL_SELECTION */);
 
@@ -120,8 +128,16 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
 
       colProperties[i] = Integer.toString( i );
 
-      // TODO: create cell editor dependent on FeatureType
-      cellEditors[i] = new TextCellEditor( table );
+      try
+      {
+        if( model.isEditable( ftp ) )
+          cellEditors[i] = m_cellEditorFactory.createEditor( ftp.getType(), table, SWT.NONE );
+      }
+      catch( final FactoryException e )
+      {
+        // ignore: Type not supported
+        LOGGER.warning( "CellEditor not found for type: " + ftp.getType() );
+      }
     }
 
     table.setMenu( m_menu.createContextMenu( table ) );
