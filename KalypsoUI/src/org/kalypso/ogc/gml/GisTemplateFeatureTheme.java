@@ -180,7 +180,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     final PoolableObjectType key = m_layerKey;
 
     layer.setId( id );
-    layer.setHref( key.getSourceAsString() );
+    layer.setHref( key.getLocation() );
     layer.setLinktype( key.getType() );
     layer.setActuate( "onRequest" );
     layer.setType( "simple" );
@@ -200,7 +200,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         StyleType styleType = extentFac.createStyledLayerTypeStyleType();
         IPoolableObjectType styleKey = styleKeys[j];
         styleType.setActuate( "onRequest" );
-        styleType.setHref( styleKey.getSourceAsString() );
+        styleType.setHref( styleKey.getLocation() );
         styleType.setLinktype( styleKey.getType() );
         styleType.setStyle( m_styleNames[j] );
         styleType.setType( "simple" );

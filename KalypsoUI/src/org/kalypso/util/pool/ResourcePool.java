@@ -41,7 +41,7 @@ public class ResourcePool implements ILoaderListener
    */
   private final ISchedulingRule m_schedulingRule = new MutexSchedulingRule();
 
-  private final Comparator m_keyComparator = new KeyComparator(this);
+  private final Comparator m_keyComparator = new KeyComparator();
 
   /** key -> Set(IPoolListener) */
   private Map m_listeners = new TreeMap( m_keyComparator );
@@ -236,7 +236,7 @@ public class ResourcePool implements ILoaderListener
 
     final ILoader loader = getLoader( type );
 
-    final Object object = loader.load( key.getSource(), key.getContext(), monitor );
+    final Object object = loader.load( key.getLocation(), key.getContext(), monitor );
     
     return object;
   }
@@ -297,7 +297,7 @@ public class ResourcePool implements ILoaderListener
       if( key != null )
       {
         final ILoader loader = getLoader( key.getType() );
-        loader.save( key.getSource(), key.getContext(), monitor, object );
+        loader.save( key.getLocation(), key.getContext(), monitor, object );
       }
     }
   }

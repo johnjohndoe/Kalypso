@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -36,10 +35,9 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#load(java.util.Properties, java.net.URL,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.ILoader#load(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public Object load( Properties source, URL context, IProgressMonitor monitor )
+  public Object load( final String source, final URL context, final IProgressMonitor monitor )
       throws LoaderException
   {
     final Object newObject = loadIntern( source, context, monitor );
@@ -52,7 +50,7 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   /**
    * This method should be overriden by clients extending this class.
    */
-  protected abstract Object loadIntern( final Properties source, final URL context,
+  protected abstract Object loadIntern( final String source, final URL context,
       final IProgressMonitor monitor ) throws LoaderException;
 
   /**
@@ -118,9 +116,9 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#save(java.util.Properties, java.net.URL, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
+   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
-  public void save( final Properties source, final URL context, final IProgressMonitor monitor,
+  public void save( final String source, final URL context, final IProgressMonitor monitor,
       final Object data ) throws LoaderException
   {
     throw new LoaderException( "Operation not supported" );

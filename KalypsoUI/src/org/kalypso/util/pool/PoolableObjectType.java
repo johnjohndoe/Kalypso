@@ -1,40 +1,25 @@
 package org.kalypso.util.pool;
 
 import java.net.URL;
-import java.util.Properties;
-
-import org.kalypso.java.util.PropertiesHelper;
 
 /**
  * @author vdoemming
  */
 public class PoolableObjectType implements IPoolableObjectType
 {
-  private static final char PROPERTY_SEPARATOR = '#';
-
-  private final String myType;
-
-  private final Properties mySource;
+  private final String m_type;
 
   private final URL m_context;
-
-  /**
-   * Constructor with location information as string. It is parsed by
-   * PropertiesHelper and a Properties object is build. Calls the constructor
-   * <code>PoolableObjectType( String, Properties, URL )</code>
-   */
-  public PoolableObjectType( final String type, final String source, final URL context )
-  {
-    this( type, PropertiesHelper.parseFromString( source, PROPERTY_SEPARATOR ), context );
-  }
+  
+  private final String m_source;
 
   /**
    * Constructor.
    */
-  public PoolableObjectType( final String type, final Properties source, final URL context )
+  public PoolableObjectType( final String type, final String source, final URL context )
   {
-    myType = type;
-    mySource = source;
+    m_type = type;
+    m_source = source;
     m_context = context;
   }
 
@@ -43,15 +28,15 @@ public class PoolableObjectType implements IPoolableObjectType
    */
   public String getType()
   {
-    return myType;
+    return m_type;
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolableObjectType#getSource()
+   * @see org.kalypso.util.pool.IPoolableObjectType#getLocation()
    */
-  public Properties getSource()
+  public String getLocation()
   {
-    return mySource;
+    return m_source;
   }
 
   /**
@@ -70,7 +55,7 @@ public class PoolableObjectType implements IPoolableObjectType
     final IPoolableObjectType other = (IPoolableObjectType)obj;
     if( !getType().equals( other.getType() ) )
       return false;
-    if( !getSource().equals( other.getSource() ) )
+    if( !getLocation().equals( other.getLocation() ) )
       return false;
     if( getContext() != null && !getContext().equals( other.getContext() ) )
       return false;
@@ -88,12 +73,7 @@ public class PoolableObjectType implements IPoolableObjectType
    */
   public String toString()
   {
-      return getClass().getName() + ": source=" + getSource() + " type=" + getType() + " context= "
+      return getClass().getName() + ": location=" + getLocation() + " type=" + getType() + " context= "
           + getContext();
-  }
-
-  public String getSourceAsString()
-  {
-    return PropertiesHelper.format( getSource(), PROPERTY_SEPARATOR );
   }
 }

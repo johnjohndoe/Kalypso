@@ -1,23 +1,15 @@
 package org.kalypso.util.pool;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Comparator;
 
-import org.kalypso.loader.ILoader;
-import org.kalypso.util.factory.FactoryException;
+import org.kalypso.util.url.UrlResolver;
 
 
 class KeyComparator implements Comparator
 {
-  private final ResourcePool m_pool;
-
-  /**
-   * @param pool
-   */
-  KeyComparator( ResourcePool pool )
-  {
-    this.m_pool = pool;
-    // TODO Auto-generated constructor stub
-  }
+  private final UrlResolver m_urlResolver = new UrlResolver();
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
@@ -33,11 +25,12 @@ class KeyComparator implements Comparator
 
     try
     {
-      final ILoader loader = this.m_pool.getLoader( k1.getType() );
-      return loader
-          .compareKeys( k1.getSource(), k1.getContext(), k2.getSource(), k2.getContext() );
+        final URL sourceURL1 = m_urlResolver.resolveURL( k1.getContext(), k1.getLocation() );
+        final URL sourceURL2 = m_urlResolver.resolveURL( k2.getContext(), k2.getLocation() );
+
+        return sourceURL1.hashCode() - sourceURL2.hashCode();
     }
-    catch( FactoryException e )
+    catch( MalformedURLException e )
     {
       e.printStackTrace();
     }

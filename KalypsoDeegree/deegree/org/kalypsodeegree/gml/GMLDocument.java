@@ -88,6 +88,11 @@ public interface GMLDocument
   public void setSchemaLocation( URL schema );
 
   /**
+   * sets the location of schema the document based on
+   */
+  public void setSchemaLocation( final String schema );
+
+  /**
    * returns the name spaces used within the document
    */
   public GMLNameSpace[] getNameSpaces();
@@ -120,6 +125,9 @@ public interface GMLDocument
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.5  2004/11/01 15:38:01  belger
+ * *** empty log message ***
+ *
  * Revision 1.4  2004/10/31 18:34:01  belger
  * *** empty log message ***
  *

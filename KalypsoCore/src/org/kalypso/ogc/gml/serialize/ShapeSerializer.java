@@ -83,7 +83,7 @@ public class ShapeSerializer
       if( monitor != null )
         monitor.done();
 
-      return new GMLWorkspace_Impl( new FeatureType[] { rootFeature.getFeatureType(), featureType }, rootFeature, null );
+      return new GMLWorkspace_Impl( new FeatureType[] { rootFeature.getFeatureType(), featureType }, rootFeature, null, null );
     }
     catch( final Exception e )
     {

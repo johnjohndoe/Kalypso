@@ -24,7 +24,7 @@ public class StartCalcWizardAction implements IWorkbenchWindowActionDelegate
    */
   public void dispose()
   {
-  // nix zu tun
+    // nix passiert 
   }
 
   /**
