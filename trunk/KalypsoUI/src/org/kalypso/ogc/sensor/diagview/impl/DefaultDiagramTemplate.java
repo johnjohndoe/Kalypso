@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.impl;
 
 import java.util.ArrayList;
@@ -60,7 +60,8 @@ import org.kalypso.ogc.sensor.template.TemplateEvent;
  * 
  * @author schlienger
  */
-public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implements IDiagramTemplate, IObservationListener
+public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implements
+    IDiagramTemplate, IObservationListener
 {
   private String m_title;
 
@@ -71,7 +72,7 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
   private final Map m_axesMap = new Hashtable();
 
   private final Map m_themesMap = new Hashtable();
-  
+
   private final Logger m_logger = Logger.getLogger( this.getClass().getName() );
 
   /**
@@ -81,7 +82,8 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
    * @param legendName
    * @param showLegend
    */
-  public DefaultDiagramTemplate( final String title, final String legendName, final boolean showLegend )
+  public DefaultDiagramTemplate( final String title, final String legendName,
+      final boolean showLegend )
   {
     m_title = title;
     m_legendName = legendName;
@@ -95,11 +97,11 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
   {
     return m_title;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     return m_title;
   }
@@ -119,11 +121,11 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
   {
     return m_showLegend;
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#getDiagramAxes()
    */
-  public Collection getDiagramAxes( )
+  public Collection getDiagramAxes()
   {
     return m_axesMap.values();
   }
@@ -131,16 +133,16 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
   /**
    * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#getCurves()
    */
-  public Collection getCurves( )
+  public Collection getCurves()
   {
     final Collection allCurves = new ArrayList();
     for( final Iterator iter = m_themesMap.values().iterator(); iter.hasNext(); )
     {
-      final Collection curves = (Collection) iter.next();
+      final Collection curves = (Collection)iter.next();
       allCurves.addAll( curves );
     }
-    
-//    return m_themesMap.values();
+
+    //    return m_themesMap.values();
     return allCurves;
   }
 
@@ -170,7 +172,8 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
   }
 
   /**
-   * Removes the given axis or throws IllegalArgumentException when no such axis.
+   * Removes the given axis or throws IllegalArgumentException when no such
+   * axis.
    * 
    * @param axis
    * @throws IllegalArgumentException
@@ -182,7 +185,7 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
     else
       throw new IllegalArgumentException( "Axis could not be found: " + axis );
   }
-  
+
   /**
    * Removes all axes
    */
@@ -197,25 +200,27 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
 
     // register as listener on the observation
     theme.getObservation().addListener( this );
-    
-    //m_logger.info( "ADDED obs listener: " + this + " for obs: " + theme.getObservation() );
-    
+
+    //m_logger.info( "ADDED obs listener: " + this + " for obs: " +
+    // theme.getObservation() );
+
     final Iterator it = theme.getCurves().iterator();
     while( it.hasNext() )
-      fireTemplateChanged( new TemplateEvent( this, it.next(), TemplateEvent.TYPE_ADD) );
+      fireTemplateChanged( new TemplateEvent( this, it.next(), TemplateEvent.TYPE_ADD ) );
   }
-  
+
   public void removeTheme( IDiagramTemplateTheme theme )
   {
     final Iterator it = theme.getCurves().iterator();
     while( it.hasNext() )
       fireTemplateChanged( new TemplateEvent( this, it.next(), TemplateEvent.TYPE_REMOVE ) );
-    
+
     // unregister listener
     theme.getObservation().removeListener( this );
-    
-    //m_logger.info( "REMOVED obs listener: " + this + " for obs: " + theme.getObservation() );
-    
+
+    //m_logger.info( "REMOVED obs listener: " + this + " for obs: " +
+    // theme.getObservation() );
+
     m_themesMap.remove( theme );
   }
 
@@ -224,7 +229,7 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
    */
   public IDiagramAxis getDiagramAxis( final String diagAxisId )
   {
-    return (IDiagramAxis) m_axesMap.get( diagAxisId );
+    return (IDiagramAxis)m_axesMap.get( diagAxisId );
   }
 
   /**
@@ -233,48 +238,49 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
   public void removeAllThemes()
   {
     clearObsListener();
-    
+
     m_themesMap.clear();
-    
+
     m_axesMap.clear();
-    
-    fireTemplateChanged( new TemplateEvent( this, null, TemplateEvent.TYPE_REMOVE_ALL) );
+
+    fireTemplateChanged( new TemplateEvent( this, null, TemplateEvent.TYPE_REMOVE_ALL ) );
   }
 
   /**
    * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     clearObsListener();
-    
+
     m_axesMap.clear();
-    
+
     final Iterator it = m_themesMap.keySet().iterator();
     while( it.hasNext() )
-      ((IDiagramTemplateTheme) it.next()).dispose();
-    
+      ( (IDiagramTemplateTheme)it.next() ).dispose();
+
     m_themesMap.clear();
   }
-  
+
   /**
    * Removes this from the listeners for the observations of this' themes
    */
-  private void clearObsListener( )
+  private void clearObsListener()
   {
     for( final Iterator it = getThemes().iterator(); it.hasNext(); )
     {
-      final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) it.next();
+      final IDiagramTemplateTheme theme = (IDiagramTemplateTheme)it.next();
       theme.getObservation().removeListener( this );
-      
-      //m_logger.info( "REMOVED obs listener: " + this + " for obs: " + theme.getObservation() );
+
+      //m_logger.info( "REMOVED obs listener: " + this + " for obs: " +
+      // theme.getObservation() );
     }
   }
 
   /**
    * @see org.kalypso.ogc.sensor.diagview.IDiagramTemplate#getThemes()
    */
-  public Collection getThemes( )
+  public Collection getThemes()
   {
     return m_themesMap.keySet();
   }
@@ -290,7 +296,7 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
     final Iterator it = getThemes().iterator();
     while( it.hasNext() )
     {
-      final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) it.next();
+      final IDiagramTemplateTheme theme = (IDiagramTemplateTheme)it.next();
 
       if( theme.getObservation().equals( obs ) )
         return theme;
@@ -298,7 +304,7 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
 
     return null;
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.IObservationListener#observationChanged(org.kalypso.ogc.sensor.IObservation)
    */

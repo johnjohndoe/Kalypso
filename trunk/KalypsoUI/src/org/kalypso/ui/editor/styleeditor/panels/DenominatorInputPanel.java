@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
@@ -155,7 +155,10 @@ public class DenominatorInputPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
 
     Label getCurrentScaleButton = new Label( composite, SWT.PUSH );
@@ -189,7 +192,10 @@ public class DenominatorInputPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
 
     Label urlLabel = new Label( composite, SWT.NULL );

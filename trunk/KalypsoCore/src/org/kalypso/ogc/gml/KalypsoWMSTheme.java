@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
@@ -50,11 +50,11 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author doemming
  */
 public class KalypsoWMSTheme extends AbstractKalypsoTheme //implements
-                                                          // OGCWebServiceClient
+// OGCWebServiceClient
 {
 
-  // auskommentiert bis deegreebackup aufgeraemt ist 
-  
+  // auskommentiert bis deegreebackup aufgeraemt ist
+
   //  private final String m_layers;
   //
   //  private Image myImage = null;
@@ -267,8 +267,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme //implements
   //  {
   //    return null;
   //  }
-  
-  
+
   public KalypsoWMSTheme( String name, String string, CS_CoordinateSystem system )
   {
     super( name );
@@ -278,7 +277,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme //implements
    * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
    */
   public void dispose()
-  {}
+  {
+  // nothing
+  }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
@@ -287,7 +288,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme //implements
    */
   public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
       int selectionId )
-  {}
+  {
+  // nothing
+  }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()

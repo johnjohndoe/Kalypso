@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -133,7 +133,10 @@ public class EditSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
 
     moveBackwardSymbolizerButton = new Label( composite, SWT.PUSH );
@@ -161,7 +164,10 @@ public class EditSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
 
     moveForwardSymbolizerButton = new Label( composite, SWT.PUSH );
@@ -189,7 +195,10 @@ public class EditSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
   }
 

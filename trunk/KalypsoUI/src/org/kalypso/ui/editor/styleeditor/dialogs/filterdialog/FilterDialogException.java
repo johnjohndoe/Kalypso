@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 
 public class FilterDialogException extends Exception
@@ -45,7 +45,9 @@ public class FilterDialogException extends Exception
   private FilterDialogError error = null;
 
   public FilterDialogException()
-  {}
+  {
+  // nothing
+  }
 
   public FilterDialogException( FilterDialogError m_error )
   {

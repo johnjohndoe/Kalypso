@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 04.08.2004
  *  
@@ -103,7 +103,9 @@ public class FilterDialogTreeNode
   private int subtype = -1;
 
   private FilterDialogTreeNode()
-  {}
+  {
+  // nothing
+  }
 
   public FilterDialogTreeNode( String string, int m_type )
   {

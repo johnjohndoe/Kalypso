@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
@@ -158,10 +158,12 @@ public class SliderPanel
     {
       public void mouseDoubleClick( MouseEvent e )
       {
+      // nothing
       }
 
       public void mouseDown( MouseEvent e )
-      { 
+      {
+      // nothing
       }
 
       public void mouseUp( MouseEvent e )

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -145,7 +145,10 @@ public class ControlRulePanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
 
     Label addPatternRuleButton = new Label( composite, SWT.PUSH );
@@ -157,7 +160,7 @@ public class ControlRulePanel
     addPatternRuleButtonData.top = new FormAttachment( 100, 1000, 0 );
     addPatternRuleButton.setLayoutData( addPatternRuleButtonData );
     if( getPossibleNumericFeatureTypeNumber() == 0 )
-      addPatternRuleButton.setVisible(false);   
+      addPatternRuleButton.setVisible( false );
     addPatternRuleButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD_RULE_PATTERN );
     addPatternRuleButton.addMouseListener( new MouseListener()
     {
@@ -173,7 +176,10 @@ public class ControlRulePanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
 
     Label removeRuleButton = new Label( composite, SWT.PUSH );
@@ -201,14 +207,17 @@ public class ControlRulePanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
 
     Label moveBackwardRuleButton = new Label( composite, SWT.PUSH );
     moveBackwardRuleButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_BACKWARD.createImage() );
     if( getCanDelete() <= 1 )
       moveBackwardRuleButton.setVisible( false );
-    
+
     FormData moveBackwardRuleButtonData = new FormData();
     moveBackwardRuleButtonData.height = 18;
     moveBackwardRuleButtonData.width = 18;
@@ -230,7 +239,10 @@ public class ControlRulePanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
 
     Label moveForwardRuleButton = new Label( composite, SWT.PUSH );
@@ -258,7 +270,10 @@ public class ControlRulePanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
   }
 
