@@ -113,13 +113,13 @@ public class ZmlTest extends TestCase
     
     final IAxis[] axes = values.getAxisList();
     
-    final IAxis dateAxis = ObservationUtilities.findAxis( axes, "Datum" );
+    final IAxis dateAxis = ObservationUtilities.findAxisByName( axes, "Datum" );
     assertNotNull( dateAxis );
     
-    final IAxis vAxis1 = ObservationUtilities.findAxis( axes, "Pegel1" );
+    final IAxis vAxis1 = ObservationUtilities.findAxisByName( axes, "Pegel1" );
     assertNotNull( vAxis1 );
     
-    final IAxis vAxis2 = ObservationUtilities.findAxis( axes, "Pegel2" );
+    final IAxis vAxis2 = ObservationUtilities.findAxisByName( axes, "Pegel2" );
     assertNotNull( vAxis2 );
     
     assertEquals( values.getElement( 0, dateAxis ), df.parse( "01.01.2004" ) );
@@ -135,13 +135,13 @@ public class ZmlTest extends TestCase
   {
     final IAxis[] axes = m_obs.getAxisList();
     
-    final IAxis dateAxis = ObservationUtilities.findAxis( axes, "Datum" );
+    final IAxis dateAxis = ObservationUtilities.findAxisByName( axes, "Datum" );
     assertNotNull( dateAxis );
     
-    final IAxis vAxis1 = ObservationUtilities.findAxis( axes, "Pegel1" );
+    final IAxis vAxis1 = ObservationUtilities.findAxisByName( axes, "Pegel1" );
     assertNotNull( vAxis1 );
     
-    final IAxis vAxis2 = ObservationUtilities.findAxis( axes, "Pegel2" );
+    final IAxis vAxis2 = ObservationUtilities.findAxisByName( axes, "Pegel2" );
     assertNotNull( vAxis2 );
     
     final SimpleTuppleModel m = new SimpleTuppleModel( m_obs.getAxisList() );

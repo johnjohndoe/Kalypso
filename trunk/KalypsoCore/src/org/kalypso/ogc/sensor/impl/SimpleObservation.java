@@ -146,7 +146,7 @@ public class SimpleObservation implements IObservation
 
       try
       {
-        final IAxis A = ObservationUtilities.findAxis( otherAxes, myA.getLabel() );
+        final IAxis A = ObservationUtilities.findAxisByName( otherAxes, myA.getLabel() );
 
         map.put( myA, A );
       }
@@ -156,7 +156,7 @@ public class SimpleObservation implements IObservation
       }
     }
 
-    final IAxis[] keys = ObservationUtilities.extractKeyAxis( m_axes );
+    final IAxis[] keys = ObservationUtilities.findAxisByKey( m_axes );
 
     for( int i = 0; i < values.getCount(); i++ )
     {

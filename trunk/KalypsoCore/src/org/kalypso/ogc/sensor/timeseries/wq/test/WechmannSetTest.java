@@ -47,4 +47,9 @@ public class WechmannSetTest extends TestCase
     assertEquals( m_ws.getForQ( 145 ), m_wp2 );
     assertNotSame( m_ws.getForQ( 96.6 ), m_wp1 );
   }
+  
+  public void testToString()
+  {
+    System.out.println( m_ws );
+  }
 }

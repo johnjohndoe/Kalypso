@@ -47,6 +47,8 @@ import org.kalypso.zml.AxisType.ValueLinkType;
 import org.xml.sax.InputSource;
 
 /**
+ * Factory for ZML-Files.
+ * 
  * @author schlienger
  */
 public class ZmlFactory
@@ -60,10 +62,6 @@ public class ZmlFactory
   private static ParserFactory m_parserFactory = null;
 
   private static Properties m_props = null;
-
-  private static Marshaller m_marsh = null;
-
-  private static Unmarshaller m_unmarsh = null;
 
   private ZmlFactory()
   {
@@ -278,7 +276,8 @@ public class ZmlFactory
         axisType.setDatatype( xsdType );
         axisType.setName( axes[i].getLabel() );
         axisType.setUnit( axes[i].getUnit() );
-        axisType.setType( "value" );
+        axisType.setType( axes[i].getType() );
+        axisType.setKey( axes[i].isKey() );
 
         final ValueArrayType valueArrayType = m_objectFactory.createAxisTypeValueArrayType();
 
@@ -353,17 +352,11 @@ public class ZmlFactory
 
   public static Marshaller getMarshaller() throws JAXBException
   {
-    if( m_marsh == null )
-      m_marsh = m_objectFactory.createMarshaller();
-
-    return m_marsh;
+    return m_objectFactory.createMarshaller();
   }
 
   private static Unmarshaller getUnmarshaller() throws JAXBException
   {
-    if( m_unmarsh == null )
-      m_unmarsh = m_objectFactory.createUnmarshaller();
-
-    return m_unmarsh;
+    return m_objectFactory.createUnmarshaller();
   }
 }
