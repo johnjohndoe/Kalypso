@@ -65,7 +65,9 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     
     setSelectionForeground( Color.BLACK );
     setSelectionBackground( Color.YELLOW );
-  }
+    
+    getTableHeader().setReorderingAllowed( false );
+  }    
 
   /**
    * @see org.kalypso.ogc.sensor.template.ITemplateEventListener#onTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)

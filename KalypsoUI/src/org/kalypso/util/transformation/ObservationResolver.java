@@ -214,6 +214,9 @@ public class ObservationResolver extends AbstractTransformation
     monitor.beginTask( "Zeitreihen auslesen", features.length * 2 );
 
     // parse range modi
+    // TODO: input validation should be done at the gui level
+    // since the user-range from-to for the vorhersage must have 
+    // valid time steps.
     final Date from1 = parseRange( start, middle, stop, rangeMode1, false,
         start );
     final Date to1 = parseRange( start, middle, stop, rangeMode1, true, middle );

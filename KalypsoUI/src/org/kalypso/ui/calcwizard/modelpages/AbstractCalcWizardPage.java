@@ -371,7 +371,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
       m_obsChart = new ObservationChart( m_diagTemplate );
       m_diagTemplate.addTemplateEventListener( m_obsChart );
 
-      final ChartPanel chartPanel = new ChartPanel( m_obsChart );
+      // chart panel without any popup menu
+      final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false, false, false, false );
       chartPanel.setMouseZoomable( true, false );
 
       m_diagFrame.setVisible( true );

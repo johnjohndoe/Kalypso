@@ -56,8 +56,9 @@ public class DiagramViewPart extends ViewPart implements
 
     m_subTitle = new TextTitle("", new Font( "Default", Font.PLAIN, 12));
     m_chart.addSubtitle( m_subTitle );
-    
-    ChartPanel chartPanel = new ChartPanel( m_chart );
+
+    // chart panel without any popup menu
+    ChartPanel chartPanel = new ChartPanel( m_chart, false, false, false, false, false );
     chartPanel.setMouseZoomable( true, false );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
