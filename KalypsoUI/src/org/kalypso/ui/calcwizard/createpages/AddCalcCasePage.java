@@ -1,11 +1,13 @@
 package org.kalypso.ui.calcwizard.createpages;
 
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -30,11 +32,11 @@ import org.kalypso.ui.calcwizard.ICalcWizardPage;
  */
 public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
 {
-  private final IAddCalcCaseChoice[] m_choices;
+  private final List m_choices = new LinkedList();
 
   private ComboViewer m_chooserViewer;
 
-  private Collection m_calcCases = new LinkedList();
+  private List m_calcCases = new LinkedList();
 
   private IFolder m_currentCalcCase = null;
 
@@ -42,12 +44,16 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
 
   private ListViewer m_caseViewer;
 
-  public AddCalcCasePage( final IAddCalcCaseChoice[] choices )
+  public AddCalcCasePage()
   {
     super( "addPrognoseWizardPage", "Vorhersage hinzufügen", null );
-    m_choices = choices;
 
     setTitle( "Vorhersage hinzufügen" );
+  }
+  
+  public void addChoice( final IAddCalcCaseChoice choice )
+  {
+    m_choices.add( choice );
   }
 
   /**
@@ -65,34 +71,41 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
 
     m_chooserViewer = new ComboViewer( panel, SWT.READ_ONLY | SWT.DROP_DOWN );
     m_chooserViewer.getControl().setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    m_chooserViewer.add( m_choices );
+    //m_chooserViewer.add( m_choices );
+    
+    m_chooserViewer.setContentProvider( new ArrayContentProvider( ) );
+    m_chooserViewer.setInput( m_choices );
 
     final Group choiceGroup = new Group( panel, SWT.NONE );
     choiceGroup.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     final StackLayout choiceLayout = new StackLayout();
     choiceGroup.setLayout( choiceLayout );
 
-    for( int i = 0; i < m_choices.length; i++ )
-      m_choices[i].createControl( choiceGroup );
+    for( final Iterator iter = m_choices.iterator(); iter.hasNext(); )
+      ((IAddCalcCaseChoice)iter.next()).createControl( choiceGroup );
 
     m_chooserViewer.addPostSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IAddCalcCaseChoice choice = getChoosen( event.getSelection() );
-        setChoice( choice );
-        choiceLayout.topControl = choice.getControl();
-        choiceGroup.setText( choice.toString() );
-
-        choiceGroup.layout( true );
+        final ISelection selection = event.getSelection();
+        if( !selection.isEmpty() )
+        {
+          final IAddCalcCaseChoice choice = getChoosen( selection );
+          setChoice( choice );
+          choiceLayout.topControl = choice.getControl();
+          choiceGroup.setText( choice.toString() );
+  
+          choiceGroup.layout( true );
+        }
       }
 
     } );
 
     setControl( panel );
 
-    if( m_choices.length > 0 )
-      m_chooserViewer.setSelection( new StructuredSelection( m_choices[0] ) );
+    if( m_choices.size() > 0 )
+      m_chooserViewer.setSelection( new StructuredSelection( m_choices.get( 0 ) ) );
   }
 
   protected void setChoice( final IAddCalcCaseChoice choice )
@@ -107,7 +120,6 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
 
   public IAddCalcCaseChoice getChoosen( final ISelection selection )
   {
-
     return (IAddCalcCaseChoice)( (IStructuredSelection)selection ).getFirstElement();
   }
 
@@ -150,12 +162,34 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
       }
     } );
   }
+  
+  public void update( final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( "Seite wird aktualisiert", m_choices.size() );
+    for( Iterator iter = m_choices.iterator(); iter.hasNext(); )
+    {
+      ((IAddCalcCaseChoice)iter.next()).update( new NullProgressMonitor() );
+      monitor.worked( 1 );
+    }
+    
+    monitor.done();
+  }
 
   /**
    * @see org.kalypso.ui.calcwizard.ICalcWizardPage#clean(org.eclipse.core.runtime.IProgressMonitor)
    */
   public void clean( final IProgressMonitor monitor )
   {
-  // todo: neuen Rechenfall wieder löschen?
+    // todo: neuen Rechenfall wieder löschen?
+  }
+
+  public boolean isUpdateCalcCase()
+  {
+    return m_choice.isUpdateCalcCase();
+  }
+
+  public List getCalcCases()
+  {
+    return m_calcCases;
   }
 }

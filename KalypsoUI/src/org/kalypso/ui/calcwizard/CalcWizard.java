@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -32,7 +33,7 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.createpages.AddCalcCasePage;
 import org.kalypso.ui.calcwizard.createpages.AddNewCalcCaseChoice;
-import org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice;
+import org.kalypso.ui.calcwizard.createpages.ContinueOldCalcCaseChoice;
 import org.kalypso.ui.calcwizard.modelpages.IModelWizardPage;
 import org.kalypso.ui.nature.ModelNature;
 import org.kalypso.ui.wizard.calccase.SteuerparameterWizardPage;
@@ -52,8 +53,6 @@ public class CalcWizard implements IWizard, IProjectProvider
 
   private IDialogSettings m_dialogSettings;
 
-  //  private RGB m_titleBarcolor;
-
   public CalcWizard( final IProject project )
   {
     m_project = project;
@@ -64,22 +63,14 @@ public class CalcWizard implements IWizard, IProjectProvider
    */
   public void addPages()
   {
-    // Add 'Add Prognose' Page
-    final IAddCalcCaseChoice[] choices = new IAddCalcCaseChoice[]
-    {
+    m_addCalcCasePage = new AddCalcCasePage();
+    m_controlPage = new SteuerparameterWizardPage( this, true );
+    
+    m_addCalcCasePage.addChoice( new AddNewCalcCaseChoice( "einen neuen Rechenfall erzeugen", m_project, m_addCalcCasePage ) );
+    m_addCalcCasePage.addChoice( new ContinueOldCalcCaseChoice( "einen bereits vorhandenen Rechenfall wieder aufnehmen", m_project, m_addCalcCasePage ) );
+    
     //        private final String m_updateChoice = "vorhandenen Rechenfall
     // duplizieren und aktualisieren";
-    //        private final String m_oldChoice = "vorhandenen Rechenfall erneut
-    // bearbeiten";
-
-    new AddNewCalcCaseChoice( "einen neuen Rechenfall erzeugen", m_project ) };
-
-    m_addCalcCasePage = new AddCalcCasePage( choices );
-    m_controlPage = new SteuerparameterWizardPage( this, true );
-
-    // Add 'Steuerparameter' Page
-
-    // Add Model-Pages
 
     addPage( m_addCalcCasePage );
     addPage( m_controlPage );
@@ -268,7 +259,10 @@ public class CalcWizard implements IWizard, IProjectProvider
           final IFolder currentCalcCase = m_addCalcCasePage.getCurrentCalcCase();
           m_controlPage.saveChanges( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
 
-          ModelNature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
+          if( m_addCalcCasePage.isUpdateCalcCase() )
+            ModelNature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
+          else
+            monitor.worked( 1000 );
           
           addModelPages( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
         }
@@ -321,7 +315,21 @@ public class CalcWizard implements IWizard, IProjectProvider
 
   public boolean doBack( final IWizardPage page )
   {
-    page.getClass();
+    final IWizardPage previous = getPreviousPage( page );
+    if( previous instanceof ICalcWizardPage )
+    {
+      try
+      {
+        ((ICalcWizardPage)previous).update( new NullProgressMonitor() );
+        return true;
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+        
+        return false;
+      }
+    }
     
     return true;
   }

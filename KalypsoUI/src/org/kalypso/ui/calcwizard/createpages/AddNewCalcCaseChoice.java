@@ -13,20 +13,28 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
- * Die Implementierung erzeugt einen völlig neuen Rechenfall im Prognoseverzeichnis
+ * Die Implementierung erzeugt einen völlig neuen Rechenfall im
+ * Prognoseverzeichnis
  * 
  * @author belger
  */
 public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 {
   private Control m_control;
+
   private final String m_label;
+
   private final IProject m_project;
 
-  public AddNewCalcCaseChoice( final String label, final IProject project )
+  private final AddCalcCasePage m_page;
+
+  public AddNewCalcCaseChoice( final String label, final IProject project,
+      final AddCalcCasePage page )
   {
     m_label = label;
     m_project = project;
+    m_page = page;
+    m_page.getClass();
   }
 
   /**
@@ -35,20 +43,20 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
   public void createControl( final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new GridLayout( ) );
-    
+    panel.setLayout( new GridLayout() );
+
     final Label label = new Label( panel, SWT.NONE );
     label.setText( "keine weiteren Eingaben nötig" );
-    final GridData labelData = new GridData(  );
+    final GridData labelData = new GridData();
     labelData.grabExcessHorizontalSpace = true;
     labelData.grabExcessVerticalSpace = true;
     labelData.horizontalAlignment = GridData.CENTER;
     labelData.verticalAlignment = GridData.CENTER;
     label.setLayoutData( labelData );
-    
+
     m_control = panel;
   }
-  
+
   /**
    * @see org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice#perform(org.eclipse.core.runtime.IProgressMonitor)
    */
@@ -65,7 +73,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
   {
     return m_control;
   }
-  
+
   /**
    * @see org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice#toString()
    */
@@ -74,4 +82,19 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
     return m_label;
   }
 
+  /**
+   * @see org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice#update(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public void update( final IProgressMonitor monitor )
+  {
+  // tut nix
+  }
+
+  /**
+   * @see org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice#isUpdateCalcCase()
+   */
+  public boolean isUpdateCalcCase()
+  {
+    return true;
+  }
 }

@@ -61,9 +61,6 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
   /** initialer Text f?r die Ergebnisablage */
   public final static String PROP_COMMITTEXTTEMPLATE="CommitTextTemplate";
   
-  /** Pfad auf Vorlage f?r die Karte (.gmt Datei) */
-  public final static String PROP_MAPTEMPLATE = "mapTemplate";
-
   /** Der Titel der Seite */
   public static final String PROP_MAPTITLE = "mapTitle";
 
@@ -81,8 +78,6 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
    * werden im diagram angezeigt
    */
   public final static String PROP_TIMEPROPNAME = "timeseriesPropertyNames";
-
-  private static final int SELECTION_ID = 0x100;
 
   private LayerTableViewer m_viewer;
 

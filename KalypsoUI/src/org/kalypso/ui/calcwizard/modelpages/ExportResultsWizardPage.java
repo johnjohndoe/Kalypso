@@ -66,9 +66,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   //    </page>
   //  
 
-  /** Pfad auf Vorlage f?r die Karte (.gmt Datei) */
-  public final static String PROP_MAPTEMPLATE = "mapTemplate";
-
   /** Der Titel der Seite */
   public static final String PROP_MAPTITLE = "mapTitle";
 
@@ -89,8 +86,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
    * geben-Property geben: eine f?r jede Kurventyp.
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
-
-  private static final int SELECTION_ID = 0x100;
 
   private LayerTableViewer m_viewer;
 

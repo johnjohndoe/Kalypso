@@ -1,13 +1,9 @@
 package org.kalypso.ui.action;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -25,6 +21,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.ui.nature.CalcCaseCollector;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
@@ -135,31 +132,6 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     // mir doch egal!
-  }
-
-  private class CalcCaseCollector implements IResourceVisitor
-  {
-    private Collection m_calcCases = new ArrayList();
-
-    /**
-     * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
-     */
-    public boolean visit( final IResource resource )
-    {
-      if( resource.getType() == IResource.FOLDER
-          && ModelNature.isCalcCalseFolder( (IFolder)resource ) )
-      {
-        m_calcCases.add( resource );
-        return false;
-      }
-
-      return true;
-    }
-
-    public IFolder[] getCalcCases()
-    {
-      return (IFolder[])m_calcCases.toArray( new IFolder[m_calcCases.size()] );
-    }
   }
 
 }

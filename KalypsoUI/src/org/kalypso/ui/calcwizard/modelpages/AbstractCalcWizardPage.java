@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -187,5 +188,23 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   public void maximizeMap()
   {
     m_mapPanel.setBoundingBox( m_boundingBox );
+  }
+  
+  public void clean( final IProgressMonitor monitor )
+  {
+    // nix zu tun
+  }
+  
+  public void doNext( final IProgressMonitor monitor )
+  {
+    // nix zu tun
+  }
+  
+  /**
+   * @see org.kalypso.ui.calcwizard.ICalcWizardPage#update(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public void update( final IProgressMonitor monitor )
+  {
+    // nix tun
   }
 }
