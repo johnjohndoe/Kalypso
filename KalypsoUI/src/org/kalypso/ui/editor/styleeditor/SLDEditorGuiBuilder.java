@@ -143,8 +143,7 @@ public class SLDEditorGuiBuilder
     ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite, "Rule:",
         rulePatternCollection.size() , numericFeatureTypePropertylist.size());
 
-    final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder( mainComposite,
-        rulePatternCollection, userStyle, theme );
+    final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder(mainComposite,rulePatternCollection, userStyle,theme); 
 
     controlRulePanel.addPanelListener( new PanelListener()
     {

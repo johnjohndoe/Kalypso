@@ -51,6 +51,7 @@ import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.panels.RulePatternInputPanel;
 import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
+import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
 
 /**
  * @author F.Lindemann
