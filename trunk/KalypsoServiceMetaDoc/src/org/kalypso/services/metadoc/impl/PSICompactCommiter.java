@@ -50,7 +50,8 @@ public class PSICompactCommiter implements IMetaDocCommiter
       final Properties props = new Properties();
       props.putAll( docBean.getMetadata() );
 
-      MetaDocSerializer.buildXML( props, writer, docBean.getLocation() );
+      // just fetch the name of the file (without path, not necessary for PSICompact)
+      MetaDocSerializer.buildXML( props, writer, new File( docBean.getLocation() ).getName() );
     }
     catch( IOException e )
     {

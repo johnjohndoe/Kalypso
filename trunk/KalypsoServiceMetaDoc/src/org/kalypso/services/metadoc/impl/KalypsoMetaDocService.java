@@ -169,6 +169,9 @@ public class KalypsoMetaDocService implements IMetaDocService
       mdb.setLocation( dest.getAbsolutePath() );
       
       m_commiter.commitDocument( mdb );
+      
+      // delete temp file
+      src.delete();
     }
     catch( Exception e ) // generic exception caught for simplicity
     {

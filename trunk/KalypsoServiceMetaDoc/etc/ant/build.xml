@@ -274,6 +274,10 @@
 		<antcall target="deploy" />
 	</target>
 
+	<target name="redeploy-all" depends="build,redeploy" description="Erzeugt alles und kopiert die Client-Jar zum KalypsoUI Projekt">
+		<copy file="${dist}/${client.jar}" todir="${workspace}/KalypsoUI/lib" />
+	</target>
+
 	<target name="list" description="Lists Web applications">
 		<echo message="Listing the applications...." />
 		<list url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" />
