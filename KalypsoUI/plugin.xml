@@ -594,7 +594,7 @@
       <actionSet
             label="Kalypso Modell"
             description="Kalypso Modell Kommandos"
-            visible="true"
+            visible="false"
             id="org.kalypso.actionSet.model">
          <menu
                label="Modell"

@@ -570,7 +570,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     }
 
     final ILabelProvider labelProvider = new FeatureLabelProvider(
-        new StringModifier( ftp ) );
+        new StringModifier( ftp, null ) );
     final ListSelectionDialog dialog = new ListSelectionDialog( getContainer()
         .getShell(), features, new ArrayContentProvider(), labelProvider,
         "Die Daten folgender Pegel werden exportiert:" );
@@ -694,11 +694,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
    * @param prognoseTss
    * @param calcCase
    * @param monitor
-   * @throws CoreException
    */
   protected IStatus performPrognoseExport( final TSLinkWithName[] resultTss,
       final TSLinkWithName[] prognoseTss, final IFolder calcCase,
-      final IProgressMonitor monitor ) throws CoreException
+      final IProgressMonitor monitor )
   {
     if( resultTss.length != prognoseTss.length )
       throw new IllegalArgumentException( "Timeseries links not same length" );

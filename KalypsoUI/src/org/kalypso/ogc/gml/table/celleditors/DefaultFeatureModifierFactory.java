@@ -52,31 +52,31 @@ import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
 {
   /**
-   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.kalypsodeegree.model.feature.FeatureTypeProperty)
+   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.kalypsodeegree.model.feature.FeatureTypeProperty, java.lang.String)
    */
-  public IFeatureModifier createFeatureModifier( final FeatureTypeProperty ftp )
+  public IFeatureModifier createFeatureModifier( final FeatureTypeProperty ftp, final String format )
   {
     final String type = ftp.getType();
 
     if( "java.lang.String".equals( type ) )
-      return new StringModifier( ftp );
+      return new StringModifier( ftp, format );
     if( "java.lang.Integer".equals( type ) )
-      return new StringModifier( ftp );
+      return new StringModifier( ftp, format );
     if( "java.lang.Long".equals( type ) )
-      return new StringModifier( ftp );
+      return new StringModifier( ftp, format );
     if( "java.lang.Float".equals( type ) )
-      return new StringModifier( ftp );
+      return new StringModifier( ftp, format );
     if( "java.lang.Double".equals( type ) )
-      return new StringModifier( ftp );
+      return new StringModifier( ftp, format );
     if( "java.lang.Date".equals( type ) )
-      return new StringModifier( ftp );
+      return new StringModifier( ftp, format );
     if( "java.lang.String".equals( type ) )
-      return new StringModifier( ftp );
+      return new StringModifier( ftp, format );
     if( "java.lang.Boolean".equals( type ) )
       return new BooleanModifier( ftp );
     if( "FeatureAssociationType".equals( type ) )
       return new ButtonModifier( ftp );
 
-    return new StringModifier( ftp );
+    return new StringModifier( ftp, format );
   }
 }

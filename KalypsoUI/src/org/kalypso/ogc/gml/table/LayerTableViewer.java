@@ -104,6 +104,7 @@ import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.InvisibleCommand;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
+import org.kalypso.util.swt.SWTUtilities;
 
 /**
  * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ändert
@@ -120,6 +121,8 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   public static final String COLUMN_PROP_EDITABLE = "columnEditable";
 
   public static final String COLUMN_PROP_WIDTH = "columnWidth";
+
+  public static final String COLUMN_PROP_FORMAT = "columnFormat";
 
   private final ObjectFactory m_gistableviewFactory = new ObjectFactory();
 
@@ -308,7 +311,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       for( final Iterator iter = columnList.iterator(); iter.hasNext(); )
       {
         final ColumnType ct = (ColumnType)iter.next();
-        addColumn( ct.getName(), ct.getWidth(), ct.isEditable(), false );
+        addColumn( ct.getName(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(), false );
       }
     }
 
@@ -352,16 +355,17 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       columns[i].dispose();
   }
 
-  public void addColumn( final String propertyName, final int width, final boolean isEditable,
-      final boolean bRefreshColumns )
+  public void addColumn( final String propertyName, final boolean isEditable, final int width,
+      final String alignment, String format, final boolean bRefreshColumns )
   {
     final Table table = getTable();
 
-    final TableColumn tc = new TableColumn( table, SWT.CENTER );
+    final TableColumn tc = new TableColumn( table, SWTUtilities.createStyleFromString( alignment ) );
     tc.setData( COLUMN_PROP_NAME, propertyName );
     tc.setData( COLUMN_PROP_EDITABLE, Boolean.valueOf( isEditable ) );
     // die Breite noch mal extra speichern, damit das Redo beim Resizen geht
     tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
+    tc.setData( COLUMN_PROP_FORMAT, format );
     tc.setWidth( width );
 
     setColumnText( tc );
@@ -480,10 +484,11 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     for( int i = 0; i < editors.length; i++ )
     {
       final String propName = columns[i].getData( COLUMN_PROP_NAME ).toString();
+      final String format = (String)columns[i].getData( COLUMN_PROP_FORMAT );
       final FeatureTypeProperty ftp = featureType.getProperty( propName );
       if( ftp != null )
       {
-        m_modifier[i] = m_featureControlFactory.createFeatureModifier( ftp );
+        m_modifier[i] = m_featureControlFactory.createFeatureModifier( ftp, format );
         editors[i] = m_modifier[i].createCellEditor( table );
 
         editors[i].setValidator( m_modifier[i] );
@@ -588,6 +593,18 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final TableColumn column = getTable().getColumn( columnIndex );
     return column.getData( COLUMN_PROP_NAME ).toString();
   }
+  
+  public String getColumnAlignment( final int columnIndex )
+  {
+    final TableColumn column = getTable().getColumn( columnIndex );
+    return "" + column.getStyle();
+  }
+  
+  public String getColumnFormat( final int columnIndex )
+  {
+    final TableColumn column = getTable().getColumn( columnIndex );
+    return column.getData( COLUMN_PROP_FORMAT ).toString();
+  }
 
   public boolean isEditable( final String property )
   {
@@ -607,6 +624,19 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     }
 
     return null;
+  }
+
+  public int getColumnID( final String property )
+  {
+    final TableColumn[] columns = getTable().getColumns();
+    for( int i = 0; i < columns.length; i++ )
+    {
+      final String name = columns[i].getData( COLUMN_PROP_NAME ).toString();
+      if( property.equals( name ) )
+        return i;
+    }
+
+    return -1;
   }
 
   public int getWidth( final String propertyName )
@@ -650,6 +680,8 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       columnType.setName( tc.getData( COLUMN_PROP_NAME ).toString() );
       columnType.setEditable( ( (Boolean)tc.getData( COLUMN_PROP_EDITABLE ) ).booleanValue() );
       columnType.setWidth( tc.getWidth() );
+      columnType.setAlignment( "" + tc.getStyle() );
+      columnType.setFormat( (String)tc.getData( COLUMN_PROP_FORMAT ) );
 
       columns.add( columnType );
     }

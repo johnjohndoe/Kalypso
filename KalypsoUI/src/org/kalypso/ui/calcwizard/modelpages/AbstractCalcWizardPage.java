@@ -254,6 +254,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_mapModell.dispose();
     }
 
+    if( m_gisTableViewer != null )
+      m_gisTableViewer.dispose();
+    
     if( m_table != null )
       m_table.dispose();
     if( m_tableTemplate != null )

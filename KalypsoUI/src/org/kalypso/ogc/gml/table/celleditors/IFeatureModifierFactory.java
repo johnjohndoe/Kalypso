@@ -48,5 +48,5 @@ import org.kalypso.ogc.gml.featureview.IFeatureModifier;
  */
 public interface IFeatureModifierFactory
 {
-  public IFeatureModifier createFeatureModifier( final FeatureTypeProperty ftp );
+  public IFeatureModifier createFeatureModifier( final FeatureTypeProperty ftp, final String format );
 }

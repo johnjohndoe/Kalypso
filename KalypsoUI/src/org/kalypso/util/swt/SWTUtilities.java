@@ -81,6 +81,10 @@ public class SWTUtilities
     putSWT( "SWT.FILL", SWT.FILL );
     putSWT( "SWT.NONE", SWT.NONE );
     putSWT( "SWT.BEGINNING", SWT.BEGINNING );
+    putSWT( "SWT.TRAIL", SWT.TRAIL );
+    putSWT( "SWT.LEAD", SWT.LEAD );
+    putSWT( "SWT.LEFT", SWT.LEFT );
+    putSWT( "SWT.RIGHT", SWT.RIGHT );
     putSWT( "SWT.END", SWT.END );
     putSWT( "SWT.CENTER", SWT.CENTER );
     putSWT( "SWT.FILL", SWT.FILL );
