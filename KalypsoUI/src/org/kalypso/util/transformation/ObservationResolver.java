@@ -1,6 +1,7 @@
 package org.kalypso.util.transformation;
 
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
@@ -9,6 +10,7 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.GMLWorkspace;
+import org.deegree_impl.gml.schema.Mapper;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -25,6 +27,7 @@ import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentThread;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -34,11 +37,18 @@ import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
+ * Diese Transformation führt das 'Resolven' der Zeitreihen durch. Dies
+ * passiert, indem alle Features einer Feature-List der Reihe nach durchlaufen
+ * werden, und für jedes Feature zwei Zeitreihen vom Server geholt und als eine
+ * gemergte Zeitreihe lokal abgelegt wird.
+ * 
  * @author belger
  */
 public class ObservationResolver extends AbstractTransformation
 {
-  private static final String PROP_SOURCEOBS = "sourceObservation";
+  private static final String PROP_SOURCEOBS1 = "sourceObservation1";
+
+  private static final String PROP_SOURCEOBS2 = "sourceObservation2";
 
   private static final String PROP_TARGETOBS = "targetObservation";
 
@@ -66,15 +76,21 @@ public class ObservationResolver extends AbstractTransformation
     // PROPS parsen
     final String gmlPath = properties.getProperty( PROP_GML, "" );
     final String featureName = properties.getProperty( PROP_FEATURE, "" );
-    final String sourceObsName = properties.getProperty( PROP_SOURCEOBS, "" );
+    final String sourceObsName1 = properties.getProperty( PROP_SOURCEOBS1, "" );
+    final String sourceObsName2 = properties.getProperty( PROP_SOURCEOBS2, null );
     final String targetObsName = properties.getProperty( PROP_TARGETOBS, "" );
     final String targetFolderName = properties.getProperty( PROP_TARGETFOLDER, "" );
+
     final String startsimString = properties.getProperty( PROP_STARTSIM, "" );
     final String endsimString = properties.getProperty( PROP_ENDSIM, "" );
     final String startforecastString = properties.getProperty( PROP_STARTFORECAST, "" );
 
     try
     {
+      final Date start = (Date)Mapper.mapXMLValueToJava( startsimString, "java.util.Date" );
+      final Date middle = (Date)Mapper.mapXMLValueToJava( startforecastString, "java.util.Date" );
+      final Date stop = (Date)Mapper.mapXMLValueToJava( endsimString, "java.util.Date" );
+      
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       final IFolder targetFolder = root.getFolder( new Path( targetFolderName ) );
       if( !targetFolder.exists() )
@@ -87,8 +103,9 @@ public class ObservationResolver extends AbstractTransformation
 
       final URL gmlURL = ResourceUtilities.createURL( gmlFile );
 
-      final UrlResolver resolver = createResolver( project, targetFolder, startsimString, startforecastString, endsimString );
-      
+      final UrlResolver resolver = createResolver( project, targetFolder, startsimString,
+          startforecastString, endsimString );
+
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, resolver );
       final FeatureType ft = workspace.getFeatureType( featureName );
       if( ft == null )
@@ -98,43 +115,56 @@ public class ObservationResolver extends AbstractTransformation
 
       if( monitor.isCanceled() )
         throw new OperationCanceledException();
-      
-      resolveTimeseries( gmlURL, features, sourceObsName, targetObsName, targetFolder,
-          new SubProgressMonitor( monitor, 1000 ) );
+
+      resolveTimeseries( gmlURL, features, sourceObsName1, sourceObsName2, targetObsName,
+          targetFolder, start, middle, stop, new SubProgressMonitor( monitor, 1000 ) );
 
       monitor.done();
     }
     catch( final Throwable e )
     {
+      e.printStackTrace();
+      
       throw new TransformationException( e );
     }
   }
 
-  private UrlResolver createResolver( final IProject project, final IFolder calcdir, final String startsim, final String startforecast, final String endsim )
+  private UrlResolver createResolver( final IProject project, final IFolder calcdir,
+      final String startsim, final String startforecast, final String endsim )
   {
-    final UrlResolver resolver = new UrlResolver(  );
-    
-    resolver.addReplaceToken( "project",  "platform:/resource/" + project.getName() + "/" );
-    resolver.addReplaceToken( "calcdir",  "platform:/resource/" + calcdir.getFullPath().toString() + "/" );
+    final UrlResolver resolver = new UrlResolver();
+
+    resolver.addReplaceToken( "project", "platform:/resource/" + project.getName() + "/" );
+    resolver.addReplaceToken( "calcdir", "platform:/resource/" + calcdir.getFullPath().toString()
+        + "/" );
     resolver.addReplaceToken( "startsim", startsim );
     resolver.addReplaceToken( "startforecast", startforecast );
     resolver.addReplaceToken( "endsim", endsim );
-    
+
     return resolver;
   }
 
   /**
    * funktioniert nur, wenn der TimeSeriesLink des Target eine relative URL hat
    * (== relativer Pfad)
+   * 
+   * @throws SensorException
+   * @throws SensorException
+   * @throws MalformedURLException
    */
-  private void resolveTimeseries( final URL baseURL, final Feature[] features, final String sourceName, final String targetName,
-      final IFolder targetFolder, final IProgressMonitor monitor ) throws TransformationException
+  private void resolveTimeseries( final URL baseURL, final Feature[] features,
+      final String sourceName1, final String sourceName2, final String targetName,
+      final IFolder targetFolder, final Date start, final Date middle, final Date stop,
+      final IProgressMonitor monitor ) throws TransformationException, MalformedURLException,
+      SensorException
   {
     if( features.length == 0 )
       return;
 
     final FeatureType featureType = features[0].getFeatureType();
-    checkColumn( featureType, sourceName );
+    checkColumn( featureType, sourceName1 );
+    if( sourceName2 != null )
+      checkColumn( featureType, sourceName2 );
     checkColumn( featureType, targetName );
 
     monitor.beginTask( "Zeitreihen auslesen", features.length * 2 );
@@ -143,41 +173,40 @@ public class ObservationResolver extends AbstractTransformation
     {
       if( monitor.isCanceled() )
         throw new OperationCanceledException();
-      
+
       final Feature feature = features[i];
 
-      final TimeseriesLink sourcelink = (TimeseriesLink)feature.getProperty( sourceName );
+      final IObservation obs1 = getObservation( feature, sourceName1, start, middle, baseURL );
+      final IObservation obs2 = getObservation( feature, sourceName2, middle, stop, baseURL );
+
       final TimeseriesLink targetlink = (TimeseriesLink)feature.getProperty( targetName );
-      if( sourcelink == null || targetlink == null )
+      if( obs1 == null || targetlink == null )
         continue;
 
       try
       {
-        String sourceref = sourcelink.getHref();
+        final IObservation obs;
+        if( obs2 == null )
+          obs = obs1;
+        else
+        {
+          // NOTE: the order is important:
+          // obs( i ) has a higher priority than obs( i + 1 )
+          // with 'i' the index in the observations array...
 
-        // TODO... Gernot, this is the way to go
-        
-        // Date from = new Date();
-        // Date to = new Date();
-        // sourceref = ZmlURL.insertDateRange( sourceref, new DateRangeArgument( from, to ) );
-        
-        final URL sourceURL = new UrlResolver().resolveURL( baseURL, sourceref );
+          final ForecastFilter fc = new ForecastFilter();
+          fc.initFilter( new IObservation[]
+          {
+              obs1,
+              obs2 }, obs1 );
+          obs = fc;
+        }
 
-        final IObservation obs = ZmlFactory.parseXML( sourceURL, targetName );
-        
-        // TODO here: merge the two observations that you got from the previous steps
-        // NOTE: the order is important: 
-        // obs( i ) has a higher priority than obs( i + 1 )
-        // with 'i' the index in the observations array...
-        
-        // final ForecastFilter fc = new ForecastFilter();
-        // fc.initFilter( new IObservation[] { obs, obs }, obs );
-        
         final IFile targetfile = targetFolder.getFile( new Path( targetlink.getHref() ) );
         FolderUtilities.mkdirs( targetfile.getParent() );
-        
-        final SetContentThread thread = new SetContentThread( targetfile, !targetfile.exists(), false, true,
-            new NullProgressMonitor() )
+
+        final SetContentThread thread = new SetContentThread( targetfile, !targetfile.exists(),
+            false, true, new NullProgressMonitor() )
         {
           protected void write( final Writer w ) throws Throwable
           {
@@ -191,7 +220,7 @@ public class ObservationResolver extends AbstractTransformation
         final Throwable thrown = thread.getThrown();
         if( thrown != null )
           thrown.printStackTrace();
-        
+
         final CoreException fileException = thread.getFileException();
         if( fileException != null )
           fileException.printStackTrace();
@@ -199,12 +228,28 @@ public class ObservationResolver extends AbstractTransformation
 
         monitor.worked( 1 );
       }
-      catch( final Throwable e )
+      catch( final Exception e )
       {
         e.printStackTrace();
         // todo: report to user!
       }
     }
+  }
+
+  private IObservation getObservation( final Feature feature, final String sourceProperty,
+      final Date from, final Date to, final URL baseURL ) throws MalformedURLException,
+      SensorException
+  {
+    if( sourceProperty == null )
+      return null;
+    final TimeseriesLink sourcelink = (TimeseriesLink)feature.getProperty( sourceProperty );
+
+    final String sourceref = ZmlURL.insertDateRange( sourcelink.getHref(), new DateRangeArgument(
+        from, to ) );
+
+    final URL sourceURL = new UrlResolver().resolveURL( baseURL, sourceref );
+
+    return ZmlFactory.parseXML( sourceURL, feature.getId() );
   }
 
   private void checkColumn( final FeatureType ft, final String sourceName )

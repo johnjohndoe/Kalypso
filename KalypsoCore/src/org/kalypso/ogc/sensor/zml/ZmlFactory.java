@@ -149,13 +149,16 @@ public class ZmlFactory
       if( zmlId == null || zmlId.length() == 0 )
         return FilterFactory.createFilter( url.getQuery() );
 
+      // TODO: unterscheide lokale und remote Zeitreihen!
+      // file: or platform:
+      
       // NOTE: Eclipse Platform's URLStreamHandler cannot deal with
       // URLs that contain a fragment part (begining with '?').
       final URL tmpUrl = new URL( zmlId );
       
       // stream is closed in finally
       inputStream = tmpUrl.openStream();
-      
+
       return parseXML( new InputSource( inputStream ), identifier, url );
     }
     catch( IOException e )
