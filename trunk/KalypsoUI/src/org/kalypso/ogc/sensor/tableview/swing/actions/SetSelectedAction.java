@@ -13,23 +13,19 @@ public class SetSelectedAction extends AbstractObservationTableAction
 {
   public SetSelectedAction( ObservationTable table )
   {
-    super( table, "Selektierte Werte setzen", "Setzt Werte der Spalte auf den selektierten Wert, welche selektiert sind" );
+    super( table, "Selektierte Werte setzen",
+        "Setzt die selektierten Werte auf den aktiven Wert" );
   }
 
-  /**
-   * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-   */
-  public void actionPerformed( ActionEvent e )
+  public void internalActionPerformed( ActionEvent e )
   {
     final ObservationTable table = getTable();
     final int col = table.getSelectedColumn();
     final int row = table.getSelectedRow();
     final int[] rows = table.getSelectedRows();
-    final Object value = table.getValueAt(row, col);
+    final Object value = table.getValueAt( row, col );
 
     for( int i = 0; i < rows.length; i++ )
       table.setValueAt( value, rows[i], col );
-    
-    table.repaint();
   }
 }

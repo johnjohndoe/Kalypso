@@ -123,6 +123,14 @@ public class ObservationTableModel extends AbstractTableModel
   }
 
   /**
+   * @return Returns the syncObservation.
+   */
+  public boolean isSyncObservation( )
+  {
+    return m_syncObservation;
+  }
+  
+  /**
    * Sets the flag for synchronizing the observations with the values in this
    * table model. When true, the observations are synchronized in this call, and
    * for each change, they are synchronized (see setValueAt())

@@ -17,10 +17,7 @@ public class SetTopAction extends AbstractObservationTableAction
         "Führt den selektierten Wert für alle vorhergehenden fort" );
   }
 
-  /**
-   * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-   */
-  public void actionPerformed( ActionEvent e )
+  public void internalActionPerformed( ActionEvent e )
   {
     final ObservationTable table = getTable();
     final int col = table.getSelectedColumn();
@@ -29,7 +26,5 @@ public class SetTopAction extends AbstractObservationTableAction
 
     for( int i = 0; i < row; i++ )
       table.setValueAt( value, i, col );
-
-    table.repaint();
   }
 }

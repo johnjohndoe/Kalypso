@@ -20,10 +20,7 @@ public class InterpolateSelectedAction extends AbstractObservationTableAction
         "Interpoliert die Werte der Spalte zwischen dem ersten und dem letzten selektierten Wert" );
   }
 
-  /**
-   * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-   */
-  public void actionPerformed( ActionEvent e )
+  public void internalActionPerformed( ActionEvent e )
   {
     final ObservationTable table = getTable();
     final int col = table.getSelectedColumn();
@@ -55,7 +52,5 @@ public class InterpolateSelectedAction extends AbstractObservationTableAction
       
       i++;
     }
-
-    table.repaint();
   }
 }
