@@ -1,5 +1,6 @@
 package org.kalypso.ui.repository.view;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -29,6 +30,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
+import org.kalypso.eclipse.ui.MementoUtils;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySourceProvider;
 import org.kalypso.repository.DefaultRepositoryContainer;
@@ -73,6 +75,8 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
   // persistence flags for memento
   private static final String TAG_REPOSITORY = "repository"; //$NON-NLS-1$
+  
+  private static final String TAG_REPOSITORY_PROPS = "repositoryProperties"; //$NON-NLS-1$
 
   private static final String TAG_EXPANDED = "expanded"; //$NON-NLS-1$
 
@@ -371,6 +375,17 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
       final IMemento child = repsMem.createChild( TAG_REPOSITORY );
       child.putTextData( new RepositoryConfigItem( rep.getFactory() ).saveState() );
+      
+      // save properties for that repository
+      final IMemento propsMem = child.createChild( TAG_REPOSITORY_PROPS );
+      try
+      {
+        MementoUtils.saveProperties( propsMem, rep.getProperties() );
+      }
+      catch( IOException e )
+      {
+        e.printStackTrace();
+      }
     }
 
     // save visible expanded elements
@@ -415,7 +430,15 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
         {
           final RepositoryConfigItem item = RepositoryConfigItem.restore( repMem[i].getTextData() );
 
-          m_repContainer.addRepository( item.createFactory( getClass().getClassLoader() ).createRepository(), KalypsoGisPlugin.getDefault().getDefaultRepositoryProperties() );
+          final IRepository rep = item.createFactory( getClass().getClassLoader() ).createRepository();
+          
+          final IMemento propsMem = repMem[i].getChild( TAG_REPOSITORY_PROPS );
+          if( propsMem == null )
+            rep.setProperties( KalypsoGisPlugin.getDefault().getDefaultRepositoryProperties() );
+          else
+            MementoUtils.loadProperties( propsMem, rep.getProperties() );
+          
+          m_repContainer.addRepository( rep );
         }
         catch( Exception e ) // generic exception caught for simplicity
         {

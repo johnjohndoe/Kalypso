@@ -72,8 +72,9 @@ public class AddRepositoryAction extends AbstractRepositoryExplorerAction
               
               monitor.worked(1);
               
-              getRepositoryContainer().addRepository( rep,
-                  KalypsoGisPlugin.getDefault().getDefaultRepositoryProperties() );
+              rep.setProperties( KalypsoGisPlugin.getDefault().getDefaultRepositoryProperties() );
+              
+              getRepositoryContainer().addRepository( rep );
               
               monitor.worked(1);
             }

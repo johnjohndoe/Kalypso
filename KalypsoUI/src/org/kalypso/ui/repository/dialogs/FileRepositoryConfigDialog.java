@@ -11,6 +11,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * Config Dialog for FileRepositoryFactory.
@@ -24,22 +25,51 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
   private final static String msg = "Bitte wählen Sie zuerst ein Basisverzeichnis aus.\n"
       + "Geben Sie anschliessend einen Kennzeichen und eine oder mehrere Dateiendungen (Komma getrennt) ein.";
 
-  protected final static String BASEDIR = "basedir";
-  protected final static String IDENTIFIER = "identifier";
-  protected final static String FILTER = "filter";
+  protected final static String BASEDIR = "FileRepositoryConfigDialog.basedir";
 
-  private PreferenceStore m_store;
+  protected final static String IDENTIFIER = "FileRepositoryConfigDialog.identifier";
+
+  protected final static String FILTER = "FileRepositoryConfigDialog.filter";
+
+  private final AbstractUIPlugin m_plugin;
+
+  private final PreferenceStore m_store;
 
   private StringFieldEditor m_fFilters;
-  
+
   private StringFieldEditor m_fIdentifier;
 
   private DirectoryFieldEditor m_fLocation;
 
-  public FileRepositoryConfigDialog( final Shell parentShell, final String location,
-      final String identifier, final String filters )
+  /**
+   * Constructor. If plugin is specified, it uses the values provided by its
+   * DialogSettings as default values for this dialog.
+   * 
+   * @param parentShell
+   * @param location
+   * @param identifier
+   * @param filters
+   * @param plugin
+   *          [optional] if not null, default values are used
+   */
+  public FileRepositoryConfigDialog( final Shell parentShell, String location,
+      String identifier, String filters, final AbstractUIPlugin plugin )
   {
     super( parentShell );
+
+    m_plugin = plugin;
+
+    if( plugin != null )
+    {
+      String s = plugin.getDialogSettings().get( BASEDIR );
+      location = s == null ? location : s;
+
+      s = plugin.getDialogSettings().get( IDENTIFIER );
+      identifier = s == null ? identifier : s;
+
+      s = plugin.getDialogSettings().get( FILTER );
+      filters = s == null ? filters : s;
+    }
 
     m_store = new PreferenceStore();
     m_store.setDefault( BASEDIR, location );
@@ -47,13 +77,13 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
     m_store.setDefault( FILTER, filters );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     m_fFilters.dispose();
     m_fIdentifier.dispose();
     m_fLocation.dispose();
   }
-  
+
   /**
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
@@ -62,21 +92,21 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
     setTitle( "ZML-Repository Konfiguration" );
     setMessage( msg );
 
-    final Composite c = (Composite)super.createDialogArea( parent );
-    
+    final Composite c = (Composite) super.createDialogArea( parent );
+
     final Composite sub = new Composite( c, SWT.FILL );
 
     m_fLocation = new DirectoryFieldEditor( BASEDIR, "Basis-Verzeichnis:", sub );
     m_fIdentifier = new StringFieldEditor( IDENTIFIER, "Kennzeichen:", sub );
     m_fFilters = new StringFieldEditor( FILTER, "Dateiendung:", sub );
-    
+
     m_fLocation.setPreferenceStore( m_store );
     m_fLocation.loadDefault();
     m_fLocation.setEmptyStringAllowed( false );
-    
+
     m_fIdentifier.setPreferenceStore( m_store );
     m_fIdentifier.loadDefault();
-    
+
     m_fFilters.setPreferenceStore( m_store );
     m_fFilters.loadDefault();
 
@@ -94,23 +124,26 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#okPressed()
    */
-  protected void okPressed()
+  protected void okPressed( )
   {
     if( !m_fLocation.isValid() )
     {
-      MessageDialog.openInformation( getParentShell(), "Basis-Verzeichnis", "Bitte geben Sie einen gültigen Verzeichnis ein" );
+      MessageDialog.openInformation( getParentShell(), "Basis-Verzeichnis",
+          "Bitte geben Sie einen gültigen Verzeichnis ein" );
       return;
     }
-    
+
     if( !m_fIdentifier.isValid() )
     {
-      MessageDialog.openInformation( getParentShell(), "Kennzeichen", "Bitte geben Sie einen gültigen Kennzeichen ein" );
+      MessageDialog.openInformation( getParentShell(), "Kennzeichen",
+          "Bitte geben Sie einen gültigen Kennzeichen ein" );
       return;
     }
-    
+
     if( !m_fFilters.isValid() )
     {
-      MessageDialog.openInformation( getParentShell(), "Dateiendung", m_fFilters.getErrorMessage() );
+      MessageDialog.openInformation( getParentShell(), "Dateiendung",
+          m_fFilters.getErrorMessage() );
       return;
     }
 
@@ -118,20 +151,27 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
     m_fIdentifier.store();
     m_fFilters.store();
 
+    if( m_plugin != null )
+    {
+      m_plugin.getDialogSettings().put( BASEDIR, getLocation() );
+      m_plugin.getDialogSettings().put( IDENTIFIER, getIdentifier() );
+      m_plugin.getDialogSettings().put( FILTER, getFilters() );
+    }
+
     super.okPressed();
   }
 
-  public String getLocation()
+  public String getLocation( )
   {
     return m_store.getString( BASEDIR );
   }
 
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return m_store.getString( IDENTIFIER );
   }
-  
-  public String getFilters()
+
+  public String getFilters( )
   {
     return m_store.getString( FILTER );
   }

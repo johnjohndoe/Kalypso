@@ -1,7 +1,6 @@
 package org.kalypso.ogc.sensor.timeseries.forecast;
 
 import java.util.Date;
-import java.util.Vector;
 
 import org.kalypso.java.util.DateUtilities;
 import org.kalypso.ogc.sensor.IAxis;

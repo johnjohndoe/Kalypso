@@ -4,14 +4,19 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jface.window.Window;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.proxy.DateRangeBean;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.OCSDataBean;
 import org.kalypso.services.proxy.ObservationBean;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.repository.dialogs.DateRangeInputDialog;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
 
@@ -40,16 +45,34 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 
     try
     {
-      DateRangeBean drb = null;
+      DateRangeArgument dra = null;
       
-      // The query part of the URL (after the ?...) contains some additional
-      // specification: from-to, filter, etc.
+      /*
+       * The query part of the URL (after the ?...) contains some additional
+       * specification: from-to, filter, etc.
+       */
       final String query = u.getQuery();
       if( query != null )
+        dra = ZmlURL.checkDateRange( query );
+      else
       {
-        final DateRangeArgument dra = ZmlURL.checkDateRange( query );
-        
-        drb = new DateRangeBean( dra.getFrom().getTime(), dra.getTo().getTime() );
+        /*
+         * Ask user for a date range if a gui is available
+         */
+        final IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
+        if( window != null )
+        {
+          final DateFormat df = DateFormat.getDateTimeInstance();
+          final DateRangeInputDialog dlg = new DateRangeInputDialog( window.getShell(), false, null, null, 15, df, KalypsoGisPlugin.getDefault() );
+          
+          if( dlg.open() == Window.OK )
+          {
+            if( dlg.isUseRange() )
+              dra = new DateRangeArgument( dlg.getDateFrom(), dlg.getDateTo() );
+            else
+              dra = DateRangeArgument.createFromPastDays( dlg.getNumberOfDays() );
+          }
+        }
       }
 
       final String obsId = ZmlURL.getIdentifierPart( u ).replaceFirst( SCHEME_OCS + ":", "" );
@@ -58,6 +81,11 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       final IObservationService srv = KalypsoGisPlugin.getDefault()
           .getObservationServiceProxy();
 
+      // set the date range if available
+      DateRangeBean drb = null;
+      if( dra != null )
+        drb = new DateRangeBean( dra.getFrom().getTime(), dra.getTo().getTime() );
+      
       final OCSDataBean db = srv.readData( ob, drb );
 
       final File file = File.createTempFile( "local-zml", ".zml" );
