@@ -28,10 +28,12 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
       "topLeft");//$NON-NLS-1$
     bottomLeft.addView(IPageLayout.ID_OUTLINE);
 
-    // Bottom right.
-    layout.addView(IPageLayout.ID_TASK_LIST, IPageLayout.BOTTOM, (float)0.66, editorArea);
-    
     setContentsOfShowViewMenu( layout );
+    
+    layout.addActionSet( "org.kalypso.actionSet.model" );
+    layout.addActionSet( "org.kalypso.actionSet.calcCase" );
+    
+    layout.addNewWizardShortcut( "org.kalypso.wizard.newMap" );
   }
   
   /**
