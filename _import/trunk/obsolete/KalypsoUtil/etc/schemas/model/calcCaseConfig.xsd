@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
-<xs:schema targetNamespace="util.xml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:kalypso="util.xml.kalypso.org">
+<xs:schema targetNamespace="model.xml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="model.xml.kalypso.org">
 	<xs:element name="transformationConfig">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="transformation" type="kalypso:transformationType" maxOccurs="unbounded"/>
+				<xs:element name="transformation" type="transformationType" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<transformationConfig xmlns="util.xml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.xml.kalypso.org .\calcCaseConfig.xsd">
+<transformationConfig xmlns="model.xml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="model.xml.kalypso.org
+.\calcCaseConfig.xsd">
 	<transformation className="org.kalypso.util.XslTransformer">
 		<arg name="input" value="modell.gml"/>
 		<arg name="xsl" value="xsl/calcCase.xsl"/>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="model.xml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="model.xml.kalypso.org
+.\modelspec.xsd" typeID="copy">
+	<input path="model.gml" relativeToCalcCase="false"/>
+	<input path="kalib.gml" relativeToCalcCase="true"/>
+	
+	<output path="modell.gml"/>
+	<output path="kalib.gml"/>
+</modelspec>
