@@ -44,6 +44,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   private DefaultRepositoryContainer m_tsRepositoryContainer;
 
+  private Properties m_ftpProperties;
+
   
   /**
    * The constructor.
@@ -199,5 +201,24 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
         m_tsRepositoryContainer = new DefaultRepositoryContainer();
     
     return m_tsRepositoryContainer;
+  }
+  
+  public Properties getFeatureTypeCellEditorProperties()
+  {
+    if( m_ftpProperties != null )
+    {
+      m_ftpProperties = new Properties();
+      
+      try
+      {
+        m_ftpProperties.load( KalypsoGisPlugin.class.getResourceAsStream( "resources/featureTypeEditor.properties" ) );
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+      }
+    }
+    
+    return m_ftpProperties;
   }
 }

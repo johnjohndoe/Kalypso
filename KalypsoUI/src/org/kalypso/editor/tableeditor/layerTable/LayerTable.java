@@ -84,6 +84,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
     final KalypsoFeatureLayer layer = model.getLayer();
     final FeatureType featureType = layer.getFeatureType();
     final FeatureTypeProperty[] featureTypeProperties = featureType.getProperties();
+    final String[] colProperties = new String[featureTypeProperties.length];
     for( int i = 0; i < featureTypeProperties.length; i++ )
     {
       final TableColumn tc = new TableColumn( table, SWT.CENTER );
@@ -96,10 +97,13 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
       handleColumn( tc );
 
       m_menu.add( new ColumnAction( m_commandManager, this, ftp, getModel().isVisible( ftp ) ) );
+      
+      colProperties[i] = Integer.toString( i );
     }
 
     table.setMenu( m_menu.createContextMenu( table ) );
 
+    m_viewer.setColumnProperties( colProperties );
     m_viewer.setInput( model );
   }
 
