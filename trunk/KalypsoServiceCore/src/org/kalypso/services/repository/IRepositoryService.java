@@ -19,14 +19,19 @@ import org.kalypso.repository.beans.RepositoryBean;
 public interface IRepositoryService extends Remote
 {
   /**
+   * Returns the number of repositories.
+   */
+  public int getRepositoriesCount() throws RemoteException;
+  
+  /**
    * Lists the available repositories.
    */
   public RepositoryBean[] getRepositories() throws RemoteException;
-  
+
   /**
-   * Lists the root-items of a given repository.
+   * Returns the number of children a given parent has.
    */
-  public ItemBean[] getRoots( final RepositoryBean repository ) throws RemoteException;
+  public int getChildrenCount( final ItemBean parent ) throws RemoteException;
   
   /**
    * Returns the children of the given item (parent node). Returns an empty array

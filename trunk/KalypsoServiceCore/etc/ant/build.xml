@@ -71,7 +71,7 @@
 
 	<!--  HIER GEHTS LOS -->
 	<target name="build"
-	        depends="build-client,build-war,javadoc-client"
+	        depends="build-client,build-war"
 	        description="Executes the targets needed to build the webservice and the client jar.">
 	</target>
 
@@ -282,7 +282,7 @@
 
 	</target>
 
-	<target name="javadoc-client"
+	<!--target name="javadoc-client"
 	        depends="prepare"
 	        description="Erzeugt die JavaDoc für die client-jar">
 
@@ -297,7 +297,7 @@
 		<zip destfile="${dist}/client-source.zip"
 		     basedir="${javadoc.dir}"
 		     includes="**/*" />
-	</target>
+	</target-->
 
 	<!-- Build and (re-)deploy service -->
 	<taskdef name="deploy"

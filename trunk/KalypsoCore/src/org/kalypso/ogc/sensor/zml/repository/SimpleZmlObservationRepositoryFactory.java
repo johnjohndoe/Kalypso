@@ -13,11 +13,6 @@ import org.kalypso.repository.IRepository;
  */
 public class SimpleZmlObservationRepositoryFactory extends AbstractRepositoryFactory
 {
-  public SimpleZmlObservationRepositoryFactory( String conf )
-  {
-    super( conf );
-  }
-
   /**
    * Does nothing in this implementation.
    * 
