@@ -71,13 +71,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class IterationBC {
     
     /**
-     * Constructor
-     */
-    public IterationBC(){
-        
-    }
-    
-    /**
      * creates iteration properties of boundary conditions
      * @param ws
      * @param rootFeature
@@ -92,13 +85,6 @@ public class IterationBC {
 //            					"JSPLPT   IHOE   IDEN   ICONVG   IGRAV";
             String blockNames = " NITI     MBAND      NCYC      DELT   LI ITSI    JSPLPT IHOE IDEN     IGRAV";
             String blockNames2 = "      NITN    NSTART                        ISPLPT              ICONVG   IPASCHE";
-            String blockValues = iterationFE.getProperty("NITI")+"  "+iterationFE.getProperty("NITN")
-								+"  "+iterationFE.getProperty("MBAND")+"  "+iterationFE.getProperty("NSTART")
-								+"  "+iterationFE.getProperty("NCYC")+"  "+iterationFE.getProperty("DELT")
-								+"  "+iterationFE.getProperty("LI")+"  "+iterationFE.getProperty("ITSI")
-								+"  "+iterationFE.getProperty("ISPLPT")+"  "+iterationFE.getProperty("JSPLPT")
-								+"  "+iterationFE.getProperty("IHOE")+"  "+iterationFE.getProperty("IDEN")
-								+"  "+iterationFE.getProperty("ICONVG")+"  "+iterationFE.getProperty("IGRAV");
             
             sb.append(blockNames+"\n");
             sb.append(blockNames2+"\n");

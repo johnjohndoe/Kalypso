@@ -89,7 +89,6 @@ public class MeshPolygon {
     /**
      * Gets the ids of the feature points. Two feature points 
      * are describing one edge.
-     * @return
      */
     public int[] getPointIDs(){
         return countID;
@@ -181,11 +180,7 @@ public class MeshPolygon {
      * @param edge
      */
     public void setEdge(int pos, Edge edge){
-        int point1 = edge.getP1();
-        int point2 = edge.getP2();
-        
         allEdgesOfRect[pos] = edge;
-        
         int size = pos+1;
         edgeVector.setSize(size);
         edgeVector.add(edge);
@@ -193,10 +188,8 @@ public class MeshPolygon {
     
     /**
      * gets order of the edges of the <MeshPolygon>
-     * @return
      */
     public String[] getOrderOfEdges(){
-        Edge edge;
         String[] s = new String[8];
         StringBuffer sb = new StringBuffer(1000);
         for(int i = 0; i < edgeVector.size(); i++){

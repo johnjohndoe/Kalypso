@@ -71,13 +71,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class GeneralBC {
     
     /**
-     * Constructor
-     */
-    public GeneralBC(){
-        
-    }
-    
-    /**
      * creates general properties of boundary conditions
      * @param ws
      * @param rootFeature
@@ -131,7 +124,6 @@ public class GeneralBC {
      * 
      * @param ws
      * @param rootFeature
-     * @return
      */
     public StringBuffer createGeneralBC(GMLWorkspace ws, Feature rootFeature){
         Feature generalCollectionFE = ws.resolveLink(rootFeature, "generalCollectionMember");

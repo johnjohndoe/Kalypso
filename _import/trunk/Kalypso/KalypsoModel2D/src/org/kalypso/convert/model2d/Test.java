@@ -85,16 +85,16 @@ public class Test {
         };
         
         //test2
-        double[]c = new double[]{
-            mp4.getX()-mp2.getX(),
-	        mp4.getY()-mp2.getY(),
-	        0d
-        };
-        double[]d = new double[]{
-	        mp1.getX()-mp2.getX(),
-	        mp1.getY()-mp2.getY(),
-	        0d
-        };
+//        double[]c = new double[]{
+//            mp4.getX()-mp2.getX(),
+//	        mp4.getY()-mp2.getY(),
+//	        0d
+//        };
+//        double[]d = new double[]{
+//	        mp1.getX()-mp2.getX(),
+//	        mp1.getY()-mp2.getY(),
+//	        0d
+//        };
         
         boolean existsClockwise = GeometryHelper.isAngleClockwise(a, b);
         System.out.println("test "+ existsClockwise);

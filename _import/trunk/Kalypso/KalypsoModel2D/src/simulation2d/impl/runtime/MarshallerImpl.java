@@ -18,6 +18,7 @@ import java.io.Writer;
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.MarshalException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
 import javax.xml.bind.helpers.AbstractMarshallerImpl;
 import javax.xml.parsers.DocumentBuilder;

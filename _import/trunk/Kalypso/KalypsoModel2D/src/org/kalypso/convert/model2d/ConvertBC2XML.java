@@ -83,7 +83,6 @@ import org.xml.sax.SAXException;
  */
 public class ConvertBC2XML {
     
-    private static HashMap mapBC = new HashMap();
     private static String[][]firstParamGroup = new String [2][100];
     private static String[][]secondParamGroup = new String [2][100];
     private static String[][]thirdParamGroup = new String [2][100];
@@ -549,15 +548,13 @@ public class ConvertBC2XML {
     /**
      * sets the StringBuffer with each param block
      * @param paramsBlock
-     * @return
      */
     public static void setBCStringBuffer(String[] paramsBlock){
-        HashMap map = new HashMap();
         firstParamGroup  = setFirstThreeParamGroups(paramsBlock[1], "NE");
         secondParamGroup = setFirstThreeParamGroups(paramsBlock[3], "OMEGA");
         thirdParamGroup  = setFirstThreeParamGroups(paramsBlock[4], "NITI");
         
-        setFourthParamGroup(paramsBlock[5], "NMAT");
+        setFourthParamGroup(paramsBlock[5]);
         
         int pos = paramsBlock[6].indexOf("IQGEN Zeilen");
         String fifthsParamBlock = paramsBlock[6].substring(0, pos);
@@ -579,7 +576,6 @@ public class ConvertBC2XML {
      * 
      * @param paramBlock
      * @param c
-     * @return
      */
     public static String[][] setFirstThreeParamGroups(String paramBlock, String c){
        String[][] s = new String[2][100];
@@ -624,7 +620,7 @@ public class ConvertBC2XML {
      * @param paramsBlock
      * @param c
      */
-    public static void setFourthParamGroup(String paramsBlock, String c){
+    public static void setFourthParamGroup(String paramsBlock){
         HashMap fourthBlock = new HashMap();
         int pos = paramsBlock.indexOf("1");
         String s = paramsBlock.substring(pos, paramsBlock.length());

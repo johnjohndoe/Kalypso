@@ -63,21 +63,11 @@ import java.util.ArrayList;
  */
 public class Roughness {
     
-    private String roughness;
     private boolean exists = false;
     private ArrayList roughnessList = new ArrayList();
     
     /**
-     * 
-     * Constructor
-     */
-    public Roughness(){
-        
-    }
-    
-    /**
      * gets the roughness parameters
-     * @return
      */
     public ArrayList getRoughness(){
         return this.roughnessList;

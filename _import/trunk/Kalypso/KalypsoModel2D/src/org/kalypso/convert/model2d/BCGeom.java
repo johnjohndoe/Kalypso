@@ -72,13 +72,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class BCGeom {
 
     /**
-     * Constructor
-     */
-    public BCGeom(){
-        
-    }
-    
-    /**
      * creates the second group of parameters for boundary conditions
      * @param ws
      * @param rootFeature

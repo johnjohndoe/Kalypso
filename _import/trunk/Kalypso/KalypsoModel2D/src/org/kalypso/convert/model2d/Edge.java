@@ -57,37 +57,18 @@
 package org.kalypso.convert.model2d;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  * @author katharina lupp <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
  */
 public class Edge {
 
-    private ArrayList edgesList = new ArrayList();
-
-    private boolean present = false;
-
-    private Vector edgeOfRectangle = new Vector();
-
+ 
     private int id = 0;
-
     private int p1 = 0;
-
     private int p2 = 0;
-
-    private int size = 0;
-
     private int idFE1 = 0;
-
     private int idFE2 = 0;
-
-    /**
-     * Constructor
-     */
-    public Edge() {
-
-    }
 
     /**
      * Constructor
@@ -97,7 +78,15 @@ public class Edge {
     public Edge(int id) {
         this.id = id;
     }
-
+    
+    /**
+     * 
+     *
+     */
+    public Edge (){
+        
+    }
+    
     /**
      * Constructor
      * 

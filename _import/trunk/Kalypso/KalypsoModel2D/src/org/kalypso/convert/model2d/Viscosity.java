@@ -70,13 +70,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class Viscosity {
     
     /**
-     * Constructor
-     */
-    public Viscosity(){
-        
-    }
-    
-    /**
      * creates the viscosity of boundary conditions
      * @param ws
      * @param rootFeature

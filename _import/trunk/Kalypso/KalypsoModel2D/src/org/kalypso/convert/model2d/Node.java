@@ -85,7 +85,6 @@ public class Node {
     
     /**
      * gets the id of <Node>
-     * @return
      */
     public int getID(){
         return this.id;
@@ -101,7 +100,6 @@ public class Node {
     
     /**
      * gets x of <Node>
-     * @return
      */
     public double getX(){
         return this.x;

@@ -88,17 +88,8 @@ public class FEMNodes {
     private static float m_yoffset=5900000;
     
     private String va;
-    private String vo;
-    private String ga;
-    private String go;
     private String zu;
     
-    /**
-     * Constructor
-     */
-    public FEMNodes(){
-        
-    }
     
     /**
      * creates node properties by using the <GMLWorkspace> and the rootFeature.

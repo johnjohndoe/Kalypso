@@ -8,6 +8,9 @@
 
 package simulation2d;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.PropertyException;
+
 
 /**
  * This object contains factory methods for each 

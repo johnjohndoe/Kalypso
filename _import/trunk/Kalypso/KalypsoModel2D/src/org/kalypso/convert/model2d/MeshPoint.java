@@ -73,9 +73,9 @@ public class MeshPoint {
     /**
      * Constructor
      * @param id
-     * @param float x
-     * @param float y
-     * @param float z
+     * @param x
+     * @param y
+     * @param z
      */
     public MeshPoint(int id, double x, double y, double z){
         this.id = id;
@@ -96,7 +96,6 @@ public class MeshPoint {
     
     /**
      * gets the x-coordinate of the MeshPoint
-     * @return
      */
     public double getX(){
         return x;
@@ -104,7 +103,6 @@ public class MeshPoint {
     
     /**
      * gets the y-coordinate of the MeshPoint
-     * @return
      */
     public double getY(){
         return y;
@@ -112,7 +110,6 @@ public class MeshPoint {
     
     /**
      * gets the z-coordinate of the MeshPoint
-     * @return
      */
     public double getZ(){
         return z;
@@ -120,7 +117,6 @@ public class MeshPoint {
     
     /**
      * gets the id of the MeshPoint
-     * @return
      */
     public int getID(){
         return id;

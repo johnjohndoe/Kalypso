@@ -69,13 +69,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class DynamicBC {
     
     /**
-     * Constructor
-     */
-    public DynamicBC(){
-        
-    }
-    
-    /**
      * creates the dynamic boundary conditions
      * @param ws
      * @param rootFeature

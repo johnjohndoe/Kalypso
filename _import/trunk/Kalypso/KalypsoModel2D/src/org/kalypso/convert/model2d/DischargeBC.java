@@ -68,12 +68,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class DischargeBC {
 
-    /**
-     * Constructor
-     */
-    public DischargeBC(){
-        
-    }
     
     /**
      * creates the discharge block of boundary conditions

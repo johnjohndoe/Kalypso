@@ -584,7 +584,6 @@ public class ConvertBC2GML {
         element.appendChild(nameElement);
         Element elem = doc.createElement("gml:LineString");
         nameElement.appendChild(elem);
-        StringBuffer sb = new StringBuffer(1000);
         
         try {
 	        URL gmlURL = new File(gml2dFile).toURL();
@@ -605,7 +604,7 @@ public class ConvertBC2GML {
 	            if(nodeList.get(node) != null){
 			        Element coordElem = doc.createElement("gml:coord");
 			        elem.appendChild(coordElem);
-		            int id = (int)Double.parseDouble(nodeId);
+//		            int id = (int)Double.parseDouble(nodeId);
 		            Element xElem = doc.createElement("gml:X");
 		            Element yElem = doc.createElement("gml:Y");
 		            Element zElem = doc.createElement("gml:Z");
@@ -721,10 +720,9 @@ public class ConvertBC2GML {
     /**
      * sets the StringBuffer with each param block
      * @param paramsBlock
-     * @return
      */
     private static void setBCStringBuffer(String[] paramsBlock){
-        HashMap map = new HashMap();
+//        HashMap map = new HashMap();
         firstParamGroup  = setFirstThreeParamGroups(paramsBlock[0], "NE");
         if(paramsBlock[1].length() > 1){
 	        firstNewParamGroup  = setFirstThreeParamGroups(paramsBlock[1], "FEM");

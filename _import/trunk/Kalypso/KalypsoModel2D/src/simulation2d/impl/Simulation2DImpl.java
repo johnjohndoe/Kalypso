@@ -9,16 +9,17 @@
 package simulation2d.impl;
 
 public class Simulation2DImpl
+
     extends simulation2d.impl.Simulation2DTypeImpl
     implements simulation2d.Simulation2D, com.sun.xml.bind.RIElement, com.sun.xml.bind.JAXBObject, simulation2d.impl.runtime.UnmarshallableObject, simulation2d.impl.runtime.XMLSerializable, simulation2d.impl.runtime.ValidatableObject
 {
 
-    public final static java.lang.Class version = (simulation2d.impl.JAXBVersion.class);
+//    public final static java.lang.Class version = (simulation2d.impl.JAXBVersion.class);
     private static com.sun.msv.grammar.Grammar schemaFragment;
-
-    private final static java.lang.Class PRIMARY_INTERFACE_CLASS() {
-        return (simulation2d.Simulation2D.class);
-    }
+//
+//    private final static java.lang.Class PRIMARY_INTERFACE_CLASS() {
+//        return (simulation2d.Simulation2D.class);
+//    }
 
     public java.lang.String ____jaxb_ri____getNamespaceURI() {
         return "http://elbe.wb.tu-harburg.de";
@@ -44,15 +45,15 @@ public class Simulation2DImpl
         context.endElement();
     }
 
-    public void serializeAttributes(simulation2d.impl.runtime.XMLSerializer context)
-        throws org.xml.sax.SAXException
-    {
-    }
-
-    public void serializeURIs(simulation2d.impl.runtime.XMLSerializer context)
-        throws org.xml.sax.SAXException
-    {
-    }
+//    public void serializeAttributes(simulation2d.impl.runtime.XMLSerializer context)
+//        throws org.xml.sax.SAXException
+//    {
+//    }
+//
+//    public void serializeURIs(simulation2d.impl.runtime.XMLSerializer context)
+//        throws org.xml.sax.SAXException
+//    {
+//    }
 
     public java.lang.Class getPrimaryInterface() {
         return (simulation2d.Simulation2D.class);
@@ -151,7 +152,7 @@ public class Simulation2DImpl
         public void enterElement(java.lang.String ___uri, java.lang.String ___local, java.lang.String ___qname, org.xml.sax.Attributes __atts)
             throws org.xml.sax.SAXException
         {
-            int attIdx;
+//            int attIdx;
             outer:
             while (true) {
                 switch (state) {
@@ -192,7 +193,7 @@ public class Simulation2DImpl
         public void leaveElement(java.lang.String ___uri, java.lang.String ___local, java.lang.String ___qname)
             throws org.xml.sax.SAXException
         {
-            int attIdx;
+//            int attIdx;
             outer:
             while (true) {
                 switch (state) {
@@ -215,7 +216,7 @@ public class Simulation2DImpl
         public void enterAttribute(java.lang.String ___uri, java.lang.String ___local, java.lang.String ___qname)
             throws org.xml.sax.SAXException
         {
-            int attIdx;
+//            int attIdx;
             outer:
             while (true) {
                 switch (state) {
@@ -231,7 +232,7 @@ public class Simulation2DImpl
         public void leaveAttribute(java.lang.String ___uri, java.lang.String ___local, java.lang.String ___qname)
             throws org.xml.sax.SAXException
         {
-            int attIdx;
+//            int attIdx;
             outer:
             while (true) {
                 switch (state) {
@@ -247,7 +248,7 @@ public class Simulation2DImpl
         public void handleText(final java.lang.String value)
             throws org.xml.sax.SAXException
         {
-            int attIdx;
+//            int attIdx;
             outer:
             while (true) {
                 try {

@@ -116,8 +116,7 @@ public class LineBC {
 		            Object[] o;
 
 	                for (int j = 0; j < positions.length; j++) {
-	                    String s = positions[j].getX()+","+positions[j].getY()+" ";
-	                    int id = getId(ws2d, rootFeature2d, positions[j].getX(),positions[j].getY(),0);
+	                    int id = getId(ws2d, rootFeature2d, positions[j].getX(),positions[j].getY());
 	                    
 	                    o = new Object[]{
 			                    new Integer( id ),
@@ -152,11 +151,9 @@ public class LineBC {
      * @param rootFeature
      * @param x
      * @param y
-     * @return
      */
-    private int getId(GMLWorkspace ws, Feature rootFeature, double x, double y, double z){
+    private int getId(GMLWorkspace ws, Feature rootFeature, double x, double y){
         int id = 0;
-
         FEMNodes nodes = new FEMNodes();
         nodes.createNodeProperties(ws, rootFeature);
         ArrayList nodeList = nodes.getNodeList();

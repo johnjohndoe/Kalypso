@@ -67,7 +67,6 @@ public class XMLHelper {
     /**
      * creates the textNode -> textContent of the element
      * @param text
-     * @return
      */ 
      public static Text createTextNode(Document doc, String text) {
          String tTmp = "";
@@ -81,7 +80,6 @@ public class XMLHelper {
       * creates attribute
       * @param attName
       * @param value
-      * @return
       */
       public static Attr createAttribute(Document doc, String attName, String value) {
           Attr attr = doc.createAttribute(attName);
