@@ -14,8 +14,7 @@ package javax.units.resources;
  * identifiers will not bloat constant pools of classes compiled against the
  * interface, providing that no class implements this interface.
  * 
- * @see net.seagis.resources.ResourceBundle
- * @see net.seagis.resources.ResourceCompiler
+ * @see ResourceKeys
  */
 public interface ResourceKeys
 {

@@ -71,7 +71,7 @@ public class Resources extends ResourceBundle
   /**
    * Returns resources in the given locale.
    * 
-   * @param local
+   * @param locale
    *          The locale, or <code>null</code> for the default locale.
    * @return Resources in the given locale.
    * @throws MissingResourceException

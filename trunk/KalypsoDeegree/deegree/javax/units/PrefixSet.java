@@ -231,7 +231,7 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
 
   /**
    * Après la lecture d'une unité, vérifie si ce préfix apparaît déjà dans la
-   * banque des préfix {@link #PREFIX}. Si oui, l'exemplaire de la banque sera
+   * banque des préfix {@link #prefix}. Si oui, l'exemplaire de la banque sera
    * retourné plutôt que de garder inutilement le préfix courant comme copie.
    */
   private Object readResolve() 

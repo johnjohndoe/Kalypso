@@ -68,7 +68,7 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   /**
    * Nom neutre du préfix. Le système SI définit plusieurs noms de préfix, parmi
    * lesquels on trouve "milli", "centi" et "kilo". Certaines unités (notamment
-   * des unités du type {@link ScaledUnit}) pourront combiner leurs noms avec
+   * des unités du type {ScaledUnit}) pourront combiner leurs noms avec
    * un nom de préfix. Par exemple le préfix "centi" (symbole "c") pourra être
    * combiné avec les unités "mètres" (symbole "m") pour former les
    * "centimètres" (symbole "cm"). La chaîne <code>name</code> peut être vide,
