@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org"><layer id="1" linktype="shape" ns1:actuate="onRequest" ns1:href="SRS=EPSG:31468#PATH=shapes/nstat_5mn#SERVICE=RESOURCE#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"><column editable="false" name="STAT_NAME" width="172"/><column editable="false" name="STAT_ID" width="590"/></layer></gistableview>
+

@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gistableview xmlns="gistableview.template.kalypso.org"><layer linktype="shape" id="1" ns1:type="simple" ns1:href="SRS=EPSG:31468#PATH=shapes/pegel_sa_thuer#SERVICE=RESOURCE#" ns1:actuate="onRequest" xmlns:ns1="http://www.w3.org/1999/xlink"><column name="PEG_NAME" width="125" editable="false"/><column name="PEG_ART" width="100" editable="false"/><column name="ANZEIGE" width="100" editable="false"/><column name="PEG_WASSER" width="392" editable="false"/></layer></gistableview>
-
