@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<observation xmlns="zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="zml.kalypso.org
+./observation.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<name>Eine Test-Observation</name>
+	<metadataList>
+		<metadata name="Pegelnullpunkt" value="10"/>
+		<metadata name="Rechtswert" value="445566"/>
+		<metadata name="Hochwert" value="887766"/>
+		<metadata name="Alarmstufe 1" value="4.3"/>
+		<metadata name="Alarmstufe 2" value="5.6"/>
+	</metadataList>
+
+	<axis name="Datum" type="date" key="true" datatype="TYPE=date#FORMAT=dd.MM.yyyy">
+		<valueLink separator=" " column="1" xlink:href="#data"/>
+	</axis>
+	
+	<axis name="Pegel1" type="W" unit="m" datatype="TYPE=double">
+		<valueLink separator=" " column="2" xlink:href="#data"/>
+	</axis>
+
+	<axis name="Pegel2" type="S" unit="" datatype="TYPE=double">
+		<valueLink separator=" " column="3" xlink:href="#data"/>
+	</axis>
+
+	<data><![CDATA[
+01.01.2004 1 11
+02.01.2004 23 23
+03.01.2004 71.8 71.8
+04.01.2004 45 45
+05.01.2004 51 51
+06.01.2004 62 62
+07.01.2004 71 71
+08.01.2004 81.7 81.7
+09.01.2004 91 91
+10.01.2004 11 11
+11.01.2004 41 41
+12.01.2004 13 13
+13.01.2004 57.4 57.4
+14.01.2004 15 15
+15.01.2004 22 22
+16.01.2004 35 35
+17.01.2004 68 68
+18.01.2004 90.3 90.3
+19.01.2004 58 58
+20.01.2004 15 15
+21.01.2004 16.6 18.5
+]]></data>
+</observation>

@@ -629,7 +629,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
       if( m_showZmlTableOnlySelected )
       {
+        // Save the observations before refreshing else
+        // changes are lost
         saveDirtyObservations( true, new NullProgressMonitor() );
+        
         refreshZMLTable();
       }
     }
