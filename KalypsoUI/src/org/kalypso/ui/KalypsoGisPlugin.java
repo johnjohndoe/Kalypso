@@ -73,6 +73,7 @@ import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
+import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
@@ -487,6 +488,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
     {
       // TODO: read TypeHandler from property-file
       registry.registerTypeHandler( new ObservationLinkHandler() );
+      // TODO: make new NA-project and move registration to it 
+      registry.registerTypeHandler(new DiagramTypeHandler());
     }
     catch( Exception e ) // generic exception caught for simplicity
     {

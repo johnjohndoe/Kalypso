@@ -93,7 +93,7 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
   public synchronized void createPartControl( final Composite parent )
   {    
     super.createPartControl( parent );
-    viewer = new GMLEditorTreeView( parent );
+    viewer = new GMLEditorTreeView( parent,this );
     load();
   }
 }

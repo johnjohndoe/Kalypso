@@ -63,9 +63,9 @@ import org.kalypso.template.featureview.TextType;
  */
 public class FeatureviewHelper
 {
-  private FeatureviewHelper( )
+  private FeatureviewHelper()
   {
-    // wird nicht instantiiert
+  // wird nicht instantiiert
   }
 
   public static final ObjectFactory FACTORY = new ObjectFactory();
@@ -101,7 +101,6 @@ public class FeatureviewHelper
       griddata.setHorizontalAlignment( "GridData.BEGINNING" );
       griddata.setWidthHint( 100 );
       editor.setLayoutData( griddata );
-      
 
       return editor;
     }
@@ -112,7 +111,7 @@ public class FeatureviewHelper
       checkbox.setEditable( true );
       checkbox.setProperty( ftp.getName() );
 
-      griddata.setHorizontalAlignment( "GridData.BEGINNING");
+      griddata.setHorizontalAlignment( "GridData.BEGINNING" );
       griddata.setWidthHint( 100 );
       checkbox.setLayoutData( griddata );
 
@@ -136,8 +135,7 @@ public class FeatureviewHelper
    * @param type
    * @return featureview
    */
-  public static Featureview createFeatureviewFromFeatureType(
-      final FeatureType type )
+  public static Featureview createFeatureviewFromFeatureType( final FeatureType type )
   {
     try
     {
