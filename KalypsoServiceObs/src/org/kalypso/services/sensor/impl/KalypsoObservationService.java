@@ -183,7 +183,13 @@ public class KalypsoObservationService implements IObservationService
         throw e;
       }
 
-      final DateRangeArgument args = new DateRangeArgument( drb.getFrom(), drb.getTo() );
+      final DateRangeArgument args;
+      
+      if( drb == null )
+        args = DateRangeArgument.createFromPastDays(0);
+      else
+        args = new DateRangeArgument( drb.getFrom(), drb.getTo() );
+      
       final ObservationType obsType = ZmlFactory.createXML( obs, args );
 
       final File f = File.createTempFile( "___" + obs.getName(), ".zml", m_tmpDir );
@@ -297,9 +303,11 @@ public class KalypsoObservationService implements IObservationService
       throw e;
     }
 
+    // maybe bean already in map?
     if( m_mapBean2Item.containsKey( obean.getId() ) )
       return (IRepositoryItem)m_mapBean2Item.get( obean.getId() );
 
+    // try with repository id
     if( m_mapId2Rep.containsKey( obean.getRepId() ) )
     {
       final IRepository rep = (IRepository)m_mapId2Rep.get( obean.getRepId() );
@@ -308,6 +316,19 @@ public class KalypsoObservationService implements IObservationService
     }
     else
     {
+      // last chance: go through repositories and check ids
+      for( final Iterator it = m_repositories.iterator(); it.hasNext(); )
+      {
+        final IRepository rep = (IRepository)it.next();
+        
+        final String repId = rep.getIdentifier();
+        
+        final String cmpId = obean.getRepId().substring(0, repId.length() - 1);
+        
+        if( repId.equalsIgnoreCase( cmpId ) )
+          return rep.findItem( obean.getId() );
+      }
+      
       final RemoteException e = new RemoteException( "Unknonwn Repository: " + obean.getRepId() );
       m_logger.throwing( "KalypsoObservationService", "itemFromBean", e );
       throw e;
@@ -449,7 +470,7 @@ public class KalypsoObservationService implements IObservationService
   /**
    * @see org.kalypso.services.repository.IRepositoryService#findItem(java.lang.String)
    */
-  public ItemBean findItem( String id ) throws RemoteException
+  public ItemBean findItem( final String id ) throws RemoteException
   {
     for( Iterator it = m_repositories.iterator(); it.hasNext(); )
     {
