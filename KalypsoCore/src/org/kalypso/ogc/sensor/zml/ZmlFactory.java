@@ -100,6 +100,8 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
  * <li>linked: values are stored in an external CSV-like file
  * <li>block-inlined: values are stored CSV-like, but in the zml file itself
  * </ul>
+ * The block-inlined Format is used with valueLink elements and if the
+ * Href-Attribute is not specified, is empty, or contains "#data".
  * 
  * @author schlienger
  */
@@ -547,7 +549,7 @@ public class ZmlFactory
   {
     final Marshaller marshaller = OF.createMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    
+
     return marshaller;
   }
 
@@ -555,8 +557,10 @@ public class ZmlFactory
   {
     final Unmarshaller unmarshaller = OF.createUnmarshaller();
 
-//    unmarshaller.setProperty( "http://apache.org/xml/features/validation/schema/normalized-value", Boolean.FALSE );
-    
+    //    unmarshaller.setProperty(
+    // "http://apache.org/xml/features/validation/schema/normalized-value",
+    // Boolean.FALSE );
+
     return unmarshaller;
   }
 
