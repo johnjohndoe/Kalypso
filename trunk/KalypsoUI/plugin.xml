@@ -426,10 +426,16 @@
             name="Kalypso Administrator"
             id="org.kalypso.ui.perspectives.AdminPerspectiveFactory"/>
       <perspective
-            icon="icons/modeler.gif"
             class="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"
+            icon="icons/modeler.gif"
+            fixed="false"
             name="Kalypso Modeler"
             id="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"/>
+      <perspective
+            class="org.kalypso.ui.perspectives.PrognosePerspective"
+            fixed="true"
+            name="Prognoserechnung"
+            id="org.kalypso.ui.perspectives.PrognosePerspective"/>
    </extension>
    <extension
          id="product"
