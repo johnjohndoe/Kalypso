@@ -15,6 +15,7 @@ import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
+import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 
@@ -100,7 +101,7 @@ public class StyleLoader extends AbstractLoader implements IPoolListener
     return null;
   }
 
-  public void onObjectInvalid( final Object oldValue, final boolean bCannotReload )
+  public void onObjectInvalid( final ResourcePool pool, final IPoolableObjectType key, final Object oldValue, final boolean bCannotReload )
       throws Exception
   {
     final KalypsoFeatureLayer[] layers = (KalypsoFeatureLayer[])oldValue;

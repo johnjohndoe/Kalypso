@@ -15,7 +15,7 @@ import org.kalypso.util.factory.FactoryException;
 /**
  * @author sbad0205
  */
-public class ResourcePool implements IObjectChangeProvider, ILoaderListener
+public class ResourcePool implements ILoaderListener
 {
   /** type -> CountableObject */
   private final Map myPool = new HashMap();
@@ -122,7 +122,7 @@ public class ResourcePool implements IObjectChangeProvider, ILoaderListener
   public void fireOnObjectInvalid( final Object oldObject, final boolean bCannotReload )
       throws Exception
   {
-    m_objectChangeProvider.fireOnObjectInvalid( oldObject, bCannotReload );
+    m_objectChangeProvider.fireOnObjectInvalid( this, findKey( oldObject ), oldObject, bCannotReload );
   }
 
   public void removePoolListener( final IPoolListener l )
@@ -148,7 +148,7 @@ public class ResourcePool implements IObjectChangeProvider, ILoaderListener
 
   private IPoolableObjectType findKey( Object oldValue )
   {
-    for( Iterator iter = myPool.entrySet().iterator(); iter.hasNext(); )
+    for( final Iterator iter = myPool.entrySet().iterator(); iter.hasNext(); )
     {
       final Map.Entry element = (Entry)iter.next();
       final CountableObject co = (CountableObject)element.getValue();

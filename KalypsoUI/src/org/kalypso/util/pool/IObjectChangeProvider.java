@@ -10,5 +10,5 @@ public interface IObjectChangeProvider
   
   public void removePoolListener( final IPoolListener l );
   
-  public void fireOnObjectInvalid( final Object oldObject, final boolean bCannotReload ) throws Exception;
+  public void fireOnObjectInvalid( final ResourcePool source, final IPoolableObjectType key, final Object oldObject, final boolean bCannotReload ) throws Exception;
 }

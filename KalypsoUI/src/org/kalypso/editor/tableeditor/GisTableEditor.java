@@ -30,7 +30,6 @@ import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
 import org.kalypso.plugin.KalypsoGisPlugin;
-import org.kalypso.template.GisTemplateHelper;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
@@ -113,7 +112,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       final Gistableview gistableview = m_gistableviewFactory.createGistableview();
       final LayerType layer = m_gistableviewFactory.createGistableviewTypeLayerType();
 
-      final PoolableObjectType key = m_theme.getKey();
+      final PoolableObjectType key = m_theme.getLayerKey();
       layer.setId( "1" );
       layer.setHref( key.getSourceAsString() );
       layer.setLinktype( key.getType() );
@@ -180,7 +179,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
     final ICellEditorFactory factory = KalypsoGisPlugin.getDefault()
         .getFeatureTypeCellEditorFactory();
-    m_layerTable = new LayerTable( parent, this, m_theme, factory );
+    m_layerTable = new LayerTable( parent, this, factory );
 
     load();
   }
@@ -221,7 +220,9 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       return;
 
     final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
-    m_theme = GisTemplateHelper.createThemeFromTemplate( m_tableview.getLayer(), project );
+    
+    m_theme = new PoolableKalypsoFeatureTheme( m_tableview.getLayer(), project );
+    
     m_theme.addModellListener( this );
 
     setContentDescription( input.getFile().getName() );
@@ -275,7 +276,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    if( modellEvent.getEventSource() == m_theme && modellEvent.getType() == ModellEvent.FULL_CHANGE )
+    if( modellEvent != null && modellEvent.getEventSource() == m_theme && modellEvent.getType() == ModellEvent.FULL_CHANGE )
     {
       final FeatureType featureType = m_theme.getLayer().getFeatureType();
 
@@ -297,7 +298,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
         {
           final LayerTable layerTable = getLayerTable();
           if( !layerTable.isDisposed() )
-            layerTable.setModel( new LayerTableModel( getTheme().getLayer(), columns ) );
+            layerTable.setModel( new LayerTableModel( getTheme(), columns ) );
         }
       } );
     }

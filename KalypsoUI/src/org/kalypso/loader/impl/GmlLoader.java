@@ -10,6 +10,7 @@ import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
+import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 
@@ -22,6 +23,8 @@ public class GmlLoader extends AbstractLoader implements IPoolListener
 {
   private final ResourcePool m_gmlArrayPool = KalypsoGisPlugin.getDefault().getPool(
       KalypsoFeatureLayer[].class );
+  
+  private PoolableObjectType m_key = null;
 
   public GmlLoader()
   {
@@ -67,8 +70,8 @@ public class GmlLoader extends AbstractLoader implements IPoolListener
 
   private KalypsoFeatureLayer[] getLayerArray( final Properties source, final IProject project, final IProgressMonitor monitor ) throws Exception
   {
-    final PoolableObjectType key = new PoolableObjectType( "gmlarray", source, project );
-    final KalypsoFeatureLayer[] layers = (KalypsoFeatureLayer[])m_gmlArrayPool.getObject( key,
+    m_key = new PoolableObjectType( "gmlarray", source, project );
+    final KalypsoFeatureLayer[] layers = (KalypsoFeatureLayer[])m_gmlArrayPool.getObject( m_key,
         monitor );
     return layers;
   }
@@ -81,16 +84,19 @@ public class GmlLoader extends AbstractLoader implements IPoolListener
     return "GML Layer";
   }
 
-  public void onObjectInvalid( final Object oldValue, final boolean bCannotReload )
+  public void onObjectInvalid( final ResourcePool pool, final IPoolableObjectType key, final Object oldValue, final boolean bCannotReload )
       throws Exception
   {
-    final KalypsoFeatureLayer[] layers = (KalypsoFeatureLayer[])oldValue;
-    for( int i = 0; i < layers.length; i++ )
+    if( pool == m_gmlArrayPool && key == m_key )
     {
-      if( hasObject( layers[i] ) )
+      final KalypsoFeatureLayer[] layers = (KalypsoFeatureLayer[])oldValue;
+      for( int i = 0; i < layers.length; i++ )
       {
-        release( layers[i] );
-        fireLoaderObjectInvalid( layers[i], bCannotReload );
+        if( hasObject( layers[i] ) )
+        {
+          release( layers[i] );
+          fireLoaderObjectInvalid( layers[i], bCannotReload );
+        }
       }
     }
   }
@@ -114,7 +120,4 @@ public class GmlLoader extends AbstractLoader implements IPoolListener
       throw new LoaderException( e );
     }
   }
-  
-  
-  
 }

@@ -16,13 +16,11 @@ public class BorrowObjectJob extends Job
   private final IPoolableObjectType m_key;
   private final Object m_dummyObject;
 
-  public BorrowObjectJob( final String name, final ResourcePool pool, final IPoolListener l, final IPoolableObjectType key, Object dummyObject )
+  public BorrowObjectJob( final String name, final ResourcePool pool, final IPoolListener l, final IPoolableObjectType key, final Object dummyObject )
   {
     super( name );
     
     setPriority( Job.LONG );
-    
-    // TODO: setRULE??
     
     m_pool = pool;
     m_poolListener = l;
@@ -38,7 +36,7 @@ public class BorrowObjectJob extends Job
     try
     {
       m_pool.getObject( m_key, monitor );
-      m_poolListener.onObjectInvalid( m_dummyObject, false );
+      m_poolListener.onObjectInvalid( m_pool, m_key, m_dummyObject, false );
     }
     catch( final Exception e )
     {

@@ -10,7 +10,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.UIManager;
+import javax.xml.bind.JAXBException;
 
+import org.deegree_impl.extension.ITypeRegistry;
+import org.deegree_impl.extension.TypeRegistryException;
+import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -18,6 +22,7 @@ import org.kalypso.eclipse.jface.viewers.DefaultCellEditorFactory;
 import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
+import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.services.calcjob.CalcJobService;
 import org.kalypso.services.factory.ServiceFactory;
 import org.kalypso.services.factory.ServiceFactoryException;
@@ -103,6 +108,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     {
       e1.printStackTrace();
     }
+    
+    registerTypeHandler();
   }
 
   private void configureLogger()
@@ -321,5 +328,24 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     }
     
     return m_calcJobService;
+  }
+  
+  private void registerTypeHandler()
+  {
+    final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
+    
+    // TODO: error handling
+    try
+    {
+      registry.registerTypeHandler( new ObservationLinkHandler() );
+    }
+    catch( final TypeRegistryException e )
+    {
+      e.printStackTrace();
+    }
+    catch( JAXBException e )
+    {
+      e.printStackTrace();
+    }
   }
 }

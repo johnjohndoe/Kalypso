@@ -23,6 +23,7 @@ import org.kalypso.ogc.sensor.view.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.view.DoubleTableCellRenderer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
+import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 
 /**
@@ -98,10 +99,9 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#onObjectInvalid(java.lang.Object,
-   *      boolean)
+   * @see org.kalypso.util.pool.IPoolListener#onObjectInvalid(org.kalypso.util.pool.ResourcePool, org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, boolean)
    */
-  public void onObjectInvalid( Object oldObject, boolean bCannotReload ) throws Exception
+  public void onObjectInvalid( final ResourcePool pool, final IPoolableObjectType key, final Object oldObject, boolean bCannotReload ) throws Exception
   {
     boolean changed = false;
     
