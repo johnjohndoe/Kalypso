@@ -6,7 +6,6 @@
         <column editable="false" name="Korrektur_Niveau" width="100"/>
         <column editable="false" name="Korrektur_Laufzeit" width="118"/>
         <column editable="false" name="KorrekturEmpfehlungLaufzeit" width="63"/>
-        <column editable="false" name="Wasserstand_gemessenEingang" width="217"/>
         <sort inverse="true" propertyName="KorrekturEmpfehlungLaufzeit"/>
     </layer>
 </gistableview>

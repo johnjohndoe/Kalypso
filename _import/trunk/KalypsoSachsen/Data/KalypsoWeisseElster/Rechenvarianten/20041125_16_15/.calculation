@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NAControl fid="" xmlns="org.kalypso.na.control" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="project:/.model/schema/control.xsd">
+  <startsimulation>2004-11-20T16:00:00</startsimulation>
+  <startforecast>2004-11-25T16:00:00</startforecast>
+  <editor>sm9</editor>
+  <description>- bitte ausfüllen -</description>
+  <comment>- bitte ausfüllen -</comment>
+  <calctime>2004-11-25T16:15:00</calctime>
+</NAControl>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>Q Neukirchen</name>
+    <metadataList>
+        <metadata name="Name" value="Q Neukirchen"/>
+        <metadata name="Vorhersage" value="25.11.2004 15:00:00;27.11.2004 15:00:00"/>
+        <metadata name="WQ-Parameter" value="&lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot; &gt;&lt;set&gt;&lt;validity  format=&quot;dd.MM.yyyy&quot; &gt;01.09.1995&lt;/validity&gt;&lt;params&gt;&lt;w1&gt;2.49&lt;/w1&gt;&lt;lnk1&gt;-7.68539&lt;/lnk1&gt;&lt;k2&gt;2.26777&lt;/k2&gt;&lt;wgr&gt;33&lt;/wgr&gt;&lt;/params&gt;&lt;params&gt;&lt;w1&gt;-81.89&lt;/w1&gt;&lt;lnk1&gt;-35.27805&lt;/lnk1&gt;&lt;k2&gt;7.45751&lt;/k2&gt;&lt;wgr&gt;57&lt;/wgr&gt;&lt;/params&gt;&lt;params&gt;&lt;w1&gt;-6.03&lt;/w1&gt;&lt;lnk1&gt;-5.01094&lt;/lnk1&gt;&lt;k2&gt;1.57319&lt;/k2&gt;&lt;/params&gt;&lt;/set&gt;&lt;/wechmann&gt;"/>
+    </metadataList>
+    <axis datatype="TYPE=double" key="false" name="Q" type="Q" unit="m^3/s">
+        <valueArray separator=";"/>
+    </axis>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";"/>
+    </axis>
+</observation>
+

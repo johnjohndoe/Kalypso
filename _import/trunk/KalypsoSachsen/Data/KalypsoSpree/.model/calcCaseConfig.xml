@@ -86,9 +86,9 @@
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
 			<argument name="feature" value="Flutung"/>
-			<argument name="sourceObservation1" value="Abgabe_eingang"/>
+			<argument name="sourceObservation1" value="Abfluss_eingang"/>
 			<argument name="rangeMode1" value="start-stop"/>
-			<argument name="targetObservation" value="Abgabe"/>
+			<argument name="targetObservation" value="Abfluss"/>
 			<argument name="targetFolder" value=":calcdir:"/>
 			<argument name="startsim" value=":startsim:"/>
 			<argument name="startforecast" value=":startforecast:"/>
@@ -98,8 +98,8 @@
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
 			<argument name="feature" value="Zufluss"/>
-			<argument name="sourceObservation1" value="Zugabe_eingang"/>
-			<argument name="targetObservation" value="Zugabe"/>
+			<argument name="sourceObservation1" value="Abfluss_eingang"/>
+			<argument name="targetObservation" value="Abfluss"/>
 			<argument name="rangeMode1" value="start-stop"/>
 			<argument name="targetFolder" value=":calcdir:"/>
 			<argument name="startsim" value=":startsim:"/>

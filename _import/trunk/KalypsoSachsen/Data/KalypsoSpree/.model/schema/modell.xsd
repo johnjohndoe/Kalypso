@@ -15,8 +15,7 @@
 				<sequence>
 					<element name="PegelCollectionAssociation" type="spree:PegelCollectionAssociationType"/>
 					<element name="TalsperreCollectionAssociation" type="spree:TalsperreCollectionAssociationType"/>
-					<element name="FlutungCollectionAssociation" type="spree:FlutungCollectionAssociationType"/>
-					<element name="ZuflussCollectionAssociation" type="spree:ZuflussCollectionAssociationType"/>
+					<element name="VorgabeCollectionAssociation" type="spree:VorgabeCollectionAssociationType"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -103,6 +102,7 @@
 			</extension>
 		</complexContent>
 	</complexType>
+	
 	<complexType name="TalsperreCollectionAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
@@ -148,87 +148,63 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="FlutungCollectionAssociationType">
+	
+	<complexType name="VorgabeCollectionAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="spree:FlutungCollection"/>
+					<element ref="spree:VorgabeCollection"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="FlutungCollection" type="spree:FlutungCollectionType"/>
-	<complexType name="FlutungCollectionType">
+	<element name="VorgabeCollection" type="spree:VorgabeCollectionType"/>
+	<complexType name="VorgabeCollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="FlutungMember" type="spree:FlutungAssociationType" minOccurs="4" maxOccurs="4"/>
+					<element name="VorgabeMember" type="spree:VorgabeAssociationType" minOccurs="5" maxOccurs="5"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="FlutungAssociationType">
+	<complexType name="VorgabeAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="spree:Flutung"/>
+					<element ref="spree:_Vorgabe"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="Flutung" type="spree:_FlutungType" substitutionGroup="gml:_Feature"/>
+	<element name="_Vorgabe" abstract="true" type="spree:_VorgabeType" substitutionGroup="gml:_Feature"/>
+	<complexType name="_VorgabeType">
+		<complexContent>
+			<extension base="spree:EmptyFeatureBaseType">
+				<sequence>
+					<element name="Name" type="string"/>
+					<element name="Ort" type="gml:PointPropertyType"/>
+					<element name="Abfluss_eingang" type="spree:TimeseriesLinkType"/>
+					<element name="Abfluss" type="spree:TimeseriesLinkType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="Flutung" type="spree:_VorgabeType" substitutionGroup="spree:_Vorgabe"/>
 	<complexType name="_FlutungType">
 		<complexContent>
-			<extension base="spree:EmptyFeatureBaseType">
+			<extension base="spree:_VorgabeType">
 				<sequence>
-					<element name="Name" type="string"/>
-					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Abgabe_eingang" type="spree:TimeseriesLinkType"/>
-					<element name="Abgabe" type="spree:TimeseriesLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="ZuflussCollectionAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="spree:ZuflussCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="ZuflussCollection" type="spree:ZuflussCollectionType"/>
-	<complexType name="ZuflussCollectionType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
-				<sequence>
-				<!--  max occurs = 2, damit die deserialisierung eine FeatureList gibt, eigentlich nur eines -->
-					<element name="ZuflussMember" type="spree:ZuflussAssociationType" minOccurs="1" maxOccurs="2"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<complexType name="ZuflussAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="spree:Zufluss"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="Zufluss" type="spree:_ZuflussType" substitutionGroup="gml:_Feature"/>
+
+	<element name="Zufluss" type="spree:_ZuflussType" substitutionGroup="spree:_Vorgabe"/>
 	<complexType name="_ZuflussType">
 		<complexContent>
-			<extension base="spree:EmptyFeatureBaseType">
-				<sequence>
-					<element name="Name" type="string"/>
-					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Zugabe_eingang" type="spree:TimeseriesLinkType"/>
-					<element name="Zugabe" type="spree:TimeseriesLinkType"/>
-				</sequence>
-			</extension>
+			<extension base="spree:_VorgabeType"/>
 		</complexContent>
 	</complexType>
 </schema>
