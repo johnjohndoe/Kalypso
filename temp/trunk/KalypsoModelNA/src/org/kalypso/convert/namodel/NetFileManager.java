@@ -417,7 +417,7 @@ public class NetFileManager extends AbstractManager
 
       downStreamElement.addUpStream( upStreamElement );
     }
-
+    // TODO check dependency storagechannel -> overflownode
     //   dependency: catchment -> catchment
     Feature[] catchmentFEs = workspace.getFeatures( m_conf.getCatchemtFT() );
     for( int i = 0; i < catchmentFEs.length; i++ )

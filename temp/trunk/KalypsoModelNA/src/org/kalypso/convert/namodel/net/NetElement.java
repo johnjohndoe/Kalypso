@@ -291,8 +291,8 @@ public class NetElement
         knotO = features[i];
         continue;
       }
-      m_calculated = true;
     }
+    m_calculated = true;
     // collect related catchments
     final List catchmentList = new ArrayList();
     final Feature[] Cfeatures = m_workspace.getFeatures( this.m_manager.m_conf.getCatchemtFT() );

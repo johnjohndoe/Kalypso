@@ -84,15 +84,15 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
 
     // check donwstream
 
-    final Feature donwnStramChannel = netElement.getChannelsBelowDownStreamNode();
+    final Feature downStreamChannel = netElement.getChannelsBelowDownStreamNode();
     final List downStreamNetElements = netElement.getDownStreamNetElements();
     boolean needToComplete = true;
     for( Iterator iter = downStreamNetElements.iterator(); iter.hasNext(); )
     {
-      final NetElement element = (NetElement)iter.next();
-      if( element.getChannel() == donwnStramChannel && element.isCalculated() )
+      final NetElement childElement = (NetElement)iter.next();
+      if( childElement.getChannel() == downStreamChannel && childElement.isCalculated() &&!childElement.resultExists() )
       {
-        visit( element );
+        visit( childElement );
         needToComplete = false;
       }
     }
