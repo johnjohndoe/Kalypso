@@ -437,8 +437,8 @@ public class NetFileManager extends AbstractManager
       final FeatureProperty createResultProp = FeatureFactory.createFeatureProperty(
           "generateResult", new Boolean( true ) );
       rootNodeFE.setProperty( createResultProp );
-      //      addRootNode( workspace, rootNodeFE, rootNetElements, netElements,
-      // channelFEs );
+      addRootNode( workspace, rootNodeFE, rootNetElements, netElements,
+       channelFEs );
     }
     else
       for( int i = 0; i < nodeFEs.length; i++ )

@@ -221,8 +221,8 @@ public class NaModelCalcJob extends AbstractCalcJob
     CalibarationConfig config = new CalibarationConfig();
     config.addFromNAControl( controlFeature );
 
-    Document modelDoc = XMLHelper.getAsDOM( inputModellURL );
-
+    Document modelDoc = XMLHelper.getAsDOM( inputModellURL ,false);
+    
     ModelVary.initializeModel( modelDoc, config.getCalContexts() );
 
     // TODO: take charset from Document

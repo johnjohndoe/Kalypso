@@ -16,7 +16,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.deegree.xml.XMLTools;
+import org.deegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
@@ -147,12 +149,14 @@ public class XMLServiceTools
     StreamResult result = new StreamResult( fw );
     t.transform( src, result );
   }
-
+  // TODO
   //method returns nodeList to a given query
-  public static NodeList getXPath( String xPathQuery, Node domNode ) throws TransformerException
+  public static NodeList getXPath( String xPathQuery, Document domNode ) throws TransformerException
   {
     NodeList nl = null;
-    nl = org.apache.xpath.XPathAPI.selectNodeList( domNode, xPathQuery );
+    Element documentElement = domNode.getDocumentElement();
+//    String info=XMLHelper.toString(documentElement);
+    nl = org.apache.xpath.XPathAPI.selectNodeList( domNode, xPathQuery ,documentElement);
     return nl;
   }
 
