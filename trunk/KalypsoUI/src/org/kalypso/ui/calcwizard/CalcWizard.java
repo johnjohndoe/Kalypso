@@ -65,6 +65,7 @@ public class CalcWizard implements IWizard, IProjectProvider
   public void addPages()
   {
     m_addCalcCasePage = new AddCalcCasePage( "addCalcCasePage", "Vorhersagen erzeugen", ImageProvider.IMAGE_ICON_GTT );
+    
     m_controlPage = new SteuerparameterWizardPage( this, true );
     
     m_addCalcCasePage.addChoice( new AddNewCalcCaseChoice( "einen neuen Rechenfall erzeugen", m_project, m_addCalcCasePage ) );
@@ -253,7 +254,9 @@ public class CalcWizard implements IWizard, IProjectProvider
         {
           // vielleicht sollte das hier auch erst nach den Steuerparametern passieren?
           m_addCalcCasePage.doNext( monitor );
+          
           m_controlPage.setUpdate( m_addCalcCasePage.shouldUpdate() );
+          m_controlPage.setFolder( m_addCalcCasePage.getCurrentCalcCase() );
         }
         else if( page == m_controlPage )
         {

@@ -26,6 +26,7 @@ import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.MapPanelHelper;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -161,7 +162,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_mapModell.addModellListener( this );
 
     m_mapPanel = new MapPanel( this, crs, SELECTION_ID );
-    // TODO: create widgets!
+    MapPanelHelper.createWidgetsForMapPanel( parent.getShell(), m_mapPanel );
+    
     m_boundingBox = GisTemplateHelper.getBoundingBox( gisview );
     final Composite mapComposite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
     

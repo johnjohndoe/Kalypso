@@ -3,6 +3,7 @@ package org.kalypso.ui.editor.mapeditor;
 import java.awt.Frame;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URL;
 
 import org.deegree.model.geometry.GM_Envelope;
@@ -13,7 +14,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
@@ -21,15 +21,8 @@ import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.widgets.EditFeatureWidget;
+import org.kalypso.ogc.gml.map.MapPanelHelper;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
-import org.kalypso.ogc.gml.widgets.CreateGeometryFeatureWidget;
-import org.kalypso.ogc.gml.widgets.PanToWidget;
-import org.kalypso.ogc.gml.widgets.SelectWidget;
-import org.kalypso.ogc.gml.widgets.ToggleSelectWidget;
-import org.kalypso.ogc.gml.widgets.UnSelectWidget;
-import org.kalypso.ogc.gml.widgets.ZoomInByRectWidget;
-import org.kalypso.ogc.gml.widgets.ZoomInWidget;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -80,18 +73,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     super.dispose();
   }
-  
-  private void createWidgets( final MapPanel panel, final Shell shell )
-  {
-    panel.setWidget( MapPanel.WIDGET_ZOOM_IN, new ZoomInWidget() );
-    panel.setWidget( MapPanel.WIDGET_ZOOM_IN_RECT, new ZoomInByRectWidget() );
-    panel.setWidget( MapPanel.WIDGET_PAN, new PanToWidget() );
-    panel.setWidget( MapPanel.WIDGET_EDIT_FEATURE, new EditFeatureWidget( shell ) );
-    panel.setWidget( MapPanel.WIDGET_CREATE_FEATURE, new CreateGeometryFeatureWidget() );
-    panel.setWidget( MapPanel.WIDGET_SELECT, new SelectWidget() );
-    panel.setWidget( MapPanel.WIDGET_UNSELECT, new UnSelectWidget() );
-    panel.setWidget( MapPanel.WIDGET_TOGGLE_SELECT, new ToggleSelectWidget() );
-  }
 
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
@@ -115,6 +96,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     if( m_mapModell == null )
       return;
 
+    ByteArrayInputStream bis = null;
     try
     {
       monitor.beginTask( "Kartenvorlage speichern", 2000 );
@@ -126,7 +108,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
       GisTemplateHelper.saveGisMapView( modellTemplate, bos );
 
-      final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+      bis = new ByteArrayInputStream( bos.toByteArray() );
       bos.close();
       monitor.worked( 1000 );
 
@@ -135,10 +117,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
         file.setContents( bis, false, true, monitor );
       else
         file.create( bis, false, monitor );
-
-      // TODO close in finally block?
-      bis.close();
-      monitor.done();
     }
     catch( final CoreException e )
     {
@@ -150,6 +128,21 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       
       throw new CoreException( KalypsoGisPlugin.createErrorStatus( "XML-Vorlagendatei konnte nicht erstellt werden.", e ) );
     }
+    finally
+    {
+      monitor.done();
+      
+      if( bis != null )
+        try
+        {
+          bis.close();
+        }
+        catch( IOException e1 )
+        {
+          // never occurs with a byteinputstream
+          e1.printStackTrace();
+        }
+    }
 
   }
 
@@ -160,7 +153,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   {
     super.createPartControl( parent );
 
-    createWidgets( myMapPanel, parent.getShell() );
+    MapPanelHelper.createWidgetsForMapPanel( parent.getShell(), myMapPanel );
     
     // create MapPanel
     final Frame virtualFrame = SWT_AWT
