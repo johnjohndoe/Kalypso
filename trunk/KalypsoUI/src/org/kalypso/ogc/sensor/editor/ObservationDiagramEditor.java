@@ -7,13 +7,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.data.time.TimeSeriesCollection;
 import org.kalypso.editor.AbstractEditorPart;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.template.DiagramViewTemplate;
 import org.kalypso.ogc.sensor.template.ITemplateListener;
+import org.kalypso.util.factory.FactoryException;
 
 /**
  * Observation Diagram Editor.
@@ -22,11 +22,9 @@ import org.kalypso.ogc.sensor.template.ITemplateListener;
  */
 public class ObservationDiagramEditor extends AbstractEditorPart implements ITemplateListener
 {
-  private JFreeChart m_chart = null;
-
-  protected final TimeSeriesCollection m_tsCol = new TimeSeriesCollection();
-
   private DiagramViewTemplate m_template = null;
+
+  private Frame m_vFrame = null;
 
   /**
    * @see org.kalypso.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -35,18 +33,8 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements ITem
   {
     super.createPartControl( parent );
 
-    m_chart = ChartFactory
-        .createTimeSeriesChart( "", "Datum", "Wert", m_tsCol, false, false, false );
-
-    ChartPanel chartPanel = new ChartPanel( m_chart );
-    chartPanel.setMouseZoomable( true, false );
-
     // SWT-AWT Brücke für die Darstellung von JFreeChart
-    Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
-
-    vFrame.setVisible( true );
-    chartPanel.setVisible( true );
-    vFrame.add( chartPanel );
+    m_vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
   }
 
   /**
@@ -59,7 +47,8 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements ITem
   }
 
   /**
-   * @see org.kalypso.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.ui.IFileEditorInput)
+   * @see org.kalypso.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
+   *      org.eclipse.ui.IFileEditorInput)
    */
   protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
@@ -72,6 +61,21 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements ITem
    */
   public void onTemplateLoaded()
   {
-     // TODO
+    try
+    {
+      JFreeChart chart = ChartFactory.createObservationChart( m_template );
+
+      ChartPanel chartPanel = new ChartPanel( chart );
+      chartPanel.setMouseZoomable( true, false );
+      chartPanel.setVisible( true );
+      
+      m_vFrame.add( chartPanel );
+      m_vFrame.setVisible( true );
+    }
+    catch( FactoryException e )
+    {
+      // TODO handling
+      throw new RuntimeException( e );
+    }
   }
 }

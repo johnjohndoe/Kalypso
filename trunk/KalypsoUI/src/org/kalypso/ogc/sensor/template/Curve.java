@@ -7,7 +7,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationProvider;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.DefaultMapping;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
@@ -30,7 +29,7 @@ public class Curve implements ICurve, IPoolListener
   private final static Object DUMMY_OBJECT = new Object();
 
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool(
-      IObservationProvider.class );
+      IObservation.class );
 
   private IObservation m_obs = null;
 
