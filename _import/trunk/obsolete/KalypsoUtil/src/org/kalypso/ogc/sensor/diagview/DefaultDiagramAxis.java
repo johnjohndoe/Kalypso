@@ -14,14 +14,16 @@ public class DefaultDiagramAxis implements IDiagramAxis
   private final String m_direction;
   private final String m_position;
   private final boolean m_isInverted;
+  private final String m_dataType;
 
   public DefaultDiagramAxis( final TypeAxis axis )
   {
-    this( axis.getLabel(), axis.getUnit(), axis.getDirection(), axis.getPosition(), axis.isInverted() );
+    this( axis.getDatatype(), axis.getLabel(), axis.getUnit(), axis.getDirection(), axis.getPosition(), axis.isInverted() );
   }
   
-  public DefaultDiagramAxis( final String label, final String unit, final String direction, final String position, final boolean isInverted )
+  public DefaultDiagramAxis( final String dataType, final String label, final String unit, final String direction, final String position, final boolean isInverted )
   {
+    m_dataType = dataType;
     m_label = label;
     m_unit = unit;
     m_direction = direction;
@@ -67,5 +69,13 @@ public class DefaultDiagramAxis implements IDiagramAxis
   public boolean isInverted()
   {
     return m_isInverted;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#getDataType()
+   */
+  public String getDataType()
+  {
+    return m_dataType;
   }
 }

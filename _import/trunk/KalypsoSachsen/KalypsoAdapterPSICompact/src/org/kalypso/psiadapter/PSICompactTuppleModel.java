@@ -6,7 +6,6 @@ import java.util.Date;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.psiadapter.util.ArchiveDataDateComparator;
-import org.kalypso.util.status.MaskedNumber;
 
 import de.psi.go.lhwz.PSICompact.ArchiveData;
 
@@ -18,8 +17,12 @@ import de.psi.go.lhwz.PSICompact.ArchiveData;
 public class PSICompactTuppleModel implements ITuppleModel
 {
   private final ArchiveData[] m_data;
-  private final MaskedNumber[] m_values;
-  private final String[] m_statuses;
+
+  private final Double[] m_values;
+
+  private final String[] m_psiStati;
+
+  private final Integer[] m_kalypsoStati;
 
   /**
    * Constructor with ArchiveData[]
@@ -27,10 +30,11 @@ public class PSICompactTuppleModel implements ITuppleModel
   public PSICompactTuppleModel( final ArchiveData[] data )
   {
     m_data = data;
-    m_values = new MaskedNumber[m_data.length];
-    m_statuses = new String[m_data.length];
+    m_values = new Double[m_data.length];
+    m_psiStati = new String[m_data.length];
+    m_kalypsoStati = new Integer[m_data.length];
   }
-  
+
   /**
    * Constructor with another ITuppleModel
    */
@@ -38,21 +42,22 @@ public class PSICompactTuppleModel implements ITuppleModel
   {
     this( constructData( model ) );
   }
-  
+
   /**
    * Helper that creates ArchiveData[] having a ITuppleModel
    */
   private final static ArchiveData[] constructData( ITuppleModel model )
   {
-    ArchiveData[] data = new ArchiveData[ model.getCount() ];
-    
+    ArchiveData[] data = new ArchiveData[model.getCount()];
+
     for( int i = 0; i < data.length; i++ )
     {
-      data[i] = new ArchiveData( (Date)model.getElement(i, PSICompactAxis.TYPE_DATE),
-          PSICompactFactory.statusTranslate( model.getElement(i, PSICompactAxis.TYPE_STATUS).toString() ),
-          ((Double)model.getElement(i, PSICompactAxis.TYPE_VALUE)).doubleValue() );
+      data[i] = new ArchiveData( (Date)model.getElement( i, PSICompactAxis.TYPE_DATE ),
+          PSICompactFactory.statusTranslate( model.getElement( i, PSICompactAxis.TYPE_STATUS )
+              .toString() ), ( (Double)model.getElement( i, PSICompactAxis.TYPE_VALUE ) )
+              .doubleValue() );
     }
-    
+
     return data;
   }
 
@@ -61,36 +66,44 @@ public class PSICompactTuppleModel implements ITuppleModel
     return m_data;
   }
 
-  private MaskedNumber getValue( int index )
+  private Double getValue( int index )
   {
-    if( m_values[ index ] == null )
-      m_values[ index ] = new MaskedNumber( m_data[index].getValue(), PSICompactFactory.statusToMask( m_data[index].getStatus() ) );
+    if( m_values[index] == null )
+      m_values[index] = new Double( m_data[index].getValue() );
 
-    return m_values[ index ];
+    return m_values[index];
   }
 
   private String getStatus( int index )
   {
-    if( m_statuses[ index ]== null )
-      m_statuses[ index ] = PSICompactFactory.statusToString( m_data[index].getStatus() );
+    if( m_psiStati[index] == null )
+      m_psiStati[index] = PSICompactFactory.statusToString( m_data[index].getStatus() );
 
-    return m_statuses[ index ];
+    return m_psiStati[index];
+  }
+
+  private Integer getKalypsoStatus( int index )
+  {
+    if( m_kalypsoStati[index] == null )
+      m_kalypsoStati[index] = PSICompactFactory.statusToMask( m_data[index].getStatus() );
+
+    return m_kalypsoStati[index];
   }
 
   private void setStatus( int index, String status )
   {
-    m_statuses[ index ] = status;
-    
+    m_psiStati[index] = status;
+
     m_data[index].setStatus( Integer.valueOf( status ).intValue() );
   }
 
-  private void setValue( int index, MaskedNumber value )
+  private void setValue( int index, Double value )
   {
-    m_values[ index ] = value;
-    
+    m_values[index] = value;
+
     m_data[index].setValue( value.doubleValue() );
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, int)
    */
@@ -101,16 +114,19 @@ public class PSICompactTuppleModel implements ITuppleModel
     case 0:
       return m_data[index].getTimestamp();
     case 1:
-      return getValue(index);
+      return getValue( index );
     case 2:
-      return getStatus(index);
+      return getStatus( index );
+    case 3:
+      return getKalypsoStatus( index );
     default:
       throw new IllegalArgumentException( "Position " + position + " ist ungültig" );
     }
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, int)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
+   *      int)
    */
   public void setElement( int index, Object element, int position )
   {
@@ -119,9 +135,11 @@ public class PSICompactTuppleModel implements ITuppleModel
     case 0:
       m_data[index].setTimestamp( (Date)element );
     case 1:
-      setValue( index, (MaskedNumber)element );
+      setValue( index, (Double)element );
     case 2:
       setStatus( index, (String)element );
+    case 3:
+      m_kalypsoStati[index] = (Integer)element;
     default:
       throw new IllegalArgumentException( "Position " + position + " ist ungültig" );
     }
@@ -136,13 +154,14 @@ public class PSICompactTuppleModel implements ITuppleModel
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
+   *      org.kalypso.ogc.sensor.IAxis)
    */
   public int indexOf( Object element, IAxis axis )
   {
     // wir gehen davon aus dass m_data sortiert ist! Sollte eigentlich der Fall
     // sein da es sich um eine Zeitreihe handelt.
-    
+
     return Arrays.binarySearch( m_data, element, new ArchiveDataDateComparator() );
-  } 
+  }
 }

@@ -2,7 +2,9 @@ package org.kalypso.ogc.sensor.tableview.template;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -37,23 +39,24 @@ public class Rules
   /**
    * Finds a rule that contains the mask
    */
-  public RenderingRule findRule( final int mask ) throws NoSuchElementException
+  public RenderingRule[] findRules( final int mask ) throws NoSuchElementException
   {
-    RenderingRule r = (RenderingRule)m_map.get( new Integer( mask ) );
+    RenderingRule[] r = (RenderingRule[])m_map.get( new Integer( mask ) );
 
     if( r != null )
       return r;
 
+    List lrules = new ArrayList();
+    
     for( int i = 0; i < m_rules.length; i++ )
     {
       if( m_rules[i].contains( mask ) )
-      {
-        m_map.put( new Integer( mask ), m_rules[i] );
-
-        return m_rules[i];
-      }
+        lrules.add( m_rules[i] );
     }
 
-    throw new NoSuchElementException();
+    r = (RenderingRule[])lrules.toArray( new RenderingRule[0]);
+    m_map.put( new Integer( mask ), r );
+    
+    return r;
   }
 }

@@ -102,7 +102,8 @@ public class DefaultDiagramTemplate extends AbstractTemplateAdapter implements I
     
     if( da == null )
     {
-      da = new DefaultDiagramAxis( axis.getLabel(), axis.getUnit(), direction, position, isInverted );
+      // TODO: data type ""
+      da = new DefaultDiagramAxis( "", axis.getLabel(), axis.getUnit(), direction, position, isInverted );
       
       axisMap.put( axis.getUnit(), da );
     }

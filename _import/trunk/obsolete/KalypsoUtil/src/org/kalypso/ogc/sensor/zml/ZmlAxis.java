@@ -8,8 +8,8 @@ import java.util.Properties;
 import org.kalypso.java.properties.PropertiesHelper;
 import org.kalypso.ogc.sensor.DefaultAxis;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.zml.values.IZmlValuesLoader;
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
+import org.kalypso.ogc.sensor.zml.values.IZmlValuesLoader;
 import org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel;
 import org.kalypso.ogc.sensor.zml.values.ZmlValueFactory;
 import org.kalypso.util.factory.FactoryException;
@@ -57,12 +57,7 @@ public class ZmlAxis extends DefaultAxis
 
     try
     {
-//      System.out.println( "axis-type:" + m_type );
-//      System.out.println( "axis-format:" + m_format );
-      
       m_parser = getParserFactory().createParser( m_type, m_format );
-      
-//      System.out.println( "axis-parser:" + m_parser );
     }
     catch( FactoryException e )
     {
@@ -71,7 +66,15 @@ public class ZmlAxis extends DefaultAxis
 
     m_dataClass = m_parser.getObjectClass();
   }
-
+  
+  /**
+   * @see org.kalypso.ogc.sensor.DefaultAxis#getDataClass()
+   */
+  public Class getDataClass()
+  {
+    return m_parser.getObjectClass();
+  }
+  
   public AxisType getAxisType()
   {
     return m_axisType;

@@ -12,7 +12,7 @@ import javax.swing.table.TableModel;
 
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.tableview.template.RenderingRule;
-import org.kalypso.util.status.MaskedNumber;
+
 
 /**
  * @author schlienger
@@ -31,35 +31,41 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
     final JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected,
         hasFocus, row, column );
 
-    final MaskedNumber mn = (MaskedNumber)value;
+    final Number n = (Number)value;
     
-    if( mn == null )
+    if( n == null )
       return label;
     
     TableModel tm = table.getModel();
     if( tm instanceof ObservationTableModel )
     {
-      final RenderingRule r = ((ObservationTableModel)tm).getRules().findRule( mn.getMask() );
+      ObservationTableModel otm = (ObservationTableModel)tm;
+      
+      final RenderingRule[] r = otm.findRules( row, column );
 
-      if( r != null )
+      String ttext = "";
+      
+      for( int i = 0; i < r.length; i++ )
       {
-        final Font f = r.getFont();
+        final Font f = r[i].getFont();
         if( f != null )
           label.setFont( f );
         
-        label.setToolTipText( r.getTooltipText() );
+        ttext += r[i].getTooltipText();
         
-        final Color fgc = r.getForegroundColor();
+        final Color fgc = r[i].getForegroundColor();
         if( fgc != null )
           label.setForeground( fgc );
         
-        final Color bgc = r.getBackgroundColor();
+        final Color bgc = r[i].getBackgroundColor();
         if( bgc != null )
-          label.setBackground( bgc );
+          label.setBackground( bgc );        
       }
+      
+      label.setToolTipText( ttext );
     }
 
-    label.setText( nf.format( mn.doubleValue() ) );
+    label.setText( nf.format( n.doubleValue() ) );
 
     return label;
   }

@@ -3,9 +3,11 @@ package org.kalypso.ogc.sensor.zml;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.ogc.sensor.DefaultTarget;
@@ -36,13 +38,13 @@ public class ZmlObservation implements IObservation
 
   private Metadata m_metadata = null;
 
-  private ZmlAxis[] m_axisList = null;
+  private ArrayList m_axisList = null;
 
   private DefaultTarget m_target = null;
 
   private ZmlTuppleModel m_model = null;
 
-  private final static ObjectFactory m_zmlObjectFactory = new ObjectFactory();
+  protected final static ObjectFactory m_zmlObjectFactory = new ObjectFactory();
 
   private final String m_sourceName;
 
@@ -131,11 +133,11 @@ public class ZmlObservation implements IObservation
       if( obs.getMetadataList() != null )
       {
         List mdList = obs.getMetadataList().getMetadata();
-  
+
         for( Iterator it = mdList.iterator(); it.hasNext(); )
         {
           MetadataType md = (MetadataType)it.next();
-  
+
           m_metadata.put( md.getName(), md.getValue() );
         }
       }
@@ -155,15 +157,15 @@ public class ZmlObservation implements IObservation
     {
       List tmpList = getObservation().getAxis();
 
-      m_axisList = new ZmlAxis[tmpList.size()];
+      m_axisList = new ArrayList( tmpList.size() );
 
-      for( int i = 0; i < m_axisList.length; i++ )
+      for( int i = 0; i < m_axisList.size(); i++ )
       {
         AxisType tmpAxis = (AxisType)tmpList.get( i );
 
         try
         {
-          m_axisList[i] = new ZmlAxis( tmpAxis, i );
+          m_axisList.add( new ZmlAxis( tmpAxis, i ) );
         }
         catch( SensorException e )
         {
@@ -173,7 +175,37 @@ public class ZmlObservation implements IObservation
       }
     }
 
-    return m_axisList;
+    return (ZmlAxis[])m_axisList.toArray( new ZmlAxis[0] );
+  }
+
+  /**
+   * Adds an axis to this observation. Convenience method that can be used by
+   * subclasses.
+   * 
+   * @throws SensorException
+   */
+  protected void addAxis( final String name, final String unit, final String dataType,
+      final String separator, final String values ) throws SensorException
+  {
+    try
+    {
+      AxisType at = m_zmlObjectFactory.createAxisType();
+      at.setName( name );
+      at.setUnit( unit );
+      at.setDatatype( dataType );
+
+      AxisType.ValueArrayType vat = m_zmlObjectFactory.createAxisTypeValueArrayType();
+      vat.setSeparator( separator );
+      vat.setValue( values );
+
+      at.setValueArray( vat );
+
+      m_axisList.add( new ZmlAxis( at, m_axisList.size() ) );
+    }
+    catch( JAXBException e )
+    {
+      throw new SensorException( e );
+    }
   }
 
   /**
@@ -185,7 +217,7 @@ public class ZmlObservation implements IObservation
     {
       getAxisList();
 
-      m_model = new ZmlTuppleModel( m_url, m_axisList );
+      m_model = new ZmlTuppleModel( m_url, (ZmlAxis[])getAxisList() );
     }
 
     return m_model;

@@ -22,7 +22,8 @@ public class ParserFactory
    */
   public ParserFactory( final Properties props, final ClassLoader cl )
   {
-    m_objFactory = new ConfigurableCachableObjectFactory( props, true, cl );
+    // cache not active because with use arguments when instanciating the parser
+    m_objFactory = new ConfigurableCachableObjectFactory( props, false, cl );
   }
 
   /**

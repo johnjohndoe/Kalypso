@@ -11,6 +11,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.status.MaskedNumber;
 
@@ -26,23 +27,26 @@ public class ObservationTimeSeries extends TimeSeriesCollection
     super();
 
     IAxis dateAxis = ObservationUtilities.findAxis( obs, Date.class )[0];
-    IAxis[] valueAxis = ObservationUtilities.findAxis( obs, MaskedNumber.class );
+    IAxis[] valueAxis = ObservationUtilities.findAxis( obs, Number.class );
 
     try
     {
       for( int i = 0; i < valueAxis.length; i++ )
       {
-        TimeSeries s = new TimeSeries( valueAxis[i].getLabel(), FixedMillisecond.class );
-
-        ITuppleModel model = obs.getValues( args );
-
-        for( int j = 0; j < model.getCount(); j++ )
+        if( !KalypsoStatusUtils.isStatusAxis( valueAxis[i] ) )
         {
-          s.addOrUpdate( new FixedMillisecond( (Date)model.getElement( j, dateAxis.getPosition() ) ),
-              ((MaskedNumber)model.getElement( j, valueAxis[i].getPosition() ) ).doubleValue() );
+          TimeSeries s = new TimeSeries( valueAxis[i].getLabel(), FixedMillisecond.class );
+  
+          ITuppleModel model = obs.getValues( args );
+  
+          for( int j = 0; j < model.getCount(); j++ )
+          {
+            s.addOrUpdate( new FixedMillisecond( (Date)model.getElement( j, dateAxis.getPosition() ) ),
+                ((MaskedNumber)model.getElement( j, valueAxis[i].getPosition() ) ).doubleValue() );
+          }
+  
+          addSeries( s );
         }
-
-        addSeries( s );
       }
     }
     catch( NoSuchElementException e )

@@ -4,7 +4,6 @@ package org.kalypso.ogc.sensor.diagview;
  * An axis in a diagram
  * 
  * @author schlienger
- *
  */
 public interface IDiagramAxis
 {
@@ -26,4 +25,6 @@ public interface IDiagramAxis
   public String getPosition();
   
   public boolean isInverted();
+
+  public String getDataType();
 }

@@ -23,6 +23,7 @@
 	<!-- type Axis -->
 	<xs:complexType name="typeAxis">
 		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="datatype" type="xs:string" use="required"/>
 		<xs:attribute name="label" type="xs:string" use="required"/>
 		<xs:attribute name="unit" type="xs:string" use="optional" default=""/>
 		<xs:attribute name="direction" type="myns:typeDirection" use="required"/>

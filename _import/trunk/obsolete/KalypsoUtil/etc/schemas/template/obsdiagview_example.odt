@@ -6,8 +6,8 @@
 	<title>Mein Diagramm</title>
 	<legend title="Legend" visible="true"/>
 
-	<axis id="d" label="Datum" unit="" direction="horizontal" position="bottom" />
-	<axis id="w" label="Wert" unit="m" direction="vertical" position="left" />
+	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
+	<axis id="w" datatype="xs:double" label="Wert" unit="m" direction="vertical" position="left" />
 
    	<curve id="C1" name="Pegel1" linktype="zml" xlink:type="simple" xlink:href="TYPE=relative#LOCATION=zml/Beispiel/beispiel.zml" xlink:actuate="onRequest">
 	   	<mapping observation-axis="Datum" diagram-axis="d" />

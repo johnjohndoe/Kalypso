@@ -9,7 +9,9 @@ import org.kalypso.ogc.sensor.DefaultAxis;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.ogc.sensor.tableview.template.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.template.Rules;
 import org.kalypso.util.runtime.IVariableArguments;
 
@@ -40,6 +42,7 @@ public class ObservationTableModel extends AbstractTableModel
 
   /**
    * Constructor with columns. Calls setColumns( ITableViewColumn[] ).
+   * 
    * @throws SensorException
    */
   public ObservationTableModel( ITableViewColumn[] columns ) throws SensorException
@@ -56,7 +59,8 @@ public class ObservationTableModel extends AbstractTableModel
    *          the arguments that will be used when fetching the values
    * @throws SensorException
    */
-  public void setColumns( final ITableViewColumn[] columns, final IVariableArguments args ) throws SensorException
+  public void setColumns( final ITableViewColumn[] columns, final IVariableArguments args )
+      throws SensorException
   {
     m_columns = columns;
     m_args = args;
@@ -64,7 +68,7 @@ public class ObservationTableModel extends AbstractTableModel
     // reset
     m_cc = null;
     m_ccAxis = null;
-    
+
     if( m_columns != null )
     {
       // the common column, merges all the values from the common axes
@@ -89,10 +93,10 @@ public class ObservationTableModel extends AbstractTableModel
           m_cc.add( sharedModel.getElement( row, sharedAxis.getPosition() ) );
       }
     }
-    
+
     fireTableStructureChanged();
   }
-  
+
   /**
    * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
    */
@@ -156,15 +160,14 @@ public class ObservationTableModel extends AbstractTableModel
 
       if( index == -1 )
         return null;
-      
+
       // Now we can retrieve the element using value axis
       return values.getElement( index, m_columns[columnIndex - 1].getValueAxis().getPosition() );
     }
     catch( SensorException e )
     {
       // TODO: handling
-      e.printStackTrace();
-      return null;
+      throw new RuntimeException( e );
     }
   }
 
@@ -211,9 +214,30 @@ public class ObservationTableModel extends AbstractTableModel
   {
     m_rules = rules;
   }
-  
-  public Rules getRules()
+
+  /**
+   * 
+   */
+  public RenderingRule[] findRules( int row, int column )
   {
-    return m_rules;
+    final String kStatusCol = KalypsoStatusUtils.getStatusAxisLabelFor( m_columns[column - 1].getValueAxis() );
+    
+    final IAxis valueAxis = findValueAxis( kStatusCol );
+    
+    return m_rules.findRules( ((Integer)getValueAt( row, valueAxis.getPosition() + 1 )).intValue() );
+  }
+ 
+  /**
+   * 
+   */
+  private IAxis findValueAxis( final String name )
+  {
+    for( int i = 0; i < m_columns.length; i++ )
+    {
+      if( m_columns[i].getValueAxis().getLabel().equals( name ) )
+        return m_columns[i].getValueAxis();
+    }
+    
+    return null;
   }
 }

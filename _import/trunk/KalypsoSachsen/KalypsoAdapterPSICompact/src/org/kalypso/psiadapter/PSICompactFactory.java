@@ -31,6 +31,8 @@ public final class PSICompactFactory
 
   private final static Map m_axes = new Hashtable();
 
+  private static final Integer m_zero = new Integer(0);
+
   /**
    * Returns the connection to the PSI-Interface implementation. This method is
    * only visible to the package.
@@ -196,31 +198,31 @@ public final class PSICompactFactory
    * @param status as delivered by PSICompact
    * @return an integer representing a bitmask.
    */
-  public final static int statusToMask( int status )
+  public final static Integer statusToMask( int status )
   {
     switch( status )
     {
     case PSICompact.STATUS_AUTO:
-      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_AUTO" ) ).intValue();
+      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_AUTO" ) );
     case PSICompact.STATUS_ERSALLG:
-      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_ERSALLG" ) ).intValue();
+      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_ERSALLG" ) );
     case PSICompact.STATUS_MANKOR:
-      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_MANKOR" ) ).intValue();
+      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_MANKOR" ) );
     case PSICompact.STATUS_NACH:
-      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_NACH" ) ).intValue();
+      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_NACH" ) );
     case PSICompact.STATUS_NORM:
-      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_NORM" ) ).intValue();
+      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_NORM" ) );
     case PSICompact.STATUS_NORMALLG:
-      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_NORMALLG" ) ).intValue();
+      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_NORMALLG" ) );
     case PSICompact.STATUS_OK:
-      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_OK" ) ).intValue();
+      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_OK" ) );
     case PSICompact.STATUS_REKO:
-      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_REKO" ) ).intValue();
+      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_REKO" ) );
     case PSICompact.STATUS_UNDEF:
-      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_UNDEF" ) ).intValue();
+      return Integer.valueOf( m_factoryProperties.getProperty( "BM_" + "STATUS_UNDEF" ) );
 
     default:
-      return 0;
+      return m_zero;
     }
   }
 

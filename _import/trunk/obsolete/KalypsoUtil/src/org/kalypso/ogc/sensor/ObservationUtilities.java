@@ -22,9 +22,9 @@ public class ObservationUtilities
    * @param axisName the name of the axis which is searched
    * @throws NoSuchElementException when no axis matches the name
    */
-  public static IAxis findAxis( IObservation obs, String axisName ) throws NoSuchElementException
+  public static IAxis findAxis( final IObservation obs, final String axisName ) throws NoSuchElementException
   {
-    IAxis[] axes = obs.getAxisList();
+    final IAxis[] axes = obs.getAxisList();
     
     for( int i = 0; i < axes.length; i++ )
     {
@@ -38,11 +38,11 @@ public class ObservationUtilities
   /**
    * Helper that returns an axis which is compatible with specified Class of data
    */
-  public static IAxis[] findAxis( IObservation obs, Class desired ) throws NoSuchElementException
+  public static IAxis[] findAxis( final IObservation obs, final Class desired ) throws NoSuchElementException
   {
-    IAxis[] axes = obs.getAxisList();
+    final IAxis[] axes = obs.getAxisList();
     
-    ArrayList list = new ArrayList( axes.length );
+    final ArrayList list = new ArrayList( axes.length );
     
     for( int i = 0; i < axes.length; i++ )
     {
