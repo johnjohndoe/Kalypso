@@ -4,10 +4,14 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.batik.dom.util.SAXDocumentFactory;
+import org.apache.xalan.transformer.XalanProperties;
 import org.deegree_impl.extension.ITypeHandler;
 import org.deegree_impl.extension.TypeRegistryException;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.ObservationLink;
+import org.w3._1999.xlink.XlinkBase;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
@@ -78,9 +82,14 @@ public class ObservationLinkHandler implements ITypeHandler
   private void test() throws JAXBException
   {
     final ObservationLink link = m_factory.createObservationLink();
-    link.setActuate( "onDemand" );
-    link.setHref( "path=blubb" );
-    link.setType( "simple" );
+    
+    final XlinkBase xlinkBase = new org.w3._1999.xlink.ObjectFactory().createXlinkBase();
+    xlinkBase.setActuate( "onDemand" );
+    xlinkBase.setHref( "path=blubb" );
+    xlinkBase.setType( "simple" );
+    
+    link.setObservation( xlinkBase );
+    
     
     m_marshaller.marshal( link, System.out );
   }
