@@ -7,7 +7,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.filter.AbstractObservationFilter;
+import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
@@ -18,16 +18,6 @@ import org.xml.sax.InputSource;
 
 /**
  * WQObservationFilter
- * <p>
- * The configuration string has following syntax:
- * 
- * <pre>
- * filter( wq * type )
- * </pre>
- * 
- * with type one of TimeserieConstants.TYPE_*, denotes the type of the value
- * axis of the model that is transformed. Thus, if the type is W, then this
- * filter generates Q.
  * 
  * @author schlienger
  */
@@ -42,15 +32,18 @@ public class WQObservationFilter extends AbstractObservationFilter
   private IAxis m_destAxis;
 
   /**
-   * @see org.kalypso.ogc.sensor.filter.AbstractObservationFilter#initFilter(java.lang.String,
-   *      org.kalypso.ogc.sensor.IObservation)
+   * The argument conf is a String as defined in TimeserieConstants.TYPE_*. It
+   * denotes the type of the value axis of the model that is transformed. Thus,
+   * if the type is W, then this filter generates Q.
+   *
+   * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object, org.kalypso.ogc.sensor.IObservation)
    */
-  public void initFilter( final String conf, final IObservation obs )
+  public void initFilter( final Object conf, final IObservation obs ) throws SensorException
   {
     super.initFilter( conf, obs );
 
     // (one of TimeserieConstants.TYPE_*) denotes the type of the model
-    final String type = conf;
+    final String type = conf.toString();
 
     final IAxis[] axes = obs.getAxisList();
     m_axes = new IAxis[axes.length + 1];
@@ -82,7 +75,7 @@ public class WQObservationFilter extends AbstractObservationFilter
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.filter.AbstractObservationFilter#getAxisList()
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getAxisList()
    */
   public IAxis[] getAxisList( )
   {
@@ -90,7 +83,7 @@ public class WQObservationFilter extends AbstractObservationFilter
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.filter.AbstractObservationFilter#getValues(org.kalypso.util.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
   public ITuppleModel getValues( IVariableArguments args )
       throws SensorException
@@ -113,7 +106,7 @@ public class WQObservationFilter extends AbstractObservationFilter
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.filter.AbstractObservationFilter#setValues(org.kalypso.ogc.sensor.ITuppleModel)
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
   public void setValues( final ITuppleModel values ) throws SensorException
   {

@@ -172,7 +172,7 @@ public class ZmlFactory
   }
 
   /**
-   * Parses the XML and creates a IObservation object.
+   * Parses the XML and creates an IObservation object.
    * 
    * @param source
    * @param identifier

@@ -1,10 +1,14 @@
 package org.kalypso.ogc.sensor.impl;
 
+import java.util.Date;
+
 import javax.swing.table.DefaultTableModel;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * <code>DefaultTableModel</code> based implementation of the
@@ -22,6 +26,7 @@ public class SimpleTuppleModel implements ITuppleModel
 
   /**
    * Constructor with axes, empty data
+   * 
    * @param axes
    */
   public SimpleTuppleModel( final IAxis[] axes )
@@ -31,6 +36,7 @@ public class SimpleTuppleModel implements ITuppleModel
 
   /**
    * Constructor with data
+   * 
    * @param axes
    * @param values
    */
@@ -43,10 +49,12 @@ public class SimpleTuppleModel implements ITuppleModel
   /**
    * Constructor with model. A <code>DefaultTableModel</code> is used to back
    * the values which are taken from the given model.
+   * 
    * @param copyTupples
    * @throws SensorException
    */
-  public SimpleTuppleModel( final ITuppleModel copyTupples ) throws SensorException
+  public SimpleTuppleModel( final ITuppleModel copyTupples )
+      throws SensorException
   {
     m_axes = copyTupples.getAxisList();
 
@@ -54,12 +62,32 @@ public class SimpleTuppleModel implements ITuppleModel
   }
 
   /**
+   * Constructor with model. A <code>DefaultTableModel</code> is used to back
+   * the values which are taken from the given model. The additional
+   * DateRangeArgument is used to limit the values that are returned by this
+   * model.
+   * 
+   * @param tupples
+   * @param dra
+   * @throws SensorException
+   */
+  public SimpleTuppleModel( final ITuppleModel tupples,
+      final DateRangeArgument dra ) throws SensorException
+  {
+    m_axes = tupples.getAxisList();
+
+    setFrom( tupples, dra );
+  }
+
+  /**
    * A <code>DefaultTableModel</code> is used to back the values which are
    * taken from the given model.
+   * 
    * @param copyTupples
    * @throws SensorException
    */
-  public final void setFrom( final ITuppleModel copyTupples ) throws SensorException
+  public final void setFrom( final ITuppleModel copyTupples )
+      throws SensorException
   {
     m_tupples = new DefaultTableModel( copyTupples.getCount(), m_axes.length );
 
@@ -75,9 +103,55 @@ public class SimpleTuppleModel implements ITuppleModel
   }
 
   /**
+   * A <code>DefaultTableModel</code> is used to back the values which are
+   * taken from the given model. Uses the given <code>DateRangeArgument</code>
+   * to check which values to copy.
+   * 
+   * @param copyTupples
+   * @param dra
+   * @throws SensorException
+   */
+  public final void setFrom( final ITuppleModel copyTupples,
+      final DateRangeArgument dra ) throws SensorException
+  {
+    final IAxis[] dateAxes = ObservationUtilities.findAxisByClass( m_axes,
+        Date.class );
+    if( dra == null || dateAxes.length == 0 )
+    {
+      setFrom( copyTupples );
+      return;
+    }
+
+    final IAxis dateAxis = dateAxes[0];
+
+    // uses same row count as original model, adjusted before method finishes
+    m_tupples = new DefaultTableModel( copyTupples.getCount(), m_axes.length );
+
+    int realIx = 0;
+    
+    for( int ix = 0; ix < copyTupples.getCount(); ix++ )
+    {
+      final Date d = (Date) copyTupples.getElement( ix, dateAxis );
+
+      if( d.compareTo( dra.getFrom() ) >= 0 && d.compareTo( dra.getTo() ) <= 0 )
+      {
+        for( int i = 0; i < m_axes.length; i++ )
+        {
+          final Object element = copyTupples.getElement( ix, m_axes[i] );
+
+          m_tupples.setValueAt( element, realIx++, m_axes[i].getPosition() );
+        }
+      }
+    }
+    
+    // readjust row count according to real amount of rows
+    m_tupples.setRowCount( realIx );
+  }
+
+  /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
-  public int getCount()
+  public int getCount( )
   {
     return m_tupples.getRowCount();
   }
@@ -92,7 +166,7 @@ public class SimpleTuppleModel implements ITuppleModel
   {
     m_tupples.addRow( tupple );
   }
-  
+
   /**
    * Inserts the tupple at given position.
    * 
@@ -103,7 +177,7 @@ public class SimpleTuppleModel implements ITuppleModel
   {
     m_tupples.insertRow( index, tupple );
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
    *      org.kalypso.ogc.sensor.IAxis)
@@ -122,7 +196,7 @@ public class SimpleTuppleModel implements ITuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
    */
-  public IAxis[] getAxisList()
+  public IAxis[] getAxisList( )
   {
     return m_axes;
   }
@@ -140,7 +214,8 @@ public class SimpleTuppleModel implements ITuppleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
    *      org.kalypso.ogc.sensor.IAxis)
    */
-  public void setElement( final int index, final Object element, final IAxis axis )
+  public void setElement( final int index, final Object element,
+      final IAxis axis )
   {
     m_tupples.setValueAt( element, index, axis.getPosition() );
   }

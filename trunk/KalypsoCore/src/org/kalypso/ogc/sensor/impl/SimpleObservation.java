@@ -13,6 +13,7 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.xlink.IXlink;
 
 /**
@@ -103,9 +104,6 @@ public class SimpleObservation implements IObservation
   }
 
   /**
-   * @param args
-   *          not used here
-   * 
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
   public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
@@ -113,6 +111,9 @@ public class SimpleObservation implements IObservation
     if( m_tupples == null )
       throw new SensorException( "Keine Werte vorhanden." );
 
+    if( args instanceof DateRangeArgument )
+      return new SimpleTuppleModel( m_tupples, (DateRangeArgument)args );
+    
     return m_tupples;
   }
 
@@ -212,8 +213,10 @@ public class SimpleObservation implements IObservation
 
   /**
    * Helper: since we are adding tupples to our model, we need a way to be sure that this
-   * is feasible. For now, we simply copy the existing values in a SimpleTuppleModel
+   * is possible. For now, we simply copy the existing values in a SimpleTuppleModel
    * which finally allows to add tupples as desired.
+   * 
+   * @return a SimpleTuppleModel
    * 
    * @throws SensorException
    */

@@ -1,34 +1,26 @@
 package org.kalypso.ogc.sensor.filter;
 
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
 
 /**
  * IObservationFilter
  * <p>
- * The general syntax for a filter is
+ * The specification of the filter is coded as an xml string.
  * 
- * <pre>
- * filter(&lt;filter_string&gt;)
- * </pre>.
- * <p>
- * syntax of the filter specification in the fragment part of the URL. Here is
- * the syntax:
- * 
- * <pre>
- * file://path/resource.ext#filter(ID*CONF)
- *            
- * ID: Alphanum
- *     id of the filter to use
- *            
- * CONF: Alphanum and following chars: - _ . ! &tilde; '
- *       configuration string for the filter
- * </pre>
- *
- * TODO: IMPORTANT NOTE: currently the 'fragment' separator is not '#' but '?'. 
+ * TODO: IMPORTANT NOTE: currently the 'fragment' separator is not '#' but '?'.
  * 
  * @author schlienger
  */
 public interface IObservationFilter extends IObservation
 {
-  public void initFilter( final String conf, final IObservation obs );
+  /**
+   * Initializes the filter with the given configuration and the
+   * observation.
+   * 
+   * @param conf implementation dependent configuration.
+   * @param obs observation that will be filtered. Can also be a subclass of IObservationFiler.
+   * @throws SensorException
+   */
+  public void initFilter( final Object conf, final IObservation obs ) throws SensorException;
 }
