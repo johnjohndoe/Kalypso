@@ -76,21 +76,25 @@ package org.deegree.ogcbasic;
  */
 public interface CommonNamespaces
 {
-  public static String GMLNS = "http://www.opengis.net/gml";
+  public static final String XSINS = "http://www.w3.org/2001/XMLSchema-instance";
+  
+  public static final String XLINKNS = "http://www.w3.org/1999/xlink";
+  
+  public static final String GMLNS = "http://www.opengis.net/gml";
 
-  public static String WFSNS = "http://www.opengis.net/wfs";
+  public static final String WFSNS = "http://www.opengis.net/wfs";
 
-  public static String WCSNS = "http://www.opengis.net/wcs";
+  public static final String WCSNS = "http://www.opengis.net/wcs";
 
-  public static String OGCNS = "http://www.opengis.net/ogc";
+  public static final String OGCNS = "http://www.opengis.net/ogc";
 
-  public static String SLDNS = "http://www.opengis.net/sld";
+  public static final String SLDNS = "http://www.opengis.net/sld";
 
-  public static String XLNNS = "http://www.w3.org/1999/xlink";
+  public static final String XLNNS = "http://www.w3.org/1999/xlink";
 
-  public static String CNTXTNS = "http://www.opengis.net/context";
+  public static final String CNTXTNS = "http://www.opengis.net/context";
 
-  public static String DGCNTXTNS = "http://www.deegree.org/context";
+  public static final String DGCNTXTNS = "http://www.deegree.org/context";
 }
 /*******************************************************************************
  * Changes to this class. What the people have been up to: $Log:

@@ -88,11 +88,10 @@ public final class AddFeatureAction extends Action
       m_workspace.postCommand( command );
       return;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      // TODO notify user
-      IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.editor.GMLEditor", 0, e
-          .getMessage(), null );
+      final String msg = e.getMessage();
+      final IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.editor.GMLEditor", 0, msg == null ? "" : msg, null );
       ErrorDialog.openError( m_shell, "ERROR", e.getMessage(), status );
       e.printStackTrace();
     }

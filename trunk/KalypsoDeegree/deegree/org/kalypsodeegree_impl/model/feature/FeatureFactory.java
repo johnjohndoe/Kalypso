@@ -60,6 +60,7 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.deegree_impl.model.feature;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -326,11 +327,34 @@ public class FeatureFactory
         feature.setProperty( createFeatureProperty( propName, o ) );
     }
 
-    //    Feature feature = createFeature( id, featureType, fp );
-
     Debug.debugMethodEnd();
     return feature;
   }
+  
+  /** Creates default feature, used by LegendView */
+  public static Feature createDefaultFeature( final FeatureType ft, final boolean createGeometry )
+  {
+    final FeatureTypeProperty[] propTypes = ft.getProperties();
+    final FeatureProperty[] props = createDefaultFeatureProperty( propTypes, createGeometry );
+    final Feature feature = FeatureFactory.createFeature( "default", ft, props );
+    return feature;
+  }
+
+  /** Creates default FeatureProperties, used by LegendView */
+  public static FeatureProperty[] createDefaultFeatureProperty( final FeatureTypeProperty[] propTypes, final boolean createGeometry )
+  {
+    final List results = new ArrayList();
+    for( int i = 0; i < propTypes.length; i++ )
+    {
+      final FeatureTypeProperty ftp = propTypes[i];
+      
+      final String type = ftp.getType();
+      final Object value = Mapper.defaultValueforJavaType( type, createGeometry );
+      results.add( FeatureFactory.createFeatureProperty( ftp.getName(), value ) );
+    }
+    return (FeatureProperty[])results.toArray( new FeatureProperty[results.size()] );
+  }
+
 
   private static Object wrap( FeatureTypeProperty ftp, GMLProperty gmlProperty ) throws Exception
   {

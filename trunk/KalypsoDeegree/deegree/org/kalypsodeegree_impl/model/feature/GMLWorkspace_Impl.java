@@ -526,8 +526,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
     else if( prop == null ) // element not set
     {
-    
-      FeatureProperty newProp = FeatureFactory.createFeatureProperty( propName, newFeature );
+      final FeatureProperty newProp = FeatureFactory.createFeatureProperty( propName, newFeature );
       parent.setProperty( newProp );
       m_indexMap.put( newFeature.getId(), newFeature );
       return;

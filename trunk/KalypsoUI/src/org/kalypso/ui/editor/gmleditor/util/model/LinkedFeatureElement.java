@@ -1,7 +1,3 @@
-/*
- * Created on Jan 19, 2005
- *  
- */
 package org.kalypso.ui.editor.gmleditor.util.model;
 
 /**
@@ -10,12 +6,11 @@ package org.kalypso.ui.editor.gmleditor.util.model;
  */
 public class LinkedFeatureElement extends Model
 {
-
   private FeatureElement linkedFeatureElement = null;
 
-  public LinkedFeatureElement( String linkedFeatureName )
+  public LinkedFeatureElement( final IModel parent, final String linkedFeatureName )
   {
-    this.name = linkedFeatureName.trim();
+    super( parent, linkedFeatureName.trim() );
   }
 
   public FeatureElement getLinkedFeature()
@@ -27,10 +22,4 @@ public class LinkedFeatureElement extends Model
   {
     this.linkedFeatureElement = m_linkedFeatureElement;
   }
-
-  /**
-   * @see org.kalypso.ui.editor.gmleditor.util.model.Model#remove(org.kalypso.ui.editor.gmleditor.util.model.Model)
-   */
-  public void remove( Model model )
-  {/**/}
 }

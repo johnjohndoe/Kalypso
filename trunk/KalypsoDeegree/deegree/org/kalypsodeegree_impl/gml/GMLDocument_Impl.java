@@ -232,6 +232,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     setSchemaLocation( schemaLocation.toString() );
   }
 
+  /** Sollte mit dem Targetnamespace zusammen aufgerufen werden */
   public void setSchemaLocation( final String loc )
   {
     setAttribute( "xsi:schemaLocation", loc );
@@ -658,7 +659,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   {
     Debug.debugMethodBegin( "", "createGMLFeature(Document, FeatureType)" );
 
-    final Element elem = createElementWithPrefix( featureType );
+    final Element elem = createElementNS( featureType.getNamespace(), featureType.getName() );
     final GMLFeature feature = new GMLFeature_Impl( elem );
 
     Debug.debugMethodEnd();
@@ -673,8 +674,8 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   {
    Debug.debugMethodBegin();
   
-   final Element elem = createElementWithPrefix( CommonNamespaces.GMLNS, collectionName );
-   final Element el = createElementWithPrefix( CommonNamespaces.GMLNS, "boundedBy" );
+   final Element elem = createElementNS( CommonNamespaces.GMLNS, collectionName );
+   final Element el = createElementNS( CommonNamespaces.GMLNS, "boundedBy" );
    elem.appendChild( el );
   
    final GMLFeatureCollection feature = new GMLFeatureCollection_Impl( elem );
@@ -706,7 +707,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
    */
   public GMLProperty createGMLProperty( final FeatureTypeProperty ftp )
   {
-    final Element elem = createElementWithPrefix( ftp );
+    final Element elem = createElementNS( ftp.getNamespace(), ftp.getName() );
     final GMLProperty ls = new GMLProperty_Impl( elem );
     return ls;
   }
@@ -720,7 +721,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
 
   public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final String attributeValue )
   {
-    final Element element = createElementWithPrefix( ftp );
+    final Element element = createElementNS( ftp.getNamespace(), ftp.getName() );
     GMLProperty gmlProp = new GMLProperty_Impl( ftp, element );
     gmlProp.setPropertyValue( attributeValue );
     return gmlProp;
@@ -731,7 +732,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   {
     try
     {
-      final Element element = createElementWithPrefix( ftp );
+      final Element element = createElementNS( ftp.getNamespace(), ftp.getName() );
       
       // marshalling
       final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
@@ -747,30 +748,5 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     {
       throw new GMLException( e.getLocalizedMessage() );
     }
-  }
-  
-  private Element createElementWithPrefix( final FeatureType ft )
-  {
-    return createElementWithPrefix( ft.getNamespace(), ft.getName() );
-  }
-
-  private Element createElementWithPrefix( final FeatureTypeProperty ftp )
-  {
-    return createElementWithPrefix( ftp.getNamespace(), ftp.getName() );
-  }
-
-  private Element createElementWithPrefix( final String namespace, final String name )
-  {
-    final Element element = createElementNS( namespace, name );
-    
-//    final GMLNameSpace gmlNS = (GMLNameSpace)m_nameSpaces.get( namespace );
-//    if( gmlNS != null )
-//    {
-//      final String prefix = gmlNS.getSubSpaceName();
-//      element.setPrefix( prefix );
-//    }
-//    
-    return element;
-    
   }
 }

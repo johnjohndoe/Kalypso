@@ -658,7 +658,7 @@ public class GMLFactory
     GMLProperty prop = null;
     if( value instanceof List )
     {
-      Iterator iterator = ( (List)value ).iterator();
+      final Iterator iterator = ( (List)value ).iterator();
       while( iterator.hasNext() )
         addGMLProperties( doc, gmlFeature, iterator.next(), ftp, min );
     }
@@ -669,7 +669,7 @@ public class GMLFactory
     }
     else if( typeHandler != null )
     {
-      final Element element = doc.createElement( ftp.getName() );
+      final Element element = doc.createElementNS( ftp.getNamespace(), ftp.getName() );
       try
       {
         typeHandler.marshall( value, element );
@@ -710,6 +710,9 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.10  2005/02/15 17:52:53  belger
+ * *** empty log message ***
+ *
  * Revision 1.9  2005/02/08 18:43:59  belger
  * *** empty log message ***
  * Revision 1.8 2005/01/18 12:50:42 doemming *** empty

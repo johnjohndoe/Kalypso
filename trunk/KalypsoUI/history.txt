@@ -7,8 +7,11 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 ###############################################################################
 
 ----------------
-Version ..... XXXXXXXXXXXXXXXXx
+Version ..... XXXXXXXXXXXXXXXXX
 ----------------
+- Beim Neuanlegen von Features (z.B. Baumansicht) werden diese mit Standardwerten gefüllt
+- Feature-Baumansicht: beim Refresh des Baums (falls sich das GML-Modell ändert) kollabiert der Baum nicht mehr (besser gesagt:
+öffnet sich wider wie vorher)
 - Bugfix Wizard: bei den Dialogen mit Wechsel zwischen zwei Diagrammansichten (Z-B. W - Q), springt die Ansicht 
 beim Durchführen der Berechnung nicht mehr nach Q (leider musste dafür die Position des Knopfs geändert werden :-( )
 - Bei GIS-Tabellen jetzt auch Eingabe von Dezimahlzahlen mit Komma ',' möglich
