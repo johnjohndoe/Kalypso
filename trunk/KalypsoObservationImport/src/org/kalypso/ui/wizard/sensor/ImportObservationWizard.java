@@ -17,7 +17,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
-import org.kalypso.ogc.sensor.adapter.NativeObservationAdapter;
+import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
@@ -137,7 +137,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
           .getSelection();
       final File fileSource = selection.getFileSource();
       final File fileTarget = selection.getFileTarget();
-      final NativeObservationAdapter nativaAdapter = selection.getNativeAdapter();
+      final INativeObservationAdapter nativaAdapter = selection.getNativeAdapter();
       final IObservation srcObservation = nativaAdapter.createObservationFromSource( fileSource );
 
       final IAxis[] axesSrc = m_page2.getAxisMappingSrc();
@@ -151,7 +151,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       final int countTarget;
       if( fileTarget.exists() && ( selection.isAppend() || selection.isRetainMetadata() ) )
       {
-        targetObservation = m_page2.getTargetObservation( fileTarget.toURL(), true );
+        targetObservation = m_page2.getTargetObservation( fileTarget.toURL() );
         tuppelModelTarget = targetObservation.getValues( null );
         if( selection.isAppend() )
           countTarget = tuppelModelTarget.getCount();
