@@ -1,6 +1,6 @@
 package org.kalypso.util.link;
 
-import java.util.Hashtable;
+import java.util.IdentityHashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
@@ -18,7 +18,7 @@ import org.kalypso.util.pool.ResourcePool;
  */
 public class LinkResolver implements IPoolListener
 {
-  private final Map m_key2link = new Hashtable();
+  private final Map m_key2link = new IdentityHashMap();
   
   private final ResourcePool m_pool;
   private final static Object DUMMY_OBJECT = new Object();
@@ -39,11 +39,11 @@ public class LinkResolver implements IPoolListener
     
     for( int i = 0; i < links.length; i++ )
     {
-      PoolableObjectType key = new PoolableObjectType( links[i].getLinkType(), links[i].getXlink().getHRef(), project );
+      final PoolableObjectType key = new PoolableObjectType( links[i].getLinkType(), links[i].getXlink().getHRef(), project );
 
       m_key2link.put( key, links[i] );
       
-      Job job = new BorrowObjectJob( "Link auslösen für " + resolveType.getName(), m_pool, this, key, DUMMY_OBJECT );
+      final Job job = new BorrowObjectJob( "Link auslösen für " + resolveType.getName(), m_pool, this, key, DUMMY_OBJECT );
       job.schedule();
     }
   }
@@ -53,12 +53,12 @@ public class LinkResolver implements IPoolListener
    */
   public void onObjectInvalid( ResourcePool source, IPoolableObjectType key, Object oldObject, boolean bCannotReload ) throws Exception
   {
-    ObjectLink link = (ObjectLink)m_key2link.get( key );
+    final ObjectLink link = (ObjectLink)m_key2link.get( key );
     
     if( oldObject == DUMMY_OBJECT || link.isResolved() && link.getLinkedObject() == oldObject )
     {
       link.linkResolved( m_pool.getObject( key, new NullProgressMonitor() ) );
-
+      
       m_listener.onLinkResolved( new LinkEvent( this, link ) );
     }
   }

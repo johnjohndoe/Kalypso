@@ -32,7 +32,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationTimeSeries;
-import org.kalypso.ogc.sensor.tableview.DefaultTableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.rules.Rules;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;

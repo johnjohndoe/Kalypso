@@ -84,8 +84,8 @@ public class ObservationTableEditor extends AbstractEditorPart
       monitor.beginTask( "Laden", 1 );
       
       m_template = ObservationTemplateHelper.loadTableViewTemplate( input.getFile() );
-      m_model.setRules( m_template );
       m_template.addTemplateEventListener( m_model );
+      m_model.setRules( m_template );
       
       monitor.worked(1);
     }

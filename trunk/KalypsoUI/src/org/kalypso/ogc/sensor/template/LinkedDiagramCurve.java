@@ -3,10 +3,10 @@ package org.kalypso.ogc.sensor.template;
 import java.util.Properties;
 
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.diagview.DiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagramCurve;
 import org.kalypso.util.link.ObjectLink;
 import org.kalypso.util.xml.xlink.IXlink;
 
@@ -50,16 +50,6 @@ public class LinkedDiagramCurve extends ObjectLink implements IDiagramCurve
   public IObservation getObservation()
   {
     return m_curve.getObservation();
-  }
-
-  public int hashCode()
-  {
-    return m_curve.hashCode();
-  }
-
-  public String toString()
-  {
-    return m_curve.toString();
   }
 
   /**

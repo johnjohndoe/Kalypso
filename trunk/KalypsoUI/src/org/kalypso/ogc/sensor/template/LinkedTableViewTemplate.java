@@ -8,7 +8,7 @@ import org.eclipse.core.resources.IProject;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
-import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.template.obstableview.TypeRenderingRule;
