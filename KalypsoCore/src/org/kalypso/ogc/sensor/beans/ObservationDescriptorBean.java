@@ -1,11 +1,13 @@
-package org.kalypso.services.sensor.beans;
+package org.kalypso.ogc.sensor.beans;
+
+import java.io.Serializable;
 
 /**
  * Contains meta-information on the localisation of the data for an observation.
  * 
  * @author schlienger
  */
-public class ObservationDescriptorBean
+public class ObservationDescriptorBean implements Serializable
 {
   private String m_location;
 
