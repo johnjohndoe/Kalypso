@@ -12,9 +12,11 @@ import javax.xml.rpc.ServiceException;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.ProxyFactory;
@@ -44,7 +46,15 @@ public class ServiceRepositoryObservation implements IObservation
   private final ObservationBean m_ob;
 
   private IObservation m_obs = null;
-
+  
+  private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
+  
+  /**
+   * Constructor
+   * 
+   * @param srv
+   * @param ob
+   */
   public ServiceRepositoryObservation( final IObservationService srv,
       final ObservationBean ob )
   {
@@ -239,6 +249,8 @@ public class ServiceRepositoryObservation implements IObservation
 
       // and clean temp stuff
       m_srv.clearTempData( db );
+      
+      m_evtPrv.fireChangedEvent();
     }
     catch( Exception e ) // generic for simplicity
     {
@@ -298,5 +310,21 @@ public class ServiceRepositoryObservation implements IObservation
     final String id = href.replaceFirst( SCHEME_OCS + ":", "" );
     
     return new ObservationBean( id, "", "", null );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
+   */
+  public void addListener( IObservationListener listener )
+  {
+    m_evtPrv.addListener( listener );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
+   */
+  public void removeListener( IObservationListener listener )
+  {
+    m_evtPrv.removeListener( listener );
   }
 }

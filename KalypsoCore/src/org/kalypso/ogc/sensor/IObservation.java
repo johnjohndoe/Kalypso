@@ -9,7 +9,7 @@ import org.kalypso.util.xml.xlink.IXlink;
  * 
  * @author schlienger
  */
-public interface IObservation
+public interface IObservation extends IObservationEventProvider
 {
   /**
    * Returns the identifier of this Observation. The identifier can be used to

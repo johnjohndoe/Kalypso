@@ -31,7 +31,7 @@ public class DoubleCellEditor extends DefaultCellEditor
   
   private char m_replaceWhat = ' ';
   private char m_replaceWith = ' ';
-
+  
   /**
    * Constructor. If useGroupingAsDecimalSymbol is true and nf is a DecimalFormat,
    * it tries to fetch the grouping and decimal symbols to be replaced.
@@ -75,7 +75,7 @@ public class DoubleCellEditor extends DefaultCellEditor
     
     return super.getTableCellEditorComponent( table, value, isSelected, row, column  );
   }
-
+  
   public boolean stopCellEditing( )
   {
     String s = (String) super.getCellEditorValue();

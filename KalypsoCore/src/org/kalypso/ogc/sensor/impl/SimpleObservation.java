@@ -8,10 +8,12 @@ import java.util.Set;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.xlink.IXlink;
@@ -36,6 +38,8 @@ public class SimpleObservation implements IObservation
   private ITuppleModel m_tupples = null;
 
   private String m_identifier;
+
+  private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
 
   /**
    * Default constructor
@@ -210,6 +214,8 @@ public class SimpleObservation implements IObservation
         stm.addTupple( tupple );
       }
     }
+    
+    m_evtPrv.fireChangedEvent();
   }
 
   /**
@@ -236,5 +242,21 @@ public class SimpleObservation implements IObservation
   public String getIdentifier()
   {
     return m_identifier;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
+   */
+  public void addListener( IObservationListener listener )
+  {
+    m_evtPrv.addListener( listener );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
+   */
+  public void removeListener( IObservationListener listener )
+  {
+    m_evtPrv.removeListener( listener );
   }
 }

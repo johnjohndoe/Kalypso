@@ -64,7 +64,8 @@ import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.template.TemplateEvent;
+import org.kalypso.ogc.sensor.tableview.swing.event.ObservationModelChangeListener;
+import org.kalypso.ogc.sensor.tableview.swing.event.SetValuesForDirtyColumnsRunnable;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.ogc.sensor.zml.ZmlObservation;
 import org.kalypso.template.gismapview.Gismapview;
@@ -145,6 +146,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     }
   };
 
+  private ObservationModelChangeListener m_listener;
+
   public AbstractCalcWizardPage( final String name )
   {
     super( name );
@@ -171,6 +174,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     {
       m_tableTemplate.removeTemplateEventListener( m_table );
       m_tableTemplate.dispose();
+    }
+    
+    if( m_tableModel != null )
+    {
+      m_tableModel.removeTableModelListener( m_listener );
     }
   }
 
@@ -473,6 +481,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
       return text;
     }
   }
+  
+  protected void registerObservationTableModelChangeListener()
+  {
+    final IRunnableWithProgress rwp = new SetValuesForDirtyColumnsRunnable( m_tableTemplate, m_tableModel );
+    m_listener = new ObservationModelChangeListener( "Daten synchronisieren (Zml)", rwp );
+    
+    m_tableModel.addTableModelListener( m_listener );
+  }
 
   protected List getSelectedFeatures( boolean useTable )
   {
@@ -671,13 +687,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     return panel;
   }
   
-  protected void saveTimeseriesPressed()
+  protected void saveTimeseriesPressed( final boolean saveInFiles )
   {
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
     {
       protected void execute( final IProgressMonitor monitor )
       {
-        saveDirtyObservations( false, monitor );
+        saveDirtyObservations( saveInFiles, monitor );
       }
     };
     
@@ -691,11 +707,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
    */
   protected void saveDirtyObservations( final boolean saveFiles, final IProgressMonitor monitor ) 
   {
-    final LinkedTableViewTemplate template = m_tableTemplate;
+    final LinkedTableViewTemplate tableTemplate = m_tableTemplate;
     final ObservationTableModel model = (ObservationTableModel) m_table
         .getModel();
 
-    final Collection themes = template.getThemes();
+    final Collection themes = tableTemplate.getThemes();
 
     monitor.beginTask( "Zeitreihen speichern", themes.size() );
     
@@ -705,33 +721,29 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
       {
         final ITableViewTheme theme = (ITableViewTheme) it.next();
 
-        boolean dirty = false;
-
-        for( final Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
-        {
-          dirty = ((ITableViewColumn) itcol.next()).isDirty();
-
-          // at least one col dirty?
-          if( dirty )
-            break;
-        }
+//        boolean dirty = false;
+//
+//        for( final Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
+//        {
+//          dirty = ((ITableViewColumn) itcol.next()).isDirty();
+//
+//          // at least one col dirty?
+//          if( dirty )
+//            break;
+//        }
 
         final IObservation obs = theme.getObservation();
 
-        if( dirty && obs instanceof ZmlObservation )
+        if( /*dirty && */ obs instanceof ZmlObservation )
         {
-          for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
+          for( final Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
             ((ITableViewColumn) itcol.next()).setDirty( false );
 
           final ITuppleModel values = model.getValues( theme.getColumns() );
           obs.setValues( values );
 
-          // TRICKY: obs data has changed, force refresh of template to update diagram view
-          // might be ameliored...
-          template.fireTemplateChanged( new TemplateEvent( theme, TemplateEvent.TYPE_REFRESH ) );
-          
           if( saveFiles )
-            template.saveObservation( obs, monitor );
+            tableTemplate.saveObservation( obs, monitor );
         }
       }
       catch( final Exception e )
@@ -767,7 +779,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
       else
         msg += "\n" + targetException.getLocalizedMessage();
       
-      ErrorDialog.openError( getContainer().getShell(), "Hochwasser Vorhersage", message, status );
+      ErrorDialog.openError( getContainer().getShell(), "Hochwasser Vorhersage", msg, status );
     }
     catch( InterruptedException e )
     {
