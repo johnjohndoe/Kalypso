@@ -8,6 +8,7 @@ import javax.xml.rpc.Stub;
 import junit.framework.TestCase;
 
 import org.kalypso.services.ProxyFactory;
+import org.kalypso.services.proxy.IObservationService;
 
 /**
  * @author schlienger
@@ -33,6 +34,7 @@ public class ProxyFactoryTest extends TestCase
     ProxyFactory pf = new ProxyFactory( m_conf );
     
     final Stub proxy = pf.getProxy( "Kalypso_ObservationService", "IObservationService" );
+    assertTrue( proxy instanceof IObservationService );
     
     //pf.getProxy( "", "" );
   }
