@@ -10,6 +10,10 @@ import java.io.File;
  */
 public class ServiceConfig
 {
+  public final static String CONF_DIR = "kalypso.server.confdir";
+  public final static String TEMP_DIR = "kalypso.server.tempdir";
+  public final static String DATA_DIR = "kalypso.server.datadir";
+  
   private ServiceConfig()
   {
     // wird nicht instantitiert
@@ -17,28 +21,16 @@ public class ServiceConfig
   
   public static File getConfDir()
   {
-    return new File( System.getProperty( "kalypso.server.confdir" ) );
+    return new File( System.getProperty( CONF_DIR ) );
   }
 
   public static File getTempDir()
   {
-    return new File( System.getProperty( "kalypso.server.tempdir" ) );
+    return new File( System.getProperty( TEMP_DIR ) );
   }
   
   public static File getDataDir()
   {
-    return new File( System.getProperty( "kalypso.server.datadir" ) );
-  }
-
-  public static File createNewTempDir( final String prefix )
-  {
-    final File tempDir = getTempDir();
-    
-    while( true )
-    {
-      final File newDir = new File( tempDir, prefix + System.currentTimeMillis() );
-      if( !newDir.exists() )
-        return newDir;
-    }
+    return new File( System.getProperty( DATA_DIR ) );
   }
 }
