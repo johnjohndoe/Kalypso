@@ -66,22 +66,22 @@ public class ObservationChart extends JFreeChart implements
             ((ObservationPlot) getPlot()).addCurve( (IDiagramCurve) evt
                 .getObject() );
 
-          if( evt.getType() == TemplateEvent.TYPE_REFRESH
-              && evt.getObject() instanceof Collection )
-          {
-            clearChart();
-
-            final Iterator itThemes = ((Collection) evt.getObject()).iterator();
-            while( itThemes.hasNext() )
-            {
-              final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) itThemes
-                  .next();
-              final Iterator it = theme.getCurves().iterator();
-              while( it.hasNext() )
-                ((ObservationPlot) getPlot()).addCurve( (IDiagramCurve) it
-                    .next() );
-            }
-          }
+//          if( evt.getType() == TemplateEvent.TYPE_REFRESH
+//              && evt.getObject() instanceof Collection )
+//          {
+//            clearChart();
+//
+//            final Iterator itThemes = ((Collection) evt.getObject()).iterator();
+//            while( itThemes.hasNext() )
+//            {
+//              final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) itThemes
+//                  .next();
+//              final Iterator it = theme.getCurves().iterator();
+//              while( it.hasNext() )
+//                ((ObservationPlot) getPlot()).addCurve( (IDiagramCurve) it
+//                    .next() );
+//            }
+//          }
 
           if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
             clearChart();

@@ -37,7 +37,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.AbstractSeriesDataset#getSeriesName(int)
    */
-  public synchronized String getSeriesName( int series )
+  public String getSeriesName( int series )
   {
     return ( (XYCurveSerie)m_curves.get( series ) ).getName();
   }

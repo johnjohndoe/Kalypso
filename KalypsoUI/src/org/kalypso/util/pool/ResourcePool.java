@@ -170,7 +170,7 @@ public class ResourcePool implements ILoaderListener
     m_objects.put( key, object );
 
     // alle Listener informieren
-    final Set listeners = (Set)m_listeners.get( key );
+    final Set listeners = Collections.synchronizedSet( (Set)m_listeners.get( key ) );
     for( final Iterator iter = listeners.iterator(); iter.hasNext(); )
     {
       final IPoolListener l = (IPoolListener)iter.next();
