@@ -154,6 +154,7 @@ public class ZmlFactory
         axisType.setDatatype( xsdType );
         axisType.setName( axes[i].getLabel() );
         axisType.setUnit( axes[i].getUnit() );
+        axisType.setType( "value" );
 
         final ValueArrayType valueArrayType = m_objectFactory.createAxisTypeValueArrayType();
 

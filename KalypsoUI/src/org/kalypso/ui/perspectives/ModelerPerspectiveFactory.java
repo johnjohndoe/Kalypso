@@ -31,9 +31,13 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
     setContentsOfShowViewMenu( layout );
     
     layout.addActionSet( "org.kalypso.actionSet.model" );
-    layout.addActionSet( "org.kalypso.actionSet.calcCase" );
     
     layout.addNewWizardShortcut( "org.kalypso.wizard.newMap" );
+    layout.addNewWizardShortcut( "org.kalypso.wizard.newGtt" );
+    layout.addNewWizardShortcut( "org.kalypso.wizard.newOdt" );
+    layout.addNewWizardShortcut( "org.kalypso.wizard.newOtt" );
+    
+    layout.setFixed( true );
   }
   
   /**
@@ -43,6 +47,10 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
   {
     layout.addShowViewShortcut( IPageLayout.ID_OUTLINE );
     layout.addShowViewShortcut( IPageLayout.ID_RES_NAV );
+    
+    layout.addShowViewShortcut( "org.kalypso.ui.repository.view.RepositoryExplorerPart" );
+    layout.addShowViewShortcut( "org.kalypso.ogc.sensor.view.DiagramViewPart" );
+    layout.addShowViewShortcut( "org.kalypso.ogc.sensor.view.TableViewPart" );
   }
   
   

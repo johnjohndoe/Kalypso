@@ -1,8 +1,10 @@
 package org.kalypso.ui.application;
 
-import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceDescription;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.application.IActionBarConfigurer;
@@ -62,28 +64,26 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     
     // Menüs umbauen
     final IMenuManager windowMenu = (IMenuManager)menuManager.find( IWorkbenchActionConstants.M_WINDOW );
-    final IMenuManager navigateMenu = (IMenuManager)windowMenu.find( "shortcuts" );
-
-    menuManager.insertAfter( IWorkbenchActionConstants.M_EDIT, navigateMenu );
+    final IMenuManager showViewMenu = (IMenuManager)windowMenu.find( "showView" );
+    menuManager.insertAfter( IWorkbenchActionConstants.M_EDIT, showViewMenu );
 
     // Menüs entfernen
     menuManager.remove( IWorkbenchActionConstants.M_PROJECT );
     menuManager.remove( IWorkbenchActionConstants.M_NAVIGATE );
-    // TODO: auskommentieren
-    //menuManager.remove( IWorkbenchActionConstants.M_WINDOW );
+    menuManager.remove( IWorkbenchActionConstants.M_WINDOW );
     
-    // neue Menüs hinzufügen
-    final IMenuManager modelMenu = new MenuManager( "Modell", "model" );
-    modelMenu.add( new GroupMarker( "modelStart" ) );
-    menuManager.insertBefore( IWorkbenchActionConstants.M_FILE, modelMenu );
+    final IMenuManager fileMenu = (IMenuManager)menuManager.find( IWorkbenchActionConstants.M_FILE );
+    fileMenu.remove( "move" );
+    fileMenu.remove( "openWorkspace" );
+    fileMenu.remove( "import" );
+    fileMenu.remove( "export" );
 
-    final IMenuManager calcMenu = new MenuManager( "Rechenfall", "calcCase" );
-    modelMenu.add( new GroupMarker( "calcCaseStart" ) );
-    menuManager.insertAfter( "model", calcMenu );
+    final IMenuManager editMenu = (IMenuManager)menuManager.find( IWorkbenchActionConstants.M_EDIT );
+    editMenu.remove( "bookmark" );
+    editMenu.remove( "addTask" );
 
-    final IMenuManager templateMenu = new MenuManager( "Vorlage", "template" );
-    modelMenu.add(new GroupMarker( "teplateStart" ) );
-    menuManager.insertAfter( "calcCase", templateMenu );
+    final IMenuManager helpMenu = menuManager.findMenuUsingPath( IWorkbenchActionConstants.M_HELP );
+    helpMenu.remove( "tipsAndTricks" );
   }
   
   /**
@@ -96,4 +96,25 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     windowConfigurer.setShowPerspectiveBar( false );
   }
   
+  /**
+   * @see org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor#postStartup()
+   */
+  public void postStartup()
+  {
+    super.postStartup();
+
+    // Das 'AutoBuild' aktivieren, damit das 'BuildAll' Icon in der Toolbar verschwindet
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final IWorkspaceDescription description = workspace.getDescription();
+    description.setAutoBuilding( true );
+    
+    try
+    {
+      workspace.setDescription( description );
+    }
+    catch( CoreException e )
+    {
+      e.printStackTrace();
+    }
+  }
 }
