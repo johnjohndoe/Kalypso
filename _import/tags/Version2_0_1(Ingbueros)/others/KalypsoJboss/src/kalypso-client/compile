@@ -1,0 +1,24 @@
+#/bin/bash
+rm de/tuhh/wb/javagis/*class de/tuhh/wb/javagis/*/*class de/tuhh/wb/javagis/*/*/*class  
+rm javac.out;
+#CLASSPATH=`cat jboss_libs_classpath`:.:
+CLASSPATH=.
+CLASSPATH=$CLASSPATH:bin/edbc.jar:bin/openroad.jar
+CLASSPATH=$CLASSPATH:bin/jbcl.jar
+CLASSPATH=$CLASSPATH:bin/braju.jar
+CLASSPATH=$CLASSPATH:../kalypsoe-src/
+CLASSPATH=$CLASSPATH:../wadas-kalypso/src/
+CLASSPATH=$CLASSPATH:../kalypso-filter/Source
+CLASSPATH=$CLASSPATH:bin/jbossall-client.jar
+CLASSPATH=$CLASSPATH:bin/javaGis1-ejb.jar:bin/javaGis2-ejb.jar:bin/javaGis3-ejb.jar
+CLASSPATH=$CLASSPATH:bin/hwssystem-ejb.jar
+CLASSPATH=$CLASSPATH:bin/hwslogistics-ejb.jar
+CLASSPATH=$CLASSPATH:bin/hwsszenario-ejb.jar
+CLASSPATH=$CLASSPATH:bin/hwscombination-ejb.jar
+
+echo CLASSPATH=$CLASSPATH
+export CLASSPATH
+javac -deprecation -d bin de/tuhh/wb/javagis/Main.java 2>javac.out 
+#javac Test.java 2>javac.out 
+echo -e "fertig\n\a";
+less javac.out

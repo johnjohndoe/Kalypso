@@ -1,0 +1,5 @@
+#! /bin/bash
+
+echo sorting files
+cp ../tmp/ejb-jar.xml ../build/META-INF/
+cp ../tmp/jboss.xml ../build/META-INF/

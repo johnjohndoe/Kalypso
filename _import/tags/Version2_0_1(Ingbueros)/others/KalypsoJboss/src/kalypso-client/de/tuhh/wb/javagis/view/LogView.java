@@ -1,0 +1,151 @@
+package de.tuhh.wb.javagis.view;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+import de.tuhh.wb.javagis.tools.I18n;
+
+public class LogView extends JFrame implements ActionListener//, WindoFrameListener
+{
+    private static DateFormat dateFormat=new SimpleDateFormat("dd.MM.yyyy HH:mm");
+    private JPanel panel=new JPanel(new GridBagLayout());
+    
+    JTextArea jTextArea    = new JTextArea();
+    JScrollPane scroller=new JScrollPane();
+    JButton jClear=new JButton(I18n.get("LV_BtnClear"));
+    static LogView instance=null;
+
+    private LogView(String title)
+    {
+	super(title);//,true,true,true,true);
+	setLocation(new Point(600,400));
+	initMask();
+	setVisible(false);
+	setSize(300,300);
+    }
+    
+    public static LogView getInstance()
+    {
+	if(instance==null)
+	    instance=new LogView(I18n.get("LV_Title"));
+	return instance;
+    }
+
+    public synchronized static void print(String text)
+    {
+	LogView.getInstance().log(text);
+    }
+
+    public static void println(String text)
+    {
+	LogView.getInstance().logln(text);
+    }
+
+    public void log(String text)
+    {
+	if(text!=null)
+	    {
+		System.out.print(text);
+		jTextArea.append(text);
+		repaint();
+	    }
+    }
+
+    public void logln(String text)
+    {
+	if(text!=null)
+	    {
+		System.out.println(text);
+		if(jTextArea.getRows()>10)
+		    jTextArea.setRows(10);
+		jTextArea.append(text+"\n");
+		repaint();
+	    }
+    }
+    
+    private void initMask()
+    {
+	add2ViewLastInRow(new JLabel(I18n.get("LV_LabelLog")));
+	jTextArea.setText("");
+	scroller.setViewportView(jTextArea);
+
+
+	GridBagLayout layout=(GridBagLayout)panel.getLayout();
+	GridBagConstraints layoutConstraints = new GridBagConstraints();
+	layoutConstraints.fill = GridBagConstraints.BOTH;
+	layoutConstraints.gridwidth = GridBagConstraints.REMAINDER;
+	layoutConstraints.gridheight =1;
+	layoutConstraints.weightx = 0;
+ 	layoutConstraints.weighty = 1;
+	layout.setConstraints(scroller, layoutConstraints);
+	panel.add(scroller);
+
+
+
+	add2ViewLastInRow(jClear);
+
+	jClear.addActionListener(this);
+	jClear.setActionCommand("clear");
+	getContentPane().add(panel);
+    }
+    
+    // ActionListener
+    public void actionPerformed(ActionEvent e)
+    {
+	String command=e.getActionCommand();
+	    
+	if("clear".equals(command))
+	    {
+		jTextArea.setText("");
+	    }
+    }
+    
+    public void add2View(JComponent  component)
+    {
+	GridBagLayout layout=(GridBagLayout)panel.getLayout();
+	GridBagConstraints layoutConstraints = new GridBagConstraints();
+	layoutConstraints.fill = GridBagConstraints.HORIZONTAL;
+	layoutConstraints.gridwidth = 1;
+	layoutConstraints.gridheight =1;
+	layoutConstraints.weightx = 0.5;
+ 	layoutConstraints.weighty = 0;
+	layout.setConstraints(component, layoutConstraints);
+	panel.add(component);
+    }
+
+    public void add2ViewLastInRow(JComponent  component)
+    {
+	GridBagLayout layout=(GridBagLayout)panel.getLayout();
+	GridBagConstraints layoutConstraints = new GridBagConstraints();
+	layoutConstraints.fill = GridBagConstraints.HORIZONTAL;
+	layoutConstraints.gridwidth = GridBagConstraints.REMAINDER;
+	layoutConstraints.gridheight =1;
+	layoutConstraints.weightx = 0.5;
+ 	layoutConstraints.weighty = 0;
+	layout.setConstraints(component, layoutConstraints);
+	panel.add(component);
+    }
+
+    public static String format(Date date)
+    {
+	if(date!=null)
+	    return dateFormat.format(date);
+	else
+	    return "null";
+	    
+    }
+}

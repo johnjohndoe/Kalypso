@@ -1,0 +1,96 @@
+package de.tuhh.wb.javagis.simpleclient;
+
+
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+
+import org.xml.sax.helpers.AttributesImpl;
+
+import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.xml.GisTransferObject;
+import de.tuhh.wb.javagis.xml.VectorSet;
+
+public class ResultDialog extends JScrollPane implements ActionListener//,MouseListener
+{
+    JPanel panel;
+    JTable jTable;
+    JButton addRow;
+    ResultDialogModel myTableModel;
+
+    public ResultDialog()
+    {
+	super();
+	this.panel=new JPanel();
+	this.myTableModel=new ResultDialogModel();
+	addRow=new JButton(I18n.get("KF_addNode"));
+	addRow.setToolTipText("<html>note: you can visualize at maximum 10 graphs at one time with the graphic-tool<br><i>you may produce more than 10 results and load them manually with the graphic-tool</i></html>");
+	panel.add(addRow);
+	jTable=new JTable(myTableModel);
+
+	JScrollPane scroller=new JScrollPane(jTable);
+	scroller.setBounds(10,10,(getSize().width-30),(getSize().height-120));
+	scroller.setPreferredSize(new Dimension(80,150));
+	panel.add(scroller);
+	panel.setPreferredSize(new Dimension(90,100));
+	addRow.setActionCommand("addRow");
+	addRow.addActionListener(this);
+	setViewportView(panel);
+	panel.setVisible(true);
+	setPreferredSize(new Dimension(100,200));
+	doLayout();
+	repaint();
+	setVisible(true);
+	scroller.setBounds(10,10,(getSize().width-30),(getSize().height-120));
+    }
+    
+    public void addRow()
+    {
+	myTableModel.addRow();
+	jTable.tableChanged(new TableModelEvent(myTableModel));
+    }
+    
+
+    public synchronized void actionPerformed(ActionEvent e)
+    {
+	String command=e.getActionCommand();
+	System.out.println(command);
+	if("addRow".equals(command))
+	    {
+		myTableModel.addRow();
+	    }
+    }
+    
+    public void loadFromGto(GisTransferObject gto)
+    {
+	String text;
+	VectorSet vs=gto.getVectorSet("m_knotenNummern");
+	if(vs!=null)
+	    for(int row=0;row<vs.size();row++)
+		{
+		    text=vs.getSimpleProperty("v_nnr",row);
+		    if(text!=null)
+			myTableModel.addRow(new Integer(text));			
+		}
+	jTable.tableChanged(new TableModelEvent(myTableModel));
+    }
+    
+    public void storeToGto(GisTransferObject gto)
+    {
+	VectorSet vs=new VectorSet("m_knotenNummern");
+	for(int row=0;row<myTableModel.getRowCount();row++)
+	{
+	    AttributesImpl atts=new AttributesImpl();
+	    String value=myTableModel.getValueAt(row,0).toString();
+	    atts.addAttribute("","v_nnr","","xsi:string",value);
+	    vs.addRow(atts);
+	}
+	gto.addVectorSet(vs);
+    }
+}    

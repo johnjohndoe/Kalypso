@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by Anoby (have no company :-() -->
+<theme xsi:noNamespaceSchemaLocation="MetaDataModel.xsd" ID="Control" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <name>Control</name>
+  <description>Control Data</description>
+  <package>de.tuhh.wb.javagis.model.control</package>
+  <objectClass ID="controlData">
+    <name>Control Data</name>
+    <description>Data to control simulation</description>
+    <simpleProperty key="m_startDate">
+      <name>Start Date</name>
+      <description>Start date of simulation </description>
+<unit>[d.M.y H:m]</unit>
+      <format>d.M.y H:m</format>
+      <type>java.util.Date</type>
+    </simpleProperty>
+    <simpleProperty key="m_endDate">
+      <name>End Date</name>
+      <description>End date of simulation </description>
+<unit>[d.M.y H:m]</unit>
+      <format>d.M.y H:m</format>
+      <type>java.util.Date</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_timeStep">
+      <name>Timestep</name>
+      <description>Timestep for simulation</description>  
+<unit>[h]</unit>
+          <type>java.lang.Float</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_rootNode">
+      <name>Root Node</name>
+      <description>Downstream node in model network to define part of simulation, node numer given in model data</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+
+    <simpleProperty key="lzpath">
+      <name>Pfad Anfangswerte</name>
+      <description>Pfadname, um vorbereitete Anfangswerte zu benutzen. Beispiel: Dateien liegen in c:\\data\\lzsim, dann hier c:\\data angeben. Ohne Angabe werden Anfangswerte aus dem Vorlageverzeichnis verwendet.</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_tmp">
+      <name>Output Temperature</name>
+       <description>Time-series of temperature, catchment </description>
+<unit>[degree]</unit>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_pre">
+      <name>Output Precipitation</name>
+      <description>Time-series of precipitation, catchment</description>
+      <unit>[mm/h]</unit>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    
+    <simpleProperty key="m_sch">
+      <name>Output Snow Height</name>
+      <description>Simulated time-series of snow height, catchment</description>
+      <unit>[mm]</unit>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    
+<!--
+    <simpleProperty key="m_bof">
+      <name>Output Soil Moisture</name>
+      <description>Simulated time-series of soil moisture for each soil layer, first hydrotop in catchment</description>
+      <unit>[mm]</unit>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+-->
+
+    <simpleProperty key="m_bsp">
+      <name>Output Soil Moisture Regime</name>
+      <description>Balance of soil moisture regime for each hydrotop of catchment (text-file)</description>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    
+    <simpleProperty key="m_gws">
+      <name>Output Groundwater height</name>
+      <description>Simulated time-series of shallow aquifer height, catchment</description>
+      <unit>[m]</unit>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_qgs">
+      <name>Output Discharge for Nodes </name>
+      <description>Simulated time-series of total discharge</description>
+      <unit>[m<sup>3</sup>/s]</unit>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_qgg">
+      <name>Output Discharge for Catchments </name>
+      <description>Simulated time-series of total discharge</description>
+      <unit>[m<sup>3</sup>/s]</unit>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+    
+    <simpleProperty key="m_qna">
+      <name>Output Surface Flow, natural</name>
+      <description>Simulated time-series of surface flow over natural areas, catchment</description>
+      <unit>[m<sup>3</sup>/s]</unit>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_qif">
+      <name>Output Interflow</name>
+      <description>Simulated time-series of interflow, catchment</description>
+      <unit>[m<sup>3</sup>/s]</unit>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_qvs">
+      <name>Output Surface Flow, sealed</name>
+      <description>Simulated time-series of surface flow over sealed areas, catchment</description>
+      <unit>[m<sup>3</sup>/s]</unit>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_qbs">
+      <name>Output Baseflow</name>
+      <description>Simulated time-series of baseflow, catchment</description>
+      <unit>[m<sup>3</sup>/s]</unit>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+
+<!--
+    <simpleProperty key="m_qt1">
+      <name>Output Cleft 1</name>
+      <description>not used</description>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+-->
+<!--
+    <simpleProperty key="m_qtg">
+      <name>Output Cleft 2</name>
+      <description>not used</description>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+-->
+    <simpleProperty key="m_qgw">
+      <name>Output Groundwater Discharge</name>
+      <description>Simulated time-series groundwater discharge, catchment</description>
+      <unit>[m<sup>3</sup>/s]</unit>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+
+<!--
+    <simpleProperty key="m_kap">
+      <name>Output Percolation</name>
+      <description>not used</description>
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+-->
+   
+<!--
+    <simpleProperty key="m_vet">
+      <name>Output Evapotranspiration</name>
+      <description>Simulated time-series evapotranspiration, catchment</description>
+      <unit>[m<sup>3</sup>/s]</unit>           
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+-->
+<!--   
+  <simpleProperty key="m_hyd">
+  <name>Balance Hydrotope</name>
+  <description>not used</description>
+  <type>java.lang.Boolean</type>
+  </simpleProperty>
+    
+  <simpleProperty key="m_bil">
+  <name>Balance Discharge</name>
+  <description>not used</description>
+  <type>java.lang.Boolean</type>
+  </simpleProperty>
+  
+  <simpleProperty key="m_nmq">
+  <name>Statistical Discharge</name>
+  <description>not used</description>
+  <type>java.lang.Boolean</type>
+  </simpleProperty>
+
+  <simpleProperty key="m_spv">
+  <name>talsperren verdunstung</name>
+  <description>not used</description>
+  <type>java.lang.Boolean</type>
+  </simpleProperty>
+-->
+  
+    <simpleProperty key="m_spi">
+      <name>Storage Volume</name>
+      <description>Simulated time-series of storage volume</description>
+      <unit>[hm<sup>3</sup>]</unit>           
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_sub">
+      <name>Output Storage</name>
+      <description>Simulated time-series of storage output</description>
+      <unit>[m<sup>3</sup>/s]</unit>           
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_sph">
+      <name>storage water table</name>
+      <description>heigth of water table in storage</description>
+      <unit>m</unit>           
+      <type>java.lang.Boolean</type>
+    </simpleProperty>
+
+    <vectorSet key="m_teilgebiete">
+      <name>Generate Results for Catchments</name>
+      <simpleProperty key="v_tgn">
+	<name>Catchment Number</name>
+	<type>java.lang.Integer</type>
+      </simpleProperty>
+    </vectorSet>
+    <vectorSet key="m_knotenNummern">
+      <name>Generate Results for Nodes</name>
+      <simpleProperty key="v_nnr">
+	<name>Node Number</name>
+	<type>java.lang.Integer</type>
+      </simpleProperty>
+    </vectorSet>
+
+  <vectorSet key="m_longTimeSim">
+      <name>shorttime-simulation-startdates</name>
+      <description>Generate results (initial-values) for shorttime-simulation</description>
+      <simpleProperty key="v_langDat">
+	<name>Discharge</name>
+	<type>java.util.Date</type>
+      </simpleProperty>
+    </vectorSet>
+
+  </objectClass>
+</theme>

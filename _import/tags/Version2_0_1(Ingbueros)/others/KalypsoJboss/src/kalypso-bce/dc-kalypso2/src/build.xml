@@ -1,0 +1,80 @@
+<?xml version='1.0'?>
+<project name="dc-kalypso" basedir="." default="compile">
+
+<property name="src.dir" value="."/>
+<property name="build.dir" value="../build"/>
+<property name="jar.dir" value="../jar"/>
+
+<property name="doc.dir" value="../doc"/>
+<property name="apidocs.dir" value="${doc.dir}/apidocs"/>
+
+
+<path id="project">
+	<fileset dir="${build.dir}" includes="**/*"/>
+</path>
+
+
+<target name="init">
+  <!-- make all directories -->
+  <mkdir dir="${build.dir}"/>
+  <mkdir dir="${jar.dir}"/>
+  <mkdir dir="${doc.dir}"/>
+  <mkdir dir="${apidocs.dir}"/>
+</target>
+
+
+<target name="compile" depends="init">
+  <javac srcdir="${src.dir}"
+         destdir="${build.dir}"
+         debug="off"
+         optimize="on"
+         excludes="build.xml">
+         <classpath refid="project"/>
+   </javac>      
+</target>
+
+<target name="compile-debug" depends="init">
+	<javac srcdir="${src.dir}"
+         destdir="${build.dir}"
+         debug="on"
+         excludes="build.xml">
+         <classpath refid="project"/>
+   </javac>
+</target>
+
+<target name="jar" depends="compile">
+  
+  <jar destfile="${jar.dir}/dc-kalypso.jar" compress="on">
+    <fileset dir="${build.dir}"/>
+	 <manifest>
+	 	<attribute name="Built-By" value="${user.name}"/>
+	 	<attribute name="Class-Path" value="edbc.jar"/>
+	 </manifest>
+  </jar>
+  
+</target>
+
+
+<target name="run">
+  <java classname="${main.class}" fork="true">
+	<classpath refid="project"/>
+  </java>            
+</target>
+
+<target name="apidocs">
+  <javadoc sourcepath="${src.dir}"
+           destdir="${apidocs.dir}"
+           private="yes"
+           packageList="packages.txt"
+  />         
+</target>
+
+<target name="cleanup">
+  <delete>
+    <fileset dir="${build.dir}" includes="*/**"/>
+  	<fileset dir="${jar.dir}" includes="*/**"/>
+  	<fileset dir="${doc.dir}" includes="*/**"/>
+  </delete>
+</target>
+
+</project>
