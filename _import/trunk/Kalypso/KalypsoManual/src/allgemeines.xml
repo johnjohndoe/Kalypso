@@ -69,6 +69,8 @@
 
     <graphic fileref="img/wasserbau-logo.png" />
 
+    <para></para>
+
     <para><emphasis role="bold">Die Nymphe Kalypso</emphasis></para>
 
     <para>In Homers Odyssee wird die Nymphe Kalypso als Tochter von Atlas
@@ -170,13 +172,13 @@
       </listitem>
     </orderedlist>
 
-    <para>Beide Modelle werden durch die KALYPSO Modeler Oberfläche <xref
-    linkend="grafische_oberflaeche" /> unterstützt. Gleichzeitig sind
+    <para>Beide Modelle werden durch die KALYPSO Modeler Oberfläche (<xref
+    linkend="grafische_oberflaeche" />) unterstützt. Gleichzeitig sind
     innerhalb der Installation in der Landeshochwasserwarnzentrale Sachsen
     zwei Vorhersage-Wizards verfügbar, die den Anwender im Falle der
     Hochwasservorhersage gezielt durch die spezifische Vorhersageberechnung
-    der jeweiligen Modelle leiten <xref
-    linkend="vorhersage_wizards" />.</para>
+    der jeweiligen Modelle leiten (<xref
+    linkend="vorhersage_wizards" />).</para>
   </section>
 
   <section id="anwendungsfaelle">
@@ -194,7 +196,7 @@
     <orderedlist>
       <listitem>
         <para><emphasis role="bold">Administration</emphasis>: Der
-        Fachadministrator nimmt hauptsächlich die Aufgabe wahr, neu Modelle
+        Fachadministrator nimmt hauptsächlich die Aufgabe wahr, neue Modelle
         bzw. Modelltypen in KALYPSO zu implementieren.</para>
       </listitem>
 
@@ -229,8 +231,8 @@
 
     <para>Der Punkt 1 Administration ist gesondert in der Technischen
     Dokumentation beschrieben. Die Benutzung von KALYPSO in Hinblick auf die
-    Modellpflege <xref linkend="grafische_oberflaeche" /> und den
-    Hochwasserbetrieb <xref linkend="vorhersage_wizards" /> ist im
+    Modellpflege (<xref linkend="grafische_oberflaeche" />) und den
+    Hochwasserbetrieb (<xref linkend="vorhersage_wizards" />) ist im
     vorliegenden Handbuch beschrieben.</para>
   </section>
 
@@ -257,11 +259,11 @@
     <para>Das Speichern des Modells (einschließlich Modellspezifikation,
     Modelldatei, Vorlagen, gemessene und berechnete Zeitreihen sowie
     Rechenfälle) auf dem Server und ähnliche Funktionen werden mittels eines
-    speziellen Menüs <guilabel>Modell</guilabel> <xref
-    linkend="grundfunktionen" /> im Hauptmenü von KALYPSO angesteuert.</para>
+    speziellen Menüs <guilabel>Modell</guilabel> (<xref
+    linkend="grundfunktionen" />) im Hauptmenü von KALYPSO angesteuert.</para>
 
-    <para>Dieses Datenmanagement-Prinzip ist insbesondere transparent in
-    KALYPSO Modeler (Expertenmodus), wo der Experte sehr detailliert und
+    <para>Dieses Datenmanagement-Prinzip ist insbesondere transparent im
+    KALYPSO-Modeler (Expertenmodus), wo der Experte sehr detailliert und
     gezielt den Datenaustausch zwischen Server und lokaler Ebene steuern
     kann.</para>
 

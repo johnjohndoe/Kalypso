@@ -17,8 +17,8 @@
   verwaltet und lediglich als Information an KALYPSO weitergereicht.</para>
 
   <para>Der Programm-Start von KALYPSO erfolgt entweder über das Windows
-  Start-Menü -&gt; Programme -&gt; KALYPSO oder über Doppelklick des
-  Desktop-Icons KALYPSO.</para>
+  <guimenu>Start-Menü -&gt; Programme -&gt; KALYPSO</guimenu> oder über
+  Doppelklick des Desktop-Icons KALYPSO.</para>
 
   <section id="kalypso_startseite">
     <sectioninfo>
@@ -63,6 +63,11 @@
 
       <listitem>
         <para>KALYPSO Modeler: Programmoberfläche für den Expertenmodus</para>
+      </listitem>
+
+      <listitem>
+        <para>Zeitreihen-Ablage: Oberfläche zur Verwaltung von
+        Zeitreihen</para>
       </listitem>
     </itemizedlist>
 

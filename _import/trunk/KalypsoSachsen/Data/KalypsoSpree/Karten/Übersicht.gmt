@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="50.97127443877715" left="14.295643595240865" right="14.954722583628214" top="51.571865622897015"/>
+    <extent bottom="5650006.916976411" left="5436586.076562207" right="5512640.846857727" top="5716010.004180241"/>
     <layers active="ID_1">
         <layer name="Vorhersagepegel (N-A Modell)" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="NA-Modelle" ns1:actuate="onRequest" ns1:href="project:/.styles/namodelle.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
@@ -18,6 +18,9 @@
             <ns10:style linktype="sld" style="Zufluesse" ns9:actuate="onRequest" ns9:href="project:/.styles/zufluesse.sld" ns9:type="simple" xmlns:ns10="types.template.kalypso.org"/>
         </layer>
         <layer name="Gewässerverlauf" visible="true" featurePath="featureMember" id="ID_6" linktype="shape" ns11:actuate="onRequest" ns11:href="project:/Grunddaten/Shapes/gewässer#EPSG:31469" ns11:type="simple" xmlns:ns11="http://www.w3.org/1999/xlink">
+            <ns12:style linktype="sld" style="sachsenrivers" ns11:actuate="onRequest" ns11:href="project:/.styles/styles.sld" ns11:type="simple" xmlns:ns12="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Sachsen" visible="true" featurePath="featureMember" id="ID_6" linktype="shape" ns11:actuate="onRequest" ns11:href="project:/Grunddaten/Shapes/sachsen#EPSG:31469" ns11:type="simple" xmlns:ns11="http://www.w3.org/1999/xlink">
             <ns12:style linktype="sld" style="sachsenrivers" ns11:actuate="onRequest" ns11:href="project:/.styles/styles.sld" ns11:type="simple" xmlns:ns12="types.template.kalypso.org"/>
         </layer>
     </layers>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpreeModell fid="root" xmlns="org.kalypso.spree.modell" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="project:/.model/schema/modell.xsd">
+<SpreeModell fid="root" xmlns="org.kalypso.spree.modell" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://ww  w.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="project:/.model/schema/modell.xsd">
   <PegelCollectionAssociation>
     <PegelCollection fid="EZC_1">
       <PegelMember>
@@ -312,8 +312,8 @@
         <FlusslaufModell fid="FM_5">
           <Name>Spremberg</Name>
           <Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
-              <gml:coordinates cs="," decimal="." ts=" ">14.38314223515295,51.55066172469371</gml:coordinates>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5456440.000,5716010.000</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessenEingang>

@@ -16,14 +16,15 @@
     allerdings keine Möglichkeit zum Bearbeiten von Daten oder Verschieben von
     Zeitreihen in andere Verzeichnisse. Beispielsweise können die in der
     Datenbank des Servers abgelegten Zeitreihen betrachtet und kontrolliert,
-    allerdings nicht verändert oder gespeichert werden. </para>
+    allerdings nicht verändert oder gespeichert werden.</para>
 
-    <para>Die dargestellten Zeitreihen können nicht exportiert oder unter
-    einem anderen Namen gespeichert werden. Es besteht jedoch die Möglichkeit,
-    die Verknüpfung (Link) auf die Zeitreihe per rechten Mausklick in die
-    Zwischenablage zu speichern und in einer anderen Datei wieder einzufügen.
-    So können beispielsweise Zeitreihen mit Modelldaten verknüpft werden
-    (Zuordnung von Niederschlagsstationen oder Pegeln).</para>
+    <para>Die dargestellten Zeitreihen können im zml-Format exportiert und
+    unter einem beliebigen Namen gespeichert werden. Es besteht jedoch die
+    Möglichkeit, die Verknüpfung (Link) auf die Zeitreihe per rechten
+    Mausklick in die Zwischenablage zu speichern und in einer anderen Datei
+    wieder einzufügen. So können beispielsweise Zeitreihen mit Modelldaten
+    verknüpft werden (Zuordnung von Niederschlagsstationen oder
+    Pegeln).</para>
 
     <para>Bei Anwahl der Perspektive über die entsprechende Schaltfläche
     öffnet sich die vordefinierte Ablagen-Ansicht (<xref
@@ -34,7 +35,10 @@
     markiert, sind die Tabelle und das Diagramm leer. Die einzelnen Fenster
     können vom Benutzer beliebig angeordnet und/oder verschoben werden. Es
     gelten die gleichen Voraussetzungen wie im Expertenmodus (siehe auch <xref
-    linkend="arbeiten_mit_ansichten" />).</para>
+    linkend="arbeiten_mit_ansichten" />). Zusätzlich kann das
+    Eigenschaften-Fenster über das Menü <guimenu>Fenster</guimenu> geöffnet
+    werden, in dem die Metadaten (Name der Station etc.) der Zeitreihe
+    angezeigt werden.</para>
 
     <figure id="repository_ansicht">
       <title>Ansicht der Zeitreihen-Ablage</title>
@@ -42,7 +46,7 @@
       <mediaobject>
         <imageobject>
           <imagedata fileref="img/repository.png" revisionflag="added"
-                     scale="50" />
+                     scale="30" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -70,6 +74,8 @@
       </mediaobject>
     </figure>
 
+    <para></para>
+
     <para><emphasis role="bold">Ablage(n) hinzufügen</emphasis></para>
 
     <para>Der Benutzer kann beliebig viele Zeitreihen-Ablagen in die
@@ -78,7 +84,7 @@
     Zeitreihen-Verzeichnisse gewählt werden kann. Wird eine lokale Ablage
     gewählt, muss im nächsten Fenster der Pfad, das Kennzeichen (Name der
     Ablage) sowie die Dateiendung der Zeitreihen (Standard: *.zml) angegeben
-    werden muss (<xref linkend="repository_import_lokal" />).</para>
+    werden (<xref linkend="repository_import_lokal" />).</para>
 
     <figure id="repository_import_lokal">
       <title>Lokale Ablage hinzufügen</title>
@@ -90,11 +96,11 @@
       </mediaobject>
     </figure>
 
-    <para>Wird dagegen der KALYPSO-Obervations-Dienst gewählt, erscheint im
+    <para>Wird dagegen der KALYPSO-Observations-Dienst gewählt, erscheint im
     Ansichts-Fenster die Verzeichnis-Struktur des Kalypso-Servers mit allen
-    d</para>
+    darauf befindlichen Zeitreihen-Verzeichnissen.</para>
 
-    <para>arauf befindlichen Zeitreihen-Verzeichnissen.</para>
+    <para></para>
 
     <para><emphasis role="bold">Ablage entfernen</emphasis></para>
 
@@ -102,13 +108,15 @@
     aktuellen Ansicht entfernt. Die entsprechenden Verzeichnisse (lokal bzw.
     auf dem Server) bleiben jedoch unangetastet.</para>
 
+    <para></para>
+
     <para><emphasis role="bold">Einstellungen der Ablage
     setzen</emphasis></para>
 
     <para>Mit dieser Option kann der Zeitraum der Zeitreihen der markierten
     Zeitreihen-Ablage definiert werden. Es erscheint ein Auswahlfenster, in
     dem der Benutzer den gewünschten Zeitraum eingeben kann(<xref
-    linkend="repository_einstellungen" />). </para>
+    linkend="repository_einstellungen" />).</para>
 
     <figure id="repository_einstellungen">
       <title>Definition der Einstellungen einer Ablage</title>
@@ -120,26 +128,33 @@
       </mediaobject>
     </figure>
 
-    <para>Die Eingabe erfolgt entweder in Form von Anzahl an Tagen oder durch
-    Angabe des gewünschten Zeitraums. Wird bei der Anzahl der Tage "0"
+    <para>Die Eingabe erfolgt entweder in Form der Anzahl der Tage oder durch
+    Angabe des gewünschten Zeitraums. Wird bei der Anzahl der Tage ´0´
     angegeben, werden alle Zeitreihen für den gesamten zur Verügung stehenden
-    Zeitraum eingelesen.</para>
+    Zeitraum eingelesen, soweit dies von der jeweiligen Ablage unterstützt
+    wird.</para>
+
+    <para></para>
 
     <para><emphasis role="bold">Ablage aktualisieren</emphasis></para>
 
     <para>Die Verzeichnisstruktur der in der Ansicht enthaltenen
     Zeitreihen-Ablagen wird neu eingelesen.</para>
 
+    <para></para>
+
     <para><emphasis role="bold">Alle Zweige des Baums
     reduzieren</emphasis></para>
 
     <para>Die Verzeichnisstruktur wird in der Ansicht bis auf die Überschrift
-    reduziert ("Zuklappen")</para>
+    reduziert (´Zuklappen´)</para>
+
+    <para></para>
 
     <para><emphasis role="bold">Alle Zweige des Baums
     anzeigen</emphasis></para>
 
     <para>Die Verzeichnisstruktur der Zeitreihen-Ablage wird vollständig
-    angezeigt ("Aufklappen")</para>
+    angezeigt (´Aufklappen´)</para>
   </section>
 </chapter>

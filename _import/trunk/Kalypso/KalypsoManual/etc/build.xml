@@ -13,12 +13,6 @@
   <property name="css.dir" value="${help.dir}/css"/>
   <property name="image.dir" value="${help.dir}/img"/>
 
-  <!-- Doc properties -->
-<!--  <property name="manual.dir" value="../manual" />
-  <property name="doc.src.dir" value="${src.dir}/doc" />
-  <property name="tex.tmp.dir" value="../textmp" />
-  -->
-
   <target name="init">
     <mkdir dir="${build.dir}" />
     <mkdir dir="${build.doc.dir}" />
@@ -100,6 +94,7 @@
       />
     </copy>
 
+    <!--
     <copy todir="${manual.dir}">
       <fileset dir="${help.dir}" casesensitive="no">
         <include name="**/*.*" />
@@ -109,6 +104,7 @@
         <exclude name="*.dtd" />
       </fileset>
     </copy>
+    -->
 
     <antcall target="pdfproc">
       <param name="pdfproc.out.dir" value="${build.pdf.dir}" />

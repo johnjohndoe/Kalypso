@@ -61,8 +61,8 @@
 
     <para>Die Ergonomie und Logik der Oberfläche ist ähnlich wie bei gängigen
     GIS-Softwareprodukten - jedoch ergänzt durch generelle Funktionen zur
-    Bearbeitung und Verwaltung hydrologisch / hydraulischer Modell (siehe u.a.
-    <xref linkend="grundfunktionen" />).</para>
+    Bearbeitung und Verwaltung hydrologisch / hydraulischer Modelle (siehe
+    u.a. <xref linkend="grundfunktionen" />).</para>
 
     <para>I.d.R. beinhaltet jede der oben genannten Ansichten ein spezifisches
     Untermenü bzw. Werkzeuge in Form von Toolbars. Z.B. umfasst die
@@ -102,7 +102,7 @@
       <para>Bei Doppelklick mit linker Maustaste auf die zu öffnende Datei
       wird derjenige Editor zum Öffnen benutzt, mit dem die Datei zuletzt
       aufgerufen wurde. Bei bestimmten Dateitypen (z.B. Zeitreihen) wird bei
-      Doppelcklick auf die Datei eine Vorlagenauswahl-Fenster geöffnet. Hier
+      Doppelklick auf die Datei eine Vorlagenauswahl-Fenster geöffnet. Hier
       besteht die Möglichkeit, die Datei unterschiedlich zu visualisieren
       (Tabelle, Diagramm).</para>
 
@@ -219,9 +219,9 @@
       aktiviert bzw. in diese hinein geklickt wird (Kartenname wird farblich
       hervorgehoben).</para>
 
-      <para>Anhand der verfügbaren Funktionen kann die Karte vergrößert oder
-      verkleinert (Zoom), der Bildausschnitt maximiert und verschoben (Pan)
-      werden.</para>
+      <para>Anhand der verfügbaren Funktionen kann die Darstellung vergrößert
+      oder verkleinert (Zoom), der Bildausschnitt maximiert und verschoben
+      (Pan) werden.</para>
 
       <para>Im Menü <guimenu>Karte</guimenu> kann die Editierfunktion (Edit
       Feature) aktiviert werden. Um Elemente in der Karte zu selektieren und
@@ -265,7 +265,7 @@
       zur Ansichtsleiste kann anhand Rechtsklick mit der Maus (Untergliederung
       des Themas muss aktiv sein) ein Submenü geöffnet werden, wo
       <guimenu>Style verändern</guimenu> ausgewählt werden kann, sodass sich
-      die Style Editor-Ansicht öffnet. mit dem Style Editor können
+      die Style-Editor-Ansicht öffnet. Mit dem Style-Editor können
       Symboldarstellungen, Farben, Fonts, etc. interaktiv verändert werden.
       Damit die Veränderungen für die Kartenvorlage wirksam werden, sind die
       Styles entsprechend zu speichern.</para>
@@ -291,7 +291,7 @@
       <title>Tabellen-Ansicht</title>
 
       <para>Sobald eine Tabellenvorlage (*.gtt) mit dem GisTableEditor
-      geöffnet wird, dann erscheint im Hauptmenü zwischen den Menüpunkten
+      geöffnet wird, erscheint im Hauptmenü zwischen den Menüpunkten
       <guimenu>Modell</guimenu> und <guimenu>Fenster</guimenu> ein
       zusätzlicher Menüpunkt <guimenu>Tabelle</guimenu> (siehe <xref
       linkend="navigation_tabellen_ansicht" />). Die Funktionen im Menü
@@ -382,7 +382,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/diagramm.png" scale="50" />
+            <imagedata fileref="img/diagramm.png" scale="30" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -391,14 +391,14 @@
       Verfügung. Um einen Abschnitt der Zeitreihe vergrößert darzustellen, ist
       der entsprechende Abschnitt durch Aufspannen eines Zaunes mit der linken
       Maus zu markieren. Nach Setzen des ersten Zaun-Eckpunktes (obere linke
-      Ecke) bitte die linke Maustaste beim Aufspannen des Zaunes gedrückt
-      lassen. Weitere Zoomfunktionen stehen durch Klick mit der rechten
+      Ecke) wird die linke Maustaste beim Aufspannen des Zaunes gedrückt
+      gehalten. Weitere Zoomfunktionen stehen durch Klick mit der rechten
       Maustaste in die Diagramm-Ansicht zur Verfügung.</para>
 
       <section>
         <title>Bearbeiten von Zeitreihen</title>
 
-        <para>Neben der Darstellung der Zeitreihen im Diagramm Quick-View
+        <para>Neben der Darstellung der Zeitreihen im Diagramm-Quick-View
         beinhaltet die Oberfläche von KALYPSO auch ein Werkzeug zum Bearbeiten
         von Zeitreihen. Das Grafik-Programm bietet vielfältige Möglichkeiten
         zur Visualisierung, Bearbeitung und Auswertung von Zeitreihen. Für
@@ -465,6 +465,8 @@
         </mediaobject>
       </figure>
 
+      <para></para>
+
       <para id="menu_modell_vom_server_laden"><emphasis role="bold">Modell vom
       Server laden</emphasis></para>
 
@@ -477,6 +479,8 @@
       gespeichert, erfolgt lediglich eine lokale Speicherung der Änderungen.
       Die Original-Dateien auf dem Server bleiben hiervon unberührt.</para>
 
+      <para></para>
+
       <para id="menu_modell_aktualisieren"><emphasis role="bold">Modell
       aktualisieren</emphasis></para>
 
@@ -486,6 +490,8 @@
       (<emphasis>alle Änderungen gehen verloren!</emphasis>). Die
       aktualisierten Dateien werden in das lokale Arbeitsverzeichnis
       gespeichert.</para>
+
+      <para></para>
 
       <para id="menu_modell_zurueckspeichern"><emphasis role="bold">Modell
       zurückspeichern</emphasis></para>
@@ -500,6 +506,8 @@
       da auf dem Server gespeicherte Änderungen nicht rückgängig gemacht
       werden können. Bei Benutzern, die Expertenrechte besitzen, werden nur
       evtl. neu erstellte Modellvarianten auf dem Server abgelegt.</para>
+
+      <para></para>
 
       <para id="menu_modellvariante_anlegen"><emphasis role="bold">Modell
       kopieren</emphasis></para>
@@ -516,8 +524,8 @@
       <para id="menu_datei">Eine weitere Möglichkeit zum Öffnen eines
       bestehenden Projektes besteht über Aktivierung des Menüpunktes <guimenu
       id="menu_datei_neu_projekt">Datei -&gt; Neu -&gt; Projekt</guimenu>. Es
-      folgt ein Auswahlfenster mit den zur Verfügung stehenden Datenquellen (
-      Server). Im weiteren Verlauf wird der Benutzer durch die Strukturen des
+      folgt ein Auswahlfenster mit den zur Verfügung stehenden Datenquellen
+      (Server). Im weiteren Verlauf wird der Benutzer durch die Strukturen des
       Servers geführt und erhält eine Liste mit den vorhanden Projekten. Diese
       können durch Bestätigung mit <guibutton>Fertigstellen</guibutton> in die
       Programmoberfläche geladen werden.</para>
@@ -536,6 +544,8 @@
       Projekteintrag aus der Programmoberfläche entfernt. Die lokal
       gespeicherten Projektdateien bleiben erhalten, so dass das Projekt
       jederzeit wieder geöffnet werden kann.</para>
+
+      <para></para>
 
       <para
       id="menu_modell_hochwasser_vorhersage_durchfuehren"><firstterm><emphasis
@@ -598,11 +608,11 @@
         </listitem>
 
         <listitem>
-          <para>Definition von Rechenfällen</para>
+          <para>Definition von Rechenvarianten</para>
 
-          <para>Innerhalb eines Modells können unterschiedliche Rechenfälle
-          definiert werden, die bspw. unterschiedliche Simualtionräume oder
-          Modellzustände beschreiben.</para>
+          <para>Innerhalb eines Modells können unterschiedliche
+          Rechenvarianten definiert werden, die bspw. unterschiedliche
+          Simulationräume oder Modellzustände beschreiben.</para>
         </listitem>
 
         <listitem>
@@ -703,14 +713,14 @@
       <title>Modellberechnung</title>
 
       <para>Um Modellberechnungen aus dem Expertenmodus heraus zu starten,
-      müssen vom Benutzer Rechenläufe definiert werden. Die Informationen
-      eines Rechenlaufes werden vom Programm in einen zu definierenden Ordner
-      gepeichert. In einem Modell können mehrere Rechenläufe vorhanden sein,
-      die entweder einzeln oder nacheinander abgearbeitet werden. Ferner ist
-      es auch möglich, aus dem Expertenmodus direkt in den Vorhersage-Modus zu
-      wechseln, um mit einem geöffneten Modell Hochwasser-Vorhersagen
-      durchzuführen. Die Steuerung der Rechenläufe erfolgt über das Menü
-      <guimenu>Rechenvariante</guimenu>.</para>
+      müssen vom Benutzer Rechenvarianten definiert werden. Die Informationen
+      einer Rechenvariante werden vom Programm in einen zu definierenden
+      Ordner gepeichert. In einem Modell können mehrere Rechenvarianten
+      vorhanden sein, die entweder einzeln oder nacheinander abgearbeitet
+      werden. Ferner ist es auch möglich, aus dem Expertenmodus direkt in den
+      Vorhersage-Modus zu wechseln, um mit einem geöffneten Modell
+      Hochwasser-Vorhersagen durchzuführen. Die Steuerung der Rechenläufe
+      erfolgt über das Menü <guimenu>Rechenvariante</guimenu>.</para>
 
       <figure id="pic_menu_modell_unten">
         <title>Hauptmenü Rechenvariante</title>
@@ -722,19 +732,23 @@
         </mediaobject>
       </figure>
 
+      <para></para>
+
       <para id="menu_rechenvariante_neu"><guimenu>Rechenvariante
       neu...</guimenu></para>
 
       <para>Bei Auswahl dieses Menüpunktes wird eine neue Rechenvariante für
       das gerade aktive Modell definiert. Es folgt ein Auswahlfenster mit der
       Aufforderung zur Angabe eines Ordners, in den die Rechenvariante
-      gepeichert werden soll. Empfohlen wird, vor dem Anlegen eines neuen
-      Rechenlaufs einen Ordner anzulegen, in den alle Rechenvarianten in Form
-      von Unterordnern abgelegt werden können. Nach Eingabe der
+      gepeichert werden soll. Empfohlen wird, vor dem Anlegen einer neuen
+      Rechenvariante einen Ordner anzulegen, in dem alle Rechenvarianten in
+      Form von Unterordnern abgelegt werden können. Nach Eingabe der
       Steuerparameter und Bestätigung der Angaben durch
       <guimenu>Fertigstellen</guimenu> werden die für die Berechnung
       benötigten Modelldateien vom Programm in das angegebene Verzeichnis
       kopiert.</para>
+
+      <para></para>
 
       <para id="menu_rechenvariante_kopieren"><guimenu>Rechenvariante
       kopieren...</guimenu></para>
@@ -745,6 +759,8 @@
       der ausgewählten Rechenvariante werden in das neue Verzeichnis
       kopiert.</para>
 
+      <para></para>
+
       <para
       id="menu_rechenvariante_zeitreihen_aktualisieren"><guimenu>Zeitreihen
       aktualisieren</guimenu></para>
@@ -754,6 +770,8 @@
       Menü-Punktes neu vom Server geladen. Die bereits vorhandenen Zeitreihen
       eines Rechenfalls werden überschrieben (Änderungen gehen
       verloren!).</para>
+
+      <para></para>
 
       <para id="menu_rechenvariante_vom_server_laden"><guimenu>Vom Server
       laden</guimenu></para>
@@ -767,6 +785,8 @@
       bei Bedarf mit dem Menüpunkt <guimenu>Zeitreihen aktualisieren</guimenu>
       vorgenommen werden.</para>
 
+      <para></para>
+
       <para
       id="menu_rechenvariante_archivieren"><guimenu>Archivieren</guimenu></para>
 
@@ -776,6 +796,8 @@
       bereits eine gleichnamige Rechenvariante, ist eine Archivierung nicht
       möglich.</para>
 
+      <para></para>
+
       <para
       id="menu_rechenvariante_berechnung_durchfuehren"><guimenu>Berechnung
       durchführen</guimenu></para>
@@ -784,13 +806,14 @@
       Modellberechnungen über diesen Menüpunkt durchgeführt werden. Es
       erscheint ein Auswahlfenster, in dem alle im Modell definierten
       Berechnungsvarianten aufgelistet werden. Durch das Häkchen vor dem Namen
-      kann der jeweilige Rechenlauf aktiviert bzw. deaktiviert werden. Dabei
-      können in einem Rechenlauf beliebig viele Varianten berechnet werden.
-      Der aktuelle Fortschritt der Berechnung(en) wird mit Hilfe eines Balkens
-      dargestellt. Nach erfolgreich durchgeführter Berechnung werden die
-      Ergebnisse in Form von Zeitreihen in den Rechenlauf-Ordner gespeichert.
-      Die Speicherung erfolgt im lokalen Arbeitsverzeichnis. Ggfs. müssen die
-      berechneten Ergebnisse per Hand auf den Server übertragen werden.</para>
+      kann die jeweilige Rechenvariante aktiviert bzw. deaktiviert werden.
+      Dabei können in einem Rechenlauf beliebig viele Varianten berechnet
+      werden. Der aktuelle Fortschritt der Berechnung(en) wird mit Hilfe eines
+      Balkens dargestellt. Nach erfolgreich durchgeführter Berechnung werden
+      die Ergebnisse in Form von Zeitreihen in den Rechenlauf-Ordner
+      gespeichert. Die Speicherung erfolgt im lokalen Arbeitsverzeichnis.
+      Ggfs. müssen die berechneten Ergebnisse per Hand auf den Server
+      übertragen werden.</para>
     </section>
 
     <section id="modellergebnisse">
@@ -807,6 +830,8 @@
       sich ein Auswahlfenster, in dem der Benutzer verschiedene Möglichkeiten
       angezeigt bekommt:</para>
 
+      <para></para>
+
       <para><emphasis>Visualisierung im Diagramm</emphasis></para>
 
       <para>Die Zeitreihe wird grafisch in einem Diagramm dargestellt.
@@ -816,6 +841,8 @@
       Einlesen der Zeitreihe in das mitgelieferte Grafik-Programm realisiert
       werden, in dem eine Vielzahl von Optionen zur Visualierung und
       Editierung von Zeitreihen gegeben ist.</para>
+
+      <para></para>
 
       <para><emphasis>Anzeige in Tabellen</emphasis></para>
 
@@ -828,6 +855,8 @@
       -&gt; Speichern</guimenu> in das Projektverzeichnis übernommen. Über
       <guimenu>Datei -&gt; Speichern unter...</guimenu> kann die Tabelle in
       einen beliebigen Ordner im Projektverzeichnis gespeichert werden.</para>
+
+      <para></para>
 
       <para><emphasis>Versenden der Ergebnisse an das
       Berichtswesen</emphasis></para>
@@ -851,7 +880,7 @@
       exportiert. Der Aufruf der Funktion erfolgt im jeweiligen Menü-Punkt
       (<guimenu id="menu_tabelle_berichtsablage">Tabelle</guimenu>, <guimenu
       id="menu_diagramm_berichtsablage">Diagramm</guimenu>) unter <guimenu
-      id="menu_berichtsablage">Berichtsablage...</guimenu> . Es erfolgt eine
+      id="menu_berichtsablage">Berichtsablage...</guimenu> . Es folgt eine
       Eingabemaske, in der zusätzliche Informationen zu der exportierten Datei
       eingetragen werden können (<xref
       linkend="pic_berichtsablage" />).</para>
@@ -865,6 +894,8 @@
           </imageobject>
         </mediaobject>
       </figure>
+
+      <para></para>
 
       <para id="menu_tabelle_exportieren"><emphasis>Exportieren von
       Ergebnissen</emphasis></para>
