@@ -39,6 +39,9 @@ public class StringModifier implements IFeatureModifier
    */
   public Object getValue( final Feature f )
   {
+    if( m_ftp == null )
+      return null;
+    
     final String type = m_ftp.getType();
     final Object data = f.getProperty( m_ftp.getName() );
 
