@@ -18,10 +18,7 @@
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="2"/>
-<!--
-<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=name#linkColumn=niederschlagZR"/>
--->
-<arg name="timeserie1" value="nameColumn=inum#nameString=Gebietsniederschlag Teilgebiet %featureprop%#linkColumn=niederschlagZR"/>        
+		<arg name="timeserie1" value="nameColumn=inum#nameString=Gebietsniederschlag Teilgebiet %featureprop%#linkColumn=niederschlagZR"/>
        	<arg name="maximizeMap" value="true"/>
     </page>
 
@@ -461,13 +458,8 @@ pageTitle="Prognose Pegel Weida 9/17"
 	<page className="org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung" 
 		imageLocation="icons/calcwizard/kalypso32.gif" >
 		<arg name="mapTemplate" value="project:.templates/calcCase/export.gmt"/>
-<!--<arg name="timeserie1" 
-			value="nameColumn=Name#linkColumn=qberechnetZR#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
-		<arg name="timeserie2" 
-			value="nameColumn=Name#linkColumn=pegelZR#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;"/>
--->
-<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
-<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
+		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="40"/>
