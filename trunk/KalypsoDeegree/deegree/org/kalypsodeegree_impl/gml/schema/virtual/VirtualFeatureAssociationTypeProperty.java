@@ -15,6 +15,7 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -157,11 +158,12 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
       final List curves = new ArrayList();
       for( int i = 0; i < destGeo.length; i++ )
       {
-        final GM_Position[] pos = new GM_Position[]
-        {
-            src,
-            destGeo[i].getCentroid().getPosition() };
-        curves.add( GeometryFactory.createGM_Curve( pos, srcGeo.getCoordinateSystem() ) );
+//        final GM_Position[] pos = new GM_Position[]
+//        {
+//            src,
+//            destGeo[i].getCentroid().getPosition() };
+//        curves.add( GeometryFactory.createGM_Curve( pos, srcGeo.getCoordinateSystem() ) );        
+        curves.add(GeometryUtilities.createArrowLineString(srcGeo.getCentroid(),destGeo[i].getCentroid(),0.8,0.01) );
       }
       return GeometryFactory.createGM_MultiCurve( (GM_Curve[])curves.toArray( new GM_Curve[curves
           .size()] ) );

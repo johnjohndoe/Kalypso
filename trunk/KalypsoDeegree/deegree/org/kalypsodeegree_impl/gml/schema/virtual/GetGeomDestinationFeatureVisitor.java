@@ -91,6 +91,7 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
 
   private void visit( Feature feature, int level )
   {
+   level++;
     FeatureTypeProperty[] properties = feature.getFeatureType().getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
@@ -129,8 +130,7 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
       }
       else
       {
-        level++;
-        if( level < m_maxLevel )
+        if( level <= m_maxLevel )
           visit( destFEs[i], level );
       }
     }
