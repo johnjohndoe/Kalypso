@@ -90,11 +90,11 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
     addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PORT, "Http-Proxy Port&nummer:", getFieldEditorParent() ) );
     addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_USER, "Http-Proxy &Benutzername:", getFieldEditorParent() ) );
     
-    addField( new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS, "Globales &Koordinatensystem:", getFieldEditorParent() ) );
     // set echo char because it is a password field
     final StringFieldEditor editor = new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PASS, "Http-Proxy Pass&wort:", getFieldEditorParent() );
     editor.getTextControl( getFieldEditorParent() ).setEchoChar( '*' );
     
+    addField( new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS, "Globales &Koordinatensystem:", getFieldEditorParent() ) );
 //
 //    addField( new RadioGroupFieldEditor( P_CHOICE, "An example of a multiple-choice preference", 1,
 //        new String[][]
