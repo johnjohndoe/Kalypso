@@ -2,9 +2,13 @@ package org.kalypso.editor.tableeditor.layerTable;
 
 import java.util.Properties;
 
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree_impl.model.feature.FeatureFactory;
 import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.plugin.KalypsoGisPlugin;
 
 /**
@@ -44,7 +48,8 @@ public class LayerTableCellModifier implements ICellModifier
    */
   public Object getValue( final Object element, final String property )
   {
-    return null;
+    final int index = Integer.parseInt(property);
+    return ((Feature)element).getProperty( index );
   }
 
   /**
@@ -52,7 +57,10 @@ public class LayerTableCellModifier implements ICellModifier
    */
   public void modify( final Object element, final String property, final Object value )
   {
+    final FeatureProperty fp = FeatureFactory.createFeatureProperty( getFeatureTypeProperty(property).getName(), value );
     
+    // TODO: post Command and send event to Layer -> TODO: react to event in LayerTable or wherever
+    ((Feature)((TableItem)element).getData()).setProperty( fp );
   }
 
 }

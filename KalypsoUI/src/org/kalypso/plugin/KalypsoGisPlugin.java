@@ -205,7 +205,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   
   public Properties getFeatureTypeCellEditorProperties()
   {
-    if( m_ftpProperties != null )
+    if( m_ftpProperties == null )
     {
       m_ftpProperties = new Properties();
       
