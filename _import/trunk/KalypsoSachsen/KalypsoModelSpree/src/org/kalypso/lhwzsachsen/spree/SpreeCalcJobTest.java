@@ -13,9 +13,9 @@ import javax.xml.bind.Unmarshaller;
 
 import junit.framework.TestCase;
 
-import org.deegree_impl.extension.ITypeRegistry;
-import org.deegree_impl.extension.TypeRegistryException;
-import org.deegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.model.xml.Modelspec;
 import org.kalypso.model.xml.ModelspecType;

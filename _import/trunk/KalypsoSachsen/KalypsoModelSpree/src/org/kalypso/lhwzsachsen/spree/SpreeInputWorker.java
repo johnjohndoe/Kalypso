@@ -18,11 +18,11 @@ import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.io.shpapi.DBaseFile;
-import org.deegree_impl.io.shpapi.FieldDescriptor;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
+import org.kalypsodeegree_impl.io.shpapi.FieldDescriptor;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.io.StreamUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;

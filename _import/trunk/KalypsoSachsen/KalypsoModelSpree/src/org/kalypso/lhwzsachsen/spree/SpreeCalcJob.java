@@ -27,11 +27,11 @@ import java.util.Properties;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.output.NullOutputStream;
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureProperty;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;

@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/KalypsoCalcService"/>
 	<classpathentry kind="src" path="/KalypsoCore"/>
-	<classpathentry kind="src" path="/backupdeegree"/>
 	<classpathentry kind="src" path="/KalypsoUtil"/>
+	<classpathentry kind="src" path="/KalypsoDeegree"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>
