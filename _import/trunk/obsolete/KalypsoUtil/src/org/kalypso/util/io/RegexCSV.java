@@ -7,37 +7,39 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Parses a CSV file. Save is possible using a Writer.
  * 
  * @author schlienger
  */
-public class CSV implements ITabledValues
+public class RegexCSV implements ITabledValues
 {
   private final Reader m_reader;
-
-  private final String m_split;
 
   private final Vector m_lines = new Vector();
 
   private final int m_line;
 
+  private final Pattern m_pattern;
+
   /**
    * Constructor. Fetches the file and closes the reader;
    * 
    * @param reader
-   * @param split the string used for spliting each line into chunks
    * @param line the line number to start reading the values at
+   * 
    * 
    * @throws IOException
    */
-  public CSV( final Reader reader, final String split, final int line ) throws IOException
+  public RegexCSV( final Reader reader, final Pattern p, final int line ) throws IOException
   {
     m_reader = reader;
-    m_split = split;
     m_line = line;
-
+    m_pattern = p;
+    
     fetchFile();
   }
 
@@ -64,11 +66,17 @@ public class CSV implements ITabledValues
       
       while( line != null )
       {
-        m_lines.add( line.split( m_split ) );
+        Matcher m = m_pattern.matcher( line );
+        String[] sLine = new String[m.groupCount()];
+        
+        for( int i = 0; i < sLine.length; i++ )
+          sLine[i] = m.group(i);
+        
+        m_lines.add( sLine );
 
         line = r.readLine();
       }
-
+      
       r.close();
     }
     catch( IOException e )
@@ -126,7 +134,7 @@ public class CSV implements ITabledValues
         // note: m_split is used as separator, maybe that's not good enough to
         // use the same token as the one for spliting
         if( i != items.length - 1 )
-          bw.write( m_split );
+          bw.write( ";" );
       }
 
       // end of line
