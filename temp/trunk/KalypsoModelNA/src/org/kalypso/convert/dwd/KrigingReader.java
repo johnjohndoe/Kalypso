@@ -17,6 +17,7 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.geometry.GM_Object;
 import org.deegree_impl.model.cs.ConvenienceCSFactory;
 import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypso.convert.WeisseElsterConstants;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.NOperationFilter;
 import org.kalypso.zml.filters.ObjectFactory;
@@ -73,7 +74,7 @@ public class KrigingReader
             m_min = krigingElements.size();
         System.out.println(krigingElements.size()
                 + " rasterpoints are withing geometry. (min is" + m_min + ")");
-
+        // calculate dependency
         final HashMap map = new HashMap();
         final double n = krigingElements.size();
         // loop elements
@@ -96,8 +97,9 @@ public class KrigingReader
                 }
             }
         }
+                
         final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
-
+        // build filter
         try
         {
             NOperationFilter nOperationFilter = filterFac
@@ -114,19 +116,14 @@ public class KrigingReader
                 filter.setOperand(Double.toString(rel.getFactor()));
                 final ZmlFilter zmlLink = filterFac.createZmlFilter();
                 final SimpleLinkType type = linkFac.createSimpleLinkType();
-                type.setHref("Ombrometer_" + rel.getId());
+                type.setHref(WeisseElsterConstants.PREFIX_LINK_OMBROMETER_Niederschlag + rel.getId());
                 zmlLink.setZml(type);
                 filter.setFilter(zmlLink);
                 System.out.println(rel.getId() + " " + rel.getFactor());
             }
-            //            StringWriter writer=new StringWriter();
-            //            m_marshaller.marshal(nOperationFilter,writer);
-            //            writer.close();
-            //            System.out.println(writer.toString());
             return nOperationFilter;
         } catch (JAXBException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
