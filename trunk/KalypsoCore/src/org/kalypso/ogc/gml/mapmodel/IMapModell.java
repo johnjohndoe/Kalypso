@@ -19,7 +19,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public interface IMapModell
 {
-  public void activateTheme( IKalypsoTheme theme );
+  public void activateTheme( final IKalypsoTheme theme );
 
   public IKalypsoTheme getActiveTheme();
 

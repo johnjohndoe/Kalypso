@@ -7,17 +7,19 @@ import org.kalypso.util.command.ICommand;
 /**
  * @author bce
  */
-public class EnableThemeCommand implements ICommand
+public class ActivateThemeCommand implements ICommand
 {
-  private final boolean m_bEnable;
-  private final IKalypsoTheme m_theme;
+  private final IKalypsoTheme m_newActive;
+
+  private final IKalypsoTheme m_oldActive;
+
   private final IMapModell m_mapModell;
 
-  public EnableThemeCommand( final IMapModell mapModell, final IKalypsoTheme theme, final boolean bEnable )
+  public ActivateThemeCommand( final IMapModell mapModell, final IKalypsoTheme activeTheme )
   {
     m_mapModell = mapModell;
-    m_theme = theme;
-    m_bEnable = bEnable;
+    m_newActive = activeTheme;
+    m_oldActive = mapModell.getActiveTheme();
   }
 
   /**
@@ -33,7 +35,7 @@ public class EnableThemeCommand implements ICommand
    */
   public void process() throws Exception
   {
-  m_mapModell.enableTheme(m_theme, m_bEnable);  
+    m_mapModell.activateTheme( m_newActive );
   }
 
   /**
@@ -41,7 +43,7 @@ public class EnableThemeCommand implements ICommand
    */
   public void redo() throws Exception
   {
-    m_mapModell.enableTheme(m_theme, m_bEnable);  
+    m_mapModell.activateTheme( m_newActive );
   }
 
   /**
@@ -49,7 +51,7 @@ public class EnableThemeCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    m_mapModell.enableTheme(m_theme, !m_bEnable);  
+    m_mapModell.activateTheme( m_oldActive );
   }
 
   /**
@@ -57,7 +59,7 @@ public class EnableThemeCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Theme " + ( m_bEnable ? "anzeigen" : "verstecken" );
+    return "aktives Thema setzen";
   }
 
 }

@@ -54,9 +54,9 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   protected RemoveThemeAction m_removeAction = null;
 
   protected OpenStyleDialogAction m_openStyleDialogAction = null;
-  
+
   protected RemoveRuleAction m_removeRuleAction = null;
-  
+
   protected SaveStyleAction m_saveStyleAction = null;
 
   private final JobExclusiveCommandTarget m_commandTarget;
@@ -75,30 +75,32 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   public void createControl( final Composite parent )
   {
     m_modellView.createControl( parent );
-    
+
     m_modellView.addDoubleClickListener( this );
-    
+
     m_moveOneDownAction = new MoveThemeDownAction( "Thema nach unten verschieben",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_DOWN, "Thema eins nach unten verschieben", m_modellView,
-        this );
+        ImageProvider.IMAGE_MAPVIEW_OUTLINE_DOWN, "Thema eins nach unten verschieben",
+        m_modellView, this );
 
     m_moveOneUpAction = new MoveThemeUpAction( "Thema nach oben verschieben",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_UP, "Thema eins nach oben verschieben", m_modellView, this );
+        ImageProvider.IMAGE_MAPVIEW_OUTLINE_UP, "Thema eins nach oben verschieben", m_modellView,
+        this );
 
     m_removeAction = new RemoveThemeAction( "Thema löschen",
         ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, "Thema löschen", m_modellView, this );
 
-//    m_addAction = new AddThemeAction( "Thema hinzuf?gen", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD,
-//        "Thema hinzuf?gen", m_modellView, this );
+    //    m_addAction = new AddThemeAction( "Thema hinzuf?gen",
+    // ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD,
+    //        "Thema hinzuf?gen", m_modellView, this );
 
     m_openStyleDialogAction = new OpenStyleDialogAction( "Style verändern",
         ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Style ändern", m_modellView );
-        
+
     m_removeRuleAction = new RemoveRuleAction( "Regel löschen",
-            ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Regel löschen", m_modellView,this );
-	
+        ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Regel löschen", m_modellView, this );
+
     m_saveStyleAction = new SaveStyleAction( "Style speichern",
-    		ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Style speichern", m_modellView);    
+        ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Style speichern", m_modellView );
 
     onModellChange( null );
   }
@@ -111,7 +113,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     if( m_modellView != null )
     {
       m_modellView.removeDoubleClickListener( this );
-      
+
       m_modellView.dispose();
     }
 
@@ -121,10 +123,10 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
       m_moveOneUpAction.dispose();
     if( m_removeAction != null )
       m_removeAction.dispose();
-    if(m_saveStyleAction !=null)
-    	m_saveStyleAction.dispose();
-    if(m_removeRuleAction != null)
-    	m_removeRuleAction.dispose();
+    if( m_saveStyleAction != null )
+      m_saveStyleAction.dispose();
+    if( m_removeRuleAction != null )
+      m_removeRuleAction.dispose();
   }
 
   /**
@@ -163,9 +165,9 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
         manager.add( new Separator() );
         manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
         manager.add( m_openStyleDialogAction );
-        manager.add( m_saveStyleAction);
+        manager.add( m_saveStyleAction );
         manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
-        manager.add( m_removeRuleAction);
+        manager.add( m_removeRuleAction );
       }
     } );
     final Menu menu = menuMgr.createContextMenu( m_modellView.getControl() );
@@ -264,8 +266,9 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void moveElementUp( final Object element )
   {
-    m_commandTarget.postCommand( new MoveThemeDownCommand( getMapModell(), (IKalypsoTheme)element ),
-        new SelectThemeRunner( (IKalypsoTheme)element ) );
+    m_commandTarget.postCommand(
+        new MoveThemeDownCommand( getMapModell(), (IKalypsoTheme)element ), new SelectThemeRunner(
+            (IKalypsoTheme)element ) );
   }
 
   /**
@@ -314,14 +317,16 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-    // nix tun
+  // nix tun
   }
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
-  public void selectionChanged( SelectionChangedEvent event )
+  public void selectionChanged( final SelectionChangedEvent event )
   {
-    // TODO: setactivetheme
+  // TODO: setactivetheme
+    
+    
   }
 }

@@ -55,6 +55,9 @@ public class LayerTableSorter extends ViewerSorter
     final Feature kf2 = (Feature)e2;
     
     final String propertyName = getPropertyName();
+    if( propertyName == null )
+      return 0;
+    
     final Object o1 = kf1.getProperty( propertyName );
     final Object o2 = kf2.getProperty( propertyName );
     

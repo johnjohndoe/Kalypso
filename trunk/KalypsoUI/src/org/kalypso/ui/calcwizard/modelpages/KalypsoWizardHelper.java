@@ -1,5 +1,6 @@
 package org.kalypso.ui.calcwizard.modelpages;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -9,7 +10,6 @@ import java.util.Properties;
 import javax.xml.bind.JAXBException;
 
 import org.deegree.model.feature.Feature;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.loader.LoaderException;
@@ -70,10 +70,12 @@ public class KalypsoWizardHelper
   /**
    * Updates the diagram template for the given TimeserieFeatureProps and
    * features
+   * 
+   * @param context
    */
   public static void updateDiagramTemplate( final TimeserieFeatureProps[] props,
       final List features, final IDiagramTemplate template, final boolean useResolver,
-      final IProject project )
+      final URL context )
   {
     template.removeAllCurves();
 
@@ -84,8 +86,7 @@ public class KalypsoWizardHelper
       for( int i = 0; i < props.length; i++ )
       {
         final String name = (String)kf.getProperty( props[i]._nameColumn );
-        final TimeseriesLink obsLink = (TimeseriesLink)kf
-            .getProperty( props[i]._linkColumn );
+        final TimeseriesLink obsLink = (TimeseriesLink)kf.getProperty( props[i]._linkColumn );
 
         if( obsLink != null )
         {
@@ -95,16 +96,21 @@ public class KalypsoWizardHelper
 
           if( !useResolver )
           {
-            final Properties loaderProps = PropertiesHelper
-                .parseFromString( obsLink.getHref(), '#' );
-
+            final Properties loaderProps = new Properties();
+            loaderProps.setProperty( "LOCATION", obsLink.getHref() );
+              
             final ZmlLoader loader = new ZmlLoader();
             try
             {
-              final IObservation obs = (IObservation)loader.load( loaderProps, project,
+              // TODO: Marc: fix it, it throws an exception
+              final IObservation obs = (IObservation)loader.load( loaderProps, context,
                   new NullProgressMonitor() );
+              //              final IObservation obs = (IObservation)loader.load(
+              // loaderProps, project,
+              //                  new NullProgressMonitor() );
 
-              final DiagramCurve curve = new DiagramCurve( name + " (" + props[i]._linkColumn + ')', obs, mappings, template, null );
+              final DiagramCurve curve = new DiagramCurve(
+                  name + " (" + props[i]._linkColumn + ')', obs, mappings, template, null );
 
               template.addCurve( curve );
             }
@@ -117,8 +123,9 @@ public class KalypsoWizardHelper
           else
           {
             final LinkedDiagramCurve curve = new LinkedDiagramCurve( obsLink.getLinktype(),
-                new JAXBXLink( obsLink ), name + " (" + props[i]._linkColumn + ')', mappings, template );
-            
+                new JAXBXLink( obsLink ), name + " (" + props[i]._linkColumn + ')', mappings,
+                template );
+
             template.addCurve( curve );
           }
         }
@@ -130,7 +137,7 @@ public class KalypsoWizardHelper
    *  
    */
   public static void updateTableTemplate( final TimeserieFeatureProps[] props, final List features,
-      final LinkedTableViewTemplate template, final boolean useResolver, final IProject project )
+      final LinkedTableViewTemplate template, final boolean useResolver, final URL context )
   {
     for( Iterator it = features.iterator(); it.hasNext(); )
     {
@@ -139,24 +146,26 @@ public class KalypsoWizardHelper
       for( int i = 0; i < props.length; i++ )
       {
         final String name = (String)kf.getProperty( props[i]._nameColumn );
-        final TimeseriesLink obsLink = (TimeseriesLink)kf
-            .getProperty( props[i]._linkColumn );
+        final TimeseriesLink obsLink = (TimeseriesLink)kf.getProperty( props[i]._linkColumn );
 
         if( obsLink != null )
         {
           if( !useResolver )
           {
             final Properties loaderProps = PropertiesHelper
-            .parseFromString( obsLink.getHref(), '#' );
-            
+                .parseFromString( obsLink.getHref(), '#' );
+
             final ZmlLoader loader = new ZmlLoader();
             try
             {
-              final IObservation obs = (IObservation)loader.load( loaderProps, project,
+              final IObservation obs = (IObservation)loader.load( loaderProps, context,
                   new NullProgressMonitor() );
 
-              final TableViewColumn col = new TableViewColumn( name + " (" + props[i]._linkColumn + ')', obs, true, 50, obsLink.getTimeaxis(), obsLink
-                  .getValueaxis(), null );
+//              final IObservation obs = (IObservation)loader.load( loaderProps, project,
+//                  new NullProgressMonitor() );
+
+              final TableViewColumn col = new TableViewColumn( name + " (" + props[i]._linkColumn
+                  + ')', obs, true, 50, obsLink.getTimeaxis(), obsLink.getValueaxis(), null );
 
               template.addColumn( col );
             }
@@ -168,10 +177,10 @@ public class KalypsoWizardHelper
           }
           else
           {
-            final LinkedTableViewColumn col = new LinkedTableViewColumn( name + " (" + props[i]._linkColumn + ')', obsLink
-                .getLinktype(), new JAXBXLink( obsLink ), true, 50, obsLink.getTimeaxis(), obsLink
-                .getValueaxis() );
-            
+            final LinkedTableViewColumn col = new LinkedTableViewColumn( name + " ("
+                + props[i]._linkColumn + ')', obsLink.getLinktype(), new JAXBXLink( obsLink ),
+                true, 50, obsLink.getTimeaxis(), obsLink.getValueaxis() );
+
             template.addColumn( col );
           }
         }
@@ -193,8 +202,7 @@ public class KalypsoWizardHelper
       for( int i = 0; i < props.length; i++ )
       {
         final String name = (String)kf.getProperty( props[i]._nameColumn );
-        final TimeseriesLink obsLink = (TimeseriesLink)kf
-            .getProperty( props[i]._linkColumn );
+        final TimeseriesLink obsLink = (TimeseriesLink)kf.getProperty( props[i]._linkColumn );
 
         if( obsLink != null )
           DiagramTemplateFactory.addTimeseriesLink( template, obsLink, name,

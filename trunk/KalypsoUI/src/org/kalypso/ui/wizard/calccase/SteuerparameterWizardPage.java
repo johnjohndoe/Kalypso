@@ -41,11 +41,14 @@ public class SteuerparameterWizardPage extends WizardPage
 
   private FeatureComposite m_featureComposite;
 
-  public SteuerparameterWizardPage( final IProjectProvider pp )
+  private boolean m_overrideCanFlipToNextPage;
+
+  public SteuerparameterWizardPage( final IProjectProvider pp, final boolean overrideCanFlipToNextPage )
   {
     super( "EditCalcCaseControlPage", "Steurparameter", null );
 
     m_projectProvider = pp;
+    m_overrideCanFlipToNextPage = overrideCanFlipToNextPage;
   }
 
   /**
@@ -117,7 +120,7 @@ public class SteuerparameterWizardPage extends WizardPage
 
     final IFile controlFile = folder.getFile( ModelNature.CONTROL_NAME );
     
-    final SetContentThread thread = new SetContentThread( controlFile, true, !controlFile.exists(), true, new NullProgressMonitor() )
+    final SetContentThread thread = new SetContentThread( controlFile, !controlFile.exists(), false, false, new NullProgressMonitor() )
     {
       public void writeStream() throws Throwable
       {
@@ -147,4 +150,16 @@ public class SteuerparameterWizardPage extends WizardPage
     if( throwable != null )
       throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Speichern der Steuerdaten.\n" + throwable.getLocalizedMessage(), throwable ) );
   }
+  
+  /**
+   * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
+   */
+  public boolean canFlipToNextPage()
+  {
+    if( m_overrideCanFlipToNextPage )
+      return isPageComplete();
+    
+    return super.canFlipToNextPage();
+  }
+  
 }

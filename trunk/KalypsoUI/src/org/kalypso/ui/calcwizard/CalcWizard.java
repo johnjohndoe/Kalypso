@@ -75,7 +75,7 @@ public class CalcWizard implements IWizard, IProjectProvider
     new AddNewCalcCaseChoice( "einen neuen Rechenfall erzeugen", m_project ) };
 
     m_addCalcCasePage = new AddCalcCasePage( choices );
-    m_controlPage = new SteuerparameterWizardPage( this );
+    m_controlPage = new SteuerparameterWizardPage( this, true );
 
     // Add 'Steuerparameter' Page
 
@@ -291,7 +291,7 @@ public class CalcWizard implements IWizard, IProjectProvider
       final Throwable te = e.getTargetException();
       if( te instanceof CoreException )
       {
-        ErrorDialog.openError( getContainer().getShell(), "Fehler", "Fehler - popeehler",
+        ErrorDialog.openError( getContainer().getShell(), "Fehler", "Fehler beim Aufruf der nächsten Wizard-Seite",
             ( (CoreException)e.getTargetException() ).getStatus() );
       }
       else
@@ -299,7 +299,7 @@ public class CalcWizard implements IWizard, IProjectProvider
         // CoreExceptions are handled above, but unexpected runtime exceptions
         // and errors may still occur.
         MessageDialog.openError( getContainer().getShell(), "Interner Fehler",
-            "Fehler beim Ausführen einer Operation: " + te.getLocalizedMessage() );
+            "Fehler beim Aufruf der nächsten Wizard-Seite: " + te.getLocalizedMessage() );
       }
     }
     return true;
@@ -320,6 +320,8 @@ public class CalcWizard implements IWizard, IProjectProvider
 
   public boolean doBack( final IWizardPage page )
   {
+    page.getClass();
+    
     return true;
   }
   
@@ -405,7 +407,7 @@ public class CalcWizard implements IWizard, IProjectProvider
    */
   public String getWindowTitle()
   {
-    return "Prognoserechnung für " + m_project.getName();
+    return "Hochwasser Vorhersage für " + m_project.getName();
   }
 
   /**

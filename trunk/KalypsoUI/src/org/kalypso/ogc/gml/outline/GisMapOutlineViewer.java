@@ -6,6 +6,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.swt.SWT;
@@ -16,6 +17,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.command.ActivateThemeCommand;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
@@ -25,8 +27,7 @@ import org.kalypso.util.command.ICommandTarget;
 /**
  * @author belger
  */
-public class GisMapOutlineViewer implements ISelectionProvider,
-    IMapModellView, SelectionListener
+public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, SelectionListener
 {
   protected StructuredViewer m_viewer;
 
@@ -58,14 +59,15 @@ public class GisMapOutlineViewer implements ISelectionProvider,
     final TableTree tree = new TableTree( parent, SWT.SINGLE | SWT.CHECK );
     tree.addSelectionListener( this );
 
-    m_viewer = new TableTreeViewer( tree );    
+    m_viewer = new TableTreeViewer( tree );
     m_viewer.setContentProvider( m_contentProvider );
     m_viewer.setLabelProvider( m_labelProvider );
 
     m_viewer.setInput( m_mapModel );
     m_viewer.refresh();
+    
     // Refresh check state
-    //onModellChange( null );
+    onModellChange( null );
   }
 
   /**
@@ -134,19 +136,26 @@ public class GisMapOutlineViewer implements ISelectionProvider,
       {
         public void run()
         {
-
-          for( int i = 0; i < items.length; i++ )
+          try
           {
-            final TableTreeItem item = items[i];
+            for( int i = 0; i < items.length; i++ )
+            {
+              final TableTreeItem item = items[i];
 
-            if( !item.isDisposed() )
-              item.setChecked( mm.isThemeEnabled( (IKalypsoTheme)item.getData() ) );
+              if( !item.isDisposed() )
+                item.setChecked( mm.isThemeEnabled( (IKalypsoTheme)item.getData() ) );
+            }
+
+            // und die ganze view refreshen!
+            viewer.refresh();
+            if( mm.getActiveTheme() != null )
+              viewer.setSelection( new StructuredSelection( mm.getActiveTheme() ) );
           }
-
-          // und die ganze view refreshen!
-          viewer.refresh();
+          catch( RuntimeException e )
+          {
+            e.printStackTrace();
+          }
         }
-
       } );
     }
   }
@@ -156,17 +165,19 @@ public class GisMapOutlineViewer implements ISelectionProvider,
    */
   public void widgetSelected( final SelectionEvent e )
   {
-
-      final TableTreeItem ti = (TableTreeItem)e.item;
-      final Object data = ti.getData();
-      if( data instanceof IKalypsoTheme )
+    final TableTreeItem ti = (TableTreeItem)e.item;
+    final Object data = ti.getData();
+    if( data instanceof IKalypsoTheme )
+    {
+      if( m_mapModel.getActiveTheme() != (IKalypsoTheme)data )
       {
-        if(m_mapModel.getActiveTheme()!=(IKalypsoTheme)data)
-         m_mapModel.activateTheme((IKalypsoTheme)data);   
-        // TODO 1. create command for this
-        // TODO 2. create MultiCommand (eg. activate and enable) 
-      }    
-    
+        m_commandTarget.postCommand( new ActivateThemeCommand( m_mapModel, (IKalypsoTheme)data ),
+            null );
+        m_mapModel.activateTheme( (IKalypsoTheme)data );
+        // todo: maybe create MultiCommand (eg. activate and enable )
+      }
+    }
+
     if( ( e.detail & SWT.CHECK ) != 0 )
     {
       if( data instanceof IKalypsoTheme )
@@ -175,7 +186,7 @@ public class GisMapOutlineViewer implements ISelectionProvider,
             .getChecked() );
         m_commandTarget.postCommand( command, null );
       }
-    }    
+    }
   }
 
   /**
