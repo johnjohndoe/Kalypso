@@ -139,7 +139,7 @@ public class WechmannFactory
 
     final List sets = wt.getSet();
 
-    final SimpleDateFormat df = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
+    final SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
     for( final Iterator it = wg.iterator(); it.hasNext(); )
     {
