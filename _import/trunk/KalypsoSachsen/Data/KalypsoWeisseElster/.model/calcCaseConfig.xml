@@ -107,7 +107,7 @@
 
     <!-- Transformationen fuer den ExpertenModus -->
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.model/expertControl.gml"/>
+			<argument name="input" value=":project:.templates/calcCase/expertControl.gml"/>
 			<argument name="output" value=":calcdir:expertControl.gml"/>
 		</transformation>
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">

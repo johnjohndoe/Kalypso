@@ -47,7 +47,7 @@
 	<KMChannels><![CDATA[//KMChannel]]></KMChannels>
 	<KMChannelsFaktorRkf></KMChannelsFaktorRkf>
 	<KMChannelsFaktorRnf></KMChannelsFaktorRnf>
-	<rootNode>Node1300</rootNode>
+	<rootNode/>
 	<resultForRootNodeOnly>false</resultForRootNodeOnly>
 	<pegelZR/>
 	<qberechnetZR/>
