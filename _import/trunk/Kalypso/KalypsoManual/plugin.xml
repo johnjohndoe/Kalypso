@@ -5,7 +5,15 @@
    name="Kalypso - Manual"
    version="0.0.1"
    provider-name="kalypso.org">
+   <requires>
+      <import plugin="org.eclipse.help"/>
+   </requires>
   <extension point="org.eclipse.help.toc">
     <toc file="toc.xml" primary="true"/>
+  </extension>
+  <extension
+        point="org.eclipse.help.contexts">
+     <contexts
+           file="contexts.xml"/>
   </extension>
 </plugin>
