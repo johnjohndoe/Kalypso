@@ -34,7 +34,7 @@
   Kontrolle der Zeitreihen, führt über die Nachkalibierung und Berechnung der
   Hochwasservorhersagen und endet mit dem Export der berechneten Ergebnisse
   als Bericht oder als Zeitreihe in PSI-Compact. Die einzelnen Schritte zur
-  Berechnung einer Vorhersage werden im folgenden modellabhängig
+  Berechnung einer Vorhersage werden im Folgenden modellabhängig
   beschrieben.</para>
 
   <section id="weisse_elster_view_prognose">
@@ -77,7 +77,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/we_1b.png" scale="30" />
+          <imagedata fileref="img/we_1b.png" scale="50" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -89,7 +89,7 @@
       erzeugen</guibutton> wird eine neue Hochwasservorhersage angelegt. Die
       Bezeichnung des Rechenfalls ist vom Benutzer frei wählbar und wird unter
       dem angegebenen Namen im lokalen Arbeitsverzeichnis gespeichert. Mit der
-      Bestätigung durch Klick auf <guibutton>weiter</guibutton> erfolgt die
+      Bestätigung durch Klick auf <guibutton>Weiter</guibutton> erfolgt die
       Aufforderung zur Eingabe der Steuerparameter (<xref
       linkend="weisse_elster_2" />).</para>
 
@@ -189,7 +189,7 @@
       einer anzugebenden Bezeichnung lokal gespeichert. Dies bietet den
       Vorteil, dass bei Änderung der Eingangsdaten die Originaldateien nicht
       überschrieben werden. Alle Einstellungen in den Steuerparametern werden
-      übernommen und können ggfs. geändert werden. Die zum Ereignis gehörigen
+      übernommen und können ggf. geändert werden. Die zum Ereignis gehörigen
       Zeitreihen können aus dem gespeicherten Rechenlauf übernommen oder über
       <guibutton>Zeitreihen aktualisieren</guibutton> vom Server neu
       eingelesen werden. Nach Auswahl des zu kopierenden Rechenfalls wird über
@@ -201,7 +201,7 @@
       <title>Kontrolle der Eingangsdaten</title>
 
       <para>Nach der Eingabe der Steuerparameter erfolgt die Überprüfung der
-      Eingansgdaten durch den Benutzer. Die Zeitreihen setzen sich aus
+      Eingangsgdaten durch den Benutzer. Die Zeitreihen setzen sich aus
       Messwerten und Prognosewerten zusammen. Die Messwerte in den Tabellen
       sind abhängig vom eingelesenen Status durch Symbole gekennzeichnet (vgl.
       <xref linkend="tabellen_kennzeichnung" />). Der Vorhersage-Wizard ist so
@@ -241,7 +241,7 @@
           </listitem>
 
           <listitem>
-            <para>Zuflüsse an den Talsperren-Abgabepegeln</para>
+            <para>Zuflüsse in das Modell an den Talsperren-Abgabepegeln</para>
           </listitem>
         </orderedlist></para>
 
@@ -258,7 +258,7 @@
       <title>Berechnung einer Vorhersage</title>
 
       <para>Nach Kontrolle und Eingabe der Eingangsdaten öffnet sich durch
-      Klick auf <guibutton>weiter</guibutton> das Prognosefenster (<xref
+      Klick auf <guibutton>Weiter</guibutton> das Prognosefenster (<xref
       linkend="we_berechnung" />) im oberen Bereich des Fensters befindet sich
       die Information über den Pegel, an dem die aktuelle Vorhersage
       durchgeführt wird. Im Kartenfenster wird eine schematische Ansicht des
@@ -291,7 +291,7 @@
         <listitem>
           <para>FaktorAigw: Anfangs-Grundwasserstand (multiplikativ)</para>
 
-          <para>Der Anfangs-Grundwasserstand (abhänigig vom Teilgebiet) wird
+          <para>Der Anfangs-Grundwasserstand (abhängig vom Teilgebiet) wird
           mit einem Faktor multipliziert.</para>
         </listitem>
 
@@ -313,15 +313,15 @@
         <listitem>
           <para>FaktorRnf: Faktor der Speicheranzahl (Gerinnespeicher)</para>
 
-          <para>Die Anzahl der Gerinnespeicher wird mit dem angegbenen Wert
-          multipliziert</para>
+          <para>Die Anzahl der Gerinnespeicher wird mit dem angegebenen Wert
+          multipliziert.</para>
         </listitem>
 
         <listitem>
           <para>FaktorRkf: Faktor für Retentionskonstante (Gerinne)</para>
 
           <para>Die Retentionskonstanten für die Gerinneelemente werden mit
-          dem angegebenen Wert multipliziert</para>
+          dem angegebenen Wert multipliziert.</para>
         </listitem>
       </itemizedlist>
 
@@ -351,8 +351,8 @@
       Zeitreihenfenster dargestellt.</para>
 
       <para>Ist eine Berechnung beendet, kann mit dem
-      <guibutton>weiter</guibutton> Button zum nächsten Pegel gesprungen
-      werden. In der Regel ist dies der nächste Stromabwärts gelegene Pegel.
+      <guibutton>Weiter</guibutton> Button zum nächsten Pegel gesprungen
+      werden. In der Regel ist dies der nächste stromabwärts gelegene Pegel.
       Die Abfolge der Vorhersagepegel ist im Programm festgeschrieben und kann
       auch im Expertenmodus nicht geändert werden. Generell gilt: Die
       berechneten Ergebnisse eines Pegels dienen jeweils als Zuflusszeitreihe
@@ -383,7 +383,7 @@
 
       <para>Nach Abarbeitung der Kalibrierungs- und Berechnungsschritte (siehe
       <xref linkend="weise_elster_5" />) können die ermittelten Ergebnisse an
-      das Berichtswesen übergeben werden. Zudem ist derExport der berechneten
+      das Berichtswesen übergeben werden. Zudem ist der Export der berechneten
       Prognose-Zeitreihen nach PSI-Compact möglich. Die dazugehörige
       Eingabemaske zeigt einen Lageplan mit allen im Modell vorhandenen
       Vorhersage-Pegeln (<xref linkend="we_ergebnisbearbeitung" />).</para>
@@ -441,8 +441,9 @@
         </listitem>
 
         <listitem>
-          <para>Grafische Darstellung der Ergebnisse im Lageplan (farbige
-          Markierung der Pegel nach Alarmstufen)</para>
+          <para>Grafische Darstellung der Ergebnisse im Lageplan, farbige
+          Markierung der Pegel nach Alarmstufen (Grafik fü das
+          Berichtswesen)</para>
         </listitem>
       </itemizedlist>
 
@@ -494,11 +495,11 @@
       <title>Neue Hochwasservorhersage anlegen</title>
 
       <para>Mit der Option <guibutton>einen neuen Rechenfall
-      erzeugen</guibutton> wird ein neues Hochwasser angelegt. Die Bezeichnung
-      des Rechenfalls ist vom Benutzer frei wählbar und wird unter dem
-      angegebenen Namen im lokalen Arbeitsverzeichnis gespeichert. Mit der
-      Bestätigung durch Klick auf <guibutton>weiter</guibutton> erfolgt die
-      Aufforderung zur Eingabe der Steuerparameter (<xref
+      erzeugen</guibutton> wird eine neue Rechenvariante angelegt. Die
+      Bezeichnung der Rechenvariante ist vom Benutzer frei wählbar und wird
+      unter dem angegebenen Namen im lokalen Arbeitsverzeichnis gespeichert.
+      Mit der Bestätigung durch Klick auf <guibutton>Weiter</guibutton>
+      erfolgt die Aufforderung zur Eingabe der Steuerparameter (<xref
       linkend="spree_steuerparameter" />).</para>
 
       <section id="spree_2">
@@ -554,14 +555,14 @@
             bereits angelegten Hochwassers. Beim Anlegen eines neuen
             Rechenfalls werden die Zeitreihen immer neu eingelesen (auch bei
             deaktiviertem Kästchen). Die Bestätigung der getätigten Angaben
-            erfolgt über den Klick auf <guibutton>weiter</guibutton>.</para>
+            erfolgt über den Klick auf <guibutton>Weiter</guibutton>.</para>
           </listitem>
         </itemizedlist>
       </section>
     </section>
 
     <section>
-      <title>Fortführen eines Rechenfalls</title>
+      <title>Fortführen einer Rechenvariante</title>
 
       <para>Durch die Wahl der Option <emphasis role="bold">einen bereits
       vorhandenen Rechenfall fortführen</emphasis> wird dem Benutzer die
@@ -571,7 +572,7 @@
       Nach Auswahl der Option erscheint ein Auswahlfenster, in dem alle
       gespeicherten Rechenläufe angezeigt werden. Nach Markieren des
       entsprechenden Rechenlaufes erfolgt die Bestätigung der Auswahl durch
-      <guibutton>weiter</guibutton>.</para>
+      <guibutton>Weiter</guibutton>.</para>
 
       <para>Es erscheint die Eingabemaske für die Steuerparameter (<xref
       linkend="spree_2" />), in die bereits die gespeicherten Eingaben für das
@@ -588,7 +589,7 @@
     </section>
 
     <section>
-      <title>Kopieren eines Rechenfalls</title>
+      <title>Kopieren einer Rechenvariante</title>
 
       <para>Die Wahl dieser Option erfolgt durch Auswahl von <guibutton>einen
       auf dem Server vorhandenen Rechenfall kopieren</guibutton>. Hierdurch
@@ -596,20 +597,20 @@
       neuer Datensatz vom Programm im lokalen Arbeitsverzeichnis gespeichert.
       Dies bietet den Vorteil, dass bei einer gewünschten Änderung der
       Eingangsdaten die Originaldateien nicht überschrieben werden. Es
-      erscheint eine Auswahl der auf dem Server gespeicherten Rechenläufe. Für
-      die lokale Kopie des Rechenlaufes muss vom Benutzer ein Name angegeben
-      werden. Nach Auswahl des zu kopierenden Rechenfalls wird durch
-      Bestätigung durch <guibutton>weiter</guibutton> die Eingabemaske für die
-      Steuerparameter (<xref linkend="spree_2" />) geöffnet.</para>
+      erscheint eine Auswahl der auf dem Server gespeicherten Rechenvarianten.
+      Für die lokale Kopie der Rechenvariante muss vom Benutzer ein Name
+      angegeben werden. Nach Auswahl der zu kopierenden Rechenvariante wird
+      durch Bestätigung durch <guibutton>Weiter</guibutton> die Eingabemaske
+      für die Steuerparameter (<xref linkend="spree_2" />) geöffnet.</para>
     </section>
 
     <section>
       <title>Kontrolle der Eingangsdaten</title>
 
       <para>Nach der Eingabe der Steuerdaten erfolgt die Überprüfung der
-      Eingansgdaten durch den Benutzer. Die Zeitreihen setzen sich aus
+      Eingangsdaten durch den Benutzer. Die Zeitreihen setzen sich aus
       Messwerten und Prognosewerten zusammen. Die Messwerte in den Tabellen
-      sind abhängig vom Daten-Status durch Symbolde gekennzeichnet (vgl. <xref
+      sind abhängig vom Daten-Status durch Symbole gekennzeichnet (vgl. <xref
       linkend="tabellen_kennzeichnung" />). Der Vorhersage-Wizard ist so
       aufgebaut, dass die Kontrolle der Zeitreihen einem festen Ablauf folgt
       (<xref linkend="spree_eingangsdaten" />):</para>
@@ -662,7 +663,7 @@
       aufgeführt. Durch Markieren eines Pegels wird die dazugehörige Zeitreihe
       auch grafisch dargestellt. Bei Bedarf können die Tabellenwerte vom
       Benutzer geändert werden. Die Änderungen werden durch Bestätigung mit
-      <guibutton>weiter</guibutton> für die Berechnungen übernommen.</para>
+      <guibutton>Weiter</guibutton> für die Berechnungen übernommen.</para>
     </section>
 
     <section id="spree_berechnung_vorhersage">
@@ -684,12 +685,12 @@
       <para>Die Wizard-Masken sind jeweils so gestaltet, dass auf der linken
       Hälfte eine Übersicht der Pegel im Lageplan erscheint (<xref
       linkend="spree_berechnung" />). In der rechten Hälfte wird oben eine
-      Tabelle angezeigt, über der die entsprechenden Parameter zur
+      Tabelle angezeigt, über die die entsprechenden Parameter zur
       Kalibrierung der Nachführung des HW-Ereignisses eingegeben werden
       können. Im unteren Teil ist eine Diagrammansicht gegeben, in der die
       Zeitreihen der Berechnung angezeigt werden. Beim Start des Wizards ist
       die Diagramm-Anzeige zunächst noch ohne Inhalt. Zeitreihen werden durch
-      einen Klick auf auf den entsprechenden Eintrag in der Tabelle grafisch
+      einen Klick auf den entsprechenden Eintrag in der Tabelle grafisch
       dargestellt. Die Achsen des Diagramms werden dabei automatisch an die
       jeweilige Zeitreihe angepasst.</para>
 
@@ -751,7 +752,7 @@
 
       <para>Nach Abarbeitung der Kalibrierungs- und Berechnungsschritte (siehe
       <xref linkend="spree_berechnung_vorhersage" />) können die ermittelten
-      Ergebnisse an das Berichtswesen übergeben werden. Zudem ist derExport
+      Ergebnisse an das Berichtswesen übergeben werden. Zudem ist der Export
       der berechneten Prognose-Zeitreihen nach PSI-Compact möglich. Die
       dazugehörige Eingabemaske (<xref linkend="spree_ergebnisse" />) zeigt
       einen Lageplan mit allen im Modell vorhandenen Vorhersage-Pegeln.</para>
@@ -789,7 +790,7 @@
 
       <itemizedlist>
         <listitem>
-          <para>Berechnete Zeitreihen der Abflüsse (Graik für das
+          <para>Berechnete Zeitreihen der Abflüsse (Grafik für das
           Berichtswesen)</para>
         </listitem>
 
@@ -799,7 +800,7 @@
         </listitem>
 
         <listitem>
-          <para>Berechnete Zeitreihen in Tabellen-Form (csv-Format für das
+          <para>Berechnete Zeitreihen in Tabellen-Form (CSV-Format für das
           Berichtswesen)</para>
         </listitem>
 
@@ -809,8 +810,8 @@
         </listitem>
 
         <listitem>
-          <para>Grafische Darstellung der Ergebnisse im Lageplan (farbige
-          Markierung der Pegel)</para>
+          <para>Grafische Darstellung der Ergebnisse im Lageplan, farbige
+          Markierung der Pegel (Grafik für das Berichtswesen)</para>
         </listitem>
       </itemizedlist>
 

@@ -11,9 +11,9 @@
   <title>Einführung</title>
 
   <section id="allgemeines_zu_kalypso">
-    <title>Allgemeines zu Kalypso</title>
+    <title>Allgemeines zu KALYPSO</title>
 
-    <para>Das Programm-System KALYPSO Enterprise ist eine Open Source
+    <para>Das Programm-System KALYPSO Enterprise ist eine Open-Source
     Entwicklung von Björnsen Beratende Ingenieure GmbH (BCE) in Kooperation
     mit dem Arbeitsbereich Wasserbau der Technischen Universität
     Hamburg-Harburg (TUHH). KALYPSO erlaubt die Integration und Verwaltung von
@@ -78,7 +78,7 @@
       sein Schiff zerstört und gesunken war, wurde Odysseus an Land der Insel
       Ogygia gespült - die Insel der Nymphe Kalypso. Kalypso hielt ihn aus
       Liebe dort gefangen und wollte ihn zu Ihrem unsterblichen Ehemann
-      nehmen. Doch selbst nach Jahren des Umwerbens und Betörens von Kalypso's
+      nehmen. Doch selbst nach Jahren des Umwerbens und Betörens von Kalypsos
       Seite sehnte sich Odysseus immer noch nach seiner Frau und seinem
       Sohn.</para>
 
@@ -159,7 +159,7 @@
     <orderedlist>
       <listitem>
         <para><emphasis role="bold">Spree</emphasis>: Ein kombiniertes
-        Niederschlags-Abfluss-Modell und Wellenablauf-Modell der TU Dresden
+        Niederschlag-Abfluss-Modell und Wellenablauf-Modell der TU Dresden
         bzw. der WASY GmbH für das Einzugsgebiet der Spree.</para>
       </listitem>
 
@@ -167,12 +167,12 @@
         <para><emphasis role="bold">Weiße Elster</emphasis>: Ein
         hydrologisches Gebietsmodell des Einzugsgebietes der Weißen Elster mit
         Abbildung der gesamten landbezogenen Wasserbilanz und integriertem
-        Wellenablauf-Modul entwickelt und aufgebaut von Björnsen Beratende
+        Wellenablauf-Modul, entwickelt und aufgebaut von Björnsen Beratende
         Ingenieure GmbH.</para>
       </listitem>
     </orderedlist>
 
-    <para>Beide Modelle werden durch die KALYPSO Modeler Oberfläche (siehe
+    <para>Beide Modelle werden durch die KALYPSO-Modeler Oberfläche (siehe
     <xref linkend="grafische_oberflaeche" />) unterstützt. Gleichzeitig sind
     innerhalb der Installation in der Landeshochwasserwarnzentrale Sachsen
     zwei Vorhersage-Wizards verfügbar, die den Anwender im Falle der
@@ -280,7 +280,7 @@
     <title>Dokumentationen</title>
 
     <para>Zur KALYPSO-Installation in der LHWZ Sachsen wurden Dokumentationen
-    zu verschiedenen Anwendungsbereichen erstellt, die im folgenden
+    zu verschiedenen Anwendungsbereichen erstellt, die im Folgenden
     aufgelistet sind.</para>
 
     <itemizedlist>
@@ -293,7 +293,7 @@
       </listitem>
 
       <listitem>
-        <para>Technische Dokumentation zu Kalypso-Enterprise</para>
+        <para>Technische Dokumentation zu KALYPSO Enterprise</para>
       </listitem>
 
       <listitem>

@@ -10,10 +10,10 @@
     Zeitreihenbrowser). Die Zeitreihen-Ablage ist eine Funktionalität, die mit
     dem Expertenmodus verbunden und somit dem einfachen Anwender nicht
     zugänglich ist. Sie erscheint standardmäßig in der KALYPSO-Oberfläche des
-    Experten, gleichgeordnet mit den Perspektiven KALYPSO Modeler und
-    Hochwasser Vorhersage. Die Perspektive kann, sofern sie geschlossen wurde,
-    über das Menü <guimenu>Fenster</guimenu> hinzugefügt werden (siehe auch
-    <xref linkend="arbeiten_mit_ansichten" />).</para>
+    Experten, parallel zu den Perspektiven KALYPSO Modeler und Hochwasser
+    Vorhersage. Die Perspektive kann, sofern sie geschlossen wurde, über das
+    Menü <guimenu>Fenster</guimenu> hinzugefügt werden (siehe auch <xref
+    linkend="arbeiten_mit_ansichten" />).</para>
 
     <para></para>
 
@@ -31,7 +31,7 @@
     Zeitreihen Repositories hinzuzufügen. Dabei kann es sich z.B. um
     Fremddaten oder historische Daten aus einer lokalen Datenquelle handeln.
     Voraussetzung ist allerdings, dass die in der Datenquelle enthaltenen
-    Zeitreihen im zml-Format vorliegen. Eine detaillierte Formatbeschreibung
+    Zeitreihen im ZML-Format vorliegen. Eine detaillierte Formatbeschreibung
     ist in der Technischen Dokumentation nachzuschlagen.</para>
 
     <para></para>
@@ -52,7 +52,7 @@
     <para>Eine weitere Funktionalität der Zeitreihen-Ablage besteht im
     Datenexport. Somit können z.B. Zeitreihen aus PSI-Compact heruntergeladen
     und in ein beliebiges Verzeichnis im Netzwerk oder lokal gespeichert
-    werden. Beim Export werden die Zeitreihen im zml-Format abgelegt. Der
+    werden. Beim Export werden die Zeitreihen im ZML-Format abgelegt. Der
     Export von Zeitreihen ist in <xref
     linkend="repository_zeitreihenverwaltung" /> beschrieben.</para>
   </section>
@@ -64,9 +64,9 @@
     öffnet sich die vordefinierte Ablagen-Ansicht (<xref
     linkend="repository_ansicht" />). Auf der linken Seite befindet sich das
     Navigator-Fenster, in dem die Zeitreihen-Ablagen als Baumstruktur
-    angezeigt werden. Zur Darstellung der Zeitreihen ist eine Tabellen- und
+    angezeigt werden. Zur Darstellung der Zeitreihen sind eine Tabellen- und
     eine Diagramm-Ansicht vorgesehen. Ist im Navigator-Fenster keine Zeitreihe
-    markiert, sind die Tabelle und das Diagramm leer. Eine simultane Ansicht
+    markiert, sind die Tadbelle und das Diagramm leer. Eine simultane Ansicht
     mehrerer Zeitreihen ist mit der Ablagen-Ansicht nicht möglich - die
     Zeitreihen können nur einzeln betrachtet werden.</para>
 
@@ -111,7 +111,7 @@
     geladen.</para>
 
     <para>Im Einzelnen stehen die nachfolgend beschriebenen Funktionen zur
-    Verfügung.</para>
+    Verfügung:</para>
 
     <figure id="repository_buttons">
       <title>Schaltflächen in der Ablagen-Ansicht</title>
@@ -228,7 +228,7 @@
     </figure>
 
     <para>Es folgt eine Eingabe-Maske, in der der Zeitraum der zu
-    exportierenden Zeitreihe angebenen wird. Vom Programm vorgebenen wird ein
+    exportierenden Zeitreihe angegeben wird. Vom Programm vorgegeben wird ein
     Zeitraum von 30 Tagen (vor der aktuellen Systemzeit). Optional kann vom
     Benutzer auch ein fest definierter Zeitraum vorgegeben werden (<xref
     linkend="repository_zeitraum" />).</para>
@@ -244,10 +244,11 @@
       </mediaobject>
     </figure>
 
-    <para>Durch Klick auf Weiter öffnet sich die Eingabemaske zur Vorgabe des
-    Pfades und des Dateinamens, unter der die Zeitreihe abgespeichert werden
-    soll. Mit Bestätigung durch Klick auf Fertigstellen wird die Zeitreihe im
-    vorgegebenen Verzeichnis gespeichert. Der Export erfolgt - unabhängig von
-    der angegebenen Dateiendung - immer im zml-Format.</para>
+    <para>Durch Klick auf <guimenu>Weiter</guimenu> öffnet sich die
+    Eingabemaske zur Vorgabe des Pfades und des Dateinamens, unter der die
+    Zeitreihe abgespeichert werden soll. Mit Bestätigung durch Klick auf
+    <guimenu>Fertigstellen</guimenu> wird die Zeitreihe im vorgegebenen
+    Verzeichnis gespeichert. Der Export erfolgt - unabhängig von der
+    angegebenen Dateiendung - immer im ZML-Format.</para>
   </section>
 </chapter>

@@ -49,7 +49,7 @@
 	</xsl:template-->
 
 	<xsl:variable name="latex.book.preamblestart">
-		\documentclass[a4paper, twoside, 10pt]{book}
+		\documentclass[a4paper, twoside, 12pt]{book}
 		\usepackage[latin1]{inputenc}
 	</xsl:variable>
 
