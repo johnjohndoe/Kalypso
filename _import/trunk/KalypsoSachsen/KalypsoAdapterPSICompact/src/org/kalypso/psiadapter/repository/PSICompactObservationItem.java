@@ -9,6 +9,10 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.wq.WechmannParams;
+import org.kalypso.ogc.sensor.timeseries.wq.WechmannSet;
+import org.kalypso.ogc.sensor.timeseries.wq.WechmannSets;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.xlink.IXlink;
@@ -17,6 +21,7 @@ import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.ArchiveData;
 import de.psi.go.lhwz.PSICompact.ObjectMetaData;
+import de.psi.go.lhwz.PSICompact.WQData;
 import de.psi.go.lhwz.PSICompact.WQParamSet;
 
 /**
@@ -38,33 +43,11 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
 
   private IAxis[] m_axes = null;
 
-  public final static String MD_WQ = "WQ-Parameter";
-
-  public final static String MD_GKR = "Rechtswert";
-
-  public final static String MD_GKH = "Hochwert";
-
-  public final static String MD_ALARM_1 = "Alarmstufe 1";
-
-  public final static String MD_ALARM_2 = "Alarmstufe 2";
-
-  public final static String MD_ALARM_3 = "Alarmstufe 3";
-
-  public final static String MD_ALARM_4 = "Alarmstufe 4";
-
-  public final static String MD_PEGELNULLPUNKT = "Pegelnullpunkt";
-
-  public final static String MD_HOEHENANGABEART = "Höhenangabeart";
-
-  public final static String MD_MESSTISCHBLATT = "Messtischblattnummer";
-  
-  public final static String MD_FLUSSGEBIET = "Flussgebiet";
-  
-  public final static String MD_FLUSS = "Fluss";
-
   // used for caching
   private ITuppleModel m_values = null;
+
   private Date m_from = null;
+
   private Date m_to = null;
 
   /**
@@ -104,10 +87,10 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   {
     if( anotherClass == IObservation.class )
       return this;
-        
+
     return super.getAdapter( anotherClass );
   }
-  
+
   /**
    * Helper für die Erzeugung der Metadaten
    */
@@ -120,23 +103,25 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
 
     if( m_psicMetaData != null )
     {
-      m_metadata.put( MD_GKH, String.valueOf( m_psicMetaData.getHeight() ) );
-      m_metadata.put( MD_GKR, String.valueOf( m_psicMetaData.getRight() ) );
-      m_metadata.put( MD_HOEHENANGABEART, m_psicMetaData.getLevelUnit() );
-      m_metadata.put( MD_PEGELNULLPUNKT, String.valueOf( m_psicMetaData.getLevel() ) );
-      m_metadata.put( MD_MESSTISCHBLATT, String.valueOf( m_psicMetaData.getMapNo() ) );
-      m_metadata.put( MD_ALARM_1, String.valueOf( m_psicMetaData.getAlarm1() ) );
-      m_metadata.put( MD_ALARM_2, String.valueOf( m_psicMetaData.getAlarm2() ) );
-      m_metadata.put( MD_ALARM_3, String.valueOf( m_psicMetaData.getAlarm3() ) );
-      m_metadata.put( MD_ALARM_4, String.valueOf( m_psicMetaData.getAlarm4() ) );
-      m_metadata.put( MD_FLUSS, m_psicMetaData.getRiver() );
-      m_metadata.put( MD_FLUSSGEBIET, m_psicMetaData.getRiversystem() );
+      m_metadata.put( TimeserieConstants.MD_GKH, String.valueOf( m_psicMetaData.getHeight() ) );
+      m_metadata.put( TimeserieConstants.MD_GKR, String.valueOf( m_psicMetaData.getRight() ) );
+      m_metadata.put( TimeserieConstants.MD_HOEHENANGABEART, m_psicMetaData.getLevelUnit() );
+      m_metadata.put( TimeserieConstants.MD_PEGELNULLPUNKT, String.valueOf( m_psicMetaData
+          .getLevel() ) );
+      m_metadata.put( TimeserieConstants.MD_MESSTISCHBLATT, String.valueOf( m_psicMetaData
+          .getMapNo() ) );
+      m_metadata.put( TimeserieConstants.MD_ALARM_1, String.valueOf( m_psicMetaData.getAlarm1() ) );
+      m_metadata.put( TimeserieConstants.MD_ALARM_2, String.valueOf( m_psicMetaData.getAlarm2() ) );
+      m_metadata.put( TimeserieConstants.MD_ALARM_3, String.valueOf( m_psicMetaData.getAlarm3() ) );
+      m_metadata.put( TimeserieConstants.MD_ALARM_4, String.valueOf( m_psicMetaData.getAlarm4() ) );
+      m_metadata.put( TimeserieConstants.MD_FLUSS, m_psicMetaData.getRiver() );
+      m_metadata.put( TimeserieConstants.MD_FLUSSGEBIET, m_psicMetaData.getRiversystem() );
     }
 
     if( m_psicWQParamSet != null )
-      m_metadata.put( MD_WQ, PSICompactFactory.wqParamSet2String( m_psicWQParamSet ) );
+      m_metadata.put( TimeserieConstants.MD_WQ, readWQParams( m_psicWQParamSet ).toString() );
   }
-  
+
   /**
    * Gibt das Messwerttyp dieser Zeitreihe zurück
    */
@@ -200,7 +185,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
       m_axes = new IAxis[3];
 
       // immer Datum Axis
-      m_axes[0] = new DefaultAxis( "Datum", "datum", "", Date.class, 0, true ); 
+      m_axes[0] = new DefaultAxis( "Datum", "datum", "", Date.class, 0, true );
 
       // Wert (Einheit abfragen)
       String label = toString();
@@ -208,10 +193,12 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
       m_axes[1] = new DefaultAxis( label, "pegel", unit, Double.class, 1, false );
 
       // PSI-Status
-      //m_axes[2] = PSICompactFactory.getAxis( "Status", "", "", String.class, 2 );
-      
+      //m_axes[2] = PSICompactFactory.getAxis( "Status", "", "", String.class,
+      // 2 );
+
       // Status
-      m_axes[2] = new DefaultAxis( KalypsoStatusUtils.getStatusAxisLabelFor( m_axes[1] ), "kalypso_status", "", Integer.class, 2, false );
+      m_axes[2] = new DefaultAxis( KalypsoStatusUtils.getStatusAxisLabelFor( m_axes[1] ),
+          "kalypso_status", "", Integer.class, 2, false );
     }
 
     return m_axes;
@@ -220,23 +207,26 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public synchronized ITuppleModel getValues( final IVariableArguments args ) throws SensorException
+  public synchronized ITuppleModel getValues( final IVariableArguments args )
+      throws SensorException
   {
     if( !( args instanceof DateRangeArgument ) )
-      throw new SensorException( "Brauche DateRange as Argument. Kann sonst die PSICompact Schnittstelle nicht abfragen" );
-    
+      throw new SensorException(
+          "Brauche DateRange as Argument. Kann sonst die PSICompact Schnittstelle nicht abfragen" );
+
     final DateRangeArgument dr = (DateRangeArgument)args;
-    
-    if( m_values != null && dr.getFrom().compareTo( m_from ) == 0 && dr.getTo().compareTo( m_to ) == 0 )
+
+    if( m_values != null && dr.getFrom().compareTo( m_from ) == 0
+        && dr.getTo().compareTo( m_to ) == 0 )
       return m_values;
-    
+
     try
     {
       m_from = dr.getFrom();
       m_to = dr.getTo();
 
-      final ArchiveData[] data = PSICompactFactory.getConnection().getArchiveData( m_objectInfo.getId(),
-          PSICompact.ARC_MIN15, m_from, m_to );
+      final ArchiveData[] data = PSICompactFactory.getConnection().getArchiveData(
+          m_objectInfo.getId(), PSICompact.ARC_MIN15, m_from, m_to );
 
       m_values = new PSICompactTuppleModel( data, getAxisList() );
       return m_values;
@@ -253,18 +243,18 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   public void setValues( final ITuppleModel values ) throws SensorException
   {
     PSICompactTuppleModel model = null;
-    
+
     if( values instanceof PSICompactTuppleModel )
       model = (PSICompactTuppleModel)values;
     else
       model = PSICompactTuppleModel.copyModel( values );
-    
+
     if( model.getCount() > 0 )
     {
       try
       {
-        PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(), PSICompact.ARC_MIN15,
-            model.getData()[0].getTimestamp(), model.getData() );
+        PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(),
+            PSICompact.ARC_MIN15, model.getData()[0].getTimestamp(), model.getData() );
       }
       catch( ECommException e )
       {
@@ -280,5 +270,25 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   {
     // only editable when it represents a forecast
     return m_valueType == PSICompact.TYPE_VALUE;
+  }
+
+  /**
+   * Helper that converts PSICompact WQParamSet objects to a WechmannSets object.
+   */
+  public static WechmannSets readWQParams( final WQParamSet[] pset )
+  {
+    final WechmannSet[] wsets = new WechmannSet[pset.length];
+    for( int i = 0; i < pset.length; i++ )
+    {
+      final WQData[] ds = pset[i].getWqData();
+      final WechmannParams[] wps = new WechmannParams[ds.length];
+
+      for( int j = 0; j < ds.length; j++ )
+        wps[j] = new WechmannParams( ds[j].getW1(), ds[j].getLNK1(), ds[j].getK2(), ds[j].getWGR() );
+
+      wsets[i] = new WechmannSet( pset[i].getValidFrom(), wps );
+    }
+
+    return new WechmannSets( wsets );
   }
 }
