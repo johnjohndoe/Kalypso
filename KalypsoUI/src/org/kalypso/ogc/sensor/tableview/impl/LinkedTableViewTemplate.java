@@ -187,15 +187,18 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
     {
       final DefaultTableViewTheme theme = (DefaultTableViewTheme) m_key2themes.get( key );
 
-      final IObservation obs = (IObservation) newValue;
-      
-      theme.setObservation( obs );
-
-      // was it a fake theme?
-      if( theme.getColumns().size() == 0 )
-        addObservation( obs, true, theme.getArguments() );
-      else
-        addTheme( theme );
+      if( theme != null )
+      {
+        final IObservation obs = (IObservation) newValue;
+        
+        theme.setObservation( obs );
+  
+        // was it a fake theme?
+        if( theme.getColumns().size() == 0 )
+          addObservation( obs, true, theme.getArguments() );
+        else
+          addTheme( theme );
+      }
     }
     else
       m_key2themes.remove( key );
