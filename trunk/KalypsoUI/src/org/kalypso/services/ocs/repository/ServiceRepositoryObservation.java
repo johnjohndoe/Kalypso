@@ -44,8 +44,10 @@ public class ServiceRepositoryObservation implements IObservation
    */
   private IObservation getRemote( final IVariableArguments args ) throws SensorException
   {
-    //if( m_obs == null )
-      m_obs = loadFromServer( args );
+    if( args == null && m_obs != null )
+      return m_obs;
+    
+    m_obs = loadFromServer( args );
     
     return m_obs;        
   }
@@ -172,6 +174,6 @@ public class ServiceRepositoryObservation implements IObservation
    */
   public void setValues( final ITuppleModel values ) throws SensorException
   {
-    getRemote( null ).setValues( values );
+    getRemote( new DateRangeArgument() ).setValues( values );
   }
 }

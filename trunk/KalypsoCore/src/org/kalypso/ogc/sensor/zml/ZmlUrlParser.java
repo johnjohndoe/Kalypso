@@ -1,63 +1,36 @@
-package org.kalypso.ogc.sensor.proxy;
+package org.kalypso.ogc.sensor.zml;
 
-import java.net.URL;
 import java.util.Date;
 
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.util.parser.ParserException;
-import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.XmlTypes;
 
 /**
- * ProxyFactory
+ * ZmlUrlParser
  * 
  * @author schlienger
  */
-public class ProxyFactory
+public class ZmlUrlParser
 {
-  private ProxyFactory( )
+  private ZmlUrlParser( )
   {
-    // not to be instanciated
+    // do not instanciate
   }
 
   /**
-   * May create a proxy depending on the contents of the url.
-   * 
-   * @param context
-   * @param zmlObs
-   * 
-   * @return obs
-   */
-  public static IObservation createProxyFrom( final URL context,
-      final IObservation zmlObs )
-  {
-    final String str = context.toExternalForm();
-
-    IVariableArguments args = null;
-    
-    // check if a DateRange proxy can be created
-    args = checkDateRange( str );
-    if( args != null )
-      return new ArgsObservationProxy( args, zmlObs );
-    
-    // no proxy could be created, so simply return the original obs
-    return zmlObs;
-  }
-
-  /**
-   * Helper: checks if the url contains the from-to specification and eventually creates the
+   * Checks if the string contains the from-to specification and eventually creates the
    * corresponding DateRangeArgument.
    * <pre>
    * The format of the from-to specification should be as follows:
    * 
-   * ...?...&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;...
+   * ...&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;...
    * </pre> 
    * 
    * @param str
    * @return DateRangeArgument
    */
-  private static DateRangeArgument checkDateRange( final String str )
+  public static DateRangeArgument checkDateRange( final String str )
   {
     final String TAG_FROM1 = "<from>";
     final String TAG_FROM2 = "</from>";
