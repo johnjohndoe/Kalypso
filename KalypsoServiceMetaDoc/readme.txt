@@ -1,0 +1,1 @@
+Bereitstellung von Dokumente wie Grafiken, Tabellen, Texten für die Veröffentlichung.
