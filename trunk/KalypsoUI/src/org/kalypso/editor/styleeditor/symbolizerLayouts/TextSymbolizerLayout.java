@@ -4,6 +4,8 @@
  */
 package org.kalypso.editor.styleeditor.symbolizerLayouts;
 
+import java.util.ArrayList;
+
 import org.deegree.graphics.sld.Fill;
 import org.deegree.graphics.sld.Font;
 import org.deegree.graphics.sld.Halo;
@@ -12,6 +14,7 @@ import org.deegree.graphics.sld.ParameterValueType;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.graphics.sld.TextSymbolizer;
 import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.services.wfs.filterencoding.Expression;
 import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.deegree_impl.graphics.sld.StyleFactory;
@@ -250,8 +253,22 @@ public class TextSymbolizerLayout extends SymbolizerLayout{
 	}
 	
     public static int getFeatureTypeGeometryType(FeatureType featureType)
-    {
-    	String ft = featureType.getProperty("GEOM").getType();
+    {    	    
+    	String ft = null;
+    	// get the Geometry Name
+    	ArrayList geometryItems = new ArrayList();
+    	FeatureTypeProperty[] ftp = featureType.getProperties();
+    	for(int i=0; i<ftp.length; i++)    	
+    		if(ftp[i].getType().startsWith("org.deegree.model.geometry."))
+    			geometryItems.add(ftp[i].getType()); 
+    	String geometries[] = new String[geometryItems.size()];
+    	for(int j=0; j<geometries.length; j++)
+    		geometries[j] = (String)geometryItems.get(j);
+    	
+    	if(geometries.length>0)
+    		ft = geometries[0];
+    	if(ft == null)
+    		return -1;    	
     	if(ft.equals("org.deegree.model.geometry.GM_Point"))
     		return GM_POINT;
 		else if(ft.equals("org.deegree.model.geometry.GM_LineString"))

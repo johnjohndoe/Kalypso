@@ -26,7 +26,7 @@ public class FilterDialogLabelProvider implements ILabelProvider {
 	 */
 	public String getText(Object element) {
 		if (element != null) {
-			return ((FilterDialogTreeNode) element).getTag();
+			return ((FilterDialogTreeNode) element).getName();
 		}
 		return null;
 	}

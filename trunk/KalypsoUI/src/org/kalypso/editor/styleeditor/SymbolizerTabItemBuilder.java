@@ -64,8 +64,9 @@ public class SymbolizerTabItemBuilder {
 		}
 		else if(symbolizer instanceof TextSymbolizer)
 		{
-			tabItem.setText("Text");			
+			tabItem.setText("Text");						
 			symbolizerLayout = new TextSymbolizerLayout(composite, symbolizer, userStyle, featureType);
+			
 		}
 		
 		if(symbolizerLayout != null)

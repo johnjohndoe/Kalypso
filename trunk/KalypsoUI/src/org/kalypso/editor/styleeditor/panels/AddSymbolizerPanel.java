@@ -190,8 +190,7 @@ public class AddSymbolizerPanel {
     private String[] getItemsByFeatureType(FeatureType featureType)
     {
 		String items[] = null;		
-		String featureTypeString = featureType.getProperty("GEOM").getType();		
-		
+						
 		if(TextSymbolizerLayout.getFeatureTypeGeometryType(featureType)== TextSymbolizerLayout.GM_POINT)
 		{
 			items = new String[1];

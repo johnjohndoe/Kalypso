@@ -13,13 +13,17 @@ import org.deegree_impl.services.wfs.filterencoding.Literal;
 import org.deegree_impl.services.wfs.filterencoding.PropertyIsLikeOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyName;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.kalypso.editor.styleeditor.dialogs.FilterDialog;
 import org.kalypso.editor.styleeditor.panels.AddSymbolizerPanel;
 import org.kalypso.editor.styleeditor.panels.EditSymbolizerPanel;
 import org.kalypso.editor.styleeditor.panels.PanelEvent;
@@ -243,17 +247,16 @@ public class RuleTabItemBuilder {
 				}
 			});
 				
-//			Button button = new Button(composite,SWT.NULL);
-//			final FilterDialog filterDialog = new FilterDialog(composite.getShell());
-//			button.addSelectionListener(new SelectionListener() {
-//				public void widgetSelected(SelectionEvent e) {
-//					filterDialog.open();
-//
-//				}
-//				public void widgetDefaultSelected(SelectionEvent e) {
-//					widgetSelected(e);
-//				}
-//			});
+			Button button = new Button(composite,SWT.NULL);
+			final FilterDialog filterDialog = new FilterDialog(composite.getShell());
+			button.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent e) {
+					filterDialog.open();			
+				}
+				public void widgetDefaultSelected(SelectionEvent e) {
+					widgetSelected(e);
+				}
+			});
 			
 			for(int j=0; j<rule.getSymbolizers().length; j++){
 				new SymbolizerTabItemBuilder(symbolizerTabFolder,rule.getSymbolizers()[j],userStyle,featureType); 								
