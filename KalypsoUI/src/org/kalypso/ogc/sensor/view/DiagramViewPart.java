@@ -1,7 +1,15 @@
 package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -14,33 +22,34 @@ import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.kalypso.ogc.sensor.DateRangeArgument;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationTimeSeries;
+import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.adapter.IAdaptable;
 import org.kalypso.util.repository.view.RepositoryExplorerPart;
 
 /**
+ * Diagram QuickView.
+ * 
  * @author schlienger
- *  
  */
 public class DiagramViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
 {
   private JFreeChart m_chart = null;
 
-  private final TimeSeriesCollection m_tsCol = new TimeSeriesCollection();
-
-  public DiagramViewPart()
-  {
-  //
-  }
+  protected final TimeSeriesCollection m_tsCol = new TimeSeriesCollection();
 
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   public void createPartControl( Composite parent )
   {
-    m_chart = ChartFactory.createTimeSeriesChart( "", "Datum", "Wert", m_tsCol, false,
-        false, false );
+    m_chart = ChartFactory
+        .createTimeSeriesChart( "", "Datum", "Wert", m_tsCol, false, false, false );
 
     ChartPanel chartPanel = new ChartPanel( m_chart );
     chartPanel.setMouseZoomable( true, false );
@@ -61,7 +70,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   public void dispose()
   {
     getSite().getPage().removePartListener( this );
-    
+
     super.dispose();
   }
 
@@ -72,7 +81,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   {
   // noch nix
   }
- 
+
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
@@ -84,12 +93,13 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
 
     if( !( selection.getFirstElement() instanceof IAdaptable ) )
       return;
-    
-    IObservation obs = (IObservation)((IAdaptable)selection.getFirstElement()).getAdapter( IObservation.class );
+
+    IObservation obs = (IObservation)( (IAdaptable)selection.getFirstElement() )
+        .getAdapter( IObservation.class );
     if( obs == null )
       return;
 
-    getViewSite().getShell().getDisplay().asyncExec( new ShowObservationInDiagramJob( m_tsCol, obs ) );
+    new ShowObservationJob( obs ).schedule();
   }
 
   /**
@@ -106,7 +116,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
    */
   public void partBroughtToTop( IWorkbenchPart part )
   {
-    // nada
+  // nada
   }
 
   /**
@@ -115,7 +125,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   public void partClosed( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ((RepositoryExplorerPart)part).removeSelectionChangedListener( this );
+      ( (RepositoryExplorerPart)part ).removeSelectionChangedListener( this );
   }
 
   /**
@@ -132,6 +142,57 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
    */
   public void partOpened( IWorkbenchPart part )
   {
-    // Siehe partActivated...
+  // Siehe partActivated...
+  }
+
+  /**
+   * Specific job for showing observation in diagram quickview.
+   * 
+   * @author schlienger
+   */
+  private class ShowObservationJob extends Job
+  {
+    private final IObservation m_obs;
+
+    public ShowObservationJob( final IObservation obs )
+    {
+      super( "Aktualisierung von Diagramm-QuickView" );
+      
+      m_obs = obs;
+      
+      setPriority( Job.SHORT );
+    }
+
+    /**
+     * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    protected IStatus run( IProgressMonitor monitor )
+    {
+      Calendar c = Calendar.getInstance();
+
+      Date to = c.getTime();
+      c.add( Calendar.DAY_OF_YEAR, -31 );
+      Date from = c.getTime();
+
+      try
+      {
+        // TODO: ok so mit der Collection von Series?
+        List series = new ObservationTimeSeries( m_obs, new DateRangeArgument( from, to ) )
+            .getSeries();
+
+        for( Iterator it = series.iterator(); it.hasNext(); )
+        {
+          TimeSeries s = (TimeSeries)it.next();
+
+          m_tsCol.addSeries( s );
+        }
+      }
+      catch( SensorException e )
+      {
+        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, "Fehler beim Laden der Diagrammdaten", e );
+      }
+      
+      return Status.OK_STATUS;
+    }
   }
 }

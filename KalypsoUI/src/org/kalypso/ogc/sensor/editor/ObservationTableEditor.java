@@ -1,40 +1,31 @@
 package org.kalypso.ogc.sensor.editor;
 
 import java.awt.Frame;
-import java.net.MalformedURLException;
 import java.util.Date;
-import java.util.Hashtable;
-import java.util.Map;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.editor.AbstractEditorPart;
-import org.kalypso.ogc.sensor.IObservationProvider;
-import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
-import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
-import org.kalypso.ogc.sensor.template.ColumnPair;
-import org.kalypso.ogc.sensor.template.TableViewTemplateFactory;
-import org.kalypso.plugin.KalypsoGisPlugin;
-import org.kalypso.util.pool.IPoolListener;
-import org.kalypso.util.pool.IPoolableObjectType;
-import org.kalypso.util.pool.ResourcePool;
+import org.kalypso.ogc.sensor.template.ITemplateListener;
+import org.kalypso.ogc.sensor.template.TableViewTemplate;
 import org.kalypso.util.status.MaskedNumber;
 
 /**
  * The Observation TableEditor.
  * <p>
- * <b>Hinweise zu den internen Verbrauch von BitMask für den Tagging von
- * Werte (Themengegliedert)</b>:
+ * <b>Hinweise zu den internen Verbrauch von BitMask für den Tagging von Werte
+ * (Themengegliedert) </b>:
+ * 
  * <pre>
  * Gültigkeit
  * 0x01 - Für Berechnung ok
@@ -53,30 +44,16 @@ import org.kalypso.util.status.MaskedNumber;
  * Änderungen vom Benutzer
  * 0x18 - vom Benutzer nicht geändert
  * 0x1F - vom Benutzer geändert
- * </pre> 
+ * </pre>
  * 
  * @author schlienger
  */
-public class ObservationTableEditor extends AbstractEditorPart implements IPoolListener
+public class ObservationTableEditor extends AbstractEditorPart implements
+    ITemplateListener
 {
   private final ObservationTableModel m_model = new ObservationTableModel();
 
-  private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool(
-      IObservationProvider.class );
-
-  private ITableViewTemplate m_tableview = null;
-
-  private ITableViewColumn[] m_cols;
-
-  private Map m_providers = new Hashtable();
-
-  /**
-   * Constructor
-   */
-  public ObservationTableEditor()
-  {
-    m_pool.addPoolListener( this );
-  }
+  private TableViewTemplate m_template = null;
 
   /**
    * @see org.kalypso.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -111,62 +88,27 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
    */
   protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
-    try
-    {
-      m_tableview = TableViewTemplateFactory.createTemplate( input.getFile() );
-    }
-    catch( MalformedURLException e )
-    {
-      // TODO: handling
-      throw new RuntimeException( e );
-    }
-
-    // the rules will be used for rendering, they are used in the table cell renderer
-    m_model.setRules( m_tableview.getRules() );
-    
-    m_cols = m_tableview.getColumns();
-
-    monitor.beginTask( "Spalten initialisieren", m_cols.length );
-
-    // TODO: blöder trick hier, ich teste ob es sich um ColumPair handelt, dies
-    // ist sicherlich nicht so schön.
-    for( int i = 0; i < m_cols.length; i++ )
-    {
-      if( m_cols[i] instanceof ColumnPair )
-        ((ColumnPair)m_cols[i]).startBorrowObjectJob( m_pool, this );
-      
-      monitor.worked( 1 );
-    }
+    m_template = new TableViewTemplate( input.getFile(), monitor );
+    m_template.addListener( this );
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#onObjectInvalid(org.kalypso.util.pool.ResourcePool,
-   *      org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, boolean)
+   * @see org.kalypso.ogc.sensor.template.ITemplateListener#onTemplateLoaded()
    */
-  public void onObjectInvalid( final ResourcePool pool, final IPoolableObjectType key,
-      final Object oldObject, boolean bCannotReload ) throws Exception
+  public void onTemplateLoaded()
   {
-    boolean changed = false;
-
-    for( int i = 0; i < m_cols.length; i++ )
+    try
     {
-      // TODO: auch nicht schön: feste Test ob es sich um ColumnPair handelt
-      if( m_cols[i] instanceof ColumnPair && ((ColumnPair)m_cols[i]).isInvalid( oldObject ) )
-      {
-        IObservationProvider p = (IObservationProvider)m_pool.getObject( ((ColumnPair)m_cols[i]).getKey(),
-            new NullProgressMonitor() );
+      // the rules will be used for rendering, they are used in the table cell
+      // renderer
+      m_model.setRules( m_template.getRules() );
 
-        ((ColumnPair)m_cols[i]).setProvider( p );
-
-        m_providers.put( m_cols[i], p );
-
-        changed = true;
-      }
+      m_model.setColumns( m_template.getColumns(), null );
     }
-
-    if( changed && m_providers.size() == m_cols.length )
+    catch( SensorException e )
     {
-      m_model.setColumns( m_cols, null );
+      // TODO handling
+      throw new RuntimeException( e );
     }
   }
 }

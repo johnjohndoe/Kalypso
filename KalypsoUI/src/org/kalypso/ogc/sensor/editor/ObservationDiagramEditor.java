@@ -1,9 +1,7 @@
 package org.kalypso.ogc.sensor.editor;
 
 import java.awt.Frame;
-import java.net.MalformedURLException;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -14,18 +12,21 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.kalypso.editor.AbstractEditorPart;
-import org.kalypso.ogc.sensor.view.ShowObservationInDiagramJob;
-import org.kalypso.ogc.sensor.zml.ZmlObservation;
+import org.kalypso.ogc.sensor.template.DiagramViewTemplate;
+import org.kalypso.ogc.sensor.template.ITemplateListener;
 
 /**
+ * Observation Diagram Editor.
+ * 
  * @author schlienger
- *  
  */
-public class ObservationDiagramEditor extends AbstractEditorPart
+public class ObservationDiagramEditor extends AbstractEditorPart implements ITemplateListener
 {
   private JFreeChart m_chart = null;
 
   protected final TimeSeriesCollection m_tsCol = new TimeSeriesCollection();
+
+  private DiagramViewTemplate m_template = null;
 
   /**
    * @see org.kalypso.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -54,22 +55,23 @@ public class ObservationDiagramEditor extends AbstractEditorPart
    */
   protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input )
   {
-    // todo
+  // todo
   }
 
   /**
-   * @throws MalformedURLException
-   * @see org.kalypso.editor.AbstractEditorPart#load()
+   * @see org.kalypso.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.ui.IFileEditorInput)
    */
-  protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input  ) throws MalformedURLException
+  protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
-      final IFile f = input.getFile();
-      //final InputSource ins = new InputSource( f.getContents() );
-      //ins.setEncoding( f.getCharset() );
-      //ins.
-      
-      final ZmlObservation obs = new ZmlObservation( f.getLocation().toFile() );
+    m_template = new DiagramViewTemplate( input.getFile(), monitor );
+    m_template.addListener( this );
+  }
 
-      getEditorSite().getShell().getDisplay().asyncExec( new ShowObservationInDiagramJob( m_tsCol, obs ) );
+  /**
+   * @see org.kalypso.ogc.sensor.template.ITemplateListener#onTemplateLoaded()
+   */
+  public void onTemplateLoaded()
+  {
+     // TODO
   }
 }

@@ -56,7 +56,7 @@
             default="true"
             name="Kalypso Observation DiagramEditor"
             id="org.kalypso.ogc.sensor.editor.ObservationDiagramEditor"
-            extensions="zml"/>
+            extensions="odt"/>
       <editor
             class="org.kalypso.ogc.sensor.editor.ObservationTableEditor"
             icon="icons/observation_repository.ico"
@@ -316,6 +316,25 @@
             </enablement>
          </contextualLaunch>
       </shortcut>
+   </extension>
+   <extension
+         point="org.eclipse.ui.viewActions">
+      <viewContribution
+            targetID="org.eclipse.ui.views.ResourceNavigator"
+            id="org.kalypso.ogc.sensor.view.vc1">
+         <action
+               label="%PopupMenu.ResourceNav.GrafikVorlageLabel"
+               id="org.kalypso.ogc.sensor.view.resourceNavigator.GrafikViewActionDelegate"
+               menubarPath="additions"
+	           toolbarPath="additions" 
+               icon="icons/sample.gif" 
+               tooltip="%PopupMenu.ResourceNav.GrafikVorlageTooltip" 
+               class="org.kalypso.ogc.sensor.view.resourceNavigator.GrafikViewActionDelegate" 
+               enablesFor="1"> 
+			<selection class="org.eclipse.core.resources.IFile" name="*.odt"/> 
+	   	</action>
+               
+      </viewContribution>
    </extension>
 
 </plugin>

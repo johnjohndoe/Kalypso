@@ -9,11 +9,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.ogc.sensor.DefaultObservationProvider;
-import org.kalypso.ogc.sensor.ObservationUtilities;
 
 /**
- * A specific loader for ZML-Files. Load liefert ein IObservationProvider.
+ * A specific loader for ZML-Files. Loads <code>ZmlObservation</code> objects.
  * 
  * @author schlienger
  */
@@ -29,10 +27,8 @@ public class ZmlLoader extends AbstractLoader
   {
     String type = source.getProperty( "TYPE" );
     String location = source.getProperty( "LOCATION" );
-    String sharedAxis = source.getProperty( "SHARED_AXIS" );
-    String valueAxis = source.getProperty( "VALUE_AXIS" );
 
-    monitor.beginTask( "Laden von ZML-Datei von " + location, 2 );
+    monitor.beginTask( "Laden von ZML-Datei von " + location, 1 );
 
     URL url = null;
 
@@ -58,14 +54,11 @@ public class ZmlLoader extends AbstractLoader
       }
     }
 
-    monitor.worked( 1 );
-
     ZmlObservation obs = new ZmlObservation( location, url );
 
     monitor.worked( 1 );
 
-    return new DefaultObservationProvider( obs, ObservationUtilities.findAxis( obs, sharedAxis ),
-        ObservationUtilities.findAxis( obs, valueAxis ) );
+    return obs;
   }
 
   /**
