@@ -1,7 +1,7 @@
 /** TODO: license definieren
 */
 
-package org.kalypso.util.gml;
+package org.kalypso.ogc.gml;
 
 import java.util.HashMap;
 

@@ -1,4 +1,4 @@
-package org.kalypso.util.reflect;
+package org.kalypso.java.reflect;
 
 /**
  * Utilities method on Class stuff

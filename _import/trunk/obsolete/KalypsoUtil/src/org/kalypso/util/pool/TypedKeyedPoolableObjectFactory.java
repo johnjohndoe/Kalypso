@@ -68,7 +68,7 @@ public class TypedKeyedPoolableObjectFactory implements KeyedPoolableObjectFacto
   {
     final IPoolableObjectType objType = testTypeOfKey( key );
     
-    final ILoader loader = m_factory.getLoaderInstance( objType.getType(), m_classLoader );
+    /*final ILoader loader = */m_factory.getLoaderInstance( objType.getType(), m_classLoader );
     
     // TODO: Loader.passivate
   }

@@ -1,4 +1,4 @@
-package org.kalypso.util.io;
+package org.kalypso.java.io;
 
 import java.io.File;
 import java.io.FileFilter;

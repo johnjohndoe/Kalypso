@@ -1,7 +1,7 @@
 /** TODO: license definieren
 */
 
-package org.kalypso.util.gml;
+package org.kalypso.ogc.gml;
 
 import org.w3c.dom.Node;
 

@@ -1,4 +1,4 @@
-package org.kalypso.util.properties;
+package org.kalypso.java.properties;
 
 import java.util.Properties;
 

@@ -4,8 +4,8 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
 
-import org.kalypso.util.reflect.ClassUtilities;
-import org.kalypso.util.reflect.ClassUtilities.ClassUtilityException;
+import org.kalypso.java.reflect.ClassUtilities;
+import org.kalypso.java.reflect.ClassUtilities.ClassUtilityException;
 
 /**
  * <p>Eine sehr allgemeine Factory, die durch Properties konfiguriert wird.</p>
