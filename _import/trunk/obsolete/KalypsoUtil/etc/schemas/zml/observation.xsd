@@ -59,9 +59,5 @@
         <xs:sequence minOccurs="1" maxOccurs="1">
             <xs:element name="observation" type="xlink:xlink-base"></xs:element>        
         </xs:sequence>
-<!--    <xs:complexContent>
-            <xs:extension base="xlink:xlink-base"/>
-        </xs:complexContent>
--->        
     </xs:complexType>
 </xs:schema>
