@@ -78,6 +78,7 @@ import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.extension.ITypeHandler;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.gml.schema.Mapper;
+import org.deegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.deegree_impl.model.geometry.GMLAdapter;
 import org.deegree_impl.model.sort.SplitSort;
 import org.deegree_impl.tools.Debug;
@@ -239,6 +240,7 @@ public class FeatureFactory
    * @param gmlFeature
    *          instance of a <CODE>GMLFeature</CODE>
    * @return instance of a <CODE>Feature</CODE>
+   * @deprecated do not create feature without GML-applicationschema
    */
   public static Feature createFeature( GMLFeature gmlFeature )
   {
@@ -499,6 +501,21 @@ public class FeatureFactory
   public static FeatureList createFeatureList( final GM_Envelope env )
   {
     return new SplitSort( env );
+  }
+
+  public static FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureType realFeatureType )
+  {
+    final FeatureTypeProperty[] properties = realFeatureType.getProperties();
+    final List newFTP = new ArrayList();
+    for( int i = 0; i < properties.length; i++ )
+    {
+      FeatureTypeProperty ftp = properties[i];
+      FeatureTypeProperty[] newFtp = VirtualFeatureTypeRegistry.getInstance()
+          .getVirtualFeatureTypePropertiesFor( ftp );
+      for( int j = 0; j < newFtp.length; j++ )
+        newFTP.add( newFtp[j] );
+    }
+    return (FeatureTypeProperty[])newFTP.toArray( new FeatureTypeProperty[newFTP.size()] );       
   }
 
 }

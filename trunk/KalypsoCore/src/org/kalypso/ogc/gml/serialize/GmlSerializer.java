@@ -206,7 +206,7 @@ public final class GmlSerializer
 
     final URL schemaLocation = urlResolver.resolveURL( gmlURL, schemaLocationName );
     final GMLSchema schema = GMLSchemaCache.getSchema( schemaLocation );
-
+    
     // create feature and workspace gml
     final FeatureType[] types = schema.getFeatureTypes();
     final Feature feature = FeatureFactory.createFeature( gml.getRootFeature(), types );

@@ -66,6 +66,7 @@ import java.net.URL;
 
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.geometry.GM_Object;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -156,6 +157,8 @@ public interface GMLDocument extends Document
   public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final String attributeValue );
 
   public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final Object customObject ) throws GMLException;
+
+  public GMLProperty createGMLGeoProperty( final FeatureTypeProperty ftp, final GM_Object geometry ) throws GMLException;
   
   /* #GMLSchema lnkGMLSchema; */
 }
@@ -163,6 +166,9 @@ public interface GMLDocument extends Document
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.10  2005/02/28 13:34:14  doemming
+ * *** empty log message ***
+ *
  * Revision 1.9  2005/02/08 18:43:59  belger
  * *** empty log message ***
  *

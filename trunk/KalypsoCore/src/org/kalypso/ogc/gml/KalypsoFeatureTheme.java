@@ -69,7 +69,7 @@ import org.kalypso.util.command.ICommand;
  */
 public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme
 {
-  private CommandableWorkspace m_workspace;
+  CommandableWorkspace m_workspace;
 
   private final HashMap m_styleDisplayMap = new HashMap();
 
@@ -246,6 +246,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       if( result == null )
         result = new HashSet();
+      m_vaildEnvelope=null;
       restyle( env );
       for( Iterator iter = m_dispayElements.iterator(); iter.hasNext(); )
         result.add( ( (DisplayElement[])iter.next() )[0].getFeature() );
@@ -318,7 +319,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
           try
           {
             DisplayElement[] elements = DisplayElementFactory.createDisplayElement( feature,
-                m_style );
+                m_style,m_workspace);
             if( elements.length > 0 )
               m_dispayElements.add( elements );
             if( elements.length > m_maxDisplayArray )

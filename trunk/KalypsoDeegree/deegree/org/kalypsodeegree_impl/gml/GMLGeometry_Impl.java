@@ -94,8 +94,6 @@ public class GMLGeometry_Impl implements GMLGeometry
 
   /**
    * 
-   * 
-   * @return
    */
   public Element getAsElement()
   {
@@ -193,8 +191,7 @@ public class GMLGeometry_Impl implements GMLGeometry
 
   /**
    * 
-   * 
-   * @return
+   * @see java.lang.Object#toString()
    */
   public String toString()
   {
@@ -215,6 +212,9 @@ public class GMLGeometry_Impl implements GMLGeometry
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.5  2005/02/28 13:34:14  doemming
+ * *** empty log message ***
+ *
  * Revision 1.4  2005/01/18 12:50:42  doemming
  * *** empty log message ***
  *

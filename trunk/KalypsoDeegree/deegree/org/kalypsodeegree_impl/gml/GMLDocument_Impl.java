@@ -74,10 +74,12 @@ import org.deegree.gml.GMLDocument;
 import org.deegree.gml.GMLException;
 import org.deegree.gml.GMLFeature;
 import org.deegree.gml.GMLFeatureCollection;
+import org.deegree.gml.GMLGeometry;
 import org.deegree.gml.GMLNameSpace;
 import org.deegree.gml.GMLProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.geometry.GM_Object;
 import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree.xml.DOMPrinter;
 import org.deegree.xml.XMLTools;
@@ -667,21 +669,21 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   }
 
   /**
-  * creates a GMLFeatureCollection that doesn't contain a property and that
-  * hasn't an id.
-  */
+   * creates a GMLFeatureCollection that doesn't contain a property and that
+   * hasn't an id.
+   */
   public GMLFeatureCollection createGMLFeatureCollection( final String collectionName )
   {
-   Debug.debugMethodBegin();
-  
-   final Element elem = createElementNS( CommonNamespaces.GMLNS, collectionName );
-   final Element el = createElementNS( CommonNamespaces.GMLNS, "boundedBy" );
-   elem.appendChild( el );
-  
-   final GMLFeatureCollection feature = new GMLFeatureCollection_Impl( elem );
-  
-   Debug.debugMethodEnd();
-   return feature;
+    Debug.debugMethodBegin();
+
+    final Element elem = createElementNS( CommonNamespaces.GMLNS, collectionName );
+    final Element el = createElementNS( CommonNamespaces.GMLNS, "boundedBy" );
+    elem.appendChild( el );
+
+    final GMLFeatureCollection feature = new GMLFeatureCollection_Impl( elem );
+
+    Debug.debugMethodEnd();
+    return feature;
   }
 
   /**
@@ -700,7 +702,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     Debug.debugMethodEnd();
     return feature;
   }
-  
+
   /**
    * factory method to create a GMLProperty. the property that will be return
    * doesn't contain a value.
@@ -726,14 +728,14 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     gmlProp.setPropertyValue( attributeValue );
     return gmlProp;
   }
-  
-  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp,
-      final Object customObject ) throws GMLException
+
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final Object customObject )
+      throws GMLException
   {
     try
     {
       final Element element = createElementNS( ftp.getNamespace(), ftp.getName() );
-      
+
       // marshalling
       final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
           .getTypeHandlerForClassName( ftp.getType() );
@@ -748,5 +750,19 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     {
       throw new GMLException( e.getLocalizedMessage() );
     }
+  }
+
+  /**
+   * 
+   * @throws GMLException
+   * @see org.deegree.gml.GMLDocument#createGMLGeoProperty(org.deegree.model.feature.FeatureTypeProperty,
+   *      org.deegree.model.geometry.GM_Object)
+   */
+  public GMLProperty createGMLGeoProperty( FeatureTypeProperty ftp, GM_Object geom ) throws GMLException
+  {
+    final GMLProperty ls = createGMLProperty( ftp );
+    GMLGeometry geometry = GMLFactory.createGMLGeometry( this, geom );
+    ls.setPropertyValue( ( (GMLGeometry_Impl)geometry ).getAsElement() );
+    return ls;
   }
 }

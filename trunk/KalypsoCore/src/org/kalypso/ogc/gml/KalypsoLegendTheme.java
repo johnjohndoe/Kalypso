@@ -250,7 +250,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     try
     {
       DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[]
-      { style } );
+      { style }, null );
       for( int i = 0; i < des.length; i++ )
       {
         DisplayElement de = des[i];

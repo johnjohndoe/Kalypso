@@ -151,26 +151,6 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
    * factory method to create a GMLGeoProperty. the property that will be return
    * doesn't contain a value.
    */
-  public static GMLGeoProperty createGMLGeoProperty( String name, GMLGeometry geom )
-      throws GMLException
-  {
-    Debug.debugMethodBegin( "GMLProperty_Impl", "createGMLGeoProperty(String,GMLGeometry)" );
-
-    Document doc = ( (GMLGeometry_Impl)geom ).getAsElement().getOwnerDocument();
-    Element elem = doc.createElement( name );
-    elem.appendChild( ( (GMLGeometry_Impl)geom ).getAsElement() );
-
-    GMLGeoProperty g = new GMLGeoProperty_Impl( elem );
-
-    Debug.debugMethodEnd();
-
-    return g;
-  }
-
-  /**
-   * factory method to create a GMLGeoProperty. the property that will be return
-   * doesn't contain a value.
-   */
   public static GMLGeoProperty createGMLGeoProperty( GMLGeometry geom ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLProperty_Impl", "createGMLGeoProperty(GMLGeometry)" );
@@ -387,11 +367,6 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
         + "of a geo property as a String" );
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     return DOMPrinter.nodeToString( element, "" );
@@ -402,6 +377,9 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.5  2005/02/28 13:34:14  doemming
+ * *** empty log message ***
+ *
  * Revision 1.4  2005/01/18 12:50:42  doemming
  * *** empty log message ***
  *

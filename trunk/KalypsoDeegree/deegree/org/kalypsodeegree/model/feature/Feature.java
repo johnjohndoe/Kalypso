@@ -1,5 +1,7 @@
 package org.deegree.model.feature;
 
+import org.deegree.model.geometry.GM_Object;
+
 /**
  * @author doemming
  * 
@@ -23,4 +25,6 @@ public interface Feature extends DeegreeFeature
 
   /** setzt die Selektion komplett */
   public void setSelection( final int selection );
+
+  public Object getVirtuelProperty( String propertyName,GMLWorkspace workspace );
 }

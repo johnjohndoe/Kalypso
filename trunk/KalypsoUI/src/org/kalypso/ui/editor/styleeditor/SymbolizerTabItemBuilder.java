@@ -52,6 +52,7 @@ import org.deegree.graphics.sld.RasterSymbolizer;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.graphics.sld.TextSymbolizer;
 import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -115,8 +116,7 @@ public class SymbolizerTabItemBuilder
     else if( symbolizer instanceof TextSymbolizer )
     {
       tabItem.setText( "Text" );
-      symbolizerLayout = new TextSymbolizerLayout( composite, symbolizer, userStyle, featureType );
-
+      symbolizerLayout = new TextSymbolizerLayout( composite, symbolizer, userStyle, featureType);
     }
 
     if( symbolizerLayout != null )

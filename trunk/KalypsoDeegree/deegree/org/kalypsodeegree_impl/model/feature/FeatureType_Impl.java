@@ -83,42 +83,9 @@ import org.deegree.model.feature.FeatureTypeProperty;
  */
 class FeatureType_Impl implements FeatureType, Serializable
 {
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  public boolean equals( Object obj )
-  {
-    if( obj == null || ( !( obj instanceof FeatureType ) ) )
-      return false;
-    FeatureType other = (FeatureType)obj;
-    if( m_namespace != null )
-      if( !m_namespace.equals( other.getNamespace() ) )
-        return false;
-    if( !m_name.equals( other.getName() ) )
-      return false;
-    return true;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  public int hashCode()
-  {
-    if( m_namespace != null )
-      return ( m_namespace + m_name ).hashCode();
-    return m_name.hashCode();
-  }
-
   private final String m_namespace;
 
   private final String m_substitutionGroup;
-
-  // private final FeatureType[] children;
-  // es werden keine children gebraucht, da keine featuretypes direkt
-  // unterhalb
-  // eines featuretypes sein kann, es k?nnen h?chstens featureassociationtypes
-  // unterhalb von featuretype sein, diese werden
-  // jedoch von featuretypeproperty abgeleitet
 
   private final String m_name;
 
@@ -133,6 +100,8 @@ class FeatureType_Impl implements FeatureType, Serializable
   private int m_defaultGeometryPropPos = -1;
 
   private final Map m_annotationsMap;
+
+  private FeatureTypeProperty[] m_virtualProperties;
 
   public FeatureType_Impl( String name, String namespace, FeatureTypeProperty[] properties,
       int[] minOccurs, int[] maxOccurs, String substitutionGroup, Map annotationMap )
@@ -178,6 +147,8 @@ class FeatureType_Impl implements FeatureType, Serializable
 
   /**
    * returns the direct children of the FeatureType
+   * 
+   * @deprecated
    */
   public FeatureType[] getChildren()
   {
@@ -281,4 +252,92 @@ class FeatureType_Impl implements FeatureType, Serializable
     return m_substitutionGroup;
 
   }
+
+  /**
+   * @see org.deegree.model.feature.FeatureType#setVirtuelFeatureTypeProperty(org.deegree.model.feature.FeatureTypeProperty[])
+   */
+  public void setVirtuelFeatureTypeProperty( FeatureTypeProperty[] virtualProperties )
+  {
+    m_virtualProperties = virtualProperties;
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureType#getVirtuelFeatureTypeProperty()
+   */
+  public FeatureTypeProperty[] getVirtuelFeatureTypeProperty()
+  {
+    return m_virtualProperties;
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureType#getDefaultGeometryProperty()
+   */
+  public FeatureTypeProperty getDefaultGeometryProperty()
+  {
+    if( m_defaultGeometryPropPos > -1 )
+      return m_properties[m_defaultGeometryPropPos];
+    return null;
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureType#getVirtuelFeatureTypeProperty(java.lang.String)
+   */
+  public FeatureTypeProperty getVirtuelFeatureTypeProperty( String propName )
+  {
+    for( int i = 0; i < m_virtualProperties.length; i++ )
+      if( propName.equals( m_virtualProperties[i].getName() ) )
+        return m_virtualProperties[i];
+    return null;
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  public boolean equals( Object obj )
+  {
+    if( obj == null || ( !( obj instanceof FeatureType ) ) )
+      return false;
+    FeatureType other = (FeatureType)obj;
+    if( m_namespace != null )
+      if( !m_namespace.equals( other.getNamespace() ) )
+        return false;
+    if( !m_name.equals( other.getName() ) )
+      return false;
+    return true;
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  public int hashCode()
+  {
+    if( m_namespace != null )
+      return ( m_namespace + m_name ).hashCode();
+    return m_name.hashCode();
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureType#isVirtuelProperty(java.lang.String)
+   */
+  public boolean isVirtuelProperty( String propertyName )
+  {
+    return !m_posOfFTP.containsKey( propertyName );
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureType#getMaxOccurs(java.lang.String)
+   */
+  public int getMaxOccurs( String linkName )
+  {
+    return m_maxOccurs[getPropertyPosition( linkName )];
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureType#getMinOccurs(java.lang.String)
+   */
+  public int getMinOccurs( String linkName )
+  {
+    return m_minOccurs[getPropertyPosition( linkName )];
+  }
+
 }

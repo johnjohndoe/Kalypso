@@ -36,19 +36,18 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 26.07.2004
  *  
  */
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
-import java.util.ArrayList;
-
 import org.deegree.filterencoding.Expression;
 import org.deegree.filterencoding.FilterEvaluationException;
 import org.deegree.graphics.sld.Font;
+import org.deegree.graphics.sld.Geometry;
 import org.deegree.graphics.sld.Halo;
 import org.deegree.graphics.sld.LabelPlacement;
 import org.deegree.graphics.sld.ParameterValueType;
@@ -85,7 +84,7 @@ import org.kalypso.ui.editor.styleeditor.panels.TextLabelComboPanel;
 public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
-  private FeatureType featureType = null;
+  private final FeatureType m_featureTyped;
 
   private TextInputPanel labelTextInput = null;
 
@@ -105,11 +104,14 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 
   public final static int GM_OBJECT = 4;
 
-  public TextSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer,
-      KalypsoUserStyle m_userStyle, FeatureType m_featureType )
+  //  private final FeatureTypeProperty m_ftp;
+
+  public TextSymbolizerLayout( Composite composite, Symbolizer symbolizer,
+      KalypsoUserStyle userStyle, FeatureType featureType )
   {
-    super( m_composite, m_symbolizer, m_userStyle );
-    this.featureType = m_featureType;
+    super( composite, symbolizer, userStyle );
+    m_featureTyped = featureType;
+    //    m_ftp = ftp;
   }
 
   public void draw() throws FilterEvaluationException
@@ -154,7 +156,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
       }
     }
     textLabelComboPanel = new TextLabelComboPanel( fontGroup, MessageBundle.STYLE_EDITOR_LABEL,
-        featureType, labelTextCombo );
+        m_featureTyped, labelTextCombo );
     labelTextInput = new TextInputPanel( fontGroup, MessageBundle.STYLE_EDITOR_OR_TEXT,
         labelTextField );
 
@@ -196,16 +198,6 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
       }
     } );
-
-    // 		***** Halo Group
-
-    //		Group haloGroup = new Group(composite,SWT.NULL);
-    //		haloGroup.setText("Halo");
-    //		GridData haloGroupData = new GridData();
-    //		haloGroupData.widthHint = 210;
-    //		haloGroup.setLayoutData(haloGroupData);
-    //		haloGroup.setLayout(compositeLayout);
-    //		haloGroup.layout();
 
     halo = textSymbolizer.getHalo();
     if( halo == null )
@@ -263,7 +255,16 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     labelPlacement = textSymbolizer.getLabelPlacement();
-    if( getFeatureTypeGeometryType( featureType ) == GM_LINESTRING )
+    final FeatureTypeProperty ftp;
+    Geometry geometry = textSymbolizer.getGeometry();
+    if( geometry != null )
+    {
+      String geoPropName = geometry.getPropertyName();
+ftp=m_featureTyped.getProperty(geoPropName);
+    }
+    else
+      ftp=m_featureTyped.getDefaultGeometryProperty();
+    if( getFeatureTypeGeometryType( ftp ) == GM_LINESTRING )
     {
       if( labelPlacement == null )
         labelPlacement = StyleFactory.createLabelPlacement( StyleFactory
@@ -337,25 +338,11 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     }
   }
 
-  public static int getFeatureTypeGeometryType( FeatureType featureType )
+  public static int getFeatureTypeGeometryType( final FeatureTypeProperty ftp )
   {
-    String ft = null;
-    // get the Geometry Name
-    ArrayList geometryItems = new ArrayList();
-    FeatureTypeProperty[] ftp = featureType.getProperties();
-    for( int i = 0; i < ftp.length; i++ )
-      if( ftp[i].getType().startsWith( "org.deegree.model.geometry." )
-          && !ftp[i].getType().endsWith( "Envelope" ) )
-
-        geometryItems.add( ftp[i].getType() );
-    String geometries[] = new String[geometryItems.size()];
-    for( int j = 0; j < geometries.length; j++ )
-      geometries[j] = (String)geometryItems.get( j );
-
-    if( geometries.length > 0 )
-      ft = geometries[0];
-    if( ft == null )
+    if( ftp == null )
       return -1;
+    final String ft = ftp.getType();
     if( ft.equals( "org.deegree.model.geometry.GM_Point" ) )
       return GM_POINT;
     else if( ft.equals( "org.deegree.model.geometry.GM_LineString" ) )

@@ -46,6 +46,8 @@ package org.kalypso.ui.editor.styleeditor;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import org.deegree.graphics.sld.FeatureTypeStyle;
 import org.deegree.graphics.sld.Rule;
 import org.deegree.graphics.sld.Symbolizer;
@@ -284,11 +286,12 @@ public class SLDEditorGuiBuilder
             PropertyName propertyName = new PropertyName( prop.getName() );
             PropertyIsBetweenOperation operation = null;
 
-            String[] geometryObjects = AddSymbolizerPanel.getGeometries( getFeatureType() );
+            List geometryObjects = AddSymbolizerPanel.queryGeometriesPropertyNames( getFeatureType().getProperties(),null );
+            //              geometryObjects = AddSymbolizerPanel.queryGeometriesPropertyNames( getFeatureType().getVirtuelFeatureTypeProperty(),geometryObjects );
 
-            if( geometryObjects.length > 0 )
+            if( geometryObjects.size() > 0 )
             {
-              Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( geometryObjects[0], "Point",
+              Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( (String)geometryObjects.get(0), "Point",
                   getFeatureType() );
               String patternName = "-name-" + new Date().getTime();
               lowerBoundary = new BoundaryExpression( "0" );

@@ -384,7 +384,9 @@ public class XMLTools
         value = Double.parseDouble( textValue );
       }
       catch( NumberFormatException e )
-      {}
+      {
+      e.printStackTrace();  
+      }
     }
 
     return value;

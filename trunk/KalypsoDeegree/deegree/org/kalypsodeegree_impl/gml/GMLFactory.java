@@ -175,11 +175,13 @@ public class GMLFactory
    * @param geo
    *          geometry
    */
-  public synchronized static GMLGeometry createGMLGeometry( GM_Object geo ) throws GMLException
+  public synchronized static GMLGeometry createGMLGeometry( GMLDocument doc, GM_Object geo )
+      throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLGeometry(GM_Object)" );
 
-    GMLDocument_Impl doc = new GMLDocument_Impl();
+    if( doc== null )
+      doc = new GMLDocument_Impl(  );
     GMLGeometry geom = null;
 
     if( geo instanceof GM_Point )
@@ -217,7 +219,7 @@ public class GMLFactory
    * @param geo
    *          point
    */
-  private static GMLPoint createGMLPoint( GM_Point geo, GMLDocument_Impl doc ) throws GMLException
+  private static GMLPoint createGMLPoint( GM_Point geo, GMLDocument doc ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLPoint" );
 
@@ -255,7 +257,7 @@ public class GMLFactory
    * @param geo
    *          GM_Curve
    */
-  private static GMLLineString createGMLLineString( GM_Curve geo, GMLDocument_Impl doc )
+  private static GMLLineString createGMLLineString( GM_Curve geo, GMLDocument doc )
       throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLLineString" );
@@ -314,7 +316,7 @@ public class GMLFactory
    * @param geo
    *          GM_Surface
    */
-  private static GMLPolygon createGMLPolygon( GM_Surface geo, GMLDocument_Impl doc )
+  private static GMLPolygon createGMLPolygon( GM_Surface geo, GMLDocument doc )
       throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLSurface" );
@@ -448,7 +450,7 @@ public class GMLFactory
    * @param geo
    *          GM_MultiPoint
    */
-  private static GMLMultiPoint createGMLMultiPoint( GM_MultiPoint geo, GMLDocument_Impl doc )
+  private static GMLMultiPoint createGMLMultiPoint( GM_MultiPoint geo, GMLDocument doc )
       throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLPoint" );
@@ -490,7 +492,7 @@ public class GMLFactory
    *          GM_MultiCurve
    */
   private static GMLMultiLineString createGMLMultiLineString( GM_MultiCurve geo,
-      GMLDocument_Impl doc ) throws GMLException
+      GMLDocument doc ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLPoint" );
 
@@ -531,7 +533,7 @@ public class GMLFactory
    * @param geo
    *          GM_MultiSurface
    */
-  private static GMLMultiPolygon createGMLMultiPolygon( GM_MultiSurface geo, GMLDocument_Impl doc )
+  private static GMLMultiPolygon createGMLMultiPolygon( GM_MultiSurface geo, GMLDocument doc )
       throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLPoint" );
@@ -568,6 +570,8 @@ public class GMLFactory
 
   /**
    * creates a GMLFeature from a XML Element
+   * 
+   * @deprecated
    */
   public static GMLFeature createGMLFeature( Element element ) throws GMLException
   {
@@ -593,8 +597,7 @@ public class GMLFactory
 
       if( properties[i] instanceof GM_Object )
       {
-        GMLGeometry geom = createGMLGeometry( (GM_Object)properties[i] );
-        prop = GMLGeoProperty_Impl.createGMLGeoProperty( ftp[i].getName(), geom );
+        prop = doc.createGMLGeoProperty( ftp[i], (GM_Object)properties[i] );
       }
       else
       {
@@ -628,7 +631,8 @@ public class GMLFactory
     return null;
   }
 
-  public static GMLFeature createGMLFeature( final GMLDocument doc, Feature feature ) throws GMLException
+  public static GMLFeature createGMLFeature( final GMLDocument doc, Feature feature )
+      throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLFeature(Feature)" );
 
@@ -647,8 +651,8 @@ public class GMLFactory
     return gmlFeature;
   }
 
-  private static void addGMLProperties( final GMLDocument doc, final GMLFeature gmlFeature, final Object value,
-      final FeatureTypeProperty ftp, final int min ) throws GMLException
+  private static void addGMLProperties( final GMLDocument doc, final GMLFeature gmlFeature,
+      final Object value, final FeatureTypeProperty ftp, final int min ) throws GMLException
   {
 
     // marshalling
@@ -682,8 +686,7 @@ public class GMLFactory
     }
     else if( value instanceof GM_Object )
     {
-      GMLGeometry geom = createGMLGeometry( (GM_Object)value );
-      prop = GMLGeoProperty_Impl.createGMLGeoProperty( ftp.getName(), geom );
+      prop = doc.createGMLGeoProperty( ftp,(GM_Object)value);
     }
     else if( value instanceof Feature )
     {
@@ -710,13 +713,13 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.10  2005/02/15 17:52:53  belger
+ * Revision 1.11  2005/02/28 13:34:14  doemming
  * *** empty log message ***
- *
- * Revision 1.9  2005/02/08 18:43:59  belger
- * *** empty log message ***
- * Revision 1.8 2005/01/18 12:50:42 doemming *** empty
+ * Revision 1.10 2005/02/15 17:52:53 belger *** empty
  * log message ***
+ * 
+ * Revision 1.9 2005/02/08 18:43:59 belger *** empty log message *** Revision
+ * 1.8 2005/01/18 12:50:42 doemming *** empty log message ***
  * 
  * Revision 1.7 2004/11/22 01:29:50 doemming *** empty log message ***
  * 

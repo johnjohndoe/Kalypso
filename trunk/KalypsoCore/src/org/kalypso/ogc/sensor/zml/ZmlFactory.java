@@ -217,11 +217,13 @@ public class ZmlFactory
       // loose the query part we might have removed because of Eclipse's
       // url handling.
       return parseXML( new InputSource( inputStream ), identifier, url );
-    }
+    }    
     catch( IOException e )
     {
-      throw new SensorException( "Error while unmarshalling: "
-          + url.toExternalForm(), e );
+//       TODO error handling
+//      throw new SensorException( "Error while unmarshalling: "
+//          + url.toExternalForm(), e );
+  return null;
     }
     finally
     {
