@@ -66,6 +66,7 @@
 					<element name="Wasserstand_gemessenEingang" type="spree:TimeseriesLinkType"/>
 					<element name="Wasserstand_gemessen" type="spree:TimeseriesLinkType"/>
 					<element name="Wasserstand_gerechnet" type="spree:TimeseriesLinkType"/>
+					<element name="Wasserstand_prognoseAblage" type="spree:TimeseriesLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
