@@ -3,6 +3,7 @@ package org.kalypso.ogc.gml.serialize;
 import java.io.Writer;
 import java.net.URL;
 
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -53,8 +54,9 @@ public final class GmlSerializer
           "xmlns:gml=http://www.opengis.net/gml" );
       final GMLNameSpace xlinkNameSpace = new GMLNameSpace_Impl(
           "xmlns:xlink=http://www.w3.org/1999/xlink" );
-      final GMLNameSpace xsiNameSpace = new GMLNameSpace_Impl( "xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance"
-           );
+      final GMLNameSpace xsiNameSpace = new GMLNameSpace_Impl(
+          "xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance"
+       );
       gmlDoc.addNameSpace( gmlNameSpace );
       gmlDoc.addNameSpace( xlinkNameSpace );
       gmlDoc.addNameSpace( xsiNameSpace );
@@ -70,6 +72,10 @@ public final class GmlSerializer
       // DOM als GML schreiben
       final Document xmlDOM = gmlDoc.getDocument();
       final Transformer t = TransformerFactory.newInstance().newTransformer();
+   
+      t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+      t.setOutputProperty(OutputKeys.INDENT, "yes");
+      
       t.transform( new DOMSource( xmlDOM ), new StreamResult( writer ) );
     }
     catch( final Exception e )
@@ -83,6 +89,9 @@ public final class GmlSerializer
     }
   }
 
+  /**
+   * @deprecated use {@link #createGMLWorkspace(URL, IUrlResolver)}instead.
+   */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final URL schemaURL )
       throws Exception
   {
