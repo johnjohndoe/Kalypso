@@ -14,7 +14,7 @@
 	</gml:boundedBy>
 	<gml:featureMember>
 		<Flusslaufmodell fid="new">
-			<Name>...</Name>
+			<Name>Der Name ist neu!</Name>
 			<Ort>
 				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#4326">
 					<gml:coordinates cs="," decimal="." ts=" ">12.325808460959156,51.69361495200816</gml:coordinates>
