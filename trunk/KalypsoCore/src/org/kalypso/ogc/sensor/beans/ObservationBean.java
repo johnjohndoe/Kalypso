@@ -19,6 +19,11 @@ public class ObservationBean extends ItemBean
     this( "", "", "", null );
   }
   
+  public ObservationBean( final String id )
+  {
+    this( id, "", "", null );
+  }
+  
   public ObservationBean( final String id, final String name, final String repId, final Map metadata )
   {
     super( id, name, repId );
