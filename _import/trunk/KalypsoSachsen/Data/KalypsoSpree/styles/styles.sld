@@ -671,6 +671,57 @@
 				</Rule>
 			</FeatureTypeStyle>
 		</UserStyle>
+
+		<UserStyle>
+			<Name>Zufluesse</Name>
+			<Title>Zufluesse</Title>
+			<IsDefault>1</IsDefault>
+			<FeatureTypeStyle>
+				<Name>Zufluesse</Name>
+				<Rule>
+					<Name>Zufluesse</Name>
+					<PointSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>Ort</ogc:PropertyName>
+						</Geometry>
+						<Graphic>
+							<Mark>
+								<WellKnownName>triangle</WellKnownName>
+								<Fill>
+									<CssParameter name="fill">#00abab</CssParameter>
+								</Fill>
+								<Stroke>
+									<CssParameter name="stroke">#111111</CssParameter>
+									<CssParameter name="stroke-width">1.0</CssParameter>
+								</Stroke>
+							</Mark>
+							<Size>10</Size>
+						</Graphic>
+					</PointSymbolizer>
+					
+					<TextSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>Ort</ogc:PropertyName>
+						</Geometry>
+						<Label>
+							<ogc:PropertyName>Name</ogc:PropertyName>
+						</Label>
+						<Font>
+							<CssParameter name="font-family">Arial</CssParameter>
+							<CssParameter name="font-family">Sans-Serif</CssParameter>
+							<CssParameter name="font-style">italic</CssParameter>
+							<CssParameter name="font-size">14</CssParameter>
+							<CssParameter name="font-color">#222222</CssParameter>
+						</Font>
+						<LabelPlacement>
+							<PointPlacement auto="true"/>
+						</LabelPlacement>
+					</TextSymbolizer>
+					
+					
+				</Rule>
+			</FeatureTypeStyle>
+		</UserStyle>
 		
 		<UserStyle>
 			<Name>Spree:Gewaesserverlauf</Name>

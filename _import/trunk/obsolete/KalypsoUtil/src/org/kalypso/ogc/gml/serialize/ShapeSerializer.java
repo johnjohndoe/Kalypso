@@ -30,7 +30,7 @@ public class ShapeSerializer
   {
     try
     {
-      final ShapeFile shapeFile = new ShapeFile( file.toString(), "w" );
+      final ShapeFile shapeFile = new ShapeFile( file.toString(), "rw" );
 
       final KalypsoFeature[] features = layer.getAllFeatures();
       final FeatureCollection fc = FeatureFactory.createFeatureCollection( "collection",

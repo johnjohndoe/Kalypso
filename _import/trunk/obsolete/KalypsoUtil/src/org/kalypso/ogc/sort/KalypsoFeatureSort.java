@@ -198,6 +198,8 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
         }
         catch( Exception e )
         {
+          // TODO: andreas: sollte dieses catch nicht einfach wegfallen, damit die Exception
+          // weiter propagiert wird?
           e.printStackTrace();
         }
       }

@@ -2,44 +2,13 @@
 <collection xmlns:gml="http://www.opengis.net/gml">
 	<gml:featureMember>
 		<Zufluss fid="new">
-			<Name>...</Name>
+			<Name>Burgneudorf</Name>
 			<Zugabe>...</Zugabe>
-			<Ort/>
-		</Zufluss>
-	</gml:featureMember>
-	<gml:featureMember>
-		<Zufluss fid="new">
-			<Name>...</Name>
-			<Zugabe>...</Zugabe>
-			<Ort/>
-		</Zufluss>
-	</gml:featureMember>
-	<gml:featureMember>
-		<Zufluss fid="new">
-			<Name>...</Name>
-			<Zugabe>...</Zugabe>
-			<Ort/>
-		</Zufluss>
-	</gml:featureMember>
-	<gml:featureMember>
-		<Zufluss fid="new">
-			<Name>...</Name>
-			<Zugabe>...</Zugabe>
-			<Ort/>
-		</Zufluss>
-	</gml:featureMember>
-	<gml:featureMember>
-		<Zufluss fid="new">
-			<Name>...</Name>
-			<Zugabe>...</Zugabe>
-			<Ort/>
-		</Zufluss>
-	</gml:featureMember>
-	<gml:featureMember>
-		<Zufluss fid="new">
-			<Name>...</Name>
-			<Zugabe>...</Zugabe>
-			<Ort/>
+			<Ort>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5457600,5707320</gml:coordinates>
+				</gml:Point>
+			</Ort>
 		</Zufluss>
 	</gml:featureMember>
 	<gml:featureMember>
@@ -88,7 +57,11 @@
 	<gml:featureMember>
 		<Flusslaufmodell fid="new">
 			<Name>Boxberg</Name>
-			<Ort/>
+			<Ort>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5470540,5696840</gml:coordinates>
+				</gml:Point>
+			</Ort>
 			<Korrektur_Faktor>1.0</Korrektur_Faktor>
 			<Korrektur_Niveau>0.0</Korrektur_Niveau>
 			<Korrektur_Laufzeit>0.0</Korrektur_Laufzeit>
@@ -170,7 +143,11 @@
 	<gml:featureMember>
 		<Einzugsgebiet fid="new">
 			<Name>Gröditz 1</Name>
-			<Ort/>
+			<Ort>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5473800,5674170</gml:coordinates>
+				</gml:Point>
+			</Ort>
 			<BodenfeuchteMin>0.01</BodenfeuchteMin>
 			<Bodenfeuchte>0.0</Bodenfeuchte>
 			<BodenfeuchteMax>70.0</BodenfeuchteMax>
@@ -181,7 +158,11 @@
 	<gml:featureMember>
 		<Einzugsgebiet fid="new">
 			<Name>Jänkendorf</Name>
-			<Ort/>
+			<Ort>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5487000,5679730</gml:coordinates>
+				</gml:Point>
+			</Ort>
 			<BodenfeuchteMin>0.01</BodenfeuchteMin>
 			<Bodenfeuchte>0.0</Bodenfeuchte>
 			<BodenfeuchteMax>200.0</BodenfeuchteMax>
@@ -192,7 +173,11 @@
 	<gml:featureMember>
 		<Einzugsgebiet fid="new">
 			<Name>Särichen</Name>
-			<Ort/>
+			<Ort>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<gml:coordinates cs="," decimal="." ts=" ">5492110,5681830</gml:coordinates>
+				</gml:Point>
+			</Ort>
 			<BodenfeuchteMin>0.01</BodenfeuchteMin>
 			<Bodenfeuchte>0.0</Bodenfeuchte>
 			<BodenfeuchteMax>310.0</BodenfeuchteMax>
@@ -217,7 +202,12 @@
 			<Name>Quitzdorf</Name>
 			<Anfangsvolumen>0.0</Anfangsvolumen>
 			<Abgabe/>
-			<Ort/>
+			<Ort>
+				<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+					<!-- Koordinaten Pegel Sproitz -->
+					<gml:coordinates cs="," decimal="." ts=" ">5482460,5683900</gml:coordinates>
+				</gml:Point>
+			</Ort>
 		</Talsperre>
 	</gml:featureMember>
 </collection>
