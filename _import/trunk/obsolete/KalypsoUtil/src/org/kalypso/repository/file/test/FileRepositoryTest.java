@@ -15,21 +15,22 @@ import junit.framework.TestCase;
 public class FileRepositoryTest extends TestCase
 {
   private FileRepository m_rep;
-  private File m_userHome;
+  private File m_root;
 
   protected void setUp() throws Exception
   {
     super.setUp();
     
-    final String home = System.getProperty( "user.home" );
-    m_userHome = new File( home );
+    // just something
+    final String home = "C:/temp/deploy/export";
+    m_root = new File( home );
     
-    m_rep = new FileRepository( null, m_userHome.getParent(), true );
+    m_rep = new FileRepository( null, m_root.getParent(), "test", true );
   }
 
   public void testFindItem() throws MalformedURLException, RepositoryException
   {
-    final IRepositoryItem item = m_rep.findItem( m_userHome.toURL().toExternalForm() );
+    final IRepositoryItem item = m_rep.findItem( "test://export/logs.zip" );
     
     assertNotNull( item );
     

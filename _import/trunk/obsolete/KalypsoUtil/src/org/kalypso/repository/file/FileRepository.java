@@ -2,7 +2,6 @@ package org.kalypso.repository.file;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.net.MalformedURLException;
 
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.io.filter.AcceptAllFileFilter;
@@ -20,11 +19,30 @@ public class FileRepository extends AbstractRepository
 {
   protected final File m_root;
 
+  protected final String m_identifier;
+
   protected final FileFilter m_filter;
 
-  public FileRepository( final IRepositoryFactory factory, final String location, final boolean readOnly, final FileFilter filter )
+  /**
+   * Creates a FileRepository.
+   * 
+   * @param factory
+   * @param location
+   *          path of the root
+   * @param identifier
+   *          user defined identifier for this repository
+   * @param readOnly
+   *          if true the repository is read only
+   * @param filter
+   *          [optional] if null an <code>AcceptAllFileFilter</code> is used.
+   */
+  public FileRepository( final IRepositoryFactory factory,
+      final String location, final String identifier, final boolean readOnly,
+      final FileFilter filter )
   {
     super( factory, location, readOnly );
+
+    m_identifier = identifier;
 
     if( filter == null )
       m_filter = new AcceptAllFileFilter();
@@ -33,18 +51,29 @@ public class FileRepository extends AbstractRepository
 
     m_root = new File( location );
     if( !m_root.exists() )
-      throw new IllegalArgumentException( "Location existiert nicht! (Location: " + location + ")" );
+      throw new IllegalArgumentException(
+          "Location existiert nicht! (Location: " + location + ")" );
   }
 
-  public FileRepository( final IRepositoryFactory factory, final String location, final boolean readOnly )
+  /**
+   * @see FileRepository#FileRepository(IRepositoryFactory, String, String,
+   *      boolean, FileFilter)
+   * 
+   * @param factory
+   * @param location
+   * @param identifier
+   * @param readOnly
+   */
+  public FileRepository( final IRepositoryFactory factory,
+      final String location, final String identifier, final boolean readOnly )
   {
-    this( factory, location, readOnly, null );
+    this( factory, location, identifier, readOnly, null );
   }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren()
+  public IRepositoryItem[] getChildren( )
   {
     return createItem( m_root ).getChildren();
   }
@@ -52,18 +81,22 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren()
+  public boolean hasChildren( )
   {
     return m_root.isDirectory();
   }
 
-  public FileFilter getFilter()
+  public FileFilter getFilter( )
   {
     return m_filter;
   }
 
   /**
-   * Factory method
+   * Factory method that can be overriden by subclasses to create adequate
+   * items.
+   * 
+   * @param file
+   * @return IRepositoryItem instance
    */
   public FileItem createItem( final File file )
   {
@@ -75,24 +108,25 @@ public class FileRepository extends AbstractRepository
    * 
    * @see org.kalypso.repository.IRepository#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
-    try
-    {
-      return m_root.toURL().toExternalForm();
-    }
-    catch( MalformedURLException e )
-    {
-      throw new IllegalStateException( e.getLocalizedMessage() );
-    }
+    //    try
+    //    {
+    //      return m_root.toURL().toExternalForm();
+    //    }
+    //    catch( MalformedURLException e )
+    //    {
+    //      throw new IllegalStateException( e.getLocalizedMessage() );
+    //    }
+    return m_identifier;
   }
 
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload()
+  public void reload( )
   {
-  // nothing to do
+    // nothing to do
   }
 
   /**
@@ -100,26 +134,57 @@ public class FileRepository extends AbstractRepository
    */
   public IRepositoryItem findItem( final String id ) throws RepositoryException
   {
-    // both lowercase to be sure comparison is done homogeneously
-    final String rootURL = getIdentifier().toLowerCase();
-    final String mid = id.toLowerCase();
-    
-    if( !mid.startsWith( rootURL ) )
-      throw new RepositoryException( "File <" + mid + "> seems not to be part of the repository: "
-          + m_root );
+    //    // both lowercase to be sure comparison is done homogeneously
+    //    final String rootURL = getIdentifier().toLowerCase();
+    //    final String mid = id.toLowerCase();
+    //    
+    //    if( !mid.startsWith( rootURL ) )
+    //      throw new RepositoryException( "File <" + mid + "> seems not to be part
+    // of the repository: "
+    //          + m_root );
+    //
+    //    final String path = m_root.getAbsolutePath() + File.separator +
+    // mid.replaceFirst( rootURL, "" );
+    //
+    //    final File f = new File( path );
+    //
+    //    if( !f.exists() )
+    //      throw new RepositoryException( "File <" + mid + "> does not exist!" );
+    //
+    //    if( !m_filter.accept( f ) )
+    //      throw new RepositoryException( "File <" + mid + "> does not fit filter!"
+    // );
+    //
+    //    if( !FileUtilities.isChildOf( m_root, f ) )
+    //      throw new RepositoryException( "File <" + mid
+    //          + "> is not part of this File Repository starting at:" + m_root );
+    //
+    //    return createItem( f );
 
-    final String path = m_root.getAbsolutePath() + File.separator + mid.replaceFirst( rootURL, "" );
+    // both lowercase to be sure comparison is done homogeneously
+    final String baseId = getIdentifier().toLowerCase();
+    final String itemId = id.toLowerCase();
+
+    final String scheme = baseId + ":/"; 
+    
+    if( !itemId.startsWith( scheme ) )
+      throw new RepositoryException( "File <" + id
+          + "> seems not to be part of the repository: " + m_root );
+
+    // absolute path of the root (replace backslashes on windows with forward slashes)
+    final String strRoot = m_root.getAbsolutePath().replace( '\\', '/' );
+    final String path = itemId.replaceFirst( scheme, strRoot );
 
     final File f = new File( path );
 
     if( !f.exists() )
-      throw new RepositoryException( "File <" + mid + "> does not exist!" );
+      throw new RepositoryException( "File <" + id + "> does not exist!" );
 
     if( !m_filter.accept( f ) )
-      throw new RepositoryException( "File <" + mid + "> does not fit filter!" );
+      throw new RepositoryException( "File <" + id + "> does not fit filter!" );
 
     if( !FileUtilities.isChildOf( m_root, f ) )
-      throw new RepositoryException( "File <" + mid
+      throw new RepositoryException( "File <" + id
           + "> is not part of this File Repository starting at:" + m_root );
 
     return createItem( f );
