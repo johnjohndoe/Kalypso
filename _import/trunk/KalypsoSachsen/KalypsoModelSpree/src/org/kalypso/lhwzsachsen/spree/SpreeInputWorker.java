@@ -4,17 +4,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
@@ -22,12 +20,10 @@ import java.util.logging.Logger;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree_impl.io.shpapi.ShapeFile;
-import org.deegree_impl.model.feature.FeatureFactory;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.deegree_impl.io.shpapi.DBaseFile;
+import org.deegree_impl.io.shpapi.FieldDescriptor;
+import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.io.StreamUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -91,20 +87,20 @@ public class SpreeInputWorker
       final File controlXSD = checkInput( "CONTROL_XSD", inputMap, tmpdir );
 
       logwriter.println( "Lese Steuerparameter: " + controlGML.getName() );
-      
+
       final Map map = parseControlFile( controlGML, controlXSD, nativedir );
       props.putAll( map );
 
       logwriter.println( "Lese Modelldaten: " + controlGML );
-      
+
       final GMLWorkspace workspace = loadGML( tmpdir, inputMap );
-      
+
       final String tsFilename = writeNonTs( props, logwriter, workspace );
 
       final Date startDate = (Date)props.get( SpreeCalcJob.DATA_STARTSIM_DATE );
       setAnfangsstauvolumen( "V_TSQUITZ", startDate, "TS_QUITZDORF", tsmap, workspace, logwriter );
       setAnfangsstauvolumen( "V_TSBAUTZ", startDate, "TS_BAUTZEN", tsmap, workspace, logwriter );
-      
+
       logwriter.println( "Erzeuge Zeitreihen-Datei: " + tsFilename );
       readZML( tmpdir, inputMap, tsmap );
       createTimeseriesFile( tsFilename, tsmap, logwriter );
@@ -118,9 +114,11 @@ public class SpreeInputWorker
     }
   }
 
-  private static void setAnfangsstauvolumen( final String name, final Date startDate, final String fid, final TSMap tsmap, final GMLWorkspace workspace, final PrintWriter logwriter )
+  private static void setAnfangsstauvolumen( final String name, final Date startDate,
+      final String fid, final TSMap tsmap, final GMLWorkspace workspace, final PrintWriter logwriter )
   {
-    // das Anfangsstauvolumen aus der GMl raussuchen und als Wert in den Zeitreihen setzen
+    // das Anfangsstauvolumen aus der GMl raussuchen und als Wert in den
+    // Zeitreihen setzen
     final Feature feature = workspace.getFeature( fid );
     final Object property = feature.getProperty( "Anfangsstauvolumen" );
     if( property != null && property instanceof Double )
@@ -129,7 +127,9 @@ public class SpreeInputWorker
       logwriter.println( "Kein Anfangsstauvolumen angegeben für: " + fid );
   }
 
-  private static String writeNonTs( final Properties props, final PrintWriter logwriter, final GMLWorkspace workspace ) throws IOException, FileNotFoundException, CalcJobServiceException
+  private static String writeNonTs( final Properties props, final PrintWriter logwriter,
+      final GMLWorkspace workspace ) throws IOException, FileNotFoundException,
+      CalcJobServiceException
   {
     final File vhsFile = (File)props.get( SpreeCalcJob.DATA_VHSFILE );
     final String flpFilename = (String)props.get( SpreeCalcJob.DATA_FLPFILENAME );
@@ -147,108 +147,242 @@ public class SpreeInputWorker
     logwriter.println( "Erzeuge _nap Datei: " + napFilename );
     findAndWriteLayer( workspace, SpreeCalcJob.NAP_NAME, SpreeCalcJob.NAP_MAP,
         SpreeCalcJob.NAP_GEOM, napFilename );
+    
+    final File shpfile = new File( tsFilename + ".shp" );
+    final InputStream shpresource = SpreeInputWorker.class.getResourceAsStream( "resources/HW.shp" );
+    FileUtilities.makeFileFromStream( false, shpfile, shpresource );
+
+    final File shxfile = new File( tsFilename + ".shx" );
+    final InputStream shxresource = SpreeInputWorker.class.getResourceAsStream( "resources/HW.shx" );
+    FileUtilities.makeFileFromStream( false, shxfile, shxresource );
+    
     return tsFilename;
   }
 
-  public static void createTimeseriesFile( final String tsFilename, final TSMap valuesMap, final PrintWriter logwriter ) throws CalcJobServiceException
+  //    public static void createTimeseriesFile( final String tsFilename, final
+  //   TSMap valuesMap, final PrintWriter logwriter ) throws
+  //   CalcJobServiceException
+  //    {
+  //      final List ftpList = new LinkedList();
+  //  
+  //      // Layer erzeugen!
+  //      ftpList
+  //          .add( FeatureFactory.createFeatureTypeProperty( "GEOM",
+  //   GM_Point.class.getName(), false ) );
+  //      ftpList.add( FeatureFactory.createFeatureTypeProperty( "DZAHL",
+  //   "java.lang.Double", false ) );
+  //      ftpList.add( FeatureFactory.createFeatureTypeProperty( "STUNDE",
+  //   "java.lang.Double", false ) );
+  //      ftpList.add( FeatureFactory.createFeatureTypeProperty( "DATUM",
+  //   "java.lang.String", false ) );
+  //      ftpList.add( FeatureFactory.createFeatureTypeProperty( "VON",
+  //   "java.lang.Double", false ) );
+  //      ftpList.add( FeatureFactory.createFeatureTypeProperty( "AB",
+  //   "java.lang.Double", false ) );
+  //  
+  //      for( int i = 0; i < SpreeCalcJob.TS_DESCRIPTOR.length; i++ )
+  //      {
+  //        final TSDesc desc = SpreeCalcJob.TS_DESCRIPTOR[i];
+  //        ftpList.add( FeatureFactory.createFeatureTypeProperty( desc.id,
+  //   "java.lang.Double", true ) );
+  //      }
+  //  
+  //      final FeatureTypeProperty[] ftps = (FeatureTypeProperty[])ftpList
+  //          .toArray( new FeatureTypeProperty[ftpList.size()] );
+  //  
+  //      final FeatureType type = FeatureFactory.createFeatureType( "shapetype",
+  //   null, ftps,
+  //          new int[ftps.length], new int[ftps.length], null, null );
+  //  
+  //      // Werte schreiben
+  //      final DateFormat specialDateFormat = new SimpleDateFormat( "yMM.dd" );
+  //      final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
+  //      final Calendar calendar = Calendar.getInstance();
+  //      
+  //      final Date[] dateArray = valuesMap.getDates();
+  //  
+  //      final Collection shapeFeatures = new ArrayList( dateArray.length );
+  //  
+  //      for( int i = 0; i < dateArray.length; i++ )
+  //      {
+  //        final Date date = dateArray[i];
+  //  
+  //        final Object[] data = new Object[6 + SpreeCalcJob.TS_DESCRIPTOR.length];
+  //  
+  //        calendar.setTime( date );
+  //        data[0] = GeometryFactory.createGM_Point( 0.0, 0.0, null );
+  //        data[1] = new Double( specialDateFormat.format( date ) );
+  //        data[2] = new Double( calendar.get( Calendar.HOUR_OF_DAY ) );
+  //        data[3] = new String( dateFormat.format( date ) );
+  //        calendar.add( Calendar.HOUR_OF_DAY, -3 );
+  //        data[4] = new Double( calendar.get( Calendar.HOUR_OF_DAY ) );
+  //        calendar.add( Calendar.HOUR_OF_DAY, -3 );
+  //        data[5] = new Double( calendar.get( Calendar.HOUR_OF_DAY ) );
+  //  
+  //        for( int j = 0; j < SpreeCalcJob.TS_DESCRIPTOR.length; j++ )
+  //        {
+  //          final String id = SpreeCalcJob.TS_DESCRIPTOR[j].id;
+  //          final Map datesToValuesMap = valuesMap.getTimeserie( id );
+  //  
+  //          if( datesToValuesMap == null )
+  //            continue;
+  //  
+  //          final Double value = (Double)datesToValuesMap.get( date );
+  //  
+  //          Double outVal = null;
+  //  
+  //          if( value == null )
+  //          {
+  //            if( id.startsWith( "PA_" ) || id.startsWith( "PG" ) )
+  //              outVal = new Double( -99.9 );
+  //            else
+  //              outVal = null;
+  //          }
+  //          else
+  //            outVal = value;
+  //  
+  //          data[6 + j] = outVal;
+  //        }
+  //  
+  //        for( int j = 0; j < data.length; j++ )
+  //          logwriter.print( data[j] + "\t" );
+  //        logwriter.println();
+  //  
+  //        final Feature feature = FeatureFactory.createFeature( "" + ( i + 1 ), type,
+  //   data );
+  //        shapeFeatures.add( feature );
+  //      }
+  //  
+  //      try
+  //      {
+  //        final ShapeFile shapeFile = new ShapeFile( tsFilename, "rw" );
+  //        shapeFile.writeShape( (Feature[])shapeFeatures.toArray( new
+  //   Feature[shapeFeatures.size()] ) );
+  //        shapeFile.close();
+  //      }
+  //      catch( final Exception e )
+  //      {
+  //        e.printStackTrace();
+  //        
+  //        throw new CalcJobServiceException( "Fehler beim Schreiben der Datei " +
+  //   tsFilename + "\n" + e.getLocalizedMessage(), e );
+  //      }
+  //    }
+
+  public static void createTimeseriesFile( final String tsFilename, final TSMap valuesMap,
+      final PrintWriter logwriter ) throws CalcJobServiceException
   {
-    final List ftpList = new LinkedList();
-
-    // Layer erzeugen!
-    ftpList
-        .add( FeatureFactory.createFeatureTypeProperty( "GEOM", GM_Point.class.getName(), false ) );
-    ftpList.add( FeatureFactory.createFeatureTypeProperty( "DZAHL", "java.lang.Double", false ) );
-    ftpList.add( FeatureFactory.createFeatureTypeProperty( "STUNDE", "java.lang.Double", false ) );
-    ftpList.add( FeatureFactory.createFeatureTypeProperty( "DATUM", "java.lang.String", false ) );
-    ftpList.add( FeatureFactory.createFeatureTypeProperty( "VON", "java.lang.Double", false ) );
-    ftpList.add( FeatureFactory.createFeatureTypeProperty( "AB", "java.lang.Double", false ) );
-
-    for( int i = 0; i < SpreeCalcJob.TS_DESCRIPTOR.length; i++ )
+    try
     {
-      final TSDesc desc = SpreeCalcJob.TS_DESCRIPTOR[i];
-      ftpList.add( FeatureFactory.createFeatureTypeProperty( desc.id, "java.lang.Double", true ) );
-    }
-
-    final FeatureTypeProperty[] ftps = (FeatureTypeProperty[])ftpList
-        .toArray( new FeatureTypeProperty[ftpList.size()] );
-
-    final FeatureType type = FeatureFactory.createFeatureType( "shapetype", null, ftps,
-        new int[ftps.length], new int[ftps.length], null, null );
-
-    // Werte schreiben
-    final DateFormat specialDateFormat = new SimpleDateFormat( "yMM.dd" );
-    final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
-    final Calendar calendar = Calendar.getInstance();
-    
-    final Date[] dateArray = valuesMap.getDates();
-
-    final Collection shapeFeatures = new ArrayList( dateArray.length );
-
-    for( int i = 0; i < dateArray.length; i++ )
-    {
-      final Date date = dateArray[i];
-
-      final Object[] data = new Object[6 + SpreeCalcJob.TS_DESCRIPTOR.length];
-
-      calendar.setTime( date );
-      data[0] = GeometryFactory.createGM_Point( 0.0, 0.0, null );
-      data[1] = new Double( specialDateFormat.format( date ) );
-      data[2] = new Double( calendar.get( Calendar.HOUR_OF_DAY ) );
-      data[3] = new String( dateFormat.format( date ) );
-      calendar.add( Calendar.HOUR_OF_DAY, -3 );
-      data[4] = new Double( calendar.get( Calendar.HOUR_OF_DAY ) );
-      calendar.add( Calendar.HOUR_OF_DAY, -3 );
-      data[5] = new Double( calendar.get( Calendar.HOUR_OF_DAY ) );
+      final FieldDescriptor[] fds = new FieldDescriptor[SpreeCalcJob.TS_DESCRIPTOR.length + 5];
+      fds[0] = new FieldDescriptor( "DZAHL", "N", (byte)6, (byte)2 );
+      fds[1] = new FieldDescriptor( "STUNDE", "N", (byte)2, (byte)0 );
+      fds[2] = new FieldDescriptor( "DATUM", "C", (byte)10, (byte)0 );
+      fds[3] = new FieldDescriptor( "VON", "N", (byte)2, (byte)0 );
+      fds[4] = new FieldDescriptor( "AB", "N", (byte)2, (byte)0 );
 
       for( int j = 0; j < SpreeCalcJob.TS_DESCRIPTOR.length; j++ )
       {
-        final String id = SpreeCalcJob.TS_DESCRIPTOR[j].id;
-        final Map datesToValuesMap = valuesMap.getTimeserie( id );
+        final TSDesc desc = SpreeCalcJob.TS_DESCRIPTOR[j];
+        final String name = desc.id;
 
-        if( datesToValuesMap == null )
-          continue;
+        final int i = j + 5;
 
-        final Double value = (Double)datesToValuesMap.get( date );
-
-        Double outVal = null;
-
-        if( value == null )
-        {
-          if( id.startsWith( "PA_" ) || id.startsWith( "PG" ) )
-            outVal = new Double( -99.9 );
-          else
-            outVal = new Double( 0 );
-        }
-        else
-          outVal = value;
-
-        data[6 + j] = outVal;
+        if( name.startsWith( "S_" ) )
+          fds[i] = new FieldDescriptor( name, "C", (byte)5, (byte)0 );
+        else if( name.startsWith( "W_" ) )
+          fds[i] = new FieldDescriptor( name, "N", (byte)5, (byte)0 );
+        else if( name.startsWith( "Q_" ) )
+          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+        else if( name.startsWith( "QX_" ) )
+          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+        else if( name.startsWith( "WV_" ) )
+          fds[i] = new FieldDescriptor( name, "N", (byte)5, (byte)0 );
+        else if( name.startsWith( "QV_" ) )
+          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+        else if( name.startsWith( "QP_" ) )
+          fds[i] = new FieldDescriptor( name, "N", (byte)8, (byte)3 );
+        else if( name.startsWith( "PG_" ) )
+          fds[i] = new FieldDescriptor( name, "N", (byte)6, (byte)1 );
+        else if( name.startsWith( "PP_" ) )
+          fds[i] = new FieldDescriptor( name, "N", (byte)3, (byte)0 );
+        else if( name.startsWith( "PA_" ) )
+          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+        else if( name.startsWith( "V_" ) )
+          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+        else if( name.startsWith( "ZG_" ) )
+          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
       }
 
-      for( int j = 0; j < data.length; j++ )
-        logwriter.print( data[j] + "\t" );
-      logwriter.println();
+      final DBaseFile dbf = new DBaseFile( tsFilename, fds );
 
-      final Feature feature = FeatureFactory.createFeature( "" + ( i + 1 ), type, data );
-      shapeFeatures.add( feature );
-    }
+      // Werte schreiben
+      final DateFormat specialDateFormat = new SimpleDateFormat( "yMM.dd" );
+      final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
+      final Calendar calendar = Calendar.getInstance();
 
-    try
-    {
-      final ShapeFile shapeFile = new ShapeFile( tsFilename, "rw" );
-      shapeFile.writeShape( (Feature[])shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
-      shapeFile.close();
+      final Date[] dateArray = valuesMap.getDates();
+
+      for( int i = 0; i < dateArray.length; i++ )
+      {
+        final Date date = dateArray[i];
+
+        final ArrayList record = new ArrayList();
+
+        calendar.setTime( date );
+        record.add( new Double( specialDateFormat.format( date ) ) );
+        record.add( new Integer( calendar.get( Calendar.HOUR_OF_DAY ) ) );
+        record.add( dateFormat.format( date ) );
+        calendar.add( Calendar.HOUR_OF_DAY, -3 );
+        record.add( new Integer( calendar.get( Calendar.HOUR_OF_DAY ) ) );
+        calendar.add( Calendar.HOUR_OF_DAY, -3 );
+        record.add( new Integer( calendar.get( Calendar.HOUR_OF_DAY ) ) );
+
+        for( int j = 0; j < SpreeCalcJob.TS_DESCRIPTOR.length; j++ )
+        {
+          final String id = SpreeCalcJob.TS_DESCRIPTOR[j].id;
+          final Map datesToValuesMap = valuesMap.getTimeserie( id );
+
+          Double outVal = null;
+
+          if( datesToValuesMap != null )
+          {
+            final Double value = (Double)datesToValuesMap.get( date );
+
+            if( value == null )
+            {
+              if( id.startsWith( "PA_" ) || id.startsWith( "PG" ) )
+                outVal = new Double( -99.9 );
+              else
+                outVal = null;
+            }
+            else
+              outVal = value;
+          }
+
+          record.add( outVal );
+        }
+
+        for( int j = 0; j < record.size(); j++ )
+          logwriter.print( record.get( j ) + "\t" );
+        logwriter.println();
+
+        dbf.setRecord( record );
+      }
+
+      dbf.writeAllToFile();
     }
-    catch( final Exception e )
+    catch( final Exception e1 )
     {
-      e.printStackTrace();
-      
-      throw new CalcJobServiceException( "Fehler beim Schreiben der Datei " + tsFilename + "\n" + e.getLocalizedMessage(), e );
+      e1.printStackTrace();
+
+      throw new CalcJobServiceException( "Fehler beim Scheiben der Zeitreihen", e1 );
     }
   }
 
   /** Liest die Zeitreihen und erzeugt daraus eine Tabelle (Map) */
-  public static TSMap readZML( final File inputdir, final Map inputMap, final TSMap tsmap ) throws IOException
+  public static TSMap readZML( final File inputdir, final Map inputMap, final TSMap tsmap )
+      throws IOException
   {
     // alle Zeitreihen lesen
     for( int i = 0; i < SpreeCalcJob.TS_DESCRIPTOR.length; i++ )
@@ -270,17 +404,17 @@ public class SpreeInputWorker
       try
       {
         final IObservation obs = ZmlFactory.parseXML( obsFile.toURL(), "" );
-        
+
         tsmap.addObservation( obs, tsDesc.id );
-        
+
         if( tsDesc.id.startsWith( "W_" ) )
         {
           // neuen Namen generieren
           final String qName = "Q_" + tsDesc.id.substring( 2 );
-          
+
           final WQObservationFilter filter = new WQObservationFilter();
           filter.initFilter( TimeserieConstants.TYPE_WATERLEVEL, obs );
-          
+
           tsmap.addObservation( filter, qName );
         }
       }
@@ -310,12 +444,12 @@ public class SpreeInputWorker
     {
       final FeatureType featureType = workspace.getFeatureType( layerName );
       if( featureType == null )
-      throw new CalcJobServiceException(
-          "Eingabedatei für Rechenmodell konnte nicht erzeugt werden. Layer nicht gefunden: "
-              + layerName, null );
-      
-      final Feature[] features = workspace.getFeatures(featureType);
-      
+        throw new CalcJobServiceException(
+            "Eingabedatei für Rechenmodell konnte nicht erzeugt werden. Layer nicht gefunden: "
+                + layerName, null );
+
+      final Feature[] features = workspace.getFeatures( featureType );
+
       ShapeSerializer.serializeFeatures( features, mapping, geoName, filenameBase );
     }
     catch( final GmlSerializeException e )
