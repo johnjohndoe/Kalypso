@@ -3,6 +3,7 @@ package org.kalypso.ogc.sensor.tableview.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
@@ -14,6 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.template.obstableview.ObjectFactory;
 import org.kalypso.template.obstableview.ObstableviewType;
@@ -40,7 +42,9 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
 
   private final ResourcePool m_pool;
 
-  private final TreeMap m_keys;
+  private final TreeMap m_key2cols;
+
+  private final TreeMap m_col2key;
 
   /**
    * Constructor
@@ -53,19 +57,9 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
   {
     super();
 
-    m_pool = KalypsoGisPlugin.getDefault().getPool( );
-    m_keys = new TreeMap( m_pool.getKeyComparator() );
-
-    final List list = obsTableView.getObservation();
-    for( final Iterator it = list.iterator(); it.hasNext(); )
-    {
-      final TypeObservation tobs = (TypeObservation) it.next();
-
-      final PoolableObjectType key = new PoolableObjectType( tobs.getLinktype(), tobs
-          .getHref(), context );
-      m_keys.put( key, tobs );
-      m_pool.addPoolListener( this, key );
-    }
+    m_pool = KalypsoGisPlugin.getDefault().getPool();
+    m_key2cols = new TreeMap( m_pool.getKeyComparator() );
+    m_col2key = new TreeMap();
 
     final RulesType trules = obsTableView.getRules();
     if( trules != null )
@@ -75,6 +69,121 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
         addRule( RenderingRule.createRenderingRule( (TypeRenderingRule) it
             .next() ) );
     }
+
+    final List cols = new ArrayList();
+
+    final List list = obsTableView.getObservation();
+    for( final Iterator it = list.iterator(); it.hasNext(); )
+    {
+      final TypeObservation tobs = (TypeObservation) it.next();
+
+      final List tcols = tobs.getColumn();
+      for( Iterator itCols = tcols.iterator(); itCols.hasNext(); )
+      {
+        final TypeColumn tcol = (TypeColumn) itCols.next();
+
+        final DefaultTableViewColumn col = new DefaultTableViewColumn( tcol
+            .getAxis(), tcol.isEditable(), tcol.getWidth(), null );
+
+        cols.add( col );
+      }
+
+      final PoolableObjectType key = new PoolableObjectType(
+          tobs.getLinktype(), tobs.getHref(), context );
+
+      addObservationTheme( key, cols );
+    }
+  }
+
+  /**
+   * Adds a list of columns as an observation theme
+   * 
+   * @param key
+   * @param cols
+   */
+  public void addObservationTheme( final PoolableObjectType key, final List cols )
+  {
+    // first record key
+    m_key2cols.put( key, cols );
+
+    // store ref col to key, used in removeColumn( ... )
+    final Iterator it = cols.iterator();
+    while( it.hasNext() )
+      m_col2key.put( it.next(), key );
+
+    // finally launch request on pool
+    m_pool.addPoolListener( this, key );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate#removeAllColumns()
+   */
+  public void removeAllColumns( )
+  {
+    super.removeAllColumns();
+
+    m_key2cols.clear();
+    m_col2key.clear();
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate#removeColumn(org.kalypso.ogc.sensor.tableview.ITableViewColumn)
+   */
+  public void removeColumn( final ITableViewColumn column )
+  {
+    super.removeColumn( column );
+
+    final Object key = m_col2key.get( column );
+    final List list = (List) m_key2cols.get( key );
+    list.remove( column );
+    if( list.isEmpty() )
+      m_key2cols.remove( key );
+
+    m_col2key.remove( column );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate#dispose()
+   */
+  public void dispose( )
+  {
+    super.dispose();
+
+    m_key2cols.clear();
+    m_col2key.clear();
+
+    m_pool.removePoolListener( this );
+  }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
+   *      java.lang.Object, org.eclipse.core.runtime.IStatus)
+   */
+  public void objectLoaded( final IPoolableObjectType key,
+      final Object newValue, final IStatus status )
+  {
+    if( status.isOK() )
+    {
+      final List cols = (List) m_key2cols.get( key );
+
+      for( final Iterator itCols = cols.iterator(); itCols.hasNext(); )
+      {
+        final DefaultTableViewColumn col = (DefaultTableViewColumn) itCols
+            .next();
+        col.setObservation( (IObservation) newValue );
+
+        addColumn( col );
+      }
+    }
+  }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType,
+   *      java.lang.Object)
+   */
+  public void objectInvalid( IPoolableObjectType key, Object oldValue )
+  {
+    // TODO Auto-generated method stub
   }
 
   /**
@@ -94,47 +203,5 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
 
     return new LinkedTableViewTemplate( baseTemplate, ResourceUtilities
         .createURL( file ) );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate#dispose()
-   */
-  public void dispose( )
-  {
-    super.dispose();
-
-    m_pool.removePoolListener( this );
-  }
-
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object, org.eclipse.core.runtime.IStatus)
-   */
-  public void objectLoaded( final IPoolableObjectType key,
-      final Object newValue, final IStatus status )
-  {
-    if( status.isOK() )
-    {
-      final TypeObservation tobs = (TypeObservation) m_keys.get( key );
-
-      final List cols = tobs.getColumn();
-      for( Iterator itCols = cols.iterator(); itCols.hasNext(); )
-      {
-        final TypeColumn col = (TypeColumn) itCols.next();
-
-        addColumn( new DefaultTableViewColumn( col.getAxis(), col.isEditable(),
-            col.getWidth(), (IObservation) newValue ) );
-      }
-    }
-  }
-
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object)
-   */
-  public void objectInvalid( IPoolableObjectType key, Object oldValue )
-  {
-    // TODO Auto-generated method stub
-
   }
 }
