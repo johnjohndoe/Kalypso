@@ -39,92 +39,12 @@
       <library name="lib/xsdlib.jar">
          <export name="*"/>
       </library>
-      <library name="lib/kalypsodeegree.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/jai/jai_codec.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/jai/jai_core.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/jai/mlibwrapper_jai.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/acme/acme.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/java3d/j3dcore.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/java3d/j3dutils.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/java3d/vecmath.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/jts/jts.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/batik/lib/batik-awt-util.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/batik/lib/batik-css.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/batik/lib/batik-dom.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/batik/lib/batik-svg-dom.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/batik/lib/batik-svggen.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/batik/lib/batik-util.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/batik/lib/batik-xml.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/ecw/ermapper.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/ecw/ermapperdoc.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/esri/jsde82_sdk.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/mail/mail.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/mysql/mysql-connector-java-3.0.8-stable-bin.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/oracle/ojdbc14.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/oracle/sdoapi.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/postgis/pg73jdbc3.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/postgis/postgis.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/servlet/jsdk2.3.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/deegree/servlet/servlet.jar">
-         <export name="*"/>
-      </library>
    </runtime>
    <requires>
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="backupdeegree" export="true"/>
    </requires>
 
 </plugin>
