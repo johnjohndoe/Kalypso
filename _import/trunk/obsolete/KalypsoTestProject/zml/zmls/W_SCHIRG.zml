@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <observation editable="false" xmlns="zml.kalypso.org">
-    <name>W_SCHIRG</name>
+    <name>582010</name>
     <metadataList>
-        <metadata name="Name" value="W_SCHIRG"/>
-        <metadata name="WQ-Parameter" value="&lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot; &gt;&lt;set&gt;&lt;params&gt;&lt;w1&gt;99.96&lt;/w1&gt;&lt;lnk1&gt;-8.43382&lt;/lnk1&gt;&lt;k2&gt;2.25920&lt;/k2&gt;&lt;wgr&gt;230.0&lt;/wgr&gt;&lt;/params&gt;&lt;params&gt;&lt;w1&gt;89.99&lt;/w1&gt;&lt;lnk1&gt;-7.49066&lt;/lnk1&gt;&lt;k2&gt;2.03671&lt;/k2&gt;&lt;/params&gt;&lt;/set&gt;&lt;/wechmann&gt;"/>
+        <metadata name="Pegelnullpunkt" value="0.0"/>
+        <metadata name="Fluss" value=""/>
+        <metadata name="Beschreibung" value="Schirgiswalde"/>
+        <metadata name="Vorhersage" value="27.04.2004 10:00:00;29.04.2004 10:00:00"/>
+        <metadata name="Flussgebiet" value=""/>
+        <metadata name="Name" value="582010"/>
+        <metadata name="WQ-Parameter" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt; &lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot;&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;0001-01-01T00:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;99.96&lt;/w1&gt;             &lt;lnk1&gt;-8.43382&lt;/lnk1&gt;             &lt;k2&gt;2.2592&lt;/k2&gt;             &lt;wgr&gt;230.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;89.99&lt;/w1&gt;             &lt;lnk1&gt;-7.49066&lt;/lnk1&gt;             &lt;k2&gt;2.03671&lt;/k2&gt;             &lt;wgr&gt;-1.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt; &lt;/wechmann&gt;  "/>
+        <metadata name="Alarmstufe 4" value="46000.0"/>
+        <metadata name="Alarmstufe 3" value="43000.0"/>
+        <metadata name="Messtischblattnummer" value="0"/>
+        <metadata name="Alarmstufe 2" value="31000.0"/>
+        <metadata name="Hochwert" value="0"/>
+        <metadata name="Alarmstufe 1" value="25000.0"/>
+        <metadata name="Rechtswert" value="0"/>
+        <metadata name="Höhenangabeart" value=""/>
     </metadataList>
-    <axis datatype="TYPE=double" key="false" name="Wasserstand" type="W" unit="cm am Pegel">
-        <valueArray separator=";">170.0;170.0;170.0;182.0</valueArray>
-    </axis>
     <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
-        <valueArray separator=";">2004-04-27T01:00:00;2004-04-27T04:00:00;2004-04-27T07:00:00;2004-04-27T10:00:00</valueArray>
+        <valueArray separator=";">2004-04-26T22:00:00;2004-04-27T01:00:00;2004-04-27T04:00:00;2004-04-27T07:00:00;2004-04-27T10:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Wasserstand 582010" type="W" unit="cm">
+        <valueArray separator=";">0.0;170.0;170.0;170.0;182.0</valueArray>
+    </axis>
+    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_Wasserstand 582010" type="kalypso-status" unit="">
+        <valueArray separator=";">2;1;1;1;1</valueArray>
     </axis>
 </observation>
 
