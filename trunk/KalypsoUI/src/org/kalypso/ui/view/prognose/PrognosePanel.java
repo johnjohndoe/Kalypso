@@ -123,10 +123,10 @@ public class PrognosePanel
     m_control = new Composite( parent, SWT.NONE );
 
     final GridLayout gridLayout = new GridLayout( 2, false );
-    gridLayout.horizontalSpacing = 20;
-    gridLayout.verticalSpacing = 20;
-    gridLayout.marginHeight = 20;
-    gridLayout.marginWidth = 20;
+//    gridLayout.horizontalSpacing = 20;
+//    gridLayout.verticalSpacing = 20;
+//    gridLayout.marginHeight = 20;
+//    gridLayout.marginWidth = 20;
     m_control.setLayout( gridLayout );
     final GridData gridData = new GridData( GridData.FILL_BOTH );
     gridData.horizontalAlignment = GridData.CENTER;
