@@ -200,15 +200,15 @@ public class ObservationResolver extends AbstractTransformation
       try
       {
         final IObservation obs;
-        final IVariableArguments dateRange;
+//        final IVariableArguments dateRange;
         if( obs2 == null )
         {
           obs = obs1;
-          dateRange = new DateRangeArgument( from1, to1 );
+//          dateRange = new DateRangeArgument( from1, to1 );
         }
         else
         {
-          dateRange = new DateRangeArgument( from1, to2 );
+//          dateRange = new DateRangeArgument( from1, to2 );
           
           // NOTE: the order is important:
           // obs( i ) has a higher priority than obs( i + 1 )
@@ -230,7 +230,7 @@ public class ObservationResolver extends AbstractTransformation
         {
           protected void write( final Writer w ) throws Throwable
           {
-            final ObservationType type = ZmlFactory.createXML( obs, dateRange );
+            final ObservationType type = ZmlFactory.createXML( obs, null);//dateRange );
             ZmlFactory.getMarshaller().marshal( type, w );
           }
         };

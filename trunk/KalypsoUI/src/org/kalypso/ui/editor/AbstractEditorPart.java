@@ -302,6 +302,9 @@ public abstract class AbstractEditorPart extends EditorPart implements
    */
   public void resourceChanged( final IResourceChangeEvent event )
   {
+    if( !(getEditorInput() instanceof IFileEditorInput) )
+      return;
+    
     final IFileEditorInput input = (IFileEditorInput) getEditorInput();
 
     if( event.getType() == IResourceChangeEvent.POST_CHANGE && input != null )

@@ -270,14 +270,14 @@ public class ZmlFactory
         .getName(), obs.isEditable(), target, metadata, model.getAxisList(),
         model );
 
-    // tricky: first check if a proxy has been specified in the url
-    final IObservation proxyObs = createProxyFrom( context, zmlObs );
-
     // tricky: maybe make a filtered observation out of this one
     final IObservation filteredObs = FilterFactory.createFilterFrom( context,
-        proxyObs );
+        zmlObs );
 
-    return filteredObs;
+    // tricky: first check if a proxy has been specified in the url
+    final IObservation proxyObs = createProxyFrom( context, filteredObs );
+    
+    return proxyObs;
   }
 
   /**

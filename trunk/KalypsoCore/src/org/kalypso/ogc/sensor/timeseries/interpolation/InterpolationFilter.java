@@ -82,13 +82,19 @@ public class InterpolationFilter extends AbstractObservationFilter
     
     final Calendar cal = Calendar.getInstance();
     
+    int startIx = 0;
+    
     // do we need to fill before the begining of the base model?
     if( dr != null && m_fill )
     {
       cal.setTime( dr.getFrom() );
+      d1 = cal.getTime();
       
       while( cal.getTime().compareTo( begin ) < 0 )
+      {
+        d1 = cal.getTime();
         fillWithDefault( dateAxis, valueAxes, intModel, cal );
+      }
     }
     else
     {
@@ -99,7 +105,7 @@ public class InterpolationFilter extends AbstractObservationFilter
       
       for( int i = 0; i < valueAxes.length; i++ )
       {
-        final Number nb = (Number) values.getElement( 0, valueAxes[i] );
+        final Number nb = (Number) values.getElement( startIx, valueAxes[i] );
         
         tupple[ valueAxes[i].getPosition() ] = nb;
         v1[ valueAxes[i].getPosition() ] = nb.doubleValue();
@@ -108,13 +114,15 @@ public class InterpolationFilter extends AbstractObservationFilter
       intModel.addTupple( tupple );
       
       cal.add( m_calField, m_amount );
+      
+      startIx++;
+      
+      d1 = cal.getTime();
     }
-
-    d1 = cal.getTime();
     
     final LinearEquation eq = new LinearEquation();
         
-    for( int ix = 1; ix < values.getCount(); ix++ )
+    for( int ix = startIx; ix < values.getCount(); ix++ )
     {
       d2 = (Date) values.getElement( ix, dateAxis );
 
@@ -124,7 +132,7 @@ public class InterpolationFilter extends AbstractObservationFilter
         v2[ valueAxes[ia].getPosition() ] = nb.doubleValue();
       }
       
-      while( cal.getTime().compareTo( d2 ) < 0 )
+      while( cal.getTime().compareTo( d2 ) <= 0 )
       {
         long ms = cal.getTimeInMillis();
 
