@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<extent bottom="1245.0" left="123.4" right="456.7" top="111.1"/>
+	<layers>
+		<layer name="d1000w_l" visible="true" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/d1000w_l#SRS=EPSG:31468" linktype="shape">
+
+			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/d1000w_l.sld#STYLE=DefaultStyle" linktype="style" />
+
+		</layer>
+		
+	
+		<layer name="ezg_agg2" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/ezg_agg2#SRS=EPSG:31468" linktype="shape">
+			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/ezg_agg2.sld#STYLE=DefaultStyle" linktype="style" />
+	
+		</layer>
+		<layer name="pegel_sa_thuer" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/pegel_sa_thuer#SRS=EPSG:31468" linktype="shape">
+			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/pegel_sa_thuer.sld#STYLE=DefaultStyle" linktype="style" />
+		</layer>
+	<layer name="d1000w_f" visible="true" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/d1000w_f#SRS=EPSG:31468" linktype="shape">
+			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/d1000w_f.sld#STYLE=DefaultStyle" linktype="style" />
+		</layer>
+		<layer name="d1000w_p" visible="true" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/d1000w_p#SRS=EPSG:31468" linktype="shape">
+			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/d1000w_p.sld#STYLE=DefaultStyle" linktype="style" />
+		</layer>		
+
+
+	<layer name="efl" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/efl#SRS=EPSG:31468" linktype="shape">
+			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/efl.sld#STYLE=DefaultStyle" linktype="style" />
+		</layer>		
+	
+		<layer name="nstat_5mn" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/nstat_5mn#SRS=EPSG:31468" linktype="shape">
+			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/nstat_5mn.sld#STYLE=DefaultStyle" linktype="style" />
+		</layer>
+		
+		<layer name="nstat_gk4_clip" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/nstat_gk4_clip#SRS=EPSG:31468" linktype="shape">
+			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/nstat_gk4_clip.sld#STYLE=DefaultStyle" linktype="style" />
+		</layer>
+		
+		<layer name="flg_WE_280403" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/flg_WE_280403#SRS=EPSG:31468" linktype="shape">
+			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/flg_WE_280403.sld#STYLE=DefaultStyle" linktype="style" />
+		</layer>
+		
+	</layers>
+</gismapview>

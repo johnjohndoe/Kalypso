@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org"><layer linktype="shape" id="1" ns1:type="simple" ns1:href="SRS=EPSG:31468#PATH=shapes/d1000w_l#SERVICE=RESOURCE#" ns1:actuate="onRequest" xmlns:ns1="http://www.w3.org/1999/xlink"><column name="OBT" width="137" editable="false"/><column name="HYD" width="580" editable="false"/></layer></gistableview>
+
