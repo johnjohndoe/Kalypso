@@ -78,10 +78,10 @@
 					<element name="BodenfeuchteMax" type="double"/>
 					<element name="Ausdehnung" type="double"/>
 					<element name="Niederschlag_eingabeEingang" type="obslink:TimeseriesLink"/>
-					<element name="Niederschlag_eingabe" type="na:TimeseriesLinkType"/>
-					<element name="Wasserstand_gemessenEingang" type="na:TimeseriesLinkType"/>
-					<element name="Wasserstand_gemessen" type="na:TimeseriesLinkType"/>
-					<element name="Wasserstand_gerechnet" type="na:TimeseriesLinkType"/>
+					<element name="Niederschlag_eingabe" type="obslink:TimeseriesLink"/>
+					<element name="Wasserstand_gemessenEingang" type="obslink:TimeseriesLink"/>
+					<element name="Wasserstand_gemessen" type="obslink:TimeseriesLink"/>
+					<element name="Wasserstand_gerechnet" type="obslink:TimeseriesLink"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -125,9 +125,9 @@
 					<element name="Korrektur_Niveau" type="double"/>
 					<element name="Korrektur_Laufzeit" type="double"/>
 					<element name="KorrekturEmpfehlungLaufzeit" type="double"/>
-					<element name="Wasserstand_gemessenEingang" type="na:TimeseriesLinkType"/>
-					<element name="Wasserstand_gemessen" type="na:TimeseriesLinkType"/>
-					<element name="Wasserstand_gerechnet" type="na:TimeseriesLinkType"/>
+					<element name="Wasserstand_gemessenEingang" type="obslink:TimeseriesLink"/>
+					<element name="Wasserstand_gemessen" type="obslink:TimeseriesLink"/>
+					<element name="Wasserstand_gerechnet" type="obslink:TimeseriesLink"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -168,9 +168,9 @@
 					<element name="Name" type="string"/>
 					<element name="Anfangsstauvolumen" type="double"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Abgabe_eingang" type="na:TimeseriesLinkType"/>
-					<element name="Abgabe" type="na:TimeseriesLinkType"/>
-					<element name="Stauinhalt" type="na:TimeseriesLinkType"/>
+					<element name="Abgabe_eingang" type="obslink:TimeseriesLink"/>
+					<element name="Abgabe" type="obslink:TimeseriesLink"/>
+					<element name="Stauinhalt" type="obslink:TimeseriesLink"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -210,8 +210,8 @@
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Abgabe_eingang" type="na:TimeseriesLinkType"/>
-					<element name="Abgabe" type="na:TimeseriesLinkType"/>
+					<element name="Abgabe_eingang" type="obslink:TimeseriesLink"/>
+					<element name="Abgabe" type="obslink:TimeseriesLink"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -251,8 +251,8 @@
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Zugabe_eingang" type="na:TimeseriesLinkType"/>
-					<element name="Zugabe" type="na:TimeseriesLinkType"/>
+					<element name="Zugabe_eingang" type="obslink:TimeseriesLink"/>
+					<element name="Zugabe" type="obslink:TimeseriesLink"/>
 				</sequence>
 			</extension>
 		</complexContent>
