@@ -8,8 +8,6 @@ import org.kalypso.template.obsdiagview.TypeAxis;
  * equals and hashcode. Two instance of IDiagramAxis are considered to be equal
  * if they have the same id.
  * 
- * TODO extended the binding to contain the lower and upper margin elements
- * 
  * @author schlienger
  */
 public class DiagramAxis implements IDiagramAxis
@@ -34,8 +32,22 @@ public class DiagramAxis implements IDiagramAxis
 
   public DiagramAxis( final TypeAxis axis )
   {
-    this( axis.getId(), axis.getDatatype(), axis.getLabel(), axis.getUnit(),
-        axis.getDirection(), axis.getPosition(), axis.isInverted() );
+    // TODO currently the binding says that lower and upper margins
+    // are optional, but we could not find out any solution 
+    // to know if the values were specified or not (primivite types, 
+    // for Object types it's not a problem since value is null)
+    // So as soon as solution is found, maybe replace the code
+    // here that currently simply checks for == 0
+    this(
+        axis.getId(),
+        axis.getDatatype(),
+        axis.getLabel(),
+        axis.getUnit(),
+        axis.getDirection(),
+        axis.getPosition(),
+        axis.isInverted(),
+        axis.getLowerMargin() == 0 ? null : new Double( axis.getLowerMargin() ),
+        axis.getUpperMargin() == 0 ? null : new Double( axis.getUpperMargin() ) );
   }
 
   public DiagramAxis( final String id, final String dataType,

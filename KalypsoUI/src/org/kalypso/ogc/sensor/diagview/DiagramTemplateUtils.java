@@ -11,6 +11,7 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.impl.DiagramAxis;
@@ -171,6 +172,7 @@ public class DiagramTemplateUtils
         final TypeCurve bdgCurve = ODT_OF.createTypeCurve();
         bdgCurve.setId( "C" + ixCurve++ );
         bdgCurve.setName( curve.getName() );
+        bdgCurve.setColor( StringUtilities.colorToString( curve.getColor() ) );
 
         final List bdgMappings = bdgCurve.getMapping();
 

@@ -283,7 +283,7 @@ public class ObservationPlot extends XYPlot
       
       final XYItemRenderer renderer = getRenderer( yAxis.getType() );
       // TODO: verify if pos is valid for use as index of series...
-      renderer.setSeriesPaint( pos == 0 ? pos : pos-1, curve.getPaint() );
+      renderer.setSeriesPaint( pos == 0 ? pos : pos-1, curve.getColor() );
       setRenderer( pos, renderer );
 
       mapDatasetToDomainAxis( pos, ((Integer) m_chartAxes2Pos

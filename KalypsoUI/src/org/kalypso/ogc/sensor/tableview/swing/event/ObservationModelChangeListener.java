@@ -5,15 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * ObservationModelChangeListener
@@ -83,12 +76,10 @@ public class ObservationModelChangeListener implements TableModelListener
     }
     catch( InvocationTargetException e1 )
     {
-      // TODO Auto-generated catch block
       e1.printStackTrace();
     }
     catch( InterruptedException e1 )
     {
-      // TODO Auto-generated catch block
       e1.printStackTrace();
     }
   }

@@ -114,7 +114,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
       if( m_outline == null || m_outline.getControl() != null
           && m_outline.getControl().isDisposed() )
       {
-        // TODO check if ok to dispose when not null
+        // dispose when not null (not sure if this is ok)
         if( m_outline != null )
           m_outline.dispose();
 

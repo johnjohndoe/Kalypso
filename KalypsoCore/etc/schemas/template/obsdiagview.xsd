@@ -26,9 +26,16 @@
 		<xs:attribute name="datatype" type="xs:string" use="required"/>
 		<xs:attribute name="label" type="xs:string" use="required"/>
 		<xs:attribute name="unit" type="xs:string" use="optional" default=""/>
+		<!-- see type: typeDirection -->
 		<xs:attribute name="direction" type="myns:typeDirection" use="required"/>
+		<!-- see type: typePosition -->
 		<xs:attribute name="position" type="myns:typePosition" use="required"/>
+		<!-- an axis can be inverted, thus elements are displayed in reverse order -->
 		<xs:attribute name="inverted" type="xs:boolean" use="optional" default="false"/>
+		<!-- the lower margin defines the margin or space between the origin of the axis' display space and the begin of the axis' value-range -->
+		<xs:attribute name="lowerMargin" type="xs:double" use="optional" />
+		<!-- the upper margin defines the margin or space between the end of the axis' display space and the end of the axis' value-range -->
+		<xs:attribute name="upperMargin" type="xs:double" use="optional" />
 	</xs:complexType>
 	
 	<!-- type AxisMaping-->

@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/KalypsoCoreServices"/>
-	<classpathentry kind="src" path="/KalypsoPSICompactAdapter"/>
 	<classpathentry kind="src" path="/KalypsoCore"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

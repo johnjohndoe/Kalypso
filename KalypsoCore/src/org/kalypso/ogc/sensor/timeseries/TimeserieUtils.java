@@ -166,7 +166,7 @@ public class TimeserieUtils
   }
   
   /**
-   * TODO check if the units are correct in the config.properties file
+   * Units are read from the config.properties file.
    * 
    * @param type
    * @return corresponding unit

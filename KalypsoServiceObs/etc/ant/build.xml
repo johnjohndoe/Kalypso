@@ -158,11 +158,6 @@
 	<target name="compile-services" depends="prepare" description="Compiles the basic-source code">
 		<echo message="Compiling the source code...." />
 
-		<!--antcall target="package-a-plugin">
-			<param name="package_jar" value="deegree.jar" />
-			<param name="package_bin" value="backupdeegree/bin" />
-			<param name="package_lib" value="backupdeegree/lib" />
-		</antcall-->
 		<antcall target="package-a-plugin">
 			<param name="package_jar" value="KalypsoUtil.jar" />
 			<param name="package_bin" value="KalypsoUtil/build/bin" />
@@ -173,23 +168,17 @@
 			<param name="package_bin" value="KalypsoCore/build/bin" />
 			<param name="package_lib" value="KalypsoCore/lib" />
 		</antcall>
-
-		<antcall target="package-a-project">
-			<param name="aproject_jar" value="KalypsoPSICompactAdapter.jar" />
-			<param name="aproject_bin" value="KalypsoPSICompactAdapter/build/bin" />
-			<param name="aproject_lib" value="KalypsoPSICompactAdapter/lib" />
-		</antcall>
-		<antcall target="package-a-project">
-			<param name="aproject_jar" value="KalypsoPSICompactAdapterCore.jar" />
-			<param name="aproject_bin" value="KalypsoPSICompactAdapterCore/build/bin" />
-			<param name="aproject_lib" value="KalypsoPSICompactAdapterCore/lib" />
-		</antcall>
 		<antcall target="package-a-project">
 			<param name="aproject_jar" value="KalypsoCoreServices.jar" />
 			<param name="aproject_bin" value="KalypsoCoreServices/build/bin" />
 			<param name="aproject_lib" value="KalypsoCoreServices/lib" />
 		</antcall>
 
+		<antcall target="package-a-project">
+			<param name="aproject_jar" value="KalypsoPSICompactAdapter.jar" />
+			<param name="aproject_bin" value="KalypsoPSICompactAdapter/build/bin" />
+			<param name="aproject_lib" value="KalypsoPSICompactAdapter/lib" />
+		</antcall>
 	</target>
 
 

@@ -16,6 +16,7 @@ public class MutexSchedulingRule implements ISchedulingRule
   {
     return true;
     // TODO: geändert von Belger: sonst gibts Probleme beim Laden der Zeitreihen
+    // --> Prüfen ob das immer noch der Fall ist?
 //    return this == rule;
   }
 

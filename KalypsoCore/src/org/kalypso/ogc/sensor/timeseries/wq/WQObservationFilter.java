@@ -10,6 +10,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
@@ -40,7 +41,8 @@ public class WQObservationFilter extends AbstractObservationFilter
    * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
    *      org.kalypso.ogc.sensor.IObservation)
    */
-  public void initFilter( final Object conf, final IObservation obs ) throws SensorException
+  public void initFilter( final Object conf, final IObservation obs )
+      throws SensorException
   {
     super.initFilter( conf, obs );
 
@@ -52,20 +54,33 @@ public class WQObservationFilter extends AbstractObservationFilter
     for( int i = 0; i < axes.length; i++ )
       m_axes[i] = axes[i];
 
-    m_dateAxis = ObservationUtilities.findAxisByType( axes, TimeserieConstants.TYPE_DATE );
+    m_dateAxis = ObservationUtilities.findAxisByType( axes,
+        TimeserieConstants.TYPE_DATE );
 
     if( TimeserieConstants.TYPE_RUNOFF.equals( type ) )
     {
-      m_srcAxis = ObservationUtilities.findAxisByType( axes, TimeserieConstants.TYPE_RUNOFF );
-      m_destAxis = new DefaultAxis( "W", TimeserieConstants.TYPE_WATERLEVEL, "cm", Double.class,
-          m_axes.length - 1, false );
+      final String name = TimeserieUtils
+          .getName( TimeserieConstants.TYPE_WATERLEVEL );
+      final String unit = TimeserieUtils
+          .getUnit( TimeserieConstants.TYPE_WATERLEVEL );
+
+      m_srcAxis = ObservationUtilities.findAxisByType( axes,
+          TimeserieConstants.TYPE_RUNOFF );
+      m_destAxis = new DefaultAxis( name, TimeserieConstants.TYPE_WATERLEVEL,
+          unit, Double.class, m_axes.length - 1, false );
       m_axes[m_axes.length - 1] = m_destAxis;
     }
     else if( TimeserieConstants.TYPE_WATERLEVEL.equals( type ) )
     {
-      m_srcAxis = ObservationUtilities.findAxisByType( axes, TimeserieConstants.TYPE_WATERLEVEL );
-      m_destAxis = new DefaultAxis( "Q", TimeserieConstants.TYPE_RUNOFF, "m^3", Double.class,
-          m_axes.length - 1, false );
+      final String name = TimeserieUtils
+          .getName( TimeserieConstants.TYPE_RUNOFF );
+      final String unit = TimeserieUtils
+          .getUnit( TimeserieConstants.TYPE_RUNOFF );
+
+      m_srcAxis = ObservationUtilities.findAxisByType( axes,
+          TimeserieConstants.TYPE_WATERLEVEL );
+      m_destAxis = new DefaultAxis( name, TimeserieConstants.TYPE_RUNOFF, unit,
+          Double.class, m_axes.length - 1, false );
       m_axes[m_axes.length - 1] = m_destAxis;
     }
     else
@@ -76,7 +91,7 @@ public class WQObservationFilter extends AbstractObservationFilter
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getAxisList()
    */
-  public IAxis[] getAxisList()
+  public IAxis[] getAxisList( )
   {
     return m_axes;
   }
@@ -84,15 +99,18 @@ public class WQObservationFilter extends AbstractObservationFilter
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
+  public ITuppleModel getValues( IVariableArguments args )
+      throws SensorException
   {
-    final String wechmann = getMetadataList().getProperty( TimeserieConstants.MD_WQ );
+    final String wechmann = getMetadataList().getProperty(
+        TimeserieConstants.MD_WQ );
     final WechmannGroup group;
     if( wechmann != null )
     {
       try
       {
-        group = WechmannFactory.parse( new InputSource( new StringReader( wechmann ) ) );
+        group = WechmannFactory.parse( new InputSource( new StringReader(
+            wechmann ) ) );
       }
       catch( WechmannException e )
       {
@@ -103,9 +121,9 @@ public class WQObservationFilter extends AbstractObservationFilter
     {
       group = new WechmannGroup( new WechmannSet[0] );
     }
-    
-    return new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_destAxis,
-        group );
+
+    return new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis,
+        m_srcAxis, m_destAxis, group );
   }
 
   /**
@@ -114,14 +132,14 @@ public class WQObservationFilter extends AbstractObservationFilter
   public void setValues( final ITuppleModel values ) throws SensorException
   {
     // TODO: only take the W or the Q depending on which type we are
-    
+
     super.setValues( values );
   }
 
   /**
    * @return Returns the dateAxis.
    */
-  public IAxis getDateAxis()
+  public IAxis getDateAxis( )
   {
     return m_dateAxis;
   }
@@ -129,7 +147,7 @@ public class WQObservationFilter extends AbstractObservationFilter
   /**
    * @return Returns the destAxis.
    */
-  public IAxis getDestAxis()
+  public IAxis getDestAxis( )
   {
     return m_destAxis;
   }
@@ -137,7 +155,7 @@ public class WQObservationFilter extends AbstractObservationFilter
   /**
    * @return Returns the srcAxis.
    */
-  public IAxis getSrcAxis()
+  public IAxis getSrcAxis( )
   {
     return m_srcAxis;
   }
