@@ -16,3 +16,18 @@ Version ...
 	- Bugfix: Fehler, falls im Navigator nichts selektiert war
 - Modeler Perspective: Standards für Menüs 'Neu' und 'Sicht anzeigen' überarbeitet
 
+- ZmlObservation: wenn eine Zml vom Server geholt wird, wird sein ID als Metadata-Eintrag
+	gespeichert.
+
+- PSICompactAdapter:
+	* Jetzt werden auch die Einheiten berücksichtigt und 
+	zwischen Kalypso und PSICompact konvertiert.
+	* Der ArchivTyp wird abhängig vom Datentyp genutzt. Z.B. Niederschläge
+	sollen Werte aus der Stundenarchiv lesen.
+
+- InterpolationFilter: wenn die grundliegende Observation keine Werte liefert aber
+	fill ist gesetzt, dann werden lauter 'default' Werte im angegebenen Datumbereich
+	erzeugt.
+
+- PSICompactImlp: unsere Fake Implementation basiert jetzt auf ZMLs die in der Jar
+	über die PSICompact ID-Liste verknüpft sind.
