@@ -63,11 +63,13 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
  */
 public class IntervallTupplemodel extends AbstractTuppleModel
 {
-  private final int TODO_NOTHING = 0;
+  private static final int TODO_NOTHING = 0;
 
-  private final int TODO_GOTO_NEXT_TARGET = 1;
+  private static final int TODO_GOTO_NEXT_TARGET = 1;
 
-  private final int TODO_GOTO_NEXT_SRC = 2;
+  private static final int TODO_GOTO_NEXT_SRC = 2;
+
+  private static final int TODO_FINISHED = 3;
 
   private final ITuppleModel m_baseModel;
 
@@ -154,7 +156,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     final Iterator iterator = new CalendarIterator( m_from, m_to, m_calendarField, m_amount );
     while( iterator.hasNext() )
     {
-      Object value = iterator.next();
+      iterator.next();
       result++;
     }
     return result;
@@ -163,19 +165,20 @@ public class IntervallTupplemodel extends AbstractTuppleModel
   private void initModell() throws SensorException
   {
     // default values
-    int[] defaultStatus = new int[m_statusAxis.length];
+    final long[] defaultStatus = new long[m_statusAxis.length];
     for( int i = 0; i < defaultStatus.length; i++ )
       defaultStatus[i] = KalypsoStati.BIT_OK;
-    double[] defaultValues = new double[m_valueAxis.length];
+    final double[] defaultValues = new double[m_valueAxis.length];
     for( int i = 0; i < defaultValues.length; i++ )
       defaultValues[i] = 0d;
 
     // create empty model
-    IAxis[] axisList = getAxisList();
+    final IAxis[] axisList = getAxisList();
     int rows = countRows();
-    m_intervallModel = new SimpleTuppleModel( axisList, new Object[axisList.length][rows] );
+    m_intervallModel = new SimpleTuppleModel( axisList, new Object[rows][axisList.length] );
 
     final Iterator iterator = new CalendarIterator( m_from, m_to, m_calendarField, m_amount );
+
     // TODO hasnext ?
     Calendar targetCal_last = (Calendar)iterator.next();
     Calendar srcCal_last = targetCal_last;
@@ -183,19 +186,37 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     Intervall srcIntervall = null;
     Intervall targetIntervall = null;
     int srcRow = 0;
+    int targetRow = 0;
+    // fill initial row
+    final Intervall initialIntervall = new Intervall( m_from, m_from, defaultStatus, defaultValues );
+    updateModelfromintervall( m_intervallModel, targetRow, initialIntervall );
+    targetRow++;
+
     int todo = TODO_NOTHING;
-    while( !( ( todo == TODO_GOTO_NEXT_SRC && srcRow >= m_baseModel.getCount() ) || ( todo == TODO_GOTO_NEXT_TARGET && !iterator
-        .hasNext() ) ) )
+    while( todo != TODO_FINISHED )
     {
+      // next src intervall ...
       if( srcIntervall == null || todo == TODO_GOTO_NEXT_SRC )
       {
+        if( !( srcRow < m_baseModel.getCount() ) )
+        {
+          // create dummy intervall
+          srcIntervall=new Intervall( srcCal_last,m_to,defaultStatus, defaultValues );
+          todo = TODO_NOTHING;
+          continue;
+        }
         final Calendar cal = getDefaultCalendar( (Date)m_baseModel.getElement( srcRow, m_dateAxis ) );
-        Object[] o = ObservationUtilities.getElements( m_baseModel, srcRow, m_statusAxis );
-        Integer[] stati = new Integer[o.length];
+        final Object[] o = ObservationUtilities.getElements( m_baseModel, srcRow, m_statusAxis );
+        final Long[] stati = new Long[o.length];
         for( int i = 0; i < o.length; i++ )
-          stati[i] = (Integer)o[i];
-        final Double[] values = (Double[])ObservationUtilities.getElements( m_baseModel, srcRow,
-            m_valueAxis );
+          stati[i] = (Long)o[i];
+
+        final Object[] valueOs = ObservationUtilities
+            .getElements( m_baseModel, srcRow, m_valueAxis );
+        final Double[] values = new Double[valueOs.length];
+        for( int i = 0; i < valueOs.length; i++ )
+          values[i] = (Double)valueOs[i];
+
         if( srcCal_last.before( cal ) )
           srcIntervall = new Intervall( srcCal_last, cal, stati, values );
         else
@@ -207,6 +228,16 @@ public class IntervallTupplemodel extends AbstractTuppleModel
       // next target intervall
       if( targetIntervall == null || todo == TODO_GOTO_NEXT_TARGET )
       {
+        if( targetIntervall != null )
+        {
+          updateModelfromintervall( m_intervallModel, targetRow, targetIntervall );
+          targetRow++;
+        }
+        if( !iterator.hasNext() )
+        {
+          todo = TODO_FINISHED;
+          continue;
+        }
         final Calendar cal = (Calendar)iterator.next();
         if( targetCal_last.before( cal ) )
           targetIntervall = new Intervall( targetCal_last, cal, defaultStatus, defaultValues );
@@ -227,32 +258,48 @@ public class IntervallTupplemodel extends AbstractTuppleModel
         continue;
       }
       // compute intersection intervall
-      int matrix = targetIntervall.calcIntersectionMatrix( srcIntervall );
+      int matrix = srcIntervall.calcIntersectionMatrix( targetIntervall );
       Intervall intersection = null;
       if( matrix != Intervall.STATUS_INTERSECTION_NONE_BEFORE
           && matrix != Intervall.STATUS_INTERSECTION_NONE_AFTER )
-        intersection = targetIntervall.getIntersection( srcIntervall, m_mode );
+        intersection = srcIntervall.getIntersection( targetIntervall, m_mode );
 
       switch( matrix )
       {
       case Intervall.STATUS_INTERSECTION_NONE_BEFORE:
-        todo = TODO_GOTO_NEXT_SRC;
+        todo = TODO_GOTO_NEXT_TARGET;
         break;
       case Intervall.STATUS_INTERSECTION_NONE_AFTER:
-        todo = TODO_GOTO_NEXT_TARGET;
+        todo = TODO_GOTO_NEXT_SRC;
         break;
       case Intervall.STATUS_INTERSECTION_START:
       case Intervall.STATUS_INTERSECTION_INSIDE:
         targetIntervall.merge( intersection, m_mode );
-        todo = TODO_GOTO_NEXT_SRC;
+        todo = TODO_GOTO_NEXT_TARGET;
+        break;
       case Intervall.STATUS_INTERSECTION_END:
       case Intervall.STATUS_INTERSECTION_ARROUND:
         targetIntervall.merge( intersection, m_mode );
-        todo = TODO_GOTO_NEXT_TARGET;
+        todo = TODO_GOTO_NEXT_SRC;
+        break;
       default:
         break;
       }
     }
+  }
+
+  // accept values for result
+  private void updateModelfromintervall( ITuppleModel model, int targetRow,
+      Intervall targetIntervall ) throws SensorException
+  {
+    final Calendar cal = targetIntervall.getEnd();
+    final long[] status = targetIntervall.getStatus();
+    final double[] value = targetIntervall.getValue();
+    model.setElement( targetRow, cal.getTime(), m_dateAxis );
+    for( int i = 0; i < m_statusAxis.length; i++ )
+      model.setElement( targetRow, new Long( status[i] ), m_statusAxis[i] );
+    for( int i = 0; i < m_valueAxis.length; i++ )
+      model.setElement( targetRow, new Double( value[i] ), m_valueAxis[i] );
   }
 
   private Calendar getDefaultCalendar( Date date )

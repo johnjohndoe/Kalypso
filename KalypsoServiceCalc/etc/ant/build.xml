@@ -217,8 +217,8 @@
 
     <antcall target="package-a-plugin">
       <param name="package_jar" value="deegree.jar" />
-      <param name="package_bin" value="backupdeegree/bin" />
-      <param name="package_lib" value="backupdeegree/lib" />
+      <param name="package_bin" value="KalypsoDeegree/bin" />
+      <param name="package_lib" value="KalypsoDeegree/lib" />
     </antcall>
     
     <antcall target="package-a-plugin">

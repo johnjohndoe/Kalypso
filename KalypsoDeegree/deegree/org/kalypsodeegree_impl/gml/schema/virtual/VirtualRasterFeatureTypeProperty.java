@@ -77,6 +77,8 @@ public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypePrope
     CS_CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( targetSrs ) );
     RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature.getProperty( "rectifiedGridDomain" );
+    if(rgDomain==null)
+      return null;
     try
     {
       return rgDomain.getGM_Surface( cs );

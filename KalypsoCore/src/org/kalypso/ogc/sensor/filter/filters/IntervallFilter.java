@@ -55,7 +55,7 @@ import org.kalypso.zml.filters.IntervallFilterType;
  */
 public class IntervallFilter extends AbstractObservationFilter
 {
-  public final static int MODE_AVERAGE = 0;
+  public final static int MODE_INTENSITY = 0;
 
   public final static int MODE_SUM = 1;
 
@@ -70,12 +70,12 @@ public class IntervallFilter extends AbstractObservationFilter
   public IntervallFilter( IntervallFilterType filter )
   {
     final String mode = filter.getMode();
-    if( "average".equals( mode ) )
-      m_mode = MODE_AVERAGE;
-    else if( "sum".equals( mode ) )
+    if( "intensity".equalsIgnoreCase( mode ) )
+      m_mode = MODE_INTENSITY;
+    else if( "sum".equalsIgnoreCase( mode ) )
       m_mode = MODE_SUM;
     else
-      m_mode = MODE_AVERAGE; // default is average
+      m_mode = MODE_INTENSITY; // default is intensity
     m_calendarField = CalendarUtilities.getCalendarField( filter.getCalendarField() );
     m_amount = filter.getAmount();
   }

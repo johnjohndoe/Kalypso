@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.status;
 
 /**
@@ -47,6 +47,13 @@ package org.kalypso.ogc.sensor.status;
  */
 public interface KalypsoStati
 {
+  // TODO check concept of kalypsostati
+  // what is the policy when tupples with
+  // different stati get merged ?
+  // merge stati with bit-or (|) ?
+  // is "BIT_OK | BIT_CHECK" possible or is it better to remove BIT_OK and
+  // define OK-status as "no bits are set" ?
+
   /** Value is OK (0x01) */
   public final static int BIT_OK = 0x01;
 
