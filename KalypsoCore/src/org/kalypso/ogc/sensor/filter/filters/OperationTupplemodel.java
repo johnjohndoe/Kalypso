@@ -50,9 +50,9 @@ public class OperationTupplemodel implements ITuppleModel
         Object object = m_baseModel.getElement(index, axis);
         if (object == null || object instanceof Date)
             return object;
-        if (object instanceof Double)
+        if (object instanceof Number)
         {
-            double value = ((Double) object).doubleValue();
+            double value = ((Number) object).doubleValue();
             switch (m_operation)
             {
             case OperationFilter.OPERATION_PLUS:

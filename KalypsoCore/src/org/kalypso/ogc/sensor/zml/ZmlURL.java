@@ -18,33 +18,46 @@ public class ZmlURL
   {
     // do not instanciate
   }
-  
+
   /**
-   * Returns only the identifier part of the zml url. The URL may contain a query part
-   * which will be ignored by this convenience method.
+   * Returns only the identifier part of the zml url. The URL may contain a
+   * query part which will be ignored by this convenience method.
    * 
    * @param url
-   * @return only identifier
+   * @return only identifier part
    */
   public static String getIdentifierPart( final URL url )
   {
-    final String strUrl = url.toExternalForm();
-    
+    return getIdentifierPart( url.toExternalForm() );
+  }
+
+  /**
+   * Returns only the identifier part of the zml url. The URL may contain a
+   * query part which will be ignored by this convenience method.
+   * 
+   * @param strUrl
+   * @return only identifier part
+   */
+  public static String getIdentifierPart( final String strUrl )
+  {
     int ix = strUrl.indexOf( '?' );
     if( ix != -1 )
       return strUrl.substring( 0, ix );
-    
+
     return strUrl;
   }
 
   /**
-   * Checks if the string contains the from-to specification and eventually creates the
-   * corresponding DateRangeArgument.
-   * <pre>
-   * The format of the from-to specification should be as follows:
+   * Checks if the string contains the from-to specification and eventually
+   * creates the corresponding DateRangeArgument.
    * 
-   * ...&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;...
-   * </pre> 
+   * <pre>
+   * 
+   *  The format of the from-to specification should be as follows:
+   *  
+   *  ...&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;...
+   *  
+   * </pre>
    * 
    * @param str
    * @return DateRangeArgument
@@ -104,11 +117,11 @@ public class ZmlURL
         e.printStackTrace();
       }
     }
-    
+
     // no date found, return null
     if( dFrom == null && dTo == null )
       return null;
-    
+
     // at least from, to or both found, return new arg
     return new DateRangeArgument( dFrom, dTo );
   }
