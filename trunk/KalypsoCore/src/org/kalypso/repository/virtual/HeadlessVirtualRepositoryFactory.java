@@ -11,6 +11,8 @@ import org.kalypso.repository.RepositoryException;
  */
 public class HeadlessVirtualRepositoryFactory extends AbstractRepositoryFactory
 {
+  private final static String SEPARATOR = "#";
+  
   /**
    * @see org.kalypso.repository.IRepositoryFactory#configureRepository()
    */
@@ -27,6 +29,11 @@ public class HeadlessVirtualRepositoryFactory extends AbstractRepositoryFactory
    */
   public IRepository createRepository( ) throws RepositoryException
   {
-    return new VirtualRepository( this, getConfiguration(), isReadOnly() );
+    final String[] splits = getConfiguration().split( SEPARATOR );
+    
+    if( splits.length != 2 )
+      throw new RepositoryException( "Configuration must contain location and identifier, separated by a " + SEPARATOR );
+    
+    return new VirtualRepository( this, splits[0], splits[1], isReadOnly() );
   }
 }

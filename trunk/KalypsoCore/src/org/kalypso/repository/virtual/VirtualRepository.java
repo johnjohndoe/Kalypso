@@ -37,19 +37,24 @@ public class VirtualRepository extends AbstractRepository
   /** stores the mapping between ids and items */
   private final Map m_idMap = new Hashtable();
 
+  private final String m_identifier;
+
   /**
    * Constructor
    * 
    * @param factory
-   * @param location
+   * @param location location of the specification file (xml)
+   * @param identifier uniquely identifies this repository among the list of repositories used in a given context
    * @param readOnly
    * @throws RepositoryException
    */
-  public VirtualRepository( IRepositoryFactory factory, String location,
+  public VirtualRepository( final IRepositoryFactory factory, final String location, final String identifier,
       boolean readOnly ) throws RepositoryException
   {
     super( factory, location, readOnly );
 
+    m_identifier = identifier;
+    
     try
     {
       buildRepository( );
@@ -123,6 +128,14 @@ public class VirtualRepository extends AbstractRepository
   }
 
   /**
+   * @see org.kalypso.repository.AbstractRepository#getName()
+   */
+  public String getName( )
+  {
+    return getIdentifier() + " (Virtual-Repository)";
+  }
+  
+  /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
   public IRepositoryItem findItem( final String id ) throws RepositoryException
@@ -151,13 +164,11 @@ public class VirtualRepository extends AbstractRepository
   }
 
   /**
-   * Returns <pre>vrep://</pre>.
-   * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
   public String getIdentifier( )
   {
-    return "vrep://";
+    return m_identifier + "://";
   }
 
   /**

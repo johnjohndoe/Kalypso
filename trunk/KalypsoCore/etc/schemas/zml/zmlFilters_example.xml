@@ -5,7 +5,7 @@ zmlFilters.xsd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:vc="valuecomp.f
 	<valueFilter>
 		<vc:compBigger value="5.3" axisType="W" mode="inc"/>
 		<vc:compSmaller value="6.54" axisType="W" mode="exc"/>
-		<vc:compBetween value="2004-03-30" value2="2004-04-24" axisType="date" mode="inc"/>
+		<vc:compBetween from="2004-03-30" to="2004-04-24" axisType="date" modeFrom="inc" modeTo="exc"/>
 		<zmlFilter>
 			<zml xlink:href="etwas"/>
 		</zmlFilter>
