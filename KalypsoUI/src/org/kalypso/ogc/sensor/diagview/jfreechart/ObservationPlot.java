@@ -322,8 +322,6 @@ public class ObservationPlot extends XYPlot
       setDataset( pos, cds );
       
       final XYItemRenderer renderer = getRenderer( yAxis.getType() );
-      // TODO: verify if pos is valid for use as index of series...
-      renderer.setSeriesPaint( pos == 0 ? pos : pos-1, curve.getColor() );
       setRenderer( pos, renderer );
 
       mapDatasetToDomainAxis( pos, ((Integer) m_chartAxes2Pos
@@ -332,7 +330,12 @@ public class ObservationPlot extends XYPlot
           .get( m_diag2chartAxis.get( yDiagAxis ) )).intValue() );
     }
 
+    // seriesPos is used for setting the color of the serie in the renderer
+    // take it now before we add the serie (0-based index)
+    final int seriePos = cds.getSeriesCount();
     cds.addCurveSerie( xyc );
+    
+    getRenderer( indexOf( cds ) ).setSeriesPaint( seriePos, curve.getColor() );
 
     m_serie2dataset.put( xyc, cds );
 

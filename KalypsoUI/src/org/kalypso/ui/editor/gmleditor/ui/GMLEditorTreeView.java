@@ -60,6 +60,8 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
 
   /**
    * The constructor.
+   * 
+   * @param m_composite
    */
   public GMLEditorTreeView( Composite m_composite )
   {

@@ -40,6 +40,7 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.transformation;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -47,7 +48,9 @@ import org.kalypso.eclipse.core.runtime.LogStatus;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * TransformationResult
+ * TransformationResult. Convenient class to be used with the ErrorDialog. This class
+ * can create an IStatus object which can be displayed in the ErrorDialog. The trick
+ * is to use the LogStatus which gets its children from the log file.
  * 
  * @author schlienger
  */
@@ -88,7 +91,12 @@ public class TransformationResult
     if( !hasMessages() )
       return Status.OK_STATUS;
     
-    final String msg = m_summary + "\n" + "Siehe Details oder Logdatei: " + m_logFile.getFullPath().toOSString();
+    // the ErrorDialog cannot show a message which is too long: the dialog's
+    // height would be bigger than the user's monitor. That's why we truncate
+    // the summary string here. If the user wants to see more, he can have
+    // a look at the log file using the 'details' button in the ErrorDialog
+    final String truncatedSummary = StringUtils.left( m_summary, 512 );
+    final String msg = truncatedSummary + "...\n" + "Siehe Details oder Logdatei: " + m_logFile.getFullPath().toOSString();
     
     return new LogStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, msg, null, m_logFile );
   }
