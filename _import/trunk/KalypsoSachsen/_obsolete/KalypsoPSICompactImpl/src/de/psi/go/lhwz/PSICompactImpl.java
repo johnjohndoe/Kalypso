@@ -1,6 +1,10 @@
 package de.psi.go.lhwz;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,6 +28,10 @@ public class PSICompactImpl implements PSICompact
 	private final Map m_id2measType;
   
   private final Map m_id2wq;
+  
+  private final Map m_id2zml;
+
+  private boolean m_init = false;
 
 	public PSICompactImpl()
 	{
@@ -34,6 +42,7 @@ public class PSICompactImpl implements PSICompact
 		m_id2vorhergesagte = new HashMap();
 		m_id2measType = new HashMap();
     m_id2wq = new HashMap();
+    m_id2zml = new HashMap();
 		
 		prepareObjects( m_id2gemessene, "m" );
 		prepareObjects( m_id2vorhergesagte, "v" );
@@ -42,16 +51,62 @@ public class PSICompactImpl implements PSICompact
 	/**
 	 * @see de.psi.go.lhwz.PSICompact#init()
 	 */
-	public void init()
+	public void init() throws ECommException
 	{
-		System.out.println( "PCICompact.init() aufgerufen");
+		m_init = true;
+    
+    final InputStream ins = getClass().getResourceAsStream( "lhwz-ids.csv" );
+    
+    try
+    {
+      final BufferedReader reader = new BufferedReader( new InputStreamReader( ins ) );
+
+      int l = 1;
+      String line = reader.readLine();
+      
+      while( line != null )
+      {
+        final String[] splits = line.split( ";" );
+        
+        if( splits.length < 2 )
+          throw new ECommException( "Konnte Kennzeichendatei nicht vollständig einlesen! Letzte Zeile ist: " + line + " NR:" + l );
+        
+        m_id2zml.put( splits[0], splits[1] );
+        
+        line = reader.readLine();
+        l++;
+      }
+    }
+    catch( IOException e )
+    {
+      throw new ECommException( e );
+    }
+    finally
+    {
+      try
+      {
+        ins.close();
+      }
+      catch( IOException e1 )
+      {
+        e1.printStackTrace();
+      }
+    }
 	}
+  
+  private void testInitDone() throws ECommException
+  {
+    if( !m_init )
+      throw new ECommException( "PSICompact.init() not performed!" );
+  }
 
 	/**
 	 * @see de.psi.go.lhwz.PSICompact#writeProtocol(java.lang.String)
 	 */
-	public boolean writeProtocol(String message)
+	public boolean writeProtocol(String message) throws ECommException
 	{
+    testInitDone();
+    
 		JOptionPane.showMessageDialog( JOptionPane.getRootFrame(), message );
 		
 		return true;
@@ -60,8 +115,10 @@ public class PSICompactImpl implements PSICompact
 	/**
 	 * @see de.psi.go.lhwz.PSICompact#getInfo(int)
 	 */
-	public ObjectInfo[] getInfo(int typespec)
+	public ObjectInfo[] getInfo(int typespec) throws ECommException
 	{
+    testInitDone();
+    
 		if( typespec == TYPE_MEASUREMENT )
 			return (ObjectInfo[]) m_id2gemessene.values().toArray( new ObjectInfo[0] );
 		else if( typespec == TYPE_VALUE )
@@ -73,8 +130,10 @@ public class PSICompactImpl implements PSICompact
 	/**
 	 * @see de.psi.go.lhwz.PSICompact#getArchiveData(java.lang.String, int, java.util.Date, java.util.Date)
 	 */
-	public ArchiveData[] getArchiveData(String id, int arcType, Date from, Date to)
+	public ArchiveData[] getArchiveData(String id, int arcType, Date from, Date to) throws ECommException
 	{
+    testInitDone();
+    
 		if( m_id2gemessene.containsKey( id ) )
 		{
 			ArchiveData[] data = (ArchiveData[]) m_id2values.get(id);
@@ -109,8 +168,10 @@ public class PSICompactImpl implements PSICompact
 	/**
 	 * @see de.psi.go.lhwz.PSICompact#setArchiveData(java.lang.String, int, java.util.Date, de.psi.go.lhwz.PSICompact.ArchiveData[])
 	 */
-	public boolean setArchiveData(String id, int arcType, Date from, ArchiveData[] data)
+	public boolean setArchiveData(String id, int arcType, Date from, ArchiveData[] data) throws ECommException
 	{
+    testInitDone();
+    
 		m_id2values.put( id, data );
 		
 		return true;
@@ -119,8 +180,10 @@ public class PSICompactImpl implements PSICompact
 	/**
 	 * @see de.psi.go.lhwz.PSICompact#getWQParams(java.lang.String)
 	 */
-	public WQParamSet[] getWQParams(String id)
+	public WQParamSet[] getWQParams(String id) throws ECommException
   {
+    testInitDone();
+    
     WQParamSet[] pset = (WQParamSet[])m_id2wq.get( id );
     
     if( pset == null )
@@ -136,8 +199,10 @@ public class PSICompactImpl implements PSICompact
 	/**
 	 * @see de.psi.go.lhwz.PSICompact#getObjectMetaData(java.lang.String)
 	 */
-	public ObjectMetaData getObjectMetaData(String id)
+	public ObjectMetaData getObjectMetaData(String id) throws ECommException
 	{
+    testInitDone();
+    
     ObjectMetaData omd = new ObjectMetaData();
     
     omd.setAlarm1(1.0);
@@ -160,16 +225,20 @@ public class PSICompactImpl implements PSICompact
 	/**
 	 * @see de.psi.go.lhwz.PSICompact#getUserClasses(java.lang.String)
 	 */
-	public String[] getUserClasses(String userId)
+	public String[] getUserClasses(String userId) throws ECommException
 	{
+    testInitDone();
+    
 		return null;
 	}
 
 	/**
 	 * @see de.psi.go.lhwz.PSICompact#getUserRights(java.lang.String, java.lang.String)
 	 */
-	public String[] getUserRights(String userId, String userClass)
+	public String[] getUserRights(String userId, String userClass) throws ECommException
 	{
+    testInitDone();
+    
 		return null;
 	}
 
@@ -236,8 +305,10 @@ public class PSICompactImpl implements PSICompact
 	/**
 	 * @see de.psi.go.lhwz.PSICompact#getMeasureType(java.lang.String)
 	 */
-	public int getMeasureType( String id )
+	public int getMeasureType( String id ) throws ECommException
 	{
+    testInitDone();
+    
 		Integer intObj = (Integer) m_id2measType.get(id);
 		
 		if( intObj == null )
@@ -266,8 +337,10 @@ public class PSICompactImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#distributeFile(java.lang.String)
    */
-  public boolean distributeFile( String filename )
+  public boolean distributeFile( String filename ) throws ECommException
   {
+    testInitDone();
+    
     System.out.println( "File <" + filename + "> wurde erfolgreich repliziert." );
     
     return true;
@@ -276,8 +349,10 @@ public class PSICompactImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#removeFile(java.lang.String)
    */
-  public boolean removeFile( String filename )
+  public boolean removeFile( String filename ) throws ECommException
   {
+    testInitDone();
+    
     File f = new File( REPLICATION_BASEDIR + File.separator + filename );
     
     return f.delete();
@@ -286,8 +361,10 @@ public class PSICompactImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getDataModelVersion()
    */
-  public int getDataModelVersion()
+  public int getDataModelVersion() throws ECommException
   {
+    testInitDone();
+    
     return 1;
   }
 
@@ -296,6 +373,8 @@ public class PSICompactImpl implements PSICompact
    */
   public String[] getUser( String userClass ) throws ECommException
   {
+    testInitDone();
+    
     return new String[] { "User1", "User2", "User3", "User4" };
   }
 
@@ -304,6 +383,8 @@ public class PSICompactImpl implements PSICompact
    */
   public int getActivDBGroup() throws ECommException
   {
+    testInitDone();
+    
     return 0;
   }
 
@@ -312,6 +393,8 @@ public class PSICompactImpl implements PSICompact
    */
   public boolean copyanddistributeFile( File source, String destination ) throws ECommException
   {
+    testInitDone();
+    
     return false;
   }
 
@@ -320,6 +403,8 @@ public class PSICompactImpl implements PSICompact
    */
   public String getComment( String Pegelkennziffer ) throws ECommException
   {
+    testInitDone();
+    
     return "Kommentar...";
   }
 
@@ -328,6 +413,8 @@ public class PSICompactImpl implements PSICompact
    */
   public String getGewaesser( String Pegelkennziffer ) throws ECommException
   {
+    testInitDone();
+    
     return "Gewaesser...";
   }
 
@@ -336,6 +423,8 @@ public class PSICompactImpl implements PSICompact
    */
   public String getFlussgebiet( String Pegelkennziffer ) throws ECommException
   {
+    testInitDone();
+    
     return "Flussgebiet...";
   }
 }

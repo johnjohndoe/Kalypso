@@ -77,7 +77,7 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
     // falls Pattern nicht auf Verzeichnis engewendet wereden soll, gleich
     // zurück
     if( file.isDirectory() && !m_bFilterDirs )
-      return true;
+return true;
 
     String name = file.getName();
 
