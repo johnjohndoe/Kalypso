@@ -23,9 +23,6 @@
       Lizenztext
    </license>
 
-   <url>
-   </url>
-
    <requires>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.runtime"/>
