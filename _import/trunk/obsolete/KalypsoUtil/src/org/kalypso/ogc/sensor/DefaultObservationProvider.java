@@ -8,12 +8,14 @@ package org.kalypso.ogc.sensor;
 public class DefaultObservationProvider implements IObservationProvider
 {
   private final IObservation m_obs;
-  private final IAxis m_axis;
+  private final IAxis m_sharedAxis;
+  private final IAxis m_valueAxis;
 
-  public DefaultObservationProvider( final IObservation obs, final IAxis axis )
+  public DefaultObservationProvider( final IObservation obs, final IAxis sharedAxis, final IAxis valueAxis )
   {
     m_obs = obs;
-    m_axis = axis;
+    m_sharedAxis = sharedAxis;
+    m_valueAxis = valueAxis;
   }
 
   /**
@@ -25,10 +27,18 @@ public class DefaultObservationProvider implements IObservationProvider
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationProvider#getDisplayAxis()
+   * @see org.kalypso.ogc.sensor.IObservationProvider#getSharedAxis()
    */
-  public IAxis getDisplayAxis()
+  public IAxis getSharedAxis()
   {
-    return m_axis;
+    return m_sharedAxis;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationProvider#getValueAxis()
+   */
+  public IAxis getValueAxis()
+  {
+    return m_valueAxis;
   }
 }

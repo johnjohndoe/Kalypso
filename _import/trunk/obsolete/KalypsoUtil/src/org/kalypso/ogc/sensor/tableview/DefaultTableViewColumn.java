@@ -11,17 +11,20 @@ import org.kalypso.ogc.sensor.IObservation;
 public class DefaultTableViewColumn implements ITableViewColumn
 {
   private final String m_name;
+
   private final IObservation m_obs;
-  private final IAxis m_axis;
+  private final IAxis m_sharedAxis;
+  private final IAxis m_valueAxis;
   
   private boolean m_editable = true;
   private int m_width = 100;
 
-  public DefaultTableViewColumn( final String name, final IObservation obs, final IAxis axis )
+  public DefaultTableViewColumn( final String name, final IObservation obs, final IAxis sharedAxis, final IAxis valueAxis )
   {
     m_name = name;
     m_obs = obs;
-    m_axis = axis;
+    m_sharedAxis = sharedAxis;
+    m_valueAxis = valueAxis;
   }
 
   /**
@@ -57,18 +60,26 @@ public class DefaultTableViewColumn implements ITableViewColumn
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationProvider#getDisplayAxis()
-   */
-  public IAxis getDisplayAxis()
-  {
-    return m_axis;
-  }
-
-  /**
    * @see org.kalypso.ogc.sensor.IObservationProvider#getObservation()
    */
   public IObservation getObservation()
   {
     return m_obs;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationProvider#getSharedAxis()
+   */
+  public IAxis getSharedAxis()
+  {
+    return m_sharedAxis;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationProvider#getValueAxis()
+   */
+  public IAxis getValueAxis()
+  {
+    return m_valueAxis;
   }
 }

@@ -16,7 +16,7 @@ public class DefaultAxis implements IAxis
   protected Class m_dataClass;
   protected int m_position;
   protected List m_restrictedValues;
-
+  
   /**
    * Constructor
    * 
@@ -33,6 +33,16 @@ public class DefaultAxis implements IAxis
     m_dataClass = dataClass;
     m_restricted = restricted;
     m_position = position;
+  }
+  
+  /**
+   * Copy Constuctor.
+   */
+  public DefaultAxis( final IAxis axis )
+  {
+    this( axis.getLabel(), axis.getUnit(), axis.getDataClass(), axis.isRestricted(), axis.getPosition() );
+    
+    setRestrictedValues( axis.getRestrictedValues() );
   }
 
   /**
