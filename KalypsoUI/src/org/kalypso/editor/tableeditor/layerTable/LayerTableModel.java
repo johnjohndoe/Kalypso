@@ -10,6 +10,7 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.sort.DisplayContext;
 
 /**
  * @author bce
@@ -88,10 +89,10 @@ public class LayerTableModel
     m_listeners.remove( l );
   }
   
-  public void fireRowsChanged( final Feature feature  )
+  public void fireRowsChanged( final DisplayContext dc  )
   {
     for( Iterator iter = m_listeners.iterator(); iter.hasNext(); )
-      ((ILayerTableModelListener)iter.next()).onRowsChanged( feature );
+      ((ILayerTableModelListener)iter.next()).onRowsChanged( dc );
   }
 
   public void fireColumnsChanged(   )
@@ -100,11 +101,19 @@ public class LayerTableModel
       ((ILayerTableModelListener)iter.next()).onColumnsChanged( );
   }
 
-  public void addFeature( final Feature feature ) throws Exception
+  public void addRow( final DisplayContext dc) throws Exception
   {
-      myLayer.addFeature( feature );
+      myLayer.add( dc );
       
-      fireRowsChanged( feature );
+      fireRowsChanged( dc );
+  }
+
+
+  public DisplayContext addRow( final Feature fe) throws Exception
+  {
+    final DisplayContext dc=myLayer.createDisplayContext( fe );  
+    addRow(dc);
+    return dc;
   }
 
   public FeatureType getFeatureType()
@@ -112,11 +121,12 @@ public class LayerTableModel
     return myLayer.getFeatureType();
   }
 
-  public void removeFeature( final Feature feature ) throws Exception
-  {
-    myLayer.removeFeature( feature );
 
-    fireRowsChanged( feature );
+  public void removeRow( final DisplayContext dc ) throws Exception
+  {
+    myLayer.remove( dc );
+
+    fireRowsChanged( dc );
   }
 
   public final static class Column

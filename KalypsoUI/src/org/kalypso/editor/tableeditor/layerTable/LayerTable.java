@@ -25,6 +25,7 @@ import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
 import org.kalypso.editor.tableeditor.actions.ColumnAction;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
+import org.kalypso.ogc.sort.DisplayContext;
 import org.kalypso.util.command.ICommandManager;
 import org.kalypso.util.factory.FactoryException;
 
@@ -231,9 +232,9 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
 
   /**
    * 
-   * @see org.kalypso.editor.tableeditor.layerTable.ILayerTableModelListener#onRowsChanged(org.deegree.model.feature.Feature)
+   * @see org.kalypso.editor.tableeditor.layerTable.ILayerTableModelListener#onRowsChanged(org.kalypso.ogc.sort.DisplayContext)
    */
-  public void onRowsChanged( final Feature row )
+  public void onRowsChanged( final DisplayContext dc )
   {
     m_viewer.getControl().getDisplay().asyncExec( m_refreshRunner );
   }

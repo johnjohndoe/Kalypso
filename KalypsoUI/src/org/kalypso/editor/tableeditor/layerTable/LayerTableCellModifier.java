@@ -1,12 +1,12 @@
 package org.kalypso.editor.tableeditor.layerTable;
 
-import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.ogc.command.ModifyFeatureCommand;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.sort.DisplayContext;
 import org.kalypso.util.command.ICommandManager;
 
 /**
@@ -48,7 +48,7 @@ public class LayerTableCellModifier implements ICellModifier
    */
   public Object getValue( final Object element, final String property )
   {
-    return ((Feature)element).getProperty( property );
+    return ((DisplayContext)element).getFeature().getProperty( property );
   }
 
   /**
@@ -56,9 +56,9 @@ public class LayerTableCellModifier implements ICellModifier
    */
   public void modify( final Object element, final String property, final Object value )
   {
-    final Feature feature = (Feature)((TableItem)element).getData();
+    final DisplayContext dc = (DisplayContext)((TableItem)element).getData();
     final KalypsoFeatureLayer layer = m_modell.getLayer();
-    m_commandManager.postCommand( new ModifyFeatureCommand( layer, feature, property, value ), null );
-  }
+    m_commandManager.postCommand( new ModifyFeatureCommand( layer, dc, property, value ), null );
+   }
 
 }

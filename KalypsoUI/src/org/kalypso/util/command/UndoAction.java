@@ -1,8 +1,6 @@
 package org.kalypso.util.command;
 
 import org.kalypso.eclipse.jface.action.FullAction;
-import org.kalypso.util.command.ICommandManager;
-import org.kalypso.util.command.ICommandManagerListener;
 
 /**
  * @author belger
@@ -13,7 +11,7 @@ public class UndoAction extends FullAction implements ICommandManagerListener
 
   public UndoAction( final ICommandManager commandManager )
   {
-    super( "Undo", null, "letzte Action Rückgängig machen" );
+    super( "Undo", null, "letzte Action R?ckg?ngig machen" );
 
     m_commandManager = commandManager;
 

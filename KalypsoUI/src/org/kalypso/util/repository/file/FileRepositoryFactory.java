@@ -5,7 +5,6 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.util.repository.IRepository;
 import org.kalypso.util.repository.IRepositoryFactory;
-import org.kalypso.util.repository.file.FileRepository;
 
 /**
  * @author schlienger

@@ -13,7 +13,8 @@ public class LayerTableContentProvider implements IStructuredContentProvider
    */
   public Object[] getElements( final Object inputElement )
   {
-    return ((LayerTableModel)inputElement).getLayer().getAllFeatures();
+    return ((LayerTableModel)inputElement).getLayer().getAllDisplayContexts();
+    //return ((LayerTableModel)inputElement).getLayer().getAllFeatures();
   }
 
   /**
