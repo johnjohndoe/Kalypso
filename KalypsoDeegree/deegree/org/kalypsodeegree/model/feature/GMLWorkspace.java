@@ -26,4 +26,11 @@ public interface GMLWorkspace
 	 * @param ft
 	 */
 	public Feature[] getFeatures(FeatureType ft);
+
+    /**
+     * @param fe
+     * @param string
+     * @return
+     */
+    public Feature resolveLink(Feature srcFeature, String linkPropertyName);
 }
