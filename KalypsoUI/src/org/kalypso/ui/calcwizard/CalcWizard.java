@@ -265,7 +265,10 @@ public class CalcWizard implements IWizard, IProjectProvider
           final IFolder currentCalcCase = m_addCalcCasePage.getCurrentCalcCase();
           m_controlPage.saveChanges( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
           if( m_controlPage.isUpdate() )
-            ModelNature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
+          {
+            final ModelNature nature = (ModelNature)currentCalcCase.getProject().getNature( ModelNature.ID );
+            nature.updateCalcCase( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
+          }
           else
             monitor.worked( 1000 );
           

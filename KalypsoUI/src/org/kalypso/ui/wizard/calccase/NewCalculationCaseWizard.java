@@ -52,6 +52,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     super.addPages();
     m_createFolderPage = new NewCalculationCaseCreateFolderPage( "Rechenfall", getSelection() );
     m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, false );
+    
     m_createControlPage.setUpdate( true );
 
     addPage( m_createFolderPage );
@@ -92,11 +93,12 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
               .getFullPath() );
           generator.generateContainer( new SubProgressMonitor( monitor, 1000 ) );
           createFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
-          ModelNature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor(
+          final ModelNature nature = (ModelNature)newFolderHandle.getProject().getNature(ModelNature.ID);
+          nature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor(
               monitor, 1000 ) );
           controlPage.saveChanges( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
           if( controlPage.isUpdate() )
-            ModelNature.updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
+            nature.updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
           else
             monitor.worked( 1000 );
         }

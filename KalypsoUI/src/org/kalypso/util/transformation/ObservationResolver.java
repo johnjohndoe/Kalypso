@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentThread;
-import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -35,18 +34,21 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class ObservationResolver extends AbstractTransformation
 {
-
   private static final String PROP_SOURCEOBS = "sourceObservation";
 
   private static final String PROP_TARGETOBS = "targetObservation";
 
   private static final String PROP_GML = "gml";
 
-  private static final String PROP_XSD = "xsd";
-
   private static final String PROP_FEATURE = "feature";
 
   private static final String PROP_TARGETFOLDER = "targetFolder";
+
+  private static final String PROP_STARTSIM = "startsim";
+
+  private static final String PROP_ENDSIM = "endsim";
+
+  private static final String PROP_STARTFORECAST = "startforecast";
 
   /**
    * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties,
@@ -59,11 +61,13 @@ public class ObservationResolver extends AbstractTransformation
 
     // PROPS parsen
     final String gmlPath = properties.getProperty( PROP_GML, "" );
-    final String schemaPath = properties.getProperty( PROP_XSD, "" );
     final String featureName = properties.getProperty( PROP_FEATURE, "" );
     final String sourceObsName = properties.getProperty( PROP_SOURCEOBS, "" );
     final String targetObsName = properties.getProperty( PROP_TARGETOBS, "" );
     final String targetFolderName = properties.getProperty( PROP_TARGETFOLDER, "" );
+    final String startsimString = properties.getProperty( PROP_STARTSIM, "" );
+    final String endsimString = properties.getProperty( PROP_ENDSIM, "" );
+    final String startforecastString = properties.getProperty( PROP_STARTFORECAST, "" );
 
     try
     {
@@ -79,25 +83,19 @@ public class ObservationResolver extends AbstractTransformation
 
       final URL gmlURL = ResourceUtilities.createURL( gmlFile );
 
-      final IFile schemaFile = root.getFile( new Path( schemaPath ) );
-      if( schemaFile == null )
-        throw new TransformationException( "Datei nicht gefunden: " + schemaPath );
-      final URL schemaURL = ResourceUtilities.createURL( schemaFile );
-
-      // todo: read via replaceToken?
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, schemaURL );
+      final UrlResolver resolver = createResolver( project, targetFolder, startsimString, startforecastString, endsimString );
+      
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, resolver );
       final FeatureType ft = workspace.getFeatureType( featureName );
       if( ft == null )
         throw new TransformationException( "Featurename unbekannt: " + featureName );
 
       final Feature[] features = workspace.getFeatures( ft );
 
-      final Properties replaceProperties = ReplaceHelper.configureReplaceProps( project, targetFolder );
-      
       if( monitor.isCanceled() )
         throw new OperationCanceledException();
       
-      resolveTimeseries( gmlURL, replaceProperties, features, sourceObsName, targetObsName, targetFolder,
+      resolveTimeseries( gmlURL, features, sourceObsName, targetObsName, targetFolder,
           new SubProgressMonitor( monitor, 1000 ) );
 
       monitor.done();
@@ -108,12 +106,24 @@ public class ObservationResolver extends AbstractTransformation
     }
   }
 
+  private UrlResolver createResolver( final IProject project, final IFolder calcdir, final String startsim, final String startforecast, final String endsim )
+  {
+    final UrlResolver resolver = new UrlResolver(  );
+    
+    resolver.addReplaceToken( "project",  "platform:/resource/" + project.getName() + "/" );
+    resolver.addReplaceToken( "calcdir",  "platform:/resource/" + calcdir.getFullPath().toString() + "/" );
+    resolver.addReplaceToken( "startsim", startsim );
+    resolver.addReplaceToken( "startforecast", startforecast );
+    resolver.addReplaceToken( "endsim", endsim );
+    
+    return resolver;
+  }
+
   /**
    * funktioniert nur, wenn der TimeSeriesLink des Target eine relative URL hat
    * (== relativer Pfad)
    */
-  private void resolveTimeseries( final URL baseURL, final Properties replaceProperties,
-      final Feature[] features, final String sourceName, final String targetName,
+  private void resolveTimeseries( final URL baseURL, final Feature[] features, final String sourceName, final String targetName,
       final IFolder targetFolder, final IProgressMonitor monitor ) throws TransformationException
   {
     if( features.length == 0 )
@@ -139,7 +149,7 @@ public class ObservationResolver extends AbstractTransformation
 
       try
       {
-        final String sourceref = StringUtilities.replaceAll( sourcelink.getHref(), replaceProperties );
+        final String sourceref = sourcelink.getHref();
         
         final URL sourceURL = new UrlResolver().resolveURL( baseURL, sourceref );
 
@@ -174,7 +184,7 @@ public class ObservationResolver extends AbstractTransformation
       catch( final Throwable e )
       {
         e.printStackTrace();
-        // TODO: report to user!
+        // todo: report to user!
       }
     }
   }
