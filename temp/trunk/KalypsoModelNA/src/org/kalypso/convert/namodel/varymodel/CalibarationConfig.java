@@ -7,6 +7,7 @@ import java.util.List;
 import javax.xml.transform.TransformerException;
 
 import org.deegree.model.feature.Feature;
+import org.deegree_impl.model.feature.FeatureHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -27,7 +28,7 @@ public class CalibarationConfig
   public void addFromNAControl( Feature rootFeature )
   {
     // Catchments
-    final String queryBaseCatchment = (String)rootFeature.getProperty( "Catchments" );
+    final String queryBaseCatchment = FeatureHelper.getAsString(rootFeature, "Catchments" );
     String[] propNamesI = new String[]
     {
         "CatchmentsBianf",
@@ -51,7 +52,7 @@ public class CalibarationConfig
 
     generateAndAddContexts( rootFeature, queryCatchments, propNamesI );
     // KMChannels
-    final String queryBaseKMChannel = (String)rootFeature.getProperty( "KMChannels" );
+    final String queryBaseKMChannel = FeatureHelper.getAsString(rootFeature, "KMChannels" );
     final String[] propNamesII = new String[]
     {
         "KMChannelsFaktorRkf",
@@ -72,7 +73,7 @@ public class CalibarationConfig
     final int n = propNames.length;
     for( int i = 0; i < n; i++ )
     {
-      final String value = (String)rootFeature.getProperty( propNames[i] );
+      final String value = FeatureHelper.getAsString(rootFeature, propNames[i] );
       final double initialValue = Double.parseDouble( value );
       final String[] xPaths = queryStrings[i];
       addContext( new CalContext( initialValue, 1, 0, 2, CalContext.MODE_DIRECT, xPaths ) );

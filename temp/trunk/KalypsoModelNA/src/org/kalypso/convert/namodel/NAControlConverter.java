@@ -60,7 +60,7 @@ public class NAControlConverter
 
   private static void appendResultsToGenerate( Feature controlFE, StringBuffer b )
   {
-    b.append( " " + controlFE.getProperty( "timeStep" ) + "\n" );
+    b.append( " " + FeatureHelper.getAsString(controlFE, "timeStep" ) + "\n" );
 
     b.append( getBoolean( controlFE.getProperty( "tmp" ) )
         + "       Temperatur                 .tmp\n" );
@@ -124,7 +124,7 @@ public class NAControlConverter
     for( int i = 0; i < nodeFEs.length; i++ )
     {
       if( FeatureHelper.booleanIsTrue( nodeFEs[i], "generateResult", false ) )
-        b.append( nodeFEs[i].getProperty( "num" ).toString() + "\n" );
+        b.append( FeatureHelper.getAsString(nodeFEs[i], "num" ) + "\n" );
     }
     b.append( "99999\n" );
     // teilgebiete
@@ -133,7 +133,7 @@ public class NAControlConverter
     for( int i = 0; i < catchmentFEs.length; i++ )
     {
       if( FeatureHelper.booleanIsTrue( catchmentFEs[i], "generateResult", false ) )
-        b.append( catchmentFEs[i].getProperty( "inum" ).toString() + "\n" );
+        b.append( FeatureHelper.getAsString(catchmentFEs[i], "inum" ) + "\n" );
     }
     b.append( "99999\n" );
     // TODO startwerte fuer die kurzzeitsimulation

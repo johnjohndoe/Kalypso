@@ -1,11 +1,13 @@
 package org.kalypso.convert.namodel;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.URL;
@@ -18,6 +20,10 @@ import java.util.Set;
 import java.util.SortedMap;
 
 import javax.xml.bind.Marshaller;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.CopyUtils;
 import org.deegree.model.feature.Feature;
@@ -25,12 +31,12 @@ import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.gml.schema.GMLSchema;
+import org.deegree_impl.gml.schema.XMLHelper;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.FeatureHelper;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.varymodel.CalibarationConfig;
 import org.kalypso.convert.namodel.varymodel.ModelVary;
-import org.kalypso.convert.namodel.varymodel.XMLServiceTools;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.java.net.UrlUtilities;
@@ -152,8 +158,6 @@ public class NaModelCalcJob extends AbstractCalcJob
     initializeModell( controlWorkspace.getRootFeature(), inputModellURL, modellFile );
 
     copyResult( inputDir, modellFile, outDir, MODELL_ID, modellFile.getName() );
-    //    FileUtils.copyFile( controlFile, new File(outDir, "control.gml" ) );
-    //    FileUtils.copyFile( modellFile, new File( outDir, "model.gml" ) );
 
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL, conf
         .getSchemaURL() );
@@ -186,9 +190,17 @@ public class NaModelCalcJob extends AbstractCalcJob
   {
     CalibarationConfig config = new CalibarationConfig();
     config.addFromNAControl( controlFeature );
-    Document modelDoc = XMLServiceTools.getXML( inputModellURL.openStream() );
+    
+    Document modelDoc = XMLHelper.getAsDOM(inputModellURL);
+    
     ModelVary.initializeModel( modelDoc, config.getCalContexts() );
-    XMLServiceTools.toFile( outputMOdelFile, modelDoc );
+
+    // TODO: take charset from Document
+    final String charset = "UTF-8";
+    final Writer writer = new OutputStreamWriter( new FileOutputStream( outputMOdelFile ), charset );
+    final Transformer t = TransformerFactory.newInstance().newTransformer();
+    t.transform(new DOMSource( modelDoc),new StreamResult( writer) );
+    writer.close();
   }
 
   /**
@@ -403,16 +415,22 @@ public class NaModelCalcJob extends AbstractCalcJob
     // TODO: use it, or REMOVE it
     log.getClass();
 
+    final File inpDir = new File( simDir, "inp.dat" );
+    // zeitreihen im out Dir
+    final File[] inpDirResults = inpDir.listFiles();
+    for( int i = 0; i < inpDirResults.length; i++ )
+    {
+      final File file = inpDirResults[i];
+      copyResult( simDir, file, outputdir, file.getName(), file.getName() );
+    }
+
+    
     final File outDir = new File( simDir, "out_we.nat" );
     // zeitreihen im out Dir
     final File[] outDirResults = outDir.listFiles();
     for( int i = 0; i < outDirResults.length; i++ )
     {
       final File file = outDirResults[i];
-      //      addResult( new CalcJobDataBean( FileUtilities.getSuffix( file ),
-      // file.getName(), file
-      //          .getAbsolutePath() ) );
-
       copyResult( simDir, file, outputdir, FileUtilities.getSuffix( file ), file.getName() );
     }
 
@@ -518,9 +536,6 @@ public class NaModelCalcJob extends AbstractCalcJob
       {
         CopyUtils.copy( inStream, outwriter );
         CopyUtils.copy( errStream, errwriter );
-
-        //        ReaderUtilities.dumpAllAvailable( inStream );
-        //        ReaderUtilities.dumpAllAvailable( errStream );
 
         try
         {

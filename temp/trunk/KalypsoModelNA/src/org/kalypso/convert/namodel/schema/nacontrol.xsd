@@ -20,7 +20,7 @@
 					<element name="startsimulation" type="dateTime"/>
 					<element name="startforecast" type="dateTime"/>
 					<element name="endsimulation" type="dateTime"/>
-					<element name="timeStep" type="integer"/>
+					<element name="timeStep" type="double"/>
 					<element name="tmp" type="boolean"/>
 					<element name="pre" type="boolean"/>
 					<element name="sch" type="boolean"/>
@@ -52,13 +52,13 @@
 					<element name="automaticCallibration" type="boolean"/>
 
 					<element name="Catchments" type="string"/>
-					<element name="CatchmentsBianf" type="string"/>
-					<element name="CatchmentsFaktorRetobTetint" type="string"/>
-					<element name="CatchmentsFaktn" type="string"/>
-					<element name="CatchmentsFaktorAigw" type="string"/>
+					<element name="CatchmentsBianf" type="double"/>
+					<element name="CatchmentsFaktorRetobTetint" type="double"/>
+					<element name="CatchmentsFaktn" type="double"/>
+					<element name="CatchmentsFaktorAigw" type="double"/>
 					<element name="KMChannels" type="string"/>
-					<element name="KMChannelsFaktorRkf" type="string"/>
-					<element name="KMChannelsFaktorRnf" type="string"/>			
+					<element name="KMChannelsFaktorRkf" type="double"/>
+					<element name="KMChannelsFaktorRnf" type="double"/>			
 					<!-- fuer die erstellung der netzdatei -->
 					<element name="rootNode" type="string"/>					
 					<!-- link auf den pegel -->
