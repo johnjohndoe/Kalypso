@@ -76,7 +76,7 @@ public class KalypsoObservationService implements IObservationService
     try
     {
       m_logger.addHandler( new FileHandler( ServiceConfig.getTempDir()
-          + "/IObservation%g.log", 10000000, 10, true ) );
+          + "/IObservation%g.log", 10000000, 1, true ) );
     }
     catch( Exception e ) // generic Exception caught for simplicity
     {

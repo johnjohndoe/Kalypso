@@ -18,16 +18,18 @@
 			<element ref="vrep:level" minOccurs="0" maxOccurs="unbounded"/>
 			<element ref="vrep:item" minOccurs="0" maxOccurs="unbounded" />
 		</sequence>
-		<attribute name="name" type="string"/>
+		<attribute name="id" type="string" use="required" />
+		<attribute name="name" type="string" use="required" />
 	</complexType>
-	<element name="level" type="vrep:levelType"/>
+	<element name="level" type="vrep:levelType" />
 
 	<!-- Item Type: an item contains a list of filters -->
 	<complexType name="itemType">
 		<sequence>
-			<element ref="filters:filter" minOccurs="0" maxOccurs="unbounded"/>
+			<element ref="filters:filter" />
 		</sequence>
-		<attribute name="name" type="string"/>
+		<attribute name="id" type="string" use="required" />
+		<attribute name="name" type="string" use="required" />
 	</complexType>
 	<element name="item" type="vrep:itemType"/>
 	

@@ -9,25 +9,24 @@ import org.kalypso.repository.RepositoryException;
  * 
  * @author schlienger
  */
-public class VirtualRepositoryFactory extends AbstractRepositoryFactory
+public class HeadlessVirtualRepositoryFactory extends AbstractRepositoryFactory
 {
-
   /**
    * @see org.kalypso.repository.IRepositoryFactory#configureRepository()
    */
   public boolean configureRepository( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return false;
+    return true;
   }
 
   /**
+   * Configuration string contains the location of the repository specification
+   * file (xml)
+   * 
    * @see org.kalypso.repository.IRepositoryFactory#createRepository()
    */
   public IRepository createRepository( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return null;
+    return new VirtualRepository( this, getConfiguration(), isReadOnly() );
   }
-
 }
