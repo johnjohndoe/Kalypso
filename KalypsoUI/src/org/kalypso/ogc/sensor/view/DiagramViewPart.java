@@ -43,7 +43,6 @@ package org.kalypso.ogc.sensor.view;
 import java.awt.Font;
 import java.awt.Frame;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -88,21 +87,19 @@ public class DiagramViewPart extends ViewPart implements
     }
     catch( SensorException e )
     {
-      MessageDialog.openError( parent.getShell(), "", e.getLocalizedMessage() );
+      e.printStackTrace();
       return;
     }
-
-    m_template.addTemplateEventListener( m_chart );
 
     m_subTitle = new TextTitle("", new Font( "Default", Font.PLAIN, 12));
     m_chart.addSubtitle( m_subTitle );
 
     // chart panel without any popup menu
-    ChartPanel chartPanel = new ChartPanel( m_chart, false, false, false, false, false );
+    final ChartPanel chartPanel = new ChartPanel( m_chart, false, false, false, false, false );
     chartPanel.setMouseZoomable( true, false );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
-    Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
+    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
         | SWT.EMBEDDED ) );
 
     vFrame.setVisible( true );
@@ -119,10 +116,10 @@ public class DiagramViewPart extends ViewPart implements
   {
     getSite().getPage().removePartListener( this );
 
-    m_template.removeTemplateEventListener( m_chart );
-
     if( m_chart != null )
       m_chart.dispose();
+    
+    m_template.dispose();
 
     super.dispose();
   }
@@ -140,6 +137,7 @@ public class DiagramViewPart extends ViewPart implements
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
+    // always remove themes first (we don't know which selection we get)
     m_template.removeAllThemes();
 
     final StructuredSelection selection = (StructuredSelection) event

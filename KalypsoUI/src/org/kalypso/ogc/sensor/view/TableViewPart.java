@@ -100,7 +100,10 @@ public class TableViewPart extends ViewPart implements
   {
     getSite().getPage().removePartListener( this );
 
-    m_table.dispose();
+    if( m_table != null )
+      m_table.dispose();
+    
+    m_template.dispose();
     
     super.dispose();
   }
@@ -118,6 +121,7 @@ public class TableViewPart extends ViewPart implements
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
+    // always remove themes first (we don't know which selection we get)
     m_template.removeAllThemes();
 
     final StructuredSelection selection = (StructuredSelection) event
