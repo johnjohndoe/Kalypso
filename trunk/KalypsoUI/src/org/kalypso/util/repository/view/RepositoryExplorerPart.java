@@ -47,7 +47,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     if( adapter == IPropertySheetPage.class )
     {
       // lazy loading
-      if( m_propsPage == null )
+      if( m_propsPage == null || m_propsPage.getControl().isDisposed() )
       {
         // PropertySheetPage erzeugen. Sie wird in das standard PropertySheet von Eclipse dargestellt
         m_propsPage  = new PropertySheetPage();
@@ -57,6 +57,8 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
         entry.setPropertySourceProvider( new ObservationPropertySourceProvider() );
 
         m_propsPage.setRootEntry( entry );
+        
+        m_propsPage.selectionChanged(this, getSelection() );
       }
     
       return m_propsPage;
@@ -178,7 +180,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    if( m_propsPage != null )
+    if( m_propsPage != null && !m_propsPage.getControl().isDisposed() )
       m_propsPage.selectionChanged( this, event.getSelection() );
   }
 }

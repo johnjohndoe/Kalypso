@@ -57,8 +57,6 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
 
   private final ObservationTableModel m_model = new ObservationTableModel();
   
-  private JFreeChart m_chart = null;
-
   private IPoolableObjectType m_key;
 
   private final TimeseriesLink m_timeserie;
@@ -180,7 +178,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
 
     final Frame vFrame = SWT_AWT.new_Frame( composite );
 
-    m_chart = ChartFactory
+    final JFreeChart m_chart = ChartFactory
         .createTimeSeriesChart( "", "Datum", "Wert", m_tsCol, false, false, false );
 
     final ChartPanel chartPanel = new ChartPanel( m_chart );
