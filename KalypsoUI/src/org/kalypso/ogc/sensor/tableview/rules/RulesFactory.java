@@ -62,24 +62,22 @@ public class RulesFactory
   /**
    * Factory method for creating a RenderingRule object with a binding object.
    * 
-   * TODO: extend binding type to include name of an icon that would be loaded
-   * here.
-   * 
    * @param rr
    * @return RenderingRule
    */
   public static RenderingRule createRenderingRule( final TypeRenderingRule rr )
   {
-    int mask = rr.getMask();
-    String fg = rr.getForegroundcolor();
-    String bg = rr.getBackgroundcolor();
-    String font = rr.getFont();
-    String tt = rr.getTooltip();
+    final int mask = rr.getMask();
+    final String fg = rr.getForegroundcolor();
+    final String bg = rr.getBackgroundcolor();
+    final String font = rr.getFont();
+    final String tt = rr.getTooltip();
+    final String icon = rr.getIcon();
 
     return new RenderingRule( mask, fg == null ? null : StringUtilities
         .stringToColor( fg ), bg == null ? null : StringUtilities
         .stringToColor( bg ), font == null ? null : StringUtilities
-        .stringToFont( font ), tt, null );
+        .stringToFont( font ), tt, KalypsoStatusUtils.getIconFor( icon ) );
   }
 
   /**

@@ -40,10 +40,11 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.status;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import org.kalypso.ogc.sensor.IAxis;
@@ -65,17 +66,17 @@ public class KalypsoStatusUtils
 
   public final static String STATUS_AXIS_UNIT = "";
 
-  private final static Icon ICON_QUESTION = new ImageIcon(
-      KalypsoStatusUtils.class.getResource( "resource/question.gif" ) );
+  private final static ImageIcon ICON_QUESTION = new ImageIcon(
+      KalypsoStatusUtils.class.getResource( "resource/question.gif" ), "question" );
 
-  private final static Icon ICON_WARNING = new ImageIcon(
-      KalypsoStatusUtils.class.getResource( "resource/warning.gif" ) );
+  private final static ImageIcon ICON_WARNING = new ImageIcon(
+      KalypsoStatusUtils.class.getResource( "resource/warning.gif" ), "warning" );
 
 //  private final static Icon ICON_ERROR = new ImageIcon(
 //      KalypsoStatusUtils.class.getResource( "resource/error.gif" ) );
 
-  private final static Icon ICON_WRITE = new ImageIcon(
-      KalypsoStatusUtils.class.getResource( "resource/write.gif" ) );
+  private final static ImageIcon ICON_WRITE = new ImageIcon(
+      KalypsoStatusUtils.class.getResource( "resource/write.gif" ), "write" );
 
   private KalypsoStatusUtils( )
   {
@@ -212,7 +213,7 @@ public class KalypsoStatusUtils
    * @param mask
    * @return the icon that best fits the mask, or null if no fit
    */
-  public static Icon getIconFor( final int mask )
+  public static ImageIcon getIconFor( final int mask )
   {
     if( checkMask( mask, KalypsoStati.BIT_CHECK ) )
       return ICON_WARNING;
@@ -224,6 +225,43 @@ public class KalypsoStatusUtils
       return ICON_WRITE;
 
     return null;
+  }
+  
+  /**
+   * Returns an icon that corresponds to the given description. Description can be
+   * any of the following:
+   * <ol>
+   * <li>"question": the Question Icon
+   * <li>"warning": the Warning Icon
+   * <li>"write": the Write Icon
+   * <li>any URL: an URL that will be used for finding the image (see ImageIcon.ImageIcon( URL ) )
+   * </ol>
+   * 
+   * @param iconDescription
+   * @return icon
+   * @see KalypsoStatusUtils#ICON_QUESTION
+   * @see KalypsoStatusUtils#ICON_WARNING
+   * @see KalypsoStatusUtils#ICON_WRITE
+   * @see ImageIcon#ImageIcon(java.net.URL)
+   */
+  public static ImageIcon getIconFor( final String iconDescription )
+  {
+    if( "question".equalsIgnoreCase( iconDescription ) )
+      return ICON_QUESTION;
+    if( "warning".equalsIgnoreCase( iconDescription ) )
+      return ICON_WARNING;
+    if( "write".equalsIgnoreCase( iconDescription ) )
+      return ICON_WRITE;
+
+    try
+    {
+      return new ImageIcon( new URL( iconDescription ) );
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   /**

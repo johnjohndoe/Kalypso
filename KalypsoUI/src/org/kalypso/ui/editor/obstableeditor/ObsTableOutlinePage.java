@@ -70,6 +70,7 @@ import org.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer2;
 import org.kalypso.eclipse.ui.views.contentouline.ContentOutlinePage2;
+import org.kalypso.ogc.sensor.commands.AddThemeCommand2;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
 import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.TableViewTheme;
@@ -90,6 +91,13 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
 
   private RemoveThemeAction m_removeThemeAction;
 
+  private final ObservationTableEditor m_editor;
+
+  public ObsTableOutlinePage( ObservationTableEditor editor )
+  {
+    m_editor = editor;
+  }
+
   /**
    * @see org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite)
    */
@@ -102,7 +110,7 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
     // drop support for files
     Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
     tv.addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers,
-        new DropAdapter( tv ) );
+        new DropAdapter( tv, m_editor ) );
 
     tv.setLabelProvider( new ObsTableTemplateLabelProvider() );
     tv.setContentProvider( new ObsTableTemplateContentProvider() );
@@ -160,12 +168,14 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
     return false;
   }
 
-  /**
-   * @return template
-   */
   public TableViewTemplate getTemplate( )
   {
     return m_template;
+  }
+  
+  public ObservationTableEditor getEditor( )
+  {
+    return m_editor;
   }
 
   /**
@@ -286,12 +296,12 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
    */
   private class DropAdapter extends ViewerDropAdapter
   {
-    /**
-     * @param viewer
-     */
-    protected DropAdapter( Viewer viewer )
+    protected final ObservationTableEditor m_editor2;
+
+    protected DropAdapter( Viewer viewer, ObservationTableEditor editor )
     {
       super( viewer );
+      m_editor2 = editor;
 
       setScrollExpandEnabled( false );
       setFeedbackEnabled( false );
@@ -324,8 +334,10 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
               file = (IFile) wksp.findMember( file.getFullPath() );
               final URL url = ResourceUtilities.createURL( file );
 
-              m_template.addObservation( file.getName(), url, url
+              final TableViewTheme theme = m_template.addObservation( file.getName(), url, url
                   .toExternalForm(), "zml", false, null );
+              
+              m_editor2.postCommand( new AddThemeCommand2( m_template, theme ), null );
             }
 
             return Status.OK_STATUS;

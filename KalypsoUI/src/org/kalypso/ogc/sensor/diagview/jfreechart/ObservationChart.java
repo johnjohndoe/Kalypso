@@ -201,7 +201,7 @@ public class ObservationChart extends JFreeChart implements
     try
     {
       if( !SwingUtilities.isEventDispatchThread() )
-        SwingUtilities.invokeAndWait( runnable );
+        SwingUtilities.invokeLater( runnable );
       else
         runnable.run();
       

@@ -199,7 +199,7 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     try
     {
       if( !SwingUtilities.isEventDispatchThread() )
-        SwingUtilities.invokeAndWait( runnable );
+        SwingUtilities.invokeLater( runnable );
       else
         runnable.run();
 

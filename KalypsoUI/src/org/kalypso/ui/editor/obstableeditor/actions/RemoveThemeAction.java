@@ -44,6 +44,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.eclipse.jface.action.FullAction;
+import org.kalypso.ogc.sensor.commands.RemoveThemeCommand;
 import org.kalypso.ogc.sensor.tableview.TableViewTheme;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.obstableeditor.ObsTableOutlinePage;
@@ -84,7 +85,8 @@ public class RemoveThemeAction extends FullAction implements
         && MessageDialog.openConfirm( m_page.getSite().getShell(),
             "Zeitreihe entfernen", "Wollen Sie wirklich die Zeitreihe "
                 + selectedTheme.getName() + " entfernen" ) )
-      m_page.getTemplate().removeTheme( selectedTheme );
+      
+      m_page.getEditor().postCommand( new RemoveThemeCommand( m_page.getTemplate(), selectedTheme ), null );
   }
 
   /**

@@ -128,7 +128,7 @@ public class ObservationTableModel extends AbstractTableModel
   {
     m_table = table;
   }
-  
+
   /**
    * Sets the flag for synchronizing the observations with the values in this
    * table model. When true, the observations are synchronized in this call, and
@@ -184,9 +184,6 @@ public class ObservationTableModel extends AbstractTableModel
       if( col == null )
         return;
 
-      if( !m_columns.contains( col ) )
-        m_columns.add( col );
-
       final IAxis keyAxis = col.getKeyAxis();
 
       if( m_sharedAxis == null )
@@ -209,6 +206,29 @@ public class ObservationTableModel extends AbstractTableModel
       if( obs == null )
         return;
 
+      if( !m_columns.contains( col ) )
+      {
+        m_columns.add( col );
+
+        // add tablecolumn to tablemodel
+        m_valuesModel.addColumn( col.getName() );
+
+        // adapt width of column
+        // TODO: listen for column width changes (initiated by the user) and
+        // store it in the template when saving it
+        final int colIx = m_valuesModel.findColumn( col.getName() );
+        final TableColumn tableColumn = m_table.getColumnModel().getColumn(
+            colIx );
+        tableColumn.setPreferredWidth( col.getWidth() );
+
+        // add tablecolumn to status model
+        final IAxis statusAxis = getStatusAxis( col );
+        if( statusAxis != null )
+          m_statusModel.addColumn( statusAxis.getName() );
+        else
+          m_statusModel.addColumn( "no-status" );
+      }
+
       final ITuppleModel tupModel = obs.getValues( col.getTheme()
           .getArguments() );
 
@@ -218,23 +238,6 @@ public class ObservationTableModel extends AbstractTableModel
         final Object elt = tupModel.getElement( r, keyAxis );
         m_sharedModel.add( elt );
       }
-
-      // add tablecolumn to tablemodel
-      m_valuesModel.addColumn( col.getName() );
-      
-      // adapt width of column
-      // TODO: listen for column width changes (initiated by the user) and 
-      // store it in the template when saving it
-      final int colIx = m_valuesModel.findColumn( col.getName() );
-      final TableColumn tableColumn = m_table.getColumnModel().getColumn( colIx );
-      tableColumn.setPreferredWidth( col.getWidth() );
-
-      // add tablecolumn to status model
-      final IAxis statusAxis = getStatusAxis( col );
-      if( statusAxis != null )
-        m_statusModel.addColumn( statusAxis.getName() );
-      else
-        m_statusModel.addColumn( "no-status" );
 
       if( m_sharedModel.size() > m_valuesModel.getRowCount() )
       {
@@ -273,7 +276,7 @@ public class ObservationTableModel extends AbstractTableModel
         m_logger.warning( "Could not find column: " + tCol );
         continue;
       }
-      
+
       final IAxis statusAxis = getStatusAxis( tCol );
       final IAxis keyAxis = tCol.getKeyAxis();
 
