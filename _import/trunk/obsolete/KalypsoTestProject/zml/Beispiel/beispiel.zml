@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Observation xmlns="zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="zml.kalypso.org
 ./observation.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<Name>Eine Test-Observation</Name>
+	<Name>Beispiel.zml</Name>
 	
 	<!-- die Target-Property kann etwas beliebiges sein -->
 	<TargetProperty source="./model.gml#pegel" type="gml" objectid="234"/>
@@ -16,7 +16,7 @@
 	</MetadataList>
 
 	<!-- im datatype der Achse kann man eine FORMAT-Angabe machen 
-		Die MÃ¶gliche Eingabe als FORMAT sind abhÃ¤ngig vom Datentyp, sie
+		Die Mögliche Eingabe als FORMAT sind abhängig vom Datentyp, sie
 		entsprechen aber den Java-Format wie man aus der API-Docs entnehmen
 		kann (Siehe SimpleDateFormat, NumberFormat, usw).
 	-->
@@ -26,11 +26,11 @@
 	
 	<!-- hier sind die Werte "inline" -->
 	<Axis name="Pegel1" unit="m" datatype="TYPE=xs:double">
-		<ValueArray>1 2.3 7 4.4 5 6.1 7 8 9 10 4 12 5.6 14 2.1 3.4 6.7 8.9 5.6 11 16.6</ValueArray>
+		<ValueArray>1 2,3 7 4,4 5 6,1 7 8 9 10 4 12 5,6 14 2,1 3,4 6,7 8,9 5,6 11 16,6</ValueArray>
 	</Axis>
 
 	<!-- hier sind die Werte in eine andere CSV-Datei
-		Zwei Links-Typen (TYPE) sind mÃ¶glich:
+		Zwei Links-Typen (TYPE) sind möglich:
 		- absolute
 		- relative (zu dieser Datei)
 		Dazu kommt noch die Angabe der Spaltennummer (COLUMN) wie
