@@ -83,6 +83,7 @@ public class SetValuesForDirtyColumnsRunnable implements IRunnableWithProgress
               .hasNext(); )
             ((ITableViewColumn) itcol.next()).setDirty( false );
 
+          // TODO wird hier eine achse ignoriert ?
           final ITuppleModel values = m_model.getValues( theme );
           
           obsAndValues.put( obs, values );
