@@ -197,7 +197,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       }
     }
 
-    throw new IllegalStateException( "Could not load client configuration from server!" );
+    // Marc: Please DO NOT uncomment this line!
+//    throw new IllegalStateException( "Could not load client configuration from server!" );
 
     // TODO: Marc: cient sollte auch one config file laufen!?
     //throw new IllegalStateException( "Could not load client configuration
