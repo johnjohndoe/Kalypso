@@ -42,6 +42,21 @@
     Linienarten als Linien-, Balken-, Treppen-, Punkt- oder Linien- mit
     Punktdarstellung erfolgen.</para>
 
+    <para>Die Datenformate werden automatisch erkannt und umgewandelt. Es
+    werden zur Zeit 8 verschiedene Formate unterschieden. Als Standardformat
+    wird folgender Aufbau der Daten verwendet:</para>
+
+    <para>„TT.MM.JJ hh:mm Wert“ bzw. „TT.MM.JJJJ hh:mm:ss Wert“</para>
+
+    <para>Die einzelnen unterstützten Dateiformate werden im Anhang näher
+    erläutert. (Datenformate )</para>
+
+    <para>Liegen entsprechend dem BCENA-Format Blöcke mit Knotennummern vor,
+    so wird der Anwender zur Auswahl einer Nummer aufgefordert. Die einzelnen
+    Jahresblöcke werden entsprechend der ausgewählten Knotennummer zu einer
+    zeitlich kontinuierlichen Ganglinie zusammengesetzt und
+    dargestellt.</para>
+
     <para>Die zuerst eingelesene Datenreihe bestimmt den Anfangszeitpunkt der
     Datendarstellung und die x-Achsenbeschriftung. Die x-Achsenbeschriftung
     kann in vielfältiger Art durch den Anwender eingestellt werden.</para>
@@ -55,54 +70,9 @@
     können über die Exportschnittstelle zur Datensicherung und der
     anschließenden Bearbeitung zum Beispiel in Excel erfolgen.</para>
 
-    <para>Das Grafik-Programm ermöglicht dem Anwender eine Vielzahl von
-    Darstellungs- und Auswertungsmöglichkeiten, die in den nachfolgenden
-    Kapiteln näher beschrieben werden.</para>
-  </section>
-
-  <section>
-    <title>Interaktion KALYPSO - Grafikprogramm</title>
-
-    <para>Der Aufruf des Grafik-Programms erfolgt aus der KALYPSO-Oberfläche,
-    indem eine Diagramm-Vorlage (*.odt) zum Bearbeiten mit dem Grafik-Programm
-    geöffnet wird (siehe Dokumentation zur Programmoberfläche KALYPSO). Beim
-    Aufruf des Grafik-Programms wird die Diagramm-Vorlage aus KALYPSO in eine
-    Grafik-Vorlage (*.tpl) umgewandelt, um mit dem Grafik-Programm die
-    entsprechenden Zeitreihen visualisieren zu können. Dabei ist folgendes zu
-    beachten:</para>
-
-    <itemizedlist>
-      <listitem>
-        <para>In beiden Programmen erfolgt eine möglichst kompatible
-        Darstellung der Zeitreihen. Das betrifft sowohl die Kurvendarstellung
-        (Benennung, Typ, Farbe) als auch die Diagramm-Achsen (Benennung,
-        Einheiten, Skalierung).</para>
-      </listitem>
-
-      <listitem>
-        <para>Werden im Grafik-Programm Änderungen in den Werten eines
-        Diagramms vorgenommen, werden diese in KALYPSO übernommen. D.h.
-        Änderungen der Werte einer Zeitreihe werden in der dazugehörigen
-        *.zml-Datei gespeichert.</para>
-      </listitem>
-
-      <listitem>
-        <para>Änderungen in der Gestaltung des Diagramms (Farben, Achsen,
-        Hinzuladen von Zeitreihen) werden nicht in KALYPSO übernommen. D.h.
-        die Änderungen werden nicht in der Vorlage (*.tpl) gespeichert. Beim
-        erneuten Öffnen einer Diagramm-Vorlage (*.odt) in KALYPSO wird eine
-        neue Grafik-Vorlage mit den Standard-Einstellungen erzeugt und ggfs.
-        bereits vorhandene Dateien überschrieben.</para>
-      </listitem>
-    </itemizedlist>
-
-    <para>Beim Öffnen von Zeitreihen im Grafik Programm werden die
-    *.zml-Dateien in *.dat-Dateien konvertiert und zusammen mit der
-    Vorlagen-Datei (*.tpl) in ein Unterverzeichnis <guimenu>grafik</guimenu>
-    abgelegt. Beim erneuten Öffnen der Diagramm-Vorlage mit dem
-    Grafik-Programm werden die Dateien überschrieben. Das Unterverzeichnis
-    grafik kann aber vom Benutzer in ein beliebiges Verzeichnis kopiert werden
-    (z.B. zur späteren Visualisierung der Zeitreihen).</para>
+    <para>Eine Reihe von Menüpunkten, Schaltflächen und Werkzeugen ermöglichen
+    eine Vielzahl von Darstellungen und Auswertungen, die im folgenden näher
+    erläutert werden sollen.</para>
   </section>
 
   <section id="grafik_menu_datei">
@@ -1394,6 +1364,371 @@
     abgelegt.</para>
 
     <graphic fileref="img/ganglinien_bild23.png" />
+  </section>
+
+  <section id="grafik_zusatzmodule">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>KALYPSO - Interaktive Gangliniengrafik</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Zusatzmodule</title>
+
+    <para>Für weiterführende Auswertungen und Datenaufbereitungen können
+    direkt aus dem Grafikprogramm Zusatzmodule aufgerufen werden.</para>
+
+    <para>Dazu gehören folgende Komplexe:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Statistik (mit Korrelationsanalysen)</para>
+      </listitem>
+
+      <listitem>
+        <para>Hydrologische Hauptzahlen</para>
+      </listitem>
+
+      <listitem>
+        <para>Test und Darstellung von Messwertausfällen</para>
+      </listitem>
+
+      <listitem>
+        <para>Grafikausdruck über ein Winword- Textdokument</para>
+      </listitem>
+
+      <listitem>
+        <para>Interaktives Bestimmen des Abflussbeiwertes</para>
+      </listitem>
+    </itemizedlist>
+
+    <section>
+      <title>Statistik</title>
+
+      <para>Der Aufruf des Statistikmoduls kann separat oder aus einem anderen
+      Programm (z.B. Gangliniengrafik) heraus erfolgen. Auf jeden Fall muss
+      eine Datenreihe und die Art der Statistik übergeben werden (siehe
+      Programmaufruf).</para>
+
+      <figure>
+        <title>Dateiausgabe nach statistischer Auswertung</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild24.png" scale="75" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para><emphasis role="bold">Korrelation</emphasis> Stat [/K]
+      [&lt;Datenreihe1&gt;] [&lt;Datenreihe2&gt;] [&lt;Ergebnisreihe&gt;]
+      [/G]</para>
+
+      <para>Es wird die Kreuzkorrelationsfunktion zwischen den Datenreihen 1
+      und 2 berechnet und in der Ergebnisreihe abgelegt.</para>
+
+      <figure>
+        <title>Kreuzkorrelation (Beispiel)</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild25.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Sind die Datenreihen 1 und 2 identisch, so wird die
+      Autokorrelation berechnet. Die grafische Darstellung ergibt den
+      entsprechenden Verlauf der Korrelationskoeffizienten zu jedem
+      Zeitschritt.</para>
+
+      <para><emphasis role="bold">Monatsstatistik</emphasis> Stat [/M]
+      [&lt;Datenreihe&gt;] [/G]</para>
+
+      <para>Zu den Werte der Datenreihe wird unter hydrologischen
+      Gesichtspunkten eine Monatsstatistik über die Jahre gebildet. Im
+      Abschluss der Einzeljahre werden die Ergebnisse zu einer Gesamtstatistik
+      zusammengefasst. Für die grafische Darstellung der Ergebnisse (/G) muss
+      sich das Gangliniengrafikprogramm im aktuellen Pfad befinden.</para>
+
+      <graphic fileref="img/ganglinien_tabelle1.png" />
+
+      <para>Die Statistik wird in der Datei Stat.tab abgelegt.</para>
+
+      <para>Als Datenreihen werden die Extremwerte der Einzelmonate in
+      Stat-HQ.dat, Stat-MQ.dat, Stat-NQ.dat, ausgegeben und können u.a. mit
+      Hilfe der dazu erstellten Grafikvorlage Stat.tpl grafisch dargestellt
+      werden.</para>
+
+      <para><emphasis role="bold">Tagesstatistik </emphasis> Stat [/T]
+      [&lt;Datenreihe&gt;] [/G]</para>
+
+      <para>Analog der Monatsstatistik wird von den Eingangsdaten eine
+      Tagesstatistik erstellt. Es werden Maxima, Minima, Mittelwert, Summe und
+      Anzahl der Werte je Tag gebildet. Für die grafische Darstellung der
+      Ergebnisse (/G) muss sich das Gangliniengrafikprogramm im aktuellen Pfad
+      befinden.</para>
+
+      <graphic fileref="img/ganglinien_tabelle2.png" />
+
+      <para>Die Statistik wird in der Datei Stat.tab abgelegt.</para>
+
+      <para>Als Datenreihen werden die Extremwerte analog der Monatsstatistik
+      in Stat-HQ.dat, Stat-MQ.dat, Stat-NQ.dat, ausgegeben und können mit
+      Hilfe der dazu erstellten Grafikvorlage Stat.tpl grafisch dargestellt
+      werden. Eine Zusammenfassung der Werte erfolgt nicht.</para>
+
+      <para><emphasis role="bold">Dauerlinie</emphasis> Stat [/D]
+      [&lt;Datenreihe&gt;] [/G]</para>
+
+      <para>Von der Datenreihe wird die Dauerlinie gebildet und analog den
+      oben beschriebenen Dateien in Stat-DL.dat und StatDL.tpl abgelegt und
+      eventuell dargestellt.</para>
+
+      <para><emphasis role="bold">BCENA-Statistik </emphasis>Stat [/B]
+      [&lt;Datenreihe&gt;] [dT0] [/G]</para>
+
+      <para>Analog der Monatsstatistik wird eine statistische Auswertung über
+      eine im BCENA-Format liegende Ergebnisdatei durchgeführt. Es werden
+      dabei alle Knoten berücksichtigt. Die Datenreihen werden konvertiert und
+      im Tabellenformat in der Datei Stat_dat.tab abgelegt. Der Parameter dT0
+      gibt dabei an, ab welchen Zeitschritt die Auswertung erfolgen soll. Der
+      Anfangszeitschritt wird in stat.ini abgespeichert und bleibt solange
+      bestehen, bis dieser Wert gelöscht oder neu belegt wird.</para>
+
+      <para>Folgende Werte werden jeweils in Abhängigkeit für jeden Monat, für
+      das Winter- und Sommerhalbjahr und für den Gesamtzeitraum
+      berechnet:</para>
+
+      <graphic fileref="img/ganglinien_tabelle3.png" />
+
+      <para>Werden weitergehende Auswertungen zu einem Knoten benötigt, kann
+      weiterhin die Datenreihe des betreffenden Knotens der Ergebnisdaten in
+      das Ganglinienprogramm eingeladen und wie bereits oben beschrieben
+      statistisch ausgewertet werden.</para>
+
+      <para>Existiert eine Datei stat.ini mit folgender Eintragung: ArcView:
+      &lt;Kennungen, ...&gt; so wird eine weitere Textdatei stat_av.txt
+      angelegt, die für den direkten Import der Tabelle in ArcView vorbereitet
+      ist. Der Inhalt der Tabelle wird durch die Kennung bestimmt.</para>
+
+      <para>Folgendes Beispiel zeigt die Ergebnisdatei und den Aufbau der
+      Kennung:</para>
+
+      <para>Ergebnisdatei: stat.tab</para>
+
+      <graphic fileref="img/ganglinien_tabelle4.png" />
+
+      <para>Parameterdatei: stat.ini</para>
+
+      <para>ArcView: NQ11 HQ11 NQ01 MQ10 MQSommer MQWinter</para>
+
+      <para>... es entsteht die Tabelle für den Import in ArcView:
+      stat_av.txt</para>
+
+      <informaltable>
+        <tgroup cols="7">
+          <tbody>
+            <row>
+              <entry>Knoten</entry>
+
+              <entry>NQ11</entry>
+
+              <entry>HQ11</entry>
+
+              <entry>NQ01</entry>
+
+              <entry>MQ10</entry>
+
+              <entry>MQSommer</entry>
+
+              <entry>MQWinter</entry>
+            </row>
+
+            <row>
+              <entry>411</entry>
+
+              <entry>0.004</entry>
+
+              <entry>0.004</entry>
+
+              <entry>0.021</entry>
+
+              <entry>0.0038</entry>
+
+              <entry>0.004</entry>
+
+              <entry>0.0375</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      <para>Die Kennung setzt sich aus der Spalte der Ergebnisdatei
+      (NQ,MNQ,...,Anzahl) und der entsprechenden Zeilenbeschriftung
+      (11,12,...,Winter, Gesamt) zusammen.</para>
+
+      <para>Bei der Angabe der Kennung ist unbedingt die zeitliche Reihenfolge
+      der Monate entsprechend der Ergebnistabelle einzuhalten, das heißt der
+      Monat 01 kommt immer nach dem Monat 12 des hydrologischen Jahres.</para>
+
+      <para>Die Art der Statistikauswertung wird durch den 1. Schalter
+      angegeben (/K, /M, /T, ...). Der letzte Schalter /G erzwingt
+      anschließend eine grafische Darstellung der Ergebnisse.</para>
+
+      <para>Beispiel: Stat /K pegel1.dat pegel1.dat kk11.dat /G berechnet von
+      der Datenreihe pegel1.dat die Autokorrelation, legt die Werte in
+      kk11.dat ab und zeigt die Ergebnisse anschließend in der grafischen
+      Darstellung.</para>
+    </section>
+
+    <section>
+      <title>Datentest</title>
+
+      <para>Über dieses Modul können Messwerte auf Ausfälle überprüft werden.
+      Der Aufruf des Moduls kann separat oder aus einem anderen Programm (z.B.
+      Gangliniengrafik) heraus erfolgen. Auf jeden Fall muss die Kennung für
+      den Messwertausfall und mindestens eine Datenreihe übergeben werden
+      (siehe Programmaufruf). Weitere unterschiedliche Auswertungen sind
+      zukünftig über die Schalter auszuwählen.</para>
+
+      <figure>
+        <title>Dateiausgabe nach Datentest</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild26.png" scale="80" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Einzelaufruf: DatTest &lt;Kennung&gt; &lt;Datenreihe1&gt;
+      [&lt;Datenreihe2&gt; ... ] [/G]</para>
+
+      <para>Die Kennung ist ein Zahlenwert, der zur Darstellung von
+      Datenausfällen genutzt wird. Üblich sind Zahlenwerte wie zum Beispiel
+      –9999, -777.</para>
+
+      <para>Der letzte Schalter /G erzwingt anschließend eine grafische
+      Darstellung der Ergebnisse.</para>
+
+      <figure>
+        <title>Messwertausfälle (Beispiel)</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ganglinien_bild27.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Beispiel:</para>
+
+      <para>DatTest -777 pegel1.dat pegel2.dat /G ermittelt von der Datenreihe
+      pegel1.dat und pegel2.dat die Datenausfälle (-777), speichert die
+      Ergebnisse in stat.tab ab und stellt die Datenausfälle grafisch
+      dar.</para>
+    </section>
+
+    <section>
+      <title>Ansteuerung von Textdokumenten</title>
+
+      <para>Für die Darstellung von einer oder mehreren Grafikdarstellungen in
+      einem Textdokument können über die Zwischenablage oder über das
+      Bitmap-Format die mit dem Programm zur interaktiven
+      Zeitreihendarstellung erstellten Diagrammbilder an den gewünschten
+      Stellen eingefügt werden.</para>
+
+      <para>Um über diesen Weg ein automatisches Ausfüllen von vorbereiteten
+      Formularen zu realisieren, kann das Modul Graf_Doc.exe angewendet
+      werden.</para>
+
+      <para>Bei Installation dieses Moduls kann über einen Menüpunkt im
+      Grafikprogramm Auswertung -Textdokument auf Basis einer vorher zu
+      erstellenden Vorlage über Verknüpfungen zum Ergebnisdokument der
+      entsprechende Ergebnisbericht vollständig automatisch erstellt
+      werden.</para>
+
+      <para>Dabei sind folgende Voraussetzungen und Ablaufschritte
+      einzuhalten. Die nachfolgenden Punkte 1-4 haben dabei vorbereitenden
+      Charakter und sind demzufolge nur bei der Erstellung einer Variante
+      notwendig:</para>
+
+      <para><emphasis role="bold">1. Erstellen von Grafikvorlagen *.tpl für
+      die entsprechend gewünschten Darstellungen</emphasis></para>
+
+      <para>Die Grafikvorlagen entsprechen den im Ganglinienprogramm
+      verwendeten üblichen Grafikvorlagen und können über den Menüpunkt Datei
+      – Vorlage sichern abgelegt werden.</para>
+
+      <para>Bsp.: 4 Vorlagedateien mit den Ansichten abb1.tpl, abb2.tpl,
+      abb3.tpl, abb4.tpl.</para>
+
+      <para><emphasis role="bold">2. Anlegen einer Liste mit der Zuordnung der
+      Grafikvorlagen zu den im Ergebnisdokument gewünschten
+      Bildverknüpfungen.</emphasis></para>
+
+      <para>Die Liste muss als einfache Textdatei mit der Endung .tpd
+      (template doc) im aktuellen Pfad vorhanden sein. Der Aufbau der Datei
+      ist wie folgt:</para>
+
+      <para>&lt;Name der 1.Vorlage&gt; &lt;Name der im Dokument zu
+      verknüpfenden Bilddatei&gt;</para>
+
+      <para>...</para>
+
+      <para>Doc: &lt;Aufruf des Textprogramms, z.B. WinWord mit Textdatei als
+      Übergabeparameter</para>
+
+      <para>Bsp.: Datei Anlage1.tpd mit folgendem Inhalt: abb1.tpl abb1.bmp
+      abb2.tpl abb2.bmp abb3.tpl abb3.bmp abb4.tpl abb4.bmp Doc:
+      "C:\Programme\Microsoft Office\Offi</para>
+
+      <para>ce\WINWORD.EXE" Anlage1.doc</para>
+
+      <para><emphasis role="bold">3. Aufruf des Moduls zur Erstellung der
+      Bitmapvorlagen (Auswertung - Textdokument)</emphasis></para>
+
+      <para>Die in der Datei *.tpd festgelegten Bilddateien werden
+      erstellt.</para>
+
+      <para>Bsp.: Auswahl der Datei Anlage1.tpd führt zur Erstellung der 4
+      Bitmap-Dateien: abb1.bmp, abb2.bmp, abb3.bmp, abb4.bmp</para>
+
+      <para><emphasis role="bold">4. Erstellen eines Textdokumentes z.B. mit
+      WinWord</emphasis></para>
+
+      <para>Anlegen eines neuen Dokumentes, Schreiben des begleitenden
+      Textes,</para>
+
+      <para>Einfügen der Platzhalter für die Grafikdarstellungen
+      (Textfeldrahmen !)</para>
+
+      <para>Einfügen der entsprechenden Verknüpfung zur Bitmap-Datei über
+      Einfügen – Grafik – Aus Datei und</para>
+
+      <para>denEigenschaften: "Verknüpfung zu Datei" und "nicht mit Dokument
+      speichern"</para>
+
+      <graphic fileref="img/ganglinien_bild28.png" />
+
+      <para><emphasis role="bold">Erstellen eines Formblattes mit den
+      gewünschten Grafiken</emphasis></para>
+
+      <para>Wird nun ein analog aufgebautes Dokument mit aktualisierten
+      Datenreihen benötigt, braucht jetzt nur noch der oben erläuterte Punkt 3
+      (Aufruf des Moduls zur Erstellung der Bitmapvorlagen Auswertung -
+      Textdokument) ausgeführt werden.</para>
+
+      <para>Es werden automatisch auf Basis der vorbereiteten Grafikvorlagen
+      die entsprechenden Bitmap-Dateien erstellt und das Textdokument mit den
+      aktualisierten Bilder geöffnet.</para>
+
+      <graphic fileref="img/ganglinien_bild29.png" />
+
+      <para>Der Ablauf kann nun immer wieder mit aktualisierten Datenwerten
+      und Datenreihen gestartet werden.</para>
+    </section>
   </section>
 
   <section id="grafik_vorlagenliste">
