@@ -7,8 +7,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.outline.RuleTreeObject;
 import org.kalypso.ogc.gml.outline.ThemeStyleTreeObject;
@@ -52,12 +52,12 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
     guiBuilder = new SLDEditorGuiBuilder( parent);
   }
 
-  public void initStyleEditor( KalypsoUserStyle userStyle, KalypsoFeatureTheme theme, int index )
+  public void initStyleEditor( KalypsoUserStyle userStyle, IKalypsoFeatureTheme theme, int index )
   {
     guiBuilder.buildSWTGui( userStyle, theme, index );
   }
 
-  public void initStyleEditor( KalypsoUserStyle userStyle, KalypsoFeatureTheme theme )
+  public void initStyleEditor( KalypsoUserStyle userStyle, IKalypsoFeatureTheme theme )
   {
   	guiBuilder.buildSWTGui( userStyle, theme);
   }
@@ -81,12 +81,12 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
     if( o instanceof ThemeStyleTreeObject )
     {
       final IKalypsoTheme theme = ( (ThemeStyleTreeObject)o ).getTheme();
-      if( !( theme instanceof KalypsoFeatureTheme ) )
+      if( !( theme instanceof IKalypsoFeatureTheme ) )
         initStyleEditor( null, null );
       else
       {        
         KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
-        initStyleEditor( kalypsoStyle, (KalypsoFeatureTheme)theme );
+        initStyleEditor( kalypsoStyle, (IKalypsoFeatureTheme)theme );
       }
     }
     else if( o instanceof IKalypsoTheme )

@@ -7,8 +7,8 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.geometry.GM_Position;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
@@ -44,9 +44,9 @@ public class EditFeatureWidget extends AbstractWidget
     {
       final GM_Position position = getPosition( m_point );
       final IKalypsoTheme activeTheme = getActiveTheme();
-      if( activeTheme instanceof KalypsoFeatureTheme )
+      if( activeTheme instanceof IKalypsoFeatureTheme )
       {
-        final KalypsoFeatureTheme featureTheme = (KalypsoFeatureTheme)activeTheme;
+        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)activeTheme;
         featureTheme.getFeatureList().query( position, null );
 
         // todo: Sollte so etwas nicht eine Zentrale Stelle machen?

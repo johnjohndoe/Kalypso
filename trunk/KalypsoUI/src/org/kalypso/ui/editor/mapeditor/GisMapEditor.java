@@ -64,6 +64,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   public void dispose()
   {
+    if( m_mapModell != null )
+      m_mapModell.dispose();
+    
     setMapModell( null );
 
     if( m_outlinePage != null )

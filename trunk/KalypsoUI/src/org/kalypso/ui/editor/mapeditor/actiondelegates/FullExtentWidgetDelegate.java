@@ -5,9 +5,9 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
+import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapPanel;
-import org.kalypso.ogc.gml.widgets.ChangeExtentCommand;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**

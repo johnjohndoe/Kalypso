@@ -7,8 +7,8 @@
 package org.kalypso.ogc.gml.outline;
 
 import org.deegree.graphics.sld.UserStyle;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 
 public class ThemeStyleTreeObject
@@ -26,7 +26,7 @@ public class ThemeStyleTreeObject
   /**
    *  
    */
-  public ThemeStyleTreeObject( KalypsoFeatureTheme theme, KalypsoUserStyle style )
+  public ThemeStyleTreeObject( final IKalypsoFeatureTheme theme, KalypsoUserStyle style )
   {
     myTheme = theme;
     myStyle = style;

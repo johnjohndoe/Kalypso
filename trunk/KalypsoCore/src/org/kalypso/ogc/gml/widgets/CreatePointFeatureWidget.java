@@ -7,7 +7,7 @@ package org.kalypso.ogc.gml.widgets;
 import java.awt.Point;
 
 import org.deegree.model.feature.FeatureTypeProperty;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -21,10 +21,10 @@ public class CreatePointFeatureWidget extends AbstractWidget
 
   private final CreateGeometryFeatureWidget myParentWidget;
 
-  private final KalypsoFeatureTheme m_theme;
+  private final IKalypsoFeatureTheme m_theme;
 
   public CreatePointFeatureWidget( CreateGeometryFeatureWidget parentWidget,
-      KalypsoFeatureTheme theme, FeatureTypeProperty ftp )
+      final IKalypsoFeatureTheme theme, FeatureTypeProperty ftp )
   {
     myParentWidget = parentWidget;
     m_theme = theme;

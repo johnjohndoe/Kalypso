@@ -2,7 +2,7 @@
  * TODO: license definieren
  */
 
-package org.kalypso.ogc.gml.widgets;
+package org.kalypso.ogc.gml.command;
 
 import org.deegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.gml.mapmodel.MapPanel;

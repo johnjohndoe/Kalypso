@@ -8,7 +8,9 @@ import java.net.URL;
 import java.util.Properties;
 
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureVisitor;
 import org.deegree.model.feature.GMLWorkspace;
+import org.deegree_impl.model.feature.visitors.TransformVisitor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -19,7 +21,9 @@ import org.kalypso.eclipse.util.SetContentThread;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.url.UrlResolver;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Lädt einen GMLWorkspace aus einem GML
@@ -39,17 +43,24 @@ public class GmlLoader extends AbstractLoader
     {
       monitor.beginTask( "GML laden", 1000 );
 
-      final String schemaPath = source.getProperty( "XSD", "" );
-      final URL schemaURL = UrlResolver.resolveURL( context, schemaPath );
-
-      final String gmlPath = source.getProperty( "PATH", "" );
-      final URL gmlURL = UrlResolver.resolveURL( context, gmlPath );
-
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, schemaURL );
+      final URL schemaURL = getSchemaURL( source, context );
+      final URL gmlURL = getGmlURL( source, context );
 
       final IResource schemaFile = ResourceUtilities.findFileFromURL( schemaURL );
       final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
+      
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, schemaURL );
 
+      try
+      {
+        final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+        workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+      }
+      catch( final Throwable e1 )
+      {
+        e1.printStackTrace();
+      }
+      
       if( gmlFile != null )
         addResource( gmlFile, workspace );
 
@@ -74,6 +85,18 @@ public class GmlLoader extends AbstractLoader
     }
   }
 
+  private URL getGmlURL( Properties source, URL context ) throws MalformedURLException
+  {
+    final String gmlPath = source.getProperty( "PATH", "" );
+    return UrlResolver.resolveURL( context, gmlPath );
+  }
+
+  private URL getSchemaURL( final Properties source, final URL context ) throws MalformedURLException
+  {
+    final String schemaPath = source.getProperty( "XSD", "" );
+    return UrlResolver.resolveURL( context, schemaPath );
+  }
+
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
@@ -88,14 +111,12 @@ public class GmlLoader extends AbstractLoader
   public void save( final Properties source, final URL context,
       final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
-    final String gmlPath = source.getProperty( "PATH", "" );
-
     try
     {
       final GMLWorkspace workspace = (GMLWorkspace)data;
       final Feature rootFeature = workspace.getRootFeature();
 
-      final URL gmlURL = UrlResolver.resolveURL( context, gmlPath );
+      final URL gmlURL = getGmlURL( source, context );
   
       // ists im Workspace?
       final IFile file = ResourceUtilities.findFileFromURL( gmlURL );
@@ -131,12 +152,38 @@ public class GmlLoader extends AbstractLoader
     {
       e.printStackTrace();
       
-      throw new LoaderException( "Der angegebene Pfad ist ungültig: " + gmlPath + "\n" + e.getLocalizedMessage(), e );
+      throw new LoaderException( "Der angegebene Pfad ist ungültig: " + source.getProperty( "PATH" ) + "\n" + e.getLocalizedMessage(), e );
     }
     catch( final Throwable e )
     {
       e.printStackTrace();
       throw new LoaderException( "Fehler beim Speichern der URL\n" + e.getLocalizedMessage(), e );
     }
+  }
+
+  /**
+   * @see org.kalypso.loader.ILoader#compareKeys(java.util.Properties, java.net.URL, java.util.Properties, java.net.URL)
+   */
+  public int compareKeys( final Properties source1, final URL context1, final Properties source2, final URL context2 )
+  {
+    try
+    {
+      final int schemaHash1 = getSchemaURL( source1, context1 ).hashCode();
+      final int schemaHash2 = getSchemaURL( source2, context2 ).hashCode();
+      
+      if( schemaHash1 != schemaHash2 )
+        return schemaHash1 - schemaHash2;
+
+      final int gmlHash1 = getGmlURL( source1, context1 ).hashCode();
+      final int gmlHash2 = getGmlURL( source2, context2 ).hashCode();
+      
+      return gmlHash1 - gmlHash2;
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+    
+    return 0;
   }
 }

@@ -1,6 +1,7 @@
 package org.kalypso.ogc.gml.loader;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
@@ -43,13 +44,14 @@ public class ShapeLoader extends AbstractLoader
   {
     try
     {
-      final String sourceLocation = source.getProperty( "PATH", "" );
 
       IResource shpResource = null;
       IResource dbfResource = null;
       IResource shxResource = null;
       
+      final String sourceLocation = source.getProperty( "PATH", "" );
       final URL sourceURL = UrlResolver.resolveURL( context, sourceLocation );
+
       final URL shpURL = UrlResolver.resolveURL( context, sourceLocation + ".shp" );
       final URL dbfURL = UrlResolver.resolveURL( context, sourceLocation + ".dbf" );
       final URL shxURL = UrlResolver.resolveURL( context, sourceLocation + ".shx" );
@@ -112,5 +114,27 @@ public class ShapeLoader extends AbstractLoader
       e.printStackTrace();
       throw new LoaderException( e );
     }
+  }
+
+  /**
+   * @see org.kalypso.loader.ILoader#compareKeys(java.util.Properties, java.net.URL, java.util.Properties, java.net.URL)
+   */
+  public int compareKeys( final Properties source1, final URL context1, final Properties source2, final URL context2 )
+  {
+    try
+    {
+      final String sourceLocation1 = source1.getProperty( "PATH", "" );
+      final URL sourceURL1 = UrlResolver.resolveURL( context1, sourceLocation1 );
+
+      final String sourceLocation2 = source2.getProperty( "PATH", "" );
+      final URL sourceURL2 = UrlResolver.resolveURL( context2, sourceLocation2 );
+
+      return sourceURL1.hashCode() - sourceURL2.hashCode();
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+    }    
+    return 0;
   }
 }

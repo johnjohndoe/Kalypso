@@ -26,8 +26,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
-import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.ICellEditorFactory;
 import org.kalypso.template.gistableview.Gistableview;
@@ -213,12 +212,11 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
   public void appendSpaltenActions( final IMenuManager manager )
   {
-    final PoolableKalypsoFeatureTheme theme = m_layerTable.getTheme();
+    final IKalypsoFeatureTheme theme = m_layerTable.getTheme();
     if( theme == null )
       return;
     
-    final KalypsoFeatureTheme featureTheme = theme.getFeatureTheme();
-    final FeatureTypeProperty[] ftps = featureTheme.getFeatureType().getProperties();
+    final FeatureTypeProperty[] ftps = theme.getFeatureType().getProperties();
     for( int i = 0; i < ftps.length; i++ )
       manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName() ) );
   }

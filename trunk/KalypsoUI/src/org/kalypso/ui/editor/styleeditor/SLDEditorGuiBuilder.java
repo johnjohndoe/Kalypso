@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.editor.styleeditor.RuleCollection;
 import org.kalypso.editor.styleeditor.RuleFilterCollection;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.outline.SaveStyleAction;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterencoding.BoundaryExpression;
@@ -65,12 +65,12 @@ public class SLDEditorGuiBuilder {
 		buildSWTGui(null,null);		
 	}
 	
-	public void buildSWTGui( final KalypsoUserStyle userStyle, KalypsoFeatureTheme theme )
+	public void buildSWTGui( final KalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme )
 	{
 		buildSWTGui(userStyle, theme, -1);
 	}
 	
-	public void buildSWTGui(final KalypsoUserStyle userStyle, final KalypsoFeatureTheme theme, final int index)
+	public void buildSWTGui(final KalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme, final int index)
 	{	
 		if(index != -1)
 			focusedRuleItem = index;

@@ -19,13 +19,14 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public interface IMapModell
 {
+  /** dispose off all themes! */
+  public void dispose();
+  
   public void activateTheme( final IKalypsoTheme theme );
 
   public IKalypsoTheme getActiveTheme();
 
   public void addTheme( final IKalypsoTheme theme );
-
-  public void clear();
 
   public void enableTheme( IKalypsoTheme theme, boolean status );
 
@@ -52,7 +53,7 @@ public interface IMapModell
 
   public void moveUp( IKalypsoTheme theme );
 
-  public void removeTheme( IKalypsoTheme theme );
+  public void removeTheme( final IKalypsoTheme theme );
 
   public void setCoordinateSystem( CS_CoordinateSystem crs ) throws Exception;
 

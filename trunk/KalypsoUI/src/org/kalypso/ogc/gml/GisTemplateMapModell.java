@@ -35,9 +35,9 @@ public class GisTemplateMapModell implements IMapModell
   {
     m_modell = new MapModell( crs );
 
-    IKalypsoTheme legenTheme = new KalypsoLegendTheme( this );
-    addTheme( legenTheme );
-    enableTheme( legenTheme, false );
+    final IKalypsoTheme legendTheme = new KalypsoLegendTheme( this );
+    addTheme( legendTheme );
+    enableTheme( legendTheme, false );
 
     final LayersType layerListType = gisview.getLayers();
     final List layerList = layerListType.getLayer();
@@ -69,13 +69,19 @@ public class GisTemplateMapModell implements IMapModell
       activateTheme( null );
 
   }
+  
+  public void dispose()
+  {
+    if( m_modell != null )
+      m_modell.dispose();
+  }
 
   private IKalypsoTheme loadTheme( final Layer layerType, final URL context )
   {
     if( "wms".equals( layerType.getLinktype() ) )
       return new KalypsoWMSTheme( layerType.getName(), layerType.getHref(), KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
 
-    return new PoolableKalypsoFeatureTheme( layerType, context );
+    return new GisTemplateFeatureTheme( layerType, context );
   }
 
   // Helper
@@ -105,11 +111,11 @@ public class GisTemplateMapModell implements IMapModell
     for( int i = 0; i < themes.length; i++ )
     {
       final IKalypsoTheme kalypsoTheme = themes[i];
-      if( kalypsoTheme instanceof PoolableKalypsoFeatureTheme )
+      if( kalypsoTheme instanceof GisTemplateFeatureTheme )
       {
        final Layer layer = maptemplateFactory.createGismapviewTypeLayersTypeLayer();
 
-        ( (PoolableKalypsoFeatureTheme)kalypsoTheme ).fillLayerType( layer, Integer
+        ( (GisTemplateFeatureTheme)kalypsoTheme ).fillLayerType( layer, Integer
             .toString( i ), m_modell.isThemeEnabled( kalypsoTheme ) );
         layerList.add( layer );
 
@@ -138,11 +144,6 @@ public class GisTemplateMapModell implements IMapModell
   public void addTheme( final IKalypsoTheme theme )
   {
     m_modell.addTheme( theme );
-  }
-
-  public void clear()
-  {
-    m_modell.clear();
   }
 
   public void enableTheme( IKalypsoTheme theme, boolean status )

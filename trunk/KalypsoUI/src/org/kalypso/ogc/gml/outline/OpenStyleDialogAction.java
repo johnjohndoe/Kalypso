@@ -6,7 +6,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 
@@ -45,10 +45,10 @@ public class OpenStyleDialogAction extends AbstractOutlineAction
       {
         final IKalypsoTheme theme = ( (ThemeStyleTreeObject)o ).getTheme();                   
 
-        if( part != null && theme instanceof KalypsoFeatureTheme )
+        if( part != null && theme instanceof IKalypsoFeatureTheme )
         {                 
           KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
-          part.initStyleEditor( kalypsoStyle, (KalypsoFeatureTheme)theme );
+          part.initStyleEditor( kalypsoStyle, (IKalypsoFeatureTheme)theme );
         }
         else
           part.initStyleEditor( null, null );

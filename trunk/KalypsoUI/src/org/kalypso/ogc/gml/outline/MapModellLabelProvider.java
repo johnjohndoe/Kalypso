@@ -4,13 +4,21 @@ import org.deegree.graphics.sld.UserStyle;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
  * @author bce
  */
 public class MapModellLabelProvider implements ILabelProvider
 {
+  private IMapModell m_mapModell = null;
+  
+  public void setMapModell( IMapModell mapModell )
+  {
+    m_mapModell = mapModell;
+  }
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
@@ -22,10 +30,27 @@ public class MapModellLabelProvider implements ILabelProvider
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     if( element instanceof IKalypsoTheme )
-      return ((IKalypsoTheme)element).getName();
+    {
+      final IKalypsoTheme kalypsoTheme = (IKalypsoTheme)element;
+
+      final StringBuffer sb = new StringBuffer( kalypsoTheme.getName() );
+      
+      // falls aktiviert
+      if( m_mapModell != null && m_mapModell.getActiveTheme() == kalypsoTheme )
+        sb.append( " - aktiv" );
+
+      if( kalypsoTheme instanceof IKalypsoFeatureTheme )
+      {
+        final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)kalypsoTheme;
+        if( kft.getWorkspace() == null )
+          sb.append( " - loading..." );
+      }
+      
+      return sb.toString();
+    }
     
     if( element instanceof ThemeStyleTreeObject )
         return element.toString();

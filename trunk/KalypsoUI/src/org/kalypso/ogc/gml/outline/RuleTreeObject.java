@@ -1,7 +1,7 @@
 package org.kalypso.ogc.gml.outline;
 
 import org.deegree.graphics.sld.Rule;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 
 public class RuleTreeObject
@@ -10,9 +10,9 @@ public class RuleTreeObject
 
   private KalypsoUserStyle m_userStyle = null;
 
-  private final KalypsoFeatureTheme m_theme;
+  private final IKalypsoFeatureTheme m_theme;
 
-  public RuleTreeObject( final Rule rule, final KalypsoUserStyle style, final KalypsoFeatureTheme theme )
+  public RuleTreeObject( final Rule rule, final KalypsoUserStyle style, final IKalypsoFeatureTheme theme )
   {
     m_rule = rule;
     m_userStyle = style;
@@ -24,7 +24,7 @@ public class RuleTreeObject
     return m_userStyle;
   }
 
-  public KalypsoFeatureTheme getTheme()
+  public IKalypsoFeatureTheme getTheme()
   {
     return m_theme;
   }

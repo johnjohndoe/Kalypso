@@ -15,14 +15,13 @@ import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.feature.event.ModellEvent;
-import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.model.sort.DisplayContext;
 
 /**
  * @author vdoemming
  */
-public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements ModellEventListener
+public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme
 {
   public final static UserStyle[] NO_STYLE = new UserStyle[0];
 
