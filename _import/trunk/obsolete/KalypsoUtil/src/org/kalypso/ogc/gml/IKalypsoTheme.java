@@ -40,7 +40,7 @@ public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener
   /**
    * returns the layer that holds the data of the theme
    */
-  public KalypsoFeatureLayer getLayer();
+  public IKalypsoLayer getLayer();
 
   public void addModellListener( final ModellEventListener listener );
 

@@ -11,13 +11,13 @@ import org.deegree.model.geometry.GM_Envelope;
  */
 public class KalypsoFeatureTheme extends AbstractKalypsoTheme
 {
-  private KalypsoFeatureLayer myLayer = null;
+  private IKalypsoLayer myLayer = null;
 
   //  private KalypsoUserStyle[] myStyles = null;
 
   public boolean DEBUG_ENV = false;
 
-  public KalypsoFeatureTheme( final KalypsoFeatureLayer layer, final String name )
+  public KalypsoFeatureTheme( final IKalypsoLayer layer, final String name )
   {
     super( name );
 
@@ -49,15 +49,18 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme
 
   public void paintSelected( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final int selectionId )
   {
-//    double scale = myParent.getScale( g );
+    if(myLayer instanceof KalypsoFeatureLayer)
+    {
+    //    double scale = myParent.getScale( g );
 //    GeoTransform p = myParent.getProjection();
 //    GM_Envelope bbox = myParent.getBoundingBox();
     //    for( int i = 0; i < myStyles.length; i++ )
-    myLayer.getSort().paintSelected( g, p, scale, bbox, selectionId );
+    ((KalypsoFeatureLayer)myLayer).getSort().paintSelected( g, p, scale, bbox, selectionId );
 
     //    if( DEBUG_ENV )
     //      myIndexDE.paint( g, myParent.getProjection() );
-  }
+    }
+   }
 
   //  /**
   //   * stes the styles used for this <tt>Theme</tt>. If this method will be
@@ -84,19 +87,24 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme
   public UserStyle[] getStyles()
   {
     //return myStyles;
-    return myLayer.getSort().getStyles();
+    // TODO
+    if(myLayer instanceof KalypsoFeatureLayer)
+    return ((KalypsoFeatureLayer)myLayer).getSort().getStyles();
+    return null;
   }
 
   public void addStyle( final KalypsoUserStyle style )
   {
-    myLayer.getSort().addStyle( style );
+    if(myLayer instanceof KalypsoFeatureLayer)
+    ((KalypsoFeatureLayer)myLayer).getSort().addStyle( style );
 
     fireModellEvent( null );
   }
 
   public void removeStyle( final KalypsoUserStyle style )
   {
-    myLayer.getSort().removeStyle( style );
+    if(myLayer instanceof KalypsoFeatureLayer)
+      ((KalypsoFeatureLayer)myLayer).getSort().removeStyle( style );
 
     fireModellEvent( null );
   }
@@ -104,7 +112,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme
   /**
    * returns the layer that holds the data of the theme
    */
-  public KalypsoFeatureLayer getLayer()
+  public IKalypsoLayer getLayer()
   {
     return myLayer;
   }

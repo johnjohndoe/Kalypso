@@ -14,7 +14,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author vdoemming
  */
-public class KalypsoFeatureLayer implements ModellEventProvider, ModellEventListener 
+public class KalypsoFeatureLayer implements IKalypsoLayer
 {
   private ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
 

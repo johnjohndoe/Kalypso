@@ -3,7 +3,7 @@ package org.kalypso.ogc.command;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.ogc.gml.KalypsoFeature;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -11,13 +11,13 @@ import org.kalypso.util.command.ICommand;
  */
 public class ModifyFeatureCommand implements ICommand
 {
-  private final KalypsoFeatureLayer m_layer;
+  private final IKalypsoLayer m_layer;
   private final KalypsoFeature m_feature;
   private final String m_name;
   private final Object m_newValue;
   private Object m_oldValue;
 
-  public ModifyFeatureCommand( final KalypsoFeatureLayer layer, final KalypsoFeature feature, final String name, final Object value )
+  public ModifyFeatureCommand( final IKalypsoLayer layer, final KalypsoFeature feature, final String name, final Object value )
   {
     m_layer = layer;
     m_feature = feature;

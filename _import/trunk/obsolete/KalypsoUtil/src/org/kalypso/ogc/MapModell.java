@@ -12,7 +12,7 @@ import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.event.ModellEventProvider;
 import org.kalypso.ogc.event.ModellEventProviderAdapter;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -57,7 +57,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
 
     myThemes.add( theme );
 
-    final KalypsoFeatureLayer layer = theme.getLayer();
+    final IKalypsoLayer layer = theme.getLayer();
     if( layer != null )
       layer.setCoordinatesSystem( myCoordinatesSystem );
 

@@ -13,6 +13,7 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.event.ModellEvent;
+import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
@@ -146,11 +147,11 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
 
   private void setup()
   {
-    KalypsoFeatureLayer layer = getActiveLayer();
+    IKalypsoLayer layer = getActiveLayer();
     myWidget=null;
-    if( layer != null )
+    if( layer != null && layer instanceof KalypsoFeatureLayer)
     {
-      FeatureType ft = layer.getFeatureType();
+      FeatureType ft = ((KalypsoFeatureLayer)layer).getFeatureType();
       FeatureTypeProperty[] ftps = ft.getProperties();
       List geoFtps = new ArrayList();
       // collect available geometry properties
@@ -163,7 +164,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
         ; // TODO ask for geometry to create
       if( geoFtps.size() > 0 )
       {
-        setGeometryWidget( layer, ft, (FeatureTypeProperty)geoFtps.get( 0 ) );
+        setGeometryWidget( (KalypsoFeatureLayer)layer, ft, (FeatureTypeProperty)geoFtps.get( 0 ) );
       }
     }
   }

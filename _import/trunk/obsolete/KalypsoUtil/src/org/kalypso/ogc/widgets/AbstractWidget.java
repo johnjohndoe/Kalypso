@@ -11,6 +11,7 @@ import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
+import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
@@ -218,7 +219,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
     //
   }
 
-  public KalypsoFeatureLayer getActiveLayer()
+  public IKalypsoLayer getActiveLayer()
   {
     try
     {
@@ -234,10 +235,13 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   {
     try
     {
-      return getActiveLayer().getFeatureType();
+      return ((KalypsoFeatureLayer)getActiveLayer()).getFeatureType();
     }
     catch(Exception e)
     {
+      // no active layer
+      // layer not loaded complete
+      // not a featurelayer e.g. a wms-layer
       return null;
     }
   }

@@ -8,8 +8,10 @@ import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.geometry.GM_Surface;
 import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeature;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 
 /**
  * DOCUMENT ME!
@@ -92,14 +94,16 @@ break;
    */
   public List select( GM_Envelope env, final IKalypsoTheme theme, boolean selectWithinBoxStatus,int selectionId )
   {
-    List resultDE = new ArrayList();
-
+    List resultList = new ArrayList();
+      IKalypsoLayer layer = theme.getLayer();
+      if(! (layer instanceof KalypsoFeatureLayer))
+        return resultList;   
     try
     {
       List testFE = new ArrayList();
-      GM_Surface bbox = GeometryFactory.createGM_Surface( env, theme.getLayer()
+      GM_Surface bbox = GeometryFactory.createGM_Surface( env, layer
           .getCoordinatesSystem() );
-      List features = theme.getLayer().getSort().query( env, new ArrayList() );
+      List features = ((KalypsoFeatureLayer)layer).getSort().query( env, new ArrayList() );
       Iterator containerIterator = features.iterator();
 
       while( containerIterator.hasNext() )
@@ -111,23 +115,26 @@ break;
           testFE.add( fe );
       }
 
-      resultDE = perform( testFE,selectionId );
+      resultList = perform( testFE,selectionId );
     }
     catch( Exception e )
     {
       e.printStackTrace();
     }
 
-    return resultDE;
+    return resultList;
   }
 
   //           selects all features (display elements) that intersects the submitted
   // point.
   public List select( GM_Position position, final IKalypsoTheme theme,int selectionId )
   {
-    List resultFe = new ArrayList();
+    List resultList = new ArrayList();
+      IKalypsoLayer layer = theme.getLayer();
+      if(! (layer instanceof KalypsoFeatureLayer))
+        return resultList;   
     List testFe = new ArrayList();
-    List features = theme.getLayer().getSort().query( position, new ArrayList() );
+    List features = ((KalypsoFeatureLayer)layer).getSort().query( position, new ArrayList() );
 
     Iterator containerIterator = features.iterator();
 
@@ -145,13 +152,13 @@ break;
         System.out.println( err.getMessage() );
         System.out.println( "...using workaround \"box selection\"" );
         System.out.println( "set view dependent radius" );
-        resultFe.addAll( select( position, 0.0001d, theme, false,selectionId ) );
+        resultList.addAll( select( position, 0.0001d, theme, false,selectionId ) );
       }
     }
 
-    resultFe.addAll( perform( testFe,selectionId ) );
+    resultList.addAll( perform( testFe,selectionId ) );
 
-    return resultFe;
+    return resultList;
   }
 
   //           selects all features (display elements) that are located within the circle
