@@ -53,7 +53,7 @@ class XYCurveSerie extends Series
     m_xDiagAxis = xDiagAxis;
     m_yDiagAxis = yDiagAxis;
 
-    m_values = m_curve.getObservation().getValues( null );
+    m_values = m_curve.getObservation().getValues( curve.getArguments() );
   }
 
   public IDiagramAxis getXDiagAxis()

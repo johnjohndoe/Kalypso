@@ -1,6 +1,7 @@
 package org.kalypso.ogc.sensor.diagview;
 
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.util.runtime.IVariableArguments;
 
 
 
@@ -25,4 +26,10 @@ public interface IDiagramCurve
    * @return observation on which this curve is based
    */
   public IObservation getObservation();
+
+  /**
+   * @return [optional] variable arguments that can be used when values are fetched from
+   * the observation
+   */
+  public IVariableArguments getArguments( );
 }

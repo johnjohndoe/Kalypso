@@ -171,10 +171,10 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
         final IObservation obs = (IObservation) newValue;
         
         //m_diagTemplate.removeAllCurves();
-        m_diagTemplate.setObservation( obs );
+        m_diagTemplate.setObservation( obs, null );
 
         //m_tableTemplate.removeAllColumns();
-        m_tableTemplate.setObservation( obs, false );
+        m_tableTemplate.setObservation( obs, false, null );
       }
       catch( Exception e )
       {

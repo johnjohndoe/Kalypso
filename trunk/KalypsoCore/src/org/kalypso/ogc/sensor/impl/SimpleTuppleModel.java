@@ -139,8 +139,10 @@ public class SimpleTuppleModel implements ITuppleModel
         {
           final Object element = copyTupples.getElement( ix, m_axes[i] );
 
-          m_tupples.setValueAt( element, realIx++, m_axes[i].getPosition() );
+          m_tupples.setValueAt( element, realIx, m_axes[i].getPosition() );
         }
+        
+        realIx++;
       }
     }
     

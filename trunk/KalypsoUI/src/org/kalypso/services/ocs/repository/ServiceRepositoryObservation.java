@@ -44,7 +44,7 @@ public class ServiceRepositoryObservation implements IObservation
    */
   private IObservation getRemote( final IVariableArguments args ) throws SensorException
   {
-    if( m_obs == null )
+    //if( m_obs == null )
       m_obs = loadFromServer( args );
     
     return m_obs;        

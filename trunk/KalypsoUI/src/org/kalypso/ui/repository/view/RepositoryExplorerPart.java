@@ -3,6 +3,7 @@ package org.kalypso.ui.repository.view;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.logging.Logger;
 
 import org.eclipse.compare.Splitter;
 import org.eclipse.jface.action.IMenuListener;
@@ -435,7 +436,11 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
         {
           final String id = elementMem[i].getString( TAG_IDENFITIER );
           final Object element = m_repContainer.findItem( id );
-          elements.add( element );
+          
+          if( element != null )
+            elements.add( element );
+          else
+            Logger.getLogger( getClass().getName() ).warning( "Restoring GUI State for observation explorer part: could not find item " + id );
         }
         catch( NoSuchElementException e )
         {

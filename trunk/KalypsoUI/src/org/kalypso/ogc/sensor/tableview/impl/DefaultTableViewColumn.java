@@ -4,6 +4,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * Default implementation of the <code>ITableViewColumn</code> interface
@@ -27,6 +28,8 @@ public class DefaultTableViewColumn implements ITableViewColumn
   private IAxis m_keyAxis = null;
 
   private IAxis m_valueAxis = null;
+
+  private IVariableArguments m_args;
 
   /**
    * Constructor
@@ -153,5 +156,18 @@ public class DefaultTableViewColumn implements ITableViewColumn
   public IAxis getKeyAxis( )
   {
     return m_keyAxis;
+  }
+
+  /**
+   * @param args
+   */
+  public void setArguments( IVariableArguments args )
+  {
+    m_args = args;
+  }
+  
+  public IVariableArguments getArguments( )
+  {
+    return m_args;
   }
 }

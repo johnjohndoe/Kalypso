@@ -10,6 +10,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
+import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * Default implementation of the <code>IDiagramCurve</code> interface.
@@ -25,6 +26,8 @@ public class DiagramCurve implements IDiagramCurve
   private IObservation m_obs = null;
 
   private final IDiagramTemplate m_template;
+
+  private IVariableArguments m_args = null;
 
   /**
    * Constructor
@@ -84,5 +87,18 @@ public class DiagramCurve implements IDiagramCurve
   public void setObservation( IObservation obs )
   {
     m_obs = obs;
+  }
+
+  /**
+   * @param args
+   */
+  public void setArguments( IVariableArguments args )
+  {
+    m_args = args;
+  }
+  
+  public IVariableArguments getArguments()
+  {
+    return m_args;
   }
 }

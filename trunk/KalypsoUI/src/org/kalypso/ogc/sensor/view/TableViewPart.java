@@ -98,7 +98,7 @@ public class TableViewPart extends ViewPart implements
 
         final IObservation obs = ObservationCache.getObservationFor( item );
         if( obs != null )
-          m_template.setObservation( obs, false );
+          m_template.setObservation( obs, false, ObservationViewHelper.makeDateRange( item ) );
       }
     };
 
