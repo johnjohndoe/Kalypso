@@ -1,9 +1,13 @@
 package org.kalypso.ui.editor.diagrameditor;
 
-import java.io.File;
+import java.net.URL;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IToolBarManager;
@@ -18,13 +22,13 @@ import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
-import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
+import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.diagrameditor.actions.RemoveThemeAction;
 
@@ -36,7 +40,7 @@ import org.kalypso.ui.editor.diagrameditor.actions.RemoveThemeAction;
 public class ObsDiagOutlinePage extends ContentOutlinePage implements
     ITemplateEventListener
 {
-  protected ObservationDiagramTemplate m_template;
+  protected LinkedDiagramTemplate m_template;
 
   private RemoveThemeAction m_removeThemeAction;
 
@@ -133,7 +137,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
   /**
    * @param template
    */
-  public void setTemplate( ObservationDiagramTemplate template )
+  public void setTemplate( LinkedDiagramTemplate template )
   {
     if( m_template != null )
       m_template.removeTemplateEventListener( this );
@@ -203,13 +207,17 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
 
           try
           {
+            final IWorkspaceRoot wksp = ResourcesPlugin.getWorkspace()
+                .getRoot();
+
             for( int i = 0; i < files.length; i++ )
             {
-              final IObservation obs = ZmlFactory.parseXML( new File( files[i] )
-                  .toURL(), files[i] );
+              IFile file = wksp.getFileForLocation( new Path( files[i] ) );
+              file = (IFile) wksp.findMember( file.getFullPath() );
+              final URL url = ResourceUtilities.createURL( file );
 
-              // TODO use other version of addObs...
-              m_template.addObservation( obs, null );
+              m_template.addObservation( file.getName(), url, url
+                  .toExternalForm(), "zml", false, null );
             }
 
             return Status.OK_STATUS;
