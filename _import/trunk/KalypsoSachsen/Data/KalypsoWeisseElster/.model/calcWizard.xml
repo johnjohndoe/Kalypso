@@ -100,7 +100,7 @@
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_1.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node1800"/>
 
@@ -121,7 +121,7 @@
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_2.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node1700"/>
 		<arg name="ignoreType1" value="W"/>
@@ -142,7 +142,7 @@
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_3.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node1600"/>
 
@@ -165,7 +165,7 @@
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_4.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node1401"/>
 
@@ -186,7 +186,7 @@
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_5.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node1300"/>
 
@@ -207,7 +207,7 @@
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_6.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node4200"/>
 
@@ -227,7 +227,7 @@
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_7.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node4100"/>
 
@@ -247,7 +247,7 @@
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_8.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node1220"/>
 
@@ -268,7 +268,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_9.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node2002"/>
 
@@ -288,7 +288,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_10.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node1210"/>
 
@@ -308,7 +308,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_11.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node1110"/>
 
@@ -328,7 +328,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_12.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node1020"/>
 
@@ -348,7 +348,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_13.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node3201"/>
 
@@ -368,7 +368,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_14.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node3100"/>
 
@@ -388,7 +388,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_15.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node1001"/>
 
@@ -408,7 +408,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_16.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node7300"/>
 
@@ -429,7 +429,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="clearResultFolder" value="false"/>
 
 		<arg name="modelspec" value="modelspec_17.xml"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="pantoFeatureId" value="Node7200"/>
 
