@@ -4,19 +4,13 @@
  */
 package org.kalypso.ui.editor.styleeditor.panels;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import javax.swing.event.EventListenerList;
-
-import org.deegree.graphics.sld.Graphic;
-import org.deegree.graphics.sld.LabelPlacement;
-import org.deegree.graphics.sld.Mark;
 import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.graphics.sld.TextSymbolizer;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree_impl.graphics.sld.StyleFactory;
+import org.deegree_impl.services.wfs.filterencoding.PropertyName;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -28,13 +22,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.TextSymbolizerLayout;
+import org.kalypso.ui.editor.styleeditor.dialogs.filterencoding.BoundaryExpression;
 
 /**
  * @author F.Lindemann
  *  
  */
-public class AddSymbolizerPanel
+public class AddPatternPanel
 {
 
   private Composite composite = null;
@@ -51,7 +45,7 @@ public class AddSymbolizerPanel
 
   private String label = null;
 
-  public AddSymbolizerPanel( Composite parent, String m_label, FeatureType m_featureType )
+  public AddPatternPanel( Composite parent, String m_label, FeatureType m_featureType )
   {
     setLabel( m_label );
     setFeatureType( m_featureType );
@@ -75,26 +69,12 @@ public class AddSymbolizerPanel
 
   private void init()
   {
-    // Symbolizer Combo
-    symbolizerCombo = new Combo( composite, SWT.NULL );
-    FormData symbolizerComboData = new FormData();
-    symbolizerComboData.height = 21;
-    symbolizerComboData.width = 35;
-    symbolizerComboData.left = new FormAttachment( 260, 1000, 0 );
-    symbolizerComboData.top = new FormAttachment( 100, 1000, 0 );
-    symbolizerCombo.setLayoutData( symbolizerComboData );
-    String items[] = getItemsByFeatureType( featureType );
-    if( items != null && items.length > 0 )
-    {
-      symbolizerCombo.setItems( items );
-      symbolizerCombo.select( 0 );
-    }
     // Geometry-Selection Combo
     geometryCombo = new Combo( composite, SWT.NULL );
     FormData geometryComboData = new FormData();
     geometryComboData.height = 21;
-    geometryComboData.width = 35;
-    geometryComboData.left = new FormAttachment( 550, 1000, 0 );
+    geometryComboData.width = 75;
+    geometryComboData.left = new FormAttachment( 260, 1000, 0 );
     geometryComboData.top = new FormAttachment( 100, 1000, 0 );
     geometryCombo.setLayoutData( geometryComboData );
     String[] geometryItems = getGeometries( featureType );
@@ -140,46 +120,6 @@ public class AddSymbolizerPanel
 
   public Symbolizer getSelection()
   {
-    String geometryPropertyName = geometryCombo.getItem( geometryCombo.getSelectionIndex() );
-    String symbolizerString = getItemsByFeatureType( featureType )[selectionIndex];
-    return getSymbolizer( geometryPropertyName, symbolizerString, featureType );
-  }
-
-  public static Symbolizer getSymbolizer( String geometryPropertyName, String symbolizerString,
-      FeatureType featureType )
-  {
-    if( symbolizerString.equals( "Point" ) )
-    {
-      Mark mark = StyleFactory.createMark( "square" );
-      Graphic graphic = StyleFactory.createGraphic( null, mark, 1.0, 2.0, 0.0 );
-      return StyleFactory.createPointSymbolizer( graphic, geometryPropertyName );
-    }
-    else if( symbolizerString.equals( "Line" ) )
-    {
-      return StyleFactory.createLineSymbolizer( StyleFactory.createStroke(), geometryPropertyName );
-    }
-    else if( symbolizerString.equals( "Text" ) )
-    {
-      TextSymbolizer textSymbolizer = StyleFactory.createTextSymbolizer( geometryPropertyName,
-          null, null );
-      textSymbolizer.setFill( null );
-      textSymbolizer.getHalo().getFill().setOpacity( 0.3 );
-      textSymbolizer.setLabel( null );
-      textSymbolizer.getFont().setColor( Color.BLACK );
-      LabelPlacement labelPlacement = null;
-      // check which geometry-type
-      // if line than label_placement - line_placement
-      if( TextSymbolizerLayout.getFeatureTypeGeometryType( featureType ) == TextSymbolizerLayout.GM_LINESTRING )
-        labelPlacement = StyleFactory.createLabelPlacement( StyleFactory
-            .createLinePlacement( "above" ) );
-      // else label_placement - point_placement
-      else
-        labelPlacement = StyleFactory.createLabelPlacement( StyleFactory.createPointPlacement() );
-      return textSymbolizer;
-    }
-    else if( symbolizerString.equals( "Polygon" ) )
-      return StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory
-          .createFill(), geometryPropertyName );
     return null;
   }
 
@@ -203,57 +143,35 @@ public class AddSymbolizerPanel
 
   public static String[] getGeometries( FeatureType featureType )
   {
-    ArrayList geometryItems = new ArrayList();
+    String items[] = null;
+    ArrayList list = new ArrayList();
     FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
     {
-      String type = ftp[i].getType();
-      if( type.startsWith( "org.deegree.model.geometry." ) && !type.endsWith( "GM_Envelope" ) )
-        geometryItems.add( ftp[i].getName() );
-    }
-    String returnItems[] = new String[geometryItems.size()];
-    for( int j = 0; j < returnItems.length; j++ )
-      returnItems[j] = (String)geometryItems.get( j );
-    return returnItems;
-  }
-
-  private String[] getItemsByFeatureType( FeatureType m_featureType )
-  {
-    String items[] = null;
-
-    if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_POINT )
+      if( ftp[i].getType().equalsIgnoreCase( "java.lang.Double" ) )
+        list.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.math.BigInteger" ) )
+        list.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Byte" ) )
+        list.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.math.BigDecimal" ) )
+        list.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Float" ) )
+        list.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Integer" ) )
+        list.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Long" ) )
+        list.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Short" ) )
+        list.add( ftp[i] );
+    }    
+    if(list.size() > 0)
     {
-      items = new String[2];
-      items[0] = "Point";
-      items[1] = "Text";
-    }
-    else if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_LINESTRING )
-    {
-      items = new String[3];
-      items[0] = "Line";
-      items[1] = "Text";
-      items[2] = "Point";
-    }
-    else if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_POLYGON )
-    {
-      items = new String[3];
-      items[0] = "Polygon";
-      items[1] = "Text";
-      items[2] = "Point";
-    }
-    else if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_MULTIPOINT )
-    {
-      items = new String[2];
-      items[0] = "Point";
-      items[1] = "Text";
-    }
-    else if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_OBJECT ) //multilinestring,
-    // multipolygon
-    {
-      items = new String[3];
-      items[0] = "Polygon";
-      items[1] = "Text";
-      items[2] = "Point";
+      items = new String[list.size()];
+      for(int j = 0; j<list.size(); j++)
+      {
+        items[j] = ((FeatureTypeProperty)list.get(j)).getName();        
+      }           
     }
     return items;
   }

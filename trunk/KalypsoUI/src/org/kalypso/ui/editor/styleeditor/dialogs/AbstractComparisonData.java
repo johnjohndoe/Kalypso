@@ -4,18 +4,19 @@
  */
 package org.kalypso.ui.editor.styleeditor.dialogs;
 
-
 public abstract class AbstractComparisonData extends AbstractData
 {
-	protected String propertyName = null;
-	
+  protected String propertyName = null;
 
-	public String getPropertyName() {
-		return propertyName;
-	}
-	public void setPropertyName(String propertyName) {
-		this.propertyName = propertyName;
-	}
-	
-	public abstract boolean verify(); 
+  public String getPropertyName()
+  {
+    return propertyName;
+  }
+
+  public void setPropertyName( String m_propertyName )
+  {
+    this.propertyName = m_propertyName;
+  }
+
+  public abstract boolean verify();
 }

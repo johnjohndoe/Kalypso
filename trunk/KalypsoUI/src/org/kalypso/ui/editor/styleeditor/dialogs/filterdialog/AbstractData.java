@@ -4,8 +4,7 @@
  */
 package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 
-
 public abstract class AbstractData
 {
-	public abstract boolean verify() throws FilterDialogException;
+  public abstract boolean verify() throws FilterDialogException;
 }

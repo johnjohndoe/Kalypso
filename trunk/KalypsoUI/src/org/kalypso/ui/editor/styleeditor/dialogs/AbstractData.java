@@ -4,8 +4,7 @@
  */
 package org.kalypso.ui.editor.styleeditor.dialogs;
 
-
 public abstract class AbstractData
 {
-	public abstract boolean verify();
+  public abstract boolean verify();
 }
