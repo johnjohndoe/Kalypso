@@ -2,19 +2,21 @@ package org.kalypso.ui.repository.services;
 
 import javax.xml.rpc.ServiceException;
 
+import org.kalypso.repository.AbstractRepositoryFactory;
 import org.kalypso.repository.IRepository;
-import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.RepositoryException;
 
 /**
  * @author schlienger
  */
-public class ObservationServiceRepositoryFactory implements IRepositoryFactory
+public class ObservationServiceRepositoryFactory extends AbstractRepositoryFactory
 {
   /**
-   * @see org.kalypso.repository.IRepositoryFactory#configureRepository(org.kalypso.repository.IRepository)
+   * Does nothing
+   * 
+   * @see org.kalypso.repository.IRepositoryFactory#configureRepository()
    */
-  public boolean configureRepository( final IRepository rep )
+  public boolean configureRepository(  )
   {
     return true;
   }
@@ -26,7 +28,7 @@ public class ObservationServiceRepositoryFactory implements IRepositoryFactory
   {
     try
     {
-      return new ObservationServiceRepository( );
+      return new ObservationServiceRepository( isReadOnly() );
     }
     catch( ServiceException e )
     {
