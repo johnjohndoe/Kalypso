@@ -126,9 +126,9 @@ public class KalypsoObservationServiceTest extends TestCase
     }
   }
   
-  public void testFindItem() throws RemoteException
+  public void testFindItem() throws RemoteException, MalformedURLException
   {
-    final ItemBean b1 = m_srv.findItem( "file://" + KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations\\NEU\\PA_GROEDI.zml" );
+    final ItemBean b1 = m_srv.findItem( new File( KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations\\NEU\\PA_GROEDI.zml" ).toURL().toExternalForm() );
     
     assertNotNull( b1 );
     
@@ -137,7 +137,7 @@ public class KalypsoObservationServiceTest extends TestCase
     assertTrue( b1 instanceof ObservationBean );
     
     
-    final ItemBean b3 = m_srv.findItem( "file://" + KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations" );
+    final ItemBean b3 = m_srv.findItem( new File( KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations").toURL().toExternalForm() );
     
     assertNotNull( b3 );
     
@@ -168,17 +168,23 @@ public class KalypsoObservationServiceTest extends TestCase
     }
   }
 
-  public void testWriteData() throws RemoteException
+  public void testWriteData() throws RemoteException, MalformedURLException
   {
     // real
-    final ObservationBean ob1 = new ObservationBean( "file://" + KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations\\test\\test.zml", "test", "file", null );
-    final OCSDataBean db1 = new OCSDataBean( 0, ob1.getId(), "file:" + KALYPSO_SERVER_BASE + "\\data\\tmp\\test\\example.zml" );
+    final String strFile = new File( KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations\\test\\test.zml").toURL().toExternalForm();
+    final String strRep = new File( KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations").toURL().toExternalForm();
+    final ObservationBean ob1 = new ObservationBean( strFile, "test", strRep, null );
+    
+    final String wFile = new File( KALYPSO_SERVER_BASE + "\\data\\tmp\\test\\example.zml").toURL().toExternalForm();
+    final OCSDataBean db1 = new OCSDataBean( 0, ob1.getId(), wFile );
     
     m_srv.writeData( ob1, db1 );
 
     // fake
-    final ObservationBean ob2 = new ObservationBean( "file://" + KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations\\fake-fake-fake", "test", "file", null );
-    final OCSDataBean db2 = new OCSDataBean( 0, ob2.getId(), KALYPSO_SERVER_BASE + "\\data\\tmp\\test\\example.zml" );
+    final String fakeFile = new File( KALYPSO_SERVER_BASE + "\\data\\mirrored\\SomeObservations\\fake-fake-fake").toURL().toExternalForm();
+    final ObservationBean ob2 = new ObservationBean( fakeFile, "test", strRep, null );
+    final String fFile = new File( KALYPSO_SERVER_BASE + "\\data\\tmp\\test\\example.zml" ).toURL().toExternalForm();
+    final OCSDataBean db2 = new OCSDataBean( 1, ob2.getId(), fFile );
     
     try
     {
