@@ -15,6 +15,7 @@ import org.kalypso.eclipse.jface.viewers.DefaultCellEditorFactory;
 import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
+import org.kalypso.service.calculation.ICalculationService;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypso.util.repository.DefaultRepositoryContainer;
 import org.kalypso.util.repository.RepositorySpecification;
@@ -283,5 +284,13 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   public SelectionIdProvider getSelectionIdProvider()
   {
       return mySelectionIdProvider;
+  }
+
+  public ICalculationService getCalcService( final String serviceName )
+  {
+    
+    // TODO:
+    
+    return null;
   }
 }
