@@ -91,7 +91,7 @@ public class KalypsoApplication implements IPlatformRunnable
         final PasswordDialog dialog = new PasswordDialog(
             shell,
             "Passworteingabe",
-            "Es konnten keine Benutzerrechte vom Server ermittelt erden. Geben Sie das Administrator-Passwort ein, um im Administrator-Modus zu starten." );
+            "Es konnten keine Benutzerrechte vom Server ermittelt werden. Geben Sie das Administrator-Passwort ein, um im Administrator-Modus zu starten." );
 
         if( dialog.open() != Window.OK )
           break;
