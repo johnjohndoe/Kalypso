@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modellist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="xml.model.kalypso.org" mainImage="sachsen_anhalt_wappen.jpg">
-    <model name="Bode" icon="bode_icon.jpg" image="bode.jpg" label="Bode"/>
-     <model name="Saale" icon="saale_icon.jpg" image="saale.jpg" label="Saale"/>
+<modellist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="xml.model.kalypso.org" mainImage="hvz.gif">
+    <model name="Bode" icon="bode_icon.jpg" image="bode.bmp" label="Bode"/>
+     <model name="Saale" icon="saale_icon.jpg" image="saale.bmp" label="Saale"/>
 </modellist>
