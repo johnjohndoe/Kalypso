@@ -73,5 +73,7 @@ public class KalypsoPreferenceInitializer extends AbstractPreferenceInitializer
     // size of the image export for the observation chart
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CHART_EXPORT_WIDTH, 600 );
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CHART_EXPORT_HEIGHT, 500 );
+    
+    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.GLOBAL_CRS,"EPSG:31469" );
   }
 }
