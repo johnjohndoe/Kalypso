@@ -64,7 +64,6 @@ public class XMLUtilities
    * WQFilterUtilities verschoben werden?
    * 
    * @param xmlString
-   * @return
    */
   public static String prepareInLine( String xmlString )
   {

@@ -44,7 +44,7 @@ public class TSMap
 
     return "value";
   }
-
+  
   /** Zeitreihenname (z.B. W_SCHIRG) -> [date->value] */
   final Map m_map = new HashMap();
 
