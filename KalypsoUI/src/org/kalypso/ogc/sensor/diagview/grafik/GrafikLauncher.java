@@ -281,7 +281,7 @@ public class GrafikLauncher
     try
     {
       final SetContentThread thread = new SetContentThread( datFile, !datFile
-          .exists(), true, false, new NullProgressMonitor() )
+          .exists(), false, false, new NullProgressMonitor() )
       {
         protected void write( final Writer writer ) throws Throwable
         {
