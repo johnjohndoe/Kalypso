@@ -74,7 +74,7 @@ public class MapModell implements MapView, ModellEventProvider, ModellEventListe
         continue;
       }
 
-      final Theme theme = new KalypsoTheme( layer );
+      final Theme theme = new KalypsoTheme( layer, layer.getName() );
       final List stylesList = layerType.getStyle();
 
       final List result = new ArrayList();

@@ -114,7 +114,7 @@ public abstract class Widget implements IWidget
   {
     final ICommand command = performIntern();
     if( command != null )
-      myCommandManager.postCommand( command );
+      myCommandManager.postCommand( command, null );
   }
   
   protected abstract ICommand performIntern();

@@ -33,10 +33,13 @@ public class KalypsoTheme implements Theme, ModellEventProvider, ModellEventList
 
   private MapView myParent = null;
 
-  public KalypsoTheme( final KalypsoFeatureLayer layer )
+  private String myName;
+
+  public KalypsoTheme( final KalypsoFeatureLayer layer, final String name )
   {
     myLayer = layer;
     myStyles = new KalypsoUserStyle[] {};
+    myName = name;
 
     myLayer.addModellListener( this );
   }
@@ -51,7 +54,14 @@ public class KalypsoTheme implements Theme, ModellEventProvider, ModellEventList
    */
   public String getName()
   {
-    return myLayer.getName();
+    return myName;
+  }
+  
+  public void setName( final String name )
+  {
+    myName = name;
+    
+    fireModellEvent(null);
   }
 
   /**
@@ -204,7 +214,8 @@ public class KalypsoTheme implements Theme, ModellEventProvider, ModellEventList
   }
 
   /**
-   * @see org.kalypso.gis.graphics.ModellEventListener#onModellChange(org.kalypso.gis.graphics.ModellEvent)
+   * 
+   * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
    */
   public void onModellChange( ModellEvent modellEvent )
   {
