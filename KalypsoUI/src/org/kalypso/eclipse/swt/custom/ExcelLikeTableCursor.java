@@ -3,6 +3,7 @@ package org.kalypso.eclipse.swt.custom;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
@@ -14,20 +15,24 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * 
- * @author gernot
+ * @author Belger
  */
-public class ExcelLikeTableCursor extends TableCursor implements SelectionListener, KeyListener, DisposeListener, MouseListener
+public class ExcelLikeTableCursor extends TableCursor implements SelectionListener, KeyListener,
+    DisposeListener, MouseListener
 {
   protected final TableViewer m_viewer;
 
-  /** Hack, um das element richtig anzuzeigen nach dem edit!
-   * Problem ist, dass die aktualisierung der tabelle schnell genug sein muss 
+  /**
+   * Hack, um das Element richtig anzuzeigen nach dem edit! Problem ist, dass
+   * die Aktualisierung der tabelle schnell genug sein muss
    */
   private final TimerTask m_timertask = new TimerTask()
   {
@@ -54,6 +59,9 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
     }
   };
 
+  private final Color m_cannotEditColor;
+  private final Color m_canEditColor;
+
   public ExcelLikeTableCursor( final TableViewer tableViewer, final int style )
   {
     super( tableViewer.getTable(), style );
@@ -62,10 +70,15 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
 
     addSelectionListener( this );
     addKeyListener( this );
+    addMouseListener( this );
 
     new Timer().schedule( m_timertask, 100, 100 );
-    
+
     addDisposeListener( this );
+    
+    m_cannotEditColor = getDisplay().getSystemColor( SWT.COLOR_GRAY );
+    
+    m_canEditColor = getBackground();
   }
 
   /**
@@ -74,43 +87,43 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
   public void dispose()
   {
     m_timertask.cancel();
+    
+    // only dispose this color
+    m_cannotEditColor.dispose();
 
     super.dispose();
   }
 
   private void startEditing( final KeyEvent ke )
   {
-//    final IStructuredSelection selection = (IStructuredSelection)m_viewer.getSelection();
-//    if( !selection.isEmpty() )
+    final int column = getColumn();
+    final Object element = getRow().getData();
+
+    setVisible( false );
+
+    m_viewer.editElement( element, column );
+    if( ke != null )
     {
-      final int column = getColumn();
-      final Object element = getRow().getData();
-
-      setVisible( false );
-
-      m_viewer.editElement( element, column );
-      if( ke != null )
-      {
       final Widget editorControl = m_viewer.getCellEditors()[column].getControl();
-        
-        // eigentlich würde ich gerne direkt den event weiterschicken, das klappt aber nicht
-//        final Event event = new Event();
-//        event.type = SWT.KeyDown;
-//        event.character = ke.character;
-//        event.keyCode = ke.keyCode;
-//        
-//        
-//        // wäre schön, jetzt ein KeyPressed abzusetzen
-//        editorControl.notifyListeners( SWT.KeyDown, event );
-        
-        // deshalb einfach den text setzen
-        if( editorControl instanceof Text )
-          ((Text)editorControl).insert( "" + ke.character );
-      }
+
+      // eigentlich würde ich gerne direkt den event weiterschicken, das klappt
+      // aber nicht
+      //        final Event event = new Event();
+      //        event.type = SWT.KeyDown;
+      //        event.character = ke.character;
+      //        event.keyCode = ke.keyCode;
+      //        
+      //        
+      //        // wäre schön, jetzt ein KeyPressed abzusetzen
+      //        editorControl.notifyListeners( SWT.KeyDown, event );
+
+      // deshalb einfach den text setzen
+      if( editorControl instanceof Text )
+        ( (Text)editorControl ).insert( "" + ke.character );
     }
   }
 
-  protected void stopEditing()
+  public void stopEditing()
   {
     setVisible( true );
     setFocus();
@@ -121,8 +134,23 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
    */
   public void widgetSelected( final SelectionEvent e )
   {
-//    m_viewer.getTable().setSelection( new TableItem[]
-//    { getRow() } );
+    // change color oder so, wenn Zelle nicht editierbar
+
+    final TableItem row = getRow();
+    final int column = getColumn();
+    final String property = m_viewer.getColumnProperties()[column].toString();
+    
+    final ICellModifier modifier = m_viewer.getCellModifier();
+    if( modifier != null )
+    {
+      if( modifier.canModify( row.getData(), property ) )
+        setBackground( m_canEditColor );
+      else
+        setBackground( m_cannotEditColor );
+    }
+    
+    e.getClass();
+  //    nichts tun
   }
 
   /**
@@ -165,7 +193,7 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
    */
   public void mouseDoubleClick( final MouseEvent e )
   {
-    startEditing( null );
+  // nichts tun
   }
 
   /**
@@ -181,6 +209,6 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
    */
   public void mouseUp( MouseEvent e )
   {
-    // nix tun
+  // nix tun
   }
 }

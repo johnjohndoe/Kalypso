@@ -42,7 +42,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Belger
  */
-public class MapAndTableWizardPage extends WizardPage
+public class MapAndTableWizardPage extends WizardPage implements ICalcWizardPage
 {
   public final static String PROP_MAPTEMPLATE = "mapTemplate";
 
@@ -52,20 +52,30 @@ public class MapAndTableWizardPage extends WizardPage
 
   private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( null );
 
-  private final Properties m_arguments;
+  private Properties m_arguments = null;
 
-  private IProject m_project;
+  private IProject m_project = null;
 
   private static final int SELECTION_ID = 0x10;
 
-  public MapAndTableWizardPage( final IProject project, final String pagetitle,
-      final ImageDescriptor imagedesc, final Properties arguments )
-  {
-    super( "MapAndTableWizardPage", pagetitle, imagedesc );
+  private LayerTableViewer m_viewer;
 
-    m_arguments = arguments;
-    m_project = project;
+  public MapAndTableWizardPage()
+  {
+    super( "<MapAndTableWizardPage>" );
   }
+  
+  /**
+   * @see org.kalypso.ui.calcwizard.ICalcWizardPage#init(org.eclipse.core.resources.IProject, java.lang.String, org.eclipse.jface.resource.ImageDescriptor, java.util.Properties)
+   */
+  public void init( final IProject project, final String pagetitle, final ImageDescriptor imagedesc, final Properties arguments )
+  {
+    setTitle( pagetitle );
+    setImageDescriptor(imagedesc);
+    m_project = project;
+    m_arguments = arguments;
+  }
+
 
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
@@ -99,9 +109,9 @@ public class MapAndTableWizardPage extends WizardPage
       final IFile templateFile = (IFile)m_project.findMember( templateFileName );
       final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile );
 
-      final LayerTableViewer viewer = new LayerTableViewer( parent, KalypsoGisPlugin.getDefault()
-          .getFeatureTypeCellEditorFactory(), SELECTION_ID );
-      viewer.applyTableTemplate( template, m_project );
+      m_viewer = new LayerTableViewer( parent, KalypsoGisPlugin.getDefault()
+                .getFeatureTypeCellEditorFactory(), SELECTION_ID );
+      m_viewer.applyTableTemplate( template, m_project );
     }
     catch( final Exception e )
     {
@@ -128,7 +138,6 @@ public class MapAndTableWizardPage extends WizardPage
     ///////////
     // Karte //
     ///////////
-    // Karte
     final MapPanel mapPanel = new MapPanel( m_commandTarget, crs, SELECTION_ID );
     final Composite mapComposite = new Composite( mapView, SWT.RIGHT | SWT.EMBEDDED );
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
@@ -169,5 +178,16 @@ public class MapAndTableWizardPage extends WizardPage
     mapView.setContent( mapComposite );
     mapView.setTopCenter( toolBar );
     mapView.setTopLeft( outlineViewer.getControl() );
+  }
+
+  /**
+   * @see org.kalypso.ui.calcwizard.ICalcWizardPage#performFinish()
+   */
+  public boolean performFinish()
+  {
+    // TODO: error handling?
+    m_viewer.saveData();
+    
+    return true;
   }
 }

@@ -12,7 +12,11 @@ public interface ITypeRegistry
   
   public void unregisterTypeHandler( final ITypeHandler typeHandler );
   
-  public ITypeHandler getTypeHandlerForTypeName( final String typeName ) throws TypeRegistryException;;
+  public boolean hasTypeName( final String typeName );
   
-  public ITypeHandler getTypeHandlerForClassName( final String className ) throws TypeRegistryException;
+  public boolean hasClassName( final String className );
+  
+  public ITypeHandler getTypeHandlerForTypeName( final String typeName );
+  
+  public ITypeHandler getTypeHandlerForClassName( final String className );
 }

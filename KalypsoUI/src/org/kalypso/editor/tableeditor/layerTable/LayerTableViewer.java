@@ -1,9 +1,7 @@
 package org.kalypso.editor.tableeditor.layerTable;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
@@ -48,7 +46,6 @@ import org.kalypso.util.pool.PoolableObjectType;
 public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     ModellEventListener, ICommandTarget
 {
-
   private static Logger LOGGER = Logger.getLogger( LayerTableViewer.class.getName() );
 
   public static final String COLUMN_PROP_NAME = "columnName";
@@ -67,18 +64,16 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   private final ICellEditorFactory m_cellEditorFactory;
 
-  /** typeName : String -> CellEditor */
-  private Map m_editorMap = new HashMap();
-
   private ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( null );
 
   private final int m_selectionID;
 
-  private final Color m_selectColor = new Color( null, 250, 0, 0 );
+  private final Color m_selectColor;
 
-  private Color m_unselectColor = new Color( null, 255, 255, 255 );
+  private final Color m_unselectColor;
 
-  public LayerTableViewer( final Composite parent, final ICellEditorFactory cellEditorFactory, final int selectionID )
+  public LayerTableViewer( final Composite parent, final ICellEditorFactory cellEditorFactory,
+      final int selectionID )
   {
     //super( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     super( parent, SWT.HIDE_SELECTION );
@@ -96,16 +91,18 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     table.setLinesVisible( true );
 
     new ExcelLikeTableCursor( this, SWT.NONE );
+
+    m_unselectColor = table.getBackground();
+    m_selectColor = table.getDisplay().getSystemColor( SWT.COLOR_YELLOW );
   }
 
   public void dispose()
   {
     applyTableTemplate( null, null );
-    
+
     m_selectColor.dispose();
-    m_unselectColor.dispose();
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.TableViewer#hookControl(org.eclipse.swt.widgets.Control)
    */
@@ -113,11 +110,18 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   {
     // wir wollen nicht die Hooks von TableViewer und StrukturedViewer
     // TODO: geht das auch anders?
-    control.addDisposeListener(new DisposeListener() {
-      public void widgetDisposed(DisposeEvent event) {
-        handleDispose(event);
+    control.addDisposeListener( new DisposeListener()
+    {
+      public void widgetDisposed( DisposeEvent event )
+      {
+        handleDispose( event );
       }
-    });
+    } );
+  }
+
+  protected void handleDispose( final DisposeEvent event )
+  {
+    super.handleDispose( event );
   }
 
   public void applyTableTemplate( final Gistableview tableView, final IProject project )
@@ -207,7 +211,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     setColumnProperties( createColumnProperties() );
 
     super.refresh();
-    
+
     // und die tableitems einfärben??
     final TableItem[] items = getTable().getItems();
     for( int i = 0; i < items.length; i++ )
@@ -219,7 +223,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       else
         item.setBackground( m_unselectColor );
     }
-    
+
   }
 
   /**
@@ -234,7 +238,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final IKalypsoTheme theme = (IKalypsoTheme)getInput();
     if( theme == null || theme.getLayer() == null )
       return editors;
-    
+
     final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)theme.getLayer();
     final FeatureType featureType = layer.getFeatureType();
     for( int i = 0; i < editors.length; i++ )
@@ -243,23 +247,15 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       final FeatureTypeProperty ftp = featureType.getProperty( propName );
       if( ftp != null )
       {
-        final String type = ftp.getType();
-        CellEditor editor = (CellEditor)m_editorMap.get( type );
-        if( editor == null )
+        try
         {
-          try
-          {
-            editor = m_cellEditorFactory.createEditor( type, table, SWT.NONE );
-            m_editorMap.put( type, editor );
-          }
-          catch( final FactoryException e )
-          {
-            // ignore: Type not supported
-            LOGGER.warning( "CellEditor not found for type: " + ftp.getType() );
-          }
+          editors[i] = m_cellEditorFactory.createEditor( ftp, table, SWT.NONE );
         }
-
-        editors[i] = editor;
+        catch( final FactoryException e )
+        {
+          // ignore: Type not supported
+          LOGGER.warning( "CellEditor not found for type: " + ftp.getType() );
+        }
       }
     }
 
@@ -392,5 +388,10 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     }
 
     return tableTemplate;
+  }
+
+  public void saveData()
+  {
+    getTheme().saveFeatures();
   }
 }

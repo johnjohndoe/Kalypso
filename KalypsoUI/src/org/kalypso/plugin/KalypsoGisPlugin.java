@@ -334,6 +334,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     // TODO: error handling
     try
     {
+      // TODO: read TypeHandler from property-file
       registry.registerTypeHandler( new ObservationLinkHandler() );
     }
     catch( final TypeRegistryException e )

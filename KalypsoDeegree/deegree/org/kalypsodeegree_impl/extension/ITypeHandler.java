@@ -10,7 +10,7 @@ public interface ITypeHandler
   /** Der Java-Name, auf den dieser Typ gemapt wird */
   public String getClassName();
   
-  /** Der Typname */
+  /** Der XML-Typname */
   public String getTypeName();
 
   /** Serialisiert ein Object von diesem Typ als XML-Node

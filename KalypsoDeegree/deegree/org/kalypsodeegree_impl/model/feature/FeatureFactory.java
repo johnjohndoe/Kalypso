@@ -51,6 +51,9 @@ import org.deegree.model.feature.FeatureCollection;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree_impl.extension.ITypeHandler;
+import org.deegree_impl.extension.TypeRegistryException;
+import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.model.feature.xlink.XLinkArc;
 import org.deegree_impl.model.feature.xlink.XLinkResource;
 import org.deegree_impl.model.geometry.GMLAdapter;
@@ -285,7 +288,7 @@ public class FeatureFactory
   {
     if( ftp instanceof XLinkFeatureTypeProperty )
       return wrapXLink( (XLinkFeatureTypeProperty)ftp, gmlProperty );
-     return wrapNOXLink( ftp, gmlProperty );
+    return wrapNOXLink( ftp, gmlProperty );
   }
 
   private static Object wrapXLink( XLinkFeatureTypeProperty propType, GMLProperty gmlProperty )
@@ -297,8 +300,8 @@ public class FeatureFactory
     case XLinkFeatureTypeProperty.XLINK_SIMPLE:
     case XLinkFeatureTypeProperty.XLINK_LOCATOR:
       //
-      value = gmlProperty.getAttributeValue("http://www.w3.org/1999/xlink","href");
-    break;
+      value = gmlProperty.getAttributeValue( "http://www.w3.org/1999/xlink", "href" );
+      break;
     case XLinkFeatureTypeProperty.XLINK_EXTENDED:
       //TODO
       break;
@@ -312,7 +315,7 @@ public class FeatureFactory
     default:
       break;
     }
-    
+
     return value;
 
   }
@@ -320,8 +323,14 @@ public class FeatureFactory
   private static Object wrapNOXLink( FeatureTypeProperty ftp, GMLProperty gmlProperty )
       throws Exception
   {
+    final String type = ftp.getType();
+    final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
+        .getTypeHandlerForClassName( type );
 
-    Object o = gmlProperty.getPropertyValue();
+    if( typeHandler != null )
+      return typeHandler.unmarshall( gmlProperty.getElement() );
+
+    final Object o = gmlProperty.getPropertyValue();
     if( o == null )
     {
       if( ftp.isNullable() )
@@ -329,19 +338,20 @@ public class FeatureFactory
       else
         throw new Exception( "Property " + ftp.getName() + " is not nullable, but value is" );
     }
+
     try
     {
       //		System.out.println("Object"+o.getClass().toString());
       if( o instanceof String )
       {
         String string = (String)o;
-        if( "java.lang.String".equals( ftp.getType() ) )
+        if( "java.lang.String".equals( type ) )
           return string;
-        if( "java.lang.Float".equals( ftp.getType() ) )
+        if( "java.lang.Float".equals( type ) )
           return new Float( string );
-        if( "java.lang.Double".equals( ftp.getType() ) )
+        if( "java.lang.Double".equals( type ) )
           return new Double( string );
-        if( "java.lang.Integer".equals( ftp.getType() ) )
+        if( "java.lang.Integer".equals( type ) )
         {
           double value = Double.parseDouble( string );
           Integer integer = new Integer( (int)value );
@@ -349,18 +359,16 @@ public class FeatureFactory
             throw new Exception();
           return integer;
         }
-        if( "java.lang.Boolean".equals( ftp.getType() ) )
+        if( "java.lang.Boolean".equals( type ) )
           return new Boolean( string );
       }
-      if( o instanceof GMLGeometry && ftp.getType().startsWith( "org.deegree.model.geometry." ) )
-      {
+      if( o instanceof GMLGeometry && type.startsWith( "org.deegree.model.geometry." ) )
         return GMLAdapter.wrap( (GMLGeometry)o );
-      }
       throw new Exception();
     }
     catch( Exception e )
     {
-      throw new Exception( "could not convert property (" + o.toString() + ") to " + ftp.getType() );
+      throw new Exception( "could not convert property (" + o.toString() + ") to " + type );
     }
   }
 

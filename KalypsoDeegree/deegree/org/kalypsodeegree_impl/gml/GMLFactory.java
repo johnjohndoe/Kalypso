@@ -47,6 +47,10 @@ import org.deegree.model.feature.*;
 import org.deegree.model.geometry.*;
 import org.deegree.xml.XMLTools;
 
+import org.deegree_impl.extension.ITypeHandler;
+import org.deegree_impl.extension.ITypeRegistry;
+import org.deegree_impl.extension.TypeRegistryException;
+import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.model.feature.XLinkFeatureTypeProperty;
 import org.deegree_impl.tools.*;
 
@@ -554,12 +558,21 @@ public class GMLFactory
       {
         if( properties[i] != null )
         {
-          System.out.println("prop:"+properties[i].getClass().toString()+" "+properties[i].toString());
-          if( ftp[i] instanceof XLinkFeatureTypeProperty )
+           if( ftp[i] instanceof XLinkFeatureTypeProperty )
             prop = GMLProperty_Impl.createGMLProperty( doc, ftp[i], properties[i].toString() );
           else
-            prop = GMLProperty_Impl.createGMLProperty( doc, ftp[i].getName(), properties[i]
+           {
+            final String type = ftp[i].getType();
+            final ITypeRegistry typeRegistry = TypeRegistrySingleton.getTypeRegistry();
+            if( typeRegistry.hasClassName(type) )
+            {
+             final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForClassName( type );
+                prop = GMLCustomProperty_Impl.createGMLProperty( doc, ftp[i], properties[i] );
+            }      
+            else
+              prop = GMLProperty_Impl.createGMLProperty( doc, ftp[i].getName(), properties[i]
                 .toString() );
+           }
         }
         else
         {
@@ -596,6 +609,9 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.3  2004/08/18 20:27:32  belger
+ * *** empty log message ***
+ *
  * Revision 1.2  2004/08/11 11:20:16  doemming
  * *** empty log message ***
  * Revision 1.1.1.1 2004/05/11 16:43:24 doemming
