@@ -79,6 +79,7 @@ import org.w3c.dom.Element;
  */
 public class PropertyIsNullOperation extends ComparisonOperation
 {
+  private static ExpressionDefines EXPRESSION_DEFINES = new ExpressionDefines();
 
   // PropertyName / Literal
   private Expression expression;
@@ -116,7 +117,7 @@ public class PropertyIsNullOperation extends ComparisonOperation
     Element child = children.item( 0 );
     Expression expr = null;
 
-    switch( ExpressionDefines.getIdByName( child.getLocalName() ) )
+    switch( EXPRESSION_DEFINES.getIdByName( child.getLocalName() ) )
     {
     case ExpressionDefines.PROPERTYNAME:
     {

@@ -1,6 +1,8 @@
 package org.kalypso.util.pool;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -11,39 +13,69 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public abstract class PoolableObjectWaiter implements IPoolListener
 {
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
+
   protected final Object[] m_data;
 
+  private IStatus m_result = Status.OK_STATUS;
+
   /**
-   * TRICKY:
-   * inherited classes may NOT use own fields, because calling this constructor via super()
-   * may immediately call {@link #objectLoaded(IPoolableObjectType, Object)} */
-  public PoolableObjectWaiter( final PoolableObjectType key, final Object[] data )
+   * TRICKY: inherited classes may NOT use own fields, because calling this
+   * constructor via super() may immediately call
+   * {@link #objectLoaded(IPoolableObjectType, Object)}
+   * 
+   * @param synchron
+   *          Falls true, wird die Obersvation sofort geladen und im gleichen
+   *          thread objectLoaded ausgeführt
+   */
+  public PoolableObjectWaiter( final PoolableObjectType key, final Object[] data,
+      final boolean synchron )
   {
     m_data = data;
-    m_pool.addPoolListener( this, key );
+
+    if( synchron )
+    {
+      Object value = null;
+      try
+      {
+        value = m_pool.getObject( key );
+      }
+      catch( final CoreException e )
+      {
+        m_result = e.getStatus();
+      }
+      objectLoaded( null, value, m_result );
+    }
+    else
+      m_pool.addPoolListener( this, key );
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
+   *      java.lang.Object, org.eclipse.core.runtime.IStatus)
    */
-  public final void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
+  public final void objectLoaded( final IPoolableObjectType key, final Object newValue,
+      final IStatus status )
   {
     if( newValue != null && status.isOK() )
       objectLoaded( key, newValue );
     else
     {
-     // TODO error handling! 
+      // TODO error handling!
     }
 
     dispose();
   }
 
-  /** This mehtod may be called in the class constructor, so dont use 
-   * own member-fields. See {@link #PoolableObjectWaiter(PoolableObjectType, Object[])}*/
+  /**
+   * This mehtod may be called in the class constructor, so dont use own
+   * member-fields. See
+   * {@link #PoolableObjectWaiter(PoolableObjectType, Object[], boolean)}
+   */
   protected abstract void objectLoaded( final IPoolableObjectType key, final Object newValue );
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
+   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType,
+   *      java.lang.Object)
    */
   public final void objectInvalid( IPoolableObjectType key, Object oldValue )
   {
@@ -54,4 +86,10 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   {
     m_pool.removePoolListener( this );
   }
+  
+  public IStatus getResult()
+  {
+    return m_result;
+  }
+
 }

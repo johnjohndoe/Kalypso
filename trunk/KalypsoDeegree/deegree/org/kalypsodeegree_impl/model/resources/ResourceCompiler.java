@@ -71,6 +71,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -172,7 +173,7 @@ final class ResourceCompiler implements Comparator
       /*
        * Copy all fields into {@link #allocatedIDs}map.
        */
-      Field.setAccessible( fields, true );
+      AccessibleObject.setAccessible( fields, true );
       for( int i = fields.length; --i >= 0; )
       {
         final Field field = fields[i];
@@ -358,7 +359,9 @@ final class ResourceCompiler implements Comparator
       {
         Integer ID;
         while( allocatedIDs.containsKey( ID = new Integer( freeID++ ) ) )
-          ;
+          {
+          // nix
+          }
         allocatedIDs.put( ID, key );
       }
     }
@@ -684,7 +687,7 @@ final class ResourceCompiler implements Comparator
    * Compare two resource keys. Object <code>o1</code> and <code>o2</code>
    * are usually {@link String}objects representing resource keys (for example "
    * <code>MISMATCHED_DIMENSION</code> "). This method compares strings as of
-   * {@link String#compareTo}, except that string starting with one of the
+   * {@link String#compareTo(java.lang.Object)}, except that string starting with one of the
    * prefix enumetated in {@link #ORDER}will appear last in the sorted array.
    */
   public int compare( Object o1, Object o2 )

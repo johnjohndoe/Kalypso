@@ -48,8 +48,8 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderListener;
 import org.kalypso.loader.LoaderException;
@@ -67,7 +67,7 @@ public final class KeyInfo extends Job implements ILoaderListener
 
   private final IPoolableObjectType m_key;
 
-  public KeyInfo( final IPoolableObjectType key, final ILoader loader )
+  public KeyInfo( final IPoolableObjectType key, final ILoader loader, final ISchedulingRule rule )
   {
     super( "Lade Resource: " + key.toString() );
 
@@ -77,9 +77,7 @@ public final class KeyInfo extends Job implements ILoaderListener
     m_loader.addLoaderListener( this );
 
     setPriority( Job.LONG );
-
-    // Jobs auf dem gleichen Pool müssen nacheinander laufen!
-    setRule( new MutexSchedulingRule() );
+    setRule( rule );
   }
 
   public void dispose()
@@ -192,8 +190,7 @@ public final class KeyInfo extends Job implements ILoaderListener
     if( m_object != null )
       b.append( "  pooled object (type): " + m_object.getClass().getName() + "\n" );
     else
-      b
-          .append( " !!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!\n pooled object (type): NULL \n" );
+      b.append( " !!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!\n pooled object (type): NULL \n" );
     b.append( "  loader (type): " + m_loader.getClass().getName() + "\n" );
     b.append( "  key: " + m_key + "\n" );
     b.append( "  number of listeners: " + m_listeners.size() + "\n" );

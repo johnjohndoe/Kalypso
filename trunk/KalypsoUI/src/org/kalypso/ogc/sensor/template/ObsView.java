@@ -208,7 +208,7 @@ public abstract class ObsView implements IObsViewEventProvider
         this,
         data,
         ignoreType,
-        tokenizedName } )
+        tokenizedName }, false )
     {
       protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
       {

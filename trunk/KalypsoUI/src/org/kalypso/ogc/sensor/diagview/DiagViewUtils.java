@@ -54,6 +54,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -66,6 +68,7 @@ import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.template.obsdiagview.ObsdiagviewType.LegendType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.xml.sax.InputSource;
 
 /**
@@ -320,9 +323,11 @@ public class DiagViewUtils
         DiagramAxis.POSITION_LEFT, false );
   }
 
-  public static void applyXMLTemplate( final DiagView view, final ObsdiagviewType xml,
-      final URL context )
+  public static IStatus applyXMLTemplate( final DiagView view, final ObsdiagviewType xml,
+      final URL context, final boolean synchron )
   {
+    final MultiStatus status = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Fehler beim Laden einer Vorlage", null );
+    
     view.removeAllItems();
 
     view.setTitle( xml.getTitle() );
@@ -344,7 +349,10 @@ public class DiagViewUtils
     for( final Iterator it = list.iterator(); it.hasNext(); )
     {
       final TypeObservation tobs = (TypeObservation)it.next();
-      new DiagViewCurveXMLLoader( view, tobs, context );
+      final DiagViewCurveXMLLoader loader = new DiagViewCurveXMLLoader( view, tobs, context, synchron );
+      status.add( loader.getResult() );
     }
+    
+    return status;
   }
 }

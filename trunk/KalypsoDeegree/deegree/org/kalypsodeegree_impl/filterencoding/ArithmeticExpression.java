@@ -77,7 +77,6 @@ import org.w3c.dom.Element;
  */
 public class ArithmeticExpression extends Expression_Impl
 {
-
   /** The first operand. */
   Expression expr1;
 
@@ -102,10 +101,9 @@ public class ArithmeticExpression extends Expression_Impl
    */
   public static Expression buildFromDOM( Element element ) throws FilterConstructionException
   {
-
     // check if root element's name is 'Add' / 'Sub' / 'Mul' or 'Div'
     String name = element.getLocalName();
-    int id = ExpressionDefines.getIdByName( name );
+    int id = EXPRESSION_DEFINES.getIdByName( name );
     switch( id )
     {
     case ExpressionDefines.ADD:

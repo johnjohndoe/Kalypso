@@ -4,7 +4,7 @@
    id="org.kalypso.repository"
    name="KalypsoRepository"
    version="0.0.5"
-   provider-name="org.kalypso">
+   provider-name="kalypso.org">
 
    <runtime>
       <library name="lib/dom.jar">

@@ -54,6 +54,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
@@ -65,6 +67,7 @@ import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
 import org.kalypso.template.obstableview.ObstableviewType.RulesType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.xml.sax.InputSource;
 
 /**
@@ -260,9 +263,10 @@ public class TableViewUtils
     return xmlTemplate;
   }
 
-  public static void applyXMLTemplate( final TableView view, final ObstableviewType xml,
-      final URL context )
+  public static IStatus applyXMLTemplate( final TableView view, final ObstableviewType xml,
+      final URL context, final boolean synchron )
   {
+    final MultiStatus status = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Fehler beim Laden einer Vorlage", null );
     view.removeAllItems();
 
     final RulesType trules = xml.getRules();
@@ -280,8 +284,10 @@ public class TableViewUtils
     {
       final TypeObservation tobs = (TypeObservation)it.next();
 
-      new TableViewColumnXMLLoader( view, tobs, context );
+      final TableViewColumnXMLLoader loader = new TableViewColumnXMLLoader( view, tobs, context, synchron );
+      status.add( loader.getResult() );
     }
-
+    
+    return status;
   }
 }

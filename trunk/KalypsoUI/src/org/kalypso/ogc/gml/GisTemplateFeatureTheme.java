@@ -321,7 +321,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       for( int i = 0; i < m_styleKeys.length; i++ )
       {
         final IPoolableObjectType styleKey = m_styleKeys[i];
-        if( KeyComparator.getInstance().compare( styleKey, key ) == 0 )
+        if( KeyComparator.getInstance().compare( styleKey, key ) == 0 && newValue != null )
         {
           final StyledLayerDescriptor sld = (StyledLayerDescriptor)newValue;
           final UserStyle style = sld.findUserStyle( m_styleNames[i] );

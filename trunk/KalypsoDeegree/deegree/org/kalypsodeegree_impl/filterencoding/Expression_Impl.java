@@ -73,6 +73,7 @@ import org.w3c.dom.Element;
  */
 abstract public class Expression_Impl implements Expression
 {
+  protected static ExpressionDefines EXPRESSION_DEFINES = new ExpressionDefines();
 
   /**
    * The underlying expression's id.
@@ -91,10 +92,9 @@ abstract public class Expression_Impl implements Expression
    */
   public static Expression buildFromDOM( Element element ) throws FilterConstructionException
   {
-
     // check if root element's name is a known expression
     String name = element.getLocalName();
-    int id = ExpressionDefines.getIdByName( name );
+    final int id = EXPRESSION_DEFINES.getIdByName( name );
     Expression expression = null;
 
     switch( id )
@@ -137,7 +137,7 @@ abstract public class Expression_Impl implements Expression
   /** Returns the name of the expression. */
   public String getExpressionName()
   {
-    return ExpressionDefines.getNameById( id );
+    return EXPRESSION_DEFINES.getNameById( id );
   }
 
   /**

@@ -4,7 +4,7 @@
    id="org.kalypso.ui"
    name="KalypsoUI"
    version="0.0.5"
-   provider-name="org.kalypso"
+   provider-name="kalypso.org"
    class="org.kalypso.ui.KalypsoGisPlugin">
 
    <runtime>
@@ -584,14 +584,14 @@
       <product
             name="Kalypso Enterprise"
             application="org.kalypso.ui.application"
-            description="Kalypso Enterprise Modelling Machine">
+            description="Kalypso Enterprise Client for numerical modelling">
          <property
                name="aboutText"
-               value="Kalypso Enterprise Copyright 2004 by BCE Koblenz and TUHH">
+               value="%productBlurb">
          </property>
          <property
                name="aboutImage"
-               value="etc/kalypso32.gif">
+               value="etc/aboutKalypso.gif">
          </property>
          <property
                name="featureImage"

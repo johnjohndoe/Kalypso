@@ -52,6 +52,8 @@ import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.template.IObsProvider;
+import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.PooledObsProvider;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
@@ -67,9 +69,9 @@ import org.kalypso.util.pool.PoolableObjectWaiter;
  */
 public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
 {
-public DiagViewCurveXMLLoader( final DiagView view, final TypeObservation xmlObs, final URL context )
+public DiagViewCurveXMLLoader( final DiagView view, final TypeObservation xmlObs, final URL context, final boolean synchron )
   {
-    super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[]{ view, xmlObs } );
+    super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[]{ view, xmlObs }, synchron );
   }
   /**
    * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
@@ -132,7 +134,7 @@ public DiagViewCurveXMLLoader( final DiagView view, final TypeObservation xmlObs
 
       // each curve gets its own provider as the curve disposes the provider,
       // when disposed
-      final PooledObsProvider provider = new PooledObsProvider( key, null );
+      final IObsProvider provider = key == null ? (IObsProvider)new PlainObsProvider( obs, null ) : new PooledObsProvider( key, null );
       final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color,
           (AxisMapping[])mappings.toArray( new AxisMapping[0] ) );
       curve.setShown( tcurve.isShown() );

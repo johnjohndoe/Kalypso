@@ -48,10 +48,16 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.kalypso.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.loader.LoaderException;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.factory.FactoryException;
 
 /**
@@ -68,6 +74,12 @@ public class ResourcePool
 
   /** key -> KeyInfo */
   private final Map m_keyInfos = new TreeMap( KeyComparator.getInstance() );
+
+  /**
+   * Rule für die KeyInfos. Das Laden der eigentlichen Objekte soll nacheinander
+   * stattfinden.
+   */
+  private final ISchedulingRule m_mutex = new MutexSchedulingRule();
 
   public ResourcePool( final ILoaderFactory factory )
   {
@@ -107,7 +119,7 @@ public class ResourcePool
         try
         {
           final ILoader loader = getLoader( key.getType() );
-          info = new KeyInfo( key, loader );
+          info = new KeyInfo( key, loader, m_mutex );
           m_keyInfos.put( key, info );
         }
         catch( final Exception e )
@@ -160,24 +172,70 @@ public class ResourcePool
   {
     synchronized( m_keyInfos )
     {
-      if(object==null)
-          return;
-        
+      if( object == null )
+        return;
+
       final Collection values = m_keyInfos.values();
       for( final Iterator iter = values.iterator(); iter.hasNext(); )
       {
-        final KeyInfo info = (KeyInfo)iter.next();     
+        final KeyInfo info = (KeyInfo)iter.next();
         if( info.getObject() == object )
-        {
           info.saveObject( monitor );
-        }
       }
     }
   }
-  
+
   public KeyInfo[] getInfos()
   {
     return (KeyInfo[])m_keyInfos.values().toArray( new KeyInfo[0] );
   }
-  
+
+  public Object getObject( final PoolableObjectType key ) throws CoreException
+  {
+    final KeyInfo info = (KeyInfo)m_keyInfos.get( key );
+    if( info != null )
+    {
+      try
+      {
+        // wait for info
+        info.join();
+        
+        final IStatus result = info.getResult();
+        if( result.isOK() )
+          return info.getObject();
+
+        throw new CoreException( result );
+      }
+      catch( final InterruptedException e )
+      {
+        e.printStackTrace();
+        
+        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Ladevorgang unterbrochen", e ) );
+      }
+    }
+    
+    // falls object nicht bereits da,
+    // einfach einen key nur fürs laden erzeugen, und gleich wieder disposen
+    KeyInfo info2 = null;
+    try
+    {
+      final ILoader loader = getLoader( key.getType() );
+      info2 = new KeyInfo( key, loader, m_mutex );
+      final IStatus result = info2.loadObject( new NullProgressMonitor() );
+      if( result.isOK() )
+        return info2.getObject();
+
+      throw new CoreException( result );
+    }
+    catch( final Exception e )
+    {
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Laden", e ) );
+    }
+    finally
+    {
+      if( info2 != null )
+        info2.dispose();
+    }
+  }
+
 }
