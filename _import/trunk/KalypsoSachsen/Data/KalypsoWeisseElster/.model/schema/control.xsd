@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.spree.control" version="0.1" xmlns:spree="org.kalypso.spree.control" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<schema targetNamespace="org.kalypso.na.control" version="0.1" xmlns:na="org.kalypso.na.control" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
-	<element name="SpreeControl" type="spree:_SpreeControlType"/>
-	<complexType name="_SpreeControlBaseType">
+	<element name="NAControl" type="na:_NAControlType"/>
+	<complexType name="_NAControlBaseType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureType"/>
 		</complexContent>
 	</complexType>
-	<complexType name="_SpreeControlType">
+	<complexType name="_NAControlType">
 		<complexContent>
-			<extension base="spree:_SpreeControlBaseType">
+			<extension base="na:_NAControlBaseType">
                 <sequence>
                     <element name="startsimulation" type="dateTime">
 						<annotation>

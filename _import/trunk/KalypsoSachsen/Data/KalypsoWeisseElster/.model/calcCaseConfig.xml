@@ -58,82 +58,36 @@
 	<!-- Catchments -->
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
-			<argument name="xsd" value=":project:.model/schema/namodell.xsd"/>
 			<argument name="feature" value="Catchment"/>
 			<argument name="sourceObservation" value="niederschlagZRRepository"/>
 			<argument name="targetObservation" value="niederschlagZR"/>
 			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
 		</transformation>
 			<!-- Zufluesse -->
 	<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
-			<argument name="xsd" value=":project:.model/schema/namodell.xsd"/>
 			<argument name="feature" value="Node"/>
 			<argument name="sourceObservation" value="zuflussZRRepository"/>
 			<argument name="targetObservation" value="zuflussZR"/>
 			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
 		</transformation>
 			<!-- Pegel (werden fuer die automatische kallibrierung gebraucht) -->
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
-			<argument name="xsd" value=":project:.model/schema/namodell.xsd"/>
 			<argument name="feature" value="Node"/>
 			<argument name="sourceObservation" value="pegelZRRepository"/>
 			<argument name="targetObservation" value="pegelZR"/>
 			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
 		</transformation>
-		<!--
-		<transformation className="org.kalypso.util.transformation.ObservationResolver">
-			<argument name="gml" value=":calcdir:calcCase.gml"/>
-			<argument name="xsd" value=":project:.model/schema/modell.xsd"/>
-			<argument name="feature" value="Einzugsgebiet"/>
-			<argument name="sourceObservation" value="Wasserstand_gemessenEingang"/>
-			<argument name="targetObservation" value="Wasserstand_gemessen"/>
-			<argument name="targetFolder" value=":calcdir:"/>
-		</transformation>
-	-->
-	<!-- Flusslaufmodelle -->
-	<!--	<transformation className="org.kalypso.util.transformation.ObservationResolver">
-			<argument name="gml" value=":calcdir:calcCase.gml"/>
-			<argument name="xsd" value=":project:.model/schema/modell.xsd"/>
-			<argument name="feature" value="FlusslaufModell"/>
-			<argument name="sourceObservation" value="Wasserstand_gemessenEingang"/>
-			<argument name="targetObservation" value="Wasserstand_gemessen"/>
-			<argument name="targetFolder" value=":calcdir:"/>
-		</transformation>
-	-->
-	
-		<!-- Talsperre -->
-		<!--
-			<transformation className="org.kalypso.util.transformation.ObservationResolver">
-			<argument name="gml" value=":calcdir:calcCase.gml"/>
-			<argument name="xsd" value=":project:.model/schema/modell.xsd"/>
-			<argument name="feature" value="Talsperre"/>
-			<argument name="sourceObservation" value="Abgabe_eingang"/>
-			<argument name="targetObservation" value="Abgabe"/>
-			<argument name="targetFolder" value=":calcdir:"/>
-		</transformation>
-	-->
-	<!-- Flutung -->
-	<!--
-		<transformation className="org.kalypso.util.transformation.ObservationResolver">
-			<argument name="gml" value=":calcdir:calcCase.gml"/>
-			<argument name="xsd" value=":project:.model/schema/modell.xsd"/>
-			<argument name="feature" value="Flutung"/>
-			<argument name="sourceObservation" value="Abgabe_eingang"/>
-			<argument name="targetObservation" value="Abgabe"/>
-			<argument name="targetFolder" value=":calcdir:"/>
-		</transformation>
-	
-		<transformation className="org.kalypso.util.transformation.ObservationResolver">
-			<argument name="gml" value=":calcdir:calcCase.gml"/>
-			<argument name="xsd" value=":project:.model/schema/modell.xsd"/>
-			<argument name="feature" value="Zufluss"/>
-			<argument name="sourceObservation" value="Zugabe_eingang"/>
-			<argument name="targetObservation" value="Zugabe"/>
-			<argument name="targetFolder" value=":calcdir:"/>
-		</transformation>
-	-->
 <!--	
 		<transformation className="org.kalypso.util.transformation.ReplaceTransformation">
 			<argument name="protocol0" value="calcdir=:calcdir:"/>
