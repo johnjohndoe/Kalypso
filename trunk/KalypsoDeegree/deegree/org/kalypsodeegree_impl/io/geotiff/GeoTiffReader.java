@@ -193,11 +193,11 @@ public class GeoTiffReader
     for( int i = 0; i < ch.length; i = i + 4 )
     {
       int[] keys = new int[3];
-      keydirversion = (int)ch[i];
+      keydirversion = ch[i];
 
-      keyrevision = (int)ch[i + 1];
-      minorrevision = (int)ch[i + 2];
-      numberofkeys = (int)ch[i + 3];
+      keyrevision = ch[i + 1];
+      minorrevision = ch[i + 2];
+      numberofkeys = ch[i + 3];
       keys[0] = keyrevision;
       keys[1] = minorrevision;
       keys[2] = numberofkeys;
@@ -701,6 +701,9 @@ public class GeoTiffReader
  * Changes to this class. What the people have been up to:
  * 
  * $Log$
+ * Revision 1.2  2004/10/30 15:22:17  belger
+ * *** empty log message ***
+ *
  * Revision 1.1  2004/10/07 14:09:20  doemming
  * *** empty log message ***
  *

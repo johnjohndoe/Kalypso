@@ -870,33 +870,6 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Returns a transformation from <code>CS</code> to a geographic coordinate
-   * system. If <code>CS</code> is already an instance of
-   * {GeographicCoordinateSystem}, then this method returns the identity
-   * transform. Otherwise, if <code>CS</code> is an instance of
-   * {@link ProjectedCoordinateSystem}, then this method returns an inverse map
-   * projection. Otherwise, this method returns <code>null</code>.
-   * 
-   * @throws CannotCreateTransformException
-   *           if the transform can't be created.
-   */
-  private CoordinateTransformation getGeographicTransformation( final CoordinateSystem CS )
-      throws CannotCreateTransformException
-  {
-    if( CS instanceof GeographicCoordinateSystem )
-    {
-      final GeographicCoordinateSystem gCS = (GeographicCoordinateSystem)CS;
-      return createTransformationStep( gCS, gCS );
-    }
-    if( CS instanceof ProjectedCoordinateSystem )
-    {
-      final ProjectedCoordinateSystem pCS = (ProjectedCoordinateSystem)CS;
-      return createTransformationStep( pCS, pCS.getGeographicCoordinateSystem() );
-    }
-    return null;
-  }
-
-  /**
    * Concatenate two transformation steps.
    * 
    * @param step1

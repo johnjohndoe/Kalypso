@@ -103,9 +103,6 @@ public class DBaseFile
 
   private String ftName = null;
 
-  // end of file flag
-  private boolean eof = false;
-
   // number of records in the table
   private double file_numrecs;
 
@@ -126,18 +123,6 @@ public class DBaseFile
 
   // current record
   private long record_number = 0;
-
-  // the file type (dbase, fox, etc) and the file update date values
-  private short file_type;
-
-  // the file type (dbase, fox, etc) and the file update date values
-  private short file_update_day;
-
-  // the file type (dbase, fox, etc) and the file update date values
-  private short file_update_month;
-
-  // the file type (dbase, fox, etc) and the file update date values
-  private short file_update_year;
 
   // size of the cache used for reading data from the dbase table
   private long cacheSize = 1000000;
@@ -217,12 +202,12 @@ final int m_defaultFileShapeType;
     rafDbf.seek( 0 );
 
     // read the file type
-    file_type = fixByte( rafDbf.readByte() );
+    fixByte( rafDbf.readByte() );
 
     // get the last update date
-    file_update_year = fixByte( rafDbf.readByte() );
-    file_update_month = fixByte( rafDbf.readByte() );
-    file_update_day = fixByte( rafDbf.readByte() );
+    fixByte( rafDbf.readByte() );
+    fixByte( rafDbf.readByte() );
+    fixByte( rafDbf.readByte() );
 
     // a byte array to hold little-endian long data
     byte[] b = new byte[4];
@@ -247,7 +232,7 @@ final int m_defaultFileShapeType;
     file_datalength = ByteUtils.readLEShort( b, 0 );
 
     // calculate the number of fields
-    num_fields = (int)( file_datap - 33 ) / 32;
+    num_fields = ( file_datap - 33 ) / 32;
 
     // read in the column data
     int locn = 0; // offset of the current column
@@ -432,7 +417,6 @@ final int m_defaultFileShapeType;
     }
 
     record_number = 0;
-    eof = false;
   }
 
   /**
@@ -449,12 +433,10 @@ final int m_defaultFileShapeType;
     if( record_number < file_numrecs )
     {
       record_number++;
-      eof = false;
       return true;
     }
     else
     {
-      eof = true;
       return false;
     }
   }
@@ -620,7 +602,7 @@ final int m_defaultFileShapeType;
         // to this column.
         column = (dbfCol)column_info.get( colHeader.get( i ) );
 
-        vec.add( (Object)column.type.trim() );
+        vec.add( column.type.trim() );
       }
     }
 

@@ -80,8 +80,6 @@ public class LegendFactory
 
   private String legendtitle = "";
 
-  private String legendtitlefilterproperty = "";
-
   /**
    * creates a <tt>LegendElement</tt> using the passed <tt>BufferedImage</tt>
    * 

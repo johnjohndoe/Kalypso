@@ -45,15 +45,12 @@ public class FeatureTypeBuilder
 
   private final HashMap m_maxOccurs;
 
-  private boolean m_isFeatureAssociation = false;
-
   private boolean m_isCutoumType = false;
 
   private String m_substitutionGroup = null;
 
   public FeatureTypeBuilder( GMLSchema schema, Node node ) throws Exception
   {
-
     m_minOccurs = new HashMap();
     m_maxOccurs = new HashMap();
     m_schema = schema;
@@ -394,7 +391,6 @@ public class FeatureTypeBuilder
 
   public void setFeatureAssociation()
   {
-    m_isFeatureAssociation = true;
   }
 
   /**

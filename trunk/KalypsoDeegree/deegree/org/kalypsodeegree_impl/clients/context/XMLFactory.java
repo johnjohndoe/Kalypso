@@ -1386,8 +1386,8 @@ public class XMLFactory
       m.setAttribute( "hidden", String.valueOf( mod.isHidden() ) );
 
       m.setAttribute( "type", mod.getType() );
-      m.setAttribute( "width", String.valueOf( (int)mod.getWidth() ) );
-      m.setAttribute( "height", String.valueOf( (int)mod.getHeight() ) );
+      m.setAttribute( "width", String.valueOf( mod.getWidth() ) );
+      m.setAttribute( "height", String.valueOf( mod.getHeight() ) );
       m.setAttribute( "scrolling", String.valueOf( mod.getScrolling() ) );
 
       Element n = createElement( namespace, "deegree:Name" );

@@ -75,14 +75,6 @@ import org.deegree_impl.model.resources.css.Resources;
 abstract class MapProjection extends AbstractMathTransform implements MathTransform2D
 {
   /**
-   * Erreur maximale (en mètres) tolérées lorsque l'on fait une transformation
-   * directe suivit d'une transformation inverse (ou vis-versa). Si les "//
-   * assertions" sont activées et qu'une erreur supérieure est détectée, une
-   * exception {@link // assertionError}sera lancée.
-   */
-  private static final double MAX_ERROR = 1;
-
-  /**
    * Marge de tolérance pour les comparaisons de nombre réels.
    */
   static final double EPS = 1.0E-6;
@@ -251,22 +243,6 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
     }
     throw new IllegalArgumentException( Resources.format(
         ResourceKeys.ERROR_LATITUDE_OUT_OF_RANGE_$1, new Latitude( y ) ) );
-  }
-
-  /**
-   * Check point for private use by {@link #checkTransform}and
-   * {@link #checkInverseTransform}. This class is necessary in order to avoid
-   * never-ending loop in <code>// assert</code> statements (when an
-   * <code>// assert</code> calls <code>transform</code>, which calls
-   * <code>inverseTransform</code>, which calls <code>transform</code>,
-   * etc.).
-   */
-  private static final class CheckPoint extends Point2D.Double
-  {
-    public CheckPoint( final Point2D point )
-    {
-      super( point.getX(), point.getY() );
-    }
   }
 
   /**

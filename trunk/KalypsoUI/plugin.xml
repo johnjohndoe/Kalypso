@@ -263,7 +263,7 @@
                label="Ausschnitt vergrößern"
                icon="icons/map/zoomin.gif"
                tooltip="vergrößert den Kartenausschnitt"
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInWidgetDelegate"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
                style="radio"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
                id="org.kalypso.ui.editor.mapeditor.action.ZoomInAction"/>

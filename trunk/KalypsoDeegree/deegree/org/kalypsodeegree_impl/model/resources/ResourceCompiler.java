@@ -104,11 +104,6 @@ final class ResourceCompiler implements Comparator
   private static final String CLASS_NAME = "ResourceKeys";
 
   /**
-   * File name prefix for properties and resources files.
-   */
-  private static final String PREFIX = "resources";
-
-  /**
    * Extension for properties files.
    */
   private static final String PROPERTIES_EXT = ".properties";

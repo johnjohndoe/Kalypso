@@ -49,7 +49,6 @@ import org.deegree.graphics.displayelements.RasterDisplayElement;
 import org.deegree.graphics.sld.RasterSymbolizer;
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
-import org.deegree_impl.graphics.sld.RasterSymbolizer_Impl;
 import org.deegree_impl.model.gc.ImageGridCoverage;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.opengis.gc.GC_GridCoverage;
@@ -64,8 +63,6 @@ import org.opengis.pt.PT_Envelope;
 public class RasterDisplayElement_Impl extends DisplayElement_Impl implements RasterDisplayElement
 {
 
-  private RasterSymbolizer symbolizer = null;
-
   private GC_GridCoverage gc = null;
 
   /**
@@ -77,7 +74,6 @@ public class RasterDisplayElement_Impl extends DisplayElement_Impl implements Ra
   RasterDisplayElement_Impl( GC_GridCoverage gc )
   {
     setRaster( gc );
-    symbolizer = new RasterSymbolizer_Impl();
   }
 
   /**
@@ -90,7 +86,9 @@ public class RasterDisplayElement_Impl extends DisplayElement_Impl implements Ra
   RasterDisplayElement_Impl( GC_GridCoverage gc, RasterSymbolizer symbolizer )
   {
     setRaster( gc );
-    this.symbolizer = symbolizer;
+    
+    // unused
+    symbolizer.getClass();
   }
 
   /**
