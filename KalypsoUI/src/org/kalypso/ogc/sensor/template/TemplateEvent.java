@@ -44,6 +44,6 @@ public class TemplateEvent extends EventObject
   
   public boolean isType( int type )
   {
-    return (m_type & type) == type;
+    return (m_type & type) == m_type;
   }
 }

@@ -32,7 +32,14 @@ import org.kalypso.util.factory.FactoryException;
  */
 public class ObservationPlot extends XYPlot
 {
-  private final static ConfigurableCachableObjectFactory OF;
+  private static final ConfigurableCachableObjectFactory OF;
+
+  /** default line renderer */
+  private static final XYItemRenderer LINE_RENDERER = new StandardXYItemRenderer(
+      StandardXYItemRenderer.LINES );
+
+  /** default bar renderer */
+  private static final XYItemRenderer BAR_RENDERER = new XYBarRenderer();
 
   static
   {
@@ -46,10 +53,11 @@ public class ObservationPlot extends XYPlot
     {
       e.printStackTrace();
     }
+
     OF = new ConfigurableCachableObjectFactory( props, false,
         ChartFactory.class.getClassLoader() );
   }
-
+  
   /** maps the diagram axis (from the template) to the chart axis */
   private transient final Map m_diag2chartAxis;
 
@@ -58,13 +66,6 @@ public class ObservationPlot extends XYPlot
 
   /** maps the diagram axes (from the template) to a dataset */
   private transient final Map m_axes2ds = new HashMap();
-
-  /** default line renderer */
-  private static final XYItemRenderer LINE_RENDERER = new StandardXYItemRenderer(
-      StandardXYItemRenderer.LINES );
-
-  /** default bar renderer */
-  private static final XYItemRenderer BAR_RENDERER = new XYBarRenderer();
 
   private int m_domPos = 0;
 

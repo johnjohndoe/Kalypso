@@ -5,7 +5,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/kalypsoservice_observation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/kalypsoservice_calculation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/kalypsoservice_metadoc.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jcommon-0.9.5.jar"/>
+	<classpathentry exported="true" sourcepath="D:/user/schlienger/dev/jcommon/jcommon-0.9.4/src" kind="lib" path="lib/jcommon-0.9.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/dom.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxrpc-api.jar"/>
