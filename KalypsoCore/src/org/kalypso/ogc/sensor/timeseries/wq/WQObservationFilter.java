@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq;
 
 import java.io.StringReader;
@@ -72,6 +72,8 @@ public class WQObservationFilter extends AbstractObservationFilter
   private IAxis m_srcAxis;
 
   private IAxis m_destAxis;
+
+  private WechmannGroup m_group = null;
 
   /**
    * The argument conf is a String as defined in TimeserieConstants.TYPE_*. It
@@ -142,28 +144,40 @@ public class WQObservationFilter extends AbstractObservationFilter
   public ITuppleModel getValues( IVariableArguments args )
       throws SensorException
   {
-    final String wechmann = getMetadataList().getProperty(
-        TimeserieConstants.MD_WQ );
-    final WechmannGroup group;
-    if( wechmann != null )
+    return new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis,
+        m_srcAxis, m_destAxis, getWechmannGroup() );
+  }
+
+  /**
+   * Lazy loading of wechmann group.
+   * 
+   * @throws SensorException
+   */
+  private WechmannGroup getWechmannGroup( ) throws SensorException
+  {
+    if( m_group == null )
     {
-      try
+      final String wechmann = getMetadataList().getProperty(
+          TimeserieConstants.MD_WQ );
+      if( wechmann != null )
       {
-        group = WechmannFactory.parse( new InputSource( new StringReader(
-            wechmann ) ) );
+        try
+        {
+          m_group = WechmannFactory.parse( new InputSource( new StringReader(
+              wechmann ) ) );
+        }
+        catch( WechmannException e )
+        {
+          throw new SensorException( e );
+        }
       }
-      catch( WechmannException e )
+      else
       {
-        throw new SensorException( e );
+        m_group = new WechmannGroup( new WechmannSet[0] );
       }
-    }
-    else
-    {
-      group = new WechmannGroup( new WechmannSet[0] );
     }
 
-    return new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis,
-        m_srcAxis, m_destAxis, group );
+    return m_group;
   }
 
   /**
@@ -171,7 +185,7 @@ public class WQObservationFilter extends AbstractObservationFilter
    */
   public void setValues( final ITuppleModel values ) throws SensorException
   {
-    super.setValues( values );
+    super.setValues( WQTuppleModel.reverse( values, m_obs.getAxisList() ) );
   }
 
   /**

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.diagrameditor;
 
 import java.awt.Frame;
@@ -59,6 +59,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.ogc.sensor.template.AbstractObservationTheme;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
@@ -75,13 +76,13 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
   protected ObservationChart m_obsChart = null;
 
   // TODO: maybe set a preference for this flag. It is currently always true.
-//  private boolean m_useAutoProxy = true;
+  //  private boolean m_useAutoProxy = true;
 
-  public ObservationDiagramEditor()
+  public ObservationDiagramEditor( )
   {
     super( new DiagViewTemplate( true ) );
   }
-  
+
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -96,7 +97,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
     try
     {
       m_obsChart = new ObservationChart( (DiagViewTemplate) getTemplate() );
-      
+
       // chart panel without any popup menu
       final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false,
           false, false, false );
@@ -157,7 +158,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
     monitor.beginTask( "Diagramm-Vorlage laden", IProgressMonitor.UNKNOWN );
 
     final DiagViewTemplate template = (DiagViewTemplate) getTemplate();
-    
+
     try
     {
       final IStorage storage = input.getStorage();
@@ -167,7 +168,9 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
         final TemplateStorage ts = (TemplateStorage) storage;
         template.setTitle( ts.getName() );
 
-        template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
+        final String themeName = AbstractObservationTheme
+            .prepareDefaultTokens( ts.getName() );
+        template.addObservation( themeName, ts.getContext(), ts.getHref(),
             "zml", false, null );
       }
       else
