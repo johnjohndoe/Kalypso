@@ -73,6 +73,9 @@ public class ExportableObservationTable implements IExportableTableDocument
   }
 
   /**
+   * TODO: use the table and its renderer for exporting! so that the decimals
+   * are correctly set (according to the view)
+   * 
    * @see org.kalypso.ui.metadoc.IExportableDocument#exportDocument(java.io.OutputStream)
    */
   public void exportDocument( final OutputStream outs ) throws Exception
