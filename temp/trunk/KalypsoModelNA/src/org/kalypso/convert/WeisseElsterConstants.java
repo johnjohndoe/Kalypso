@@ -20,8 +20,8 @@ public class WeisseElsterConstants
 //    kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1500
     public final static String ALTERNATIV_PREFIX_LINK_WQ_Zufluss_Rep = "kalypso-ocs:WeisseElster://Zufluss/Zufluss_";//...+FID
 
-    // TODO
-    public final static String PREFIX_LINK_WQ_Zufluss_Rep_Vorhersage = "";
+     // TODO let LFUG define a PSI-timeseries for forecast
+    public final static String PREFIX_LINK_WQ_Zufluss_Rep_Vorhersage = PREFIX_LINK_WQ_Zufluss_Rep;
 
     //      kalypso-ocs:psicompact://HN.5_WE.02PG...577510
     public final static String PREFIX_LINK_WQ_Pegel_Rep =  "kalypso-ocs:psicompact://HN.5_WE.02PG...";//...+ID
