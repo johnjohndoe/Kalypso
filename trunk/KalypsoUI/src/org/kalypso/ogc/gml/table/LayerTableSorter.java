@@ -62,7 +62,12 @@ public class LayerTableSorter extends ViewerSorter
     final Object o2 = kf2.getProperty( propertyName );
     
     final int sign = isInverse() ? -1 : 1;
-    
+    if(o1==o2)
+      return 0;
+    if(o1==null)
+      return sign;
+    if(o2==null)
+      return -sign;
     if( o1 instanceof String )
       return sign * ((String)o1).compareTo( o2 );
     else if( o1 instanceof Integer )
