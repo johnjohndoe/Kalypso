@@ -110,7 +110,7 @@ public class DummyTimeSeriesWriter
       // TODO add numberformatparsing
       // String out = m_dateFormat.format( date )+" " +
       // Double.toString(verd)+"\n";
-      String out = m_dateFormat.format( date ) + " " + "2.0\n";
+      String out = m_dateFormat.format( date ) + " " + "0.5\n";
       writer.write( out );
       calendarStart.add( Calendar.DATE, 1 );
       int year = calendarStart.get( Calendar.YEAR );
