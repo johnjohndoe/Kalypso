@@ -221,7 +221,7 @@ author: Markus Schneider - mschneider@lat-lon.de
                                         compile-mysql-support, compile-postgis-support" description="compile all deegree classes and interfaces"/>
                                         
 	<target name="jar" depends="compile" description="creating the deegree java library">
-		<jar jarfile="kalypsoDeegree.jar" basedir="build"/>
+		<jar jarfile="kalypsodeegree.jar" basedir="build"/>
 	</target>                                        
 	
 	<target name="clean" description="Clean only generated classes">
