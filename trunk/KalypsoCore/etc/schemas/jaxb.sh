@@ -1,1 +1,0 @@
-/opt/jwsdp-1.4/jaxb/bin/xjc.sh -d ../../build/src template/*.xsd zml/*.xsd model/*.xsd

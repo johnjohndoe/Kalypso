@@ -29,7 +29,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   private ICommandTarget m_commandPoster;
   
   /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget, org.kalypso.ogc.MapPanel)
+   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget, org.kalypso.ogc.gml.mapmodel.MapPanel)
    */
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {

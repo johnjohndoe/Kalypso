@@ -47,19 +47,21 @@ public class CalcCaseRunnable implements IProgressRunnable
 
   private IStatus waitForJob( final IProgressMonitor monitor, final String jobID )
   {
+    jobID.getClass();
+    
     monitor.beginTask( "Berechnung wird durchgeführt", 2000 );
 
     try
     {
-      final String folderPath = m_configuration.getAttribute(
-          IKalypsoLaunchConfigurationConstants.CALC_PATH, "" );
+//      final String folderPath = m_configuration.getAttribute(
+//          IKalypsoLaunchConfigurationConstants.CALC_PATH, "" );
 
-      final IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(
-          new Path( folderPath ) );
+//      final IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(
+//          new Path( folderPath ) );
 
-      final ModelNature nature = (ModelNature)folder.getProject().getNature( ModelNature.ID );
+//      final ModelNature nature = (ModelNature)folder.getProject().getNature( ModelNature.ID );
 
-      int lastProgress = 0;
+//      int lastProgress = 0;
       while( true )
       {
 //        final CalcJobDescription jobDescription = nature.checkCalculation( jobID ); 

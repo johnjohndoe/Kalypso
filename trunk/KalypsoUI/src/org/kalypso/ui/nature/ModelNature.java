@@ -3,10 +3,7 @@ package org.kalypso.ui.nature;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -48,7 +45,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
 import org.kalypso.java.io.ReaderUtilities;
-import org.kalypso.java.io.StreamUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.model.xml.Calcwizard;
 import org.kalypso.model.xml.CalcwizardType;
@@ -86,7 +82,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public static final String CALCULATION_FILE = ".calculation";
 
-  private static final String CALC_RESULT_FOLDER = ".results";
+//  private static final String CALC_RESULT_FOLDER = ".results";
 
   private static final String MODELLTYP_CALCWIZARD_XML = MODELLTYP_FOLDER + "/" + "calcWizard.xml";
 
@@ -391,91 +387,91 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  private void putCalcCaseOutputData( final IFolder folder, final URL[] results,
-      final IProgressMonitor monitor ) throws CoreException
-  {
-    monitor.beginTask( "Ergebnisdaten werden abgelegt", 2000 );
-
-    final Modelspec modelspec = getModelspec();
-
-    final List outputList = modelspec.getOutput();
-    int count = 0;
-    if( results == null || results.length < outputList.size() )
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Ergebnisdaten passen nicht zur Modellspezifikation", null ) );
-
-    final IFolder resultsFolder = folder.getFolder( CALC_RESULT_FOLDER );
-    if( resultsFolder.exists() )
-      resultsFolder.delete( false, true, new SubProgressMonitor( monitor, 1000 ) );
-
-    resultsFolder.create( false, true, null );
-
-    for( final Iterator iter = outputList.iterator(); iter.hasNext(); )
-    {
-      try
-      {
-        final ModelspecType.OutputType output = (ModelspecType.OutputType)iter.next();
-        final String path = output.getPath();
-
-        final IFile file = resultsFolder.getFile( path );
-        final PipedInputStream pis = new PipedInputStream();
-        final PipedOutputStream pos = new PipedOutputStream( pis );
-
-        final int index = count;
-        final Thread readThread = new Thread( "Ergebnis lesen: " + path )
-        {
-          public void run()
-          {
-            try
-            {
-              final URL url = results[index];
-              //            jobmonitor.beginTask( "URL lesen: " + url.toExternalForm(),
-              // IProgressMonitor.UNKNOWN );
-
-              final InputStream urlStream = url.openStream();
-              StreamUtilities.streamCopy( urlStream, pos );
-
-              pos.close();
-            }
-            catch( final IOException e )
-            {
-              e.printStackTrace();
-              //            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-              //                "Fehler beim Zugriff auf Ergebnisdaten", e );
-            }
-            finally
-            {
-              if( pos != null )
-                try
-                {
-                  pos.close();
-                }
-                catch( IOException e )
-                {
-                  e.printStackTrace();
-                  //                return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(),
-                  // 0,
-                  //                    "Fehler beim Zugriff auf Ergebnisdaten", e );
-                }
-            }
-
-            //          return Status.OK_STATUS;
-          }
-        };
-        readThread.start();
-
-        file.create( pis, false, null );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
-
-      count++;
-    }
-
-    monitor.worked( 1000 );
-  }
+//  private void putCalcCaseOutputData( final IFolder folder, final URL[] results,
+//      final IProgressMonitor monitor ) throws CoreException
+//  {
+//    monitor.beginTask( "Ergebnisdaten werden abgelegt", 2000 );
+//
+//    final Modelspec modelspec = getModelspec();
+//
+//    final List outputList = modelspec.getOutput();
+//    int count = 0;
+//    if( results == null || results.length < outputList.size() )
+//      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+//          "Ergebnisdaten passen nicht zur Modellspezifikation", null ) );
+//
+//    final IFolder resultsFolder = folder.getFolder( CALC_RESULT_FOLDER );
+//    if( resultsFolder.exists() )
+//      resultsFolder.delete( false, true, new SubProgressMonitor( monitor, 1000 ) );
+//
+//    resultsFolder.create( false, true, null );
+//
+//    for( final Iterator iter = outputList.iterator(); iter.hasNext(); )
+//    {
+//      try
+//      {
+//        final ModelspecType.OutputType output = (ModelspecType.OutputType)iter.next();
+//        final String path = output.getPath();
+//
+//        final IFile file = resultsFolder.getFile( path );
+//        final PipedInputStream pis = new PipedInputStream();
+//        final PipedOutputStream pos = new PipedOutputStream( pis );
+//
+//        final int index = count;
+//        final Thread readThread = new Thread( "Ergebnis lesen: " + path )
+//        {
+//          public void run()
+//          {
+//            try
+//            {
+//              final URL url = results[index];
+//              //            jobmonitor.beginTask( "URL lesen: " + url.toExternalForm(),
+//              // IProgressMonitor.UNKNOWN );
+//
+//              final InputStream urlStream = url.openStream();
+//              StreamUtilities.streamCopy( urlStream, pos );
+//
+//              pos.close();
+//            }
+//            catch( final IOException e )
+//            {
+//              e.printStackTrace();
+//              //            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+//              //                "Fehler beim Zugriff auf Ergebnisdaten", e );
+//            }
+//            finally
+//            {
+//              if( pos != null )
+//                try
+//                {
+//                  pos.close();
+//                }
+//                catch( IOException e )
+//                {
+//                  e.printStackTrace();
+//                  //                return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(),
+//                  // 0,
+//                  //                    "Fehler beim Zugriff auf Ergebnisdaten", e );
+//                }
+//            }
+//
+//            //          return Status.OK_STATUS;
+//          }
+//        };
+//        readThread.start();
+//
+//        file.create( pis, false, null );
+//      }
+//      catch( final Exception e )
+//      {
+//        e.printStackTrace();
+//      }
+//
+//      count++;
+//    }
+//
+//    monitor.worked( 1000 );
+//  }
 
   public static void runPrognose( final Shell shell, final String name )
   {
@@ -573,7 +569,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       monitor.beginTask( "Modellrechnung starten", 2000 );
 
       // die Dateien suchen und erzeugen
-      final URL[] input = getCalcCaseInputData( calcFolder, new SubProgressMonitor( monitor, 1000 ) );
+//      final URL[] input = getCalcCaseInputData( calcFolder, new SubProgressMonitor( monitor, 1000 ) );
 
       // start job
       // TODO
@@ -597,6 +593,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public void stopCalculation( final String jobID )
   {
+    jobID.getClass();
 //    final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
 //
 //    try
@@ -634,8 +631,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 //    }
 //  }
 
-  public void retrieveCalculation( final String jobID ) throws CoreException
+  public void retrieveCalculation( final String jobID ) //throws CoreException
   {
+    jobID.getClass();
 //    try
 //    {
 //      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();

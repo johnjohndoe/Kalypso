@@ -27,6 +27,7 @@ public class ZmlAxis extends DefaultAxis
 
   private IParser m_parser;
 
+  // TODO: hides field from supertype
   private String m_type;
 
   private String m_format;

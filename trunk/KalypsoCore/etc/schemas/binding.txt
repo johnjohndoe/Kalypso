@@ -1,0 +1,5 @@
+In diesem Verzeichnis befinden sich die Binding-Schemata.
+
+Die Schemata werden über die build.xml (target deploy) compiliert 
+und in der coreBindings.jar im lib Verzeichnis abgelegt.
+

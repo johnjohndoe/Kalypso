@@ -4,6 +4,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellEditorValidator;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -29,6 +30,7 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void activate()
   {
+    if( m_cellEditor != null )
     m_cellEditor.activate();
   }
   /**
@@ -36,6 +38,7 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void addListener( ICellEditorListener listener )
   {
+    if( m_cellEditor != null )
     m_cellEditor.addListener( listener );
   }
   /**
@@ -43,13 +46,15 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void addPropertyChangeListener( IPropertyChangeListener listener )
   {
+    if( m_cellEditor != null )
     m_cellEditor.addPropertyChangeListener( listener );
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#create(org.eclipse.swt.widgets.Composite)
    */
-  public void create( Composite parent )
+  public void create( final Composite parent )
   {
+    if( m_cellEditor != null )
     m_cellEditor.create( parent );
   }
   /**
@@ -57,13 +62,15 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void deactivate()
   {
-    m_cellEditor.deactivate();
+    if( m_cellEditor != null )
+      m_cellEditor.deactivate();
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#dispose()
    */
   public void dispose()
   {
+    if( m_cellEditor != null )
     m_cellEditor.dispose();
   }
   /**
@@ -71,28 +78,40 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public Control getControl()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.getControl();
+    
+    return null;
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#getErrorMessage()
    */
   public String getErrorMessage()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.getErrorMessage();
+    
+    return null;
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#getLayoutData()
    */
   public LayoutData getLayoutData()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.getLayoutData();
+    
+    return null;
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#getStyle()
    */
   public int getStyle()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.getStyle();
+    
+    return SWT.NONE;
   }
   
   /**
@@ -100,7 +119,10 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public ICellEditorValidator getValidator()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.getValidator();
+    
+    return null;
   }
   
   /**
@@ -108,83 +130,117 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public boolean isActivated()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.isActivated();
+    
+    return false;
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#isCopyEnabled()
    */
   public boolean isCopyEnabled()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.isCopyEnabled();
+    
+    return false;
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#isCutEnabled()
    */
   public boolean isCutEnabled()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.isCutEnabled();
+    
+    return false;
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#isDeleteEnabled()
    */
   public boolean isDeleteEnabled()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.isDeleteEnabled();
+    
+    return false;
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#isDirty()
    */
   public boolean isDirty()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.isDirty();
+    
+    return false;
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#isFindEnabled()
    */
   public boolean isFindEnabled()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.isFindEnabled();
+    
+    return false;
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#isPasteEnabled()
    */
   public boolean isPasteEnabled()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.isPasteEnabled();
+    
+    return false;
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#isRedoEnabled()
    */
   public boolean isRedoEnabled()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.isRedoEnabled();
+    
+    return false;
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#isSelectAllEnabled()
    */
   public boolean isSelectAllEnabled()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.isSelectAllEnabled();
+    
+    return false;
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#isUndoEnabled()
    */
   public boolean isUndoEnabled()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.isUndoEnabled();
+    
+    return false;
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#isValueValid()
    */
   public boolean isValueValid()
   {
+    if( m_cellEditor != null )
     return m_cellEditor.isValueValid();
+    
+    return true;
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#performCopy()
    */
   public void performCopy()
   {
+    if( m_cellEditor != null )
     m_cellEditor.performCopy();
   }
   /**
@@ -192,6 +248,7 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void performCut()
   {
+    if( m_cellEditor != null )
     m_cellEditor.performCut();
   }
   /**
@@ -199,6 +256,7 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void performDelete()
   {
+    if( m_cellEditor != null )
     m_cellEditor.performDelete();
   }
   /**
@@ -206,6 +264,7 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void performFind()
   {
+    if( m_cellEditor != null )
     m_cellEditor.performFind();
   }
   /**
@@ -213,6 +272,7 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void performPaste()
   {
+    if( m_cellEditor != null )
     m_cellEditor.performPaste();
   }
   /**
@@ -220,6 +280,7 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void performRedo()
   {
+    if( m_cellEditor != null )
     m_cellEditor.performRedo();
   }
   /**
@@ -227,6 +288,7 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void performSelectAll()
   {
+    if( m_cellEditor != null )
     m_cellEditor.performSelectAll();
   }
   /**
@@ -234,6 +296,7 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void performUndo()
   {
+    if( m_cellEditor != null )
     m_cellEditor.performUndo();
   }
   /**
@@ -241,6 +304,7 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void removeListener( ICellEditorListener listener )
   {
+    if( m_cellEditor != null )
     m_cellEditor.removeListener( listener );
   }
   /**
@@ -248,6 +312,7 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void removePropertyChangeListener( IPropertyChangeListener listener )
   {
+    if( m_cellEditor != null )
     m_cellEditor.removePropertyChangeListener( listener );
   }
   /**
@@ -255,6 +320,7 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void setFocus()
   {
+    if( m_cellEditor != null )
     m_cellEditor.setFocus();
   }
   /**
@@ -262,13 +328,15 @@ public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
    */
   public void setStyle( int style )
   {
-    m_cellEditor.setStyle( style );
+    if( m_cellEditor != null )
+      m_cellEditor.setStyle( style );
   }
   /**
    * @see org.eclipse.jface.viewers.CellEditor#setValidator(org.eclipse.jface.viewers.ICellEditorValidator)
    */
   public void setValidator( ICellEditorValidator validator )
   {
+    if( m_cellEditor != null )
     m_cellEditor.setValidator( validator );
   }
 
