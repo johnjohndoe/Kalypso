@@ -1,35 +1,36 @@
 package org.kalypso.ogc.sensor.editor;
 
 import java.awt.Frame;
+import java.io.IOException;
 import java.util.Date;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.xml.bind.JAXBException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.editor.AbstractEditorPart;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
-import org.kalypso.ogc.sensor.template.ITemplateListener;
-import org.kalypso.ogc.sensor.template.TableViewTemplate;
+import org.kalypso.ogc.sensor.template.LinkedTableViewTemplate;
+import org.kalypso.template.ObservationTemplateHelper;
 
 /**
  * The Observation TableEditor.
  * 
  * @author schlienger
  */
-public class ObservationTableEditor extends AbstractEditorPart implements
-    ITemplateListener
+public class ObservationTableEditor extends AbstractEditorPart
 {
   private final ObservationTableModel m_model = new ObservationTableModel();
 
-  private TableViewTemplate m_template = null;
+  private LinkedTableViewTemplate m_template = null;
 
   /**
    * @see org.kalypso.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -47,12 +48,23 @@ public class ObservationTableEditor extends AbstractEditorPart implements
 
     vFrame.setVisible( true );
     table.setVisible( true );
-    
+
     final JScrollPane pane = new JScrollPane( table );
     //pane.setBorder( BorderFactory.createEmptyBorder() );
     vFrame.add( pane );
   }
 
+  /**
+   * @see org.kalypso.editor.AbstractEditorPart#dispose()
+   */
+  public void dispose()
+  {
+    super.dispose();
+    
+    if( m_template != null )
+      m_template.removeTemplateEventListener( m_model );
+  }
+  
   /**
    * @see org.kalypso.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
@@ -67,27 +79,27 @@ public class ObservationTableEditor extends AbstractEditorPart implements
    */
   protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
-    m_template = new TableViewTemplate( input.getFile(), monitor );
-    m_template.addListener( this );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.template.ITemplateListener#onTemplateLoaded()
-   */
-  public void onTemplateLoaded()
-  {
     try
     {
-      // the rules will be used for rendering, they are used in the table cell
-      // renderer
-      m_model.setRules( m_template.getRules() );
-
-      m_model.setColumns( m_template.getColumns(), null );
+      monitor.beginTask( "Laden", 1 );
+      
+      m_template = ObservationTemplateHelper.loadTableViewTemplate( input.getFile() );
+      m_model.setRules( m_template );
+      m_template.addTemplateEventListener( m_model );
+      
+      monitor.worked(1);
     }
-    catch( SensorException e )
+    catch( CoreException e )
     {
-      // TODO handling
-      throw new RuntimeException( e );
+      e.printStackTrace();
+    }
+    catch( JAXBException e )
+    {
+      e.printStackTrace();
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
     }
   }
 }

@@ -32,11 +32,11 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationTimeSeries;
+import org.kalypso.ogc.sensor.tableview.DefaultTableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.rules.Rules;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
-import org.kalypso.ogc.sensor.tableview.template.DefaultTableViewTemplate;
-import org.kalypso.ogc.sensor.tableview.template.Rules;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.pool.BorrowObjectJob;
 import org.kalypso.util.pool.IPoolListener;
@@ -121,7 +121,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
       
       try
       {
-        final DefaultTableViewTemplate tab = new DefaultTableViewTemplate( obs );
+        final DefaultTableViewTemplate tab = new DefaultTableViewTemplate( obs, false );
         m_model.setColumns( tab.getColumns(), null );
       }
       catch( final SensorException e )

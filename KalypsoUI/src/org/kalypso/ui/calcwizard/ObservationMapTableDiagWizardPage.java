@@ -2,20 +2,22 @@ package org.kalypso.ui.calcwizard;
 
 import java.awt.Frame;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.ToolBar;
+import org.jfree.chart.ChartPanel;
 import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.event.ModellEvent;
@@ -24,16 +26,18 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.ogc.gml.mapactions.FullExtentMapAction;
-import org.kalypso.ogc.gml.mapactions.PanToWidgetAction;
-import org.kalypso.ogc.gml.mapactions.SelectWidgetAction;
-import org.kalypso.ogc.gml.mapactions.ToggleSelectWidgetAction;
-import org.kalypso.ogc.gml.mapactions.UnselectWidgetAction;
-import org.kalypso.ogc.gml.mapactions.ZoomInWidgetAction;
-import org.kalypso.ogc.gml.mapactions.ZoomOutMapAction;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.ogc.sensor.deegree.TimeserieFeatureProps;
+import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
+import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
+import org.kalypso.ogc.sensor.template.LinkedTableViewTemplate;
+import org.kalypso.ogc.widgets.ToggleSelectWidget;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.template.GisTemplateHelper;
+import org.kalypso.template.ObservationTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -69,7 +73,21 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
   private static final int SELECTION_ID = 0x10;
 
-  private IMapModell m_mapModell;
+  private IMapModell m_mapModell = null;
+
+  private Frame m_diagFrame = null;
+
+  private Frame m_tableFrame = null;
+
+  private SashForm m_sashForm = null;
+
+  private IDiagramTemplate m_diagTemplate = null;
+
+  private ObservationChart m_obsChart = null;
+
+  private final ObservationTableModel m_tableModel = new ObservationTableModel();
+
+  private LinkedTableViewTemplate m_tableTemplate = null;
 
   public ObservationMapTableDiagWizardPage()
   {
@@ -82,6 +100,9 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
   public void dispose()
   {
     m_mapModell.removeModellListener( this );
+
+    if( m_diagTemplate != null )
+      m_diagTemplate.removeTemplateEventListener( m_obsChart );
   }
 
   /**
@@ -91,23 +112,22 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
   {
     try
     {
-      final SashForm sashForm = new SashForm( parent, SWT.HORIZONTAL );
-      createMapPanel( sashForm );
-      final SashForm rightSash = new SashForm( sashForm, SWT.VERTICAL );
+      m_sashForm = new SashForm( parent, SWT.HORIZONTAL );
+      createMapPanel( m_sashForm );
+      final SashForm rightSash = new SashForm( m_sashForm, SWT.VERTICAL );
       createTablePanel( rightSash );
       createDiagramPanel( rightSash );
 
       final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
       final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
-      // TODO: konfigure
-      sashForm.setWeights( new int[]
+      m_sashForm.setWeights( new int[]
       { mainWeight, 100 - mainWeight } );
 
       rightSash.setWeights( new int[]
       { rightWeight, 100 - rightWeight } );
 
-      setControl( sashForm );
+      setControl( m_sashForm );
     }
     catch( final Exception e )
     {
@@ -118,20 +138,35 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
   private void createDiagramPanel( final Composite parent )
   {
-    final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+    final String diagFileName = getArguments().getProperty( PROP_DIAGTEMPLATE );
+    final IFile diagFile = (IFile)getProject().findMember( diagFileName );
 
-    final Frame vFrame = SWT_AWT.new_Frame( composite );
+    try
+    {
+      // actually creates the template
+      m_diagTemplate = ObservationTemplateHelper.loadDiagramTemplate( diagFile );
 
-    //    final JFreeChart chart = ChartFactory.createTimeSeriesChart( "", "Datum",
-    // "Wert", m_tsCol,
-    //        false, false, false );
-    //
-    //    final ChartPanel chartPanel = new ChartPanel( chart );
-    //    chartPanel.setMouseZoomable( true, false );
-    //
-    //    vFrame.setVisible( true );
-    //    chartPanel.setVisible( true );
-    //    vFrame.add( chartPanel );
+      final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+      m_diagFrame = SWT_AWT.new_Frame( composite );
+      m_diagFrame.setVisible( true );
+
+      m_obsChart = new ObservationChart( m_diagTemplate );
+      m_diagTemplate.addTemplateEventListener( m_obsChart );
+
+      final ChartPanel chartPanel = new ChartPanel( m_obsChart );
+      chartPanel.setMouseZoomable( true, false );
+
+      m_diagFrame.setVisible( true );
+      chartPanel.setVisible( true );
+      m_diagFrame.add( chartPanel );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+
+      final Text text = new Text( parent, SWT.CENTER );
+      text.setText( "Kein Diagram vorhanden" );
+    }
   }
 
   private void createTablePanel( final Composite parent )
@@ -141,19 +176,31 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       final String templateFileName = getArguments().getProperty( PROP_TABLETEMPLATE );
       final IFile templateFile = (IFile)getProject().findMember( templateFileName );
 
-      //      final Gistableview template = GisTemplateHelper.loadGisTableview(
-      // templateFile );
+      m_tableTemplate = ObservationTemplateHelper.loadTableViewTemplate( templateFile );
+      m_tableModel.setRules( m_tableTemplate );
+      m_tableTemplate.addTemplateEventListener( m_tableModel );
 
-      //      m_viewer = new LayerTableViewer( parent, getProject(),
-      // KalypsoGisPlugin.getDefault()
-      //          .createFeatureTypeCellEditorFactory(), SELECTION_ID );
-      //      m_viewer.applyTableTemplate( template, getProject() );
+      final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+      m_tableFrame = SWT_AWT.new_Frame( composite );
+
+      final JTable table = new JTable( m_tableModel );
+      table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
+      table.setDefaultRenderer( Number.class, new MaskedNumberTableCellRenderer() );
+      table.setVisible( true );
+
+      final JScrollPane pane = new JScrollPane( table );
+      pane.setBorder( BorderFactory.createEmptyBorder() );
+
+      m_tableFrame.setVisible( true );
+      table.setVisible( true );
+      m_tableFrame.add( pane );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
-      final Text text = new Text( parent, SWT.NONE );
-      text.setText( "Fehler beim Laden des TableTemplate" );
+
+      final Text text = new Text( parent, SWT.CENTER );
+      text.setText( "Keine Tabelle vorhanden" );
     }
   }
 
@@ -164,12 +211,13 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile );
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
     m_mapModell = new GisTemplateMapModell( gisview, getProject(), crs );
     m_mapModell.addModellListener( this );
 
     final MapPanel mapPanel = new MapPanel( this, crs, SELECTION_ID );
+    mapPanel.setBoundingBox( GisTemplateHelper.getBoundingBox( gisview ) );
     final Composite mapComposite = new Composite( mapView, SWT.RIGHT | SWT.EMBEDDED );
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
 
@@ -180,29 +228,12 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     mapPanel.setMapModell( m_mapModell );
     mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
-    final ToolBarManager tbm = new ToolBarManager();
-    tbm.add( new GroupMarker( "radio_group" ) );
-    tbm.appendToGroup( "radio_group", new ZoomInWidgetAction( mapPanel ) );
-    tbm.appendToGroup( "radio_group", new PanToWidgetAction( mapPanel ) );
-    tbm.appendToGroup( "radio_group", new ToggleSelectWidgetAction( mapPanel ) );
-    tbm.appendToGroup( "radio_group", new SelectWidgetAction( mapPanel ) );
-    tbm.appendToGroup( "radio_group", new UnselectWidgetAction( mapPanel ) );
+    mapPanel.changeWidget( new ToggleSelectWidget() );
 
-    tbm.add( new Separator() );
-
-    tbm.add( new FullExtentMapAction( this, mapPanel ) );
-    tbm.add( new ZoomOutMapAction( this, mapPanel ) );
-
-    final ToolBar toolBar = tbm.createControl( mapView );
-
-    /////////////
-    // Legende //
-    /////////////
     final GisMapOutlineViewer outlineViewer = new GisMapOutlineViewer( this, m_mapModell );
     outlineViewer.createControl( mapView );
 
     mapView.setContent( mapComposite );
-    mapView.setTopCenter( toolBar );
     mapView.setTopLeft( outlineViewer.getControl() );
   }
 
@@ -219,14 +250,14 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    final TimeserieFeatureProps[] tsProps = KalypsoWizardHelper
-        .parseTimeserieFeactureProps( getArguments() );
+    if( m_diagFrame == null )
+      return;
 
     final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
     if( !( layer instanceof KalypsoFeatureLayer ) )
       return;
 
-    List selectedFeatures = new ArrayList();
+    final List selectedFeatures = new ArrayList();
 
     final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
     final KalypsoFeature[] allFeatures = kfl.getAllFeatures();
@@ -234,14 +265,16 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       if( allFeatures[i].isSelected( SELECTION_ID ) )
         selectedFeatures.add( allFeatures[i] );
 
-    final String diagFileName = getArguments().getProperty( PROP_DIAGTEMPLATE );
-    final IFile diagFile = (IFile)getProject().findMember( diagFileName );
+    m_diagTemplate.removeAllCurves();
+    m_tableTemplate.removeAllColumns();
+      
+    if( selectedFeatures.size() > 0 )
+    {
+      final TimeserieFeatureProps[] tsProps = KalypsoWizardHelper
+          .parseTimeserieFeatureProps( getArguments() );
 
-    // create the diagram template
-    KalypsoWizardHelper.createDiagramTemplate( tsProps, selectedFeatures, diagFile );
-
-    // TODO: create chart
-
-    // TODO: update observation table
+      KalypsoWizardHelper.updateDiagramTemplate( tsProps, selectedFeatures, m_diagTemplate );
+      KalypsoWizardHelper.updateTableTemplate( tsProps, selectedFeatures, m_tableTemplate );
+    }
   }
 }
