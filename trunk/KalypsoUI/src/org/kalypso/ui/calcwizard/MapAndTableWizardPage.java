@@ -39,7 +39,7 @@ import org.kalypso.ogc.sensor.deegree.TimeserieFeatureProps;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.template.LinkedDiagramTemplate;
-import org.kalypso.ogc.widgets.ToggleSelectWidget;
+import org.kalypso.ogc.widgets.SingleElementSelectWidget;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.services.calcjob.CalcJobDescription;
 import org.kalypso.services.calcjob.CalcJobStatus;
@@ -122,6 +122,14 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
       createRightPanel( sashForm );
 
       setControl( sashForm );
+      
+      parent.getDisplay().asyncExec( new Runnable()
+          {
+            public void run()
+            {
+              maximizeMap();  
+            }
+          } );
     }
     catch( final Exception e )
     {
@@ -161,7 +169,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
       {
         maximizeMap();
       }
-
     } );
 
     button.addSelectionListener( new SelectionAdapter()
@@ -259,8 +266,8 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
 
     // das kann erst passieren, wenn die Control fertig ist: beim ersten rezise
     // event
-    //m_mapPanel.setBoundingBox( m_boundingBox );
-    m_mapPanel.changeWidget( new ToggleSelectWidget() );
+    m_mapPanel.setBoundingBox( m_boundingBox );
+    m_mapPanel.changeWidget( new SingleElementSelectWidget() );
 
     /////////////
     // Legende //

@@ -6,12 +6,15 @@ import java.util.List;
 
 import javax.swing.JScrollPane;
 
+import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.jfree.chart.ChartPanel;
@@ -90,6 +93,10 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
   private boolean m_useResolver = false;
 
+  private MapPanel m_mapPanel;
+
+  private GM_Envelope m_boundingBox;
+
   public ObservationMapTableDiagWizardPage()
   {
     super( "<ObservationMapTableDiagWizardPage>" );
@@ -123,14 +130,37 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
       m_tsProps = KalypsoWizardHelper.parseTimeserieFeatureProps( getArguments() );
-      
+
+      final ControlAdapter controlAdapter = new ControlAdapter()
+      {
+        public void controlResized( ControlEvent e )
+        {
+          maximizeMap();
+        }
+      };
+
+      rightSash.addControlListener( controlAdapter );
+      m_sashForm.addControlListener( controlAdapter );
+
       m_sashForm.setWeights( new int[]
-      { mainWeight, 100 - mainWeight } );
+      {
+          mainWeight,
+          100 - mainWeight } );
 
       rightSash.setWeights( new int[]
-      { rightWeight, 100 - rightWeight } );
+      {
+          rightWeight,
+          100 - rightWeight } );
 
       setControl( m_sashForm );
+
+      parent.getDisplay().asyncExec( new Runnable()
+      {
+        public void run()
+        {
+          maximizeMap();  
+        }
+      } );
     }
     catch( final Exception e )
     {
@@ -148,9 +178,9 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     {
       // actually creates the template
       m_diagTemplate = ObservationTemplateHelper.loadDiagramTemplate( diagFile );
-      
+
       // TODO tricky: to be ameliorated once pool geschichte is better!!!
-      ((LinkedDiagramTemplate)m_diagTemplate).setUseResolver( m_useResolver );
+      ( (LinkedDiagramTemplate)m_diagTemplate ).setUseResolver( m_useResolver );
 
       final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
       m_diagFrame = SWT_AWT.new_Frame( composite );
@@ -185,7 +215,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       m_tableTemplate = ObservationTemplateHelper.loadTableViewTemplate( templateFile );
       m_tableModel.setRules( m_tableTemplate );
       m_tableTemplate.addTemplateEventListener( m_tableModel );
-      
+
       // TODO tricky: to be ameliorated once pool geschichte is better!!!
       m_tableTemplate.setUseResolver( m_useResolver );
 
@@ -223,25 +253,27 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     m_mapModell = new GisTemplateMapModell( gisview, getProject(), crs );
     m_mapModell.addModellListener( this );
 
-    final MapPanel mapPanel = new MapPanel( this, crs, SELECTION_ID );
-    mapPanel.setBoundingBox( GisTemplateHelper.getBoundingBox( gisview ) );
+    m_mapPanel = new MapPanel( this, crs, SELECTION_ID );
+    m_boundingBox = GisTemplateHelper.getBoundingBox( gisview );
     final Composite mapComposite = new Composite( mapView, SWT.RIGHT | SWT.EMBEDDED );
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
 
     virtualFrame.setVisible( true );
-    mapPanel.setVisible( true );
-    virtualFrame.add( mapPanel );
+    m_mapPanel.setVisible( true );
+    virtualFrame.add( m_mapPanel );
 
-    mapPanel.setMapModell( m_mapModell );
-    mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
+    m_mapPanel.setMapModell( m_mapModell );
+    m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
-    mapPanel.changeWidget( new ToggleSelectWidget() );
+    m_mapPanel.changeWidget( new ToggleSelectWidget() );
 
     final GisMapOutlineViewer outlineViewer = new GisMapOutlineViewer( this, m_mapModell );
     outlineViewer.createControl( mapView );
 
     mapView.setContent( mapComposite );
     mapView.setTopLeft( outlineViewer.getControl() );
+
+    m_mapPanel.setBoundingBox( m_boundingBox );
   }
 
   /**
@@ -274,11 +306,19 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
     m_diagTemplate.removeAllCurves();
     m_tableTemplate.removeAllColumns();
-      
+
     if( selectedFeatures.size() > 0 )
     {
-      KalypsoWizardHelper.updateDiagramTemplate( m_tsProps, selectedFeatures, m_diagTemplate, m_useResolver, getProject() );
-      KalypsoWizardHelper.updateTableTemplate( m_tsProps, selectedFeatures, m_tableTemplate, m_useResolver, getProject() );
+      KalypsoWizardHelper.updateDiagramTemplate( m_tsProps, selectedFeatures, m_diagTemplate,
+          m_useResolver, getProject() );
+      KalypsoWizardHelper.updateTableTemplate( m_tsProps, selectedFeatures, m_tableTemplate,
+          m_useResolver, getProject() );
     }
   }
+
+  public void maximizeMap()
+  {
+    m_mapPanel.setBoundingBox( m_boundingBox );
+  }
+
 }
