@@ -21,7 +21,7 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.feature.FeatureFactory;
-import org.kalypso.java.net.test.UrlUtilities;
+import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;
