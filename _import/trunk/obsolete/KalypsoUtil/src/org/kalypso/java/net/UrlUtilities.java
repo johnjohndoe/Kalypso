@@ -1,4 +1,4 @@
-package org.kalypso.java.net.test;
+package org.kalypso.java.net;
 
 import java.net.MalformedURLException;
 import java.net.URI;

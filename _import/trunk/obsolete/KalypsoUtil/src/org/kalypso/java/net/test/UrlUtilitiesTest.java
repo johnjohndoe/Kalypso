@@ -3,6 +3,8 @@ package org.kalypso.java.net.test;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.kalypso.java.net.UrlUtilities;
+
 import junit.framework.TestCase;
 
 
