@@ -9,7 +9,7 @@ package org.kalypso.repository;
  * 
  * @author schlienger
  */
-public abstract class AbstractRepositoryFactory
+public abstract class AbstractRepositoryFactory implements IRepositoryFactory
 {
   /** configuration string, may be used by subclasses */
   protected String m_configuration;

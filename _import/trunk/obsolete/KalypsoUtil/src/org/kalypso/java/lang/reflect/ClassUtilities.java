@@ -11,6 +11,19 @@ import java.lang.reflect.InvocationTargetException;
 public class ClassUtilities
 {
   /**
+   * Returns the classname of the given class without package part.
+   * <p>
+   * Example: org.foo.bar.FooBar will return FooBar
+   */
+  public static String getOnlyClassName( final Class someClass )
+  {
+    final String className = someClass.getName().substring(
+        someClass.getName().lastIndexOf( '.' ) + 1 );
+
+    return className;
+  }
+
+  /**
    * @see ClassUtilities#newInstance(String, Class, ClassLoader, Class[],
    *      Object[])
    */
