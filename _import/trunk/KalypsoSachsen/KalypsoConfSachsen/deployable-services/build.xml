@@ -42,6 +42,7 @@
 	</target>
 
 	<target name="fake-psicompact" depends="prepare" description="deploy the fake impl of psicompact into the KalypsoPSICompactAdapter libs">
+		<delete file="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" />
 		<ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml" target="deploy" inheritall="false"/>
 	</target>
 	
@@ -53,5 +54,9 @@
 		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
 		<ant antfile="${project.path}/deployable-services/build-KalypsoConf.xml" target="redeploy" inheritAll="true" />
+	</target>
+	
+	<target name="deploy-KalypsoConf" depends="prepare">
+		<ant antfile="${project.path}/deployable-services/build-KalypsoConf.xml" target="deploy" inheritAll="true" />
 	</target>
 </project>

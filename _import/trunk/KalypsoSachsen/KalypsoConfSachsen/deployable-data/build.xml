@@ -32,7 +32,7 @@
 	</target>
 
 	<!-- checkout the Sachsen Models -->
-	<target name="co-sachsen-models" depends="copy-data">
+	<target name="co-sachsen-models" depends="clean,copy-data">
 		
 		<antcall target="co-model">
 			<param name="pPackage" value="KalypsoData/KalypsoSpree" />
@@ -70,13 +70,17 @@
 			<fileset dir="${dist.prognose}/${pName}" includes="**/.calculation"/>
 
 			<!-- remove all CVS files -->
-			<fileset dir="${dist.prognose}/${pName}" includes="**/CVS/**"/>
+			<fileset dir="${dist.prognose}/${pName}" defaultexcludes="false">
+				<include name="**/CVS/*"/>
+				<include name="**/CVS/**"/>
+			</fileset>
+
 		</delete>
 	</target>
-
+	
 	<!-- copy data to the kalypso server -->
 	<target name="deploy-bce" depends="co-sachsen-models" description="Copy the data files to the kalypso server" >
-		<copy todir="\\\\${tomcat.server}\\kalypso\$\\data">
+		<copy todir="\\\\${tomcat.server}\\kalypso$\\data" overwrite="true">
 			<fileset dir="${dist.data}" includes="*/**" excludes="**/CVS/**" />
 		</copy>
 	</target>

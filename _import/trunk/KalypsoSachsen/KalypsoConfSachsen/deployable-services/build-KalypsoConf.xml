@@ -5,6 +5,8 @@
 	<property name="deployable.war" value="kalypso_conf.zip" />
 	<property name="service.name" value="KalypsoConf" />
 
+	<property name="war.path" value="file:///${dist.services}/${deployable.war}" />
+
 	<property name="core.path" value="${workspace}/KalypsoCoreServices" />
 	<property file="${core.path}/etc/ant/build.properties" />
 	<property file="${core.path}/etc/ant/tomcat.properties" />
