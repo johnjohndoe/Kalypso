@@ -2,6 +2,6 @@
 <repconf xmlns="conf.repository.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="conf.repository.kalypso.org
 .\repconf.xsd">
 
-	<rep className="org.kalypso." confString="" />
+	<rep className="org.kalypso." confString="" readOnly="true" />
 	<rep className="org.kalypso." confString="" />
 </repconf>

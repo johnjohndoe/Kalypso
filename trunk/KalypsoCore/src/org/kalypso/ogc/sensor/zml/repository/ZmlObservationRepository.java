@@ -13,16 +13,9 @@ import org.kalypso.repository.file.FileRepository;
  */
 public class ZmlObservationRepository extends FileRepository
 {
-  public final static String[] ZML_FILES = {"*.zml"};
-  
-  public ZmlObservationRepository( String location, FileFilter filter )
+  public ZmlObservationRepository( final String root_location, final boolean readOnly, final FileFilter filter )
   {
-    super( location, filter );
-  }
-
-  public ZmlObservationRepository( String location )
-  {
-    super( location );
+    super( root_location, readOnly, filter );
   }
 
   /**

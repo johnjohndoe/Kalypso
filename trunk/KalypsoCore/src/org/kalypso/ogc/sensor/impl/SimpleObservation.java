@@ -146,7 +146,7 @@ public class SimpleObservation implements IObservation
 
       try
       {
-        final IAxis A = ObservationUtilities.findAxis( otherAxes, myA.getDataClass() )[0];
+        final IAxis A = ObservationUtilities.findAxis( otherAxes, myA.getLabel() );
 
         map.put( myA, A );
       }
@@ -165,8 +165,8 @@ public class SimpleObservation implements IObservation
 
       for( int j = 0; j < keys.length; j++ )
       {
-        final Object obj = values.getElement( i, (IAxis)map.get( keys[i] ) );
-        final int ix = m_tupples.indexOf( obj, keys[i] );
+        final Object obj = values.getElement( i, (IAxis)map.get( keys[j] ) );
+        final int ix = m_tupples.indexOf( obj, keys[j] );
 
         if( ix >= 0 && ixPresent != -1 )
         {

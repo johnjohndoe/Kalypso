@@ -50,16 +50,17 @@ public class SimpleTuppleModel implements ITuppleModel
     
     for( int ix = 0; ix < copyTupples.getCount(); ix++ )
     {
-      Vector v = new Vector( m_axes.length );
+      //Vector v = new Vector( m_axes.length );
       
       for( int i = 0; i < m_axes.length; i++ )
       {
         final Object element = copyTupples.getElement( ix, m_axes[i] );
         
-        v.add( element );
+        //v.add( element );
+        m_tupples.setValueAt( element, ix, m_axes[i].getPosition() );
       }
       
-      m_tupples.addRow( v );
+      //m_tupples.addRow( v );
     }
   }
 
