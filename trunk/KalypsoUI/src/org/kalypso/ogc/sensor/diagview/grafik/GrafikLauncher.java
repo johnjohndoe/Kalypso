@@ -342,20 +342,23 @@ public class GrafikLauncher
       final IAxis[] numberAxes = ObservationUtilities.findAxisByClass( axes,
           Number.class, true );
 
-      // create a corresponding dat-File for the current observation file
-      final IFile datFile = dest.getFile( FileUtilities
-          .nameWithoutExtension( zmlFile.getName() )
-          + ".dat" );
-      
-      // convert to dat-file, ready to be read by the grafik tool
-      zml2dat( obs, datFile, dateAxis, numberAxes, monitor );
-
+      int cc = 1;
       final List curves = tobs[i].getCurve();
       for( final Iterator itc = curves.iterator(); itc.hasNext(); )
       {
         final TypeCurve tc = (TypeCurve) itc.next();
 
-        gKurven.addCurve( datFile.getName(), tc, numberAxes );
+        // create a corresponding dat-File for the current observation file
+        final IFile datFile = dest.getFile( FileUtilities
+            .nameWithoutExtension( zmlFile.getName() )
+            + "-" + cc + ".dat" );
+
+        final IAxis axis = gKurven.addCurve( datFile, tc, numberAxes );
+
+        // convert to dat-file, ready to be read by the grafik tool
+        zml2dat( obs, datFile, dateAxis, axis, monitor );
+
+        cc++;
       }
 
       // is this obs a forecast?
@@ -402,13 +405,13 @@ public class GrafikLauncher
    * @param obs
    * @param datFile
    * @param dateAxis
-   * @param numberAxes
+   * @param axis
    * @param monitor
    * @throws CoreException
    */
   private static void zml2dat( final IObservation obs, final IFile datFile,
-      final IAxis dateAxis, final IAxis[] numberAxes,
-      final IProgressMonitor monitor ) throws CoreException
+      final IAxis dateAxis, final IAxis axis, final IProgressMonitor monitor )
+      throws CoreException
   {
     final SetContentHelper sch = new SetContentHelper()
     {
@@ -425,13 +428,8 @@ public class GrafikLauncher
           writer.write( text );
           writer.write( '\t' );
 
-          for( int j = 0; j < numberAxes.length; j++ )
-          {
-            final IAxis axis = numberAxes[j];
-
-            writer.write( values.getElement( i, axis ).toString() );
-            writer.write( '\t' );
-          }
+          writer.write( values.getElement( i, axis ).toString() );
+          writer.write( '\t' );
 
           writer.write( '\n' );
         }
@@ -440,8 +438,6 @@ public class GrafikLauncher
 
     sch.setFileContents( datFile, false, false, monitor );
   }
-
-
 
   /**
    * mini helper class for storing a value and a color

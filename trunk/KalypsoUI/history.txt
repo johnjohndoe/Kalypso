@@ -32,7 +32,6 @@ Jetzt Behandlung wie bei 0.0: optimaler Wert wird ermittelt und übernommen.
 - Bug #28
 - Bug #33
 - Bug #36
-- Bug #47
 - Bug #58
 - Bug #59
 

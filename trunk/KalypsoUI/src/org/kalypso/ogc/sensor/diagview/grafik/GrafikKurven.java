@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.kalypso.java.awt.ColorUtilities;
 import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
@@ -78,18 +79,20 @@ public class GrafikKurven
   /**
    * Add a curve, performs the business to make it grafik compliant
    * 
-   * @param datFileName
    * @param tc
    * @param numberAxes
+   * @return
+   * @return
    */
-  public void addCurve( final String datFileName, final TypeCurve tc,
-      final IAxis[] numberAxes )
+  public IAxis addCurve( final IFile file, final TypeCurve tc, final IAxis[] numberAxes )
   {
-    final GrafikKurve gk = new GrafikKurve( datFileName, tc.getName(), tc
+    final GrafikKurve gk = new GrafikKurve( file.getName(), tc.getName(), tc
         .isShown(), toGrafikColor( tc.getColor() ) );
 
     m_kurven.add( gk );
 
+    IAxis axis = null;
+    
     final List tmList = tc.getMapping();
     for( Iterator itm = tmList.iterator(); itm.hasNext(); )
     {
@@ -98,7 +101,7 @@ public class GrafikKurven
       final GrafikAchse ga = m_achsen.getFor( tm.getDiagramAxis() );
       if( ga != null )
       {
-        final IAxis axis = ObservationUtilities.findAxisByName( numberAxes, tm
+        axis = ObservationUtilities.findAxisByName( numberAxes, tm
             .getObservationAxis() );
 
         gk.setNr( m_kurven.size() );
@@ -108,6 +111,7 @@ public class GrafikKurven
       }
     }
 
+    return axis;
     //      title = achse.getName() + " (" + title + ")";
   }
 
@@ -204,7 +208,7 @@ public class GrafikKurven
 
     private final int m_color;
 
-    private final String m_filename;
+    private String m_filename;
 
     private final String m_shown;
 
@@ -219,7 +223,7 @@ public class GrafikKurven
       m_shown = shown ? "J" : "N";
       m_color = color;
     }
-
+    
     /**
      * @param unit
      *          string representation of the unit
