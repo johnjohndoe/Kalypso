@@ -520,22 +520,22 @@
 		</UserStyle>
 
 		<UserStyle>
-			<Name>SpreePegel</Name>
-			<Title>Eingabepegel</Title>
+			<Name>Talsperren</Name>
+			<Title>Talsperren</Title>
 			<IsDefault>1</IsDefault>
 			<FeatureTypeStyle>
-				<Name>SpreePegel</Name>
+				<Name>Talsperren</Name>
 				<Rule>
-					<Name>SpreePegel</Name>
+					<Name>Talsperren</Name>
 					<PointSymbolizer>
 						<Geometry>
 							<ogc:PropertyName>Ort</ogc:PropertyName>
 						</Geometry>
 						<Graphic>
 							<Mark>
-								<WellKnownName>square</WellKnownName>
+								<WellKnownName>triangle</WellKnownName>
 								<Fill>
-									<CssParameter name="fill">#000000</CssParameter>
+									<CssParameter name="fill">#0000ab</CssParameter>
 								</Fill>
 								<Stroke>
 									<CssParameter name="stroke">#111111</CssParameter>
@@ -543,13 +543,156 @@
 								</Stroke>
 								
 							</Mark>
-							<Size>3</Size>
+							<Size>10</Size>
 						</Graphic>
 					</PointSymbolizer>
+					
+					<TextSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>Ort</ogc:PropertyName>
+						</Geometry>
+						<Label>
+							<ogc:PropertyName>Name</ogc:PropertyName>
+						</Label>
+						<Font>
+							<CssParameter name="font-family">Arial</CssParameter>
+							<CssParameter name="font-family">Sans-Serif</CssParameter>
+							<CssParameter name="font-style">italic</CssParameter>
+							<CssParameter name="font-size">10</CssParameter>
+							<CssParameter name="font-color">#222222</CssParameter>
+						</Font>
+						<LabelPlacement>
+							<PointPlacement auto="true"/>
+						</LabelPlacement>
+					</TextSymbolizer>
+					
 				</Rule>
 			</FeatureTypeStyle>
 		</UserStyle>
 
+		<UserStyle>
+			<Name>Einzugsgebiete</Name>
+			<Title>Einzugsgebiete</Title>
+			<IsDefault>1</IsDefault>
+			<FeatureTypeStyle>
+				<Name>Einzugsgebiete</Name>
+				<Rule>
+					<Name>Einzugsgebiete</Name>
+					<PointSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>Ort</ogc:PropertyName>
+						</Geometry>
+						<Graphic>
+							<Mark>
+								<WellKnownName>triangle</WellKnownName>
+								<Fill>
+									<CssParameter name="fill">#00ab00</CssParameter>
+								</Fill>
+								<Stroke>
+									<CssParameter name="stroke">#111111</CssParameter>
+									<CssParameter name="stroke-width">1.0</CssParameter>
+								</Stroke>
+							</Mark>
+							<Size>10</Size>
+						</Graphic>
+					</PointSymbolizer>
+					
+					<TextSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>Ort</ogc:PropertyName>
+						</Geometry>
+						<Label>
+							<ogc:PropertyName>Name</ogc:PropertyName>
+						</Label>
+						<Font>
+							<CssParameter name="font-family">Arial</CssParameter>
+							<CssParameter name="font-family">Sans-Serif</CssParameter>
+							<CssParameter name="font-style">italic</CssParameter>
+							<CssParameter name="font-size">10</CssParameter>
+							<CssParameter name="font-color">#222222</CssParameter>
+						</Font>
+						<LabelPlacement>
+							<PointPlacement auto="true"/>
+						</LabelPlacement>
+					</TextSymbolizer>
+					
+					
+				</Rule>
+			</FeatureTypeStyle>
+		</UserStyle>
 
+		<UserStyle>
+			<Name>Flusslaufmodelle</Name>
+			<Title>Flusslaufmodelle</Title>
+			<IsDefault>1</IsDefault>
+			<FeatureTypeStyle>
+				<Name>Flusslaufmodelle</Name>
+				<Rule>
+					<Name>Flusslaufmodelle</Name>
+					<PointSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>Ort</ogc:PropertyName>
+						</Geometry>
+						<Graphic>
+							<Mark>
+								<WellKnownName>triangle</WellKnownName>
+								<Fill>
+									<CssParameter name="fill">#ab0000</CssParameter>
+								</Fill>
+								<Stroke>
+									<CssParameter name="stroke">#111111</CssParameter>
+									<CssParameter name="stroke-width">1.0</CssParameter>
+								</Stroke>
+							</Mark>
+							<Size>10</Size>
+						</Graphic>
+					</PointSymbolizer>
+					
+					<TextSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>Ort</ogc:PropertyName>
+						</Geometry>
+						<Label>
+							<ogc:PropertyName>Name</ogc:PropertyName>
+						</Label>
+						<Font>
+							<CssParameter name="font-family">Arial</CssParameter>
+							<CssParameter name="font-family">Sans-Serif</CssParameter>
+							<CssParameter name="font-style">italic</CssParameter>
+							<CssParameter name="font-size">10</CssParameter>
+							<CssParameter name="font-color">#222222</CssParameter>
+						</Font>
+						<LabelPlacement>
+							<PointPlacement auto="true"/>
+						</LabelPlacement>
+					</TextSymbolizer>
+					
+					
+				</Rule>
+			</FeatureTypeStyle>
+		</UserStyle>
+		
+		<UserStyle>
+			<Name>Spree:Gewaesserverlauf</Name>
+			<Title>Spree:Gewaesserverlauf</Title>
+			<IsDefault>1</IsDefault>
+			<FeatureTypeStyle>
+				<Name>Spree:Gewaesserverlauf</Name>
+				<Rule>
+					<Name>LineRule</Name>
+					<LineSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>Shape</ogc:PropertyName>
+						</Geometry>
+						<Stroke>
+							<CssParameter name="stroke">#0000FF</CssParameter>
+							<CssParameter name="stroke-width">1</CssParameter>
+						</Stroke>
+					</LineSymbolizer>
+				</Rule>
+			</FeatureTypeStyle>
+		</UserStyle>
+		
+		
 	</NamedLayer>
 </StyledLayerDescriptor>

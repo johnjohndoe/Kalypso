@@ -455,36 +455,41 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
       {
         try
         {
-          GeoTransformer gt = new GeoTransformer( getCoordinatesSystem() );
-          GM_Envelope env = gt.transformEnvelope( themes[i].getLayer().getBoundingBox(), themes[i]
-              .getLayer().getCoordinatesSystem() );
-          double minX = env.getMin().getX();
-          double minY = env.getMin().getY();
-
-          double maxX = env.getMax().getX();
-          double maxY = env.getMax().getY();
-
-          if( !found )
+          final GeoTransformer gt = new GeoTransformer( getCoordinatesSystem() );
+          final GM_Envelope boundingBox = themes[i].getLayer().getBoundingBox();
+          
+          if( boundingBox != null )
           {
-            resultMinX = minX;
-            resultMinY = minY;
-            resultMaxX = maxX;
-            resultMaxY = maxY;
-            found = true;
-          }
-          else
-          {
-            if( minY < resultMinX )
+            final GM_Envelope env = gt.transformEnvelope( boundingBox, themes[i]
+                .getLayer().getCoordinatesSystem() );
+            double minX = env.getMin().getX();
+            double minY = env.getMin().getY();
+  
+            double maxX = env.getMax().getX();
+            double maxY = env.getMax().getY();
+  
+            if( !found )
+            {
               resultMinX = minX;
-
-            if( minY < resultMinY )
               resultMinY = minY;
-
-            if( maxX > resultMaxX )
               resultMaxX = maxX;
-
-            if( maxY > resultMaxY )
               resultMaxY = maxY;
+              found = true;
+            }
+            else
+            {
+              if( minY < resultMinX )
+                resultMinX = minX;
+  
+              if( minY < resultMinY )
+                resultMinY = minY;
+  
+              if( maxX > resultMaxX )
+                resultMaxX = maxX;
+  
+              if( maxY > resultMaxY )
+                resultMaxY = maxY;
+            }
           }
         }
         catch( Exception e )

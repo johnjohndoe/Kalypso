@@ -78,7 +78,7 @@ public class MapPanel extends Canvas implements IMapModellView
 
     repaint();
   }
-
+  
   /**
    * @see java.awt.Component#paint(java.awt.Graphics)
    */
@@ -287,5 +287,4 @@ public class MapPanel extends Canvas implements IMapModellView
 
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
-
 }

@@ -135,7 +135,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener
       {
       case MouseEvent.BUTTON1: // Left
         actualWidget.leftReleased( e.getPoint() );
-
         break;
 
       case MouseEvent.BUTTON2:
@@ -158,9 +157,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
   public void paintWidget( Graphics g )
   {
     if( getActualWidget() != null )
-    {
       getActualWidget().paint( g );
-    }
   }
 
   public IWidget getActualWidget()
