@@ -58,4 +58,7 @@ public interface KalypsoStati
 
   /** Value has been MODIFIED by user (0x08) */
   public final static int BIT_USER_MODIFIED = 0x08;
+
+  /** status used when user modifies the values */
+  public final static Integer STATUS_USERMOD = new Integer( BIT_USER_MODIFIED );
 }

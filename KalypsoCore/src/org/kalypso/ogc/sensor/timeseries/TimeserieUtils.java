@@ -309,12 +309,12 @@ public class TimeserieUtils
 
       // for W
       final NumberFormat wf = NumberFormat.getInstance();
-      wf.setMinimumFractionDigits( 0 );
+      wf.setMinimumFractionDigits( Integer.valueOf( getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_WATERLEVEL ) ).intValue() );
       m_formatMap.put( TimeserieConstants.TYPE_WATERLEVEL, wf );
 
       // for N
       final NumberFormat nf = NumberFormat.getInstance();
-      nf.setMinimumFractionDigits( 1 );
+      wf.setMinimumFractionDigits( Integer.valueOf( getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_RAINFALL ) ).intValue() );
       m_formatMap.put( TimeserieConstants.TYPE_RAINFALL, nf );
     }
 

@@ -128,7 +128,9 @@ class XYCurveSerie extends Series
     final Object obj = m_values.getElement( item, m_yAxis );
 
     if( obj instanceof Number )
+    {
       return (Number) obj;
+    }
 
     return null;
   }

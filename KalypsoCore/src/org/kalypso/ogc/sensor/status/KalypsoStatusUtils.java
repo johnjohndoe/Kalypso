@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.status;
 
 import java.net.MalformedURLException;
@@ -67,13 +67,14 @@ public class KalypsoStatusUtils
   public final static String STATUS_AXIS_UNIT = "";
 
   private final static ImageIcon ICON_QUESTION = new ImageIcon(
-      KalypsoStatusUtils.class.getResource( "resource/question.gif" ), "question" );
+      KalypsoStatusUtils.class.getResource( "resource/question.gif" ),
+      "question" );
 
   private final static ImageIcon ICON_WARNING = new ImageIcon(
       KalypsoStatusUtils.class.getResource( "resource/warning.gif" ), "warning" );
 
-//  private final static Icon ICON_ERROR = new ImageIcon(
-//      KalypsoStatusUtils.class.getResource( "resource/error.gif" ) );
+  //  private final static Icon ICON_ERROR = new ImageIcon(
+  //      KalypsoStatusUtils.class.getResource( "resource/error.gif" ) );
 
   private final static ImageIcon ICON_WRITE = new ImageIcon(
       KalypsoStatusUtils.class.getResource( "resource/write.gif" ), "write" );
@@ -97,7 +98,7 @@ public class KalypsoStatusUtils
 
     return STATUS_AXIS_LABELPREFIX + axis.getName();
   }
-  
+
   /**
    * Returns the axis label without the status marker
    * 
@@ -140,6 +141,20 @@ public class KalypsoStatusUtils
   }
 
   /**
+   * Returns true if the given statusCandidate is the status axis for the given axis
+   * 
+   * @param axis
+   * @param statusCandidate
+   * @return
+   */
+  public static boolean isStatusAxisFor( final IAxis axis, final IAxis statusCandidate )
+  {
+    final String statusAxisLabel = getStatusAxisLabelFor( axis );
+    
+    return statusCandidate.getName().equals( statusAxisLabel );
+  }
+  
+  /**
    * Finds the first status axis among the given list.
    * 
    * @param axes
@@ -157,6 +172,26 @@ public class KalypsoStatusUtils
     }
 
     throw new NoSuchElementException( "No Status-Axis found" );
+  }
+
+  /**
+   * Returns the status axis for the given axis if found in the axes-list.
+   *  
+   * @param axes
+   * @param axis
+   * @return
+   * @throws NoSuchElementException if no corresponding status axis found
+   */
+  public static IAxis findStatusAxisFor( final IAxis[] axes, final IAxis axis )
+      throws NoSuchElementException
+  {
+    for( int i = 0; i < axes.length; i++ )
+    {
+      if( isStatusAxisFor( axis, axes[i] ) )
+        return axes[i];
+    }
+
+    throw new NoSuchElementException( "No Status-Axis found for: " + axis );
   }
 
   /**
@@ -196,7 +231,7 @@ public class KalypsoStatusUtils
 
     return (IAxis[]) list.toArray( new IAxis[list.size()] );
   }
-  
+
   /**
    * Checks if bit is in the mask.
    * 
@@ -226,15 +261,16 @@ public class KalypsoStatusUtils
 
     return null;
   }
-  
+
   /**
-   * Returns an icon that corresponds to the given description. Description can be
-   * any of the following:
+   * Returns an icon that corresponds to the given description. Description can
+   * be any of the following:
    * <ol>
    * <li>"question": the Question Icon
    * <li>"warning": the Warning Icon
    * <li>"write": the Write Icon
-   * <li>any URL: an URL that will be used for finding the image (see ImageIcon.ImageIcon( URL ) )
+   * <li>any URL: an URL that will be used for finding the image (see
+   * ImageIcon.ImageIcon( URL ) )
    * <li>null: returns null
    * </ol>
    * 
@@ -249,7 +285,7 @@ public class KalypsoStatusUtils
   {
     if( iconDescription == null )
       return null;
-    
+
     if( "question".equalsIgnoreCase( iconDescription ) )
       return ICON_QUESTION;
     if( "warning".equalsIgnoreCase( iconDescription ) )

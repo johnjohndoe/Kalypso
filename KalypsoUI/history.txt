@@ -7,7 +7,7 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 ###############################################################################
 
 ----------------
-Version 0.0.5 (Deploy vom XX.02.2005)
+Version 0.0.5 (Deploy vom 23.02.2005)
 ----------------
 - Bugfix: Die (manchmal) zufällig Farbvergabe im Wizard ist korrigiert.
 - Wizard: Spaltenbeschriftung und Legendeneinträge jetzt frei konfigurierbar
