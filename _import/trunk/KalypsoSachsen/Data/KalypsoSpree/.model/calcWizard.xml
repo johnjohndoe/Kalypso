@@ -71,9 +71,16 @@
         <arg name="rightSash" value="30"/>
         <arg name="selectionID" value="32"/>
         
-        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_rechnung"/>
-        <arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=w2#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
-        <arg name="timeserie3" value="diagDateAxis=d#diagValueAxis=w2#nameColumn=Name#linkColumn=Wasserstand_gerechnet"/>
+        <arg name="ignoreType" value="Q"/>
+        
+        <arg name="timeserie1" 
+        	value="nameColumn=Name#linkColumn=Niederschlag_rechnung"/>
+        <arg name="timeserie2" 
+        	value="nameColumn=Name#linkColumn=Wasserstand_gemessen#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;"/>
+        <arg name="timeserie3" 
+        	value="nameColumn=Name#linkColumn=Wasserstand_gerechnet#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
+        <arg name="timeserie3" 
+        	value="nameColumn=Name#linkColumn=Wasserstand_vorhersage#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
     </page>
 
     <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Talsperren" imageLocation="icons/calcwizard/kalypso32.gif" >
