@@ -20,11 +20,16 @@ wenn sie nicht auch auf dem Server waren.
   Bearbeitung der Loop (Beispiel: Siehe GrafikLauncher und ExportResultsWizardPage).
 - Fehlerbehanldung verbessert in ExportResultsWizardPage: der Benutzer wird besser informiert
   wenn eine Zeitreihe nicht zurückgespeichert werden konnte.
-- Fehlerbehanldung verbessert in GrafikLauncher.
+- GrafikLauncher:
+  * Fehlerbehandlung verbessert
+  * Alarmstufen werden ohne Nachkommastellen angezeigt
+- Todo #23: Neues Popup-Menu in der ObservationTable. Vereinfacht die Eingabe von Werte auf mehrere Zeilen.
+- ObservationTable: Copy/Paste (auch mit Excel) geeignet
 - Bug #79
 - Bug #80
 - Bug #83
 - Bug #84
+- Bug #47
 
 ----------------
 Version 0.0.5 (Deploy vom 23.02.2005)
