@@ -46,7 +46,10 @@ public class DataCenterLevelItem implements IRepositoryItem
    */
   public String getIdentifier( )
   {
-    return m_parent.getIdentifier() + "." + String.valueOf( m_level.getID() );
+    if( m_parent != null )
+      return m_parent.getIdentifier() + "." + String.valueOf( m_level.getID() );
+    else
+      return m_rep.getIdentifier() + String.valueOf( m_level.getID() );
   }
 
   /**
