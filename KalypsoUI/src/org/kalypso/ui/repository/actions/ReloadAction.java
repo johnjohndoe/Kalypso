@@ -3,6 +3,7 @@ package org.kalypso.ui.repository.actions;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.ui.ImageProvider;
@@ -30,6 +31,8 @@ public class ReloadAction extends AbstractRepositoryExplorerAction implements IS
     final IRepository rep = getExplorer().isRepository( getExplorer().getSelection() );
     if( rep == null )
       return;
+    
+    ObservationCache.clear();
     
     try
     {

@@ -36,6 +36,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapPanel;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.widgets.SingleElementSelectWidget;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.diagview.template.LinkedDiagramTemplate;
@@ -317,8 +318,22 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
       final TimeserieFeatureProps[] tsProps = KalypsoWizardHelper
           .parseTimeserieFeatureProps( getArguments() );
 
-      KalypsoWizardHelper.updateDiagramTemplate( tsProps, selectedFeatures, m_diagTemplate,
-          m_useResolver, getContext() );
+      try
+      {
+        KalypsoWizardHelper.updateDiagramTemplate( tsProps, selectedFeatures, m_diagTemplate,
+            m_useResolver, getContext() );
+      }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
+        getShell().getDisplay().asyncExec( new Runnable()
+            {
+              public void run( )
+              {
+                MessageDialog.openError( getShell(), "Aktualisierungsfehler", e.getLocalizedMessage() );
+              }
+            });
+      }
     }
   }
 

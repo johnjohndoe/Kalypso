@@ -1,9 +1,9 @@
-package org.kalypso.ogc.sensor.timeseries.wq.test;
+package org.kalypso.ogc.sensor.timeseries.wq.wechmann.test;
 
 import org.kalypso.java.util.DoubleComparator;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannException;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannFunction;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannParams;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFunction;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
 
 import junit.framework.TestCase;
 
