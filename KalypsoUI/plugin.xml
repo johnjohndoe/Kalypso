@@ -3,7 +3,7 @@
 <plugin
    id="org.kalypso.ui"
    name="KalypsoUI"
-   version="0.0.5"
+   version="1.0.0"
    provider-name="kalypso.org"
    class="org.kalypso.ui.KalypsoGisPlugin">
 

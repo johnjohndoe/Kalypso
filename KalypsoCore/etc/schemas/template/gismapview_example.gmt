@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="gismapview.template.kalypso.org
 .\gismapview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-	
 	<extent bottom="1245.0" left="123.4" right="456.7" top="111.1"/>
 	<layers>
-		<layer id="argls" name="Pegel" featurePath="collection/featureMember" xlink:type="simple" xlink:actuate="onRequest" xlink:href="RESOURCE#shapes/example#unknown" linktype="shape" visible="false">
-			<kalypso:style style="name" xlink:href="./styles/pegel.sld" linktype="sld"/>
-			<kalypso:style style="name" xlink:href="./styles/pegel.sld" linktype="sld"/>
+		<layer id="l0" name="Pegel" featurePath="collection/featureMember" xlink:type="simple" xlink:actuate="onRequest" xlink:href="project:/.shapes/example#EPSG:31469" linktype="shape" visible="false">
+			<kalypso:style style="geometrie" xlink:href="./styles/pegel.sld" linktype="sld"/>
+			<kalypso:style style="text" xlink:href="./styles/pegel.sld" linktype="sld"/>
 		</layer>
-		<layer id="urgl" name="Einzugsgebiete" featurePath="collection/featureMember" xlink:type="simple" xlink:actuate="onRequest" xlink:href="FILE#E:\wspproj\MapDemo\map\Rebrach_profile#unknown" linktype="shape" visible="true">
-			<kalypso:style style="name" xlink:type="simple" xlink:actuate="onRequest" xlink:href="x" linktype="sld"/>
+		<layer id="l1" name="Einzugsgebiete" featurePath="collection/featureMember" xlink:type="simple" xlink:actuate="onRequest" xlink:href="file://E:\wspproj\MapDemo\map\Rebrach_profile#EPSG:31469" linktype="shape" visible="true">
 			<kalypso:style style="name" xlink:type="simple" xlink:actuate="onRequest" xlink:href="./sld/teilgebiete.sld" linktype="sld"/>
-			<kalypso:depends layerid="argls"/>
 		</layer>
 	</layers>
 </gismapview>
