@@ -111,13 +111,14 @@ public class KalypsoWizardHelper
             catch( LoaderException e )
             {
               // ignored, do nothing...
-              e.printStackTrace();
+              //e.printStackTrace();
             }
           }
           else
           {
             final LinkedDiagramCurve curve = new LinkedDiagramCurve( obsLink.getLinktype(),
                 new JAXBXLink( obsLink ), name, mappings, template );
+            
             template.addCurve( curve );
           }
         }
@@ -162,9 +163,8 @@ public class KalypsoWizardHelper
             catch( LoaderException e )
             {
               // ignored, do nothing...
-              e.printStackTrace();
+              //e.printStackTrace();
             }
-
           }
           else
           {
