@@ -96,7 +96,28 @@ public class UpdateModell
             feature.setProperty(property);
         }
     }
-
+    
+    private final static String[][] m_zufluss=
+    {
+    new String[]{"Neukirchen","Node7300"},
+    new String[]{"Poehl","Node1301"},
+    new String[]{"Droeda","Node6100"},
+    new String[]{"Boehlen","Node7100"},
+    new String[]{"Magwitz","Node1500"}
+    };
+    
+    private static void updateZuflussNamen(GMLWorkspace workspace)
+    {
+        for (int i = 0; i < m_zufluss.length; i++)
+        {
+            final String[] zuflussContext = m_zufluss[i];
+            final String zuflussID = zuflussContext[1];
+            final Feature feature = workspace.getFeature(zuflussID);
+            final FeatureProperty nameProp = FeatureFactory.createFeatureProperty(
+                    "name", zuflussContext[0]);
+            feature.setProperty(nameProp);
+        }
+    }
     private final static String[][] m_pegel =
     {
     // kaputte pegel und noch nicht verfuegbare pegel sind kommentiert
@@ -129,8 +150,8 @@ public class UpdateModell
         {
             final String[] pegelContext = m_pegel[i];
             final String nodeID = pegelContext[1];
-            Feature feature = workspace.getFeature(nodeID);
-            FeatureProperty nameProp = FeatureFactory.createFeatureProperty(
+            final Feature feature = workspace.getFeature(nodeID);
+            final FeatureProperty nameProp = FeatureFactory.createFeatureProperty(
                     "name", pegelContext[0]);
             feature.setProperty(nameProp);
             try
