@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Andreas (TU) -->
+<schema targetNamespace="http://www.tuhh.de/kalypsoSpree" version="0.9"
+    xmlns:na="http://www.tuhh.de/kalypsoSpree"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:gml="http://www.opengis.net/gml"
+    xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org">
+    <import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+    <import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlinks.xsd"/>
+    <import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/> 
+
+    <element name="collection" type="na:_SpreeModellType" substitutionGroup="gml:_FeatureCollection"/>
+    <complexType name="_SpreeModellType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureCollectionType"/>
+        </complexContent>
+    </complexType>
+    
+    <element name="Pegel" type="na:_PegelType" substitutionGroup="gml:_Feature"/>
+    <complexType name="_PegelType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <element name="Name" type="string"/>
+                    <element name="Ort" type="gml:PointPropertyType"/>
+                    <element name="Art" type="string"/>
+                    <element name="NiederschlagMessung" type="obslink:TimeseriesLink"/>
+                    <element name="NiederschlagVorhersage" type="obslink:TimeseriesLink"/>
+                    <element name="NiederschlagVorhersageKorrektur" type="obslink:TimeseriesLink"/>
+                    <element name="PegelMessung" type="obslink:TimeseriesLink"/>
+                    <element name="PegelBerechnung" type="obslink:TimeseriesLink"/>
+                   </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+</schema>

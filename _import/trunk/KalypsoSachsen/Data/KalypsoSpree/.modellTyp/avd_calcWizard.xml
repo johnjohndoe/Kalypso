@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.model.kalypso.org calcwizard.xsd">
+
+<!-- Ergebniskontroole NA-Modelle-->
+<page className="org.kalypso.ui.calcwizard.ViewResultsWizardPage"
+   pageTitle="Ergebniskontrolle NA-Modelle"
+   imageLocation="icons/calcwizard/boden.gif" >
+   <arg name="mapTemplate" value="project:.modellTyp/vorlagen/rechenfall/ergebniskontrollePegel.gmt"/>
+   <arg name="tableTemplate"  value="project:.modellTyp/vorlagen/rechenfall/ergebniskontrollePegel.gtt"/>
+
+         <arg name="timeseriesPropertyNames"
+   value="NiederschlagMessung#PegelBerechnung"/>
+         
+          <arg name="mainSash" value="50"/>
+          <arg name="rightSash" value="40"/>
+         <arg name="grafikToolTemplate" value="project:.modellTyp/vorlagen/grafiktool/viewResult.xyz"/>
+      </page>
+
+
+
+ <!-- was kommt in die Ergebnisablage-->
+      <page className="org.kalypso.ui.calcwizard.CommitResultsWizardPage"
+            pageTitle="Kontrolle der Ergebnisse"
+            imageLocation="icons/calcwizard/boden.gif" >
+ <arg name="mapTemplate" value="project:.modellTyp/vorlagen/rechenfall/ergebniskontrollePegel.gmt"/>
+   <arg name="tableTemplate"  value="project:.modellTyp/vorlagen/rechenfall/ergebniskontrollePegel.gtt"/>
+     
+            <arg name="mainSash" value="50"/>
+          <arg name="rightSash0" value="40"/>
+          <arg name="rightSash1" value="40"/>
+         <arg name="timeseriesPropertyNames"
+   value="NiederschlagMessung#PegelBerechnung"/>
+        
+          <arg name="CommitTextTemplate" value="
+&#xA; 
+&#xD;
+&#xD; Freistaat Sachsen
+&#xD; Landesamt für Umwelt und Geologie
+&#xD;
+&#xD; Prognoserechnung mit Kalypso (SpreeModell)
+&#xD;
+&#xD; Kommentar:
+&#xD;
+&#xD; Bearbeiter: "/>
+      </page>
+</calcwizard>
