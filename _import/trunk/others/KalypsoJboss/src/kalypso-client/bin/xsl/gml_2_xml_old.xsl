@@ -16,6 +16,7 @@
 
         <xsl:variable name="typanz" select="count(//TEILGEBNR[.=$num])"/>
         <xsl:variable name="areaTG" select="sum(  //TEILGEBNR[.=$num]/../FLAECHE)"/>
+        <!--        <xsl:variable name="versigGrad" select="../VERSIEGGR"/> -->
         <xsl:variable name="pos" select="..//gml:coordinates"/>
         <xsl:variable name="cs" select="..//gml:coordinates/@cs"/>
         <xsl:variable name="ts" select="..//gml:coordinates/@ts"/>
@@ -53,6 +54,14 @@
                   <xsl:with-param name="format" select="'0'"/>
                 </xsl:call-template>
               </xsl:attribute>
+              <!--
+                   <xsl:attribute name="m_sealedAreaRb">
+                     <xsl:value-of select="$versigGrad*$areaTG"/>
+                   </xsl:attribute>
+                   <xsl:attribute name="m_natAreaRb">
+                     <xsl:value-of select="(1-$versigGrad)*$areaTG"/>
+                   </xsl:attribute>
+                   -->
             </xsl:element>
           </xsl:element>
         </table>
@@ -60,38 +69,11 @@
         <xsl:for-each select="//TEILGEBNR[.=$num]/..">
           <xsl:sort select="FLAECHE" order="descending" data-type="number"/>
           <xsl:variable name="areaHYDRO" select="FLAECHE"/>
-          <xsl:variable name="tmp" select="translate(NUTZUNGALB,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
-          <xsl:variable name="nutz">
-            <xsl:choose>
-              <xsl:when test="starts-with($tmp,'ALB_')">
-                <xsl:value-of select="$tmp"/>                      
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:text>ALB_</xsl:text>
-                <xsl:call-template name="format">
-                  <xsl:with-param name="value" select="number($tmp)"/>
-                  <xsl:with-param name="digits" select="1"/>
-                  <xsl:with-param name="format" select="'0'"/>
-                </xsl:call-template>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:variable>
-          
-
+          <xsl:variable name="nutz" select="NUTZUNGALB"/>
           <xsl:variable name="boden" select="translate(BODENTYP,' ','_')"/>
           <xsl:variable name="maxPERKOL" select="MAXPERRATE"/>
           <xsl:variable name="anteilGW" select="GWFAKTOR"/>
-
-          
-          <!--          <xsl:variable name="versigGrad" select="VERSIEGGR"/> -->
-
-          <xsl:variable name="versigGrad">
-            <xsl:call-template name="get_seal_factor">
-              <xsl:with-param name="versigGrad" select="VERSIEGGR"/>
-              <xsl:with-param name="alb_key" select="$nutz"/>
-            </xsl:call-template>
-          </xsl:variable>
-          
+          <xsl:variable name="versigGrad" select="VERSIEGGR"/>
           <xsl:variable name="Gebietskenn" select="GEBKZAHL"/>
           <xsl:variable name="pos" select="..//gml:coordinates"/>
           <xsl:variable name="cs" select="..//gml:coordinates/@cs"/>
@@ -145,17 +127,36 @@
                          <xsl:with-param name="format" select="'0'"/>
                        </xsl:call-template>
                      </xsl:attribute>
+                <!--
+                     <xsl:attribute name="m_sealedAreaHy">
+                       <xsl:value-of select="$versigGrad*$areaHYDRO"/>
+                     </xsl:attribute>
+                     <xsl:attribute name="m_natAreaHy">
+                       <xsl:value-of select="(1-$versigGrad)*$areaHYDRO"/>
+                     </xsl:attribute>
+                     -->
                      <xsl:attribute name="m_sealFactor">
                        <xsl:value-of select="$versigGrad"/>
                      </xsl:attribute>
                 <xsl:attribute name="m_sealFactorCor">
                   <xsl:value-of select="$versiegkor"/>
                 </xsl:attribute>
-
                 <xsl:attribute name="m_landuseALB">
-                  <xsl:value-of select="$nutz"/>
-                </xsl:attribute>
+                  <xsl:choose>
+                    <xsl:when test="starts-with($nutz,'ALB_')">
+                      <xsl:value-of select="$nutz"/>                      
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:text>ALB_</xsl:text>
+                      <xsl:call-template name="format">
+                        <xsl:with-param name="value" select="number($nutz)"/>
+                        <xsl:with-param name="digits" select="1"/>
+                        <xsl:with-param name="format" select="'0'"/>
+                      </xsl:call-template>
+                    </xsl:otherwise>
+                  </xsl:choose>
 
+                </xsl:attribute>
                 <xsl:attribute name="m_soiltype">
                   <xsl:value-of select="$boden"/>
                 </xsl:attribute>

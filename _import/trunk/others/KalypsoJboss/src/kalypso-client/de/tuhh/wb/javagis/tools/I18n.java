@@ -9,6 +9,9 @@ import javax.swing.JOptionPane;
 
 public class I18n
 {
+    private static boolean SHOWKEY=false;
+    private static boolean LEARN=false;
+
     private static I18n instance=null;
     private Properties props=null;
     private static String lang=null;
@@ -63,18 +66,26 @@ public class I18n
 	String prop=instance.props.getProperty(key);
 	if(prop==null)
 	    {
-		String value=JOptionPane.showInputDialog(null,"enter value for \""+key+"\"");
-		instance.props.setProperty(key,"\""+value+"\"");
-		instance.save();
-		instance.load();
-		return value;
+		if(LEARN)
+		    {
+			String value=JOptionPane.showInputDialog(null,"enter value for \""+key+"\"");
+			instance.props.setProperty(key,"\""+value+"\"");
+			instance.save();
+			instance.load();
+			return value;
+		    }
+		else
+		    return "  ";
 	    }
 	else
 	    {
 		StringBuffer stBuff = new StringBuffer(prop);
 		stBuff.deleteCharAt(0);
 		stBuff.deleteCharAt((stBuff.length()-1));
-		return stBuff.toString()+" ["+key+"]";
+		if(SHOWKEY)
+		    return stBuff.toString()+" ["+key+"]";
+		else
+		    return stBuff.toString();
 	    }
     }
     
