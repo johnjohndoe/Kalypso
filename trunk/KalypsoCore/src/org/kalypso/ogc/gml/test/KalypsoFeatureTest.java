@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.test;
 
 import junit.framework.TestCase;
@@ -45,6 +45,7 @@ import junit.framework.TestCase;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.gml.schema.GMLSchema;
+import org.deegree_impl.gml.schema.GMLSchemaCache;
 import org.deegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -52,11 +53,11 @@ import org.deegree_impl.model.feature.FeatureFactory;
  */
 public class KalypsoFeatureTest extends TestCase
 {
-  private Feature createFeature( )
+  private Feature createFeature()
   {
     try
     {
-      final GMLSchema schema = new GMLSchema( KalypsoFeatureTest.class
+      final GMLSchema schema = GMLSchemaCache.getSchema( KalypsoFeatureTest.class
           .getResource( "point.xsd" ) );
       final FeatureType featureType = schema.getFeatureTypes()[0];
 
@@ -69,7 +70,7 @@ public class KalypsoFeatureTest extends TestCase
     return null;
   }
 
-  public void testSelect( )
+  public void testSelect()
   {
     Feature fe = createFeature();
     int s1 = 10;
@@ -77,7 +78,7 @@ public class KalypsoFeatureTest extends TestCase
     assertEquals( true, fe.isSelected( s1 ) );
   }
 
-  public void testUnselect( )
+  public void testUnselect()
   {
     Feature fe = createFeature();
     int s1 = 10;
@@ -87,7 +88,7 @@ public class KalypsoFeatureTest extends TestCase
     assertEquals( false, fe.isSelected( s1 ) );
   }
 
-  public void testToggle( )
+  public void testToggle()
   {
     Feature fe = createFeature();
     int s1 = 10;

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.test;
 
 import java.io.BufferedReader;
@@ -61,6 +61,7 @@ import org.deegree_impl.extension.TypeRegistryException;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.gml.schema.EnumerationFeatureTypeProperty;
 import org.deegree_impl.gml.schema.GMLSchema;
+import org.deegree_impl.gml.schema.GMLSchemaCache;
 import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
@@ -89,7 +90,7 @@ public class JMSchemaTest extends TestCase
   public void loadSchemaAndCompareIt( String xsdName, final String compareFile ) throws Exception
   {
 
-    final GMLSchema jmSchema = new GMLSchema( getClass().getResource( xsdName ) );
+    final GMLSchema jmSchema = GMLSchemaCache.getSchema( getClass().getResource( xsdName ) );
 
     final FeatureType[] ftps = jmSchema.getFeatureTypes();
     final String result = toString( 0, ftps );
@@ -140,13 +141,13 @@ public class JMSchemaTest extends TestCase
   public void testSpreeModellGML() throws Exception
   {
     final URL modellURL = getClass().getResource( "spreemodell/modell.gml" );
-//    final URL schemaURL = getClass().getResource( "spreemodell/modell.xsd" );
+    //    final URL schemaURL = getClass().getResource( "spreemodell/modell.xsd" );
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellURL, new UrlUtilities() );
     final File file = File.createTempFile( "mode:out", ".gml" );
     file.deleteOnExit();
 
     final FileWriter writer = new FileWriter( file );
-    GmlSerializer.serializeWorkspace( writer, workspace);
+    GmlSerializer.serializeWorkspace( writer, workspace );
   }
 
   //  
@@ -161,25 +162,28 @@ public class JMSchemaTest extends TestCase
   //  }
   //  
 
-//  private void loadAndWriteGML( final String xsdFile, final String gmlFile ) throws Exception
-//  {
-//    //    InputSource schemaSource = new InputSource(
-//    // getClass().getResourceAsStream( xsdFile ) );
-//    //    InputSource gmlSource = new InputSource(
-//    // getClass().getResourceAsStream( gmlFile ) );
-//    ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-//    CS_CoordinateSystem crs = Adapters.getDefault().export( csFac.getCSByName( "EPSG:4326" ) );
-//
-//    KalypsoFeatureLayer[] layers = GmlSerializer.deserialize( getClass().getResource( xsdFile ),
-//        getClass().getResource( gmlFile ), crs, null );
-//
-//    System.out.println( "GML loaded" );
-//    File outFile = File.createTempFile( "test_parse", "gml" );
-//    final Writer writer = new FileWriter( outFile );
-//
-//    GmlSerializer.serialize( writer, layers, null );
-//    System.out.println( "GML saved in " + outFile.getPath() );
-//  }
+  //  private void loadAndWriteGML( final String xsdFile, final String gmlFile )
+  // throws Exception
+  //  {
+  //    // InputSource schemaSource = new InputSource(
+  //    // getClass().getResourceAsStream( xsdFile ) );
+  //    // InputSource gmlSource = new InputSource(
+  //    // getClass().getResourceAsStream( gmlFile ) );
+  //    ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
+  //    CS_CoordinateSystem crs = Adapters.getDefault().export( csFac.getCSByName(
+  // "EPSG:4326" ) );
+  //
+  //    KalypsoFeatureLayer[] layers = GmlSerializer.deserialize(
+  // getClass().getResource( xsdFile ),
+  //        getClass().getResource( gmlFile ), crs, null );
+  //
+  //    System.out.println( "GML loaded" );
+  //    File outFile = File.createTempFile( "test_parse", "gml" );
+  //    final Writer writer = new FileWriter( outFile );
+  //
+  //    GmlSerializer.serialize( writer, layers, null );
+  //    System.out.println( "GML saved in " + outFile.getPath() );
+  //  }
 
   private String toString( int indent, FeatureType[] fts )
   {
