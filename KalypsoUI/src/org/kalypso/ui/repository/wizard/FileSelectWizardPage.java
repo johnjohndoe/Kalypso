@@ -60,6 +60,9 @@ public class FileSelectWizardPage extends WizardPage
   
   public String getFilePath()
   {
+    if( m_ffe == null )
+      return null;
+    
     m_ffe.store();
     
     return m_store.getString( "FILE" );

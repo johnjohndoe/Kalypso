@@ -16,7 +16,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -168,7 +167,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
     m_repViewer = new TreeViewer( split, SWT.H_SCROLL | SWT.V_SCROLL );
     m_repViewer.setContentProvider( new RepositoryTreeContentProvider() );
-    m_repViewer.setLabelProvider( new LabelProvider() );
+    m_repViewer.setLabelProvider( new RepositoryLabelProvider() );
     m_repViewer.setInput( m_repContainer );
 
     initContextMenu();

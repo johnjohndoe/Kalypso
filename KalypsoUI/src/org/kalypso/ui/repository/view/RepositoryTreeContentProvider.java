@@ -17,6 +17,9 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
 {
   /**
    * helper
+   * 
+   * @param arg
+   * @return item or throws IllegalArgumentException if type is not an IRepositoryItem
    */
   private IRepositoryItem testArg( Object arg )
   {

@@ -267,10 +267,11 @@ public class ObservationTableModel extends AbstractTableModel
   {
     synchronized( m_columns )
     {
+      final ITableViewColumn col = (ITableViewColumn) m_columns.get( columnIndex - 1 );
+      col.setDirty( true );
+      
       m_valuesModel.setValueAt( aValue, rowIndex, columnIndex - 1 );
       m_statusModel.setValueAt( STATUS_USERMOD, rowIndex, columnIndex - 1 );
-
-      ((ITableViewColumn) m_columns.get( columnIndex - 1 )).setDirty( true );
     }
   }
 
@@ -294,6 +295,9 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public RenderingRule[] findRules( int row, int column )
   {
+    if( column == 0 )
+      return EMPTY_RENDERING_RULES;
+    
     final Number status = (Number) m_statusModel.getValueAt( row, column - 1 );
     if( status == null )
       return EMPTY_RENDERING_RULES;
