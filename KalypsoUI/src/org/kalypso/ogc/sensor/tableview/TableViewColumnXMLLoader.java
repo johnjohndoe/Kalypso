@@ -46,6 +46,7 @@ import java.util.Iterator;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.template.NameUtils;
 import org.kalypso.ogc.sensor.template.PooledObsProvider;
 import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
@@ -86,9 +87,10 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
           .getAxis() );
 
       final String colName = tcol.getName() != null ? tcol.getName() : tcol.getAxis();
-
+      final String name = NameUtils.replaceTokens( colName, obs, valueAxis );
+      
       final PooledObsProvider provider = new PooledObsProvider( key, null );
-      final TableViewColumn column = new TableViewColumn( m_view, provider, colName, tcol.isEditable(), tcol
+      final TableViewColumn column = new TableViewColumn( m_view, provider, name, tcol.isEditable(), tcol
           .getWidth(), keyAxis, valueAxis );
 
       m_view.addItem( column );

@@ -52,6 +52,7 @@ import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.template.NameUtils;
 import org.kalypso.ogc.sensor.template.PooledObsProvider;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
@@ -128,10 +129,15 @@ public DiagViewCurveXMLLoader( final DiagView view, final TypeObservation xmlObs
       if( color == null )
         color = ColorUtilities.random();
 
+      final String curveName = tcurve.getName();
+      // welche ValueAxis?
+//      final String name = NameUtils.replaceTokens( curveName, obs, valueAxis );
+
+
       // each curve gets its own provider as the curve disposes the provider,
       // when disposed
       final PooledObsProvider provider = new PooledObsProvider( key, null );
-      final DiagViewCurve curve = new DiagViewCurve( view, provider, tcurve.getName(), color,
+      final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color,
           (AxisMapping[])mappings.toArray( new AxisMapping[0] ) );
       curve.setShown( tcurve.isShown() );
 
