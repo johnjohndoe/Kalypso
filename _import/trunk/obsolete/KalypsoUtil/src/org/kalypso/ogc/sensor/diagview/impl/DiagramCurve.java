@@ -10,6 +10,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
+import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * @author schlienger
@@ -24,15 +25,19 @@ public class DiagramCurve implements IDiagramCurve
 
   private final IDiagramTemplate m_template;
 
+  private IVariableArguments m_args = null;
+
   /**
    *  
    */
-  public DiagramCurve( final String name, final IObservation obs, final Properties mappings, final IDiagramTemplate template )
+  public DiagramCurve( final String name, final IObservation obs, final Properties mappings,
+      final IDiagramTemplate template, final IVariableArguments args )
   {
     m_name = name;
     m_mappings = mappings;
     m_obs = obs;
     m_template = template;
+    m_args = args;
   }
 
   /**
@@ -49,15 +54,16 @@ public class DiagramCurve implements IDiagramCurve
   public IAxisMapping[] getMappings()
   {
     List ms = new ArrayList();
-    
+
     for( Iterator it = m_mappings.keySet().iterator(); it.hasNext(); )
     {
       String obsAxis = (String)it.next();
       String diagAxis = m_mappings.getProperty( obsAxis );
-     
-      ms.add( new AxisMapping( ObservationUtilities.findAxis( m_obs, obsAxis ), m_template.findAxis( diagAxis ) ) );
+
+      ms.add( new AxisMapping( ObservationUtilities.findAxis( m_obs, obsAxis ), m_template
+          .findAxis( diagAxis ) ) );
     }
-    
+
     return (IAxisMapping[])ms.toArray( new IAxisMapping[0] );
   }
 
@@ -67,5 +73,21 @@ public class DiagramCurve implements IDiagramCurve
   public IObservation getObservation()
   {
     return m_obs;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramCurve#getArguments()
+   */
+  public IVariableArguments getArguments()
+  {
+    return m_args;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramCurve#setArguments(org.kalypso.util.runtime.IVariableArguments)
+   */
+  public void setArguments( IVariableArguments args )
+  {
+    m_args = args;
   }
 }

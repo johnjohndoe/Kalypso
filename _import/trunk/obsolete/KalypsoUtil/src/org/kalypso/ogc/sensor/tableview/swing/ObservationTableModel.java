@@ -70,11 +70,11 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
     {
       final Set cols = new HashSet( Arrays.asList( m_columns ) );
       cols.add( column );
-      setColumns( (ITableViewColumn[])cols.toArray( new ITableViewColumn[0] ), m_args );
+      setColumns( (ITableViewColumn[])cols.toArray( new ITableViewColumn[0] ), column.getArguments() );
     }
     else
       setColumns( new ITableViewColumn[]
-      { column }, m_args );
+      { column }, column.getArguments() );
   }
 
   /**
@@ -310,7 +310,10 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
     try
     {
       if( evt.getType() == TemplateEvent.TYPE_ADD && evt.getObject() instanceof ITableViewColumn )
-        addColumn( (ITableViewColumn)evt.getObject() );
+      {
+        ITableViewColumn col = (ITableViewColumn)evt.getObject();
+        addColumn( col );
+      }
 
       if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
         clearColumns();

@@ -4,6 +4,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * @author schlienger
@@ -11,13 +12,22 @@ import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 public class TableViewColumn implements ITableViewColumn
 {
   private String m_name;
+
   private boolean m_isEditable;
+
   private int m_width;
+
   private String m_sharedAxisName;
+
   private String m_valueAxisName;
+
   private IObservation m_obs;
 
-  public TableViewColumn( final String name, final IObservation obs, final boolean isEditable, final int width, final String sharedAxisName, final String valueAxisName )
+  private IVariableArguments m_args = null;
+
+  public TableViewColumn( final String name, final IObservation obs, final boolean isEditable,
+      final int width, final String sharedAxisName, final String valueAxisName,
+      final IVariableArguments args )
   {
     m_name = name;
     m_obs = obs;
@@ -25,6 +35,7 @@ public class TableViewColumn implements ITableViewColumn
     m_width = width;
     m_sharedAxisName = sharedAxisName;
     m_valueAxisName = valueAxisName;
+    m_args = args;
   }
 
   /**
@@ -81,5 +92,21 @@ public class TableViewColumn implements ITableViewColumn
   public IObservation getObservation()
   {
     return m_obs;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#setArguments(org.kalypso.util.runtime.IVariableArguments)
+   */
+  public void setArguments( IVariableArguments args )
+  {
+    m_args = args;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getArguments()
+   */
+  public IVariableArguments getArguments()
+  {
+    return m_args;
   }
 }

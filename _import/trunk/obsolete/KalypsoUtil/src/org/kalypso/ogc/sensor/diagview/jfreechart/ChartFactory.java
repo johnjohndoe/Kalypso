@@ -121,6 +121,20 @@ public class ChartFactory
       else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_RIGHT ) )
         return AxisLocation.TOP_OR_RIGHT;
     }
+    else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_LEFT ) )
+    {
+      if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
+        return AxisLocation.BOTTOM_OR_LEFT;
+      else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_TOP ) )
+        return AxisLocation.TOP_OR_LEFT;
+    }
+    else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_RIGHT ) )
+    {
+      if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
+        return AxisLocation.BOTTOM_OR_RIGHT;
+      else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_TOP ) )
+        return AxisLocation.TOP_OR_RIGHT;
+    }
 
     // default
     return AxisLocation.BOTTOM_OR_LEFT;
