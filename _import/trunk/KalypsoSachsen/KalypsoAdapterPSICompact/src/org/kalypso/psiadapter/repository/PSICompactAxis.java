@@ -1,4 +1,4 @@
-package org.kalypso.psiadapter;
+package org.kalypso.psiadapter.repository;
 
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 

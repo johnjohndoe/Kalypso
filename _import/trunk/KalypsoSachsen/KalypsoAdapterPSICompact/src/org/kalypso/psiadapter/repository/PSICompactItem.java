@@ -1,9 +1,9 @@
-package org.kalypso.psiadapter;
+package org.kalypso.psiadapter.repository;
 
 import java.util.List;
 import java.util.Vector;
 
-import org.kalypso.util.repository.IRepositoryItem;
+import org.kalypso.repository.IRepositoryItem;
 
 /**
  * A Repository Item from the PSICompact structure
@@ -25,7 +25,7 @@ public class PSICompactItem implements IRepositoryItem
   }
   
   /**
-   * @see org.kalypso.util.repository.IRepositoryItem#getName()
+   * @see org.kalypso.repository.IRepositoryItem#getName()
    */
   public String getName()
   {
@@ -46,7 +46,7 @@ public class PSICompactItem implements IRepositoryItem
   }
   
   /**
-   * @see org.kalypso.util.repository.IRepositoryItem#getParent()
+   * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
   public IRepositoryItem getParent()
   {
@@ -54,7 +54,7 @@ public class PSICompactItem implements IRepositoryItem
   }
 
   /**
-   * @see org.kalypso.util.repository.IRepositoryItem#hasChildren()
+   * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
   public boolean hasChildren()
   {
@@ -62,7 +62,7 @@ public class PSICompactItem implements IRepositoryItem
   }
 
   /**
-   * @see org.kalypso.util.repository.IRepositoryItem#getChildren()
+   * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
   public IRepositoryItem[] getChildren()
   {

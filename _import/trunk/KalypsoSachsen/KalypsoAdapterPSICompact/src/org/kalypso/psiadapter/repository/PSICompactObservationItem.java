@@ -1,4 +1,4 @@
-package org.kalypso.psiadapter;
+package org.kalypso.psiadapter.repository;
 
 import java.util.Date;
 
@@ -59,6 +59,10 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   public final static String MD_HOEHENANGABEART = "Höhenangabeart";
 
   public final static String MD_MESSTISCHBLATT = "Messtischblattnummer";
+  
+  public final static String MD_FLUSSGEBIET = "Flussgebiet";
+  
+  public final static String MD_FLUSS = "Fluss";
 
   // used for caching
   private ITuppleModel m_values = null;
@@ -97,7 +101,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   }
 
   /**
-   * @see org.kalypso.psiadapter.PSICompactItem#getAdapter(java.lang.Class)
+   * @see org.kalypso.psiadapter.repository.PSICompactItem#getAdapter(java.lang.Class)
    */
   public Object getAdapter( Class anotherClass )
   {
@@ -128,6 +132,8 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
       m_metadata.put( MD_ALARM_2, String.valueOf( m_psicMetaData.getAlarm2() ) );
       m_metadata.put( MD_ALARM_3, String.valueOf( m_psicMetaData.getAlarm3() ) );
       m_metadata.put( MD_ALARM_4, String.valueOf( m_psicMetaData.getAlarm4() ) );
+      m_metadata.put( MD_FLUSS, m_psicMetaData.getRiver() );
+      m_metadata.put( MD_FLUSSGEBIET, m_psicMetaData.getRiversystem() );
     }
 
     if( m_psicWQParamSet != null )
@@ -162,7 +168,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   }
 
   /**
-   * @see org.kalypso.psiadapter.PSICompactItem#toString()
+   * @see org.kalypso.psiadapter.repository.PSICompactItem#toString()
    */
   public String toString()
   {

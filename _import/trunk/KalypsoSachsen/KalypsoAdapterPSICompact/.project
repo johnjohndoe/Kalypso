@@ -3,6 +3,7 @@
 	<name>KalypsoPSICompactAdapter</name>
 	<comment></comment>
 	<projects>
+		<project>KalypsoCore</project>
 		<project>KalypsoUtil</project>
 	</projects>
 	<buildSpec>

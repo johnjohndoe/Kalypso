@@ -4,12 +4,9 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
-
-import de.psi.go.lhwz.PSICompact.WQParamSet;
 
 /**
  * Test Implementierung von der PSICompact Schnitstelle. 
@@ -147,13 +144,15 @@ public class PSICompactImpl implements PSICompact
     omd.setAlarm2(2.0);
     omd.setAlarm3(3.0);
     omd.setAlarm4(4.0);
-    omd.setDescription(1);
     omd.setHeight(34);
     omd.setId(id);
     omd.setLevel(56.8);
     omd.setLevelUnit("Etwas...");
     omd.setMapNo(7);
     omd.setRight( 987654321 );
+    omd.setRiver( "Fluss..." );
+    omd.setRiversystem( "Flussgebiet..." );
+    omd.setUnit( SI_NO_UNIT );
     
 		return omd;
 	}
@@ -290,5 +289,53 @@ public class PSICompactImpl implements PSICompact
   public int getDataModelVersion()
   {
     return 1;
+  }
+
+  /**
+   * @see de.psi.go.lhwz.PSICompact#getUser(java.lang.String)
+   */
+  public String[] getUser( String userClass ) throws ECommException
+  {
+    return new String[] { "User1", "User2", "User3", "User4" };
+  }
+
+  /**
+   * @see de.psi.go.lhwz.PSICompact#getActivDBGroup()
+   */
+  public int getActivDBGroup() throws ECommException
+  {
+    return 0;
+  }
+
+  /**
+   * @see de.psi.go.lhwz.PSICompact#copyanddistributeFile(java.io.File, java.lang.String)
+   */
+  public boolean copyanddistributeFile( File source, String destination ) throws ECommException
+  {
+    return false;
+  }
+
+  /**
+   * @see de.psi.go.lhwz.PSICompact#getComment(java.lang.String)
+   */
+  public String getComment( String Pegelkennziffer ) throws ECommException
+  {
+    return "Kommentar...";
+  }
+
+  /**
+   * @see de.psi.go.lhwz.PSICompact#getGewaesser(java.lang.String)
+   */
+  public String getGewaesser( String Pegelkennziffer ) throws ECommException
+  {
+    return "Gewaesser...";
+  }
+
+  /**
+   * @see de.psi.go.lhwz.PSICompact#getFlussgebiet(java.lang.String)
+   */
+  public String getFlussgebiet( String Pegelkennziffer ) throws ECommException
+  {
+    return "Flussgebiet...";
   }
 }

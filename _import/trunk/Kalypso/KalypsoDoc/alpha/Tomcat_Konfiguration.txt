@@ -1,0 +1,19 @@
+Tomcat Konfiguration auf dem Kalypso Server
+
+1. Tomcat 5.0.28 installieren (Install-Programm benutzen)
+
+Beispiel Programmpfad:
+C:\programme\KalypsoServer\Tomcat5.0
+
+NB:
+- Java Runtime muss vorhanden sein ( TODO: kann man eine spezielle JRE nur für Tomcat einsetzen,
+  also vielleicht unterhalb des KalypsoServer Verzeichnis?
+  C:\programme\KalypsoServer\jre1.4.2 )
+- Tomcat Service einrichten damit Tomcat as service bei Windows Start gestartet wird.
+
+
+2. Abhängigkeiten
+
+Die libs (*.jar) aus dem KalypsoServices Projekt in $CATALINA_HOME/common/lib kopieren.
+
+

@@ -3,7 +3,7 @@
 <plugin
    id="org.kalypso.psiadapter"
    name="org.kalypso.psiadapter"
-   version="1.0.0"
+   version="0.0.1"
    provider-name="org.kalypso">
 
    <runtime>
@@ -16,6 +16,7 @@
    </runtime>
 
    <requires>
+      <import plugin="org.kalypso.core"/>
       <import plugin="org.kalypso.util"/>
    </requires>
 

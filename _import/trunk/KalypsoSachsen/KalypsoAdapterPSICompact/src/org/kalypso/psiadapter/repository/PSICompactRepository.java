@@ -1,12 +1,12 @@
-package org.kalypso.psiadapter;
+package org.kalypso.psiadapter.repository;
 
 import java.util.Hashtable;
 
 import org.kalypso.java.util.Arrays;
 import org.kalypso.psiadapter.util.ObjectInfoLengthComparator;
-import org.kalypso.util.repository.AbstractRepository;
-import org.kalypso.util.repository.IRepositoryItem;
-import org.kalypso.util.repository.RepositoryException;
+import org.kalypso.repository.AbstractRepository;
+import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.RepositoryException;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
@@ -116,7 +116,7 @@ public class PSICompactRepository extends AbstractRepository
   }
 
   /**
-   * @see org.kalypso.util.repository.IRepositoryItem#hasChildren()
+   * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
   public boolean hasChildren()
   {
@@ -124,7 +124,7 @@ public class PSICompactRepository extends AbstractRepository
   }
 
   /**
-   * @see org.kalypso.util.repository.IRepositoryItem#getChildren()
+   * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
   public IRepositoryItem[] getChildren()
   {

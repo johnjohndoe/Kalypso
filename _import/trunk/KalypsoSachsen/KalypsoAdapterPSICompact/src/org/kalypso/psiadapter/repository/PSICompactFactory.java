@@ -1,13 +1,13 @@
-package org.kalypso.psiadapter;
+package org.kalypso.psiadapter.repository;
 
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
 
-import org.kalypso.java.reflect.ClassUtilities;
+import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.util.repository.RepositoryException;
+import org.kalypso.repository.RepositoryException;
 
 import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.WQData;

@@ -1,0 +1,39 @@
+Konfiguration des Client
+
+Jeder Client braucht lediglich zu wissen, wo die Konfigurationsdatei zentral liegt (URL). Pro
+Client gibt es normalerweise eine Liste von URL für jede alternative Konfigurationsdatei.
+Sollte die erste Konfigurationsdatei nicht zur Verfügung stehen, versucht es der Client
+mit der nächste, usw., bis es klappt.
+
+Achtung: da es mehrere Kopie der Konfigurationsdatei gibt (erstmal pro Kalypso Server,
+um die Ausfallsicherheit zu garantieren), sollte man darauf achten das alle Kopien
+immer den gleichen Stand haben.
+
+Die Konfigurationsdatei ist wie eine Properties-Datei aufgebaut. Siehe configuration.ini für
+mehr Information.
+
+
+{
+  /** localisation of the cvs root directory */
+  public final static String PARAM_CVSROOT = "CVS_ROOT";
+
+  /**
+   * localisation of the temp directory. This dir can be used for temporary
+   * files that are created by the server, or deposited by the clients.
+   */
+  public final static String PARAM_TEMP_DIR = "TEMP_DIR";
+
+  /** localisation of the report directory. This directory holds the 
+   * files and metainformation that will be published over some channel.
+   */
+  public final static String PARAM_REPORT_DIR = "REPORT_DIR";
+
+  /** localisation of the service for user rights management */
+  public final static String PARAM_URIGHTS_SRV = "URIGHTS_SRV";
+
+  /** localisation of the service for calculations */
+  public final static String PARAM_CALC_SRV = "CALC_SRV";
+
+  /** localisation of the service for timeseries and observations in general */
+  public final static String PARAM_OBS_SRV = "OBS_SRV";
+  

@@ -1,27 +1,27 @@
+/*
+ * 
+ * To change the template for this generated file go to Window - Preferences -
+ * Java - Code Generation - Code and Comments
+ */
 package de.psi.go.lhwz;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Interface für Zugriffe auf PSICompact
  * 
- * @author BKarpa
- * 
- * To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Generation - Code and Comments
+ * @author BKarpa To change the template for this generated type comment go to
+ *         Window - Preferences - Java - Code Generation - Code and Comments
  */
 public interface PSICompact
 {
   // Definition der unterschiedlichen Status Konstanten des Archivs
-  /**
-   * Archiv Status Undefiniert
-   */
+  /** Archiv Status Undefiniert */
   public static int STATUS_UNDEF = -1;
 
-  /**
-   * Archiv Status OK
-   */
+  /** Archiv Status OK */
   public static int STATUS_OK = 0;
 
   /**
@@ -75,34 +75,22 @@ public interface PSICompact
   public static int STATUS_NORMALLG = 7;
 
   // Definition der unterschiedlichen Archivtypen
-  /**
-   * Archiv Undefiniert
-   */
+  /** Archiv Undefiniert */
   public static int ARC_UNDEF = -1;
 
-  /**
-   * Archiv 5 Minuten
-   */
+  /** Archiv 5 Minuten */
   public static int ARC_MIN5 = 0;
 
-  /**
-   * Archiv 15 Minuten
-   */
+  /** Archiv 15 Minuten */
   public static int ARC_MIN15 = 1;
 
-  /**
-   * Archiv Stunde
-   */
+  /** Archiv Stunde */
   public static int ARC_HOUR = 2;
 
-  /**
-   * Archiv Tag
-   */
+  /** Archiv Tag */
   public static int ARC_DAY = 3;
 
-  /**
-   * Archiv Monat
-   */
+  /** Archiv Monat */
   public static int ARC_MONTH = 4;
 
   // Definition der unterschiedlichen Objekt Typen
@@ -110,101 +98,67 @@ public interface PSICompact
   // die Prognose
   // TYPE_VALUE bezeichnet einen Messwert und somit die Ausgangsdaten der
   // Prognose
-  /**
-   * Typ Undefiniert
-   */
+
+  /** Typ Undefiniert */
   public static int TYPE_UNDEF = -1;
 
-  /**
-   * Typ gemessener Wert
-   */
+  /** Typ gemessener Wert */
   public static int TYPE_MEASUREMENT = 0;
 
-  /**
-   * Typ Vorhergesagter Wert
-   */
+  /** Typ Vorhergesagter Wert */
   public static int TYPE_VALUE = 1;
 
   // Definition der unterschiedlichen SI Einheiten
   // SI_NO_UNIT bezeichnet Werte ohne Einheit
   // Weitere Einheiten können bei Bedarf ergänzt werden
-  /**
-   * SI Einheit: Undefiniert
-   */
+
+  /** SI Einheit: Undefiniert */
   public static int SI_UNDEF = -1;
 
-  /**
-   * SI Einheit: Keine Einheit
-   */
+  /** SI Einheit: Keine Einheit */
   public static int SI_NO_UNIT = 0;
 
-  /**
-   * SI Einheit: Meter
-   */
+  /** SI Einheit: Meter */
   public static int SI_METER = 1;
 
-  /**
-   * SI Einheit: Kubikmeter
-   */
+  /** SI Einheit: Kubikmeter */
   public static int SI_QUBIC_METER = 2;
 
-  /**
-   * SI Einheit: Kubikmeter pro Sekunde
-   */
+  /** SI Einheit: Kubikmeter pro Sekunde */
   public static int SI_CUBIC_METER_PER_SECOND = 3;
 
-  /**
-   * SI Einheit: Kelvin
-   */
+  /** SI Einheit: Kelvin */
   public static int SI_KELVIN = 4;
 
   // Definition der unterschiedlichen Messungstypen
-  /**
-   * Messungstyp: Undefiniert
-   */
+  /** Messungstyp: Undefiniert */
   public static int MEAS_UNDEF = -1;
 
-  /**
-   * Messungstyp: Niederschlag
-   */
+  /** Messungstyp: Niederschlag */
   public static int MEAS_RAINFALL = 0;
 
-  /**
-   * Messungstyp: Temperatur
-   */
+  /** Messungstyp: Temperatur */
   public static int MEAS_TEMPERATUR = 1;
 
-  /**
-   * Messungstyp: Wasserstand
-   */
+  /** Messungstyp: Wasserstand */
   public static int MEAS_LEVEL = 2;
 
-  /**
-   * Messungstyp: Durchfluss
-   */
+  /** Messungstyp: Durchfluss */
   public static int MEAS_FLOW = 3;
 
-  /**
-   * öffentliche Klasse für die Klartext Informationen
-   */
+  /** öffentliche Klasse für die Klartext Informationen */
   public class ObjectInfo implements Serializable
   {
 
-    /**
-     * Dass Kennzeichen des Objekts
-     */
+    /** Dass Kennzeichen des Objekts */
     private String id = null;
 
-    /**
-     * Die Bezeichnung/Beschreibung des Objekts
-     */
+    /** Die Bezeichnung/Beschreibung des Objekts */
     private String description = null;
 
     // constructors
 
-    /**
-     * empty constructor
-     */
+    /** empty constructor */
     public ObjectInfo()
     {
       id = "";
@@ -221,8 +175,6 @@ public interface PSICompact
      */
     public ObjectInfo( String idParam, String descriptionParam )
     {
-
-      // TODO Auto-generated constructor stub
       id = idParam;
       description = descriptionParam;
     }
@@ -270,7 +222,6 @@ public interface PSICompact
     {
       this.description = description;
     }
-
   }
 
   /**
@@ -279,50 +230,38 @@ public interface PSICompact
   public class ObjectMetaData implements Serializable
   {
 
-    /**
-     * Dass Kennzeichen des Objekts
-     */
+    /** Dass Kennzeichen des Objekts */
     private String id = null;
 
-    /**
-     * Die SI Einheit des Objekts
-     */
+    /** Die SI Einheit des Objekts */
     private int unit = SI_UNDEF;
 
-    /**
-     * Die Alarmstufe 1 des Objekts in SI Einheit
-     */
+    /** Die Alarmstufe 1 des Objekts in SI Einheit */
     private double alarm1 = 0.0;
 
-    /**
-     * Die Alarmstufe 2 des Objekts in SI Einheit
-     */
+    /** Die Alarmstufe 2 des Objekts in SI Einheit */
     private double alarm2 = 0.0;
 
-    /**
-     * Die Alarmstufe 3 des Objekts in SI Einheit
-     */
+    /** Die Alarmstufe 3 des Objekts in SI Einheit */
     private double alarm3 = 0.0;
 
-    /**
-     * Die Alarmstufe 4 des Objekts in SI Einheit
-     */
+    /** Die Alarmstufe 4 des Objekts in SI Einheit */
     private double alarm4 = 0.0;
 
-    /**
-     * Messtischblattnummer
-     */
+    /** Messtischblattnummer */
     private int mapNo = 0;
 
-    /**
-     * Rechtswert Geo Koordinate
-     */
+    /** Rechtswert Geo Koordinate */
     private int right = 0;
 
-    /**
-     * Hochwert Geo Koordinate
-     */
+    /** Hochwert Geo Koordinate */
     private int height = 0;
+
+    /** Flussgebiet */
+    private String system = null;
+
+    /** Fluss/Gewaesser */
+    private String river = null;
 
     /**
      * die Liste von unterstützten Archiven für dieses Objekt, siehe ARC_*
@@ -330,21 +269,15 @@ public interface PSICompact
      */
     private int[] archiveData = null;
 
-    /**
-     * Pegelnullpunkt
-     */
+    /** Pegelnullpunkt */
     private double level = 0.0;
 
-    /**
-     * Höhenangabe des Pegelnullpunktes
-     */
+    /** Höhenangabe des Pegelnullpunktes */
     private String levelUnit = null;
 
     // constructors
 
-    /**
-     * empty constructor
-     */
+    /** empty constructor */
     public ObjectMetaData()
     {
       id = null;
@@ -359,10 +292,11 @@ public interface PSICompact
       archiveData = null;
       level = 0.0;
       levelUnit = null;
+      system = null;
+      river = null;
     }
 
     /**
-     * 
      * @param unitParam
      * @param alarm1Param
      * @param alarm2Param
@@ -378,8 +312,6 @@ public interface PSICompact
         double alarm3Param, double alarm4Param, int mapNoParam, int rightParam, int heightParam,
         int[] archiveDataParam, double levelParam, String levelUnitParam )
     {
-
-      // TODO Auto-generated constructor stub
       id = idParam;
       unit = unitParam;
       alarm1 = alarm1Param;
@@ -396,9 +328,7 @@ public interface PSICompact
 
     // getter & setter
 
-    /**
-     * @return Returns the id.
-     */
+    /** @return Returns the id. */
     public final String getId()
     {
       return id;
@@ -413,9 +343,7 @@ public interface PSICompact
       this.id = id;
     }
 
-    /**
-     * @return Returns the unit.
-     */
+    /** @return Returns the unit. */
     public final int getUnit()
     {
       return unit;
@@ -425,14 +353,12 @@ public interface PSICompact
      * @param unit
      *          The unit to set.
      */
-    public final void setDescription( int unit )
+    public final void setUnit( int unit )
     {
       this.unit = unit;
     }
 
-    /**
-     * @return Returns the alarm1.
-     */
+    /** @return Returns the alarm1. */
     public final double getAlarm1()
     {
       return alarm1;
@@ -447,9 +373,7 @@ public interface PSICompact
       this.alarm1 = alarm1;
     }
 
-    /**
-     * @return Returns the alarm2.
-     */
+    /** @return Returns the alarm2. */
     public final double getAlarm2()
     {
       return alarm2;
@@ -464,9 +388,7 @@ public interface PSICompact
       this.alarm2 = alarm2;
     }
 
-    /**
-     * @return Returns the alarm3.
-     */
+    /** @return Returns the alarm3. */
     public final double getAlarm3()
     {
       return alarm3;
@@ -481,9 +403,7 @@ public interface PSICompact
       this.alarm3 = alarm3;
     }
 
-    /**
-     * @return Returns the alarm4.
-     */
+    /** @return Returns the alarm4. */
     public final double getAlarm4()
     {
       return alarm4;
@@ -624,50 +544,77 @@ public interface PSICompact
       this.levelUnit = levelUnit;
     }
 
+    /**
+     * Setter for property system.
+     * 
+     * @param system
+     *          New value of property system ( Flussgebiet).
+     */
+    public void setRiversystem( java.lang.String riversystem )
+    {
+      this.system = riversystem;
+    }
+
+    /**
+     * Getter for property system.
+     * 
+     * @return Value of property system ( Flussgebiet).
+     */
+    public java.lang.String getRiversystem()
+    {
+      return system;
+    }
+
+    /**
+     * Setter for property river.
+     * 
+     * @param system
+     *          New value of property river ( Fluss / Gewaesser).
+     */
+    public void setRiver( java.lang.String river )
+    {
+      this.river = river;
+    }
+
+    /**
+     * Getter for property river.
+     * 
+     * @return Value of property river ( Fluss / Gewaesser).
+     */
+    public java.lang.String getRiver()
+    {
+      return river;
+    }
   }
 
-  /**
-   * öffentliche Klasse für die Archivwerte
-   */
+  /** öffentliche Klasse für die Archivwerte */
   public class ArchiveData implements Serializable
   {
-    /**
-     * Zeitstempel des Archivwertes
-     */
+    /** Zeitstempel des Archivwertes */
     private Date Timestamp;
 
-    /**
-     * Status des Archivwertes, siehe Konstanten ARC_*
-     */
+    /** Status des Archivwertes, siehe Konstanten ARC_* */
     private int status;
 
-    /**
-     * Der Archivwert in SI Einheit
-     */
+    /** Der Archivwert in SI Einheit */
     private double value;
 
     // constructors
-
-    /**
-     * empty constructor
-     */
+    /** empty constructor */
     public ArchiveData()
     {
-      //Timestamp = ;
+      // Timestamp = ;
       status = STATUS_UNDEF;
       value = 0.0;
     }
 
     /**
-     * 
      * @param tsParam
      * @param statusParam
      * @param valueParam
      */
     public ArchiveData( Date tsParam, int statusParam, double valueParam )
     {
-
-      // TODO Auto-generated constructor stub
       Timestamp = tsParam;
       status = statusParam;
       value = valueParam;
@@ -675,9 +622,7 @@ public interface PSICompact
 
     // getter & setter
 
-    /**
-     * @return Returns the status.
-     */
+    /** @return Returns the status. */
     public final int getStatus()
     {
       return status;
@@ -692,9 +637,7 @@ public interface PSICompact
       this.status = status;
     }
 
-    /**
-     * @return Returns the timestamp.
-     */
+    /** @return Returns the timestamp. */
     public final Date getTimestamp()
     {
       return Timestamp;
@@ -709,9 +652,7 @@ public interface PSICompact
       Timestamp = timestamp;
     }
 
-    /**
-     * @return Returns the value.
-     */
+    /** @return Returns the value. */
     public final double getValue()
     {
       return value;
@@ -727,37 +668,24 @@ public interface PSICompact
     }
   }
 
-  /**
-   * öffentliche Klasse für die W-Q Parameter
-   */
+  /** öffentliche Klasse für die W-Q Parameter */
   public class WQData implements Serializable
   {
-
-    /**
-     * obere Wasserstandsgrenze in cm
-     */
+    /** obere Wasserstandsgrenze in cm */
     private double WGR;
 
-    /**
-     * Konstante W1
-     */
+    /** Konstante W1 */
     private double W1;
 
-    /**
-     * Konstante LNK1
-     */
+    /** Konstante LNK1 */
     private double LNK1;
 
-    /**
-     * Konstante K2
-     */
+    /** Konstante K2 */
     private double K2;
 
     // constructors
 
-    /**
-     * empty constructor
-     */
+    /** empty constructor */
     public WQData()
     {
       WGR = 0.0;
@@ -767,7 +695,6 @@ public interface PSICompact
     }
 
     /**
-     * 
      * @param WGRParam
      * @param W1Param
      * @param LNK1Param
@@ -775,8 +702,6 @@ public interface PSICompact
      */
     public WQData( double WGRParam, double W1Param, double LNK1Param, double K2Param )
     {
-
-      // TODO Auto-generated constructor stub
       WGR = WGRParam;
       W1 = W1Param;
       LNK1 = LNK1Param;
@@ -785,9 +710,7 @@ public interface PSICompact
 
     // getter & setter
 
-    /**
-     * @return Returns the k2.
-     */
+    /** @return Returns the k2. */
     public final double getK2()
     {
       return K2;
@@ -802,9 +725,7 @@ public interface PSICompact
       K2 = k2;
     }
 
-    /**
-     * @return Returns the lNK1.
-     */
+    /** @return Returns the lNK1. */
     public final double getLNK1()
     {
       return LNK1;
@@ -819,9 +740,7 @@ public interface PSICompact
       LNK1 = lnk1;
     }
 
-    /**
-     * @return Returns the w1.
-     */
+    /** @return Returns the w1. */
     public final double getW1()
     {
       return W1;
@@ -836,9 +755,7 @@ public interface PSICompact
       W1 = w1;
     }
 
-    /**
-     * @return Returns the wGR.
-     */
+    /** @return Returns the wGR. */
     public final double getWGR()
     {
       return WGR;
@@ -854,23 +771,16 @@ public interface PSICompact
     }
   }
 
-  /**
-   * öffenliche Klasse für einen W-Q Parametersatz
-   */
+  /** öffenliche Klasse für einen W-Q Parametersatz */
   public class WQParamSet implements Serializable
   {
-    /**
-     * Gültigkeitszeiraum ab
-     */
+    /** Gültigkeitszeiraum ab */
     private Date validFrom;
 
-    /**
-     * die Parameter
-     */
+    /** die Parameter */
     private WQData[] wqData;
 
     // constructors
-
     /**
      * @param validFrom
      * @param wqData
@@ -884,9 +794,7 @@ public interface PSICompact
 
     // getter & setter
 
-    /**
-     * @return Returns the validFrom.
-     */
+    /** @return Returns the validFrom. */
     public final Date getValidFrom()
     {
       return validFrom;
@@ -901,9 +809,7 @@ public interface PSICompact
       this.validFrom = validFrom;
     }
 
-    /**
-     * @return Returns the wqData.
-     */
+    /** return Returns the wqData. */
     public final WQData[] getWqData()
     {
       return wqData;
@@ -919,9 +825,7 @@ public interface PSICompact
     }
   }
 
-  /**
-   * Initialisieren der Schnittstelle zu PSICompact
-   */
+  /** Initialisieren der Schnittstelle zu PSICompact */
   public void init() throws ECommException;
 
   /**
@@ -1012,7 +916,6 @@ public interface PSICompact
    * 
    * @param id
    *          Kennzeichen des Objekts für das W-Q Parameter geholt werden
-   *          sollen.
    * @return die Liste von W-Q Parametern für dieses Objekt, oder null, wenn ein
    *         Fehler aufgetreten ist.
    */
@@ -1065,4 +968,69 @@ public interface PSICompact
    */
   public int getMeasureType( java.lang.String id ) throws ECommException;
 
+  /**
+   * Schnittstelle zum DMS
+   */
+
+  /**
+   * Liefert alle Benutzer für eine gegebene Benutzerklasse
+   * 
+   * @param userClass
+   *          Benutzerklasse
+   * @return Liste der Benutzer, die für diese Benutzerklasse definiert wurden,
+   *         oder null wenn Benutzerklasse nicht definiert, bzw. leeres Array,
+   *         wenn keine Benutzer für diese Benutzerklasse vorhanden sind.
+   */
+  public String[] getUser( String userClass ) throws ECommException;
+
+  /**
+   * Liefert die Rechnernummer (1 oder 2) auf dem die DB Dienstgruppe aktiv ist
+   * 
+   * @return 0, wenn keine Dienstgruppe aktiv
+   */
+  public int getActivDBGroup() throws ECommException;
+
+  /**
+   * Einstellen einer Datei in die Fileverteilung
+   * 
+   * @param lokaler
+   *          Pfad und Dateiname der Datei die verteilt werden soll.
+   * @param relativer
+   *          Pfad und Dateiname der Datei in der Fileverteilung.
+   * @return True falls alles OK, False wenn Fehler aufgetreten ist
+   */
+  public boolean copyanddistributeFile( File source, String destination ) throws ECommException;
+
+  /**
+   * TODO: Schnittstelle zum Informationsverteiler Realisierungspriorität von
+   * oben nach unten :-)
+   */
+
+  /**
+   * Objektinfo für einen Pegel
+   * 
+   * @param Pegelkennziffer
+   *          (letzten n Stellen).
+   * @return Bemerkung für diesen Pegel, die dem Pegelmelder vorgelesen werden
+   *         soll
+   */
+  public String getComment( String Pegelkennziffer ) throws ECommException;
+
+  /**
+   * Gewaesser für einen Pegel
+   * 
+   * @param Pegelkennziffer
+   *          (letzten n Stellen).
+   * @return Gewaesser für diesen Pegel
+   */
+  public String getGewaesser( String Pegelkennziffer ) throws ECommException;
+
+  /**
+   * Flussgebiet für einen Pegel
+   * 
+   * @param Pegelkennziffer
+   *          (letzten n Stellen).
+   * @return Flussgebiet für diesen Pegel
+   */
+  public String getFlussgebiet( String Pegelkennziffer ) throws ECommException;
 }
