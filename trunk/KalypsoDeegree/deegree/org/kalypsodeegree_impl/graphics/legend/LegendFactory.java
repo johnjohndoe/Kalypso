@@ -57,12 +57,14 @@ import org.deegree.graphics.sld.UserStyle;
 import org.deegree.services.wfs.filterencoding.Filter;
 import org.deegree.services.wfs.filterencoding.Operation;
 import org.deegree_impl.services.wfs.filterencoding.ComplexFilter;
+import org.deegree_impl.services.wfs.filterencoding.FeatureFilter;
 import org.deegree_impl.services.wfs.filterencoding.Literal;
 import org.deegree_impl.services.wfs.filterencoding.LogicalOperation;
 import org.deegree_impl.services.wfs.filterencoding.OperationDefines;
 import org.deegree_impl.services.wfs.filterencoding.PropertyIsBetweenOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyIsCOMPOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyIsLikeOperation;
+import org.deegree_impl.services.wfs.filterencoding.PropertyIsNullOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyName;
 import org.deegree_impl.services.wfs.filterencoding.SpatialOperation;
 import org.deegree_impl.tools.Debug;
@@ -274,15 +276,23 @@ public class LegendFactory
   private String getPropertyNameFromFilter( Filter filter ) throws LegendException
   {
     Debug.debugMethodBegin( "LegendFactory", "getPropertyNameFromFilter" );
-    ComplexFilter cf = (ComplexFilter)filter;
-
-    // System.out.println("Name der Operation: " +
-    // cf.getOperation().getOperatorName() + "\n" + cf.toXML()); //DEBUG
-    Operation operation = cf.getOperation();
-    String ret = getPropertyNameFromOperation( operation );
-    Debug.debugMethodEnd();
-    return ret;
-
+    if( filter instanceof ComplexFilter )
+    {
+      ComplexFilter cf = (ComplexFilter)filter;
+      Operation operation = cf.getOperation();
+      String ret = getPropertyNameFromOperation( operation );
+      Debug.debugMethodEnd();
+      return ret;
+    }
+    else if( filter instanceof FeatureFilter )
+    {
+      return "FeatureFilter";
+    }
+    else
+    {
+      return "no implementation for " + filter.getClass()
+          + " at org.deegree_impl.graphics.legend.LegendFactory";
+    }
   }
 
   /**
@@ -397,6 +407,11 @@ public class LegendFactory
       legendlabel = propIsbetween.getPropertyName().getValue()
           + getOperationString( propIsbetween.getOperatorId() ) + propIsbetween.getLowerBoundary()
           + propIsbetween.getUpperBoundary();
+    }
+    else if( operation instanceof PropertyIsNullOperation )
+    {
+      PropertyIsNullOperation propertyIsNullOperation = (PropertyIsNullOperation)operation;
+      legendlabel = propertyIsNullOperation.getExpression().getExpressionName();
     }
     else
     {

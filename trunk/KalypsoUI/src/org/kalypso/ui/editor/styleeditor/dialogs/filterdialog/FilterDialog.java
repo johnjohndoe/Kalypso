@@ -1112,7 +1112,9 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     featureIdText.setLayoutData( textData );
 
     if( data != null && data.getFeatureId() != null )
+    {     
       featureIdText.setText( data.getFeatureId() );
+    }
 
     Button addButton = new Button( configureGroup, SWT.NULL );
     addButton.setText( "set" );

@@ -118,7 +118,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
    * structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *                   if the structure of the DOM-fragment is invalid
    */
   public static Operation buildFromDOM( Element element ) throws FilterConstructionException
   {
@@ -190,12 +190,12 @@ public class PropertyIsLikeOperation extends ComparisonOperation
    * <p>
    * 
    * @param feature
-   *          that determines the property values
+   *                   that determines the property values
    * @return true, if the <tt>Literal</tt> matches the <tt>PropertyName</tt>
-   *         's value
+   *                's value
    * @throws FilterEvaluationException
-   *           if the evaluation could not be performed (for example a specified
-   *           Property did not exist)
+   *                   if the evaluation could not be performed (for example a specified
+   *                   Property did not exist)
    */
   public boolean evaluate( Feature feature ) throws FilterEvaluationException
   {
@@ -206,6 +206,8 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     {
       value1 = propertyName.evaluate( feature );
       value2 = literal.getValue();
+      if( value1 == null || value2 == null )
+        return false;
     }
     catch( Exception e )
     {
