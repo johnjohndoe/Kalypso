@@ -71,7 +71,7 @@ public class FilterAxesAction extends FullAction
   {
     // TODO: refactor this code with the axis from the observation
 
-//    final AbstractViewTemplate tpl = m_page.getTemplate();
+//    final ObsThemeList tpl = m_page.getTemplate();
 //    final Vector elts = new Vector( tpl.getDiagramAxes() );
 //    elts.add( 0, "(Keiner)" );
 //
@@ -92,7 +92,7 @@ public class FilterAxesAction extends FullAction
 //      else
 //        tpl.setIgnoreType( null );
 //      
-//      tpl.fireTemplateChanged( new TemplateEvent( tpl.getThemes(), TemplateEvent.TYPE_REFRESH ) );
+//      tpl.fireTemplateChanged( new ObsViewEvent( tpl.getThemes(), ObsViewEvent.TYPE_REFRESH ) );
 //    }
   }
 }

@@ -45,14 +45,10 @@ import java.io.FileWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.deegree.model.feature.FeatureVisitor;
 import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.model.feature.visitors.QuerySelectionVisitor;
 import org.deegree_impl.model.feature.visitors.ResortVisitor;
-import org.deegree_impl.model.feature.visitors.SetSelectionVisitor;
 import org.deegree_impl.model.feature.visitors.TransformVisitor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -76,11 +72,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class GmlLoader extends AbstractLoader
 {
-  private Map m_oldSelectionMap = new HashMap();
-
   private final IUrlResolver m_urlResolver = new UrlResolver();
-
-  private CommandableWorkspace m_workspace;
 
   /**
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String,
@@ -113,14 +105,8 @@ public class GmlLoader extends AbstractLoader
         e1.printStackTrace();
       }
 
-      workspace.accept( new SetSelectionVisitor( m_oldSelectionMap ), workspace.getRootFeature(),
-          FeatureVisitor.DEPTH_INFINITE );
-      m_oldSelectionMap.clear();
-
       if( gmlFile != null )
         addResource( gmlFile, workspace );
-
-      m_workspace = workspace;
 
       return workspace;
     }
@@ -200,18 +186,5 @@ public class GmlLoader extends AbstractLoader
       e.printStackTrace();
       throw new LoaderException( "Fehler beim Speichern der URL\n" + e.getLocalizedMessage(), e );
     }
-  }
-
-  /**
-   * @see org.kalypso.loader.AbstractLoader#beforeObjectInvalid()
-   */
-  protected void beforeObjectInvalid()
-  {
-    // alte selektion wieer setzen
-    m_oldSelectionMap.clear();
-
-    if( m_workspace != null )
-      m_workspace.accept( new QuerySelectionVisitor( m_oldSelectionMap ), m_workspace
-          .getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
   }
 }

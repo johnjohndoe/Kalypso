@@ -76,6 +76,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.KeyComparator;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.xml.sax.InputSource;
@@ -240,7 +241,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       final IStatus status )
   {
     // Daten sind jetzt da!
-    if( m_pool.equalsKeys( m_key, key ) )
+    if( KeyComparator.getInstance().compare( m_key, key ) == 0 )
       setWorkspace( (CommandableWorkspace)newValue );
   }
 
@@ -250,7 +251,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
-    if( m_pool.equalsKeys( key, m_key ) )
+    if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
       setWorkspace( null );
   }
 

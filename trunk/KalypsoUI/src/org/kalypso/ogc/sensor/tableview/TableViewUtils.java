@@ -44,9 +44,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Collection;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -55,6 +57,8 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
+import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
+import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.template.obstableview.ObjectFactory;
 import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.template.obstableview.TypeColumn;
@@ -77,9 +81,9 @@ public class TableViewUtils
   /**
    * Not to be instanciated
    */
-  private TableViewUtils( )
+  private TableViewUtils()
   {
-    // empty
+  // empty
   }
 
   /**
@@ -118,7 +122,7 @@ public class TableViewUtils
       IOUtils.closeQuietly( ins );
     }
   }
-  
+
   /**
    * Loads the xml template from the given inutsource
    * 
@@ -126,13 +130,12 @@ public class TableViewUtils
    * @return table view template
    * @throws JAXBException
    */
-  public static ObstableviewType loadTableTemplateXML( final InputSource ins )
-      throws JAXBException
+  public static ObstableviewType loadTableTemplateXML( final InputSource ins ) throws JAXBException
   {
-      final ObstableviewType baseTemplate = (ObstableviewType) OTT_OF
-          .createUnmarshaller().unmarshal( ins );
+    final ObstableviewType baseTemplate = (ObstableviewType)OTT_OF.createUnmarshaller().unmarshal(
+        ins );
 
-      return baseTemplate;
+    return baseTemplate;
   }
 
   /**
@@ -142,8 +145,8 @@ public class TableViewUtils
    * @param outs
    * @throws JAXBException
    */
-  public static void saveTableTemplateXML( final ObstableviewType xml,
-      final OutputStream outs ) throws JAXBException
+  public static void saveTableTemplateXML( final ObstableviewType xml, final OutputStream outs )
+      throws JAXBException
   {
     try
     {
@@ -164,8 +167,8 @@ public class TableViewUtils
    * @param writer
    * @throws JAXBException
    */
-  public static void saveTableTemplateXML( final ObstableviewType xml,
-      final Writer writer ) throws JAXBException
+  public static void saveTableTemplateXML( final ObstableviewType xml, final Writer writer )
+      throws JAXBException
   {
     try
     {
@@ -186,8 +189,8 @@ public class TableViewUtils
    * @return xml binding object (ready for marshalling for instance)
    * @throws JAXBException
    */
-  public static ObstableviewType buildTableTemplateXML(
-      final TableViewTemplate template ) throws JAXBException
+  public static ObstableviewType buildTableTemplateXML( final TableView template )
+      throws JAXBException
   {
     final ObstableviewType xmlTemplate = OTT_OF.createObstableview();
 
@@ -199,8 +202,8 @@ public class TableViewUtils
     final List rules = template.getRules().getRules();
     for( final Iterator itRules = rules.iterator(); itRules.hasNext(); )
     {
-      final RenderingRule rule = (RenderingRule) itRules.next();
-      
+      final RenderingRule rule = (RenderingRule)itRules.next();
+
       final TypeRenderingRule xmlRule = OTT_OF.createTypeRenderingRule();
       xmlRule.setMask( rule.getMask() );
       if( rule.getForegroundColor() != null )
@@ -210,38 +213,38 @@ public class TableViewUtils
       if( rule.getFont() != null )
         xmlRule.setFont( StringUtilities.fontToString( rule.getFont() ) );
       xmlRule.setTooltip( rule.getTooltipText() );
-      
+
       xmlRules.add( xmlRule );
     }
-    
+
     // themes
     final List xmlObsList = xmlTemplate.getObservation();
-    
+
     int colCount = 0;
+
+    final Map map = ObsView.mapItems( template.getItems() );
     
-    final Collection themes = template.getThemes();
-    for( final Iterator itThemes = themes.iterator(); itThemes.hasNext(); )
+    for( final Iterator itThemes = map.entrySet().iterator(); itThemes.hasNext(); )
     {
-      final TableViewTheme theme = (TableViewTheme) itThemes.next();
-      
-      final IObservation obs = theme.getObservation();
+      final Map.Entry entry = (Entry)itThemes.next();
+      final IObservation obs = (IObservation)entry.getKey();
       if( obs == null )
         continue;
-      
+
       final TypeObservation xmlObs = OTT_OF.createTypeObservation();
       xmlObs.setHref( obs.getHref() );
       xmlObs.setLinktype( "zml" );
 
       xmlObsList.add( xmlObs );
-      
+
       // columns
       final List xmlColumns = xmlObs.getColumn();
-      
-      final List columns = theme.getColumns();
+
+      final List columns = (List)entry.getValue();
       for( Iterator itCol = columns.iterator(); itCol.hasNext(); )
       {
-        final TableViewColumn col = (TableViewColumn) itCol.next();
-        
+        final TableViewColumn col = (TableViewColumn)itCol.next();
+
         colCount++;
         final TypeColumn xmlCol = OTT_OF.createTypeColumn();
         xmlCol.setAxis( col.getAxis().getName() );
@@ -249,11 +252,36 @@ public class TableViewUtils
         xmlCol.setId( "c" + String.valueOf( colCount ) );
         xmlCol.setName( col.getName() );
         xmlCol.setWidth( col.getWidth() );
-        
+
         xmlColumns.add( xmlCol );
       }
     }
-    
+
     return xmlTemplate;
+  }
+
+  public static void applyXMLTemplate( final TableView view, final ObstableviewType xml,
+      final URL context )
+  {
+    view.removeAllItems();
+
+    final RulesType trules = xml.getRules();
+    if( trules != null )
+    {
+      // clear the rules since we get ones from the xml
+      view.getRules().removeAllRules();
+
+      for( final Iterator it = trules.getRenderingrule().iterator(); it.hasNext(); )
+        view.getRules().addRule( RulesFactory.createRenderingRule( (TypeRenderingRule)it.next() ) );
+    }
+
+    final List list = xml.getObservation();
+    for( final Iterator it = list.iterator(); it.hasNext(); )
+    {
+      final TypeObservation tobs = (TypeObservation)it.next();
+
+      new TableViewColumnXMLLoader( view, tobs, context );
+    }
+
   }
 }

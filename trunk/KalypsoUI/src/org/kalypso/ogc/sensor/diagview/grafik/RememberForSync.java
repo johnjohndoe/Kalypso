@@ -90,8 +90,8 @@ final class RememberForSync
       Logger.getLogger( getClass().getName() ).info( "In Sync, " + toString() );
       return;
     }
-    else
-      Logger.getLogger( getClass().getName() ).info( "Update, " + toString() );
+
+    Logger.getLogger( getClass().getName() ).info( "Update, " + toString() );
 
     Reader datReader = null;
     Reader zmlReader = null;

@@ -2,7 +2,7 @@ package org.kalypso.ui.editor.abstractobseditor;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.ogc.sensor.template.AbstractObservationTheme;
+import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ui.ImageProvider;
 
 /**
@@ -36,7 +36,7 @@ public class ObsTemplateLabelProvider extends LabelProvider
    */
   public Image getImage( Object element )
   {
-    if( element instanceof AbstractObservationTheme )
+    if( element instanceof PlainObsProvider )
       return getThemeImage();
     
     return getDefaultImage();

@@ -1,7 +1,21 @@
 package org.kalypso.ui.editor.abstractobseditor;
 
+import java.net.URL;
+
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.ogc.sensor.template.AbstractViewTemplate;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.ogc.sensor.diagview.DiagView;
+import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
+import org.kalypso.ogc.sensor.tableview.TableView;
+import org.kalypso.ogc.sensor.tableview.TableViewUtils;
+import org.kalypso.ogc.sensor.template.NameUtils;
+import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.template.TemplateStorage;
+import org.kalypso.template.obsdiagview.ObsdiagviewType;
+import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.ui.editor.AbstractEditorPart;
 
 /**
@@ -11,13 +25,13 @@ import org.kalypso.ui.editor.AbstractEditorPart;
  */
 public abstract class AbstractObservationEditor extends AbstractEditorPart
 {
-  private AbstractViewTemplate m_template;
+  private final ObsView m_view;
 
   private ObservationEditorOutlinePage m_outline = null;
 
-  public AbstractObservationEditor( AbstractViewTemplate template )
+  public AbstractObservationEditor( ObsView view )
   {
-    m_template = template;
+    m_view = view;
   }
 
   /**
@@ -25,8 +39,8 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
    */
   public void dispose( )
   {
-    if( m_template != null )
-      m_template.dispose();
+    if( m_view != null )
+      m_view.dispose();
 
     if( m_outline != null )
       m_outline.dispose();
@@ -37,9 +51,9 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
   /**
    * @return template
    */
-  public AbstractViewTemplate getTemplate( )
+  public ObsView getView( )
   {
-    return m_template;
+    return m_view;
   }
 
   /**
@@ -58,11 +72,70 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
           m_outline.dispose();
 
         m_outline = new ObservationEditorOutlinePage( this );
-        m_outline.setTemplate( m_template );
+        m_outline.setView( m_view );
       }
 
       return m_outline;
     }
     return null;
   }
+
+  /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
+   *      org.eclipse.ui.IFileEditorInput)
+   */
+  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
+  {
+    monitor.beginTask( "Vorlage laden", IProgressMonitor.UNKNOWN );
+
+    final ObsView view = getView();
+
+    try
+    {
+      final IStorage storage = input.getStorage();
+
+      if( storage instanceof TemplateStorage )
+      {
+        final TemplateStorage ts = (TemplateStorage)storage;
+        if( view instanceof DiagView )
+          ((DiagView)view).setTitle( ts.getName() );
+
+        loadObservation( ts.getContext(), ts.getHref() );
+      }
+      else
+      {
+        if( view instanceof DiagView )
+        {
+          final ObsdiagviewType baseTemplate = DiagViewUtils.loadDiagramTemplateXML( storage
+              .getContents() );
+  
+          final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
+          DiagViewUtils.applyXMLTemplate( (DiagView)getView(), baseTemplate, new URL( strUrl ) );
+        }
+        else if( view instanceof TableView )
+        {
+          final ObstableviewType baseTemplate = TableViewUtils
+          .loadTableTemplateXML( storage.getContents() );
+  
+          final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
+          TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ) );
+        }
+      }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      monitor.done();
+    }
+  }
+
+  public void loadObservation( final URL context, final String href )
+  {
+    if( m_view != null )
+      m_view.loadObservation( context, href, false, null, NameUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( true, null ) );
+  }
+
 }

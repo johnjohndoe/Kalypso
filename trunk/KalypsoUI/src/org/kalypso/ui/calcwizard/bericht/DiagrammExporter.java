@@ -50,7 +50,7 @@ import java.util.Properties;
 
 import org.deegree.model.feature.Feature;
 import org.kalypso.java.io.ReaderUtilities;
-import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
@@ -90,8 +90,8 @@ public class DiagrammExporter extends AbstractBerichtExporter
     
     final ObsdiagviewType xml = DiagViewUtils.loadDiagramTemplateXML( reader2 );
     
-    final DiagViewTemplate tpl = new DiagViewTemplate();
-    tpl.setBaseTemplate( xml, getContext(), true );
+    final DiagView tpl = new DiagView();
+    DiagViewUtils.applyXMLTemplate( tpl, xml, getContext() );
     tpl.waitUntilLoaded( 100, 100 );
 
     final ObservationChart chart = new ObservationChart( tpl );

@@ -38,67 +38,68 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.commands;
+package org.kalypso.ogc.sensor.template;
 
-import org.kalypso.ogc.sensor.template.AbstractObservationTheme;
-import org.kalypso.ogc.sensor.template.AbstractViewTemplate;
-import org.kalypso.util.command.ICommand;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.util.runtime.IVariableArguments;
 
 /**
- * RemoveThemeCommand
+ * A Theme for an IObservation
  * 
  * @author schlienger
  */
-public class RemoveThemeCommand implements ICommand
+public final class PlainObsProvider implements IObsProvider
 {
-  private final AbstractViewTemplate m_template;
+  private final IObservation m_obs;
 
-  private final AbstractObservationTheme m_theme;
+  private final IVariableArguments m_args;
 
-  public RemoveThemeCommand( AbstractViewTemplate template,
-      AbstractObservationTheme theme )
+  public PlainObsProvider( final IObservation obs, final IVariableArguments args )
   {
-    m_template = template;
-    m_theme = theme;
+    m_args = args;
+    m_obs = obs;
+  }
+
+  public void dispose( )
+  {
+    // nix zu tun
+  }
+
+  public IObservation getObservation( )
+  {
+    return m_obs;
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#isUndoable()
+   * @return [optional] variable arguments that can be used when values are
+   *         fetched from the observation
    */
-  public boolean isUndoable( )
+  public IVariableArguments getArguments( )
   {
-    return true;
+    return m_args;
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#process()
+   * @see org.kalypso.ogc.sensor.template.IObsProvider#addListener(org.kalypso.ogc.sensor.template.IObsProviderListener)
    */
-  public void process( ) throws Exception
+  public void addListener( final IObsProviderListener l )
   {
-    m_template.removeTheme( m_theme );
+    // obs kann sich nicht ändern
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#redo()
+   * @see org.kalypso.ogc.sensor.template.IObsProvider#removeListener(org.kalypso.ogc.sensor.template.IObsProviderListener)
    */
-  public void redo( ) throws Exception
+  public void removeListener( IObsProviderListener l )
   {
-    process();
+    // obs kann sich nicht ändern
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#undo()
+   * @see org.kalypso.ogc.sensor.template.IObsProvider#isLoading()
    */
-  public void undo( ) throws Exception
+  public boolean isLoading()
   {
-    m_template.addTheme( m_theme );
-  }
-
-  /**
-   * @see org.kalypso.util.command.ICommand#getDescription()
-   */
-  public String getDescription( )
-  {
-    return "Entfernt einen Thema";
+    return false;
   }
 }

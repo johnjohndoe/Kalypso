@@ -1,7 +1,6 @@
 package org.kalypso.ui.editor.abstractobseditor;
 
 import java.net.URL;
-import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -11,7 +10,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -25,22 +23,14 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer2;
 import org.kalypso.eclipse.ui.views.contentouline.ContentOutlinePage2;
-import org.kalypso.ogc.sensor.commands.AddThemeCommand2;
-import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
-import org.kalypso.ogc.sensor.diagview.DiagViewTheme;
-import org.kalypso.ogc.sensor.tableview.TableViewColumn;
-import org.kalypso.ogc.sensor.tableview.TableViewTheme;
-import org.kalypso.ogc.sensor.template.AbstractObservationTheme;
-import org.kalypso.ogc.sensor.template.AbstractViewTemplate;
-import org.kalypso.ogc.sensor.template.ITemplateEventListener;
-import org.kalypso.ogc.sensor.template.TemplateEvent;
+import org.kalypso.ogc.sensor.template.IObsViewEventListener;
+import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.template.ObsViewEvent;
+import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction;
 
 /**
  * AbstractObsOutlinePage
@@ -48,11 +38,9 @@ import org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction;
  * @author schlienger
  */
 public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
-    ITemplateEventListener, ICheckStateListener
+    IObsViewEventListener, ICheckStateListener
 {
-  protected AbstractViewTemplate m_template;
-
-  private RemoveThemeAction m_removeThemeAction;
+  protected ObsView m_view;
 
   private final AbstractObservationEditor m_editor;
 
@@ -68,20 +56,18 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   {
     super.createControl( parent );
 
-    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer) getTreeViewer();
+    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer)getTreeViewer();
 
     // drop support for files
-    Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
-    tv.addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers,
-        new DropAdapter( tv, m_editor ) );
+    Transfer[] transfers = new Transfer[]
+    { FileTransfer.getInstance() };
+    tv.addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers, new DropAdapter( tv, m_editor ) );
 
     tv.setLabelProvider( new ObsTemplateLabelProvider() );
     tv.setContentProvider( new ObsTemplateContentProvider() );
-    tv.setInput( m_template );
+    setView( m_view );
 
     tv.addCheckStateListener( this );
-
-    m_removeThemeAction = new RemoveThemeAction( this );
   }
 
   /**
@@ -89,146 +75,96 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
    */
   protected TreeViewer createTreeViewer( final Composite parent )
   {
-    return new ContainerCheckedTreeViewer2( parent, SWT.MULTI | SWT.H_SCROLL
-        | SWT.V_SCROLL );
+    return new ContainerCheckedTreeViewer( parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
   }
 
   /**
    * @return the selected theme or null
    */
-  public AbstractObservationTheme getSelectedTheme( )
+  public ObsViewItem getSelectedItem()
   {
     final ISelection sel = getSelection();
 
     if( sel instanceof IStructuredSelection )
     {
-      final Object element = ((IStructuredSelection) sel).getFirstElement();
-
-      if( element instanceof AbstractObservationTheme )
-        return (AbstractObservationTheme) element;
-
-      if( element instanceof TableViewColumn )
-        return ((TableViewColumn) element).getTheme();
-      
-      if( element instanceof DiagViewCurve )
-        return ((DiagViewCurve) element).getTheme();
+      final Object element = ( (IStructuredSelection)sel ).getFirstElement();
+      if( element instanceof ObsViewItem )
+        return (ObsViewItem)element;
     }
 
     return null;
   }
 
   /**
-   * @return true if a theme is selected
+   * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onObsViewChanged(org.kalypso.ogc.sensor.template.ObsViewEvent)
    */
-  public boolean isThemeSelected( )
+  public void onObsViewChanged( final ObsViewEvent evt )
   {
-    final ISelection sel = getSelection();
-
-    if( sel instanceof IStructuredSelection )
+    final TreeViewer tv = getTreeViewer();
+    if( tv != null && !tv.getControl().isDisposed() )
     {
-      final Object element = ((IStructuredSelection) sel).getFirstElement();
-
-      return element instanceof AbstractObservationTheme;
-    }
-
-    return false;
-  }
-
-  public AbstractViewTemplate getTemplate( )
-  {
-    return m_template;
-  }
-
-  public AbstractObservationEditor getEditor( )
-  {
-    return m_editor;
-  }
-
-  /**
-   * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
-   */
-  public void setActionBars( IActionBars actionBars )
-  {
-    final IToolBarManager toolBarManager = actionBars.getToolBarManager();
-    toolBarManager.add( m_removeThemeAction );
-    actionBars.updateActionBars();
-  }
-
-  /**
-   * This method must be called from the ui thread
-   */
-  protected void refreshViewer( )
-  {
-    getTreeViewer().refresh();
-  }
-
-  /**
-   * This method must be called from the ui thread
-   */
-  protected void setTemplateAsInput( )
-  {
-    getTreeViewer().setInput( m_template );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.template.ITemplateEventListener#onTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)
-   */
-  public void onTemplateChanged( TemplateEvent evt )
-  {
-    if( getTreeViewer() != null )
-    {
-      getSite().getShell().getDisplay().asyncExec( new Runnable()
+      tv.getControl().getDisplay().asyncExec( new Runnable()
       {
-        public void run( )
+        public void run()
         {
-          refreshViewer();
+          tv.refresh();
+          refreshCheckState( (ContainerCheckedTreeViewer)tv );
         }
       } );
     }
   }
 
-  /**
-   * @param template
-   */
-  public void setTemplate( AbstractViewTemplate template )
+  public void setView( final ObsView view )
   {
-    if( m_template != null )
-      m_template.removeTemplateEventListener( this );
+    if( m_view != null )
+      m_view.removeObsViewListener( this );
 
-    m_template = template;
+    m_view = view;
 
-    if( getTreeViewer() != null )
+    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer)getTreeViewer();
+    if( tv != null )
     {
-      getSite().getShell().getDisplay().asyncExec( new Runnable()
+      getSite().getShell().getDisplay().syncExec( new Runnable()
       {
-        public void run( )
+        public void run()
         {
-          setTemplateAsInput();
-          refreshViewer();
+          tv.setInput( m_view );
+
+          refreshCheckState( tv );
         }
       } );
     }
 
-    if( m_template != null )
-      m_template.addTemplateEventListener( this );
+    if( m_view != null )
+      m_view.addObsViewEventListener( this );
+  }
+
+  protected void refreshCheckState( final ContainerCheckedTreeViewer tv )
+  {
+    if( m_view != null )
+    {
+      final ObsViewItem[] items = m_view.getItems();
+      for( int i = 0; i < items.length; i++ )
+      {
+        final ObsViewItem item = items[i];
+        tv.setChecked( item, item.isShown() );
+      }
+    }
   }
 
   /**
    * @see org.eclipse.ui.part.IPage#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
-    if( m_removeThemeAction != null )
-      m_removeThemeAction.dispose();
+    if( m_view != null )
+      m_view.removeObsViewListener( this );
 
-    if( m_template != null )
-      m_template.removeTemplateEventListener( this );
-
-    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer) getTreeViewer();
+    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer)getTreeViewer();
     if( tv != null )
       tv.removeCheckStateListener( this );
 
-    m_template = null;
+    m_view = null;
   }
 
   /**
@@ -238,35 +174,10 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   {
     final Object element = event.getElement();
 
-    if( element instanceof TableViewColumn )
+    if( element instanceof ObsViewItem )
     {
-      final TableViewColumn col = (TableViewColumn) element;
-      col.setShown( event.getChecked() );
-    }
-    else if( element instanceof DiagViewCurve )
-    {
-      final DiagViewCurve curve = (DiagViewCurve) element;
+      final ObsViewItem curve = (ObsViewItem)element;
       curve.setShown( event.getChecked() );
-    }
-    else if( element instanceof TableViewTheme )
-    {
-      final TableViewTheme theme = (TableViewTheme) element;
-
-      for( final Iterator it = theme.getColumns().iterator(); it.hasNext(); )
-      {
-        final TableViewColumn col = (TableViewColumn) it.next();
-        col.setShown( event.getChecked() );
-      }
-    }
-    else if( element instanceof DiagViewTheme )
-    {
-      final DiagViewTheme theme = (DiagViewTheme) element;
-
-      for( final Iterator it = theme.getCurves().iterator(); it.hasNext(); )
-      {
-        final DiagViewCurve curve = (DiagViewCurve) it.next();
-        curve.setShown( event.getChecked() );
-      }
     }
   }
 
@@ -293,10 +204,12 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
      */
     public boolean performDrop( Object data )
     {
-      if( m_template == null )
+      if( m_view == null )
         return false;
 
-      final String[] files = (String[]) data;
+      final String[] files = (String[])data;
+
+      final AbstractObservationEditor editor = m_editor2;
 
       final Job updateTemplateJob = new Job( "Vorlage aktualisieren" )
       {
@@ -306,29 +219,22 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
 
           try
           {
-            final IWorkspaceRoot wksp = ResourcesPlugin.getWorkspace()
-                .getRoot();
+            final IWorkspaceRoot wksp = ResourcesPlugin.getWorkspace().getRoot();
 
             for( int i = 0; i < files.length; i++ )
             {
               IFile file = wksp.getFileForLocation( new Path( files[i] ) );
-              file = (IFile) wksp.findMember( file.getFullPath() );
+              file = (IFile)wksp.findMember( file.getFullPath() );
               final URL url = ResourceUtilities.createURL( file );
 
-              final String themeName = AbstractObservationTheme.prepareDefaultTokens( file.getName() );
-              
-              final AbstractObservationTheme theme = m_template.addObservation( themeName, url, url.toExternalForm(), "zml", false, null );
-
-              m_editor2.postCommand( new AddThemeCommand2( m_template, theme ),
-                  null );
+              editor.loadObservation( url, url.toExternalForm() );
             }
 
             return Status.OK_STATUS;
           }
           catch( Exception e )
           {
-            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "",
-                e );
+            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "", e );
           }
           finally
           {
@@ -346,8 +252,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
      * @see org.eclipse.jface.viewers.ViewerDropAdapter#validateDrop(java.lang.Object,
      *      int, org.eclipse.swt.dnd.TransferData)
      */
-    public boolean validateDrop( Object target, int operation,
-        TransferData transferType )
+    public boolean validateDrop( Object target, int operation, TransferData transferType )
     {
       if( !FileTransfer.getInstance().isSupportedType( transferType ) )
         return false;

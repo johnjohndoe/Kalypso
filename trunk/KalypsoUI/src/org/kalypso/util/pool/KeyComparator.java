@@ -47,10 +47,22 @@ import java.util.Comparator;
 import org.kalypso.util.url.UrlResolver;
 
 
-class KeyComparator implements Comparator
+public final class KeyComparator implements Comparator
 {
+  private final static KeyComparator m_instance = new KeyComparator();
+  
+  public final static KeyComparator getInstance()
+  {
+    return m_instance;
+  }
+  
   private final UrlResolver m_urlResolver = new UrlResolver();
-
+  
+  private KeyComparator()
+  {
+    // ist a singleton
+  }
+  
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */

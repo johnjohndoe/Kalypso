@@ -42,70 +42,29 @@ package org.kalypso.ogc.sensor.diagview;
 
 import java.awt.Color;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.kalypso.ogc.sensor.template.TemplateEvent;
+import org.kalypso.ogc.sensor.template.IObsProvider;
+import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 /**
  * Default implementation of the <code>ITableViewColumn</code> interface
  * 
  * @author schlienger
  */
-public class DiagViewCurve
+public class DiagViewCurve extends ObsViewItem
 {
-  private DiagViewTheme m_theme;
-  private final DiagViewTemplate m_template;
-  
-  private String m_name = "";
   private final Color m_color;
-  private boolean m_shown = true;
-  
   private final AxisMapping[] m_mappings;
 
-
-  /**
-   * Constructor
-   * 
-   * @param name
-   * @param color
-   * @param theme
-   * @param mappings
-   * @param template
-   */
-  public DiagViewCurve( final String name, final Color color,
-      final DiagViewTheme theme, final AxisMapping[] mappings,
-      final DiagViewTemplate template )
+  public DiagViewCurve( final DiagView view, final IObsProvider obsProvider, final String name, final Color color,
+      final AxisMapping[] mappings
+       )
   {
-    m_name = name;
+    super( view, obsProvider, name );
+
     m_color = color;
     m_mappings = mappings;
-    m_theme = theme;
-    m_template = template;
   }
-
-  public String getName( )
-  {
-    return m_name;
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
-  public String toString( )
-  {
-    return getName();
-  }
-
-  public void setName( String name )
-  {
-    m_name = name;
-  }
-
-  public DiagViewTheme getTheme( )
-  {
-    return m_theme;
-  }
-
+  
   public AxisMapping[] getMappings( )
   {
     return m_mappings;
@@ -116,45 +75,29 @@ public class DiagViewCurve
     return m_color;
   }
   
-  public boolean isShown( )
-  {
-    return m_shown;
-  }
-
-  public void setShown( boolean shown )
-  {
-    if( shown != m_shown )
-    {
-      m_shown = shown;
-
-      m_template.fireTemplateChanged( new TemplateEvent( this,
-          TemplateEvent.TYPE_SHOW_STATE ) );
-    }
-  }
-
-  /**
-   * Two TableViewColumn objects are equal if they have the same name and belong
-   * to the same theme.
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  public boolean equals( final Object obj )
-  {
-    if( !this.getClass().equals( obj.getClass() ) )
-      return false;
-
-    final DiagViewCurve col = (DiagViewCurve) obj;
-
-    return new EqualsBuilder().append( col.m_name, m_name ).append(
-        col.m_theme, m_theme ).isEquals();
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  public int hashCode( )
-  {
-    return new HashCodeBuilder( 7, 31 ).append( m_name ).append( m_theme )
-        .toHashCode();
-  }
+//  /**
+//   * Two TableViewColumn objects are equal if they have the same name and belong
+//   * to the same theme.
+//   * 
+//   * @see java.lang.Object#equals(java.lang.Object)
+//   */
+//  public boolean equals( final Object obj )
+//  {
+//    if( !this.getClass().equals( obj.getClass() ) )
+//      return false;
+//
+//    final ObsViewItem col = (ObsViewItem) obj;
+//
+//    return new EqualsBuilder().append( col.m_name, m_name ).append(
+//        col.m_theme, m_theme ).isEquals();
+//  }
+//
+//  /**
+//   * @see java.lang.Object#hashCode()
+//   */
+//  public int hashCode( )
+//  {
+//    return new HashCodeBuilder( 7, 31 ).append( m_name ).append( m_theme )
+//        .toHashCode();
+//  }
 }

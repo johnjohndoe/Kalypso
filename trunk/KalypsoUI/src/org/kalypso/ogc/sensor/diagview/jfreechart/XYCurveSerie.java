@@ -95,7 +95,7 @@ class XYCurveSerie extends Series
 
     try
     {
-      m_values = m_curve.getTheme().getObservation().getValues( m_curve.getTheme().getArguments() );
+      m_values = m_curve.getObservation().getValues( m_curve.getArguments() );
     }
     catch( NullPointerException e )
     {
@@ -117,7 +117,7 @@ class XYCurveSerie extends Series
 
   public int getItemCount() throws SensorException
   {
-    return m_values.getCount();
+    return m_values == null ? 0 : m_values.getCount();
   }
 
   public Number getXValue( int item ) throws SensorException

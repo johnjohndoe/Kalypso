@@ -56,8 +56,11 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.title.TextTitle;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.ogc.sensor.template.NameUtils;
+import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 import org.kalypso.util.runtime.args.DateRangeArgument;
@@ -70,7 +73,7 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
 public class DiagramViewPart extends ViewPart implements
     ISelectionChangedListener, IPartListener
 {
-  protected final DiagViewTemplate m_template = new DiagViewTemplate( true );
+  protected final DiagView m_diagView = new DiagView( true );
 
   private ObservationChart m_chart;
 
@@ -83,7 +86,7 @@ public class DiagramViewPart extends ViewPart implements
   {
     try
     {
-      m_chart = new ObservationChart( m_template );
+      m_chart = new ObservationChart( m_diagView );
     }
     catch( SensorException e )
     {
@@ -119,7 +122,7 @@ public class DiagramViewPart extends ViewPart implements
     if( m_chart != null )
       m_chart.dispose();
     
-    m_template.dispose();
+    m_diagView.dispose();
 
     super.dispose();
   }
@@ -137,8 +140,8 @@ public class DiagramViewPart extends ViewPart implements
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    // always remove themes first (we don't know which selection we get)
-    m_template.removeAllThemes();
+    // always remove items first (we don't know which selection we get)
+    m_diagView.removeAllItems();
 
     final StructuredSelection selection = (StructuredSelection) event
         .getSelection();
@@ -155,7 +158,7 @@ public class DiagramViewPart extends ViewPart implements
     {
       final DateRangeArgument dra = ObservationViewHelper.makeDateRange( item );
 
-      m_template.setObservation( obs, dra );
+      m_diagView.addObservation( new PlainObsProvider( obs, dra ), NameUtils.DEFAULT_ITEM_NAME, null, new ObsView.ItemData( false, null ) );
 
       // sub title of diagram contains date-range info
       m_subTitle.setText("");

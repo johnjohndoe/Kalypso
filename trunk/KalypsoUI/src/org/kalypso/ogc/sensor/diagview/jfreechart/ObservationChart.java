@@ -40,9 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
 
@@ -52,19 +50,20 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardLegend;
 import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
-import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
-import org.kalypso.ogc.sensor.diagview.DiagViewTheme;
-import org.kalypso.ogc.sensor.template.ITemplateEventListener;
-import org.kalypso.ogc.sensor.template.TemplateEvent;
+import org.kalypso.ogc.sensor.template.IObsViewEventListener;
+import org.kalypso.ogc.sensor.template.ObsViewEvent;
+import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 /**
  * @author schlienger
  */
-public class ObservationChart extends JFreeChart implements
-    ITemplateEventListener
+public class ObservationChart extends JFreeChart implements IObsViewEventListener
 {
-  private final DiagViewTemplate m_template;
+  protected static final Logger LOGGER = Logger.getLogger( ObservationChart.class.getName() );
+
+  private final DiagView m_view;
 
   /**
    * Creates an ObservationChart
@@ -72,13 +71,12 @@ public class ObservationChart extends JFreeChart implements
    * @param template
    * @throws SensorException
    */
-  public ObservationChart( final DiagViewTemplate template )
-      throws SensorException
+  public ObservationChart( final DiagView template ) throws SensorException
   {
     super( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, ChartFactory
         .createObservationPlot( template ), template.isShowLegend() );
 
-    m_template = template;
+    m_view = template;
 
     if( template.isShowLegend() )
     {
@@ -87,17 +85,17 @@ public class ObservationChart extends JFreeChart implements
 
       setLegend( leg );
     }
-    
+
     // removed in this.dispose()
-    m_template.addTemplateEventListener( this );
+    m_view.addObsViewEventListener( this );
   }
 
   /**
    * Disposes the chart.
    */
-  public void dispose( )
+  public void dispose()
   {
-    m_template.removeTemplateEventListener( this );
+    m_view.removeObsViewListener( this );
 
     clearChart();
   }
@@ -105,7 +103,7 @@ public class ObservationChart extends JFreeChart implements
   /**
    * Clears the curves in the chart
    */
-  protected void clearChart( )
+  protected void clearChart()
   {
     getObservationPlot().clearCurves();
   }
@@ -113,103 +111,73 @@ public class ObservationChart extends JFreeChart implements
   /**
    * @return plot casted as obs plot
    */
-  public ObservationPlot getObservationPlot( )
+  public ObservationPlot getObservationPlot()
   {
-    return (ObservationPlot) getPlot();
+    return (ObservationPlot)getPlot();
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.template.ITemplateEventListener#onTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)
+   * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onObsViewChanged(org.kalypso.ogc.sensor.template.ObsViewEvent)
    */
-  public void onTemplateChanged( final TemplateEvent evt )
+  public void onObsViewChanged( final ObsViewEvent evt )
   {
     final CatchRunnable runnable = new CatchRunnable()
     {
-      protected void runIntern( ) throws Throwable
+      protected void runIntern() throws Throwable
       {
         final ObservationPlot obsPlot = getObservationPlot();
 
-        // ADD A THEME
-        if( evt.isType( TemplateEvent.TYPE_ADD )
-            && evt.getObject() instanceof DiagViewTheme )
-        {
-          final List curves = ((DiagViewTheme) evt.getObject()).getCurves();
-          for( Iterator it = curves.iterator(); it.hasNext(); )
-            obsPlot.addCurve( (DiagViewCurve) it.next() );
-        }
+//        // ADD A CURVE
+//        if( evt.getObject() instanceof DiagViewCurve )
+//        {
+//          final DiagViewCurve curve = (DiagViewCurve)evt.getObject();
+//
+//          if( evt.isType( ObsViewEvent.TYPE_ADD ) )
+//          {
+//           LOGGER.info( "addcurve" );
+//            obsPlot.addCurve( curve );
+//          }
+//          else if( evt.isType( ObsViewEvent.TYPE_REMOVE ) )
+//          {
+//            LOGGER.info( "removecurve" );
+//            obsPlot.removeCurve( curve );
+//          }
+//          else if( evt.getType() == ObsViewEvent.TYPE_REFRESH )
+//          {
+//            LOGGER.info( "refresh:" );
+//            LOGGER.info( "removecurve" );
+//            obsPlot.removeCurve( curve );
+//            LOGGER.info( "addcurve" );
+//            obsPlot.addCurve( curve );
+//            //          fireChartChanged();
+//          }
+//        }
 
-        // ADD A CURVE
-        if( evt.isType( TemplateEvent.TYPE_ADD )
-            && evt.getObject() instanceof DiagViewCurve )
-        {
-          obsPlot.addCurve( (DiagViewCurve) evt.getObject() );
-        }
-
-        // REMOVE A THEME
-        if( evt.isType( TemplateEvent.TYPE_REMOVE )
-            && evt.getObject() instanceof DiagViewTheme )
-        {
-          final List curves = ((DiagViewTheme) evt.getObject()).getCurves();
-          for( Iterator it = curves.iterator(); it.hasNext(); )
-            obsPlot.removeCurve( (DiagViewCurve) it.next() );
-        }
-
-        // REMOVE A CURVE
-        if( evt.isType( TemplateEvent.TYPE_REMOVE )
-            && evt.getObject() instanceof DiagViewCurve )
-        {
-          obsPlot.removeCurve( (DiagViewCurve) evt.getObject() );
-        }
-
-        // SHOW/HIDE A CURVE
-        if( evt.isType( TemplateEvent.TYPE_SHOW_STATE )
-            && evt.getObject() instanceof DiagViewCurve )
-        {
-          final DiagViewCurve curve = (DiagViewCurve) evt.getObject();
-
-          if( curve.isShown() )
-            obsPlot.addCurve( curve );
-          else
-            obsPlot.removeCurve( curve );
-        }
-
+        // This is not thread safe!
+        // better always refresh tha whola kaboodle
+        
+        DiagView view = null;
+        if( evt.getObject() instanceof DiagView )
+          view = (DiagView)evt.getObject();
+        else if( evt.getObject() instanceof DiagViewCurve )
+          view = (DiagView)((DiagViewCurve)evt.getObject()).getView();
+          
+        
         // REFRESH LIST OF THEMES
-        if( evt.getType() == TemplateEvent.TYPE_REFRESH
-            && evt.getObject() instanceof Collection )
-        {
-          clearChart();
-
-          final Iterator itThemes = ((Collection) evt.getObject()).iterator();
-          while( itThemes.hasNext() )
-          {
-            final DiagViewTheme theme = (DiagViewTheme) itThemes.next();
-            final Iterator it = theme.getCurves().iterator();
-            while( it.hasNext() )
-              obsPlot.addCurve( (DiagViewCurve) it.next() );
-          }
-
-          fireChartChanged();
-        }
-
-        // REFRESH ONE THEME
-        if( evt.getType() == TemplateEvent.TYPE_REFRESH
-            && evt.getObject() instanceof DiagViewTheme )
-        {
-          final DiagViewTheme theme = (DiagViewTheme) evt.getObject();
-          final Iterator it = theme.getCurves().iterator();
-          while( it.hasNext() )
-          {
-            final DiagViewCurve crv = (DiagViewCurve) it.next();
-            obsPlot.removeCurve( crv );
-            obsPlot.addCurve( crv );
-          }
-
-          fireChartChanged();
-        }
-
         // REMOVE ALL THEMES
-        if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
+        if( evt.getType() == ObsViewEvent.TYPE_REMOVE_ALL )
           clearChart();
+        else // if( evt.getType() == ObsViewEvent.TYPE_REFRESH && evt.getObject() instanceof DiagView )
+        {
+          clearChart();
+
+          final ObsViewItem[] items = view.getItems();
+          for( int i = 0; i < items.length; i++ )
+          {
+            final DiagViewCurve curve = (DiagViewCurve)items[i];
+            obsPlot.addCurve( curve );
+          }
+        }
       }
     };
 
@@ -227,9 +195,8 @@ public class ObservationChart extends JFreeChart implements
     {
       // TODO: hier kann ne Nullpointer exception geben (es gibt nicht immer ein
       // activeWokbenchWindow)
-      MessageDialog.openError( Workbench.getInstance()
-          .getActiveWorkbenchWindow().getShell(), "Aktualisierungsfehler", e
-          .toString() );
+      MessageDialog.openError( Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+          "Aktualisierungsfehler", e.toString() );
     }
   }
 }

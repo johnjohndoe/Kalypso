@@ -60,11 +60,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.jfree.chart.ChartPanel;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
-import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
@@ -83,8 +82,8 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
 
   private final TimeseriesLink m_timeserie;
 
-  private final DiagViewTemplate m_diagTemplate = new DiagViewTemplate();
-  private final TableViewTemplate m_tableTemplate = new TableViewTemplate();
+  private final DiagView m_diagTemplate = new DiagView();
+  private final TableView m_tableTemplate = new TableView();
 
   private ObservationChart m_chart;
   private ObservationTable m_table;
@@ -111,7 +110,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
   public void dispose()
   {
     m_pool.removePoolListener( this );
-    m_diagTemplate.removeTemplateEventListener( m_chart );
+    m_diagTemplate.removeObsViewListener( m_chart );
     
     m_table.dispose();
   }
@@ -172,7 +171,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
       return;
     }
 
-    m_diagTemplate.addTemplateEventListener( m_chart );
+    m_diagTemplate.addObsViewEventListener( m_chart );
 
     ChartPanel chartPanel = new ChartPanel( m_chart );
     chartPanel.setMouseZoomable( true, false );
@@ -207,13 +206,15 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
     {
       try
       {
-        final IObservation obs = (IObservation) newValue;
+        // das kann doch ein PoolableWaiter machen! -> gibts da nicht schon ne utility?
         
-        //m_diagTemplate.removeAllCurves();
-        m_diagTemplate.setObservation( obs, null );
-
-        //m_tableTemplate.removeAllColumns();
-        m_tableTemplate.setObservation( obs, null );
+//        final IObservation obs = (IObservation) newValue;
+//        
+//        //m_diagTemplate.removeAllCurves();
+//        m_diagTemplate.setObservation( obs, null );
+//
+//        //m_tableTemplate.removeAllColumns();
+//        m_tableTemplate.setObservation( obs, null );
       }
       catch( Exception e )
       {

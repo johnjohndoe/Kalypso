@@ -45,7 +45,7 @@ import java.util.EventObject;
 /**
  * @author schlienger
  */
-public class TemplateEvent extends EventObject
+public class ObsViewEvent extends EventObject
 {
   public final static int TYPE_ADD = 1;
 
@@ -55,20 +55,16 @@ public class TemplateEvent extends EventObject
   
   public final static int TYPE_REFRESH = 8;
   
-  public static final int TYPE_SHOW_STATE = 16;
-  
   private final Object m_obj;
 
   private final int m_type;
-
-
   
-  public TemplateEvent( final Object obj, final int type )
+  public ObsViewEvent( final Object obj, final int type )
   {
     this( obj, obj, type );
   }
   
-  public TemplateEvent( final Object src, final Object obj, final int type )
+  public ObsViewEvent( final Object src, final Object obj, final int type )
   {
     super( src );
     m_obj = obj;

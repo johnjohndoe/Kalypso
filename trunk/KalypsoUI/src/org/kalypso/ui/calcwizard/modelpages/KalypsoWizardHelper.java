@@ -45,8 +45,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.kalypso.java.util.PropertiesHelper;
-import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
-import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
+import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.ui.calcwizard.Arguments;
 
@@ -101,44 +100,22 @@ public class KalypsoWizardHelper
    * Updates the diagram template for the given TimeserieFeatureProps and
    * features
    * 
-   * @param template
+   * @param view
    * @param links
    * @param context
    * @param ignoreExceptions
+   * @param ignoreType
    */
-  public static void updateDiagramTemplate(
-      final DiagViewTemplate template, final TSLinkWithName[] links,
-      final URL context, final boolean ignoreExceptions )
+  public static void updateZMLView(
+      final ObsView view, final TSLinkWithName[] links,
+      final URL context, final boolean ignoreExceptions, final String ignoreType )
   {
-    template.removeAllThemes();
+    view.removeAllItems();
 
     for( int i = 0; i < links.length; i++ )
     {
       final TSLinkWithName link = links[i];
-      template.addObservation( link.name, context, link.href, link.linktype,
-          ignoreExceptions, null, link.color );
-    }
-  }
-
-  /**
-   * Updates the table template
-   * 
-   * @param template
-   * @param links
-   * @param context
-   * @param ignoreExceptions
-   */
-  public static void updateTableTemplate(
-      final TableViewTemplate template, final TSLinkWithName[] links,
-      final URL context, final boolean ignoreExceptions )
-  {
-    template.removeAllThemes();
-
-    for( int i = 0; i < links.length; i++ )
-    {
-      final TSLinkWithName link = links[i];
-      template.addObservation( link.name, context, link.href, link.linktype,
-          ignoreExceptions, null );
+      view.loadObservation( context, link.href, ignoreExceptions, ignoreType, link.name, new ObsView.ItemData( true, link.color ) );
     }
   }
 }

@@ -40,12 +40,12 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
-import java.util.EventListener;
 
 /**
  * @author schlienger
  */
-public interface ITemplateEventListener extends EventListener
+public interface IObsViewEventProvider
 {
-  public void onTemplateChanged( TemplateEvent evt );
+  public void addObsViewEventListener( IObsViewEventListener l );
+  public void removeObsViewListener( IObsViewEventListener l );
 }

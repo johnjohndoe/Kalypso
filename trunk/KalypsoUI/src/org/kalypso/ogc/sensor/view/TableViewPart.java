@@ -55,8 +55,11 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
+import org.kalypso.ogc.sensor.template.NameUtils;
+import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 
@@ -65,10 +68,9 @@ import org.kalypso.ui.repository.view.RepositoryExplorerPart;
  * 
  * @author schlienger
  */
-public class TableViewPart extends ViewPart implements
-    ISelectionChangedListener, IPartListener
+public class TableViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
 {
-  protected final TableViewTemplate m_template = new TableViewTemplate();
+  protected final TableView m_tableView = new TableView();
 
   private ObservationTable m_table;
 
@@ -77,11 +79,10 @@ public class TableViewPart extends ViewPart implements
    */
   public void createPartControl( final Composite parent )
   {
-    m_table = new ObservationTable( m_template );
+    m_table = new ObservationTable( m_tableView );
 
     // SWT-AWT Brücke für die Darstellung von JTable
-    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
-        | SWT.EMBEDDED ) );
+    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 
     vFrame.setVisible( true );
     m_table.setVisible( true );
@@ -96,24 +97,24 @@ public class TableViewPart extends ViewPart implements
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     getSite().getPage().removePartListener( this );
 
     if( m_table != null )
       m_table.dispose();
-    
-    m_template.dispose();
-    
+
+    m_tableView.dispose();
+
     super.dispose();
   }
 
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  public void setFocus( )
+  public void setFocus()
   {
-    // noch nix
+  // noch nix
   }
 
   /**
@@ -121,22 +122,22 @@ public class TableViewPart extends ViewPart implements
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    // always remove themes first (we don't know which selection we get)
-    m_template.removeAllThemes();
+    // always remove items first (we don't know which selection we get)
+    m_tableView.removeAllItems();
 
-    final StructuredSelection selection = (StructuredSelection) event
-        .getSelection();
+    final StructuredSelection selection = (StructuredSelection)event.getSelection();
 
-    if( !(selection.getFirstElement() instanceof IRepositoryItem) )
+    if( !( selection.getFirstElement() instanceof IRepositoryItem ) )
       return;
 
-    final IRepositoryItem item = (IRepositoryItem) selection.getFirstElement();
+    final IRepositoryItem item = (IRepositoryItem)selection.getFirstElement();
 
-    final IObservation obs = ObservationCache.getInstance().getObservationFor(
-        item );
+    final IObservation obs = ObservationCache.getInstance().getObservationFor( item );
     if( obs != null )
-      m_template.setObservation( obs, ObservationViewHelper
-          .makeDateRange( item ) );
+    {
+      m_tableView.addObservation( new PlainObsProvider( obs, ObservationViewHelper
+          .makeDateRange( item ) ), NameUtils.DEFAULT_ITEM_NAME, null, new ObsView.ItemData( false, null ) );
+    }
   }
 
   /**
@@ -145,7 +146,7 @@ public class TableViewPart extends ViewPart implements
   public void partActivated( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ((RepositoryExplorerPart) part).addSelectionChangedListener( this );
+      ( (RepositoryExplorerPart)part ).addSelectionChangedListener( this );
   }
 
   /**
@@ -153,7 +154,7 @@ public class TableViewPart extends ViewPart implements
    */
   public void partBroughtToTop( IWorkbenchPart part )
   {
-    // nada
+  // nada
   }
 
   /**
@@ -162,7 +163,7 @@ public class TableViewPart extends ViewPart implements
   public void partClosed( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
+      ( (RepositoryExplorerPart)part ).removeSelectionChangedListener( this );
   }
 
   /**
@@ -171,7 +172,7 @@ public class TableViewPart extends ViewPart implements
   public void partDeactivated( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
+      ( (RepositoryExplorerPart)part ).removeSelectionChangedListener( this );
   }
 
   /**
@@ -179,6 +180,6 @@ public class TableViewPart extends ViewPart implements
    */
   public void partOpened( IWorkbenchPart part )
   {
-    // Siehe partActivated...
+  // Siehe partActivated...
   }
 }
