@@ -44,21 +44,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Shell;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
 import org.kalypso.eclipse.util.SetContentThread;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.model.xml.CalcCaseConfigType;
-import org.kalypso.model.xml.Calcwizard;
-import org.kalypso.model.xml.CalcwizardType;
 import org.kalypso.model.xml.Modelspec;
 import org.kalypso.model.xml.ModelspecType;
 import org.kalypso.model.xml.ObjectFactory;
-import org.kalypso.model.xml.CalcwizardType.PageType.ArgType;
 import org.kalypso.model.xml.ModelspecType.InputType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.services.ProxyFactory;
@@ -66,10 +58,7 @@ import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.proxy.CalcJobBean;
 import org.kalypso.services.proxy.CalcJobDataBean;
 import org.kalypso.services.proxy.ICalculationService;
-import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.calcwizard.CalcWizard;
-import org.kalypso.ui.calcwizard.ICalcWizardPage;
 import org.kalypso.util.transformation.TransformationHelper;
 import org.xml.sax.InputSource;
 
@@ -79,24 +68,24 @@ import org.xml.sax.InputSource;
  */
 public class ModelNature implements IProjectNature, IResourceChangeListener
 {
-  private static final String MODELLTYP_FOLDER = ".model";
+  public static final String MODELLTYP_FOLDER = ".model";
 
-  private static final String MODELLTYP_CALCCASECONFIG_XML = MODELLTYP_FOLDER + "/"
+  public static final String MODELLTYP_CALCCASECONFIG_XML = MODELLTYP_FOLDER + "/"
       + "calcCaseConfig.xml";
 
-  private static final String MODELLTYP_MODELSPEC_XML = MODELLTYP_FOLDER + "/" + "modelspec.xml";
+  public static final String MODELLTYP_MODELSPEC_XML = MODELLTYP_FOLDER + "/" + "modelspec.xml";
 
   public static final String ID = "org.kalypso.ui.ModelNature";
 
   private static final String METADATA_FILE = ".metadata";
 
-  public static final String CALCULATION_FILE = ".calculation";
+  public static final String CONTROL_NAME = ".calculation";
 
-  public static final String CALCULATION_TEMPLATE = ".calculation.template";
+  public static final String CONTROL_TEMPLATE_NAME = ".calculation.template";
 
-  public static final String CALCULATION_VIEW = MODELLTYP_FOLDER + "/.calculation.view";
+  public static final String CONTROL_VIEW_PATH = MODELLTYP_FOLDER + "/.calculation.view";
 
-  private static final String MODELLTYP_CALCWIZARD_XML = MODELLTYP_FOLDER + "/" + "calcWizard.xml";
+  public static final String MODELLTYP_CALCWIZARD_XML = MODELLTYP_FOLDER + "/" + "calcWizard.xml";
 
   private final Properties m_metadata = new Properties();
 
@@ -104,9 +93,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   private static final String PROGNOSE_FOLDER = ".prognose";
 
-  public static final String CONTROL_TEMPLATE_GML = MODELLTYP_FOLDER + "/" + CALCULATION_TEMPLATE;
+  public static final String CONTROL_TEMPLATE_GML_PATH = MODELLTYP_FOLDER + "/"
+      + CONTROL_TEMPLATE_NAME;
 
-  public static final String CONTROL_TEMPLATE_XSD = MODELLTYP_FOLDER + "/schema/control.xsd";
+  public static final String CONTROL_TEMPLATE_XSD_PATH = MODELLTYP_FOLDER + "/schema/control.xsd";
 
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
@@ -226,7 +216,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public static boolean isCalcCalseFolder( final IFolder folder )
   {
-    final IResource calcFile = folder.findMember( CALCULATION_FILE );
+    final IResource calcFile = folder.findMember( CONTROL_NAME );
     return ( calcFile != null && calcFile.exists() && calcFile instanceof IFile );
   }
 
@@ -453,8 +443,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
                 + MODELLTYP_MODELSPEC_XML, null ) );
 
       final File basedir = input.isRelativeToCalcCase() ? serverCalcDir : serverBaseDir;
-      final String reldir = ( input.isRelativeToCalcCase() ? "calc" : "base" ) + "/"
-          + inputPath;
+      final String reldir = ( input.isRelativeToCalcCase() ? "calc" : "base" ) + "/" + inputPath;
 
       final IResourceVisitor copyVisitor = new CopyResourceToFileVisitor( baseresource, basedir );
       inputResource.accept( copyVisitor );
@@ -493,88 +482,19 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  public static void runPrognose( final Shell shell, final String name )
+  public IFolder createNewPrognose( final IProgressMonitor monitor ) throws CoreException
   {
-    try
-    {
-      final IProject project = (IProject)ResourcesPlugin.getWorkspace().getRoot().findMember( name );
+    final IProject project = getProject();
 
-      // ein noch nicht benutztes Unterverzeichnis im Prognoseverzeichnis finden
-      final IFolder prognoseFolder = project.getFolder( PROGNOSE_FOLDER );
-      final IFolder calcCaseFolder = FolderUtilities
-          .createUnusedFolder( prognoseFolder, "prognose" );
+    // ein noch nicht benutztes Unterverzeichnis im Prognoseverzeichnis finden
+    final IFolder prognoseFolder = project.getFolder( PROGNOSE_FOLDER );
+    final IFolder calcCaseFolder = FolderUtilities.createUnusedFolder( prognoseFolder, "prognose" );
 
-      final Job createCalcCaseJob = new Job( "neuen Rechenfall anlegen" )
-      {
-        protected IStatus run( final IProgressMonitor monitor )
-        {
-          try
-          {
-            monitor.beginTask( "neuen Rechenfall erzeugen", 2000 );
-            calcCaseFolder.create( false, true, new SubProgressMonitor( monitor, 1000 ) );
-            createCalculationCaseInFolder( calcCaseFolder, new SubProgressMonitor( monitor, 1000 ) );
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
+    monitor.beginTask( "neuen Rechenfall erzeugen", 2000 );
+    calcCaseFolder.create( false, true, new SubProgressMonitor( monitor, 1000 ) );
+    createCalculationCaseInFolder( calcCaseFolder, new SubProgressMonitor( monitor, 1000 ) );
 
-            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-                "Der Rechenfall für die Prognoserechnung konnte nicht erzeugt werden", e );
-          }
-
-          return Status.OK_STATUS;
-        }
-      };
-      createCalcCaseJob.schedule();
-      createCalcCaseJob.join();
-      if( createCalcCaseJob.getResult().getSeverity() != IStatus.OK )
-        return;
-
-      final Wizard wizard = new CalcWizard( calcCaseFolder );
-      wizard.setNeedsProgressMonitor( true );
-      wizard.setWindowTitle( "Prognoserechnung für " + project.getName() );
-
-      // wizard seiten hinzufügen!
-      final IFile wizardConfigFile = (IFile)project.findMember( MODELLTYP_CALCWIZARD_XML );
-      final InputSource inputSource = new InputSource( wizardConfigFile.getContents() );
-      inputSource.setEncoding( wizardConfigFile.getCharset() );
-
-      final Calcwizard calcwizardData = (Calcwizard)new ObjectFactory().createUnmarshaller()
-          .unmarshal( inputSource );
-      final List pages = calcwizardData.getPage();
-      for( Iterator pIt = pages.iterator(); pIt.hasNext(); )
-      {
-        final CalcwizardType.PageType page = (CalcwizardType.PageType)pIt.next();
-
-        final Properties props = new Properties();
-        final List arglist = page.getArg();
-        for( Iterator aIt = arglist.iterator(); aIt.hasNext(); )
-        {
-          final CalcwizardType.PageType.ArgType arg = (ArgType)aIt.next();
-          props.setProperty( arg.getName(), arg.getValue() );
-        }
-
-        final String className = page.getClassName();
-        final String pageTitle = page.getPageTitle();
-        final String imageLocation = page.getImageLocation();
-        final ImageDescriptor imageDesc = imageLocation == null ? null : ImageProvider
-            .id( imageLocation );
-
-        final ICalcWizardPage wizardPage = (ICalcWizardPage)ClassUtilities.newInstance( className,
-            ICalcWizardPage.class, ModelNature.class.getClassLoader(), null, null );
-        wizardPage.init( project, pageTitle, imageDesc, props, calcCaseFolder );
-        wizard.addPage( wizardPage );
-      }
-
-      final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
-      wizardDialog.create();
-      wizardDialog.getShell().setBounds( shell.getBounds() );
-      wizardDialog.open();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
+    return calcCaseFolder;
   }
 
   private void retrieveOutput( final File serveroutputdir, final IFolder targetfolder,
@@ -626,22 +546,37 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
             "Fehler beim Zurückladen der Ergebnisdateien", thrown ) );
 
       monitor.worked( 1 );
-      
+
       if( monitor.isCanceled() )
-        throw new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), 0, "Vorgang vom Benutzer abgebrochen", null ) );
+        throw new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), 0,
+            "Vorgang vom Benutzer abgebrochen", null ) );
     }
 
     monitor.done();
   }
 
-  public GMLWorkspace getDefaultControl() throws CoreException
+  public GMLWorkspace loadDefaultControl() throws CoreException
+  {
+    return loadOrCreateControl( null );
+  }
+  
+  public GMLWorkspace loadOrCreateControl( final IFolder folder ) throws CoreException
   {
     try
     {
-      final URL gmlURL = new URL( "platform:/resource/" + getProject().getName() + "/"
-          + CONTROL_TEMPLATE_GML );
+      // gibts das file schon, dann laden
+      String gmlPath = getProject().getName() + "/" + CONTROL_TEMPLATE_GML_PATH;
+      
+      if( folder != null )
+      {
+        final IFile controlFile = folder.getFile( CONTROL_NAME );
+        if( controlFile.exists() )
+          gmlPath = controlFile.getFullPath().toString();
+      }
+      
+      final URL gmlURL = new URL( "platform:/resource/" + gmlPath );
       final URL schemaURL = new URL( "platform:/resource/" + getProject().getName() + "/"
-          + CONTROL_TEMPLATE_XSD );
+          + CONTROL_TEMPLATE_XSD_PATH );
 
       // TODO: ReplaceTokens
 
@@ -660,8 +595,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public void runCalculation( final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
   {
-    final CoreException cancelException = new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) );
-    
+    final CoreException cancelException = new CoreException( new Status( IStatus.CANCEL,
+        KalypsoGisPlugin.getId(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) );
+
     if( !isCalcCalseFolder( folder ) )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Verzeichnis ist kein Rechenfall :" + folder.getName(), null ) );
@@ -681,11 +617,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
               .getOnlyClassName( ICalculationService.class ) );
 
       job = calcService.prepareJob( modelspec.getTypeID(), "" );
-      
+
       if( monitor.isCanceled() )
       {
-          calcService.disposeJob( job.getId() );
-          throw cancelException;
+        calcService.disposeJob( job.getId() );
+        throw cancelException;
       }
     }
     catch( final RemoteException e )
@@ -720,7 +656,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       if( monitor.isCanceled() )
         throw cancelException;
-      
+
       final SubProgressMonitor calcMonitor = new SubProgressMonitor( monitor, 1000 );
       monitor.setTaskName( "Berechnung wird durchgeführt" );
       calcMonitor.beginTask( "Berechnung wird durchgeführt", 100 );
@@ -760,7 +696,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         calcMonitor.worked( progress - oldProgess );
         oldProgess = progress;
 
-        // ab hier bei cancel nicht mehr zurückkehren, sondern 
+        // ab hier bei cancel nicht mehr zurückkehren, sondern
         // erstmal den Job-Canceln und warten bis er zurückkehrt
         if( monitor.isCanceled() )
           calcService.cancelJob( jobID );
@@ -781,9 +717,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         if( outputfolder.exists() )
           outputfolder.delete( false, false, new NullProgressMonitor() );
 
-        final File serveroutputdir = new File( jobBean.getBasedir(), ICalcServiceConstants.OUTPUT_DIR_NAME ); 
-        retrieveOutput( serveroutputdir, outputfolder, results, new SubProgressMonitor(
-            monitor, 1000 ) );
+        final File serveroutputdir = new File( jobBean.getBasedir(),
+            ICalcServiceConstants.OUTPUT_DIR_NAME );
+        retrieveOutput( serveroutputdir, outputfolder, results, new SubProgressMonitor( monitor,
+            1000 ) );
         return;
 
       case ICalcServiceConstants.CANCELED:
@@ -811,17 +748,17 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
     finally
     {
-//      try
-//      {
-//        calcService.disposeJob( job.getId() );
-//      }
-//      catch( final RemoteException e1 )
-//      {
-//        e1.printStackTrace();
-//
-//        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-//            "Kritischer Fehler bei Löschen des Rechen-Jobs", e1 ) );
-//      }
+      //      try
+      //      {
+      //        calcService.disposeJob( job.getId() );
+      //      }
+      //      catch( final RemoteException e1 )
+      //      {
+      //        e1.printStackTrace();
+      //
+      //        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+      //            "Kritischer Fehler bei Löschen des Rechen-Jobs", e1 ) );
+      //      }
     }
   }
 

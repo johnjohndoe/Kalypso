@@ -8,7 +8,7 @@ import org.kalypso.ogc.gml.featureview.IFeatureControl;
  */
 public abstract class AbstractFeatureControl implements IFeatureControl
 {
-  private final Feature m_feature;
+  private Feature m_feature;
 
   private final String m_propertyName;
   
@@ -32,6 +32,11 @@ public abstract class AbstractFeatureControl implements IFeatureControl
   public final Feature getFeature()
   {
     return m_feature;
+  }
+  
+  public final void setFeature( final Feature feature )
+  {
+    m_feature = feature;
   }
   
   public String getPropertyName()

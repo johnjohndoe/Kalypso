@@ -145,6 +145,11 @@
             category="Kalypso"
             name="Style Editor"
             id="org.kalypso.ui.editor.mapeditor.views.styleeditor"/>
+      <view
+            class="org.kalypso.ui.view.prognose.PrognoseView"
+            category="Kalypso"
+            name="Hochwasser Vorhersage"
+            id="org.kalypso.view.prognose"/>
    </extension>
    <extension
          point="org.eclipse.ui.editorActions">
@@ -434,7 +439,7 @@
       <perspective
             class="org.kalypso.ui.perspectives.PrognosePerspective"
             fixed="true"
-            name="Prognoserechnung"
+            name="Hochwasser Vorhersage"
             id="org.kalypso.ui.perspectives.PrognosePerspective"/>
    </extension>
    <extension
@@ -458,16 +463,6 @@
                value="etc/kalypso16.gif"
                name="windowImage"/>
       </product>
-   </extension>
-   <extension
-         point="org.eclipse.ui.intro">
-      <intro
-            icon="etc/kalypso16.gif"
-            class="org.kalypso.ui.intro.ModelChooserIntro"
-            id="modelIntro"/>
-      <introProductBinding
-            introId="modelIntro"
-            productId="org.kalypso.ui.product"/>
    </extension>
    <extension
          id="application"
@@ -523,6 +518,11 @@
          <action
                label="Modell vom Server laden"
                tooltip="lädt ein Modell vom Sever, falls es nicht bereits vorhanden ist"
+               menubarPath="org.kalypso.menu.model/modelStart"
+               id="org.kalypso.action.model.checkoutModel"/>
+         <action
+               label="Vorhersagerechnung"
+               class="org.kalypso.ui.action.StartCalcWizardAction"
                menubarPath="org.kalypso.menu.model/modelStart"
                id="org.kalypso.action.model.checkoutModel"/>
       </actionSet>

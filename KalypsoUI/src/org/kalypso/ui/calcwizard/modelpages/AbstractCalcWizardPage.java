@@ -1,4 +1,4 @@
-package org.kalypso.ui.calcwizard;
+package org.kalypso.ui.calcwizard.modelpages;
 
 import java.util.Properties;
 
@@ -13,7 +13,7 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 /**
  * @author Belger
  */
-public abstract class AbstractCalcWizardPage extends WizardPage implements ICalcWizardPage,
+public abstract class AbstractCalcWizardPage extends WizardPage implements IModelWizardPage,
     ICommandTarget
 {
   private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( null );
@@ -47,7 +47,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements ICalc
   }
 
   /**
-   * @see org.kalypso.ui.calcwizard.ICalcWizardPage#init(org.eclipse.core.resources.IProject, java.lang.String, org.eclipse.jface.resource.ImageDescriptor, java.util.Properties, org.eclipse.core.resources.IFolder)
+   * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#init(org.eclipse.core.resources.IProject, java.lang.String, org.eclipse.jface.resource.ImageDescriptor, java.util.Properties, org.eclipse.core.resources.IFolder)
    */
   public void init( final IProject project, final String pagetitle,
       final ImageDescriptor imagedesc, final Properties arguments, final IFolder calcFolder )

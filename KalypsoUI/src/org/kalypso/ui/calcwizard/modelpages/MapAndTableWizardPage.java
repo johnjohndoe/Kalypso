@@ -1,10 +1,9 @@
-package org.kalypso.ui.calcwizard;
+package org.kalypso.ui.calcwizard.modelpages;
 
 import java.awt.Frame;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JScrollPane;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.event.ModellEvent;
@@ -12,12 +11,19 @@ import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.jfree.chart.ChartPanel;
@@ -28,24 +34,22 @@ import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapPanel;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
-import org.kalypso.ogc.gml.widgets.ToggleSelectWidget;
+import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.ogc.gml.widgets.SingleElementSelectWidget;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.diagview.template.LinkedDiagramTemplate;
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.tableview.template.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.template.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author schlienger
+ * @author Belger
  */
-public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage implements
-    ModellEventListener
+public class MapAndTableWizardPage extends AbstractCalcWizardPage implements ModellEventListener
 {
   /** Pfad auf Vorlage f?r die Karte (.gmt Datei) */
   public final static String PROP_MAPTEMPLATE = "mapTemplate";
@@ -53,7 +57,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
   /** Der Titel der Seite */
   public static final String PROP_MAPTITLE = "mapTitle";
 
-  /** Pfad auf Vorlage f?r die Observation-Table (.ott Datei) */
+  /** Pfad auf Vorlage f?r die Gis-Tabell (.gtt Datei) */
   public final static String PROP_TABLETEMPLATE = "tableTemplate";
 
   /** Pfad auf die Vorlage f?r das Diagramm (.odt Datei) */
@@ -73,35 +77,25 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
   private static final int SELECTION_ID = 0x10;
 
-  private IMapModell m_mapModell = null;
+  private LayerTableViewer m_viewer;
+
+  private IMapModell m_mapModell;
+
+  private GM_Envelope m_boundingBox;
+
+  private MapPanel m_mapPanel;
 
   private Frame m_diagFrame = null;
-
-  private Frame m_tableFrame = null;
-
-  private SashForm m_sashForm = null;
 
   private IDiagramTemplate m_diagTemplate = null;
 
   private ObservationChart m_obsChart = null;
-
-  private final ObservationTableModel m_tableModel = new ObservationTableModel();
-
-  private LinkedTableViewTemplate m_tableTemplate = null;
-
-  private TimeserieFeatureProps[] m_tsProps;
-
+  
   private boolean m_useResolver = false;
 
-  private MapPanel m_mapPanel;
-
-  private GM_Envelope m_boundingBox;
-
-  private ObservationTable m_table;
-
-  public ObservationMapTableDiagWizardPage()
+  public MapAndTableWizardPage()
   {
-    super( "<ObservationMapTableDiagWizardPage>" );
+    super( "<MapAndTableWizardPage>" );
   }
 
   /**
@@ -110,12 +104,6 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
   public void dispose()
   {
     m_mapModell.removeModellListener( this );
-
-    if( m_diagTemplate != null )
-      m_diagTemplate.removeTemplateEventListener( m_obsChart );
-    
-    if( m_tableTemplate != null )
-      m_tableTemplate.removeTemplateEventListener( m_table );
   }
 
   /**
@@ -125,53 +113,67 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
   {
     try
     {
-      m_sashForm = new SashForm( parent, SWT.HORIZONTAL );
-      createMapPanel( m_sashForm );
-      final SashForm rightSash = new SashForm( m_sashForm, SWT.VERTICAL );
-      createTablePanel( rightSash );
-      createDiagramPanel( rightSash );
+      final SashForm sashForm = new SashForm( parent, SWT.HORIZONTAL );
+      createMapPanel( sashForm );
+      createRightPanel( sashForm );
 
-      final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
-      final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
-
-      m_tsProps = KalypsoWizardHelper.parseTimeserieFeatureProps( getArguments() );
-
-      final ControlAdapter controlAdapter = new ControlAdapter()
-      {
-        public void controlResized( ControlEvent e )
-        {
-          maximizeMap();
-        }
-      };
-
-      rightSash.addControlListener( controlAdapter );
-      m_sashForm.addControlListener( controlAdapter );
-
-      m_sashForm.setWeights( new int[]
-      {
-          mainWeight,
-          100 - mainWeight } );
-
-      rightSash.setWeights( new int[]
-      {
-          rightWeight,
-          100 - rightWeight } );
-
-      setControl( m_sashForm );
-
+      setControl( sashForm );
+      
       parent.getDisplay().asyncExec( new Runnable()
-      {
-        public void run()
-        {
-          maximizeMap();  
-        }
-      } );
+          {
+            public void run()
+            {
+              maximizeMap();  
+            }
+          } );
     }
     catch( final Exception e )
     {
-      // TODO handling
-      throw new RuntimeException( e );
+      e.printStackTrace();
     }
+  }
+
+  private void createRightPanel( final SashForm sashForm ) throws NumberFormatException
+  {
+    final Composite rightPanel = new Composite( sashForm, SWT.NONE );
+
+    final GridLayout gridLayout = new GridLayout();
+    rightPanel.setLayout( gridLayout );
+    rightPanel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+    final SashForm rightSash = new SashForm( rightPanel, SWT.VERTICAL );
+    rightSash.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    createTablePanel( rightSash );
+    createDiagramPanel( rightSash );
+
+    final Button button = new Button( rightPanel, SWT.NONE | SWT.PUSH );
+    button.setText( "Berechnung durchf?hren" );
+
+    final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
+    final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
+
+    sashForm.setWeights( new int[]
+    { mainWeight, 100 - mainWeight } );
+
+    rightSash.setWeights( new int[]
+    { rightWeight, 100 - rightWeight } );
+
+    // die Karte soll immer maximiert sein
+    rightSash.addControlListener( new ControlAdapter()
+    {
+      public void controlResized( ControlEvent e )
+      {
+        maximizeMap();
+      }
+    } );
+
+    button.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        runCalculation();
+      }
+    } );
   }
 
   private void createDiagramPanel( final Composite parent )
@@ -183,9 +185,9 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     {
       // actually creates the template
       m_diagTemplate = ObservationTemplateHelper.loadDiagramTemplate( diagFile );
-
+      
       // TODO tricky: to be ameliorated once pool geschichte is better!!!
-      ( (LinkedDiagramTemplate)m_diagTemplate ).setUseResolver( m_useResolver );
+      ((LinkedDiagramTemplate)m_diagTemplate).setUseResolver( m_useResolver );
 
       final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
       m_diagFrame = SWT_AWT.new_Frame( composite );
@@ -216,34 +218,18 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     {
       final String templateFileName = getArguments().getProperty( PROP_TABLETEMPLATE );
       final IFile templateFile = (IFile)getProject().findMember( templateFileName );
+      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,
+          getReplaceProperties() );
 
-      m_table = new ObservationTable( m_tableModel );
-      
-      m_tableTemplate = ObservationTemplateHelper.loadTableViewTemplate( templateFile );
-      m_tableModel.setRules( m_tableTemplate );
-      m_tableTemplate.addTemplateEventListener( m_table );
-
-      // TODO tricky: to be ameliorated once pool geschichte is better!!!
-      m_tableTemplate.setUseResolver( m_useResolver );
-
-      final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
-      m_tableFrame = SWT_AWT.new_Frame( composite );
-      
-      m_table.setVisible( true );
-
-      final JScrollPane pane = new JScrollPane( m_table );
-      //pane.setBorder( BorderFactory.createEmptyBorder() );
-
-      m_tableFrame.setVisible( true );
-      m_table.setVisible( true );
-      m_tableFrame.add( pane );
+      m_viewer = new LayerTableViewer( parent, this, getProject(), KalypsoGisPlugin.getDefault()
+          .createFeatureTypeCellEditorFactory(), SELECTION_ID, false );
+      m_viewer.applyTableTemplate( template, getProject() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
-
-      final Text text = new Text( parent, SWT.CENTER );
-      text.setText( "Keine Tabelle vorhanden" );
+      final Text text = new Text( parent, SWT.NONE );
+      text.setText( "Fehler beim Laden des TableTemplate" );
     }
   }
 
@@ -251,6 +237,9 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
   {
     final ViewForm mapView = new ViewForm( parent, SWT.FLAT );
 
+    ///////////////
+    // MapModell //
+    ///////////////
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
 
@@ -260,7 +249,6 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     m_mapModell.addModellListener( this );
 
     m_mapPanel = new MapPanel( this, crs, SELECTION_ID );
-    m_boundingBox = GisTemplateHelper.getBoundingBox( gisview );
     final Composite mapComposite = new Composite( mapView, SWT.RIGHT | SWT.EMBEDDED );
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
 
@@ -270,23 +258,31 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
     m_mapPanel.setMapModell( m_mapModell );
     m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
+    m_boundingBox = GisTemplateHelper.getBoundingBox( gisview );
 
-    m_mapPanel.changeWidget( new ToggleSelectWidget() );
+    // das kann erst passieren, wenn die Control fertig ist: beim ersten rezise
+    // event
+    m_mapPanel.setBoundingBox( m_boundingBox );
+    m_mapPanel.changeWidget( new SingleElementSelectWidget() );
 
+    /////////////
+    // Legende //
+    /////////////
     final GisMapOutlineViewer outlineViewer = new GisMapOutlineViewer( this, m_mapModell );
     outlineViewer.createControl( mapView );
 
     mapView.setContent( mapComposite );
     mapView.setTopLeft( outlineViewer.getControl() );
-
-    m_mapPanel.setBoundingBox( m_boundingBox );
   }
 
   /**
-   * @see org.kalypso.ui.calcwizard.ICalcWizardPage#performFinish()
+   * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#performFinish()
    */
   public boolean performFinish()
   {
+    // TODO: error handling?
+    m_viewer.saveData();
+
     return true;
   }
 
@@ -311,14 +307,13 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
         selectedFeatures.add( allFeatures[i] );
 
     m_diagTemplate.removeAllCurves();
-    m_tableTemplate.removeAllColumns();
 
     if( selectedFeatures.size() > 0 )
     {
-      KalypsoWizardHelper.updateDiagramTemplate( m_tsProps, selectedFeatures, m_diagTemplate,
-          m_useResolver, getProject() );
-      KalypsoWizardHelper.updateTableTemplate( m_tsProps, selectedFeatures, m_tableTemplate,
-          m_useResolver, getProject() );
+      final TimeserieFeatureProps[] tsProps = KalypsoWizardHelper
+          .parseTimeserieFeatureProps( getArguments() );
+
+      KalypsoWizardHelper.updateDiagramTemplate( tsProps, selectedFeatures, m_diagTemplate, m_useResolver, getProject() );
     }
   }
 
@@ -327,4 +322,70 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     m_mapPanel.setBoundingBox( m_boundingBox );
   }
 
+  protected void runCalculation()
+  {
+    m_viewer.saveData();
+
+    try
+    {
+      getWizard().getContainer().run( false, true, new IRunnableWithProgress()
+      {
+        public void run( final IProgressMonitor monitor ) 
+        {
+//          try
+//          {
+//
+//            monitor.beginTask( "Prognoserechnung durchf?hren", 2000 );
+//
+////            final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature(
+////                ModelNature.ID );
+////            final String jobID = nature.startCalculation( getCalcFolder(), new SubProgressMonitor(
+////                monitor, 100 ) );
+//
+//            while( !monitor.isCanceled() )
+//            {
+//              // check if job is ready!
+//              // TODO
+////              final CalcJobDescription description = nature.checkCalculation( jobID );
+////              switch( description.getState() )
+////              {
+////              case CalcJobStatus.ERROR:
+////                setErrorMessage( description.getMessage() );
+////                return;
+////
+////              case CalcJobStatus.FINISHED:
+////                return;
+////              }
+////
+////              Thread.sleep( 100 );
+////              monitor.worked( 10 );
+//            }
+//
+//            if( monitor.isCanceled() )
+//            {
+////              nature.stopCalculation( jobID );
+//              throw new InterruptedException( "Abbruch durch Benutzer" );
+//            }
+//            // auf rechnung warten!
+//          }
+//          catch( final CoreException e )
+//          {
+//            e.printStackTrace();
+//            throw new InvocationTargetException( e, "Fehler bei der Berechnung" );
+//          }
+        }
+      } );
+    }
+    catch( final InvocationTargetException e )
+    {
+      e.printStackTrace();
+      setErrorMessage( e.getLocalizedMessage() );
+    }
+    catch( final InterruptedException e )
+    {
+      e.printStackTrace();
+      setErrorMessage( e.getLocalizedMessage() );
+    }
+
+  }
 }

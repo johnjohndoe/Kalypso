@@ -14,7 +14,7 @@ public class PrognosePerspective implements IPerspectiveFactory
    */
   public void createInitialLayout( final IPageLayout layout )
   {
-    layout.addView( IKalypsoUIConstants.ID_REPOSITORY_VIEW, IPageLayout.LEFT, 0.95f, IPageLayout.ID_EDITOR_AREA );
+    layout.addView( IKalypsoUIConstants.ID_PROGNOSE_VIEW, IPageLayout.LEFT, 0.95f, IPageLayout.ID_EDITOR_AREA );
     
     layout.setFixed( true );
     layout.setEditorAreaVisible( false );

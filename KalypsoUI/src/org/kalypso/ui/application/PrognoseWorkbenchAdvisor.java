@@ -71,7 +71,7 @@ public class PrognoseWorkbenchAdvisor extends IDEWorkbenchAdvisor
     final IWorkbench workbench = PlatformUI.getWorkbench();
     try
     {
-      workbench.showPerspective( IKalypsoUIConstants.REPOSITORY_PERSPECTIVE, workbench.getActiveWorkbenchWindow() );
+      workbench.showPerspective( IKalypsoUIConstants.PROGNOSE_PERSPECTIVE, workbench.getActiveWorkbenchWindow() );
     }
     catch( final WorkbenchException e )
     {
