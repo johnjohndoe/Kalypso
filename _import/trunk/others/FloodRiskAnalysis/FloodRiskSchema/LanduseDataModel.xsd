@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://elbe.wb.tu-harburg.de/floodrisk" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:rgc="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" xmlns:hws="http://elbe.wb.tu-harburg.de/floodrisk">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:rgc="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" xmlns:hws="http://elbe.wb.tu-harburg.de/floodrisk" targetNamespace="http://elbe.wb.tu-harburg.de/floodrisk" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<!-- =========================================================== -->
 	<!--Imports=========================================================== -->
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
@@ -32,28 +32,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="RectifiedGridCoverageMember" type="hws:RectifiedGridCoverageMemberAssociationType"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<!-- RectifiedGridCoverageMember=========================================================== -->
-	<complexType name="RectifiedGridCoverageMemberAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="hws:RectifiedGridCoverage"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="RectifiedGridCoverage" type="hws:RectifiedGridCoverageType" substitutionGroup="gml:_Feature"/>
-	<complexType name="RectifiedGridCoverageType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="rectifiedGridDomain" type="rgc:RectifiedGridDomainType"/>
-					<element name="rangeSet" type="rgc:RangeSetType"/>
+					<element name="RectifiedGridCoverageMember" type="rgc:RectifiedGridCoverageMemberAssociationType"/>
 				</sequence>
 			</extension>
 		</complexContent>

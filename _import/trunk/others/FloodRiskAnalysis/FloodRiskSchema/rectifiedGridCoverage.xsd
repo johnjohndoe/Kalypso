@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" elementFormDefault="qualified" version="3.1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:rgc="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" xmlns:gml="http://www.opengis.net/gml">
+<schema xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:rgc="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" xmlns:gml="http://www.opengis.net/gml" targetNamespace="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" elementFormDefault="qualified" version="3.1.0">
 	<!-- ==============================================================
        includes and imports
 	============================================================== -->
 	<import namespace="http://www.opengis.net/gml" schemaLocation="geometry.xsd"/>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<!-- =========================================================== -->
+	<!-- RectifiedGridCoverageMember=========================================================== -->
+	<element name="RectifiedGridCoverageMember" type="rgc:RectifiedGridCoverageMemberAssociationType"/>
+	<complexType name="RectifiedGridCoverageMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="rgc:RectifiedGridCoverage"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="RectifiedGridCoverage" type="rgc:RectifiedGridCoverageType" substitutionGroup="gml:_Feature"/>
+	<complexType name="RectifiedGridCoverageType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="rectifiedGridDomain" type="rgc:RectifiedGridDomainType"/>
+					<element name="rangeSet" type="rgc:RangeSetType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
 	<!-- =========================================================== -->
 	<complexType name="RectifiedGridDomainType">
 		<sequence>
@@ -14,7 +37,7 @@
 	<!-- =========================================================== -->
 	<complexType name="RangeSetType">
 		<sequence>
-				<element name="File" type="rgc:FileType"/>
+			<element name="File" type="rgc:FileType"/>
 		</sequence>
 	</complexType>
 	<!-- =========================================================== -->

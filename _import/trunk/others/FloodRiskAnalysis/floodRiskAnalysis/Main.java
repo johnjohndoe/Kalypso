@@ -443,7 +443,7 @@ public class Main
     {
 
       //String workingDir = "D://Nadja//floodRiskAnalysis//Test//";
-      String schemaDir = "D://Nadja//floodRiskAnalysis//FloodRiskModel_Schema//";
+      String schemaDir = "D://Nadja//eclipse//runtime-workspace//FloodRiskAnalysis//.model//schema//";
 
       //String workingDir1 =
       // "D://Nadja//floodRiskAnalysis//Kellinghusen//Grid1//";
@@ -451,11 +451,18 @@ public class Main
       // "D://Nadja//floodRiskAnalysis//Kellinghusen//Grid1_neu//";
       //String workingDir2 =
       // "D://Nadja//floodRiskAnalysis//Kellinghusen//Grid2//";
-      String workingDir3 = "D://Nadja//floodRiskAnalysis//Kellinghusen//Grid3//";
+      String workingDir = "D://Nadja//eclipse//runtime-workspace//FloodRiskAnalysis//AnnualDamage//";
 
       ITypeRegistry typeRegistry = TypeRegistrySingleton.getTypeRegistry();
       typeRegistry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
       typeRegistry.registerTypeHandler( new RangeSetTypeHandler() );
+
+      RectifiedGridCoverage testGrid = ResultModel.createAnnualDamageGrid( new File( workingDir
+          + "AnnualDamageResultModel.gml" ), new File( schemaDir
+          + "AnnualDamageResultModel.xsd" ) );
+      ResultModel.writeAnnualDamageData(new File("D://temp//test.gml"), testGrid);
+      ResultModel.createAnnualDamageGrid(new File("D://temp//test.gml"), new File( schemaDir
+          + "AnnualDamageResultModel.xsd" ));
 
       /*
        * File wsp_HQ10 = new File(workingDir1_neu + "Waterlevel//wsp_HQ10.asc");
@@ -472,10 +479,9 @@ public class Main
 
       //convertLanduse(workingDir2, schemaDir);
       //convertAdministrationUnit(workingDir, schemaDir);
-      prepareDamageCalculation( workingDir3, schemaDir );
+      //prepareDamageCalculation( workingDir3, schemaDir );
       //prepareRiskCalculation(workingDir3, schemaDir);
       //ArcGridConverter gridConverter = new ArcGridConverter();
-
       /*
        * RectifiedGridCoverage landuseGrid = gridConverter .importGridArc(new
        * File(workingDir3 + "landuse.asc"));

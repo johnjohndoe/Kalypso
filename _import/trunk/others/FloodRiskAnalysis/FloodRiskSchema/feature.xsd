@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- File: feature.xsd  -->
-<schema targetNamespace="http://www.opengis.net/gml" elementFormDefault="qualified" version="2.05" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml">
+<schema targetNamespace="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" version="2.05">
 	<annotation>
 		<appinfo>feature.xsd v2.05 2001-02</appinfo>
 		<documentation xml:lang="en">
