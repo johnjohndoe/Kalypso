@@ -51,8 +51,7 @@ public class ObservationFileRepositoryFactory extends AbstractRepositoryFactory
    */
   public IRepository createRepository()
   {
-    final String[] ZML_FILES = {"*.zml"};
-    final FileFilter filter = new MultipleWildCardFileFilter( ZML_FILES, false, true, false );
+    final FileFilter filter = new MultipleWildCardFileFilter( ZmlObservationRepository.ZML_FILES, false, true, false );
     
     return new ZmlObservationRepository( m_configuration, filter );
   }
