@@ -4,7 +4,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.Metadata;
+import org.kalypso.ogc.sensor.MetadataList;
 
 /**
  * PropertySource for the Metadata of an IObservation.
@@ -36,7 +36,7 @@ public class ObservationPropertySource implements IPropertySource
   {
     if( m_descriptors == null )
     {
-      Metadata md = m_observation.getMetadata();
+      MetadataList md = m_observation.getMetadataList();
       
       m_descriptors = new IPropertyDescriptor[ md.size() ];
       
@@ -58,7 +58,7 @@ public class ObservationPropertySource implements IPropertySource
    */
   public Object getPropertyValue( Object id )
   {
-    return m_observation.getMetadata().get( id );
+    return m_observation.getMetadataList().get( id );
   }
 
   /**
