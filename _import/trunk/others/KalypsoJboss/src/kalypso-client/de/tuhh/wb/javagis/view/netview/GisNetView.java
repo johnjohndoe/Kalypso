@@ -34,6 +34,7 @@ import java.awt.BasicStroke;
 import java.awt.GridLayout;
 
 import de.tuhh.wb.javagis.data.*;
+import javax.ejb.ObjectNotFoundException;
 
 public class GisNetView extends JInternalFrame implements ComponentListener, MouseListener,MouseMotionListener,ActionListener
 {
@@ -69,7 +70,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 
     private JTextField tfAction;
 	
-    private double scale = 1.0d;
+
     
     //    public static GisMap gisMap;
     public GisMap gisMap;
@@ -78,7 +79,6 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
     public GisNetView(GisNetModel netModel)
     {
 	super("Net View",true,true,true,true);
-	
 
 	this.movingGisObject=null;
 	this.movingGisPoint=null;
@@ -98,10 +98,10 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	gisMap.addMouseMotionListener(this);
 	gisMap.addMouseListener(this);
 	gisMap.repaint();
-	
-	pack();
+	pack();	
+	netModel.setGisMap(gisMap);
     }
-
+    
     private String getModeLabel(int mode)
     {
 	switch(mode)
@@ -148,14 +148,14 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
     {
 	System.out.println("component resized...");
 	this.setSize(getSize().width,(int)(getSize().width/gisMap.ratioWtoH));
-	gisMap.setScreenBox(new ScreenBox(0,0,this.getSize().width,this.getSize().height),scale);
+	gisMap.setScreenBox(new ScreenBox(0,0,this.getSize().width,this.getSize().height));
     }
     
     public void componentShown(ComponentEvent e)
     {
 	System.out.println("component shown...");
 	this.setSize(getSize().width,(int)(getSize().width/gisMap.ratioWtoH));
-	gisMap.setScreenBox(new ScreenBox(0,0,getSize().width,getSize().height),scale);
+	gisMap.setScreenBox(new ScreenBox(0,0,getSize().width,getSize().height));
     }
     
     // MouseListener:
@@ -165,13 +165,13 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	switch(mode)
 	    {
 	    case ZOOMOUT_MODE:
-		gisMap.zoomOut(scale);
+		gisMap.zoomOut();
 		clearModes();
 		break;
 	    case PAN_MODE:
 		if(e.getModifiers()!=MouseEvent.BUTTON3_MASK)
 		    {
-			gisMap.panTo(gisPoint, scale);
+			gisMap.panTo(gisPoint);
 			clearModes();
 		    }
 		break;
@@ -234,8 +234,6 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 		    {
 			setMode(DEFAULT_MODE);
 		    }
-		
-		
 		//break;
 		//case RELATION_MODE:
 		//select Object
@@ -262,7 +260,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 		if(movingGisObject!=null)
 		    {
 			movingGisObject.setBasePoint(gisPoint);
-			gisMap.updateImage(scale);
+			gisMap.updateImage();
 			clearModes();
 		    }
 		break;
@@ -274,7 +272,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 			    {
 				System.out.println("snaped for Relation...(END)"+endRelationGisObject);
 				netModel.createRelation(startRelationGisObject,endRelationGisObject);
-				gisMap.updateImage(scale);
+				gisMap.updateImage();
 				clearModes();
 			    }
 		    }
@@ -291,7 +289,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	    case ZOOMIN_MODE:
 		if(zoomGisBox!=null)
 		    {
-			gisMap.zoomTo(zoomGisBox, scale);
+			gisMap.zoomTo(zoomGisBox);
 			zoomGisBox=null;
 			clearModes();
 			/*
@@ -303,7 +301,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 			if(endZoomGisPoint!=null && startZoomGisPoint!=endZoomGisPoint)
 			    {
 				GisBox zoomGisBox=new GisBox(startZoomGisPoint,endZoomGisPoint);
-				gisMap.zoomTo(zoomGisBox, scale);
+				gisMap.zoomTo(zoomGisBox);
 
 			    }
 			*/
@@ -379,16 +377,24 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	    case RELATION_MODE:
 		if(startRelationGisObject!=null)
 		    {
-			GisObject tmpGO=netModel.snap(gisPoint);
-			if(tmpGO!=null && tmpGO!=startRelationGisObject) //ToDo: GisObject: equal-methode implementieren
+			try
 			    {
-				if(netModel.isAllowedRelation(startRelationGisObject,tmpGO))
-				    endRelationGisPoint=tmpGO.getBasePoint();
+				GisObject tmpGO=netModel.snap(gisPoint);
+				if(tmpGO!=null && tmpGO!=startRelationGisObject) //ToDo: GisObject: equal-methode implementieren
+				    {
+					if(netModel.isAllowedRelation(startRelationGisObject,tmpGO))
+					    
+					    endRelationGisPoint=tmpGO.getBasePoint();
+					else
+					    endRelationGisPoint=null;
+				    }
 				else
 				    endRelationGisPoint=null;
 			    }
-			else
-			    endRelationGisPoint=null;
+			catch(ObjectNotFoundException ex)
+			    {
+				endRelationGisPoint=null;
+			    }
 		    }
 		break;
 	    case ZOOMIN_MODE:
@@ -573,7 +579,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	    setMode(ZOOMIN_MODE);
 	
 	if(action.equals("zoomOut"))
-	    gisMap.zoomOut(scale);
+	    gisMap.zoomOut();
 	//	    setMode(ZOOMOUT_MODE);
 
 	if(action.equals("panTo"))
@@ -583,13 +589,13 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	    setMode(MOVE_MODE);
 		
 	if(action.equals("incSymbolSize"))
-	    scaleplus();
+	    gisMap.scaleplus();
 	
 	if(action.equals("decSymbolSize"))
-	    scaleminus();
+	    gisMap.scaleminus();
 
 	if(action.equals("fullExtent"))
-	    gisMap.zoomToFullExtent(scale);
+	    gisMap.zoomToFullExtent();
 
 	if(action.equals("showLegend"))
 	    showLegend();
@@ -608,7 +614,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	  //newObject = (GisObject)gisObjectClass.createObject();
 	  //				    newObject.setBasePoint(createGisPoint);
 	  //				    createGisPoint=null;
-	  //				    gisMap.updateImage(scaleplus);
+	  //				    gisMap.updateImage();
 	  }
 	  catch(Exception ex)
 	  {
@@ -628,17 +634,23 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	g.setColor(Color.red);
 	if(selectedGisObject!=null)
 	    {
-		GisPoint gp=selectedGisObject.getBasePoint();
-		Object oId=selectedGisObject.getId();
-		GisObjectClass gisObjectClass=(GisObjectClass)selectedGisObject.getGisElementClass();
-		Image symbol=gisObjectClass.getSymbol();
-		int symbolHeight=symbol.getHeight(null);
-		int	yOffset=symbolHeight/2;
-		ScreenPoint sp=gisMap.trafo.convert(gp);
-		double size=scale*10;
-		Font font = new Font("SansSerif",Font.PLAIN,(int)size);
-		g.setFont(font);
-		g.drawString("#"+oId.toString(),(int)sp.getX(),(int)sp.getY()-yOffset);
+		try
+		    {
+			GisPoint gp=selectedGisObject.getBasePoint();
+			Object oId=selectedGisObject.getId();
+			GisObjectClass gisObjectClass=(GisObjectClass)selectedGisObject.getGisElementClass();
+			Image symbol=gisObjectClass.getSymbol();
+			int symbolHeight=symbol.getHeight(null);
+			int	yOffset=symbolHeight/2;
+			ScreenPoint sp=gisMap.trafo.convert(gp);
+			//		Font font = new Font("SansSerif",Font.PLAIN,(int)gisMap.getScale());
+			//		g.setFont(font);
+			g.drawString("#"+oId.toString(),(int)sp.getX(),(int)sp.getY()-yOffset);
+		    }
+		catch(ObjectNotFoundException e)
+		    {
+			//
+		    }
 	    }
 	g.setColor(Color.black);
     }
@@ -649,9 +661,8 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	if(movingGisObject!=null && movingGisPoint!=null)
 	    {
 		ScreenPoint sp=gisMap.trafo.convert(movingGisPoint);
-		double size=scale*10;
-		Font font = new Font("SansSerif",Font.PLAIN,(int)size);
-		g.setFont(font);
+		//		Font font = new Font("SansSerif",Font.PLAIN,(int)gisMap.getScale());
+		//		g.setFont(font);
 		g.drawString(movingGisObject.getName()+"#"+movingGisObject.getId().toString(),(int)sp.getX(),(int)sp.getY());
 	    }
     }
@@ -664,7 +675,7 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	    {
 		ScreenPoint spa=gisMap.trafo.convert(startRelationGisPoint);
 		ScreenPoint spe=gisMap.trafo.convert(endRelationGisPoint);
-		BasicStroke stroke = new BasicStroke((float)scale);
+		BasicStroke stroke = new BasicStroke((float)gisMap.getScale());
 		g2.setStroke(stroke);
 		g2.drawLine((int)spa.getX(),(int)spa.getY(),(int)spe.getX(),(int)spe.getY());
 	    }
@@ -685,26 +696,6 @@ public class GisNetView extends JInternalFrame implements ComponentListener, Mou
 	    }
     }
 	
-    public void scaleplus()
-    {
-	scale=scale/0.9;
-	//	    System.out.println("Skalierungsfaktor: "+scale);
-	gisMap.updateImage(scale);
-    }
-	
-    public void scaleminus()
-    {
-	scale=0.9*scale;
-	//   System.out.println("Skalierungsfaktor: "+scale);
-	if(scale<=0)
-	    {
-		JOptionPane jop = new JOptionPane();
-		jop.showMessageDialog(this,(Object)"Keine Verkleinerung möglich+++!","Warnung",JOptionPane.WARNING_MESSAGE);
-	    }
-	else{
-	    gisMap.updateImage(scale);
-	}
-    }
 	
     public void showLegend()
     {

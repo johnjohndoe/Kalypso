@@ -1,5 +1,6 @@
 package de.tuhh.wb.javagis.data;
 import java.util.Comparator;
+import javax.ejb.ObjectNotFoundException;
 
 public class ByPropertyComparator implements Comparator
 {
@@ -38,8 +39,23 @@ public class ByPropertyComparator implements Comparator
 	    }
 	else
 	    {
-		p1=myGisElementClass.getSimplePropertyValue(id1,myPropCol-1);
-		p2=myGisElementClass.getSimplePropertyValue(id2,myPropCol-1);
+		try
+		    {
+			p1=myGisElementClass.getSimplePropertyValue(id1,myPropCol-1);
+		    }
+	    	catch(ObjectNotFoundException e)
+		    {
+			p1=null;
+		    }
+		
+		try
+		    {		
+			p2=myGisElementClass.getSimplePropertyValue(id2,myPropCol-1);
+		    }
+	    	catch(ObjectNotFoundException e)
+		    {
+			p2=null;
+		    }
 	    }
 	if(p1==null && p2==null)
 	    return 0;
@@ -56,7 +72,16 @@ public class ByPropertyComparator implements Comparator
 	if(myPropCol==0)
 	    p=id;
 	else
-	    p=myGisElementClass.getSimplePropertyValue(id,myPropCol-1);
+	    {
+		try
+		    {
+			p=myGisElementClass.getSimplePropertyValue(id,myPropCol-1);
+		    }
+	    	catch(ObjectNotFoundException e)
+		    {
+			p=null;
+		    }
+	    }
 	if(p==null && value==null)
 	    return 0;
 	if(p==null && value !=null)
@@ -73,8 +98,15 @@ public class ByPropertyComparator implements Comparator
 	if(myPropCol==0)
 	    p=id;
 	else
-	    p=myGisElementClass.getSimplePropertyValue(id,myPropCol-1);
-
+	    try
+		{
+		    p=myGisElementClass.getSimplePropertyValue(id,myPropCol-1);
+		}
+	catch(ObjectNotFoundException e)
+	    {
+		p=null;
+	    }
+	
 	if(p==null && myCompareValue==null)
 	    result= 0;
 	if(p==null && myCompareValue !=null)

@@ -8,7 +8,7 @@ import java.util.Enumeration;
 
 //import de.tuhh.wb.javagis.model.ElementSession;
 import de.tuhh.wb.javagis.view.netview.GisPoint;
-
+import javax.ejb.ObjectNotFoundException;
 public class GisObject extends GisElement
 {
     public GisObject(Object id,GisObjectClass gisObjectClass)
@@ -65,7 +65,7 @@ public class GisObject extends GisElement
 	((GisObjectClass)myGisElementClass).setBasePoint(myId,gp);    
     }
 
-    public GisPoint getBasePoint()
+    public GisPoint getBasePoint() throws ObjectNotFoundException
     {
 	return ((GisObjectClass)myGisElementClass).getBasePoint(myId);    
     }

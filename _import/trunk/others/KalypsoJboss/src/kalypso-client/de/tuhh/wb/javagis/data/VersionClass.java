@@ -23,6 +23,7 @@ import de.tuhh.wb.javagis.view.netview.GisPoint;
 
 import de.tuhh.wb.javagis.model.BasePointTransfer;         
 import de.tuhh.wb.javagis.model.VersionSession;
+
 //import de.tuhh.wb.javagis.model.ElementSession;
 //import de.tuhh.wb.javagis.model.ObjectSession;
 //import de.tuhh.wb.javagis.model.RelationSession;
@@ -32,6 +33,8 @@ import java.lang.reflect.*;
 import  de.tuhh.wb.javagis.view.netview.GisNetModel;
 import  de.tuhh.wb.javagis.view.tableview.GisTableModel;
 import  de.tuhh.wb.javagis.view.JobRequest;
+
+import javax.ejb.ObjectNotFoundException;
 
 import ejb.event.EJBEvent;
 import ejb.event.EJBEventListener;
@@ -709,7 +712,8 @@ public class VersionClass implements EJBEventListener
 
     public void log(Exception e)
     {
-	e.printStackTrace();
+	System.out.println("LOG: "+e.getMessage());
+	//	e.printStackTrace();
     }
 
 
@@ -765,12 +769,12 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
 		    }
 	    }
     }
 
     public synchronized Hashtable getBasePoint(String themeKey,int et,Vector eIds)
+	throws ObjectNotFoundException
     {
 	Hashtable result=null;
 	try
@@ -791,13 +795,15 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
+			if(e instanceof ObjectNotFoundException)
+			    throw (ObjectNotFoundException)e;
 		    }
 	    }
 	return result;
     }
 
     public synchronized GisPoint getBasePoint(String themeKey,int et,Object eId)
+	throws ObjectNotFoundException
     {
 	GisPoint result=null;
 	try
@@ -818,7 +824,8 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
+			if(e instanceof ObjectNotFoundException)
+			    throw (ObjectNotFoundException)e;
 		    }
 	    }
 	return result;
@@ -844,12 +851,12 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
 		    }
 	    }
     }
     
     public synchronized Vector getPrimaryKeyList(String themeKey,Object vId,int et)
+	throws ObjectNotFoundException
     {
 	Vector result=null;
 	try
@@ -870,13 +877,16 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
+			if(e instanceof ObjectNotFoundException)
+			    throw (ObjectNotFoundException)e;
+
 		    }
 	    }
 	return result;
     }
 
     public synchronized Vector getSimplePropertyRow(String themeKey,int et,Object eId)
+	throws ObjectNotFoundException
     {
 	Vector result=null;
 	try
@@ -897,13 +907,15 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
+			if(e instanceof ObjectNotFoundException)
+			    throw (ObjectNotFoundException)e;
 		    }
 	    }
 	return result;
     }
 
     public synchronized Hashtable getSimplePropertyRows(String themeKey,int et,Vector eIds)
+	throws ObjectNotFoundException
     {
 	Hashtable result=null;
 	try
@@ -924,7 +936,8 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
+			if(e instanceof ObjectNotFoundException)
+			    throw (ObjectNotFoundException)e;
 		    }
 	    }
 	return result;
@@ -950,12 +963,12 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
 		    }
 	    }
     }
 
     public synchronized Vector getVectorSets(String themeKey,Object vId,int et,Object eId)
+	throws ObjectNotFoundException
     {
 	Vector result=null;
 	try
@@ -976,7 +989,8 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
+			if(e instanceof ObjectNotFoundException)
+			    throw (ObjectNotFoundException)e;
 		    }
 	    }
 	return result;
@@ -1002,7 +1016,6 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
 		    }
 	    }
     }
@@ -1027,7 +1040,6 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
 		    }
 	    }
     }
@@ -1054,13 +1066,13 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
 		    }
 	    }
     }
 
 
     public synchronized Vector getRelationVector(String themeKey,int rt,Object rId)
+	throws ObjectNotFoundException
     {
 	Vector result=null;
 	try
@@ -1081,7 +1093,8 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
+			if(e instanceof ObjectNotFoundException)
+			    throw (ObjectNotFoundException)e;
 		    }
 	    }
 	return result;
@@ -1115,6 +1128,7 @@ public class VersionClass implements EJBEventListener
     }
 
     public synchronized Vector returnForwardRelations(String themeKey,int ot,Object oId)
+	throws ObjectNotFoundException
     {
 	Vector result=null;
 	try
@@ -1135,13 +1149,15 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
+			if(e instanceof ObjectNotFoundException)
+			    throw (ObjectNotFoundException)e;
 		    }
 	    }
 	return result;
     }
 
     public synchronized Vector returnBackwardRelations(String themeKey,int ot,Object oId)
+	throws ObjectNotFoundException
     {
 	Vector result=null;
 	try
@@ -1162,7 +1178,8 @@ public class VersionClass implements EJBEventListener
 		    {
 			lostVersionSession=false;
 			log(e);
-			System.out.println(e.getMessage());
+			if(e instanceof ObjectNotFoundException)
+			    throw (ObjectNotFoundException)e;
 		    }
 	    }
 	return result;

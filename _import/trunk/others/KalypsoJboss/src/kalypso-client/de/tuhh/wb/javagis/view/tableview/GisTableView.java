@@ -49,6 +49,7 @@ import de.tuhh.wb.javagis.view.LogView;
 import de.tuhh.wb.javagis.data.DoubleKeyHash;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import javax.ejb.ObjectNotFoundException;
 
 public class GisTableView extends JInternalFrame implements InternalFrameListener,ActionListener,MouseListener,GisView,ItemListener
 {
@@ -217,17 +218,23 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 	
 	if(action.equals("showVectorSetView") && tableModel.hasVectorSets())
 	    {
- 		int row=selectedRows[0];
-	        Object eId=tableModel.getElementId(row);
-		GisElementClass tabGisElementClass=tableModel.getGisElementClass();
-		Vector vectorSetTableModels = tableModel.getVectorSetTableModels(row);
-		String frameName=getTitle()+"/"+tableModel.getName()+"#"+eId.toString()+"/VectorSet";
-		GisVectorSetTableView gisVectorSetTableView = new GisVectorSetTableView(tableModel,frameName,vectorSetTableModels,eId,tabGisElementClass);
-		gisVectorSetTableView.setVisible(true);
-		gisVectorSetTableView.setSize(670,300);
-		ViewManager.desktop.add(gisVectorSetTableView);
-		gisVectorSetTableView.moveToFront();
-	  }
+		//		try
+		//		    {
+			int row=selectedRows[0];
+			Object eId=tableModel.getElementId(row);
+			GisElementClass tabGisElementClass=tableModel.getGisElementClass();
+			Vector vectorSetTableModels = tableModel.getVectorSetTableModels(row);
+			String frameName=getTitle()+"/"+tableModel.getName()+"#"+eId.toString()+"/VectorSet";
+			GisVectorSetTableView gisVectorSetTableView = new GisVectorSetTableView(tableModel,frameName,vectorSetTableModels,eId,tabGisElementClass);
+			gisVectorSetTableView.setVisible(true);
+			gisVectorSetTableView.setSize(670,300);
+			ViewManager.desktop.add(gisVectorSetTableView);
+			gisVectorSetTableView.moveToFront();
+			//		    }
+			//	    	catch(ObjectNotFoundException e)
+			//		    {
+			//		    }
+	    }
 	if(action.equals("saveColumnProfile"))
 	    {
 		TableProfile.getInstance().save();

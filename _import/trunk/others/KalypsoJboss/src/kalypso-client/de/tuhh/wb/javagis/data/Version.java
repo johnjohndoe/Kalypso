@@ -23,6 +23,7 @@ import java.lang.reflect.*;
 import  de.tuhh.wb.javagis.view.netview.GisNetModel;
 import  de.tuhh.wb.javagis.view.tableview.GisTableModel;
 import  de.tuhh.wb.javagis.view.JobRequest;
+import javax.ejb.ObjectNotFoundException;
 
 public class Version // implements ActionListener
 {
@@ -237,12 +238,12 @@ public class Version // implements ActionListener
     }
 
 
-    public Vector getAllPrimaryKeys(int et)
+    public Vector getAllPrimaryKeys(int et) throws ObjectNotFoundException
     {
 	return Main.versionClass.getPrimaryKeyList(myThemeKey,myVersionId,et);
     }
 
-    public Vector getVectorSets(int et,Object eId)
+    public Vector getVectorSets(int et,Object eId) throws ObjectNotFoundException
     {
 	return Main.versionClass.getVectorSets(myThemeKey,myVersionId,et,eId);
     }
@@ -256,12 +257,12 @@ public class Version // implements ActionListener
 	Main.versionClass.setVectorSets(myThemeKey,et,eId,vectorSets);
     }
 
-    public Vector getSimplePropertyRow(int et,Object eId)
+    public Vector getSimplePropertyRow(int et,Object eId) throws ObjectNotFoundException
     {
 	return Main.versionClass.getSimplePropertyRow(myThemeKey,et,eId);
     }
 
-    public Hashtable getSimplePropertyRows(int et,Vector eIds)
+    public Hashtable getSimplePropertyRows(int et,Vector eIds) throws ObjectNotFoundException
     {
 	return Main.versionClass.getSimplePropertyRows(myThemeKey,et,eIds);
     }
@@ -271,12 +272,12 @@ public class Version // implements ActionListener
 	Main.versionClass.setSimplePropertyValue(myThemeKey,et,eId,pos,value);
     }
 
-    public Hashtable getBasePoints(int et,Vector eIds)
+    public Hashtable getBasePoints(int et,Vector eIds) throws ObjectNotFoundException
     {
 	return Main.versionClass.getBasePoint(myThemeKey,et,eIds);
     }
 
-    public GisPoint getBasePoint(int et,Object eId)
+    public GisPoint getBasePoint(int et,Object eId) throws ObjectNotFoundException
     {
 	return Main.versionClass.getBasePoint(myThemeKey,et,eId);
     }
@@ -292,18 +293,18 @@ public class Version // implements ActionListener
 	Main.versionClass.createRelation(myThemeKey,myVersionId,rt,srcKey,srcId,destKey,destId);
     }
 
-    public Vector getRelationVector(int rt,Object rId)
+    public Vector getRelationVector(int rt,Object rId) throws ObjectNotFoundException
     {
 	return Main.versionClass.getRelationVector(myThemeKey,rt,rId);
     }
 
 
     //emulated ObjectSession
-    public Vector returnForwardRelations(int ot,Object oId)
+    public Vector returnForwardRelations(int ot,Object oId) throws ObjectNotFoundException
     {
 	return Main.versionClass.returnForwardRelations(myThemeKey,ot,oId);
     }
-    public Vector returnBackwardRelations(int ot,Object oId)
+    public Vector returnBackwardRelations(int ot,Object oId) throws ObjectNotFoundException
     {
 	return Main.versionClass.returnBackwardRelations(myThemeKey,ot,oId);
     }

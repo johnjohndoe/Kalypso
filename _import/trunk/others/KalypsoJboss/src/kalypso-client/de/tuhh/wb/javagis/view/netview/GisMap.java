@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JPanel;
 
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -25,7 +26,7 @@ import java.awt.Color;
 import java.awt.Font;
 
 import de.tuhh.wb.javagis.data.*;
-
+import javax.ejb.ObjectNotFoundException;
 
 public class GisMap extends JPanel
 {
@@ -41,7 +42,40 @@ public class GisMap extends JPanel
     private Font font;
     private Vector gisObjectClasses;
     private Vector objectIdListVector;
+    private double scale=1d;
+
+    public void setScale(double scale)
+    {
+	this.scale=scale;
+    }
     
+    public double getScale()
+    {
+	return this.scale;
+    }
+
+    public void scaleplus()
+    {
+	scale=scale/0.9;
+	//	    System.out.println("Skalierungsfaktor: "+scale);
+	updateImage();
+    }
+	
+    public void scaleminus()
+    {
+	scale=0.9*scale;
+	if(scale<=0)
+	    {
+		JOptionPane jop = new JOptionPane();
+		jop.showMessageDialog(this,(Object)"Keine Verkleinerung möglich+++!","Warnung",JOptionPane.WARNING_MESSAGE);
+	    }
+	else{
+	    updateImage();
+	}
+    }
+
+
+
     public GisMap(GisNetModel netModel, GisNetView netView)
     {
 	super();
@@ -63,7 +97,7 @@ public class GisMap extends JPanel
 	repaint();
     }
     
-    public void zoomOut(double scale)
+    public void zoomOut()
     {
 	double f=2; // factor;
 	double h=mapBox.getHeight();
@@ -71,31 +105,32 @@ public class GisMap extends JPanel
 	this.mapBox    = new GisBox(new GisPoint(mapBox.p1.x-(f*w-w)/2.0, mapBox.p1.y-(f*h-h)/2.0),
 				    new GisPoint(mapBox.p2.x+(f*w-w)/2.0, mapBox.p2.y+(f*h-h)/2.0));
 	this.trafo=new Transformation(screenBox,mapBox,Transformation._UseGK);
-	updateImage(scale);
+	updateImage();
 	repaint();
     }
     
-    public void panTo(GisPoint m, double scale)
+    public void panTo(GisPoint m)
     {
 	double h=mapBox.getHeight();
 	double w=ratioWtoH*h;
 	
 	this.mapBox    = new GisBox(new GisPoint(m.x-w/2.0,m.y-h/2.0),new GisPoint(m.x+w/2.0,m.y+h/2.0));
 	this.trafo=new Transformation(screenBox,mapBox,Transformation._UseGK);
-	updateImage(scale);
+	updateImage();
 	repaint();
     }
     
-    public void zoomTo(GisBox gisBox, double scale)
+    public void zoomTo(GisBox gisBox)
     {
 	this.mapBox    = gisBox;
 	this.trafo=new Transformation(screenBox,mapBox,Transformation._UseGK);
-	updateImage(scale);
+	updateImage();
 	repaint();
     }
 	
-    public void zoomToFullExtent(double scale)
+    public void zoomToFullExtent()
     {
+	// todo: solve this problem with a flag
 	double minX = Double.MAX_VALUE;
 	double minY = Double.MAX_VALUE;
 	double maxX = 0-Double.MAX_VALUE;
@@ -106,25 +141,32 @@ public class GisMap extends JPanel
 		Vector idList=(Vector)objectIdListVector.elementAt(i);
 		for(int n=0;n<idList.size();n++)
 		    {
-			Object oId=idList.elementAt(n);
-			GisPoint gp=gisObjectClass.getBasePoint(oId);
-			double cx=gp.getX();
-			double cy=gp.getY();
-			if(cx > maxX)
+			try
 			    {
-				maxX = cx;
+				Object oId=idList.elementAt(n);
+				GisPoint gp=gisObjectClass.getBasePoint(oId);
+				double cx=gp.getX();
+				double cy=gp.getY();
+				if(cx > maxX)
+				    {
+					maxX = cx;
+				    }
+				if(cx < minX)
+				    {
+					minX = cx;
+				    }
+				if(cy > maxY)
+				    {
+					maxY = cy;
+				    }
+				if(cy < minY)
+				    {
+					minY = cy;
+				    }
 			    }
-			if(cx < minX)
+			catch(ObjectNotFoundException e)
 			    {
-				minX = cx;
-			    }
-			if(cy > maxY)
-			    {
-				maxY = cy;
-			    }
-			if(cy < minY)
-			    {
-				minY = cy;
+				//
 			    }
 		    }
 	    }
@@ -145,7 +187,7 @@ public class GisMap extends JPanel
 	System.out.println("MaxX1: "+gp1neu.getX()+"MaxY1: "+gp1neu.getY()+"MinX1: "+gp2neu.getX()+"MinY1: "+gp2neu.getY());
 	this.mapBox = new GisBox(gp2neu,gp1neu);
 	this.trafo=new Transformation(screenBox,mapBox,Transformation._UseGK);
-	updateImage(scale);
+	updateImage();
 	repaint();
     }
 	
@@ -175,17 +217,17 @@ public class GisMap extends JPanel
 	    }
     }
     
-    public void updateImage(double scale)
+    public void updateImage()
     {
 	this.mapBuffer=netModel.getBufferedMap((Component)this,trafo,scale);
 	repaint();
     }
 
-    public void setScreenBox(ScreenBox screenBox,double scale)
+    public void setScreenBox(ScreenBox screenBox)
     {
 	this.screenBox=screenBox;
 	trafo=new Transformation(screenBox,mapBox,Transformation._UseGK);
-	updateImage(scale);
+	updateImage();
     }
 
     public GisBox getZoomGisBox(GisPoint gp1,GisPoint gp2)

@@ -1,7 +1,7 @@
 package de.tuhh.wb.javagis.data;
 
 import javax.swing.table.AbstractTableModel;
-
+import javax.ejb.ObjectNotFoundException;
 /*
 import de.tuhh.wb.javagis.model.ElementSession;
 import de.tuhh.wb.javagis.model.ObjectSession;
@@ -73,25 +73,31 @@ public class GisRelationClass extends GisElementClass
 
     private void loadRelation(Object rId)
     {
-	System.out.println(getName()+" loadRelation: #"+rId.toString());
-	
-	System.out.println(getName()+"getRelationVector...");
-	Vector relationVector=myVersion.getRelationVector(mrt,rId);
-	System.out.println(getName()+"getRelationVector... done");
-	Object srcId=relationVector.elementAt(0);
-	String srcKey=(String)relationVector.elementAt(1);
-	Object destId=relationVector.elementAt(2);
-	String destKey=(String)relationVector.elementAt(3);
-	
-	Vector cache=new Vector();			
-	System.out.println("\nGisRelationClass: "+srcId.toString()+srcKey);
-	System.out.println("GisRelationClass: "+destId.toString()+destKey+"\n");
-	
-	cache.add(srcId); //#0
-	cache.add(myVersion.getGisObjectClass(srcKey)); //#1
-	cache.add(destId); //#2
-	cache.add(myVersion.getGisObjectClass(destKey)); //#3
-	relations.put(rId,cache);
+	try
+	    {
+		System.out.println(getName()+" loadRelation: #"+rId.toString());
+		System.out.println(getName()+"getRelationVector...");
+		Vector relationVector=myVersion.getRelationVector(mrt,rId);
+		System.out.println(getName()+"getRelationVector... done");
+		Object srcId=relationVector.elementAt(0);
+		String srcKey=(String)relationVector.elementAt(1);
+		Object destId=relationVector.elementAt(2);
+		String destKey=(String)relationVector.elementAt(3);
+		
+		Vector cache=new Vector();			
+		System.out.println("\nGisRelationClass: "+srcId.toString()+srcKey);
+		System.out.println("GisRelationClass: "+destId.toString()+destKey+"\n");
+		
+		cache.add(srcId); //#0
+		cache.add(myVersion.getGisObjectClass(srcKey)); //#1
+		cache.add(destId); //#2
+		cache.add(myVersion.getGisObjectClass(destKey)); //#3
+		relations.put(rId,cache);
+	    }
+	catch(ObjectNotFoundException e)
+	    {
+		e.printStackTrace();
+	    }
     }
 
     public GisObject getSrcGisObject(Object rId)
@@ -112,7 +118,7 @@ public class GisRelationClass extends GisElementClass
 	return gisObjectClass.getGisObject(cache.elementAt(DEST_ID));
     }
 
-    public GisPoint getBasePointSource(Object rId)
+    public GisPoint getBasePointSource(Object rId) throws ObjectNotFoundException
     {
 	if(!relations.containsKey(rId))
 	    loadRelation(rId);
@@ -121,7 +127,7 @@ public class GisRelationClass extends GisElementClass
 	return gisObjectClass.getBasePoint(cache.elementAt(SRC_ID));
     }
 
-    public GisPoint getBasePointDestination(Object rId)
+    public GisPoint getBasePointDestination(Object rId) throws ObjectNotFoundException
     {
 	if(!relations.containsKey(rId))
 	    loadRelation(rId);

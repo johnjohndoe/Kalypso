@@ -19,6 +19,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Comparator;
 
+import javax.ejb.ObjectNotFoundException;
 
 public class GisTableModel extends AbstractTableModel implements GisInterfaceTableModel, ElementClassListener
 {
@@ -30,7 +31,14 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
     {
 	super();
 	this.myGisElementClass=gisElementClass;
-	this.myIdList=gisElementClass.getAllPrimaryKeys();
+	try
+	    {
+		this.myIdList=gisElementClass.getAllPrimaryKeys();
+	    }
+	catch(ObjectNotFoundException e)
+	    {
+		this.myIdList=new Vector();
+	    }
 	this.myGisView=null;
 	myGisElementClass.addElementClassListener(this);
     }
@@ -47,7 +55,14 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 
     public void showAllElements()
     {
-	this.myIdList=myGisElementClass.getAllPrimaryKeys();
+	try
+	    {
+		this.myIdList=myGisElementClass.getAllPrimaryKeys();
+	    }
+	catch(ObjectNotFoundException e)
+	    {
+		this.myIdList=new Vector();
+	    }
 	if(myGisView!=null)
 	    myGisView.refreshView();
     }
@@ -62,29 +77,36 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
     
     public void filter(int col,Object value,boolean selectFromAll,int filterType)
     {
-	Vector idList=null;
-	Vector filteredList=new Vector();
-	if(selectFromAll)
-	    idList=new Vector(myGisElementClass.getAllPrimaryKeys());
-	else
-	    idList=new Vector(myIdList);
-	ByPropertyComparator comparator=new ByPropertyComparator(myGisElementClass,col,value,filterType);
-	Object id=null;
-	
-	for(int i=0;i<idList.size();i++)
+	try
 	    {
-		id=idList.elementAt(i);
-		if(comparator.filter(id))
-		    {
-			System.out.println("true");
-			filteredList.add(id);
-		    }
+		Vector idList=null;
+		Vector filteredList=new Vector();
+		if(selectFromAll)
+		    idList=new Vector(myGisElementClass.getAllPrimaryKeys());
 		else
-		    System.out.println("false");
+		    idList=new Vector(myIdList);
+		ByPropertyComparator comparator=new ByPropertyComparator(myGisElementClass,col,value,filterType);
+		Object id=null;
+		
+		for(int i=0;i<idList.size();i++)
+		    {
+			id=idList.elementAt(i);
+			if(comparator.filter(id))
+			    {
+				System.out.println("true");
+				filteredList.add(id);
+		    }
+			else
+			    System.out.println("false");
+		    }
+		this.myIdList=filteredList;
+		if(myGisView!=null)
+		    myGisView.refreshView();
 	    }
-	this.myIdList=filteredList;
-	if(myGisView!=null)
-	    myGisView.refreshView();
+	catch(ObjectNotFoundException e)
+	    {
+		//
+	    }
     }
     
     public void orderColumnBy(int col,boolean reverse)
@@ -117,6 +139,7 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 		    myGisView.refreshView();
 	    }
     }
+
     public void onTableElementRemove(int elementTable,Object eId)
     {
 	if(myIdList.remove(eId))
@@ -228,13 +251,20 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 	    return id;
 	else
 	    {
-		Object value=myGisElementClass.getSimplePropertyValue(id,col-1);
-			/*if(value instanceof java.util.Date)
+		try
 		    {
-			DateFormat dateFormat=new SimpleDateFormat(myGisElementClass.getSimplePropertyFormat(col-1));
-			return dateFormat.format((Date)value);
-			 }*/
-
+			return myGisElementClass.getSimplePropertyValue(id,col-1);
+		    }
+		catch(ObjectNotFoundException e)
+		    {
+			return null;
+		    }
+		/*if(value instanceof java.util.Date)
+		  {
+		  DateFormat dateFormat=new SimpleDateFormat(myGisElementClass.getSimplePropertyFormat(col-1));
+		  return dateFormat.format((Date)value);
+		  }*/
+		
 		/*
 		  else if("bce_db".equals(myGisElementClass.getSimplePropertyFormat(col-1)))
 		  {
@@ -256,7 +286,7 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 		  }
 		  }
 		*/
-		return value;
+
 	    }
     }
 
@@ -383,8 +413,15 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 
     public Vector getVectorSetTableModels(int row)
     {
-	Object id=myIdList.elementAt(row);
-	return myGisElementClass.getVectorSets(id);
+	try
+	    {
+		Object id=myIdList.elementAt(row);
+		return myGisElementClass.getVectorSets(id);
+	    }
+	catch(ObjectNotFoundException e)
+	    {
+		return new Vector();
+	    }
     }
 
     public Object getElementId(int row)

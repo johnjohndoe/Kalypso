@@ -215,7 +215,6 @@ public class VersionAccessImpl implements VersionAccess
 	Version version=myVersionClass.getVersion(themeKey,vId);
 	//	System.out.println("Version:"+version.toString());
 	//	System.out.println("Viemanager:"+Main.viewManager);
-	
 	Main.viewManager.showObjectTableView(version);
     }
     

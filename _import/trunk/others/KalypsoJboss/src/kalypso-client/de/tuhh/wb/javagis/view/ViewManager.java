@@ -144,7 +144,7 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
     public void showRelationTableView(Version version)
     {
         // 	GisTableView gisTableView = new GisTableView("TestVersion",version.getGisTableModels(),null,0,null,GisTableView.IS_GISELEMENTLIST);
-         GisTableView gisTableView = new GisTableView(I18n.get("windowTitleTV")+version.getLabel(),version.getGisRelationTableModels());
+        GisTableView gisTableView = new GisTableView(I18n.get("windowTitleTV")+version.getLabel(),version.getGisRelationTableModels());
         gisTableView.setVisible(true);
         gisTableView.setSize(670,300);
         desktop.add(gisTableView);

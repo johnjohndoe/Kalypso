@@ -28,6 +28,8 @@ import de.tuhh.wb.javagis.data.event.TableListener;
 import de.tuhh.wb.javagis.data.event.ElementClassListener;
 import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
 import de.tuhh.wb.javagis.tools.I18n;
+import javax.ejb.ObjectNotFoundException;
+
 public abstract class GisElementClass implements TableListener
 {
     private List elementClassListeners;
@@ -106,7 +108,7 @@ public abstract class GisElementClass implements TableListener
 	return symbol;
     }
     
-    public Vector getAllPrimaryKeys()
+    public Vector getAllPrimaryKeys() throws ObjectNotFoundException
     {
 	return myVersion.getAllPrimaryKeys(met);
     }
@@ -204,7 +206,7 @@ public abstract class GisElementClass implements TableListener
 	//return mm.vectorSetDescriptions[met][n];
     }
 
-    public Vector getVectorSets(Object oId)
+    public Vector getVectorSets(Object oId) throws ObjectNotFoundException
     {
 	return myVersion.getVectorSets(met,oId);
     }
@@ -219,9 +221,8 @@ public abstract class GisElementClass implements TableListener
 	myVersion.setVectorSets(met,oId,vectorSets);
     }
 
-    public Object getSimplePropertyValue(Object oId,int n)
+    public Object getSimplePropertyValue(Object oId,int n) throws ObjectNotFoundException 
     {
-
 	if(!simpleProperties.containsKey(oId))
 	    {
 		Vector  result=myVersion.getSimplePropertyRow(met,oId);
@@ -238,19 +239,26 @@ public abstract class GisElementClass implements TableListener
 
     public void preLoadSimplePropertyValues(Vector eIds)
     {
-	Vector uncachedIds=new Vector();
-	for (Enumeration e = eIds.elements() ; e.hasMoreElements() ;)
+	try
 	    {
-		Object test=e.nextElement();
-		if(!simpleProperties.containsKey(test))
-		    uncachedIds.add(test);
+		Vector uncachedIds=new Vector();
+		for (Enumeration e = eIds.elements() ; e.hasMoreElements() ;)
+		    {
+			Object test=e.nextElement();
+			if(!simpleProperties.containsKey(test))
+			    uncachedIds.add(test);
+		    }
+		Hashtable resultRows=myVersion.getSimplePropertyRows(met,uncachedIds);
+		for (Enumeration e = resultRows.keys() ; e.hasMoreElements() ;)
+		    {
+			Object primKey=e.nextElement();
+			simpleProperties.put(primKey,resultRows.get(primKey));
+			System.out.println("Cache: add "+primKey);
+		    }
 	    }
-	Hashtable resultRows=myVersion.getSimplePropertyRows(met,uncachedIds);
-	for (Enumeration e = resultRows.keys() ; e.hasMoreElements() ;)
+	catch(ObjectNotFoundException e)
 	    {
-		Object primKey=e.nextElement();
-		simpleProperties.put(primKey,resultRows.get(primKey));
-		System.out.println("Cache: add "+primKey);
+		// nothing
 	    }
     }
 
@@ -267,6 +275,7 @@ public abstract class GisElementClass implements TableListener
     {
 	myVersion.remove(met,eId);
     }
+    
     public void onTableElementCreate(int elementTable,Object eId)
     {
 	ElementClassListener listener=null;

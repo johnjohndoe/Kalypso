@@ -8,6 +8,8 @@ import java.util.Enumeration;
 
 //import de.tuhh.wb.javagis.model.ElementSession;
 import de.tuhh.wb.javagis.view.netview.GisPoint;
+
+import javax.ejb.ObjectNotFoundException;
 public class GisElement
 {
     public Object myId;
@@ -65,7 +67,15 @@ public class GisElement
     }
     public Object getSimplePropertyValue(int position)
     {
-	return myGisElementClass.getSimplePropertyValue(myId,position);
+	try
+	    {
+		return myGisElementClass.getSimplePropertyValue(myId,position);
+	    }
+	catch(ObjectNotFoundException e)
+	    {
+		return null;
+	    }
+
     }
     public void setSimplePropertyValue(int position,Object value)
     {

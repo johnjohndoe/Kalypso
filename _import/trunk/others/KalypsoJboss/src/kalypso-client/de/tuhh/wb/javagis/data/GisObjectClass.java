@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import java.awt.geom.Point2D;
 import de.tuhh.wb.javagis.model.BasePointTransfer;         
 import de.tuhh.wb.javagis.view.netview.GisPoint;
+import javax.ejb.ObjectNotFoundException;
 
 public class GisObjectClass extends GisElementClass
 {
@@ -33,53 +34,67 @@ public class GisObjectClass extends GisElementClass
     
     private void loadForwardRelations(Object oId)
     {
-	System.out.println("load ForwardRelation : ID "+oId.toString());
-	
-	Vector allRelations=myVersion.returnForwardRelations(mot,oId);
-	Vector newRelations=new Vector();
-	for(int i=0;i<allRelations.size();i++)
+	try
 	    {
-		Vector relations=(Vector)allRelations.elementAt(i);
-		String relationClassKey=(String)relations.elementAt(0);
-		System.out.println("relation To \""+relationClassKey+"\"");
-		GisRelationClass gisRelationClass=myVersion.getGisRelationClass(relationClassKey);
-		Vector idList=(Vector)relations.elementAt(1);
-		System.out.println("numer of Relations :"+idList.size());
-		for(int r=0;r<idList.size();r++)
+		System.out.println("load ForwardRelation : ID "+oId.toString());
+		
+		Vector allRelations=myVersion.returnForwardRelations(mot,oId);
+		Vector newRelations=new Vector();
+		for(int i=0;i<allRelations.size();i++)
 		    {
-			Vector newRelation=new Vector();
-			newRelation.add(gisRelationClass); // 0
-			newRelation.add(idList.elementAt(r)); // 1
-			newRelations.add(newRelation);
-		    }				
+			Vector relations=(Vector)allRelations.elementAt(i);
+			String relationClassKey=(String)relations.elementAt(0);
+			System.out.println("relation To \""+relationClassKey+"\"");
+			GisRelationClass gisRelationClass=myVersion.getGisRelationClass(relationClassKey);
+			Vector idList=(Vector)relations.elementAt(1);
+			System.out.println("numer of Relations :"+idList.size());
+			for(int r=0;r<idList.size();r++)
+			    {
+				Vector newRelation=new Vector();
+				newRelation.add(gisRelationClass); // 0
+				newRelation.add(idList.elementAt(r)); // 1
+				newRelations.add(newRelation);
+			    }				
+		    }
+		forwardRelations.put(oId,newRelations);
 	    }
-	forwardRelations.put(oId,newRelations);
+	catch(ObjectNotFoundException e)
+	    {
+		//
+	    }
     }
     
     private void loadBackwardRelations(Object oId)
     {
-	System.out.println("load BeckwardRelation : ID "+oId.toString());
-
-	Vector allRelations=myVersion.returnBackwardRelations(mot,oId);
-		
-	Vector newRelations=new Vector();
-	for(int i=0;i<allRelations.size();i++)
+	try
 	    {
-		Vector relations=(Vector)allRelations.elementAt(i);
-		String relationClassKey=(String)relations.elementAt(0);
-		System.out.println("relation from \""+relationClassKey+"\"");				
-		GisRelationClass gisRelationClass=myVersion.getGisRelationClass(relationClassKey);
-		Vector idList=(Vector)relations.elementAt(1);
-		System.out.println("numer of Relations :"+idList.size());
-		for(int r=0;r<idList.size();r++)
+		System.out.println("load BeckwardRelation : ID "+oId.toString());
+		
+		Vector allRelations=myVersion.returnBackwardRelations(mot,oId);
+		
+		Vector newRelations=new Vector();
+		for(int i=0;i<allRelations.size();i++)
 		    {
-			Vector newRelation=new Vector();
-			newRelation.add(gisRelationClass); // 0
-			newRelation.add(idList.elementAt(r)); // 1
-			newRelations.add(newRelation);
+			Vector relations=(Vector)allRelations.elementAt(i);
+			String relationClassKey=(String)relations.elementAt(0);
+			System.out.println("relation from \""+relationClassKey+"\"");				
+			GisRelationClass gisRelationClass=myVersion.getGisRelationClass(relationClassKey);
+			Vector idList=(Vector)relations.elementAt(1);
+			System.out.println("numer of Relations :"+idList.size());
+			for(int r=0;r<idList.size();r++)
+			    {
+				Vector newRelation=new Vector();
+				newRelation.add(gisRelationClass); // 0
+				newRelation.add(idList.elementAt(r)); // 1
+				newRelations.add(newRelation);
+			    }
 		    }
-		    }
-	backwardRelations.put(oId,newRelations);
+		backwardRelations.put(oId,newRelations);
+	    }
+	catch(ObjectNotFoundException e)
+	    {
+		//
+	    }
     }
 
     public GisRelation getForwardRelation(Object oId,int pos)
@@ -135,24 +150,31 @@ public class GisObjectClass extends GisElementClass
     // BasePoints
     public void loadBasePoints(Vector oIds)
     {
-	Vector toLoad=new Vector();
-	for(int i=0;i<oIds.size();i++)
-	    if(!basePoints.containsKey(oIds.elementAt(i)))
+	try
 	    {
-		toLoad.add(oIds.elementAt(i));
-	    }
-	if(!toLoad.isEmpty())
-	    {
-		Hashtable bps=myVersion.getBasePoints(met,toLoad);
-		for (Enumeration e = bps.keys() ; e.hasMoreElements();)
+		Vector toLoad=new Vector();
+		for(int i=0;i<oIds.size();i++)
+		    if(!basePoints.containsKey(oIds.elementAt(i)))
+			{
+			    toLoad.add(oIds.elementAt(i));
+			}
+		if(!toLoad.isEmpty())
 		    {
-			Object oId=e.nextElement();
-			basePoints.put(oId,new GisPoint((BasePointTransfer)bps.get(oId)));
+			Hashtable bps=myVersion.getBasePoints(met,toLoad);
+			for (Enumeration e = bps.keys() ; e.hasMoreElements();)
+			    {
+				Object oId=e.nextElement();
+				basePoints.put(oId,new GisPoint((BasePointTransfer)bps.get(oId)));
+			    }
 		    }
+	    }
+	catch(ObjectNotFoundException e)
+	    {
+		//
 	    }
     }
     
-    public GisPoint getBasePoint(Object oId)
+    public GisPoint getBasePoint(Object oId) throws ObjectNotFoundException
     {
 	if(!basePoints.containsKey(oId))
 	    {
@@ -190,12 +212,11 @@ public class GisObjectClass extends GisElementClass
 	basePoints.remove(oId);
     }
 
-
-
     public void onTableElementCreate(int elementTable,Object eId)
     {
 	super.onTableElementCreate(elementTable,eId);
     }
+
     public void onTableElementRemove(int elementTable,Object oId)
     {
 	forwardRelations.remove(oId);

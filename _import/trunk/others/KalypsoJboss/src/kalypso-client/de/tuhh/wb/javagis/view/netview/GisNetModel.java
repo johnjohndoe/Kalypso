@@ -17,12 +17,14 @@ import java.awt.geom.AffineTransform;
 import java.awt.BasicStroke;
 import java.awt.Font;
 import de.tuhh.wb.javagis.data.*;
+import de.tuhh.wb.javagis.data.event.*;
 import de.tuhh.wb.javagis.view.netview.GisNetView;
 import javax.swing.JCheckBoxMenuItem;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.ejb.ObjectNotFoundException;
 
-public class GisNetModel implements ActionListener
+public class GisNetModel implements ActionListener,ElementClassListener
 {
     private final static int MAX_CACHE_ROWS=2000;
     private final static int CACHE_PAGE_SIZE=1000;
@@ -35,6 +37,13 @@ public class GisNetModel implements ActionListener
     
     private HashSet hiddenElements=new HashSet();
     // all GisObjectClasses should have symbol-mode
+    private GisMap myGisMap=null;
+
+    public void setGisMap(GisMap gisMap)
+    {
+	this.myGisMap=gisMap;
+    }
+
     public GisNetModel(Vector gisObjectClasses, Vector gisRelationClasses)
     {
 	this.hiddenElements.add("wc2objects");
@@ -46,10 +55,19 @@ public class GisNetModel implements ActionListener
 	    {
 		GisObjectClass gisObjectClass=(GisObjectClass)myGisObjectClasses.elementAt(i);
 		System.out.println("NetView: show object: "+gisObjectClass.getName());
-		Vector oIds=gisObjectClass.getAllPrimaryKeys(); // ToDo: select from ViewBox
+		Vector oIds;
+		try
+		    {
+			oIds=gisObjectClass.getAllPrimaryKeys(); // ToDo: select from ViewBox
+		    }
+		catch(ObjectNotFoundException e)
+		    {
+			oIds=new Vector();
+		    }
 		myObjectIdListVector.add(oIds);
 		gisObjectClass.loadBasePoints(oIds);
 		System.out.println("NetView: got PrimaryKeys for Objects");
+		gisObjectClass.addElementClassListener(this);
 	    }
 	this.myGisRelationClasses=gisRelationClasses;
 	this.myRelationIdListVector=new Vector();
@@ -57,12 +75,35 @@ public class GisNetModel implements ActionListener
 	    {		
 		GisRelationClass gisRelationClass=(GisRelationClass)myGisRelationClasses.elementAt(i);	       
 		//		System.out.println("NetView: show relation: "+gisRelationClass.getName());
-		Vector rIds=gisRelationClass.getAllPrimaryKeys(); // ToDo: select from ViewBox
+		Vector rIds;
+		try
+		    {
+			rIds=gisRelationClass.getAllPrimaryKeys(); // ToDo: select from ViewBox
+		    }
+		catch(ObjectNotFoundException e)
+		    {
+			rIds=new Vector();
+		    }
 		myRelationIdListVector.add(rIds);
+		gisRelationClass.addElementClassListener(this);
 		//		System.out.println("NetView: got PrimaryKeys for Relations");
 	    }
     }
 
+    public void close()
+    {
+	for(int i=0;i<myGisObjectClasses.size();i++)
+	    {
+		GisObjectClass gisObjectClass=(GisObjectClass)myGisObjectClasses.elementAt(i);
+		gisObjectClass.removeElementClassListener(this);
+	    }
+	for(int i=0;i<myGisRelationClasses.size();i++)
+	    {		
+		GisRelationClass gisRelationClass=(GisRelationClass)myGisRelationClasses.elementAt(i);	       
+		gisRelationClass.removeElementClassListener(this);
+	    }
+    }
+    
     public GisObject snap(GisPoint snapPoint)
     {
 	GisObject result=null;
@@ -75,11 +116,18 @@ public class GisNetModel implements ActionListener
 		for(int n=0;n<idList.size();n++)
 		    {
 			Object oId=idList.elementAt(n);
-			testDistance=gisObjectClass.getBasePoint(oId).distanceSq(snapPoint);
-			if(testDistance<distance)
+			try
 			    {
-				distance=testDistance;
-				result=gisObjectClass.getGisObject(oId);
+				testDistance=gisObjectClass.getBasePoint(oId).distanceSq(snapPoint);
+				if(testDistance<distance)
+				    {
+					distance=testDistance;
+					result=gisObjectClass.getGisObject(oId);
+				    }
+			    }
+			catch(ObjectNotFoundException e)
+			    {
+				//
 			    }
 		    }
 	    }
@@ -126,27 +174,34 @@ public class GisNetModel implements ActionListener
 			Vector idList=(Vector)myRelationIdListVector.elementAt(i);
 			for(int n=0;n<idList.size();n++)
 			    {
-				Object rId=idList.elementAt(n);
-				GisPoint gpSrc=gisRelationClass.getBasePointSource(rId);
-				ScreenPoint spSrc=trafo.convert(gpSrc);
-				GisPoint gpDest=gisRelationClass.getBasePointDestination(rId);
-				ScreenPoint spDest=trafo.convert(gpDest);
-				double cx=(spSrc.getX()+spDest.getX())/2.0d;
-				double cy=(spSrc.getY()+spDest.getY())/2.0d;
-				g2.setColor(Color.blue);
-				BasicStroke stroke = new BasicStroke((float)scale);
-				g2.setStroke(stroke);
-				g2.drawLine((int)spSrc.getX(),(int)spSrc.getY(),(int)spDest.getX(),(int)spDest.getY());
-				AffineTransform trans = new AffineTransform();
-				trans.translate(cx,cy);
-				trans.rotate(getAngle(spSrc,spDest));
-				trans.scale(scale,scale);
-				g2.transform(trans);
-				g2.drawImage(symbol,(int)-xOffset,(int)-yOffset,null);
-				g2.setTransform(trans_org);
-				g.setColor(Color.magenta);
-				g.drawString("#"+rId.toString(),(int)cx,(int)cy-yOffset);
-				g.setColor(Color.black);
+				try
+				    {
+					Object rId=idList.elementAt(n);
+					GisPoint gpSrc=gisRelationClass.getBasePointSource(rId);
+					ScreenPoint spSrc=trafo.convert(gpSrc);
+					GisPoint gpDest=gisRelationClass.getBasePointDestination(rId);
+					ScreenPoint spDest=trafo.convert(gpDest);
+					double cx=(spSrc.getX()+spDest.getX())/2.0d;
+					double cy=(spSrc.getY()+spDest.getY())/2.0d;
+					g2.setColor(Color.blue);
+					BasicStroke stroke = new BasicStroke((float)scale);
+					g2.setStroke(stroke);
+					g2.drawLine((int)spSrc.getX(),(int)spSrc.getY(),(int)spDest.getX(),(int)spDest.getY());
+					AffineTransform trans = new AffineTransform();
+					trans.translate(cx,cy);
+					trans.rotate(getAngle(spSrc,spDest));
+					trans.scale(scale,scale);
+					g2.transform(trans);
+					g2.drawImage(symbol,(int)-xOffset,(int)-yOffset,null);
+					g2.setTransform(trans_org);
+					g.setColor(Color.magenta);
+					g.drawString("#"+rId.toString(),(int)cx,(int)cy-yOffset);
+					g.setColor(Color.black);
+				    }
+				catch(ObjectNotFoundException e)
+				    {
+					//
+				    }
 			    }
 		    }
 	    }
@@ -174,30 +229,37 @@ public class GisNetModel implements ActionListener
 			Vector idList=(Vector)myObjectIdListVector.elementAt(i);
 			for(int n=0;n<idList.size();n++)
 			    {
-				Object oId=idList.elementAt(n);
-				GisPoint gp=gisObjectClass.getBasePoint(oId);
-				ScreenPoint sp=trafo.convert(gp);
-				double cx=sp.getX();
-				double cy=sp.getY();
-				AffineTransform trans = new AffineTransform();
-				trans.translate(cx,cy);
-				trans.scale(scale,scale);
-				g2.transform(trans);
-				g2.drawImage(symbol,(int)-xOffset,(int)-yOffset,null);
-				g2.setTransform(trans_org);
-				g.setColor(Color.blue);
-				
-				String text;
-				if(gisObjectClass.getSimplePropertySize()>0)			    
-				    if(gisObjectClass.getSimplePropertyValue(oId,0)!=null)
+				try
+				    {
+					Object oId=idList.elementAt(n);
+					GisPoint gp=gisObjectClass.getBasePoint(oId);
+					ScreenPoint sp=trafo.convert(gp);
+					double cx=sp.getX();
+					double cy=sp.getY();
+					AffineTransform trans = new AffineTransform();
+					trans.translate(cx,cy);
+					trans.scale(scale,scale);
+					g2.transform(trans);
+					g2.drawImage(symbol,(int)-xOffset,(int)-yOffset,null);
+					g2.setTransform(trans_org);
+					g.setColor(Color.blue);
+					
+					String text;
+					if(gisObjectClass.getSimplePropertySize()>0)			    
+					    if(gisObjectClass.getSimplePropertyValue(oId,0)!=null)
 					text="No:"+gisObjectClass.getSimplePropertyValue(oId,0).toString();
-				    else
-					text="ID:"+oId.toString();				
-				else
-				    text="ID:"+oId.toString();
-				g.drawString(text,(int)sp.getX(),(int)sp.getY()-yOffset);
-				
-				g.setColor(Color.black);
+					    else
+						text="ID:"+oId.toString();				
+					else
+					    text="ID:"+oId.toString();
+					g.drawString(text,(int)sp.getX(),(int)sp.getY()-yOffset);
+					
+					g.setColor(Color.black);
+				    }
+				catch(ObjectNotFoundException e)
+				    {
+					//
+				    }
 			    }
 		    }
 	    }
@@ -278,5 +340,59 @@ public class GisNetModel implements ActionListener
 		else
 		    hiddenElements.add(action);
 	    }
+    }
+
+
+    private Vector getIds(int elementTable)
+    {
+	for(int i=0;i<myGisObjectClasses.size();i++)
+	    {
+		GisElementClass gisElementClass=(GisElementClass)myGisObjectClasses.elementAt(i);
+		if(elementTable==gisElementClass.getElementTable())
+		    {
+			Vector oIds=(Vector)myObjectIdListVector.elementAt(i);
+			return oIds;
+		    }
+	    }
+	
+	for(int i=0;i<myGisRelationClasses.size();i++)
+	    {
+		GisElementClass gisElementClass=(GisElementClass)myGisRelationClasses.elementAt(i);
+		if(elementTable==gisElementClass.getElementTable())
+		    {
+			Vector oIds=(Vector)myRelationIdListVector.elementAt(i);
+			return oIds;
+		    }
+
+	    }
+	return new Vector();
+    }
+    
+    public void onTableElementCreate(int elementTable,Object eId)
+    {
+	Vector oIds= getIds(elementTable);
+	if(!oIds.contains(eId))
+	    {
+		oIds.add(eId);
+		if(myGisMap!=null)
+		    myGisMap.updateImage();
+	    }
+    }
+
+    public void onTableElementRemove(int elementTable,Object eId)
+    {
+	Vector oIds= getIds(elementTable);
+	if(oIds.remove(eId))
+	    if(myGisMap!=null)
+		myGisMap.updateImage();
+    }
+
+
+    public void onSimplePropertyChanged(int elementTable,Object eId)
+    {
+	// do nothing in netview
+	/*	if(myGisView!=null)
+	    myGisView.refreshView();
+	*/
     }
 }

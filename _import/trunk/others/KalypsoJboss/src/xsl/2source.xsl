@@ -230,6 +230,7 @@
         * @ejb:interface-method
         * @ejb:relation name="<xsl:value-of select="$relationClass"/>_<xsl:value-of select="$destClass"/>"
         *               role-name="<xsl:value-of select="$relationClass"/>_to_<xsl:value-of select="$destClass"/>"
+        *               cascade-delete="yes" <!-- version deletes objects deletes relations -->
         * @jboss:relation fk-constraint="false"
         *                 related-pk-field="id"
         *                 fk-column="relFrom<xsl:value-of select="$destClass"/>"
@@ -1307,7 +1308,7 @@
            EJBEvent event=new EJBEvent("<xsl:value-of select="$themeKey"/>",EJBEvent.OBJECT_REMOVE,getVersion().getPrimaryKey(),<xsl:value-of select="position()-1"/>,getId());
            EJBEventHelper eventHelper=new EJBEventHelper();          
            eventHelper.fireEvent(event);
-       //           System.out.println("fired remove ObjectEvent");
+         //           System.out.println("fired remove ObjectEvent");
          }
          catch(NamingException e)
          {
@@ -1327,7 +1328,7 @@
            EJBEvent event=new EJBEvent("<xsl:value-of select="$themeKey"/>",EJBEvent.RELATION_REMOVE,getVersion().getPrimaryKey(),<xsl:value-of select="position()-1"/>,getId());
            EJBEventHelper eventHelper=new EJBEventHelper();          
            eventHelper.fireEvent(event);
-       //           System.out.println("fired remove RelationEvent");
+         //           System.out.println("fired remove RelationEvent");
          }
          catch(NamingException e)
          {
