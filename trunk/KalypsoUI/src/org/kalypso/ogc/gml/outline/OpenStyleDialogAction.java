@@ -6,11 +6,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
-import org.kalypso.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 
 /**
  * @author belger
@@ -37,7 +37,7 @@ public class OpenStyleDialogAction extends AbstractOutlineAction
     try
     {
       part = (StyleEditorViewPart)window.getActivePage().showView(
-          "org.kalypso.editor.mapeditor.views.styleeditor" );
+          "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
 
       if( part != null )
         part.setSelectionChangedProvider( getOutlineviewer() );
@@ -49,7 +49,7 @@ public class OpenStyleDialogAction extends AbstractOutlineAction
 
         if( part != null && layer instanceof KalypsoFeatureLayer )
         {
-          FeatureType ft = ( (KalypsoFeatureLayer)layer ).getFeatureType();         
+          FeatureType ft = ( (KalypsoFeatureLayer)layer ).getFeatureType();
           KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
           part.initStyleEditor( kalypsoStyle, ft );
         }
