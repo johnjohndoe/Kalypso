@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<project name="KalypsoRepositoryBuild" default="deploy">
+
+  <!-- Propertys aus einer Datei laden -->
+  <property file="../../../projectbuild.properties" />
+
+  <property name="project" value="${workspace}/KalypsoRepository" />
+  <property name="project.build" value="${project}/build" />
+  <property name="project.bin" value="${project.build}/bin" />
+  <property name="project.src" value="${project}/src" />
+  <property name="project.lib" value="${project}/lib" />
+
+  <path id="project.classpath">
+    <fileset dir="${project.lib}" includes="**/*.jar" />
+    <fileset dir="${workspace}/KalypsoUtil/build" includes="**/*.jar" />
+  </path>
+
+
+  <target name="prepare">
+    <mkdir dir="${project.bin}" />
+  </target>
+
+  <target name="wsdp">
+    <ant antfile="${project}/etc/xmlbinding/build.xml"
+         inheritall="true"
+         target="deploy"
+         dir="${project}/etc/xmlbinding"
+    />
+  </target>
+
+  <target name="compile" depends="prepare,wsdp">
+    <echo message="Compiliere Sourcen ..." />
+    <javac srcdir="${project.src}"
+           destdir="${project.bin}"
+           classpathref="project.classpath"
+    >
+    </javac>
+  </target>
+
+  <target name="junit-test"
+          description="Runs the junit-tests of the projekt"
+          depends="prepare,compile"
+  >
+    <junit haltonerror="false" fork="true">
+      <classpath>
+        <path refid="project.classpath" />
+      </classpath>
+
+      <formatter type="xml" />
+
+      <batchtest fork="yes" todir=".">
+        <fileset dir="${project.src}">
+          <include name="**/*Test*.java" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="deploy" depends="compile">
+    <jar destfile="${project.build}/KalypsoRepository.jar">
+      <fileset dir="${project.bin}" includes="**/*" />
+    </jar>
+  </target>
+
+  <target name="clean">
+    <echo message="Rauume auf ..." />
+    <delete dir="${project.build}" />
+    <ant antfile="${project}/etc/xmlbinding/build.xml"
+         target="clean"
+         dir="${project}/etc/xmlbinding/"
+    />
+  </target>
+
+</project>
