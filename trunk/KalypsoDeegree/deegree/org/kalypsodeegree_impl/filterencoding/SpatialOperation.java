@@ -64,7 +64,6 @@ import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.gml.GMLBox;
-import org.kalypsodeegree.gml.GMLException;
 import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -169,17 +168,7 @@ public class SpatialOperation extends AbstractOperation
     }
 
     PropertyName propertyName = (PropertyName)PropertyName.buildFromDOM( child1 );
-    GMLGeometry gmlGeometry = null;
-
-    try
-    {
-      gmlGeometry = GMLFactory.createGMLGeometry( child2 );
-    }
-    catch( GMLException e )
-    {
-      throw new FilterConstructionException( "GMLGeometry definition in '" + name
-          + "'-operation is erroneous: " + e.getMessage() );
-    }
+    final GMLGeometry gmlGeometry = GMLFactory.createGMLGeometry( child2 );
 
     if( gmlGeometry == null )
     {

@@ -146,7 +146,9 @@ public class Literal extends Expression_Impl
       return new Double( value );
     }
     catch( NumberFormatException e )
-    {}
+    {
+    //  
+    }
     return value;
   }
 }

@@ -61,7 +61,6 @@
 package org.kalypsodeegree_impl.filterencoding;
 
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.ElementList;
@@ -211,11 +210,8 @@ public class PropertyIsLikeOperation extends ComparisonOperation
    *                   that determines the property values
    * @return true, if the <tt>Literal</tt> matches the <tt>PropertyName</tt>
    *                's value
-   * @throws FilterEvaluationException
-   *                   if the evaluation could not be performed (for example a specified
-   *                   Property did not exist)
    */
-  public boolean evaluate( Feature feature ) throws FilterEvaluationException
+  public boolean evaluate( Feature feature )
   {
 
     Object value1 = null;

@@ -31,18 +31,17 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#marshall(java.lang.Object,
-   *      org.w3c.dom.Node)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
    */
-  public void marshall( Object object, Node node,URL context  ) throws TypeRegistryException
+  public void marshall( Object object, Node node,URL context  )
   {
     throw new UnsupportedOperationException( "TODO implement it" );
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
    */
-  public Object unmarshall( Node node,URL context  ) throws TypeRegistryException
+  public Object unmarshall( Node node,URL context  )
   {
     throw new UnsupportedOperationException( "TODO implement it" );
   }

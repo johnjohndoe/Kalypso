@@ -337,15 +337,6 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
     return Math.sqrt( ( x2 - x1 ) * ( x2 - x1 ) + ( y2 - y1 ) * ( y2 - y1 ) );
   }
 
-  /**
-   * 
-   * 
-   * @param g2
-   * @param color
-   * @param opacity
-   * 
-   * @return
-   */
   private Graphics2D setColor( Graphics2D g2, Color color, double opacity )
   {
     if( opacity < 0.999 )

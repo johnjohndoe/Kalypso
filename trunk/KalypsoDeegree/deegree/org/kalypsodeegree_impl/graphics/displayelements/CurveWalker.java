@@ -164,7 +164,7 @@ public class CurveWalker
         //				}
 
         double rotation = getRotation( boxStartX, boxStartY, boxEndX, boxEndY );
-        double[] deviation = calcDeviation( new int[]
+        calcDeviation( new int[]
         { boxStartX, boxStartY }, new int[]
         { boxEndX, boxEndY }, eCandidates );
 
@@ -211,7 +211,6 @@ public class CurveWalker
    *          end point of the linestring
    * @param points
    *          points in between
-   * @return
    */
   public double[] calcDeviation( int[] start, int[] end, List points )
   {
@@ -322,7 +321,6 @@ public class CurveWalker
    *          end point of the line
    * @param d
    *          distance
-   * @return
    */
   public static int[] findPointWithDistance( int[] p0, int[] p1, int[] p2, int d )
   {
@@ -410,31 +408,6 @@ public class CurveWalker
     { (int)( x + 0.5 ), (int)( y + 0.5 ) };
   }
 
-  //	public double getRotation (double x1, double y1, double x2, double y2) {
-  //		double dx = x2-x1;
-  //		double dy = y2-y1;
-  //		double alpha = -Math.atan (dy / dx);
-  //		if (dx >= 0) {
-  //			if (dy > 0) {
-  //				alpha = 2 * Math.PI + alpha;
-  //			}
-  //		} else {
-  //			if (dy > 0) {
-  //				alpha = Math.PI + alpha;
-  //			} else {
-  //				alpha = Math.PI + alpha;
-  //			}
-  //		}
-  //		return Math.atan (alpha);
-  //	}
-
-  /**
-   * @param x1
-   * @param y1
-   * @param x2
-   * @param y2
-   * @return
-   */
   public double getRotation( double x1, double y1, double x2, double y2 )
   {
     double dx = x2 - x1;
@@ -470,11 +443,6 @@ public class CurveWalker
     return rotation;
   }
 
-  /**
-   * @param p1
-   * @param p2
-   * @return
-   */
   public double getDistance( int[] p1, int[] p2 )
   {
     double dx = p1[0] - p2[0];
@@ -482,13 +450,6 @@ public class CurveWalker
     return Math.sqrt( dx * dx + dy * dy );
   }
 
-  /**
-   * @param x1
-   * @param y1
-   * @param x2
-   * @param y2
-   * @return
-   */
   public double getDistance( double x1, double y1, double x2, double y2 )
   {
     double dx = x2 - x1;

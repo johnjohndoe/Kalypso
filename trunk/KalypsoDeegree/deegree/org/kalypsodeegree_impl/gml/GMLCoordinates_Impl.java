@@ -116,7 +116,6 @@ public class GMLCoordinates_Impl implements GMLCoordinates
    * @param doc
    * @param coordinates
    * 
-   * @return
    */
   public static GMLCoordinates createGMLCoordinates( Document doc, String coordinates )
   {
@@ -270,11 +269,6 @@ public class GMLCoordinates_Impl implements GMLCoordinates
     Debug.debugMethodEnd();
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     return DOMPrinter.nodeToString( element, "" );
@@ -285,6 +279,9 @@ public class GMLCoordinates_Impl implements GMLCoordinates
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2005/03/13 12:52:15  belger
+ * *** empty log message ***
+ *
  * Revision 1.5  2005/03/08 11:01:04  doemming
  * *** empty log message ***
  *

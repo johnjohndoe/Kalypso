@@ -62,7 +62,6 @@ package org.kalypsodeegree_impl.gml;
 
 import org.kalypsodeegree.gml.GMLCoord;
 import org.kalypsodeegree.gml.GMLCoordinates;
-import org.kalypsodeegree.gml.GMLException;
 import org.kalypsodeegree.gml.GMLLinearRing;
 import org.kalypsodeegree.ogcbasic.CommonNamespaces;
 import org.kalypsodeegree.xml.XMLTools;
@@ -109,11 +108,6 @@ public class GMLLinearRing_Impl extends GMLGeometry_Impl implements GMLLinearRin
     return ls;
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public Element getAsElement()
   {
     return element;
@@ -150,7 +144,7 @@ public class GMLLinearRing_Impl extends GMLGeometry_Impl implements GMLLinearRin
    *      be thrown if the coords are not homogen or the coords are not building
    *      a closed ring.
    */
-  public void setCoord( GMLCoord[] coord ) throws GMLException
+  public void setCoord( GMLCoord[] coord )
   {
     Debug.debugMethodBegin( "", "setCoords" );
 
@@ -197,7 +191,7 @@ public class GMLLinearRing_Impl extends GMLGeometry_Impl implements GMLLinearRin
    * @see org.kalypsodeegree_impl.gml.GMLLinearRing_Impl#getCoordinates() a exception
    *      should be thrown if the coords are not building a closed ring.
    */
-  public void setCoordinates( GMLCoordinates coordinates ) throws GMLException
+  public void setCoordinates( GMLCoordinates coordinates )
   {
     Debug.debugMethodBegin( this, "setCoordinates(GMLCoordinates)" );
 
@@ -218,6 +212,9 @@ public class GMLLinearRing_Impl extends GMLGeometry_Impl implements GMLLinearRin
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2005/03/13 12:52:15  belger
+ * *** empty log message ***
+ *
  * Revision 1.5  2005/03/08 11:01:03  doemming
  * *** empty log message ***
  *
