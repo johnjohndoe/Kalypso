@@ -21,13 +21,16 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.editor.mapeditor.actions.AddThemeAction;
 import org.kalypso.editor.mapeditor.actions.MoveThemeDownAction;
 import org.kalypso.editor.mapeditor.actions.MoveThemeUpAction;
 import org.kalypso.editor.mapeditor.actions.OpenStyleDialogAction;
 import org.kalypso.editor.mapeditor.actions.RemoveThemeAction;
+import org.kalypso.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.ogc.IMapModellView;
 import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.command.EnableThemeCommand;
@@ -186,7 +189,12 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void setFocus()
   {
-  // nichts tun
+  	// bei jedem Focus, überprüfe ob outline beim StyleEditor registriert ist.
+  	IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
+  	StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().findView("org.kalypso.editor.mapeditor.views.styleeditor");	
+	
+	if(part != null)
+		part.setSelectionChangedProvider(this); 
   }
 
   /**
