@@ -33,7 +33,8 @@ public class ZoomInWidget extends GisMapEditorWidgetActionDelegate
 
     public void dragged( Point p )
     {
-        if( startPoint != null )
+        if( startPoint == null )
+       startPoint=p;
         {
             endPoint = p;
         }

@@ -12,15 +12,15 @@ import java.awt.event.MouseMotionListener;
 import org.kalypso.ogc.MapPanel;
 
 /**
- * Der Controller für die MapView
+ * Der Controller fuer die MapView
  * 
  * @author vdoemming
  */
 public class WidgetManager implements MouseListener, MouseMotionListener
 {
-  private IWidget normalWidget = null;
+  private IWidget myNormalWidget = null;
 
-  private IWidget temporaryWidget = null;
+  private IWidget myTemporaryWidget = null;
 
   private final MapPanel myMapPanel;
 
@@ -74,8 +74,8 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   public void mouseExited( MouseEvent e )
   {
-  //
-  }
+//
+    }
 
   public void mouseMoved( MouseEvent e )
   {
@@ -157,10 +157,10 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   public IWidget getActualWidget()
   {
-    if( temporaryWidget != null )
-      return temporaryWidget;
+    if( myTemporaryWidget != null )
+      return myTemporaryWidget;
 
-    return normalWidget;
+    return myNormalWidget;
   }
 
   //    private Widget getFeatureCreateWidget( )
@@ -204,23 +204,29 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   public void changeWidget( IWidget newWidget )
   {
-      if( temporaryWidget != null ) // finish temporary widget if required
+    if(newWidget==null)
+    {
+        myNormalWidget=null;
+    return;
+    }
+        if( myTemporaryWidget != null ) // finish temporary widget if required
       {
-        temporaryWidget.finish();
-        temporaryWidget = null;
+        myTemporaryWidget.finish();
+        myTemporaryWidget = null;
       }
 
       if( newWidget instanceof TemporaryActionWidget )
       {
-        temporaryWidget = newWidget;
+        myTemporaryWidget = newWidget;
       }
       else
       // normal widget
       {
-        if( normalWidget != null && normalWidget != newWidget )
-          normalWidget.finish();
+        if( myNormalWidget != null)// && normalWidget != newWidget )
+          myNormalWidget.finish();
 
-        normalWidget = newWidget;
+        myNormalWidget = newWidget;
+        myNormalWidget.activate();
       }
 
     if( getActualWidget() != null )
@@ -252,10 +258,10 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   private void stopTemporaryWidget()
   {
-    if( temporaryWidget != null )
+    if( myTemporaryWidget != null )
     {
-      temporaryWidget.finish();
-      temporaryWidget = null;
+      myTemporaryWidget.finish();
+      myTemporaryWidget = null;
     }
 
     if( getActualWidget() != null )

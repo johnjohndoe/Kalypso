@@ -191,12 +191,9 @@ public class MapPanel extends Canvas implements IMapModellView
     //    Graphics gr = widgetImage.getGraphics();
     g.setColor( Color.red );
     g.setClip( 0, 0, getWidth(), getHeight() );
-    IWidget actualWidget = myWidgetManager.getActualWidget();
-    if( actualWidget instanceof GisMapEditorWidgetActionDelegate )
-      if( ( (GisMapEditorWidgetActionDelegate)actualWidget ).paintOnView( this ) )
+   
         myWidgetManager.paintWidget( g );
-      else
-        myWidgetManager.paintWidget( g );
+ 
     //    g.drawImage( widgetImage, 0, 0, null );
     //    gr.dispose();
   }

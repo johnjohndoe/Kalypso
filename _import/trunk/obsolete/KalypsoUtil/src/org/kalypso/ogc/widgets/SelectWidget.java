@@ -23,10 +23,11 @@ public class SelectWidget extends GisMapEditorWidgetActionDelegate
   private int myRadius = 20;
 
   private boolean mySnapEnabled = true;
-
+  
   public void dragged( Point p )
   {
-    if( startPoint != null )
+    if( startPoint == null )
+      startPoint=p;
       endPoint = p;
   }
 
