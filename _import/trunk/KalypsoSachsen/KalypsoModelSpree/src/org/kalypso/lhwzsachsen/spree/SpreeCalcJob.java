@@ -706,7 +706,7 @@ public class SpreeCalcJob extends AbstractCalcJob
         if( metadata == null )
           metadata = new MetadataList();
           
-        final IObservation observation = new SimpleObservation( column, column, false, null,
+        final IObservation observation = new SimpleObservation( outFileRelative.getPath(), column, column, false, null,
             metadata, achsen );
         observation.setValues( model );
 

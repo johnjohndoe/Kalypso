@@ -80,7 +80,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes,
         Date.class )[0];
     final IAxis valueAxis = ObservationUtilities.findAxisByClass( axes,
-        Number.class )[0];
+        Number.class, true )[0];
     final IAxis statusAxis = KalypsoStatusUtils.findStatusAxis( axes );
 
     final ArchiveData[] data = constructData( model, dateAxis, valueAxis,
@@ -184,8 +184,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     if( !axis.getType().equals( TimeserieConstants.TYPE_DATE ) )
       return -1;
 
-    // TODO folgende Statement prüfen (vielleicht PSI fragen)
-    // wir gehen davon aus dass m_data sortiert ist! Sollte eigentlich der Fall
+    // TRICKY: wir gehen davon aus dass m_data sortiert ist! Sollte eigentlich der Fall
     // sein da es sich um eine Zeitreihe handelt.
     return Arrays.binarySearch( m_data, element,
         new ArchiveDataDateComparator() );

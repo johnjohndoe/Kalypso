@@ -14,19 +14,4 @@
 	   		<mapping observation-axis="Adorf" diagram-axis="w" />
 	   	</curve>
    	</observation>
-   	
-	<observation linktype="zml" xlink:href="alarmstufe1.zml">
-	   	<curve id="C2" name="Alarmstufe1"  >
-		   	<mapping observation-axis="Datum" diagram-axis="d" />
-	   		<mapping observation-axis="Alarmstufe1" diagram-axis="w" />
-	   	</curve>
-   	</observation>
-
-	<observation linktype="zml" xlink:href="alarmstufe2.zml">
-	   	<curve id="C3" name="Alarmstufe2"  >
-		   	<mapping observation-axis="Datum" diagram-axis="d" />
-	   		<mapping observation-axis="Alarmstufe2" diagram-axis="w" />
-	   	</curve>
-   	</observation>
-
 </obsdiagview>

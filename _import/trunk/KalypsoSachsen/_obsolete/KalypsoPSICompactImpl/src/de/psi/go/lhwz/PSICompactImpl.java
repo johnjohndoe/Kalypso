@@ -281,7 +281,7 @@ public class PSICompactImpl implements PSICompact
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( obs
           .getAxisList(), Date.class )[0];
       final IAxis valueAxis = ObservationUtilities.findAxisByClass( obs
-          .getAxisList(), Number.class )[0];
+          .getAxisList(), Number.class, true )[0];
 
       final ArchiveData[] data = new ArchiveData[values.getCount()];
       for( int i = 0; i < data.length; i++ )
@@ -445,7 +445,7 @@ public class PSICompactImpl implements PSICompact
         omd.setLevel( Integer.valueOf( p ).doubleValue() );
 
       final IAxis nba = ObservationUtilities.findAxisByClass(
-          obs.getAxisList(), Number.class )[0];
+          obs.getAxisList(), Number.class, true )[0];
 
       omd.setUnit( whichUnit( nba.getUnit() ) );
     }
@@ -555,7 +555,7 @@ public class PSICompactImpl implements PSICompact
     {
       final IObservation obs = getZmlObs( id );
       final IAxis nba = ObservationUtilities.findAxisByClass(
-          obs.getAxisList(), Number.class )[0];
+          obs.getAxisList(), Number.class, true )[0];
 
       return toMeasType( nba.getType() );
     }
