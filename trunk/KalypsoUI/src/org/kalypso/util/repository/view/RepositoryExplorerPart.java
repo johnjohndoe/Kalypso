@@ -15,7 +15,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.kalypso.ogc.sensor.ObservationPropertySourceProvider;
+import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySourceProvider;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.repository.DefaultRepositoryContainer;
 import org.kalypso.util.repository.IRepositoryContainer;

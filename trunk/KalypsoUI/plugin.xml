@@ -323,18 +323,31 @@
             targetID="org.eclipse.ui.views.ResourceNavigator"
             id="org.kalypso.ogc.sensor.view.vc1">
          <action
-               label="%PopupMenu.ResourceNav.GrafikVorlageLabel"
+               label="Grafik mit Diagrammvorlage starten"
                id="org.kalypso.ogc.sensor.view.resourceNavigator.GrafikViewActionDelegate"
                menubarPath="additions"
 	           toolbarPath="additions" 
                icon="icons/grafik-icon.gif" 
-               tooltip="%PopupMenu.ResourceNav.GrafikVorlageTooltip" 
+               tooltip="Grafik-Tool auf Diagrammvorlage starten" 
                class="org.kalypso.ogc.sensor.view.resourceNavigator.GrafikViewActionDelegate" 
                enablesFor="1"> 
 			<selection class="org.eclipse.core.resources.IFile" name="*.odt"/> 
 	   	</action>
+
+         <action
+               label="Grafik mit Vorlage starten"
+               id="org.kalypso.ogc.sensor.view.resourceNavigator.GrafikVorlageActionDelegate"
+               menubarPath="additions"
+	           toolbarPath="additions" 
+               icon="icons/grafik-icon.gif" 
+               tooltip="Grafik mit Vorlage öffnen" 
+               class="org.kalypso.ogc.sensor.view.resourceNavigator.GrafikVorlageActionDelegate" 
+               enablesFor="1"> 
+			<selection class="org.eclipse.core.resources.IFile" name="*.tpl"/> 
+	   	</action>
                
       </viewContribution>
+
    </extension>
 
 </plugin>
