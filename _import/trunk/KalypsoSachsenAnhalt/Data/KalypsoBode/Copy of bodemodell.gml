@@ -6,7 +6,6 @@
         <bodepegel:Pegel fid="Pegel0">
           <bodepegel:Name>uhu</bodepegel:Name>
           <bodepegel:Ort/>
-          <bodepegel:WISKI_Name>toll</bodepegel:WISKI_Name>
           <bodepegel:istEingabePegel/>
           <bodepegel:istErgebnisPegel/>
         </bodepegel:Pegel>

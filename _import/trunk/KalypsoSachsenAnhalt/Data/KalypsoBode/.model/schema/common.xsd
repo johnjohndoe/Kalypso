@@ -55,10 +55,14 @@
 			</extension>
 		</complexContent>
 	</complexType>
+	
 	<simpleType name="monatnummer">
 		<restriction base="integer">
+		<!-- Zur Zeit nicht vom deegree Parser unterstützt -->
+		<!--
 			<minInclusive value="1"/>
 			<maxInclusive value="12"/>
+	     -->
 		</restriction>
 	</simpleType>
 </schema>

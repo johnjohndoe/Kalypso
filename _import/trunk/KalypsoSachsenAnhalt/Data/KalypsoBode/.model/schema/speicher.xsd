@@ -19,7 +19,6 @@
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element ref="gml:boundedBy"/>
 					<element ref="bodespeicher:SpeicherMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</restriction>
