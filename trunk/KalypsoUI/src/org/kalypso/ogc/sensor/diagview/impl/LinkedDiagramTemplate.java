@@ -8,6 +8,7 @@ import java.util.TreeMap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxis;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
@@ -33,23 +34,31 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
 
   /**
    * Constructor
+   */
+  public LinkedDiagramTemplate( )
+  {
+    super();
+
+    m_pool = KalypsoGisPlugin.getDefault().getPool();
+    m_key2themes = new TreeMap( m_pool.getKeyComparator() );
+  }
+
+  /**
+   * Sets the base template and loads the curves.
    * 
    * @param obsDiagView
    * @param context
    */
-  public LinkedDiagramTemplate( final ObsdiagviewType obsDiagView,
+  public void setBaseTemplate( final ObsdiagviewType obsDiagView,
       final URL context )
   {
-    super();
-
+    removeAllThemes();
+    
     setTitle( obsDiagView.getTitle() );
     setLegendName( obsDiagView.getLegend() == null ? "" : obsDiagView
         .getLegend().getTitle() );
     setShowLegend( obsDiagView.getLegend() == null ? false : obsDiagView
         .getLegend().isVisible() );
-
-    m_pool = KalypsoGisPlugin.getDefault().getPool();
-    m_key2themes = new TreeMap( m_pool.getKeyComparator() );
 
     for( final Iterator it = obsDiagView.getAxis().iterator(); it.hasNext(); )
     {
@@ -65,7 +74,8 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
       final List tcurves = tobs.getCurve();
 
       // no observation yet, will be updated once loaded
-      final DefaultDiagramTemplateTheme theme = new DefaultDiagramTemplateTheme( null );
+      final DefaultDiagramTemplateTheme theme = new DefaultDiagramTemplateTheme(
+          null );
 
       for( final Iterator itcurves = tcurves.iterator(); itcurves.hasNext(); )
       {
@@ -87,6 +97,8 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
             mappings, this );
         theme.addCurve( curve );
       }
+
+      addTheme( theme );
 
       // create key according to observation link
       final PoolableObjectType key = new PoolableObjectType(
@@ -111,7 +123,7 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
     // now add to pool
     m_pool.addPoolListener( this, key );
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate#removeAllThemes()
    */
@@ -150,8 +162,7 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
 
       theme.setObservation( (IObservation) newValue );
 
-      // now that theme is ready, add it
-      addTheme( theme );
+      fireTemplateChanged( new TemplateEvent( this, theme, TemplateEvent.TYPE_LOADED ) );
     }
   }
 

@@ -6,7 +6,9 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.template.obsdiagview.TypeAxis;
 
 /**
- * Default implementation of <code>IDiagramAxis</code>.
+ * Default implementation of <code>IDiagramAxis</code>. This class overrides
+ * equals and hashcode. Two instance of IDiagramAxis are considered to be equal
+ * if they have the same id.
  * 
  * @author schlienger
  */
@@ -108,7 +110,28 @@ public class DiagramAxis implements IDiagramAxis
   {
     return toFullString();
   }
-  
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  public boolean equals( Object obj )
+  {
+    if( !(obj instanceof IDiagramAxis) )
+      return false;
+
+    IDiagramAxis other = (IDiagramAxis) obj;
+
+    return m_id.equals( other.getIdentifier() );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  public int hashCode( )
+  {
+    return m_id.hashCode();
+  }
+
   /**
    * @see org.kalypso.ogc.sensor.diagview.IDiagramAxis#toFullString()
    */
@@ -143,33 +166,28 @@ public class DiagramAxis implements IDiagramAxis
       final String label, final String unit )
   {
     if( axisType.equals( TimeserieConstants.TYPE_DATE ) )
-      return new DiagramAxis( axisType, "date", label,
-          unit, IDiagramAxis.DIRECTION_HORIZONTAL, IDiagramAxis.POSITION_BOTTOM,
+      return new DiagramAxis( axisType, "date", label, unit,
+          IDiagramAxis.DIRECTION_HORIZONTAL, IDiagramAxis.POSITION_BOTTOM,
           false );
 
     if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-      return new DiagramAxis( axisType, "double",
-          label, unit, IDiagramAxis.DIRECTION_VERTICAL,
-          IDiagramAxis.POSITION_LEFT, false );
+      return new DiagramAxis( axisType, "double", label, unit,
+          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_LEFT, false );
 
     if( axisType.equals( TimeserieConstants.TYPE_RUNOFF ) )
-      return new DiagramAxis( axisType, "double",
-          label, unit, IDiagramAxis.DIRECTION_VERTICAL,
-          IDiagramAxis.POSITION_LEFT, false );
+      return new DiagramAxis( axisType, "double", label, unit,
+          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_LEFT, false );
 
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
-      return new DiagramAxis( axisType, "double",
-          label, unit, IDiagramAxis.DIRECTION_VERTICAL,
-          IDiagramAxis.POSITION_RIGHT, true );
+      return new DiagramAxis( axisType, "double", label, unit,
+          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_RIGHT, true );
 
     if( axisType.equals( TimeserieConstants.TYPE_TEMPERATURE ) )
-      return new DiagramAxis( axisType, "double",
-          label, unit, IDiagramAxis.DIRECTION_VERTICAL,
-          IDiagramAxis.POSITION_RIGHT, false );
+      return new DiagramAxis( axisType, "double", label, unit,
+          IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_RIGHT, false );
 
     // default axis
-    return new DiagramAxis( axisType, "double",
-        label, unit, IDiagramAxis.DIRECTION_VERTICAL,
-        IDiagramAxis.POSITION_LEFT, false );
+    return new DiagramAxis( axisType, "double", label, unit,
+        IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_LEFT, false );
   }
 }

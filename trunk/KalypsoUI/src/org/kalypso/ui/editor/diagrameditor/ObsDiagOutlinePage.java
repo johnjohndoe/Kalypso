@@ -93,6 +93,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
       public void run( )
       {
         setTemplateAsInput();
+        refreshViewer();
       }
     } );
 
@@ -134,6 +135,9 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
      */
     public boolean performDrop( Object data )
     {
+      if( m_template == null )
+        return false;
+      
       final String[] files = (String[]) data;
 
       final Job updateTemplateJob = new Job( "Diagram aktualisieren" )

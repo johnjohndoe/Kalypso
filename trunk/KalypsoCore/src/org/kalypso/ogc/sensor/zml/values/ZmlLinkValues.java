@@ -63,6 +63,11 @@ public class ZmlLinkValues implements IZmlValues
       // get item from csv file
       final String item = m_csv.getItem( index, m_column );
 
+      if( item.length() == 0 )
+      {
+        System.out.println( "empty element" );
+      }
+      
       // parse item using axis parser
       final Object obj = m_parser.parse( item );
 
