@@ -346,15 +346,15 @@ public abstract class AbstractManager
     }
   }
 
-  public static String createFormatLine( String name, String format, String separator, int count )
+  public static String createFormatLine( String name, String format, String separator, int repeats )
   {
     //    (ngwzu,*)
-    if( count < 1 )
+    if( repeats < 1 )
       return "";
     StringBuffer b = new StringBuffer( "(" + name + "" + 0 + "," + format + ")" );
-    if( count > 1 )
+    if( repeats > 1 )
     {
-      for( int i = 1; i < count; i++ )
+      for( int i = 1; i < repeats; i++ )
       {
         b.append( separator + "(" + name + "" + i + "," + format + ")" );
       }

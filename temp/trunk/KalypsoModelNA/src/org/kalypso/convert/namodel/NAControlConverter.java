@@ -3,7 +3,6 @@ package org.kalypso.convert.namodel;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
@@ -12,7 +11,7 @@ import org.deegree_impl.model.feature.FeatureHelper;
 
 public class NAControlConverter
 {
-  private static final String NL = System.getProperty( "line.separator" );
+//  private static final String NL = System.getProperty( "line.separator" );
 
   // graphicTool: types
   public static final int LINE = 0;

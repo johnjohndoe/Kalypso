@@ -36,8 +36,7 @@ public class ChannelManager extends AbstractManager
 
   private FeatureType m_kmParameterFT;
 
-  public ChannelManager( GMLSchema schema, NAConfiguration conf )
-      throws IOException
+  public ChannelManager( GMLSchema schema, NAConfiguration conf ) throws IOException
   {
     super( conf.getChannelFormatURL() );
     m_virtualChannelFT = schema.getFeatureType( "VirtualChannel" );
@@ -47,18 +46,18 @@ public class ChannelManager extends AbstractManager
 
   /**
    * 
-   * @throws Exception
- * @see org.kalypso.convert.namodel.AbstractManager#parseFile(java.io.File)
+   * @see org.kalypso.convert.namodel.AbstractManager#parseFile(java.net.URL)
    */
   public Feature[] parseFile( URL url ) throws Exception
   {
-    List result=new ArrayList();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader(url.openConnection().getInputStream()));// new FileReader( file ) );
-    Feature fe=null;
-    while( (fe=readNextFeature( reader ))!=null)
-      result.add(fe);
-       return (Feature[])result.toArray(new Feature[result.size()]);
- }
+    List result = new ArrayList();
+    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection()
+        .getInputStream() ) );// new FileReader( file ) );
+    Feature fe = null;
+    while( ( fe = readNextFeature( reader ) ) != null )
+      result.add( fe );
+    return (Feature[])result.toArray( new Feature[result.size()] );
+  }
 
   private Feature readNextFeature( LineNumberReader reader ) throws Exception
   {
@@ -93,7 +92,7 @@ public class ChannelManager extends AbstractManager
 
       for( int i = 0; i < 5; i++ )
       {
-        Feature kmParameterFeature = createFeature( m_kmParameterFT);
+        Feature kmParameterFeature = createFeature( m_kmParameterFT );
         line = reader.readLine();
         System.out.println( " km(" + i + "): " + line );
         createProperties( kmPropCollector, line, 3 );
@@ -109,25 +108,25 @@ public class ChannelManager extends AbstractManager
     }
     Collection collection = propCollector.values();
     setParsedProperties( feature, collection );
-    StringWriter writer=new StringWriter();
-    writeFeature( writer,feature );
-    System.out.println(writer.toString());
+    StringWriter writer = new StringWriter();
+    writeFeature( writer, feature );
+    System.out.println( writer.toString() );
     return feature;
   }
 
-  public void writeFile( Writer writer,GMLWorkspace workspace) throws IOException
+  public void writeFile( Writer writer, GMLWorkspace workspace ) throws IOException
   {
-      Feature rootFeature=workspace.getRootFeature();
+    Feature rootFeature = workspace.getRootFeature();
     Feature channelCol = (Feature)rootFeature.getProperty( "ChannelCollectionMember" );
     List channelList = (List)channelCol.getProperty( "channelMember" );
     Iterator iter = channelList.iterator();
     while( iter.hasNext() )
-      writeFeature( writer,(Feature)iter.next() );
+      writeFeature( writer, (Feature)iter.next() );
   }
 
   private void writeFeature( Writer writer, Feature feature ) throws IOException
   {
-    
+
     writer.write( toAscci( feature, 0 ) + "\n" );
     FeatureType ft = feature.getFeatureType();
     if( "VirtualChannel".equals( ft.getName() ) )
@@ -150,9 +149,9 @@ public class ChannelManager extends AbstractManager
           + feature.toString() );
 
   }
-  
-  public String mapID(int id, FeatureType ft) 
+
+  public String mapID( int id, FeatureType ft )
   {
-  	return ft.getName()+id;
+    return ft.getName() + id;
   }
 }

@@ -52,7 +52,7 @@ public class NetFileManager extends AbstractManager
         .getInputStream() ) );
     HashMap nodeCollector = new HashMap();
     readNet( reader, nodeCollector );
-    readNodeList(reader);
+    readNodeList( reader );
     Collection valueCol = nodeCollector.values();
     return (Feature[])valueCol.toArray( new Feature[valueCol.size()] );
   }
@@ -112,10 +112,10 @@ public class NetFileManager extends AbstractManager
       for( Iterator iter = set.iterator(); iter.hasNext(); )
       {
         Entry element = (Entry)iter.next();
-        System.out.println(element.getKey()+"="+((FeatureProperty)
-        element.getValue()).getValue());
+        System.out.println( element.getKey() + "="
+            + ( (FeatureProperty)element.getValue() ).getValue() );
       }
-     // setParsedProperties( fe, propCollector.keySet() );
+      // setParsedProperties( fe, propCollector.keySet() );
     }
   }
 
@@ -199,7 +199,7 @@ public class NetFileManager extends AbstractManager
    */
   public void writeFile( Writer writer, GMLWorkspace workspace ) throws Exception
   {
-  // TODO Auto-generated method stub
+  // TODO
 
   }
 

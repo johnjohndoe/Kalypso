@@ -21,7 +21,6 @@ public class ModelManager extends AbstractManager {
 	/* (non-Javadoc)
 	 * @see org.kalypso.convert.AbstractManager#mapID(int, org.deegree.model.feature.FeatureType)
 	 */
-	private int m_counter=0;
 	public ModelManager() throws IOException 
 	{
 		super(null);
@@ -35,7 +34,7 @@ public class ModelManager extends AbstractManager {
 	/* (non-Javadoc)
 	 * @see org.kalypso.convert.AbstractManager#parseFile(java.io.File)
 	 */
-	public Feature[] parseFile(URL url) throws IOException 
+	public Feature[] parseFile(URL url)  
 	{
 		// nothing to do
 		return null;
@@ -44,7 +43,7 @@ public class ModelManager extends AbstractManager {
 	/* (non-Javadoc)
 	 * @see org.kalypso.convert.AbstractManager#writeFile(java.io.Writer)
 	 */
-	public void writeFile(Writer writer,GMLWorkspace workspace) throws IOException
+	public void writeFile(Writer writer,GMLWorkspace workspace)
 	{
 	// nothing to do
 	}
