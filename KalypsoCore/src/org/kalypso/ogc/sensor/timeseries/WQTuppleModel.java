@@ -51,18 +51,18 @@ public class WQTuppleModel implements ITuppleModel
     for( int i = 0; i < axes.length; i++ )
       m_axes[i] = axes[i];
 
-    m_dateAxis = ObservationUtilities.findAxisWithType( axes, TimeserieConstants.TYPE_DATE );
+    m_dateAxis = ObservationUtilities.findAxisByType( axes, TimeserieConstants.TYPE_DATE );
 
     if( TimeserieConstants.TYPE_WATERLEVEL.equals( type ) )
     {
-      m_srcAxis = ObservationUtilities.findAxisWithType( axes, TimeserieConstants.TYPE_RUNOFF );
+      m_srcAxis = ObservationUtilities.findAxisByType( axes, TimeserieConstants.TYPE_RUNOFF );
       m_destAxis = new DefaultAxis( "W", TimeserieConstants.TYPE_WATERLEVEL, "cm", Double.class,
           m_axes.length - 1, false );
       m_axes[m_axes.length - 1] = m_destAxis;
     }
     else if( TimeserieConstants.TYPE_RUNOFF.equals( type ) )
     {
-      m_srcAxis = ObservationUtilities.findAxisWithType( axes, TimeserieConstants.TYPE_WATERLEVEL );
+      m_srcAxis = ObservationUtilities.findAxisByType( axes, TimeserieConstants.TYPE_WATERLEVEL );
       m_destAxis = new DefaultAxis( "Q", TimeserieConstants.TYPE_RUNOFF, "m^3", Double.class,
           m_axes.length - 1, false );
       m_axes[m_axes.length - 1] = m_destAxis;

@@ -6,10 +6,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Properties;
 import java.util.regex.Pattern;
 
-import org.kalypso.java.util.PropertiesHelper;
+import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.util.io.CSV;
 import org.kalypso.util.io.ITabledValues;
@@ -36,18 +35,10 @@ public class ZmlLinkValues implements IZmlValues
   {
     m_parser = parser;
 
-    final Properties hrefProps = PropertiesHelper.parseFromString( vl.getHref(), '#' );
+    // index begins with 0 internally
+    m_column = vl.getColumn() - 1;
 
-    final String type = hrefProps.getProperty( "TYPE" );
-    m_column = vl.getColumn();
-
-    URL url = null;
-
-    // depending on path type, complement with currentPath
-    if( type.equals( "relative" ) )
-      url = new URL( context, hrefProps.getProperty( "LOCATION" ) );
-    else
-      url = new URL( hrefProps.getProperty( "LOCATION" ) );
+    final URL url = UrlUtilities.resolveURL( context, vl.getHref() );
 
     if( vl.getRegexp() == null || vl.getRegexp().length() == 0 )
     {
@@ -56,6 +47,7 @@ public class ZmlLinkValues implements IZmlValues
     }
     else
     {
+      // stream closed in RegexCSV()
       m_csv = new RegexCSV( new InputStreamReader( url.openStream() ), Pattern.compile( vl
           .getRegexp() ), vl.getLine() );
     }
