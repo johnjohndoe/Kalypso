@@ -20,7 +20,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
-  public boolean configureRepository( ) throws RepositoryException
+  public boolean configureRepository( )
   {
     return true;
   }

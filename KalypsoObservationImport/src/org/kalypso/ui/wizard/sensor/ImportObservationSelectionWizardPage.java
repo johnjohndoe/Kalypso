@@ -129,9 +129,6 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
     m_adapter = createNativeAdapters();
   }
 
-  /**
-   * @return
-   */
   private List createNativeAdapters( )
   {
     final List adapters = new ArrayList();

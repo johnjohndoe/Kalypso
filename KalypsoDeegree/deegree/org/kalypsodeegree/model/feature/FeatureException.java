@@ -72,13 +72,6 @@ public class FeatureException extends java.lang.Exception
   private String st = "org.kalypsodeegree.model.feature.FeatureException";
 
   /**
-   * Creates a new instance of <code>FeatureException</code> without detail
-   * message.
-   */
-  public FeatureException()
-  {}
-
-  /**
    * Constructs an instance of <code>FeatureException</code> with the
    * specified detail message.
    * 

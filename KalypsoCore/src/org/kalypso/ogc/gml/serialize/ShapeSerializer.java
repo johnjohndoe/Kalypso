@@ -233,7 +233,7 @@ public class ShapeSerializer
     }
   }
 
-  private static Feature createShapeRootFeature( final FeatureType ft )
+  public static Feature createShapeRootFeature( final FeatureType ft )
   {
     final FeatureTypeProperty nameProp = FeatureFactory.createFeatureTypeProperty( PROPERTY_NAME,
         null, String.class.getName(), true, null );
