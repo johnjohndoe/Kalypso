@@ -299,12 +299,21 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 				popup.add(menuItem);
 				
 				if("SimulationCase".equals(theme))
-			    {
+				    {
 					menuItem = new JMenuItem(I18n.get("PV_PopMen_Sim"));
 					menuItem.setActionCommand("simulate");
 					menuItem.addActionListener(this);
 					popup.add(menuItem);
-			    }
+				    }
+
+				if("HWS_Combination".equals(theme))
+				    {
+					menuItem = new JMenuItem(I18n.get("HWS_Combination_startCalculation"));
+					menuItem.setActionCommand("hws_startCalculation");
+					menuItem.addActionListener(this);
+					popup.add(menuItem);
+				    }
+
 				menuItem = new JMenuItem(I18n.get("PV_PopMen_XMLex"));
 				menuItem.setActionCommand("xml-export");
 				menuItem.setIcon((new ImageIcon(cl.getResource( "symbols/Export16.gif"))));
@@ -456,15 +465,37 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 			    }
 		    }
 	    }
+		
 		if("simulate".equals(e.getActionCommand()))
-	    {
-			if(selectedVersion!=-1)
 		    {
+			if(selectedVersion!=-1)
+			    {
 				String themeKey=versionAccess.getThemeKey(selectedVersion);
 				Object vId=versionAccess.getVersionId(selectedVersion);
 				new SimulationDialog(versionAccess,themeKey,vId);
+			    }
 		    }
-	    }
+		
+		if("hws_startCalculation".equals(e.getActionCommand()))
+		    {
+			if(selectedVersion!=-1)
+			    {
+				String themeKey=versionAccess.getThemeKey(selectedVersion);
+				Object vId=versionAccess.getVersionId(selectedVersion);
+				HwsSimulation simulation=new HwsSimulation();
+				try
+				    {
+					simulation.startSimulation(versionAccess,themeKey,vId);
+				    }
+				catch(Exception err)
+				    {
+					String message="sorry, calculation failed by: "+err.getMessage();
+					JOptionPane.showMessageDialog(null,message,"calculation message",JOptionPane.ERROR_MESSAGE);
+					err.printStackTrace();
+				    }
+				//	new SimulationDialog(versionAccess,themeKey,vId);
+			    }
+		    }
     }
 	
     //VersionListener:
