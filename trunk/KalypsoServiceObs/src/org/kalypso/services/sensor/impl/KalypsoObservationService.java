@@ -446,6 +446,8 @@ public class KalypsoObservationService implements IObservationService
         return (ItemBean[]) m_mapItem2Beans.get( item );
 
       final IRepositoryItem[] children = item.getChildren();
+      
+      // TODO null pointer exception on children. sometimes
       final ItemBean[] beans = new ItemBean[children.length];
 
       for( int i = 0; i < beans.length; i++ )
