@@ -5,7 +5,7 @@
         <metadata name="StartZeit" value="27.4.2005 12:00"/>
         <metadata name="Name" value="QV_TSQUITZ"/>
     </metadataList>
-    <axis datatype="TYPE=double" key="false" name="Wert" type="Q" unit="">
+    <axis datatype="TYPE=double" key="false" name="Wert" type="Q" unit="m³">
         <valueArray separator=";">1.0;1.0;1.0;1.0</valueArray>
     </axis>
     <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">

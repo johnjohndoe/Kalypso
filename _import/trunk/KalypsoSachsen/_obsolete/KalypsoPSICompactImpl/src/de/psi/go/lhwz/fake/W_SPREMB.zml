@@ -4,12 +4,12 @@
     <metadataList>
         <metadata name="Name" value="582090"/>
         <metadata name="Beschreibung" value="Spremberg"/>
-        <metadata name="Alarmstufe 4" value="300"/>
-        <metadata name="Alarmstufe 3" value="250"/>
-        <metadata name="Alarmstufe 2" value="200"/>
-        <metadata name="Alarmstufe 1" value="150"/>
+        <metadata name="Alarmstufe 4" value="3.00"/>
+        <metadata name="Alarmstufe 3" value="2.50"/>
+        <metadata name="Alarmstufe 2" value="2.00"/>
+        <metadata name="Alarmstufe 1" value="1.50"/>
     </metadataList>
-    <axis datatype="TYPE=double" key="false" name="Wasserstand 582090" type="W" unit="cm">
+    <axis datatype="TYPE=double" key="false" name="Wasserstand 582090" type="W" unit="m">
         <valueArray separator=";">0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0</valueArray>
     </axis>
     <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">

@@ -4,12 +4,12 @@
     <metadataList>
         <metadata name="Name" value="LEER"/>
         <metadata name="WQ-Parameter" value="&lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot; &gt;&lt;set&gt;&lt;params&gt;&lt;w1&gt;139.79&lt;/w1&gt;&lt;lnk1&gt;-3.30939&lt;/lnk1&gt;&lt;k2&gt;1.42567&lt;/k2&gt;&lt;/params&gt;&lt;/set&gt;&lt;/wechmann&gt;"/>
-        <metadata name="Alarmstufe 1" value="260"/>
-        <metadata name="Alarmstufe 2" value="360"/>
-        <metadata name="Alarmstufe 3" value="410"/>
-        <metadata name="Alarmstufe 4" value="470"/>
+        <metadata name="Alarmstufe 1" value="2.60"/>
+        <metadata name="Alarmstufe 2" value="3.60"/>
+        <metadata name="Alarmstufe 3" value="4.10"/>
+        <metadata name="Alarmstufe 4" value="4.70"/>
     </metadataList>
-    <axis datatype="TYPE=double" key="false" name="Wasserstand" type="W" unit="cm">
+    <axis datatype="TYPE=double" key="false" name="Wasserstand" type="W" unit="m">
         <valueArray separator=";"/>
     </axis>
     <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="false" name="Datum" type="date" unit="">
