@@ -10,10 +10,10 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.io.shpapi.ShapeFile;
 import org.deegree_impl.model.feature.FeatureFactory;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.ogc.gml.GMLHelper;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.util.progress.IProgressMonitor;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**

@@ -3,7 +3,7 @@
 <project name="KalypsoCoreServices" default="build" basedir="../..">
 
 	<!-- Projekt abhängig (benutzt das aktive Projekt) -->
-	<property file="../KalypsoObsService/etc/ant/service.properties" />
+	<property file="${workspace}${project}/etc/ant/service.properties" />
 
 	<property file="etc/ant/tomcat.properties" />
 	<property file="etc/ant/build.properties" />
@@ -23,6 +23,10 @@
 		<path refid="generate.classpath"/>
 		<!--schon in build.properties pathelement location="${project.path}/build/bin" /-->
 		<!-- schon in generate.classpath pathelement location="${workspace}/KalypsoCoreServices/build/bin" /-->
+	</path>
+
+    <path id="run.classpath">
+		<path refid="compile.classpath"/>
 	</path>
 
 	<fileset id="compile.jars" dir="./lib/" includes="*.jar" />
@@ -270,7 +274,6 @@
 		           config="${java.io.tmpdir}/${config.wsdl.file}">
 			<classpath refid="compile.classpath" />
 		</wscompile>
-
 	</target>
 
 	<target name="javadoc-client"

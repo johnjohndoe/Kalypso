@@ -1,6 +1,5 @@
 package org.kalypso.services.calcjob;
 
-import java.net.URL;
 import java.rmi.Remote;
 
 
@@ -41,7 +40,7 @@ public interface CalcJobService extends Remote
 	 * Erzeugt einen neuen Auftrag. Der Auftrag wird in die Liste gestellt und
 	 * je nach Implementation abgearbeitet.
 	 */  
-  public String createJob( final String typeID, final String description, final URL[] inputURLs ) throws CalcJobServiceException;
+  public String createJob( final String typeID, final String description, final String[] inputURLs ) throws CalcJobServiceException;
   
   /**
    * Gibt die BEschreibung des Auftrags zurück.
@@ -57,14 +56,16 @@ public interface CalcJobService extends Remote
   /**
    * <p>Löscht einen Auftrag vollständig<p>
    * <p>Löscht auch alle Dateien, die zu diesem Job gehörten, d.h. die URLs
-   * von {@link #retrieveResults(String)} sind nciht mehr gültig</p>
+   * von {@link #retrieveResults(String)} sind nicht mehr gültig</p>
    */
   public void removeJob( final String jobID ) throws CalcJobServiceException;
   
   /**
    * Gibt die Ergebnisse eines Auftrags zurück.
    * Falls der Auftrag noch nicht abgearbeitet wird, gibts ne Exception.
+   * 
+   * @return Die String-Repräsentation von URLs
    */
-  public URL[] retrieveResults( final String jobID ) throws CalcJobServiceException;
+  public String[] retrieveResults( final String jobID ) throws CalcJobServiceException;
 }
 

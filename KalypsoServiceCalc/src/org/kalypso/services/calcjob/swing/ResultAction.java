@@ -1,7 +1,6 @@
 package org.kalypso.services.calcjob.swing;
 
 import java.awt.event.ActionEvent;
-import java.net.URL;
 import java.rmi.RemoteException;
 
 import javax.swing.AbstractAction;
@@ -47,14 +46,14 @@ public class ResultAction extends AbstractAction
         final int seletecIndex = m_jqv.getSelectedRow();
         m_jqv.getSelectionModel().removeIndexInterval( seletecIndex, seletecIndex );
         final CalcJobDescription job = m_jqs.getJobDescription( jobID );
-        final URL[] results = m_jqs.retrieveResults( jobID );
+        final String[] results = m_jqs.retrieveResults( jobID );
 
         final Box box = Box.createVerticalBox();
         if( results == null )
           box.add( new JLabel( "no results available" ) );
         else
           for( int i = 0; i < results.length; i++ )
-            box.add( new JLabel( results[i].toExternalForm() ) );
+            box.add( new JLabel( results[i] ) );
 
         JOptionPane.showMessageDialog( m_jqv, box, "Results of CalcJobDescription: "
             + job.getDescription(), JOptionPane.PLAIN_MESSAGE );

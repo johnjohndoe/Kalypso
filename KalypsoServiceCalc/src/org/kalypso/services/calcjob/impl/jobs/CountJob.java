@@ -1,8 +1,6 @@
 package org.kalypso.services.calcjob.impl.jobs;
 
-import java.net.URL;
-
-import org.kalypso.services.calcjob.CalcJobException;
+import org.kalypso.services.calcjob.CalcJobServiceException;
 import org.kalypso.services.calcjob.CalcJobStatus;
 
 /**
@@ -11,9 +9,9 @@ import org.kalypso.services.calcjob.CalcJobStatus;
 public final class CountJob extends AbstractCalcJob
 {
   /**
-   * @see org.kalypso.services.calcjob.impl.jobs.AbstractCalcJob#runIntern(java.net.URL[], org.kalypso.services.calcjob.impl.jobs.CalcJobProgressMonitor)
+   * @see org.kalypso.services.calcjob.impl.jobs.AbstractCalcJob#runIntern(java.lang.String[], org.kalypso.services.calcjob.impl.jobs.CalcJobProgressMonitor)
    */
-  protected URL[] runIntern( final URL[] arguments, final CalcJobProgressMonitor monitor ) throws CalcJobException
+  protected String[] runIntern( final String[] arguments, final CalcJobProgressMonitor monitor ) throws CalcJobServiceException
   {
     while( getDescription().getState() == CalcJobStatus.RUNNING )
     {
@@ -23,7 +21,7 @@ public final class CountJob extends AbstractCalcJob
       }
       catch( final InterruptedException e )
       {
-        throw new CalcJobException( e );
+        throw new CalcJobServiceException( "Thread interrupted", e );
       }
 
       final int progress = getDescription().getProgress();
@@ -33,7 +31,7 @@ public final class CountJob extends AbstractCalcJob
       monitor.worked( 100 );
     }
     
-    return new URL[] {};
+    return new String[] {};
   }
 
   /**

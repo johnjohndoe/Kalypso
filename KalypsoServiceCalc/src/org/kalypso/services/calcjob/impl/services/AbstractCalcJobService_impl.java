@@ -1,6 +1,5 @@
 package org.kalypso.services.calcjob.impl.services;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +28,7 @@ public abstract class AbstractCalcJobService_impl implements CalcJobService
   }
   
   public final String createJob( final String typeID, final String description,
-      final URL[] arguments ) throws CalcJobServiceException
+      final String[] arguments ) throws CalcJobServiceException
   {
     MAX_ID++;
 
@@ -53,7 +52,7 @@ public abstract class AbstractCalcJobService_impl implements CalcJobService
     return getJob( jobID ).getDescription();
   }
 
-  public final URL[] retrieveResults( final String jobID ) throws CalcJobServiceException
+  public final String[] retrieveResults( final String jobID ) throws CalcJobServiceException
   {
     final CalcJob job = getJob( jobID );
 
