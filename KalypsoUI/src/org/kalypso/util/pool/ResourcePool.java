@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.pool;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -159,11 +160,17 @@ public class ResourcePool
   {
     synchronized( m_keyInfos )
     {
-      for( final Iterator iter = m_keyInfos.values().iterator(); iter.hasNext(); )
+      if(object==null)
+          return;
+        
+      final Collection values = m_keyInfos.values();
+      for( final Iterator iter = values.iterator(); iter.hasNext(); )
       {
-        final KeyInfo info = (KeyInfo)iter.next();
+        final KeyInfo info = (KeyInfo)iter.next();     
         if( info.getObject() == object )
+        {
           info.saveObject( monitor );
+        }
       }
     }
   }

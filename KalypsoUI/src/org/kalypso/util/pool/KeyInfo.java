@@ -123,11 +123,6 @@ final class KeyInfo extends Job implements ILoaderListener
     return m_object;
   }
 
-  public void setObject( Object object )
-  {
-    m_object = object;
-  }
-
   /**
    * @see org.kalypso.loader.ILoaderListener#onLoaderObjectInvalid(java.lang.Object,
    *      boolean)
@@ -178,7 +173,6 @@ final class KeyInfo extends Job implements ILoaderListener
     try
     {
       LOGGER.info( "Loading object for key: " + m_key );
-
       m_object = m_loader.load( m_key.getLocation(), m_key.getContext(), monitor );
     }
     catch( final Throwable e )
@@ -203,4 +197,17 @@ final class KeyInfo extends Job implements ILoaderListener
     m_loader.save( m_key.getLocation(), m_key.getContext(), monitor, m_object );
   }
 
+  public String toString()
+  {
+    StringBuffer b=new StringBuffer();
+    b.append("KeyInfo:\n");
+    if(m_object!=null)
+    b.append("  pooled object (type): "+m_object.getClass().getName()+"\n");
+    else
+      b.append(" !!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!\n pooled object (type): NULL \n");
+    b.append("  loader (type): "+m_loader.getClass().getName()+"\n");
+    b.append("  key: "+m_key+"\n");
+    b.append("  number of listeners: "+m_listeners.size()+"\n");
+    return b.toString();
+  }
 }
