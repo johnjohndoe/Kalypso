@@ -5,14 +5,15 @@ import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
 
 /**
- * @author belger
+ * @author bce
  */
-public class CreateFeatureCommand implements ICommand
+public class RemoveFeaturesCommand implements ICommand
 {
   private final KalypsoFeatureLayer m_layer;
+
   private final KalypsoFeature[] m_features;
-  
-  public CreateFeatureCommand( final KalypsoFeatureLayer layer, final KalypsoFeature[] features )
+
+  public RemoveFeaturesCommand( final KalypsoFeatureLayer layer, final KalypsoFeature[] features )
   {
     m_layer = layer;
     m_features = features;
@@ -31,7 +32,7 @@ public class CreateFeatureCommand implements ICommand
    */
   public void process() throws Exception
   {
-    redo();
+    m_layer.removeFeatures( m_features );
   }
 
   /**
@@ -39,7 +40,7 @@ public class CreateFeatureCommand implements ICommand
    */
   public void redo() throws Exception
   {
-    m_layer.addFeatures(m_features);
+    process();
   }
 
   /**
@@ -47,7 +48,8 @@ public class CreateFeatureCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    m_layer.removeFeatures(m_features);
+    // TODO: an der alten Position wieder einfügen?
+    m_layer.addFeatures( m_features );
   }
 
   /**
@@ -55,8 +57,6 @@ public class CreateFeatureCommand implements ICommand
    */
   public String getDescription()
   {
-    return "create Feature";
+    return "Element löschen";
   }
-
-  
 }

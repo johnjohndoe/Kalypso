@@ -114,23 +114,6 @@ public class KalypsoFeatureSort implements ModellEventListener, ModellEventProvi
     return mySort.query( position, list );
   }
 
-//  public void paint( final Graphics g, final GeoTransform projection, final double scale, final GM_Envelope boundingBox )
-//  {
-//    if( myIsDirty )
-//      reStyleAll();
-//
-//    final List list = new ArrayList();
-//
-//    mySort.query( boundingBox, list );
-//
-//    for( int i = 0; i < myStyles.size(); i++ )
-//    {
-//      //    final int styleNo = getStyleNo( style );
-//      for( final Iterator it = list.iterator(); it.hasNext(); )
-//        ( (KalypsoFeature)it.next() ).paint( g, projection, i, scale );
-//    }
-//  }
-
   public void paintSelected( final Graphics g, final GeoTransform projection, final double scale,
       final GM_Envelope boundingBox, final int selectionId )
   {

@@ -34,11 +34,10 @@ public class ClassUtilities
       final ClassLoader cl, final Object[] arguments ) throws ClassUtilityException
   {
     Class[] argClasses = null;
-    
     if( arguments != null )
     {
       argClasses = new Class[arguments.length];
-  
+
       for( int i = 0; i < argClasses.length; i++ )
         argClasses[i] = arguments[i].getClass();
     }
