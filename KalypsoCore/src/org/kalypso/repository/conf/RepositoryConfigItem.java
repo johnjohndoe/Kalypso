@@ -88,7 +88,7 @@ public class RepositoryConfigItem
     final String[] splits = state.split( SEPARATOR );
     
     if( splits.length != 3 )
-      throw new IllegalArgumentException( "state must be an string-array of length 3 with following separator: " + SEPARATOR );
+      return null;
     
     return new RepositoryConfigItem( splits[0], splits[1], Boolean.valueOf( splits[2] ).booleanValue() );
   }
