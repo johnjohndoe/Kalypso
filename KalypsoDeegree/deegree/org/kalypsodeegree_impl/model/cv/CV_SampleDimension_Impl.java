@@ -35,8 +35,6 @@ public class CV_SampleDimension_Impl implements CV_SampleDimension, Serializable
 {
   private CV_ColorInterpretation colorInterpretation = null;
 
-  private String[] categoryNames = null;
-
   private String description = null;
 
   private double maximumValue = 0;
@@ -65,7 +63,6 @@ public class CV_SampleDimension_Impl implements CV_SampleDimension, Serializable
       CV_ColorInterpretation colorInterpretation, CV_PaletteInterpretation paletteInterpretation,
       CV_SampleDimensionType sampleDimensionType )
   {
-    this.categoryNames = categoryNames;
     this.maximumValue = maximumValue;
     this.minimumValue = minimumValue;
     this.scale = scale;

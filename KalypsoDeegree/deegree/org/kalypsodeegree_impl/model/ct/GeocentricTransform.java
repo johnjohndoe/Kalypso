@@ -77,16 +77,6 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
   private static final long serialVersionUID = -3352045463953828140L;
 
   /**
-   * Maximal error tolerance in metres during // assertions, in metres. If //
-   * assertions are enabled (JDK 1.4 only), then every coordinates transformed
-   * with {@link #inverseTransform}will be transformed again with
-   * {@link #transform}. If the distance between the resulting position and the
-   * original position is greater than <code>MAX_ERROR</code>, then a
-   * {@link // assertionError}is thrown.
-   */
-  private static final double MAX_ERROR = 0.01;
-
-  /**
    * Cosine of 67.5 degrees.
    */
   private static final double COS_67P5 = 0.38268343236508977;
@@ -460,19 +450,6 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
       srcOff += step;
       dstOff += step;
     }
-  }
-
-  /**
-   * Transform the last half if the specified array and returns the distance
-   * with the first half. Array <code>points</code> must have a length of 6.
-   */
-  private double checkTransform( final double[] points )
-  {
-    transform( points, 3, points, 3, 1, true );
-    final double dx = points[0] - points[3];
-    final double dy = points[1] - points[4];
-    final double dz = points[2] - points[5];
-    return Math.sqrt( dx * dx + dy * dy + dz * dz );
   }
 
   /**

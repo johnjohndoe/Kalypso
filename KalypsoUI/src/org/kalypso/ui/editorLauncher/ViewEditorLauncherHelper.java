@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
@@ -34,9 +38,18 @@ public class ViewEditorLauncherHelper
   // never instantiate this class
   }
 
-  public static void showTemplateDialog( final IContainer folder, final FileFilter fileFilter,
-      final IFile[] defaultTemplates )
+  public static void showTemplateDialog( final IPath filePath, final FileFilter fileFilter,
+      final Object[] defaultTemplates )
   {
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final IWorkspaceRoot root = workspace.getRoot();
+    final IFile file = root.getFileForLocation( filePath );
+    if( file == null )
+      return;
+
+    // vorhandene Vorlagen im Verzeichnis finden
+    final IContainer folder = file.getParent();
+
     // vorhandene Vorlagen im Verzeichnis finden
     final FileFilterVisitor visitor = new FileFilterVisitor( fileFilter );
 
@@ -101,7 +114,7 @@ public class ViewEditorLauncherHelper
             if( defaultTemplates[j] == template )
             {
               MessageDialog.openInformation( shell, "Vorlagenansicht",
-              "Die Standardvorlagenansicht ist noch nicht verfügbar" );
+                  "Die Standardvorlagenansicht ist noch nicht verfügbar" );
 
               // TODO mach was!
               bFound = true;
@@ -110,7 +123,7 @@ public class ViewEditorLauncherHelper
           }
           if( bFound )
             continue;
-          
+
           editorDescription = editorRegistry.getDefaultEditor( template.getName() );
 
           input = new FileEditorInput( template );
