@@ -24,6 +24,12 @@ public class DefaultCommandManager implements ICommandManager
 
   public void postCommand( final ICommand command ) throws Exception
   {
+    if( command instanceof InvisibleCommand )
+    {
+      checkStatus();
+      return;
+    }
+    
       command.process();
 
       if( command.isUndoable() )
