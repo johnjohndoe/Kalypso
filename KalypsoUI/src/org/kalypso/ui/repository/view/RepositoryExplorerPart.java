@@ -2,6 +2,7 @@ package org.kalypso.ui.repository.view;
 
 import org.eclipse.compare.Splitter;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -9,6 +10,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -36,7 +38,7 @@ import org.kalypso.ui.repository.actions.RemoveRepositoryAction;
 public class RepositoryExplorerPart extends ViewPart implements IRepositoryContainerListener,
     ISelectionProvider, ISelectionChangedListener
 {
-  protected TreeViewer m_repViewer = null;
+  private TreeViewer m_repViewer = null;
 
   private final DefaultRepositoryContainer m_repContainer;
 
@@ -105,6 +107,11 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     super.dispose();
   }
 
+  public Viewer getViewer()
+  {
+    return m_repViewer;
+  }
+  
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -121,15 +128,17 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
     final IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
     
-    toolBarManager.add( new AddRepositoryAction( shell, m_repContainer ) );
+    toolBarManager.add( new AddRepositoryAction( this ) );
     
-    m_removeAction = new RemoveRepositoryAction( shell, this );
+    toolBarManager.add( new Separator() );
+    
+    m_removeAction = new RemoveRepositoryAction( this );
     toolBarManager.add( m_removeAction );
     
-    m_confAction = new ConfigurePreviewAction( shell, this );
+    m_confAction = new ConfigurePreviewAction( this );
     toolBarManager.add( m_confAction );
     
-    m_reloadAction = new ReloadAction( shell, this );
+    m_reloadAction = new ReloadAction( this );
     toolBarManager.add( m_reloadAction );
 
     getViewSite().getActionBars().updateActionBars();
@@ -170,7 +179,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     {
       public void run()
       {
-        m_repViewer.refresh();
+        getViewer().refresh();
       }
     };
 
@@ -231,5 +240,10 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     super.saveState( memento );
     
     // TODO: save gui state (See ResourceNavigator)
+  }
+
+  public IRepositoryContainer getReposiryContainer()
+  {
+    return m_repContainer;
   }
 }

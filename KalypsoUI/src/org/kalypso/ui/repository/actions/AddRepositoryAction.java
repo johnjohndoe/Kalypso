@@ -4,34 +4,25 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
-import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.repository.IRepository;
-import org.kalypso.repository.IRepositoryContainer;
 import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.RepositorySpecification;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
+import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 
 /**
  * Ein Repository hinzufügen.
  * 
  * @author schlienger
  */
-public class AddRepositoryAction extends FullAction
+public class AddRepositoryAction extends AbstractRepositoryExplorerAction
 {
-  private final Shell m_shell;
-
-  private final IRepositoryContainer m_cp;
-
-  public AddRepositoryAction( final Shell shell, final IRepositoryContainer cp )
+  public AddRepositoryAction( final RepositoryExplorerPart explorer )
   {
-    super( "Repository hinzufügen", ImageProvider.IMAGE_ZML_REPOSITORY_ADD, "Fügt ein Repository hinzu..." );
-
-    m_cp = cp;
-    m_shell = shell;
+    super( explorer, "Repository hinzufügen", ImageProvider.IMAGE_ZML_REPOSITORY_ADD, "Fügt ein Repository hinzu..." );
   }
 
   /**
@@ -39,7 +30,7 @@ public class AddRepositoryAction extends FullAction
    */
   public void run()
   {
-    final ListDialog dlg = new ListDialog( m_shell );
+    final ListDialog dlg = new ListDialog( getShell() );
     dlg.setLabelProvider( new LabelProvider() );
     dlg.setContentProvider( new ArrayContentProvider() );
     dlg.setTitle( "Repository Typ auswählen" );
@@ -61,12 +52,12 @@ public class AddRepositoryAction extends FullAction
         final String value = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.NUMBER_OF_DAYS );
         rep.setProperty( IKalypsoPreferences.NUMBER_OF_DAYS, value );
 
-        m_cp.addRepository( rep );
+        getRepositoryContainer().addRepository( rep );
       }
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
-      MessageDialog.openError( m_shell, "Repository hinzufügen", e.getLocalizedMessage() );
+      MessageDialog.openError( getShell(), "Repository hinzufügen", e.getLocalizedMessage() );
     }
   }
 }
