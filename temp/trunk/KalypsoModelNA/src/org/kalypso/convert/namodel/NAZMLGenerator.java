@@ -13,6 +13,7 @@ import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.ObjectFactory;
@@ -24,7 +25,9 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class NAZMLGenerator
 {
-  private static boolean DEBUG = false;
+  private static boolean DEBUG = true;
+
+  // debug = true skips converting ascii timeseries to zml timeseries while importing ascii
 
   final static SimpleDateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
 
@@ -36,12 +39,11 @@ public class NAZMLGenerator
 
   final static NAZMLGenerator m_singelton = new NAZMLGenerator();
 
-
   public NAZMLGenerator()
   {
-    // do not instanciate
+  // do not instanciate
   }
-  
+
   /**
    * generate copy of custom timeseriesfile to zml-format, and returns
    * timeserieslink
@@ -64,7 +66,15 @@ public class NAZMLGenerator
     if( !dir.exists() )
       dir.mkdirs();
     if( !simulateCopy && !DEBUG )
-      convert( copySource, srcType, targetZmlFile);
+      try
+      {
+        convert( copySource, srcType, targetZmlFile );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+        System.out.println( "could not create ZML, but operation will continue..." );
+      }
     if( relative )
       return generateobsLink( targetRelativePath, srcType );
     URL targetURL = UrlUtilities.resolveURL( targetBaseDir.toURL(), targetRelativePath );
@@ -107,8 +117,7 @@ public class NAZMLGenerator
     return link;
   }
 
-  public static void convert( URL sourceURL, int sourceType, File targetZmlFile )
-      throws Exception
+  public static void convert( URL sourceURL, int sourceType, File targetZmlFile ) throws Exception
   {
     StringBuffer buffer = new StringBuffer();
     generateTmpZml( buffer, sourceType, sourceURL );
@@ -125,6 +134,7 @@ public class NAZMLGenerator
     Writer writer = new FileWriter( targetZmlFile );
     marshaller.marshal( type, writer );
     writer.close();
+
   }
 
   private static void generateTmpZml( StringBuffer buffer, int type, URL sourceURL )
@@ -147,7 +157,8 @@ public class NAZMLGenerator
     buffer.append( "      </metadataList>" );
 
     //axis1
-    buffer.append( "<axis name=\"" + getAxisName( 1, type ) + "\" type=\"datum\" unit=\"\"" );
+    buffer.append( "<axis name=\"" + getAxisName( 1, type ) + "\" key=\"true\" type=\""
+        + getAxisType( 1, type ) + "\" unit=\"\"" );
     buffer.append( " datatype=\"TYPE=xs:date#FORMAT=dd MM yyyy HH mm ss\">" );
     buffer.append( "<valueLink separator=\",\" column=\"1\" line=\"4\" " );
     buffer.append( " xlink:href=\"" + location + "\"/>" );
@@ -172,6 +183,20 @@ public class NAZMLGenerator
 
   }
 
+  private static String getAxisType( int col, int type )
+  {
+    switch( type )
+    {
+    case NA_NIEDERSCHLAG_EINGABE:
+      return col == 1 ? TimeserieConstants.TYPE_DATE : TimeserieConstants.TYPE_RAINFALL;
+    case NA_ZUFLUSS_EINGABE:
+      return col == 1 ? TimeserieConstants.TYPE_DATE : TimeserieConstants.TYPE_RUNOFF;
+    default:
+      break;
+    }
+    throw new IllegalArgumentException( "unknown file type " + type );
+  }
+
   private static String getAxisName( int col, int type ) throws Exception
   {
     switch( type )
@@ -183,7 +208,7 @@ public class NAZMLGenerator
     default:
       break;
     }
-    throw new Exception( "unknown file type " + type );
+    throw new IllegalArgumentException( "unknown file type " + type );
   }
 
   public static void createFile( FileWriter writer, int type, IObservation observation )

@@ -3,6 +3,7 @@ package org.kalypso.convert.namodel;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -62,7 +63,7 @@ public class NAModellConverter
     }
   }
 
-  public static void gml2asciil( ) throws Exception
+  public static void gml2asciil( ) throws MalformedURLException, Exception 
   {
 
     // export

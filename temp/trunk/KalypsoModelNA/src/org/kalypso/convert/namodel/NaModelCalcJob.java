@@ -339,7 +339,7 @@ public class NaModelCalcJob extends AbstractCalcJob
 
         final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "",
             Date.class, 0, true );
-        final IAxis qAxis = new DefaultAxis( "Abfluss", TimeserieConstants.TYPE_RUNOFF, "m³/s",
+        final IAxis qAxis = new DefaultAxis( "Abfluss", TimeserieConstants.TYPE_RUNOFF, "m?/s",
             Double.class, 1, false );
         IAxis[] axis = new IAxis[]
         {
