@@ -482,7 +482,7 @@ public class SpreeCalcJob extends AbstractCalcJob
             achsen );
         observation.setValues( model );
 
-        final ObservationType observationType = ZmlFactory.createXML( observation );
+        final ObservationType observationType = ZmlFactory.createXML( observation, null );
         final FileOutputStream outStream = new FileOutputStream( outFile );
         ZmlFactory.getMarshaller().marshal( observationType, outStream );
         outStream.close();
