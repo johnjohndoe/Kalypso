@@ -22,7 +22,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.deegree_impl.gml.schema.NodeList_Impl;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -236,10 +235,10 @@ public class XMLTools
 
             throw new Exception( "uups, no http connection" );
     }
-
+/*
     public static NodeList reduceByAttribute( NodeList nl, String attributeName, String attributeValue )
     {
-        NodeList_Impl result = new NodeList_Impl();
+        NodeList result = new NodeList_Impl();
 
         for( int i = 0; i < nl.getLength(  ); i++ )
         {
@@ -258,7 +257,7 @@ public class XMLTools
 
         return result;
     }
-
+*/
     public static String toString( NodeList nl )
     {
         StringBuffer result = new StringBuffer(  );

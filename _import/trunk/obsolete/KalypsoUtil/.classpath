@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb-impl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb-libs.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb-xjc.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jax-qname.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/namespace.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/relaxngDatatype.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/xercesImpl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/xsdlib.jar"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="build/src"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="lib/dom.jar"/>
-	<classpathentry exported="true" sourcepath="J:/hyd5309/Development/Java/jfreechart/jfreechart-0.9.20/src" kind="lib" path="lib/jfreechart-0.9.20.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jcommon-0.9.5.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

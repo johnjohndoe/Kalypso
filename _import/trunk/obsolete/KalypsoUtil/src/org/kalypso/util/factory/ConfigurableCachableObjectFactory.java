@@ -4,8 +4,8 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
 
-import org.kalypso.java.reflect.ClassUtilities;
-import org.kalypso.java.reflect.ClassUtilities.ClassUtilityException;
+import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.java.lang.reflect.ClassUtilities.ClassUtilityException;
 
 /**
  * <p>
