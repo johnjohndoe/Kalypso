@@ -4,23 +4,17 @@
  */
 package org.kalypso.ui.editor.styleeditor;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Date;
-
 import org.deegree.graphics.sld.FeatureTypeStyle;
-import org.deegree.graphics.sld.Fill;
-import org.deegree.graphics.sld.Geometry;
-import org.deegree.graphics.sld.PolygonSymbolizer;
 import org.deegree.graphics.sld.Rule;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.graphics.sld.UserStyle;
-import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.event.ModellEvent;
-import org.deegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.deegree_impl.graphics.sld.StyleFactory;
+import org.deegree_impl.services.wfs.filterencoding.BoundaryExpression;
 import org.deegree_impl.services.wfs.filterencoding.ComplexFilter;
 import org.deegree_impl.services.wfs.filterencoding.PropertyIsBetweenOperation;
 import org.deegree_impl.services.wfs.filterencoding.PropertyName;
@@ -36,7 +30,6 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.outline.SaveStyleAction;
-import org.kalypso.ui.editor.styleeditor.dialogs.filterencoding.BoundaryExpression;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
 import org.kalypso.ui.editor.styleeditor.panels.ControlRulePanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
@@ -116,7 +109,8 @@ public class SLDEditorGuiBuilder
       rulePatternCollection.addRule( rules[i] );
     }
 
-    // check whether there are featureTypes that have numeric properties to be used by a pattern-filter    
+    // check whether there are featureTypes that have numeric properties to be
+    // used by a pattern-filter
     final ArrayList numericFeatureTypePropertylist = new ArrayList();
     FeatureTypeProperty[] ftp = getFeatureType().getProperties();
     for( int i = 0; i < ftp.length; i++ )
@@ -137,11 +131,12 @@ public class SLDEditorGuiBuilder
         numericFeatureTypePropertylist.add( ftp[i] );
       else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Short" ) )
         numericFeatureTypePropertylist.add( ftp[i] );
-    }    
+    }
     ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite, "Rule:",
-        rulePatternCollection.size() , numericFeatureTypePropertylist.size());
+        rulePatternCollection.size(), numericFeatureTypePropertylist.size() );
 
-    final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder(mainComposite,rulePatternCollection, userStyle,theme); 
+    final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder( mainComposite,
+        rulePatternCollection, userStyle, theme, numericFeatureTypePropertylist );
 
     controlRulePanel.addPanelListener( new PanelListener()
     {
@@ -239,78 +234,37 @@ public class SLDEditorGuiBuilder
           // create a pattern-filter for this style
           if( numericFeatureTypePropertylist.size() > 0 )
           {
-//            ArrayList ruleList = new ArrayList();
+            ArrayList ruleList = new ArrayList();
             // set by default first featuretypeproperty
             FeatureTypeProperty prop = (FeatureTypeProperty)numericFeatureTypePropertylist.get( 0 );
-//            BoundaryExpression upperBoundary = null;
-//            BoundaryExpression lowerBoundary = null;
-//            PropertyName propertyName = new PropertyName( prop.getName() );
-//            PropertyIsBetweenOperation operation = null;           
-           
-//            int geometryType = TextSymbolizerLayout.getFeatureTypeGeometryType(getFeatureType());
-//            switch(geometryType)
-//            {
-//              case GM_POINT:
-//              {
-//                break;
-//              }
-//              case GM_LINESTRING:
-//              {
-//                break;
-//              }
-//              case GM_POLYGON:
-//              {
-//                break;
-//              }
-//              case GM_MULTIPOINT:
-//              {
-//                break;
-//              }  
-//              case GM_OBJECT:
-//              {
-//                break;
-//              }                  
-//            }
-              
-              
+            BoundaryExpression upperBoundary = null;
+            BoundaryExpression lowerBoundary = null;
+            PropertyName propertyName = new PropertyName( prop.getName() );
+            PropertyIsBetweenOperation operation = null;
+
             String[] geometryObjects = AddSymbolizerPanel.getGeometries( getFeatureType() );
+
             if( geometryObjects.length > 0 )
-            {       
-              System.out.println("prop " + prop + " geom " +  geometryObjects[0] );
-//              // I choose to use a ploygon-symbolier hopeing that it works
-//              Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( geometryObjects[0], "Polygon",
-//                  getFeatureType() );
-//              Geometry geom = symbo.getGeometry();
-//
-//              String patternName = "-title-" + new Date().getTime();
-//
-//              for( int i = 0; i < 5; i++ )
-//              {
-//                lowerBoundary = new BoundaryExpression( "" + ( i * 1 ) );
-//                upperBoundary = new BoundaryExpression( "" + ( ( i + 1 ) * 1 ) );
-//                operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary,
-//                    upperBoundary );
-//
-//                PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
-//                symb.setGeometry( geom );
-//
-//                Color color = new Color( 600000 * ( i + 1 ) );
-//                Fill fill = StyleFactory.createFill( color );
-//                symb.setFill( fill );
-//                Symbolizer s[] =
-//                { symb };
-//
-//                ruleList.add( StyleFactory.createRule( s, patternName, "-name-" + i, "abstract",
-//                    null, new ComplexFilter( operation ), false, symb.getMinScaleDenominator(), symb
-//                        .getMaxScaleDenominator() ) );
-//                userStyle.getFeatureTypeStyles()[0].addRule( StyleFactory.createRule( s,
-//                    patternName,"-name-" + i, "abstract", null, new ComplexFilter( operation ),
-//                    false, symb.getMinScaleDenominator(), symb.getMaxScaleDenominator() ) );
-              }
-              //userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );             
-           //   buildSWTGui( userStyle, theme );
-            }               
-          System.out.println("sadfsd");
+            {
+              Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( geometryObjects[0], "Point",
+                  getFeatureType() );
+              String patternName = "-name-" + new Date().getTime();
+              lowerBoundary = new BoundaryExpression( "0" );
+              upperBoundary = new BoundaryExpression( "1" );
+              operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary,
+                  upperBoundary );
+
+              ruleList.add( StyleFactory.createRule( null, patternName, "", "abstract", null,
+                  new ComplexFilter( operation ), false, symbo.getMinScaleDenominator(), symbo
+                      .getMaxScaleDenominator() ) );
+              userStyle.getFeatureTypeStyles()[0].addRule( StyleFactory.createRule( null,
+                  patternName, "", "abstract", null, new ComplexFilter( operation ), false, symbo
+                      .getMinScaleDenominator(), symbo.getMaxScaleDenominator() ) );
+            }
+            setFocusedRuleItem( getRulePatternCollection().size() );
+            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+            buildSWTGui( userStyle, theme );
+          }
           break;
         }
         default:
@@ -339,116 +293,6 @@ public class SLDEditorGuiBuilder
       }
     } );
 
-    // ******* CREATE PATTERN
-    final Button patternButton = new Button( buttonComposite, SWT.NULL );
-    patternButton.setText( "Pattern" );
-    patternButton.addSelectionListener( new SelectionListener()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        ArrayList list = new ArrayList();
-        FeatureTypeProperty[] tp = getFeatureType().getProperties();
-        for( int i = 0; i < tp.length; i++ )
-        {
-          if( tp[i].getType().equalsIgnoreCase( "java.lang.Double" ) )
-            list.add( tp[i] );
-          else if( tp[i].getType().equalsIgnoreCase( "java.math.BigInteger" ) )
-            list.add( tp[i] );
-          else if( tp[i].getType().equalsIgnoreCase( "java.lang.Byte" ) )
-            list.add( tp[i] );
-          else if( tp[i].getType().equalsIgnoreCase( "java.math.BigDecimal" ) )
-            list.add( tp[i] );
-          else if( tp[i].getType().equalsIgnoreCase( "java.lang.Float" ) )
-            list.add( tp[i] );
-          else if( tp[i].getType().equalsIgnoreCase( "java.lang.Integer" ) )
-            list.add( tp[i] );
-          else if( tp[i].getType().equalsIgnoreCase( "java.lang.Long" ) )
-            list.add( tp[i] );
-          else if( tp[i].getType().equalsIgnoreCase( "java.lang.Short" ) )
-            list.add( tp[i] );
-        }
-
-        if( list.size() > 0 )
-        {
-          ArrayList ruleList = new ArrayList();
-          FeatureTypeProperty prop = (FeatureTypeProperty)list.get( 0 );
-          BoundaryExpression upperBoundary = null;
-          BoundaryExpression lowerBoundary = null;
-          PropertyName propertyName = new PropertyName( prop.getName() );
-          PropertyIsBetweenOperation operation = null;
-
-          final Feature[] fts = theme.getWorkspace().getFeatures( theme.getFeatureType() );
-          double minValue = -1;
-          double maxValue = -1;
-          double value;
-          boolean hasFeatures = false;
-          if( fts.length > 0 )
-          {
-            value = Double.parseDouble( fts[0].getProperty( prop.getName() ).toString() );
-            minValue = value;
-            maxValue = value;
-            hasFeatures = true;
-          }
-          // TODO: Need to check whether there are features??? otherwise no
-          // min,max value
-          for( int i = 0; i < fts.length; i++ )
-          {
-            value = Double.parseDouble( fts[i].getProperty( prop.getName() ).toString() );
-            if( value < minValue )
-              minValue = value;
-            else if( value > maxValue )
-              maxValue = value;
-          }
-          if( hasFeatures )
-            System.out.println( "Min: " + minValue + "  Max: " + maxValue );
-
-          String[] geometryObjects = AddSymbolizerPanel.getGeometries( getFeatureType() );
-          if( geometryObjects.length > 0 )
-          {
-            // I choose to use a ploygon-symbolier hopeing that it works
-            Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( geometryObjects[0], "Polygon",
-                getFeatureType() );
-            Geometry geom = symbo.getGeometry();
-
-            String patternName = "-title-" + new Date().getTime();
-
-            for( int i = 0; i < 5; i++ )
-            {
-              lowerBoundary = new BoundaryExpression( "" + ( i * 1 ) );
-              upperBoundary = new BoundaryExpression( "" + ( ( i + 1 ) * 1 ) );
-              operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary,
-                  upperBoundary );
-
-              PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
-              symb.setGeometry( geom );
-
-              Color color = new Color( 600000 * ( i + 1 ) );
-              Fill fill = StyleFactory.createFill( color );
-              symb.setFill( fill );
-              Symbolizer s[] =
-              { symb };
-
-              ruleList.add( StyleFactory.createRule( s, patternName, "-name-" + i, "abstract",
-                  null, new ComplexFilter( operation ), false, symb.getMinScaleDenominator(), symb
-                      .getMaxScaleDenominator() ) );
-              userStyle.getFeatureTypeStyles()[0].addRule( StyleFactory.createRule( s,
-                  patternName,"-name-" + i, "abstract", null, new ComplexFilter( operation ),
-                  false, symb.getMinScaleDenominator(), symb.getMaxScaleDenominator() ) );
-            }
-            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
-            //System.out.println(userStyle.exportAsXML());
-            buildSWTGui( userStyle, theme );
-          }
-        }
-
-      }
-
-      public void widgetDefaultSelected( SelectionEvent e )
-      {
-        widgetSelected( e );
-      }
-    } );
-
     ruleTabItemBuilder.draw();
     if( focusedRuleItem > -1 )
       ruleTabItemBuilder.setSelectedRule( focusedRuleItem );
@@ -458,7 +302,6 @@ public class SLDEditorGuiBuilder
   private Rule[] getRules( UserStyle style )
   {
     FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
-    // TODO Pay attention that it is currently limited to the first fts
     return fts[0].getRules();
   }
 

@@ -6,11 +6,16 @@ package org.kalypso.ui.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
 
+import org.deegree_impl.services.wfs.filterencoding.ComplexFilter;
+import org.deegree_impl.services.wfs.filterencoding.PropertyIsBetweenOperation;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.ui.editor.styleeditor.dialogs.filterpatterndialog.FilterPatternDialog;
+import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
 
 /**
  * @author F.Lindemann
@@ -32,10 +37,13 @@ public class ColorPalette
   private Color[] colors = null;
 
   private ColorBox[] colorBoxes = null;
+  
+  private RuleCollection ruleCollection = null;
 
-  public ColorPalette( Composite parent, Color[] m_colors, int m_colorSize, int m_borderWidth )
+  public ColorPalette( Composite parent, Color[] m_colors, int m_colorSize, int m_borderWidth, RuleCollection m_ruleCollection)
   {
     this.colors = m_colors;
+    setRuleCollection(m_ruleCollection);
     composite = new Composite( parent, SWT.NULL );
     GridLayout compositeLayout = new GridLayout( MAX_WIDTH, true );
     GridData compositeData = new GridData();
@@ -65,10 +73,18 @@ public class ColorPalette
     {
       final ColorBox box = new ColorBox( composite, colors[i], colorSize, borderWidth );
       colorBoxes[i] = box;
+       
+      final FilterPatternDialog  filterPatternDialog = new FilterPatternDialog( composite.getShell(), ((ComplexFilter)getRuleCollection().get(i).getFilter()).getOperation());
       box.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
-        {
+        {          
+          filterPatternDialog.setColor(((ColorBox)event.getSource()).getColor());
+          filterPatternDialog.open();
+          if(filterPatternDialog.getReturnCode()  ==  Dialog.OK)
+          {
+            ((ColorBox)event.getSource()).setColor(filterPatternDialog.getColor());            
+          }
           for( int j = 0; j < getColorBoxes().length; j++ )
           {
             getColors()[j] = getColorBoxes()[j].getColor();
@@ -79,9 +95,18 @@ public class ColorPalette
     }
   }
 
+  private void update()
+  {
+    for( int j = 0; j < colorBoxes.length; j++ )
+    {
+      colorBoxes[j].setColor( colors[j] );
+    }
+  }
+
   public void setColors( Color[] m_colors )
   {
     this.colors = m_colors;
+    update();
   }
 
   public Color[] getColors()
@@ -110,5 +135,13 @@ public class ColorPalette
   public void setColorBoxes( ColorBox[] m_colorBoxes )
   {
     this.colorBoxes = m_colorBoxes;
+  }
+  public RuleCollection getRuleCollection()
+  {
+    return ruleCollection;
+  }
+  public void setRuleCollection( RuleCollection m_ruleCollection )
+  {
+    this.ruleCollection = m_ruleCollection;
   }
 }

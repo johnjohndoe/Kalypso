@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.swing.event.EventListenerList;
 
 import org.deegree.graphics.sld.Graphic;
+import org.deegree.graphics.sld.LabelPlacement;
 import org.deegree.graphics.sld.Mark;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.graphics.sld.TextSymbolizer;
@@ -50,10 +51,31 @@ public class AddSymbolizerPanel
 
   private String label = null;
 
+  private boolean isSimpleRule = true;
+
   public AddSymbolizerPanel( Composite parent, String m_label, FeatureType m_featureType )
   {
     setLabel( m_label );
     setFeatureType( m_featureType );
+    composite = new Composite( parent, SWT.NULL );
+    FormLayout compositeLayout = new FormLayout();
+    GridData compositeData = new GridData();
+    compositeData.widthHint = 230;
+    composite.setLayoutData( compositeData );
+    composite.setLayout( compositeLayout );
+    compositeLayout.marginWidth = 0;
+    compositeLayout.marginHeight = 0;
+    compositeLayout.spacing = 0;
+    composite.layout();
+    init();
+  }
+
+  public AddSymbolizerPanel( Composite parent, String m_label, FeatureType m_featureType,
+      boolean m_isSimpleRule )
+  {
+    setLabel( m_label );
+    setFeatureType( m_featureType );
+    this.isSimpleRule = m_isSimpleRule;
     composite = new Composite( parent, SWT.NULL );
     FormLayout compositeLayout = new FormLayout();
     GridData compositeData = new GridData();
@@ -78,8 +100,8 @@ public class AddSymbolizerPanel
     symbolizerCombo = new Combo( composite, SWT.NULL );
     FormData symbolizerComboData = new FormData();
     symbolizerComboData.height = 21;
-    symbolizerComboData.width = 35;
-    symbolizerComboData.left = new FormAttachment( 260, 1000, 0 );
+    symbolizerComboData.width = 30;
+    symbolizerComboData.left = new FormAttachment( 295, 1000, 0 );
     symbolizerComboData.top = new FormAttachment( 100, 1000, 0 );
     symbolizerCombo.setLayoutData( symbolizerComboData );
     String items[] = getItemsByFeatureType( featureType );
@@ -93,7 +115,7 @@ public class AddSymbolizerPanel
     FormData geometryComboData = new FormData();
     geometryComboData.height = 21;
     geometryComboData.width = 35;
-    geometryComboData.left = new FormAttachment( 550, 1000, 0 );
+    geometryComboData.left = new FormAttachment( 560, 1000, 0 );
     geometryComboData.top = new FormAttachment( 100, 1000, 0 );
     geometryCombo.setLayoutData( geometryComboData );
     String[] geometryItems = getGeometries( featureType );
@@ -165,15 +187,15 @@ public class AddSymbolizerPanel
       textSymbolizer.getHalo().getFill().setOpacity( 0.3 );
       textSymbolizer.setLabel( null );
       textSymbolizer.getFont().setColor( Color.BLACK );
-//      LabelPlacement labelPlacement = null;
+      LabelPlacement labelPlacement = null;
       // check which geometry-type
       // if line than label_placement - line_placement
       if( TextSymbolizerLayout.getFeatureTypeGeometryType( featureType ) == TextSymbolizerLayout.GM_LINESTRING )
-        /* labelPlacement = */StyleFactory.createLabelPlacement( StyleFactory
+        labelPlacement = StyleFactory.createLabelPlacement( StyleFactory
             .createLinePlacement( "above" ) );
       // else label_placement - point_placement
       else
-        /* labelPlacement = */StyleFactory.createLabelPlacement( StyleFactory.createPointPlacement() );
+        labelPlacement = StyleFactory.createLabelPlacement( StyleFactory.createPointPlacement() );
       return textSymbolizer;
     }
     else if( symbolizerString.equals( "Polygon" ) )
@@ -219,40 +241,83 @@ public class AddSymbolizerPanel
   private String[] getItemsByFeatureType( FeatureType m_featureType )
   {
     String items[] = null;
-
+    // in case of Pattern-Rule it does not make sense to have a pattern for textsymbolizer
     if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_POINT )
     {
-      items = new String[2];
-      items[0] = "Point";
-      items[1] = "Text";
+      if( isSimpleRule )
+      {
+        items = new String[2];
+        items[0] = "Point";
+        items[1] = "Text";
+      }
+      else
+      {
+        items = new String[1];
+        items[0] = "Point";
+      }
     }
     else if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_LINESTRING )
     {
-      items = new String[3];
-      items[0] = "Line";
-      items[1] = "Text";
-      items[2] = "Point";
+      if( isSimpleRule )
+      {
+        items = new String[3];
+        items[0] = "Line";
+        items[1] = "Text";
+        items[2] = "Point";
+      }
+      else
+      {
+        items = new String[2];
+        items[0] = "Line";
+        items[1] = "Point";
+      }
     }
     else if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_POLYGON )
     {
-      items = new String[3];
-      items[0] = "Polygon";
-      items[1] = "Text";
-      items[2] = "Point";
+      if( isSimpleRule )
+      {
+        items = new String[3];
+        items[0] = "Polygon";
+        items[1] = "Text";
+        items[2] = "Point";
+      }
+      else
+      {
+        items = new String[2];
+        items[0] = "Polygon";
+        items[1] = "Point";
+      }
     }
     else if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_MULTIPOINT )
     {
-      items = new String[2];
-      items[0] = "Point";
-      items[1] = "Text";
+      if( isSimpleRule )
+      {
+        items = new String[2];
+        items[0] = "Point";
+        items[1] = "Text";
+      }
+      else
+      {
+        items = new String[1];
+        items[0] = "Point";
+      }
     }
     else if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_OBJECT ) //multilinestring,
     // multipolygon
     {
-      items = new String[3];
-      items[0] = "Polygon";
-      items[1] = "Text";
-      items[2] = "Point";
+      if( isSimpleRule )
+      {
+        items = new String[3];
+        items[0] = "Polygon";
+        items[1] = "Text";
+        items[2] = "Point";
+      }
+      else
+      {
+        items = new String[2];
+        items[0] = "Polygon";
+        items[1] = "Point";
+      }
     }
     return items;
   }
