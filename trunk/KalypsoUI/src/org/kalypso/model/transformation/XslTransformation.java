@@ -13,8 +13,8 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.java.lang.CatchThread;
@@ -26,11 +26,9 @@ import org.w3c.dom.Document;
 public class XslTransformation extends AbstractTransformation
 {
   /**
-   * @throws TransformationException
-   * @see org.kalypso.model.transformation.ICalculationCaseTransformation#transform(org.eclipse.core.resources.IFolder,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.model.transformation.AbstractTransformation#transformIntern(java.util.Properties, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void transformIntern( final IFolder targetFolder, final Properties properties, final IProgressMonitor monitor )
+  public void transformIntern( final Properties properties, final IProgressMonitor monitor )
       throws TransformationException
   {
     monitor.beginTask( "XSL Transformation", 3000 );
@@ -39,11 +37,11 @@ public class XslTransformation extends AbstractTransformation
     final String xsl = properties.getProperty( "xsl" );
     final String output = properties.getProperty( "output" );
 
-    final IProject project = targetFolder.getProject();
-
-    final IFile inputFile = (IFile)project.findMember( input );
-    final IFile xslFile = (IFile)project.findMember( xsl );
-    final IFile outputFile = targetFolder.getFile( output );
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    
+    final IFile inputFile = (IFile)root.findMember( input );
+    final IFile xslFile = (IFile)root.findMember( xsl );
+    final IFile outputFile = (IFile)root.findMember( output );
 
     try
     {
@@ -53,7 +51,6 @@ public class XslTransformation extends AbstractTransformation
       factory.setNamespaceAware( true );
       final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
       final Document xmlDOM = docuBuilder.parse( inputFile.getContents() );
-      //final Document xslDOM = docuBuilder.parse( xslFile.getContents() );
       final TransformerFactory transformerFactory = TransformerFactory.newInstance();
       final Transformer transformer = transformerFactory.newTransformer( xslSource );
       

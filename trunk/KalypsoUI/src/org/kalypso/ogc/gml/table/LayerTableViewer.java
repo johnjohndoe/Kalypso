@@ -107,8 +107,6 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       {
         selectFeature( (KalypsoFeature)tc.getRow().getData() );
       }
-//      public void widgetDefaultSelected( SelectionEvent e )
-//      {}
     } );
 
     m_unselectColor = table.getBackground();
@@ -257,6 +255,8 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
         item.setBackground( m_unselectColor );
     }
 
+    if( m_tableCursor != null )
+      m_tableCursor.redraw();
   }
 
   /**

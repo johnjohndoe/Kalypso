@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -40,6 +42,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
+import org.kalypso.java.io.ReaderUtilities;
 import org.kalypso.java.reflect.ClassUtilities;
 import org.kalypso.model.transformation.ICalculationCaseTransformation;
 import org.kalypso.model.transformation.TransformationException;
@@ -214,10 +217,19 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public static void createCalculationCaseInFolder( final IFolder folder,
       final IProgressMonitor monitor ) throws Exception
   {
-    // maybe check requirements? (Project is of this nature an folder is not
-    // contained in other CalcCase)
+    final IProject project = folder.getProject();
+    final IFile tranformerConfigFile = project.getFile( ModelNature.MODELLTYP_CALCCASECONFIG_XML );
 
-    tranformModelData( folder, monitor );
+    final InputStreamReader inputStreamReader = new InputStreamReader( tranformerConfigFile
+        .getContents(), tranformerConfigFile.getCharset() );
+    final Properties replaceProps = createReplacePropertiesForTransformation( folder );
+
+    final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
+
+    final TransformationConfig trans = (TransformationConfig)new ObjectFactory()
+        .createUnmarshaller().unmarshal( new InputSource( new StringReader( contents ) ) );
+
+    tranformModelData( trans, monitor );
 
     final IFile calcFile = folder.getFile( CALCULATION_FILE );
     if( !calcFile.exists() )
@@ -225,18 +237,22 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           + calcFile.getName() );
   }
 
-  private static void tranformModelData( final IFolder targetFolder, final IProgressMonitor monitor )
-      throws JAXBException, CoreException, IOException, TransformationException
+  private static Properties createReplacePropertiesForTransformation( final IFolder calcFolder )
   {
-    // load Transformer config
-    final IFile tranformerConfigFile = (IFile)targetFolder.getProject().findMember(
-        ModelNature.MODELLTYP_CALCCASECONFIG_XML );
+    final Properties props = new Properties();
 
-    final InputStream contents = tranformerConfigFile.getContents();
-    final TransformationConfig trans = (TransformationConfig)new ObjectFactory()
-        .createUnmarshaller().unmarshal( contents );
-    contents.close();
+    props.setProperty( "#SYSTEM_TIME#", new SimpleDateFormat( "dd.MM.yyyy HH:mm" ).format( new Date(
+        System.currentTimeMillis() ) ) );
+    
+    props.setProperty( "calcdir:", calcFolder.getFullPath().toString() + "/" );
+    props.setProperty( "project:", calcFolder.getProject().getFullPath().toString() + "/" );
 
+    return props;
+  }
+
+  private static void tranformModelData( final TransformationConfig trans,
+      final IProgressMonitor monitor ) throws TransformationException
+  {
     final List transList = trans.getTransformation();
 
     monitor.beginTask( "Transformationen durchführen", transList.size() );
@@ -247,7 +263,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final ICalculationCaseTransformation ccTrans = TransformationFactory
           .createTransformation( element );
 
-      ccTrans.transform( targetFolder, new SubProgressMonitor( monitor, 1 ) );
+      ccTrans.transform( new SubProgressMonitor( monitor, 1 ) );
     }
   }
 
@@ -431,10 +447,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       final IProject project = (IProject)ResourcesPlugin.getWorkspace().getRoot().findMember( name );
 
-      // ein noch nicht benutztes Unterverzeichnis im Prognoseverzeichnis finden 
+      // ein noch nicht benutztes Unterverzeichnis im Prognoseverzeichnis finden
       final IFolder prognoseFolder = project.getFolder( PROGNOSE_FOLDER );
-      final IFolder calcCaseFolder = FolderUtilities.createUnusedFolder( prognoseFolder, "prognose" );
-      
+      final IFolder calcCaseFolder = FolderUtilities
+          .createUnusedFolder( prognoseFolder, "prognose" );
+
       final Job createCalcCaseJob = new Job( "neuen Rechenfall anlegen" )
       {
         protected IStatus run( final IProgressMonitor monitor )
@@ -448,10 +465,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           catch( final Exception e )
           {
             e.printStackTrace();
-            
-            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Der Rechenfall für die Prognoserechnung konnte nicht erzeugt werden", e );
+
+            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+                "Der Rechenfall für die Prognoserechnung konnte nicht erzeugt werden", e );
           }
-          
+
           return Status.OK_STATUS;
         }
       };
@@ -459,7 +477,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       createCalcCaseJob.join();
       if( createCalcCaseJob.getResult().getSeverity() != IStatus.OK )
         return;
-      
+
       final Wizard wizard = new CalcWizard( calcCaseFolder );
       wizard.setNeedsProgressMonitor( true );
       wizard.setWindowTitle( "Prognoserechnung für " + project.getName() );

@@ -1,14 +1,11 @@
 package org.kalypso.eclipse.swt.custom;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -19,48 +16,33 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * 
  * @author Belger
  */
-public class ExcelLikeTableCursor extends TableCursor implements SelectionListener, KeyListener,
-    DisposeListener, MouseListener
+public class ExcelLikeTableCursor extends TableCursor implements SelectionListener, KeyListener, MouseListener
 {
   protected final TableViewer m_viewer;
 
-  /**
-   * Hack, um das Element richtig anzuzeigen nach dem edit! Problem ist, dass
-   * die Aktualisierung der tabelle schnell genug sein muss
-   */
-  private final TimerTask m_timertask = new TimerTask()
-  {
-    public void run()
-    {
-      PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable()
-      {
-        public void run()
-        {
-          if( !isDisposed() && !isVisible() && !m_viewer.isCellEditorActive() )
-          {
-            try
-            {
-              Thread.sleep( 100 );
-            }
-            catch( InterruptedException e )
-            {
-              e.printStackTrace();
-            }
-            stopEditing();
-          }
-        }
-      } );
-    }
-  };
-
   private final Color m_cannotEditColor;
   private final Color m_canEditColor;
+
+  private final ICellEditorListener m_editorListener = new ICellEditorListener() {
+    public void applyEditorValue()
+    {
+      stopEditing();
+    }
+
+    public void cancelEditor()
+    {
+      stopEditing();
+    }
+
+    public void editorValueChanged( boolean oldValidState, boolean newValidState )
+    {
+    // nix  
+    }};
 
   public ExcelLikeTableCursor( final TableViewer tableViewer, final int style )
   {
@@ -72,23 +54,9 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
     addKeyListener( this );
     addMouseListener( this );
 
-    new Timer().schedule( m_timertask, 100, 100 );
-
-    addDisposeListener( this );
-    
     m_cannotEditColor = getDisplay().getSystemColor( SWT.COLOR_GRAY );
     
     m_canEditColor = getBackground();
-  }
-
-  /**
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
-  public void dispose()
-  {
-    m_timertask.cancel();
-    
-    super.dispose();
   }
 
   private void startEditing( final KeyEvent ke )
@@ -102,11 +70,13 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
 
     setVisible( false );
 
+    final CellEditor cellEditor = m_viewer.getCellEditors()[column];
+    cellEditor.addListener( m_editorListener );
+    
     m_viewer.editElement( element, column );
+
     if( ke != null )
     {
-      final Widget editorControl = m_viewer.getCellEditors()[column].getControl();
-
       // eigentlich würde ich gerne direkt den event weiterschicken, das klappt
       // aber nicht
       //        final Event event = new Event();
@@ -119,9 +89,11 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
       //        editorControl.notifyListeners( SWT.KeyDown, event );
 
       // deshalb einfach den text setzen
+      final Widget editorControl = cellEditor.getControl();
       if( editorControl instanceof Text )
         ( (Text)editorControl ).insert( "" + ke.character );
     }
+
   }
 
   public void stopEditing()
@@ -182,14 +154,6 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
   public void keyReleased( final KeyEvent e )
   {
   // ignore
-  }
-
-  /**
-   * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
-   */
-  public void widgetDisposed( final DisposeEvent e )
-  {
-    m_timertask.cancel();
   }
 
   /**

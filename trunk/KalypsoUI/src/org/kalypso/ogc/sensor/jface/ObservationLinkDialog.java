@@ -72,7 +72,8 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
 
     m_timeserie = obslink;
 
-    m_key = new PoolableObjectType( obslink.getLinktype(), obslink.getHref(), projectProvider.getProject() );
+    if( obslink != null )
+      m_key = new PoolableObjectType( obslink.getLinktype(), obslink.getHref(), projectProvider.getProject() );
     startLoadTimeserie();
   }
 
@@ -86,8 +87,11 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
 
   private void startLoadTimeserie()
   {
-    final Job job = new BorrowObjectJob( "Zeitreihe laden", m_pool, this, m_key, DUMMY_OBJECT );
-    job.schedule();
+    if( m_key != null )
+    {
+      final Job job = new BorrowObjectJob( "Zeitreihe laden", m_pool, this, m_key, DUMMY_OBJECT );
+      job.schedule();
+    }
   }
 
   public TimeseriesLink getResult()
