@@ -1,5 +1,7 @@
 package org.kalypso.ogc.sensor.filter.creators;
 
+import java.util.List;
+
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
@@ -10,18 +12,17 @@ import org.kalypso.zml.filters.NOperationFilterType;
 
 public class NOperationFilterCreator implements IFilterCreator
 {
-    /*
-     * 
-     * @see org.kalypso.ogc.sensor.filter.IFilterCreator#createFilter(org.kalypso.zml.filters.AbstractFilterType,
-     *      org.kalypso.ogc.sensor.IObservation)
-     */
     public IObservationFilter createFilter(AbstractFilterType aft,
             IObservation baseObs) throws SensorException
     {
-        NOperationFilterType filter = (NOperationFilterType) aft;
-        NOperationFilter noperationFilter = new NOperationFilter();
-        noperationFilter.initFilter(filter, baseObs);
-        return noperationFilter;
-    }
+        final NOperationFilterType filter = (NOperationFilterType) aft;
+        final List filters = filter.getFilter();
+        final IObservation[] innerObs=new IObservation[filters.size()];
+        for (int i = 0; i < innerObs.length; i++)
+            innerObs[i]=FilterCreatorHelper.resolveFilter((AbstractFilterType) filters.get(i), baseObs );
 
+        final NOperationFilter nOperationFilter = new NOperationFilter(filter);
+        nOperationFilter.initFilter(innerObs, baseObs);
+        return nOperationFilter;
+    }
 }
