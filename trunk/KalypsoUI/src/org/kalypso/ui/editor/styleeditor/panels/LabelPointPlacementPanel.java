@@ -160,7 +160,7 @@ public class LabelPointPlacementPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
   }
 

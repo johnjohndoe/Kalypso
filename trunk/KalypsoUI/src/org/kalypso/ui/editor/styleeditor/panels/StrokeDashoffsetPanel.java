@@ -103,7 +103,7 @@ public class StrokeDashoffsetPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     Label offsetLabel = new Label( composite, SWT.NULL );

@@ -100,7 +100,7 @@ public class AddFilterPropertyPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     // ***** Label

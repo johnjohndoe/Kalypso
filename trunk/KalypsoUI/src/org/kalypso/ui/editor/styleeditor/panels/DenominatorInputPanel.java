@@ -115,7 +115,7 @@ public class DenominatorInputPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     Label getCurrentScaleButton = new Label( composite, SWT.PUSH );
@@ -149,7 +149,7 @@ public class DenominatorInputPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
 
     Label urlLabel = new Label( composite, SWT.NULL );

@@ -69,7 +69,7 @@ public class ColorBox
       }
 
       public void mouseUp( MouseEvent e )
-      { /**/
+      { 
       }
     } );
     fillColorImageInner.addMouseListener( new MouseListener()
@@ -85,7 +85,7 @@ public class ColorBox
       }
 
       public void mouseUp( MouseEvent e )
-      { /**/
+      { 
       }
     } );
   }

@@ -223,7 +223,9 @@ public class RuleTabItem
         {
           int index = symbolizerTabFolder.getSelectionIndex();
           if( index == ( rule.getSymbolizers().length - 1 ) || index < 0 )
-          {/**/}
+          {
+              // nothing
+          }
           else
           {
             Symbolizer newOrderedObjects[] = new Symbolizer[rule.getSymbolizers().length];

@@ -5,7 +5,7 @@ public class FilterDialogException extends Exception
   private FilterDialogError error = null;
 
   public FilterDialogException()
-  {/**/}
+  {}
 
   public FilterDialogException( FilterDialogError m_error )
   {

@@ -190,7 +190,7 @@ public class RulePatternInputPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {/**/}
+      {}
     } );
   }
 

@@ -117,11 +117,11 @@ public class SliderPanel
     slider.addMouseListener( new MouseListener()
     {
       public void mouseDoubleClick( MouseEvent e )
-      {/**/
+      {
       }
 
       public void mouseDown( MouseEvent e )
-      { /**/
+      { 
       }
 
       public void mouseUp( MouseEvent e )
