@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.test;
 
 import java.io.InputStream;
@@ -58,22 +58,23 @@ public class FilterFactoryTest extends TestCase
 {
   private InputStream m_ins;
 
-  protected void setUp( ) throws Exception
+  protected void setUp() throws Exception
   {
     super.setUp();
-    
+
     m_ins = getClass().getResourceAsStream( "wqfilter.xml" );
   }
-  
-  protected void tearDown( ) throws Exception
+
+  protected void tearDown() throws Exception
   {
-    super.tearDown();    
+    super.tearDown();
     m_ins.close();
   }
 
-  public void testCreateFilter( ) throws SensorException
+  public void testCreateFilter() throws SensorException
   {
-    IObservation obs = FilterFactory.createFilter( m_ins );    
+    IObservation obs = FilterFactory.createFilter( m_ins );
     assertTrue( obs instanceof WQObservationFilter );
-  }  
+  }
+
 }

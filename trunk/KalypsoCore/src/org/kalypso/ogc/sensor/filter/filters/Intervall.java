@@ -74,19 +74,20 @@ public class Intervall
 
   final Calendar m_end;
 
-  private int[] m_status;
+  private long[] m_status;
 
   private double[] m_value;
 
   /**
    * @author doemming
    */
-  public Intervall( Calendar start, Calendar end, int[] status, double[] value )
+  public Intervall( Calendar start, Calendar end, final long[] status, final double[] value )
   {
-    m_start = start;
-    m_end = end;
-    m_status = status;
-    m_value = value;
+
+    m_start = (Calendar)start.clone();
+    m_end = (Calendar)end.clone();
+    m_status = (long[])status.clone();
+    m_value = (double[])value.clone();
   }
 
   /*
@@ -95,8 +96,8 @@ public class Intervall
    */
   public Intervall( Calendar start, Calendar end )
   {
-    m_start = start;
-    m_end = end;
+    m_start = (Calendar)start.clone();
+    m_end = (Calendar)end.clone();
     m_status = null;
     m_value = null;
   }
@@ -105,13 +106,13 @@ public class Intervall
    * 
    * @author doemming
    */
-  public Intervall( Calendar start, Calendar end, Integer[] status, Double[] values )
+  public Intervall( Calendar start, Calendar end, Long[] status, Double[] values )
   {
     m_start = start;
     m_end = end;
-    m_status = new int[status.length];
+    m_status = new long[status.length];
     for( int i = 0; i < status.length; i++ )
-      m_status[i] = status[i].intValue();
+      m_status[i] = status[i].longValue();
     m_value = new double[values.length];
     for( int i = 0; i < values.length; i++ )
       m_value[i] = values[i].doubleValue();
@@ -127,14 +128,14 @@ public class Intervall
     return m_start;
   }
 
-  public int[] getStatus()
+  public long[] getStatus()
   {
     return m_status;
   }
 
-  public void setStatus( int[] status )
+  public void setStatus( final long[] status )
   {
-    m_status = status;
+    m_status = (long[])status.clone();
   }
 
   public double[] getValue()
@@ -142,9 +143,9 @@ public class Intervall
     return m_value;
   }
 
-  public void setValue( double[] value )
+  public void setValue( final double[] value )
   {
-    m_value = value;
+    m_value = (double[])value.clone();
   }
 
   private long getDurationInMillis()
@@ -175,7 +176,8 @@ public class Intervall
   public Intervall getIntersection( Intervall other, int mode )
   {
     final Intervall result;
-    switch( calcIntersectionMatrix( other ) )
+    final int matrix = calcIntersectionMatrix( other );
+    switch( matrix )
     {
     case STATUS_INTERSECTION_START:
       result = new Intervall( getStart(), other.getEnd() );
@@ -191,6 +193,7 @@ public class Intervall
       break;
     case STATUS_INTERSECTION_NONE_BEFORE:
     case STATUS_INTERSECTION_NONE_AFTER:
+      return null;
     default:
       return null;
     }
@@ -220,8 +223,8 @@ public class Intervall
     switch( mode )
     {
     case IntervallFilter.MODE_SUM:
-      return other.getDurationInMillis() / getDurationInMillis();
-    case IntervallFilter.MODE_AVERAGE:
+      return (double)other.getDurationInMillis() / (double)getDurationInMillis();
+    case IntervallFilter.MODE_INTENSITY:
     default:
       return 1d;
     }
@@ -233,9 +236,24 @@ public class Intervall
     {
     case IntervallFilter.MODE_SUM:
       return 1d;
-    case IntervallFilter.MODE_AVERAGE:
+    case IntervallFilter.MODE_INTENSITY:
     default:
-      return other.getDurationInMillis() / getDurationInMillis();
+      return (double)other.getDurationInMillis() / (double)getDurationInMillis();
     }
+  }
+
+  public String toString()
+  {
+    final StringBuffer result = new StringBuffer();
+    result.append( " from : " + m_start.getTime().toString() + "\n" );
+    result.append( " to   : " + m_end.getTime().toString() + "\n" );
+    result.append( " duration: " + getDurationInMillis() + " ms \n" );
+    if( m_value != null )
+    {
+      result.append( "value : " );
+      for( int i = 0; i < m_value.length; i++ )
+        result.append( "  " + m_value[i] );
+    }
+    return result.toString();
   }
 }

@@ -49,16 +49,20 @@
 		</complexContent>
 	</complexType>
 	<element name="operationFilter" type="filters:operationFilterType" substitutionGroup="filters:filter"/>
-    
-    
+            
     <!-- Filter: intervall building filter 
         required axis: date-axis value-axis        
         optionam axis: status-axis
-        more then one value-axis will throw exceptions,
-        result will have date-axis, value-axis eventually one status-axis,
+        result will have same axis as source observation
         date axis will be build with intervalls,
-        value-axis will be build calculating summs or avarages over intervall (resp. mode),
+        value-axis will be build calculating summs or intensity over intervall (resp. mode),
         status axis will be build using bitmask on source-status
+                
+        more than one status-axis is supported
+        more than one value-axis is supported
+
+        restrictions:
+        value-axis must be type Double
         -->
 	<complexType name="intervallFilterType">
 		<complexContent>
@@ -66,8 +70,8 @@
 				<sequence>
 					<element ref="filters:filter" minOccurs="0"/>
 				</sequence>
-                <!-- mode: "sum" or "average"-->
-				<attribute name="mode" type="string"/>
+                <!-- mode: "sum" or "intensity"-->
+				<attribute name="mode" type="string" default="intensity"/>
 
                 <!-- calendar field to build intervall--> 
             	<attribute type="string" name="calendarField"/>

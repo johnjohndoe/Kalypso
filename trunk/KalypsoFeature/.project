@@ -3,7 +3,7 @@
 	<name>KalypsoFeature</name>
 	<comment></comment>
 	<projects>
-		<project>backupdeegree</project>
+		<project>KalypsoDeegree</project>
 		<project>KalypsoPSICompactAdapter</project>
 		<project>KalypsoUI</project>
 		<project>KalypsoUtil</project>
