@@ -59,9 +59,11 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
 /**
  * @author schlienger
  */
-public class ObservationChart extends JFreeChart implements IObsViewEventListener
+public class ObservationChart extends JFreeChart implements
+    IObsViewEventListener
 {
-  protected static final Logger LOGGER = Logger.getLogger( ObservationChart.class.getName() );
+  protected static final Logger LOGGER = Logger
+      .getLogger( ObservationChart.class.getName() );
 
   private final DiagView m_view;
 
@@ -93,7 +95,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
   /**
    * Disposes the chart.
    */
-  public void dispose()
+  public void dispose( )
   {
     m_view.removeObsViewListener( this );
 
@@ -103,7 +105,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
   /**
    * Clears the curves in the chart
    */
-  protected void clearChart()
+  protected void clearChart( )
   {
     getObservationPlot().clearCurves();
   }
@@ -111,9 +113,9 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
   /**
    * @return plot casted as obs plot
    */
-  public ObservationPlot getObservationPlot()
+  public ObservationPlot getObservationPlot( )
   {
-    return (ObservationPlot)getPlot();
+    return (ObservationPlot) getPlot();
   }
 
   /**
@@ -123,58 +125,27 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
   {
     final CatchRunnable runnable = new CatchRunnable()
     {
-      protected void runIntern() throws Throwable
+      protected void runIntern( ) throws Throwable
       {
         final ObservationPlot obsPlot = getObservationPlot();
 
-//        // ADD A CURVE
-//        if( evt.getObject() instanceof DiagViewCurve )
-//        {
-//          final DiagViewCurve curve = (DiagViewCurve)evt.getObject();
-//
-//          if( evt.isType( ObsViewEvent.TYPE_ADD ) )
-//          {
-//           LOGGER.info( "addcurve" );
-//            obsPlot.addCurve( curve );
-//          }
-//          else if( evt.isType( ObsViewEvent.TYPE_REMOVE ) )
-//          {
-//            LOGGER.info( "removecurve" );
-//            obsPlot.removeCurve( curve );
-//          }
-//          else if( evt.getType() == ObsViewEvent.TYPE_REFRESH )
-//          {
-//            LOGGER.info( "refresh:" );
-//            LOGGER.info( "removecurve" );
-//            obsPlot.removeCurve( curve );
-//            LOGGER.info( "addcurve" );
-//            obsPlot.addCurve( curve );
-//            //          fireChartChanged();
-//          }
-//        }
+        clearChart();
 
-        // This is not thread safe!
-        // better always refresh tha whola kaboodle
-        
         DiagView view = null;
         if( evt.getObject() instanceof DiagView )
-          view = (DiagView)evt.getObject();
+          view = (DiagView) evt.getObject();
         else if( evt.getObject() instanceof DiagViewCurve )
-          view = (DiagView)((DiagViewCurve)evt.getObject()).getView();
-          
-        
+          view = (DiagView) ((DiagViewCurve) evt.getObject()).getView();
+
         // REFRESH LIST OF THEMES
         // REMOVE ALL THEMES
-        if( evt.getType() == ObsViewEvent.TYPE_REMOVE_ALL )
-          clearChart();
-        else // if( evt.getType() == ObsViewEvent.TYPE_REFRESH && evt.getObject() instanceof DiagView )
+        if( evt.getType() == ObsViewEvent.TYPE_ADD
+            || evt.getType() == ObsViewEvent.TYPE_REFRESH )
         {
-          clearChart();
-
           final ObsViewItem[] items = view.getItems();
           for( int i = 0; i < items.length; i++ )
           {
-            final DiagViewCurve curve = (DiagViewCurve)items[i];
+            final DiagViewCurve curve = (DiagViewCurve) items[i];
             obsPlot.addCurve( curve );
           }
         }
@@ -195,8 +166,9 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
     {
       // TODO: hier kann ne Nullpointer exception geben (es gibt nicht immer ein
       // activeWokbenchWindow)
-      MessageDialog.openError( Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-          "Aktualisierungsfehler", e.toString() );
+      MessageDialog.openError( Workbench.getInstance()
+          .getActiveWorkbenchWindow().getShell(), "Aktualisierungsfehler", e
+          .toString() );
     }
   }
 }
