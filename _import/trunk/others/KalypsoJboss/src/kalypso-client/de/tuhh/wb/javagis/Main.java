@@ -64,10 +64,10 @@ public class Main {
 
 		try {
 			connectBCE();
-			DCBrowser.getInstance().setVisible(true);
+			/*DCBrowser.getInstance().setVisible(true);
 			DCBrowser.getInstance().expandTo("Z_12_26");
 			System.out.println(
-				DCBrowser.getInstance().getSelectedTimeSeriesKey());
+				DCBrowser.getInstance().getSelectedTimeSeriesKey());*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

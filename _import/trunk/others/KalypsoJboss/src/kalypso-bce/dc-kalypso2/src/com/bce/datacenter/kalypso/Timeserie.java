@@ -170,6 +170,8 @@ public class Timeserie extends Persistent {
 		rs.next();
 
 		Timeserie ts = null;
+		
+		//System.out.println("Resultset get Object: "+rs.getObject(1));
 
 		if (rs.getObject(1) != null) {
 			ts = new Timeserie(rs.getInt(1));

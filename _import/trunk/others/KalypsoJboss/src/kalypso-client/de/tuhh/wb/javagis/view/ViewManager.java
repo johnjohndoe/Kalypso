@@ -66,19 +66,19 @@ public class ViewManager
 	// Buttons
 	private JMenuBar menubar = new JMenuBar();
 	private JMenu jMenu_ProjectManager = new JMenu();
-	private JMenu jMenu_Preprocessing = new JMenu();
-	private JMenu jMenu_Postprocessing = new JMenu();
+	//private JMenu jMenu_Preprocessing = new JMenu();
+	//private JMenu jMenu_Postprocessing = new JMenu();
 	private JMenuItem jMenuItem_OpenProject = new JMenuItem();
 	private JMenuItem jMenuItem_openConfView = new JMenuItem();
 	private JMenuItem jMenuItem_Close = new JMenuItem();
 	private JMenuItem jMenuItem_Exit = new JMenuItem();
-	private JMenuItem jMenuItem_Print = new JMenuItem();
+	//private JMenuItem jMenuItem_Print = new JMenuItem();
 	private JMenuItem jMenuItem_View = new JMenuItem();
 	private JMenuItem jMenuItem_Layout = new JMenuItem();
 	private JMenuItem jMenuItem_Control = new JMenuItem();
 	private JMenuItem jMenuItem_SimCas = new JMenuItem();
 	private JMenuItem jMenuItem_Run = new JMenuItem();
-	private JMenu jMenu_Post = new JMenu();
+	//private JMenu jMenu_Post = new JMenu();
 	private JMenuItem jMenuItem_ViewRes = new JMenuItem();
 	private JMenuItem jMenuItem_ViewErr = new JMenuItem();
 	private JMenuItem jMenuItem_About = new JMenuItem();
@@ -103,6 +103,8 @@ public class ViewManager
 
 	private static JComboBox comboBox;
 	private static boolean processingFlag = true;
+	
+	private static ProjectView projectView;
 
 	public static JDesktopPane desktop = new JDesktopPane();
 	//    KalypsoInterface kalypsoInterface;
@@ -277,7 +279,7 @@ public class ViewManager
 		String title = I18n.get("windowTitlePV");
 		boolean open = isViewOpen(title);
 				if (!open) {
-		ProjectView projectView = new ProjectView(title);
+		projectView = new ProjectView(title);
 		projectView.setVisible(true);
 		projectView.setSize(400, 300);
 		desktop.add(projectView);
@@ -401,11 +403,11 @@ public class ViewManager
 	private void jbInit() throws Exception {
 		//jMenu_ProjectManager.setMnemonic('P');
 		jMenu_ProjectManager.setText(I18n.get("jMenu_ProjectManager"));
-		jMenu_Preprocessing.setText(I18n.get("jMenu_Preprocessing"));
+		//jMenu_Preprocessing.setText(I18n.get("jMenu_Preprocessing"));
 		//jMenu_Preprocessing.setMnemonic('R');
 		//jMenu_Preprocessing.setText("Preprocessing");
 		//jMenu_Postprocessing.setMnemonic('e');
-		jMenu_Postprocessing.setText(I18n.get("jMenu_Processing"));
+		//jMenu_Postprocessing.setText(I18n.get("jMenu_Processing"));
 		jMenuItem_OpenProject.setText(I18n.get("jMenuItem_OpenProject"));
 		jMenuItem_openConfView.setText(I18n.get("jMenuItem_openConfView"));
 		jMenuItem_OpenProject.setActionCommand("getTree");
@@ -440,6 +442,18 @@ public class ViewManager
 		});
 		jMenuItem_Close.setText(I18n.get("jMenuItem_Close"));
 		jMenuItem_Close.setEnabled(false);
+		jMenuItem_Close.setActionCommand("Close_Project");
+		jMenuItem_Close.addActionListener(new java.awt.event.ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						if ("Close_Project".equals(e.getActionCommand())) {
+							projectView.dispose();
+							jMenuItem_OpenProject.setEnabled(true);
+							jMenuItem_Close.setEnabled(false);
+							jMenuItem_ViewErr.setEnabled(false);
+						}
+					}
+				});
 		jMenuItem_Exit.setText(I18n.get("jMenuItem_Exit"));
 		//jMenuItem_Exit.setMnemonic('X');
 
@@ -481,8 +495,8 @@ public class ViewManager
 			}
 		});
 
-		jMenuItem_Print.setEnabled(false);
-		jMenuItem_Print.setText(I18n.get("jMenuItem_Print"));
+		//jMenuItem_Print.setEnabled(false);
+		//jMenuItem_Print.setText(I18n.get("jMenuItem_Print"));
 		//jMenuItem_View.setMnemonic('V');
 		jMenuItem_View.setText(I18n.get("jMenuItem_View"));
 		jMenuItem_View.setEnabled(false);
@@ -505,7 +519,7 @@ public class ViewManager
 		});
 
 		//jMenu_Post.setMnemonic('S');
-		jMenu_Post.setText(I18n.get("jMenu_Postprocessing"));
+		//jMenu_Post.setText(I18n.get("jMenu_Postprocessing"));
 		//jMenuItem_ViewRes.setMnemonic('I');
 		jMenuItem_ViewRes.setText(I18n.get("jMenuItem_ViewRes"));
 		jMenuItem_ViewRes.setEnabled(false);
@@ -556,7 +570,7 @@ public class ViewManager
 		jPanel1.setLayout(borderLayout1);
 		this.getContentPane().setLayout(borderLayout2);
 		jPanel1.setPreferredSize(new Dimension(300, 40));
-		createVButton.setMaximumSize(new Dimension(35, 309));
+		/*createVButton.setMaximumSize(new Dimension(35, 309));
 		createVButton.setPreferredSize(new Dimension(35, 35));
 		createVButton.setToolTipText(I18n.get("ButtonCreateTT"));
 		createVButton.setIcon(
@@ -604,12 +618,12 @@ public class ViewManager
 		xmlIButton.setPreferredSize(new Dimension(35, 35));
 		xmlIButton.setToolTipText(I18n.get("ButtonXMLIDataTT"));
 		xmlIButton.setIcon(
-			(new ImageIcon(cl.getResource("symbols/Import24.gif"))));
-		calibrationButton.setMaximumSize(new Dimension(35, 110));
-		calibrationButton.setPreferredSize(new Dimension(35, 35));
+			(new ImageIcon(cl.getResource("symbols/Import24.gif"))));*/
+		calibrationButton.setMaximumSize(new Dimension(30, 110));
+		calibrationButton.setPreferredSize(new Dimension(30, 30));
 		calibrationButton.setToolTipText(I18n.get("ButtonAutomateCalibration"));
-		//calibrationButton.setIcon(
-		//	(new ImageIcon(cl.getResource("symbols/calibration.gif"))));
+		calibrationButton.setIcon(
+			(new ImageIcon(cl.getResource("symbols/calibration.gif"))));
 		calibrationButton.addActionListener(this);
 		calibrationButton.setActionCommand("automateCalibration");
 
@@ -617,49 +631,56 @@ public class ViewManager
 		comboBox.setRenderer(new MyCellRenderer());
 		comboBox.addActionListener(this);
 
+		menubar.setBorderPainted(true);
 		menubar.add(jMenu_ProjectManager);
-		menubar.add(jMenu_Preprocessing);
-		menubar.add(jMenu_Postprocessing);
-		menubar.add(jMenu_Post);
+		//menubar.add(jMenu_Preprocessing);
+		//menubar.add(jMenu_Postprocessing);
+		//menubar.add(jMenu_Post);
 		menubar.add(jMenu_Help);
-		menubar.add(comboBox);
+		
 		jMenu_ProjectManager.add(jMenuItem_OpenProject);
-		jMenu_ProjectManager.add(jMenuItem_openConfView);
 		jMenu_ProjectManager.add(jMenuItem_Close);
+		jMenu_ProjectManager.add(jMenuItem_openConfView);
+		jMenu_ProjectManager.add(jMenuItem_ViewErr);
 		jMenu_ProjectManager.addSeparator();
-		jMenu_ProjectManager.add(jMenuItem_Print);
+		//jMenu_ProjectManager.add(jMenuItem_Print);
 		jMenu_ProjectManager.add(jMenuItem_Exit);
-		jMenu_Preprocessing.add(jMenuItem_View);
-		jMenu_Preprocessing.add(jMenu_ModelD);
-		jMenu_Preprocessing.add(jMenuItem_Layout);
-		jMenu_Postprocessing.add(jMenuItem_Control);
-		jMenu_Postprocessing.add(jMenuItem_SimCas);
-		jMenu_Postprocessing.addSeparator();
-		jMenu_Postprocessing.add(jMenuItem_Run);
-		jMenu_Post.add(jMenuItem_ViewRes);
-		jMenu_Post.add(jMenuItem_ViewErr);
+		
+		//jMenu_Preprocessing.add(jMenuItem_View);
+		//jMenu_Preprocessing.add(jMenu_ModelD);
+		//jMenu_Preprocessing.add(jMenuItem_Layout);
+		//jMenu_Postprocessing.add(jMenuItem_Control);
+		//jMenu_Postprocessing.add(jMenuItem_SimCas);
+		//jMenu_Postprocessing.addSeparator();
+		//jMenu_Postprocessing.add(jMenuItem_Run);
+		//jMenu_Post.add(jMenuItem_ViewRes);
+		//jMenu_Post.add(jMenuItem_ViewErr);
 		jMenu_Help.add(jMenuItem_Tutorial);
 		jMenu_Help.add(jMenuItem_About);
 		jMenu_ModelD.add(jMenuItem_Net);
 		jMenu_ModelD.add(jMenuItem_Net_Param);
-		this.getContentPane().add(jPanel1, BorderLayout.NORTH);
-		jPanel1.add(toolBar, BorderLayout.CENTER);
-		toolBar.add(createVButton, null);
+		//this.getContentPane().add(jPanel1, BorderLayout.NORTH);
+		//this.getContentPane().add(jPanel1, BorderLayout.CENTER);
+		
+		/*toolBar.add(createVButton, null);
 		toolBar.add(copyButton, null);
 		toolBar.add(tableButton, null);
 		toolBar.add(netButton, null);
 		toolBar.add(renameButton, null);
 		toolBar.add(removeButton, null);
 		toolBar.add(xmlEDataButton, null);
-		toolBar.add(xmlIButton, null);
+		toolBar.add(xmlIButton, null);*/
 		String autoCal = Main.props.getProperty("automatedCalibration");
 		System.out.println("Automated Calibration: "+autoCal);
 		//if(autoCal!=null && autoCal.equals("enabled")){
 		if(autoCal!=null && (autoCal.equals("enabled1")||autoCal.equals("enabled2"))){
-		toolBar.add(calibrationButton, null);
+		//jPanel1.add(toolBar, BorderLayout.CENTER);
+		//toolBar.add(calibrationButton, null);
+		menubar.add(calibrationButton);
 		}
 		this.getContentPane().add(desktop, BorderLayout.CENTER);
 
+		menubar.add(comboBox);
 		this.setJMenuBar(menubar);
 
 	}

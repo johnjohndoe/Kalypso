@@ -30,19 +30,21 @@ public class DCChannelTableModel extends DefaultTableModel {
 
 		setCurrentChannel(channel);
 	}
-	
-	public Timeserie getTimeserie(int row)
-	{
-		return (Timeserie) m_myTimeSeries.get(row);
+
+	public Timeserie getTimeserie(int row) {
+		if (m_myTimeSeries.size() > 0) {
+			//System.out.println("Timeserie: "+m_myTimeSeries+" TimeseriesSize: "+m_myTimeSeries.size());
+			return (Timeserie) m_myTimeSeries.get(row);
+		} else {
+			return null;
+		}
 	}
-	
-	
+
 	public DCChannelTableModel(Level level) {
 		super(1, 4);
 
 		setCurrentLevel(level);
 	}
-
 
 	/**
 	 * @see javax.swing.table.TableModel#isCellEditable(int, int)

@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Iterator;
+//import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.AbstractAction;
@@ -27,6 +27,11 @@ import com.bce.datacenter.ingres.Database;
 import com.bce.datacenter.kalypso.Channel;
 import com.bce.datacenter.kalypso.Level;
 import com.bce.datacenter.kalypso.Timeserie;
+//import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.data.TSLink;
 
 /**
  * Timeseries Browser
@@ -41,6 +46,11 @@ public class DCBrowser extends JFrame {
 	private final JTree m_tree = new JTree(m_treeModel);
 
 	private static DCBrowser instance = null;
+
+	private JButton ok = new JButton(I18n.get("Dia_OK"));
+	private JButton cancel = new JButton(I18n.get("Dia_Cancel"));
+	private JButton clear = new JButton(I18n.get("Dia_Clear"));
+
 	public static DCBrowser getInstance() {
 		if (instance == null)
 			instance = new DCBrowser();
@@ -49,10 +59,19 @@ public class DCBrowser extends JFrame {
 
 	public String getSelectedTimeSeriesKey() {
 		int row = m_table.getSelectionModel().getLeadSelectionIndex();
+		//System.out.println("Selcted Row: "+row);
+		if(row == -1){
+			row = 0;
+			//System.out.println("Selcted Row: "+row);
+		}
 		Timeserie timeserie = m_tableModel.getTimeserie(row);
+		if(timeserie != null){
 		return timeserie.getDataTableName();
+		}else{
+			return null;
+		}
 	}
-	
+
 	public TreePath getTreePath(String timeSeriesKey) {
 		try {
 			List backpath = new ArrayList();
@@ -118,6 +137,31 @@ public class DCBrowser extends JFrame {
 		validate();
 	}
 
+	public TSLink getSelectedNode() {
+
+		if (instance.getSelectedTimeSeriesKey() != null)
+		{
+		String text=getTreePath(instance.getSelectedTimeSeriesKey()).toString();
+		text=text.replaceAll(",","/");			
+		text=text.replaceAll("\\[","");			
+		text=text.replaceAll("\\]","");			
+			return new TSLink(
+				text+ ","
+					+ instance.getSelectedTimeSeriesKey());
+		}
+		else
+			return new TSLink(null);
+	}
+
+	public void setActionListener(
+		ActionListener okListener,
+		ActionListener cancelListener,
+		ActionListener clearListener) {
+		ok.addActionListener(okListener);
+		cancel.addActionListener(cancelListener);
+		clear.addActionListener(clearListener);
+	}
+
 	/**
 	 * Creates a new DCBrowser object.
 	 */
@@ -142,6 +186,33 @@ public class DCBrowser extends JFrame {
 				new JScrollPane(m_table)),
 			BorderLayout.CENTER);
 		this.getContentPane().add(panel);
+
+		//ButtonPanel
+		JPanel buttonPanel = new JPanel();
+
+		ActionListener okListener1 = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				hide();
+			}
+		};
+		ok.addActionListener(okListener1);
+		buttonPanel.add(ok);
+
+		ActionListener cancelListener1 = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				hide();
+			}
+		};
+		cancel.addActionListener(cancelListener1);
+		ActionListener clearListener1 = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				hide();
+			}
+		};
+		clear.addActionListener(clearListener1);
+		buttonPanel.add(cancel);
+		buttonPanel.add(clear);
+		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		setSize(500, 400);
 		setTitle("Zeitreihen-Browser");

@@ -10,7 +10,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JTable;
 
-import timeserieSelection.CSelectTSFrame;
+import com.bce.datacenter.kalypso.dcbrowser.DCBrowser;
 import de.tuhh.wb.javagis.data.TSLink;
 
 public class BCEChooser {
@@ -47,18 +47,18 @@ public class BCEChooser {
 
 	}
 
-	private static CSelectTSFrame tsFrameDialog =
-		new CSelectTSFrame();
-
 	public static void setUpBCEEditor(
 		final TableCellEditorBCE bceEditor,
 		final JButton button) {
+
+		
 
 		ActionListener okListener = new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 
-				bceEditor.selectedLink = tsFrameDialog.getSelectedNode();
+				bceEditor.selectedLink =
+					DCBrowser.getInstance().getSelectedNode();
 				bceEditor.stopCellEditing();
 				System.out.println(
 					"selectedNode: " + bceEditor.selectedLink.toString());
@@ -87,18 +87,18 @@ public class BCEChooser {
 
 		};
 
-		tsFrameDialog.setActionListener(
+		DCBrowser.getInstance().setActionListener(
 			okListener,
 			cancelListener,
 			clearListener);
 
-		tsFrameDialog.addWindowListener(new WindowAdapter() {
+		DCBrowser.getInstance().addWindowListener(new WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
 
 				bceEditor.cancelCellEditing();
 
-				tsFrameDialog.hide();
+				DCBrowser.getInstance().hide();
 
 			}
 
@@ -112,15 +112,19 @@ public class BCEChooser {
 
 				if (bceEditor.selectedLink != null) {
 
-					button.setText(bceEditor.selectedLink.toString());
+					button.setText(bceEditor.selectedLink.getText());
 
 				} else
 					button.setText("");
-
-				tsFrameDialog.setLocationRelativeTo(button);
-				tsFrameDialog.prepareWindow(bceEditor.selectedLink);
-				tsFrameDialog.show();
-				tsFrameDialog.toFront();
+					
+				DCBrowser.getInstance().setVisible(true);
+				DCBrowser.getInstance().setLocationRelativeTo(button);
+				if (bceEditor.selectedLink != null) {
+					DCBrowser.getInstance().expandTo(
+						bceEditor.selectedLink.getCode());
+				}
+				DCBrowser.getInstance().show();
+				DCBrowser.getInstance().toFront();
 
 			}
 
