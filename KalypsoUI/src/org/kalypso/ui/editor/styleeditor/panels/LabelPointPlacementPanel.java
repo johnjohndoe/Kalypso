@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -200,14 +200,19 @@ public class LabelPointPlacementPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
   }
 
   public double[] getValue()
   {
     double returnArray[] =
-    { xValue, yValue };
+    {
+        xValue,
+        yValue };
     return returnArray;
   }
 

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.dialogs;
 
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -81,6 +81,7 @@ public class FilterDialogLabelProvider implements ILabelProvider
    */
   public void addListener( ILabelProviderListener listener )
   {
+  // nothing
   }
 
   /*
@@ -90,14 +91,14 @@ public class FilterDialogLabelProvider implements ILabelProvider
    */
   public void dispose()
   {
-  
+  // nothing
   }
 
   /*
    * (non-Javadoc)
    * 
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object,
-   *            java.lang.String)
+   *      java.lang.String)
    */
   public boolean isLabelProperty( Object element, String property )
   {
@@ -111,7 +112,7 @@ public class FilterDialogLabelProvider implements ILabelProvider
    */
   public void removeListener( ILabelProviderListener listener )
   {
-  
+  // nothing
   }
 
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
@@ -143,7 +143,10 @@ public class StrokeDashoffsetPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
 
     Label offsetLabel = new Label( composite, SWT.NULL );

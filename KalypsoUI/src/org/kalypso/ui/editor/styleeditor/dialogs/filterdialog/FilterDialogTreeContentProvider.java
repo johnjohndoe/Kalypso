@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -85,15 +85,16 @@ public class FilterDialogTreeContentProvider implements ITreeContentProvider
    */
   public void dispose()
   {
-  
+  // nothing
   }
 
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-   *            java.lang.Object, java.lang.Object)
+   *      java.lang.Object, java.lang.Object)
    */
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-  
+  // nothing
   }
+
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -144,7 +144,10 @@ public class UrlInputPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
 
     Label urlLabel = new Label( composite, SWT.NULL );

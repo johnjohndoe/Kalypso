@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -127,13 +127,16 @@ public class ConfigurePointSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
 
     Label removeMarkButton = new Label( composite, SWT.PUSH );
     removeMarkButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
     if( getCanDelete() == 1 )
-      removeMarkButton.setVisible(false);
+      removeMarkButton.setVisible( false );
     FormData removeMarkButtonData = new FormData();
     removeMarkButtonData.height = 18;
     removeMarkButtonData.width = 18;
@@ -155,7 +158,10 @@ public class ConfigurePointSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
 
     Label moveBackwardMarkButton = new Label( composite, SWT.PUSH );
@@ -181,7 +187,10 @@ public class ConfigurePointSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
 
     Label moveForwardMarkButton = new Label( composite, SWT.PUSH );
@@ -207,7 +216,10 @@ public class ConfigurePointSymbolizerPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
+
     } );
   }
 

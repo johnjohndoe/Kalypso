@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 09.07.2004
  *  
@@ -171,8 +171,9 @@ public class SLDEditorGuiBuilder
       else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Short" ) )
         numericFeatureTypePropertylist.add( ftp[i] );
     }
-    ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite, MessageBundle.STYLE_EDITOR_RULE,
-        rulePatternCollection.size(), numericFeatureTypePropertylist.size() );
+    ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite,
+        MessageBundle.STYLE_EDITOR_RULE, rulePatternCollection.size(),
+        numericFeatureTypePropertylist.size() );
 
     final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder( mainComposite,
         rulePatternCollection, userStyle, theme, numericFeatureTypePropertylist );
@@ -246,7 +247,9 @@ public class SLDEditorGuiBuilder
         {
           int index4 = ruleTabItemBuilder.getSelectedRule();
           if( index4 == ( getRulePatternCollection().size() - 1 ) || index4 < 0 )
-          {}
+          {
+            // nothing
+          }
           else
           {
             ArrayList newOrdered = new ArrayList();
@@ -333,7 +336,9 @@ public class SLDEditorGuiBuilder
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
     } );
 
     ruleTabItemBuilder.draw();

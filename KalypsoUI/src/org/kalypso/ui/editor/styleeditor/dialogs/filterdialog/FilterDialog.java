@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 
 import java.util.ArrayList;
@@ -316,7 +316,9 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
     } );
 
     // ++++ Comparison filter line
@@ -347,7 +349,9 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
     } );
 
     //	++++ Comparison FilterFilter line
@@ -376,7 +380,9 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
     } );
 
     // ----- SLD Filter
@@ -407,7 +413,9 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
 
       public void mouseUp( MouseEvent e )
-      {}
+      {
+      // nothing
+      }
     } );
 
     // **** FOURTH ROW

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -109,8 +109,10 @@ public class ColorBox
       }
 
       public void mouseUp( MouseEvent e )
-      { 
+      {
+      // nothing
       }
+
     } );
     fillColorImageInner.addMouseListener( new MouseListener()
     {
@@ -125,8 +127,10 @@ public class ColorBox
       }
 
       public void mouseUp( MouseEvent e )
-      { 
+      {
+      // nothing
       }
+
     } );
   }
 
