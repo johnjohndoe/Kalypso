@@ -88,6 +88,9 @@ public class TimeserieUtils
    */
   public final static String[] findOutMDBeginningWith( final IObservation obs, final String mdPrefix )
   {
+    if( obs == null )
+      return null;
+    
     final MetadataList mdl = obs.getMetadataList();
 
     final ArrayList mds = new ArrayList();
@@ -186,6 +189,9 @@ public class TimeserieUtils
    */
   public final static DateRangeArgument isForecast( final IObservation obs )
   {
+    if( obs == null )
+      return null;
+    
     final MetadataList mdl = obs.getMetadataList();
     final String range = mdl.getProperty( TimeserieConstants.MD_VORHERSAGE );
     if( range != null )
