@@ -3,6 +3,7 @@ package de.tuhh.wb.javagis.view.projectview;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -29,6 +30,7 @@ import de.tuhh.wb.javagis.xml.GisTransferObject;
 import de.tuhh.wb.javagis.xml.KalypsoXmlImportListener;
 import de.tuhh.wb.javagis.xml.XmlImport;
 import ejb.event.EJBEvent;
+import de.tuhh.wb.javagis.tools.xml.ServiceTools;
 
 public class SimulationDialog
 	extends JInternalFrame
@@ -155,8 +157,10 @@ public class SimulationDialog
 			}
 		}
 		if ("start".equals(command)) {
-			File kalypsoTemplate=new File(Main.props.getProperty("template_simulation"));
+			/*File kalypsoTemplate =
+				new File(Main.props.getProperty("template_simulation"));
 			File kalypsoInp = new File(kalypsoTemplate, "inp.dat");
+			File kalypsoOut = new File(kalypsoTemplate, "out_tis.eik");
 			File zftFile = new File(kalypsoInp, "tis_eik.zft");
 			File[] inpFiles = kalypsoInp.listFiles();
 			boolean hasZftFile = false;
@@ -169,16 +173,20 @@ public class SimulationDialog
 			}
 			if (!hasZftFile) {
 				System.out.println("tis_eik.zft nicht vorhanden");
+				File[] outFiles = kalypsoOut.listFiles();
+				for (int i = 0; i < outFiles.length; i++) {
+					System.out.println(outFiles[i]);
+				}
 				LogView.println(I18n.get("LV_SD_missZft"));
 				JOptionPane jop = new JOptionPane();
 				jop.showMessageDialog(
 					this,
-				    I18n.get("LV_SD_missZft"),
+					I18n.get("LV_SD_missZft"),
 					I18n.get("LV_SD_missZft_Title"),
 					JOptionPane.INFORMATION_MESSAGE);
-			}else{
+			} else {*/
 			runSimulation();
-			}
+			//}
 		}
 		if ("viewLog".equals(command)) {
 			LogView.getInstance().show();
@@ -281,14 +289,77 @@ public class SimulationDialog
 			//		kalypsoExe.run();
 			//		kalypsoExe.join();
 
-			FileSystemUtils.execute("kalypso.bat", myNaModelDir);
-			KonfigWrite.renameOutputFiles(resultDir);
-			File resultsDir =
-				KonfigWrite.moveOutputDir(targetDir, "out_tis.eik", OUT_DIR);
+			File kalypsoInp = new File(targetDir, "inp.dat");
+			File kalypsoOut = new File(targetDir, "out_tis.eik");
+			File zftFile = new File(kalypsoInp, "tis_eik.zft");
+			File modelFile = new File(kalypsoOut, "model.xml");
+			File[] inpFiles = kalypsoInp.listFiles();
+			boolean hasZftFile = false;
+			for (int i = 0; i < inpFiles.length; i++) {
+				//System.out.println(inpFiles[i]);
+				if (inpFiles[i].equals(zftFile)) {
+					hasZftFile = true;
+					System.out.println("tis_eik.zft vorhanden");
+					FileSystemUtils.execute("kalypso.bat", myNaModelDir);
+					KonfigWrite.renameOutputFiles(resultDir);
+					File resultsDir =
+						KonfigWrite.moveOutputDir(
+							targetDir,
+							"out_tis.eik",
+							OUT_DIR);
 
-			JOptionPane.showMessageDialog(
-				null,
-				"results are stored to \n" + resultsDir.toString());
+					JOptionPane.showMessageDialog(
+						null,
+						"results are stored to \n" + resultsDir.toString());
+
+				}
+			}
+			if (!hasZftFile) {
+				System.out.println("tis_eik.zft nicht vorhanden");
+				File[] outFiles = kalypsoOut.listFiles();
+				for (int i = 0; i < outFiles.length; i++) {
+					System.out.println(outFiles[i]);
+				}
+				Object[] options = { I18n.get("Dia_Yes"), I18n.get("Dia_No")};
+				int n =
+					JOptionPane.showOptionDialog(
+						null,
+						I18n.get("SD_zft_Question"),
+						I18n.get("SD_zft_Title"),
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE,
+						null,
+						options,
+						options[0]);
+
+				switch (n) {
+					case JOptionPane.NO_OPTION :
+						LogView.println(I18n.get("LV_SD_missZft"));
+						break;
+					case JOptionPane.YES_OPTION :
+						File xslFile = new File("xsl", "xml_2_zft.xsl");
+						String result =
+							ServiceTools.xslTransform(modelFile, xslFile);
+						FileWriter out = new FileWriter(zftFile);
+						out.write(result);
+						out.close();
+						FileSystemUtils.execute("kalypso.bat", myNaModelDir);
+						KonfigWrite.renameOutputFiles(resultDir);
+						File resultsDir =
+							KonfigWrite.moveOutputDir(
+								targetDir,
+								"out_tis.eik",
+								OUT_DIR);
+
+						JOptionPane.showMessageDialog(
+							null,
+							"results are stored to \n" + resultsDir.toString());
+
+					default :
+						break;
+
+				}
+			}
 
 			/*
 			  try

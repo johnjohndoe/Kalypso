@@ -29,6 +29,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import javax.swing.table.JTableHeader;
 
 import de.tuhh.wb.javagis.Main;
 import de.tuhh.wb.javagis.data.DoubleKeyHash;
@@ -102,6 +103,7 @@ public class GisTableView
 			//tableModel.setEditable(true);
 
 			JTable jTable = new JTable((TableModel) tableModel, null);
+			jTable.setTableHeader(new MyJTableHeader(jTable.getColumnModel(),tableModel));
 
 			DateChooser.setUpDateChooser(jTable);
 			BCEChooser.setUpBCEChooser(jTable);
@@ -861,7 +863,7 @@ public class GisTableView
 
 			String description = tableModel.getDescription(selectedCol);
 
-			if (description != null && !"".equals(description)) {
+			/*if (description != null && !"".equals(description)) {
 
 				mi =
 					new JMenuItem(
@@ -883,7 +885,7 @@ public class GisTableView
 
 				popup.add(mi);
 
-			}
+			}*/
 
 			popup.show(e.getComponent(), e.getX(), e.getY());
 
@@ -995,6 +997,27 @@ public class GisTableView
 				}
 			}
 		}*/
+
+	}
+
+	class MyJTableHeader extends JTableHeader {
+		GisTableModel tableModel;
+
+		MyJTableHeader(
+			TableColumnModel columnModel,
+			GisTableModel tableModel) {
+			super(columnModel);
+			this.tableModel = tableModel;
+		}
+		public String getToolTipText(MouseEvent e) {
+			String tip = null;
+			java.awt.Point p = e.getPoint();
+			int index = columnModel.getColumnIndexAtX(p.x);
+			int realIndex = columnModel.getColumn(index).getModelIndex();
+			//System.out.println("RealIndex= " + realIndex);
+			//System.out.println("TableModel: " + tableModel);
+			return tableModel.getDescription(realIndex);
+		}
 
 	}
 

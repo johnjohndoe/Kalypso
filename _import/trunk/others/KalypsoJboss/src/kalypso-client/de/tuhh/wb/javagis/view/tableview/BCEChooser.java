@@ -120,8 +120,13 @@ public class BCEChooser {
 				DCBrowser.getInstance().setVisible(true);
 				DCBrowser.getInstance().setLocationRelativeTo(button);
 				if (bceEditor.selectedLink != null) {
+					try{
 					DCBrowser.getInstance().expandTo(
 						bceEditor.selectedLink.getCode());
+					}
+					catch(Exception exeption)
+					{
+					}
 				}
 				DCBrowser.getInstance().show();
 				DCBrowser.getInstance().toFront();

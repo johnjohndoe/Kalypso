@@ -103,7 +103,7 @@ public class ViewManager
 
 	private static JComboBox comboBox;
 	private static boolean processingFlag = true;
-	
+
 	private static ProjectView projectView;
 
 	public static JDesktopPane desktop = new JDesktopPane();
@@ -168,6 +168,13 @@ public class ViewManager
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		Toolkit.getDefaultToolkit().sync();
 		repaint();
+		
+		/*WaitingDialog waitDialog = new WaitingDialog();
+		waitDialog.setVisible(true);
+		waitDialog.setSize(150, 150);
+		desktop.add(waitDialog);
+		waitDialog.moveToFront();
+		repaint();*/
 
 		//GisTableView gisTableView = new GisTableView("TestVersion",version.getGisTableModels(),null,0,null,GisTableView.IS_GISELEMENTLIST);
 		String beginTitle = null;
@@ -275,22 +282,27 @@ public class ViewManager
 	public void showProjectView() {
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		repaint();
+		/*WaitingDialog waitDialog = new WaitingDialog();
+		waitDialog.setVisible(true);
+		waitDialog.setSize(150,150);
+		desktop.add(waitDialog);
+		waitDialog.moveToFront();
+		repaint();*/
 
 		String title = I18n.get("windowTitlePV");
 		boolean open = isViewOpen(title);
-				if (!open) {
-		projectView = new ProjectView(title);
-		projectView.setVisible(true);
-		projectView.setSize(400, 300);
-		desktop.add(projectView);
-		projectView.moveToFront();
-				}
+		if (!open) {
+			projectView = new ProjectView(title);
+			projectView.setVisible(true);
+			projectView.setSize(400, 300);
+			desktop.add(projectView);
+			projectView.moveToFront();
+		}
 
 		setCursor(Cursor.getDefaultCursor());
 		repaint();
+		//waitDialog.dispose();
 	}
-	
-
 
 	public void xmlImport(String themeKey, Object vId, File file) {
 		versionAccess.xmlImport(themeKey, vId, file);
@@ -348,7 +360,7 @@ public class ViewManager
 			System.out.println("start AutomateCalibration");
 			SCE_KALYPSO.openSCEView();
 		}
-		
+
 		if ("comboBoxChanged".equals(e.getActionCommand())) {
 			if (processingFlag) {
 				int index = comboBox.getItemCount();
@@ -357,9 +369,9 @@ public class ViewManager
 					JInternalFrame frame =
 						(JInternalFrame) comboBox.getSelectedItem();
 					//System.out.println("Selcted item: "+frame.getTitle());
-					try{
-					frame.setIcon(false);
-					}catch(Exception exception){
+					try {
+						frame.setIcon(false);
+					} catch (Exception exception) {
 						System.out.println("Cannot de-iconify frame!");
 					}
 					frame.moveToFront();
@@ -445,15 +457,15 @@ public class ViewManager
 		jMenuItem_Close.setActionCommand("Close_Project");
 		jMenuItem_Close.addActionListener(new java.awt.event.ActionListener() {
 
-					public void actionPerformed(ActionEvent e) {
-						if ("Close_Project".equals(e.getActionCommand())) {
-							projectView.dispose();
-							jMenuItem_OpenProject.setEnabled(true);
-							jMenuItem_Close.setEnabled(false);
-							jMenuItem_ViewErr.setEnabled(false);
-						}
-					}
-				});
+			public void actionPerformed(ActionEvent e) {
+				if ("Close_Project".equals(e.getActionCommand())) {
+					projectView.dispose();
+					jMenuItem_OpenProject.setEnabled(true);
+					jMenuItem_Close.setEnabled(false);
+					jMenuItem_ViewErr.setEnabled(false);
+				}
+			}
+		});
 		jMenuItem_Exit.setText(I18n.get("jMenuItem_Exit"));
 		//jMenuItem_Exit.setMnemonic('X');
 
@@ -637,7 +649,7 @@ public class ViewManager
 		//menubar.add(jMenu_Postprocessing);
 		//menubar.add(jMenu_Post);
 		menubar.add(jMenu_Help);
-		
+
 		jMenu_ProjectManager.add(jMenuItem_OpenProject);
 		jMenu_ProjectManager.add(jMenuItem_Close);
 		jMenu_ProjectManager.add(jMenuItem_openConfView);
@@ -645,7 +657,7 @@ public class ViewManager
 		jMenu_ProjectManager.addSeparator();
 		//jMenu_ProjectManager.add(jMenuItem_Print);
 		jMenu_ProjectManager.add(jMenuItem_Exit);
-		
+
 		//jMenu_Preprocessing.add(jMenuItem_View);
 		//jMenu_Preprocessing.add(jMenu_ModelD);
 		//jMenu_Preprocessing.add(jMenuItem_Layout);
@@ -661,7 +673,7 @@ public class ViewManager
 		jMenu_ModelD.add(jMenuItem_Net_Param);
 		//this.getContentPane().add(jPanel1, BorderLayout.NORTH);
 		//this.getContentPane().add(jPanel1, BorderLayout.CENTER);
-		
+
 		/*toolBar.add(createVButton, null);
 		toolBar.add(copyButton, null);
 		toolBar.add(tableButton, null);
@@ -671,12 +683,13 @@ public class ViewManager
 		toolBar.add(xmlEDataButton, null);
 		toolBar.add(xmlIButton, null);*/
 		String autoCal = Main.props.getProperty("automatedCalibration");
-		System.out.println("Automated Calibration: "+autoCal);
+		System.out.println("Automated Calibration: " + autoCal);
 		//if(autoCal!=null && autoCal.equals("enabled")){
-		if(autoCal!=null && (autoCal.equals("enabled1")||autoCal.equals("enabled2"))){
-		//jPanel1.add(toolBar, BorderLayout.CENTER);
-		//toolBar.add(calibrationButton, null);
-		menubar.add(calibrationButton);
+		if (autoCal != null
+			&& (autoCal.equals("enabled1") || autoCal.equals("enabled2"))) {
+			//jPanel1.add(toolBar, BorderLayout.CENTER);
+			//toolBar.add(calibrationButton, null);
+			menubar.add(calibrationButton);
 		}
 		this.getContentPane().add(desktop, BorderLayout.CENTER);
 
@@ -701,7 +714,7 @@ public class ViewManager
 	void removeButton_actionPerformed(ActionEvent e) {
 
 	}
-	
+
 	public static void addViewToList(InternalFrameEvent e) {
 		processingFlag = false;
 		JInternalFrame frame = e.getInternalFrame();
@@ -746,14 +759,14 @@ public class ViewManager
 			//System.out.println("Actual Title: "+comboItemString);
 			if (title.equals(comboItemString)) {
 				JInternalFrame frame = (JInternalFrame) comboItemObject;
-				try{
-				frame.setIcon(false);
-				}catch(Exception exception){
+				try {
+					frame.setIcon(false);
+				} catch (Exception exception) {
 					System.out.println("Cannot de-iconify frame!");
 				}
 				frame.moveToFront();
 				flag = true;
-			} 
+			}
 		}
 		//System.out.println("Flag: "+flag);
 		return flag;
@@ -786,4 +799,5 @@ class MyCellRenderer extends JLabel implements ListCellRenderer {
 		return this;
 
 	}
+	
 }

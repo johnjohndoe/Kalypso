@@ -19,6 +19,8 @@ import javax.swing.JTable;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.event.TableModelEvent;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 
 import de.tuhh.wb.javagis.Main;
 import de.tuhh.wb.javagis.data.GisElementClass;
@@ -66,6 +68,7 @@ public class GisVectorSetTableView
 					myGisElementClass);
 			dummyTableModels.addElement(dummyTableModel);
 			JTable jTable = new JTable(dummyTableModel, null);
+			jTable.setTableHeader(new MyJTableHeader(jTable.getColumnModel(),dummyTableModel));
 			/*
 			GisInterfaceTableModel tableModel=(GisInterfaceTableModel)tableModels.elementAt(index);
 			JTable jTable=new JTable(new DummyTableModel((GisInterfaceTableModel)tableModels.elementAt(index)),null);
@@ -391,7 +394,7 @@ public class GisVectorSetTableView
 				popup.add(mi);
 			}
 			String description = tableModel.getDescription(selectedCol);
-			if (description != null && !"".equals(description)) {
+			/*if (description != null && !"".equals(description)) {
 				mi =
 					new JMenuItem(
 						Main.toHtml(
@@ -405,7 +408,7 @@ public class GisVectorSetTableView
 				mi.addActionListener(this);
 				popup.addSeparator();
 				popup.add(mi);
-			}
+			}*/
 			popup.show(e.getComponent(), e.getX(), e.getY());
 		}
 	}
@@ -477,4 +480,26 @@ public class GisVectorSetTableView
 	    }
 	}
 	*/
+	
+	class MyJTableHeader extends JTableHeader {
+			GisInterfaceTableModel tableModel;
+
+			MyJTableHeader(
+				TableColumnModel columnModel,
+				GisInterfaceTableModel tableModel) {
+				super(columnModel);
+				this.tableModel = tableModel;
+			}
+			public String getToolTipText(MouseEvent e) {
+				String tip = null;
+				java.awt.Point p = e.getPoint();
+				int index = columnModel.getColumnIndexAtX(p.x);
+				int realIndex = columnModel.getColumn(index).getModelIndex();
+				//System.out.println("RealIndex= " + realIndex);
+				//System.out.println("TableModel: " + tableModel);
+				return tableModel.getDescription(realIndex);
+			}
+
+		}
+		
 }
