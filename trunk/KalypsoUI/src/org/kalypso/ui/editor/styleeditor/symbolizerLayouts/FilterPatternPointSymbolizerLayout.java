@@ -31,7 +31,7 @@ import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
  *  
  */
 
-public class FilterPatternPointSymbolizerLayout extends SymbolizerLayout
+public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
   private int selectionIndex = 0;
@@ -167,8 +167,7 @@ public class FilterPatternPointSymbolizerLayout extends SymbolizerLayout
                         .getBlue() ) );
           }
         }
-      }
-      userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+      }      
 
       colorPalettePanel.addColorPalettePanelListener( new PanelListener()
       {

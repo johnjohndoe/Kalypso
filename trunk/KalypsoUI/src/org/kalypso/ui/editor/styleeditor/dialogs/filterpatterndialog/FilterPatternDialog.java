@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialogEvent;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialogListener;
 import org.kalypso.ui.editor.styleeditor.panels.ColorBox;
@@ -26,17 +27,21 @@ public class FilterPatternDialog extends Dialog
 {
 
   private EventListenerList listenerList = new EventListenerList();
+
   private PropertyIsBetweenOperation operation = null;
+
   private Color color = null;
+
   private Text upperBoundaryText = null;
+
   private Text lowerBoundaryText = null;
 
-  public FilterPatternDialog( Shell parent, Operation m_operation)
-  {    
-    super( parent );    
+  public FilterPatternDialog( Shell parent, Operation m_operation )
+  {
+    super( parent );
     // Currently, pattern supports only PropertyIsBetweenOperation
-    if(m_operation instanceof PropertyIsBetweenOperation)
-      operation = (PropertyIsBetweenOperation) m_operation;    
+    if( m_operation instanceof PropertyIsBetweenOperation )
+      operation = (PropertyIsBetweenOperation)m_operation;
   }
 
   protected void configureShell( Shell shell )
@@ -48,8 +53,47 @@ public class FilterPatternDialog extends Dialog
 
   protected void okPressed()
   {
-    ((BoundaryExpression)operation.getLowerBoundary()).setValue(lowerBoundaryText.getText());
-    ((BoundaryExpression)operation.getUpperBoundary()).setValue(upperBoundaryText.getText());
+    // check whether boundaries are set and lowerBoundary<upperBoundary
+    if( lowerBoundaryText.getText() == null || lowerBoundaryText.getText().trim().length() == 0 )
+    {
+      new StyleEditorErrorDialog( getShell(), "Eingabefehler", "LowerBoundary wurde nicht gesetzt" )
+          .showError();
+      super.cancelPressed();
+      return;
+    }
+    else if( upperBoundaryText.getText() == null
+        || upperBoundaryText.getText().trim().length() == 0 )
+    {
+      new StyleEditorErrorDialog( getShell(), "Eingabefehler", "UpperBoundary wurde nicht gesetzt" )
+          .showError();
+      super.cancelPressed();
+      return;
+    }
+    else if( !( isNumeric( lowerBoundaryText.getText() ) ) )
+    {
+      new StyleEditorErrorDialog( getShell(), "Eingabefehler",
+          "LowerBoundary ist kein numerischer Wert" ).showError();
+      super.cancelPressed();
+      return;
+    }
+    else if( !( isNumeric( upperBoundaryText.getText() ) ) )
+    {
+      new StyleEditorErrorDialog( getShell(), "Eingabefehler",
+          "UpperBoundary ist kein numerischer Wert" ).showError();
+      super.cancelPressed();
+      return;
+    }
+    else if( Double.parseDouble( lowerBoundaryText.getText() ) > Double
+        .parseDouble( upperBoundaryText.getText() ) )
+    {
+      new StyleEditorErrorDialog( getShell(), "Eingabefehler",
+          "UpperBoundary darf nicht kleiner als LowerBoundary sein" ).showError();
+      super.cancelPressed();
+      return;
+    }
+
+    ( (BoundaryExpression)operation.getLowerBoundary() ).setValue( lowerBoundaryText.getText() );
+    ( (BoundaryExpression)operation.getUpperBoundary() ).setValue( upperBoundaryText.getText() );
     fire();
     super.okPressed();
   }
@@ -84,54 +128,72 @@ public class FilterPatternDialog extends Dialog
     composite.setSize( 200, 200 );
     composite.setLayout( new GridLayout( 1, true ) );
     composite.layout();
-    applyDialogFont( composite );    
-            
-    final ColorBox box = new ColorBox( composite, getColor(), ColorPalettePanel.COLOR_SIZE, ColorPalettePanel.COLOR_BORDER );
+    applyDialogFont( composite );
+
+    final ColorBox box = new ColorBox( composite, getColor(), ColorPalettePanel.COLOR_SIZE,
+        ColorPalettePanel.COLOR_BORDER );
     final ColorDialog dialog = new ColorDialog( composite.getShell() );
     dialog.setRGB( getColor().getRGB() );
-    box.addPanelListener(new PanelListener()
+    box.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
         dialog.open();
-        Color newColor =  new Color( null, dialog.getRGB() );        
-        setColor(newColor);
-        box.setColor(newColor);
+        Color newColor = new Color( null, dialog.getRGB() );
+        setColor( newColor );
+        box.setColor( newColor );
         fire();
       }
-    });
-    
+    } );
+
     Label lowerBoundaryLabel = new Label( composite, SWT.NULL );
     lowerBoundaryLabel.setText( "LowerBoundary" );
-    lowerBoundaryText = new Text( composite, SWT.BORDER );    
+    lowerBoundaryText = new Text( composite, SWT.BORDER );
     GridData textData = new GridData();
     textData.widthHint = 90;
     textData.heightHint = 10;
     lowerBoundaryText.setLayoutData( textData );
-    lowerBoundaryText.setText( ((BoundaryExpression) operation.getLowerBoundary()).getValue());
-    
+    lowerBoundaryText.setText( ( (BoundaryExpression)operation.getLowerBoundary() ).getValue() );
+
     Label upperBoundaryLabel = new Label( composite, SWT.NULL );
     upperBoundaryLabel.setText( "UpperBoundary" );
-    upperBoundaryText = new Text( composite, SWT.BORDER );    
+    upperBoundaryText = new Text( composite, SWT.BORDER );
     GridData textData2 = new GridData();
     textData2.widthHint = 90;
     textData2.heightHint = 10;
-    upperBoundaryText.setLayoutData( textData2 ); 
-    upperBoundaryText.setText( ((BoundaryExpression) operation.getUpperBoundary()).getValue());    
+    upperBoundaryText.setLayoutData( textData2 );
+    upperBoundaryText.setText( ( (BoundaryExpression)operation.getUpperBoundary() ).getValue() );
     return composite;
   }
+
+  private boolean isNumeric( String value )
+  {
+    try
+    {
+      Double.parseDouble( value );
+    }
+    catch( NumberFormatException e )
+    {
+      return false;
+    }
+    return true;
+  }
+
   public Color getColor()
   {
     return color;
   }
+
   public void setColor( Color m_color )
-  {   
+  {
     this.color = m_color;
   }
+
   public PropertyIsBetweenOperation getOperation()
   {
     return operation;
   }
+
   public void setOperation( PropertyIsBetweenOperation m_operation )
   {
     this.operation = m_operation;

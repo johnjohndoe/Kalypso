@@ -1,7 +1,6 @@
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
 import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -13,29 +12,19 @@ import org.kalypso.ogc.gml.KalypsoUserStyle;
  * @author F.Lindemann
  *  
  */
-public class SymbolizerLayout
+public class SymbolizerLayout extends AbstractSymbolizerLayout
 {
-
-  protected Composite composite = null;
-
-  protected Symbolizer symbolizer = null;
-
-  protected KalypsoUserStyle userStyle = null;
-
-  protected SymbolizerLayout( Composite m_parent, Symbolizer m_symbolizer,
-      KalypsoUserStyle m_userStyle )
+  public SymbolizerLayout( Composite m_parent, Symbolizer m_symbolizer, KalypsoUserStyle m_userStyle )
   {
-    this.composite = m_parent;
-    this.symbolizer = m_symbolizer;
-    this.userStyle = m_userStyle;
+    super( m_parent, m_symbolizer, m_userStyle );
   }
 
   public SymbolizerLayout( Composite parent )
   {
-    this.composite = parent;
+    super( parent );
   }
 
-  public void draw() throws FilterEvaluationException
+  public void draw()
   {
     GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;

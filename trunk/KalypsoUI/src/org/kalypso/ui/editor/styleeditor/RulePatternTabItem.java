@@ -1,6 +1,5 @@
 /*
  * Created on 12.07.2004
- *  
  */
 package org.kalypso.ui.editor.styleeditor;
 
@@ -97,13 +96,12 @@ public class RulePatternTabItem
     // 1. get global values for name, minDen, maxDen,
     String rulePatternName = tmpRule.getTitle();
     if( rulePatternName == null || rulePatternName.trim().length() == 0 )
-    {      
+    {
       rulePatternName = "set title";
-      tmpRule.setTitle( rulePatternName);
+      tmpRule.setTitle( rulePatternName );
     }
     double rulePatternMinDenom = tmpRule.getMinScaleDenominator();
     double rulePatternMaxDenom = tmpRule.getMaxScaleDenominator();
-    int patternType = -1;
 
     // 2. Begin to draw the first lines
     final TabItem tabItem = new TabItem( ruleTabFolder, SWT.NULL );
@@ -272,10 +270,8 @@ public class RulePatternTabItem
       // if PropertyIsBetween
       if( ( (ComplexFilter)filter ).getOperation().getOperatorId() == OperationDefines.PROPERTYISBETWEEN )
       {
-        patternType = OperationDefines.PROPERTYISBETWEEN;
         // find out the settings of the filter - min, max and step values
 
-        boolean valuesHaveChanged = false;
         for( int j = 0; j < ruleCollection.size(); j++ )
         {
           // verify again that it is a complexFilter and of type PropertyIs
@@ -294,7 +290,6 @@ public class RulePatternTabItem
                 maxValue = Double.parseDouble( ( (BoundaryExpression)isBetweenOperation
                     .getUpperBoundary() ).getValue() );
                 step = maxValue - minValue;
-                valuesHaveChanged = true;
               }
               else
               {

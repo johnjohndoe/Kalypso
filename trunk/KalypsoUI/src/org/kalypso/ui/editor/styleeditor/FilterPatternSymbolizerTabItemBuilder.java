@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
+import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.AbstractSymbolizerLayout;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.FilterPatternLineSymbolizerLayout;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.FilterPatternPointSymbolizerLayout;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.FilterPatternPolygonSymbolizerLayout;
@@ -41,7 +42,7 @@ public class FilterPatternSymbolizerTabItemBuilder
     composite.layout();
     tabItem.setControl( composite );
 
-    SymbolizerLayout symbolizerLayout = null;
+    AbstractSymbolizerLayout symbolizerLayout = null;
 
     if( symbolizer == null )
     {
@@ -75,10 +76,6 @@ public class FilterPatternSymbolizerTabItemBuilder
       catch( FilterEvaluationException e )
       {
         e.printStackTrace();
-      }
-      catch( Exception ee )
-      {
-        ee.printStackTrace();
       }
     }
 

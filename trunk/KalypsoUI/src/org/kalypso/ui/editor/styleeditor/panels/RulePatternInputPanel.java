@@ -148,6 +148,12 @@ public class RulePatternInputPanel
                 .getShell(), "Input value invalid", "Step needs to be positive >0" );
             errorDialog.showError();
           }
+          // restrict editor to 50 steps
+          else if( ( (int)Math.ceil( ( t_max - t_min ) / t_step ) ) > 50 )
+          {
+            new StyleEditorErrorDialog( getComposite().getShell(), "Verweis",
+                "Editor ist auf 50 Abschnitte begrenzt" ).showError();
+          }
           else
           {
             setMin( t_min );

@@ -14,7 +14,7 @@ import org.kalypso.ogc.gml.KalypsoUserStyle;
  *  
  */
 
-public class RasterSymbolizerLayout extends SymbolizerLayout
+public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
   public RasterSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer,

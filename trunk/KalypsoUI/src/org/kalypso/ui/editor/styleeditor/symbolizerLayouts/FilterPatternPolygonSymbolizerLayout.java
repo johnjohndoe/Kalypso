@@ -25,7 +25,7 @@ import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
  *  
  */
 
-public class FilterPatternPolygonSymbolizerLayout extends SymbolizerLayout
+public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
   private int selectionIndex = 0;
@@ -82,8 +82,7 @@ public class FilterPatternPolygonSymbolizerLayout extends SymbolizerLayout
           ( (PolygonSymbolizer)symb ).getFill().setFill(
               new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );
         }
-      }
-      userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+      }     
 
       colorPalettePanel.addColorPalettePanelListener( new PanelListener()
       {
