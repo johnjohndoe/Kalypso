@@ -17,7 +17,7 @@
         <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="1"/>
+        <arg name="selectionID" value="2"/>
 <!--
 <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=name#linkColumn=niederschlagZR"/>
 -->
@@ -98,6 +98,7 @@
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_1.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -119,6 +120,7 @@
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_2.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -140,6 +142,7 @@
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_3.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -163,6 +166,7 @@
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_4.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -184,6 +188,7 @@
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_5.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -205,6 +210,7 @@
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_6.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -225,6 +231,7 @@
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_7.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -245,6 +252,7 @@
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_8.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -266,6 +274,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_9.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -286,6 +295,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_10.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -306,6 +316,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_11.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -326,6 +337,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_12.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -346,6 +358,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_13.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -366,6 +379,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_14.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -386,6 +400,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_15.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -406,6 +421,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_16.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -427,6 +443,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
+		<arg name="selectFirstFeatureByDefault" value="false"/>
 
 		<arg name="modelspec" value="modelspec_17.xml"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
@@ -438,6 +455,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="ignoreLabel1" value="Abfluss"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
+
 
 	<!-- Ergebniskontrolle NA-Modelle-->
 	<page className="org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung" 

@@ -9,6 +9,7 @@
 			<IsDefault>1</IsDefault>
 			<FeatureTypeStyle>
 				<Name>Node</Name>
+<!--
 				<Rule>
 					<Name>default</Name>
 					<Title>Zufluss</Title>
@@ -75,6 +76,7 @@
 						</Graphic>
 					</PointSymbolizer>
 				</Rule>
+-->
 				<Rule>
 					<Name>default</Name>
 					<Title>PrognosePegel</Title>
