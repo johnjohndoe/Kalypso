@@ -1,21 +1,29 @@
 package org.kalypso.util.pool;
 
+import java.util.HashMap;
+
 /**
  * @author vdoemming
  */
 public class PoolableObjectType implements IPoolableObjectType
 {
-  private String myType = null;
+  private final String myType;
 
-  private String mySource = null;
-
-  public PoolableObjectType()
-  {}
+  private final HashMap mySource;
   
   public PoolableObjectType( final String type, final String source )
   {
     myType = type;
-    mySource = source;
+    
+    mySource = new HashMap();
+     final String[] strings = source.split("&");
+     for(int i=0;i<strings.length;i++)
+     {
+       int pos=strings[i].indexOf("=");
+       if(pos>0)
+         mySource.put(strings[i].substring(0,pos),strings[i].substring(pos+1));
+      
+     }
   }
 
   /**
@@ -29,7 +37,7 @@ public class PoolableObjectType implements IPoolableObjectType
   /**
    * @see org.kalypso.util.pool.IPoolableObjectType#getSource()
    */
-  public String getSource()
+  public HashMap getSource()
   {
     return mySource;
   }
