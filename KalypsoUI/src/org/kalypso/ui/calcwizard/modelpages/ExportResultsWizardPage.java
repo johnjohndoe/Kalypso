@@ -570,7 +570,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     }
 
     final ILabelProvider labelProvider = new FeatureLabelProvider(
-        new StringModifier( ftp, null ) );
+        new StringModifier( ftp ) );
     final ListSelectionDialog dialog = new ListSelectionDialog( getContainer()
         .getShell(), features, new ArrayContentProvider(), labelProvider,
         "Die Daten folgender Pegel werden exportiert:" );

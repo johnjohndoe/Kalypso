@@ -59,18 +59,19 @@ import org.kalypso.util.pool.PoolableObjectWaiter;
 public abstract class ObsView implements IObsViewEventProvider
 {
   /** Additional hints for new items */
-  public static class ItemData 
+  public static class ItemData
   {
-      public final Color color;
-      public final boolean editable; 
+    public final Color color;
 
-      public ItemData( final boolean editable, final Color color )
-      {
-        this.color = color;
-        this.editable = editable;
-      }
+    public final boolean editable;
+
+    public ItemData( final boolean editable, final Color color )
+    {
+      this.color = color;
+      this.editable = editable;
+    }
   }
-  
+
   private final List m_items = new ArrayList();
 
   private final List m_listeners = new ArrayList();
@@ -196,22 +197,42 @@ public abstract class ObsView implements IObsViewEventProvider
   }
 
   /** Laods an observation into this view and sets default values */
-  public void loadObservation( final URL context, final String href, final boolean ignoreExceptions, final String ignoreType, final String tokenizedName, final ItemData data )
+  public void loadObservation( final URL context, final String href,
+      final boolean ignoreExceptions, final String ignoreType, final String tokenizedName,
+      final ItemData data )
   {
     final PoolableObjectType k = new PoolableObjectType( "zml", href, context, ignoreExceptions );
-    
-    new PoolableObjectWaiter( k, new Object[] { this, data, ignoreType, tokenizedName } )
+
+    new PoolableObjectWaiter( k, new Object[]
+    {
+        this,
+        data,
+        ignoreType,
+        tokenizedName } )
     {
       protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
       {
         final IObsProvider provider = new PooledObsProvider( key, null );
-        ((ObsView)m_data[0]).addObservation( provider, (String)m_data[3], (String)m_data[2], (ObsView.ItemData)m_data[1] );
+        try
+        {
+          ( (ObsView)m_data[0] ).addObservation( provider, (String)m_data[3], (String)m_data[2],
+              (ObsView.ItemData)m_data[1] );
+        }
+        finally
+        {
+          provider.dispose();
+        }
       }
     };
   }
-  
-  protected abstract void addObservation( final IObsProvider provider,
-      final String tokenizedName, final String ignoreType, final ItemData data );
+
+  /**
+   * Implementors of this class must ensure, that there is a 1:1 relationship
+   * between provider and added item. So the given provider should be disposed
+   * and for each added item a copy of the given provider should be made.
+   */
+  protected abstract void addObservation( final IObsProvider provider, final String tokenizedName,
+      final String ignoreType, final ItemData data );
 
   public static Map mapItems( final ObsViewItem[] items )
   {

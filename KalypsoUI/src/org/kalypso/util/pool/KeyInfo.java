@@ -40,9 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.pool;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -59,7 +59,7 @@ public final class KeyInfo extends Job implements ILoaderListener
 {
   protected final static Logger LOGGER = Logger.getLogger( KeyInfo.class.getName() );
 
-  private final List m_listeners = Collections.synchronizedList( new LinkedList() );
+  private final Collection m_listeners = Collections.synchronizedSet( new HashSet() );
 
   private Object m_object = null;
 
@@ -121,7 +121,7 @@ public final class KeyInfo extends Job implements ILoaderListener
     if( m_object == object )
     {
       LOGGER.info( "Object invalid for key: " + m_key );
-      
+
       m_object = null;
 
       final IPoolListener[] ls = (IPoolListener[])m_listeners
@@ -143,12 +143,12 @@ public final class KeyInfo extends Job implements ILoaderListener
   {
     final IStatus status = loadObject( monitor );
 
-      final IPoolListener[] ls = (IPoolListener[])m_listeners
-          .toArray( new IPoolListener[m_listeners.size()] );
-      // TRICKY: objectLoaded may add a new PoolListener for this key,
-      // so we cannot iterate over m_listeners
-      for( int i = 0; i < ls.length; i++ )
-        ls[i].objectLoaded( m_key, m_object, status );
+    final IPoolListener[] ls = (IPoolListener[])m_listeners.toArray( new IPoolListener[m_listeners
+        .size()] );
+    // TRICKY: objectLoaded may add a new PoolListener for this key,
+    // so we cannot iterate over m_listeners
+    for( int i = 0; i < ls.length; i++ )
+      ls[i].objectLoaded( m_key, m_object, status );
 
     return status;
   }
@@ -177,7 +177,7 @@ public final class KeyInfo extends Job implements ILoaderListener
 
   public boolean isEmpty()
   {
-      return m_listeners.isEmpty();
+    return m_listeners.isEmpty();
   }
 
   public void saveObject( final IProgressMonitor monitor ) throws LoaderException
@@ -187,18 +187,19 @@ public final class KeyInfo extends Job implements ILoaderListener
 
   public String toString()
   {
-    StringBuffer b=new StringBuffer();
-    b.append("KeyInfo:\n");
-    if(m_object!=null)
-    b.append("  pooled object (type): "+m_object.getClass().getName()+"\n");
+    final StringBuffer b = new StringBuffer();
+    b.append( "KeyInfo:\n" );
+    if( m_object != null )
+      b.append( "  pooled object (type): " + m_object.getClass().getName() + "\n" );
     else
-      b.append(" !!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!\n pooled object (type): NULL \n");
-    b.append("  loader (type): "+m_loader.getClass().getName()+"\n");
-    b.append("  key: "+m_key+"\n");
-    b.append("  number of listeners: "+m_listeners.size()+"\n");
+      b
+          .append( " !!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!\n pooled object (type): NULL \n" );
+    b.append( "  loader (type): " + m_loader.getClass().getName() + "\n" );
+    b.append( "  key: " + m_key + "\n" );
+    b.append( "  number of listeners: " + m_listeners.size() + "\n" );
     return b.toString();
   }
-  
+
   public IPoolableObjectType getKey()
   {
     return m_key;
@@ -206,9 +207,9 @@ public final class KeyInfo extends Job implements ILoaderListener
 
   public IPoolListener[] getListeners()
   {
-    return (IPoolListener[])m_listeners.toArray( new IPoolListener[m_listeners.size()] ) ;
+    return (IPoolListener[])m_listeners.toArray( new IPoolListener[m_listeners.size()] );
   }
-  
+
   public Object getObject()
   {
     return m_object;

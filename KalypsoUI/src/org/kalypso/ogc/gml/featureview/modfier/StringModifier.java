@@ -65,7 +65,7 @@ public class StringModifier implements IFeatureModifier
   
   private final FeatureTypeProperty m_ftp;
 
-  public StringModifier( final FeatureTypeProperty ftp, final String format )
+  public StringModifier( final FeatureTypeProperty ftp )
   {
     m_ftp = ftp;
   }

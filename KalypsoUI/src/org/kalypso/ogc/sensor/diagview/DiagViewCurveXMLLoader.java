@@ -129,9 +129,6 @@ public DiagViewCurveXMLLoader( final DiagView view, final TypeObservation xmlObs
         color = ColorUtilities.random();
 
       final String curveName = tcurve.getName();
-      // welche ValueAxis?
-//      final String name = NameUtils.replaceTokens( curveName, obs, valueAxis );
-
 
       // each curve gets its own provider as the curve disposes the provider,
       // when disposed

@@ -102,4 +102,12 @@ public final class PlainObsProvider implements IObsProvider
   {
     return false;
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
+   */
+  public IObsProvider copy()
+  {
+    return new PlainObsProvider( m_obs, m_args );
+  }
 }

@@ -68,11 +68,14 @@ public class TableView extends ObsView
   /**
    * Update the tableView with the new observation, perform best guess to know
    * which columns will be added to the tableView.
+   *
+   * @see org.kalypso.ogc.sensor.template.ObsView#addObservation(org.kalypso.ogc.sensor.template.IObsProvider, java.lang.String, java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
    */
   public void addObservation( final IObsProvider provider,
       final String tokenizedName, final String ignoreType, final ItemData data )
   {
     final IObservation obs = provider.getObservation();
+    
     if( obs != null )
     {
       final IAxis[] axes = obs.getAxisList();
@@ -97,7 +100,7 @@ public class TableView extends ObsView
 
           if( !valueAxis.getType().equals( ignoreType ) )
           {
-            final TableViewColumn col = new TableViewColumn( this, provider, NameUtils
+            final TableViewColumn col = new TableViewColumn( this, provider.copy(), NameUtils
                 .replaceTokens( tokenizedName, obs, valueAxis ), data.editable, 50, keyAxes[0],
                 valueAxis );
 

@@ -45,18 +45,10 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
-import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
-import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.feature.visitors.QuerySelectionVisitor;
-import org.kalypsodeegree_impl.model.feature.visitors.SetSelectionVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -77,6 +69,15 @@ import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.KeyComparator;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.feature.visitors.QuerySelectionVisitor;
+import org.kalypsodeegree_impl.model.feature.visitors.SetSelectionVisitor;
 
 /**
  * <p>
@@ -102,6 +103,8 @@ import org.kalypso.util.pool.ResourcePool;
 public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener,
     ICommandTarget, IKalypsoFeatureTheme, IPooledObject
 {
+  protected static final Logger LOGGER = Logger.getLogger( GisTemplateFeatureTheme.class.getName() );
+  
   private JobExclusiveCommandTarget m_commandTarget;
 
   private boolean m_loaded = false;
@@ -120,6 +123,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    featureId -> selection */
   private final Map m_lastSelectedFeaturesMap = new HashMap();
 
+  private boolean m_disposed = false;
 
   /**
    * @param layerType
@@ -171,6 +175,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void dispose()
   {
+    m_disposed = true;
+    
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     pool.removePoolListener( this );
 
@@ -201,7 +207,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     try
     {
-      KalypsoGisPlugin.getDefault().getPool().saveObject( m_theme.getWorkspace(), monitor );
+      if( m_theme != null )
+        KalypsoGisPlugin.getDefault().getPool().saveObject( m_theme.getWorkspace(), monitor );
     }
     catch( final Exception e )
     {
@@ -272,10 +279,15 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
+    if( m_disposed )
+      LOGGER.info( "Theme already disposed: " + this );
+    
+    LOGGER.info( "Object loaded: " + key );
+    
     try
     {
       final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-
+      
       if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
       {
         if( m_theme != null )
@@ -294,17 +306,14 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
         m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
 
-        // jetzt immer die styles noch mal holen
-        // das ist nicht ok! was ist, wenn inzwischen neue styles vom user
-        // hinzugefügt wurden?
+        // erst jetzt mit dem style laden anfangen!
         for( int i = 0; i < m_styleKeys.length; i++ )
           pool.addPoolListener( this, m_styleKeys[i] );
-
+        
         fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
 
         final FeatureList featureList = m_theme.getFeatureList();
         featureList.accept( new SetSelectionVisitor( m_lastSelectedFeaturesMap ) );
-        
         fireModellEvent( new ModellEvent( this, ModellEvent.SELECTION_CHANGED ) );
       }
 
@@ -342,12 +351,20 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
+    LOGGER.info( "Key invalidated for theme: " + key );
+    
     m_loaded = false;
-    if( key == m_layerKey )
+    
+    if( m_theme == null )
+      return;
+    
+    if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
     {
       // die alte selektion merken, falls das Thema gleich wieder geladen wird!
       final FeatureList featureList = m_theme.getFeatureList();
       featureList.accept( new QuerySelectionVisitor( m_lastSelectedFeaturesMap ) );
+      System.out.println( "selektion for theme: " + this );
+      System.out.println( m_lastSelectedFeaturesMap );
       
       m_theme.removeModellListener( this );
       m_theme.dispose();
@@ -360,7 +377,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     for( int i = 0; i < m_styleKeys.length; i++ )
     {
       final IPoolableObjectType styleKey = m_styleKeys[i];
-      if( key == styleKey )
+      if( KeyComparator.getInstance().compare( key, styleKey ) == 0 )
         m_theme.removeStyle( (KalypsoUserStyle)oldValue );
     }
   }

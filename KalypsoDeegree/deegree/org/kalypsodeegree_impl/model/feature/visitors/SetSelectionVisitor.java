@@ -28,8 +28,8 @@ public class SetSelectionVisitor implements FeatureVisitor
     if( object != null )
     {
       final int intValue = ((Integer)object).intValue();
-      System.out.println( "Selekting feature " + f + " with " +intValue );
-      f.select( intValue );
+      System.out.println( "Selecting feature " + f.getId() + " with " + intValue );
+      f.setSelection( intValue );
     }
     
     return true;
