@@ -85,6 +85,9 @@
             category="Kalypso"
             name="Table QuickView"
             id="org.kalypso.ogc.sensor.view.TableViewPart"/>
+      <category
+            name="Kalypso"
+            id="Kalypso"/>            
       <view
             icon="icons/full/elcl16/kde_filter.gif"
             class="org.kalypso.editor.mapeditor.views.StyleEditorViewPart"

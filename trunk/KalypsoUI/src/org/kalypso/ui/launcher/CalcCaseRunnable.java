@@ -11,7 +11,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.service.calculation.ICalculationService;
 import org.kalypso.service.calculation.IJobStatus;
-import org.omg.CORBA.portable.InvokeHandler;
 
 /**
  * @author belger
