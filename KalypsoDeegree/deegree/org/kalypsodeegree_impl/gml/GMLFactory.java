@@ -582,12 +582,12 @@ public class GMLFactory
       {
         if( properties[i] != null )
         {
-          prop = GMLProperty_Impl.createGMLProperty( doc, ftp[i].getName(), properties[i]
+          prop = GMLProperty_Impl.createGMLProperty( doc, ftp[i], properties[i]
               .toString() );
         }
         else
         {
-          prop = GMLProperty_Impl.createGMLProperty( doc, ftp[i].getName(), "" );
+          prop = GMLProperty_Impl.createGMLProperty( doc, ftp[i], "" );
         }
       }
 
@@ -645,7 +645,6 @@ public class GMLFactory
           .getTypeHandlerForClassName( ftp.getType() );
       
     GMLProperty prop = null;
-    // TODO
     if( value instanceof List )
     {
       Iterator iterator = ( (List)value ).iterator();
@@ -654,9 +653,8 @@ public class GMLFactory
     }
     else if( value == null )
     {
-      // TODO test cardinality
       if( min > 0 )
-        prop = GMLProperty_Impl.createGMLProperty( doc, ftp.getName(), "" );
+        prop = GMLProperty_Impl.createGMLProperty( doc, ftp, "" );
     }
     else if(typeHandler!=null)
     {
@@ -680,7 +678,7 @@ public class GMLFactory
     {
       Feature fe = (Feature)value;
       GMLFeature gmlFe = createGMLFeature( doc, fe );
-      prop = GMLProperty_Impl.createGMLProperty( doc, ftp.getName(), gmlFe.getAsElement() );
+      prop = GMLProperty_Impl.createGMLProperty( doc, ftp, gmlFe.getAsElement() );
     }
  else if(value instanceof String
         && ftp instanceof FeatureAssociationTypeProperty)
@@ -692,7 +690,7 @@ public class GMLFactory
     else
     {
     	
-      prop = GMLProperty_Impl.createGMLProperty( doc, ftp.getName(), Mapper.mapJavaValueToXml(value,ftp.getType()) );
+      prop = GMLProperty_Impl.createGMLProperty( doc, ftp, Mapper.mapJavaValueToXml(value,ftp.getType()) );
     }
     // TODO integrate typehandler ??
     if( prop != null )
@@ -704,6 +702,9 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.7  2004/11/22 01:29:50  doemming
+ * *** empty log message ***
+ *
  * Revision 1.6  2004/10/07 19:28:24  doemming
  * *** empty log message ***
  *
