@@ -65,7 +65,7 @@ public class ZmlFactory
 
   private static ParserFactory m_parserFactory = null;
 
-  private static Properties m_props = null;
+  private static Properties m_parserProps = null;
 
   private ZmlFactory( )
   {
@@ -74,20 +74,20 @@ public class ZmlFactory
 
   private static Properties getProperties( )
   {
-    if( m_props == null )
+    if( m_parserProps == null )
     {
       InputStream ins = null;
 
       try
       {
-        m_props = new Properties();
+        m_parserProps = new Properties();
 
         ins = ZmlFactory.class
             .getResourceAsStream( "resource/types2parser.properties" );
 
-        m_props.load( ins );
+        m_parserProps.load( ins );
 
-        return m_props;
+        return m_parserProps;
       }
       catch( IOException e )
       {
@@ -99,7 +99,7 @@ public class ZmlFactory
       }
     }
 
-    return m_props;
+    return m_parserProps;
   }
 
   /**
@@ -224,12 +224,19 @@ public class ZmlFactory
       final Properties props = PropertiesHelper.parseFromString( tmpAxis
           .getDatatype(), '#' );
       final String type = props.getProperty( "TYPE" );
-      final String format = props.getProperty( "FORMAT" );
+      String format = props.getProperty( "FORMAT" );
 
       final IParser parser;
       final IZmlValues values;
       try
       {
+        // if format not specified, then we use the default specification
+        // found in the properties file. Every type can have a default format
+        // declared in this file using the convention that the property 
+        // must be build using the type name followed by the '_format' string.
+        if( format == null || format == "" )
+          format = m_parserProps.getProperty( type + "_format" );
+        
         parser = getParserFactory().createParser( type, format );
 
         values = createValues( context, tmpAxis, parser );
