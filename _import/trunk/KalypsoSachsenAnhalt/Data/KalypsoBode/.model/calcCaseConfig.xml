@@ -37,9 +37,11 @@
 
 	<!-- -->
 	<afterCalcTransformations logFile="calcCase.log">
+<!--	
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":calcdir:Ergebnisse/calcCase.gml"/>
 			<argument name="output" value=":calcdir:calcCase.gml"/>
 		</transformation>
+-->
 	</afterCalcTransformations>
 </calcCaseConfig>

@@ -81,14 +81,14 @@ public class ZipUtilities
     }
   }
 
-  public static void unzip( final InputStream inputStream, final File targetFile )
+  public static void unzip( final InputStream inputStream, final File targetDir )
       throws IOException
   {   
     final ZipInputStream zis = new ZipInputStream( inputStream );
     ZipEntry entry;
     while( ( entry = zis.getNextEntry() ) != null )
     {
-      final File newFile = new File( targetFile, entry.getName() );
+      final File newFile = new File( targetDir, entry.getName() );
       if( entry.isDirectory() )
         newFile.mkdirs();
       else

@@ -56,7 +56,7 @@
 			<arg line="/C start ${project.path}/deployable-data/cvs-co.bat ${user.name} ${copath} ${pPackage}"/>
 		</exec>
 		
-		<delete includeemptydirs="true">
+		<delete includeemptydirs="true" failonerror="false">
 			<!-- empty '.prognose' and 'Rechenvariante' dirs -->
 		    <fileset dir="${dist.prognose}/${pName}/.prognose" includes="**/*"/>
 		    <fileset dir="${dist.prognose}/${pName}/Rechenvarianten" includes="**/*"/>
