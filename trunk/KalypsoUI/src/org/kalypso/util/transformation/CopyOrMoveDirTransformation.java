@@ -43,39 +43,46 @@ package org.kalypso.util.transformation;
 import java.io.BufferedWriter;
 import java.util.Properties;
 
-import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.eclipse.core.resources.FolderUtilities;
 
 /**
- * belger
+ * Kopiert oder verschiebt ein Verzeichnis
+ * 
+ * thül, belger
  */
-public class CopyOrMoveTransformation extends AbstractTransformation
+public class CopyOrMoveDirTransformation extends AbstractTransformation
 {
   public static final int MODE_MOVE = 1;
 
   public static final int MODE_COPY = 2;
 
-  /** Eingabedatei: Absoluter Pfad im Workspace */
+  /** Eingabedatei: Absoluter Pfad im Workspace auf ein Verzeichnis */
   public final static String PROP_INPUT = "input";
 
-  /** Ausgabedatei: Absoluter Pfad im Workspace */
+  /** Ausgabedatei: Absoluter Pfad im Workspace auf ein Verzeichnis  */
   public final static String PROP_OUTPUT = "output";
 
   /** ignore error */
   public final static String PROP_IGNOREERROR = "ignoreError";
 
-  private final int m_mode;
+//  /** Auch Unterverzeichnisse kopieren? 
+//   * Muss 'true' oder 'false' sein
+//   * Optional, default ist 'false'.
+//   * */
+//  public final static String PROP_RECURSE = "recurseSubFolders";
 
-  public CopyOrMoveTransformation( int mode )
-  {
-    m_mode = mode;
-  }
+  /** 
+   * Ursprüngliche Dateien löschen? 
+   * Muss 'true' oder 'false' sein
+   * Optional, default ist 'false'.
+   */
+  public final static String PROP_DELETE_OLD = "deleteOld";
 
   /**
    * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties,
@@ -94,29 +101,27 @@ public class CopyOrMoveTransformation extends AbstractTransformation
 
     try
     {
+      final boolean deleteOld = Boolean.valueOf( properties.getProperty( PROP_DELETE_OLD, "false" ) ).booleanValue();
+//      final boolean recurse = Boolean.valueOf( properties.getProperty( PROP_RECURSE, "false" ) ).booleanValue();
+      
       if( input == null )
         throw new TransformationException( "Parameter 'input' nicht gesetzt" );
       if( output == null || output.length() == 0 )
         throw new TransformationException( "Parameter 'output' nicht gesetzt" );
 
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      final IFile inputFile = root.getFile( new Path( input ) );
-      if( inputFile == null || !inputFile.exists() )
+      final IFolder inputFolder = root.getFolder( new Path( input ) );
+      if( inputFolder == null || !inputFolder.exists() )
         throw new TransformationException( "input file doesn't exist or is not a file: " + input );
 
-      final IFile outputFile = root.getFile( new Path( output ) );
+      final IFolder outputFolder = root.getFolder( new Path( output ) );
 
       try
       {
-        FolderUtilities.mkdirs( outputFile.getParent() );
-        if( outputFile.exists() )
-          outputFile.delete( false, true, new SubProgressMonitor( monitor, 1000 ) );
+        if( deleteOld )
+          inputFolder.move( outputFolder.getFullPath(), false, true, new SubProgressMonitor( monitor, 1000 ) );
         else
-          monitor.worked( 1000 );
-        inputFile.copy( outputFile.getFullPath(), false, new SubProgressMonitor( monitor, 1000 ) );
-        outputFile.setCharset( inputFile.getCharset(), new SubProgressMonitor( monitor, 1000 ) );
-        if( m_mode == MODE_MOVE )
-          inputFile.delete( false, true, new SubProgressMonitor( monitor, 1000 ) );
+          inputFolder.copy( outputFolder.getFullPath(), false, new SubProgressMonitor( monitor, 1000 ) );
       }
       catch( final CoreException e )
       {
