@@ -30,42 +30,6 @@ import org.xml.sax.InputSource;
  */
 public class GisTemplateHelper
 {
-  // TODO: das sollte alles nicht statisch sein, da es hier zu threading
-  // problemen kommt
-  //  private static Unmarshaller GMT_UNMARSHALLER;
-
-  //  private static Marshaller GMT_MARSHALLER;
-
-  //  private static Unmarshaller GTT_UNMARSHALLER;
-
-  //  private static Unmarshaller GFT_UNMARSHALLER;
-
-  //  static
-  //  {
-  //    try
-  //    {
-  //      final ObjectFactory objectFactory = new ObjectFactory();
-  //      GMT_UNMARSHALLER = objectFactory.createUnmarshaller();
-  //      GMT_MARSHALLER.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE
-  // );
-  //      GMT_MARSHALLER = objectFactory.createMarshaller();
-
-  //      GTT_UNMARSHALLER = new
-  // org.kalypso.template.gistableview.ObjectFactory().createUnmarshaller();
-  //      GMT_MARSHALLER.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE
-  // );
-
-  //      GFT_UNMARSHALLER = new
-  // org.kalypso.template.featureview.ObjectFactory().createUnmarshaller();
-  //      GMT_MARSHALLER.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE
-  // );
-  //    }
-  //    catch( final JAXBException e )
-  //    {
-  //      e.printStackTrace();
-  //    }
-  //  }
-
   private GisTemplateHelper()
   {
   // never instantiate this class

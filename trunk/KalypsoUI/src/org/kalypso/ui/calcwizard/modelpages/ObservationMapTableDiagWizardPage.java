@@ -56,13 +56,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
 
       setControl( m_sashForm );
 
-      parent.getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          maximizeMap();
-        }
-      } );
+      postCreateControl();
     }
     catch( final Throwable e )
     {

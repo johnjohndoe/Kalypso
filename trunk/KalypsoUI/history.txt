@@ -124,7 +124,14 @@ Version ...
 	* SetContentThread: bessere handhabung der Thread. Die Klasse heisst jetzt
 	SetContentHelper.
 	
--Weisse-Elster-Modell:
+- Weisse-Elster-Modell:
    für Zufluesse und Pegel wird jetzt ein InterpolationFilter (1h) verwendet. 
    Die Zufluss-Vorhersage-Zeitreihe ist ebenfalls auf die gemessene ZuflussZR verlinkt. Durch den Filter 
    werden bei einer prognoserechnung default-werte erzeugt, die manuell verändert werden können.
+
+- Spree-Modell:
+	- kleinere Bugfixes in der Input-Datenerzeugung
+	- Bugfix beim Übertragen der Erzeugten Dateien zum Client -> die .dbf Dateien lassen sich jetzt auch mit dem alten
+	Programm lesen (Systemzeit vorher umstellen!)
+	
+- Beim Start eines Vorhersagemodells aus dem Startbildschirm wird jetzt eine Sanduhr angezeigt

@@ -157,6 +157,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       sashForm.addControlListener( getControlAdapter() );
 
       setControl( sashForm );
+      
+      postCreateControl();
 
       // Load Template for Grafix.exe
       final String diagFileName = getArguments()
@@ -600,11 +602,11 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
         return;
       }
 
+      // TODO: change to IRunnableWithProgress??
       final WorkspaceModifyOperation mod = new WorkspaceModifyOperation( null )
       {
         protected void execute( final IProgressMonitor monitor )
-            throws CoreException, InvocationTargetException,
-            InterruptedException
+            throws CoreException, InvocationTargetException
         {
           monitor.beginTask( "Grafik öffnen", IProgressMonitor.UNKNOWN );
 

@@ -30,19 +30,11 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class GisTemplateMapModell implements IMapModell
 {
   private final IMapModell m_modell;
-  private final int m_selectionID;
 
   public GisTemplateMapModell( final Gismapview gisview, final URL context,
       final CS_CoordinateSystem crs )
   {
-    this( gisview, context, crs, -1 );
-  }
-  
-  public GisTemplateMapModell( final Gismapview gisview, final URL context,
-      final CS_CoordinateSystem crs, final int selectionID )
-  {
     m_modell = new MapModell( crs );
-    m_selectionID = selectionID;
     
     final IKalypsoTheme legendTheme = new KalypsoLegendTheme( this );
     addTheme( legendTheme );
@@ -58,7 +50,7 @@ public class GisTemplateMapModell implements IMapModell
       final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList
           .get( i );
       
-      final IKalypsoTheme theme = loadTheme( layerType, context, layerType == activeLayer );
+      final IKalypsoTheme theme = loadTheme( layerType, context );
       if( theme != null )
       {
         addTheme( theme );
@@ -76,14 +68,12 @@ public class GisTemplateMapModell implements IMapModell
       m_modell.dispose();
   }
 
-  private IKalypsoTheme loadTheme( final Layer layerType, final URL context, final boolean bActive )
+  private IKalypsoTheme loadTheme( final Layer layerType, final URL context )
   {
     if( "wms".equals( layerType.getLinktype() ) )
       return new KalypsoWMSTheme( layerType.getName(), layerType.getHref(), KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
 
-    final int selectionID = bActive ? m_selectionID : -1;
-    
-    return new GisTemplateFeatureTheme( layerType, context,selectionID );
+    return new GisTemplateFeatureTheme( layerType, context );
   }
 
   // Helper
