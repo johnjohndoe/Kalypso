@@ -47,7 +47,8 @@ public class ResourcePool implements ILoaderListener
   private final Comparator m_keyComparator = new KeyComparator();
 
   /** key -> Set(IPoolListener) */
-  private Map m_listeners = Collections.synchronizedMap( new TreeMap( m_keyComparator ) );
+//  private Map m_listeners = Collections.synchronizedMap( new TreeMap( m_keyComparator ) );
+  private Map m_listeners = new TreeMap( m_keyComparator );
 
   /** key -> object */
   private Map m_objects = new TreeMap( m_keyComparator );
@@ -59,16 +60,11 @@ public class ResourcePool implements ILoaderListener
 
   public ResourcePool( final ILoaderFactory factory )
   {
-    synchronized( this )
-    {
       m_factory = factory;
-    }
   }
 
-  public void dispose()
+  public synchronized void dispose()
   {
-    synchronized( this )
-    {
       for( final Iterator iter = m_listeners.entrySet().iterator(); iter.hasNext(); )
       {
         final Map.Entry entry = (Entry)iter.next();
@@ -81,7 +77,6 @@ public class ResourcePool implements ILoaderListener
 
       for( Iterator iter = m_loaderCache.values().iterator(); iter.hasNext(); )
         ( (ILoader)iter.next() ).removeLoaderListener( this );
-    }
   }
 
   /**
@@ -91,10 +86,8 @@ public class ResourcePool implements ILoaderListener
    * @param l
    * @param key
    */
-  public void addPoolListener( final IPoolListener l, final IPoolableObjectType key )
+  public synchronized void addPoolListener( final IPoolListener l, final IPoolableObjectType key )
   {
-    synchronized( this )
-    {
       Set listeners = (Set)m_listeners.get( key );
 
       // falls noch keine Listener da waren eine neue Liste anlegen
@@ -109,13 +102,10 @@ public class ResourcePool implements ILoaderListener
       final Object o = checkValid( key );
       if( o != null )
         l.objectLoaded( key, o, Status.OK_STATUS );
-    }
   }
 
-  public void removePoolListener( final IPoolListener l )
+  public synchronized void removePoolListener( final IPoolListener l )
   {
-    synchronized( m_listeners )
-    {
       final Collection toRemove = new ArrayList();
       
       // von allen keys den Listener löschen
@@ -138,7 +128,6 @@ public class ResourcePool implements ILoaderListener
       
       for( final Iterator iter = toRemove.iterator(); iter.hasNext(); )
         m_listeners.remove( iter.next() );
-    }
   }
 
   /**
@@ -171,7 +160,7 @@ public class ResourcePool implements ILoaderListener
     job.schedule();
   }
 
-  protected void onObjectLoaded( final IPoolableObjectType key, final Object object,
+  protected synchronized void onObjectLoaded( final IPoolableObjectType key, final Object object,
       final IStatus status )
   {
     if( object == null )
@@ -200,10 +189,8 @@ public class ResourcePool implements ILoaderListener
    * @see org.kalypso.loader.ILoaderListener#onLoaderObjectInvalid(java.lang.Object,
    *      boolean)
    */
-  public void onLoaderObjectInvalid( final Object oldValue, final boolean bCannotReload )
+  public synchronized void onLoaderObjectInvalid( final Object oldValue, final boolean bCannotReload )
   {
-    synchronized( this )
-    {
       m_logger.info( "Objekt invalidated: " + oldValue );
 
       final IPoolableObjectType key = findKey( oldValue );
@@ -223,7 +210,6 @@ public class ResourcePool implements ILoaderListener
 
         checkValid( key );
       }
-    }
   }
 
   private IPoolableObjectType findKey( final Object o )
@@ -248,7 +234,7 @@ public class ResourcePool implements ILoaderListener
    * @throws LoaderException
    * @throws FactoryException
    */
-  protected Object makeObject( final IPoolableObjectType key, final IProgressMonitor monitor )
+  protected synchronized Object makeObject( final IPoolableObjectType key, final IProgressMonitor monitor )
       throws LoaderException, FactoryException
   {
     m_logger.info( "Loading objekt for key: " + key );
@@ -262,7 +248,7 @@ public class ResourcePool implements ILoaderListener
     return object;
   }
 
-  protected ILoader getLoader( final String type ) throws FactoryException
+  private ILoader getLoader( final String type ) throws FactoryException
   {
     ILoader loader = (ILoader)m_loaderCache.get( type );
     if( loader == null )
@@ -279,8 +265,6 @@ public class ResourcePool implements ILoaderListener
 
   private void releaseKey( final IPoolableObjectType key )
   {
-    synchronized( this )
-    {
       m_logger.info( "Releasing key: " + key );
       
       final BorrowObjectJob job = (BorrowObjectJob)m_jobs.get( key );
@@ -308,15 +292,12 @@ public class ResourcePool implements ILoaderListener
       }
 
       m_objects.remove( key );
-    }
   }
 
-  public void saveObject( final Object object, final IProgressMonitor monitor )
+  public synchronized void saveObject( final Object object, final IProgressMonitor monitor )
       throws LoaderException, FactoryException
 
   {
-    synchronized( this )
-    {
       final IPoolableObjectType key = findKey( object );
 
       if( key != null )
@@ -324,10 +305,9 @@ public class ResourcePool implements ILoaderListener
         final ILoader loader = getLoader( key.getType() );
         loader.save( key.getLocation(), key.getContext(), monitor, object );
       }
-    }
   }
 
-  protected ISchedulingRule getSchedulingRule()
+  protected synchronized ISchedulingRule getSchedulingRule()
   {
     return m_schedulingRule;
   }
