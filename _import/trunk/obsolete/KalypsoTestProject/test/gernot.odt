@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obsdiagview xmlns="obsdiagview.template.kalypso.org">
+    <title>QP_BURGNEU.zml</title>
+    <legend title="" visible="true"/>
+    <axis datatype="double" direction="vertical" id="W" inverted="false" label="Wasserstand" position="left" unit="cm am Pegel"/>
+    <axis datatype="date" direction="horizontal" id="date" inverted="false" label="Datum" position="bottom" unit=""/>
+    <axis datatype="double" direction="vertical" id="Q" inverted="false" label="Abfluss" position="left" unit="m³/s"/>
+    <observation linktype="zml" ns1:href="platform:/resource//KalypsoSpree/.prognose/040427_neu/zeitreihen/QP_BURGNEU.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <curve id="C1" name="QP_BURGNEU (Abfluss)">
+            <mapping diagram-axis="date" observation-axis="Datum"/>
+            <mapping diagram-axis="Q" observation-axis="Abfluss"/>
+        </curve>
+    </observation>
+    <observation linktype="zml" ns2:href="platform:/resource//KalypsoSpree/.prognose/040427_neu/zeitreihen/W_GROEDI.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
+        <curve id="C2" name="W_GROEDI (Wasserstand)">
+            <mapping diagram-axis="date" observation-axis="Datum"/>
+            <mapping diagram-axis="W" observation-axis="Wasserstand"/>
+        </curve>
+    </observation>
+</obsdiagview>
+
