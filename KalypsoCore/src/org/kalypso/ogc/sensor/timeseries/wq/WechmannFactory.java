@@ -1,10 +1,17 @@
 package org.kalypso.ogc.sensor.timeseries.wq;
 
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
+import java.util.List;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.kalypso.wechmann.WechmannSet;
+import org.kalypso.wechmann.WechmannType;
+import org.kalypso.wechmann.WechmannSet.ValidityType;
 import org.xml.sax.InputSource;
 
 
@@ -25,7 +32,7 @@ public class WechmannFactory
   /**
    * Parses the xml and creates a WechmannSets object.
    */
-  public static WechmannSets parse( final InputSource ins ) throws WechmannException
+  public static WechmannGroup parse( final InputSource ins ) throws WechmannException
   {
     try
     {
@@ -72,11 +79,43 @@ public class WechmannFactory
         }
       }
       
-      return new WechmannSets( sets );
+      return new WechmannGroup( sets );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
       throw new WechmannException( e );
     }
+  }
+  
+  /**
+   * 
+   */
+  public static String createXMLString( final WechmannGroup wg ) throws JAXBException
+  {
+    final WechmannType wt = m_objectFactory.createWechmannType();
+    
+    final List sets = wt.getSet();
+    
+    for( final Iterator it = wg.iterator(); it.hasNext(); )
+    {
+      final WechmannSet wset = (WechmannSet)it.next();
+      
+      final WechmannSet wechmannSet = m_objectFactory.createWechmannSet();
+      final ValidityType validityType = m_objectFactory.createWechmannSetValidityType();
+      
+      
+      
+//      validityType.setFormat( wset. )
+//      wechmannSet.setValidity(  )
+    }
+    
+    sets.add(  );
+    
+    final Marshaller marshaller = m_objectFactory.createMarshaller();
+    
+    final StringWriter writer = new StringWriter(  );
+    marshaller.marshal( wt, writer );
+    
+    return writer.toString();
   }
 }

@@ -13,14 +13,14 @@ import java.util.TreeMap;
  * 
  * @author schlienger
  */
-public class WechmannSets
+public class WechmannGroup
 {
   // used for persistence
   private final static String TAG_SET = "set";
   
   private final SortedMap m_map;
 
-  public WechmannSets( final WechmannSet[] wsets )
+  public WechmannGroup( final WechmannSet[] wsets )
   {
     m_map = new TreeMap( new WechmannSetComparator() );
     for( int i = 0; i < wsets.length; i++ )
