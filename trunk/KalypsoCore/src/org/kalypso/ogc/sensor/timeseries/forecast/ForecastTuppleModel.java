@@ -71,7 +71,7 @@ public class ForecastTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
-  public int getCount( ) throws SensorException
+  public int getCount( )
   {
     return m_model.getCount();
   }
@@ -79,7 +79,7 @@ public class ForecastTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
    */
-  public Object getElement( int index, IAxis axis ) throws SensorException
+  public Object getElement( int index, IAxis axis ) 
   {
     return m_model.getElement( index, axis );
   }
@@ -88,7 +88,6 @@ public class ForecastTuppleModel extends AbstractTuppleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
   public void setElement( int index, Object element, IAxis axis )
-      throws SensorException
   {
     m_model.setElement( index, element, axis );
   }
@@ -96,7 +95,7 @@ public class ForecastTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
-  public int indexOf( Object element, IAxis axis ) throws SensorException
+  public int indexOf( Object element, IAxis axis )
   {
     return m_model.indexOf( element, axis );
   }

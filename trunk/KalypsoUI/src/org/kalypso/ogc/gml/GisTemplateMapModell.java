@@ -2,9 +2,7 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
@@ -32,12 +30,20 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class GisTemplateMapModell implements IMapModell
 {
   private final IMapModell m_modell;
+  private final int m_selectionID;
 
   public GisTemplateMapModell( final Gismapview gisview, final URL context,
       final CS_CoordinateSystem crs )
   {
+    this( gisview, context, crs, -1 );
+  }
+  
+  public GisTemplateMapModell( final Gismapview gisview, final URL context,
+      final CS_CoordinateSystem crs, final int selectionID )
+  {
     m_modell = new MapModell( crs );
-
+    m_selectionID = selectionID;
+    
     final IKalypsoTheme legendTheme = new KalypsoLegendTheme( this );
     addTheme( legendTheme );
     enableTheme( legendTheme, false );
@@ -45,32 +51,23 @@ public class GisTemplateMapModell implements IMapModell
     final LayersType layerListType = gisview.getLayers();
     final List layerList = layerListType.getLayer();
 
-    // layer -> theme
-    final Map layerMap = new HashMap();
+    final Layer activeLayer = (Layer)layerListType.getActive();
 
     for( int i = 0; i < layerList.size(); i++ )
     {
       final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList
           .get( i );
-
-      final IKalypsoTheme theme = loadTheme( layerType, context );
+      
+      final IKalypsoTheme theme = loadTheme( layerType, context, layerType == activeLayer );
       if( theme != null )
       {
         addTheme( theme );
         enableTheme( theme, layerType.isVisible() );
-        layerMap.put( layerType, theme );
+        
+        if( layerType == activeLayer )
+          activateTheme( theme );
       }
     }
-
-    final Layer activeLayer = (Layer)layerListType.getActive();
-    if( activeLayer != null )
-    {
-      final IKalypsoTheme theme = (IKalypsoTheme)layerMap.get( activeLayer );
-      activateTheme( theme );
-    }
-    else
-      activateTheme( null );
-
   }
   
   public void dispose()
@@ -79,12 +76,14 @@ public class GisTemplateMapModell implements IMapModell
       m_modell.dispose();
   }
 
-  private IKalypsoTheme loadTheme( final Layer layerType, final URL context )
+  private IKalypsoTheme loadTheme( final Layer layerType, final URL context, final boolean bActive )
   {
     if( "wms".equals( layerType.getLinktype() ) )
       return new KalypsoWMSTheme( layerType.getName(), layerType.getHref(), KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
 
-    return new GisTemplateFeatureTheme( layerType, context );
+    final int selectionID = bActive ? m_selectionID : -1;
+    
+    return new GisTemplateFeatureTheme( layerType, context,selectionID );
   }
 
   // Helper

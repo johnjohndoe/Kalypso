@@ -9,6 +9,7 @@ import javax.xml.bind.JAXBException;
 import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.event.ModellEvent;
@@ -68,10 +69,17 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private IKalypsoFeatureTheme m_theme = null;
 
-  public GisTemplateFeatureTheme( final LayerType layerType, final URL context )
+  private final int m_selectionID;
+
+  /**
+   * @param selectionID Falls ungleich -1, wird das erste feature des geladenen Themas mit dieser ID selektiert
+   */
+  public GisTemplateFeatureTheme( final LayerType layerType, final URL context, final int selectionID )
   {
     super( "<no name>" );
 
+    m_selectionID = selectionID;
+    
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
     final String source = layerType.getHref();
@@ -229,6 +237,16 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         }
 
         m_theme = new KalypsoFeatureTheme( (CommandableWorkspace)newValue, m_featurePath, getName() );
+
+        if( m_selectionID != -1 )
+        {
+          final FeatureList featureList = m_theme.getFeatureList();
+          if( featureList != null && featureList.size() > 0 )
+          {
+            ((Feature)featureList.get( 0 )).select( m_selectionID );
+          }
+        }
+        
         m_theme.addModellListener( this );
 
         m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );

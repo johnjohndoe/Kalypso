@@ -269,7 +269,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-    m_mapModell = new GisTemplateMapModell( gisview, getContext(), crs );
+    m_mapModell = new GisTemplateMapModell( gisview, getContext(), crs, m_selectionID );
 
     m_mapModell.addModellListener( this );
 
@@ -531,7 +531,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public final void onModellChange( final ModellEvent modellEvent )
   {
-    refreshTimeseries();
+    if( modellEvent != null && modellEvent.getType() == ModellEvent.SELECTION_CHANGED )
+      refreshTimeseries();
   }
 
   public TimeserieFeatureProps[] getTsProps()

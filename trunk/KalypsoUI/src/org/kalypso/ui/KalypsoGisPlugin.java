@@ -99,7 +99,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private DefaultFeatureModifierFactory m_defaultFeatureControlFactory;
 
   private String[] m_userRights;
-  
+
+//  private static final String DEFAULT_CRS = "EPSG:4326";
+  private static final String DEFAULT_CRS = "EPSG:31469";
+
   /**
    * The constructor. Manages the configuration of the kalypso client.
    */
@@ -458,8 +461,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     {
       ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
       myCoordinateSystem = org.deegree_impl.model.cs.Adapters.getDefault()
-          .export( csFac.getCSByName( "EPSG:4326" ) );
-      //csFac.getCSByName( "EPSG:31494" ) );
+          .export( csFac.getCSByName( DEFAULT_CRS ) );
     }
     return myCoordinateSystem;
   }

@@ -9,7 +9,6 @@ import org.kalypso.ogc.sensor.filter.IFilterCreator;
 import org.kalypso.ogc.sensor.filter.IObservationFilter;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.RepositoryException;
 import org.kalypso.zml.filters.AbstractFilterType;
 
 /**
@@ -63,7 +62,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent( ) throws RepositoryException
+  public IRepositoryItem getParent( )
   {
     return m_parent;
   }
@@ -71,7 +70,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( ) throws RepositoryException
+  public boolean hasChildren( )
   {
     return m_children != null && m_children.length > 0;
   }
@@ -79,7 +78,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( ) throws RepositoryException
+  public IRepositoryItem[] getChildren( )
   {
     return m_children;
   }

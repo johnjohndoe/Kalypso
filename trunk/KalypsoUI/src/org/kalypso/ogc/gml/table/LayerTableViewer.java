@@ -249,7 +249,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     if( tableView != null )
     {
       final LayerType layer = tableView.getLayer();
-      setTheme( new GisTemplateFeatureTheme( layer, context ) );
+      setTheme( new GisTemplateFeatureTheme( layer, context, -1 ) );
 
       final SortType sort = layer.getSort();
       if( sort != null )

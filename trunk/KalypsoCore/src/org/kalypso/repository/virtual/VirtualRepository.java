@@ -138,7 +138,7 @@ public class VirtualRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
-  public IRepositoryItem findItem( final String id ) throws RepositoryException
+  public IRepositoryItem findItem( final String id )
   {
     return (IRepositoryItem) m_idMap.get( id );
   }
@@ -174,7 +174,7 @@ public class VirtualRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( ) throws RepositoryException
+  public boolean hasChildren( )
   {
     return m_children != null && m_children.length > 0;
   }
@@ -182,7 +182,7 @@ public class VirtualRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( ) throws RepositoryException
+  public IRepositoryItem[] getChildren( ) 
   {
     return m_children;
   }

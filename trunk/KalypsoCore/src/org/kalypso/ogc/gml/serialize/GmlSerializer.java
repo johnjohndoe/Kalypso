@@ -73,7 +73,6 @@ public final class GmlSerializer
       gmlDoc.addNameSpace( xlinkNameSpace );
       gmlDoc.addNameSpace( xsiNameSpace );
 
-      workspace.getContext();
       final String schemaLoc = workspace.getSchemaLocation();
       if( schemaLoc != null )
         gmlDoc.setSchemaLocation( schemaLoc );
@@ -108,7 +107,10 @@ public final class GmlSerializer
     final FeatureType[] types = schema.getFeatureTypes();
     final Feature feature = FeatureFactory.createFeature( gmlFeature, types );
 
-    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaURL.toString(), schema.getTargetNS() );
+    // nicht die echte URL der schemaLocation, sondern dass, was im gml steht!
+    final String schemaLocationName = gml.getSchemaLocationName();
+    
+    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaLocationName, schema.getTargetNS() );
   }
 
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IUrlResolver urlResolver )
