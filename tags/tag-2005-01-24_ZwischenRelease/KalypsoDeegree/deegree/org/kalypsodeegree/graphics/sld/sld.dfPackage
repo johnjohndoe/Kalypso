@@ -1,0 +1,249 @@
+package id2vwmzcyhgw4thcyhgynmm;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.StyledLayerDescriptor:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.NamedLayer:oiref><oihard>
+@__modelType reference 
+*/
+class reference3 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.LayerFeatureConstraints:oiref><oihard>
+@__modelType reference 
+*/
+class reference5 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.FeatureTypeConstraint:oiref><oihard>
+@__modelType reference 
+*/
+class reference6 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.Extent:oiref><oihard>
+@__modelType reference 
+*/
+class reference7 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.UserStyle:oiref><oihard>
+@__modelType reference 
+*/
+class reference8 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.UserLayer:oiref><oihard>
+@__modelType reference 
+*/
+class reference9 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.FeatureTypeStyle:oiref><oihard>
+@__modelType reference 
+*/
+class reference10 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.Rule:oiref><oihard>
+@__modelType reference 
+*/
+class reference11 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.LegendGraphic:oiref><oihard>
+@__modelType reference 
+*/
+class reference12 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.Graphic:oiref><oihard>
+@__modelType reference 
+*/
+class reference13 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.Symbolizer:oiref><oihard>
+@__modelType reference 
+*/
+class reference14 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.Geometry:oiref><oihard>
+@__modelType reference 
+*/
+class reference15 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.LineSymbolizer:oiref><oihard>
+@__modelType reference 
+*/
+class reference16 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.PolygonSymbolizer:oiref><oihard>
+@__modelType reference 
+*/
+class reference17 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.PointSymbolizer:oiref><oihard>
+@__modelType reference 
+*/
+class reference18 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.TextSymbolizer:oiref><oihard>
+@__modelType reference 
+*/
+class reference19 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.RasterSymbolizer:oiref><oihard>
+@__modelType reference 
+*/
+class reference20 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.Stroke:oiref><oihard>
+@__modelType reference 
+*/
+class reference21 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.CssParameter:oiref><oihard>
+@__modelType reference 
+*/
+class reference22 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.GraphicFill:oiref><oihard>
+@__modelType reference 
+*/
+class reference23 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.GraphicStroke:oiref><oihard>
+@__modelType reference 
+*/
+class reference24 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.Fill:oiref><oihard>
+@__modelType reference 
+*/
+class reference25 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.Drawing:oiref><oihard>
+@__modelType reference 
+*/
+class reference26 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.Mark:oiref><oihard>
+@__modelType reference 
+*/
+class reference27 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.Halo:oiref><oihard>
+@__modelType reference 
+*/
+class reference29 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.Font:oiref><oihard>
+@__modelType reference 
+*/
+class reference30 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.LabelPlacement:oiref><oihard>
+@__modelType reference 
+*/
+class reference31 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.RemoteOWS:oiref><oihard>
+@__modelType reference 
+*/
+class reference1 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.ExternalGraphic:oiref><oihard>
+@__modelType reference 
+*/
+class reference28 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.PointPlacement:oiref><oihard>
+@__modelType reference 
+*/
+class reference32 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.LinePlacement:oiref><oihard>
+@__modelType reference 
+*/
+class reference33 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.Style:oiref><oihard>
+@__modelType reference 
+*/
+class reference34 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.NamedStyle:oiref><oihard>
+@__modelType reference 
+*/
+class reference35 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.Layer:oiref><oihard>
+@__modelType reference 
+*/
+class reference36 {
+}/**
+@__ref <oiref:java#Class#org.deegree.graphics.sld.ParameterValueType:oiref><oihard>
+@__modelType reference 
+*/
+class reference37 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:java#Class#org.deegree.graphics.sld.Fill:oiref>=1587,166,108,70,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.GraphicStroke:oiref>=823,490,140,80,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.Extent:oiref>=453,390,204,75,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.Symbolizer:oiref>=1037,10,168,77,0:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.graphics.sld.TextSymbolizer#org.deegree.graphics.sld.Symbolizer:oiref>=1113,174,1113,87:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.graphics.sld.PolygonSymbolizer#org.deegree.graphics.sld.Symbolizer:oiref>=855,174,1062,87:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.Geometry:oiref>=10,510,175,81,0:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.graphics.sld.Halo#org.deegree.graphics.sld.Fill:oiref>=79,820,79,780:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.CssParameter:oiref>=1530,390,129,64,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.UserLayer:oiref>=242,215,215,75,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.UserStyle:oiref>=469,177,207,80,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.Rule:oiref>=904,390,198,67,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.PolygonSymbolizer:oiref>=795,174,121,66,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.FeatureTypeStyle:oiref>=677,390,207,57,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.Graphic:oiref>=1330,390,180,60,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.LegendGraphic:oiref>=1122,390,188,65,0:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.graphics.sld.Fill#org.deegree.graphics.sld.Drawing:oiref>=1618,166,1618,81:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.graphics.sld.UserLayer#org.deegree.graphics.sld.Layer:oiref>=287,215,287,128:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.StyledLayerDescriptor:oiref>=10,330,203,142,0:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.graphics.sld.RasterSymbolizer#org.deegree.graphics.sld.Symbolizer:oiref>=989,174,1087,87:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.Stroke:oiref>=1464,166,103,71,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.Halo:oiref>=1123,490,113,55,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.RasterSymbolizer:oiref>=936,174,106,62,0:oigroup>
+<oigroup:<oiref:java#Member#org.deegree.graphics.sld.CssParameter#getExpression#(##)#:oiref>=265,605,0,0,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.FeatureTypeConstraint:oiref>=233,390,200,75,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.NamedLayer:oiref>=10,215,212,73,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.NamedStyle:oiref>=696,177,79,77,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.RemoteOWS:oiref>=1543,490,111,74,0:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.graphics.sld.UserStyle#org.deegree.graphics.sld.Style:oiref>=635,177,635,90:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.GraphicFill:oiref>=677,490,126,72,0:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.graphics.sld.PointSymbolizer#org.deegree.graphics.sld.Symbolizer:oiref>=1254,174,1143,87:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.graphics.sld.NamedLayer#org.deegree.graphics.sld.Layer:oiref>=175,215,175,128:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.ExternalGraphic:oiref>=10,630,161,86,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.Font:oiref>=1256,490,90,62,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.LineSymbolizer:oiref>=1333,174,111,66,0:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.graphics.sld.Stroke#org.deegree.graphics.sld.Drawing:oiref>=1536,166,1536,81:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.PointPlacement:oiref>=205,610,141,93,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.PointSymbolizer:oiref>=1195,174,118,64,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.Drawing:oiref>=1506,10,144,71,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.LabelPlacement:oiref>=1366,490,157,78,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.Layer:oiref>=129,10,203,118,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.graphics.sld.LineSymbolizer#org.deegree.graphics.sld.Symbolizer:oiref>=1388,174,1174,87:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.Mark:oiref>=983,490,120,71,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.Style:oiref>=594,10,120,80,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.LayerFeatureConstraints:oiref>=1464,270,203,80,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.TextSymbolizer:oiref>=1062,174,113,60,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.graphics.sld.LinePlacement:oiref>=366,610,141,85,0:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.graphics.sld.NamedStyle#org.deegree.graphics.sld.Style:oiref>=735,177,674,90:oigroup>
+*/
+class __positions {
+}
