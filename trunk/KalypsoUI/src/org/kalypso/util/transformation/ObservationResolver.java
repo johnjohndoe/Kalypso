@@ -178,7 +178,7 @@ public class ObservationResolver extends AbstractTransformation
 
   private void writeTimeserieToFile( final IFile newZmlFile, final IObservation obs ) throws CoreException, FactoryException, IOException
   {
-    final ObservationType observationType = ZmlFactory.createXML( obs );
+    final ObservationType observationType = ZmlFactory.createXML( obs, null );
 
     final PipedOutputStream pos = new PipedOutputStream();
     final PipedInputStream pis = new PipedInputStream( pos );
