@@ -6,6 +6,7 @@ import javax.xml.rpc.ServiceException;
 
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.RepositoryException;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.ItemBean;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -69,14 +70,48 @@ public class ObservationServiceRepository extends AbstractRepository
       final IRepositoryItem[] items = new IRepositoryItem[ beans.length ];
       
       for( int i = 0; i < items.length; i++ )
-        items[i] = new ServiceRepositoryItem( m_srv, beans[i], null );
+        items[i] = new ServiceRepositoryItem( m_srv, beans[i], null, this );
       
       return items;
     }
     catch( RemoteException e )
     {
+      // TODO modify interface IRepositoryItem to throw a RepositoryException
       e.printStackTrace();
       return null;
     }
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepository#getIdentifier()
+   */
+  public String getIdentifier()
+  {
+    return "observation-service-repository";
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepository#reload()
+   */
+  public void reload() throws RepositoryException
+  {
+    try
+    {
+      m_srv.reload();
+    }
+    catch( RemoteException e )
+    {
+      throw new RepositoryException( e );
+    }
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
+   */
+  public IRepositoryItem findItem( String id ) throws RepositoryException
+  {
+// TODO    
+//      final IRepositoryItem[] children = getChildren();
+    return null;
   }
 }

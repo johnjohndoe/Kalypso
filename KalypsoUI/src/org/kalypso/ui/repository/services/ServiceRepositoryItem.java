@@ -5,11 +5,13 @@ import java.rmi.RemoteException;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlObservation;
+import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.services.proxy.DateRangeBean;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.ItemBean;
+import org.kalypso.services.proxy.OCSDataBean;
 import org.kalypso.services.proxy.ObservationBean;
-import org.kalypso.services.proxy.ObservationDataDescriptorBean;
 
 /**
  * @author schlienger
@@ -19,9 +21,11 @@ public class ServiceRepositoryItem implements IRepositoryItem
   private final ItemBean m_bean;
   private final ServiceRepositoryItem m_parent;
   private final IObservationService m_srv;
+  private final IRepository m_rep;
 
-  public ServiceRepositoryItem( final IObservationService srv, final ItemBean bean, final ServiceRepositoryItem parent )
+  public ServiceRepositoryItem( final IObservationService srv, final ItemBean bean, final ServiceRepositoryItem parent, final IRepository rep )
   {
+    m_rep = rep;
     m_srv = srv;
     m_bean = bean;
     m_parent = parent;
@@ -71,7 +75,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
       final IRepositoryItem[] items = new ServiceRepositoryItem[ beans.length ];
       
       for( int i = 0; i < items.length; i++ )
-        items[i] = new ServiceRepositoryItem( m_srv, beans[i], this );
+        items[i] = new ServiceRepositoryItem( m_srv, beans[i], this, m_rep );
       
       return items;
     }
@@ -93,11 +97,12 @@ public class ServiceRepositoryItem implements IRepositoryItem
       
       try
       {
-        final ObservationDataDescriptorBean oddb = m_srv.readData( ob );
+        DateRangeBean drb = new DateRangeBean();
+        final OCSDataBean bean = m_srv.readData( ob, drb );
         
-        final ZmlObservation obs = new ZmlObservation( new URL( oddb.getLocation() ) );
+        final ZmlObservation obs = new ZmlObservation( new URL( bean.getLocation() ), bean.getObsId() );
         
-        m_srv.clearTempData( oddb );
+        m_srv.clearTempData( bean );
         
         return obs;
       }
@@ -117,5 +122,21 @@ public class ServiceRepositoryItem implements IRepositoryItem
   public String toString()
   {
     return getName();
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
+   */
+  public String getIdentifier()
+  {
+    return m_bean.getId();
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#getRepository()
+   */
+  public IRepository getRepository()
+  {
+    return m_rep;
   }
 }
