@@ -219,7 +219,8 @@
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="ZuflussMember" type="spree:ZuflussAssociationType" minOccurs="1" maxOccurs="1"/>
+				<!--  max occurs = 2, damit die deserialisierung eine FeatureList gibt, eigentlich nur eines -->
+					<element name="ZuflussMember" type="spree:ZuflussAssociationType" minOccurs="1" maxOccurs="2"/>
 				</sequence>
 			</restriction>
 		</complexContent>

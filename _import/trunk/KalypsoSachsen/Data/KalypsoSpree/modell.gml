@@ -5,9 +5,9 @@
    xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="org.kalypso.spree.modell ./.model/schema/modell.xsd">
 	<EZCollectionAssociation>
-		<EZCollection>
+		<EZCollection fid="EZC_1">
 			<EZMember>
-				<Einzugsgebiet>
+				<Einzugsgebiet fid="EZ_1">
 					<Name>Schirgiswalde</Name>
 					<Ort>
 						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
@@ -36,7 +36,7 @@
 				</Einzugsgebiet>
 			</EZMember>
 			<EZMember>
-				<Einzugsgebiet>
+				<Einzugsgebiet fid="EZ_2">
 					<Name>Bautzen WB</Name>
 					<Ort>
 						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
@@ -67,7 +67,7 @@
 				</Einzugsgebiet>
 			</EZMember>
 			<EZMember>
-				<Einzugsgebiet>
+				<Einzugsgebiet fid="EZ_3">
 					<Name>Gröditz 1</Name>
 					<Ort>
 						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
@@ -97,7 +97,7 @@
 				</Einzugsgebiet>
 			</EZMember>
 			<EZMember>
-				<Einzugsgebiet>
+				<Einzugsgebiet fid="EZ_4">
 					<Name>Jänkendorf</Name>
 					<Ort>
 						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
@@ -127,7 +127,7 @@
 				</Einzugsgebiet>
 			</EZMember>
 			<EZMember>
-				<Einzugsgebiet>
+				<Einzugsgebiet fid="EZ_5">
 					<Name>Särichen</Name>
 					<Ort>
 						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
@@ -160,9 +160,9 @@
 	</EZCollectionAssociation>
 	
 	<FlusslaufModellCollectionAssociation>
-		<FlusslaufModellCollection>
+		<FlusslaufModellCollection fid="FMC_1">
 			<FlusslaufModellMember>
-				<FlusslaufModell fid="new">
+				<FlusslaufModell fid="FM_1">
 					<Name>Lieske</Name>
 					<Ort>
 						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
@@ -187,7 +187,7 @@
 			</FlusslaufModellMember>
 			
 			<FlusslaufModellMember>
-				<FlusslaufModell>
+				<FlusslaufModell  fid="FM_2">
 					<Name>Boxberg</Name>
 					<Ort>
 						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
@@ -211,7 +211,7 @@
 				</FlusslaufModell>
 			</FlusslaufModellMember>
 			<FlusslaufModellMember>
-				<FlusslaufModell>
+				<FlusslaufModell  fid="FM_3">
 					<Name>Sprey</Name>
 					<Ort>
 						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
@@ -235,7 +235,7 @@
 				</FlusslaufModell>
 			</FlusslaufModellMember>
 			<FlusslaufModellMember>
-				<FlusslaufModell>
+				<FlusslaufModell  fid="FM_4">
 					<Name>Spreewitz</Name>
 					<Ort>
 						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
@@ -259,7 +259,7 @@
 				</FlusslaufModell>
 			</FlusslaufModellMember>
 			<FlusslaufModellMember>
-				<FlusslaufModell fid="x">
+				<FlusslaufModell fid="FM_5">
 					<Name>Spremberg</Name>
 					<Ort/>
 					<Korrektur_Faktor>1.0</Korrektur_Faktor>
@@ -282,9 +282,9 @@
 	</FlusslaufModellCollectionAssociation>
 	
 	<TalsperreCollectionAssociation>
-		<TalsperreCollection>
+		<TalsperreCollection fid="TSC_1">
 			<TalsperreMember>
-				<Talsperre fid="ID2">
+				<Talsperre fid="TS_1">
 					<Name>Quitzdorf</Name>
 					<Anfangsstauvolumen>0.0</Anfangsstauvolumen>
 					<Ort>
@@ -305,7 +305,7 @@
 				</Talsperre>
 			</TalsperreMember>
 			<TalsperreMember>
-				<Talsperre fid="ID1">
+				<Talsperre fid="TS_2">
 					<Name>Bautzen</Name>
 					<Anfangsstauvolumen>0.0</Anfangsstauvolumen>
 					<Ort>
@@ -327,9 +327,9 @@
 		</TalsperreCollection>
 	</TalsperreCollectionAssociation>
 	<FlutungCollectionAssociation>
-		<FlutungCollection>
+		<FlutungCollection fid="FC_1">
 			<FlutungMember>
-				<Flutung>
+				<Flutung  fid="F_1">
 					<Name>Überleitung Restlochkette</Name>
 					<Ort/>
 					<Abgabe_eingang>
@@ -341,7 +341,7 @@
 				</Flutung>
 			</FlutungMember>
 			<FlutungMember>
-				<Flutung>
+				<Flutung  fid="F_2">
 					<Name>Zuleiter Restloch Lohsa II</Name>
 					<Ort/>
 					<Abgabe_eingang>
@@ -353,7 +353,7 @@
 				</Flutung>
 			</FlutungMember>
 			<FlutungMember>
-				<Flutung>
+				<Flutung  fid="F_3">
 					<Name>Zuleiter Restloch Bärwalde</Name>
 					<Ort/>
 					<Abgabe_eingang>
@@ -365,7 +365,7 @@
 				</Flutung>
 			</FlutungMember>
 			<FlutungMember>
-				<Flutung fid="neu">
+				<Flutung fid="F_4">
 					<Name>Abzweig Kleine Spree</Name>
 					<Ort/>
 					<Abgabe_eingang>
@@ -379,9 +379,9 @@
 		</FlutungCollection>
 	</FlutungCollectionAssociation>
 	<ZuflussCollectionAssociation>
-		<ZuflussCollection>
+		<ZuflussCollection fid="ZC_1">
 			<ZuflussMember>
-				<Zufluss>
+				<Zufluss fid="Z_1">
 					<Name>Burgneudorf</Name>
 					<Ort>
 						<gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
