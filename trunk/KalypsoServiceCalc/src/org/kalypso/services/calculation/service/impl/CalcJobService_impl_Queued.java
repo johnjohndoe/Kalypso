@@ -55,6 +55,7 @@ import java.util.logging.Logger;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -107,6 +108,7 @@ public class CalcJobService_impl_Queued implements ICalculationService
     try
     {
       TypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new ObservationLinkHandler() );
+      TypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new DiagramTypeHandler() );
     }
     catch( final Exception e )
     {
