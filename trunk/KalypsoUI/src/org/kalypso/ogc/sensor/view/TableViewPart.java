@@ -6,7 +6,6 @@ import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -24,9 +23,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
-import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.adapter.IAdaptable;
 import org.kalypso.util.repository.view.RepositoryExplorerPart;
@@ -46,9 +44,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
    */
   public void createPartControl( final Composite parent )
   {
-    final JTable table = new JTable( m_model );
-    table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
-    table.setDefaultRenderer( Number.class, new MaskedNumberTableCellRenderer() );
+    final ObservationTable table = new ObservationTable( m_model );
     
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );

@@ -29,6 +29,9 @@ public class LinkedTableViewTemplate implements ITableViewTemplate, ILinkResolve
 
   private final IProject m_project;
 
+  private int m_toBeResolved = 0;
+  private final List m_resolved = new ArrayList();
+
   /**
    * Constructor
    */
@@ -43,7 +46,7 @@ public class LinkedTableViewTemplate implements ITableViewTemplate, ILinkResolve
     // the list of columns, will be added to template once links are resolved
     final List linkedColumns = new ArrayList( cols.size() );
 
-    for( Iterator it = cols.iterator(); it.hasNext(); )
+    for( final Iterator it = cols.iterator(); it.hasNext(); )
     {
       ObstableviewType.ColumnpairType col = (ObstableviewType.ColumnpairType)it.next();
 
@@ -53,31 +56,32 @@ public class LinkedTableViewTemplate implements ITableViewTemplate, ILinkResolve
     final RulesType trules = obsTableView.getRules();
     if( trules != null )
     {
-      for( Iterator it = trules.getRenderingrule().iterator(); it.hasNext(); )
+      for( final Iterator it = trules.getRenderingrule().iterator(); it.hasNext(); )
         m_template.addRule( RenderingRule.createRenderingRule( (TypeRenderingRule)it.next() ) );
     }
 
+    m_toBeResolved = linkedColumns.size();
+    
     // resolve the links!
     new LinkResolver( (LinkedTableViewColumn[])linkedColumns.toArray( new LinkedTableViewColumn[0] ),
         IObservation.class, project, this );
   }
 
-  public void addColumn( ITableViewColumn column )
+  public void addColumn( final ITableViewColumn column )
   {
     // resolve link curve before adding column!
     if( column instanceof LinkedTableViewColumn )
+    {
+      m_toBeResolved++;
+      
       new LinkResolver( new LinkedTableViewColumn[]
       { (LinkedTableViewColumn)column }, IObservation.class, m_project, this );
+    }
   }
 
   public void addTemplateEventListener( ITemplateEventListener l )
   {
     m_template.addTemplateEventListener( l );
-  }
-
-  public boolean equals( Object obj )
-  {
-    return m_template.equals( obj );
   }
 
   public void fireTemplateChanged( TemplateEvent evt )
@@ -120,18 +124,35 @@ public class LinkedTableViewTemplate implements ITableViewTemplate, ILinkResolve
     m_template.removeTemplateEventListener( l );
   }
 
-  public String toString()
-  {
-    return m_template.toString();
-  }
-
   /**
+   * Adds columns to base template as soon as they are all resolved!
+   * 
    * @see org.kalypso.util.link.ILinkResolverListener#onLinkResolved(org.kalypso.util.link.LinkEvent)
    */
   public void onLinkResolved( LinkEvent evt )
   {
-    // now that link is resolved, we can add the column!
-    m_template.addColumn( (ITableViewColumn)evt.getLink() );
+    m_resolved.add( evt.getLink() );
+    
+    m_toBeResolved--;
+    
+    System.out.println( "onLinkResolved  toBeResolved= " + m_toBeResolved );
+    
+    if( m_toBeResolved == 0 )
+    {
+      System.out.println( "... all resolved..." );
+      
+      for( final Iterator it = m_resolved.iterator(); it.hasNext(); )
+      {
+        ITableViewColumn col = (ITableViewColumn)it.next();
+
+        // now that link is resolved, we can add the column!
+        m_template.addColumn( col );
+        
+        System.out.println( "... added column: " + col.getName() );
+      }
+      
+      m_resolved.clear();
+    }
   }
 
   public void removeAllColumns()

@@ -6,13 +6,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import javax.xml.bind.JAXBException;
+
 import org.kalypso.java.properties.PropertiesHelper;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.sensor.deegree.TimeserieFeatureProps;
+import org.kalypso.ogc.sensor.diagview.DiagramTemplateFactory;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.template.LinkedDiagramCurve;
 import org.kalypso.ogc.sensor.template.LinkedTableViewColumn;
 import org.kalypso.ogc.sensor.template.LinkedTableViewTemplate;
+import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.util.xml.xlink.JAXBXLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 
@@ -108,5 +112,26 @@ public class KalypsoWizardHelper
         }
       }
     } 
+  }
+  
+  /**
+   * @throws JAXBException
+   * 
+   */
+  public static void updateXMLDiagramTemplate( final TimeserieFeatureProps[] props, final List features, final ObsdiagviewType template ) throws JAXBException
+  {
+    for( Iterator it = features.iterator(); it.hasNext(); )
+    {
+      final KalypsoFeature kf = (KalypsoFeature)it.next();
+      
+      for( int i = 0; i < props.length; i++ )
+      {
+        final String name = (String)kf.getProperty( props[i]._nameColumn );
+        final TimeseriesLinkType obsLink = (TimeseriesLinkType)kf.getProperty( props[i]._linkColumn );
+
+        if( obsLink != null )
+          DiagramTemplateFactory.addTimeseriesLink( template, obsLink, name, props[i]._diagDateAxis, props[i]._diagValueAxis );
+      }
+    }
   }
 }

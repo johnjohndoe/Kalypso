@@ -282,7 +282,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    if( m_diagFrame == null )
+    if( m_diagFrame == null || !isCurrentPage() )
       return;
 
     final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
