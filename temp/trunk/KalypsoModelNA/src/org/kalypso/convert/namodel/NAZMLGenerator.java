@@ -9,7 +9,7 @@ import java.util.Date;
 
 import javax.xml.bind.Marshaller;
 
-import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.java.net.test.UrlUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
