@@ -270,7 +270,11 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    return m_conf.getProperty( userId, "" ).split( "," );
+    final String property = m_conf.getProperty( userId, null );
+    if( property == null )
+      return null;
+    
+    return property.split( "," );
   }
 
   /**

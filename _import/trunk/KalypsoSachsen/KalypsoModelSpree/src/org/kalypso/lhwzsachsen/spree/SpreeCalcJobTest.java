@@ -67,7 +67,7 @@ public class SpreeCalcJobTest extends TestCase
   public void test040427_neu() throws IOException, TypeRegistryException, JAXBException
   {
     final File baseDir = calculateModel( "040427_neu" );
-    FileUtilities.deleteRecursive( baseDir );
+//    FileUtilities.deleteRecursive( baseDir );
   }
   
   public File calculateModel( final String testName ) throws IOException, TypeRegistryException, JAXBException

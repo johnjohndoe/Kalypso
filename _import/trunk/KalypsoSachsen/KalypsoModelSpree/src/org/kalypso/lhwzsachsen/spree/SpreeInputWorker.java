@@ -366,6 +366,7 @@ public class SpreeInputWorker
       }
 
       dbf.writeAllToFile();
+      dbf.close();
     }
     catch( final Exception e1 )
     {
