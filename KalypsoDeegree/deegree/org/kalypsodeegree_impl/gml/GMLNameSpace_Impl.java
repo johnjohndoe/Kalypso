@@ -105,6 +105,8 @@ public class GMLNameSpace_Impl implements GMLNameSpace
    * <p>
    * if the name space is 'xmlns:gml="http://www.opengis.net/gml"', 'gml' will
    * be returned
+   * 
+   * @return null, if no subspace is given
    */
   public String getSubSpaceName()
   {
@@ -113,6 +115,9 @@ public class GMLNameSpace_Impl implements GMLNameSpace
     int pos1 = nameSpace.indexOf( ":" );
     int pos2 = nameSpace.indexOf( "=" );
 
+    if( pos1 == -1 || pos2 == -1 )
+      return null;
+    
     Debug.debugMethodEnd();
 
     return nameSpace.substring( pos1 + 1, pos2 ).trim();
@@ -156,6 +161,9 @@ public class GMLNameSpace_Impl implements GMLNameSpace
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.4  2004/11/17 14:48:41  belger
+ * *** empty log message ***
+ *
  * Revision 1.3  2004/10/07 14:09:14  doemming
  * *** empty log message ***
  *
