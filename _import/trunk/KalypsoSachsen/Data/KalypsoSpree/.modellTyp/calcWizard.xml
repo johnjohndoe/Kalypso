@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.model.kalypso.org calcwizard.xsd">
-<!--
+
     <page className="org.kalypso.ui.calcwizard.ObservationMapTableDiagWizardPage" pageTitle="Eingabe Niederschlag" imageLocation="icons/calcwizard/boden.gif" >
         <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/ezg.gmt"/>
         <arg name="tableTemplate" value=".modellTyp/vorlagen/rechenfall/table1.ott"/>
@@ -12,7 +12,7 @@
         
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=Niederschlag_eingabe"/>
     </page>
-
+<!--
     <page className="org.kalypso.ui.calcwizard.ObservationMapTableDiagWizardPage" pageTitle="Eingabe Talsperrenabgaben" imageLocation="icons/calcwizard/boden.gif" >
         <arg name="mapTemplate" value=".modellTyp/vorlagen/rechenfall/talsperren.gmt"/>
         <arg name="tableTemplate" value=".modellTyp/vorlagen/rechenfall/table1.ott"/>
@@ -105,7 +105,7 @@
         
     </page>
 -->
-	<!-- Ergebniskontroole NA-Modelle-->
+	<!-- Ergebniskontrolle NA-Modelle-->
 	<page className="org.kalypso.ui.calcwizard.ExportResultsWizardPage"
 	   pageTitle="Ergebniskontrolle Pegel"
 	   imageLocation="icons/calcwizard/boden.gif" >
