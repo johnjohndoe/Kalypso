@@ -7,6 +7,9 @@ import org.jfree.data.AbstractIntervalXYDataset;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
+ * TODO: inserted synchronized at some places because if pages are switched too fast in kalypso wizzard
+ * then I presume that many swing ui threads are trying to update the chart, thus leading to
+ * possible array out of bound exceptions because of concurrent accesses.
  * 
  * @author schlienger
  */
@@ -14,24 +17,30 @@ class CurveDataset extends AbstractIntervalXYDataset
 {
   private final List m_curves = new ArrayList();
 
-  public CurveDataset()
+  public CurveDataset( )
   {
-  // empty
+    // empty
   }
-  
+
   public void addCurveSerie( final XYCurveSerie xyc )
   {
-    m_curves.add( xyc );
-    
-    fireDatasetChanged();
+    synchronized( m_curves )
+    {
+      m_curves.add( xyc );
+
+      fireDatasetChanged();
+    }
   }
 
   /**
    * @see org.jfree.data.AbstractSeriesDataset#getSeriesCount()
    */
-  public int getSeriesCount()
+  public int getSeriesCount( )
   {
-    return m_curves.size();
+    synchronized( m_curves )
+    {
+      return m_curves.size();
+    }
   }
 
   /**
@@ -39,7 +48,10 @@ class CurveDataset extends AbstractIntervalXYDataset
    */
   public String getSeriesName( int series )
   {
-    return ( (XYCurveSerie)m_curves.get( series ) ).getName();
+    synchronized( m_curves )
+    {
+      return ((XYCurveSerie) m_curves.get( series )).getName();
+    }
   }
 
   /**
@@ -47,14 +59,17 @@ class CurveDataset extends AbstractIntervalXYDataset
    */
   public int getItemCount( int series )
   {
-    try
+    synchronized( m_curves )
     {
-      return ( (XYCurveSerie)m_curves.get( series ) ).getItemCount();
-    }
-    catch( SensorException e )
-    {
-      e.printStackTrace();
-      return 0;
+      try
+      {
+        return ((XYCurveSerie) m_curves.get( series )).getItemCount();
+      }
+      catch( SensorException e )
+      {
+        e.printStackTrace();
+        return 0;
+      }
     }
   }
 
@@ -63,14 +78,17 @@ class CurveDataset extends AbstractIntervalXYDataset
    */
   public Number getXValue( int series, int item )
   {
-    try
+    synchronized( m_curves )
     {
-      return ( (XYCurveSerie)m_curves.get( series ) ).getXValue( item );
-    }
-    catch( SensorException e )
-    {
-      e.printStackTrace();
-      return new Integer(0);
+      try
+      {
+        return ((XYCurveSerie) m_curves.get( series )).getXValue( item );
+      }
+      catch( SensorException e )
+      {
+        e.printStackTrace();
+        return new Integer( 0 );
+      }
     }
   }
 
@@ -90,12 +108,12 @@ class CurveDataset extends AbstractIntervalXYDataset
   {
     try
     {
-      return ( (XYCurveSerie)m_curves.get( series ) ).getYValue( item );
+      return ((XYCurveSerie) m_curves.get( series )).getYValue( item );
     }
     catch( SensorException e )
     {
       e.printStackTrace();
-      return new Integer(0);
+      return new Integer( 0 );
     }
   }
 
@@ -115,7 +133,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   {
     if( item > 0 )
       return getXValue( series, item - 1 );
-    
+
     return getXValue( series, item );
   }
 
@@ -134,7 +152,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   {
     if( item > 0 )
       return getYValue( series, item - 1 );
-    
+
     return getYValue( series, item );
   }
 

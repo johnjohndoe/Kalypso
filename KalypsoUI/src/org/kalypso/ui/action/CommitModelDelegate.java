@@ -15,7 +15,7 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.services.user.common.IUserServiceConstants;
+import org.kalypso.services.user.UserServiceConstants;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.synchronize.ModelSynchronizer;
 
@@ -68,7 +68,7 @@ public class CommitModelDelegate implements IWorkbenchWindowActionDelegate
     final File serverProject = new File( serverRoot, name );
     
     // nur Administratoren dürfen Projekte überschreiben
-    if( serverProject.exists() && !KalypsoGisPlugin.getDefault().checkUserRight( IUserServiceConstants.RIGHT_ADMIN ) )
+    if( serverProject.exists() && !KalypsoGisPlugin.getDefault().checkUserRight( UserServiceConstants.RIGHT_ADMIN ) )
     {
       MessageDialog.openWarning( m_window.getShell(), "Modell zurückspeichern", "Das Modell existiert bereits auf dem Server.\nNur Administratoren dürfen bereits vorhandene Modelle überschreiben." );
       return;
