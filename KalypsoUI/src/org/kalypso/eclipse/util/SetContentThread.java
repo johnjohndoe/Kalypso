@@ -35,42 +35,58 @@ public abstract class SetContentThread extends CatchThread
 
   private String m_charset;
 
-  public SetContentThread( final IFile file, final boolean create, final boolean force,
-      final boolean keepHistory, final IProgressMonitor monitor ) throws CoreException
+  private Thread m_thread;
+
+  public SetContentThread( final IFile file, final boolean create,
+      final boolean force, final boolean keepHistory,
+      final IProgressMonitor monitor ) throws CoreException
+  {
+    this( file, create, force, keepHistory, monitor, null );
+  }
+
+  public SetContentThread( final IFile file, final boolean create,
+      final boolean force, final boolean keepHistory,
+      final IProgressMonitor monitor, final String charset )
+      throws CoreException
   {
     m_file = file;
     try
     {
       m_pis = new PipedInputStream( m_pos );
 
-      final String charset;
-      if( !create )
-        charset = m_file.getCharset();
+      if( charset == null )
+      {
+        if( !create )
+          m_charset = m_file.getCharset();
+        else
+          m_charset = m_file.getParent().getDefaultCharset();
+      }
       else
-        charset = m_file.getParent().getDefaultCharset();
-      m_charset = charset;
+        m_charset = charset;
 
       final InputStream is = m_pis;
       m_catchRunnable = new CatchRunnable()
       {
-        protected void runIntern() throws Throwable
+        protected void runIntern( ) throws Throwable
         {
           if( create )
             file.create( is, force, monitor );
           else
             file.setContents( is, force, keepHistory, monitor );
           is.close();
-          
+
           file.setCharset( charset, monitor );
         }
       };
-      new Thread( m_catchRunnable ).start();
+      m_thread = new Thread( m_catchRunnable );
+      m_thread.start();
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Fehler beim Erzeugen der Kontrolldatei: " + e.getLocalizedMessage(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin
+          .getId(), 0, "Fehler beim Erzeugen der Kontrolldatei: "
+          + e.getLocalizedMessage(), e ) );
     }
   }
 
@@ -82,13 +98,13 @@ public abstract class SetContentThread extends CatchThread
   }
   
   /** Exceptions, welche beim Schreiben des Files entstehen */
-  public CoreException getFileException()
+  public CoreException getFileException( )
   {
     // zum Glück wissen wir, dass es nur eine CoreException sein kann
-    return (CoreException)m_catchRunnable.getThrown();
+    return (CoreException) m_catchRunnable.getThrown();
   }
 
-  protected void runIntern() throws Throwable
+  protected void runIntern( ) throws Throwable
   {
     Writer outputStreamWriter = null;
     try
@@ -100,6 +116,11 @@ public abstract class SetContentThread extends CatchThread
     {
       if( outputStreamWriter != null )
         outputStreamWriter.close();
+
+      // TODO: ugly! better to switch contents of this method and 'runIntern' of
+      // inner thread
+      // tod be shure, that file is written when this thread exits
+      m_thread.join();
     }
   }
 
