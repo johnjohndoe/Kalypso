@@ -11,7 +11,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.internal.Workbench;
 import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
-import org.kalypso.ogc.sensor.tableview.swing.editor.DoubleCellEditor;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
@@ -36,7 +35,7 @@ public class ObservationTable extends JTable implements ITemplateEventListener
 
     final NumberFormat nf = NumberFormat.getNumberInstance();
     nf.setGroupingUsed( false );
-    setDefaultEditor( Double.class, new DoubleCellEditor( nf, true ) );
+    //setDefaultEditor( Double.class, new DoubleCellEditor( nf, true ) );
     
     setSelectionForeground( Color.BLACK );
     setSelectionBackground( Color.YELLOW );
