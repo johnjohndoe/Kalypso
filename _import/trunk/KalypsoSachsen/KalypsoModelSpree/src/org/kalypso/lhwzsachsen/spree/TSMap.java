@@ -40,7 +40,9 @@ public class TSMap
     if( tsName.startsWith( "PA" ) )
       return TimeserieConstants.TYPE_RAINFALL;
 
-    // TODO: create a Constant
+    if( tsName.startsWith( "V_" ) )
+      return TimeserieConstants.TYPE_VOLUME;
+
     return "value";
   }
 

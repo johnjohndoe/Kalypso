@@ -82,6 +82,7 @@
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
 			<argument name="feature" value="Talsperre"/>
 			<argument name="sourceObservation1" value="Abgabe_eingang"/>
+			<argument name="rangeMode1" value="start-stop"/>
 			<argument name="targetObservation" value="Abgabe"/>
 			<argument name="targetFolder" value=":calcdir:"/>
 			<argument name="startsim" value=":startsim:"/>
@@ -94,6 +95,7 @@
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
 			<argument name="feature" value="Flutung"/>
 			<argument name="sourceObservation1" value="Abgabe_eingang"/>
+			<argument name="rangeMode1" value="start-stop"/>
 			<argument name="targetObservation" value="Abgabe"/>
 			<argument name="targetFolder" value=":calcdir:"/>
 			<argument name="startsim" value=":startsim:"/>
@@ -107,19 +109,10 @@
 			<argument name="sourceObservation1" value="Zugabe_eingang"/>
 			<argument name="targetObservation" value="Zugabe"/>
 			<argument name="rangeMode1" value="start-stop"/>
-			<argument name="rangeMode2" value=""/>
 			<argument name="targetFolder" value=":calcdir:"/>
 			<argument name="startsim" value=":startsim:"/>
 			<argument name="startforecast" value=":startforecast:"/>
 			<argument name="endsim" value=":endsim:"/>
 		</transformation>
-	
-<!--	
-		<transformation className="org.kalypso.util.transformation.ReplaceTransformation">
-			<argument name="protocol0" value="calcdir=:calcdir:"/>
-			<argument name="protocol1" value="localcalc=localcalc:"/>
-			<argument name="file0" value=":calcdir:calcCase.gml"/>
-		</transformation>
--->		
 	</updateTransformations>
 </calcCaseConfig>

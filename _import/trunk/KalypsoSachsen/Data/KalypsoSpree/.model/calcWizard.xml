@@ -71,7 +71,10 @@
         <arg name="rightSash" value="30"/>
         <arg name="selectionID" value="32"/>
         
-        <arg name="ignoreType" value="Q"/>
+        <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
         
         <arg name="timeserie1" 
         	value="nameColumn=Name#linkColumn=Niederschlag_rechnung"/>
@@ -79,7 +82,7 @@
         	value="nameColumn=Name#linkColumn=Wasserstand_gemessen#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;"/>
         <arg name="timeserie3" 
         	value="nameColumn=Name#linkColumn=Wasserstand_gerechnet#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
-        <arg name="timeserie3" 
+        <arg name="timeserie4" 
         	value="nameColumn=Name#linkColumn=Wasserstand_vorhersage#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
     </page>
 
@@ -88,7 +91,12 @@
         <arg name="tableTemplate" value=".templates/calcCase/talsperren.gtt"/>
         <arg name="diagTemplate" value=".templates/calcCase/talsperren.odt"/>
 
-        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=a#nameColumn=Name#linkColumn=Abgabe_eingang"/>
+        <arg name="ignoreType1" value="V"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel2" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Volumen"/>
+
+        <arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe_eingang"/>
 
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="40"/>
@@ -100,7 +108,17 @@
         <arg name="tableTemplate" value=".templates/calcCase/flusslauf.gtt"/>
         <arg name="diagTemplate" value=".templates/calcCase/flusslauf.odt"/>
 
-        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
+        <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
+
+        <arg name="timeserie1" 
+        	value="nameColumn=Name#linkColumn=Wasserstand_gemessen#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;"/>
+        <arg name="timeserie2" 
+        	value="nameColumn=Name#linkColumn=Wasserstand_gerechnet#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
+        <arg name="timeserie3" 
+        	value="nameColumn=Name#linkColumn=Wasserstand_vorhersage#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
 
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="40"/>
@@ -115,10 +133,15 @@
 	   	<arg name="tableTemplate"  value="project:.templates/calcCase/pegel.gtt"/>
 		<arg name="diagTemplate" value=".templates/calcCase/results.odt"/>
 	
-        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_rechnung"/>
-        <arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=w2#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
-        <arg name="timeserie3" value="diagDateAxis=d#diagValueAxis=w2#nameColumn=Name#linkColumn=Wasserstand_gerechnet"/>
-	
+        <arg name="timeserie1" 
+        	value="nameColumn=Name#linkColumn=Niederschlag_rechnung"/>
+        <arg name="timeserie2" 
+        	value="nameColumn=Name#linkColumn=Wasserstand_gemessen#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;"/>
+        <arg name="timeserie3" 
+        	value="nameColumn=Name#linkColumn=Wasserstand_gerechnet#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
+        <arg name="timeserie4" 
+        	value="nameColumn=Name#linkColumn=Wasserstand_vorhersage#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
+		
 	   	<arg name="mainSash" value="50"/>
 	   	<arg name="rightSash" value="40"/>
 	   	<arg name="selectionID" value="256"/>
