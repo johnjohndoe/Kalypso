@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Andreas (TU) -->
+<schema targetNamespace="http://www.tuhh.de/kalypsoSpree" version="0.9"
+    xmlns:na="http://www.tuhh.de/kalypsoSpree"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:gml="http://www.opengis.net/gml"
+    xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org">
+    <import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+    <import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlinks.xsd"/>
+    <import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/> 
+
+    <element name="collection" type="na:_SpreeModellType" substitutionGroup="gml:_FeatureCollection"/>
+    <complexType name="_SpreeModellType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureCollectionType"/>
+        </complexContent>
+    </complexType>
+    
+    <element name="bodenhorizonte" type="na:_BodenHorizonteType" substitutionGroup="gml:_FeatureCollection"/>
+    <complexType name="_BodenHorizonteType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureCollectionType"/>
+			<sequence>
+				
+			</sequence>
+        </complexContent>
+    </complexType>
+
+
+    <element name="bodenhorizont" type="na:_BodenHorizontType" substitutionGroup="gml:_Feature"/>
+    <complexType name="_BodenHorizontType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <element name="cinh" type="string"/>
+                    <element name="cind" type="string"/>
+                    <element name="cex" type="string"/>
+                    <element name="bmax" type="string"/>
+                    <element name="banf" type="string"/>
+                    <element name="fko" type="string"/>
+                    <element name="retlay" type="string"/>
+                    <element name="evalay" type="string"/>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+    
+    <element name="catchment" type="na:_CatchmentType" substitutionGroup="gml:_Feature"/>
+    <complexType name="_CatchmentType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+<!--
+    ___________(inum,i5)____(ispk,i3)
+(text,a80)
+(flaech,*)
+(pns,a1)_(kurzzeit,a)_(namfn,a)_(langzeit,a)_(faktn,f5.2)
+(namft,a)_(namept,a)
+(namfzf,a)
+(namhydro,a)
+(snowtype,a15)(ftem,*)_(fver,*)
+    -->
+                    <element name="Ort" type="gml:PointPropertyType"/>
+                    <element name="inum" type="string"/>
+                    <element name="ispk" type="string"/>
+                    <element name="text" type="string"/>
+                    <element name="flaech" type="string"/>
+                    <element name="pns" type="string"/>
+                    <element name="kuzzeit" type="string"/>
+                    <element name="namfn" type="string"/>
+                    <element name="langzeit" type="string"/>
+                    <element name="faktn" type="string"/>
+                    <element name="namft" type="string"/>
+                    <element name="namept" type="string"/>
+                    <element name="namfzf" type="string"/>
+                    <element name="namhydro" type="string"/>
+                    <element name="snowtype" type="string"/>
+                    <element name="ftem" type="string"/>
+                    <element name="fver" type="string"/>
+<!--
+(vsg,f5.3)(anzlayy,i5)_____(bimax,f5.1)_____(bianf,f5.1)(izkn_vers,f5.1)_____(tint,f5.1)_____(rintmx,f5.1)
+-->
+                    <element name="vsg" type="string"/>
+                    <element name="anzlayy" type="string"/>
+                    <element name="bimax" type="string"/>
+                    <element name="bianf" type="string"/>
+                    <element name="izkn_vers" type="string"/>
+                    <element name="tint" type="string"/>
+                    <element name="rintmx" type="string"/>
+<!--
+ (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)_(evalay,*)
+-->
+        			<element name="bodenhorizonte" ref="na:bodenhorizonte"/>
+<!--
+(f_eva,f4.1)_(aint,f4.1)_(aigw,f6.2)_(fint,f4.2)_(ftra,f4.2)
+(retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*)
+(igwzu,*)
+-->
+                    <element name="f_eva" type="string"/>
+                    <element name="aint" type="string"/>
+                    <element name="aigw" type="string"/>
+                    <element name="fint" type="string"/>
+                    <element name="ftra" type="string"/>
+                    <element name="retvs" type="string"/>
+                    <element name="retob" type="string"/>
+                    <element name="retint" type="string"/>
+                    <element name="retbas" type="string"/>
+                    <element name="retgw" type="string"/>
+                    <element name="retklu" type="string"/>
+                    <element name="igwzu" type="string"/>
+	
+<!--
+ (ngwzu,*)_...
+ (gwwi,*)_...
+-->
+                    <element name="ngwzu" type="string"/>
+                    <element name="gwwi" type="string"/>
+<!--
+(hgru,*)(hgro,*)(rtr,*)(pors,*)(gwsent,*)(klupor,*)(izkn,*)
+
+-->                
+                    <element name="hgru" type="string"/>
+                    <element name="hgro" type="string"/>
+                    <element name="rtr" type="string"/>
+                    <element name="pors" type="string"/>
+                    <element name="gwsent" type="string"/>
+                    <element name="klupor" type="string"/>
+                    <element name="izkn" type="string"/>
+<!--                
+                    <element name="BodenfeuchteMin" type="double"/>
+                    <element name="Bodenfeuchte" type="double"/>
+                    <element name="BodenfeuchteMax" type="double"/>
+                    <element name="Ausdehnung" type="double"/>
+   					<element name="Niederschlag_eingabeEingang" type="obslink:TimeseriesLink"/>
+   					<element name="Niederschlag_eingabe" type="obslink:TimeseriesLink"/>
+                    <element name="Wasserstand_gemessenEingang" type="obslink:TimeseriesLink"/>
+                    <element name="Wasserstand_gemessen" type="obslink:TimeseriesLink"/>
+                    <element name="Wasserstand_gerechnet" type="obslink:TimeseriesLink"/>
+-->
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+</schema>

@@ -1,0 +1,492 @@
+
+
+
+
+
+
+          *****************************************************
+          *****************************************************
+          ****                                             ****
+          ****      TU HAMBURG-HARBURG, AB WASSERBAU       ****
+          ****                                             ****
+          ****                                             ****
+          ****            K A L Y P S O - N A              ****
+          ****                                             ****
+          ****                                             ****
+          ****      NIEDERSCHLAG-ABFLUSS-MODELLIERUNG      ****
+          ****                                             ****
+          ****                                             ****
+          ****                                             ****
+          ****                                             ****
+          ****     VERS.  2.0.1       Stand: 03.08.2004    ****
+          ****                                             ****
+          ****                                             ****
+          *****************************************************
+          *****************************************************
+
+
+
+
+ bearbeitung fall: 2 p:\vwe04121\modell\hydrologie\namod we nat 1995 08 31 00 1995 09 15 00 start\we_nat1.txt                              
+debug: length ,path  0                                                                                       
+Debug: length ,path  0                                                                                       
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+   neuer Jahreszyklus 
+
+         Jahr:      1995
+         Zyklus:       1
+
+
+
+
+ auswertung des stranges  1800
+
+
+ auswertung von gebiet  1800
+
+
+ keine anfangswerte fuer grundwasserspeicher bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Schnee bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Bodenfeuchte bei startdatum 19950831 gefunden.
+xxx eingelesener Niederschlag:     42.5 mm
+xxx Datenfile:  p:\vwe04121\modell\hydrologie\namod\klima.dat\04426.kz                                                                  
+ xerr gws-speicher2 :    -0.0461
+ xerr2 gws-speicher :    -0.0187
+ q_gws+q_basis :     9.2199
+ xerr2 gws-speicher nach korrekt. :     0.0000
+ ISO: Normierungsfaktor = 1.0001
+ ISO: Summe normierter uh =   1.0000
+
+ISOV: Retentionskonstanten:  25.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 1377
+ISOV: Retentionskonstanten:   1.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH =   71
+ISOV: Retentionskonstanten:******       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000059
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ ISOV: Normierungsfaktor =   16965.37
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 2880
+
+
+ auswertung des stranges  1700
+
+
+ auswertung von gebiet  1700
+
+
+ keine anfangswerte fuer grundwasserspeicher bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Schnee bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Bodenfeuchte bei startdatum 19950831 gefunden.
+xxx eingelesener Niederschlag:     42.5 mm
+xxx Datenfile:  p:\vwe04121\modell\hydrologie\namod\klima.dat\04426.kz                                                                  
+ xerr gws-speicher2 :    -0.1267
+ xerr2 gws-speicher :    -0.0329
+ q_gws+q_basis :     9.3764
+ xerr2 gws-speicher nach korrekt. :     0.0000
+ ISO: Normierungsfaktor = 1.0001
+ ISO: Summe normierter uh =   1.0000
+
+ISOV: Retentionskonstanten:  25.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 1377
+ISOV: Retentionskonstanten:   1.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH =   71
+ISOV: Retentionskonstanten:******       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000059
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ ISOV: Normierungsfaktor =   16965.37
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 2880
+
+
+ auswertung des stranges  1600
+
+
+ auswertung von gebiet  1600
+
+
+ keine anfangswerte fuer grundwasserspeicher bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Schnee bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Bodenfeuchte bei startdatum 19950831 gefunden.
+xxx eingelesener Niederschlag:     42.5 mm
+xxx Datenfile:  p:\vwe04121\modell\hydrologie\namod\klima.dat\04426.kz                                                                  
+ xerr gws-speicher2 :    -0.9319
+ xerr2 gws-speicher :    -0.0308
+ q_gws+q_basis :    10.0409
+ xerr2 gws-speicher nach korrekt. :     0.0000
+ ISO: Normierungsfaktor = 1.0001
+ ISO: Summe normierter uh =   1.0000
+
+ISOV: Retentionskonstanten:  25.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 1377
+ISOV: Retentionskonstanten:   1.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH =   71
+ISOV: Retentionskonstanten:******       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000059
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ ISOV: Normierungsfaktor =   16965.37
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 2880
+
+
+ auswertung des stranges  1601
+
+
+ auswertung von gebiet  1601
+
+
+ keine anfangswerte fuer grundwasserspeicher bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Schnee bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Bodenfeuchte bei startdatum 19950831 gefunden.
+xxx eingelesener Niederschlag:     42.5 mm
+xxx Datenfile:  p:\vwe04121\modell\hydrologie\namod\klima.dat\04426.kz                                                                  
+ xerr gws-speicher2 :    -0.5007
+ xerr2 gws-speicher :    -0.0576
+ q_gws+q_basis :     9.9147
+ xerr2 gws-speicher nach korrekt. :     0.0000
+ ISO: Normierungsfaktor = 1.0001
+ ISO: Summe normierter uh =   1.0000
+
+ISOV: Retentionskonstanten:  25.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 1377
+ISOV: Retentionskonstanten:******       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000059
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ ISOV: Normierungsfaktor =   16965.37
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 2880
+
+
+ auswertung des stranges  1500
+
+
+ auswertung von gebiet  1500
+
+
+ keine anfangswerte fuer grundwasserspeicher bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Schnee bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Bodenfeuchte bei startdatum 19950831 gefunden.
+xxx eingelesener Niederschlag:     42.5 mm
+xxx Datenfile:  p:\vwe04121\modell\hydrologie\namod\klima.dat\04426.kz                                                                  
+ xerr gws-speicher2 :    -4.7272
+ xerr2 gws-speicher :    -0.0885
+ q_gws+q_basis :    13.3253
+ xerr2 gws-speicher nach korrekt. :     0.0000
+ ISO: Normierungsfaktor = 1.0001
+ ISO: Summe normierter uh =   1.0000
+
+ISOV: Retentionskonstanten:  25.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 1377
+ISOV: Retentionskonstanten:   1.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH =   71
+ISOV: Retentionskonstanten:******       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000059
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ ISOV: Normierungsfaktor =   16965.37
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 2880
+
+
+ auswertung des stranges  1403
+
+
+ auswertung von gebiet  1403
+
+
+ keine anfangswerte fuer grundwasserspeicher bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Schnee bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Bodenfeuchte bei startdatum 19950831 gefunden.
+xxx eingelesener Niederschlag:     42.5 mm
+xxx Datenfile:  p:\vwe04121\modell\hydrologie\namod\klima.dat\04426.kz                                                                  
+ xerr gws-speicher2 :    -0.0765
+ xerr2 gws-speicher :    -0.0211
+ q_gws+q_basis :     9.2789
+ xerr2 gws-speicher nach korrekt. :     0.0000
+ ISO: Normierungsfaktor = 1.0001
+ ISO: Summe normierter uh =   1.0000
+
+ISOV: Retentionskonstanten:  25.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 1377
+ISOV: Retentionskonstanten:******       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000059
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ ISOV: Normierungsfaktor =   16965.37
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 2880
+
+
+ auswertung des stranges  1404
+
+
+ auswertung von gebiet  1404
+
+
+ keine anfangswerte fuer grundwasserspeicher bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Schnee bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Bodenfeuchte bei startdatum 19950831 gefunden.
+xxx eingelesener Niederschlag:     42.5 mm
+xxx Datenfile:  p:\vwe04121\modell\hydrologie\namod\klima.dat\04426.kz                                                                  
+ xerr gws-speicher2 :    -3.4896
+ xerr2 gws-speicher :    -0.1774
+ q_gws+q_basis :    13.8079
+ xerr2 gws-speicher nach korrekt. :     0.0000
+ ISO: Normierungsfaktor = 1.0001
+ ISO: Summe normierter uh =   1.0000
+
+ISOV: Retentionskonstanten:  25.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 1377
+ISOV: Retentionskonstanten:******       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000059
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ ISOV: Normierungsfaktor =   16965.37
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 2880
+
+
+ auswertung des stranges  6100
+
+
+ auswertung von gebiet  6100
+
+
+ keine anfangswerte fuer grundwasserspeicher bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Schnee bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Bodenfeuchte bei startdatum 19950831 gefunden.
+xxx eingelesener Niederschlag:     42.5 mm
+xxx Datenfile:  p:\vwe04121\modell\hydrologie\namod\klima.dat\04426.kz                                                                  
+ xerr gws-speicher2 :    -2.4210
+ xerr2 gws-speicher :    -0.1703
+ q_gws+q_basis :    12.4110
+ xerr2 gws-speicher nach korrekt. :     0.0000
+ ISO: Normierungsfaktor = 1.0001
+ ISO: Summe normierter uh =   1.0000
+
+ISOV: Retentionskonstanten:  25.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 1377
+ISOV: Retentionskonstanten:******       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000059
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ ISOV: Normierungsfaktor =   16965.37
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 2880
+
+
+ auswertung des stranges  6000
+
+
+ auswertung von gebiet  6000
+
+
+ keine anfangswerte fuer grundwasserspeicher bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Schnee bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Bodenfeuchte bei startdatum 19950831 gefunden.
+xxx eingelesener Niederschlag:     42.5 mm
+xxx Datenfile:  p:\vwe04121\modell\hydrologie\namod\klima.dat\04426.kz                                                                  
+
+ warnung!!!
+ konvergenzkriterium im grundwasser speicher noch nicht erreicht.
+Iterationsanzahl=  100 zeitschritt: 838
+ deltagws1: 0.259637833000  deltagws2: 0.259876251000
+ xerr gws-speicher2 :   -10.7514
+ xerr2 gws-speicher :     0.0106
+ q_gws+q_basis :    15.1611
+ xerr2 gws-speicher nach korrekt. :     0.0000
+ ISO: Normierungsfaktor = 1.0001
+ ISO: Summe normierter uh =   1.0000
+
+ISOV: Retentionskonstanten:  25.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 1377
+ISOV: Retentionskonstanten:   1.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH =   71
+ISOV: Retentionskonstanten:******       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000059
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ ISOV: Normierungsfaktor =   16965.37
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 2880
+
+
+ auswertung des stranges  1401
+
+
+ auswertung von gebiet  1401
+
+
+ keine anfangswerte fuer grundwasserspeicher bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Schnee bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Bodenfeuchte bei startdatum 19950831 gefunden.
+xxx eingelesener Niederschlag:     42.5 mm
+xxx Datenfile:  p:\vwe04121\modell\hydrologie\namod\klima.dat\04426.kz                                                                  
+
+ warnung!!!
+ konvergenzkriterium im grundwasser speicher noch nicht erreicht.
+Iterationsanzahl=  100 zeitschritt:1276
+ deltagws1: 0.132083893000  deltagws2: 0.132322311000
+ xerr gws-speicher2 :    -7.5917
+ xerr2 gws-speicher :    -0.0351
+ q_gws+q_basis :    14.4576
+ xerr2 gws-speicher nach korrekt. :     0.0000
+ ISO: Normierungsfaktor = 1.0001
+ ISO: Summe normierter uh =   1.0000
+
+ISOV: Retentionskonstanten:  25.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 1377
+ISOV: Retentionskonstanten:******       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000059
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ ISOV: Normierungsfaktor =   16965.37
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 2880
+
+
+ auswertung des stranges  1402
+
+
+ auswertung von gebiet  1402
+
+
+ keine anfangswerte fuer grundwasserspeicher bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Schnee bei startdatum 19950831 gefunden.
+
+ keine anfangswerte fuer Bodenfeuchte bei startdatum 19950831 gefunden.
+xxx eingelesener Niederschlag:     42.5 mm
+xxx Datenfile:  p:\vwe04121\modell\hydrologie\namod\klima.dat\04426.kz                                                                  
+ xerr gws-speicher2 :    -5.4568
+ xerr2 gws-speicher :    -0.3217
+ q_gws+q_basis :    16.3771
+ xerr2 gws-speicher nach korrekt. :     0.0000
+ ISO: Normierungsfaktor = 1.0001
+ ISO: Summe normierter uh =   1.0000
+
+ISOV: Retentionskonstanten:  25.0       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ ISOV: Normierungsfaktor =       1.00
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 1377
+ISOV: Retentionskonstanten:******       0.0       0.0
+ISOV: Speicheranzahl:         3.0       0.0       3.0
+ISOV: Aufteilngsfaktor:      1.00      0.00
+ISOV: Warnung! UH nicht korrekt.
+ ISOV: Summe der UH-Ordinaten = 0.000059
+ ISOV: Wert uh(ituh) =       0.0000 bei ituh = 2880
+ ISOV: Normierungsfaktor =   16965.37
+ ISOV: Summe normierter UH-Ordinaten =     1.0000
+ ISOV: Anz. Zeitschritte UH = 2880
+
+
+xxx berechnung wurde ohne fehler beendet!
