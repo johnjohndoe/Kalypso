@@ -1,0 +1,31 @@
+/ConvenienceCSFactoryFull.java/1.13/Result of merge+Thu Jan 15 08:27:35 2004//
+/Adapters.java/1.3/Thu Mar 25 14:24:18 2004//
+/AxisInfo.java/1.2/Thu Mar 25 14:24:18 2004//
+/AxisOrientation.java/1.2/Thu Mar 25 14:24:18 2004//
+/BackingStoreException.java/1.3/Thu Mar 25 14:24:18 2004//
+/CompoundCoordinateSystem.java/1.3/Thu Mar 25 14:24:18 2004//
+/ConvenienceCSFactory.java/1.38/Thu Mar 25 14:24:18 2004//
+/CoordinateSystem.java/1.2/Thu Mar 25 14:24:18 2004//
+/CoordinateSystemAuthorityFactory.java/1.2/Thu Mar 25 14:24:18 2004//
+/CoordinateSystemFactory.java/1.3/Thu Mar 25 14:24:18 2004//
+/Datum.java/1.3/Thu Mar 25 14:24:18 2004//
+/DatumType.java/1.5/Thu Mar 25 14:24:18 2004//
+/Ellipsoid.java/1.3/Thu Mar 25 14:24:18 2004//
+/GeocentricCoordinateSystem.java/1.2/Thu Mar 25 14:24:18 2004//
+/GeographicCoordinateSystem.java/1.3/Thu Mar 25 14:24:18 2004//
+/HorizontalCoordinateSystem.java/1.2/Thu Mar 25 14:24:18 2004//
+/HorizontalDatum.java/1.3/Thu Mar 25 14:24:18 2004//
+/Info.java/1.8/Thu Mar 25 14:24:18 2004//
+/LocalCoordinateSystem.java/1.4/Thu Mar 25 14:24:18 2004//
+/LocalDatum.java/1.4/Thu Mar 25 14:24:18 2004//
+/NoSuchAuthorityCodeException.java/1.2/Thu Mar 25 14:24:18 2004//
+/PrimeMeridian.java/1.3/Thu Mar 25 14:24:18 2004//
+/ProjectedCoordinateSystem.java/1.4/Thu Mar 25 14:24:18 2004//
+/Projection.java/1.3/Thu Mar 25 14:24:18 2004//
+/TemporalCoordinateSystem.java/1.3/Thu Mar 25 14:24:18 2004//
+/TemporalDatum.java/1.4/Thu Mar 25 14:24:18 2004//
+/VerticalCoordinateSystem.java/1.4/Thu Mar 25 14:24:18 2004//
+/VerticalDatum.java/1.4/Thu Mar 25 14:24:18 2004//
+/WGS84ConversionInfo.java/1.2/Thu Mar 25 14:24:18 2004//
+/cs.dfPackage/1.2/Thu Mar 25 14:24:18 2004//
+D

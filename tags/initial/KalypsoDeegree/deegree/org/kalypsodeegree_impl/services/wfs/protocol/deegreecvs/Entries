@@ -1,0 +1,24 @@
+/FeatureTypeSchema_Impl.java/1.2/Thu Mar 25 14:24:18 2004//
+/WFSBasicResponse_Impl.java/1.3/Thu Mar 25 14:24:18 2004//
+/WFSDelete_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/WFSDescribeFeatureTypeRequest_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/WFSDescribeFeatureTypeResponse_Impl.java/1.3/Thu Mar 25 14:24:18 2004//
+/WFSGetCapabilitiesRequest_Impl.java/1.5/Thu Mar 25 14:24:18 2004//
+/WFSGetCapabilitiesResponse_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/WFSGetFeatureRequest_Impl.java/1.11/Thu Mar 25 14:24:18 2004//
+/WFSGetFeatureWithLockRequest_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/WFSGetFeatureWithLockResponse_Impl.java/1.3/Thu Mar 25 14:24:18 2004//
+/WFSInsertResult_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/WFSInsert_Impl.java/1.3/Thu Mar 25 14:24:18 2004//
+/WFSLockFeatureRequest_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/WFSLockFeatureResponse_Impl.java/1.3/Thu Mar 25 14:24:18 2004//
+/WFSLock_Impl.java/1.3/Thu Mar 25 14:24:18 2004//
+/WFSNative_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/WFSQuery_Impl.java/1.5/Thu Mar 25 14:24:18 2004//
+/WFSTransactionRequest_Impl.java/1.6/Thu Mar 25 14:24:18 2004//
+/WFSTransactionResponse_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/WFSUpdate_Impl.java/1.6/Thu Mar 25 14:24:18 2004//
+/WFSBasicRequest_Impl.java/1.7/Tue Mar 30 07:06:27 2004//
+/WFSGetFeatureResponse_Impl.java/1.4/Tue Mar 30 07:06:27 2004//
+/WFSProtocolFactory.java/1.25/Tue Mar 30 07:06:27 2004//
+D

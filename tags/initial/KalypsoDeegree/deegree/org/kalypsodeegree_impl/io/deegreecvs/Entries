@@ -1,0 +1,16 @@
+D/imgapi////
+D/rtree////
+D/sdeapi////
+D/shpapi////
+D/bnaapi////
+D/ecwapi////
+D/mapinfo////
+/DBConnectionPool.java/1.4/Thu Mar 25 14:24:18 2004//
+/DBPool.java/1.10/Thu Mar 25 14:24:18 2004//
+/GenericSQLIDGenerator.java/1.2/Thu Mar 25 14:24:18 2004//
+/IDGeneratorFactory.java/1.2/Thu Mar 25 14:24:18 2004//
+/MySQLDBAccess.java/1.5/Thu Mar 25 14:24:18 2004//
+/OracleSpatialAccess.java/1.20/Thu Mar 25 14:24:18 2004//
+/PostgisDBAccess.java/1.7/Thu Mar 25 14:24:18 2004//
+/SQLTools.java/1.9/Thu Mar 25 14:24:18 2004//
+/DBAccess.java/1.25/Tue Mar 30 07:06:23 2004//
