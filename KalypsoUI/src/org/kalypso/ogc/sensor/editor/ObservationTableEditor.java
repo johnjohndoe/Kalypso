@@ -16,8 +16,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.editor.AbstractEditorPart;
 import org.kalypso.ogc.sensor.IObservationProvider;
-import org.kalypso.ogc.sensor.renderer.DateTableCellRenderer;
-import org.kalypso.ogc.sensor.renderer.MaskedNumberTableCellRenderer;
+import org.kalypso.ogc.sensor.tableview.renderer.DateTableCellRenderer;
+import org.kalypso.ogc.sensor.tableview.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.template.ColumnPair;
 import org.kalypso.ogc.sensor.template.TableViewTemplate;
@@ -25,6 +25,7 @@ import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypso.util.status.MaskedNumber;
 
 /**
  * The Observation TableEditor.
@@ -83,7 +84,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
 
     JTable table = new JTable( m_model );
     table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
-    table.setDefaultRenderer( Number.class, new MaskedNumberTableCellRenderer( null ) );
+    table.setDefaultRenderer( MaskedNumber.class, new MaskedNumberTableCellRenderer() );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
@@ -109,6 +110,9 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
   {
     m_tableview = new TableViewTemplate( input.getFile() );
 
+    // the rules will be used for rendering, they are used in the table cell renderer
+    m_model.setRules( m_tableview.getRules() );
+    
     m_cols = m_tableview.getColumns();
 
     monitor.beginTask( "Spalten initialisieren", m_cols.length );
