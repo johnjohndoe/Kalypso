@@ -141,10 +141,11 @@
 	   pageTitle="Ergebnisbearbeitung und Veröffentlichung"
 	   imageLocation="icons/calcwizard/kalypso32.gif" >
 	   	<arg name="mapTemplate" value="project:.templates/calcCase/pegel.gmt"/>
-	   	<arg name="tableTemplate"  value="project:.templates/calcCase/pegel.gtt"/>
+<!--	   	<arg name="tableTemplate"  value="project:.templates/calcCase/pegel.gtt"/>
 		<arg name="diagTemplate" value=".templates/calcCase/results.odt"/>
-	
-		<arg name="exportDiagram" value="template=.templates/export/pegelVorhersage.odt#timeseries=Wasserstand_gemessen;Wasserstand_vorhersage"/>
+-->	
+<!--		<arg name="exportDiagram" value="template=.templates/export/pegelVorhersage.odt#timeseries=Wasserstand_gemessen;Wasserstand_vorhersage"/>
+-->
 	
         <arg name="timeserie1" 
         	value="nameColumn=Name#linkColumn=Niederschlag_rechnung"/>

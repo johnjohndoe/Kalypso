@@ -24,6 +24,8 @@
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="4"/>
+<!--        <arg name="zmlTableShow" value="all"/> -->
+        <arg name="selectFeatureID" value="Node6100"/>
         
         <arg name="timeserie3" value="diagDateAxis=d#diagValueAxis=a#nameColumn=Name#linkColumn=zuflussZR"/>
     </page>
@@ -57,6 +59,11 @@
 		<arg name="modelspec" value="modelspec_1.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Adorf 2/17" 
@@ -71,6 +78,11 @@
 		<arg name="modelspec" value="modelspec_2.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Oelsnitz 3/17" 
@@ -85,11 +97,13 @@
 		<arg name="modelspec" value="modelspec_3.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	
-
-
-
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Strassberg 4/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
@@ -102,9 +116,12 @@
 		<arg name="modelspec" value="modelspec_4.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
-
-
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Elsterberg 5/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
@@ -118,6 +135,11 @@
 		<arg name="modelspec" value="modelspec_5.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Rodewisch 6/17" 
@@ -132,6 +154,11 @@
 		<arg name="modelspec" value="modelspec_6.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Mylau 7/17" 
@@ -146,6 +173,11 @@
 		<arg name="modelspec" value="modelspec_7.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Greiz 8/17" 
@@ -160,6 +192,11 @@
 		<arg name="modelspec" value="modelspec_8.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Weida 9/17" 
@@ -174,6 +211,11 @@
 		<arg name="modelspec" value="modelspec_9.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Gera 10/17" 
@@ -188,6 +230,11 @@
 		<arg name="modelspec" value="modelspec_10.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Zeitz 11/17" 
@@ -202,6 +249,11 @@
 		<arg name="modelspec" value="modelspec_11.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Kleindalzig 12/17" 
@@ -216,6 +268,11 @@
 		<arg name="modelspec" value="modelspec_12.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Albrechtshain 13/17" 
@@ -230,6 +287,11 @@
 		<arg name="modelspec" value="modelspec_13.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Leipzig-Thekla 14/17" 
@@ -244,6 +306,11 @@
 		<arg name="modelspec" value="modelspec_14.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Oberthau 15/17" 
@@ -258,6 +325,11 @@
 		<arg name="modelspec" value="modelspec_15.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Neukirchen 16/17" 
@@ -272,6 +344,11 @@
 		<arg name="modelspec" value="modelspec_16.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Goessnitz 17/17" 
@@ -286,26 +363,14 @@
 		<arg name="modelspec" value="modelspec_17.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<!-- Ergebniskontrolle NA-Modelle-->
-	<!--
-	<page className="org.kalypso.ui.calcwizard.ExportResultsWizardPage"
-	   pageTitle="Ergebniskontrolle Pegel"
-	   imageLocation="icons/calcwizard/boden.gif" >
-	   	<arg name="mapTemplate" value="project:.templates/calcCase/ergebniskontrollePegel.gmt"/>
-	   	<arg name="tableTemplate"  value="project:.templates/calcCase/ergebniskontrollePegel.gtt"/>
-		<arg name="diagTemplate" value=".templates/calcCase/results.odt"/>
-	
-		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=PegelBerechnung"/>
-		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=NiederschlagMessung"/>
-	
-	   	<arg name="mainSash" value="50"/>
-	   	<arg name="rightSash" value="40"/>
-	   	<arg name="selectionID" value="256"/>
-	</page>
--->
-	<!-- Ergebnisablage -->
 	<page className="org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung" 
 		imageLocation="icons/calcwizard/kalypso32.gif" >
 		<arg name="mapTemplate" value="project:.templates/calcCase/export.gmt"/>
@@ -313,8 +378,23 @@
 			value="nameColumn=Name#linkColumn=qberechnetZR#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
 		<arg name="timeserie2" 
 			value="nameColumn=Name#linkColumn=pegelZR#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
+
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="256"/>
+
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
+		
+		<arg name="pegelNameProperty" value="Name"/>
+		<arg name="resultProperty" value="qberechnetZR"/>
+		<arg name="prognoseProperty" value="pegelBerechnetZRAblage"/>
+		
+		<arg name="exporter1" value="class=org.kalypso.ui.calcwizard.bericht.MapExporter;name=Karte"/>
+	   	<arg name="exporter2" value="class=org.kalypso.ui.calcwizard.bericht.ZmlTableExporter;name=Tabelle"/>
+	   	<arg name="exporter3" value="class=org.kalypso.ui.calcwizard.bericht.DiagrammExporter;name=Abflussgrafik"/>
+	   	<arg name="exporter4" value="class=org.kalypso.ui.calcwizard.bericht.DiagrammExporter;name=Wasserstandgrafik;"/>
 	</page>
 </calcwizard>
