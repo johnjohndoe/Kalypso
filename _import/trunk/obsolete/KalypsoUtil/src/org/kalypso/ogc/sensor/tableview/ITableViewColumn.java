@@ -1,14 +1,13 @@
 package org.kalypso.ogc.sensor.tableview;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.IObservationProvider;
 
 /**
  * A column of a tableview over IObservation.
  * 
  * @author schlienger
  */
-public interface ITableViewColumn
+public interface ITableViewColumn extends IObservationProvider
 {
   public String getName();
   
@@ -16,8 +15,4 @@ public interface ITableViewColumn
   
   public int getWidth();
   public void setWidth( final int width );
-  
-  public IObservation getObservation();
-  
-  public IAxis getAxis();
 }

@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 /**
@@ -37,16 +38,21 @@ public class ObservationUtilities
   /**
    * Helper that returns an axis which is compatible with specified Class of data
    */
-  public static IAxis findAxis( IObservation obs, Class desired ) throws NoSuchElementException
+  public static IAxis[] findAxis( IObservation obs, Class desired ) throws NoSuchElementException
   {
     IAxis[] axes = obs.getAxisList();
+    
+    ArrayList list = new ArrayList( axes.length );
     
     for( int i = 0; i < axes.length; i++ )
     {
       if( desired.isAssignableFrom( axes[i].getDataClass() ) )
-        return axes[i];
+        list.add( axes[i] );
     }
     
-    throw new NoSuchElementException( "No axis found with class '" + desired + "' in observation '" + obs.getName() + "'" );
+    if( list.size() == 0 )
+      throw new NoSuchElementException( "No axis found with class '" + desired + "' in observation '" + obs.getName() + "'" );
+    
+    return (IAxis[])list.toArray( new IAxis[list.size()] );
   }
 }

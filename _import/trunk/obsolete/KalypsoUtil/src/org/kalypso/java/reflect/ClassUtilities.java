@@ -58,11 +58,13 @@ public class ClassUtilities
    * @param mapping [optional] if not null, uses this mapping to resolve class name
    * @throws ClassNotFoundException
    */
-  public static Class typeToClass( final String type, final Properties mapping ) throws ClassNotFoundException
+  public static Class typeToClass( final String type, final Properties mapping /*, final ClassLoader cl */ ) throws ClassNotFoundException
   {
-    Properties typeMapping = mapping == null ? getTypeToClassProperties() : mapping;
+    final Properties typeMapping = mapping == null ? getTypeToClassProperties() : mapping;
     
-    return Class.forName( typeMapping.getProperty(type) );
+    final String foo = typeMapping.getProperty(type);
+    System.out.println( foo + " - " + type );
+    return Class.forName( foo );//, true, cl );
   }
   
   

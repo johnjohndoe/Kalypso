@@ -57,7 +57,7 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public Class getColumnClass( int columnIndex )
   {
-    return m_columns[ columnIndex ].getAxis().getDataClass();
+    return m_columns[ columnIndex ].getDisplayAxis().getDataClass();
   }
 
   /**
@@ -106,7 +106,7 @@ public class ObservationTableModel extends AbstractTableModel
   {
     try
     {
-      return m_columns[ columnIndex ].getObservation().getValues(m_args).getElement(rowIndex, m_columns[ columnIndex ].getAxis().getPosition() );
+      return m_columns[ columnIndex ].getObservation().getValues(m_args).getElement(rowIndex, m_columns[ columnIndex ].getDisplayAxis().getPosition() );
     }
     catch( SensorException e )
     {
@@ -131,7 +131,7 @@ public class ObservationTableModel extends AbstractTableModel
   {
     try
     {
-      m_columns[ columnIndex ].getObservation().getValues(m_args).setElement(rowIndex, aValue, m_columns[ columnIndex ].getAxis().getPosition() );
+      m_columns[ columnIndex ].getObservation().getValues(m_args).setElement(rowIndex, aValue, m_columns[ columnIndex ].getDisplayAxis().getPosition() );
     }
     catch( SensorException e )
     {

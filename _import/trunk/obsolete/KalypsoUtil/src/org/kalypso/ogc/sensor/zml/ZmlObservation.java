@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.ogc.sensor.DefaultTarget;
@@ -80,8 +79,10 @@ public class ZmlObservation implements IObservation
         Unmarshaller u = m_zmlObjectFactory.createUnmarshaller();
 
         m_obsFile = (Observation)u.unmarshal( m_inputStream );
+        
+        m_inputStream.close();
       }
-      catch( JAXBException e )
+      catch( Exception e )
       {
         // TODO: how to handle this correctly?
         e.printStackTrace();

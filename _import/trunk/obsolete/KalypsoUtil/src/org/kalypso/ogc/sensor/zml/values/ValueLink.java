@@ -1,7 +1,6 @@
 package org.kalypso.ogc.sensor.zml.values;
 
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.Properties;
@@ -11,9 +10,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlAxis;
 import org.kalypso.util.factory.ValueObjectFactory;
 import org.kalypso.util.io.CSV;
-import org.kalypso.util.xml.xlink.IXlink;
-import org.kalypso.util.xml.xlink.JaxbXlink;
-import org.kalypso.util.xml.xlink.resolver.IResolver;
 import org.kalypso.zml.AxisType;
 import org.kalypso.zml.AxisType.ValueLinkType;
 
@@ -22,7 +18,7 @@ import org.kalypso.zml.AxisType.ValueLinkType;
  * 
  * @author schlienger
  */
-public class ValueLink extends JaxbXlink implements IZmlValuesLoader, IZmlValuesProvider, IResolver
+public class ValueLink implements IZmlValuesLoader, IZmlValuesProvider
 {
   private final ValueLinkType m_valueLink;
 
@@ -37,12 +33,13 @@ public class ValueLink extends JaxbXlink implements IZmlValuesLoader, IZmlValues
 
   public ValueLink( final AxisType.ValueLinkType valueLink, final ZmlAxis axis )
   {
-    super( valueLink );
-    
     m_valueLink = valueLink;
     m_axis = axis;
     
-    resolve( this );
+    Properties hrefProps = PropertiesHelper.parseFromString( valueLink.getHref(), '#' );
+    
+    m_path = hrefProps.getProperty( "PATH" );
+    m_column = Integer.valueOf( hrefProps.getProperty("COLUMN") ).intValue() - 1;
   }
 
   /**
@@ -55,7 +52,7 @@ public class ValueLink extends JaxbXlink implements IZmlValuesLoader, IZmlValues
       m_csv = (CSV)m_model.getPoolObject( m_path );
       if( m_csv == null )
       {
-        m_csv = new CSV( new InputStreamReader( toUrl().openStream() ), m_valueLink
+        m_csv = new CSV( new InputStreamReader( new URL( m_path ).openStream() ), m_valueLink
             .getSeparator() );
         m_model.putPoolObject( m_path, m_csv );
       }
@@ -106,26 +103,5 @@ public class ValueLink extends JaxbXlink implements IZmlValuesLoader, IZmlValues
   public void setElement( int index, Object element )
   {
     m_csv.setItem( index, m_column, ValueObjectFactory.toStringRepresentation( element ) );
-  }
-  
-  /**
-   * @see org.kalypso.util.xml.xlink.JaxbXlink#toUrl()
-   */
-  public URL toUrl() throws MalformedURLException
-  {
-    return new URL( m_path );
-  }
-
-  /**
-   * @see org.kalypso.util.xml.xlink.resolver.IResolver#resolve(org.kalypso.util.xml.xlink.IXlink)
-   */
-  public Object resolve( IXlink link )
-  {
-    Properties hrefProps = PropertiesHelper.parseFromString( link.getHRef(), '#' );
-    
-    m_path = hrefProps.getProperty( "PATH" );
-    m_column = Integer.valueOf( hrefProps.getProperty("COLUMN") ).intValue();
-    
-    return this;
   }
 }

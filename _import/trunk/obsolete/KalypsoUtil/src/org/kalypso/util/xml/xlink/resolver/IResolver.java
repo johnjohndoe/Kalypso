@@ -1,6 +1,5 @@
 package org.kalypso.util.xml.xlink.resolver;
 
-import org.kalypso.util.xml.xlink.IXlink;
 import org.kalypso.util.xml.xlink.XLinkException;
 
 /**
@@ -10,5 +9,5 @@ import org.kalypso.util.xml.xlink.XLinkException;
  */
 public interface IResolver
 {
-  public Object resolve( IXlink link ) throws XLinkException;
+  public Object resolve() throws XLinkException;
 }

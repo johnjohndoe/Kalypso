@@ -23,7 +23,7 @@ public class ZmlTuppleModel implements ITuppleModel
     m_axes = axes;
     
     for( int i = 0; i < m_axes.length; i++ )
-      m_axes[i].fetchValues();
+      m_axes[i].fetchValues( this );
   }
 
   protected Object getPoolObject( Object key )

@@ -4,8 +4,9 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 
 /**
+ * A simple implementation of the ITableViewColumn interface.
+ * 
  * @author schlienger
- *
  */
 public class DefaultTableViewColumn implements ITableViewColumn
 {
@@ -56,18 +57,18 @@ public class DefaultTableViewColumn implements ITableViewColumn
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getObservation()
+   * @see org.kalypso.ogc.sensor.IObservationProvider#getDisplayAxis()
+   */
+  public IAxis getDisplayAxis()
+  {
+    return m_axis;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationProvider#getObservation()
    */
   public IObservation getObservation()
   {
     return m_obs;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getAxis()
-   */
-  public IAxis getAxis()
-  {
-    return m_axis;
   }
 }
