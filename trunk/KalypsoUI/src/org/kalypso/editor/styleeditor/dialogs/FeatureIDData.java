@@ -13,12 +13,14 @@ public class FeatureIDData extends AbstractData
 		return featureId;
 	}
 	public void setFeatureId(String featureId) {
-		this.featureId = featureId;
-	}
-
-	public boolean verify() {
-		if(featureId != null)
-			return true;
-		return false;					
-	}
+		this.featureId = featureId.trim();
+	}	
+	
+	public boolean verify() throws FilterDialogException 
+	{
+		if(featureId == null || featureId.trim().length() == 0)		
+			throw new FilterDialogException(new FilterDialogError(null,FilterDialogError.INCOMPLETE));
+		else 
+			return true;		
+	}	
 }

@@ -14,18 +14,35 @@ public class BetweenComparisonData extends AbstractComparisonData
 		return lower;
 	}
 	public void setLower(String lower) {
-		this.lower = lower;
+		this.lower = lower.trim();
 	}
 	public String getUpper() {
 		return upper;
 	}
 	public void setUpper(String upper) {
-		this.upper = upper;
+		this.upper = upper.trim();
 	}
 
-	public boolean verify() {
-		if(lower != null && upper != null && propertyName != null)
+	public boolean verify() throws FilterDialogException 
+	{
+		if(lower == null || lower.trim().length() == 0 || upper == null || upper.trim().length() == 0 || propertyName == null)
+		{
+			throw new FilterDialogException(new FilterDialogError(null,FilterDialogError.INCOMPLETE));
+		}
+		else 
+		{	
+			try
+			{
+				double lowerDouble = Double.parseDouble(lower);
+				double upperDouble = Double.parseDouble(upper);
+				if(lowerDouble>upperDouble)
+					throw new FilterDialogException(new FilterDialogError(null,FilterDialogError.LOWERBOUNDARY_EXCEEDS_UPPERBOUNDARY));
+			}
+			catch(NumberFormatException e)
+			{
+				throw new FilterDialogException(new FilterDialogError(null,"Lower- and UpperBound input " +FilterDialogError.NUMERIC_VALUE));
+			}			
 			return true;
-		return false;
+		}			
 	}
 }

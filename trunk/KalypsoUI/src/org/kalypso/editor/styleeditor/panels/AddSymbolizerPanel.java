@@ -192,8 +192,9 @@ public class AddSymbolizerPanel {
 						
 		if(TextSymbolizerLayout.getFeatureTypeGeometryType(featureType)== TextSymbolizerLayout.GM_POINT)
 		{
-			items = new String[1];
+			items = new String[2];
 			items[0] = "Point";
+			items[1] = "Text";
 		}
 		else if(TextSymbolizerLayout.getFeatureTypeGeometryType(featureType)== TextSymbolizerLayout.GM_LINESTRING)
 		{
@@ -211,8 +212,9 @@ public class AddSymbolizerPanel {
 		}
 		else if(TextSymbolizerLayout.getFeatureTypeGeometryType(featureType)== TextSymbolizerLayout.GM_MULTIPOINT)
 		{
-			items = new String[1];
-			items[0] = "Point";			
+			items = new String[2];
+			items[0] = "Point";	
+			items[1] = "Text";
 		}
 		else if(TextSymbolizerLayout.getFeatureTypeGeometryType(featureType)== TextSymbolizerLayout.GM_OBJECT) //multilinestring, multipolygon
 		{

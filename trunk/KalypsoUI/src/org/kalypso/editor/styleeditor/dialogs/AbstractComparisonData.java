@@ -14,8 +14,8 @@ public abstract class AbstractComparisonData extends AbstractData
 		return propertyName;
 	}
 	public void setPropertyName(String propertyName) {
-		this.propertyName = propertyName;
+		this.propertyName = propertyName.trim();
 	}
 	
-	public abstract boolean verify(); 
+	public abstract boolean verify() throws FilterDialogException; 
 }

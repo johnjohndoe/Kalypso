@@ -7,11 +7,13 @@ package org.kalypso.editor.styleeditor.dialogs;
 
 public class NullComparisonData extends AbstractComparisonData
 {
-
-	public boolean verify() 
+	
+	public boolean verify() throws FilterDialogException 
 	{
-		if(propertyName != null)
+		if(propertyName == null)		
+			throw new FilterDialogException(new FilterDialogError(null,FilterDialogError.INCOMPLETE));
+		else
 			return true;
-		return false;
-	}
+	}	
+	
 }

@@ -7,7 +7,6 @@ package org.kalypso.editor.styleeditor;
 import org.deegree.graphics.sld.Rule;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.model.feature.FeatureType;
-import org.deegree.services.wfs.filterencoding.Filter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -20,6 +19,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.editor.styleeditor.dialogs.FilterDialog;
+import org.kalypso.editor.styleeditor.dialogs.FilterDialogEvent;
+import org.kalypso.editor.styleeditor.dialogs.FilterDialogListener;
 import org.kalypso.editor.styleeditor.panels.AddSymbolizerPanel;
 import org.kalypso.editor.styleeditor.panels.EditSymbolizerPanel;
 import org.kalypso.editor.styleeditor.panels.LegendLabel;
@@ -237,16 +238,21 @@ public class RuleTabItemBuilder {
 			buttonComposite.setLayout(new GridLayout(2,true));
 			Button button = new Button(buttonComposite,SWT.NULL);
 			button.setText("Edit Filter");			
-			final FilterDialog filterDialog = new FilterDialog(composite.getShell(),featureType,rule.getFilter()); 
+			final FilterDialog filterDialog = new FilterDialog(composite.getShell(),featureType,rule);
+			filterDialog.addFilterDialogListener(new FilterDialogListener() {
+				public void filterUpdated(FilterDialogEvent event) {						
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
+				}
+			});
 			button.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {
-					int returnCode = filterDialog.open();						
-					if(returnCode == 0)
-					{
-						Filter filter = filterDialog.getFilter();						
-						rule.setFilter(filter);
-						userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));											
-					}					
+					int returnCode = filterDialog.open();	
+//					if(returnCode == 0)
+//					{
+//						Filter filter = filterDialog.getFilter();						
+//						rule.setFilter(filter);
+//						userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));											
+//					}					
 				}
 				public void widgetDefaultSelected(SelectionEvent e) {
 					widgetSelected(e);
@@ -257,7 +263,7 @@ public class RuleTabItemBuilder {
 			final Button saveButton = new Button(buttonComposite,SWT.NULL);			
 			saveButton.setText("Save");						
 			saveButton.addSelectionListener(new SelectionListener() {
-				public void widgetSelected(SelectionEvent e) {						 
+				public void widgetSelected(SelectionEvent e) {					
 					SaveStyleAction.saveUserStyle(userStyle, composite.getShell());									
 				}
 				public void widgetDefaultSelected(SelectionEvent e) {

@@ -5,7 +5,7 @@
 package org.kalypso.editor.styleeditor.dialogs;
 
 
-public class BinaryComparisonData extends AbstractComparisonData
+public class BinaryComparisonNumericData extends AbstractComparisonData
 {
 	private String literal = null;
 	public String getLiteral() {
@@ -22,6 +22,16 @@ public class BinaryComparisonData extends AbstractComparisonData
 			throw new FilterDialogException(new FilterDialogError(null,FilterDialogError.INCOMPLETE));
 		}
 		else 
-			return true;		
+		{
+			try
+			{
+				Double.parseDouble(literal);			
+			}
+			catch(NumberFormatException e)
+			{
+				throw new FilterDialogException(new FilterDialogError(null,"Value " +FilterDialogError.NUMERIC_VALUE));
+			}									
+		}
+		return true;		
 	}	
 }
