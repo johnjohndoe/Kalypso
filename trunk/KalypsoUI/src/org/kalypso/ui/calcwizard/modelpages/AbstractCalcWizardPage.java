@@ -30,8 +30,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
@@ -65,13 +71,16 @@ import org.opengis.cs.CS_CoordinateSystem;
 public abstract class AbstractCalcWizardPage extends WizardPage implements IModelWizardPage,
     ICommandTarget, ModellEventListener
 {
-  //  public static final int SELECTION_ID = 0x10;
-
   private int m_selectionID = 0x1;
 
-  /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
-  public final static String PROP_IGNORETYPE = "ignoreType";
+  private static final String PROP_IGNORETYPE1 = "ignoreType1";
 
+  private static final String PROP_IGNORETYPE2 = "ignoreType2";
+
+  private static final String PROP_IGNORELABEL1 = "ignoreLabel1";
+
+  private static final String PROP_IGNORELABEL2 = "ignoreLabel2";
+  
   /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
   public final static String PROP_TABLETEMPLATE = "tableTemplate";
 
@@ -123,6 +132,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       maximizeMap();
     }
   };
+
 
   public AbstractCalcWizardPage( final String name )
   {
@@ -302,7 +312,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       // actually creates the template
       m_diagTemplate = new LinkedDiagramTemplate();
 
-      final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE, null );
+      final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
       m_diagTemplate.setIgnoreType( ignoreType );
 
       final Composite composite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
@@ -405,7 +415,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_table = new ObservationTable( m_tableModel );
 
       m_tableTemplate = new LinkedTableViewTemplate();
-      final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE, null );
+      final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
       m_tableTemplate.setIgnoreType( ignoreType );
       
       m_tableModel.setRules( m_tableTemplate );
@@ -552,7 +562,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return featureList;
   }
 
-  protected void setObsIngoreType( final String ignoreType )
+  protected void setObsIgnoreType( final String ignoreType )
   {
     if( m_diagTemplate != null )
       m_diagTemplate.setIgnoreType( ignoreType );
@@ -560,5 +570,67 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_tableTemplate.setIgnoreType( ignoreType );
     
     refreshTimeseries();
+  }
+  
+  /**
+   * @see org.eclipse.jface.dialogs.IDialogPage#performHelp()
+   */
+  public void performHelp()
+  {
+    // TODO
+    // get helpid
+    // show help
+  }
+
+  protected Composite createIgnoreButtonPanel( final Composite parent )
+  {
+    // properties lesen
+    final String ignoreType1 = m_arguments.getProperty( PROP_IGNORETYPE1, "Q" );
+    final String ignoreType2 = m_arguments.getProperty( PROP_IGNORETYPE2, "W" );
+
+    final String ignoreLabel1 = m_arguments.getProperty( PROP_IGNORELABEL1, "Abfluss" );
+    final String ignoreLabel2 = m_arguments.getProperty( PROP_IGNORELABEL2, "Wasserstand" );
+    
+    final Composite panel = new Composite( parent, SWT.NONE );
+    panel.setLayout( new GridLayout( 3, false ) );
+    panel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    
+    final Label label = new Label( panel, SWT.NONE );
+    label.setText( "Diagrammanzeige:" );
+    final GridData gridData = new GridData(  );
+    gridData.grabExcessHorizontalSpace = true;
+    gridData.horizontalAlignment = GridData.END;
+    label.setLayoutData( gridData );
+    
+    final Button radioQ = new Button( panel, SWT.RADIO );
+    radioQ.setText( ignoreLabel1 );
+    radioQ.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      public void widgetSelected( SelectionEvent e )
+      {
+        setObsIgnoreType( ignoreType1 );
+      }
+    } );
+    
+    final Button radioW = new Button( panel, SWT.RADIO );
+    radioW.setText( ignoreLabel2 );
+  
+    radioW.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      public void widgetSelected( SelectionEvent e )
+      {
+        setObsIgnoreType( ignoreType2 );
+      }
+    } );
+    
+    radioQ.setSelection( true );
+  
+    return panel;
   }
 }

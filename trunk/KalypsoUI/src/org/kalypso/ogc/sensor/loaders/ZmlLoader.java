@@ -47,7 +47,7 @@ public class ZmlLoader extends AbstractLoader
       final IObservation obs = ZmlFactory.parseXML( url, url.getFile() );
 
       // add resource in order to get aware of changes made by tier on it
-      IFile file = ResourceUtilities.findFileFromURL( url );
+      final IFile file = ResourceUtilities.findFileFromURL( url );
       if( file != null )
         addResource( file, obs );
       return obs;

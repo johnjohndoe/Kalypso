@@ -24,6 +24,8 @@ public abstract class TimeserieConstants implements ObservationConstants
   /** Datum */
   public final static String TYPE_DATE = "date";
   
+  /** Füllung (VOLUMEN) */
+  public static final String TYPE_VOLUME = "V";
   
   public final static String MD_WQ = "WQ-Parameter";
 
@@ -48,6 +50,7 @@ public abstract class TimeserieConstants implements ObservationConstants
   public final static String MD_FLUSSGEBIET = "Flussgebiet";
   
   public final static String MD_FLUSS = "Fluss";
+
   
   /**
    * @param type
