@@ -6,7 +6,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.editor.tableeditor.layerTable.LayerTable;
 import org.kalypso.editor.tableeditor.layerTable.command.RemoveRowsCommand;
 import org.kalypso.java.util.Arrays;
-import org.kalypso.ogc.sort.DisplayContext;
+import org.kalypso.ogc.gml.KalypsoFeature;
 
 /**
  * @author bce
@@ -18,10 +18,10 @@ public class RemoveRowsActionDelegate extends GisTableAbstractActionDelagate
     final LayerTable layerTable = getEditor().getLayerTable();
 
     final IStructuredSelection selection = (IStructuredSelection)getEditor().getSelection();
-    final DisplayContext[] displayContexts = (DisplayContext[])Arrays.castArray( selection.toArray(),
-        new DisplayContext[selection.size()] );
+    final KalypsoFeature[] features = (KalypsoFeature[])Arrays.castArray( selection.toArray(),
+        new KalypsoFeature[selection.size()] );
 
-    getEditor().postCommand( new RemoveRowsCommand( layerTable.getModel(), displayContexts ), null );
+    getEditor().postCommand( new RemoveRowsCommand( layerTable.getModel(), features ), null );
   }
 
   /**

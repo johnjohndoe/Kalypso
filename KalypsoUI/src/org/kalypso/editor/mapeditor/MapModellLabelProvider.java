@@ -1,10 +1,11 @@
 package org.kalypso.editor.mapeditor;
 
-import org.deegree.graphics.Theme;
+
 import org.deegree.graphics.sld.UserStyle;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.ogc.gml.KalypsoTheme;
 
 /**
  * @author bce
@@ -24,8 +25,8 @@ public class MapModellLabelProvider implements ILabelProvider
    */
   public String getText( Object element )
   {
-    if( element instanceof Theme )
-      return ((Theme)element).getName();
+    if( element instanceof KalypsoTheme )
+      return ((KalypsoTheme)element).getName();
     
     if( element instanceof ThemeStyleTreeObject )
         return element.toString();

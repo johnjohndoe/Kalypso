@@ -133,6 +133,14 @@
                class="org.kalypso.ogc.widgets.PanToWidget"
                style="radio"
                id="org.kalypso.editor.mapeditor.action.PanAction"/>
+          <action
+               toolbarPath="karte"
+               label="Elemente selektieren"
+               tooltip="selektiert dinge"
+               icon="icons/full/elcl16/kde_14_polyline.gif"
+               class="org.kalypso.ogc.widgets.SelectWidget"
+               style="radio"
+               id="org.kalypso.editor.mapeditor.action.SelectAction"/>
             </editorContribution>
    </extension>
    <extension

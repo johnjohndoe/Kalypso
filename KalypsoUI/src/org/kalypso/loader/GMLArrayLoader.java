@@ -8,8 +8,6 @@ import java.util.Properties;
 import org.deegree.gml.GMLDocument;
 import org.deegree.gml.GMLFeature;
 import org.deegree.gml.GMLFeatureCollection;
-import org.deegree.graphics.FeatureLayer;
-import org.deegree.graphics.Layer;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.gml.GMLDocument_Impl;
@@ -20,6 +18,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ogc.gml.GMLHelper;
 import org.kalypso.ogc.gml.JMSchema;
+import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.loader.ILoader;
@@ -94,8 +93,8 @@ public class GMLArrayLoader implements ILoader
         final Feature feature = FeatureFactory.createFeature( gmlFeatures[i], types );
         GMLHelper.checkCrs( feature, layerCrs );
 
-        final FeatureLayer fl = (FeatureLayer)layerMap.get( feature.getFeatureType() );
-        fl.addFeature( feature );
+        final KalypsoFeatureLayer fl = (KalypsoFeatureLayer)layerMap.get( feature.getFeatureType() );
+        fl.addFeature( new KalypsoFeature(feature) );
       }
       for( Iterator iter = layerMap.values().iterator(); iter.hasNext(); )
       {
@@ -103,7 +102,7 @@ public class GMLArrayLoader implements ILoader
         layer.optimize();
       }
 
-      return layerMap.values().toArray( new Layer[layerMap.size()] );
+      return layerMap.values().toArray( new KalypsoFeatureLayer[layerMap.size()] );
     }
 
     catch( Exception e )

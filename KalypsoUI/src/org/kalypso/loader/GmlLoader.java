@@ -2,7 +2,7 @@ package org.kalypso.loader;
 
 import java.util.Properties;
 
-import org.deegree.graphics.Layer;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.loader.ILoader;
 import org.kalypso.util.loader.LoaderException;
@@ -25,10 +25,10 @@ public class GmlLoader implements ILoader
       final String name = source.getProperty( "LAYER", "" );
       
       // erst mal gml laden
-      final Layer[] layers=(Layer[])KalypsoGisPlugin.getDefault().getPool( Layer[].class ).borrowObject( new PoolableObjectType("gmlarray",source, helper) );
+      final KalypsoFeatureLayer[] layers=(KalypsoFeatureLayer[])KalypsoGisPlugin.getDefault().getPool( KalypsoFeatureLayer[].class ).borrowObject( new PoolableObjectType("gmlarray",source, helper) );
       for( int i = 0; i < layers.length; i++ )
       {
-        final Layer layer = layers[i];
+        final KalypsoFeatureLayer layer = layers[i];
         if( name.equals( layer.getName() ) )
             return layer;
       }      

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.jface.action.IAction;
@@ -25,7 +24,7 @@ import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
 import org.kalypso.editor.tableeditor.actions.ColumnAction;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
-import org.kalypso.ogc.sort.DisplayContext;
+import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.util.command.ICommandManager;
 import org.kalypso.util.factory.FactoryException;
 
@@ -230,16 +229,16 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
       } );
     }
 
-  /**
+  /** 
    * 
-   * @see org.kalypso.editor.tableeditor.layerTable.ILayerTableModelListener#onRowsChanged(org.kalypso.ogc.sort.DisplayContext)
+   * @see org.kalypso.editor.tableeditor.layerTable.ILayerTableModelListener#onRowsChanged(org.kalypso.ogc.gml.KalypsoFeature)
    */
-  public void onRowsChanged( final DisplayContext dc )
+  public void onRowsChanged( final KalypsoFeature fe )
   {
     m_viewer.getControl().getDisplay().asyncExec( m_refreshRunner );
   }
 
-  public void selectRow( final Feature feature )
+  public void selectRow( final KalypsoFeature feature )
   {
     m_viewer.getControl().getDisplay().asyncExec( new Runnable()
     {
