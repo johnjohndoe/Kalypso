@@ -235,7 +235,7 @@ public class ZmlFactory
         // declared in this file using the convention that the property 
         // must be build using the type name followed by the '_format' string.
         if( format == null || format == "" )
-          format = m_parserProps.getProperty( type + "_format" );
+          format = getProperties().getProperty( type + "_format" );
         
         parser = getParserFactory().createParser( type, format );
 
