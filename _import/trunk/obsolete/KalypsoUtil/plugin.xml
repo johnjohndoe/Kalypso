@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin>
+<plugin
+   id="org.kalypso.util"
+   name="Kalypso - Util"
+   version="1.0.0"
+   provider-name="org.kalypso">
+   <runtime>
+      <library name="kalypsoUtil.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/commons-pool-1.2.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jaxb-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jaxb-impl.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jaxb-libs.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jaxb-xjc.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jax-qname.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypsodeegree.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/namespace.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/relaxngDatatype.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/xercesImpl.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/xsdlib.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
 
 </plugin>

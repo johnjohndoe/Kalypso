@@ -1,3 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<mapview><extent bottom="12345.0" left="123.4" right="456.7" top="111.1"/></mapview>
+<gisview xmlns="gisview.xml.kalypso.org" xmlns:kalypso="types.xml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="gisview.xml.kalypso.org
+D:\runtime-workbench-workspace\Spree\schema\gisview.xsd">
+	<extent bottom="1245.0" left="123.4" right="456.7" top="111.1"/>
+	<layers>
+		<kalypso:layer id="argls" name="Pegel" source="modell.gml" type="gml" visible="false">
+			<kalypso:style source="./styles/pegel.sld" type="sld"/>
+			<kalypso:style source="./styles/pegel.sld" type="sld"/>
+		</kalypso:layer>
 
+		<kalypso:layer id="urgl" name="Einzugsgebiete" source="modell.gml" type="gml" visible="true">
+			<kalypso:style source="x" type="sld" />
+			<kalypso:style source="./sld/teilgebiete.sld" type="sld" />
+			<kalypso:srs name="gauss"/>
+			<kalypso:depends layerid="argls"/>
+		</kalypso:layer>
+	</layers>
+</gisview>
