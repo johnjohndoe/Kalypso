@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="deegree"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="deegree/"/>
 	<classpathentry exported="true" kind="lib" path="lib/acme/acme.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ecw/ermapper.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/esri/jsde82_sdk.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jai/jai_codec.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/java3d/j3dcore.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jts/jts.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-awt-util.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-css.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-dom.jar"/>
@@ -11,24 +14,32 @@
 	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-svggen.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-util.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/lib/batik-xml.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/ecw/ermapper.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ecw/ermapperdoc.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/esri/jsde82_sdk.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jai/jai_codec.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/jai_core.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/mlibwrapper_jai.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/java3d/j3dcore.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/java3d/j3dutils.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/java3d/vecmath.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jts/jts.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit/junit.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jwsdp/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jwsdp/dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jwsdp/jaxp-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jwsdp/jax-qname.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jwsdp/jaxrpc-api.jar"/>
+	<classpathentry exported="true" sourcepath="J:/hyd5309/Development/Java/jwsdp/jaxrpc1.0-scsl/jaxrpc-ri/src" kind="lib" path="lib/jwsdp/jaxrpc-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jwsdp/jaxrpc-spi.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jwsdp/mail.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mail/mail.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mysql/mysql-connector-java-3.0.8-stable-bin.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/oracle/ojdbc14.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/oracle/sdoapi.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/postgis/pg73jdbc3.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/postgis/postgis.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/servlet/jsdk2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jwsdp/saaj-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jwsdp/saaj-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jwsdp/xercesImpl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/oracle/sdoapi.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/postgis/postgis.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/servlet/servlet.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/junit/junit.jar"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

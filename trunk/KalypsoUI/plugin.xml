@@ -360,10 +360,6 @@
                label="Menu"
                path="org.kalypso.ui.editors.tableeditor.popMenu"
                id="org.kalypso.ui.editors.tableeditor.popMenu.menu"/>
-         <action
-               label="AddRow"
-               class="org.kalypso.ui.editor.gistableeditor.actions.AddRowActionDelagate"
-               id="org.kalypso.tableeditor.AddRowAction"/>
         </viewerContribution>
    </extension>
    <extension
@@ -417,15 +413,6 @@
             category="org.kalypso.ui.wizardCategory"
             name="Tabelle (Zeitreihen)"
             id="org.kalypso.wizard.newOtt"/>
-   </extension>
-   <extension
-         point="org.eclipse.debug.core.launchConfigurationTypes">
-      <launchConfigurationType
-            delegate="org.kalypso.ui.launcher.CalcCaseLaunchConfigurationDelegate"
-            public="true"
-            name="Modellrechnung"
-            modes="run"
-            id="org.kalypso.ui.launch.CalcCaseType"/>
    </extension>
    <extension
          point="org.eclipse.ui.viewActions">

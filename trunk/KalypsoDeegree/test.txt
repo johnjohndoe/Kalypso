@@ -1,0 +1,5 @@
+
+,lib/jai/jai_core.jar,lib/jai/mlibwrapper_jai.jar,lib/java3d/j3dutils.jar,lib/java3d/vecmath.jar,lib/jts/jts.jar,lib/junit/junit.jar,lib/jwsdp/activation.jar,lib/jwsdp/dom.jar
+,lib/jwsdp/jaxp-api.jar,lib/mail/mail.jar,lib/mysql/mysql-connector-java-3.0.8-stable-bin.jar,lib/oracle/ojdbc14.jar,lib/postgis/pg73jdbc3.jar,lib/servlet/jsdk2.3.jar
+,lib/jwsdp/jax-qname.jar,lib/jwsdp/jaxrpc-api.jar,lib/jwsdp/jaxrpc-impl.jar,lib/jwsdp/jaxrpc-spi.jar,lib/jwsdp/mail.jar,lib/jwsdp/saaj-api.jar,lib/jwsdp/saaj-impl.jar
+,lib/jwsdp/xercesImpl.jar,lib/oracle/sdoapi.jar,lib/postgis/postgis.jar,lib/servlet/servlet.jar

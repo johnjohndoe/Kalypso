@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
 <plugin
    id="org.kalypso.deegree"
    name="org.kalypso.deegree"
    version="0.0.1"
    provider-name="org.kalypso">
    <runtime>
+      <library name="kalypsodeegree.jar">
+         <export name="*"/>
+      </library>
       <library name="lib/acme/acme.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/ecw/ermapper.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/esri/jsde82_sdk.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jai/jai_codec.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/java3d/j3dcore.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jts/jts.jar">
          <export name="*"/>
       </library>
       <library name="lib/batik/lib/batik-awt-util.jar">
@@ -29,16 +48,7 @@
       <library name="lib/batik/lib/batik-xml.jar">
          <export name="*"/>
       </library>
-      <library name="lib/ecw/ermapper.jar">
-         <export name="*"/>
-      </library>
       <library name="lib/ecw/ermapperdoc.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/esri/jsde82_sdk.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jai/jai_codec.jar">
          <export name="*"/>
       </library>
       <library name="lib/jai/jai_core.jar">
@@ -47,16 +57,37 @@
       <library name="lib/jai/mlibwrapper_jai.jar">
          <export name="*"/>
       </library>
-      <library name="lib/java3d/j3dcore.jar">
-         <export name="*"/>
-      </library>
       <library name="lib/java3d/j3dutils.jar">
          <export name="*"/>
       </library>
       <library name="lib/java3d/vecmath.jar">
          <export name="*"/>
       </library>
-      <library name="lib/jts/jts.jar">
+      <library name="lib/junit/junit.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jwsdp/activation.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jwsdp/dom.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jwsdp/jaxp-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jwsdp/jax-qname.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jwsdp/jaxrpc-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jwsdp/jaxrpc-impl.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jwsdp/jaxrpc-spi.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jwsdp/mail.jar">
          <export name="*"/>
       </library>
       <library name="lib/mail/mail.jar">
@@ -68,60 +99,29 @@
       <library name="lib/oracle/ojdbc14.jar">
          <export name="*"/>
       </library>
-      <library name="lib/oracle/sdoapi.jar">
-         <export name="*"/>
-      </library>
       <library name="lib/postgis/pg73jdbc3.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/postgis/postgis.jar">
          <export name="*"/>
       </library>
       <library name="lib/servlet/jsdk2.3.jar">
          <export name="*"/>
       </library>
-      <library name="kalypsodeegree.jar">
+      <library name="lib/jwsdp/saaj-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jwsdp/saaj-impl.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jwsdp/xercesImpl.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/oracle/sdoapi.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/postgis/postgis.jar">
          <export name="*"/>
       </library>
       <library name="lib/servlet/servlet.jar">
          <export name="*"/>
       </library>
-      <library name="lib/junit/junit.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/kalypso-webservice/activation.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/kalypso-webservice/dom.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/kalypso-webservice/jaxp-api.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/kalypso-webservice/jax-qname.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/kalypso-webservice/jaxrpc-api.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/kalypso-webservice/jaxrpc-impl.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/kalypso-webservice/jaxrpc-spi.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/kalypso-webservice/mail.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/kalypso-webservice/saaj-api.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/kalypso-webservice/saaj-impl.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/kalypso-webservice/xercesImpl.jar">
-         <export name="*"/>
-      </library>
    </runtime>
-
 </plugin>
