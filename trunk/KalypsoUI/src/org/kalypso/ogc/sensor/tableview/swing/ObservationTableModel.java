@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
@@ -12,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewRules;
@@ -343,5 +345,53 @@ public class ObservationTableModel extends AbstractTableModel
 
       return row;
     }
+  }
+
+  /**
+   * Creates a new ITuppleModel with the values for the given columns.
+   * 
+   * @param cols list of columns for which to create a tupple model.
+   * 
+   * @return new model
+   */
+  public ITuppleModel getValues( final List cols )
+  {
+    final List axes = new ArrayList();
+    
+    axes.add( m_sharedAxis );
+    
+    final Iterator it = cols.iterator();
+    while( it.hasNext() )
+    {
+      final ITableViewColumn col = (ITableViewColumn) it.next();
+      axes.add( col.getAxis() );
+    }
+    
+    final SimpleTuppleModel model = new SimpleTuppleModel( axes );
+
+    int rowIndex = 0;
+    for( final Iterator ite = m_sharedModel.iterator(); ite.hasNext(); )
+    {
+      final Object keyObj = ite.next();      
+      
+      final Vector tupple = new Vector( axes.size() );
+      
+      tupple.add( keyObj );
+      
+      for( final Iterator ita = cols.iterator(); ita.hasNext(); )
+      {
+        final ITableViewColumn col= (ITableViewColumn) ita.next();
+        
+        final int colIndex = m_valuesModel.findColumn( col.getName() );
+        
+        tupple.add( m_valuesModel.getValueAt( rowIndex, colIndex ) );
+      }
+      
+      model.addTupple( tupple );
+      
+      rowIndex++;
+    }
+    
+    return model;
   }
 }

@@ -13,8 +13,10 @@ import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
@@ -25,6 +27,7 @@ import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
 import org.kalypso.template.obstableview.ObstableviewType.RulesType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
@@ -113,6 +116,19 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
 
     // finally launch request on pool
     m_pool.addPoolListener( this, key );
+  }
+  
+  /**
+   * Saves the given obs using the pool.
+   * 
+   * @param obs
+   * @param monitor
+   * @throws FactoryException
+   * @throws LoaderException
+   */
+  public void saveObservation( final IObservation obs, final IProgressMonitor monitor ) throws LoaderException, FactoryException
+  {
+    m_pool.saveObject( obs, monitor );
   }
 
   /**

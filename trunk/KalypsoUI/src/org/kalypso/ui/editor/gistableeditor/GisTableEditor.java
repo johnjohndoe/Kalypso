@@ -98,11 +98,14 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
       final OutputStreamWriter osw = new OutputStreamWriter( bos, file.getCharset() );
       m_marshaller.marshal( tableTemplate, osw );
+      
+      // TODO close in finally block?
       bos.close();
 
       final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
       file.setContents( bis, false, true, monitor );
 
+      // TODO close in finally block?
       bis.close();
     }
     catch( final JAXBException e )

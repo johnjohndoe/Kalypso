@@ -1,23 +1,30 @@
 package org.kalypso.ui.editor.obstableeditor;
 
 import java.awt.Frame;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.java.lang.CatchRunnable;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 
 /**
@@ -89,13 +96,13 @@ public class ObservationTableEditor extends AbstractEditorPart
    *      org.eclipse.ui.IFileEditorInput)
    */
   protected void doSaveInternal( IProgressMonitor monitor,
-      IFileEditorInput input )
+      IFileEditorInput input ) throws CoreException
   {
     final List columns = m_template.getColumns();
 
-    for( Iterator it = columns.iterator(); it.hasNext(); )
+    for( final Iterator it = columns.iterator(); it.hasNext(); )
     {
-      ITableViewColumn column = (ITableViewColumn) it.next();
+      final ITableViewColumn column = (ITableViewColumn) it.next();
 
       if( column.isDirty() )
       {
@@ -108,18 +115,46 @@ public class ObservationTableEditor extends AbstractEditorPart
 
         if( b )
         {
-//          final IObservation obs = column.getObservation();
+          final IObservation obs = column.getObservation();
 
-          //m_model.g
+          column.setDirty( false );
 
-          //obs.setValues( );
+          final List cols2save = new ArrayList();
+          cols2save.add( column );
+
+          // reset dirty flag for other columns that have the same observation
+          for( final Iterator itTmp = columns.iterator(); itTmp.hasNext(); )
+          {
+            final ITableViewColumn col = (ITableViewColumn) itTmp.next();
+
+            if( col.getObservation().equals( obs ) && col.isDirty() )
+            {
+              col.setDirty( false );
+              cols2save.add( col );
+            }
+          }
+
+          final ITuppleModel values = m_model.getValues( cols2save );
+
+          try
+          {
+            obs.setValues( values );
+
+            m_template.saveObservation( obs, monitor );
+          }
+          catch( Exception e )
+          {
+            e.printStackTrace();
+            throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "ZML speichern", e ) );
+          }
         }
       }
     }
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#load()
+   * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
+   *      org.eclipse.ui.IFileEditorInput)
    */
   protected void loadInternal( final IProgressMonitor monitor,
       final IFileEditorInput input )
@@ -141,7 +176,7 @@ public class ObservationTableEditor extends AbstractEditorPart
     {
       SwingUtilities.invokeAndWait( runnable );
       if( runnable.getThrown() != null )
-       throw runnable.getThrown();
+        throw runnable.getThrown();
     }
     catch( Throwable e ) // generic throwable caught for simplicity
     {
