@@ -51,7 +51,7 @@ public class GisTemplateMapModell implements IMapModell
           final String source = layerType.getHref();
           PoolableObjectType poolType = new PoolableObjectType( "sld", source, project );
           KalypsoWMSLayer layer = (KalypsoWMSLayer)loaderInstance.load(poolType.getSource(), project, null);
-          addTheme(new KalypsoWMSTheme(layer));
+          addTheme(new KalypsoWMSTheme(layerType.getName(),layer));
         }
         catch( FactoryException e )
         {
