@@ -3,16 +3,21 @@ package org.kalypso.ogc.sensor.beans;
 import java.io.Serializable;
 
 /**
- * Contains meta-information on the localisation of the data for an observation.
+ * Contains meta-information on the localisation of the data for an observation. OCSDataBean
+ * are designed to be used within the Kalypso Observation Web Service API. They are used
+ * on both client side and server side.
  * 
  * @author schlienger
  */
 public class OCSDataBean implements Serializable
 {
+  /** Identifier of the observation bean it delivers data for */
   private String m_obsId;
 
+  /** Location of the data, URL which should be accessible for both client and server */
   private String m_location;
 
+  /** Internal id of this ODCDataBean */
   private int m_id;
 
   public OCSDataBean()
@@ -20,6 +25,13 @@ public class OCSDataBean implements Serializable
     this( 0, "", "" );
   }
 
+  /**
+   * Constructs a new OCSDataBean.
+   * 
+   * @param id Internal id of this ODCDataBean
+   * @param obsId Identifier of the observation bean it delivers data for
+   * @param location Location of the data, URL which should be accessible for both client and server
+   */
   public OCSDataBean( final int id, final String obsId, final String location )
   {
     m_id = id;

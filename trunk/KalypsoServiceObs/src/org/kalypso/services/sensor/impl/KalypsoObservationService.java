@@ -2,7 +2,6 @@ package org.kalypso.services.sensor.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,9 +12,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 
 import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.lang.reflect.ClassUtilities.ClassUtilityException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.beans.DateRangeBean;
 import org.kalypso.ogc.sensor.beans.OCSDataBean;
@@ -57,22 +57,35 @@ public class KalypsoObservationService implements IObservationService
 
   private int m_lastId = 0;
 
+  private final Logger m_logger;
+
   /**
    * Constructs the service by reading the configuration.
    * 
-   * @throws RepositoryException
-   * @throws ClassUtilityException
-   * @throws FileNotFoundException
+   * @throws RemoteException
    */
-  public KalypsoObservationService() throws RepositoryException, ClassUtilityException,
-      FileNotFoundException
+  public KalypsoObservationService() throws RemoteException
   {
     m_mapBean2Item = new Hashtable( 512 );
     m_mapBean2File = new Hashtable( 512 );
     m_mapItem2Beans = new Hashtable( 512 );
     m_mapId2Rep = new Hashtable();
 
+    m_logger = Logger.getLogger( KalypsoObservationService.class.getName() );
+
+    try
+    {
+      m_logger.addHandler( new FileHandler( ServiceConfig.getTempDir() + "/IObservation%g.log",
+          10000000, 10, true ) );
+    }
+    catch( Exception e ) // generic Exception caught for simplicity
+    {
+      e.printStackTrace();
+      throw new RemoteException( "Exception in KalypsoObservationService.constructor()", e );
+    }
+
     m_tmpDir = FileUtilities.createNewTempDir( "Observations", ServiceConfig.getTempDir() );
+    m_tmpDir.deleteOnExit();
 
     init();
   }
@@ -80,7 +93,7 @@ public class KalypsoObservationService implements IObservationService
   /**
    * Initialize the Service according to configuration.
    */
-  private void init() throws FileNotFoundException, RepositoryException, ClassUtilityException
+  private void init() throws RemoteException
   {
     m_lastId = 0;
 
@@ -89,27 +102,63 @@ public class KalypsoObservationService implements IObservationService
     m_mapItem2Beans.clear();
     m_mapId2Rep.clear();
 
-    final File conf = new File( ServiceConfig.getConfDir(),
-        "IObservationService/repconf_server.xml" );
-
-    final InputStream stream = new FileInputStream( conf );
-
-    // this call also closes the stream
-    final RepositoryConfig config = RepositoryConfigUtils.loadConfig( stream );
-
-    final List items = config.getItems();
-    m_repositories = new Vector( items.size() );
-
-    for( final Iterator it = items.iterator(); it.hasNext(); )
+    try
     {
-      final RepositoryConfigItem item = (RepositoryConfigItem)it.next();
-      final IRepositoryFactory fact = item.createFactory();
+      final File conf = new File( ServiceConfig.getConfDir(),
+          "IObservationService/repconf_server.xml" );
 
-      final IRepository rep = fact.createRepository();
-      m_repositories.add( rep );
+      final InputStream stream = new FileInputStream( conf );
 
-      m_mapId2Rep.put( rep.getIdentifier(), rep );
+      // this call also closes the stream
+      final RepositoryConfig config = RepositoryConfigUtils.loadConfig( stream );
+
+      final List items = config.getItems();
+      m_repositories = new Vector( items.size() );
+
+      for( final Iterator it = items.iterator(); it.hasNext(); )
+      {
+        final RepositoryConfigItem item = (RepositoryConfigItem)it.next();
+        final IRepositoryFactory fact = item.createFactory();
+
+        final IRepository rep = fact.createRepository();
+        m_repositories.add( rep );
+
+        m_mapId2Rep.put( rep.getIdentifier(), rep );
+      }
     }
+    catch( Exception e ) // generic exception caught for simplicity
+    {
+      m_logger.throwing( "KalypsoObservationService", "init", e );
+
+      throw new RemoteException( "Exception in KalypsoObservationService.init()", e );
+    }
+  }
+
+  /**
+   * Performs some clean up.
+   * 
+   * @see java.lang.Object#finalize()
+   */
+  protected void finalize() throws Throwable
+  {
+    m_repositories.clear();
+    m_repositoryBeans = null;
+    m_mapBean2Item.clear();
+    m_mapItem2Beans.clear();
+    m_mapId2Rep.clear();
+
+    // delete temp files
+    for( final Iterator iter = m_mapBean2File.keySet().iterator(); iter.hasNext(); )
+    {
+      final Object elt = iter.next();
+
+      // force delete, even if we called deleteOnExit()
+      ( (File)m_mapBean2File.get( elt ) ).delete();
+    }
+    m_mapBean2File.clear();
+
+    // force delete, even if we called deleteOnExit()
+    m_tmpDir.delete();
   }
 
   /**
@@ -128,12 +177,23 @@ public class KalypsoObservationService implements IObservationService
       final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
 
       if( obs == null )
-        throw new RemoteException( "No observation for " + obean.getId() );
+      {
+        final RemoteException e = new RemoteException( "No observation for " + obean.getId() );
+        m_logger.throwing( "KalypsoObservationService", "readData", e );
+        throw e;
+      }
 
       final DateRangeArgument args = new DateRangeArgument( drb.getFrom(), drb.getTo() );
       final ObservationType obsType = ZmlFactory.createXML( obs, args );
 
       final File f = File.createTempFile( "___" + obs.getName(), ".zml", m_tmpDir );
+
+      // we say delete on exit even if we allow the client to delete the file
+      // explicitely
+      // in the clearTempData() service call. This allows us to clear temp files
+      // on shutdown
+      // in the case the client forgets it.
+      f.deleteOnExit();
 
       // will be closed in finally block
       fos = new FileOutputStream( f );
@@ -149,6 +209,7 @@ public class KalypsoObservationService implements IObservationService
     }
     catch( Exception e ) // generic exception used for simplicity
     {
+      m_logger.throwing( "KalypsoObservationService", "readData", e );
       throw new RemoteException( "", e );
     }
     finally
@@ -158,9 +219,10 @@ public class KalypsoObservationService implements IObservationService
         {
           fos.close();
         }
-        catch( IOException e2 )
+        catch( IOException e )
         {
-          throw new RemoteException( "Exception while closing output stream", e2 );
+          m_logger.throwing( "KalypsoObservationService", "readData", e );
+          throw new RemoteException( "", e );
         }
     }
   }
@@ -176,9 +238,14 @@ public class KalypsoObservationService implements IObservationService
     if( m_mapBean2File.containsKey( id ) )
     {
       final File f = (File)m_mapBean2File.get( id );
-      f.delete();
 
-      m_mapBean2File.remove( id );
+      if( f.delete() )
+      {
+        m_mapBean2File.remove( id );
+        m_logger.info( "File deleted: " + f.getAbsolutePath() );
+      }
+      else
+        m_logger.warning( "Could not delete file: " + f.getAbsolutePath() );
     }
   }
 
@@ -196,7 +263,11 @@ public class KalypsoObservationService implements IObservationService
       final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
 
       if( obs == null )
-        throw new RemoteException( "No observation for " + obean.getId() );
+      {
+        final RemoteException e = new RemoteException( "No observation for " + obean.getId() );
+        m_logger.throwing( "KalypsoObservationService", "writeData", e );
+        throw e;
+      }
 
       final IObservation zml = ZmlFactory.parseXML( new URL( odb.getLocation() ), odb.getObsId() );
 
@@ -204,6 +275,7 @@ public class KalypsoObservationService implements IObservationService
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
+      m_logger.throwing( "KalypsoObservationService", "writeData", e );
       throw new RemoteException( "", e );
     }
 
@@ -219,7 +291,11 @@ public class KalypsoObservationService implements IObservationService
       RepositoryException
   {
     if( obean == null )
-      throw new NullPointerException( "ItemBean must not be null" );
+    {
+      final NullPointerException e = new NullPointerException( "ItemBean must not be null" );
+      m_logger.throwing( "KalypsoObservationService", "itemFromBean", e );
+      throw e;
+    }
 
     if( m_mapBean2Item.containsKey( obean.getId() ) )
       return (IRepositoryItem)m_mapBean2Item.get( obean.getId() );
@@ -231,7 +307,11 @@ public class KalypsoObservationService implements IObservationService
       return rep.findItem( obean.getId() );
     }
     else
-      throw new RemoteException( "Unknonwn Repository: " + obean.getRepId() );
+    {
+      final RemoteException e = new RemoteException( "Unknonwn Repository: " + obean.getRepId() );
+      m_logger.throwing( "KalypsoObservationService", "itemFromBean", e );
+      throw e;
+    }
   }
 
   /**
@@ -251,7 +331,7 @@ public class KalypsoObservationService implements IObservationService
     }
     catch( RepositoryException e )
     {
-      e.printStackTrace();
+      m_logger.throwing( "KalypsoObservationService", "hasChildren", e );
       throw new RemoteException( "", e );
     }
   }
@@ -286,43 +366,43 @@ public class KalypsoObservationService implements IObservationService
     try
     {
       item = itemFromBean( pbean );
+
+      // already in cache?
+      if( m_mapItem2Beans.containsKey( item ) )
+        return (ItemBean[])m_mapItem2Beans.get( item );
+
+      final IRepositoryItem[] children = item.getChildren();
+      final ItemBean[] beans = new ItemBean[children.length];
+
+      for( int i = 0; i < beans.length; i++ )
+      {
+        final IObservation obs = (IObservation)children[i].getAdapter( IObservation.class );
+
+        if( obs != null )
+        {
+          beans[i] = new ObservationBean( children[i].getIdentifier(), obs.getName(), item
+              .getRepository().getIdentifier(), obs.getMetadataList() );
+        }
+        else
+        {
+          beans[i] = new ItemBean( children[i].getIdentifier(), children[i].getName(), item
+              .getRepository().getIdentifier() );
+        }
+
+        // store it for future referencing
+        m_mapBean2Item.put( beans[i].getId(), children[i] );
+      }
+
+      // cache it for next request
+      m_mapItem2Beans.put( item, beans );
+      
+      return beans;
     }
     catch( RepositoryException e )
     {
-      e.printStackTrace();
+      m_logger.throwing( "KalypsoObservationService", "getChildren", e );
       throw new RemoteException( "", e );
     }
-
-    // already in cache?
-    if( m_mapItem2Beans.containsKey( item ) )
-      return (ItemBean[])m_mapItem2Beans.get( item );
-
-    final IRepositoryItem[] children = item.getChildren();
-    final ItemBean[] beans = new ItemBean[children.length];
-
-    for( int i = 0; i < beans.length; i++ )
-    {
-      final IObservation obs = (IObservation)children[i].getAdapter( IObservation.class );
-
-      if( obs != null )
-      {
-        beans[i] = new ObservationBean( children[i].getIdentifier(), obs.getName(), item
-            .getRepository().getIdentifier(), obs.getMetadataList() );
-      }
-      else
-      {
-        beans[i] = new ItemBean( children[i].getIdentifier(), children[i].getName(), item
-            .getRepository().getIdentifier() );
-      }
-
-      // store it for future referencing
-      m_mapBean2Item.put( beans[i].getId(), children[i] );
-    }
-
-    // cache it for next request
-    m_mapItem2Beans.put( item, beans );
-
-    return beans;
   }
 
   /**
@@ -358,20 +438,12 @@ public class KalypsoObservationService implements IObservationService
       }
       catch( RepositoryException e )
       {
-        e.printStackTrace();
+        m_logger.throwing( "KalypsoObservationService", "reload", e );
         throw new RemoteException( "", e );
       }
     }
 
-    try
-    {
-      init();
-    }
-    catch( Exception e ) // generic exception caught for simplicity
-    {
-      e.printStackTrace();
-      throw new RemoteException( "", e );
-    }
+    init();
   }
 
   /**
@@ -412,6 +484,8 @@ public class KalypsoObservationService implements IObservationService
       }
     }
 
-    throw new RemoteException( "Item not found: " + id );
+    final RemoteException e = new RemoteException( "Item not found: " + id );
+    m_logger.throwing( "KalypsoObservationService", "reload", e );
+    throw e;
   }
 }
