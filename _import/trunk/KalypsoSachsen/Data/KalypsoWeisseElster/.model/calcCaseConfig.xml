@@ -8,6 +8,15 @@
 		</transformation>
 		<!-- controls kopieren ... -->
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/expertControl.gml"/>
+			<argument name="output" value=":calcdir:expertControl.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/expertControl.gtt"/>
+			<argument name="output" value=":calcdir:expertControl.gtt"/>
+		</transformation>
+
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.model/nacontrol_1600.gml"/>
 			<argument name="output" value=":calcdir:nacontrol_1600.gml"/>
 		</transformation>

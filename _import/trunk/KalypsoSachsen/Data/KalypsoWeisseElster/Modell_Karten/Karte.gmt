@@ -1,28 +1,3 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gismapview xmlns="gismapview.template.kalypso.org">
-	<extent bottom="50.18962953891842" left="12.132611791930984" right="12.503940127554799" top="50.42537750131719"/>
-	<layers active="ID_1">
-		<layer name="Knoten" visible="true" featurePath="NodeCollectionMember/nodeMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" 
-			ns1:href="../modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-			<ns2:style linktype="sld" style="Node" ns1:actuate="onRequest" ns1:href="../.styles/Node.sld" ns1:type="simple" 
-				xmlns:ns2="types.template.kalypso.org"/>
-		</layer>
-		<layer name="Gewaesser" visible="true" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" id="ID_2" linktype="gml" 
-			ns3:actuate="onRequest" ns3:href="../modell.gml" ns3:type="simple" 
-			xmlns:ns3="http://www.w3.org/1999/xlink">
-			<ns4:style linktype="sld" style="VChannel" ns3:actuate="onRequest" ns3:href="../.styles/VChannel.sld" ns3:type="simple" 
-				xmlns:ns4="types.template.kalypso.org"/>
-		</layer>
-		<layer name="KMGewaesser" visible="true" featurePath="ChannelCollectionMember/channelMember[KMChannel]" id="ID_3" linktype="gml" 
-			ns5:actuate="onRequest" ns5:href="../modell.gml" ns5:type="simple" 
-			xmlns:ns5="http://www.w3.org/1999/xlink">
-			<ns6:style linktype="sld" style="KMChannel" ns5:actuate="onRequest" ns5:href="../.styles/KMChannel.sld" ns5:type="simple" 
-				xmlns:ns6="types.template.kalypso.org"/>
-		</layer>
-		<layer name="Teilgebiete" visible="true" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_4" linktype="gml" ns7:actuate="onRequest" 
-			ns7:href="../modell.gml" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
-			<ns8:style linktype="sld" style="Teilgebiete" ns7:actuate="onRequest" ns7:href="../.styles/teilgebiete.sld" ns7:type="simple" 
-				xmlns:ns8="types.template.kalypso.org"/>
-		</layer>
-	</layers>
-</gismapview>
+<gismapview xmlns="gismapview.template.kalypso.org"><extent bottom="50.87151938138751" left="11.887347125814872" right="12.168462292059855" top="51.10104260238233"/><layers active="ID_1"><layer name="Knoten" visible="true" featurePath="NodeCollectionMember/nodeMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="../modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"><ns2:style linktype="sld" style="Node" ns1:actuate="onRequest" ns1:href="../.styles/Node.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/></layer><layer name="Gewaesser" visible="true" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" id="ID_2" linktype="gml" ns3:actuate="onRequest" ns3:href="../modell.gml" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink"><ns4:style linktype="sld" style="VChannel" ns3:actuate="onRequest" ns3:href="../.styles/VChannel.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/></layer><layer name="KMGewaesser" visible="true" featurePath="ChannelCollectionMember/channelMember[KMChannel]" id="ID_3" linktype="gml" ns5:actuate="onRequest" ns5:href="../modell.gml" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink"><ns6:style linktype="sld" style="KMChannel" ns5:actuate="onRequest" ns5:href="../.styles/KMChannel.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/></layer><layer name="Teilgebiete" visible="true" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_4" linktype="gml" ns7:actuate="onRequest" ns7:href="../modell.gml" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink"><ns8:style linktype="sld" style="Teilgebiete" ns7:actuate="onRequest" ns7:href="../.styles/teilgebiete.sld" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/></layer></layers></gismapview>
+
