@@ -36,7 +36,7 @@ public class ObservationServiceRepository extends AbstractRepository
   {
     try
     {
-      return m_srv.getRepositoriesCount() > 0;
+      return m_srv.hasRepositories();
     }
     catch( RemoteException e )
     {

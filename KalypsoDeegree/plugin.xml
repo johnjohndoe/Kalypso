@@ -89,6 +89,39 @@
       <library name="lib/junit/junit.jar">
          <export name="*"/>
       </library>
+      <library name="lib/kalypso-webservice/activation.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypso-webservice/dom.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypso-webservice/jaxp-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypso-webservice/jax-qname.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypso-webservice/jaxrpc-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypso-webservice/jaxrpc-impl.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypso-webservice/jaxrpc-spi.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypso-webservice/mail.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypso-webservice/saaj-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypso-webservice/saaj-impl.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypso-webservice/xercesImpl.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
 </plugin>

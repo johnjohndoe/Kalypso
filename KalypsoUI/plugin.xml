@@ -10,9 +10,6 @@
       <library name="KalypsoUi.jar">
          <export name="*"/>
       </library>
-      <library name="lib/activation.jar">
-         <export name="*"/>
-      </library>
       <library name="lib/mail.jar">
          <export name="*"/>
       </library>
@@ -50,6 +47,9 @@
          <export name="*"/>
       </library>
       <library name="lib/kalypsoservice_observation.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/activation.jar">
          <export name="*"/>
       </library>
    </runtime>
