@@ -1,6 +1,6 @@
 package org.kalypso.ogc.sensor.diagview.impl;
 
-import java.awt.Paint;
+import java.awt.Color;
 
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
@@ -23,7 +23,7 @@ public class DiagramCurve implements IDiagramCurve
 
   private IDiagramTemplateTheme m_theme;
 
-  private final Paint m_paint;
+  private final Color m_color;
 
   private boolean m_shown = true;
 
@@ -31,17 +31,17 @@ public class DiagramCurve implements IDiagramCurve
    * Constructor
    * 
    * @param name
-   * @param paint
+   * @param color
    * @param theme
    * @param mappings
    * @param template
    */
-  public DiagramCurve( final String name, final Paint paint,
+  public DiagramCurve( final String name, final Color color,
       final IDiagramTemplateTheme theme, final IAxisMapping[] mappings,
       final IDiagramTemplate template )
   {
     m_name = name;
-    m_paint = paint;
+    m_color = color;
     m_mappings = mappings;
     m_theme = theme;
     m_template = template;
@@ -105,11 +105,11 @@ public class DiagramCurve implements IDiagramCurve
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.diagview.IDiagramCurve#getPaint()
+   * @see org.kalypso.ogc.sensor.diagview.IDiagramCurve#getColor()
    */
-  public Paint getPaint( )
+  public Color getColor( )
   {
-    return m_paint;
+    return m_color;
   }
 
   /**

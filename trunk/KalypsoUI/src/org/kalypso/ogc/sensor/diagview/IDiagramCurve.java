@@ -1,6 +1,6 @@
 package org.kalypso.ogc.sensor.diagview;
 
-import java.awt.Paint;
+import java.awt.Color;
 
 import org.kalypso.eclipse.ui.IViewable;
 
@@ -16,6 +16,7 @@ public interface IDiagramCurve extends IViewable
    * @return name of the curve as displayed in the diagram
    */
   public String getName();
+  public void setName( String string );
   
   /**
    * @return list of mappings between diagram axes and observation axes
@@ -27,12 +28,10 @@ public interface IDiagramCurve extends IViewable
    */
   public IDiagramTemplateTheme getTheme();
 
-  public void setName( String string );
-  
   /**
-   * @return paint
+   * @return color of the curve
    */
-  public Paint getPaint();
+  public Color getColor();
 
-  public void setShown( boolean shown); 
+  public void setShown( boolean shown);
 }

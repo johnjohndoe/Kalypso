@@ -97,8 +97,6 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
   /**
    * Convenienve method for adding an observation to this template.
    *
-   * TODO: use themeName as name for the column
-   * 
    * @param themeName used as part of the col name if not null
    * @param context
    * @param href

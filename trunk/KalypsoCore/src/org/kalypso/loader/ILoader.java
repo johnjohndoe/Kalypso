@@ -19,6 +19,8 @@ public interface ILoader
    * @param location information about the location of the resource to load
    * @param context some context for making the relative location of the resource to load absolute
    * @param monitor monitors the progress of loading
+   * @return object
+   * @throws LoaderException
    */
   public Object load( final String location, final URL context, final IProgressMonitor monitor ) throws LoaderException;
   
@@ -26,6 +28,7 @@ public interface ILoader
 
   /**
    * TODO: document this
+   * @param object
    */
   public void release( final Object object );
   

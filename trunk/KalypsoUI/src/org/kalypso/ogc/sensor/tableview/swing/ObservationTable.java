@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.text.NumberFormat;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
@@ -140,9 +141,7 @@ public class ObservationTable extends JTable implements ITemplateEventListener
       if( shell != null )
         MessageDialog.openError( shell, "Aktualisierungsfehler", e.toString() );
       else
-        System.out.println( "Aktualisierungsfehler" + e.toString() );
-      // TODO: sometimes there is no shell!! (Wizard!) -> maybe use Swing
-      // MessageBox in this context?
+        JOptionPane.showMessageDialog( null, e.toString(), "Aktualisierungsfehler", JOptionPane.ERROR_MESSAGE );
     }
   }
 

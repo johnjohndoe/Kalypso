@@ -98,7 +98,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
       // lazy loading
       if( m_propsPage == null || m_propsPage.getControl().isDisposed() )
       {
-        // TODO check if this is ok to dispose it when not null
+        // dispose it when not null (not sure if this is ok)
         if( m_propsPage != null )
           m_propsPage.dispose();
         
