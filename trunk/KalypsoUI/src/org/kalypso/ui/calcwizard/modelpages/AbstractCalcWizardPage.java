@@ -382,6 +382,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_viewer = new LayerTableViewer( parent, this, KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), getSelectionID(), false );
       m_viewer.applyTableTemplate( template, getContext() );
+      
     }
     catch( final Exception e )
     {
@@ -422,13 +423,18 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     }
   }
 
-  public TSLinkWithName[] getObservationsFromMap()
+  public TSLinkWithName[] getObservationsFromMap(boolean useTable)
   {
     final IMapModell mapModell = getMapModell();
     if( mapModell == null )
       return new TSLinkWithName[] {};
 
-    final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+    final IKalypsoTheme activeTheme;
+    if(useTable)
+      activeTheme= m_viewer.getTheme();
+    else
+      activeTheme = mapModell.getActiveTheme();
+    
     if( activeTheme == null )
       return new TSLinkWithName[] {};
 

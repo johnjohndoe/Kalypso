@@ -142,6 +142,6 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
    */
   protected TSLinkWithName[] getObservationsToShow()
   {
-    return getObservationsFromMap();
+    return getObservationsFromMap(false);
   }
 }
