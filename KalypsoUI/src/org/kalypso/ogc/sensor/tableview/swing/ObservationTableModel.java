@@ -419,9 +419,9 @@ public class ObservationTableModel extends AbstractTableModel
       if( rows == null
           || (rows != null && Arrays.binarySearch( rows, rowIndex ) >= 0) )
       {
-        final Vector tupple = new Vector( axes.size() );
+        Object[] tupple = new Object[ axes.size() ];
 
-        tupple.add( keyObj );
+        tupple[ m_sharedAxis.getPosition() ] = keyObj;
 
         for( final Iterator ita = cols.iterator(); ita.hasNext(); )
         {
@@ -429,7 +429,7 @@ public class ObservationTableModel extends AbstractTableModel
 
           final int colIndex = m_valuesModel.findColumn( col.getName() );
 
-          tupple.add( m_valuesModel.getValueAt( rowIndex, colIndex ) );
+          tupple[ col.getAxis().getPosition() ] = m_valuesModel.getValueAt( rowIndex, colIndex );
         }
 
         model.addTupple( tupple );

@@ -24,6 +24,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -49,12 +52,17 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.MapPanelHelper;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
+import org.kalypso.ogc.sensor.zml.ZmlObservation;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -68,8 +76,8 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Belger
  */
-public abstract class AbstractCalcWizardPage extends WizardPage implements IModelWizardPage,
-    ICommandTarget, ModellEventListener
+public abstract class AbstractCalcWizardPage extends WizardPage implements
+    IModelWizardPage, ICommandTarget, ModellEventListener
 {
   private int m_selectionID = 0x1;
 
@@ -80,7 +88,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private static final String PROP_IGNORELABEL1 = "ignoreLabel1";
 
   private static final String PROP_IGNORELABEL2 = "ignoreLabel2";
-  
+
   /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
   public final static String PROP_TABLETEMPLATE = "tableTemplate";
 
@@ -133,7 +141,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     }
   };
 
-
   public AbstractCalcWizardPage( final String name )
   {
     super( name );
@@ -142,7 +149,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     if( m_mapModell != null )
     {
@@ -163,22 +170,22 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     }
   }
 
-  public Properties getArguments()
+  public Properties getArguments( )
   {
     return m_arguments;
   }
 
-  public IProject getProject()
+  public IProject getProject( )
   {
     return m_project;
   }
 
-  public IFolder getCalcFolder()
+  public IFolder getCalcFolder( )
   {
     return m_calcFolder;
   }
 
-  public URL getContext()
+  public URL getContext( )
   {
     try
     {
@@ -198,7 +205,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    *      java.util.Properties, org.eclipse.core.resources.IFolder)
    */
   public void init( final IProject project, final String pagetitle,
-      final ImageDescriptor imagedesc, final Properties arguments, final IFolder calcFolder )
+      final ImageDescriptor imagedesc, final Properties arguments,
+      final IFolder calcFolder )
   {
     setTitle( pagetitle );
     setImageDescriptor( imagedesc );
@@ -210,7 +218,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     try
     {
-      m_selectionID = Integer.parseInt( m_arguments.getProperty( PROP_SELECTIONID, "1" ) );
+      m_selectionID = Integer.parseInt( m_arguments.getProperty(
+          PROP_SELECTIONID, "1" ) );
     }
     catch( final NumberFormatException nfe )
     {
@@ -242,7 +251,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * 
    * @return properties
    */
-  protected Properties getReplaceProperties()
+  protected Properties getReplaceProperties( )
   {
     return m_replaceProperties;
   }
@@ -258,18 +267,21 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * @throws JAXBException
    * @throws CoreException
    */
-  protected Control initMap( final Composite parent, final String widgetID ) throws IOException,
-      JAXBException, CoreException
+  protected Control initMap( final Composite parent, final String widgetID )
+      throws IOException, JAXBException, CoreException
   {
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
-    final IFile mapFile = (IFile)getProject().findMember( mapFileName );
+    final IFile mapFile = (IFile) getProject().findMember( mapFileName );
     if( mapFile == null )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Vorlagendatei existiert nicht: " + mapFileName, null ) );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
-    final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-    m_mapModell = new GisTemplateMapModell( gisview, getContext(), crs, m_selectionID );
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile,
+        getReplaceProperties() );
+    final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault()
+        .getCoordinatesSystem();
+    m_mapModell = new GisTemplateMapModell( gisview, getContext(), crs,
+        m_selectionID );
 
     m_mapModell.addModellListener( this );
 
@@ -277,7 +289,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     MapPanelHelper.createWidgetsForMapPanel( parent.getShell(), m_mapPanel );
 
     m_boundingBox = GisTemplateHelper.getBoundingBox( gisview );
-    final Composite mapComposite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
+    final Composite mapComposite = new Composite( parent, SWT.BORDER
+        | SWT.RIGHT | SWT.EMBEDDED );
 
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
 
@@ -286,7 +299,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     virtualFrame.add( m_mapPanel );
 
     m_mapPanel.setMapModell( m_mapModell );
-    m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
+    m_mapPanel
+        .onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
     m_mapPanel.changeWidget( widgetID );
 
@@ -295,12 +309,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return mapComposite;
   }
 
-  protected IMapModell getMapModell()
+  protected IMapModell getMapModell( )
   {
     return m_mapModell;
   }
 
-  public void maximizeMap()
+  public void maximizeMap( )
   {
     m_mapPanel.setBoundingBox( m_boundingBox );
   }
@@ -312,10 +326,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       // actually creates the template
       m_diagTemplate = new LinkedDiagramTemplate();
 
-      final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
+      final String ignoreType = m_arguments
+          .getProperty( PROP_IGNORETYPE1, null );
       m_diagTemplate.setIgnoreType( ignoreType );
 
-      final Composite composite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
+      final Composite composite = new Composite( parent, SWT.BORDER | SWT.RIGHT
+          | SWT.EMBEDDED );
       m_diagFrame = SWT_AWT.new_Frame( composite );
       m_diagFrame.setVisible( true );
 
@@ -346,12 +362,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   public void clean( final IProgressMonitor monitor )
   {
-  // nix zu tun
+    // nix zu tun
   }
 
   public void doNext( final IProgressMonitor monitor )
   {
-  // nix zu tun
+    // nix zu tun
   }
 
   /**
@@ -359,44 +375,50 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public void update( final IProgressMonitor monitor )
   {
-  // nix tun
+    // nix tun
   }
 
-  protected ControlAdapter getControlAdapter()
+  protected ControlAdapter getControlAdapter( )
   {
     return m_controlAdapter;
   }
 
-  public void refreshTimeseries()
+  public void refreshTimeseries( )
   {
     final TSLinkWithName[] obs = getObservationsToShow();
     refreshObservationsForContext( obs, getContext() );
   }
 
-  protected void refreshObservationsForContext( final TSLinkWithName[] obs, final URL context )
+  protected void refreshObservationsForContext( final TSLinkWithName[] obs,
+      final URL context )
   {
     final LinkedDiagramTemplate diagTemplate = m_diagTemplate;
     final LinkedTableViewTemplate tableTemplate = m_tableTemplate;
 
     if( diagTemplate != null )
-      KalypsoWizardHelper.updateDiagramTemplate( diagTemplate, obs, context, true );
+      KalypsoWizardHelper.updateDiagramTemplate( diagTemplate, obs, context,
+          true );
     if( tableTemplate != null )
-      KalypsoWizardHelper.updateTableTemplate( tableTemplate, obs, context, true );
+      KalypsoWizardHelper.updateTableTemplate( tableTemplate, obs, context,
+          true );
   }
 
-  protected abstract TSLinkWithName[] getObservationsToShow();
+  protected abstract TSLinkWithName[] getObservationsToShow( );
 
   protected void initFeatureTable( final Composite parent )
   {
     try
     {
-      final String templateFileName = getArguments().getProperty( PROP_TABLETEMPLATE );
-      final IFile templateFile = (IFile)getProject().findMember( templateFileName );
-      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,
-          getReplaceProperties() );
+      final String templateFileName = getArguments().getProperty(
+          PROP_TABLETEMPLATE );
+      final IFile templateFile = (IFile) getProject().findMember(
+          templateFileName );
+      final Gistableview template = GisTemplateHelper.loadGisTableview(
+          templateFile, getReplaceProperties() );
 
-      m_viewer = new LayerTableViewer( parent, this, KalypsoGisPlugin.getDefault()
-          .createFeatureTypeCellEditorFactory(), getSelectionID(), false );
+      m_viewer = new LayerTableViewer( parent, this, KalypsoGisPlugin
+          .getDefault().createFeatureTypeCellEditorFactory(), getSelectionID(),
+          false );
       m_viewer.applyTableTemplate( template, getContext() );
 
     }
@@ -415,13 +437,15 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_table = new ObservationTable( m_tableModel );
 
       m_tableTemplate = new LinkedTableViewTemplate();
-      final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
+      final String ignoreType = m_arguments
+          .getProperty( PROP_IGNORETYPE1, null );
       m_tableTemplate.setIgnoreType( ignoreType );
-      
+
       m_tableModel.setRules( m_tableTemplate );
       m_tableTemplate.addTemplateEventListener( m_table );
 
-      final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+      final Composite composite = new Composite( parent, SWT.RIGHT
+          | SWT.EMBEDDED );
       m_tableFrame = SWT_AWT.new_Frame( composite );
 
       m_table.setVisible( true );
@@ -457,7 +481,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( activeTheme == null )
       return new ArrayList();
 
-    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
+    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) activeTheme;
     final FeatureList featureList = kft.getFeatureList();
 
     if( featureList == null )
@@ -474,54 +498,55 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     for( final Iterator it = selectedFeatures.iterator(); it.hasNext(); )
     {
-      final Feature kf = (Feature)it.next();
+      final Feature kf = (Feature) it.next();
 
       for( int i = 0; i < m_tsProps.length; i++ )
       {
-        final String name = (String)kf.getProperty( m_tsProps[i].getNameColumn() );
-        final TimeseriesLink obsLink = (TimeseriesLink)kf
+        final String name = (String) kf.getProperty( m_tsProps[i]
+            .getNameColumn() );
+        final TimeseriesLink obsLink = (TimeseriesLink) kf
             .getProperty( m_tsProps[i].getLinkColumn() );
         if( obsLink != null )
         {
-          final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink.getLinktype(),
-              obsLink.getHref(), m_tsProps[i].getFilter() );
+          final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink
+              .getLinktype(), obsLink.getHref(), m_tsProps[i].getFilter() );
           foundObservations.add( linkWithName );
         }
       }
     }
 
-    return (TSLinkWithName[])foundObservations
+    return (TSLinkWithName[]) foundObservations
         .toArray( new TSLinkWithName[foundObservations.size()] );
   }
 
-  protected TSLinkWithName[] getTimeseriesForProperty( final String name, final List features,
-      final String property, final String filter )
+  protected TSLinkWithName[] getTimeseriesForProperty( final String name,
+      final List features, final String property, final String filter )
   {
     final Collection foundObservations = new ArrayList( features.size() );
 
     for( final Iterator it = features.iterator(); it.hasNext(); )
     {
-      final Feature kf = (Feature)it.next();
+      final Feature kf = (Feature) it.next();
 
-      final TimeseriesLink obsLink = (TimeseriesLink)kf.getProperty( property );
+      final TimeseriesLink obsLink = (TimeseriesLink) kf.getProperty( property );
       if( obsLink != null )
       {
-        final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink.getLinktype(),
-            obsLink.getHref(), filter );
+        final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink
+            .getLinktype(), obsLink.getHref(), filter );
         foundObservations.add( linkWithName );
       }
     }
 
-    return (TSLinkWithName[])foundObservations
+    return (TSLinkWithName[]) foundObservations
         .toArray( new TSLinkWithName[foundObservations.size()] );
   }
 
-  protected int getSelectionID()
+  protected int getSelectionID( )
   {
     return m_selectionID;
   }
 
-  protected LayerTableViewer getLayerTable()
+  protected LayerTableViewer getLayerTable( )
   {
     return m_viewer;
   }
@@ -531,11 +556,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public final void onModellChange( final ModellEvent modellEvent )
   {
-    if( modellEvent != null && modellEvent.getType() == ModellEvent.SELECTION_CHANGED )
+    if( modellEvent != null
+        && modellEvent.getType() == ModellEvent.SELECTION_CHANGED )
       refreshTimeseries();
   }
 
-  public TimeserieFeatureProps[] getTsProps()
+  public TimeserieFeatureProps[] getTsProps( )
   {
     return m_tsProps;
   }
@@ -555,7 +581,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( activeTheme == null )
       return new ArrayList();
 
-    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
+    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) activeTheme;
     final FeatureList featureList = kft.getFeatureList();
     if( featureList == null )
       return new ArrayList();
@@ -569,14 +595,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_diagTemplate.setIgnoreType( ignoreType );
     if( m_tableTemplate != null )
       m_tableTemplate.setIgnoreType( ignoreType );
-    
+
     refreshTimeseries();
   }
-  
+
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#performHelp()
    */
-  public void performHelp()
+  public void performHelp( )
   {
     // TODO
     // get helpid
@@ -589,20 +615,22 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final String ignoreType1 = m_arguments.getProperty( PROP_IGNORETYPE1, "Q" );
     final String ignoreType2 = m_arguments.getProperty( PROP_IGNORETYPE2, "W" );
 
-    final String ignoreLabel1 = m_arguments.getProperty( PROP_IGNORELABEL1, "Abfluss" );
-    final String ignoreLabel2 = m_arguments.getProperty( PROP_IGNORELABEL2, "Wasserstand" );
-    
+    final String ignoreLabel1 = m_arguments.getProperty( PROP_IGNORELABEL1,
+        "Abfluss" );
+    final String ignoreLabel2 = m_arguments.getProperty( PROP_IGNORELABEL2,
+        "Wasserstand" );
+
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout( 3, false ) );
     panel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    
+
     final Label label = new Label( panel, SWT.NONE );
     label.setText( "Diagrammanzeige:" );
-    final GridData gridData = new GridData(  );
+    final GridData gridData = new GridData();
     gridData.grabExcessHorizontalSpace = true;
     gridData.horizontalAlignment = GridData.END;
     label.setLayoutData( gridData );
-    
+
     final Button radioQ = new Button( panel, SWT.RADIO );
     radioQ.setText( ignoreLabel1 );
     radioQ.addSelectionListener( new SelectionAdapter()
@@ -615,10 +643,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         setObsIgnoreType( ignoreType1 );
       }
     } );
-    
+
     final Button radioW = new Button( panel, SWT.RADIO );
     radioW.setText( ignoreLabel2 );
-  
+
     radioW.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -629,9 +657,69 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         setObsIgnoreType( ignoreType2 );
       }
     } );
-    
+
     radioQ.setSelection( true );
-  
+
     return panel;
+  }
+
+  /**
+   * Saves the dirty observations that were edited in the table.
+   */
+  protected void saveDirtyObservations( )
+  {
+    final LinkedTableViewTemplate template = m_tableTemplate;
+    final ObservationTableModel model = (ObservationTableModel) m_table
+        .getModel();
+
+    final Collection themes = template.getThemes();
+
+    for( final Iterator it = themes.iterator(); it.hasNext(); )
+    {
+      final ITableViewTheme theme = (ITableViewTheme) it.next();
+
+      boolean dirty = false;
+
+      for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
+      {
+        dirty = ((ITableViewColumn) itcol.next()).isDirty();
+
+        // at least one col dirty?
+        if( dirty )
+          break;
+      }
+
+      final IObservation obs = theme.getObservation();
+
+      if( dirty && obs instanceof ZmlObservation )
+      {
+        for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
+          ((ITableViewColumn) itcol.next()).setDirty( false );
+
+        final ITuppleModel values = model.getValues( theme.getColumns() );
+
+        final Job job = new Job( "" )
+        {
+          protected IStatus run( IProgressMonitor monitor )
+          {
+            try
+            {
+              obs.setValues( values );
+
+              template.saveObservation( obs, monitor );
+            }
+            catch( Exception e )
+            {
+              e.printStackTrace();
+              return KalypsoGisPlugin.createErrorStatus( "", e );
+            }
+
+            return Status.OK_STATUS;
+          }
+        };
+
+        job.schedule();
+      }
+    }
   }
 }

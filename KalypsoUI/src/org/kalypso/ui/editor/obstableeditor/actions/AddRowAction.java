@@ -6,6 +6,7 @@ import org.eclipse.jface.window.Window;
 import org.kalypso.eclipse.jface.dialogs.TypeBasedInputValidator;
 import org.kalypso.ogc.sensor.commands.AddRowCommand;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
 
 /**

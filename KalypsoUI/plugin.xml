@@ -352,6 +352,14 @@
                id="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction"/>
          <action
                toolbarPath="table"
+               label="Daten speichern"
+               tooltip="Speichert die grundliegende Daten"
+               icon="icons/gistable/save_edit.gif"
+               class="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction"
+               style="push"
+               id="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction"/>
+         <action
+               toolbarPath="table_export"
                label="Tabelle exportieren"
                class="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate"
                icon="icons/gistable/export_wiz.gif"

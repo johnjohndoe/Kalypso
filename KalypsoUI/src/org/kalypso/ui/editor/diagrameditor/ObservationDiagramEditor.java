@@ -247,4 +247,12 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
   {
     return m_obsChart;
   }
+
+  /**
+   * @return template
+   */
+  public LinkedDiagramTemplate getTemplate( )
+  {
+    return m_template;
+  }
 }

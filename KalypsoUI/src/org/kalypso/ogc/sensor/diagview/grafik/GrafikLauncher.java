@@ -8,6 +8,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,15 +29,18 @@ import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikYAchsen.GrafikAchse;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.url.UrlResolver;
 import org.xml.sax.InputSource;
 
@@ -205,6 +209,9 @@ public class GrafikLauncher
       final GrafikYAchsen yAchsen = new GrafikYAchsen( odt.getAxis() );
       String dateAxisLabel = "Datum";
 
+      final List xLines = new ArrayList();
+      final List yLines = new ArrayList();
+      
       int ixObs = 1;
 
       final List tobsList = odt.getObservation();
@@ -281,6 +288,17 @@ public class GrafikLauncher
 
         writer.write( ixObs++ + "- " + datFile.getName() + " J " + grafikType
             + " " + grafikAxis + " " + title + "\n" );
+        
+        // is this obs a forecast?
+        final DateRangeArgument fr = TimeserieUtils.isForecast( obs );
+        if( fr != null )
+          xLines.add( GRAFIK_DF.format( fr.getFrom() ) );
+        
+        // does is have Alarmstufen?
+        final MetadataList mdl = obs.getMetadataList();
+        final String[] mds = TimeserieUtils.findOutMDAlarmstufen( obs );
+        for( int i = 0; i < mds.length; i++ )
+          yLines.add( mdl.getProperty( mds[i] ) );
       }
 
       writer.write( "\n" );
@@ -288,6 +306,12 @@ public class GrafikLauncher
       writer.write( "xTitel:\t" + dateAxisLabel + "\n" );
       writer.write( "yTitel1:\t" + yAchsen.getLabelAt( 1 ) + "\n" );
       writer.write( "yTitel2:\t" + yAchsen.getLabelAt( 2 ) + "\n" );
+      
+      // TODO: find out which command means vertical line in the grafik tool...
+      // writer.write( verticalLines... + '\n' );
+      
+      // TODO: find out command for constant horizontal lines...
+      // writer.write( alarmstufen...  + '\n' );
     }
     catch( Exception e )
     {

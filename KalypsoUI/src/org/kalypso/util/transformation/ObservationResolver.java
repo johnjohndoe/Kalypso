@@ -3,7 +3,6 @@ package org.kalypso.util.transformation;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.Properties;
 
@@ -29,7 +28,7 @@ import org.kalypso.eclipse.util.SetContentThread;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -172,6 +171,20 @@ public class ObservationResolver extends AbstractTransformation
    * funktioniert nur, wenn der TimeSeriesLink des Target eine relative URL hat
    * (== relativer Pfad)
    * 
+   * @param baseURL
+   * @param features
+   * @param sourceName1
+   * @param sourceName2
+   * @param targetName
+   * @param targetFolder
+   * @param start
+   * @param middle
+   * @param stop
+   * @param rangeMode1
+   * @param rangeMode2
+   * @param monitor
+   * 
+   * @throws TransformationException
    * @throws SensorException
    * @throws SensorException
    * @throws MalformedURLException
@@ -239,9 +252,10 @@ public class ObservationResolver extends AbstractTransformation
           final ForecastFilter fc = new ForecastFilter();
           fc.initFilter( new IObservation[] { obs1, obs2 }, obs1 );
           obs = fc;
-          
-          DateFormat df = DateFormat.getDateTimeInstance();
-          obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE, df.format(from2) + ";" + df.format(to2) );
+
+          // set forecast metadata, might be used in diagram for instance
+          // to mark the forecast range
+          TimeserieUtils.setForecast( obs, from2, to2 );
         }
 
         final IFile targetfile = targetFolder.getFile( new Path( targetlink

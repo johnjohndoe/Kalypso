@@ -3,6 +3,7 @@ package org.kalypso.ui.editor.obstableeditor.actions;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.sensor.commands.RemoveRowCommand;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
 
 /**

@@ -1,5 +1,7 @@
 package org.kalypso.ogc.sensor.loaders;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.PipedInputStream;
 import java.io.Writer;
 import java.net.URL;
@@ -70,8 +72,6 @@ public class ZmlLoader extends AbstractLoader
   public void save( final String source, URL context, IProgressMonitor monitor,
       Object data ) throws LoaderException
   {
-    PipedInputStream pis = null;
-
     try
     {
       final URL url = m_urlResolver.resolveURL( context, source );
@@ -85,7 +85,13 @@ public class ZmlLoader extends AbstractLoader
 
       final ObservationType xmlObs = ZmlFactory.createXML( (IObservation) data,
           null );
+      
+      // TODO testing, remove
+      final FileWriter wrtr = new FileWriter( new File("c:/temp/test.zml") );
+      ZmlFactory.getMarshaller().marshal( xmlObs, wrtr );
+      wrtr.close();
 
+      // set contents of ZML-file
       final SetContentThread thread = new SetContentThread( file, !file
           .exists(), false, true, new NullProgressMonitor() )
       {
@@ -104,37 +110,6 @@ public class ZmlLoader extends AbstractLoader
       final Throwable thrown = thread.getThrown();
       if( thrown != null )
         throw thrown;
-
-      //        
-      //        final PipedOutputStream pos = new PipedOutputStream();
-      //        pis = new PipedInputStream( pos );
-      //
-      //        final Runnable runnable = new Runnable()
-      //        {
-      //          public void run( )
-      //          {
-      //            try
-      //            {
-      //              final OutputStreamWriter osw = new OutputStreamWriter( pos, file
-      //                  .getCharset() );
-      //
-      //              ZmlFactory.getMarshaller().marshal( xmlObs, osw );
-      //            }
-      //            catch( final Exception e )
-      //            {
-      //              e.printStackTrace();
-      //            }
-      //            finally
-      //            {
-      //              IOUtils.closeQuietly( pos );
-      //            }
-      //          }
-      //        };
-      //
-      //        final Thread thread = new Thread( runnable, "ZML Save Thread" );
-      //        thread.start();
-      //
-      //        file.setContents( pis, false, true, monitor );
     }
     catch( Throwable e ) // generic exception caught for simplicity
     {
@@ -143,8 +118,6 @@ public class ZmlLoader extends AbstractLoader
     finally
     {
       monitor.done();
-
-      IOUtils.closeQuietly( pis );
     }
   }
 
