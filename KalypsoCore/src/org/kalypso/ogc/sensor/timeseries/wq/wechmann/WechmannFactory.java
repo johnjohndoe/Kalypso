@@ -175,6 +175,7 @@ public class WechmannFactory
     }
 
     final Marshaller marshaller = m_objectFactory.createMarshaller();
+    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
     final StringWriter writer = new StringWriter();
     marshaller.marshal( wt, writer );

@@ -61,6 +61,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     try
     {
       m_marshaller = m_gistableviewFactory.createMarshaller();
+      m_marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     }
     catch( final JAXBException e )
     {

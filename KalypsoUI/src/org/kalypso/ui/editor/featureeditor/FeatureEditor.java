@@ -115,6 +115,8 @@ public class FeatureEditor extends EditorPart implements IPoolListener, ModellEv
     try
     {
       m_marshaller = m_templateFactory.createMarshaller();
+      m_marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+      
       m_unmarshaller = m_templateFactory.createUnmarshaller();
     }
     catch( final JAXBException e )

@@ -450,7 +450,9 @@ public class ZmlFactory
 
   public static Marshaller getMarshaller( ) throws JAXBException
   {
-    return OF.createMarshaller();
+    final Marshaller marshaller = OF.createMarshaller();
+    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    return marshaller;
   }
 
   private static Unmarshaller getUnmarshaller( ) throws JAXBException

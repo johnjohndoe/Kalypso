@@ -30,6 +30,7 @@ import org.xml.sax.InputSource;
  */
 public class GisTemplateHelper
 {
+  // TODO: das sollte alles nicht statisch sein, da es hier zu threading problemen kommt
   private static Unmarshaller GMT_UNMARSHALLER;
 
   private static Marshaller GMT_MARSHALLER;
@@ -46,6 +47,7 @@ public class GisTemplateHelper
       final ObjectFactory objectFactory = new ObjectFactory();
       GMT_UNMARSHALLER = objectFactory.createUnmarshaller();
       GMT_MARSHALLER = objectFactory.createMarshaller();
+      GMT_MARSHALLER.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       GTT_UNMARSHALLER = new org.kalypso.template.gistableview.ObjectFactory().createUnmarshaller();
 
