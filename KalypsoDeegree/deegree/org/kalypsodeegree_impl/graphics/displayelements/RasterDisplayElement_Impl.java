@@ -160,96 +160,11 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
     CS_CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( targetSrs ) );
+    TiledImage rasterImage = getImage();
 
     try
     {
-      // get the Screen extent in real coordinates
-      GM_Envelope sourceScreenRect = projection.getSourceRect();
-      // create a surface and transform it in the coordinate system of the
-      // RectifiedGridCoverage
-      GM_Surface sourceScreenSurface = GeometryFactory.createGM_Surface( sourceScreenRect, cs );
-      GeoTransformer geoTrans1 = new GeoTransformer( rgDomain.getOrigin( null )
-          .getCoordinateSystem() );
-      GM_Surface destScreenSurface = (GM_Surface)geoTrans1.transform( sourceScreenSurface );
-      // get the gridExtent for the envelope of the surface
-      int[] gridExtent = rgDomain.getGridExtent( destScreenSurface.getEnvelope(), rgDomain
-          .getOrigin( null ).getCoordinateSystem() );
-      int lowX = gridExtent[0];
-      int lowY = gridExtent[1];
-      int highX = gridExtent[2];
-      int highY = gridExtent[3];
-
-      // create the image as TiledImage from the RectifiedGridCoverage
-      TiledImage tiledImage = getImage();
-      int minX = lowX;
-      int minY = tiledImage.getHeight() - highY;
-      int width = highX - lowX;
-      int height = highY - lowY;
-      // get the required subImage according to the gridExtent
-      PlanarImage image = tiledImage.getSubImage( minX, minY, width, height );
-
-      // get the destinationSurface in target coordinates
-      GM_Surface destSurface = rgDomain.getGM_Surface( lowX, lowY, highX, highY, cs );
-      GM_Ring destExtRing = destSurface.getSurfaceBoundary().getExteriorRing();
-      GM_Position llCorner = destExtRing.getPositions()[0];
-      GM_Position lrCorner = destExtRing.getPositions()[1];
-      GM_Position urCorner = destExtRing.getPositions()[2];
-      GM_Position ulCorner = destExtRing.getPositions()[3];
-      // calculate the Corners in screen coordinates
-      GM_Position pixel_llCorner = projection.getDestPoint( llCorner );
-      GM_Position pixel_lrCorner = projection.getDestPoint( lrCorner );
-      GM_Position pixel_urCorner = projection.getDestPoint( urCorner );
-      GM_Position pixel_ulCorner = projection.getDestPoint( ulCorner );
-      // calculate the height and width of the image on screen
-      double destImageHeight = pixel_llCorner.getY() - pixel_ulCorner.getY();
-      double destImageWidth = pixel_lrCorner.getX() - pixel_llCorner.getX();
-      // calculate the scaling factors for the transformation
-      double scaleX = destImageWidth / image.getWidth();
-      double scaleY = destImageHeight / image.getHeight();
-      // calculate the shear parameters for the transformation
-      double shearX = pixel_llCorner.getX() - pixel_ulCorner.getX();
-      double shearY = pixel_lrCorner.getY() - pixel_llCorner.getY();
-
-      GM_Surface orgDestSurface = rgDomain.getGM_Surface( cs );
-      GM_Position orgULCorner = orgDestSurface.getSurfaceBoundary().getExteriorRing()
-          .getPositions()[3];
-      GM_Position pixel_orgULCorner = projection.getDestPoint( orgULCorner );
-
-      AffineTransform trafo = new AffineTransform();
-      // translate the image, so that the subImage is at the right position
-      trafo.translate( pixel_orgULCorner.getX() - pixel_ulCorner.getX(), pixel_orgULCorner.getY()
-          - pixel_ulCorner.getY() );
-      // scale the image
-      trafo.scale( scaleX, scaleY );
-      // translate the image to compensate the shearing
-      trafo.translate( Math.abs( shearX ) / Math.abs( scaleX ), Math.abs( shearY )
-          / Math.abs( scaleY ) );
-      // shear the image
-      trafo.shear( shearX / destImageHeight, shearY / destImageWidth );
-
-      // calculate the required extent of the bufferedImage
-      GM_Position scaledImage_min = pixel_ulCorner;
-      GM_Position scaledImage_max = GeometryFactory.createGM_Position( pixel_urCorner.getX(),
-          pixel_llCorner.getY() );
-
-      GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX()
-          - Math.abs( shearX ), scaledImage_min.getY() - Math.abs( shearY ) );
-      GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX()
-          + Math.abs( shearX ), scaledImage_max.getY() + Math.abs( shearY ) );
-      GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max );
-
-      BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(), (int)buffImageEnv
-          .getHeight(), BufferedImage.TYPE_INT_ARGB );
-      Graphics2D bufferGraphics = (Graphics2D)buffer.getGraphics();
-      //bufferGraphics.setColor(Color.GREEN);
-      // draw a transparent backround on the bufferedImage
-      bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
-      bufferGraphics.fillRect( 0, 0, (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight() );
-      // draw the image with the given transformation
-      bufferGraphics.drawRenderedImage( image, trafo );
-      // draw bufferedImage on the screen
-      g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(), (int)buffImageEnv.getMin().getY(),
-          null );
+      drawRasterImage( g2, projection, rasterImage, rgDomain, cs );
     }
     catch( Exception e )
     {
@@ -308,6 +223,96 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
      * null ); } catch( Exception e ) { // TODO Auto-generated catch block
      * e.printStackTrace(); }
      */
+  }
+
+  public void drawRasterImage( Graphics2D g2, GeoTransform projection, TiledImage rasterImage,
+      RectifiedGridDomain gridDomain, CS_CoordinateSystem targetCS ) throws Exception
+  {
+    //  get the Screen extent in real coordinates
+    GM_Envelope sourceScreenRect = projection.getSourceRect();
+    // create a surface and transform it in the coordinate system of the
+    // RectifiedGridCoverage
+    GM_Surface sourceScreenSurface = GeometryFactory.createGM_Surface( sourceScreenRect, targetCS );
+    GeoTransformer geoTrans1 = new GeoTransformer( gridDomain.getOrigin( null )
+        .getCoordinateSystem() );
+    GM_Surface destScreenSurface = (GM_Surface)geoTrans1.transform( sourceScreenSurface );
+    // get the gridExtent for the envelope of the surface
+    int[] gridExtent = gridDomain.getGridExtent( destScreenSurface.getEnvelope(), gridDomain
+        .getOrigin( null ).getCoordinateSystem() );
+    int lowX = gridExtent[0];
+    int lowY = gridExtent[1];
+    int highX = gridExtent[2];
+    int highY = gridExtent[3];
+
+    // calculate imageExtent from gridExtent
+    int minX = lowX;
+    int minY = rasterImage.getHeight() - highY;
+    int width = highX - lowX;
+    int height = highY - lowY;
+    // get the required subImage according to the gridExtent
+    PlanarImage image = rasterImage.getSubImage( minX, minY, width, height );
+
+    // get the destinationSurface in target coordinates
+    GM_Surface destSurface = gridDomain.getGM_Surface( lowX, lowY, highX, highY, targetCS );
+    GM_Ring destExtRing = destSurface.getSurfaceBoundary().getExteriorRing();
+    GM_Position llCorner = destExtRing.getPositions()[0];
+    GM_Position lrCorner = destExtRing.getPositions()[1];
+    GM_Position urCorner = destExtRing.getPositions()[2];
+    GM_Position ulCorner = destExtRing.getPositions()[3];
+    // calculate the Corners in screen coordinates
+    GM_Position pixel_llCorner = projection.getDestPoint( llCorner );
+    GM_Position pixel_lrCorner = projection.getDestPoint( lrCorner );
+    GM_Position pixel_urCorner = projection.getDestPoint( urCorner );
+    GM_Position pixel_ulCorner = projection.getDestPoint( ulCorner );
+    // calculate the height and width of the image on screen
+    double destImageHeight = pixel_llCorner.getY() - pixel_ulCorner.getY();
+    double destImageWidth = pixel_lrCorner.getX() - pixel_llCorner.getX();
+    // calculate the scaling factors for the transformation
+    double scaleX = destImageWidth / image.getWidth();
+    double scaleY = destImageHeight / image.getHeight();
+    // calculate the shear parameters for the transformation
+    double shearX = pixel_llCorner.getX() - pixel_ulCorner.getX();
+    double shearY = pixel_lrCorner.getY() - pixel_llCorner.getY();
+
+    GM_Surface orgDestSurface = gridDomain.getGM_Surface( targetCS );
+    GM_Position orgULCorner = orgDestSurface.getSurfaceBoundary().getExteriorRing().getPositions()[3];
+    GM_Position pixel_orgULCorner = projection.getDestPoint( orgULCorner );
+
+    AffineTransform trafo = new AffineTransform();
+    // translate the image, so that the subImage is at the right position
+    trafo.translate( pixel_orgULCorner.getX() - pixel_ulCorner.getX(), pixel_orgULCorner.getY()
+        - pixel_ulCorner.getY() );
+    // scale the image
+    trafo.scale( scaleX, scaleY );
+    // translate the image to compensate the shearing
+    trafo.translate( Math.abs( shearX ) / Math.abs( scaleX ), Math.abs( shearY )
+        / Math.abs( scaleY ) );
+    // shear the image
+    trafo.shear( shearX / destImageHeight, shearY / destImageWidth );
+
+    // calculate the required extent of the bufferedImage
+    GM_Position scaledImage_min = pixel_ulCorner;
+    GM_Position scaledImage_max = GeometryFactory.createGM_Position( pixel_urCorner.getX(),
+        pixel_llCorner.getY() );
+
+    GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX()
+        - Math.abs( shearX ), scaledImage_min.getY() - Math.abs( shearY ) );
+    GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX()
+        + Math.abs( shearX ), scaledImage_max.getY() + Math.abs( shearY ) );
+    GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max );
+
+    BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(), (int)buffImageEnv
+        .getHeight(), BufferedImage.TYPE_INT_ARGB );
+    Graphics2D bufferGraphics = (Graphics2D)buffer.getGraphics();
+    //bufferGraphics.setColor(Color.GREEN);
+    // draw a transparent backround on the bufferedImage
+    bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
+    bufferGraphics.fillRect( 0, 0, (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight() );
+    // draw the image with the given transformation
+    bufferGraphics.drawRenderedImage( image, trafo );
+    // draw bufferedImage on the screen
+    g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(), (int)buffImageEnv.getMin().getY(),
+        null );
   }
 
   /**
